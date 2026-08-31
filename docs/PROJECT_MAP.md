@@ -1,109 +1,131 @@
-# Project Map
+# Trading Station — canonical project map
 
-## Goal
-- Build a crypto + Alpaca trading system that survives regime changes.
-- Use multiple sleeves, not one universal strategy.
-- Let control-plane decide when sleeves should be on, reduced, paused, or blocked.
-- Promote sleeves to live only after honest validation, then keep improving the rest.
+Updated: 2026-08-31.
 
-## Core Layers
+Canonical workspace: `bybit-bot-recovery-20260824`.
 
-### 1. Live Bot
-- File: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py`
-- Responsibility:
-  - live market data
-  - order placement
-  - open-trade management
-  - per-sleeve entry loops
-  - Telegram/operator messages
+Current handoff: `reports/CODEX_SESSION_CHECKPOINT_2026_08_31.md`.
 
-### 2. Control Plane
-- Regime:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py`
-  - outputs market phase and strategy overrides
-- Router:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_symbol_router.py`
-  - chooses symbol baskets per sleeve
-- Allocator:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_portfolio_allocator.py`
-  - translates regime + router + health into final sleeve enable flags and risk haircuts
-- Watchdog / health:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh`
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/control_plane_watchdog.py`
+## Product objective
 
-### 3. Research / Validation
-- Static portfolio runner:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py`
-- Dynamic system replay:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py`
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py`
-- Autoresearch / sweeps:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_strategy_autoresearch.py`
-- Project-wide health/reporting:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_project_doctor_report.py`
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/live_vs_backtest_monitor.py`
+Build a multi-market station in which strategy research, live execution and
+capital control share one reproducible contract. The system may adapt by
+proposing and testing changes, but no model or research job can grant itself
+money authority.
 
-### 4. Operator / AI
-- Runtime snapshot:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py`
-- Telegram/web AI truth layer:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/deepseek_overlay.py`
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/web/routes/ai_routes.py`
+## End-to-end lifecycle
 
-### 5. Web Surface
-- API:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/web/routes`
-- Mirror sync:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/sync_web_live_mirror.sh`
+```text
+idea intake
+  -> preregistration
+  -> causal replay
+  -> random/matched control
+  -> costs, stress, concentration and PIT checks
+  -> zero-risk shadow
+  -> broker paper lifecycle
+  -> tiny canary
+  -> allocator + regime governor
+  -> degradation monitor
+  -> scale, reduce or disable through a new receipt
+```
 
-## Truth Sources
-- Live heartbeat:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/bot_heartbeat.json`
-- Regime:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/regime/orchestrator_state.json`
-- Router:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/router/symbol_router_state.json`
-- Allocator:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/control_plane/portfolio_allocator_state.json`
-- Strategy health:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/strategy_health.json`
-- Project doctor:
-  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/project_doctor/latest.txt`
+## Layer map
 
-## Promotion Policy
+| Layer | Main locations | Contract |
+|---|---|---|
+| Money runtime | `smart_pump_reversal_bot.py`, `bot/` | Orders only through explicit live authority |
+| Strategy logic | `strategies/` | Pure signal/event geometry where possible |
+| Research/live parity | `research_lab/live_native_*`, `research_lab/adapter_parity.py` | Same decision, fill, exit and cost semantics |
+| Research factory | `research_lab/`, `backtest/`, `configs/research/` | Frozen inputs, prereg, controls and receipts |
+| Canonical station | `research_lab/canonical_station.py`, `scripts/canonical_station_migration.py` | One evidence epoch, exact process parity, fail-closed migration |
+| Regime/router/allocator | `scripts/build_regime_state.py`, `scripts/build_symbol_router.py`, `scripts/build_portfolio_allocator.py` | Enable/reduce/disable sleeves; no silent risk increase |
+| Broker integrations | Alpaca/Bybit/MT5 adapters and deploy scripts | Broker truth overrides UI and Markdown |
+| Observability | `web/`, Telegram, `runtime/`, `reports/receipts/` | Explain state; never invent money truth |
+| AI analysis | Ollama/DeepSeek/Codex proposal paths | Secret-free and proposal-only |
 
-### Canary Gate
-- `360d confirm`
-- recent `WF`
-- recent `2025 + 2026 YTD`
-- if good: reduced-risk canary/live
+## Market sleeves
 
-### Standard Gate
-- `2022 / 2023 / 2024 / 2025 / 2026 YTD`
-- `WF`
-- if good: fully validated sleeve/package
+### Crypto
 
-## Current Lanes
+- ATT1 current frozen configuration: OOS `FAIL_CLOSED`; not eligible for risk
+  expansion.
+- SBR1 current frozen configuration: `INCONCLUSIVE_LOW_N` and negative; no
+  money integration.
+- Bull Continuation V1: approved implementation plan, research-only.
+- XSEC PIT V5: approved plan, currently blocked on delisted-contract history.
+- Order blocks, imbalances, horizontal/sloped levels and pattern atlas are
+  feature/research infrastructure, not independent money authority.
 
-### Current strong live base
-- `ATT1`
+### Alpaca
 
-### Best next candidate
-- `ASB1`
+- Protective management is a separate contour from entry selection.
+- New entries remain gated by PIT selector, stress, SHA reconciliation and a
+  complete paper lifecycle.
+- Any current live statement requires a fresh broker/service read.
 
-### Candidate, not yet cleared
-- `breakdown_v1`
+### XAU/Forex
 
-### Repair / rewrite lanes
-- `Elder v3`
-- `inplay_breakout`
-- `midterm_v3`
-- `bounce1`
-- `HZBO1`
+- XAU unchanged-replication plan exists.
+- Use shared controls, causal data, costs and demo/paper lifecycle before MT5
+  authority.
 
-## Immediate Work Pattern
-1. Validate sleeves individually.
-2. Validate packages statically.
-3. Validate the same package through dynamic control-plane replay.
-4. Promote only what survives recent windows.
-5. Move failed ideas into repair lanes instead of forgetting them.
+### Future lanes
+
+- Polymarket, DeFi and cross-exchange arbitrage remain idea/backlog lanes until
+  data provenance, execution costs, operational/legal constraints and controls
+  are explicit.
+
+## Truth hierarchy
+
+For a live claim, reconcile all four layers:
+
+1. Git source SHA and release bundle;
+2. deployed file hashes and deploy receipt;
+3. service, heartbeat and effective authority;
+4. direct broker positions, orders, fills and accounting.
+
+Conflicts are labelled `NOT_CONFIRMED`. Research, shadow, paper and UI state do
+not override broker truth.
+
+## Canonical migration state
+
+Task 5 is commit `482a536`. It can stop only an exact legacy screen after a
+fresh actual canonical launch, independently replayed process-kind comparator,
+current evidence hashes, exact authorization scope and immediate OS identity
+recheck. The completed dry-run is `NOT_CONFIRMED`; no screen was stopped.
+
+Canonical Station Task 6 still needs to connect this gate to status/audit and
+write the operator runbook. It must not perform a live migration.
+
+## Current execution queue
+
+```text
+XSEC shared controls (first shared dependency)
+  +-- XSEC PIT V5 preflight and delisted-data blocker
+  +-- Bull frozen contract
+  +-- XAU unchanged replication controls
+
+Bull event detector + execution model (parallel, no shared-file conflict)
+
+Canonical Station Task 6 (parallel, research infrastructure only)
+
+Dirty-tree preservation (isolated groups, never blind staging)
+```
+
+## Repository boundary
+
+- Canonical integration: `bybit-bot-recovery-20260824`.
+- Legacy/active evidence source: `bybit-bot-clean-v28`.
+- Do not patch both trees in parallel.
+- Do not commit `_snimki/`, `_to_delete/`, `*.bak*`, env files, sessions, logs
+  or bulk raw/generated data.
+- Move unique legacy work by explicit file list, secret scan, tests, review and
+  one scoped commit at a time.
+
+## Non-negotiable gates
+
+- No reuse of consumed ATT1/SBR1 OOS v1.
+- No current-137 substitution for XSEC closed-contract PIT.
+- No money/risk/slot change from a research finding alone.
+- No legacy stop from a dry-run or self-declared PASS.
+- No AI authority to trade, promote or restore risk.

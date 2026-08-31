@@ -1,392 +1,86 @@
 {
-  "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-11T17:08:00Z",
-  "read_first": [
-    "reports/CURRENT_HANDOFF.md",
-    "reports/current_project_state.json",
-    "reports/CURRENT_PROJECT_ROADMAP.md",
-    "reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md"
-  ],
-  "live_truth_warning": "refresh_git_deploy_service_heartbeat_broker_before_mutation",
-  "validation_update": {
-    "checked_at_utc": "2026-08-11T17:08:00Z",
-    "bybit_direct_broker_open_positions": 0,
-    "heartbeat_open_trades": 0,
-    "ws_guard_active": false,
-    "funding_evidence_contract": "one_active_trial_per_symbol_btc_hedged_diagnostics_v2",
-    "funding_dynamic_legacy_quarantined": 1059,
-    "funding_frozen_legacy_quarantined": 272,
-    "inplay_status": "queued_risk_zero_collector_not_money",
-    "elder_status": "rejected_parked",
-    "xsec_modern_recount": "quarantined_reserved_holdout_revealed",
-    "promotion_queue_validation": "PASS_13_crypto_6_fx_active_4_of_5_capital_false"
+  "schema_id": "trading_station_project_state_v2",
+  "generated_at_utc": "2026-08-31T12:37:36Z",
+  "read_first": "reports/CODEX_SESSION_CHECKPOINT_2026_08_31.md",
+  "canonical_git": {
+    "workspace": "bybit-bot-recovery-20260824",
+    "branch": "codex/recovery-20260824",
+    "verified_task5_code_floor": "482a536f1b734361c42720744243465b3f033a69",
+    "task5_code_floor_pushed": true,
+    "self_sha_embedded": false
   },
-  "bybit": {
-    "bundle_revision": "475745108b5e7ff0668011694646181ba6d9bd00",
-    "contains_fix_commit": "f290463_and_att1_stale_fill_fixed_r_release",
-    "bundle_sha256": "01eebc0541c77be78df496b3b261e76ab03e583fed4f2d91d3beaf944e7f4a01",
-    "deploy_receipt": "/root/by-bot/runtime/deploy_receipts/atomic_live_475745108b5e_20260811T124041Z.json",
-    "backup": "/root/by-bot/backups/atomic_live_475745108b5e_20260811T124041Z",
-    "manifest": "pass_8_of_8_live_hashes_exact",
-    "service": "active_pid_2334168_at_2026-08-11T13:16Z",
-    "direct_broker": "flat_after_release",
-    "last_direct_check_utc": "2026-08-11T17:08:00Z",
-    "heartbeat_open_trades": 0,
-    "heartbeat_warning": null,
-    "broker_open_position_count": 0,
-    "open_positions": [],
-    "heartbeat": {
-      "age_seconds_at_check": 0.4,
-      "open_trades": 0,
-      "bybit_msgs": 152536,
-      "trade_on": true,
-      "dry_run": false,
-      "regime": "bear_chop"
-    },
-    "ws_transport_guard": {
-      "active": false,
-      "critical_streak": 0,
-      "last_status": "NO_ACTIVITY",
-      "root_cause_confirmed": false
-    },
-    "closed_incident_results": [
-      {
-        "symbol": "DOTUSDT",
-        "net_broker_pnl_usdt": 0.1072467,
-        "exit_path": "TP1+TP2",
-        "clean_cohort_eligible": false
-      },
-      {
-        "symbol": "ADAUSDT",
-        "net_broker_pnl_usdt": 0.4193142,
-        "exit_path": "TP1+BE+ATR_TRAIL+EXCHANGE_STOP",
-        "clean_cohort_eligible": false
-      }
-    ],
-    "execution_incidents": [
-      {
-        "symbol": "DOTUSDT",
-        "type": "stale_fill_beyond_tp1_and_risk_expansion",
-        "planned_entry": 0.8136,
-        "actual_entry": 0.8023,
-        "planned_tp1": 0.805391,
-        "risk_expansion": 2.6377,
-        "adverse_bps": 138.89,
-        "clean_cohort_eligible": false
-      },
-      {
-        "symbol": "ADAUSDT",
-        "type": "post_fill_risk_expansion",
-        "planned_entry": 0.1953,
-        "actual_entry": 0.1931,
-        "planned_tp1": 0.19071964174685418,
-        "risk_expansion": 1.5641,
-        "clean_cohort_eligible": false
-      }
-    ],
-    "execution_patch": "deployed_verified_8_of_8_at_2026-08-11T12:40:46Z",
-    "candidate_release": {
-      "revision": "475745108b5e7ff0668011694646181ba6d9bd00",
-      "bundle_sha256": "01eebc0541c77be78df496b3b261e76ab03e583fed4f2d91d3beaf944e7f4a01",
-      "manifest": "pass_8_of_8",
-      "server_stage": "/root/bybot-staging/475745108b5e",
-      "server_python_import_smoke": "pass",
-      "bounded_no_order_main_smoke": "pass_20_seconds",
-      "deploy_status": "deployed",
-      "deploy_receipt": "/root/by-bot/runtime/deploy_receipts/atomic_live_475745108b5e_20260811T124041Z.json",
-      "backup": "/root/by-bot/backups/atomic_live_475745108b5e_20260811T124041Z"
-    },
-    "required_operator_control": {
-      "command": "/strategy_pause att1 execution_fix_release",
-      "scope": "new_entries_only",
-      "existing_position_management_continues": true,
-      "confirmed_current": false,
-      "last_checked_utc": "2026-08-11T12:38:00Z",
-      "server_state": "file_absent_no_paused_sleeves_at_release",
-      "release_blocker": false,
-      "note": "execution_fix_is_live; preserve_owner_approved_tiny_canary"
-    },
-    "authority_complete": true,
-    "money_authority": [
-      {
-        "strategy": "att1",
-        "side": "short_only",
-        "risk_mult": 0.1
-      }
-    ]
+  "task5_canonical_migration": {
+    "implementation": "COMPLETE",
+    "independent_audit": "GO",
+    "related_tests_passed": 157,
+    "dry_run_epoch": "dryrun_20260831_task5_v9",
+    "dry_run_state": "NOT_CONFIRMED",
+    "dry_run_jobs": 5,
+    "dry_run_started_pids": 0,
+    "legacy_stop": [],
+    "authorization_created": false,
+    "live_migration_performed": false
   },
-  "alpaca": {
-    "mode": "live_safe_hold",
-    "checked_at_utc": "2026-08-10T14:44:29Z",
-    "market_open": true,
-    "account_blocked": false,
-    "equity_usd": 485.87,
-    "cash_usd": 391.27,
-    "positions": 2,
-    "open_protective_orders": 2,
-    "new_entries_allowed": false,
-    "protective_scheduler": "server_cron_every_15m",
-    "protective_scheduler_post_patch_receipt_utc": "2026-08-10T14:45:08Z",
-    "protective_scheduler_post_patch_status": "pass_hold_no_material_stop_raise",
-    "protective_authority": "protective_exits_only_no_buys_no_rotation_no_market_close",
-    "paper_telegram_routine_reports": "disabled_by_default",
-    "intraday_shadow_dry_run_telegram_deploy": {
-      "revision": "d43ecb0",
-      "deployed_at_utc": "2026-08-10T18:40:00Z",
-      "bridge_sha256": "0b22d4283db8ec3b61666b4c239b2ec20449794d8bff76487aff4cb9ed6ed220",
-      "config_sha256": "b31f713cd09672d5687cbd057dee0ebbb7c6adf354021b4ea78ee40384b1e9ee",
-      "backup": "/root/by-bot/backups/alpaca-dryrun-tg-d43ecb0-20260810T1840Z",
-      "post_deploy_cron_utc": "2026-08-10T18:40:00Z",
-      "orders_submitted": false
-    },
-    "schw_stop_receipt": {
-      "qty": 0.563776973,
-      "old_stop": 96.47,
-      "new_stop": 105.03,
-      "locked_gain_pct_at_stop": 3.424846,
-      "broker_order_id": "27473b37-9c6d-4a2c-b3a9-493c04cef21b",
-      "broker_status": "new",
-      "time_in_force": "day"
-    },
-    "selection_parity": "blocked_fail_closed_live_abbv_schw_vs_adaptive_shadow_snow_bac_panw_crwd",
-    "remaining_risk": "fractional_day_stops_require_rearm_and_do_not_remove_overnight_gap_risk"
+  "authority": {
+    "research_only": true,
+    "live_changed_in_session": false,
+    "orders_sent_in_session": 0,
+    "risk_changed_in_session": false,
+    "money_authority_changed_in_session": false,
+    "legacy_screens_stopped_in_session": 0
   },
-  "research_station": {
-    "checked_at_utc": "2026-08-11T12:42:00Z",
-    "healthy": 5,
-    "degraded": 0,
-    "live_order_authority": false,
-    "wip_cap_full": true,
-    "temporary_research_sessions": [
-      {
-        "session": "bybit_history_150_20260810",
-        "state": "complete_session_exited",
-        "purpose": "public_5m_history_download",
-        "live_order_authority": false
-      },
-      {
-        "session": "six_day_crypto_20260810",
-        "state": "complete_exact_48_of_48_watchdog_exited",
-        "status_receipt": "reports/research/six_day_crypto_pipeline_20260810/status.json",
-        "live_order_authority": false
-      }
-    ],
-    "six_day_integrity_incident": {
-      "observed_terminal_status": "complete_40_of_48_invalid",
-      "repaired_terminal_status": "complete_48_of_48_zero_current_failures",
-      "ledger_case_complete_events": 88,
-      "ledger_unique_case_complete": 48,
-      "ledger_historical_case_failed": 8,
-      "failed_scope": "squeeze_long_short_discovery_2023h2_and_replication_2024h1_base_stress",
-      "root_cause": "zero_division_on_all_zero_bollinger_width_history",
-      "repair_commit": "25bcb57",
-      "focused_tests_passed": 11,
-      "durable_watchdog": "screen_six_day_crypto_20260810_requires_exact_48_of_48_and_zero_failures",
-      "resume_progress": "complete",
-      "first_repaired_case": "discovery_2023h2_squeeze_long_base_620_trades_-131.34R_mean_-0.21184_t_-6.74_pf_0.537",
-      "resume_live_order_authority": false,
-      "reserved_holdout_read": false,
-      "verdict": "no_family_eligible_for_promotion",
-      "verdict_report": "reports/research/SIX_DAY_CRYPTO_MATRIX_VERDICT_20260811.md"
+  "strategy_evidence": {
+    "att1_reserved_oos": {
+      "state": "FAIL_CLOSED",
+      "binding_reason": "stress_second_half_negative",
+      "stress_second_half_r": -0.3372,
+      "money_promotion": false
     },
-    "heartbeat_automation": {
-      "id": "six-day-trading-research-guard",
-      "cadence_hours": 6,
-      "ends_utc": "2026-08-16T18:45:00Z",
-      "notifications": "failed_runs_only"
+    "sbr1_reserved_oos": {
+      "state": "INCONCLUSIVE_LOW_N",
+      "n": 16,
+      "base_and_stress_negative": true,
+      "money_promotion": false
     },
-    "host_keep_awake": {
-      "mechanism": "macos_caffeinate_idle_sleep_assertion",
-      "confirmed_at_utc": "2026-08-10T18:58:00Z",
-      "duration_seconds": 518400,
-      "display_forced_on": false,
-      "limitations": ["power_loss", "reboot", "network_outage"]
+    "xsec_pit_v5": {
+      "state": "PLANNED_DATA_BLOCKED",
+      "provider_closed_contracts": 936,
+      "closed_contract_histories_available": 0,
+      "current_symbol_histories": 137,
+      "required_preflight_state_until_data": "BLOCKED_DATA_OR_PARITY"
     },
-    "load_guarded_backlog": {
-      "state": "complete",
-      "session": "research_backlog_guard_20260810",
-      "max_load_1m": 9.0,
-      "deadline_utc": "2026-08-11T06:00:00Z",
-      "jobs": ["fx_usdjpy_h1_focused_stress", "fx_h4_slow_assets_fixed_probe"],
-      "live_order_authority": false
+    "bull_continuation_v1": {
+      "state": "APPROVED_PLAN_NOT_IMPLEMENTED",
+      "authority": "research_only"
+    },
+    "xauusd_unchanged_replication": {
+      "state": "APPROVED_PLAN_NOT_STARTED_THIS_SESSION",
+      "authority": "research_only"
+    },
+    "alpaca_new_entries": {
+      "state_from_last_canonical_checkpoint": "SAFE_HOLD",
+      "current_broker_state_verified_in_session": false,
+      "remaining_gate": "selector_pit_and_stress_then_complete_paper_lifecycle"
     }
   },
-  "fx_research": {
-    "live_order_authority": false,
-    "h1_usdjpy": "rejected_cost_infeasible_feeR_0.515_above_0.35",
-    "h4_preflight_passed": false,
-    "annual_reproduction": "all_four_leads_flip_sign_across_two_years_no_stable_leg",
-    "h4_diagnostic_leads": [
-      "EURJPY_trend_pullback_3.366R_13_trades_2_of_4_folds",
-      "GBPUSD_trend_pullback_1.732R_9_trades_3_of_4_folds",
-      "USDJPY_session_breakout_retest_1.321R_10_trades_2_of_4_folds",
-      "EURUSD_session_breakout_retest_1.221R_4_trades_2_of_4_folds"
-    ],
-    "next_gate": "preregistered_reproduction_fresh_bid_ask_swap_news_chronological_oos"
-  },
-  "alpaca_research": {
-    "runner": "scripts/run_alpaca_honest_diagnostic.py",
-    "prereg": "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json",
-    "receipt": "reports/research/alpaca_honest_diagnostic_v1_20260810/receipt.json",
-    "validation": "reports/research/alpaca_honest_diagnostic_v1_20260810/validation_receipt.json",
-    "forward_outcomes_read": false,
-    "promotion_ready": false,
-    "live_bridge_weight_cap_repaired": true,
-    "focused_tests_passed": 34,
-    "data_quality_rating": "needs_revision",
-    "invariants": "16_of_16_results_6_of_6_pins_8_of_8_cost_stress_pass",
-    "v38_gated_stress": {
-      "bear_2022_return_pct": -2.885989,
-      "bear_2022_daily_dd_pct": 3.999085,
-      "recent_2024_2026_return_pct": 30.164229,
-      "recent_2024_2026_daily_dd_pct": 7.841996
-    },
-    "adaptive_gated_stress": {
-      "bear_2022_return_pct": -5.627509,
-      "bear_2022_daily_dd_pct": 6.581035,
-      "recent_2024_2026_return_pct": 18.750701,
-      "recent_2024_2026_daily_dd_pct": 4.937231
-    },
-    "capital_blockers": [
-      "point_in_time_universe",
-      "authoritative_xnys_ledger",
-      "corporate_actions_and_delistings",
-      "broker_cost_calibration",
-      "intraday_exit_path",
-      "sealed_forward"
-    ]
-  },
-  "att1_research": {
-    "wide_universe": {
-      "trades": 823,
-      "traded_symbols": 64,
-      "gross_r": 19.33946,
-      "cost_r": 48.109293,
-      "net_r": -28.769833,
-      "mean_net_r": -0.034957,
-      "t_stat": -0.987,
-      "profit_factor": 0.932,
-      "verdict": "rejected_wide_rollout_major_only_hypothesis_remains_separate"
-    },
-    "shallow_oos": {
-      "baseline": "100_trades_2.76R_t0.27",
-      "shallow": "9_trades_-1.99R_t-0.63",
-      "shallow_maker": "9_trades_0.18R_t0.06",
-      "verdict": "old_0.3203R_per_trade_not_reproduced_and_sample_too_small"
-    },
-    "promotion_cohort": {
-      "state": "started_after_atomic_release_2026-08-11T12:40:46Z",
-      "observed_cadence": "9_trades_per_21_days",
-      "estimated_n20_days_after_release": 47,
-      "realistic_first_scale_window": "late_September_2026_conditional_on_gates"
-    }
-  },
-  "negative_trade_lab": {
-    "implementation": "research_lab/negative_trade_lab.py",
-    "authority": "research_only_proposal_only_ai_packet",
-    "squeeze_long_discovery_base": {
-      "trades": 620,
-      "symbols": 24,
-      "gross_r": -40.372844,
-      "cost_r": 90.968881,
-      "net_r": -131.341724,
-      "t_stat": -6.7415,
-      "profit_factor": 0.53684,
-      "diagnostic_class": "negative_gross_edge_plus_cost_drag",
-      "mfe_mae_coverage": "620_of_620"
-    },
-    "focused_suite_passed": 40,
-    "claim_boundary": "descriptive_buckets_require_preregistered_time_and_symbol_replication"
-  },
-  "xsec_shadow": {
-    "mode": "v3_zero_risk_shadow",
-    "screen": "xsec_v3_shadow_20260726",
-    "capital_authorized": false,
-    "current_maturity_audit": "62_of_62_pass_at_390_days",
-    "integrity_repairs": [
-      "immutable_entry_prices",
-      "per_symbol_markout_contributions",
-      "incomplete_attribution_rejected",
-      "symbol_and_portfolio_anomaly_gate",
-      "legacy_return_sanitization"
-    ],
-    "historical_extreme_markouts_promotion_eligible": false,
-    "next_gate": "forward_attributable_markouts_and_independent_replication"
-  },
-  "bybit_sizing_parity": {
-    "pure_contract": "shared_between_backtest_and_live",
-    "golden_pre_round_fixtures": "pass",
-    "covered": ["uncapped", "notional_cap", "min_fill_reject", "dot_like_geometry"],
-    "remaining": ["qty_step", "min_qty", "fees", "partial_fills", "legacy_dca_block"]
-  },
-  "position_reconciliation": {
-    "pure_contract": "bot/position_reconciliation.py",
-    "schema_id": "position_reconciliation_v1",
-    "covered_conflicts": [
-      "source_stale_or_missing",
-      "broker_runner_owner_accounting_presence",
-      "broker_stop_missing",
-      "qty_mismatch",
-      "side_mismatch",
-      "strategy_owner_mismatch",
-      "duplicate_or_hedged_rows"
-    ],
-    "scope": "block_new_entries_only_existing_management_continues",
-    "focused_tests_passed": 18,
-    "live_wired": false,
-    "next_gate": "runtime_adapters_durable_receipt_and_all_submit_path_entry_gate"
-  },
-  "retest3": {
-    "old_run": "quarantined_noop",
-    "contract": "repaired",
-    "config_preflight": "pass",
-    "smoke_trade_counts": [0, 0, 1, 1],
-    "full_ladder": {
-      "stop_0_35": "204_trades_17.33R_0.085R_per_trade_t0.64",
-      "stop_0_525": "510_trades_-45.43R",
-      "stop_0_70": "2494_trades_-610.42R",
-      "stop_0_875": "1941_trades_-296.04R"
-    },
-    "strategy_verdict": "differentiated_but_edge_gate_failed",
-    "focused_tests_passed": 50
-  },
-  "worktree_cleanup": {
-    "inventory_at_head": "c5eba1c",
-    "record_count": 1138,
-    "tracked_changes": 27,
-    "untracked_paths": 1111,
-    "manual_code_candidates": 61,
-    "archive_or_backup_candidates": 100,
-    "destructive_actions_taken": false,
-    "plan": "reports/WORKTREE_CLEANUP_PLAN_2026_08_10.md"
-  },
-  "priority_queue": [
-    "monitor_post_release_att1_execution_receipts_and_clean_cohort",
-    "monitor_completed_six_day_crypto_matrix_integrity",
-    "run_preregistered_negative_trade_phenotype_ablations",
-    "accumulate_xsec_v3_attributable_zero_risk_shadow",
-    "retest3_wide_reachability_after_compute_slot_frees",
-    "broaden_public_funding_history_and_listing_metadata",
-    "build_pit_aware_equities_daily_bundle",
-    "elder_v2_v3_exact_parity_replay",
-    "alpaca_next_session_day_stop_rearm_proof",
-    "alpaca_pit_xnys_corporate_action_cost_bundle_and_second_engine",
-    "wire_position_reconciliation_runtime_adapters_and_entry_gate",
-    "backtest_live_sizing_parity",
-    "clean_att1_cohort",
-    "preregistered_h4_fx_reproduction_then_demo_shadow",
-    "strategy_edge_cards_and_loss_phenotypes",
-    "independent_replay",
-    "owner_tagged_worktree_cleanup_batches",
-    "nonsecret_code_index"
+  "next_execution": [
+    "xsec_task1_shared_controls",
+    "bull_task2_sloped_event_detector_parallel",
+    "bull_task3_execution_model_parallel",
+    "canonical_station_task6_status_audit_gate",
+    "bull_task1_frozen_contract_after_shared_controls",
+    "xsec_pit_preflight_and_closed_symbol_data_acquisition",
+    "xau_unchanged_replication_after_shared_controls"
   ],
-  "scoped_git": {
+  "legacy_preservation": {
+    "workspace": "bybit-bot-clean-v28",
     "branch": "codex/dynamic-symbol-filters",
-    "upstream_head": "475745108b5e7ff0668011694646181ba6d9bd00",
-    "session_content_commit": "1bf5293e4ef5daca0886991d9b02714218ca3afd",
-    "state_snapshot_commit": "self",
-    "ahead_commits_including_state_snapshot": 8,
-    "current_head_includes_this_handoff_commit": true,
-    "foreign_dirty_worktree_preserved": true
-  }
+    "head": "76fc63ccbe43",
+    "actively_changing_during_audit": true,
+    "blind_commit_allowed": false,
+    "snapshot_sha256": "ad810ccc2564fa5c1e32e7179fe1c54255c398049afb12abc553ab0a554c8d37",
+    "snapshot_secret_risk": true,
+    "migration_method": "isolated_scoped_groups_with_secret_scan_tests_and_review"
+  },
+  "live_truth_warning": "No current broker or deployed-server truth was refreshed in this session. Reconcile Git, deployed hashes, service heartbeat and direct broker state before any live claim."
 }

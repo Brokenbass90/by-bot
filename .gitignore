@@ -72,3 +72,9 @@ pytest-cache-files-*/
 tmp/
 tmp_codex_sync/
 *.pyc
+
+# Local recovery snapshots, trash staging and editor/operator backups.
+_snimki/
+_to_delete/
+*.bak
+*.bak*

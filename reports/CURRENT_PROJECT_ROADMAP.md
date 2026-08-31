@@ -1,8 +1,38 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-29. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-31. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Latest engineering update — 2026-08-31
+
+Task 5 fail-closed canonical migration завершён, независимо проверен, commit
+`482a536` запушен в `origin/codex/recovery-20260824`. Связанный suite:
+`157 passed`; последний factual dry-run v9 — `NOT_CONFIRMED`, 5/5 jobs только
+`DRY_RUN`, PID отсутствуют, `legacy_stop=[]`, authorization отсутствует. Live,
+ордера, риск и screen-сессии не менялись.
+
+Главная очередь теперь:
+
+1. XSEC PIT V5 Task 1 — shared deterministic controls и frozen 36-arm family.
+2. Параллельно Bull Continuation Tasks 2/3 — event detector и execution model.
+3. Canonical Station Task 6 — status/audit gate, без live migration.
+4. Затем Bull frozen contract, XSEC PIT preflight и public-only acquisition
+   histories закрытых контрактов.
+
+XSEC data blocker точный: provider inventory содержит 936 Closed, а доступные
+daily/funding archives покрывают 137 текущих символов и ноль историй закрытых
+контрактов. До устранения этого разрыва правильный verdict —
+`BLOCKED_DATA_OR_PARITY`; current-137 подменять запрещено.
+
+Read-only audit старого `bybit-bot-clean-v28` подтвердил, что core parity уже
+сохранён в recovery, но web/lab/AI/signal-copy содержит уникальные изменения.
+Старое дерево активно пишет research output, поэтому `git add -A`, удаление
+stale lock и единый коммит запрещены. Переносить только scoped groups из
+чистого isolated worktree после secret scan и tests.
+
+Полная каноническая передача:
+`reports/CODEX_SESSION_CHECKPOINT_2026_08_31.md`.
 
 ## Latest operational update — 2026-08-29
 
