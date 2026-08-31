@@ -250,7 +250,7 @@ def read_verified_receipt(path: Path, *, expected_schema: str) -> dict[str, Any]
     else:
         allowed = {"schema_id", "receipt_sha256", "authority", "hypothesis_id", "phase", "status", "manifest_sha256", "preregistration_sha256", "adapter_argv_sha256", "input_artifacts", "output_artifacts", "metrics", "live_or_broker_calls", "private_api_calls", "capital_or_promotion_authority"}
     value = _object(value, allowed, "receipt")
-    required = {"schema_id", "receipt_sha256", "value"} if expected_schema == "x" else {"schema_id", "receipt_sha256"}
+    required = {"schema_id", "receipt_sha256", "value"} if expected_schema == "x" else allowed
     if not required.issubset(value):
         raise ContractError("receipt missing required fields")
     if value.get("schema_id") != expected_schema or not isinstance(value.get("receipt_sha256"), str):
