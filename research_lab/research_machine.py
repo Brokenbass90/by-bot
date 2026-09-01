@@ -41,6 +41,11 @@ from pathlib import Path
 
 import numpy as np
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from research_lab.strategy_call_contract import build_ohlcv_caller
+
 WINDOWS = {
     "2024-03..2025-09": (1709251200000, 1759276800000),
     "2023-01..2024-02": (1672531200000, 1709251200000),
@@ -70,6 +75,16 @@ class Store:
 
     def fetch_klines(self, sym, tf, n):
         return self.rows[-n:]
+
+
+def build_research_signal_caller(strategy, store: Store):
+    """Bind the corpus call contract once per strategy/symbol replay."""
+    caller = build_ohlcv_caller(strategy, store=store, symbol=store.symbol)
+
+    def call(bar):
+        return caller(bar[0], bar[1], bar[2], bar[3], bar[4], bar[5])
+
+    return call
 
 
 def ema(x, n):
@@ -208,12 +223,13 @@ def main():
                 continue
             bars = [[int(ts[x]), o[x, 0], o[x, 1], o[x, 2], o[x, 3], o[x, 4]] for x in range(len(ts))]
             st = Store(Path(fp).stem); strat = Strategy()
+            signal_caller = build_research_signal_caller(strat, st)
             sigs = []
             for i in range(LOOKBACK, len(bars)):
                 st.rows = bars[: i + 1]
                 b = bars[i]
                 try:
-                    s = strat.maybe_signal(st, b[0], b[1], b[2], b[3], b[4], b[5])
+                    s = signal_caller(b)
                 except Exception:
                     continue
                 if s is None or b[0] < sta:

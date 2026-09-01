@@ -37,9 +37,23 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, ".")
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-CONVENTIONS = ("ohlcv", "last_price", "async_last_price", "async_ohlcv", "flat_bars", "evaluate_i")
+from research_lab.strategy_call_contract import first_signal_argument
+
+CONVENTIONS = (
+    "ohlcv",
+    "symbol_ohlcv",
+    "last_price",
+    "symbol_last_price",
+    "async_last_price",
+    "async_symbol_last_price",
+    "async_ohlcv",
+    "async_symbol_ohlcv",
+    "flat_bars",
+    "evaluate_i",
+)
 
 
 # ------------------------------------------------------------------ данные
@@ -136,9 +150,14 @@ def detect_convention(obj):
                   if p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]
         n_req = sum(1 for p in params if p.default is inspect._empty)
         is_async = inspect.iscoroutinefunction(fn)
+        symbol_first = first_signal_argument(obj) == "symbol"
         if n_req >= 6:
-            return ("async_ohlcv" if is_async else "ohlcv"), sig
-        return ("async_last_price" if is_async else "last_price"), sig
+            if is_async:
+                return ("async_symbol_ohlcv" if symbol_first else "async_ohlcv"), sig
+            return ("symbol_ohlcv" if symbol_first else "ohlcv"), sig
+        if is_async:
+            return ("async_symbol_last_price" if symbol_first else "async_last_price"), sig
+        return ("symbol_last_price" if symbol_first else "last_price"), sig
 
     fn = getattr(obj, "evaluate", None)
     if fn is not None:
@@ -183,20 +202,31 @@ def symbol_allowlist(obj):
 # ------------------------------------------------------------------ вызов
 def make_caller(conv, obj, symbol, regime="bull_trend"):
     """Один вызов для всех конвенций. Возвращает f(store, candles, i) -> signal|None."""
-    if conv == "ohlcv":
-        return lambda st, cs, i: obj.maybe_signal(st, cs[i].ts, cs[i].o, cs[i].h,
+    if conv in ("ohlcv", "symbol_ohlcv"):
+        return lambda st, cs, i: obj.maybe_signal(symbol if conv == "symbol_ohlcv" else st,
+                                                  cs[i].ts, cs[i].o, cs[i].h,
                                                   cs[i].l, cs[i].c, cs[i].v)
-    if conv == "last_price":
-        return lambda st, cs, i: obj.maybe_signal(st, cs[i].ts, cs[i].c)
+    if conv in ("last_price", "symbol_last_price"):
+        return lambda st, cs, i: obj.maybe_signal(
+            symbol if conv == "symbol_last_price" else st,
+            cs[i].ts,
+            cs[i].c,
+        )
 
-    if conv in ("async_ohlcv", "async_last_price"):
+    if conv in (
+        "async_ohlcv",
+        "async_symbol_ohlcv",
+        "async_last_price",
+        "async_symbol_last_price",
+    ):
         loop = asyncio.new_event_loop()
 
         def _call(st, cs, i):
-            if conv == "async_ohlcv":
-                co = obj.maybe_signal(st, cs[i].ts, cs[i].o, cs[i].h, cs[i].l, cs[i].c, cs[i].v)
+            first = symbol if "symbol" in conv else st
+            if conv in ("async_ohlcv", "async_symbol_ohlcv"):
+                co = obj.maybe_signal(first, cs[i].ts, cs[i].o, cs[i].h, cs[i].l, cs[i].c, cs[i].v)
             else:
-                co = obj.maybe_signal(st, cs[i].ts, cs[i].c)
+                co = obj.maybe_signal(first, cs[i].ts, cs[i].c)
             return loop.run_until_complete(co)
         return _call
 
