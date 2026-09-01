@@ -4,7 +4,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-from research_lab.research_machine import Store, build_research_signal_caller
+from research_lab.research_machine import (
+    SignalCallDiagnostics,
+    Store,
+    build_research_signal_caller,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,3 +57,26 @@ def test_research_machine_preserves_store_for_store_first_strategy() -> None:
 
     assert caller(bar) == "signal"
     assert seen == [store]
+
+
+def test_signal_call_exceptions_are_counted_and_invalidate_the_run() -> None:
+    diagnostics = SignalCallDiagnostics(sample_limit=2)
+
+    def broken(_bar):
+        raise RuntimeError("fixture failure")
+
+    assert diagnostics.invoke(broken, [123, 1, 2, 0, 1, 9], symbol="BTCUSDT") is None
+
+    receipt = diagnostics.as_dict()
+    assert receipt["calls"] == 1
+    assert receipt["errors"] == 1
+    assert receipt["complete"] is False
+    assert receipt["error_types"] == {"RuntimeError": 1}
+    assert receipt["samples"] == [
+        {
+            "symbol": "BTCUSDT",
+            "ts_ms": 123,
+            "error_type": "RuntimeError",
+            "message": "fixture failure",
+        }
+    ]

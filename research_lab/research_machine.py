@@ -31,6 +31,8 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
+from dataclasses import dataclass, field
 import glob
 import importlib
 import json
@@ -66,6 +68,45 @@ REGIMES = (
 FEE_BPS_SIDE = 6.0
 LOOKBACK = 120
 SIGMA_R = 1.03    # исторический разброс одной сделки при стопе ×1, только для справки
+
+
+@dataclass
+class SignalCallDiagnostics:
+    """Make strategy-call failures explicit in every research passport."""
+
+    sample_limit: int = 10
+    calls: int = 0
+    errors: int = 0
+    error_types: Counter[str] = field(default_factory=Counter)
+    samples: list[dict[str, object]] = field(default_factory=list)
+
+    def invoke(self, caller, bar, *, symbol: str):
+        self.calls += 1
+        try:
+            return caller(bar)
+        except Exception as exc:
+            self.errors += 1
+            error_type = type(exc).__name__
+            self.error_types[error_type] += 1
+            if len(self.samples) < self.sample_limit:
+                self.samples.append(
+                    {
+                        "symbol": symbol,
+                        "ts_ms": int(bar[0]),
+                        "error_type": error_type,
+                        "message": str(exc)[:200],
+                    }
+                )
+            return None
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "calls": self.calls,
+            "errors": self.errors,
+            "complete": self.errors == 0,
+            "error_types": dict(sorted(self.error_types.items())),
+            "samples": list(self.samples),
+        }
 
 
 class Store:
@@ -209,6 +250,7 @@ def main():
         j = max(0, int(np.searchsorted(btc[0], t, side="right")) - 1)
         return float(btc[1][j]) if j < len(btc[1]) else None
 
+    diagnostics = SignalCallDiagnostics()
     passport = dict(strategy=a.strategy, prefix=a.prefix, symbols=len(files),
                     windows={}, axes=dict(stops=list(STOPS), holds=list(HOLDS)))
 
@@ -228,10 +270,7 @@ def main():
             for i in range(LOOKBACK, len(bars)):
                 st.rows = bars[: i + 1]
                 b = bars[i]
-                try:
-                    s = signal_caller(b)
-                except Exception:
-                    continue
+                s = diagnostics.invoke(signal_caller, b, symbol=st.symbol)
                 if s is None or b[0] < sta:
                     continue
                 sigs.append((i, s.side, s.sl, list(s.tps or []), (s.tp_fracs or [0.55])[0]))
@@ -273,6 +312,17 @@ def main():
                     wout[f"{mult}|{hold}|{side}|{rname}"] = s
         passport["windows"][wname] = wout
 
+    passport["call_diagnostics"] = diagnostics.as_dict()
+    passport["validity"] = (
+        "complete" if passport["call_diagnostics"]["complete"]
+        else "fail_closed_call_errors"
+    )
+    print(
+        "\nвызовы стратегии: "
+        f"{diagnostics.calls}, исключения: {diagnostics.errors}, "
+        f"валидность: {passport['validity']}"
+    )
+
     out = Path(a.root) / "research_lab" / f"passport_{a.tag}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(passport, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -281,7 +331,9 @@ def main():
     # автоматический отсев: что выжило на ОБОИХ окнах
     print("\n╔══ ОТСЕВ: конфигурации, положительные на ОБОИХ окнах")
     ws = list(passport["windows"].values())
-    if len(ws) == 2:
+    if passport["validity"] != "complete":
+        print("  отсев заблокирован: исключения strategy caller")
+    elif len(ws) == 2:
         good = []
         for key, s1 in ws[0].items():
             s2 = ws[1].get(key)
