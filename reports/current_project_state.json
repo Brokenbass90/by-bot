@@ -1,10 +1,11 @@
 {
   "schema_id": "trading_station_project_state_v2",
-  "generated_at_utc": "2026-08-31T12:37:36Z",
-  "read_first": "reports/CODEX_SESSION_CHECKPOINT_2026_08_31.md",
+  "generated_at_utc": "2026-09-01T05:17:29Z",
+  "read_first": "reports/CURRENT_HANDOFF.md",
   "canonical_git": {
     "workspace": "bybit-bot-recovery-20260824",
     "branch": "codex/recovery-20260824",
+    "head_before_task4_docs": "62c34504d93ec4fa4b1cd9454ea5a9e8b09a5e19",
     "verified_task5_code_floor": "482a536f1b734361c42720744243465b3f033a69",
     "task5_code_floor_pushed": true,
     "self_sha_embedded": false
@@ -20,6 +21,42 @@
     "legacy_stop": [],
     "authorization_created": false,
     "live_migration_performed": false
+  },
+  "research_conveyor_v1": {
+    "state": "INITIAL_QUEUE_PREFLIGHT_COMPLETE",
+    "authority": "research_only_no_live_risk_order_promotion_or_private_api_authority",
+    "manifest_path": "configs/research/research_conveyor_v1.json",
+    "manifest_sha256": "3acee610628448efda834b17e847ab7291013c142154dc9e8929597fa49e26cb",
+    "manifest_sha256_kind": "SHA-256 of the canonical manifest JSON payload, not a raw file-byte hash",
+    "canonical_preflight_receipt": "runtime/research_conveyor/manual_20260901_v3/terminal_receipt.json",
+    "canonical_preflight_receipt_embedded_sha256": "b4523610e1f9938bd7aa1f5c954ae02f05225cf54870b5d77a2cc8e5c5ed5c22",
+    "preflight_mode": "preflight",
+    "terminal_receipts": 10,
+    "terminal_counts": {
+      "BLOCKED_DATA_OR_PARITY": 3,
+      "BLOCKED_ADAPTER": 7
+    },
+    "phase_receipts": 0,
+    "phase_logs": 0,
+    "adapters_launched": 0,
+    "initial_runnable_cards": 0,
+    "scheduler_installed": false,
+    "task1_to_task3_verification": {
+      "tests_passed": 72,
+      "py_compile": "PASS",
+      "git_diff_check": "PASS",
+      "task2_focused_tests_passed": 55
+    },
+    "station_v3_relation": "SEPARATE_CONTRACTS: Station v3 may resume an immutable run_id; Conveyor requires a run_dir path that does not already exist and has different authority.",
+    "security_boundary": "POLICY_AND_RECEIPT_CONTRACT_NOT_OS_SANDBOX: runner uses shell=False, sanitized environment, and hash-bound reviewed script paths, but does not technically block sockets, credential-file reads, or arbitrary subprocess side effects.",
+    "future_run_requirement": "Before any RUNNABLE adapter is launched, separately review that it has no network, private, live, broker, order, or risk side effects; use Station v3 isolation or equivalent where stronger enforcement is required.",
+    "verdict_semantics": "BLOCKED_* is a valid readiness terminal state. PASS_DIAGNOSTIC is not promotion, shadow, paper, money, live, broker, order, private API, or risk authority.",
+    "next_adapter_queue": [
+      "xsec_shared_deterministic_controls_and_data_parity",
+      "bull_continuation_detector_and_execution_adapter",
+      "xau_independent_causal_data_and_cost_parity"
+    ],
+    "rollback": "For a compliant reviewed research adapter no external rollback is expected. Retain receipts and do not reuse any existing run_dir path. If an adapter causes side effects, treat it as an incident and reconcile external systems; receipts alone cannot roll back effects."
   },
   "authority": {
     "research_only": true,

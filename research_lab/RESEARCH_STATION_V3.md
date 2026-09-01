@@ -151,3 +151,87 @@ Run the focused contract tests with:
 ```bash
 python3 -m pytest -q tests/test_research_station_v3.py
 ```
+
+## Research Conveyor V1: a separate readiness queue
+
+Research Conveyor V1 is adjacent to Station v3, but it is **not** a Station
+v3 run and its receipts are not interchangeable with Station receipts.  Station
+v3 uses its own config contract and can resume the same immutable `run-id`.
+Conveyor V1 declares the exact policy and receipt authority
+`research_only_no_live_risk_order_promotion_or_private_api_authority`. Every
+invocation requires a **new path that does not already exist**; any existing
+path, including an empty one, is refused rather than resumed.
+
+The executable queue is
+`configs/research/research_conveyor_v1.json`.  Its initial `manifest_sha256`
+(SHA-256 of the canonical JSON payload, not a raw manifest-file hash) is
+`3acee610628448efda834b17e847ab7291013c142154dc9e8929597fa49e26cb`.
+It contains ten strategy families, all initially blocked and therefore no
+runnable adapters.  The canonical manual preflight is
+`runtime/research_conveyor/manual_20260901_v3/terminal_receipt.json`; its
+embedded self-hash is
+`b4523610e1f9938bd7aa1f5c954ae02f05225cf54870b5d77a2cc8e5c5ed5c22`.
+It records ten terminal receipts: three `BLOCKED_DATA_OR_PARITY`, seven
+`BLOCKED_ADAPTER`, and zero phase receipts, phase logs, or adapter launches.
+
+Run Conveyor only from the canonical checkout and choose a fresh directory for
+every command:
+
+```bash
+cd /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824
+
+# Validate the manifest and publish readiness receipts without adapters.
+python3 scripts/run_research_conveyor.py \
+  --config configs/research/research_conveyor_v1.json \
+  --run-dir runtime/research_conveyor/manual_<UTC_UNIQUE>_dry \
+  --dry-run
+
+# Publish the formal preflight; this also launches zero adapters.
+python3 scripts/run_research_conveyor.py \
+  --config configs/research/research_conveyor_v1.json \
+  --run-dir runtime/research_conveyor/manual_<UTC_UNIQUE>_preflight \
+  --preflight
+
+# Only after a card has a reviewed hash-bound four-phase adapter: run it.
+python3 scripts/run_research_conveyor.py \
+  --config configs/research/research_conveyor_v1.json \
+  --run-dir runtime/research_conveyor/manual_<UTC_UNIQUE>_run \
+  --run
+```
+
+`BLOCKED_*` is a valid terminal readiness verdict, not a failed experiment and
+not a result.  `PASS_DIAGNOSTIC` means only that all four frozen research
+phases passed their diagnostic contract.  Neither verdict authorizes shadow,
+paper, capital, promotion, live configuration, risk, orders, broker calls, or
+private API access.  The initial queue has no `RUNNABLE` card, so all three
+commands above launch no adapter today.  No scheduler, LaunchAgent, or cron is
+installed by this change; a scheduler can only be proposed after a manual run
+and an independent audit.
+
+This authority is a policy and receipt contract, **not** an OS sandbox. The
+runner uses `shell=False`, a stripped environment, and hash-bound reviewed
+script paths, but it does not technically block sockets, credential-file reads,
+or arbitrary subprocess side effects. The canonical preflight is safe because
+it has zero `RUNNABLE` cards and launched zero adapters. A future `--run` is
+permitted only after separate adapter review proves research-only behavior with
+no network, private, live, broker, order, or risk side effects; Station v3
+isolation or an equivalent guard should be used when stronger enforcement is
+required.
+
+For a compliant reviewed research adapter no external rollback is expected. Do
+not overwrite, remove, or reuse the existing receipt tree: retain it as
+evidence and simply do not launch another Conveyor invocation. A corrected
+manifest or adapter needs a new scoped commit and a new path that does not
+exist. If an adapter causes side effects despite review, treat it as an
+incident: reconcile the external systems first, because receipts alone cannot
+roll back those effects.
+
+The first adapter-conversion queue is deliberately narrow:
+
+1. shared deterministic controls and data-parity contract for XSEC;
+2. Bull Continuation detector and execution adapter on frozen inputs;
+3. independent causal XAU data/cost parity, then its adapter.
+
+Each conversion must add its own frozen contract, adapter bytes in
+`contract_refs`, focused tests, manual receipt, and review before its manifest
+card changes to `RUNNABLE`.
