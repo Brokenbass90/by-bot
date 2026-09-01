@@ -84,8 +84,11 @@ Each hypothesis contains only:
 - `reopen_when` with a falsifiable condition;
 - `contract_refs`: explicit project-relative files that are hashed before a
   run; globs and paths outside the repository are forbidden;
-- `data_refs`: explicit required files/directories and an optional minimum
-  count;
+- `data_refs`: explicit required files/directories, each with a mandatory
+  non-negative `min_count` and SHA-256 fingerprint. An empty list is allowed
+  only for a non-executable card whose current state is a truthful `BLOCKED_*`
+  readiness state or `DISABLED`; every `RUNNABLE` card needs at least one
+  frozen data reference;
 - exact `preregistration`: hypothesis, universe, signal, entry, exit, costs,
   control, stress, concentration, death criteria, and acceptance gate;
 - for `RUNNABLE` only, four ordered phase adapters: `prereg`, `replay`,
@@ -94,12 +97,17 @@ Each hypothesis contains only:
 An adapter is an argv array, never a shell string. Its executable is the
 current repository Python, and its script must resolve beneath an allowed
 script root. The runner adds only declared placeholders for run directory,
-hypothesis ID, phase, and output receipt. Unknown placeholders fail closed.
+  hypothesis ID, phase, and output receipt. A placeholder must occupy its
+  complete argv element; embedded, unmatched, or unknown braces fail closed.
 
 The initial queue may honestly contain no `RUNNABLE` card. That is still a
 useful terminal readiness run: it proves which exact dependency blocks each
 family. A card becomes runnable only in a scoped commit that adds its adapter,
-tests, and frozen contract.
+tests, and frozen contract, and only after the adapter executes through
+Station v3 isolation or an independently reviewed equivalent that prevents
+process/session spawn. The V1 timeout is process-group bounded for cooperative
+reviewed adapters; it is not adversarial process-tree containment. Synthetic
+adapters remain test-only and do not qualify a production card for RUNNABLE.
 
 ## 5. Phase receipt protocol
 
@@ -159,7 +167,9 @@ reclaims a live lock. Before every phase it verifies:
 - the sanitized environment contains no variable whose name includes
   `KEY`, `TOKEN`, `SECRET`, `PASSWORD`, `CREDENTIAL`, or `PRIVATE`.
 
-V1 has `--dry-run`, `--preflight`, and `--run`. Dry-run never launches an
+V1 has `--dry-run`, `--preflight`, and `--run`. The CLI is bound to the
+canonical repository checkout and refuses invocation from another working
+directory. Dry-run never launches an
 adapter. Preflight writes terminal readiness receipts but never launches an
 adapter. Run launches only `RUNNABLE` cards and still emits receipts for all
 blocked cards.
@@ -198,12 +208,14 @@ V1 is complete when:
    receipts;
 3. dry-run and preflight launch zero subprocesses;
 4. a synthetic four-phase adapter can reach `PASS_DIAGNOSTIC` only with four
-   valid self-hashed receipts;
+   valid self-hashed receipts (the synthetic adapter is test-only);
 5. invalid hash, missing receipt, nonzero exit, timeout, secret-like env, disk
    guard, or changed manifest produces a non-promotional failure state;
 6. repeated manifests produce stable preregistration hashes and deterministic
    order;
 7. the initial manual preflight emits ten terminal hypothesis receipts and an
-   independently verifiable aggregate receipt;
-8. all focused tests, `py_compile`, `git diff --check`, secret scan, scoped
+   independently verifiable aggregate receipt, with zero `RUNNABLE` cards;
+8. every initial card states the Station v3/equivalent isolation gate and the
+   process-group timeout limitation before it can become `RUNNABLE`;
+9. all focused tests, `py_compile`, `git diff --check`, secret scan, scoped
    commit, and push pass.

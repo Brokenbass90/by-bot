@@ -163,14 +163,16 @@ invocation requires a **new path that does not already exist**; any existing
 path, including an empty one, is refused rather than resumed.
 
 The executable queue is
-`configs/research/research_conveyor_v1.json`.  Its initial `manifest_sha256`
+`configs/research/research_conveyor_v1.json`.  Its current `manifest_sha256`
 (SHA-256 of the canonical JSON payload, not a raw manifest-file hash) is
-`3acee610628448efda834b17e847ab7291013c142154dc9e8929597fa49e26cb`.
+`ca007dfba56d01aaf559a46c7086614c46f1a56266f6c4653b312232016616b0`.
 It contains ten strategy families, all initially blocked and therefore no
 runnable adapters.  The canonical manual preflight is
-`runtime/research_conveyor/manual_20260901_v3/terminal_receipt.json`; its
+`runtime/research_conveyor/manual_20260901_v5/terminal_receipt.json`; its
 embedded self-hash is
-`b4523610e1f9938bd7aa1f5c954ae02f05225cf54870b5d77a2cc8e5c5ed5c22`.
+`561e54eef1610cfcb4529b476365835e56502e180fb1d0f273d5dcc6bb8a6630`.
+The earlier v1, v2, v3, and v4 preflights are superseded evidence and must not
+be reused as the current manifest receipt.
 It records ten terminal receipts: three `BLOCKED_DATA_OR_PARITY`, seven
 `BLOCKED_ADAPTER`, and zero phase receipts, phase logs, or adapter launches.
 
@@ -209,14 +211,17 @@ installed by this change; a scheduler can only be proposed after a manual run
 and an independent audit.
 
 This authority is a policy and receipt contract, **not** an OS sandbox. The
-runner uses `shell=False`, a stripped environment, and hash-bound reviewed
-script paths, but it does not technically block sockets, credential-file reads,
-or arbitrary subprocess side effects. The canonical preflight is safe because
-it has zero `RUNNABLE` cards and launched zero adapters. A future `--run` is
-permitted only after separate adapter review proves research-only behavior with
-no network, private, live, broker, order, or risk side effects; Station v3
-isolation or an equivalent guard should be used when stronger enforcement is
-required.
+runner uses `shell=False`, a stripped environment, hash-bound reviewed script
+paths, and a process-group-bounded timeout for cooperative reviewed adapters.
+That timeout is not adversarial process-tree containment and does not claim to
+stop a hostile child that escapes the reviewed execution assumptions. The
+canonical preflight is safe because it has zero `RUNNABLE` cards and launched
+zero adapters. A future `--run` is permitted only after separate adapter review
+proves research-only behavior with no network, private, live, broker, order, or
+risk side effects, and the adapter executes through Station v3 isolation or an
+independently reviewed equivalent that prevents process/session spawn.
+Synthetic adapters remain test-only and cannot make a production card
+`RUNNABLE`.
 
 For a compliant reviewed research adapter no external rollback is expected. Do
 not overwrite, remove, or reuse the existing receipt tree: retain it as

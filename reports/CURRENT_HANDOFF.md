@@ -14,14 +14,16 @@ authority:
 `research_only_no_live_risk_order_promotion_or_private_api_authority`
 
 Executable manifest:
-`configs/research/research_conveyor_v1.json`, `manifest_sha256` (SHA-256 of
+`configs/research/research_conveyor_v1.json`, current `manifest_sha256` (SHA-256 of
 the canonical JSON payload, not raw file bytes)
-`3acee610628448efda834b17e847ab7291013c142154dc9e8929597fa49e26cb`.
+`ca007dfba56d01aaf559a46c7086614c46f1a56266f6c4653b312232016616b0`.
 
 Канонический preflight receipt:
-`runtime/research_conveyor/manual_20260901_v3/terminal_receipt.json`, embedded
+`runtime/research_conveyor/manual_20260901_v5/terminal_receipt.json`, embedded
 self-hash
-`b4523610e1f9938bd7aa1f5c954ae02f05225cf54870b5d77a2cc8e5c5ed5c22`.
+`561e54eef1610cfcb4529b476365835e56502e180fb1d0f273d5dcc6bb8a6630`.
+Preflights v1–v4 are superseded evidence; do not treat them as the current
+manifest receipt.
 
 Он зафиксировал 10 terminal receipts: 3 `BLOCKED_DATA_OR_PARITY`, 7
 `BLOCKED_ADAPTER`, ноль phase receipts, logs и adapter launches. Это корректный
@@ -53,16 +55,19 @@ authority этих двух систем не взаимозаменяемы. Д
 перезаписывать receipts: сохранить evidence и не запускать новую итерацию.
 
 Граница безопасности важна: Conveyor authority — policy + receipt contract, не
-OS sandbox. Runner использует `shell=False`, очищенное окружение и
-hash-bound reviewed script paths, но технически не блокирует sockets,
-credential-file reads или произвольные subprocess side effects. Текущий
+OS sandbox. Runner использует `shell=False`, очищенное окружение, hash-bound
+reviewed script paths и process-group-bounded timeout для cooperative reviewed
+adapters. Это не adversarial process-tree containment и не обещает остановить
+враждебный дочерний процесс вне reviewed execution assumptions. Текущий
 preflight безопасен фактически: `RUNNABLE=0`, adapters launched=0. Будущий
 `--run` разрешать только после отдельного review, доказывающего отсутствие
-network/private/live/broker/order/risk side effects у adapter; для более
-сильного enforcement использовать Station v3 isolation или эквивалент. У
-compliant reviewed adapter external rollback не ожидается. Если side effect
-всё-таки возникнет, это incident: сначала reconciliation внешних систем,
-потому что receipts сами ничего не откатывают.
+network/private/live/broker/order/risk side effects у adapter, и после запуска
+adapter через Station v3 isolation либо независимо reviewed equivalent,
+предотвращающий process/session spawn. Synthetic adapters только для тестов и
+не могут сделать production card `RUNNABLE`. У compliant reviewed adapter
+external rollback не ожидается. Если side effect всё-таки возникнет, это
+incident: сначала reconciliation внешних систем, потому что receipts сами
+ничего не откатывают.
 
 ## Ближайшая техническая очередь
 

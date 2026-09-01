@@ -26,10 +26,11 @@
     "state": "INITIAL_QUEUE_PREFLIGHT_COMPLETE",
     "authority": "research_only_no_live_risk_order_promotion_or_private_api_authority",
     "manifest_path": "configs/research/research_conveyor_v1.json",
-    "manifest_sha256": "3acee610628448efda834b17e847ab7291013c142154dc9e8929597fa49e26cb",
+    "manifest_sha256": "ca007dfba56d01aaf559a46c7086614c46f1a56266f6c4653b312232016616b0",
     "manifest_sha256_kind": "SHA-256 of the canonical manifest JSON payload, not a raw file-byte hash",
-    "canonical_preflight_receipt": "runtime/research_conveyor/manual_20260901_v3/terminal_receipt.json",
-    "canonical_preflight_receipt_embedded_sha256": "b4523610e1f9938bd7aa1f5c954ae02f05225cf54870b5d77a2cc8e5c5ed5c22",
+    "canonical_preflight_receipt": "runtime/research_conveyor/manual_20260901_v5/terminal_receipt.json",
+    "canonical_preflight_receipt_embedded_sha256": "561e54eef1610cfcb4529b476365835e56502e180fb1d0f273d5dcc6bb8a6630",
+    "superseded_preflights": ["manual_20260901_v1", "manual_20260901_v2", "manual_20260901_v3", "manual_20260901_v4"],
     "preflight_mode": "preflight",
     "terminal_receipts": 10,
     "terminal_counts": {
@@ -48,8 +49,9 @@
       "task2_focused_tests_passed": 55
     },
     "station_v3_relation": "SEPARATE_CONTRACTS: Station v3 may resume an immutable run_id; Conveyor requires a run_dir path that does not already exist and has different authority.",
-    "security_boundary": "POLICY_AND_RECEIPT_CONTRACT_NOT_OS_SANDBOX: runner uses shell=False, sanitized environment, and hash-bound reviewed script paths, but does not technically block sockets, credential-file reads, or arbitrary subprocess side effects.",
-    "future_run_requirement": "Before any RUNNABLE adapter is launched, separately review that it has no network, private, live, broker, order, or risk side effects; use Station v3 isolation or equivalent where stronger enforcement is required.",
+    "security_boundary": "POLICY_AND_RECEIPT_CONTRACT_NOT_OS_SANDBOX: runner uses shell=False, sanitized environment, hash-bound reviewed script paths, and a process-group-bounded timeout for cooperative reviewed adapters; this is not adversarial process-tree containment and does not technically block sockets, credential-file reads, or arbitrary subprocess side effects.",
+    "future_run_requirement": "Before any RUNNABLE adapter is launched, separately review that it has no network, private, live, broker, order, or risk side effects, and require Station v3 isolation or an independently reviewed equivalent that prevents process/session spawn. V1 timeout remains process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
+    "initial_queue_isolation_gate": "All 10 initial cards are non-RUNNABLE. No card may become RUNNABLE until its adapter has the isolation gate above; synthetic adapters remain test-only.",
     "verdict_semantics": "BLOCKED_* is a valid readiness terminal state. PASS_DIAGNOSTIC is not promotion, shadow, paper, money, live, broker, order, private API, or risk authority.",
     "next_adapter_queue": [
       "xsec_shared_deterministic_controls_and_data_parity",

@@ -17,6 +17,12 @@
 - No shell command strings, network calls, `auto_apply_research_winner.py`, or consumed ATT1/SBR1 OOS reuse.
 - Unknown fields, missing hashes, path escape, stale/changed inputs, and missing receipts fail closed.
 - Initial blocked candidates must still publish terminal receipts and must never be called tested.
+- `min_count` is mandatory on every declared data reference (empty `data_refs`
+  is allowed only for a non-executable `BLOCKED_*` or `DISABLED` card).
+- V1 timeout is process-group bounded for cooperative reviewed adapters, not
+  adversarial process-tree containment. No card may become `RUNNABLE` until its
+  adapter executes through Station v3 isolation or an independently reviewed
+  equivalent that prevents process/session spawn.
 
 ---
 
@@ -90,9 +96,10 @@
 
 - [ ] **Step 3: Implement the minimal runner**
 
-  Use `subprocess.run(argv, shell=False, cwd=root, timeout=remaining_budget)`,
-  one phase at a time, a stripped environment, bounded log capture, and one
-  exclusive lock. Validate the phase receipt after every process and stop the
+  Use one phase at a time, a stripped environment, bounded log capture, and
+  one exclusive lock. Termination is process-group bounded for cooperative
+  reviewed adapters; it is not an adversarial process-tree containment
+  mechanism. Validate the phase receipt after every process and stop the
   hypothesis at the first non-PASS research state or technical failure.
 
 - [ ] **Step 4: Run focused tests**
@@ -136,12 +143,17 @@
   Bind each card to its current plan, prereg, strategy, or autoresearch config.
   Mark legacy-only families `BLOCKED_ADAPTER`; mark missing causal data
   `BLOCKED_DATA_OR_PARITY`. Give every card exact death criteria and a
-  falsifiable `reopen_when`.
+  falsifiable `reopen_when`, including the Station v3/equivalent isolation
+  gate and the process-group timeout limitation. Keep the initial queue at
+  zero `RUNNABLE` cards.
 
 - [ ] **Step 4: Run the initial preflight**
 
   Run:
-  `python3 scripts/run_research_conveyor.py --config configs/research/research_conveyor_v1.json --run-dir runtime/research_conveyor/manual_20260831_v1 --preflight`
+  `python3 scripts/run_research_conveyor.py --config configs/research/research_conveyor_v1.json --run-dir runtime/research_conveyor/manual_20260901_v5 --preflight`
+
+  This v5 receipt is the current canonical preflight; earlier v1-v4 receipts
+  are superseded evidence and must not be reused.
 
   Expected: ten hypothesis receipts, zero adapters launched, aggregate
   authority research-only, terminal result with explicit blocker counts.

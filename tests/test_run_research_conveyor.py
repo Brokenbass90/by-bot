@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -279,7 +280,7 @@ def test_phase_output_flood_is_bounded_and_marked(tmp_path: Path):
     assert "truncated" in log.read_text(encoding="utf-8")
 
 
-def test_timeout_kills_the_entire_adapter_process_group(tmp_path: Path):
+def test_timeout_bounds_a_cooperative_adapter_process_group(tmp_path: Path):
     config = _repository(tmp_path, [_card("h1", 1, behavior="timeout_child")], runtime=1)
 
     result = _run(tmp_path, config)
@@ -289,7 +290,7 @@ def test_timeout_kills_the_entire_adapter_process_group(tmp_path: Path):
     assert not (tmp_path / "run" / "orphaned-child.txt").exists()
 
 
-def test_timeout_does_not_wait_for_term_ignoring_descendant_pipe(tmp_path: Path):
+def test_timeout_does_not_wait_for_a_descendant_that_keeps_pipes_open(tmp_path: Path):
     config = _repository(tmp_path, [_card("h1", 1, behavior="timeout_term_ignoring_child")], runtime=1)
 
     started = time.monotonic()
@@ -403,6 +404,9 @@ def test_repository_manifest_is_the_ten_card_blocked_readiness_queue():
     assert {card["id"]: card["state"] for card in manifest.hypotheses} == expected_states
     assert all(card["adapters"] is None and card["data_refs"] == [] for card in manifest.hypotheses)
     assert all(card["reopen_when"] for card in manifest.hypotheses)
+    assert not any(card["state"] == "RUNNABLE" for card in manifest.hypotheses)
+    assert all("Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn" in card["reopen_when"] for card in manifest.hypotheses)
+    assert all("process-group bounded for cooperative reviewed adapters, not adversarial tree containment" in card["reopen_when"] for card in manifest.hypotheses)
     assert all(all(card["preregistration"].values()) for card in manifest.hypotheses)
     assert all((root / ref).is_file() for card in manifest.hypotheses for ref in card["contract_refs"])
 
@@ -491,3 +495,57 @@ def test_repository_manifest_cli_help_imports_from_the_repository_root():
 
     assert completed.returncode == 0, completed.stderr
     assert "--preflight" in completed.stdout
+
+
+def test_repository_manifest_cli_refuses_a_noncanonical_working_directory(tmp_path: Path):
+    """The executable queue must never be invoked with an arbitrary project root."""
+    root = Path(__file__).resolve().parents[1]
+    config = root / "configs" / "research" / "research_conveyor_v1.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(root / "scripts" / "run_research_conveyor.py"),
+            "--config",
+            str(config),
+            "--run-dir",
+            str(tmp_path / "refused-run"),
+            "--preflight",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+
+    assert completed.returncode != 0
+    assert "canonical repository root" in completed.stderr
+
+
+def test_repository_manifest_cli_runs_valid_preflight_from_canonical_root(tmp_path: Path):
+    """A canonical invocation remains a usable, zero-adapter smoke path."""
+    root = Path(__file__).resolve().parents[1]
+    run_dir = root / "runtime" / "research_conveyor" / f"_test_cli_{os.getpid()}_{time.monotonic_ns()}"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "scripts/run_research_conveyor.py",
+            "--config",
+            "configs/research/research_conveyor_v1.json",
+            "--run-dir",
+            str(run_dir),
+            "--preflight",
+        ],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+
+    try:
+        assert completed.returncode == 0, completed.stderr
+        result = json.loads(completed.stdout)
+        assert result["counts"] == {"BLOCKED_ADAPTER": 7, "BLOCKED_DATA_OR_PARITY": 3}
+    finally:
+        shutil.rmtree(run_dir, ignore_errors=True)

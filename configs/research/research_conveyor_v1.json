@@ -17,7 +17,7 @@
       "family": "cross_sectional_crypto",
       "priority": 10,
       "state": "BLOCKED_DATA_OR_PARITY",
-      "reopen_when": "Reopen only when causal histories for every delisted and active Bybit USDT linear contract are materialized, their point-in-time membership is independently checked, and a four-phase conveyor adapter hashes that frozen universe; current-137 substitution is prohibited.",
+      "reopen_when": "Reopen only when causal histories for every delisted and active Bybit USDT linear contract are materialized, their point-in-time membership is independently checked, and a four-phase conveyor adapter hashes that frozen universe; current-137 substitution is prohibited. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "docs/superpowers/plans/2026-08-29-xsec-pit-v5-implementation-plan.md",
         "research_lab/prereg/PREREG_XSEC_CAUSAL_V1_2026_08_12.md",
@@ -47,7 +47,7 @@
       "family": "event_continuation",
       "priority": 20,
       "state": "BLOCKED_ADAPTER",
-      "reopen_when": "Reopen only when the detector, frozen next-open execution model, level snapshots, controls, and strict four-phase receipt adapter are bound in one scoped commit.",
+      "reopen_when": "Reopen only when the detector, frozen next-open execution model, level snapshots, controls, and strict four-phase receipt adapter are bound in one scoped commit. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "docs/superpowers/plans/2026-08-29-crypto-bull-continuation-v1-implementation-plan.md",
         "strategies/event_expansion_retest_long_mtf_v1.py",
@@ -78,7 +78,7 @@
       "family": "intraday_replication",
       "priority": 30,
       "state": "BLOCKED_DATA_OR_PARITY",
-      "reopen_when": "Reopen only when an independent causal XAUUSD source, source-to-source parity reconciliation, frozen cost assumptions, and a four-phase adapter are available; the existing baseline is a different contract and is not an unchanged replication.",
+      "reopen_when": "Reopen only when an independent causal XAUUSD source, source-to-source parity reconciliation, frozen cost assumptions, and a four-phase adapter are available; the existing baseline is a different contract and is not an unchanged replication. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "docs/superpowers/plans/2026-08-29-xauusd-unchanged-replication-implementation-plan.md",
         "docs/superpowers/specs/2026-08-24-xau-mt5-demo-tracker-design.md",
@@ -108,7 +108,7 @@
       "family": "market_neutral_funding_carry",
       "priority": 40,
       "state": "BLOCKED_ADAPTER",
-      "reopen_when": "Reopen only when public frozen funding, basis, fee, and borrow inputs are converted to the four-phase receipt protocol without invoking account, exchange, hedge execution, or promotion code.",
+      "reopen_when": "Reopen only when public frozen funding, basis, fee, and borrow inputs are converted to the four-phase receipt protocol without invoking account, exchange, hedge execution, or promotion code. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "strategies/funding_hold_v1.py",
         "backtest/funding_carry_gate.py",
@@ -137,7 +137,7 @@
       "family": "vwap_mean_reversion",
       "priority": 50,
       "state": "BLOCKED_ADAPTER",
-      "reopen_when": "Reopen only when the cited crypto VWAP mean-reversion rule, frozen perpetual data, controls, and stress cases are wrapped by a strict four-phase adapter.",
+      "reopen_when": "Reopen only when the cited crypto VWAP mean-reversion rule, frozen perpetual data, controls, and stress cases are wrapped by a strict four-phase adapter. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "strategies/alt_vwap_mean_reversion_v1.py",
         "configs/autoresearch/vwap_mean_reversion_v1_annual_repair_v2.json",
@@ -166,7 +166,7 @@
       "family": "breakout_retest",
       "priority": 60,
       "state": "BLOCKED_ADAPTER",
-      "reopen_when": "Reopen only when the breakout detector, strict gate, frozen focus configuration, randomized control, and stress replay emit the strict four-phase receipt protocol.",
+      "reopen_when": "Reopen only when the breakout detector, strict gate, frozen focus configuration, randomized control, and stress replay emit the strict four-phase receipt protocol. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "strategies/inplay_breakout.py",
         "scripts/run_inplay_breakout_retest_strict_gate_20260706.py",
@@ -196,7 +196,7 @@
       "family": "cross_venue_spot_perp_basis",
       "priority": 70,
       "state": "BLOCKED_DATA_OR_PARITY",
-      "reopen_when": "Reopen only when synchronized public venue histories, timestamp-parity checks, transfer and execution-cost assumptions, and a strict paper-only four-phase adapter are frozen; private balance and account inputs are prohibited until a public-data adapter exists, and no order path may be used.",
+      "reopen_when": "Reopen only when synchronized public venue histories, timestamp-parity checks, transfer and execution-cost assumptions, and a strict paper-only four-phase adapter are frozen; private balance and account inputs are prohibited until a public-data adapter exists, and no order path may be used. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "ARBITRAGE_AND_LEVERAGE_PLAN_20260504.md",
         "scripts/cross_exchange_arb_dry_run.py"
@@ -224,7 +224,7 @@
       "family": "ema_trend_pullback",
       "priority": 80,
       "state": "BLOCKED_ADAPTER",
-      "reopen_when": "Reopen only when the cited EMA Trend Pullback V2 rule, frozen FX inputs, controls, and stress model are packaged behind a strict four-phase adapter.",
+      "reopen_when": "Reopen only when the cited EMA Trend Pullback V2 rule, frozen FX inputs, controls, and stress model are packaged behind a strict four-phase adapter. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "forex/strategies/ema_trend_pullback_v2.py"
       ],
@@ -251,7 +251,7 @@
       "family": "london_open_breakout",
       "priority": 90,
       "state": "BLOCKED_ADAPTER",
-      "reopen_when": "Reopen only when the London session definition, London Open Breakout V2 rule, frozen FX data coverage, controls, and stress replay are frozen in a strict four-phase adapter.",
+      "reopen_when": "Reopen only when the London session definition, London Open Breakout V2 rule, frozen FX data coverage, controls, and stress replay are frozen in a strict four-phase adapter. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "forex/strategies/london_open_breakout_v2.py"
       ],
@@ -278,7 +278,7 @@
       "family": "range_rejection",
       "priority": 100,
       "state": "BLOCKED_ADAPTER",
-      "reopen_when": "Reopen only when the range-rejection rule, annual repair configuration, controls, and stress cases are converted to a strict four-phase receipt adapter.",
+      "reopen_when": "Reopen only when the range-rejection rule, annual repair configuration, controls, and stress cases are converted to a strict four-phase receipt adapter. Before RUNNABLE, the adapter must execute through Station v3 isolation or an equivalent reviewed isolation implementation that prevents process/session spawn; V1 timeout is process-group bounded for cooperative reviewed adapters, not adversarial tree containment.",
       "contract_refs": [
         "strategies/alt_range_scalp_v1.py",
         "configs/autoresearch/range_scalp_v1_annual_repair_v3.json",

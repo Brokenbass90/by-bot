@@ -159,6 +159,26 @@ def test_blocked_card_may_omit_adapters_but_runnable_may_not(tmp_path: Path):
         load_manifest(tmp_path, _write_manifest(tmp_path, _manifest([runnable])))
 
 
+def test_runnable_card_must_declare_data_refs(tmp_path: Path):
+    """A runnable phase cannot claim evidence without an input data ref."""
+    value = _manifest()
+    path = _write_manifest(tmp_path, value)
+    value["hypotheses"][0]["data_refs"] = []
+    path.write_text(json.dumps(value))
+
+    with pytest.raises(ContractError, match="data_refs"):
+        load_manifest(tmp_path, path)
+
+
+def test_blocked_card_may_have_empty_data_refs(tmp_path: Path):
+    value = _manifest([_hypothesis("BLOCKED_DATA_OR_PARITY")])
+    path = _write_manifest(tmp_path, value)
+    value["hypotheses"][0]["data_refs"] = []
+    path.write_text(json.dumps(value))
+
+    load_manifest(tmp_path, path)
+
+
 def test_self_hash_is_atomic_and_tampering_is_rejected(tmp_path: Path):
     path = tmp_path / "receipt.json"
     written = write_self_hashed_json(path, {"schema_id": "x", "value": 3})
@@ -185,6 +205,8 @@ def test_nested_unknown_fields_are_rejected(tmp_path: Path):
     ["{python}", "research_lab/missing.py"],
     ["{python}", "research_lab/../scripts/a.py"],
     ["{python}", str(Path.cwd() / "research_lab/a.py")],
+    ["{python}", "research_lab/a.py", "--out={typo}"],
+    ["{python}", "research_lab/a.py", "unmatched}"],
 ])
 def test_adapter_shape_and_paths_fail_closed(tmp_path: Path, argv):
     value = _manifest()

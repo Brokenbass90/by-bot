@@ -40,6 +40,7 @@ SECRET_WORDS = ("KEY", "TOKEN", "SECRET", "PASSWORD", "CREDENTIAL", "PRIVATE")
 RESEARCH_STATES = {"PASS", "REJECT", "INCONCLUSIVE", "BLOCKED_DATA_OR_PARITY", "FAILED_TECHNICAL"}
 HEX64 = set("0123456789abcdef")
 HYPOTHESIS_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}")
+ARG_PLACEHOLDERS = {"{run_dir}", "{hypothesis_id}", "{phase}", "{receipt}"}
 
 
 def _canonical(value: Any) -> bytes:
@@ -177,6 +178,13 @@ def _release_lock(lock: Path) -> None:
 
 
 def _expand_argv(template: list[str], *, run_dir: Path, hypothesis_id: str, phase: str, receipt: Path) -> list[str]:
+    for index, item in enumerate(template):
+        if not isinstance(item, str):
+            raise ContractError("adapter argv must be strings")
+        if "{" in item or "}" in item:
+            allowed = item in ARG_PLACEHOLDERS or (index == 0 and item == "{python}")
+            if not allowed:
+                raise ContractError("unknown placeholder/argument")
     values = {
         "{python}": sys.executable,
         "{run_dir}": str(run_dir),
@@ -184,10 +192,7 @@ def _expand_argv(template: list[str], *, run_dir: Path, hypothesis_id: str, phas
         "{phase}": phase,
         "{receipt}": str(receipt),
     }
-    try:
-        return [values.get(item, item) for item in template]
-    except TypeError as exc:
-        raise ContractError("adapter argv must be strings") from exc
+    return [values.get(item, item) for item in template]
 
 
 def _safe_artifact_path(root: Path, boundary: Path, value: Any) -> Path | None:
@@ -418,6 +423,8 @@ def main() -> int:
     modes.add_argument("--preflight", action="store_true")
     modes.add_argument("--run", action="store_true")
     args = parser.parse_args()
+    if Path.cwd().resolve() != ROOT:
+        parser.error(f"canonical repository root required: {ROOT}")
     mode = "dry-run" if args.dry_run else "preflight" if args.preflight else "run"
     result = run_conveyor(Path.cwd(), args.config, args.run_dir, mode)
     print(json.dumps(result, sort_keys=True))

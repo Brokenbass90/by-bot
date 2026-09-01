@@ -114,6 +114,7 @@ _DATA = {"path", "min_count", "sha256"}
 _PHASES = ("prereg", "replay", "random_control", "stress")
 _STATES = {"RUNNABLE", "BLOCKED_ADAPTER", "BLOCKED_DATA_OR_PARITY", "DISABLED"}
 _HYPOTHESIS_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}")
+_ARG_PLACEHOLDERS = {"{run_dir}", "{hypothesis_id}", "{phase}", "{receipt}"}
 
 
 def _data_fingerprint(path: Path) -> tuple[str, int]:
@@ -167,6 +168,8 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
         data_refs = h.get("data_refs")
         if not isinstance(data_refs, list):
             raise ContractError(f"{hid} data_refs invalid")
+        if h["state"] == "RUNNABLE" and not data_refs:
+            raise ContractError(f"{hid} RUNNABLE card requires data_refs")
         for d in data_refs:
             d = _object(d, _DATA, f"{hid}.data_ref")
             if set(d) != {"path", "min_count", "sha256"}:
@@ -205,9 +208,13 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
                     raise ContractError(f"{hid}.{phase}.script not in allowed existing roots")
                 if argv[1] not in refs:
                     raise ContractError(f"{hid}.{phase} adapter script must be a contract ref")
-                for arg in argv[2:]:
-                    if not isinstance(arg, str) or (arg.startswith("{") and arg not in {"{run_dir}", "{hypothesis_id}", "{phase}", "{receipt}"}):
-                        raise ContractError(f"{hid}.{phase} unknown placeholder/argument")
+                for index, arg in enumerate(argv):
+                    if not isinstance(arg, str):
+                        raise ContractError(f"{hid}.{phase} adapter argv must contain strings")
+                    if "{" in arg or "}" in arg:
+                        allowed = arg in _ARG_PLACEHOLDERS or (index == 0 and arg == "{python}")
+                        if not allowed:
+                            raise ContractError(f"{hid}.{phase} unknown placeholder/argument")
     return ConveyorManifest(root, path, _freeze(copy.deepcopy(raw)), _sha(raw))
 
 
