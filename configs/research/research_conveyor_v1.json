@@ -1,0 +1,304 @@
+{
+  "schema_id": "research_conveyor_manifest_v1",
+  "authority": "research_only_no_live_risk_order_promotion_or_private_api_authority",
+  "enabled": true,
+  "max_jobs_per_run": 1,
+  "max_runtime_seconds": 1800,
+  "min_free_bytes": 536870912,
+  "allowed_script_roots": [
+    "research_lab",
+    "scripts"
+  ],
+  "hypotheses": [
+    {
+      "id": "xsec_pit_v5",
+      "title": "XSEC PIT V5 causal cross-sectional replication",
+      "market": "Bybit USDT linear crypto perpetuals",
+      "family": "cross_sectional_crypto",
+      "priority": 10,
+      "state": "BLOCKED_DATA_OR_PARITY",
+      "reopen_when": "Reopen only when causal histories for every delisted and active Bybit USDT linear contract are materialized, their point-in-time membership is independently checked, and a four-phase conveyor adapter hashes that frozen universe; current-137 substitution is prohibited.",
+      "contract_refs": [
+        "docs/superpowers/plans/2026-08-29-xsec-pit-v5-implementation-plan.md",
+        "research_lab/prereg/PREREG_XSEC_CAUSAL_V1_2026_08_12.md",
+        "research_lab/xsec_causal_contract.py",
+        "research_lab/xsec_causal_replay.py"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "A point-in-time cross-sectional crypto signal may retain diagnostic value only when evaluated on the complete causal eligible universe.",
+        "universe": "The active and delisted Bybit USDT linear perpetual contracts with membership known at each UTC daily decision timestamp.",
+        "signal": "The frozen XSEC PIT V5 ranking defined by the cited causal contract and preregistration.",
+        "entry": "Enter only at the next UTC daily open after a fully known ranking event.",
+        "exit": "Exit at the next frozen UTC daily rebalance or risk rule in the causal contract without post-event revision.",
+        "costs": "Apply turnover, exact funding, and preregistered base and stress basis-point costs to every eligible transaction.",
+        "control": "Compare against a same-date randomized ranking and a passive universe-matched crypto baseline.",
+        "stress": "Recompute under delayed fills, higher basis-point costs, funding stress, and membership-history omissions flagged as failures rather than imputed.",
+        "concentration": "Report symbol, month, side, and survivor concentration before any diagnostic conclusion.",
+        "death_criteria": "Reject the hypothesis if causal replay fails its preregistered control or stress gate, or if complete causal membership cannot be proven.",
+        "acceptance_gate": "Only four valid conveyor phase receipts on frozen causal data may produce PASS_DIAGNOSTIC; no result authorizes promotion."
+      },
+      "adapters": null
+    },
+    {
+      "id": "crypto_bull_continuation_v1",
+      "title": "Crypto Bull Continuation V1 event continuation",
+      "market": "crypto perpetual futures",
+      "family": "event_continuation",
+      "priority": 20,
+      "state": "BLOCKED_ADAPTER",
+      "reopen_when": "Reopen only when the detector, frozen next-open execution model, level snapshots, controls, and strict four-phase receipt adapter are bound in one scoped commit.",
+      "contract_refs": [
+        "docs/superpowers/plans/2026-08-29-crypto-bull-continuation-v1-implementation-plan.md",
+        "strategies/event_expansion_retest_long_mtf_v1.py",
+        "bot/event_long_execution_v1.py",
+        "bot/level_snapshot_v1.py",
+        "bot/sloped_level_snapshot_v1.py"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "A frozen multi-timeframe bull expansion and retest event may show continuation beyond conservative execution costs.",
+        "universe": "The explicitly frozen liquid crypto perpetual symbols and decision timestamps chosen before replay.",
+        "signal": "The cited expansion-retest detector with level snapshots available no later than the closed signal bar.",
+        "entry": "Enter only at the next M5 open prescribed by the frozen long execution contract.",
+        "exit": "Use the contract's immutable stop, re-anchored targets, and maximum holding rule.",
+        "costs": "Charge the cited execution contract's base and stressed fees, slippage, and exact funding debits.",
+        "control": "Compare against timestamp-matched randomized entries and a detector-disabled continuation baseline.",
+        "stress": "Apply delayed fills, adverse gaps, stop-first intrabar resolution, and stressed funding debits.",
+        "concentration": "Report symbol, regime, event-date, and overlapping-position concentration.",
+        "death_criteria": "Reject if the preregistered edge fails either random control or stress, or if event knowledge timing is not reproducible.",
+        "acceptance_gate": "A future adapter must emit four valid receipts from frozen detector and execution inputs; this card cannot authorize capital."
+      },
+      "adapters": null
+    },
+    {
+      "id": "xauusd_unchanged_replication_v1",
+      "title": "XAUUSD unchanged replication",
+      "market": "XAUUSD",
+      "family": "intraday_replication",
+      "priority": 30,
+      "state": "BLOCKED_DATA_OR_PARITY",
+      "reopen_when": "Reopen only when an independent causal XAUUSD source, source-to-source parity reconciliation, frozen cost assumptions, and a four-phase adapter are available; the existing baseline is a different contract and is not an unchanged replication.",
+      "contract_refs": [
+        "docs/superpowers/plans/2026-08-29-xauusd-unchanged-replication-implementation-plan.md",
+        "docs/superpowers/specs/2026-08-24-xau-mt5-demo-tracker-design.md",
+        "research_lab/prereg/PREREG_XAU_INTRADAY_FLAT_BASELINE_V2_20260813.json",
+        "bot/xau_mt5_zero_order_paper.py"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "The unchanged XAUUSD rule set may be reproducible only if an independent causal source and execution-cost parity are demonstrated.",
+        "universe": "The exact XAUUSD bars and sessions from the original rule contract, with no substituted symbol or vendor history.",
+        "signal": "The unchanged rule definition frozen before any independent-source replay.",
+        "entry": "Enter only at the original contract's timestamp and side using observed bid and ask geometry.",
+        "exit": "Exit by the original stop, target, and time rule without parameter replacement.",
+        "costs": "Use independently reconciled spread, slippage, commission, and point-value assumptions.",
+        "control": "Compare the unchanged rule with timestamp-matched randomized entries and a flat baseline.",
+        "stress": "Replay with wider spreads, delayed observations, and adverse gap handling.",
+        "concentration": "Report session, calendar-date, direction, and event clustering concentration.",
+        "death_criteria": "Reject if source parity, cost parity, or unchanged-rule replay cannot be established before evaluating performance.",
+        "acceptance_gate": "Only a strict four-phase receipt set on independently verified causal data may yield PASS_DIAGNOSTIC; no paper record promotes capital."
+      },
+      "adapters": null
+    },
+    {
+      "id": "funding_carry",
+      "title": "Market-neutral funding carry gate",
+      "market": "crypto spot and perpetual futures",
+      "family": "market_neutral_funding_carry",
+      "priority": 40,
+      "state": "BLOCKED_ADAPTER",
+      "reopen_when": "Reopen only when public frozen funding, basis, fee, and borrow inputs are converted to the four-phase receipt protocol without invoking account, exchange, hedge execution, or promotion code.",
+      "contract_refs": [
+        "strategies/funding_hold_v1.py",
+        "backtest/funding_carry_gate.py",
+        "reports/FUNDING_CARRY_GATE_180D_HEDGEABLE_latest.md"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "A market-neutral funding carry gate may remain positive after complete public costs and adverse basis treatment.",
+        "universe": "The frozen public venue, symbol, and funding-event history declared by the future adapter.",
+        "signal": "A preregistered funding and basis condition evaluated only from events known before entry.",
+        "entry": "Open a simulated matched hedge at the next executable public observation after the signal.",
+        "exit": "Close by the frozen holding, funding-event, basis-stop, or data-quality rule.",
+        "costs": "Debit both-leg entry and exit fees, borrow, spread, slippage, and adverse basis movement.",
+        "control": "Compare with date-matched randomized funding-event assignments and a no-carry hedge baseline.",
+        "stress": "Use higher fees, lost maker assumptions, adverse basis, and tail funding debits.",
+        "concentration": "Report venue, symbol, funding-window, and correlated-leg concentration.",
+        "death_criteria": "Reject if net carry is non-positive after all costs, tails fail the gate, or public input completeness is unproven.",
+        "acceptance_gate": "The cited 180-day hedgeable report is NO-GO at 1.8% annualized and supplies no promotion evidence; a future public-data adapter needs four valid non-promotional phase receipts before any diagnostic pass."
+      },
+      "adapters": null
+    },
+    {
+      "id": "simple_mean_reversion",
+      "title": "Crypto VWAP mean reversion diagnostic",
+      "market": "crypto perpetual futures",
+      "family": "vwap_mean_reversion",
+      "priority": 50,
+      "state": "BLOCKED_ADAPTER",
+      "reopen_when": "Reopen only when the cited crypto VWAP mean-reversion rule, frozen perpetual data, controls, and stress cases are wrapped by a strict four-phase adapter.",
+      "contract_refs": [
+        "strategies/alt_vwap_mean_reversion_v1.py",
+        "configs/autoresearch/vwap_mean_reversion_v1_annual_repair_v2.json",
+        "reports/INCOME_RESEARCH_vwap_mean_reversion_v1_annual_repair_v2_20260617_130032.json"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "A simple crypto VWAP mean-reversion signal may retain a diagnostic edge after realistic perpetual execution costs and controls.",
+        "universe": "The frozen liquid crypto perpetual symbols, bars, and sessions specified by the future adapter before replay.",
+        "signal": "The cited VWAP deviation rule with parameters frozen before evaluation.",
+        "entry": "Enter at the next executable bar after a closed qualifying signal.",
+        "exit": "Exit at the frozen target, stop, time limit, or signal-neutralization condition.",
+        "costs": "Charge conservative perpetual fees, spread, slippage, and exact funding assumptions on every simulated trade.",
+        "control": "Compare against timestamp-matched randomized entries and a no-signal crypto baseline.",
+        "stress": "Apply widened costs, delayed fills, funding stress, and adverse intrabar stop handling.",
+        "concentration": "Report symbol, session, regime, and consecutive-trade concentration.",
+        "death_criteria": "Reject if control-adjusted results fail the frozen acceptance gate or are concentrated in an unrepeatable slice.",
+        "acceptance_gate": "Only four valid phase receipts on frozen inputs may produce PASS_DIAGNOSTIC; legacy reports are not promotion evidence."
+      },
+      "adapters": null
+    },
+    {
+      "id": "breakout_retest",
+      "title": "Breakout retest diagnostic",
+      "market": "crypto perpetual futures",
+      "family": "breakout_retest",
+      "priority": 60,
+      "state": "BLOCKED_ADAPTER",
+      "reopen_when": "Reopen only when the breakout detector, strict gate, frozen focus configuration, randomized control, and stress replay emit the strict four-phase receipt protocol.",
+      "contract_refs": [
+        "strategies/inplay_breakout.py",
+        "scripts/run_inplay_breakout_retest_strict_gate_20260706.py",
+        "configs/autoresearch/inplay_breakout_retest_focus_v1.json",
+        "reports/INCOME_RESEARCH_inplay_breakout_retest_htf_runner_v2_20260617_130032.json"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "A breakout followed by a qualified retest may have a diagnostic continuation edge after conservative crypto execution costs.",
+        "universe": "The frozen liquid perpetual symbols and complete decision bars declared before replay.",
+        "signal": "The cited in-play breakout and retest conditions using only closed bars and frozen thresholds.",
+        "entry": "Enter at the next permitted executable bar after a confirmed retest event.",
+        "exit": "Exit by the frozen stop, target, invalidation, or maximum-hold rule.",
+        "costs": "Debit conservative taker or maker fees, slippage, spread, and funding at exact event times.",
+        "control": "Compare with timestamp-matched randomized retests and breakout-disabled entries.",
+        "stress": "Apply delayed fills, adverse gaps, wider costs, and stop-first intrabar ambiguity.",
+        "concentration": "Report symbol, breakout date, volatility regime, and overlapping-event concentration.",
+        "death_criteria": "Reject if controls or stress remove the diagnostic edge, or if causal signal timing fails validation.",
+        "acceptance_gate": "A scoped adapter must provide four valid receipts; no historical report alone advances the family."
+      },
+      "adapters": null
+    },
+    {
+      "id": "cross_exchange_arbitrage_paper",
+      "title": "Cross-venue spot-perpetual basis paper diagnostic",
+      "market": "crypto cross-venue spot and perpetual futures",
+      "family": "cross_venue_spot_perp_basis",
+      "priority": 70,
+      "state": "BLOCKED_DATA_OR_PARITY",
+      "reopen_when": "Reopen only when synchronized public venue histories, timestamp-parity checks, transfer and execution-cost assumptions, and a strict paper-only four-phase adapter are frozen; private balance and account inputs are prohibited until a public-data adapter exists, and no order path may be used.",
+      "contract_refs": [
+        "ARBITRAGE_AND_LEVERAGE_PLAN_20260504.md",
+        "scripts/cross_exchange_arb_dry_run.py"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "A synchronized public cross-venue spot-perpetual basis may retain a paper diagnostic margin after all two-leg and transfer costs.",
+        "universe": "The future adapter's frozen public spot and perpetual venues, symbols, synchronized timestamps, and quote-quality filters.",
+        "signal": "A predeclared spot-perpetual basis threshold computed only from synchronized observed public quotes.",
+        "entry": "Simulate both legs at the first jointly executable observation after the spread qualifies.",
+        "exit": "Simulate closure at convergence, risk stop, stale-data cutoff, or frozen maximum hold.",
+        "costs": "Debit both-leg fees, spread, slippage, transfer assumptions, funding, and adverse fill asymmetry.",
+        "control": "Compare against timestamp-shuffled venue pairings and a same-venue spot-perpetual basis baseline.",
+        "stress": "Apply clock skew, stale quotes, higher fees, partial-fill asymmetry, and withdrawal-delay assumptions.",
+        "concentration": "Report spot-perpetual venue pair, symbol, time window, and common-asset concentration.",
+        "death_criteria": "Reject if synchronization or cost parity is incomplete, or if the margin fails controls or stress.",
+        "acceptance_gate": "The cited dry-run script is hash-only evidence and is never an adapter or executed by this conveyor; only public-data, paper-only four-phase receipts can yield PASS_DIAGNOSTIC, and this card has no account or order authority."
+      },
+      "adapters": null
+    },
+    {
+      "id": "trend_pullback",
+      "title": "EMA Trend Pullback V2 diagnostic",
+      "market": "FX",
+      "family": "ema_trend_pullback",
+      "priority": 80,
+      "state": "BLOCKED_ADAPTER",
+      "reopen_when": "Reopen only when the cited EMA Trend Pullback V2 rule, frozen FX inputs, controls, and stress model are packaged behind a strict four-phase adapter.",
+      "contract_refs": [
+        "forex/strategies/ema_trend_pullback_v2.py"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "EMA Trend Pullback V2 may show diagnostic persistence after conservative FX execution treatment.",
+        "universe": "The future adapter's frozen FX pairs and M5 bars selected before replay.",
+        "signal": "The cited EMA Trend Pullback V2 conditions evaluated only on bars closed at the decision time.",
+        "entry": "Enter at the next executable bar after the frozen pullback confirmation.",
+        "exit": "Exit by the frozen stop, target, trend invalidation, or maximum-hold rule.",
+        "costs": "Apply fixed conservative FX spread, commission, slippage, and rollover costs.",
+        "control": "Compare against timestamp-matched randomized entries and a trend-only no-pullback baseline.",
+        "stress": "Apply delayed fills, wider costs, adverse gaps, and regime-boundary exclusions.",
+        "concentration": "Report pair, month, direction, trend regime, and overlapping-position concentration.",
+        "death_criteria": "Reject if the signal fails the frozen controls or stress tests, or depends on a single pair or calendar fold.",
+        "acceptance_gate": "Only a strict adapter's four valid receipts may create a diagnostic result; historical reproduction is not promotion authority."
+      },
+      "adapters": null
+    },
+    {
+      "id": "session_breakout",
+      "title": "London Open Breakout V2 diagnostic",
+      "market": "FX",
+      "family": "london_open_breakout",
+      "priority": 90,
+      "state": "BLOCKED_ADAPTER",
+      "reopen_when": "Reopen only when the London session definition, London Open Breakout V2 rule, frozen FX data coverage, controls, and stress replay are frozen in a strict four-phase adapter.",
+      "contract_refs": [
+        "forex/strategies/london_open_breakout_v2.py"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "London Open Breakout V2 may provide a diagnostic edge when session timing and costs are frozen ex ante.",
+        "universe": "The frozen FX pairs, exchange-calendar sessions, and complete bars declared by the future adapter.",
+        "signal": "The cited London Open Breakout V2 range and breakout rule evaluated from closed pre-entry observations.",
+        "entry": "Enter at the first executable bar after the range breach according to the frozen session clock.",
+        "exit": "Exit by the frozen target, stop, session close, or maximum holding condition.",
+        "costs": "Debit conservative session-dependent FX spread, commission, slippage, and rollover costs.",
+        "control": "Compare against timestamp-matched randomized session windows and a no-breakout baseline.",
+        "stress": "Apply session-clock shifts, delayed fills, wider spreads, and adverse intrabar ambiguity.",
+        "concentration": "Report pair, calendar session, month, and repeated-news-window concentration.",
+        "death_criteria": "Reject if the result fails controls or stress, or is driven by a narrow session or calendar slice.",
+        "acceptance_gate": "A future strict four-phase adapter must validate frozen timing and inputs before any PASS_DIAGNOSTIC result."
+      },
+      "adapters": null
+    },
+    {
+      "id": "range_rejection",
+      "title": "Range rejection diagnostic",
+      "market": "crypto perpetual futures",
+      "family": "range_rejection",
+      "priority": 100,
+      "state": "BLOCKED_ADAPTER",
+      "reopen_when": "Reopen only when the range-rejection rule, annual repair configuration, controls, and stress cases are converted to a strict four-phase receipt adapter.",
+      "contract_refs": [
+        "strategies/alt_range_scalp_v1.py",
+        "configs/autoresearch/range_scalp_v1_annual_repair_v3.json",
+        "reports/INCOME_RESEARCH_range_scalp_v1_annual_repair_v3_20260617_064447.json"
+      ],
+      "data_refs": [],
+      "preregistration": {
+        "hypothesis": "A rejection at a predeclared crypto range boundary may retain diagnostic value after realistic costs and adverse fills.",
+        "universe": "The future adapter's frozen liquid perpetual symbols, range definitions, and complete decision bars.",
+        "signal": "The cited range-boundary rejection criteria evaluated only after the qualifying bar is closed.",
+        "entry": "Enter at the next permitted executable bar after a frozen rejection signal.",
+        "exit": "Exit at the frozen mean target, protective stop, range invalidation, or maximum hold.",
+        "costs": "Debit conservative fees, spread, slippage, and funding on every simulated entry and exit.",
+        "control": "Compare against timestamp-matched randomized range boundaries and an unconditioned range baseline.",
+        "stress": "Apply wider costs, delayed fills, false-break gaps, and stop-first intrabar handling.",
+        "concentration": "Report symbol, boundary, volatility regime, and clustered-signal concentration.",
+        "death_criteria": "Reject if the edge vanishes under controls or stress, or is concentrated in a single symbol or regime.",
+        "acceptance_gate": "Only four valid receipts from a frozen future adapter may produce PASS_DIAGNOSTIC; legacy annual repairs do not authorize promotion."
+      },
+      "adapters": null
+    }
+  ]
+}

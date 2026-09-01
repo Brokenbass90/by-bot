@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -362,3 +363,131 @@ def test_preregistration_artifact_is_deterministic_and_bound_to_freeze(tmp_path:
     assert artifact["manifest_sha256"] == _sha(json.loads(config.read_text(encoding="utf-8")))
     assert artifact["preregistration_sha256"] == _sha(_card("h1", 1)["preregistration"])
     assert artifact["contract_hashes"]["scripts/research_conveyor_phase_adapter.py"] == hashlib.sha256((tmp_path / "scripts" / "research_conveyor_phase_adapter.py").read_bytes()).hexdigest()
+
+
+def test_repository_manifest_is_the_ten_card_blocked_readiness_queue():
+    """Catches an accidental runnable/live card or drift from the approved queue."""
+    root = Path(__file__).resolve().parents[1]
+    config = root / "configs" / "research" / "research_conveyor_v1.json"
+
+    manifest = load_manifest(root, config)
+
+    assert manifest.payload["authority"] == AUTH
+    assert manifest.payload["enabled"] is True
+    assert manifest.payload["max_jobs_per_run"] == 1
+    assert manifest.payload["allowed_script_roots"] == ["research_lab", "scripts"]
+    assert [(card["id"], card["priority"]) for card in manifest.hypotheses] == [
+        ("xsec_pit_v5", 10),
+        ("crypto_bull_continuation_v1", 20),
+        ("xauusd_unchanged_replication_v1", 30),
+        ("funding_carry", 40),
+        ("simple_mean_reversion", 50),
+        ("breakout_retest", 60),
+        ("cross_exchange_arbitrage_paper", 70),
+        ("trend_pullback", 80),
+        ("session_breakout", 90),
+        ("range_rejection", 100),
+    ]
+    expected_states = {
+        "xsec_pit_v5": "BLOCKED_DATA_OR_PARITY",
+        "crypto_bull_continuation_v1": "BLOCKED_ADAPTER",
+        "xauusd_unchanged_replication_v1": "BLOCKED_DATA_OR_PARITY",
+        "funding_carry": "BLOCKED_ADAPTER",
+        "simple_mean_reversion": "BLOCKED_ADAPTER",
+        "breakout_retest": "BLOCKED_ADAPTER",
+        "cross_exchange_arbitrage_paper": "BLOCKED_DATA_OR_PARITY",
+        "trend_pullback": "BLOCKED_ADAPTER",
+        "session_breakout": "BLOCKED_ADAPTER",
+        "range_rejection": "BLOCKED_ADAPTER",
+    }
+    assert {card["id"]: card["state"] for card in manifest.hypotheses} == expected_states
+    assert all(card["adapters"] is None and card["data_refs"] == [] for card in manifest.hypotheses)
+    assert all(card["reopen_when"] for card in manifest.hypotheses)
+    assert all(all(card["preregistration"].values()) for card in manifest.hypotheses)
+    assert all((root / ref).is_file() for card in manifest.hypotheses for ref in card["contract_refs"])
+
+
+def test_repository_manifest_preflight_writes_independently_hashed_blocker_receipts(tmp_path: Path):
+    """Catches a preflight that launches work or misstates the queue's blockers."""
+    root = Path(__file__).resolve().parents[1]
+    source_config = root / "configs" / "research" / "research_conveyor_v1.json"
+    payload = json.loads(source_config.read_text(encoding="utf-8"))
+    copied_root = tmp_path / "repository"
+    config = copied_root / "configs" / "research" / "research_conveyor_v1.json"
+    config.parent.mkdir(parents=True)
+    config.write_text(json.dumps(payload), encoding="utf-8")
+    for card in payload["hypotheses"]:
+        for ref in card["contract_refs"]:
+            target = copied_root / ref
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((root / ref).read_bytes())
+
+    run_dir = copied_root / "runtime" / "repository-preflight"
+    result = run_conveyor(copied_root, config, run_dir, "preflight")
+
+    assert result["authority"] == AUTH
+    assert result["counts"] == {"BLOCKED_DATA_OR_PARITY": 3, "BLOCKED_ADAPTER": 7}
+    assert len(result["terminals"]) == 10
+    aggregate = json.loads((run_dir / "terminal_receipt.json").read_text(encoding="utf-8"))
+    _verify_self_hash(aggregate)
+    assert aggregate["authority"] == AUTH
+    for terminal in result["terminals"]:
+        hypothesis_receipt = json.loads((run_dir / "hypotheses" / terminal["hypothesis_id"] / "terminal_receipt.json").read_text(encoding="utf-8"))
+        _verify_self_hash(hypothesis_receipt)
+        assert hypothesis_receipt["authority"] == AUTH
+        assert hypothesis_receipt["state"] == terminal["state"]
+
+
+def test_repository_manifest_cards_bind_exact_strategy_families_and_refs():
+    """Catches semantically mixed strategy cards disguised as a valid queue."""
+    root = Path(__file__).resolve().parents[1]
+    manifest = load_manifest(root, root / "configs" / "research" / "research_conveyor_v1.json")
+    cards = {card["id"]: card for card in manifest.hypotheses}
+
+    expected_identity = {
+        "xsec_pit_v5": ("Bybit USDT linear crypto perpetuals", "cross_sectional_crypto"),
+        "funding_carry": ("crypto spot and perpetual futures", "market_neutral_funding_carry"),
+        "simple_mean_reversion": ("crypto perpetual futures", "vwap_mean_reversion"),
+        "cross_exchange_arbitrage_paper": ("crypto cross-venue spot and perpetual futures", "cross_venue_spot_perp_basis"),
+        "trend_pullback": ("FX", "ema_trend_pullback"),
+        "session_breakout": ("FX", "london_open_breakout"),
+    }
+    assert {identifier: (cards[identifier]["market"], cards[identifier]["family"]) for identifier in expected_identity} == expected_identity
+    assert cards["funding_carry"]["contract_refs"] == [
+        "strategies/funding_hold_v1.py",
+        "backtest/funding_carry_gate.py",
+        "reports/FUNDING_CARRY_GATE_180D_HEDGEABLE_latest.md",
+    ]
+    assert cards["simple_mean_reversion"]["contract_refs"] == [
+        "strategies/alt_vwap_mean_reversion_v1.py",
+        "configs/autoresearch/vwap_mean_reversion_v1_annual_repair_v2.json",
+        "reports/INCOME_RESEARCH_vwap_mean_reversion_v1_annual_repair_v2_20260617_130032.json",
+    ]
+    assert cards["cross_exchange_arbitrage_paper"]["contract_refs"] == [
+        "ARBITRAGE_AND_LEVERAGE_PLAN_20260504.md",
+        "scripts/cross_exchange_arb_dry_run.py",
+    ]
+    assert cards["trend_pullback"]["contract_refs"] == ["forex/strategies/ema_trend_pullback_v2.py"]
+    assert cards["session_breakout"]["contract_refs"] == ["forex/strategies/london_open_breakout_v2.py"]
+    forbidden = ("pair_statarb", "pair_arb", "funding_positioning", "range_mean_reversion", "triple_screen", "annual_reproduction", "session_range")
+    assert all(not any(token in ref for token in forbidden) for card in cards.values() for ref in card["contract_refs"])
+    assert "private balance" in cards["cross_exchange_arbitrage_paper"]["reopen_when"].lower()
+    assert "no-go" in cards["funding_carry"]["preregistration"]["acceptance_gate"].lower()
+    assert "1.8%" in cards["funding_carry"]["preregistration"]["acceptance_gate"]
+
+
+def test_repository_manifest_cli_help_imports_from_the_repository_root():
+    """Catches direct script execution losing the repository package root."""
+    root = Path(__file__).resolve().parents[1]
+
+    completed = subprocess.run(
+        [sys.executable, "scripts/run_research_conveyor.py", "--help"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert "--preflight" in completed.stdout
