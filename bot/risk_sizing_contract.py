@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
+from bot.side_contract import SideContractError, normalize_side
+
 
 @dataclass(frozen=True)
 class RiskSizeDecision:
@@ -39,13 +41,14 @@ def calculate_risk_size(
         return _reject("non_finite_input")
     if equity <= 0 or entry <= 0 or target_risk_fraction <= 0:
         return _reject("nonpositive_input")
-    normalized_side = str(side or "").strip().lower()
+    try:
+        normalized_side = normalize_side(side)
+    except SideContractError:
+        return _reject("unknown_side")
     if normalized_side == "long":
         stop_distance = entry - stop
-    elif normalized_side == "short":
-        stop_distance = stop - entry
     else:
-        stop_distance = abs(entry - stop)
+        stop_distance = stop - entry
     if stop_distance <= 0:
         return _reject("nonpositive_stop_distance")
 
@@ -107,6 +110,7 @@ def calculate_notional_from_stop_pct(
         equity=float(equity),
         entry=1.0,
         stop=1.0 - distance_fraction,
+        side="long",
         target_risk_fraction=combined_risk_fraction,
         max_notional_usd=max_notional_usd,
         min_fill_fraction=min_fill_fraction,

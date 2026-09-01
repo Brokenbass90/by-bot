@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Optional, TypeVar
 
+from bot.side_contract import SideContractError, normalize_side
+
 
 T = TypeVar("T")
 
@@ -63,14 +65,17 @@ def planned_tpsl_after_fill(
     if fill is None or entry is None or fill <= 0 or entry <= 0:
         return tp, sl
 
-    side_norm = str(side or "").strip()
     try:
-        if side_norm == "Buy":
+        side_norm = normalize_side(side)
+    except SideContractError:
+        return tp, sl
+    try:
+        if side_norm == "long":
             if planned_sl is not None and float(planned_sl) < entry and sl is not None and float(sl) >= fill:
                 sl = fill - abs(entry - float(planned_sl))
             if planned_tp is not None and float(planned_tp) > entry and tp is not None and float(tp) <= fill:
                 tp = fill + abs(float(planned_tp) - entry)
-        elif side_norm == "Sell":
+        else:
             if planned_sl is not None and float(planned_sl) > entry and sl is not None and float(sl) <= fill:
                 sl = fill + abs(float(planned_sl) - entry)
             if planned_tp is not None and float(planned_tp) < entry and tp is not None and float(tp) >= fill:
@@ -102,12 +107,13 @@ def protective_stop_is_live(
         return False
     if stop_f is None or price_f is None or stop_f <= 0 or price_f <= 0:
         return False
-    side_norm = str(side or "").strip()
-    if side_norm == "Buy":
+    try:
+        side_norm = normalize_side(side)
+    except SideContractError:
+        return False
+    if side_norm == "long":
         return stop_f < price_f - tick_f
-    if side_norm == "Sell":
-        return stop_f > price_f + tick_f
-    return False
+    return stop_f > price_f + tick_f
 
 
 def should_preserve_strategy_tpsl(

@@ -12,6 +12,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 from .metrics import Trade
 from bot.risk_sizing_contract import calculate_risk_size
+from bot.side_contract import normalize_side
 from strategies.signals import TradeSignal
 
 
@@ -282,10 +283,9 @@ class Position:
 
 def _apply_slippage(price: float, side: str, is_entry: bool, slippage_bps: float) -> float:
     bps = slippage_bps / 10000.0
-    if side == "long":
+    if normalize_side(side) == "long":
         return price * (1 + bps) if is_entry else price * (1 - bps)
-    else:
-        return price * (1 - bps) if is_entry else price * (1 + bps)
+    return price * (1 - bps) if is_entry else price * (1 + bps)
 
 
 def _fees(notional: float, fee_bps: float) -> float:

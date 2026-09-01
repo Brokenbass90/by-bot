@@ -94,15 +94,48 @@ def test_wrong_side_stop_is_rejected() -> None:
 
 
 @pytest.mark.parametrize(
-    ("equity", "entry", "stop", "risk_fraction", "risk_mult", "vol_mult", "cap"),
+    ("side", "stop"),
+    [("Buy", 102.0), ("SELL", 98.0)],
+)
+def test_exchange_side_aliases_do_not_bypass_stop_geometry(side: str, stop: float) -> None:
+    decision = calculate_risk_size(
+        equity=1000.0,
+        entry=100.0,
+        stop=stop,
+        side=side,
+        target_risk_fraction=0.01,
+        max_notional_usd=1000.0,
+    )
+
+    assert not decision.accepted
+    assert decision.reason == "nonpositive_stop_distance"
+
+
+@pytest.mark.parametrize("side", [None, "", "hold"])
+def test_unknown_side_is_rejected_instead_of_using_absolute_distance(side) -> None:
+    decision = calculate_risk_size(
+        equity=1000.0,
+        entry=100.0,
+        stop=98.0,
+        side=side,
+        target_risk_fraction=0.01,
+        max_notional_usd=1000.0,
+    )
+
+    assert not decision.accepted
+    assert decision.reason == "unknown_side"
+
+
+@pytest.mark.parametrize(
+    ("equity", "entry", "stop", "side", "risk_fraction", "risk_mult", "vol_mult", "cap"),
     [
-        (1021.07, 0.8136, 0.8205, 0.01, 0.10, 0.44, 970.0),
-        (1000.0, 100.0, 98.0, 0.01, 1.00, 1.00, 1000.0),
-        (1000.0, 100.0, 98.0, 0.01, 1.00, 1.00, 250.0),
+        (1021.07, 0.8136, 0.8205, "short", 0.01, 0.10, 0.44, 970.0),
+        (1000.0, 100.0, 98.0, "long", 0.01, 1.00, 1.00, 1000.0),
+        (1000.0, 100.0, 98.0, "long", 0.01, 1.00, 1.00, 250.0),
     ],
 )
 def test_live_stop_pct_and_backtest_fixed_r_have_pre_round_parity(
-    equity, entry, stop, risk_fraction, risk_mult, vol_mult, cap
+    equity, entry, stop, side, risk_fraction, risk_mult, vol_mult, cap
 ) -> None:
     stop_pct = abs(entry - stop) / entry * 100.0
     live = calculate_notional_from_stop_pct(
@@ -118,6 +151,7 @@ def test_live_stop_pct_and_backtest_fixed_r_have_pre_round_parity(
         equity=equity,
         entry=entry,
         stop=stop,
+        side=side,
         target_risk_fraction=risk_fraction * risk_mult * vol_mult,
         max_notional_usd=cap,
         min_fill_fraction=0.40,

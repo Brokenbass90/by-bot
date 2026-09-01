@@ -63,6 +63,29 @@ def test_planned_stop_reanchors_when_fill_crosses_level():
     assert round(sl, 6) == 0.1587
 
 
+def test_planned_tpsl_accepts_internal_long_vocabulary():
+    bybit = planned_tpsl_after_fill(
+        "Buy",
+        fill_price=103.0,
+        planned_entry=100.0,
+        planned_tp=103.0,
+        planned_sl=98.0,
+        current_tp=103.0,
+        current_sl=98.0,
+    )
+    internal = planned_tpsl_after_fill(
+        "long",
+        fill_price=103.0,
+        planned_entry=100.0,
+        planned_tp=103.0,
+        planned_sl=98.0,
+        current_tp=103.0,
+        current_sl=98.0,
+    )
+
+    assert internal == bybit == (106.0, 98.0)
+
+
 def test_protective_stop_is_checked_against_current_price_not_entry():
     # Short profit-lock can be below entry, but it still has to sit above the
     # current market. ADA exposed the bad case: internal SL below current is not
@@ -72,6 +95,12 @@ def test_protective_stop_is_checked_against_current_price_not_entry():
 
     assert protective_stop_is_live("Buy", stop=101.0, current_price=104.0)
     assert not protective_stop_is_live("Buy", stop=105.0, current_price=104.0)
+
+
+def test_protective_stop_accepts_both_declared_vocabularies():
+    assert protective_stop_is_live("long", stop=101.0, current_price=104.0)
+    assert protective_stop_is_live("short", stop=107.0, current_price=104.0)
+    assert not protective_stop_is_live("hold", stop=101.0, current_price=104.0)
 
 
 # --- P0-fix regression: strategy-designed TP/SL must survive the fill ---
