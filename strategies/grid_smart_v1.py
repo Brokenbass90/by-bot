@@ -29,7 +29,7 @@ allocator решает можно ли открыть позицию.
 4. **Grid build.** Якорь = `GS1_GRID_ANCHOR_MODE` (`ema21` или `mid_range`).
    Уровни вверх: `+1, +2, ..., +N * ATR_MULT * ATR`. Аналогично вниз.
 5. **Touch detection.** Цена пересекает уровень (lambda buffer `GS1_TOUCH_BUFFER_ATR`).
-   Side: `Buy` для нижних уровней, `Sell` для верхних.
+   Internal side: `long` для нижних уровней, `short` для верхних.
 6. **Bias skew.** Если bias=short, max long-levels = `GS1_MAX_LONGS_SHORT_BIAS`,
    max short-levels = `GS1_MAX_LEVELS_PER_SIDE`. Симметрично для bias=long.
 7. **Per-trade risk:** SL = соседний outer level + `GS1_SL_BUFFER_ATR * ATR`.
@@ -285,7 +285,7 @@ class GridSmartV1Strategy:
         buf = c.touch_buffer_atr * atr
         best: Optional[Tuple[int, float, float]] = None
         for i, lvl in enumerate(levels):
-            if side == "Buy":
+            if side == "long":
                 # Цена должна быть ниже-равной уровню (отскок снизу вверх потенциальный) с buffer'ом
                 dist = lvl - price
                 if -buf <= dist <= buf * 2.0:
@@ -395,14 +395,14 @@ class GridSmartV1Strategy:
         chosen_level: float | None = None
         chosen_idx: int = -1
         if c.allow_shorts and shorts_above:
-            r = self._nearest_touch(price, shorts_above, atr, "Sell")
+            r = self._nearest_touch(price, shorts_above, atr, "short")
             if r is not None:
-                chosen_side = "Sell"
+                chosen_side = "short"
                 chosen_idx, chosen_level = r
         if chosen_side is None and c.allow_longs and longs_below:
-            r = self._nearest_touch(price, longs_below, atr, "Buy")
+            r = self._nearest_touch(price, longs_below, atr, "long")
             if r is not None:
-                chosen_side = "Buy"
+                chosen_side = "long"
                 chosen_idx, chosen_level = r
 
         if chosen_side is None or chosen_level is None:
@@ -414,7 +414,7 @@ class GridSmartV1Strategy:
         sl_buf = c.sl_buffer_atr * atr
         tp_buf = c.tp_buffer_atr * atr
 
-        if chosen_side == "Sell":
+        if chosen_side == "short":
             outer = shorts_above[chosen_idx + 1] if chosen_idx + 1 < len(shorts_above) else chosen_level + step
             inner = shorts_above[chosen_idx - 1] if chosen_idx - 1 >= 0 else chosen_level - step
             sl = outer + sl_buf
@@ -433,10 +433,10 @@ class GridSmartV1Strategy:
             self._no_signal("invalid_risk_or_tp")
             return None
 
-        if chosen_side == "Sell" and not (tp < entry < sl):
+        if chosen_side == "short" and not (tp < entry < sl):
             self._no_signal("invalid_short_geometry")
             return None
-        if chosen_side == "Buy" and not (sl < entry < tp):
+        if chosen_side == "long" and not (sl < entry < tp):
             self._no_signal("invalid_long_geometry")
             return None
 
