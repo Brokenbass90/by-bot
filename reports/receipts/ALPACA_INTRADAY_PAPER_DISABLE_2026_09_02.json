@@ -1,0 +1,31 @@
+{
+  "schema_id": "alpaca_intraday_paper_disable_receipt_v1",
+  "observed_at_utc": "2026-09-02T06:27:50Z",
+  "target_host": "64.226.73.119",
+  "authority": "owner_requested_disable_of_alpaca_intraday_paper_and_shadow_only",
+  "removed_cron_routes": [
+    "scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once",
+    "scripts/run_equities_alpaca_intraday_dynamic_v3_shadow.sh --once"
+  ],
+  "removed_route_count": 2,
+  "remaining_target_route_count": 0,
+  "preserved_routes": [
+    "alpaca_live_v38_manager",
+    "alpaca_protective_exit_only",
+    "alpaca_readonly_health_auditor",
+    "alpaca_readonly_health_preopen",
+    "alpaca_readonly_health_weekend"
+  ],
+  "backup": {
+    "path": "/root/crontab.backup_disable_alpaca_intraday_20260902_0625",
+    "sha256": "d0cc882a4b70468ffd3b18860de0ae0d5e622d757bc7083adcf346a7876eeec2",
+    "recoverable": true
+  },
+  "post_change_crontab_sha256": "35c972918d2a6a2683f8a258af1c7ba4c5f89b875969f27dc3902dbf5d0c50aa",
+  "active_intraday_processes_observed_before_change": 0,
+  "live_risk_changed": false,
+  "live_orders_changed": false,
+  "positions_changed": false,
+  "main_alpaca_protection_changed": false,
+  "verdict": "DISABLED_RECOVERABLY"
+}
