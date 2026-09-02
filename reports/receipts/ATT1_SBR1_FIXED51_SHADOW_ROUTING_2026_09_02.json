@@ -1,0 +1,76 @@
+{
+  "schema_id": "att1_sbr1_fixed51_shadow_routing_receipt_v1",
+  "observed_at_utc": "2026-09-02T06:39:03Z",
+  "target_host": "64.226.73.119",
+  "authority": "owner_authorized_zero_risk_public_shadow_collection_only",
+  "change": {
+    "att1_timer_was_enabled": false,
+    "att1_timer_enabled_now": true,
+    "command_effect": "created the normal systemd wants symlink for att1-fixed51-raw-shadow.timer",
+    "sbr1_timer_changed": false,
+    "rollback": "systemctl disable att1-fixed51-raw-shadow.timer"
+  },
+  "timers": {
+    "att1-fixed51-raw-shadow.timer": {
+      "active_state": "active",
+      "sub_state": "waiting",
+      "unit_file_state": "enabled",
+      "last_service_exit_utc": "2026-09-02T06:02:20Z",
+      "last_service_result": "success",
+      "last_service_exit_code": 0,
+      "unit_sha256": "88781a7749e379482b6a87a835f4dfc9f0e1241fda4ccc70b2b196452c2e3051",
+      "service_sha256": "cdf644f675e950ce16683ad7cd2926bafb4f586ae5c51c7499dd4e54c1b8297f",
+      "runtime_config_sha256": "4faa0a24804634327f16be5db9357d2e37428186fbe258a2300dae928805fcb2"
+    },
+    "sbr1-zero-risk-shadow.timer": {
+      "active_state": "active",
+      "sub_state": "waiting",
+      "unit_file_state": "enabled",
+      "last_service_exit_utc": "2026-09-02T06:35:20Z",
+      "last_service_result": "success",
+      "last_service_exit_code": 0,
+      "unit_sha256": "98d3d4e1af5216bb38e22f605c449b3976bbb64ff4c6015dea8858f017900d02",
+      "service_sha256": "ea1a7670a1cc5b97f1e0ddcd0fd2418ea5fad55fa967e6a39bfba4701e6b2754",
+      "runtime_config_sha256": "19f8d41f06f01734502adfe36148b0c7366fc1b63c23fa2c9a73338c555b9dea"
+    }
+  },
+  "journals": {
+    "att1": {
+      "remote_path": "/opt/bybot-research/att1-fixed51-raw-shadow/runtime/att1_fixed51_zero_risk_shadow/events.jsonl",
+      "snapshot_sha256": "fe3def5d3efab71c208efdacd4c747cad55fb858cf2aa590c7f21b2253faa4d6",
+      "rows": 10302,
+      "bad_json_rows": 0,
+      "raw_decisions": 10055,
+      "raw_signals": 44,
+      "raw_signals_regime_eligible_diagnostic": 6,
+      "historical_processing_errors": 45,
+      "latest_cycle_events": 51,
+      "latest_cycle_error_types": {},
+      "admitted": 0,
+      "final_n_eligible": 0
+    },
+    "sbr1": {
+      "remote_path": "/opt/bybot-research/sbr1-zero-risk-shadow/runtime/sbr1_zero_risk_shadow/events.jsonl",
+      "snapshot_sha256": "92000dcfa8a10162de07b0e3ab31962152934bf58b256b3c78086633a9bb4ad3",
+      "rows": 11330,
+      "bad_json_rows": 0,
+      "evaluations": 10900,
+      "raw_signals": 19,
+      "latest_cycle_events": 54,
+      "latest_cycle_error_types": {},
+      "admitted": 0,
+      "final_n_eligible": 0
+    }
+  },
+  "authority_invariants": {
+    "orders_allowed_true_rows": 0,
+    "money_authority_true_rows": 0,
+    "private_api_allowed_true_rows": 0,
+    "promotion_authority_true_rows": 0,
+    "live_risk_changed": false,
+    "orders_changed": false,
+    "positions_changed": false
+  },
+  "scope_caveat": "These are independent VPS systemd shadow timers, not canonical local research-station routes. No canonical-station parity is claimed.",
+  "verdict": "ZERO_RISK_FIXED51_COLLECTION_ACTIVE"
+}
