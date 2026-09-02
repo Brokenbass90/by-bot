@@ -1,0 +1,63 @@
+{
+  "schema_id": "gs1_side_call_contract_recompute_receipt_v1",
+  "observed_at_utc": "2026-09-02T06:34:33Z",
+  "authority": "research_only_no_promotion_no_live_no_orders_no_money_authority",
+  "source_git_sha": "997bbfd3f0856d3fe3864857c7560f9aea66cbb5",
+  "strategy": "grid_smart_v1",
+  "strategy_class": "GridSmartV1Strategy",
+  "prefix": "GS1",
+  "regime_mode": "force_on",
+  "input": {
+    "path_at_execution": "/private/tmp/gs1_presealed_h1_20260902",
+    "physical_cutoff_exclusive_utc": "2025-10-01T00:00:00Z",
+    "files": 137,
+    "rows": 1220785,
+    "empty_files": 38,
+    "post_cut_rows": 0,
+    "max_timestamp_ms": 1759273200000,
+    "total_bytes": 18935898,
+    "manifest_path": "reports/receipts/GS1_PRESEALED_INPUT_MANIFEST_2026_09_02.tsv",
+    "manifest_sha256": "21524a3ef0b7d4594f7f06780e2e2ab4d0f9973bd6476bbb6612ddb50bce4b23",
+    "manifest_algorithm": "UTF-8 lines sorted by filename: filename<TAB>sha256<LF>"
+  },
+  "command": "env GS1_REGIME_MODE=force_on .venv/bin/python research_lab/research_machine.py --strategy grid_smart_v1 --cls GridSmartV1Strategy --prefix GS1 --data /private/tmp/gs1_presealed_h1_20260902 --tag gs1_side_call_contract_20260901 --root . --cooldown 0",
+  "output": {
+    "path": "research_lab/passport_gs1_side_call_contract_20260901.json",
+    "sha256": "16b020bc212386b87049d7ecd1e3f8c59d90e53ef150f9fde57f5543389d2ca7",
+    "validity": "complete",
+    "strategy_calls": 1525853,
+    "strategy_call_errors": 0,
+    "symbol_count": 137,
+    "windows": {
+      "2024-03..2025-09": 210,
+      "2023-01..2024-02": 209
+    },
+    "common_cells": 209,
+    "positive_net_both_windows": 17,
+    "positive_both_and_n_ge_200_both": 13,
+    "positive_n_ge_200_and_visible_either": 7,
+    "strict_accepts": 0,
+    "binding_gate": "no surviving cell has weekly-bootstrap lower bound above zero after the prior gates"
+  },
+  "source_hashes": {
+    "research_lab/research_machine.py": "b15c8074598a6cddc795a81b2f375f4e940a45081aae48abdff7204d4a9fd01c",
+    "strategies/grid_smart_v1.py": "5d82cb541a10a4e27beafa12da433de9b641284977225095cdb55932b2243850",
+    "research_lab/strategy_call_contract.py": "79327f23209d26d699c39762d84c16bcf3019adcff5577b48155483786693349",
+    "research_lab/strategy_adapter.py": "032c3e1b427b5deb7c1e8f64b8b83ccd9f97a65cfd3154493dd3b83595e54d0a"
+  },
+  "superseded_artifacts": {
+    "research_lab/passport_gs1.json": {
+      "sha256": "b315ff726af7aa527964dd826bbeb7e7fc18edbd773204f4736447cdfb6479a4",
+      "reason": "empty pre-contract passport"
+    },
+    "research_lab/passport_pf.json": {
+      "sha256": "3ee0f5c9feb1c0446487b5e1dfbcab70fed5fdc4fee1dad30a0a9ad3928a4742",
+      "reason": "empty stale PUMP-family passport predating explicit symbol-first dispatch; PUMP4 needs its M5-native runner"
+    }
+  },
+  "discarded_run": {
+    "reason": "the first corrected run logically masked the cutoff but physically opened source NPZ files containing post-cut rows",
+    "promotion_use": false
+  },
+  "verdict": "FAIL_CLOSED_NO_STRICT_GS1_CANDIDATE"
+}
