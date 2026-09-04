@@ -18,12 +18,22 @@ class _ATT1Store:
     def __init__(self, symbol: str, fetch_klines):
         self.symbol = symbol
         self._fetch = fetch_klines
+        self._observed_at_ms: Optional[int] = None
         self._last_closed_rows: Dict[str, list] = {}
 
     def fetch_klines(self, symbol: str, interval: str, limit: int):
-        rows = fetch_closed_klines(self._fetch, symbol, interval, limit)
+        rows = fetch_closed_klines(
+            self._fetch,
+            symbol,
+            interval,
+            limit,
+            now_ms=self._observed_at_ms,
+        )
         self._last_closed_rows[str(interval)] = list(rows)
         return rows
+
+    def set_observed_at_ms(self, value: Optional[int]) -> None:
+        self._observed_at_ms = None if value is None else int(value)
 
     def last_closed_rows(self, interval: str = "60") -> list:
         """Return the exact parsed rows consumed by the latest evaluation."""
@@ -68,8 +78,11 @@ class ATT1LiveEngine:
         l: float,
         c: float,
         v: float = 0.0,
+        *,
+        observed_at_ms: Optional[int] = None,
     ) -> Optional[TradeSignal]:
         store = self._get_store(symbol)
+        store.set_observed_at_ms(observed_at_ms)
         strat = self._get_strategy(symbol)
         # Do not turn an engine failure into an ordinary no-signal.  The real
         # monolith caller already catches and logs strategy exceptions; parity

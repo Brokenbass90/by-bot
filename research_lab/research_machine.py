@@ -47,6 +47,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from research_lab.strategy_call_contract import build_ohlcv_caller
+from research_lab.research_ohlcv_store import ResearchKlineStore as Store
 
 WINDOWS = {
     "2024-03..2025-09": (1709251200000, 1759276800000),
@@ -107,15 +108,6 @@ class SignalCallDiagnostics:
             "error_types": dict(sorted(self.error_types.items())),
             "samples": list(self.samples),
         }
-
-
-class Store:
-    def __init__(self, sym):
-        self.symbol = sym
-        self.rows = []
-
-    def fetch_klines(self, sym, tf, n):
-        return self.rows[-n:]
 
 
 def build_research_signal_caller(strategy, store: Store):

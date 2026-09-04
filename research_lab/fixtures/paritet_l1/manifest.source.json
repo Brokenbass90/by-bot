@@ -1,0 +1,38 @@
+{
+ "authority": "research_only_no_orders_no_broker",
+ "bary": {
+  "1000BONKUSDT": {
+   "barov": 2500,
+   "path": "research_lab/fixtures/paritet_l1/bars/1000BONKUSDT.json",
+   "pervyy_ts": 1777384800000,
+   "posledniy_ts": 1786381200000,
+   "sha256": "e4ae5ab63a53d0e028bcd98084cb08c712ae2c013146f61893aef0b28f66aadb"
+  },
+  "1000PEPEUSDT": {
+   "barov": 2500,
+   "path": "research_lab/fixtures/paritet_l1/bars/1000PEPEUSDT.json",
+   "pervyy_ts": 1774206000000,
+   "posledniy_ts": 1783202400000,
+   "sha256": "3e11ee1a54a2511eda3603f905ae082f614161feb3d8f45bb8a814d247fdf0f5"
+  }
+ },
+ "etalony": {
+  "ATT1": {
+   "path": "research_lab/fixtures/paritet_l1/etalon_ATT1.jsonl",
+   "sha256": "ef6fc0da8a43868acc265cba12811d6658c3810a6c11a61bac15e88718ff510b",
+   "signalov": 14,
+   "strok": 600
+  },
+  "ETS2S": {
+   "path": "research_lab/fixtures/paritet_l1/etalon_ETS2S.jsonl",
+   "sha256": "6d5a5f7a77c73671a1e592efa6384c0c29b0fbb3ba9dc6670d144993e0ced34f",
+   "signalov": 7,
+   "strok": 600
+  }
+ },
+ "python": "3.10.12",
+ "razogrev_barov": 2200,
+ "resheniy_barov": 300,
+ "schema_id": "paritet_l1_fixture_v1",
+ "sozdano_utc": "2026-09-04T11:33:20.795137Z"
+}

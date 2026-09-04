@@ -38,9 +38,16 @@ def closed_kline_rows(rows: list, interval: str, *, now_ms: Optional[int] = None
     return list(rows)
 
 
-def fetch_closed_klines(fetch_klines, symbol: str, interval: str, limit: int) -> list:
+def fetch_closed_klines(
+    fetch_klines,
+    symbol: str,
+    interval: str,
+    limit: int,
+    *,
+    now_ms: Optional[int] = None,
+) -> list:
     """Fetch one extra row and trim the still-open candle if present."""
     req_limit = max(1, int(limit)) + 1
     rows = fetch_klines(symbol, interval, req_limit)
-    closed = closed_kline_rows(rows, interval)
+    closed = closed_kline_rows(rows, interval, now_ms=now_ms)
     return closed[-int(limit):]

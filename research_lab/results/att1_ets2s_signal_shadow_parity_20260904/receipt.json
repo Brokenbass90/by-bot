@@ -1,0 +1,42 @@
+{
+  "authority": "research_only_no_orders_no_broker_no_money_authority",
+  "decision_bars_per_symbol": 300,
+  "fixture_root": "research_lab/fixtures/paritet_l1",
+  "overall_verdict": "PASS",
+  "schema_id": "att1_ets2s_signal_shadow_parity_receipt_v1",
+  "sleeves": {
+    "ATT1": {
+      "config_hash": "9d6f790d1d21b5597643a11d768d09b9234a1798b6db3f53490e0aad5af187b4",
+      "decision_rows": 600,
+      "exception_rows": 0,
+      "mismatch_examples": [],
+      "mismatches_by_field": {},
+      "only_research": [],
+      "only_shadow": [],
+      "research_rows": 600,
+      "shadow_rows": 600,
+      "signals": 6,
+      "source_hash": "a7b8d3f5d69ee3943aae8f4c9489fd1a5f5a84fe3ed89b08707231d647299f15",
+      "verdict": "PASS"
+    },
+    "ETS2S": {
+      "config_hash": "453378735642a9c27d9a5ffd94c8bd2d7ab77a28f9cc3f14dbf4334d7c8c0662",
+      "decision_rows": 600,
+      "exception_rows": 0,
+      "mismatch_examples": [],
+      "mismatches_by_field": {},
+      "only_research": [],
+      "only_shadow": [],
+      "research_rows": 600,
+      "shadow_rows": 600,
+      "signals": 30,
+      "source_hash": "d682e034400f55e943ec1a43bfc093eee856624f1b7a1b59e0c5e5eb2ccf9c50",
+      "verdict": "PASS"
+    }
+  },
+  "store_contract_id": "canonical_closed_utc_buckets_v1",
+  "symbols": [
+    "1000BONKUSDT",
+    "1000PEPEUSDT"
+  ]
+}
