@@ -1,0 +1,28 @@
+{
+  "schema_id": "att1_ets2s_signal_shadow_config_v1",
+  "enabled": false,
+  "default_off": true,
+  "authority": "research_only_public_att1_ets2s_signal_shadow_no_orders_no_private_api_no_money_no_promotion",
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "release_or_promotion_authority": false,
+  "sealed_data_allowed": false,
+  "public_base_url": "https://api.bybit.com",
+  "allowed_public_endpoints": ["https://api.bybit.com/v5/market/kline"],
+  "store_contract_id": "canonical_closed_utc_buckets_v1",
+  "evidence_universe": ["1000BONKUSDT", "1000PEPEUSDT", "1000RATSUSDT", "AAVEUSDT", "ACEUSDT", "ADAUSDT", "ALGOUSDT", "APTUSDT", "ARBUSDT", "ATOMUSDT", "AVAXUSDT", "BCHUSDT", "BICOUSDT", "BNBUSDT", "BTCUSDT", "C98USDT", "COTIUSDT", "CRVUSDT", "DOGEUSDT", "ETCUSDT", "ETHUSDT", "FILUSDT", "GALAUSDT", "HBARUSDT", "HFTUSDT", "ICPUSDT", "INJUSDT", "JTOUSDT", "LDOUSDT", "MNTUSDT", "ONDOUSDT", "OPUSDT", "ORDIUSDT", "PAXGUSDT", "PEOPLEUSDT", "SEIUSDT", "SHIB1000USDT", "SOLUSDT", "STRKUSDT", "SUIUSDT", "TAOUSDT", "TIAUSDT", "TRXUSDT", "UNIUSDT", "USDCUSDT", "WIFUSDT", "WLDUSDT", "XLMUSDT", "XMRUSDT", "XRPUSDT", "ZECUSDT"],
+  "evidence_universe_sha256": "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19",
+  "profiles": {
+    "ATT1": {"config_hash": "9d6f790d1d21b5597643a11d768d09b9234a1798b6db3f53490e0aad5af187b4", "fixed51_config_hash": "fbe3ad079bdf89a00786a5a9b3c27ffd8be27b7826ae3191d60dbb80ead47a9f", "source_hash": "a7b8d3f5d69ee3943aae8f4c9489fd1a5f5a84fe3ed89b08707231d647299f15"},
+    "ETS2S": {"config_hash": "453378735642a9c27d9a5ffd94c8bd2d7ab77a28f9cc3f14dbf4334d7c8c0662", "fixed51_config_hash": "af1f846a73098a386d5bff84e589749372c760fc829ae49d95001e8b5f8a3cf5", "source_hash": "d682e034400f55e943ec1a43bfc093eee856624f1b7a1b59e0c5e5eb2ccf9c50"}
+  },
+  "manifest_path": "configs/research/att1_ets2s_signal_shadow_manifest_v1.json",
+  "operator_ack": "ATT1_ETS2S_SIGNAL_SHADOW",
+  "runtime_paths": {"cache": "runtime/att1_ets2s_signal_shadow/cache", "journal": "runtime/att1_ets2s_signal_shadow/events.jsonl", "heartbeat": "runtime/att1_ets2s_signal_shadow/heartbeat.json", "state": "runtime/att1_ets2s_signal_shadow/state.json"},
+  "data_policy": {"closed_timeframe": "60", "max_decision_age_ms": 300000, "max_forward_lag_ms": 300000, "min_bootstrap_h1_bars": 2160, "max_cache_h1_bars": 2880, "min_runtime_free_bytes": 536870912, "page_limit": 1000, "max_response_bytes": 5000000, "gap_free": true, "exclude_forming_bar": true, "public_only": true},
+  "expected_unavailable_symbols": ["HFTUSDT"],
+  "runner_placeholder_path": "scripts/run_att1_ets2s_signal_shadow.py",
+  "systemd_service_path": "deploy/systemd/att1-ets2s-signal-shadow.service",
+  "systemd_timer_path": "deploy/systemd/att1-ets2s-signal-shadow.timer"
+}

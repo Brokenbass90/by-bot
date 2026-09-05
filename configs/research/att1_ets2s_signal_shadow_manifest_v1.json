@@ -1,0 +1,52 @@
+{
+  "schema_id": "att1_ets2s_signal_shadow_manifest_v1",
+  "authority": "research_only_public_att1_ets2s_signal_shadow_no_orders_no_private_api_no_money_no_promotion",
+  "default_off": true,
+  "enabled": false,
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "release_or_promotion_authority": false,
+  "sealed_data_allowed": false,
+  "public_base_url": "https://api.bybit.com",
+  "allowed_public_endpoints": ["https://api.bybit.com/v5/market/kline"],
+  "store_contract_id": "canonical_closed_utc_buckets_v1",
+  "operator_ack": "ATT1_ETS2S_SIGNAL_SHADOW",
+  "evidence_universe": ["1000BONKUSDT", "1000PEPEUSDT", "1000RATSUSDT", "AAVEUSDT", "ACEUSDT", "ADAUSDT", "ALGOUSDT", "APTUSDT", "ARBUSDT", "ATOMUSDT", "AVAXUSDT", "BCHUSDT", "BICOUSDT", "BNBUSDT", "BTCUSDT", "C98USDT", "COTIUSDT", "CRVUSDT", "DOGEUSDT", "ETCUSDT", "ETHUSDT", "FILUSDT", "GALAUSDT", "HBARUSDT", "HFTUSDT", "ICPUSDT", "INJUSDT", "JTOUSDT", "LDOUSDT", "MNTUSDT", "ONDOUSDT", "OPUSDT", "ORDIUSDT", "PAXGUSDT", "PEOPLEUSDT", "SEIUSDT", "SHIB1000USDT", "SOLUSDT", "STRKUSDT", "SUIUSDT", "TAOUSDT", "TIAUSDT", "TRXUSDT", "UNIUSDT", "USDCUSDT", "WIFUSDT", "WLDUSDT", "XLMUSDT", "XMRUSDT", "XRPUSDT", "ZECUSDT"],
+  "evidence_universe_sha256": "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19",
+  "profiles": {
+    "ATT1": {
+      "config_hash": "9d6f790d1d21b5597643a11d768d09b9234a1798b6db3f53490e0aad5af187b4",
+      "fixed51_config_hash": "fbe3ad079bdf89a00786a5a9b3c27ffd8be27b7826ae3191d60dbb80ead47a9f",
+      "source_hash": "a7b8d3f5d69ee3943aae8f4c9489fd1a5f5a84fe3ed89b08707231d647299f15",
+      "source_paths": ["strategies/alt_trendline_touch_v1.py", "strategies/att1_live.py", "strategies/live_kline_utils.py", "strategies/signals.py", "research_lab/research_ohlcv_store.py", "research_lab/att1_ets2s_signal_shadow_parity.py"]
+    },
+    "ETS2S": {
+      "config_hash": "453378735642a9c27d9a5ffd94c8bd2d7ab77a28f9cc3f14dbf4334d7c8c0662",
+      "fixed51_config_hash": "af1f846a73098a386d5bff84e589749372c760fc829ae49d95001e8b5f8a3cf5",
+      "source_hash": "d682e034400f55e943ec1a43bfc093eee856624f1b7a1b59e0c5e5eb2ccf9c50",
+      "source_paths": ["strategies/elder_triple_screen_v2.py", "strategies/elder_live.py", "strategies/live_kline_utils.py", "strategies/signals.py", "research_lab/research_ohlcv_store.py", "research_lab/att1_ets2s_signal_shadow_parity.py"]
+    }
+  },
+  "source_closure_sha256": "6170cc0e5db216d0f4c12f59ac9024e17ccada7874a6bf244c75af596e565ffa",
+  "source_files": [
+    {"path": "bot/att1_ets2s_shadow_journal.py", "bytes": 8369, "sha256": "fc815468caab9de7a1c869b475ee20d0328b7cf3c480f36c7f7af4e13ea33e67"},
+    {"path": "bot/att1_ets2s_signal_shadow_contract.py", "bytes": 28081, "sha256": "155976e0eb65cb9f40324a11e23771cfec54753c48e6f0fb77c7e73e047f7752"},
+    {"path": "bot/public_h1_cache_store.py", "bytes": 16402, "sha256": "f3f572336784489c9a2352b013fac72222455b203aadce792dff40f2030c4bc8"},
+    {"path": "bot/sbr1_universe.py", "bytes": 6716, "sha256": "4594c3a9192d1620f207d5591495d4e7f1640f6e17dabbb6aa8016290964de07"},
+    {"path": "configs/att1_ets2s_signal_shadow_v1.json", "bytes": 2800, "sha256": "2936d14143ed66cd7d4342602ab347479f04fb9bf901f17801bc1b083bcdbf32"},
+    {"path": "deploy/systemd/att1-ets2s-signal-shadow.service", "bytes": 1158, "sha256": "f5c9d9f5249fd15fe1cfa6d4cee3edc9362ed07a2f0c2acbe94605eb5d8b7895"},
+    {"path": "deploy/systemd/att1-ets2s-signal-shadow.timer", "bytes": 246, "sha256": "c41358215434eb3485f19dd9384fa7b2f9532db593359c7ce4486ce5e794e9c2"},
+    {"path": "research_lab/att1_ets2s_signal_shadow_parity.py", "bytes": 22911, "sha256": "26e5fc3496c409d9de843b7542421d582d08445515a4ea7f4f3bf15ab1ecc1f0"},
+    {"path": "research_lab/research_ohlcv_store.py", "bytes": 9179, "sha256": "843ef55280cd29fabf6424aa50131fbd97d53c984f59934e889549b543cf9636"},
+    {"path": "scripts/launch_att1_ets2s_shadow.py", "bytes": 11430, "sha256": "ff0cb205b39084d76669f7a0bb0b6fc87f47070e9ef3af6b4b2d77f92b61dc86"},
+    {"path": "scripts/prepare_att1_ets2s_shadow_release.py", "bytes": 8930, "sha256": "1d4787b67fe2c4e707f7fc57ab67679600926907c1aea0870edec7631a2020d1"},
+    {"path": "scripts/run_att1_ets2s_signal_shadow.py", "bytes": 25048, "sha256": "3612f5ef794bad33b654c677259ef89827beeafcbd598cd4502eb63c3f6d26bc"},
+    {"path": "strategies/alt_trendline_touch_v1.py", "bytes": 41984, "sha256": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"},
+    {"path": "strategies/att1_live.py", "bytes": 3859, "sha256": "08e31bac4690fff367ab1e699d16fd9fdc6f3bf6b8f5977f1cb34b4bb24bb7c8"},
+    {"path": "strategies/elder_live.py", "bytes": 4824, "sha256": "3e0fc4e9005b7fcf13e19fde2ab51d35a46a6e354954462326c243e870b72869"},
+    {"path": "strategies/elder_triple_screen_v2.py", "bytes": 30527, "sha256": "6439db1f9df4f7285c3211802cb15abc5d0bb8450a60d3b78a3a7be2093e982a"},
+    {"path": "strategies/live_kline_utils.py", "bytes": 1548, "sha256": "2d26bc689ee4ee67d06e06f4a26861143791aa3884f36f3714cf3fded466dbd7"},
+    {"path": "strategies/signals.py", "bytes": 3378, "sha256": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"}
+  ]
+}

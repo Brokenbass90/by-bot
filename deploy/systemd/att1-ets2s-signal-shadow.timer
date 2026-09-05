@@ -1,0 +1,13 @@
+[Unit]
+Description=ATT1+ETS2S public zero-risk signal shadow hourly timer
+
+[Timer]
+Unit=att1-ets2s-signal-shadow.service
+OnBootSec=2min
+OnCalendar=*-*-* *:02:00
+AccuracySec=1s
+RandomizedDelaySec=0
+Persistent=yes
+
+[Install]
+WantedBy=timers.target

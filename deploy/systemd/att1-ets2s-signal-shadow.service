@@ -1,0 +1,38 @@
+[Unit]
+Description=ATT1+ETS2S public zero-risk signal shadow
+Documentation=file:/opt/bybot-research/att1-ets2s-signal-shadow/app/reports/ATT1_ETS2S_VPS_SHADOW_2026_09_05.md
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=/opt/bybot-research/att1-ets2s-signal-shadow/app/configs/att1_ets2s_signal_shadow_v1.json
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/bybot-research/att1-ets2s-signal-shadow/app
+Environment=PYTHONDONTWRITEBYTECODE=1
+UMask=0077
+ExecStart=/usr/bin/python3 /usr/local/libexec/att1-ets2s-shadow-launcher --once
+TimeoutStartSec=20min
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+ProcSubset=pid
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+CapabilityBoundingSet=CAP_SETUID CAP_SETGID
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6
+SystemCallArchitectures=native
+ReadWritePaths=/opt/bybot-research/att1-ets2s-signal-shadow/app/runtime
+
+[Install]
+WantedBy=multi-user.target
