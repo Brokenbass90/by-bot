@@ -1,0 +1,100 @@
+{
+  "schema_id": "att1_ets2s_vps_shadow_deployment_receipt_v1",
+  "status": "BURN_IN_STARTED",
+  "authority": "research_only_public_att1_ets2s_signal_shadow_no_orders_no_private_api_no_money_no_promotion",
+  "git_commit_sha": "773ce065270b5df16041e49e0985c5e950e5da10",
+  "archive_sha256": "d676e67fe9c43a709048d0e98148f585cffdaabc408a05e2b834e359780c0c1f",
+  "config_sha256": "2834c6ffa9e43daa41fdfccb77cda110e25886895cb856a154d710b757a19c0e",
+  "manifest_sha256": "65b83d60160c4bc86cb577cd7b29fd7c08791534b6ed58287f9e28a09a6eced7",
+  "source_closure_sha256": "896b27c5c570eed8280dbf78050ace180185d4f517573e48eb42c1c23b4bba92",
+  "privileged_launcher_sha256": "ff0cb205b39084d76669f7a0bb0b6fc87f47070e9ef3af6b4b2d77f92b61dc86",
+  "target": {
+    "os": "Ubuntu 24.04.4 LTS",
+    "systemd": 255,
+    "python": "3.12.3",
+    "target_import_pass": true,
+    "preflight_pass": true,
+    "systemd_verify_pass": true
+  },
+  "bootstrap": {
+    "healthy": true,
+    "symbols": 51,
+    "coverage": {"ATT1": 51, "ETS2S": 51},
+    "stream_counts": {"ALPHA_FORWARD_BACKFILL": 102, "EXECUTION_FORWARD": 0},
+    "journal_rows": 102,
+    "journal_tip_hash": "d16cf90ebfbcb4ecb2b63f99e91a469da07ea1797c45e95bfad7eb5674904c12",
+    "exceptions": {"ATT1": 0, "ETS2S": 0},
+    "errors": 0,
+    "orders_allowed": false,
+    "private_api_allowed": false,
+    "money_authority": false,
+    "broker_calls": 0,
+    "order_calls": 0
+  },
+  "restart_dedup": {
+    "healthy": true,
+    "unchanged_symbols": 51,
+    "rows_written": 0,
+    "journal_rows": 102,
+    "journal_tip_unchanged": true
+  },
+  "timer": {
+    "enabled": true,
+    "active": true,
+    "last_trigger_utc": "2026-09-05T08:02:00Z",
+    "next_trigger_utc": "2026-09-05T09:02:00Z",
+    "old_att1_timer_untouched_active": true,
+    "old_sbr1_timer_untouched_active": true
+  },
+  "first_scheduled_cycle": {
+    "service_result": "success",
+    "service_exit_status": 0,
+    "observed_at_ms": 1788595321339,
+    "healthy": true,
+    "available_symbols": 51,
+    "unchanged_symbols": [
+      "HFTUSDT"
+    ],
+    "coverage": {
+      "ATT1": 50,
+      "ETS2S": 50
+    },
+    "signals": {
+      "ATT1": 1,
+      "ETS2S": 0
+    },
+    "signal_symbols": {
+      "ATT1": [
+        "UNIUSDT"
+      ],
+      "ETS2S": []
+    },
+    "stream_counts": {
+      "ALPHA_FORWARD_BACKFILL": 0,
+      "EXECUTION_FORWARD": 100
+    },
+    "rows_written": 100,
+    "journal_rows": 202,
+    "journal_tip_hash": "9acbf13164f77f5d37bfdcb9e91d17647f060201e7be0989d1f96bb5454fd1e2",
+    "exceptions": {
+      "ATT1": 0,
+      "ETS2S": 0
+    },
+    "errors": 0,
+    "orders_allowed": false,
+    "private_api_allowed": false,
+    "money_authority": false,
+    "broker_calls": 0,
+    "order_calls": 0
+  },
+  "burn_in": {
+    "started": true,
+    "start_utc": "2026-09-05T08:02:00Z",
+    "evaluation_not_before_utc": "2026-09-08T08:02:00Z",
+    "reason": "first healthy scheduled EXECUTION_FORWARD cycle; bootstrap and idempotent retries excluded"
+  },
+  "rollback": {
+    "prior_release": null,
+    "action": "disable and stop only att1-ets2s-signal-shadow.timer/service; preserve app and evidence"
+  }
+}
