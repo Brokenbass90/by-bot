@@ -1,8 +1,19 @@
 # Текущий handoff
 
-Обновлено: 2026-09-01. Работать только в каноническом дереве
-`bybit-bot-recovery-20260824`, ветка `codex/recovery-20260824`. Перед этим
-документом код Research Conveyor V1 находится на запушенном commit
+Обновлено: 2026-09-06. Работать только в каноническом дереве
+`bybit-bot-recovery-20260824`, ветка `codex/recovery-20260824`.
+
+Сначала читать `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`, затем
+`reports/CURRENT_PROJECT_ROADMAP.md`. Текущий gate: неизменный 72h VPS burn-in
+ATT1/ETS2S L1 shadow до проверки не раньше `2026-09-08 08:02 UTC`; затем L2
+execution lifecycle и L3 accounting parity. Денежных полномочий у тени нет.
+
+Весь текст ниже — сохранённый handoff Research Conveyor от 2026-09-01. Он
+исторически полезен, но не является текущим операционным статусом.
+
+## Архивный handoff — 2026-09-01
+
+Перед этим документом код Research Conveyor V1 находится на запушенном commit
 `62c34504d93ec4fa4b1cd9454ea5a9e8b09a5e19`; документационный commit меняет
 HEAD отдельно.
 

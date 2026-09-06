@@ -1,10 +1,56 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-31. Это стабильная точка входа между чатами.
-Датированные отчеты остаются журналом, но при конфликте планов сначала читать
-`CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+Обновлено: 2026-09-06. Это стабильная точка входа между чатами.
 
-## Latest engineering update — 2026-08-31
+Канонический порядок чтения:
+
+1. `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`;
+2. `reports/ATT1_ETS2S_VPS_SHADOW_2026_09_05.md`;
+3. этот roadmap;
+4. старые датированные документы только как историю.
+
+При конфликте статусов новый checkpoint имеет приоритет, но live/broker факты
+всегда перепроверяются напрямую.
+
+## Latest operational update — 2026-09-06
+
+ATT1/ETS2S public-only fixed-51 L1 signal shadow развёрнут на VPS с runtime SHA
+`773ce065270b5df16041e49e0985c5e950e5da10`. Первый плановый цикл и следующие
+19 циклов завершились без ошибок: 2,000 prospective decision rows, 5 ATT1 и 13
+ETS2S raw signals, 0 exceptions, 0 broker/order calls, all authority false.
+Burn-in идёт с `2026-09-05 08:02 UTC` до проверки не раньше
+`2026-09-08 08:02 UTC`.
+
+Raw signals не являются сделками. До денег обязательны L2 position/execution
+lifecycle parity, L3 fees/funding/accounting parity, zero-risk lifecycle shadow
+и отдельное owner-approved micro-canary решение.
+
+### Текущий порядок приоритетов
+
+1. **P0 — shortest money path:** завершить неизменный 72h burn-in, затем L2,
+   L3 и zero-risk lifecycle receipt. Никакого автоматического promotion.
+2. **P1 — project truth:** один актуальный checkpoint, current handoff и roadmap;
+   старые документы явно исторические.
+3. **P1 parallel — LAB_AI_V0:** тонкий read-only evidence assistant на
+   Ollama/audit/ledger/conveyor. Дизайн:
+   `docs/superpowers/specs/2026-09-06-lab-ai-v0-design.md`.
+4. **P2 — research data fabric:** единый registry, DuckDB/Parquet, Polars по
+   необходимости, Qdrant как rebuildable semantic index.
+5. **P3 — researcher LoRA:** MLX-LM QLoRA только на human-reviewed evidence;
+   первая модель оценивает качество исследований, а не предсказывает цену.
+6. **P4 — Market Perception:** market-state memory, regime/drift, experts и
+   meta-gate только через replay/control/shadow.
+7. **P5 — дополнительные рынки:** Bull Continuation/XSEC, Alpaca, XAU/Forex,
+   затем Polymarket/DeFi/arbitrage по готовности data/execution contracts.
+
+`LAB_AI_V0` идёт параллельно лёгкими моделями и не имеет права задерживать P0.
+Optuna разрешён только в discovery/train с полным Trial Ledger; OOS не является
+objective, а модель не может менять verdict, риск или money authority.
+
+## Historical engineering update — 2026-08-31 (superseded queue)
+
+Этот раздел сохранён как история выполненных работ. Его «главная очередь» не
+исполнять вместо P0/P1 из обновления 2026-09-06 выше.
 
 Task 5 fail-closed canonical migration завершён, независимо проверен, commit
 `482a536` запушен в `origin/codex/recovery-20260824`. Связанный suite:

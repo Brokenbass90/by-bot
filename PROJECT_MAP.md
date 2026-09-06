@@ -2,12 +2,19 @@
 
 *Онбординг для человека и любого ИИ. Визуал: `reports/PROJECT_MAP.svg`. Машиночитаемая карта кода: `reports/AI_CODEMAP.json` (через `bot.ai_tools.get_codemap`).*
 
-**START HERE (2026-06-30):** `CODEX_HANDOFF_2026_06_29.md` →
+> **CURRENT START HERE (2026-09-06):**
+> `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md` →
+> `reports/CURRENT_PROJECT_ROADMAP.md` → `docs/PROJECT_MAP.md`.
+> Разделы ниже с датой 2026-06-30 являются исторической картой и не должны
+> использоваться как текущая live-истина.
+
+**ARCHIVED START POINT (2026-06-30; history only):**
+`CODEX_HANDOFF_2026_06_29.md` →
 `reports/ROADMAP_WHERE_WE_ARE_2026_06_30.md` →
 `reports/STATE_AND_MIGRATION_2026_06_28.md` →
 `reports/OWNER_STRATEGY_SPEC_2026_06_25.md` (ручной эдж владельца).
 
-**Текущая истина (2026-06-30):**
+**Архивный снимок, не текущая истина (2026-06-30):**
 - Crypto live уже разморожен точечно: ATT1 short-only canary `risk=0.10`,
   остальные price-рукава `risk=0.0`. Нет сделок не из-за freeze, а потому что
   одна редкая наклонка ждёт валидный short setup.
@@ -101,7 +108,7 @@ ATT1 не заблокирован: breaker `enabled=true`, `blocked=false`,
 - latest progress note: `CODEX_HANDOFF_2026_06_19.md`
 <!-- AUTO_SNAPSHOT_END -->
 
-## Ключевые документы
+## Ключевые исторические документы (2026-06; не current handoff)
 - `CODEX_HANDOFF_2026_06_20.md` — каноническая точка продолжения, проверка последних коммитов и текущая серверная истина.
 - `CODEX_HANDOFF_2026_06_19.md` — предшествующий подробный handoff.
 - `reports/LIVE_TRADING_AUDIT_2026_06_18.md`, `reports/RANGE_FORENSICS_AND_ADAPTIVE_PAPER_2026_06_18.md` — live/runtime и execution evidence.

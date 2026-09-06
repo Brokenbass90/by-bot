@@ -1,15 +1,25 @@
-# Current handoff — 2026-08-29
+# Current handoff — 2026-09-06
 
 Canonical tree: `bybit-bot-recovery-20260824`.
 Canonical branch: `codex/recovery-20260824`.
 
 Read first:
 
-1. `reports/CODEX_SESSION_CHECKPOINT_2026_08_29.md`;
+1. `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`;
 2. `reports/CURRENT_PROJECT_ROADMAP.md`;
 3. older dated reports only as history.
 
-## Current gate
+Current gate: ATT1/ETS2S public-only L1 shadow is in an unchanged 72-hour VPS
+burn-in from `2026-09-05 08:02 UTC`; evaluate no earlier than
+`2026-09-08 08:02 UTC`, then proceed to L2 execution lifecycle and L3
+accounting parity. No money authority was added.
+
+The remainder of this file is the archived 2026-08-29 handoff. Do not use its
+"Current gate" or "Next action" sections instead of the checkpoint above.
+
+## Archived handoff — 2026-08-29
+
+### Archived current gate (as of 2026-08-29)
 
 The owner-authorized ATT1/SBR1 reserved diagnostic was run exactly once and is
 consumed. It terminated `FAIL_CLOSED_AFTER_CLAIM` on an `AttributeError` in the
@@ -33,7 +43,7 @@ absent and are intentionally inapplicable after the consumed run.
 Read `reports/ATT1_SBR1_RESERVED_OOS_RESULT_2026_08_29.md` for the complete
 publication and exact hashes.
 
-## Next action
+### Archived next action (as of 2026-08-29)
 
 Do not spend a new authorization on a mechanical rerun: the immutable forensic
 economics already rejects promotion. Preserve v1 byte-for-byte. Move research

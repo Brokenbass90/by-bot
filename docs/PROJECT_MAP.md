@@ -1,10 +1,15 @@
 # Trading Station — canonical project map
 
-Updated: 2026-08-31.
+Updated: 2026-09-06.
 
 Canonical workspace: `bybit-bot-recovery-20260824`.
 
-Current handoff: `reports/CODEX_SESSION_CHECKPOINT_2026_08_31.md`.
+Current handoff: `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`.
+
+Current critical path: unchanged ATT1/ETS2S L1 VPS shadow burn-in through
+`2026-09-08 08:02 UTC`, then L2 execution lifecycle parity and L3
+fees/funding/accounting parity. `LAB_AI_V0` is a parallel read-only project and
+cannot block or promote the money path.
 
 ## Product objective
 
