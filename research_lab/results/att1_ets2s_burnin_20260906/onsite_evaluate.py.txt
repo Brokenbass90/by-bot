@@ -1,0 +1,934 @@
+"""Deterministic, offline ATT1/ETS2S operational burn-in evaluation.
+
+The evaluator only reads a bounded snapshot.  It deliberately does not import
+the deployed runner, its journal writer, a broker client, or any network code.
+"""
+
+from __future__ import annotations
+
+from collections import Counter, defaultdict
+from datetime import datetime, timezone
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import re
+import stat
+from typing import Mapping, Sequence
+
+
+SCHEMA_ID = "att1_ets2s_burnin_receipt_v1"
+SNAPSHOT_SCHEMA_ID = "att1_ets2s_burnin_snapshot_v1"
+AUTHORITY = "research_only_public_att1_ets2s_signal_shadow_no_orders_no_private_api_no_money_no_promotion"
+START_MS = 1_788_595_320_000  # 2026-09-05T08:02:00Z
+END_MS = START_MS + 72 * 3_600_000
+HOUR_MS = 3_600_000
+SERVICE_TIMEOUT_MS = 20 * 60_000
+GENESIS_HASH = "0" * 64
+UNIVERSE_SHA256 = "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19"
+PROFILE_HASHES = {
+    "ATT1": {
+        "config_hash": "9d6f790d1d21b5597643a11d768d09b9234a1798b6db3f53490e0aad5af187b4",
+        "fixed51_config_hash": "fbe3ad079bdf89a00786a5a9b3c27ffd8be27b7826ae3191d60dbb80ead47a9f",
+        "source_hash": "a7b8d3f5d69ee3943aae8f4c9489fd1a5f5a84fe3ed89b08707231d647299f15",
+    },
+    "ETS2S": {
+        "config_hash": "453378735642a9c27d9a5ffd94c8bd2d7ab77a28f9cc3f14dbf4334d7c8c0662",
+        "fixed51_config_hash": "af1f846a73098a386d5bff84e589749372c760fc829ae49d95001e8b5f8a3cf5",
+        "source_hash": "d682e034400f55e943ec1a43bfc093eee856624f1b7a1b59e0c5e5eb2ccf9c50",
+    },
+}
+EXPECTED_FILES = frozenset(
+    {"events.jsonl", "heartbeat.json", "config.json", "manifest.json", "anchor.json", "systemd.jsonl"}
+)
+MAX_BYTES = {
+    "events.jsonl": 64 * 1024 * 1024,
+    "systemd.jsonl": 32 * 1024 * 1024,
+    "heartbeat.json": 1024 * 1024,
+    "config.json": 4 * 1024 * 1024,
+    "manifest.json": 8 * 1024 * 1024,
+    "anchor.json": 1024 * 1024,
+    "snapshot.json": 8 * 1024 * 1024,
+    "deployment_receipt.json": 4 * 1024 * 1024,
+}
+_SHA = re.compile(r"[0-9a-f]{64}\Z")
+_CLAIM = re.compile(
+    r"decision:(ALPHA_FORWARD_BACKFILL|EXECUTION_FORWARD):(ATT1|ETS2S):([A-Z0-9]{2,40}):([0-9]+)\Z"
+)
+
+
+class BurninViolation(ValueError):
+    """Fail-closed input or evidence violation."""
+
+
+def _canonical(value: object) -> bytes:
+    try:
+        return json.dumps(
+            value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+        ).encode("ascii")
+    except (TypeError, ValueError, UnicodeEncodeError) as exc:
+        raise BurninViolation("noncanonical evidence") from exc
+
+
+def _sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _pairs(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, value in pairs:
+        if key in result:
+            raise BurninViolation(f"duplicate JSON key:{key}")
+        result[key] = value
+    return result
+
+
+def _bad_constant(value: str) -> object:
+    raise BurninViolation(f"non-finite JSON value:{value}")
+
+
+def _finite_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise BurninViolation("non-finite JSON number")
+    return parsed
+
+
+def _json(data: bytes, label: str) -> dict[str, object]:
+    try:
+        value = json.loads(
+            data.decode("utf-8"), object_pairs_hook=_pairs, parse_constant=_bad_constant,
+            parse_float=_finite_float,
+        )
+    except BurninViolation:
+        raise
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        raise BurninViolation(f"malformed JSON:{label}") from exc
+    if not isinstance(value, dict):
+        raise BurninViolation(f"JSON object required:{label}")
+    return value
+
+
+def _read_regular(path: Path, *, limit: int, label: str) -> bytes:
+    absolute = Path(os.path.abspath(os.fspath(path)))
+    try:
+        parent = absolute.parent
+        if any(ancestor.is_symlink() for ancestor in absolute.parents) or not parent.is_dir():
+            raise BurninViolation(f"unsafe evidence parent:{label}")
+        fd = os.open(absolute, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    except BurninViolation:
+        raise
+    except OSError as exc:
+        raise BurninViolation(f"cannot open evidence:{label}") from exc
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode):
+            raise BurninViolation(f"evidence is not a regular file:{label}")
+        if info.st_size > limit:
+            raise BurninViolation(f"oversized evidence:{label}")
+        chunks: list[bytes] = []
+        remaining = limit + 1
+        while remaining:
+            chunk = os.read(fd, min(1024 * 1024, remaining))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        data = b"".join(chunks)
+        if len(data) > limit:
+            raise BurninViolation(f"oversized evidence:{label}")
+        return data
+    finally:
+        os.close(fd)
+
+
+def _jsonl(data: bytes, label: str, *, max_lines: int = 500_000) -> list[dict[str, object]]:
+    if data and not data.endswith(b"\n"):
+        raise BurninViolation(f"truncated JSONL:{label}")
+    encoded = data.splitlines()
+    if len(encoded) > max_lines:
+        raise BurninViolation(f"too many JSONL rows:{label}")
+    return [_json(line, f"{label}:{index}") for index, line in enumerate(encoded, 1)]
+
+
+def _integer(value: object, label: str, *, minimum: int | None = None) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise BurninViolation(f"integer required:{label}")
+    if minimum is not None and value < minimum:
+        raise BurninViolation(f"integer below minimum:{label}")
+    return value
+
+
+def _counter(value: object, label: str) -> dict[str, int]:
+    if not isinstance(value, Mapping) or set(value) != {"ATT1", "ETS2S"}:
+        raise BurninViolation(f"invalid sleeve counter:{label}")
+    return {name: _integer(value[name], f"{label}:{name}", minimum=0) for name in ("ATT1", "ETS2S")}
+
+
+def _false_authority(
+    value: Mapping[str, object],
+    label: str,
+    *,
+    require_authority: bool = True,
+    require_zero_fields: bool = True,
+    require_calls: bool = False,
+) -> None:
+    if require_authority and value.get("authority") != AUTHORITY:
+        raise BurninViolation(f"authority drift:{label}")
+    for field in ("money_authority", "orders_allowed", "private_api_allowed"):
+        if (require_zero_fields or field in value) and value.get(field) is not False:
+            raise BurninViolation(f"unsafe authority:{label}:{field}")
+    for field in ("release_or_promotion_authority", "sealed_data_allowed"):
+        if field in value and value.get(field) is not False:
+            raise BurninViolation(f"unsafe authority:{label}:{field}")
+    for field in ("broker_calls", "order_calls"):
+        if (require_calls or field in value) and _integer(value.get(field), f"{label}:{field}", minimum=0) != 0:
+            raise BurninViolation(f"nonzero authority activity:{label}:{field}")
+
+
+def _parse_utc(value: object, label: str) -> int:
+    if not isinstance(value, str):
+        raise BurninViolation(f"UTC timestamp required:{label}")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise BurninViolation(f"invalid UTC timestamp:{label}") from exc
+    if parsed.tzinfo is None or parsed.utcoffset() != timezone.utc.utcoffset(parsed):
+        raise BurninViolation(f"UTC timestamp required:{label}")
+    return int(parsed.timestamp() * 1000)
+
+
+def _validate_contract(
+    config: Mapping[str, object],
+    manifest: Mapping[str, object],
+    anchor: Mapping[str, object],
+    deployment: Mapping[str, object],
+    raw: Mapping[str, bytes],
+) -> tuple[tuple[str, ...], int, str]:
+    _false_authority(config, "config")
+    _false_authority(manifest, "manifest")
+    _false_authority(anchor, "anchor", require_authority=False)
+    _false_authority(deployment, "deployment_receipt", require_zero_fields=False)
+    if config.get("schema_id") != "att1_ets2s_signal_shadow_config_v1":
+        raise BurninViolation("config schema drift")
+    if manifest.get("schema_id") != "att1_ets2s_signal_shadow_manifest_v1":
+        raise BurninViolation("manifest schema drift")
+    if anchor.get("schema_id") != "att1_ets2s_signal_shadow_deployment_anchor_v1":
+        raise BurninViolation("anchor schema drift")
+    if deployment.get("schema_id") != "att1_ets2s_vps_shadow_deployment_receipt_v1":
+        raise BurninViolation("deployment receipt schema drift")
+    if config.get("enabled") is not True or config.get("default_off") is not True:
+        raise BurninViolation("deployed config enable/default-off drift")
+    universe_raw = config.get("evidence_universe")
+    if not isinstance(universe_raw, list) or any(not isinstance(item, str) for item in universe_raw):
+        raise BurninViolation("fixed-51 universe missing")
+    universe = tuple(universe_raw)
+    if len(universe) != 51 or len(set(universe)) != 51 or "HFTUSDT" not in universe:
+        raise BurninViolation("fixed-51 universe drift")
+    if config.get("evidence_universe_sha256") != UNIVERSE_SHA256:
+        raise BurninViolation("known universe hash drift")
+    if _sha(_canonical(list(universe))) != UNIVERSE_SHA256:
+        raise BurninViolation("universe content hash mismatch")
+    if manifest.get("evidence_universe") != list(universe) or manifest.get("evidence_universe_sha256") != UNIVERSE_SHA256:
+        raise BurninViolation("manifest universe mismatch")
+    if config.get("profiles") != PROFILE_HASHES:
+        raise BurninViolation("known profile/source hash drift")
+    manifest_profiles = manifest.get("profiles")
+    if not isinstance(manifest_profiles, Mapping) or set(manifest_profiles) != set(PROFILE_HASHES):
+        raise BurninViolation("manifest profile inventory drift")
+    for sleeve, expected_profile in PROFILE_HASHES.items():
+        actual_profile = manifest_profiles[sleeve]
+        if not isinstance(actual_profile, Mapping) or {
+            key: actual_profile.get(key) for key in expected_profile
+        } != expected_profile:
+            raise BurninViolation("known manifest profile/source hash drift")
+    if config.get("expected_unavailable_symbols") != ["HFTUSDT"]:
+        raise BurninViolation("unexpected universe exemption")
+    if config.get("store_contract_id") != "canonical_closed_utc_buckets_v1":
+        raise BurninViolation("store contract drift")
+    policy = config.get("data_policy")
+    if not isinstance(policy, Mapping):
+        raise BurninViolation("data policy missing")
+    max_age = _integer(policy.get("max_decision_age_ms"), "max_decision_age_ms", minimum=0)
+    if max_age != 300_000 or policy.get("max_forward_lag_ms") != 300_000:
+        raise BurninViolation("forward freshness policy drift")
+    minimum_free = _integer(policy.get("min_runtime_free_bytes"), "min_runtime_free_bytes", minimum=1)
+
+    for field, filename in (("config_sha256", "config.json"), ("manifest_sha256", "manifest.json")):
+        expected = deployment.get(field)
+        if not isinstance(expected, str) or _SHA.fullmatch(expected) is None:
+            raise BurninViolation(f"deployment hash invalid:{field}")
+        if _sha(raw[filename]) != expected or anchor.get(field) != expected:
+            raise BurninViolation(f"deployed input hash mismatch:{field}")
+    for field in ("git_commit_sha", "source_closure_sha256", "privileged_launcher_sha256"):
+        if anchor.get(field) != deployment.get(field):
+            raise BurninViolation(f"anchor/deployment mismatch:{field}")
+    if anchor.get("acknowledgement") != "ATT1_ETS2S_SIGNAL_SHADOW" or anchor.get("enabled") is not True:
+        raise BurninViolation("anchor authorization drift")
+    source_rows = manifest.get("source_files")
+    if not isinstance(source_rows, list) or not source_rows:
+        raise BurninViolation("manifest source closure missing")
+    normalized: list[dict[str, object]] = []
+    paths: set[str] = set()
+    for item in source_rows:
+        if not isinstance(item, Mapping) or set(item) != {"path", "bytes", "sha256"}:
+            raise BurninViolation("invalid manifest source row")
+        path = item.get("path")
+        size = item.get("bytes")
+        digest = item.get("sha256")
+        if not isinstance(path, str) or not path or path in paths or path.startswith("/") or ".." in Path(path).parts:
+            raise BurninViolation("unsafe or duplicate manifest source path")
+        if _integer(size, f"source bytes:{path}", minimum=0) != size or not isinstance(digest, str) or _SHA.fullmatch(digest) is None:
+            raise BurninViolation("invalid manifest source hash row")
+        paths.add(path)
+        normalized.append({"path": path, "bytes": size, "sha256": digest})
+    closure = _sha(_canonical({"files": sorted(normalized, key=lambda row: str(row["path"])), "schema_id": "att1_ets2s_source_closure_v1"}))
+    if manifest.get("source_closure_sha256") != closure or deployment.get("source_closure_sha256") != closure:
+        raise BurninViolation("source closure hash mismatch")
+    return universe, minimum_free, closure
+
+
+def _validate_source_snapshot(meta: Mapping[str, object], manifest: Mapping[str, object], deployment: Mapping[str, object]) -> None:
+    verification = meta.get("source_verification")
+    if not isinstance(verification, Mapping):
+        raise BurninViolation("source verification missing")
+    actual_rows = verification.get("files")
+    expected_rows = manifest.get("source_files")
+    if not isinstance(actual_rows, list) or not isinstance(expected_rows, list):
+        raise BurninViolation("source verification rows missing")
+    actual_by_path: dict[str, Mapping[str, object]] = {}
+    for row in actual_rows:
+        if not isinstance(row, Mapping) or not isinstance(row.get("path"), str):
+            raise BurninViolation("invalid verified source row")
+        path = str(row["path"])
+        if path in actual_by_path:
+            raise BurninViolation("duplicate verified source path")
+        actual_by_path[path] = row
+    expected_by_path = {str(row["path"]): row for row in expected_rows if isinstance(row, Mapping)}
+    if set(actual_by_path) != set(expected_by_path):
+        raise BurninViolation("verified source closure paths mismatch")
+    for path, expected in expected_by_path.items():
+        actual = actual_by_path[path]
+        if actual.get("sha256") != expected.get("sha256") or actual.get("bytes") != expected.get("bytes"):
+            raise BurninViolation(f"verified source mismatch:{path}")
+        if actual.get("uid") != 0 or _mode_writable(actual.get("mode")):
+            raise BurninViolation(f"unsafe verified source ownership/mode:{path}")
+    launcher = verification.get("launcher")
+    units = verification.get("units")
+    if not isinstance(launcher, Mapping) or not isinstance(units, Mapping):
+        raise BurninViolation("launcher/unit verification missing")
+    _trusted_verified_row(launcher, "launcher")
+    if launcher.get("sha256") != deployment.get("privileged_launcher_sha256"):
+        raise BurninViolation("installed launcher hash mismatch")
+    expected_special = {
+        "launcher": expected_by_path.get("scripts/launch_att1_ets2s_shadow.py"),
+        "service": expected_by_path.get("deploy/systemd/att1-ets2s-signal-shadow.service"),
+        "timer": expected_by_path.get("deploy/systemd/att1-ets2s-signal-shadow.timer"),
+    }
+    for name in ("service", "timer"):
+        row = units.get(name)
+        if not isinstance(row, Mapping):
+            raise BurninViolation(f"installed unit verification missing:{name}")
+        _trusted_verified_row(row, f"unit:{name}")
+        expected = expected_special[name]
+        if not isinstance(expected, Mapping) or row.get("sha256") != expected.get("sha256") or row.get("bytes") != expected.get("bytes"):
+            raise BurninViolation(f"installed unit hash mismatch:{name}")
+    launcher_source = expected_special["launcher"]
+    if not isinstance(launcher_source, Mapping) or launcher.get("sha256") != launcher_source.get("sha256") or launcher.get("bytes") != launcher_source.get("bytes"):
+        raise BurninViolation("installed launcher/source mismatch")
+
+
+def _mode_writable(value: object) -> bool:
+    try:
+        mode = int(str(value), 8) if isinstance(value, str) else int(value)
+    except (TypeError, ValueError):
+        raise BurninViolation("invalid verified file mode")
+    return bool(mode & 0o022)
+
+
+def _trusted_verified_row(row: Mapping[str, object], label: str) -> None:
+    if row.get("uid") != 0 or _mode_writable(row.get("mode")):
+        raise BurninViolation(f"unsafe installed ownership/mode:{label}")
+    if not isinstance(row.get("sha256"), str) or _SHA.fullmatch(str(row["sha256"])) is None:
+        raise BurninViolation(f"invalid installed hash:{label}")
+    _integer(row.get("bytes"), f"installed bytes:{label}", minimum=0)
+
+
+def _validate_journal(
+    rows: Sequence[Mapping[str, object]], universe: Sequence[str], max_age: int
+) -> tuple[dict[str, list[Mapping[str, object]]], list[str], int]:
+    previous = GENESIS_HASH
+    claims: set[str] = set()
+    by_cycle: dict[str, list[Mapping[str, object]]] = defaultdict(list)
+    hashes: list[str] = []
+    signal_rows = 0
+    for line_no, row in enumerate(rows, 1):
+        claim = row.get("claim_key")
+        row_hash = row.get("row_hash")
+        if not isinstance(claim, str) or (match := _CLAIM.fullmatch(claim)) is None:
+            raise BurninViolation(f"invalid journal claim:{line_no}")
+        if claim in claims:
+            raise BurninViolation(f"duplicate journal claim:{line_no}")
+        if row.get("prev_hash") != previous or not isinstance(row_hash, str) or _SHA.fullmatch(row_hash) is None:
+            raise BurninViolation(f"broken journal chain:{line_no}")
+        unsigned = {key: value for key, value in row.items() if key != "row_hash"}
+        if _sha(_canonical(unsigned)) != row_hash:
+            raise BurninViolation(f"broken journal row hash:{line_no}")
+        stream, sleeve, symbol, close_text = match.groups()
+        close = int(close_text)
+        if row.get("stream") != stream or row.get("sleeve_id") != sleeve or row.get("symbol") != symbol or row.get("bar_close_ms") != close:
+            raise BurninViolation(f"claim/payload mismatch:{line_no}")
+        if symbol not in universe:
+            raise BurninViolation(f"journal symbol outside fixed universe:{line_no}")
+        _false_authority(row, f"journal:{line_no}", require_calls=True)
+        if row.get("schema_id") != "att1_ets2s_signal_shadow_decision_v1":
+            raise BurninViolation(f"journal schema drift:{line_no}")
+        profile = PROFILE_HASHES[sleeve]
+        if (
+            row.get("l1_profile_config_hash") != profile["config_hash"]
+            or row.get("profile_config_hash") != profile["fixed51_config_hash"]
+            or row.get("profile_source_hash") != profile["source_hash"]
+        ):
+            raise BurninViolation(f"journal profile/source drift:{line_no}")
+        if row.get("store_contract_id") != "canonical_closed_utc_buckets_v1":
+            raise BurninViolation(f"journal store contract drift:{line_no}")
+        start = _integer(row.get("bar_start_ms"), f"bar_start:{line_no}", minimum=0)
+        observed = _integer(row.get("observed_at_ms"), f"observed_at:{line_no}", minimum=0)
+        age = _integer(row.get("decision_age_ms"), f"decision_age:{line_no}")
+        if start + HOUR_MS != close or close % HOUR_MS != 0 or observed - close != age:
+            raise BurninViolation(f"noncausal H1 timestamp:{line_no}")
+        if stream == "EXECUTION_FORWARD" and not 0 <= age <= max_age:
+            raise BurninViolation(f"forward decision outside freshness policy:{line_no}")
+        cycle_id = row.get("cycle_id")
+        if not isinstance(cycle_id, str) or cycle_id != f"cycle:{observed}":
+            raise BurninViolation(f"cycle observation mismatch:{line_no}")
+        if cycle_id in by_cycle and next(reversed(by_cycle)) != cycle_id:
+            raise BurninViolation(f"noncontiguous journal cycle:{line_no}")
+        signal = row.get("signal")
+        exception = row.get("exception")
+        no_signal = row.get("no_signal_reason")
+        if exception is None and signal is None:
+            if not isinstance(no_signal, str) or not no_signal:
+                raise BurninViolation(f"missing no-signal evidence:{line_no}")
+        elif exception is None and isinstance(signal, Mapping):
+            if no_signal != "":
+                raise BurninViolation(f"signal/no-signal overlap:{line_no}")
+            signal_rows += 1
+        elif isinstance(exception, str) and exception and signal is None and no_signal == "":
+            pass
+        else:
+            raise BurninViolation(f"invalid signal/exception partition:{line_no}")
+        claims.add(claim)
+        previous = row_hash
+        hashes.append(row_hash)
+        by_cycle[cycle_id].append(row)
+    return dict(by_cycle), hashes, signal_rows
+
+
+def _cycle_stats(rows: Sequence[Mapping[str, object]]) -> dict[str, object]:
+    coverage = Counter(str(row["sleeve_id"]) for row in rows)
+    signals = Counter(str(row["sleeve_id"]) for row in rows if isinstance(row.get("signal"), Mapping))
+    exceptions = Counter(str(row["sleeve_id"]) for row in rows if row.get("exception") is not None)
+    no_signals = Counter(
+        str(row["sleeve_id"])
+        for row in rows
+        if row.get("signal") is None and row.get("exception") is None
+    )
+    streams = Counter(str(row["stream"]) for row in rows)
+    return {
+        "coverage": {name: coverage[name] for name in ("ATT1", "ETS2S")},
+        "signals": {name: signals[name] for name in ("ATT1", "ETS2S")},
+        "no_signals": {name: no_signals[name] for name in ("ATT1", "ETS2S")},
+        "exceptions": {name: exceptions[name] for name in ("ATT1", "ETS2S")},
+        "stream_counts": {
+            "ALPHA_FORWARD_BACKFILL": streams["ALPHA_FORWARD_BACKFILL"],
+            "EXECUTION_FORWARD": streams["EXECUTION_FORWARD"],
+        },
+    }
+
+
+def _systemd_cycles(data: bytes) -> tuple[list[dict[str, object]], int]:
+    cycles: list[dict[str, object]] = []
+    failures = 0
+    for entry in _jsonl(data, "systemd.jsonl", max_lines=100_000):
+        message = entry.get("MESSAGE")
+        if not isinstance(message, str):
+            continue
+        stripped = message.strip()
+        if stripped.startswith("{"):
+            parsed = _json(stripped.encode("utf-8"), "systemd MESSAGE")
+            if parsed.get("schema_id") == "att1_ets2s_signal_shadow_cycle_v1":
+                if entry.get("_SYSTEMD_UNIT") != "att1-ets2s-signal-shadow.service":
+                    raise BurninViolation("cycle receipt has wrong systemd unit")
+                invocation = entry.get("_SYSTEMD_INVOCATION_ID")
+                if not isinstance(invocation, str) or re.fullmatch(r"[0-9a-f]{32}", invocation) is None:
+                    raise BurninViolation("cycle receipt has no valid invocation identity")
+                if any(key.startswith("_systemd_") for key in parsed):
+                    raise BurninViolation("reserved systemd provenance field in receipt")
+                parsed["_systemd_emitted_at_ms"] = _numeric_string(
+                    entry.get("__REALTIME_TIMESTAMP"), "systemd emission", positive=True
+                ) // 1000
+                parsed["_systemd_invocation_id"] = invocation
+                cycles.append(parsed)
+        elif "att1_ets2s_signal_shadow_cycle_v1" in stripped:
+            raise BurninViolation("malformed systemd cycle receipt")
+        lowered = stripped.lower()
+        if "failed with result" in lowered or "main process exited" in lowered or "failed to start" in lowered:
+            failures += 1
+        if str(entry.get("JOB_RESULT", entry.get("RESULT", ""))).lower() in {"failed", "timeout", "signal", "core-dump"}:
+            failures += 1
+    return cycles, failures
+
+
+def _validate_receipts(
+    receipts: Sequence[Mapping[str, object]],
+    by_cycle: Mapping[str, list[Mapping[str, object]]],
+    hashes: Sequence[str],
+    universe: Sequence[str],
+    config_hash: str,
+    manifest_hash: str,
+    closure: str,
+    as_of: int,
+) -> dict[str, object]:
+    receipts_by_cycle: dict[str, list[Mapping[str, object]]] = defaultdict(list)
+    slots: dict[int, list[str]] = defaultdict(list)
+    later_cycles = 0
+    failed_receipts = 0
+    cursor = 0
+    boundaries: dict[str, int] = {}
+    for cycle_id, rows in by_cycle.items():
+        cursor += len(rows)
+        boundaries[cycle_id] = cursor
+    cursor = 0
+    previous_emitted = 0
+    previous_observed = 0
+    invocations: set[str] = set()
+    durations: list[int] = []
+    for index, receipt in enumerate(receipts, 1):
+        _false_authority(receipt, f"cycle_receipt:{index}", require_calls=True)
+        cycle_id = receipt.get("cycle_id")
+        observed = _integer(receipt.get("observed_at_ms"), f"cycle observed:{index}", minimum=0)
+        emitted = _integer(receipt.get("_systemd_emitted_at_ms"), "receipt emission", minimum=0)
+        if not observed <= emitted <= as_of or emitted - observed > SERVICE_TIMEOUT_MS:
+            raise BurninViolation(f"cycle completion outside causal timeout window:{index}")
+        if emitted < previous_emitted or observed < previous_observed:
+            raise BurninViolation("systemd cycle order regressed")
+        previous_emitted, previous_observed = emitted, observed
+        if cycle_id != f"cycle:{observed}":
+            raise BurninViolation(f"cycle receipt identity mismatch:{index}")
+        if cycle_id in receipts_by_cycle:
+            if _receipt_payload(receipt) != _receipt_payload(receipts_by_cycle[str(cycle_id)][0]):
+                raise BurninViolation("conflicting repeated cycle receipt")
+            continue  # duplicate export of the same invocation cannot add hours
+        invocation = str(receipt["_systemd_invocation_id"])
+        if invocation in invocations:
+            raise BurninViolation("multiple cycle identities in one invocation")
+        invocations.add(invocation)
+        durations.append(emitted - observed)
+        cycle_rows = by_cycle.get(str(cycle_id), [])
+        if _integer(receipt.get("rows_written"), f"rows_written:{index}", minimum=0) != len(cycle_rows):
+            raise BurninViolation(f"cycle rows_written mismatch:{index}")
+        stats = _cycle_stats(cycle_rows)
+        for field in ("coverage", "signals", "no_signals", "exceptions"):
+            if _counter(receipt.get(field), f"receipt {field}:{index}") != stats[field]:
+                raise BurninViolation(f"cycle {field} mismatch:{index}")
+        if receipt.get("stream_counts") != stats["stream_counts"]:
+            raise BurninViolation(f"cycle stream counts mismatch:{index}")
+        journal = receipt.get("journal")
+        if not isinstance(journal, Mapping):
+            raise BurninViolation(f"cycle journal tip missing:{index}")
+        count = _integer(journal.get("row_count"), f"cycle journal count:{index}", minimum=0)
+        if count != cursor + len(cycle_rows) or (cycle_rows and boundaries[str(cycle_id)] != count):
+            raise BurninViolation(f"cycle cumulative journal boundary mismatch:{index}")
+        expected_tip = GENESIS_HASH if count == 0 else hashes[count - 1] if count <= len(hashes) else None
+        if journal.get("tip_hash") != expected_tip:
+            raise BurninViolation(f"cycle journal tip mismatch:{index}")
+        cursor = count
+        if (
+            receipt.get("config_sha256") != config_hash
+            or receipt.get("manifest_sha256") != manifest_hash
+            or receipt.get("source_closure_sha256") != closure
+            or receipt.get("evidence_universe_sha256") != UNIVERSE_SHA256
+            or receipt.get("store_contract_id") != "canonical_closed_utc_buckets_v1"
+        ):
+            raise BurninViolation(f"cycle provenance mismatch:{index}")
+        available = _symbol_set(receipt.get("available_symbols"), f"available:{index}")
+        unchanged = _symbol_set(receipt.get("unchanged_symbols"), f"unchanged:{index}")
+        unavailable = _symbol_set(receipt.get("expected_unavailable"), f"unavailable:{index}")
+        if not unavailable <= {"HFTUSDT"} or unchanged - available:
+            raise BurninViolation(f"cycle unavailable/unchanged accounting invalid:{index}")
+        evaluated = {str(row["symbol"]) for row in cycle_rows}
+        if set(universe) != evaluated | unchanged | unavailable or evaluated & (unavailable | unchanged) or unchanged & unavailable:
+            raise BurninViolation(f"cycle fixed-51 coverage gap:{index}")
+        pairs = Counter((str(row["sleeve_id"]), str(row["symbol"])) for row in cycle_rows)
+        if pairs != Counter({(sleeve, symbol): 1 for symbol in evaluated for sleeve in ("ATT1", "ETS2S")}):
+            raise BurninViolation(f"cycle sleeve/symbol coverage gap:{index}")
+        if type(receipt.get("evidence_universe_count")) is not int or receipt["evidence_universe_count"] != 51:
+            raise BurninViolation(f"cycle universe count drift:{index}")
+        if available != set(universe) - unavailable:
+            raise BurninViolation(f"cycle available universe mismatch:{index}")
+        if receipt.get("healthy") is not True or receipt.get("errors") != [] or sum(stats["exceptions"].values()) != 0:
+            failed_receipts += 1
+        receipts_by_cycle[str(cycle_id)].append(receipt)
+        if stats["stream_counts"]["EXECUTION_FORWARD"]:
+            if unchanged - {"HFTUSDT"}:
+                raise BurninViolation(f"forward cycle unexpected unchanged symbol:{index}")
+            if observed < START_MS:
+                continue
+            slot = START_MS + ((observed - START_MS) // HOUR_MS) * HOUR_MS
+            if observed >= slot + SERVICE_TIMEOUT_MS:
+                raise BurninViolation(f"cycle started outside scheduled timeout window:{index}")
+            if slot < END_MS:
+                slots[slot].append(str(cycle_id))
+            else:
+                later_cycles += 1
+    missing_receipts = sorted(set(by_cycle) - set(receipts_by_cycle))
+    if missing_receipts:
+        raise BurninViolation(f"journal cycles missing systemd receipts:{len(missing_receipts)}")
+    if failed_receipts:
+        raise BurninViolation(f"unhealthy cycle receipts:{failed_receipts}")
+    if cursor != len(hashes):
+        raise BurninViolation("final receipt does not cover entire journal")
+    completed_slots = sum(1 for slot in slots if START_MS <= slot < END_MS)
+    required = [
+        START_MS + index * HOUR_MS
+        for index in range(72)
+        if START_MS + index * HOUR_MS + SERVICE_TIMEOUT_MS <= min(as_of, END_MS)
+    ]
+    missing = [slot for slot in required if slot not in slots]
+    if missing:
+        raise BurninViolation(f"missing required scheduled slots:{len(missing)}")
+    duplicate_slots = sum(max(0, len(set(cycles)) - 1) for cycles in slots.values())
+    return {
+        "completed_slots": completed_slots,
+        "required_slots_as_of": len(required),
+        "missing_required_slots": 0,
+        "duplicate_slot_invocations": duplicate_slots,
+        "later_cycles": later_cycles,
+        "cycle_receipts": len(receipts),
+        "unique_invocations": len(invocations),
+        "zero_row_invocations": sum(not by_cycle.get(cycle) for cycle in receipts_by_cycle),
+        "observed_cycle_duration_min_ms": min(durations) if durations else None,
+        "observed_cycle_duration_max_ms": max(durations) if durations else None,
+    }
+
+
+def _symbol_set(value: object, label: str) -> set[str]:
+    if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+        raise BurninViolation(f"symbol list required:{label}")
+    if len(value) != len(set(value)):
+        raise BurninViolation(f"duplicate symbol accounting:{label}")
+    return set(value)
+
+
+def _receipt_payload(receipt: Mapping[str, object]) -> dict[str, object]:
+    return {key: value for key, value in receipt.items() if not key.startswith("_systemd_")}
+
+
+def _validate_heartbeat(heartbeat: Mapping[str, object], receipts: Sequence[Mapping[str, object]], as_of: int) -> None:
+    # The pinned runner writes {heartbeat_schema, **cycle_receipt}; the cycle
+    # schema therefore wins. Accept the exact deployed wire format.
+    if heartbeat.get("schema_id") != "att1_ets2s_signal_shadow_cycle_v1":
+        raise BurninViolation("heartbeat schema drift")
+    cycle_id = heartbeat.get("cycle_id")
+    matches = [receipt for receipt in receipts if receipt.get("cycle_id") == cycle_id]
+    if not matches or cycle_id != receipts[-1].get("cycle_id"):
+        raise BurninViolation("heartbeat has no systemd cycle receipt")
+    normalized = dict(heartbeat)
+    normalized["schema_id"] = "att1_ets2s_signal_shadow_cycle_v1"
+    if normalized != _receipt_payload(matches[-1]):
+        raise BurninViolation("heartbeat/systemd receipt mismatch")
+    if not 0 <= as_of - _integer(heartbeat.get("observed_at_ms"), "heartbeat observation") <= HOUR_MS + SERVICE_TIMEOUT_MS:
+        raise BurninViolation("latest heartbeat is stale")
+
+
+def _validate_snapshot_files(snapshot_dir: Path) -> tuple[dict[str, object], dict[str, bytes], bytes]:
+    directory = Path(os.path.abspath(os.fspath(snapshot_dir)))
+    if directory.is_symlink() or not directory.is_dir():
+        raise BurninViolation("snapshot directory is unsafe")
+    snapshot_bytes = _read_regular(directory / "snapshot.json", limit=MAX_BYTES["snapshot.json"], label="snapshot.json")
+    meta = _json(snapshot_bytes, "snapshot.json")
+    if meta.get("schema_id") != SNAPSHOT_SCHEMA_ID or meta.get("consistent") is not True:
+        raise BurninViolation("snapshot consistency/schema failure")
+    files = meta.get("files")
+    if not isinstance(files, Mapping) or set(files) != EXPECTED_FILES:
+        raise BurninViolation("snapshot file inventory mismatch")
+    raw: dict[str, bytes] = {}
+    for name in sorted(EXPECTED_FILES):
+        item = files.get(name)
+        if not isinstance(item, Mapping) or set(item) != {"sha256", "bytes", "remote_path"}:
+            raise BurninViolation(f"snapshot file metadata invalid:{name}")
+        data = _read_regular(directory / name, limit=MAX_BYTES[name], label=name)
+        if item.get("sha256") != _sha(data) or item.get("bytes") != len(data):
+            raise BurninViolation(f"snapshot file hash/size mismatch:{name}")
+        if not isinstance(item.get("remote_path"), str) or not item.get("remote_path"):
+            raise BurninViolation(f"snapshot source path missing:{name}")
+        raw[name] = data
+    return meta, raw, snapshot_bytes
+
+
+def _resource_evidence(meta: Mapping[str, object], minimum_free: int) -> tuple[dict[str, object], list[str]]:
+    missing: list[str] = []
+    disk = meta.get("disk")
+    if not isinstance(disk, Mapping):
+        missing.append("current_disk")
+        disk_result: dict[str, object] = {"current_disk": "missing"}
+    else:
+        free = _integer(disk.get("free_bytes"), "disk free", minimum=0)
+        total = _integer(disk.get("total_bytes"), "disk total", minimum=1)
+        used = _integer(disk.get("used_bytes"), "disk used", minimum=0)
+        if free + used > total:
+            raise BurninViolation("disk byte accounting mismatch")
+        if free < minimum_free:
+            raise BurninViolation("current disk guard below deployed minimum")
+        disk_result = {"free_bytes": free, "total_bytes": total, "used_bytes": used,
+                       "reserved_or_unavailable_bytes": total - free - used, "guard_pass": True}
+    systemd = meta.get("systemd")
+    if not isinstance(systemd, Mapping):
+        raise BurninViolation("systemd snapshot missing")
+    service = systemd.get("service")
+    timer = systemd.get("timer")
+    clock = systemd.get("clock")
+    legacy = systemd.get("legacy_timers")
+    if not isinstance(service, Mapping) or not isinstance(timer, Mapping) or not isinstance(clock, Mapping) or not isinstance(legacy, Mapping):
+        raise BurninViolation("systemd properties incomplete")
+    if service.get("Result") != "success" or str(service.get("ExecMainStatus")) != "0":
+        raise BurninViolation("latest service failed")
+    if service.get("ActiveState") != "inactive":
+        raise BurninViolation("snapshot contains an active or failed oneshot service")
+    restarts = _numeric_string(service.get("NRestarts"), "NRestarts")
+    if restarts != 0:
+        raise BurninViolation("service restart counter nonzero")
+    if timer.get("ActiveState") != "active" or timer.get("UnitFileState") != "enabled":
+        raise BurninViolation("timer inactive or disabled")
+    if set(legacy) != {"att1-fixed51-raw-shadow.timer", "sbr1-zero-risk-shadow.timer"} or any(value != "active" for value in legacy.values()):
+        raise BurninViolation("legacy timer state changed")
+    if str(clock.get("NTPSynchronized")).lower() not in {"yes", "true", "1"} or clock.get("Timezone") != "UTC":
+        raise BurninViolation("host clock not confirmed synchronized UTC")
+    resource_values: dict[str, int | None] = {}
+    optional_missing: list[str] = []
+    for field in ("MemoryPeak", "CPUUsageNSec"):
+        try:
+            resource_values[field] = _numeric_string(service.get(field), field, positive=True)
+        except BurninViolation:
+            resource_values[field] = None
+            (optional_missing if field == "MemoryPeak" else missing).append(field)
+    return {"disk": disk_result, "service": resource_values, "restarts": restarts,
+            "unavailable_optional_measurements": optional_missing}, missing
+
+
+def _numeric_string(value: object, label: str, *, positive: bool = False) -> int:
+    if isinstance(value, bool):
+        raise BurninViolation(f"numeric systemd property required:{label}")
+    try:
+        result = int(str(value))
+    except (TypeError, ValueError) as exc:
+        raise BurninViolation(f"numeric systemd property required:{label}") from exc
+    if result < (1 if positive else 0):
+        raise BurninViolation(f"numeric systemd property out of range:{label}")
+    return result
+
+
+def _base_receipt(snapshot_sha: str | None = None) -> dict[str, object]:
+    result: dict[str, object] = {
+        "schema_id": SCHEMA_ID,
+        "status": "FAIL_CLOSED",
+        "authority": AUTHORITY,
+        "money_authority": False,
+        "promotion_authority": False,
+        "orders_allowed": False,
+        "private_api_allowed": False,
+        "statistics_semantics": "signals_only_not_trades_or_profit",
+        "l1_freshness_scope": "cycle_start_observation_only_not_decision_emission_or_executable_fill_latency",
+        "findings": [],
+    }
+    if snapshot_sha is not None:
+        result["snapshot_sha256"] = snapshot_sha
+    return result
+
+
+def evaluate_burnin(snapshot_dir: Path | str, deployment_receipt: Path | str) -> dict[str, object]:
+    """Evaluate a coherent local snapshot and return a deterministic receipt."""
+
+    result = _base_receipt()
+    try:
+        _meta, raw, snapshot_bytes = _validate_snapshot_files(Path(snapshot_dir))
+        deployment_bytes = _read_regular(
+            Path(deployment_receipt), limit=MAX_BYTES["deployment_receipt.json"], label="deployment_receipt.json"
+        )
+    except (BurninViolation, OSError) as exc:
+        result["findings"] = [str(exc)]
+        return result
+    return evaluate_burnin_bundle(snapshot_bytes, raw, deployment_bytes)
+
+
+def evaluate_burnin_bundle(
+    snapshot_bytes: bytes, raw: Mapping[str, bytes], deployment_bytes: bytes
+) -> dict[str, object]:
+    """Pure byte-input seam, also usable onsite without exporting raw files."""
+    result = _base_receipt()
+    try:
+        if not isinstance(snapshot_bytes, bytes) or len(snapshot_bytes) > MAX_BYTES["snapshot.json"]:
+            raise BurninViolation("invalid/oversized snapshot metadata")
+        if not isinstance(deployment_bytes, bytes) or len(deployment_bytes) > MAX_BYTES["deployment_receipt.json"]:
+            raise BurninViolation("invalid/oversized deployment receipt")
+        meta = _json(snapshot_bytes, "snapshot.json")
+        result["snapshot_sha256"] = _sha(snapshot_bytes)
+        if meta.get("schema_id") != SNAPSHOT_SCHEMA_ID or meta.get("consistent") is not True:
+            raise BurninViolation("snapshot consistency/schema failure")
+        files = meta.get("files")
+        if not isinstance(raw, Mapping) or set(raw) != EXPECTED_FILES or not isinstance(files, Mapping) or set(files) != EXPECTED_FILES:
+            raise BurninViolation("snapshot file inventory mismatch")
+        for name, data in raw.items():
+            item = files[name]
+            if not isinstance(data, bytes) or len(data) > MAX_BYTES[name]:
+                raise BurninViolation(f"invalid/oversized evidence:{name}")
+            if not isinstance(item, Mapping) or set(item) != {"sha256", "bytes", "remote_path"}:
+                raise BurninViolation(f"snapshot file metadata invalid:{name}")
+            if item.get("sha256") != _sha(data) or type(item.get("bytes")) is not int or item["bytes"] != len(data):
+                raise BurninViolation(f"snapshot file hash/size mismatch:{name}")
+            if not isinstance(item.get("remote_path"), str) or not item["remote_path"]:
+                raise BurninViolation(f"snapshot source path missing:{name}")
+        deployment = _json(deployment_bytes, "deployment_receipt.json")
+        config = _json(raw["config.json"], "config.json")
+        manifest = _json(raw["manifest.json"], "manifest.json")
+        anchor = _json(raw["anchor.json"], "anchor.json")
+        heartbeat = _json(raw["heartbeat.json"], "heartbeat.json")
+        universe, minimum_free, closure = _validate_contract(config, manifest, anchor, deployment, raw)
+        burn_in = deployment.get("burn_in")
+        if not isinstance(burn_in, Mapping) or burn_in.get("started") is not True:
+            raise BurninViolation("deployment burn-in anchor missing")
+        if _parse_utc(burn_in.get("start_utc"), "burn-in start") != START_MS or _parse_utc(
+            burn_in.get("evaluation_not_before_utc"), "burn-in endpoint"
+        ) != END_MS:
+            raise BurninViolation("burn-in schedule anchor drift")
+        as_of = _integer(meta.get("as_of_ms"), "snapshot as_of_ms", minimum=START_MS)
+        capture_started = _integer(meta.get("capture_started_at_ms"), "capture start", minimum=0)
+        capture_finished = _integer(meta.get("capture_finished_at_ms"), "capture finish", minimum=0)
+        if capture_started > capture_finished or as_of < capture_started or as_of > capture_finished:
+            raise BurninViolation("snapshot capture time inconsistency")
+        capture_label = _parse_utc(meta.get("captured_at_utc"), "snapshot captured_at_utc")
+        if abs(capture_label - capture_finished) >= 1000:
+            raise BurninViolation("snapshot UTC label differs from capture timestamp")
+        _validate_source_snapshot(meta, manifest, deployment)
+        journal_rows = _jsonl(raw["events.jsonl"], "events.jsonl")
+        by_cycle, hashes, signal_rows = _validate_journal(journal_rows, universe, 300_000)
+        cycles, service_failures = _systemd_cycles(raw["systemd.jsonl"])
+        if service_failures:
+            raise BurninViolation(f"systemd service failures:{service_failures}")
+        schedule = _validate_receipts(
+            cycles,
+            by_cycle,
+            hashes,
+            universe,
+            str(deployment["config_sha256"]),
+            str(deployment["manifest_sha256"]),
+            closure,
+            as_of,
+        )
+        _validate_heartbeat(heartbeat, cycles, as_of)
+        resources, missing_resources = _resource_evidence(meta, minimum_free)
+        result.update(
+            {
+                "as_of_ms": as_of,
+                "deployment_receipt_sha256": _sha(deployment_bytes),
+                "journal": {
+                    "rows": len(journal_rows),
+                    "tip_hash": hashes[-1] if hashes else GENESIS_HASH,
+                    "raw_signal_rows": signal_rows,
+                },
+                "burn_in": schedule,
+                "resources": resources,
+                "resource_evidence_missing": missing_resources,
+                "observed_processing_latency": "reported_from_systemd_only; cycle observed_at is cycle start",
+            }
+        )
+        if as_of < END_MS:
+            result["status"] = "IN_PROGRESS"
+        elif schedule["completed_slots"] != 72:
+            raise BurninViolation("72 scheduled slots are incomplete")
+        elif missing_resources:
+            result["status"] = "NOT_CONFIRMED"
+            result["findings"] = [f"mandatory resource evidence missing:{field}" for field in missing_resources]
+        else:
+            result["status"] = "PASS_OPERATIONAL_BURN_IN"
+        return result
+    except BurninViolation as exc:
+        result["status"] = "FAIL_CLOSED"
+        result["findings"] = [str(exc)]
+        return result
+    except (OSError, KeyError, TypeError, ValueError) as exc:
+        result["status"] = "FAIL_CLOSED"
+        result["findings"] = [f"unexpected evaluator input failure:{type(exc).__name__}"]
+        return result
+
+
+__all__ = ["BurninViolation", "evaluate_burnin", "evaluate_burnin_bundle"]
+
+import json, hashlib, subprocess, time, shutil
+from pathlib import Path
+
+root = Path('/opt/bybot-research/att1-ets2s-signal-shadow/app')
+start = int(time.time() * 1000)
+paths = {
+    'events.jsonl': root / 'runtime/att1_ets2s_signal_shadow/events.jsonl',
+    'heartbeat.json': root / 'runtime/att1_ets2s_signal_shadow/heartbeat.json',
+    'config.json': root / 'configs/att1_ets2s_signal_shadow_v1.json',
+    'manifest.json': root / 'configs/research/att1_ets2s_signal_shadow_manifest_v1.json',
+    'anchor.json': Path('/etc/bybot-research/att1-ets2s-signal-shadow.anchor.json'),
+}
+def fingerprint(p):
+    s = p.stat()
+    return [s.st_ino, s.st_size, s.st_mtime_ns]
+def source(p, name=None):
+    s = p.stat()
+    data = p.read_bytes()
+    return {'path': name or str(p), 'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data), 'mode': oct(s.st_mode & 0o777), 'uid': s.st_uid, 'gid': s.st_gid}
+def command(argv):
+    return subprocess.run(argv, check=True, capture_output=True, text=True, timeout=30).stdout
+def props(unit):
+    names = ['ActiveState', 'SubState', 'UnitFileState', 'Result', 'ExecMainStatus', 'ExecMainStartTimestamp', 'ExecMainExitTimestamp', 'InvocationID', 'LastTriggerUSec', 'NextElapseUSecRealtime', 'MemoryPeak', 'CPUUsageNSec', 'TimeoutStartUSec', 'MemoryMax', 'MemoryHigh', 'CPUQuotaPerSecUSec', 'NRestarts']
+    argv = ['systemctl', 'show', unit]
+    for p in names:
+        argv += ['-p', p]
+    return dict(line.split('=', 1) for line in command(argv).splitlines() if '=' in line)
+
+before = {k: fingerprint(p) for k, p in paths.items()}
+files = {k: p.read_text(encoding='ascii') for k, p in paths.items()}
+files['systemd.jsonl'] = command(['journalctl', '-u', 'att1-ets2s-signal-shadow.service', '--since', '2026-09-05 07:00:00 UTC', '--no-pager', '-o', 'json'])
+manifest = json.loads(files['manifest.json'])
+source_files = [source(root / f['path'], f['path']) for f in manifest['source_files']]
+systemd = {
+    'service': props('att1-ets2s-signal-shadow.service'),
+    'timer': props('att1-ets2s-signal-shadow.timer'),
+    'legacy_timers': {u: props(u)['ActiveState'] for u in ['att1-fixed51-raw-shadow.timer', 'sbr1-zero-risk-shadow.timer']},
+    'clock': dict(x.split('=', 1) for x in command(['timedatectl', 'show', '-p', 'NTPSynchronized', '-p', 'Timezone']).splitlines() if '=' in x),
+}
+disk = shutil.disk_usage(root)
+after = {k: fingerprint(p) for k, p in paths.items()}
+end = int(time.time() * 1000)
+meta = {
+    'schema_id': 'att1_ets2s_burnin_snapshot_v1', 'host': 'canonical_vps',
+    'captured_at_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(end / 1000)),
+    'capture_started_at_ms': start, 'capture_finished_at_ms': end, 'as_of_ms': end,
+    'consistent': before == after and systemd['service']['ActiveState'] == 'inactive',
+    'before': before, 'after': after, 'systemd': systemd,
+    'disk': {'free_bytes': disk.free, 'total_bytes': disk.total, 'used_bytes': disk.used},
+    'source_verification': {
+        'files': source_files,
+        'launcher': source(Path('/usr/local/libexec/att1-ets2s-shadow-launcher')),
+        'units': {n: source(Path('/etc/systemd/system/att1-ets2s-signal-shadow.' + n)) for n in ['service', 'timer']},
+    },
+    'files': {k: {'sha256': hashlib.sha256(v.encode('ascii')).hexdigest(), 'bytes': len(v.encode('ascii')), 'remote_path': str(paths[k]) if k in paths else 'journalctl -u att1-ets2s-signal-shadow.service --since 2026-09-05T07:00:00Z -o json'} for k, v in files.items()},
+}
+
+
+# Only the aggregate evaluator receipt leaves the VPS. Raw evidence stays in RAM.
+deployment_bytes = b'{\n  "schema_id": "att1_ets2s_vps_shadow_deployment_receipt_v1",\n  "status": "BURN_IN_STARTED",\n  "authority": "research_only_public_att1_ets2s_signal_shadow_no_orders_no_private_api_no_money_no_promotion",\n  "git_commit_sha": "773ce065270b5df16041e49e0985c5e950e5da10",\n  "archive_sha256": "d676e67fe9c43a709048d0e98148f585cffdaabc408a05e2b834e359780c0c1f",\n  "config_sha256": "2834c6ffa9e43daa41fdfccb77cda110e25886895cb856a154d710b757a19c0e",\n  "manifest_sha256": "65b83d60160c4bc86cb577cd7b29fd7c08791534b6ed58287f9e28a09a6eced7",\n  "source_closure_sha256": "896b27c5c570eed8280dbf78050ace180185d4f517573e48eb42c1c23b4bba92",\n  "privileged_launcher_sha256": "ff0cb205b39084d76669f7a0bb0b6fc87f47070e9ef3af6b4b2d77f92b61dc86",\n  "target": {\n    "os": "Ubuntu 24.04.4 LTS",\n    "systemd": 255,\n    "python": "3.12.3",\n    "target_import_pass": true,\n    "preflight_pass": true,\n    "systemd_verify_pass": true\n  },\n  "bootstrap": {\n    "healthy": true,\n    "symbols": 51,\n    "coverage": {"ATT1": 51, "ETS2S": 51},\n    "stream_counts": {"ALPHA_FORWARD_BACKFILL": 102, "EXECUTION_FORWARD": 0},\n    "journal_rows": 102,\n    "journal_tip_hash": "d16cf90ebfbcb4ecb2b63f99e91a469da07ea1797c45e95bfad7eb5674904c12",\n    "exceptions": {"ATT1": 0, "ETS2S": 0},\n    "errors": 0,\n    "orders_allowed": false,\n    "private_api_allowed": false,\n    "money_authority": false,\n    "broker_calls": 0,\n    "order_calls": 0\n  },\n  "restart_dedup": {\n    "healthy": true,\n    "unchanged_symbols": 51,\n    "rows_written": 0,\n    "journal_rows": 102,\n    "journal_tip_unchanged": true\n  },\n  "timer": {\n    "enabled": true,\n    "active": true,\n    "last_trigger_utc": "2026-09-05T08:02:00Z",\n    "next_trigger_utc": "2026-09-05T09:02:00Z",\n    "old_att1_timer_untouched_active": true,\n    "old_sbr1_timer_untouched_active": true\n  },\n  "first_scheduled_cycle": {\n    "service_result": "success",\n    "service_exit_status": 0,\n    "observed_at_ms": 1788595321339,\n    "healthy": true,\n    "available_symbols": 51,\n    "unchanged_symbols": [\n      "HFTUSDT"\n    ],\n    "coverage": {\n      "ATT1": 50,\n      "ETS2S": 50\n    },\n    "signals": {\n      "ATT1": 1,\n      "ETS2S": 0\n    },\n    "signal_symbols": {\n      "ATT1": [\n        "UNIUSDT"\n      ],\n      "ETS2S": []\n    },\n    "stream_counts": {\n      "ALPHA_FORWARD_BACKFILL": 0,\n      "EXECUTION_FORWARD": 100\n    },\n    "rows_written": 100,\n    "journal_rows": 202,\n    "journal_tip_hash": "9acbf13164f77f5d37bfdcb9e91d17647f060201e7be0989d1f96bb5454fd1e2",\n    "exceptions": {\n      "ATT1": 0,\n      "ETS2S": 0\n    },\n    "errors": 0,\n    "orders_allowed": false,\n    "private_api_allowed": false,\n    "money_authority": false,\n    "broker_calls": 0,\n    "order_calls": 0\n  },\n  "burn_in": {\n    "started": true,\n    "start_utc": "2026-09-05T08:02:00Z",\n    "evaluation_not_before_utc": "2026-09-08T08:02:00Z",\n    "reason": "first healthy scheduled EXECUTION_FORWARD cycle; bootstrap and idempotent retries excluded"\n  },\n  "rollback": {\n    "prior_release": null,\n    "action": "disable and stop only att1-ets2s-signal-shadow.timer/service; preserve app and evidence"\n  }\n}\n'
+receipt = evaluate_burnin_bundle(json.dumps(meta, sort_keys=True).encode("ascii"), {k:v.encode("ascii") for k,v in files.items()}, deployment_bytes)
+receipt["evaluator_source_sha256"] = '843db15adf737dfcfc787cb4bd3cd60ce7cb833b330ebd5a9b57739c80f6bc12'
+receipt["evaluated_on_vps"] = True
+receipt["raw_remote_files_exported"] = False
+receipt["deployed_shadow_modified"] = False
+print(json.dumps(receipt, sort_keys=True))

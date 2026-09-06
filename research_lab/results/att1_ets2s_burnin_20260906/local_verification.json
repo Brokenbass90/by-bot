@@ -1,0 +1,24 @@
+{
+  "combined_duration_seconds": 22.18,
+  "combined_tests_passed": 129,
+  "deployed_shadow_modified": false,
+  "evaluator_tests_passed": 29,
+  "files": {
+    "docs/superpowers/specs/2026-09-06-att1-ets2s-l2-l3-contract.md": "c319cb1de02660c56270d303fdab984d220f554f580ca10eb44f25b55cbe0903",
+    "research_lab/att1_ets2s_burnin.py": "843db15adf737dfcfc787cb4bd3cd60ce7cb833b330ebd5a9b57739c80f6bc12",
+    "research_lab/results/att1_ets2s_burnin_20260906/onsite_evaluate.py.txt": "5a53aa33771a575197aa034c650f3417b86397852947f9fea60dcb0c4b823321",
+    "scripts/evaluate_att1_ets2s_burnin.py": "fc94393c1e642932cbb5c0cd2ecc30141f4b79946fa426983ca5a2b7165c1169",
+    "tests/test_att1_ets2s_burnin.py": "2669e268f6a1d8c42a1d89cb0a6a27e6ca484aeb7f3a33568d83ba58e7dc9a6e"
+  },
+  "money_authority": false,
+  "promotion_authority": false,
+  "review": {
+    "evaluator_false_pass_regressions": "PASS_BOUNDED_REVIEW",
+    "in_memory_cli_and_onsite_wrapper": "PASS_BOUNDED_REVIEW",
+    "l2_l3_design": "PASS_BOUNDED_REVIEW"
+  },
+  "schema_id": "att1_ets2s_preburnin_local_verification_v1",
+  "status": "PASS_LOCAL_ONLY",
+  "vps_full_evaluation": "PENDING_SPECIFIC_DESTINATION_APPROVAL",
+  "vps_summary_as_of": "2026-09-06T08:42:07Z"
+}

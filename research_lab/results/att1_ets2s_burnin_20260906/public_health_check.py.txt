@@ -1,0 +1,135 @@
+"""Read-only check. Export only fixed-key counts, booleans, times and SHA256s.
+
+No raw journal rows, log messages, config/anchor/source contents, symbols,
+credentials or private broker data leave the VPS. No files are written there.
+"""
+import json, hashlib, subprocess, time, shutil
+from pathlib import Path
+from collections import Counter
+
+root = Path('/opt/bybot-research/att1-ets2s-signal-shadow/app')
+runtime = root / 'runtime/att1_ets2s_signal_shadow'
+def pairs(items):
+    result = {}
+    for k, v in items:
+        if k in result:
+            raise ValueError('duplicate JSON key')
+        result[k] = v
+    return result
+def reject(v):
+    raise ValueError('nonfinite JSON')
+def parse(raw):
+    return json.loads(raw, object_pairs_hook=pairs, parse_constant=reject)
+def digest(raw):
+    return hashlib.sha256(raw).hexdigest()
+def canonical(v):
+    return json.dumps(v, sort_keys=True, separators=(',', ':'), ensure_ascii=True, allow_nan=False).encode('ascii')
+def run(argv):
+    return subprocess.run(argv, check=True, capture_output=True, text=True, timeout=30).stdout
+
+start = int(time.time() * 1000)
+raw = (runtime / 'events.jsonl').read_bytes()
+heartbeat = parse((runtime / 'heartbeat.json').read_bytes())
+assert raw.endswith(b'\n')
+previous = '0' * 64
+claims = set()
+streams = Counter()
+signals = Counter()
+sides = Counter()
+cycles = {}
+violations = 0
+exceptions = 0
+max_age = 0
+for encoded in raw.splitlines():
+    row = parse(encoded)
+    assert row['prev_hash'] == previous
+    assert digest(canonical({k:v for k,v in row.items() if k != 'row_hash'})) == row['row_hash']
+    assert row['claim_key'] not in claims
+    claims.add(row['claim_key'])
+    previous = row['row_hash']
+    stream = row['stream']
+    assert stream in ['ALPHA_FORWARD_BACKFILL', 'EXECUTION_FORWARD']
+    sleeve = row['sleeve_id']
+    assert sleeve in ['ATT1', 'ETS2S']
+    streams[stream] += 1
+    exceptions += int(row['exception'] is not None)
+    violations += sum(row[k] is not False for k in ['orders_allowed','private_api_allowed','money_authority'])
+    violations += sum(type(row[k]) is not int or row[k] != 0 for k in ['broker_calls','order_calls'])
+    if stream == 'EXECUTION_FORWARD':
+        c = cycles.setdefault(row['cycle_id'], {'observed':row['observed_at_ms'], 'count':0})
+        c['count'] += 1
+        max_age = max(max_age, row['decision_age_ms'])
+        if row['signal'] is not None:
+            signals[sleeve] += 1
+            assert row['signal']['side'] in ['long','short']
+            sides[row['signal']['side']] += 1
+
+jraw = run(['journalctl','-u','att1-ets2s-signal-shadow.service','--since','2026-09-05 07:00:00 UTC','--no-pager','-o','json'])
+receipts = []
+failed_receipts = 0
+service_failures = 0
+durations = []
+last_start = None
+boots = set()
+for line in jraw.splitlines():
+    event = parse(line)
+    message = event.get('MESSAGE','')
+    if not isinstance(message,str):
+        continue
+    ts = int(event['__REALTIME_TIMESTAMP']) // 1000
+    if event.get('_BOOT_ID'):
+        boots.add(event['_BOOT_ID'])
+    if message.startswith('Starting att1-ets2s-signal-shadow.service'):
+        last_start = ts
+    if message.startswith('Finished att1-ets2s-signal-shadow.service') and last_start is not None:
+        durations.append(ts-last_start)
+        last_start = None
+    if 'Failed with result' in message or 'Main process exited' in message or message.startswith('Failed to start att1-ets2s'):
+        service_failures += 1
+    if message.startswith('{'):
+        obj = parse(message)
+        if obj.get('schema_id') == 'att1_ets2s_signal_shadow_cycle_v1':
+            receipts.append(obj)
+            failed_receipts += int(obj.get('healthy') is not True)
+
+config_raw = (root/'configs/att1_ets2s_signal_shadow_v1.json').read_bytes()
+manifest_raw = (root/'configs/research/att1_ets2s_signal_shadow_manifest_v1.json').read_bytes()
+manifest = parse(manifest_raw)
+source_mismatches = sum(digest((root/f['path']).read_bytes()) != f['sha256'] for f in manifest['source_files'])
+service = dict(x.split('=',1) for x in run(['systemctl','show','att1-ets2s-signal-shadow.service','-p','Result','-p','ExecMainStatus','-p','ActiveState','-p','CPUUsageNSec']).splitlines())
+timer = dict(x.split('=',1) for x in run(['systemctl','show','att1-ets2s-signal-shadow.timer','-p','ActiveState','-p','UnitFileState']).splitlines())
+start_slot = 1788595320000
+observed_slots = {(c['observed']-start_slot)//3600000 for c in cycles.values()}
+latest_slot = max(observed_slots)
+end = int(time.time()*1000)
+result = {
+ 'schema_id':'att1_ets2s_public_health_summary_v1','captured_at_ms':end,
+ 'captured_at_utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime(end/1000)),
+ 'read_only':True,'raw_remote_files_exported':False,
+ 'coherent_journal_read':raw==(runtime/'events.jsonl').read_bytes(),
+ 'journal_rows':len(claims),'journal_sha256':digest(raw),'journal_tip_hash':previous,'chain_valid':True,
+ 'heartbeat_tip_matches':heartbeat['journal']=={'row_count':len(claims),'tip_hash':previous},
+ 'bootstrap_rows':streams['ALPHA_FORWARD_BACKFILL'],'forward_rows':streams['EXECUTION_FORWARD'],
+ 'forward_cycles':len(cycles),'forward_min_rows_per_cycle':min(c['count'] for c in cycles.values()),
+ 'forward_max_rows_per_cycle':max(c['count'] for c in cycles.values()),
+ 'scheduled_slots_through_latest':latest_slot+1,'missing_slots_through_latest':len(set(range(latest_slot+1))-observed_slots),
+ 'first_forward_observed_at_ms':min(c['observed'] for c in cycles.values()),
+ 'latest_forward_observed_at_ms':max(c['observed'] for c in cycles.values()),
+ 'att1_raw_signals':signals['ATT1'],'ets2s_raw_signals':signals['ETS2S'],
+ 'long_raw_signals':sides['long'],'short_raw_signals':sides['short'],
+ 'journal_exceptions':exceptions,'authority_or_call_violations':violations,
+ 'max_recorded_forward_decision_age_ms':max_age,
+ 'cycle_receipts':len(receipts),'unhealthy_cycle_receipts':failed_receipts,'service_failure_log_events':service_failures,
+ 'receipt_forward_cycles':sum(r.get('stream_counts',{}).get('EXECUTION_FORWARD',0)>0 for r in receipts),
+ 'receipt_zero_row_cycles':sum(r.get('rows_written')==0 for r in receipts),
+ 'service_finished_count':len(durations),'service_duration_min_ms':min(durations),'service_duration_max_ms':max(durations),
+ 'observed_boot_count':len(boots),'latest_service_success':service.get('Result')=='success' and service.get('ExecMainStatus')=='0',
+ 'latest_cpu_ns':int(service['CPUUsageNSec']),'timer_active_enabled':timer.get('ActiveState')=='active' and timer.get('UnitFileState')=='enabled',
+ 'source_file_count':len(manifest['source_files']),'source_hash_mismatches':source_mismatches,
+ 'config_sha_matches':digest(config_raw)=='2834c6ffa9e43daa41fdfccb77cda110e25886895cb856a154d710b757a19c0e',
+ 'manifest_sha_matches':digest(manifest_raw)=='65b83d60160c4bc86cb577cd7b29fd7c08791534b6ed58287f9e28a09a6eced7',
+ 'launcher_sha_matches':digest(Path('/usr/local/libexec/att1-ets2s-shadow-launcher').read_bytes())=='ff0cb205b39084d76669f7a0bb0b6fc87f47070e9ef3af6b4b2d77f92b61dc86',
+ 'free_disk_bytes':shutil.disk_usage(root).free,'collection_duration_ms':end-start,
+ 'money_authority':False,'promotion_authority':False,
+}
+print(json.dumps(result,sort_keys=True))

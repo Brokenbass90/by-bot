@@ -78,3 +78,7 @@ _snimki/
 _to_delete/
 *.bak
 *.bak*
+
+# Owner-local evidence must not enter public history.
+/.private/
+*.private.bundle
