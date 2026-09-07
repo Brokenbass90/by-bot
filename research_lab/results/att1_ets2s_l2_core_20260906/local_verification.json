@@ -1,0 +1,21 @@
+{
+  "schema_id": "att1_ets2s_l2_exposure_core_local_verification_v1",
+  "status": "LOCAL_SYNTHETIC_EXPOSURE_CORE_REVIEWED",
+  "reviewer_status": "NO_SLICE_BLOCKERS",
+  "tests": {"command": ".venv/bin/python -m pytest -q tests/test_att1_ets2s_lifecycle.py", "result": "23 passed in 0.07s"},
+  "py_compile": {"command": ".venv/bin/python -m py_compile research_lab/att1_ets2s_lifecycle.py", "result": "exit 0"},
+  "aggregate_context": {"separate_suite_tests": 134, "separate_suite_duration": "24.93s", "combined_evidence_count": 157, "count_semantics": "two separately executed suites"},
+  "critical_review": {"path": "research_lab/results/att1_ets2s_l2_core_20260906/final_review.md", "sha256": "14e7d92c3fa547a8ba4a1b423956fb9ab95d8493a9c930bc320ddfb7580e275e", "command_result": "28 passed, 29 deselected in 1.55s; additional 6000 transition and 1000 Fraction-oracle probes passed"},
+  "source": {"path": "research_lab/att1_ets2s_lifecycle.py", "sha256": "1c1055de90e4dab75b1c5f81872f0f0da5b3f35cc75feb797993b4d2696829c0"},
+  "tests_file": {"path": "tests/test_att1_ets2s_lifecycle.py", "sha256": "6f98caf68719a4120b27a2621ae15322f6396b90843c33db548b88e4dd496221"},
+  "plan": {"path": "docs/superpowers/plans/2026-09-06-l2-exposure-core.md", "sha256": "c437447fc901bf662edf78cc378e8757c6a52e0046ce8c5044e8aa063ddaea39"},
+  "report": {"path": "reports/ATT1_ETS2S_L2_EXPOSURE_CORE_2026_09_06.md"},
+  "receipt_and_payload": {
+    "receipt_path": "research_lab/results/att1_ets2s_l2_core_20260906/local_verification.json",
+    "payload_paths": ["research_lab/att1_ets2s_lifecycle.py", "tests/test_att1_ets2s_lifecycle.py", "docs/superpowers/plans/2026-09-06-l2-exposure-core.md"],
+    "payload_hashes": ["1c1055de90e4dab75b1c5f81872f0f0da5b3f35cc75feb797993b4d2696829c0", "6f98caf68719a4120b27a2621ae15322f6396b90843c33db548b88e4dd496221", "c437447fc901bf662edf78cc378e8757c6a52e0046ce8c5044e8aa063ddaea39"]
+  },
+  "authority": {"network": false, "broker": false, "orders": false, "risk": false, "money": false, "promotion": false},
+  "profit_claim": false,
+  "full_l2_l3_parity": false
+}

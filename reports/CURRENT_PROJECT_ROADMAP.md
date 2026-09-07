@@ -1,6 +1,6 @@
 # Current roadmap
 
-Burn-in evaluator and lifecycle contracts prepared.
+Synthetic L2 exposure core implemented and verified.
 
 Canonical branch: `codex/recovery-20260824`. Only ATT1 P0 is active.
 Private broker snapshots and account economics remain on local branch

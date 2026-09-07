@@ -1,0 +1,60 @@
+{
+  "schema_id": "codex_project_orchestration_verification_v1",
+  "checked_at_utc": "2026-09-06T14:20:27.603011+00:00",
+  "cli_version": "0.153.4",
+  "app_version": "26.901.51231",
+  "app_build": "8109",
+  "evidence_scope": "local runtime metadata and rollout turn_context, not backend billing attestation",
+  "features_after": [
+    "multi_agent                              stable             true",
+    "multi_agent_mode                         removed            false",
+    "multi_agent_v2                           stable             true"
+  ],
+  "project_config_sha256": "e974fc99451c456a5e2d93999bb04f27544220b5049a380729d478f850ce1235",
+  "children": [
+    {
+      "id": "01a07710-a4e1-7b00-af24-6b32a8366868",
+      "rollout_path": "/OWNER_HOME/.codex/PRIVATE_SESSION_PATH",
+      "cli_version": "0.153.4",
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "medium",
+      "agent_path": "/root/l2_inventory",
+      "latest_turn_context": {
+        "model": "gpt-5.6-luna",
+        "effort": "medium",
+        "turn_id": "01a07710-a549-7862-8d84-3e8682eb51ff"
+      }
+    },
+    {
+      "id": "01a07712-6e1c-7820-b610-088d6cf5711e",
+      "rollout_path": "/OWNER_HOME/.codex/PRIVATE_SESSION_PATH",
+      "cli_version": "0.153.4",
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "medium",
+      "agent_path": "/root/burnin_utc_alias",
+      "latest_turn_context": {
+        "model": "gpt-5.6-luna",
+        "effort": "medium",
+        "turn_id": "01a07712-6e69-7471-ad61-2aa7b8b9c430"
+      }
+    },
+    {
+      "id": "01a07715-b479-7eb2-8faa-78e22b0e7a31",
+      "rollout_path": "/OWNER_HOME/.codex/PRIVATE_SESSION_PATH",
+      "cli_version": "0.153.4",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "high",
+      "agent_path": "/root/l2_exposure_core",
+      "latest_turn_context": {
+        "model": "gpt-5.6-terra",
+        "effort": "high",
+        "turn_id": "01a07715-b4dd-7990-b3f5-9ad54c4a140f"
+      }
+    }
+  ],
+  "savings_percentage_measured": false,
+  "root_model_unchanged": true,
+  "supersedes": "runtime_verification.json",
+  "configuration_loading_fix": "canonical repo explicitly trusted; parent workspace was already trusted",
+  "child_verification_scope": "Explicit model/effort runtime dispatch works in current parent; persisted defaults verified separately by config loader, not by restart"
+}

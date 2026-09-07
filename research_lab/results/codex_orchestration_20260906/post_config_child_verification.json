@@ -1,0 +1,28 @@
+{
+  "schema_id": "codex_post_config_child_verification_v1",
+  "verified_at_utc": "2026-09-06T14:22:38Z",
+  "thread_id": "01a07717-f379-7d81-8984-e8653766ce44",
+  "parent_thread_id": "01a075d8-273b-76a2-ad6e-02bc6cb34c11",
+  "sqlite_source": "/OWNER_HOME/.codex/state_5.sqlite",
+  "sqlite_thread": {
+    "cli_version": "0.153.4",
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "medium",
+    "agent_path": "/root/orchestration_evidence_docs",
+    "memory_mode": "enabled",
+    "thread_source": "subagent"
+  },
+  "rollout_path": "/OWNER_HOME/.codex/PRIVATE_SESSION_PATH",
+  "turn_context": {
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "turn_id": "01a07717-f3d4-72e1-828d-29b84bad3736",
+    "evidence_basis": "SQLite thread model/reasoning_effort plus child rollout runtime context"
+  },
+  "configuration_scope": "canonical repository explicitly trusted; parent workspace already trusted",
+  "parent_restart_performed": false,
+  "explicit_per_spawn_dispatch_verified": true,
+  "persisted_defaults_hot_reload_proven": false,
+  "billing_attestation": false,
+  "savings_percentage_measured": false
+}

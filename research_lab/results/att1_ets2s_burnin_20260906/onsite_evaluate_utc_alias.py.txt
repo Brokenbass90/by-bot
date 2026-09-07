@@ -865,3 +865,70 @@ def evaluate_burnin_bundle(
 
 
 __all__ = ["BurninViolation", "evaluate_burnin", "evaluate_burnin_bundle"]
+
+import json, hashlib, subprocess, time, shutil
+from pathlib import Path
+
+root = Path('/opt/bybot-research/att1-ets2s-signal-shadow/app')
+start = int(time.time() * 1000)
+paths = {
+    'events.jsonl': root / 'runtime/att1_ets2s_signal_shadow/events.jsonl',
+    'heartbeat.json': root / 'runtime/att1_ets2s_signal_shadow/heartbeat.json',
+    'config.json': root / 'configs/att1_ets2s_signal_shadow_v1.json',
+    'manifest.json': root / 'configs/research/att1_ets2s_signal_shadow_manifest_v1.json',
+    'anchor.json': Path('/etc/bybot-research/att1-ets2s-signal-shadow.anchor.json'),
+}
+def fingerprint(p):
+    s = p.stat()
+    return [s.st_ino, s.st_size, s.st_mtime_ns]
+def source(p, name=None):
+    s = p.stat()
+    data = p.read_bytes()
+    return {'path': name or str(p), 'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data), 'mode': oct(s.st_mode & 0o777), 'uid': s.st_uid, 'gid': s.st_gid}
+def command(argv):
+    return subprocess.run(argv, check=True, capture_output=True, text=True, timeout=30).stdout
+def props(unit):
+    names = ['ActiveState', 'SubState', 'UnitFileState', 'Result', 'ExecMainStatus', 'ExecMainStartTimestamp', 'ExecMainExitTimestamp', 'InvocationID', 'LastTriggerUSec', 'NextElapseUSecRealtime', 'MemoryPeak', 'CPUUsageNSec', 'TimeoutStartUSec', 'MemoryMax', 'MemoryHigh', 'CPUQuotaPerSecUSec', 'NRestarts']
+    argv = ['systemctl', 'show', unit]
+    for p in names:
+        argv += ['-p', p]
+    return dict(line.split('=', 1) for line in command(argv).splitlines() if '=' in line)
+
+before = {k: fingerprint(p) for k, p in paths.items()}
+files = {k: p.read_text(encoding='ascii') for k, p in paths.items()}
+files['systemd.jsonl'] = command(['journalctl', '-u', 'att1-ets2s-signal-shadow.service', '--since', '2026-09-05 07:00:00 UTC', '--no-pager', '-o', 'json'])
+manifest = json.loads(files['manifest.json'])
+source_files = [source(root / f['path'], f['path']) for f in manifest['source_files']]
+systemd = {
+    'service': props('att1-ets2s-signal-shadow.service'),
+    'timer': props('att1-ets2s-signal-shadow.timer'),
+    'legacy_timers': {u: props(u)['ActiveState'] for u in ['att1-fixed51-raw-shadow.timer', 'sbr1-zero-risk-shadow.timer']},
+    'clock': dict(x.split('=', 1) for x in command(['timedatectl', 'show', '-p', 'NTPSynchronized', '-p', 'Timezone']).splitlines() if '=' in x),
+}
+disk = shutil.disk_usage(root)
+after = {k: fingerprint(p) for k, p in paths.items()}
+end = int(time.time() * 1000)
+meta = {
+    'schema_id': 'att1_ets2s_burnin_snapshot_v1', 'host': 'canonical_vps',
+    'captured_at_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(end / 1000)),
+    'capture_started_at_ms': start, 'capture_finished_at_ms': end, 'as_of_ms': end,
+    'consistent': before == after and systemd['service']['ActiveState'] == 'inactive',
+    'before': before, 'after': after, 'systemd': systemd,
+    'disk': {'free_bytes': disk.free, 'total_bytes': disk.total, 'used_bytes': disk.used},
+    'source_verification': {
+        'files': source_files,
+        'launcher': source(Path('/usr/local/libexec/att1-ets2s-shadow-launcher')),
+        'units': {n: source(Path('/etc/systemd/system/att1-ets2s-signal-shadow.' + n)) for n in ['service', 'timer']},
+    },
+    'files': {k: {'sha256': hashlib.sha256(v.encode('ascii')).hexdigest(), 'bytes': len(v.encode('ascii')), 'remote_path': str(paths[k]) if k in paths else 'journalctl -u att1-ets2s-signal-shadow.service --since 2026-09-05T07:00:00Z -o json'} for k, v in files.items()},
+}
+
+
+# Only the aggregate evaluator receipt leaves the VPS. Raw evidence stays in RAM.
+deployment_bytes = b'{\n  "schema_id": "att1_ets2s_vps_shadow_deployment_receipt_v1",\n  "status": "BURN_IN_STARTED",\n  "authority": "research_only_public_att1_ets2s_signal_shadow_no_orders_no_private_api_no_money_no_promotion",\n  "git_commit_sha": "773ce065270b5df16041e49e0985c5e950e5da10",\n  "archive_sha256": "d676e67fe9c43a709048d0e98148f585cffdaabc408a05e2b834e359780c0c1f",\n  "config_sha256": "2834c6ffa9e43daa41fdfccb77cda110e25886895cb856a154d710b757a19c0e",\n  "manifest_sha256": "65b83d60160c4bc86cb577cd7b29fd7c08791534b6ed58287f9e28a09a6eced7",\n  "source_closure_sha256": "896b27c5c570eed8280dbf78050ace180185d4f517573e48eb42c1c23b4bba92",\n  "privileged_launcher_sha256": "ff0cb205b39084d76669f7a0bb0b6fc87f47070e9ef3af6b4b2d77f92b61dc86",\n  "target": {\n    "os": "Ubuntu 24.04.4 LTS",\n    "systemd": 255,\n    "python": "3.12.3",\n    "target_import_pass": true,\n    "preflight_pass": true,\n    "systemd_verify_pass": true\n  },\n  "bootstrap": {\n    "healthy": true,\n    "symbols": 51,\n    "coverage": {"ATT1": 51, "ETS2S": 51},\n    "stream_counts": {"ALPHA_FORWARD_BACKFILL": 102, "EXECUTION_FORWARD": 0},\n    "journal_rows": 102,\n    "journal_tip_hash": "d16cf90ebfbcb4ecb2b63f99e91a469da07ea1797c45e95bfad7eb5674904c12",\n    "exceptions": {"ATT1": 0, "ETS2S": 0},\n    "errors": 0,\n    "orders_allowed": false,\n    "private_api_allowed": false,\n    "money_authority": false,\n    "broker_calls": 0,\n    "order_calls": 0\n  },\n  "restart_dedup": {\n    "healthy": true,\n    "unchanged_symbols": 51,\n    "rows_written": 0,\n    "journal_rows": 102,\n    "journal_tip_unchanged": true\n  },\n  "timer": {\n    "enabled": true,\n    "active": true,\n    "last_trigger_utc": "2026-09-05T08:02:00Z",\n    "next_trigger_utc": "2026-09-05T09:02:00Z",\n    "old_att1_timer_untouched_active": true,\n    "old_sbr1_timer_untouched_active": true\n  },\n  "first_scheduled_cycle": {\n    "service_result": "success",\n    "service_exit_status": 0,\n    "observed_at_ms": 1788595321339,\n    "healthy": true,\n    "available_symbols": 51,\n    "unchanged_symbols": [\n      "HFTUSDT"\n    ],\n    "coverage": {\n      "ATT1": 50,\n      "ETS2S": 50\n    },\n    "signals": {\n      "ATT1": 1,\n      "ETS2S": 0\n    },\n    "signal_symbols": {\n      "ATT1": [\n        "UNIUSDT"\n      ],\n      "ETS2S": []\n    },\n    "stream_counts": {\n      "ALPHA_FORWARD_BACKFILL": 0,\n      "EXECUTION_FORWARD": 100\n    },\n    "rows_written": 100,\n    "journal_rows": 202,\n    "journal_tip_hash": "9acbf13164f77f5d37bfdcb9e91d17647f060201e7be0989d1f96bb5454fd1e2",\n    "exceptions": {\n      "ATT1": 0,\n      "ETS2S": 0\n    },\n    "errors": 0,\n    "orders_allowed": false,\n    "private_api_allowed": false,\n    "money_authority": false,\n    "broker_calls": 0,\n    "order_calls": 0\n  },\n  "burn_in": {\n    "started": true,\n    "start_utc": "2026-09-05T08:02:00Z",\n    "evaluation_not_before_utc": "2026-09-08T08:02:00Z",\n    "reason": "first healthy scheduled EXECUTION_FORWARD cycle; bootstrap and idempotent retries excluded"\n  },\n  "rollback": {\n    "prior_release": null,\n    "action": "disable and stop only att1-ets2s-signal-shadow.timer/service; preserve app and evidence"\n  }\n}\n'
+receipt = evaluate_burnin_bundle(json.dumps(meta, sort_keys=True).encode("ascii"), {k:v.encode("ascii") for k,v in files.items()}, deployment_bytes)
+receipt["evaluator_source_sha256"] = '71d0cae7f24620360184faa83608cd57f56e9756644d1d3801d64d192ef0c931'
+receipt["evaluated_on_vps"] = True
+receipt["raw_remote_files_exported"] = False
+receipt["deployed_shadow_modified"] = False
+print(json.dumps(receipt, sort_keys=True))

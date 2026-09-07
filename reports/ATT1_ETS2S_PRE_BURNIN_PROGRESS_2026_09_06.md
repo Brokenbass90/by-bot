@@ -1,5 +1,30 @@
 # ATT1/ETS2S — progress before the burn-in boundary
 
+## Current status — 2026-09-06T14:17:56.950Z
+
+The owner explicitly authorized the exact onsite in-memory evaluator run. It
+succeeded with aggregate-only output: raw signal data stayed on the VPS, no
+remote file was written, and the deployed shadow was not modified. The exact
+receipt is
+`research_lab/results/att1_ets2s_burnin_20260906/onsite_receipt_20260906T141756Z.json`.
+
+Status is `IN_PROGRESS`: 31 completed slots, 30 required after the completion
+grace, zero missing required slots, 34 cycle receipts, zero duplicate
+invocations, and two zero-row idempotent invocations. The journal contains
+3,202 rows (3,100 forward plus 102 bootstrap) and 24 total raw signals across
+the whole journal (the receipt does not expose a forward-only split). The
+current receipt does not provide a sleeve split; no current ATT1/ETS2S split is
+asserted here. Maximum observed service duration is 389,404 ms.
+
+The burn-in evaluation remains earliest `2026-09-08 08:02 UTC`. Runtime release
+SHA remains `773ce065270b5df16041e49e0985c5e950e5da10`. The prior first receipt
+and its `FAIL_CLOSED` result remain preserved as historical evidence of the UTC
+alias bug; the corrected evaluator has 34 passing evaluator tests.
+
+The old pending-permission status below is superseded by this section.
+
+## Historical snapshot — 2026-09-06 08:42:07 UTC
+
 Snapshot: 2026-09-06 08:42:07 UTC. Canonical tree/branch remain
 `bybit-bot-recovery-20260824` / `codex/recovery-20260824`.
 
@@ -69,7 +94,7 @@ claim about its positions or PnL is made here.
    of execution replay, an existing funding/basis screen, and independent
    Market Perception baselines. These are experiment proposals, not results.
 
-Verification: **129 passed** in the combined focused suite (29 new evaluator
+Verification: **134 passed** in the combined focused suite (34 evaluator
 tests plus the original 100 L1/release/Store tests). The machine record is
 `research_lab/results/att1_ets2s_burnin_20260906/local_verification.json`.
 No remote full-evaluator PASS is claimed.
@@ -91,17 +116,14 @@ No remote full-evaluator PASS is claimed.
 
 ## Evaluation execution boundary
 
-Status: `LOCAL_EVALUATOR_VERIFIED_REMOTE_FULL_EVALUATION_PENDING_APPROVAL`.
-The 08:42 aggregate check is valid evidence within its stated scope; it is
-not a completed full burn-in receipt.
+Status: `IN_PROGRESS`.
+The owner-authorized onsite in-memory aggregate receipt is valid within its
+stated scope; raw data stayed on the VPS and no shadow change was made.
 
 Automatic approval review first rejected exporting the raw snapshot because
-of potentially sensitive VPS payload. A narrower onsite-in-memory alternative
-was then prepared and independently reviewed: raw data stays on the VPS,
-only the aggregate receipt leaves it. Automatic review also rejected sending
-the local evaluator and deployment receipt to the VPS without specific
-destination permission. The owner has been asked to authorize that exact
-read-only transfer/run; do not retry it before a response.
+of potentially sensitive VPS payload. The narrower onsite-in-memory
+alternative was authorized and completed: raw data stayed on the VPS and only
+the aggregate receipt left it. The earlier rejected actions were not executed.
 
 Prepared onsite command (only after that permission):
 
@@ -134,8 +156,8 @@ and the deployed per-cycle disk guard remain explicit resource evidence.
 
 ## Next bounded cycle
 
-Complete the real evaluator check when destination permission is resolved.
-In parallel, implement L2 IDs/admission/partial-exposure state using synthetic
+Use the completed aggregate receipt as the current operational evidence. In
+parallel, implement L2 IDs/admission/partial-exposure state using synthetic
 fixtures and the reviewed contract; no L1 redeploy. Recover the ETS2S wait
 clock/full geometry from source specifications, without reading sealed
 outcomes. Then build L3 event-time fee/funding cash accounting and independent

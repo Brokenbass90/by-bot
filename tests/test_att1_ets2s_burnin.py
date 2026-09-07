@@ -282,6 +282,43 @@ def test_valid_72_hour_bundle_passes_without_granting_promotion(tmp_path: Path) 
     assert result["money_authority"] is False
 
 
+@pytest.mark.parametrize("timezone_name", ["UTC", "Etc/UTC"])
+def test_completed_bundle_accepts_utc_timezone_aliases(tmp_path: Path, timezone_name: str) -> None:
+    snapshot, receipt = _fixture(tmp_path)
+    metadata = json.loads((snapshot / "snapshot.json").read_text())
+    metadata["systemd"]["clock"]["Timezone"] = timezone_name
+    _write_json(snapshot / "snapshot.json", metadata)
+
+    result = evaluate_burnin(snapshot, receipt)
+
+    assert result["status"] == "PASS_OPERATIONAL_BURN_IN", result["findings"]
+
+
+@pytest.mark.parametrize(
+    ("ntp_synchronized", "timezone_name"),
+    [
+        ("no", "UTC"),
+        ("yes", None),
+        ("yes", "Europe/Nicosia"),
+    ],
+)
+def test_completed_bundle_rejects_unsynchronized_or_non_utc_clock(
+    tmp_path: Path, ntp_synchronized: str, timezone_name: str | None
+) -> None:
+    snapshot, receipt = _fixture(tmp_path)
+    metadata = json.loads((snapshot / "snapshot.json").read_text())
+    metadata["systemd"]["clock"]["NTPSynchronized"] = ntp_synchronized
+    if timezone_name is None:
+        metadata["systemd"]["clock"].pop("Timezone")
+    else:
+        metadata["systemd"]["clock"]["Timezone"] = timezone_name
+    _write_json(snapshot / "snapshot.json", metadata)
+
+    result = evaluate_burnin(snapshot, receipt)
+
+    assert result["status"] == "FAIL_CLOSED"
+
+
 def test_preboundary_evidence_cannot_pass(tmp_path: Path) -> None:
     snapshot, receipt = _fixture(tmp_path, hours=20, as_of_ms=START_MS + 20 * HOUR_MS)
     result = evaluate_burnin(snapshot, receipt)
