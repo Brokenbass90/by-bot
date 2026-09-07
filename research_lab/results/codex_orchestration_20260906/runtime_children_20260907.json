@@ -1,0 +1,43 @@
+{
+  "schema_id": "codex_child_runtime_proof_v1",
+  "children": [
+    {
+      "id": "01a07a9d-1383-7740-abe2-b11196b64259",
+      "rollout_path": "/OWNER_HOME/.codex/PRIVATE_SESSION_PATH",
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "medium",
+      "agent_path": "/root/alpaca_safe_hold_acceleration",
+      "latest_turn_context": {
+        "model": "gpt-5.6-luna",
+        "effort": "medium",
+        "turn_id": "01a07aab-7423-7c53-aeeb-55ea7f07bb7f"
+      }
+    },
+    {
+      "id": "01a07aa1-7d3b-7db1-bf2b-8763f08575e8",
+      "rollout_path": "/OWNER_HOME/.codex/PRIVATE_SESSION_PATH",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "high",
+      "agent_path": "/root/l3_accounting_core",
+      "latest_turn_context": {
+        "model": "gpt-5.6-terra",
+        "effort": "high",
+        "turn_id": "01a07aa9-49c7-74b0-8beb-d215a4c28453"
+      }
+    },
+    {
+      "id": "01a07aa7-dafa-7433-b0ad-b163e8917069",
+      "rollout_path": "/OWNER_HOME/.codex/PRIVATE_SESSION_PATH",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "high",
+      "agent_path": "/root/l3_financial_review",
+      "latest_turn_context": {
+        "model": "gpt-6-astra",
+        "effort": "high",
+        "turn_id": "01a07aa7-db85-7101-8c38-1ebe354038ec"
+      }
+    }
+  ],
+  "billing_attestation": false,
+  "luna_followups": "usage_limit_errors; no repeated retries; partial docs verified and finalized by parent"
+}

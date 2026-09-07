@@ -1,0 +1,32 @@
+{
+  "schema_id": "att1_ets2s_l3_core_local_verification_v1",
+  "status": "LOCAL_SYNTHETIC_CORE_REVIEWED",
+  "checked_at_utc": "2026-09-07T12:22:11.327467+00:00",
+  "git_base": "d7c7632",
+  "files": {
+    "research_lab/att1_ets2s_accounting.py": "04d7910d4b089132a0b774a5baeda544521d25e2f05b5886ab9b207b2f42405d",
+    "tests/test_att1_ets2s_accounting.py": "35c05c86af48a2f136750941db1b01c61d5df42db8e0e4b668a45aa9ec9423d0",
+    "docs/superpowers/plans/2026-09-07-l3-accounting-core.md": "137b02bc74915f8335ad5e98de61009b86065e579e8680ccecf87b3e3c484a11",
+    "research_lab/results/att1_ets2s_l3_core_20260907/final_review.md": "f3c00aa2b6505945508dcfef2ac92da715dd161c7a7d426344f83558690409a7"
+  },
+  "verification": {
+    "command": ".venv/bin/python -m pytest -q tests/test_att1_ets2s_lifecycle.py tests/test_att1_ets2s_accounting.py",
+    "result": "42 passed in 0.14s",
+    "l2_tests": 23,
+    "l3_tests": 19,
+    "independent_review": "1500 event prefixes; resolved duplicate funding timestamp bug; no unresolved slice blocker"
+  },
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "promotion_authority": false,
+  "actual_account_costs_verified": false,
+  "full_l2_l3_parity": false,
+  "strategy_profitability_proven": false,
+  "final_integration_rerun": {
+    "recorded_at_utc": "2026-09-07T12:31:11.291186+00:00",
+    "command": ".venv/bin/python -m pytest -q tests/test_att1_ets2s_lifecycle.py tests/test_att1_ets2s_accounting.py",
+    "result": "42 passed in 0.26s",
+    "exit_code": 0
+  }
+}

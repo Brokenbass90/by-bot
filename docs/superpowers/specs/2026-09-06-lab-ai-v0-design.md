@@ -1,8 +1,9 @@
 # LAB_AI_V0 — read-only evidence assistant design
 
 Date: 2026-09-06
-Status: owner-approved architecture; implementation plan requires owner review
-of this written specification.
+Status: owner-approved architecture. Subsequent owner instructions authorize
+safe read-only research implementation without another routine approval;
+implementation remains planned, not a running LAB_AI_V0 result.
 Canonical tree: `bybit-bot-recovery-20260824`
 Branch: `codex/recovery-20260824`
 

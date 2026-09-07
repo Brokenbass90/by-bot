@@ -48,9 +48,11 @@ checkpoint. Report raw signals separately from independent trades and net edge.
 
 ## Concurrent Alpaca work
 
-The owner reports Claude is also working on Alpaca. Before editing Alpaca
-files, identify current work ownership and inspect existing uncommitted changes.
-Use a separate bounded worker and new evidence paths while ownership is unknown;
-do not overwrite Claude's work or duplicate a running collector/paper lifecycle.
-Read-only truth checks and isolated local prototypes may proceed independently
-of crypto P0. Keep broker/service mutations out of this coordination step.
+Claude owns Alpaca forensic lineage and the next canonical dynamic/adaptive
+selection plus entry-relative protection/HWM/ratchet/trailing version. Owner
+provided worktree: `../alpaca-wt-20260907`, branch `claude/alpaca-2026-09-07`,
+starting commit `6285530`. Do not duplicate that work or alter its worktree.
+Codex Alpaca scope is read-only truth, compatibility and shared infrastructure.
+Keep compatibility patches isolated in `../bybit-alpaca-safe-hold-20260907`
+until integration ownership is coordinated. Do not launch a competing paper
+lifecycle or modify existing paper positions, services or live controls.

@@ -1,0 +1,55 @@
+{
+  "as_of_ms": 1788784038120,
+  "authority": "research_only_public_att1_ets2s_signal_shadow_no_orders_no_private_api_no_money_no_promotion",
+  "burn_in": {
+    "completed_slots": 53,
+    "cycle_receipts": 56,
+    "duplicate_slot_invocations": 0,
+    "later_cycles": 0,
+    "missing_required_slots": 0,
+    "observed_cycle_duration_max_ms": 440522,
+    "observed_cycle_duration_min_ms": 28144,
+    "required_slots_as_of": 53,
+    "unique_invocations": 56,
+    "zero_row_invocations": 2
+  },
+  "deployed_shadow_modified": false,
+  "deployment_receipt_sha256": "e919b56f70fd53cb132fd6b1cdd3f1a8681905ec95380b312927ea6f7d39221b",
+  "evaluated_on_vps": true,
+  "evaluator_source_sha256": "71d0cae7f24620360184faa83608cd57f56e9756644d1d3801d64d192ef0c931",
+  "findings": [],
+  "journal": {
+    "raw_signal_rows": 30,
+    "rows": 5402,
+    "tip_hash": "5f84a9e3d18c6ce5485550a159c0e94934b8b523830e32f936f08b3317dc58af"
+  },
+  "l1_freshness_scope": "cycle_start_observation_only_not_decision_emission_or_executable_fill_latency",
+  "money_authority": false,
+  "observed_processing_latency": "reported_from_systemd_only; cycle observed_at is cycle start",
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "promotion_authority": false,
+  "raw_remote_files_exported": false,
+  "resource_evidence_missing": [],
+  "resources": {
+    "disk": {
+      "free_bytes": 7534108672,
+      "guard_pass": true,
+      "reserved_or_unavailable_bytes": 16777216,
+      "total_bytes": 24883167232,
+      "used_bytes": 17332281344
+    },
+    "restarts": 0,
+    "service": {
+      "CPUUsageNSec": 261543652000,
+      "MemoryPeak": null
+    },
+    "unavailable_optional_measurements": [
+      "MemoryPeak"
+    ]
+  },
+  "schema_id": "att1_ets2s_burnin_receipt_v1",
+  "snapshot_sha256": "b0df9667820b8007e5ecfd237c5f1dec112dd7858502af29c40fe910731efd4a",
+  "statistics_semantics": "signals_only_not_trades_or_profit",
+  "status": "IN_PROGRESS"
+}

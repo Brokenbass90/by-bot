@@ -1,6 +1,6 @@
 # Current roadmap
 
-Synthetic L2 exposure core implemented and verified.
+Synthetic L3 accounting implemented and reviewed.
 
 Canonical branch: `codex/recovery-20260824`. Only ATT1 P0 is active.
 Private broker snapshots and account economics remain on local branch

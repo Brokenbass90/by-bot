@@ -2,6 +2,15 @@
 
 ## Current verified state
 
+September 7 continuation evidence:
+`research_lab/results/codex_orchestration_20260906/runtime_children_20260907.json`
+confirms Alpaca mechanical work on Luna/medium, L3 implementation on Terra/high
+and independent financial review on Astra/high in both runtime metadata and
+rollout contexts. Two Luna follow-ups hit usage-limit errors after useful work;
+they were not retried or replaced by an expensive mechanical worker. The root
+independently checked the patches and closed integration/documentation. This
+does not establish the billing reason for the errors; no reset was consumed.
+
 The local Codex app/runtime supports stable `multi_agent_v2`: app
 `26.901.51231`, build `8109`, CLI `0.153.4`. The feature is enabled by the
 scoped project configuration for the parent workspace and canonical
