@@ -1,4 +1,4 @@
-from dataclasses import FrozenInstanceError
+from dataclasses import FrozenInstanceError, replace
 from decimal import localcontext
 from fractions import Fraction
 
@@ -311,3 +311,67 @@ def test_no_fill_finalization_has_no_r_and_invalid_hash_or_final_conflict_reject
         replay_accounting(_plan(profile_id="ATT1_REAL_V1"), (), _schedule())
     with pytest.raises(AccountingViolation):
         replay_accounting(_plan(), (_final(), _final("another", exchange_ms=104, received_ms=105)), _schedule())
+
+
+def test_delayed_funding_reconciles_historical_exposure_without_retiming_fills():
+    events = (
+        _fill('entry', 'e1', 'ENTRY', '1', '100', exchange_ms=10000, received_ms=10001),
+        _final(exchange_ms=10002, received_ms=10003),
+        _fill('exit', 'x1', 'EXIT', '1', '90', exchange_ms=30000, received_ms=30001),
+        FundingSettlement('fund', 'f1', 20000, 20000, 31000, '1', '100', '.001', FUNDING_SHA),
+    )
+    with pytest.raises(AccountingViolation, match='decreasing exchange'):
+        replay_accounting(_plan(), events, _schedule((20000,), end_ms=30000))
+    result = replay_accounting(_plan(), events, _schedule((20000,), end_ms=30000), reconcile_delayed_funding=True)
+    assert result.held_qty == 0
+    assert result.gross_realized == 10
+    assert result.settled_funding == Fraction(1, 10)
+    assert result.closed_net_r == Fraction(101, 100)
+    assert events[-1].received_ms == 31000
+    assert events[2].received_ms == 30001
+
+
+def test_delayed_funding_after_partial_exit_uses_settlement_quantity_not_final_flat():
+    events = (
+        _fill('entry', 'e1', 'ENTRY', '2', '100', exchange_ms=10000, received_ms=10001),
+        _final(exchange_ms=10002, received_ms=10003),
+        _fill('partial', 'x1', 'EXIT', '1', '95', exchange_ms=20000, received_ms=20001),
+        _fill('exit', 'x2', 'EXIT', '1', '90', exchange_ms=40000, received_ms=40001),
+        FundingSettlement('fund', 'f1', 30000, 30000, 41000, '1', '100', '-.001', FUNDING_SHA),
+    )
+    result = replay_accounting(_plan(), events, _schedule((30000,), end_ms=40000), reconcile_delayed_funding=True)
+    assert result.gross_realized == 15
+    assert result.settled_funding == Fraction(-1, 10)
+    assert result.closed_net_r == Fraction(149, 200)
+    bad = events[:-1] + (replace(events[-1], qty_at_settlement='2'),)
+    with pytest.raises(AccountingViolation, match='qty_at_settlement'):
+        replay_accounting(_plan(), bad, _schedule((30000,), end_ms=40000), reconcile_delayed_funding=True)
+
+
+def test_delayed_funding_keeps_receive_order_and_execution_order_strict():
+    events = (
+        _fill('entry', 'e1', 'ENTRY', '1', '100', exchange_ms=10000, received_ms=10001),
+        _final(exchange_ms=10002, received_ms=10003),
+        _fill('exit', 'x1', 'EXIT', '1', '90', exchange_ms=30000, received_ms=30001),
+        FundingSettlement('fund', 'f1', 20000, 20000, 25000, '1', '100', '.001', FUNDING_SHA),
+    )
+    with pytest.raises(AccountingViolation, match='decreasing received'):
+        replay_accounting(_plan(), events, _schedule((20000,), end_ms=30000), reconcile_delayed_funding=True)
+    bad = events[:3] + (_fill('late', 'late1', 'ENTRY', '1', '100', exchange_ms=29000, received_ms=32000),)
+    with pytest.raises(AccountingViolation, match='decreasing exchange'):
+        replay_accounting(_plan(), bad, _schedule((), end_ms=30000), reconcile_delayed_funding=True)
+
+
+def test_funding_boundary_uncertainty_blocks_net_even_with_complete_history():
+    events = (
+        _fill('entry', 'e1', 'ENTRY', '1', '100', exchange_ms=10000, received_ms=10001),
+        _final(exchange_ms=10002, received_ms=10003),
+        _fill('exit', 'x1', 'EXIT', '1', '90', exchange_ms=30000, received_ms=30001),
+        FundingSettlement('fund', 'f1', 12000, 12000, 31000, '1', '100', '.001', FUNDING_SHA),
+    )
+    result = replay_accounting(_plan(), events, _schedule((12000,), end_ms=30000), reconcile_delayed_funding=True)
+    assert 'FUNDING_BOUNDARY_AMBIGUOUS' in result.issues
+    assert result.gross_realized == 10
+    assert result.closed_net_r is None
+    assert result.net_realized is None
+    assert result.costs_complete is False

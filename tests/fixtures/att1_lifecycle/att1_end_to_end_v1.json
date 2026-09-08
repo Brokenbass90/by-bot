@@ -1,0 +1,413 @@
+{
+  "schema_id": "att1_lifecycle_e2e_fixture_v1",
+  "evidence_kind": "SYNTHETIC_ONLY_NO_MARKET_OUTCOMES",
+  "cases": [
+    {
+      "name": "two_targets",
+      "intent": {
+        "signal": {
+          "schema_id": "att1_lifecycle_signal_v1",
+          "symbol": "BTCUSDT",
+          "side": "short",
+          "stream": "EXECUTION_FORWARD",
+          "bar_close_ms": 6480000000,
+          "source_available_ms": 6480000010,
+          "signal_ready_ms": 6480000020,
+          "entry": "100",
+          "sl": "110",
+          "tps": [
+            "88",
+            "75"
+          ],
+          "tp_fracs": [
+            "0.55",
+            "0.45"
+          ],
+          "be_trigger_rr": "0",
+          "be_lock_rr": "0.02",
+          "trailing_atr_mult": "0",
+          "trailing_atr_period": 14,
+          "trail_activate_rr": "1",
+          "time_stop_bars_5m": 4032,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "data_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050"
+        },
+        "instrument": {
+          "symbol": "BTCUSDT",
+          "tick_size": "0.01",
+          "qty_step": "0.01",
+          "min_order_qty": "0.01",
+          "min_notional": "1",
+          "max_market_qty": "10",
+          "observed_ms": 6480000010,
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "book_state": {
+          "active_decision_id": null,
+          "last_admitted_bar_ms": null,
+          "last_terminal_ms": null
+        },
+        "book": "ATT1_TEST",
+        "submit_ms": 6480000030
+      },
+      "events": [
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "ENTRY_ACK:31",
+          "kind": "ENTRY_ACK",
+          "exchange_ms": 6480000031,
+          "received_ms": 6480000032,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "ENTRY_FILL:40",
+          "kind": "ENTRY_FILL",
+          "exchange_ms": 6480000040,
+          "received_ms": 6480000041,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "execution_id": "ex:40",
+          "qty": "0.1",
+          "price": "100",
+          "fee_amount": "0.01",
+          "fee_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "liquidity": "TAKER"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "PROTECTION_ACK:42",
+          "kind": "PROTECTION_ACK",
+          "exchange_ms": 6480000042,
+          "received_ms": 6480000043,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "qty": "0.1",
+          "stop": "110"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "ENTRY_FINAL:44",
+          "kind": "ENTRY_FINAL",
+          "exchange_ms": 6480000044,
+          "received_ms": 6480000045,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "FILLED"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "PRICE:100",
+          "kind": "PRICE",
+          "exchange_ms": 6480000100,
+          "received_ms": 6480000101,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "bid": "87.99",
+          "ask": "88"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_ACK:102",
+          "kind": "EXIT_ACK",
+          "exchange_ms": 6480000102,
+          "received_ms": 6480000103,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exit_order_id": "research-exit:0dc3f63b156431d9815b69db4abd72392df992b11bb7d9f2f58e654032c755e0"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_FILL:104",
+          "kind": "EXIT_FILL",
+          "exchange_ms": 6480000104,
+          "received_ms": 6480000105,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "execution_id": "ex:104",
+          "qty": "0.05",
+          "price": "88",
+          "fee_amount": "0.0044",
+          "fee_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "liquidity": "TAKER",
+          "exit_order_id": "research-exit:0dc3f63b156431d9815b69db4abd72392df992b11bb7d9f2f58e654032c755e0"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_FINAL:106",
+          "kind": "EXIT_FINAL",
+          "exchange_ms": 6480000106,
+          "received_ms": 6480000107,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exit_order_id": "research-exit:0dc3f63b156431d9815b69db4abd72392df992b11bb7d9f2f58e654032c755e0",
+          "status": "FILLED"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "PRICE:200",
+          "kind": "PRICE",
+          "exchange_ms": 6480000200,
+          "received_ms": 6480000201,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "bid": "74.99",
+          "ask": "75"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_ACK:202",
+          "kind": "EXIT_ACK",
+          "exchange_ms": 6480000202,
+          "received_ms": 6480000203,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exit_order_id": "research-exit:52e045e344a52d733ff512987f7e3432d14bc2cd452449b76e07e98bf743bbba"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_FILL:204",
+          "kind": "EXIT_FILL",
+          "exchange_ms": 6480000204,
+          "received_ms": 6480000205,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "execution_id": "ex:204",
+          "qty": "0.05",
+          "price": "75",
+          "fee_amount": "0.00375",
+          "fee_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "liquidity": "TAKER",
+          "exit_order_id": "research-exit:52e045e344a52d733ff512987f7e3432d14bc2cd452449b76e07e98bf743bbba"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_FINAL:206",
+          "kind": "EXIT_FINAL",
+          "exchange_ms": 6480000206,
+          "received_ms": 6480000207,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exit_order_id": "research-exit:52e045e344a52d733ff512987f7e3432d14bc2cd452449b76e07e98bf743bbba",
+          "status": "FILLED"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "FUNDING_COVERAGE:300",
+          "kind": "FUNDING_COVERAGE",
+          "exchange_ms": 6480000300,
+          "received_ms": 6480000301,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start_ms": 6480000000,
+          "end_ms": 6480000300,
+          "settlement_ms": [],
+          "complete": true
+        }
+      ],
+      "expected_final": {
+        "held_qty": "0",
+        "lifecycle_terminal": true,
+        "final_net_r": "36637/20000"
+      },
+      "expected_accounting": {
+        "gross_realized": "37/20",
+        "known_fee_total": "363/20000",
+        "fixed_r0": "1",
+        "net_realized": "36637/20000"
+      },
+      "expected_held_prefix": [
+        "0",
+        "1/10",
+        "1/10",
+        "1/10",
+        "1/10",
+        "1/10",
+        "1/20",
+        "1/20",
+        "1/20",
+        "1/20",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "name": "partial_entry_gap_delayed_funding",
+      "intent": {
+        "signal": {
+          "schema_id": "att1_lifecycle_signal_v1",
+          "symbol": "BTCUSDT",
+          "side": "short",
+          "stream": "EXECUTION_FORWARD",
+          "bar_close_ms": 6480000000,
+          "source_available_ms": 6480000010,
+          "signal_ready_ms": 6480000020,
+          "entry": "100",
+          "sl": "110",
+          "tps": [
+            "88",
+            "75"
+          ],
+          "tp_fracs": [
+            "0.55",
+            "0.45"
+          ],
+          "be_trigger_rr": "0",
+          "be_lock_rr": "0.02",
+          "trailing_atr_mult": "0",
+          "trailing_atr_period": 14,
+          "trail_activate_rr": "1",
+          "time_stop_bars_5m": 4032,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "data_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050"
+        },
+        "instrument": {
+          "symbol": "BTCUSDT",
+          "tick_size": "0.01",
+          "qty_step": "0.01",
+          "min_order_qty": "0.01",
+          "min_notional": "1",
+          "max_market_qty": "10",
+          "observed_ms": 6480000010,
+          "source_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "book_state": {
+          "active_decision_id": null,
+          "last_admitted_bar_ms": null,
+          "last_terminal_ms": null
+        },
+        "book": "ATT1_TEST",
+        "submit_ms": 6480000030
+      },
+      "events": [
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "ENTRY_ACK:31",
+          "kind": "ENTRY_ACK",
+          "exchange_ms": 6480000031,
+          "received_ms": 6480000032,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "ENTRY_FILL:40",
+          "kind": "ENTRY_FILL",
+          "exchange_ms": 6480000040,
+          "received_ms": 6480000041,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "execution_id": "ex:40",
+          "qty": "0.04",
+          "price": "100",
+          "fee_amount": "0.004",
+          "fee_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "liquidity": "TAKER"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "PROTECTION_ACK:42",
+          "kind": "PROTECTION_ACK",
+          "exchange_ms": 6480000042,
+          "received_ms": 6480000043,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "qty": "0.04",
+          "stop": "110"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "ENTRY_FINAL:44",
+          "kind": "ENTRY_FINAL",
+          "exchange_ms": 6480000044,
+          "received_ms": 6480000045,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "CANCELLED"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "PRICE:20000",
+          "kind": "PRICE",
+          "exchange_ms": 6480020000,
+          "received_ms": 6480020001,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "bid": "111.99",
+          "ask": "112"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_ACK:20002",
+          "kind": "EXIT_ACK",
+          "exchange_ms": 6480020002,
+          "received_ms": 6480020003,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exit_order_id": "research-exit:35678da2c530f4bb7c42be490ea99d63d84806e419d374cea39bc397a6348ae7"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_FILL:20004",
+          "kind": "EXIT_FILL",
+          "exchange_ms": 6480020004,
+          "received_ms": 6480020005,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "execution_id": "ex:20004",
+          "qty": "0.04",
+          "price": "112",
+          "fee_amount": "0.00448",
+          "fee_source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "liquidity": "TAKER",
+          "exit_order_id": "research-exit:35678da2c530f4bb7c42be490ea99d63d84806e419d374cea39bc397a6348ae7"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "EXIT_FINAL:20006",
+          "kind": "EXIT_FINAL",
+          "exchange_ms": 6480020006,
+          "received_ms": 6480020007,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exit_order_id": "research-exit:35678da2c530f4bb7c42be490ea99d63d84806e419d374cea39bc397a6348ae7",
+          "status": "FILLED"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "FUNDING:10000",
+          "kind": "FUNDING",
+          "exchange_ms": 6480010000,
+          "received_ms": 6480021000,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "settlement_id": "fund1",
+          "settlement_ms": 6480010000,
+          "qty_at_settlement": "0.04",
+          "mark_price": "100",
+          "rate": "0.001"
+        },
+        {
+          "schema_id": "att1_lifecycle_event_v1",
+          "event_id": "FUNDING_COVERAGE:22000",
+          "kind": "FUNDING_COVERAGE",
+          "exchange_ms": 6480022000,
+          "received_ms": 6480022001,
+          "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start_ms": 6480000000,
+          "end_ms": 6480022000,
+          "settlement_ms": [
+            6480010000
+          ],
+          "complete": true
+        }
+      ],
+      "expected_final": {
+        "held_qty": "0",
+        "lifecycle_terminal": true,
+        "final_net_r": "-757/625"
+      },
+      "expected_accounting": {
+        "gross_realized": "-12/25",
+        "known_fee_total": "53/6250",
+        "settled_funding": "1/250",
+        "fixed_r0": "2/5",
+        "net_realized": "-1514/3125"
+      },
+      "expected_held_prefix": [
+        "0",
+        "1/25",
+        "1/25",
+        "1/25",
+        "1/25",
+        "1/25",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    }
+  ]
+}

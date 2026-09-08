@@ -254,8 +254,17 @@ def replay_accounting(
     funding_schedule: FundingSchedule | None,
     *,
     mark_price: str | None = None,
+    reconcile_delayed_funding: bool = False,
 ) -> AccountingResult:
-    """Replay ordered synthetic receipts using exact rational cash arithmetic."""
+    """Replay cash without moving a receipt into the past.
+
+    Optional funding reconciliation accepts later receipt of settled funding,
+    validating its quantity against executions at settlement time. Execution
+    exchange order and all receive clocks remain strict. A fill within five
+    seconds of settlement makes net costs uncertain in this public simulation.
+    """
+    if not isinstance(reconcile_delayed_funding, bool):
+        raise AccountingViolation("reconcile_delayed_funding must be bool")
     accepted_stop, planned_risk = _validate_plan(plan)
     schedule = _validate_schedule(funding_schedule)
     if not isinstance(events, (tuple, list)):
@@ -280,6 +289,9 @@ def replay_accounting(
     last_exchange: int | None = None
     last_received: int | None = None
     first_entry_exchange: int | None = None
+    last_execution_exchange: int | None = None
+    exposure_changes: list[tuple[int, Fraction]] = []
+    delayed_settlements: list[tuple[FundingSettlement, Fraction, Fraction, Fraction]] = []
 
     for event in events:
         fingerprint = _event_fingerprint(event)
@@ -318,13 +330,19 @@ def replay_accounting(
         event_ids[event_id] = fingerprint
         if duplicate_receipt:
             continue
-        if last_exchange is not None and exchange < last_exchange:
+        exchange_watermark = last_execution_exchange if reconcile_delayed_funding else last_exchange
+        check_exchange = not (reconcile_delayed_funding and isinstance(event, FundingSettlement))
+        if check_exchange and exchange_watermark is not None and exchange < exchange_watermark:
             raise AccountingViolation("decreasing exchange timestamps are unresolved")
         if last_received is not None and received < last_received:
             raise AccountingViolation("decreasing received timestamps are unresolved")
 
-        last_exchange, last_received = exchange, received
+        last_exchange = exchange if last_exchange is None else max(last_exchange, exchange)
+        last_received = received
+        if not isinstance(event, FundingSettlement):
+            last_execution_exchange = exchange
         if isinstance(event, Execution):
+            exposure_changes.append((exchange, qty if event.kind == "ENTRY" else -qty))
             executions[event.execution_id] = execution_fingerprint
             if fee is None:
                 unknown_fee = True
@@ -356,10 +374,22 @@ def replay_accounting(
             settlements[event.settlement_id] = settlement_fingerprint
             if event.settlement_ms in seen_settlement_times:
                 raise AccountingViolation("multiple funding settlements share one timestamp")
-            if qty != held_qty:
+            if not reconcile_delayed_funding and qty != held_qty:
                 raise AccountingViolation("funding qty_at_settlement must equal held qty")
-            funding += qty * price * rate
+            if reconcile_delayed_funding:
+                delayed_settlements.append((event, qty, price, rate))
+            else:
+                funding += qty * price * rate
             seen_settlement_times.add(event.settlement_ms)
+
+    for settlement, qty, price, rate in delayed_settlements:
+        historical_qty = sum((change for when, change in exposure_changes
+                              if when <= settlement.settlement_ms), Fraction(0))
+        if qty != historical_qty:
+            raise AccountingViolation("funding qty_at_settlement must equal historical held qty")
+        if any(abs(when - settlement.settlement_ms) <= 5000 for when, _ in exposure_changes):
+            issues.add("FUNDING_BOUNDARY_AMBIGUOUS")
+        funding += qty * price * rate
 
     coverage_complete = False
     if first_entry_exchange is None:
@@ -376,7 +406,7 @@ def replay_accounting(
         )
         if not coverage_complete:
             issues.add("FUNDING_COVERAGE_INCOMPLETE")
-    costs_complete = not unknown_fee and coverage_complete
+    costs_complete = not unknown_fee and coverage_complete and "FUNDING_BOUNDARY_AMBIGUOUS" not in issues
     net_realized = gross - known_fees + funding if costs_complete else None
     unrealized = None if mark is None else held_qty * (held_cost / held_qty - mark) if held_qty else Fraction(0)
     net_equity_change = None

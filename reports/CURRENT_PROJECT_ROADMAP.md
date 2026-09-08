@@ -1,6 +1,6 @@
 # Current roadmap
 
-Synthetic L3 accounting implemented and reviewed.
+ATT1 durable public runtime implemented; final L1 operational burn-in PASS.
 
 Canonical branch: `codex/recovery-20260824`. Only ATT1 P0 is active.
 Private broker snapshots and account economics remain on local branch

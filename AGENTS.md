@@ -39,9 +39,11 @@ read-only VPS checks, research scripts and documentation are already authorized.
 Separate owner confirmation is required for money authority, increased risk,
 existing money positions or irreversible sealed evidence consumption.
 
-P0: burn-in receipt -> L2 lifecycle -> L3 fees/funding/net-R -> clean zero-risk
-lifecycle -> owner-approved gated micro-canary. LAB_AI and Market Perception
-remain read-only/research-only and cannot turn hypotheses into promotion.
+Current owner scope: ATT1 profile/admission -> full coordinator -> durable
+restart/recovery -> end-to-end fixture -> separate public-only VPS lifecycle.
+Final L1 burn-in evaluator only at/after 2026-09-08 08:02 UTC. No new strategy
+rules or architecture layers. Alpaca, LAB_AI, Market Perception and new research
+are paused for Codex. Money canary requires clean evidence and separate approval.
 
 End each bounded cycle with reproducible evidence and an updated canonical
 checkpoint. Report raw signals separately from independent trades and net edge.
@@ -52,7 +54,7 @@ Claude owns Alpaca forensic lineage and the next canonical dynamic/adaptive
 selection plus entry-relative protection/HWM/ratchet/trailing version. Owner
 provided worktree: `../alpaca-wt-20260907`, branch `claude/alpaca-2026-09-07`,
 starting commit `6285530`. Do not duplicate that work or alter its worktree.
-Codex Alpaca scope is read-only truth, compatibility and shared infrastructure.
+Codex Alpaca work is currently paused, including read-only/compatibility tasks.
 Keep compatibility patches isolated in `../bybit-alpaca-safe-hold-20260907`
 until integration ownership is coordinated. Do not launch a competing paper
 lifecycle or modify existing paper positions, services or live controls.

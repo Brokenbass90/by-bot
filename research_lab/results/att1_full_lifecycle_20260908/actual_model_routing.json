@@ -1,0 +1,25 @@
+{
+  "records": [
+    {
+      "id": "01a07f59-5d95-7001-8b93-e1d5559f8019",
+      "model": "gpt-5.6-terra",
+      "effort": "high",
+      "agent": "/root/att1_public_service",
+      "turn_context": {
+        "model": "gpt-5.6-terra",
+        "effort": "high"
+      }
+    },
+    {
+      "id": "01a07f68-6950-71a0-8f64-d5371130be45",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "agent": "/root/att1_final_review",
+      "turn_context": {
+        "model": "gpt-6-astra",
+        "effort": "high"
+      }
+    }
+  ],
+  "limitation": "Astra review hit usage limit after one actionable finding; root fixed and completed review. Terra first scope incomplete; root completed runtime integration. No billing savings claim."
+}

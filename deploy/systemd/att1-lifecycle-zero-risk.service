@@ -1,0 +1,44 @@
+[Unit]
+Description=ATT1 public snapshot zero-risk lifecycle (no broker authority)
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=bybot-research
+Group=bybot-research
+WorkingDirectory=/opt/bybot-research/att1-lifecycle-zero-risk/app
+ExecStartPre=/usr/bin/python3 -B scripts/run_att1_lifecycle_zero_risk.py --config configs/research/att1_lifecycle_public_v1.json --preflight
+ExecStart=/usr/bin/python3 -B scripts/run_att1_lifecycle_zero_risk.py --config configs/research/att1_lifecycle_public_v1.json --run --ack ATT1_PUBLIC_LIFECYCLE
+Restart=on-failure
+RestartSec=20
+TimeoutStopSec=25
+KillSignal=SIGTERM
+UMask=0077
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONNOUSERSITE=1
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+ReadWritePaths=/opt/bybot-research/att1-lifecycle-zero-risk/runtime
+ReadOnlyPaths=/opt/bybot-research/att1-ets2s-signal-shadow
+MemoryMax=160M
+CPUQuota=30%
+TasksMax=16
+LimitNOFILE=128
+Nice=10
+
+[Install]
+WantedBy=multi-user.target
