@@ -1,0 +1,52 @@
+{
+  "be_trigger_rr": {
+    "new": 0.0,
+    "old": 1.0,
+    "old_field_present": true
+  },
+  "max_stop_pct": {
+    "new": 0.25,
+    "old": 0.06,
+    "old_field_present": true
+  },
+  "min_entry_dist_atr": {
+    "new": 0.0,
+    "old": null,
+    "old_field_present": false
+  },
+  "min_r2": {
+    "new": 0.8,
+    "old": 0.55,
+    "old_field_present": true
+  },
+  "pivot_left": {
+    "new": 3,
+    "old": 2,
+    "old_field_present": true
+  },
+  "rsi_long_max": {
+    "new": 55.0,
+    "old": 52.0,
+    "old_field_present": true
+  },
+  "sl_atr_mult": {
+    "new": 6.6,
+    "old": 1.1,
+    "old_field_present": true
+  },
+  "time_stop_bars_5m": {
+    "new": 4032,
+    "old": 2016,
+    "old_field_present": true
+  },
+  "touch_atr": {
+    "new": 0.35,
+    "old": 0.5,
+    "old_field_present": true
+  },
+  "trail_atr_mult": {
+    "new": 0.0,
+    "old": 1.5,
+    "old_field_present": true
+  }
+}
