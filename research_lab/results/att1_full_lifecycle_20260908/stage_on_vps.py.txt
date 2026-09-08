@@ -1,0 +1,40 @@
+import io,sys,os,json,hashlib,tarfile,subprocess,platform
+from pathlib import Path,PurePosixPath
+raw=sys.stdin.buffer.read(2000000)
+assert hashlib.sha256(raw).hexdigest()=="014196517119e9694c9866524a71945e0ab8146f6d73357711727ab4bb958032"
+tar=tarfile.open(fileobj=io.BytesIO(raw),mode="r:")
+members=tar.getmembers()
+assert len(members)<=100
+assert all(m.isfile() and not PurePosixPath(m.name).is_absolute() and ".." not in PurePosixPath(m.name).parts for m in members)
+manifest=json.load(tar.extractfile("release_manifest.json"))
+assert manifest["closure_sha256"]=="d461b6a25f317911418203cce6fabbd1b921566079c003e4621b0b7c041d4cf4"
+assert all(v is False for v in manifest["authority"].values())
+assert not manifest["source_tree_dirty"]
+expected={r["path"]:r for r in manifest["files"]}
+assert set(m.name for m in members)==set(expected)|{"release_manifest.json"}
+for member in members:
+ data=tar.extractfile(member).read()
+ if member.name in expected:
+  row=expected[member.name]
+  assert len(data)==row["bytes"] and hashlib.sha256(data).hexdigest()==row["sha256"]
+base=Path("/opt/bybot-research/att1-lifecycle-zero-risk")
+assert not (base/"app").exists(),"an installed app already exists; no overwrite"
+base.mkdir(mode=0o755,exist_ok=True)
+assert not base.is_symlink()
+stage=base/"staged-d461b6a25f317911"
+stage.mkdir(mode=0o755)
+for member in members:
+ target=stage/member.name
+ target.parent.mkdir(mode=0o755,parents=True,exist_ok=True)
+ target.write_bytes(tar.extractfile(member).read())
+ os.chmod(target,0o644)
+def run(args):
+ p=subprocess.run(args,cwd=stage/"app",text=True,capture_output=True)
+ if p.returncode:
+  print(p.stdout);print(p.stderr,file=sys.stderr);raise SystemExit(p.returncode)
+ return p.stdout
+prefix=["/usr/sbin/runuser","-u","bybot-research","--","/usr/bin/python3","-B"]
+fixture=json.loads(run(prefix+["scripts/verify_att1_lifecycle.py"]))
+preflight=json.loads(run(prefix+["scripts/run_att1_lifecycle_zero_risk.py","--config","configs/research/att1_lifecycle_public_v1.json","--preflight"]))
+run(["/usr/bin/systemd-analyze","verify",str(stage/"deploy/systemd/att1-lifecycle-zero-risk.service")])
+print(json.dumps({"status":"TARGET_SMOKE_PASS","python":platform.python_version(),"stage":str(stage),"closure_sha256":manifest["closure_sha256"],"source_tree_head":manifest["source_tree_head"],"fixture":fixture,"preflight":preflight,"service_started":False},sort_keys=True))

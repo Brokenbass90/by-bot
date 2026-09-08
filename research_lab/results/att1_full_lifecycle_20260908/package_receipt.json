@@ -1,0 +1,15 @@
+{
+  "archive": "/private/tmp/att1-lifecycle-release/att1-lifecycle-d461b6a25f317911.tar",
+  "archive_sha256": "014196517119e9694c9866524a71945e0ab8146f6d73357711727ab4bb958032",
+  "authority": {
+    "money_authority": false,
+    "orders_allowed": false,
+    "private_api_allowed": false,
+    "promotion_authority": false
+  },
+  "bytes": 481280,
+  "closure_sha256": "d461b6a25f317911418203cce6fabbd1b921566079c003e4621b0b7c041d4cf4",
+  "files": 31,
+  "source_tree_dirty": false,
+  "source_tree_head": "defcb1055c3f60daa3a04d7c7c621c7e91b6b0f5"
+}

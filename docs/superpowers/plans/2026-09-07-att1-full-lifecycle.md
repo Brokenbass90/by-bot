@@ -130,9 +130,10 @@ Strict finite JSON only; no Python object/string coercion.
 
 ## Integration gates and current completion
 
-September 8: Tasks 1–4 pass 118 tests; fixture covers 23 durable restart
-boundaries and two literal final net-R oracles. Task 5 remains in progress;
-no VPS lifecycle deployment is claimed yet. Task 6 remains time gated.
+September 8: Tasks 1–6 complete for the authorized zero-risk scope. 138 tests;
+23 durable boundaries and four HTTP-tape runtime stages; target Python3.12.3
+exact receipt parity, actual service restart and separate process recovery PASS.
+L1 final72h operational burn-in PASS. Money/economics gates remain separate.
 
 ### Exact task sequence
 

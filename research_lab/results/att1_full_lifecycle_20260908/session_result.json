@@ -1,0 +1,31 @@
+{
+  "as_of_utc": "2026-09-08T10:29:37.490856+00:00",
+  "burn_in_slots": 72,
+  "burn_in_verdict": "PASS_OPERATIONAL_BURN_IN",
+  "final_deployment_verified": true,
+  "final_heartbeat_as_of_ms": 1788863433295,
+  "final_nrestarts": 0,
+  "final_service_pid": 68289,
+  "fixture_process_restart_boundaries": 23,
+  "known_limitations": [
+    "No prospective session at restart snapshot; nonzero position/cost proof is isolated synthetic process recovery.",
+    "CLI --verify-state refuses an empty session directory; proof uses the same read-only verify_state API also used by service heartbeat.",
+    "REST simulation/scenario fee/mark proxy are not broker parity or proven net edge."
+  ],
+  "l1_unchanged": true,
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "promotion_authority": false,
+  "prospective_sessions_at_restart": 0,
+  "runtime_source_commit": "defcb1055c3f60daa3a04d7c7c621c7e91b6b0f5",
+  "schema_id": "att1_public_lifecycle_session_result_v1",
+  "service_pid_after": 68289,
+  "service_pid_before": 64650,
+  "service_state_identical": true,
+  "source_closure_sha256": "d461b6a25f317911418203cce6fabbd1b921566079c003e4621b0b7c041d4cf4",
+  "status": "DEPLOYED_ZERO_RISK_RESTART_PASS_BURN_IN_PASS",
+  "synthetic_fixture_scope": "ISOLATED_SYNTHETIC_FIXTURES_NOT_PROSPECTIVE_TRADES",
+  "target_fixture_identical_to_local": true,
+  "target_python": "3.12.3"
+}

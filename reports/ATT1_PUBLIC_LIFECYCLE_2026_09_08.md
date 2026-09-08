@@ -1,6 +1,9 @@
 # ATT1 public lifecycle — September 8
 
-Status at this commit: IMPLEMENTED_AND_LOCAL_VERIFIED; target deployment pending.
+**DEPLOYED ZERO-RISK + RESTART PASS + BURN-IN PASS.**
+
+Runtime source commit: `defcb1055c3f60daa3a04d7c7c621c7e91b6b0f5`.
+Source closure: `d461b6a25f317911418203cce6fabbd1b921566079c003e4621b0b7c041d4cf4`.
 Scope: frozen ATT1 only, no strategy changes. BE and ATR trailing remain disabled.
 
 Implemented the existing planned profile/admission, coordinator, delayed funding,
@@ -56,4 +59,37 @@ Package manifest binds all file hashes and is verified before target smoke.
 Rollback is stop/disable only this new unit, preserve all journals and release
 files. No existing service/position is affected, no evidence cleanup or rewrite.
 
-Target smoke/deploy/restart receipts will be appended after actual execution.
+## Actual target result
+
+Python3.12.3 under bybot-research: TARGET_SMOKE_PASS. The complete standalone
+verifier JSON is exactly identical between local and VPS, including source hashes,
+23 core restart boundaries and four actual-runtime HTTP-tape restart stages.
+Target unit syntax/preflight and all31 packaged file hashes passed.
+
+The new unit is enabled and running. At initial start:PID64650,NRestarts0,
+MemoryCurrent18,620,416 bytes. Controlled systemd restart changed PID to68289.
+Read-only durable state before/after and startup_state_sha256 match:
+`d78253fc59a23e79697a6c70ba2a806c223dfc837eee658f2f90212100d67942`.
+There were **zero prospective sessions** at this snapshot. The service starts
+fresh H1 scans at close+20seconds within the frozen5-minute admission window;
+it does not backdate a trade to a historical L1 signal.
+
+Nonzero exposure/cost proof is separate: a writer Python process persisted
+23 fixture-prefix journals; a different reader process restored every full
+receipt/exposure/accounting/final-net-R identically. Literal closed oracles are
+36637/20000 and-757/625. Those files are isolated from the prospective runtime in
+`/opt/bybot-research/att1-lifecycle-zero-risk/verification-20260908` and retained.
+No synthetic trade was injected into the running prospective session directory.
+
+Four actual Bybit public endpoints passed GET validation on VPS:orderbook,
+instruments-info,H1 kline and funding/history. L1 source/config/manifest and
+systemd service/timer bytes were identical before/after deployment.
+
+Receipts: `target_python_smoke.json`, `deployment_receipt.json`,
+`vps_restart_receipt.json`, `session_result.json` in the evidence directory.
+Exact one-shot stage/deploy/restart payloads are preserved beside them.
+
+Known CLI detail: --verify-state refuses an empty session directory. Empty
+service comparison therefore used its existing read-only verify_state API, the
+same API used by heartbeat; nonempty-journal process proof is independent above.
+No broker parity, actual account tier or profitable edge is claimed by this PASS.
