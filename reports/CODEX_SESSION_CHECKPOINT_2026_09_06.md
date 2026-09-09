@@ -2,10 +2,30 @@
 
 ## Public continuation checkpoint
 
-Latest continuation: September 9. Public v2 DEPLOYED + RESTART PASS;
-read-only broker replay implemented. READY FOR OWNER ACTIVATION = FALSE.
+Latest continuation: September 9, after OLD watchdog restarts at 16:02 and
+17:02 UTC. Immediate blocker: recurring VPS lifecycle discontinuity; public v2
+also has two dirty RECOVERY_GAP sessions, no clean prospective final net-R.
+Read `reports/ATT1_HANDOFF_AND_WATCHDOG_2026_09_09.md` first.
+Durable handoff preparation: 192 focused tests PASS, including 25 SQLite
+reservation tests also PASS on target Python 3.12.3. These functions are NOT
+connected to production dispatch/send/recovery. Next implementation work:
+authenticated production OLD→NEW dispatch/send/reconciliation in the monolith.
+READY FOR OWNER ACTIVATION = FALSE; no valid owner activation command yet.
 
-Read `reports/ATT1_PUBLIC_V2_AND_BROKER_REPLAY_2026_09_09.md` first.
+The external watchdog restarted OLD for heartbeat ages 96s and 145s; the VPS
+did not reboot. Second OLD PID 1206069, start 17:02:15 UTC; heartbeat recovered
+to ~10s at 17:03. After-second-restart signed GET at 17:05:40 UTC: flat, no orders,
+complete pagination, unchanged PID, heartbeat age 9.1s. Existing sar proves CPU/swap pressure (16:00–16:10 CPU idle
+0.34%); the exact stalling call remains NOT_CONFIRMED. v2 CRV/DOGE gap journals
+must stay dirty; poll_errors={} does not imply clean lifecycle continuity.
+No OLD money/settings, public service or watchdog changes were made in this cycle.
+Fully bound OLD absolute risk still requires runtime capital/equity inputs
+absent from heartbeat; do not infer exact risk from wallet/config alone.
+
+Prior completed continuation: Public v2 DEPLOYED + RESTART PASS;
+read-only broker replay implemented.
+
+Then read `reports/ATT1_PUBLIC_V2_AND_BROKER_REPLAY_2026_09_09.md`.
 Service source `8e3b122c926cb0e5f0227ad26f4d40c53b5ce94d`; new separate unit
 `att1-lifecycle-zero-risk-v2.service`, runtime under its own `runtime/v2`.
 Original v1, OLD micro-live and L1 were preserved. 167 tests, target Python,
@@ -32,9 +52,10 @@ Prospective public ADA evidence is dirty: RECOVERY_GAP, flat simulated exposure,
 no clean final net-R. The captured 266-row journal restores identically with
 the incident. Preserve it; do not relax the 2s gate or rewrite public v1.
 
-Next bounded P0: production exclusive OLD pause/drain/new-H1 handoff in the
-existing bybot dispatch, persisted cross-profile dedupe and max-one reservation,
-daily costs/risk controls and authenticated broker binding. Read-only mappers
+Next bounded P0: connect the tested SQLite handoff/reservation functions to the
+existing bybot dispatch/send/recovery, with authenticated broker finality and
+runtime risk/daily cost binding. Do not build another ledger or replay core.
+Read-only mappers
 and exact funding cash replay are implemented but not connected to money.
 Follow v2 prospective continuity; preserve all dirty v1 evidence. No financial
 activation before actual PASS receipts. Owner operates the money transition.

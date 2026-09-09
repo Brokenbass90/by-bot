@@ -163,3 +163,13 @@ binding is not installed financial authority and does not prove those gates.
 
 Public export: monetary values and account evidence are owner-private inputs.
 The original full plan remains in the local private-evidence branch.
+
+September 9 handoff cycle: the existing coordinator adapter now contains durable
+SQLite route/decision reservation functions; 25 focused tests PASS locally and
+on target Python 3.12.3, 192 tests PASS in the combined focused suite. Production
+dispatch/send/recovery has not been wired, so Task 3 production boxes above stay
+open. Do not recreate these tables/functions in a new framework. The next step
+is their authenticated integration into the existing monolith, including actual
+OLD watermark/cooldown import and runtime risk/cost truth. See
+`reports/ATT1_HANDOFF_AND_WATCHDOG_2026_09_09.md` for the measured boundary and
+the external watchdog restart investigation. No owner activation step is ready.
