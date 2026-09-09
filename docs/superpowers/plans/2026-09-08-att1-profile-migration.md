@@ -50,14 +50,15 @@ standalone fixture. Preserve the captured public journal and existing v1 epoch.
 
 - [x] Capture the real ADA gap journal, verify chain, repeat replay and retain
   flat exposure, scenario costs and null clean net-R identically.
-- [ ] Add a targeted fixture/timing probe for entry followed by >2s blocking
-  scan/funding/publication work. Identify the exact slow phase before editing.
-- [ ] Give open-position observation priority within the existing driver; retain
+- [x] Add targeted fixtures for >2s optional scan and slow book response. The
+  retained historical journal cannot identify the exact slow phase; do not infer
+  historical attribution from a synthetic reproduction or repeat a broad audit.
+- [x] Give open-position observation priority within the existing driver; retain
   fail-closed incident semantics and the 2s limit. No new strategy/scheduler core.
-- [ ] Prove normal cycles remain within the bound and genuinely delayed cycles
+- [x] Prove fixture cycles remain within the bound and genuinely delayed cycles
   stay dirty. Stop repeated flat, fully-covered funding polling without clearing
   incidents or pretending dirty lifecycle finality is clean evidence.
-- [ ] Verify in target Python and a distinct public epoch/release if deployment
+- [x] Verify in target Python and a distinct public epoch/release if deployment
   is needed. Never mutate source binding under existing durable v1 journals.
 
 ## Task 2 — Bind real evidence to the existing coordinator, send disabled
@@ -66,7 +67,7 @@ Files: existing `research_lab/att1_lifecycle_profile.py`, coordinator/session an
 L3 accounting contract; thin proposed `bot/att1_coordinator_adapter.py`; existing
 `smart_pump_reversal_bot.py` ATT1 entry/runner integration. No duplicate core.
 
-- [ ] Extract only the minimal execution/provenance binding needed to reuse
+- [x] Extract only the minimal execution/provenance binding needed to reuse
   frozen strategy admission at the lower risk. Existing SYNTHETIC profile bytes,
   authority and expected receipts must remain valid and unchanged.
 - [ ] Adapter inputs are immutable signal/instrument/book admission inputs plus
@@ -81,7 +82,7 @@ L3 accounting contract; thin proposed `bot/att1_coordinator_adapter.py`; existin
 - [ ] Map exits to coordinator decisions, reduce-only broker operations and exact
   final remainder. Freeze initial R0 once final entry quantity is known; target
   rebasing and first-fill time deadline must match the NEW coordinator.
-- [ ] Use actual signed funding cash debits/credits and explicit coverage. Current
+- [x] Support signed funding cash debits/credits and explicit coverage. Previous
   L3 funding accepts quantity×mark×rate, not a broker cash amount: extend evidence
   binding minimally and test broker rounding; never invent a synthetic mark/rate
   to force agreement. Retain fees/funding provenance separately from scenarios.
@@ -151,9 +152,14 @@ account alongside an unpaused OLD is explicitly disallowed by this plan.
   overrun or incomplete/conflicting costs, close admission. Preserve journals and
   active management; never auto-resume OLD or clear dirty evidence to continue.
 
-Current bounded cycle completed direct truth, exact profile diff, risk/cost
-reconciliation, gap preservation, migration design and local Git persistence.
-It did not implement or activate the money adapter, so activation remains blocked.
+September 9 cycle: public continuity fix deployed in a distinct v2 service;
+167 tests and target-Python/23-prefix recovery proofs PASS. Existing v1, OLD and
+L1 preserved. Transport-free broker-shaped record mapping, separate profile and
+exact cash funding replay implemented. See
+`reports/ATT1_PUBLIC_V2_AND_BROKER_REPLAY_2026_09_09.md` for exact receipts.
+Production account authentication, exclusive dispatch/handoff, durable global
+slot/daily budget and a clean prospective v2 cohort are still open. A pure replay
+binding is not installed financial authority and does not prove those gates.
 
 Public export: monetary values and account evidence are owner-private inputs.
 The original full plan remains in the local private-evidence branch.

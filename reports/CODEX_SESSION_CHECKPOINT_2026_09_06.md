@@ -2,7 +2,15 @@
 
 ## Public continuation checkpoint
 
-OLD/NEW profiles reconciled. READY FOR OWNER ACTIVATION = FALSE.
+Latest continuation: September 9. Public v2 DEPLOYED + RESTART PASS;
+read-only broker replay implemented. READY FOR OWNER ACTIVATION = FALSE.
+
+Read `reports/ATT1_PUBLIC_V2_AND_BROKER_REPLAY_2026_09_09.md` first.
+Service source `8e3b122c926cb0e5f0227ad26f4d40c53b5ce94d`; new separate unit
+`att1-lifecycle-zero-risk-v2.service`, runtime under its own `runtime/v2`.
+Original v1, OLD micro-live and L1 were preserved. 167 tests, target Python,
+23 nonzero fixture restart boundaries and actual empty-state service restart PASS.
+No clean prospective filled v2 lifecycle is claimed by the restart receipt.
 
 Canonical branch: `codex/recovery-20260824`. Only ATT1 P0 is active.
 Private broker snapshots and account economics remain on local branch
@@ -24,10 +32,11 @@ Prospective public ADA evidence is dirty: RECOVERY_GAP, flat simulated exposure,
 no clean final net-R. The captured 266-row journal restores identically with
 the incident. Preserve it; do not relax the 2s gate or rewrite public v1.
 
-Next bounded P0: reproduce/fix public continuity; prepare send-disabled broker
-and actual-cost binding through the existing coordinator; test exclusive OLD
-pause/drain/new-H1 handoff, max one reservation, owner-bound absolute risk and
-daily loss controls, restart/protection/cost failure paths. No financial
+Next bounded P0: production exclusive OLD pause/drain/new-H1 handoff in the
+existing bybot dispatch, persisted cross-profile dedupe and max-one reservation,
+daily costs/risk controls and authenticated broker binding. Read-only mappers
+and exact funding cash replay are implemented but not connected to money.
+Follow v2 prospective continuity; preserve all dirty v1 evidence. No financial
 activation before actual PASS receipts. Owner operates the money transition.
 No fallback to OLD and no simultaneous OLD/NEW money entry.
 

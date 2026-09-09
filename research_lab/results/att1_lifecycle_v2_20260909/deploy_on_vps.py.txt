@@ -1,0 +1,60 @@
+import json,os,hashlib,subprocess,time,pwd,shutil
+from pathlib import Path
+base=Path("/opt/bybot-research/att1-lifecycle-zero-risk-v2")
+stage=base/"staged-a759f1d6dddb7f8e"
+unit=Path("/etc/systemd/system/att1-lifecycle-zero-risk-v2.service")
+assert not unit.exists() and not unit.is_symlink(),"unit already exists; no replacement"
+assert not (base/"app").exists(),"app already exists; no replacement"
+m=json.loads((stage/"release_manifest.json").read_bytes())
+assert m["closure_sha256"]=="a759f1d6dddb7f8e790fb09144d4acff6763ff6ecdd88efb46debd44bbf279a1"
+for row in m["files"]:
+ data=(stage/row["path"]).read_bytes()
+ assert hashlib.sha256(data).hexdigest()==row["sha256"],row["path"]
+l1=Path("/opt/bybot-research/att1-ets2s-signal-shadow/app")
+def l1truth():
+ manifest=json.loads((l1/"configs/research/att1_ets2s_signal_shadow_manifest_v1.json").read_bytes())
+ paths=[r["path"] for r in manifest["source_files"]]+["configs/att1_ets2s_signal_shadow_v1.json","configs/research/att1_ets2s_signal_shadow_manifest_v1.json"]
+ hashes={p:hashlib.sha256((l1/p).read_bytes()).hexdigest() for p in paths}
+ units=subprocess.check_output(["systemctl","cat","att1-ets2s-signal-shadow.service","att1-ets2s-signal-shadow.timer"])
+ hashes["systemd_units_sha256"]=hashlib.sha256(units).hexdigest()
+ return hashes
+def preserved_truth():
+ oldbase=Path('/opt/bybot-research/att1-lifecycle-zero-risk')
+ result={}
+ for name in ('bybot.service','att1-lifecycle-zero-risk.service'):
+  result[name]=subprocess.check_output(['systemctl','show',name,'-p','MainPID','-p','NRestarts','-p','ActiveState'],text=True)
+  unitpath=Path('/etc/systemd/system')/name
+  result[name+':unit_sha256']=hashlib.sha256(unitpath.read_bytes()).hexdigest()
+ manifest=json.loads((oldbase/'release_manifest.json').read_bytes())
+ result['v1_files']={r['path']:hashlib.sha256((oldbase/r['path']).read_bytes()).hexdigest() for r in manifest['files'] if r['path'].startswith('app/')}
+ return result
+preserved_before=preserved_truth()
+before=l1truth()
+user=pwd.getpwnam("bybot-research")
+for path in [base/"runtime",base/"runtime/v2"]:
+ path.mkdir(mode=0o700);os.chown(path,user.pw_uid,user.pw_gid)
+os.rename(stage/"app",base/"app")
+shutil.copyfile(stage/"release_manifest.json",base/"release_manifest.json")
+unit.write_bytes((stage/"deploy/systemd/att1-lifecycle-zero-risk-v2.service").read_bytes())
+os.chmod(unit,0o644)
+def run(args):
+ result=subprocess.run(args,text=True,capture_output=True)
+ if result.returncode:raise RuntimeError(str(args)+":"+result.stderr)
+ return result.stdout
+try:
+ run(["systemctl","daemon-reload"])
+ run(["systemctl","enable","--now",unit.name])
+ for _ in range(30):
+  hb=base/"runtime/v2/heartbeat.json"
+  if hb.exists():break
+  time.sleep(0.2)
+ heartbeat=json.loads(hb.read_bytes())
+ active=run(["systemctl","is-active",unit.name]).strip()
+ assert active=="active" and heartbeat["status"]=="RUNNING"
+ after=l1truth();assert before==after,"L1 source/config/unit changed"
+ preserved_after=preserved_truth();assert preserved_before==preserved_after,"existing service/source changed"
+ props=run(["systemctl","show",unit.name,"-p","MainPID","-p","NRestarts","-p","MemoryCurrent","-p","CPUUsageNSec","-p","ActiveState","-p","SubState"])
+ print(json.dumps({"status":"DEPLOYED_ZERO_RISK_V2","preserved_before":preserved_before,"preserved_after":preserved_after,"as_of_ms":time.time_ns()//1000000,"source_tree_head":m["source_tree_head"],"closure_sha256":m["closure_sha256"],"unit_sha256":hashlib.sha256(unit.read_bytes()).hexdigest(),"service":props,"heartbeat":heartbeat,"l1_before":before,"l1_after":after,"l1_unchanged":True,"money_authority":False,"orders_allowed":False,"private_api_allowed":False},sort_keys=True))
+except BaseException:
+ subprocess.run(["systemctl","disable","--now",unit.name],capture_output=True)
+ raise
