@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "tests": 167,
+  "scope": "SYNTHETIC_AND_BROKER_SHAPED_FIXTURES_NOT_AUTHENTICATED_ACCOUNT_EVIDENCE",
+  "synthetic_prefixes_unchanged": 23,
+  "public_runtime_stages_unchanged": 4,
+  "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
+  "broker_send_enabled": false,
+  "ready_for_owner_activation": false,
+  "model_routing": {
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "verified_from": [
+      "runtime_thread_metadata",
+      "turn_context"
+    ],
+    "last_worker_turn": "USAGE_LIMIT_AFTER_IMPLEMENTATION",
+    "final_review": "ROOT",
+    "independent_final_review": false
+  }
+}

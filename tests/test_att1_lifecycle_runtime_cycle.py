@@ -110,3 +110,51 @@ def test_public_funding_uses_historical_exposure_after_exit(tmp_path):
     assert session.receipt['accounting']['net_realized']=='-757/625'
     assert session.receipt['final_net_r'] is None
     assert make_runtime(tmp_path,tape).state()==rt.state()
+
+
+def test_slow_observation_book_marks_open_session_dirty_after_response(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    original=tape.__call__
+    def slow_book(url,params,**kwargs):
+        if url.endswith('/orderbook'):tape.now+=2100
+        return original(url,params,**kwargs)
+    rt.transport=slow_book
+    rt.manage(session)
+    assert session.receipt['incidents']==['RECOVERY_GAP']
+    assert session.receipt['final_net_r'] is None
+
+
+def test_open_session_defers_slow_optional_scan_before_next_observation(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    tape.now=(tape.now//runner.H1_MS)*runner.H1_MS+20000
+    rt.last_observed[session.receipt['plan']['decision_id']]=tape.now
+    scan_calls=[]
+    def slow_scan(symbol):
+        scan_calls.append(symbol);tape.now+=2100
+        return {'result':'NO_SIGNAL'}
+    rt.scan_symbol=slow_scan
+    rt.tick()
+    rt.manage(session)
+    assert scan_calls==[]
+    assert session.receipt['incidents']==[]
+    assert session.receipt['held_qty']=='1/10'
+
+
+def test_dirty_flat_completed_funding_coverage_does_not_repeat_public_get(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    settlement=intent['signal']['bar_close_ms']+60000
+    tape.now=settlement+20000;tape.bid='111.99';tape.ask='112'
+    rt.manage(session)
+    assert session.receipt['incidents']==['RECOVERY_GAP']
+    tape.funding=[{'symbol':'BTCUSDT','fundingRate':'0.001','fundingRateTimestamp':str(settlement)}]
+    tape.now+=65000;rt.reconcile_funding(session)
+    before_calls=len(tape.calls)
+    before_coverage=len([e for e in rt._records(session) if e['kind']=='FUNDING_COVERAGE'])
+    tape.now+=65000;rt.reconcile_funding(session)
+    assert len(tape.calls)==before_calls
+    assert len([e for e in rt._records(session) if e['kind']=='FUNDING_COVERAGE'])==before_coverage
+    assert session.receipt['incidents']==['RECOVERY_GAP']
+    assert session.receipt['final_net_r'] is None

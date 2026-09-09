@@ -118,8 +118,8 @@ class ExposurePlan:
     def __post_init__(self) -> None:
         for field in ("book", "sleeve", "symbol", "decision_id", "order_id", "profile_id"):
             _text(getattr(self, field), field)
-        if not self.profile_id.startswith("SYNTHETIC_"):
-            raise LifecycleViolation("profile_id must start with SYNTHETIC_")
+        if not self.profile_id.startswith("SYNTHETIC_") and self.profile_id != 'BROKER_REPLAY_ATT1_V1':
+            raise LifecycleViolation("profile_id must be synthetic or explicit broker replay")
         step = _positive_decimal(self.qty_step, "qty_step")
         _steps(self.requested_qty, step, "requested_qty")
         _nonnegative_int(self.submit_ms, "submit_ms")

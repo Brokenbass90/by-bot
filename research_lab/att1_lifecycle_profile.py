@@ -6,6 +6,7 @@ profile.  It has no network, broker, order, runtime, or outcome dependencies.
 from __future__ import annotations
 
 from dataclasses import asdict
+from copy import deepcopy
 from fractions import Fraction
 import hashlib
 import json
@@ -29,6 +30,8 @@ from strategies.alt_trendline_touch_v1 import AltTrendlineTouchV1Strategy
 
 PROFILE_SCHEMA_ID = "att1_lifecycle_profile_v1"
 PROFILE_ID = "SYNTHETIC_ATT1_LIFECYCLE_V1"
+BROKER_REPLAY_PROFILE_ID = "BROKER_REPLAY_ATT1_V1"
+BROKER_ADMISSION_SYMBOLS = ('ADAUSDT','BTCUSDT','DOTUSDT','ETHUSDT','LINKUSDT','LTCUSDT','SOLUSDT','SUIUSDT')
 SIGNAL_SCHEMA_ID = "att1_lifecycle_signal_v1"
 EXECUTION_FORWARD = "EXECUTION_FORWARD"
 L1_SOURCE_PATHS = ATT1_PROFILE.source_paths
@@ -204,11 +207,67 @@ def build_profile(root: Path) -> dict:
     return profile
 
 
+def bind_broker_replay_profile(base: Mapping, binding: Mapping) -> dict:
+    """Bind owner-supplied limits to read-only replay, never money authority.
+
+    Hashes bind declared input provenance; this pure function does not establish
+    that an input came from a signed broker response or reflects current risk.
+    """
+    validate_profile(base)
+    if base['profile_id'] != PROFILE_ID:
+        raise ProfileViolation('binding_requires_synthetic_base')
+    result = deepcopy(dict(base))
+    result['profile_id'] = BROKER_REPLAY_PROFILE_ID
+    result['broker_binding'] = deepcopy(dict(binding))
+    result['execution']['risk_amount'] = binding.get('absolute_risk_cap')
+    result['execution']['max_notional'] = binding.get('max_notional')
+    result['profile_sha256'] = _sha256(_profile_without_sha(result))
+    validate_profile(result)
+    return result
+
+
+def _validate_broker_profile(profile: Mapping) -> None:
+    b = _strict_mapping(profile.get('broker_binding'), {
+        'base_profile_sha256','account_fingerprint_sha256','broker_truth_sha256',
+        'account_mode','observed_ms','absolute_risk_cap','old_budget_ceiling',
+        'max_notional','daily_loss_cap','max_concurrent_positions','send_enabled',
+    }, 'broker_binding')
+    for name in ('base_profile_sha256','account_fingerprint_sha256','broker_truth_sha256'):
+        _sha_text(b[name], name)
+    _int(b['observed_ms'],'broker_observed_ms',positive=True)
+    cap = _decimal(b['absolute_risk_cap'],'absolute_risk_cap',positive=True)
+    ceiling = _decimal(b['old_budget_ceiling'],'old_budget_ceiling',positive=True)
+    notional = _decimal(b['max_notional'],'max_notional',positive=True)
+    daily = _decimal(b['daily_loss_cap'],'daily_loss_cap',positive=True)
+    if (cap > ceiling or notional > 100 or daily > 2*cap
+            or b['account_mode'] != 'UNIFIED_ONE_WAY_USDT'
+            or type(b['max_concurrent_positions']) is not int or b['max_concurrent_positions'] != 1
+            or b['send_enabled'] is not False):
+        raise ProfileViolation('unsafe_broker_binding')
+    execution = profile.get('execution')
+    if not isinstance(execution, Mapping) or execution.get('risk_amount') != b['absolute_risk_cap'] or execution.get('max_notional') != b['max_notional']:
+        raise ProfileViolation('broker_execution_binding')
+    # Reconstruct and fully validate the frozen synthetic base. All strategy,
+    # source, clock, authority and universe fields must match that exact digest.
+    base = deepcopy(dict(profile))
+    del base['broker_binding']
+    base['profile_id'] = PROFILE_ID
+    base['execution']['risk_amount'] = '1'
+    base['execution']['max_notional'] = '100'
+    base['profile_sha256'] = b['base_profile_sha256']
+    validate_profile(base)
+    if _sha_text(profile['profile_sha256'],'profile_sha256') != _sha256(_profile_without_sha(profile)):
+        raise ProfileViolation('profile_sha256')
+
+
 def validate_profile(profile: Mapping) -> None:
     """Strictly validate the self-contained, default-off synthetic profile."""
 
     if not isinstance(profile, Mapping):
         raise ProfileViolation("profile_not_mapping")
+    if profile.get('profile_id') == BROKER_REPLAY_PROFILE_ID:
+        _validate_broker_profile(profile)
+        return
     required = {
         "schema_id", "profile_id", "sleeve_id", "l1_source_aggregate_sha256",
         "resolved_config_sha256", "source_sha256", "universe", "strategy", "execution",
@@ -340,13 +399,22 @@ def admit_signal(profile: Mapping, signal: Mapping, instrument: Mapping, book_st
     submit_ms = _int(submit_ms, "submit_ms", positive=True)
     strategy = profile["strategy"]
     execution = profile["execution"]
+    binding = profile.get('broker_binding')
+    if binding is not None:
+        if book != 'ATT1_BROKER_REPLAY:' + binding['account_fingerprint_sha256']:
+            return _reject('BROKER_BOOK_MISMATCH')
+        if not 0 <= submit_ms-binding['observed_ms'] <= 2000:
+            return _reject('BROKER_TRUTH_STALE')
+        if signal['symbol'] not in BROKER_ADMISSION_SYMBOLS:
+            return _reject('BROKER_ADMISSION_SYMBOL')
     if signal["stream"] != EXECUTION_FORWARD:
         return _reject("STREAM_NOT_EXECUTION_FORWARD")
     if signal["symbol"] not in profile["universe"] or instrument["symbol"] not in profile["universe"] or signal["symbol"] != instrument["symbol"]:
         return _reject("SYMBOL_MISMATCH")
     if signal["side"] != strategy["side"]:
         return _reject("SIDE_MISMATCH")
-    if signal["profile_sha256"] != profile["profile_sha256"]:
+    signal_profile_sha = binding['base_profile_sha256'] if binding else profile['profile_sha256']
+    if signal["profile_sha256"] != signal_profile_sha:
         return _reject("PROFILE_HASH_MISMATCH")
     bar_close_ms = signal["bar_close_ms"]
     source_available_ms = signal["source_available_ms"]
@@ -397,7 +465,11 @@ def admit_signal(profile: Mapping, signal: Mapping, instrument: Mapping, book_st
     if not 0 < rebased_targets[1] < rebased_targets[0] < entry:
         return _reject("REBASED_TARGET_INVALID")
     qty_step = _decimal(instrument["qty_step"], "qty_step", positive=True)
-    requested_qty = _floor_to_step(min(_decimal(execution["risk_amount"], "risk_amount", positive=True) / risk, _decimal(execution["max_notional"], "max_notional", positive=True) / entry, _decimal(instrument["max_market_qty"], "max_market_qty", positive=True)), qty_step)
+    # For broker replay reserve the full allowed adverse fill expansion before
+    # flooring size. The absolute cap must survive the admissible IOC boundary.
+    sizing_risk = risk * (1 + _decimal(execution['max_adverse_risk_expansion'],'max_adverse_risk_expansion')) if binding else risk
+    sizing_price = rounded_stop if binding else entry
+    requested_qty = _floor_to_step(min(_decimal(execution["risk_amount"], "risk_amount", positive=True) / sizing_risk, _decimal(execution["max_notional"], "max_notional", positive=True) / sizing_price, _decimal(instrument["max_market_qty"], "max_market_qty", positive=True)), qty_step)
     if requested_qty < _decimal(instrument["min_order_qty"], "min_order_qty", positive=True):
         return _reject("BELOW_MIN_QTY")
     if requested_qty * entry < _decimal(instrument["min_notional"], "min_notional", positive=True):

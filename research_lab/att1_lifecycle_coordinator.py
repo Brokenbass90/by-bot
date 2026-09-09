@@ -16,7 +16,7 @@ from research_lab.att1_ets2s_lifecycle import (
     ExposurePlan, ExposureEvent, LifecycleViolation, initial_state, apply_event,
 )
 from research_lab.att1_ets2s_accounting import (
-    AccountingPlan, AccountingViolation, Execution, EntryFinal, FundingSettlement,
+    AccountingPlan, AccountingViolation, Execution, EntryFinal, FundingSettlement, FundingCashSettlement,
     FundingSchedule, replay_accounting, _decimal as number,
 )
 
@@ -30,6 +30,7 @@ FIELDS = {
     'PRICE': {'bid', 'ask'}, 'EXIT_ACK': {'exit_order_id'},
     'EXIT_FILL': FILL | {'exit_order_id'}, 'EXIT_FINAL': {'exit_order_id', 'status'},
     'FUNDING': {'settlement_id', 'settlement_ms', 'qty_at_settlement', 'mark_price', 'rate'},
+    'FUNDING_CASH': {'settlement_id', 'settlement_ms', 'qty_at_settlement', 'cash_amount', 'currency'},
     'FUNDING_COVERAGE': {'start_ms', 'end_ms', 'settlement_ms', 'complete'},
     'RECOVERY_GAP': {'reason'},
 }
@@ -122,6 +123,7 @@ def _replay(profile, intent, events):
             raise CoordinatorViolation('events for rejected admission')
         return {'schema_id':'att1_lifecycle_receipt_v1','admission':admission,'authority':dict(AUTHORITY)}
     p = admission['plan']
+    broker_replay = p['profile_id'] == 'BROKER_REPLAY_ATT1_V1'
     exposure = initial_state(ExposurePlan(p['book'],'ATT1',p['symbol'],p['decision_id'],p['order_id'],
                                          p['profile_id'],p['qty_step'],p['requested_qty'],p['submit_ms']))
     account_plan = AccountingPlan(p['profile_id'],p['original_stop'],p['planned_risk_amount'],'USDT',p['signal_source_sha256'])
@@ -208,11 +210,11 @@ def _replay(profile, intent, events):
             accepted_ids[e['event_id']] = fingerprint
             last_rx = rx
             continue
-        if kind not in {'FUNDING','FUNDING_COVERAGE','CLOCK','RECOVERY_GAP'}:
+        if kind not in {'FUNDING','FUNDING_CASH','FUNDING_COVERAGE','CLOCK','RECOVERY_GAP'}:
             if ex < last_exchange:
                 raise CoordinatorViolation('decreasing exchange clock')
             last_exchange = ex
-        if kind not in {'FUNDING','FUNDING_COVERAGE'} and ex < p['submit_ms']:
+        if kind not in {'FUNDING','FUNDING_CASH','FUNDING_COVERAGE'} and ex < p['submit_ms']:
             raise CoordinatorViolation('event before submit')
         if unprotected_since is not None and held() > 0 and rx-unprotected_since > 2000:
             incidents.add('PROTECTION_ACK_TIMEOUT')
@@ -239,6 +241,15 @@ def _replay(profile, intent, events):
                 _decimal_text(quantity),_decimal_text(price),e['fee_amount'],'USDT',e['fee_source_sha256'],
                 e['liquidity'],ex,rx,e['source_sha256']))
             if kind == 'ENTRY_FILL':
+                if broker_replay:
+                    a = account()
+                    aggregate_risk = (a.aggregate_entry_qty * abs(
+                        a.aggregate_entry_notional / a.aggregate_entry_qty - original_stop
+                    ) if a.aggregate_entry_qty else Fraction(0))
+                    if aggregate_risk > number(profile['execution']['risk_amount'],'risk_amount',positive=True):
+                        incidents.add('ABSOLUTE_RISK_CAP_EXCEEDED')
+                    if a.aggregate_entry_notional > number(profile['execution']['max_notional'],'max_notional',positive=True):
+                        incidents.add('NOTIONAL_CAP_EXCEEDED')
                 if first_fill is None:
                     first_fill = ex
                     deadline = ex + 336*3600000
@@ -324,6 +335,8 @@ def _replay(profile, intent, events):
                     raise CoordinatorViolation('rejected exit has fills')
                 pending_exit=None; cancel_exit=False
         elif kind == 'FUNDING':
+            if broker_replay:
+                raise CoordinatorViolation('synthetic funding is not allowed for broker replay')
             text(e['settlement_id'],'settlement_id')
             economic = {k:v for k,v in e.items() if k not in {'event_id','received_ms'}}
             old=settlements.get(e['settlement_id'])
@@ -333,6 +346,18 @@ def _replay(profile, intent, events):
                 settlements[e['settlement_id']]=digest(economic)
                 ledger.append(FundingSettlement(e['event_id'],e['settlement_id'],e['settlement_ms'],ex,rx,
                     e['qty_at_settlement'],e['mark_price'],e['rate'],e['source_sha256']))
+        elif kind == 'FUNDING_CASH':
+            if not broker_replay:
+                raise CoordinatorViolation('broker funding cash is not allowed for synthetic profile')
+            text(e['settlement_id'],'settlement_id')
+            economic = {k:v for k,v in e.items() if k not in {'event_id','received_ms'}}
+            old=settlements.get(e['settlement_id'])
+            if old is not None:
+                if old!=digest(economic): raise CoordinatorViolation('conflicting funding settlement')
+            else:
+                settlements[e['settlement_id']]=digest(economic)
+                ledger.append(FundingCashSettlement(e['event_id'],e['settlement_id'],e['settlement_ms'],ex,rx,
+                    e['qty_at_settlement'],e['cash_amount'],e['currency'],e['source_sha256']))
         elif kind == 'FUNDING_COVERAGE':
             start, end=integer(e['start_ms'],'coverage start'),integer(e['end_ms'],'coverage end')
             if end>rx or not isinstance(e['settlement_ms'],list) or type(e['complete']) is not bool:
@@ -359,7 +384,8 @@ def _replay(profile, intent, events):
     nonfill = entry_final_seen and exposure.entry_filled_qty==0 and held()==0 and pending_exit is None and not incidents
     return json_value({
         'schema_id':'att1_lifecycle_receipt_v1','admission':admission,'plan':p,'authority':dict(AUTHORITY),
-        'execution_evidence':'SIMULATED_NOT_BROKER_FILLS','actual_account_costs_verified':False,
+        'execution_evidence':'BROKER_REPLAY_INPUTS_NOT_AUTHENTICATED' if broker_replay else 'SIMULATED_NOT_BROKER_FILLS',
+        'actual_account_costs_verified':False,
         'entry_status':entry_status,'held_qty':held(),'pending_entry_qty':Fraction(exposure.pending_entry_qty),
         'protected_qty':Fraction(exposure.protected_qty),'protection_stop':protection_stop,
         'first_fill_ms':first_fill,'time_deadline_ms':deadline,'targets':targets,'pending_exit':pending_exit,

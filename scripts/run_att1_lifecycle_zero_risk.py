@@ -564,6 +564,17 @@ class PublicLifecycleRuntime:
     def _active(self,receipt):
         return not (receipt['terminal_nonfill'] or receipt['lifecycle_terminal'])
 
+    def _observation_required(self):
+        return any(Fraction(session.receipt['held_qty'])>0 or
+                   Fraction(session.receipt['pending_entry_qty'])>0 or
+                   session.receipt['pending_exit'] is not None
+                   for session in self.sessions.values())
+
+    def _mark_observation_gap(self,session,observed_ms):
+        decision=session.receipt['plan']['decision_id'];last=self.last_observed.get(decision)
+        if last is not None and observed_ms-last>2000 and 'RECOVERY_GAP' not in session.receipt['incidents']:
+            self._emit(session,'RECOVERY_GAP',exchange_ms=observed_ms,received_ms=observed_ms,reason='public polling continuity gap')
+
     def book_state(self,symbol):
         related=[s for s in self.sessions.values() if s.receipt['plan']['symbol']==symbol]
         active=[s for s in related if self._active(s.receipt)]
@@ -636,9 +647,7 @@ class PublicLifecycleRuntime:
         receipt=session.receipt;p=receipt['plan'];decision=p['decision_id']
         if Fraction(receipt['held_qty'])<=0 and receipt['pending_exit'] is None:
             return
-        now=self.clock();last=self.last_observed.get(decision)
-        if last is not None and now-last>2000 and 'RECOVERY_GAP' not in receipt['incidents']:
-            self._emit(session,'RECOVERY_GAP',exchange_ms=now,reason='public polling continuity gap')
+        self._mark_observation_gap(session,self.clock())
         if session.receipt['intents']['protect_qty']!='0':
             self._emit(session,'PROTECTION_ACK',qty=_fraction_text(Fraction(session.receipt['held_qty'])),stop=p['original_stop'])
         if session.receipt['pending_exit'] is not None:
@@ -648,6 +657,7 @@ class PublicLifecycleRuntime:
             else:
                 self.execute_ioc(session);return
         snapshot,rx,raw=self._book(p['symbol'])
+        self._mark_observation_gap(session,rx)
         self.last_observed[decision]=rx
         source=_hash({'public_response':raw,'received_ms':rx})
         event=self._event(session,'PRICE',exchange_ms=snapshot['cts'],received_ms=rx,source=source,
@@ -668,6 +678,8 @@ class PublicLifecycleRuntime:
         # A short publication buffer is an evidence delay, never a strategy rule.
         end=last_exit+5000 if flat else now-60000
         if end<first or now<end+60000:return
+        prior=[e for e in records if e['kind']=='FUNDING_COVERAGE']
+        if prior and prior[-1]['complete'] is True and end<=prior[-1]['end_ms']:return
         if now-self.last_funding.get(receipt['plan']['decision_id'],0)<60000:return
         symbol=receipt['plan']['symbol'];start=max(0,first-5000);upper=end;rows={};pages=[]
         for page in range(16):
@@ -701,8 +713,6 @@ class PublicLifecycleRuntime:
             source=self._save_source(provenance)
             self._emit(session,'FUNDING',exchange_ms=when,received_ms=rx,source=source,
                 settlement_id=symbol+':'+str(when),settlement_ms=when,qty_at_settlement=_fraction_text(qty),mark_price=mark,rate=row['fundingRate'])
-        prior=[e for e in records if e['kind']=='FUNDING_COVERAGE']
-        if prior and end<prior[-1]['end_ms']:return
         source=self._save_source({'funding_pages_sha256':pages,'window':[start,end],'complete':True})
         self._emit(session,'FUNDING_COVERAGE',source=source,start_ms=start,end_ms=end,settlement_ms=sorted(rows),complete=True)
         self.last_funding[receipt['plan']['decision_id']]=self.clock()
@@ -748,16 +758,23 @@ class PublicLifecycleRuntime:
             decision=session.receipt['plan']['decision_id']
             try:
                 self.manage(session)
-                self.reconcile_funding(session)
                 self.poll_errors.pop(decision,None)
             except (URLError,TimeoutError,ConnectionError) as exc:
                 self.poll_errors[decision]=type(exc).__name__
+        if not self._observation_required():
+            for session in list(self.sessions.values()):
+                decision=session.receipt['plan']['decision_id']
+                try:
+                    self.reconcile_funding(session)
+                    self.poll_errors.pop(decision,None)
+                except (URLError,TimeoutError,ConnectionError) as exc:
+                    self.poll_errors[decision]=type(exc).__name__
         now=self.clock();close=now//H1_MS*H1_MS
         if self.scan_close!=close:
             self.scan_close=close;self.scanned=set();self.scan_results={}
             for event in self.scan_journal.read():
                 if event.get('bar_close_ms')==close:self.scanned.add(event['symbol']);self.scan_results[event['symbol']]=event['result']
-        if 20000<=now-close<=300000:
+        if not self._observation_required() and 20000<=now-close<=300000:
             symbol=next((s for s in FIXED51_UNIVERSE if s not in self.scanned),None)
             if symbol:
                 try:result=self.scan_symbol(symbol)

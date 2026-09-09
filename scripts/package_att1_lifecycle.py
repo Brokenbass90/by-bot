@@ -37,16 +37,24 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=True, allow_nan=False).encode('ascii')
 
 
-def build(out: Path):
-    config = json.loads((ROOT / CONFIG).read_bytes())
+def build(out: Path, *, revision='v1'):
+    if revision not in {'v1','v2'}:
+        raise ValueError('unknown public release revision')
+    config_path = CONFIG if revision == 'v1' else 'configs/research/att1_lifecycle_public_v2.json'
+    unit_path = UNIT if revision == 'v1' else 'deploy/systemd/att1-lifecycle-zero-risk-v2.service'
+    config = json.loads((ROOT / config_path).read_bytes())
     if config['enabled'] is not False or set(config['authority']) != set(AUTHORITY):
         raise ValueError('repository config must be default off with exact authority fields')
     if any(config['authority'][key] is not False for key in AUTHORITY):
         raise ValueError('authority must remain exactly false')
     config['enabled'] = True  # simulation process only; money capabilities remain false
     files = {'app/' + p: (ROOT / p).read_bytes() for p in (*SOURCES, FIXTURE)}
-    files['app/' + CONFIG] = json.dumps(config, sort_keys=True, indent=2).encode() + b'\n'
-    files[UNIT] = (ROOT / UNIT).read_bytes()
+    if revision == 'v2':
+        # The standalone synthetic HTTP-tape verifier still uses this disabled
+        # template and redirects both directories into its temporary fixture.
+        files['app/' + CONFIG] = (ROOT / CONFIG).read_bytes()
+    files['app/' + config_path] = json.dumps(config, sort_keys=True, indent=2).encode() + b'\n'
+    files[unit_path] = (ROOT / unit_path).read_bytes()
     rows = [{'path': p, 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
             for p, data in sorted(files.items())]
     closure = hashlib.sha256(canonical(rows)).hexdigest()
@@ -81,5 +89,6 @@ def build(out: Path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--revision', choices=('v1','v2'), default='v1')
     args = parser.parse_args()
-    print(json.dumps(build(args.out), sort_keys=True))
+    print(json.dumps(build(args.out, revision=args.revision), sort_keys=True))

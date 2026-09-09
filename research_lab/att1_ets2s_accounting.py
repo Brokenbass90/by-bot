@@ -70,6 +70,19 @@ class FundingSettlement:
 
 
 @dataclass(frozen=True)
+class FundingCashSettlement:
+    event_id: str
+    settlement_id: str
+    settlement_ms: int
+    exchange_ms: int
+    received_ms: int
+    qty_at_settlement: str
+    cash_amount: str
+    currency: str
+    source_sha256: str
+
+
+@dataclass(frozen=True)
 class FundingSchedule:
     settlement_ms: tuple[int, ...]
     start_ms: int
@@ -156,8 +169,8 @@ def _validate_plan(plan: object) -> tuple[Fraction, Fraction]:
     if not isinstance(plan, AccountingPlan):
         raise AccountingViolation("plan must be an AccountingPlan")
     _text(plan.profile_id, "profile_id")
-    if not plan.profile_id.startswith("SYNTHETIC_"):
-        raise AccountingViolation("profile_id must start with SYNTHETIC_")
+    if not (plan.profile_id.startswith("SYNTHETIC_") or plan.profile_id == "BROKER_REPLAY_ATT1_V1"):
+        raise AccountingViolation("profile_id must be synthetic or BROKER_REPLAY_ATT1_V1")
     if plan.currency != "USDT":
         raise AccountingViolation("only USDT is supported")
     _sha(plan.source_sha256, "plan.source_sha256")
@@ -230,6 +243,25 @@ def _funding_values(event: FundingSettlement) -> tuple[Fraction, Fraction, Fract
     return qty, mark, rate, exchange, received
 
 
+def _funding_cash_values(event: FundingCashSettlement) -> tuple[Fraction, Fraction, int, int]:
+    if not isinstance(event, FundingCashSettlement):
+        raise AccountingViolation("event must be FundingCashSettlement")
+    _text(event.event_id, "event_id")
+    _text(event.settlement_id, "settlement_id")
+    settlement = _integer(event.settlement_ms, "settlement_ms")
+    exchange, received = _times(event.exchange_ms, event.received_ms)
+    if settlement != exchange:
+        raise AccountingViolation("settlement_ms must equal exchange_ms")
+    qty = _decimal(event.qty_at_settlement, "qty_at_settlement", nonnegative=True)
+    cash = _decimal(event.cash_amount, "cash_amount")
+    if qty == 0 and cash != 0:
+        raise AccountingViolation("zero funding quantity cannot have nonzero cash")
+    if event.currency != "USDT":
+        raise AccountingViolation("funding cash currency must be USDT")
+    _sha(event.source_sha256, "funding_cash.source_sha256")
+    return qty, cash, exchange, received
+
+
 def _event_fingerprint(event: object) -> tuple[object, ...]:
     if isinstance(event, Execution):
         return ("execution",) + tuple(event.__dict__.values())
@@ -237,7 +269,9 @@ def _event_fingerprint(event: object) -> tuple[object, ...]:
         return ("entry_final",) + tuple(event.__dict__.values())
     if isinstance(event, FundingSettlement):
         return ("funding",) + tuple(event.__dict__.values())
-    raise AccountingViolation("event must be Execution, EntryFinal, or FundingSettlement")
+    if isinstance(event, FundingCashSettlement):
+        return ("funding_cash",) + tuple(event.__dict__.values())
+    raise AccountingViolation("event must be Execution, EntryFinal, FundingSettlement, or FundingCashSettlement")
 
 
 def _execution_fingerprint(event: Execution) -> tuple[object, ...]:
@@ -250,7 +284,7 @@ def _funding_fingerprint(event: FundingSettlement) -> tuple[object, ...]:
 
 def replay_accounting(
     plan: AccountingPlan,
-    events: tuple[Execution | EntryFinal | FundingSettlement, ...] | list[Execution | EntryFinal | FundingSettlement],
+    events: tuple[Execution | EntryFinal | FundingSettlement | FundingCashSettlement, ...] | list[Execution | EntryFinal | FundingSettlement | FundingCashSettlement],
     funding_schedule: FundingSchedule | None,
     *,
     mark_price: str | None = None,
@@ -266,6 +300,7 @@ def replay_accounting(
     if not isinstance(reconcile_delayed_funding, bool):
         raise AccountingViolation("reconcile_delayed_funding must be bool")
     accepted_stop, planned_risk = _validate_plan(plan)
+    broker_replay = plan.profile_id == "BROKER_REPLAY_ATT1_V1"
     schedule = _validate_schedule(funding_schedule)
     if not isinstance(events, (tuple, list)):
         raise AccountingViolation("events must be a tuple or list")
@@ -291,7 +326,7 @@ def replay_accounting(
     first_entry_exchange: int | None = None
     last_execution_exchange: int | None = None
     exposure_changes: list[tuple[int, Fraction]] = []
-    delayed_settlements: list[tuple[FundingSettlement, Fraction, Fraction, Fraction]] = []
+    delayed_settlements: list[tuple[FundingSettlement | FundingCashSettlement, Fraction, Fraction]] = []
 
     for event in events:
         fingerprint = _event_fingerprint(event)
@@ -317,6 +352,8 @@ def replay_accounting(
             if final_seen:
                 raise AccountingViolation("multiple distinct EntryFinal events")
         elif isinstance(event, FundingSettlement):
+            if broker_replay:
+                raise AccountingViolation("synthetic funding is not allowed for broker replay")
             qty, price, rate, exchange, received = _funding_values(event)
             settlement_fingerprint = _funding_fingerprint(event)
             prior_settlement = settlements.get(event.settlement_id)
@@ -324,14 +361,24 @@ def replay_accounting(
                 if prior_settlement != settlement_fingerprint:
                     raise AccountingViolation("conflicting settlement_id reuse")
                 duplicate_receipt = True
+        elif isinstance(event, FundingCashSettlement):
+            if not broker_replay:
+                raise AccountingViolation("broker funding cash is not allowed for synthetic profile")
+            qty, cash, exchange, received = _funding_cash_values(event)
+            settlement_fingerprint = _funding_fingerprint(event)
+            prior_settlement = settlements.get(event.settlement_id)
+            if prior_settlement is not None:
+                if prior_settlement != settlement_fingerprint:
+                    raise AccountingViolation("conflicting settlement_id reuse")
+                duplicate_receipt = True
         else:
-            raise AccountingViolation("event must be Execution, EntryFinal, or FundingSettlement")
+            raise AccountingViolation("event must be Execution, EntryFinal, FundingSettlement, or FundingCashSettlement")
 
         event_ids[event_id] = fingerprint
         if duplicate_receipt:
             continue
         exchange_watermark = last_execution_exchange if reconcile_delayed_funding else last_exchange
-        check_exchange = not (reconcile_delayed_funding and isinstance(event, FundingSettlement))
+        check_exchange = not (reconcile_delayed_funding and isinstance(event, (FundingSettlement, FundingCashSettlement)))
         if check_exchange and exchange_watermark is not None and exchange < exchange_watermark:
             raise AccountingViolation("decreasing exchange timestamps are unresolved")
         if last_received is not None and received < last_received:
@@ -339,7 +386,7 @@ def replay_accounting(
 
         last_exchange = exchange if last_exchange is None else max(last_exchange, exchange)
         last_received = received
-        if not isinstance(event, FundingSettlement):
+        if not isinstance(event, (FundingSettlement, FundingCashSettlement)):
             last_execution_exchange = exchange
         if isinstance(event, Execution):
             exposure_changes.append((exchange, qty if event.kind == "ENTRY" else -qty))
@@ -370,26 +417,37 @@ def replay_accounting(
             final_seen = True
             if aggregate_qty > 0:
                 fixed_r0 = aggregate_qty * abs(aggregate_notional / aggregate_qty - accepted_stop)
-        else:
+        elif isinstance(event, FundingSettlement):
             settlements[event.settlement_id] = settlement_fingerprint
             if event.settlement_ms in seen_settlement_times:
                 raise AccountingViolation("multiple funding settlements share one timestamp")
             if not reconcile_delayed_funding and qty != held_qty:
                 raise AccountingViolation("funding qty_at_settlement must equal held qty")
             if reconcile_delayed_funding:
-                delayed_settlements.append((event, qty, price, rate))
+                delayed_settlements.append((event, qty, qty * price * rate))
             else:
                 funding += qty * price * rate
             seen_settlement_times.add(event.settlement_ms)
+        elif isinstance(event, FundingCashSettlement):
+            settlements[event.settlement_id] = settlement_fingerprint
+            if event.settlement_ms in seen_settlement_times:
+                raise AccountingViolation("multiple funding settlements share one timestamp")
+            if not reconcile_delayed_funding and qty != held_qty:
+                raise AccountingViolation("funding qty_at_settlement must equal held qty")
+            if reconcile_delayed_funding:
+                delayed_settlements.append((event, qty, cash))
+            else:
+                funding += cash
+            seen_settlement_times.add(event.settlement_ms)
 
-    for settlement, qty, price, rate in delayed_settlements:
+    for settlement, qty, cash_amount in delayed_settlements:
         historical_qty = sum((change for when, change in exposure_changes
                               if when <= settlement.settlement_ms), Fraction(0))
         if qty != historical_qty:
             raise AccountingViolation("funding qty_at_settlement must equal historical held qty")
         if any(abs(when - settlement.settlement_ms) <= 5000 for when, _ in exposure_changes):
             issues.add("FUNDING_BOUNDARY_AMBIGUOUS")
-        funding += qty * price * rate
+        funding += cash_amount
 
     coverage_complete = False
     if first_entry_exchange is None:
