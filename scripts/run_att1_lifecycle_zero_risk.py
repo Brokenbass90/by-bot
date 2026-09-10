@@ -15,6 +15,7 @@ import stat
 import fcntl
 import shutil
 import signal as signal_module
+from copy import deepcopy
 from urllib.request import Request, HTTPRedirectHandler, ProxyHandler, build_opener
 from urllib.parse import urlencode
 from urllib.error import URLError
@@ -249,6 +250,17 @@ def verify_state(paths: list[Path], profile: Mapping[str, object]) -> dict[str, 
     }
     state["state_sha256"] = hashlib.sha256(_canonical(state)).hexdigest()
     return state
+
+def _journal_signature(paths: list[Path]):
+    signature=[]
+    for path in sorted((Path(path) for path in paths), key=str):
+        try:
+            if path.is_symlink(): raise RunnerViolation('journal symlink')
+            info=path.stat()
+        except OSError as exc: raise RunnerViolation('journal stat') from exc
+        if not stat.S_ISREG(info.st_mode): raise RunnerViolation('journal not regular')
+        signature.append((str(path),info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_ctime_ns))
+    return tuple(signature)
 
 
 def _no_duplicates(pairs: list[tuple[str, object]]) -> dict[str, object]:
@@ -531,12 +543,18 @@ class PublicLifecycleRuntime:
             decision=session.receipt['plan']['decision_id']
             if path.name!=decision+'.jsonl' or decision in self.sessions:raise RunnerViolation('session path identity')
             self.sessions[decision]=session
+        self._state_cache=None
         self.start_ms=self.clock();self.start_state=self.state()
         self.last_observed={};self.last_funding={};self.scanned=set();self.scan_close=None
         self.poll_errors={};self.scan_results={};self.get_count=0;self.running=True
 
     def state(self):
-        return verify_state([s.journal.path for s in self.sessions.values()],self.profile)
+        paths=[s.journal.path for s in self.sessions.values()]; before=_journal_signature(paths)
+        if self._state_cache is not None and self._state_cache[0]==before:
+            return deepcopy(self._state_cache[1])
+        state=verify_state(paths,self.profile); after=_journal_signature(paths)
+        if before!=after: raise RunnerViolation('journal changed during state verification')
+        self._state_cache=(after,deepcopy(state)); return deepcopy(state)
 
     def _get(self,path,symbol,**params):
         params={'category':'linear','symbol':symbol,**params}

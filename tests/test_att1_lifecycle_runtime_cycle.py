@@ -34,6 +34,45 @@ def make_runtime(tmp_path,tape):
     config.update(enabled=True,runtime_dir=str(tmp_path/'runtime'),l1_cache_dir=str(tmp_path/'cache'))
     return runner.PublicLifecycleRuntime(config,clock_ms=tape.clock,transport=tape,sleep_fn=tape.sleep)
 
+def _runtime_with_session(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent'])
+    rt=make_runtime(tmp_path,PublicTape(intent['submit_ms']))
+    return rt,rt.admit_candidate(intent['signal'],intent['instrument'])
+
+def test_state_cache_reuses_unchanged_journals_and_isolation(tmp_path, monkeypatch):
+    rt,session=_runtime_with_session(tmp_path); calls=[]; original=runner.verify_state
+    monkeypatch.setattr(runner,'verify_state',lambda *args:(calls.append(1) or original(*args)))
+    first=rt.state(); assert rt.state()==first; assert len(calls)==1
+    first['sessions'].append({'poison':True}); assert all('poison' not in x for x in rt.state()['sessions']); assert len(calls)==1
+
+def test_state_cache_invalidates_append_and_replacement(tmp_path, monkeypatch):
+    rt,session=_runtime_with_session(tmp_path); calls=[]; original=runner.verify_state
+    monkeypatch.setattr(runner,'verify_state',lambda *args:(calls.append(1) or original(*args)))
+    rt.state(); path=session.journal.path
+    rt._emit(session,'CLOCK')
+    rt.state(); assert len(calls)==2
+    replacement=path.with_suffix('.replacement'); replacement.write_bytes(path.read_bytes()); replacement.chmod(0o600); replacement.replace(path)
+    assert rt.state()==runner.verify_state([path],rt.profile)
+    assert len(calls)==4  # Cache invalidation plus the explicit independent replay.
+
+def test_state_cache_rejects_corruption_symlink_and_concurrent_change(tmp_path, monkeypatch):
+    rt,session=_runtime_with_session(tmp_path); path=session.journal.path
+    path.write_bytes(path.read_bytes()+b'not-json\n')
+    from research_lab.att1_lifecycle_journal import JournalViolation
+    with pytest.raises(JournalViolation):
+        rt.state()
+    path.unlink(); path.symlink_to(tmp_path/'missing')
+    with pytest.raises(runner.RunnerViolation,match='journal'):
+        runner._journal_signature([path])
+
+def test_state_cache_detects_change_during_replay(tmp_path, monkeypatch):
+    rt,session=_runtime_with_session(tmp_path); path=session.journal.path; original=runner.verify_state
+    def changing(*args):
+        result=original(*args); path.touch(); return result
+    monkeypatch.setattr(runner,'verify_state',changing)
+    with pytest.raises(runner.RunnerViolation,match='changed during'):
+        rt.state()
+
 
 def test_public_tape_entry_two_targets_fees_and_full_restart_oracle(tmp_path):
     intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])

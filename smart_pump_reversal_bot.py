@@ -5756,7 +5756,7 @@ async def tg_cmd_loop():
             params = {"timeout": 20}
             if last_id:
                 params["offset"] = last_id + 1
-            r = requests.get(f"https://api.telegram.org/bot{TG_TOKEN}/getUpdates", params=params, timeout=25)
+            r = await asyncio.to_thread(requests.get, f"https://api.telegram.org/bot{TG_TOKEN}/getUpdates", params=params, timeout=25)
             j = r.json()
             updates = j.get("result", []) if isinstance(j, dict) else []
             for u in updates:

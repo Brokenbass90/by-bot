@@ -8,7 +8,7 @@
     "promotion_authority": false
   },
   "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
-  "runtime_dir": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/v2",
+  "runtime_dir": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260910-stability",
   "l1_cache_dir": "/opt/bybot-research/att1-ets2s-signal-shadow/app/runtime/att1_ets2s_signal_shadow/cache",
   "public_base_url": "https://api.bybit.com",
   "poll_seconds": 1,
@@ -16,5 +16,5 @@
   "min_free_bytes": 536870912,
   "scenario_taker_fee_rate": "0.001",
   "max_book_participation": "0.05",
-  "epoch_id": "att1-public-lifecycle-20260909-v2"
+  "epoch_id": "att1-public-lifecycle-20260910-stability"
 }
