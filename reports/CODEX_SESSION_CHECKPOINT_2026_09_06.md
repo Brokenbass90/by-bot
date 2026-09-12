@@ -2,7 +2,24 @@
 
 ## Public continuation checkpoint
 
-Current continuation: **September 12**. Read
+Current continuation: **September 13, Cyprus**. Read
+`reports/ATT1_PUBLIC_PROGRESS_2026_09_13.md` first.
+Read-only VPS snapshot September 12 23:37–23:41 UTC: OLD PID unchanged since
+08:28 UTC, heartbeat age 7.64s, signed broker flat/no orders. ETH entry remains
+OLD; NEW has no production broker-send binding. No money/service changes here.
+L1: 9,200 forward ATT1 decision rows, 42 signals; signals are not trades.
+Across three preserved public epochs: 12 sessions, 10 simulated filled entries,
+2 nonfills, all 10 filled sessions contaminated by RECOVERY_GAP, zero clean final
+net-R. Current epoch is 6 sessions: 5 dirty fills plus CRV cancelled nonfill.
+All session and scan hash chains verified. Current scanner reaches only 29–34
+of 51 symbols in recent hourly slots. HBAR/AAVE public crashes are specifically
+`future/stale public book` followed by a 20s systemd restart delay. No fresh
+filled session after the September 12 OLD repair validates continuity yet.
+READY FOR OWNER ACTIVATION = FALSE. Immediate gate: fix/verify continuity in the
+existing public runner without weakening the 2s gate or changing old evidence;
+then resume existing production dispatch/reservation/broker binding. No new core.
+
+Prior September 12 deployment record: read
 `reports/ATT1_STABILITY_DEPLOYMENT_2026_09_12.md` first.
 Source `79be191ba4ef8238df7a4b0e2b61ec75da3d9a03`: OLD Telegram long polling
 fix is DEPLOYED (only HTTP wait moved off the main event loop). Controlled

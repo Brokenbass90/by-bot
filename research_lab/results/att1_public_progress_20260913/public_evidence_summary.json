@@ -1,0 +1,450 @@
+{
+  "schema": "att1_public_evidence_snapshot_v1",
+  "as_of_utc": "2026-09-12T23:39:29.204000+00:00",
+  "authority": "public_only_no_promotion",
+  "l1_groups": {
+    "ATT1:ALPHA_FORWARD_BACKFILL": {
+      "rows": 51,
+      "signals": 0,
+      "exceptions": 0,
+      "first_ms": 1788591600000,
+      "last_ms": 1788591600000
+    },
+    "ETS2S:ALPHA_FORWARD_BACKFILL": {
+      "rows": 51,
+      "signals": 0,
+      "exceptions": 0,
+      "first_ms": 1788591600000,
+      "last_ms": 1788591600000
+    },
+    "ATT1:EXECUTION_FORWARD": {
+      "rows": 9200,
+      "signals": 42,
+      "exceptions": 0,
+      "first_ms": 1788595200000,
+      "last_ms": 1789254000000
+    },
+    "ETS2S:EXECUTION_FORWARD": {
+      "rows": 9200,
+      "signals": 325,
+      "exceptions": 0,
+      "first_ms": 1788595200000,
+      "last_ms": 1789254000000
+    }
+  },
+  "l1_duplicate_claims": 0,
+  "epochs": [
+    {
+      "runtime": "/opt/bybot-research/att1-lifecycle-zero-risk/runtime/v1",
+      "session_journal_hash_chains_verified": true,
+      "sessions": [
+        {
+          "symbol": "AAVEUSDT",
+          "submit_utc": "2026-09-09T03:01:15.316000+00:00",
+          "journal_sha256": "7de33e83e11f77180cddb2c39193e24a0c43a98d933e3065d14e83339fea6925",
+          "entry_filled": false,
+          "exit_filled": false,
+          "gap_reasons": [],
+          "entry_final": [
+            "CANCELLED"
+          ]
+        },
+        {
+          "symbol": "DOGEUSDT",
+          "submit_utc": "2026-09-08T19:04:00.810000+00:00",
+          "journal_sha256": "fca4553bcf7b0ef9efb09ebfcd839188f602ac9d22deb0d981927a1d1c4d6a08",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        },
+        {
+          "symbol": "ADAUSDT",
+          "submit_utc": "2026-09-08T11:01:14.704000+00:00",
+          "journal_sha256": "06f436b74a70d2cf5a28a79ac165a4f1f79b49316ee35b67057b059b7513da2e",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        },
+        {
+          "symbol": "APTUSDT",
+          "submit_utc": "2026-09-09T03:02:09.256000+00:00",
+          "journal_sha256": "5b53e00c6e8b39b1a08b415c0d09be563bb424670421b6bfb7d28ec70d85f63e",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        }
+      ],
+      "scan_rows": 654,
+      "scan_results": {
+        "NO_SIGNAL": 621,
+        "ADMITTED": 4,
+        "STALE_CLOSED_BAR": 8,
+        "SCAN_REJECTED": 19,
+        "BELOW_MIN_QTY": 1,
+        "POSITION_ACTIVE": 1
+      },
+      "scan_errors": {
+        "ProfileViolation:public_source_stale_or_future": 18,
+        "RunnerViolation:public retCode": 1
+      },
+      "scan_hours": 43,
+      "last_16_hour_scan_counts": [
+        [
+          1788962400000,
+          6
+        ],
+        [
+          1788966000000,
+          6
+        ],
+        [
+          1788969600000,
+          6
+        ],
+        [
+          1788973200000,
+          6
+        ],
+        [
+          1788976800000,
+          6
+        ],
+        [
+          1788980400000,
+          6
+        ],
+        [
+          1788984000000,
+          5
+        ],
+        [
+          1788987600000,
+          6
+        ],
+        [
+          1788991200000,
+          6
+        ],
+        [
+          1788994800000,
+          7
+        ],
+        [
+          1788998400000,
+          6
+        ],
+        [
+          1789002000000,
+          6
+        ],
+        [
+          1789005600000,
+          6
+        ],
+        [
+          1789009200000,
+          5
+        ],
+        [
+          1789012800000,
+          6
+        ],
+        [
+          1789016400000,
+          6
+        ]
+      ],
+      "state_sha256": "f347e395264db271b841c8b7d2d782dde3e637e835808fa402573b66c5f31e5e"
+    },
+    {
+      "runtime": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/v2",
+      "session_journal_hash_chains_verified": true,
+      "sessions": [
+        {
+          "symbol": "CRVUSDT",
+          "submit_utc": "2026-09-09T15:04:34.615000+00:00",
+          "journal_sha256": "0eed80c372f46a90edf1aa45031eda0c6c6881c3230cecaf7ec0b1a1ac5bb8d1",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        },
+        {
+          "symbol": "DOGEUSDT",
+          "submit_utc": "2026-09-09T14:04:38.019000+00:00",
+          "journal_sha256": "ef62bd19f3ec9e7bbdeae64ea0efe82c990e523a7af4d359a520b5ef0e723eba",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        }
+      ],
+      "scan_rows": 455,
+      "scan_results": {
+        "NO_SIGNAL": 430,
+        "STALE_CLOSED_BAR": 11,
+        "SCAN_REJECTED": 12,
+        "ADMITTED": 2
+      },
+      "scan_errors": {
+        "ProfileViolation:public_source_stale_or_future": 12
+      },
+      "scan_hours": 18,
+      "last_16_hour_scan_counts": [
+        [
+          1788962400000,
+          19
+        ],
+        [
+          1788966000000,
+          18
+        ],
+        [
+          1788969600000,
+          24
+        ],
+        [
+          1788973200000,
+          23
+        ],
+        [
+          1788976800000,
+          24
+        ],
+        [
+          1788980400000,
+          22
+        ],
+        [
+          1788984000000,
+          24
+        ],
+        [
+          1788987600000,
+          24
+        ],
+        [
+          1788991200000,
+          26
+        ],
+        [
+          1788994800000,
+          29
+        ],
+        [
+          1788998400000,
+          27
+        ],
+        [
+          1789002000000,
+          27
+        ],
+        [
+          1789005600000,
+          27
+        ],
+        [
+          1789009200000,
+          27
+        ],
+        [
+          1789012800000,
+          29
+        ],
+        [
+          1789016400000,
+          29
+        ]
+      ],
+      "state_sha256": "770e85e51fa1a63906bc5b357973a03a1ba6d590aa5932d929984c2e967e6f73"
+    },
+    {
+      "runtime": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260910-stability",
+      "session_journal_hash_chains_verified": true,
+      "sessions": [
+        {
+          "symbol": "INJUSDT",
+          "submit_utc": "2026-09-10T23:03:55.442000+00:00",
+          "journal_sha256": "c812cf3afcfe02ef88be3c60b0f9eda958ee03970e3ada5b354cd63d5cbf1bef",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        },
+        {
+          "symbol": "HBARUSDT",
+          "submit_utc": "2026-09-11T03:03:28.608000+00:00",
+          "journal_sha256": "074ff3f9cc99391e3d9951a693a6636be29bfa1228a01c2492e63755d3be1dae",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "restart lost public observation continuity"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        },
+        {
+          "symbol": "ICPUSDT",
+          "submit_utc": "2026-09-10T16:04:20.169000+00:00",
+          "journal_sha256": "56e427829fe81616c78463e5e09a42ca3a4ee79d386bebc908b2dacde6c15053",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        },
+        {
+          "symbol": "CRVUSDT",
+          "submit_utc": "2026-09-11T09:02:53.654000+00:00",
+          "journal_sha256": "9662bc813541582eafe7c0a7214f76358dedffb693aa1e241c98583ecbd5f00f",
+          "entry_filled": false,
+          "exit_filled": false,
+          "gap_reasons": [],
+          "entry_final": [
+            "CANCELLED"
+          ]
+        },
+        {
+          "symbol": "BNBUSDT",
+          "submit_utc": "2026-09-11T08:02:19.513000+00:00",
+          "journal_sha256": "8f1a14692f00c271d29ad668813848348ddf1c93e893f211feb581c58a178659",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "public polling continuity gap"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        },
+        {
+          "symbol": "AAVEUSDT",
+          "submit_utc": "2026-09-11T10:00:52.919000+00:00",
+          "journal_sha256": "b0e59e1bca9c46cea81251a34f5b27d27295f933af4b5f530d892d845f224ad1",
+          "entry_filled": true,
+          "exit_filled": true,
+          "gap_reasons": [
+            "restart lost public observation continuity"
+          ],
+          "entry_final": [
+            "FILLED"
+          ]
+        }
+      ],
+      "scan_rows": 2114,
+      "scan_results": {
+        "NO_SIGNAL": 1981,
+        "STALE_CLOSED_BAR": 72,
+        "SCAN_REJECTED": 51,
+        "BELOW_MIN_QTY": 3,
+        "ADMITTED": 6,
+        "POSITION_ACTIVE": 1
+      },
+      "scan_errors": {
+        "ProfileViolation:public_source_stale_or_future": 49,
+        "RunnerViolation:public retCode": 2
+      },
+      "scan_hours": 66,
+      "last_16_hour_scan_counts": [
+        [
+          1789200000000,
+          33
+        ],
+        [
+          1789203600000,
+          33
+        ],
+        [
+          1789207200000,
+          34
+        ],
+        [
+          1789210800000,
+          32
+        ],
+        [
+          1789214400000,
+          33
+        ],
+        [
+          1789218000000,
+          31
+        ],
+        [
+          1789221600000,
+          31
+        ],
+        [
+          1789225200000,
+          29
+        ],
+        [
+          1789228800000,
+          30
+        ],
+        [
+          1789232400000,
+          31
+        ],
+        [
+          1789236000000,
+          31
+        ],
+        [
+          1789239600000,
+          31
+        ],
+        [
+          1789243200000,
+          31
+        ],
+        [
+          1789246800000,
+          31
+        ],
+        [
+          1789250400000,
+          33
+        ],
+        [
+          1789254000000,
+          31
+        ]
+      ],
+      "state_sha256": "d7b2af51f369db42f9ae95d16a469f0dcd0dfba4142e1ef7413e0f3aa3ece8c4"
+    }
+  ],
+  "clean_filled_final_net_r_count": 0,
+  "readiness": false
+}
