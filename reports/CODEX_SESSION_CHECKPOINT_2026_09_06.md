@@ -2,6 +2,27 @@
 
 ## Public continuation checkpoint
 
+Current continuation: **September 12**. Read
+`reports/ATT1_STABILITY_DEPLOYMENT_2026_09_12.md` first.
+Source `79be191ba4ef8238df7a4b0e2b61ec75da3d9a03`: OLD Telegram long polling
+fix is DEPLOYED (only HTTP wait moved off the main event loop). Controlled
+restart PID 3563637 → 3650522; signed GET at 08:28:28 UTC flat/no orders,
+heartbeat age 3.2s, control hashes and visible risk settings unchanged.
+44.17s post-fix sample: heartbeat age 0.81–10.86s, PID stable; public v2 CPU 1.14%.
+Do not yet claim the entire hourly incident resolved; observe an hourly boundary.
+
+Public replay-cache fix is DEPLOYED in the existing v2 service, new epoch
+`att1-public-lifecycle-20260910-stability`, runtime `runtime/20260910-stability`.
+Redundant public v1 is stopped/disabled; previous v1/v2 journals are preserved.
+200 local tests, 14 target Python tests and end-to-end target verifier PASS.
+NEW is still public-only. The reported ETH money entry used OLD.
+READY FOR OWNER ACTIVATION = FALSE; production dispatch/broker binding remains
+unimplemented and clean prospective filled evidence is absent. Continue the
+existing reservation integration after runtime verification; no new core/lab.
+Final burn-in automation deleted as obsolete; retain the existing L1 PASS.
+
+The following September 9 snapshot is historical, superseded by the above:
+
 Latest continuation: September 9, after OLD watchdog restarts at 16:02 and
 17:02 UTC. Immediate blocker: recurring VPS lifecycle discontinuity; public v2
 also has two dirty RECOVERY_GAP sessions, no clean prospective final net-R.
