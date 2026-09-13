@@ -365,6 +365,12 @@ class CanonicalCachedFeed:
         self._store = ResearchKlineStore(self.symbol, base_interval_minutes=60)
         self._store.rows = self.rows
 
+    def set_closed_prefix(self, end: int) -> None:
+        """Expose only this prefix of the already validated immutable input history."""
+        if type(end) is not int or not 0 <= end <= len(self.rows):
+            raise PublicCacheViolation('closed prefix outside history')
+        self._store.rows = self.rows[:end]
+
     def __call__(self, symbol: str, timeframe: object, limit: int):
         if symbol != self.symbol:
             raise PublicCacheViolation("feed symbol mismatch")

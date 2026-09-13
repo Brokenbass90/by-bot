@@ -7,11 +7,10 @@ from fractions import Fraction
 from typing import Mapping, Sequence
 
 from bot.att1_ets2s_signal_shadow_contract import PROFILE_FIXED51_CONFIG_HASHES
-from bot.public_h1_cache_store import H1_MS, validate_closed_h1_rows
+from bot.public_h1_cache_store import H1_MS, validate_closed_h1_rows, CanonicalCachedFeed
 from bot.sbr1_universe import FIXED51_UNIVERSE
 from research_lab.att1_ets2s_signal_shadow_parity import ATT1_PROFILE, _resolved_config_hash, frozen_profile_env
 from research_lab.att1_lifecycle_profile import ProfileViolation, _decimal_text, validate_profile
-from scripts.run_att1_ets2s_signal_shadow import CausalCanonicalFeed
 from strategies.att1_live import ATT1LiveEngine
 
 
@@ -44,14 +43,14 @@ def signal_from_rows(symbol: str, rows: Sequence[Sequence[object]], profile: Map
         raise ProfileViolation("signal_symbol")
     normalized = validate_closed_h1_rows(rows, source_available, min_bars=2160)
     data_sha = hashlib.sha256(_canonical(normalized)).hexdigest()
-    feed = CausalCanonicalFeed(symbol, normalized)
+    feed = CanonicalCachedFeed(symbol, normalized)
     with frozen_profile_env(ATT1_PROFILE, FIXED51_UNIVERSE):
         engine = ATT1LiveEngine(feed)
         if _resolved_config_hash(ATT1_PROFILE, engine._get_strategy(symbol), FIXED51_UNIVERSE) != PROFILE_FIXED51_CONFIG_HASHES["ATT1"]:
             raise ProfileViolation("pinned_resolved_config_drift")
         signal = None
         for index in range(len(normalized) - 48, len(normalized)):
-            feed.set_cursor(index)
+            feed.set_closed_prefix(index + 1)
             row = normalized[index]
             signal = engine.signal(symbol, *row, observed_at_ms=int(row[0]) + H1_MS)
     ready = _clock(read_clock(), "clock_ms")

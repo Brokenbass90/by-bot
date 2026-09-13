@@ -164,7 +164,7 @@ def test_slow_observation_book_marks_open_session_dirty_after_response(tmp_path)
     assert session.receipt['final_net_r'] is None
 
 
-def test_open_session_defers_slow_optional_scan_before_next_observation(tmp_path):
+def test_scan_concurrency_does_not_hide_a_real_global_clock_gap(tmp_path):
     intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
     rt=make_runtime(tmp_path,tape);session=rt.admit_candidate(intent['signal'],intent['instrument'])
     tape.now=(tape.now//runner.H1_MS)*runner.H1_MS+20000
@@ -175,10 +175,12 @@ def test_open_session_defers_slow_optional_scan_before_next_observation(tmp_path
         return {'result':'NO_SIGNAL'}
     rt.scan_symbol=slow_scan
     rt.tick()
+    rt.scan_future[2].result(timeout=2)
     rt.manage(session)
-    assert scan_calls==[]
-    assert session.receipt['incidents']==[]
-    assert session.receipt['held_qty']=='1/10'
+    assert len(scan_calls)==1
+    assert session.receipt['incidents']==['RECOVERY_GAP']
+    assert session.receipt['final_net_r'] is None
+    rt.scan_executor.shutdown(wait=True)
 
 
 def test_dirty_flat_completed_funding_coverage_does_not_repeat_public_get(tmp_path):
@@ -197,3 +199,136 @@ def test_dirty_flat_completed_funding_coverage_does_not_repeat_public_get(tmp_pa
     assert len([e for e in rt._records(session) if e['kind']=='FUNDING_COVERAGE'])==before_coverage
     assert session.receipt['incidents']==['RECOVERY_GAP']
     assert session.receipt['final_net_r'] is None
+
+@pytest.mark.parametrize('offset', [-2001, 1])
+def test_bad_book_time_keeps_process_and_durable_gap_until_fresh_exit(tmp_path, offset):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    def bad_book(url,params,**kwargs):
+        data=json.loads(tape(url,params,**kwargs))
+        if url.endswith('/orderbook'):data['result']['cts']=tape.now+offset
+        return json.dumps(data).encode()
+    rt.transport=bad_book
+    rt.tick()  # The old driver raises RunnerViolation and exits its process here.
+    assert session.receipt['held_qty']=='1/10'
+    assert session.receipt['incidents']==['RECOVERY_GAP']
+    assert session.receipt['final_net_r'] is None
+    assert session.receipt==LifecycleSession(session.journal.path,rt.profile).receipt
+    assert not any(e['kind']=='EXIT_FILL' for e in rt._records(session))
+    assert rt.poll_errors
+    rt.tick()
+    assert sum(e['kind']=='RECOVERY_GAP' for e in rt._records(session))==1
+    rt.transport=tape;rt.tick()
+    assert session.receipt['held_qty']=='0'
+    assert session.receipt['final_net_r'] is None
+    assert not rt.poll_errors
+
+@pytest.mark.parametrize('offset', [-2001, 1])
+def test_invalid_entry_book_cancels_only_simulated_ioc_without_dangling_intent(tmp_path, offset):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape)
+    def bad_book(url,params,**kwargs):
+        data=json.loads(tape(url,params,**kwargs));data['result']['cts']=tape.now+offset
+        return json.dumps(data).encode()
+    rt.transport=bad_book
+    session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    assert session.receipt['terminal_nonfill'] is True
+    assert session.receipt['pending_entry_qty']=='0'
+    assert session.receipt['held_qty']=='0'
+    assert session.receipt['final_net_r'] is None
+    assert list((rt.root/'sources').glob('*.json'))
+
+
+def test_malformed_book_remains_fatal_not_caught_as_time_error(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);rt.admit_candidate(intent['signal'],intent['instrument'])
+    tape.bid='102'
+    with pytest.raises(runner.RunnerViolation,match='crossed'):rt.tick()
+
+
+def test_hour_scan_covers_universe_while_open_book_observation_continues(tmp_path):
+    from threading import Event
+    import time
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    tape.now=(tape.now//runner.H1_MS)*runner.H1_MS+20000
+    rt.last_observed[session.receipt['plan']['decision_id']]=tape.now
+    entered=Event();release=Event();called=[]
+    def scan(symbol):
+        called.append(symbol);entered.set()
+        assert release.wait(2)
+        return {'result':'NO_SIGNAL'}
+    rt.scan_symbol=scan
+    try:
+        rt.tick()
+        assert entered.wait(.5), 'open exposure must not starve the fixed-universe scan'
+        before=len(tape.calls);rt.tick()
+        assert len(tape.calls)>before and session.receipt['incidents']==[]
+        release.set()
+        for _ in range(400):
+            rt.tick();time.sleep(.001)
+            if len(rt.scanned)==len(runner.FIXED51_UNIVERSE):break
+        assert set(rt.scanned)==set(runner.FIXED51_UNIVERSE)
+        assert len(called)==len(set(called))==51
+        assert session.receipt['held_qty']=='1/10'
+        assert session.receipt['incidents']==[]
+    finally:
+        release.set()
+        if getattr(rt,'scan_executor',None):rt.scan_executor.shutdown(wait=True)
+
+
+def test_simulated_entry_transport_failure_does_not_leave_pending_order(tmp_path):
+    from urllib.error import URLError
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape)
+    def unavailable(*args,**kwargs):raise URLError('public timeout')
+    rt.transport=unavailable
+    session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    assert session.receipt['terminal_nonfill'] is True
+    assert session.receipt['pending_entry_qty']=='0'
+    assert session.receipt['final_net_r'] is None
+
+
+def test_public_get_has_bounded_concurrency_and_start_rate(tmp_path):
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Lock
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);lock=Lock();active=0;peak=0;starts=[]
+    def slow(url,params,**kwargs):
+        nonlocal active,peak
+        with lock:active+=1;peak=max(peak,active);starts.append(time.monotonic())
+        time.sleep(.20)
+        with lock:
+            raw=tape(url,params,**kwargs);active-=1
+        return raw
+    rt.transport=slow
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        futures=[pool.submit(rt._get,'/v5/market/orderbook','BTCUSDT',limit=50) for _ in range(8)]
+        for f in futures:f.result(timeout=4)
+    assert peak<=2
+    assert max(starts)-min(starts)>=.80  # Eight starts at no more than 8/s.
+
+
+def test_scan_result_cannot_admit_a_different_h1_cutoff(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);close=intent['signal']['bar_close_ms']-runner.H1_MS
+    rt.scan_close=close
+    rt.finish_scan(close,'BTCUSDT',{'result':'CANDIDATE','signal':intent['signal'],'instrument':intent['instrument']})
+    assert rt.sessions=={}
+    assert rt.scan_results['BTCUSDT']=='SCAN_REJECTED'
+
+
+def test_scan_journal_identity_and_restart_dedupe_are_deterministic(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);close=intent['signal']['bar_close_ms'];rt.scan_close=close
+    rt.finish_scan(close,'BTCUSDT',{'result':'NO_SIGNAL'})
+    row=rt.scan_journal.read()[0]
+    assert row['event_id']=='scan:'+rt.config['epoch_id']+':BTCUSDT:'+str(close)
+    before=rt.scan_journal.path.read_bytes()
+    rt.finish_scan(close,'BTCUSDT',{'result':'NO_SIGNAL'})
+    assert rt.scan_journal.path.read_bytes()==before
+    restart=make_runtime(tmp_path,tape);restart.tick()
+    assert 'BTCUSDT' in restart.scanned
+    assert restart.scan_journal.path.read_bytes()==before
+    if restart.scan_executor:restart.scan_executor.shutdown(wait=True)

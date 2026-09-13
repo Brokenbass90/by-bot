@@ -16,6 +16,8 @@ import fcntl
 import shutil
 import signal as signal_module
 from copy import deepcopy
+from concurrent.futures import ThreadPoolExecutor
+from threading import BoundedSemaphore, Lock, Event
 from urllib.request import Request, HTTPRedirectHandler, ProxyHandler, build_opener
 from urllib.parse import urlencode
 from urllib.error import URLError
@@ -52,6 +54,13 @@ CONFIG_FIELDS = {
 
 class RunnerViolation(ValueError):
     """The public-only runner cannot establish a required safety invariant."""
+
+
+class PublicBookTimeViolation(RunnerViolation):
+    """An unusable quote, retained as evidence without restarting the process."""
+    def __init__(self, source_sha256):
+        super().__init__('future/stale public book')
+        self.source_sha256 = source_sha256
 
 
 PUBLIC_BASE_URL = "https://api.bybit.com"
@@ -518,7 +527,8 @@ class PublicLifecycleRuntime:
     def __init__(self,config,*,clock_ms=None,transport=None,sleep_fn=None):
         self.config=config
         self.clock=clock_ms or (lambda:time.time_ns()//1_000_000)
-        self.sleep=sleep_fn or time.sleep
+        self.scan_wakeup=Event()
+        self.sleep=sleep_fn or self.scan_wakeup.wait
         self.transport=transport or network_transport
         self.profile=build_profile(ROOT)
         if config['profile_sha256']!=self.profile['profile_sha256']:raise RunnerViolation('profile hash mismatch')
@@ -547,6 +557,8 @@ class PublicLifecycleRuntime:
         self.start_ms=self.clock();self.start_state=self.state()
         self.last_observed={};self.last_funding={};self.scanned=set();self.scan_close=None
         self.poll_errors={};self.scan_results={};self.get_count=0;self.running=True
+        self.scan_executor=None;self.scan_future=None
+        self.public_slots=BoundedSemaphore(2);self.public_rate_lock=Lock();self.next_public_start=0.0
 
     def state(self):
         paths=[s.journal.path for s in self.sessions.values()]; before=_journal_signature(paths)
@@ -558,8 +570,15 @@ class PublicLifecycleRuntime:
 
     def _get(self,path,symbol,**params):
         params={'category':'linear','symbol':symbol,**params}
-        value=request_public(self.transport,path,params,symbol=symbol,max_response_bytes=self.config['max_response_bytes'])
-        self.get_count+=1
+        with self.public_slots:
+            # One scan worker and the management thread share a conservative
+            # request-start budget. Hold no journal lock while waiting on I/O.
+            with self.public_rate_lock:
+                wait=max(0.0,self.next_public_start-time.monotonic())
+                if wait:time.sleep(wait)
+                self.next_public_start=time.monotonic()+0.125
+            value=request_public(self.transport,path,params,symbol=symbol,max_response_bytes=self.config['max_response_bytes'])
+            with self.public_rate_lock:self.get_count+=1
         return value,self.clock()
 
     def _save_source(self,value):
@@ -622,7 +641,9 @@ class PublicLifecycleRuntime:
         snapshot={k:result[k] for k in ('ts','cts','u','seq','b','a')}
         _snapshot_levels(snapshot,'bid');_snapshot_levels(snapshot,'ask')
         if Fraction(snapshot['b'][0][0])>Fraction(snapshot['a'][0][0]):raise RunnerViolation('crossed book')
-        if snapshot['cts']>rx or rx-snapshot['cts']>2000:raise RunnerViolation('future/stale public book')
+        if snapshot['cts']>rx or rx-snapshot['cts']>2000:
+            source=self._save_source({'public_response':raw,'received_ms':rx,'rejected':'future/stale public book'})
+            raise PublicBookTimeViolation(source)
         return snapshot,rx,raw
 
     def execute_ioc(self,session,*,entry=False):
@@ -633,7 +654,16 @@ class PublicLifecycleRuntime:
         requested=p['requested_qty'] if entry else _fraction_text(Fraction(pending['remaining_qty']))
         if not entry and not pending['acknowledged']:
             self._emit(session,'EXIT_ACK',exit_order_id=order,exchange_ms=submit)
-        snapshot,rx,raw=self._book(p['symbol'])
+        try:
+            snapshot,rx,raw=self._book(p['symbol'])
+        except (PublicBookTimeViolation,URLError,TimeoutError,ConnectionError) as exc:
+            if not entry:raise
+            # This is a local synthetic IOC, never an unknown broker order.
+            # No quote was consumed and no fill can exist: retain a sourced nonfill.
+            source=(exc.source_sha256 if isinstance(exc,PublicBookTimeViolation) else
+                    self._save_source({'public_request_failed':type(exc).__name__,'received_ms':self.clock()}))
+            self._emit(session,'ENTRY_FINAL',status='CANCELLED',source=source)
+            return
         source=self._save_source({'public_response':raw,'received_ms':rx,
                                   'scenario_taker_fee_rate':'0.001','max_book_participation':'0.05'})
         fills=simulate_ioc_fills(snapshot,decision_id=p['decision_id'],order_id=order,
@@ -765,10 +795,23 @@ class PublicLifecycleRuntime:
         instrument={'symbol':symbol,'tick_size':item['priceFilter']['tickSize'],'qty_step':lot['qtyStep'],
                     'min_order_qty':lot['minOrderQty'],'min_notional':lot['minNotionalValue'],
                     'max_market_qty':lot['maxMktOrderQty'],'observed_ms':observed,'source_sha256':source}
-        session=self.admit_candidate(signal,instrument)
-        return {'result':'ADMITTED' if session else self.scan_results[symbol],
-                'decision_id':session.receipt['plan']['decision_id'] if session else None,
-                'signal_source_sha256':signal['source_sha256'],'data_sha256':signal['data_sha256']}
+        # Only the main loop may admit, fill, or mutate lifecycle journals.
+        return {'result':'CANDIDATE','signal':signal,'instrument':instrument}
+
+    def finish_scan(self,close,symbol,result):
+        if result['result']=='CANDIDATE' and (result['signal']['bar_close_ms']!=close or result['signal']['symbol']!=symbol):
+            result={'result':'SCAN_REJECTED','error':'candidate scan cutoff/symbol mismatch'}
+        if result['result']=='CANDIDATE':
+            signal=result['signal'];instrument=result['instrument']
+            session=self.admit_candidate(signal,instrument)
+            result={'result':'ADMITTED' if session else self.scan_results[symbol],
+                    'decision_id':session.receipt['plan']['decision_id'] if session else None,
+                    'signal_source_sha256':signal['source_sha256'],'data_sha256':signal['data_sha256']}
+        row={'schema_id':'att1_lifecycle_event_v1','event_id':'scan:'+self.config['epoch_id']+':'+symbol+':'+str(close),
+             'kind':'SCAN','symbol':symbol,'bar_close_ms':close,'received_ms':self.clock(),**result}
+        self.scan_journal.append(row)
+        if close==self.scan_close:
+            self.scanned.add(symbol);self.scan_results[symbol]=result['result']
 
     def tick(self):
         if shutil.disk_usage(self.root).free<self.config['min_free_bytes']:raise RunnerViolation('runtime free space guard')
@@ -777,6 +820,11 @@ class PublicLifecycleRuntime:
             try:
                 self.manage(session)
                 self.poll_errors.pop(decision,None)
+            except PublicBookTimeViolation as exc:
+                if 'RECOVERY_GAP' not in session.receipt['incidents']:
+                    self._emit(session,'RECOVERY_GAP',source=exc.source_sha256,
+                               reason='rejected future/stale public book')
+                self.poll_errors[decision]=str(exc)
             except (URLError,TimeoutError,ConnectionError) as exc:
                 self.poll_errors[decision]=type(exc).__name__
         if not self._observation_required():
@@ -792,15 +840,19 @@ class PublicLifecycleRuntime:
             self.scan_close=close;self.scanned=set();self.scan_results={}
             for event in self.scan_journal.read():
                 if event.get('bar_close_ms')==close:self.scanned.add(event['symbol']);self.scan_results[event['symbol']]=event['result']
-        if not self._observation_required() and 20000<=now-close<=300000:
+        if self.scan_future is not None and self.scan_future[2].done():
+            task_close,symbol,future=self.scan_future
+            try:result=future.result()
+            except (RunnerViolation,PublicCacheViolation,ProfileViolation,URLError,TimeoutError) as exc:
+                result={'result':'SCAN_REJECTED','error':type(exc).__name__+':'+str(exc)[:180]}
+            self.finish_scan(task_close,symbol,result)
+            self.scan_future=None
+        if self.scan_future is None and 20000<=now-close<=300000:
             symbol=next((s for s in FIXED51_UNIVERSE if s not in self.scanned),None)
             if symbol:
-                try:result=self.scan_symbol(symbol)
-                except (RunnerViolation,PublicCacheViolation,ProfileViolation,URLError,TimeoutError) as exc:
-                    result={'result':'SCAN_REJECTED','error':type(exc).__name__+':'+str(exc)[:180]}
-                row={'schema_id':'att1_lifecycle_event_v1','event_id':'scan:'+self.config['epoch_id']+':'+symbol+':'+str(close),
-                     'kind':'SCAN','symbol':symbol,'bar_close_ms':close,'received_ms':self.clock(),**result}
-                self.scan_journal.append(row);self.scanned.add(symbol);self.scan_results[symbol]=result['result']
+                if self.scan_executor is None:self.scan_executor=ThreadPoolExecutor(max_workers=1,thread_name_prefix='att1-public-scan')
+                self.scan_future=(close,symbol,self.scan_executor.submit(self.scan_symbol,symbol))
+                self.scan_future[2].add_done_callback(lambda _future:self.scan_wakeup.set())
         self.publish()
 
     def publish(self,status='RUNNING'):
@@ -813,6 +865,7 @@ class PublicLifecycleRuntime:
             'open_positions':sum(Fraction(s.receipt['held_qty'])>0 for s in self.sessions.values()),
             'public_get_count':self.get_count,'broker_calls':0,'order_calls':0,
             'scan_bar_close_ms':self.scan_close,'scanned_symbols':len(self.scanned),
+            'scan_coverage_complete':len(self.scanned)==len(FIXED51_UNIVERSE),
             'scan_results':self.scan_results,'poll_errors':self.poll_errors,
             'last_public_observed_ms':self.last_observed,
             'valuation_note':'durable state updates on lifecycle transitions; ordinary quote marks are not journaled'})
@@ -828,11 +881,15 @@ class PublicLifecycleRuntime:
                 def stop(_signum,_frame):self.running=False
                 signal_module.signal(signal_module.SIGTERM,stop);signal_module.signal(signal_module.SIGINT,stop)
             while self.running:
+                self.scan_wakeup.clear()
+                started=self.clock()
                 self.tick()
                 if once:break
-                self.sleep(self.config['poll_seconds'])
+                self.sleep(max(0,self.config['poll_seconds']-(self.clock()-started)/1000))
             self.publish('STOPPED' if not once else 'ONCE_COMPLETE')
-        finally:os.close(lock)
+        finally:
+            if self.scan_executor is not None:self.scan_executor.shutdown(wait=True,cancel_futures=True)
+            os.close(lock)
 
 
 def main(argv: list[str] | None = None) -> int:
