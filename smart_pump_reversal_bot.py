@@ -16493,6 +16493,9 @@ async def bybit_ws():
 
                         trim(st, ts)
                         detect("Bybit", sym, st, ts)
+                        # Buffered recv() can complete without suspending. Let
+                        # heartbeat and position management run between messages.
+                        await asyncio.sleep(0)
 
             except (TimeoutError, asyncio.TimeoutError) as e:
                 # это как раз "timed out during opening handshake"
