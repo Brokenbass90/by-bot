@@ -2,22 +2,50 @@
 
 ## Public continuation checkpoint
 
-Current continuation: **September 13, Cyprus**. Read
-`reports/ATT1_PUBLIC_PROGRESS_2026_09_13.md` first.
-Read-only VPS snapshot September 12 23:37–23:41 UTC: OLD PID unchanged since
-08:28 UTC, heartbeat age 7.64s, signed broker flat/no orders. ETH entry remains
-OLD; NEW has no production broker-send binding. No money/service changes here.
-L1: 9,200 forward ATT1 decision rows, 42 signals; signals are not trades.
-Across three preserved public epochs: 12 sessions, 10 simulated filled entries,
-2 nonfills, all 10 filled sessions contaminated by RECOVERY_GAP, zero clean final
-net-R. Current epoch is 6 sessions: 5 dirty fills plus CRV cancelled nonfill.
-All session and scan hash chains verified. Current scanner reaches only 29–34
-of 51 symbols in recent hourly slots. HBAR/AAVE public crashes are specifically
-`future/stale public book` followed by a 20s systemd restart delay. No fresh
-filled session after the September 12 OLD repair validates continuity yet.
-READY FOR OWNER ACTIVATION = FALSE. Immediate gate: fix/verify continuity in the
-existing public runner without weakening the 2s gate or changing old evidence;
-then resume existing production dispatch/reservation/broker binding. No new core.
+Current continuation: **September 13, 13:32 UTC; ATT1 P0 only**. Read
+`reports/ATT1_CONTINUITY_DEPLOYMENT_2026_09_13.md` first; its accompanying
+`reports/ATT1_CONTINUITY_RECEIPT_2026_09_13.json` contains public evidence.
+
+**PUBLIC CONTINUITY DEPLOYED** at 07:52 UTC, source
+`f38badcaa4b87d5f2aa9ffc285766fbbda13e116`, closure
+`ea78a3bb5970292601145167f3780750074be8c7ecd9cdbb09095aa8359c633f`.
+Existing v2 service, new epoch `att1-public-lifecycle-20260913-continuity`,
+runtime `/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260913-continuity`.
+PID 451398 unchanged, NRestarts=0, heartbeat age 0.64s at observation.
+Six consecutive H1 closes (08:00–13:00 UTC) completed **51/51 attempts**;
+HFTUSDT is explicitly stale, so this is not 51 fresh feeds. Actual ALGO public
+simulation rejected a future/stale book around 11:07 UTC, retained RECOVERY_GAP,
+then flattened on acceptable data without process exit/restart. Costs complete,
+net-R null. **Clean filled terminal net-R count = 0**; preserve this dirty session.
+193 local focused public tests, subsequent 18 cache checks, 55 target Python
+3.12.3 tests and end-to-end verifier PASS; 480 recorded public decisions exact
+parity. The 2s gate, profile, deterministic journal identities and strategy rules
+remain unchanged. Prior epochs and L1 burn-in PASS remain preserved.
+
+Local **default-off preparation** is committed as `d5c1242`, 75 tests PASS:
+existing OLD durable reservation/send hook, stable orderLinkId and unknown ACK
+recovery. **Not deployed**, no money adapter in the public release. Full NEW
+production dispatch/management and authenticated account/fill/protection/cost
+finality remain unfinished. A config fingerprint is not broker account proof.
+READY FOR OWNER ACTIVATION = FALSE; no activation command. OLD absolute risk
+still needs authenticated fresh truth plus actual runtime capital/sizing inputs.
+Do not change OLD positions/risk or enable NEW money.
+
+OLD watchdog restarted OLD at 11:12:06 UTC after 128s heartbeat age; host did not
+reboot and public PID stayed unchanged. Remaining blocking call NOT_CONFIRMED.
+A bounded read-only timed-stack capture is armed in
+`/root/by-bot/runtime/att1-stall-capture-20260913` (30s trigger, <=24 nonblocking
+py-spy dumps, <=12h). Read capture.jsonl privately; no idle-stack attribution.
+Automation `att1-continuity-and-canary-gate` checks this thread every 2h for
+12 runs, quiet unless actionable. Do not create duplicate monitors or audits.
+
+Next: finish the existing default-off production binding, inspect next timed
+OLD stall if captured, and observe **2–3 clean filled prospective terminal net-R**
+lifecycles. Once evidence and binding gates pass, fresh exact OLD risk truth →
+micro-canary dossier → separate owner approval. These are operational gates,
+not proof of positive edge. No new architecture, strategy, Alpaca, LAB or replay.
+
+The following snapshots are historical and superseded where they conflict:
 
 Prior September 12 deployment record: read
 `reports/ATT1_STABILITY_DEPLOYMENT_2026_09_12.md` first.
