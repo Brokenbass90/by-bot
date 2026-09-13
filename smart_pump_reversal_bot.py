@@ -818,6 +818,9 @@ ATT1_MAX_OPEN_TRADES = int(os.getenv("ATT1_MAX_OPEN_TRADES", "2"))
 ATT1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
 ATT1_ENGINE = None
 _ATT1_LAST_TRY: dict[str, float] = {}
+# Default-off OLD dispatch reservation only.  This never enables NEW transport,
+# risk, or management; it just makes an opted-in OLD intent durable before send.
+ATT1_COORDINATOR_BINDING_ENABLE = _env_bool("ATT1_COORDINATOR_BINDING_ENABLE", False)
 ATT1_CALLER_RECEIPT_ENABLE = _env_bool("ATT1_CALLER_RECEIPT_ENABLE", False)
 ATT1_CALLER_REGIME_RECEIPT_REQUIRED = _env_bool(
     "ATT1_CALLER_REGIME_RECEIPT_REQUIRED", True
@@ -6395,6 +6398,17 @@ class BybitClient:
         lst = (((j or {}).get("result") or {}).get("list") or [])
         return lst[0] if lst else None
 
+    def get_order_by_link_id(self, symbol: str, order_link_id: str) -> Optional[dict]:
+        """Read one Bybit linear order by its deterministic client identity."""
+        j = self.get("/v5/order/realtime", {
+            "category": "linear",
+            "symbol": symbol,
+            "orderLinkId": order_link_id,
+            "limit": 1,
+        }, timeout=10)
+        lst = (((j or {}).get("result") or {}).get("list") or [])
+        return lst[0] if lst else None
+
     def cancel_order(self, symbol: str, order_id: str) -> bool:
         if DRY_RUN:
             return True
@@ -6474,14 +6488,24 @@ class BybitClient:
         self._lev_set = set()
         self._clock = BybitClock()
 
-    def place_market(self, symbol: str, side: str, qty: float, allow_quote_fallback: bool = True) -> Tuple[str, float]:
+    def place_market(self, symbol: str, side: str, qty: float, allow_quote_fallback: bool = True,
+                     *, order_link_id: str | None = None) -> Tuple[str, float]:
 
         if DRY_RUN:
             return f"DRYRUN-{self.name}-{symbol}-{int(time.time())}", qty
 
-        # Per-(client,symbol,side,bar) idempotency для безопасных POST-retry.
-        link_id_open  = _make_order_link_id(self.name, symbol, side, "open") if ORDER_LINK_ID_ENABLED else ""
-        link_id_quote = _make_order_link_id(self.name, symbol, side, "open_quote") if ORDER_LINK_ID_ENABLED else ""
+        # Legacy callers preserve their existing per-bar IDs and exact request
+        # payloads.  An opted-in durable ATT1 reservation supplies one stable
+        # ID for every create attempt, including a possible quote fallback.
+        if order_link_id is None:
+            link_id_open = _make_order_link_id(self.name, symbol, side, "open") if ORDER_LINK_ID_ENABLED else ""
+            link_id_quote = _make_order_link_id(self.name, symbol, side, "open_quote") if ORDER_LINK_ID_ENABLED else ""
+        else:
+            if (not isinstance(order_link_id, str) or not order_link_id
+                    or order_link_id != order_link_id.strip() or len(order_link_id) > 36):
+                raise ValueError("invalid deterministic orderLinkId")
+            link_id_open = order_link_id
+            link_id_quote = order_link_id
 
         def _mk_body_base(q):
             body = {
@@ -8925,6 +8949,56 @@ def _manage_all_open_runners() -> None:
             log_error(f"runner heartbeat fail {sym}: {e}")
 
 
+def _att1_recover_unknown_old_dispatches() -> None:
+    """Read-only startup lookup for durable pre-ACK OLD ATT1 intents.
+
+    This never sends, invents fill/finality, adopts a position, or releases a
+    slot.  An absent, malformed, foreign, or inaccessible lookup remains an
+    explicit occupied unknown for authenticated reconciliation.
+    """
+    if not ATT1_COORDINATOR_BINDING_ENABLE or DRY_RUN or TRADE_CLIENT is None:
+        return
+    account_config = _find_account_cfg(TRADE_ACCOUNT_NAME)
+    if not isinstance(account_config, dict) or account_config.get("name") != TRADE_CLIENT.name:
+        _diag_inc("att1_dispatch_recovery_account_config_missing")
+        log_error("ATT1 recovery unresolved: selected account config missing/mismatched")
+        return
+    try:
+        from bot import att1_coordinator_adapter as adapter
+    except ImportError as exc:
+        _diag_inc("att1_dispatch_recovery_adapter_unavailable")
+        log_error(f"ATT1 recovery unresolved: adapter unavailable: {exc}")
+        return
+    try:
+        pending = adapter.read_unresolved_old_att1_dispatches(TRADE_DB_PATH, account_config)
+    except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError) as exc:
+        _diag_inc("att1_dispatch_recovery_ledger_unavailable")
+        log_error(f"ATT1 recovery unresolved: durable ledger unavailable: {type(exc).__name__}: {exc}")
+        return
+    for reservation in pending:
+        symbol = str(reservation.get("symbol") or "")
+        link_id = str(reservation.get("order_link_id") or "")
+        try:
+            order = TRADE_CLIENT.get_order_by_link_id(symbol, link_id)
+        except (RuntimeError, OSError, TypeError, ValueError, requests.RequestException) as exc:
+            _diag_inc("att1_dispatch_recovery_lookup_failed")
+            log_error(f"ATT1 recovery unresolved {symbol}: orderLinkId lookup failed: {type(exc).__name__}: {exc}")
+            continue
+        if order is None:
+            _diag_inc("att1_dispatch_recovery_lookup_absent")
+            log_error(f"ATT1 recovery unresolved {symbol}: no broker order for durable orderLinkId")
+            continue
+        try:
+            order_id = adapter.validate_old_att1_ack_lookup(account_config, reservation, order)
+            adapter.bind_old_att1_dispatch_ack(TRADE_DB_PATH, reservation, order_id)
+        except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError) as exc:
+            _diag_inc("att1_dispatch_recovery_lookup_mismatch")
+            log_error(f"ATT1 recovery unresolved {symbol}: broker order did not match durable intent: {type(exc).__name__}: {exc}")
+            continue
+        _diag_inc("att1_dispatch_recovery_ack_bound")
+        log_error(f"ATT1 recovery ACK bound {symbol}: broker identity recovered; fill/finality still unproven")
+
+
 def bootstrap_open_trades_from_exchange():
     """
     На старте восстанавливает открытые Bybit-позиции в локальный TRADES.
@@ -8932,6 +9006,8 @@ def bootstrap_open_trades_from_exchange():
     """
     if DRY_RUN or TRADE_CLIENT is None:
         return
+
+    _att1_recover_unknown_old_dispatches()
 
     try:
         rows = TRADE_CLIENT.list_open_positions()
@@ -9991,7 +10067,8 @@ def _release_or_quarantine_entry_slot(symbol: str, execution: MakerExecutionResu
     _clear_entry_slot(symbol)
 
 
-def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tuple[str, float] | None:
+def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float,
+                                *, order_link_id: str | None = None) -> tuple[str, float] | None:
     if TRADE_CLIENT is None:
         return None
     if symbol in _BYBIT_UNSUPPORTED:
@@ -10008,7 +10085,17 @@ def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tup
         return None
     try:
         ensure_leverage(symbol, BYBIT_LEVERAGE)
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        if order_link_id is None:
+            # Preserve the established call contract for every non-ATT1
+            # strategy and existing test/dry-run clients.
+            oid, q = TRADE_CLIENT.place_market(
+                symbol, side, qty_floor, allow_quote_fallback=False
+            )
+        else:
+            oid, q = TRADE_CLIENT.place_market(
+                symbol, side, qty_floor, allow_quote_fallback=False,
+                order_link_id=order_link_id,
+            )
         if ENTRY_CIRCUIT_ENABLE:
             _ENTRY_CIRCUIT.note_success()
         _diag_inc("entry_submit_ok")
@@ -11771,6 +11858,68 @@ def _att1_record_caller_receipt(
     return True
 
 
+def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int):
+    """Reserve the opted-in OLD ATT1 intent before broker submission.
+
+    The normal default-off path exits before opening SQLite.  When enabled, a
+    missing selected account config, ledger error, or route conflict prevents a
+    send.  A successful reservation is deliberately never released here: a
+    failed/unknown submit can still have reached the broker and must be
+    reconciled by authenticated recovery.
+    """
+    if not ATT1_COORDINATOR_BINDING_ENABLE:
+        return True, None
+    if TRADE_CLIENT is None:
+        return False, None
+    account_config = _find_account_cfg(TRADE_ACCOUNT_NAME)
+    if not isinstance(account_config, dict) or account_config.get("name") != TRADE_CLIENT.name:
+        _diag_inc("att1_dispatch_binding_account_config_missing")
+        log_error("ATT1 dispatch binding blocked: selected account config missing/mismatched")
+        return False, None
+    try:
+        from bot import att1_coordinator_adapter as adapter
+    except ImportError as exc:
+        _diag_inc("att1_dispatch_binding_adapter_unavailable")
+        log_error(f"ATT1 dispatch binding blocked: adapter unavailable: {exc}")
+        return False, None
+    try:
+        reservation = adapter.reserve_old_att1_dispatch(
+            TRADE_DB_PATH,
+            account_config,
+            symbol=symbol,
+            side="Sell",
+            consumed_h1_rows=consumed_h1_rows,
+            now_ms=now_ms,
+            enabled=True,
+        )
+    except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError) as exc:
+        _diag_inc("att1_dispatch_binding_reserve_failed")
+        log_error(f"ATT1 dispatch binding blocked {symbol}: {type(exc).__name__}: {exc}")
+        return False, None
+    return True, reservation
+
+
+def _att1_bind_old_dispatch_ack(reservation, order_id: str) -> bool:
+    """Persist a known OLD ACK; failure retains the durable occupied intent."""
+    if reservation is None:
+        return True
+    try:
+        from bot import att1_coordinator_adapter as adapter
+    except ImportError as exc:
+        _diag_inc("att1_dispatch_binding_adapter_unavailable")
+        log_error(f"ATT1 dispatch ACK persistence failed: adapter unavailable: {exc}")
+        return False
+    try:
+        adapter.bind_old_att1_dispatch_ack(
+            TRADE_DB_PATH, reservation, order_id
+        )
+    except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError) as exc:
+        _diag_inc("att1_dispatch_binding_ack_persist_failed")
+        log_error(f"ATT1 dispatch ACK persistence failed {reservation.get('symbol', '?')}: {type(exc).__name__}: {exc}")
+        return False
+    return True
+
+
 async def try_att1_entry_async(symbol: str, price: float):
     """Try ATT1 trendline-touch entry for a symbol."""
     if not ENABLE_ATT1_TRADING:
@@ -11837,6 +11986,19 @@ async def try_att1_entry_async(symbol: str, price: float):
         _diag_inc(_att1_no_signal_diag_key(ns_reason))
         _append_signal_decision("att1", symbol, "no_signal", ns_reason)
         return
+
+    # Freeze the exact closed H1 rows consumed for this decision only when the
+    # default-off durable OLD dispatch binding has been explicitly enabled.
+    # The reservation must never use wall clock time as a substitute for the
+    # decision bar timestamp.
+    att1_consumed_h1_rows = None
+    if ATT1_COORDINATOR_BINDING_ENABLE:
+        try:
+            att1_consumed_h1_rows = tuple(ATT1_ENGINE.last_closed_rows(symbol, "60"))
+        except (AttributeError, TypeError, ValueError) as exc:
+            _diag_inc("att1_dispatch_binding_rows_missing")
+            log_error(f"ATT1 dispatch binding blocked {symbol}: consumed H1 rows unavailable: {exc}")
+            return
 
     if not _att1_record_caller_receipt(
         symbol=symbol,
@@ -12016,13 +12178,35 @@ async def try_att1_entry_async(symbol: str, price: float):
             _diag_inc("att1_skip_reserve")
             return
 
+        dispatch_allowed, dispatch_reservation = _att1_reserve_old_dispatch(
+            symbol,
+            att1_consumed_h1_rows,
+            int(now * 1000),
+        )
+        if not dispatch_allowed:
+            _diag_inc("att1_skip_dispatch_binding")
+            _clear_entry_slot(symbol)
+            return
+        dispatch_order_link_id = None
+        if ATT1_COORDINATOR_BINDING_ENABLE:
+            if (not isinstance(dispatch_reservation, dict)
+                    or not isinstance(dispatch_reservation.get("order_link_id"), str)):
+                _diag_inc("att1_skip_dispatch_binding")
+                log_error(f"ATT1 dispatch binding blocked {symbol}: durable orderLinkId missing")
+                _clear_entry_slot(symbol)
+                return
+            dispatch_order_link_id = dispatch_reservation["order_link_id"]
+
         _diag_inc("att1_entry")
-        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        submitted = _submit_entry_order_guarded(
+            symbol, side, qty_floor, order_link_id=dispatch_order_link_id
+        )
         if not submitted:
             _diag_inc("att1_skip_submit")
             _clear_entry_slot(symbol)
             return
         oid, q = submitted
+        dispatch_ack_persisted = _att1_bind_old_dispatch_ack(dispatch_reservation, str(oid))
 
         tr = TradeState(
             symbol=symbol,
@@ -12040,6 +12224,8 @@ async def try_att1_entry_async(symbol: str, price: float):
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
         tr.signal_reason = signal_reason
+        tr.att1_dispatch_reservation = dispatch_reservation
+        tr.att1_dispatch_ack_persisted = bool(dispatch_ack_persisted)
         # The exchange has acknowledged a real order. Replace the concurrency
         # reservation immediately, before any optional telemetry/geometry work,
         # so sync and protection own the position even if an auxiliary hook

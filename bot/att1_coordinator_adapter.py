@@ -10,13 +10,14 @@ from fractions import Fraction
 import hashlib
 import json
 import sqlite3
+from pathlib import Path
 from research_lab.att1_ets2s_accounting import _decimal, AccountingViolation
 from research_lab.att1_lifecycle_coordinator import digest
 
 SEND_ENABLED = False
 # Preparation ledger only. NEW_READY never authorizes transport or money.
-# The production dispatcher does not call these functions yet. Flat/finality
-# flags and evidence hashes require authenticated reconciliation by the caller.
+# The monolith has an opt-in OLD reservation/ACK path; NEW remains unwired.
+# Flat/finality flags and evidence hashes still require authenticated reconciliation.
 ATT1_FAMILY = 'ATT1'
 ATT1_H1_MS = 60 * 60 * 1000
 ATT1_COOLDOWN_MS = 8 * 60 * 60 * 1000
@@ -243,6 +244,137 @@ def _decision_key(value):
 def _stable_link_id(account, symbol, side, h1_close_ms):
     raw = json.dumps([account, ATT1_FAMILY, symbol, side, h1_close_ms], separators=(',', ':'), ensure_ascii=True).encode()
     return 'a1' + hashlib.sha256(raw).hexdigest()[:26]
+
+
+def att1_account_config_fingerprint(account_config):
+    """Stable opaque ledger account ID from the selected loaded Bybit config.
+
+    This is deliberately not an operator-provided ATT1 account string.  It
+    binds a reservation to the account name, configured API credential and
+    endpoint selected by the existing monolith.  It is still only a local
+    configuration fingerprint; authenticated broker account proof is required
+    before any NEW route could be considered.
+    """
+    if not isinstance(account_config, Mapping):
+        raise AdapterViolation('selected account config required')
+    name = _text(account_config.get('name'), 'account config name')
+    key = _text(account_config.get('key'), 'account config key')
+    base = _text(account_config.get('base'), 'account config base').rstrip('/')
+    if not base.startswith(('https://', 'http://')):
+        raise AdapterViolation('invalid account config base')
+    raw = json.dumps([name, key, base], separators=(',', ':'), ensure_ascii=True).encode()
+    return 'cfg:' + hashlib.sha256(raw).hexdigest()
+
+
+def _consumed_h1_close_ms(rows):
+    """Return the close of the exact final closed H1 row used by ATT1."""
+    if not isinstance(rows, (list, tuple)) or not rows:
+        raise AdapterViolation('consumed H1 rows required')
+    starts = []
+    for row in rows:
+        if not isinstance(row, (list, tuple)) or not row:
+            raise AdapterViolation('malformed consumed H1 row')
+        raw = row[0]
+        if isinstance(raw, bool) or not isinstance(raw, (int, str)):
+            raise AdapterViolation('invalid consumed H1 timestamp')
+        try:
+            start = int(raw)
+        except (TypeError, ValueError) as exc:
+            raise AdapterViolation('invalid consumed H1 timestamp') from exc
+        if start <= 0:
+            raise AdapterViolation('invalid consumed H1 timestamp')
+        # The existing Bybit adapter accepts seconds or milliseconds.  Preserve
+        # that exact normalisation here, then require a real H1 boundary.
+        if start <= 10**11:
+            start *= 1000
+        if start % ATT1_H1_MS:
+            raise AdapterViolation('consumed H1 timestamp is not an H1 boundary')
+        starts.append(start)
+    if any(left >= right for left, right in zip(starts, starts[1:])):
+        raise AdapterViolation('consumed H1 rows are not strictly ordered')
+    return starts[-1] + ATT1_H1_MS
+
+
+def reserve_old_att1_dispatch(db_path, account_config, *, symbol, side,
+                              consumed_h1_rows, now_ms, enabled):
+    """Default-off durable OLD dispatch reservation in the existing SQLite DB.
+
+    With ``enabled=False`` this returns before opening SQLite, so a normal OLD
+    process creates no route table or other ledger state.  With opt-in it
+    reserves before a broker send.  No submit failure, exception, or timeout
+    may release that reservation; authenticated recovery owns finalisation.
+    """
+    if enabled is False:
+        return None
+    if enabled is not True:
+        raise AdapterViolation('ATT1 dispatch binding flag must be bool')
+    account = att1_account_config_fingerprint(account_config)
+    h1_close_ms = _consumed_h1_close_ms(consumed_h1_rows)
+    if type(now_ms) is not int or now_ms < h1_close_ms:
+        raise AdapterViolation('dispatch clock precedes consumed H1 close')
+    with sqlite3.connect(db_path) as con:
+        initialize_att1_route(con, account, now_ms=now_ms)
+        return reserve_att1_decision(
+            con, account, owner='OLD', symbol=symbol, side=side,
+            h1_close_ms=h1_close_ms, now_ms=now_ms,
+        )
+
+
+def bind_old_att1_dispatch_ack(db_path, decision_key, broker_order_id):
+    """Persist an OLD broker ACK without treating it as fill/finality.
+
+    Exact ACK re-delivery is idempotent.  A conflicting order identity is a
+    fail-closed violation and the occupied reservation remains in place.
+    """
+    key = _decision_key(decision_key)
+    with sqlite3.connect(db_path) as con:
+        return bind_att1_order(con, key[0], key, broker_order_id)
+
+
+def read_unresolved_old_att1_dispatches(db_path, account_config):
+    """Read pre-ACK OLD intents without creating or modifying the trade DB."""
+    account = att1_account_config_fingerprint(account_config)
+    try:
+        uri = Path(db_path).expanduser().resolve().as_uri() + '?mode=ro'
+        con = sqlite3.connect(uri, uri=True)
+    except (OSError, sqlite3.Error) as exc:
+        raise AdapterViolation('ATT1 recovery ledger unavailable') from exc
+    try:
+        read_att1_route(con, account)  # validates the existing route; never initializes it.
+        rows = con.execute('''SELECT account,family,symbol,side,h1_close_ms,
+                                      order_link_id,owner,reserved_at_ms
+                               FROM att1_decisions
+                               WHERE account=? AND family=? AND owner='OLD'
+                                 AND broker_order_id IS NULL AND terminal_at_ms IS NULL
+                               ORDER BY reserved_at_ms,h1_close_ms''',
+                           (account, ATT1_FAMILY)).fetchall()
+    except sqlite3.Error as exc:
+        raise AdapterViolation('ATT1 recovery ledger malformed') from exc
+    finally:
+        con.close()
+    keys = ('account', 'family', 'symbol', 'side', 'h1_close_ms',
+            'order_link_id', 'owner', 'reserved_at_ms')
+    return [dict(zip(keys, row)) for row in rows]
+
+
+def validate_old_att1_ack_lookup(account_config, decision_key, order):
+    """Accept an order-link lookup only for the configured account's exact OLD intent."""
+    account = att1_account_config_fingerprint(account_config)
+    key = _decision_key(decision_key)
+    if account != key[0]:
+        raise AdapterViolation('lookup account does not own ATT1 decision')
+    if not isinstance(decision_key, Mapping) or decision_key.get('owner') != 'OLD':
+        raise AdapterViolation('lookup is not an OLD ATT1 decision')
+    link_id = _text(decision_key.get('order_link_id'), 'order_link_id')
+    if not isinstance(order, Mapping):
+        raise AdapterViolation('broker order lookup malformed')
+    if order.get('symbol') != key[2] or order.get('side') != 'Sell':
+        raise AdapterViolation('foreign broker order lookup')
+    if order.get('orderLinkId') != link_id:
+        raise AdapterViolation('broker order link mismatch')
+    if order.get('category') not in (None, 'linear'):
+        raise AdapterViolation('broker order category mismatch')
+    return _text(order.get('orderId'), 'broker_order_id')
 
 
 def reserve_att1_decision(con, account, *, owner, symbol, side, h1_close_ms, now_ms):

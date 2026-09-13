@@ -2,8 +2,11 @@
 import sqlite3
 import subprocess
 import sys
+import ast
+from typing import Optional, Tuple
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
+from pathlib import Path
 
 import pytest
 
@@ -12,6 +15,11 @@ from bot import att1_coordinator_adapter as a
 H1 = 3_600_000
 T = 500_000 * H1
 ACCOUNT = 'fixture-account'
+ACCOUNT_CONFIG = {
+    'name': 'main',
+    'key': 'fixture-api-key',
+    'base': 'https://api.bybit.com',
+}
 
 
 @pytest.fixture
@@ -242,3 +250,245 @@ def test_route_checks_are_inside_the_sqlite_write_transaction(ledger):
     a.pause_att1_route(con, ACCOUNT, T + 11)
     cutover(con)
     assert checks and all(checks)
+
+
+def test_default_off_old_dispatch_does_not_create_or_mutate_ledger(tmp_path):
+    """A disabled production binding must not touch the existing trade DB."""
+    path = tmp_path / 'trades.db'
+    reservation = a.reserve_old_att1_dispatch(
+        path,
+        ACCOUNT_CONFIG,
+        symbol='ETHUSDT',
+        side='Sell',
+        consumed_h1_rows=[[T - H1, '1', '1', '1', '1', '1']],
+        now_ms=T + 1,
+        enabled=False,
+    )
+    assert reservation is None
+    assert not path.exists()
+
+
+def test_monolith_att1_binding_gate_is_default_off_and_precedes_submit():
+    """A future edit cannot accidentally put a ledger send gate behind send."""
+    tree = ast.parse((Path(__file__).resolve().parents[1] / 'smart_pump_reversal_bot.py').read_text())
+    gate = next(
+        node.value for node in tree.body
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == 'ATT1_COORDINATOR_BINDING_ENABLE'
+                for target in node.targets)
+    )
+    assert isinstance(gate, ast.Call)
+    assert isinstance(gate.func, ast.Name) and gate.func.id == '_env_bool'
+    assert isinstance(gate.args[1], ast.Constant) and gate.args[1].value is False
+    caller = next(
+        node for node in tree.body
+        if isinstance(node, ast.AsyncFunctionDef) and node.name == 'try_att1_entry_async'
+    )
+    reserve_line = min(
+        node.lineno for node in ast.walk(caller)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+        and node.func.id == '_att1_reserve_old_dispatch'
+    )
+    submit_line = min(
+        node.lineno for node in ast.walk(caller)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+        and node.func.id == '_submit_entry_order_guarded'
+    )
+    assert reserve_line < submit_line
+
+
+def test_monolith_keeps_adapter_lazy_and_starts_lookup_without_finalizing():
+    """Default OLD import stays free of research binding; recovery is ACK-only."""
+    tree = ast.parse((Path(__file__).resolve().parents[1] / 'smart_pump_reversal_bot.py').read_text())
+    assert not any(
+        isinstance(node, ast.ImportFrom) and node.module == 'bot'
+        and any(alias.name == 'att1_coordinator_adapter' for alias in node.names)
+        for node in tree.body
+    )
+    helpers = {
+        node.name: node for node in tree.body
+        if isinstance(node, ast.FunctionDef)
+    }
+    reserve = helpers['_att1_reserve_old_dispatch']
+    recovery = helpers['_att1_recover_unknown_old_dispatches']
+    reserve_import = min(
+        node.lineno for node in ast.walk(reserve)
+        if isinstance(node, ast.ImportFrom)
+        and any(alias.name == 'att1_coordinator_adapter' for alias in node.names)
+    )
+    disabled_return = min(
+        node.lineno for node in reserve.body
+        if isinstance(node, ast.If)
+        and isinstance(node.test, ast.UnaryOp)
+        and isinstance(node.test.operand, ast.Name)
+        and node.test.operand.id == 'ATT1_COORDINATOR_BINDING_ENABLE'
+    )
+    assert disabled_return < reserve_import
+    names = [
+        node.func.attr for node in ast.walk(recovery)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+    ]
+    assert 'get_order_by_link_id' in names
+    assert 'bind_old_att1_dispatch_ack' in names
+    assert 'finalize_att1_reservation' not in names
+    submit_calls = [
+        node for node in ast.walk(helpers['_submit_entry_order_guarded'])
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+        and node.func.attr == 'place_market'
+    ]
+    assert any(not any(keyword.arg == 'order_link_id' for keyword in node.keywords)
+               for node in submit_calls)
+    assert any(any(keyword.arg == 'order_link_id' for keyword in node.keywords)
+               for node in submit_calls)
+
+
+def test_old_dispatch_uses_selected_account_config_and_frozen_closed_h1(tmp_path):
+    """A changed credential or consumed bar must change/refuse the durable intent."""
+    path = tmp_path / 'trades.db'
+    reservation = a.reserve_old_att1_dispatch(
+        path,
+        ACCOUNT_CONFIG,
+        symbol='ETHUSDT',
+        side='Sell',
+        consumed_h1_rows=[[T - 2 * H1, '1', '1', '1', '1', '1'],
+                          [T - H1, '1', '1', '1', '1', '1']],
+        now_ms=T + 1,
+        enabled=True,
+    )
+    assert reservation['account'] == a.att1_account_config_fingerprint(ACCOUNT_CONFIG)
+    assert reservation['h1_close_ms'] == T
+    with sqlite3.connect(path) as con:
+        assert a.read_att1_route(con, reservation['account'])['owner'] == 'OLD'
+        assert con.execute('SELECT order_link_id, broker_order_id FROM att1_decisions').fetchone() == (
+            reservation['order_link_id'], None,
+        )
+
+
+def test_old_dispatch_crash_before_ack_and_duplicate_late_ack_keep_one_slot(tmp_path):
+    """No process exit, late ACK, or ACK re-delivery may free or fork an ATT1 intent."""
+    path = tmp_path / 'trades.db'
+    code = 'import sys; sys.path[:] = ' + repr(sys.path) + '\n' + '''
+import importlib.util, os, sys
+spec = importlib.util.spec_from_file_location('routing_crash_fixture', sys.argv[2])
+a = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(a)
+t = 500_000 * 3_600_000
+a.reserve_old_att1_dispatch(sys.argv[1], {'name':'main','key':'fixture-api-key','base':'https://api.bybit.com'},
+                            symbol='ETHUSDT', side='Sell',
+                            consumed_h1_rows=[[t-3_600_000, '1', '1', '1', '1', '1']],
+                            now_ms=t+1, enabled=True)
+os._exit(73)
+'''
+    result = subprocess.run([sys.executable, '-c', code, str(path), a.__file__],
+                            capture_output=True, text=True, timeout=15)
+    assert result.returncode == 73, result.stderr
+    with pytest.raises(a.AdapterViolation, match='occupied'):
+        a.reserve_old_att1_dispatch(
+            path, ACCOUNT_CONFIG, symbol='BTCUSDT', side='Sell',
+            consumed_h1_rows=[[T, '1', '1', '1', '1', '1']],
+            now_ms=T + H1 + 1, enabled=True,
+        )
+    with sqlite3.connect(path) as con:
+        key = dict(zip(('account', 'family', 'symbol', 'side', 'h1_close_ms'), con.execute(
+            'SELECT account, family, symbol, side, h1_close_ms FROM att1_decisions'
+        ).fetchone()))
+    assert a.bind_old_att1_dispatch_ack(path, key, 'late-order') == 'late-order'
+    assert a.bind_old_att1_dispatch_ack(path, key, 'late-order') == 'late-order'
+    with sqlite3.connect(path) as con:
+        assert con.execute('SELECT broker_order_id, terminal_at_ms FROM att1_decisions').fetchone() == ('late-order', None)
+
+
+def test_unknown_old_dispatch_lookup_is_read_only_and_refuses_foreign_ack(tmp_path):
+    """A restart probe may bind only the exact reserved symbol/side/link ACK."""
+    path = tmp_path / 'trades.db'
+    reservation = a.reserve_old_att1_dispatch(
+        path, ACCOUNT_CONFIG, symbol='ETHUSDT', side='Sell',
+        consumed_h1_rows=[[T - H1, '1', '1', '1', '1', '1']],
+        now_ms=T + 1, enabled=True,
+    )
+    pending = a.read_unresolved_old_att1_dispatches(path, ACCOUNT_CONFIG)
+    assert pending == [reservation]
+    assert a.validate_old_att1_ack_lookup(
+        ACCOUNT_CONFIG, reservation,
+        {'symbol': 'ETHUSDT', 'side': 'Sell', 'orderLinkId': reservation['order_link_id'], 'orderId': 'ack-1'},
+    ) == 'ack-1'
+    for bad in (
+        {'symbol': 'BTCUSDT', 'side': 'Sell', 'orderLinkId': reservation['order_link_id'], 'orderId': 'ack-1'},
+        {'symbol': 'ETHUSDT', 'side': 'Buy', 'orderLinkId': reservation['order_link_id'], 'orderId': 'ack-1'},
+        {'symbol': 'ETHUSDT', 'side': 'Sell', 'orderLinkId': 'foreign', 'orderId': 'ack-1'},
+    ):
+        with pytest.raises(a.AdapterViolation):
+            a.validate_old_att1_ack_lookup(ACCOUNT_CONFIG, reservation, bad)
+    with sqlite3.connect(path) as con:
+        assert con.execute('SELECT broker_order_id, terminal_at_ms FROM att1_decisions').fetchone() == (None, None)
+    assert a.bind_old_att1_dispatch_ack(path, reservation, 'ack-1') == 'ack-1'
+    assert a.read_unresolved_old_att1_dispatches(path, ACCOUNT_CONFIG) == []
+    with sqlite3.connect(path) as con:
+        assert con.execute('SELECT broker_order_id, terminal_at_ms FROM att1_decisions').fetchone() == ('ack-1', None)
+
+
+def _isolated_bybit_client():
+    """Compile the production client class with only its non-I/O dependencies."""
+    tree = ast.parse((Path(__file__).resolve().parents[1] / 'smart_pump_reversal_bot.py').read_text())
+    node = next(item for item in tree.body if isinstance(item, ast.ClassDef) and item.name == 'BybitClient')
+    namespace = {
+        'DRY_RUN': False,
+        'Tuple': Tuple,
+        'Optional': Optional,
+        'strict_round_qty': lambda _symbol, qty: qty,
+        'fmt_qty': lambda _symbol, qty: str(qty),
+        'fmt_amt': lambda _symbol, qty: str(qty),
+        'ORDER_LINK_ID_ENABLED': True,
+        'POS_IS_ONEWAY': True,
+        '_make_order_link_id': lambda *_args: 'legacy-generated-link',
+        '_log_order_link': lambda *_args: None,
+        'MIN_NOTIONAL_USD': 5.0,
+        'S': lambda *_args: None,
+        '_HTTP': None,
+        'log_error': lambda *_args: None,
+        'tg_trade': lambda *_args: None,
+        'time': __import__('time'),
+        'hmac': __import__('hmac'),
+        'hashlib': __import__('hashlib'),
+        'json': __import__('json'),
+        'urlencode': __import__('urllib.parse', fromlist=['urlencode']).urlencode,
+        'AUTH_LAST_ERROR': {},
+        'auth_disabled': lambda *_args: False,
+        'is_timestamp_error': lambda *_args: False,
+        'is_bybit_auth_error': lambda *_args: False,
+        'mark_auth_fail': lambda *_args, **_kwargs: None,
+        'tg_trade_throttled': lambda *_args, **_kwargs: None,
+    }
+    exec(compile(ast.Module(body=[node], type_ignores=[]), '<isolated-bybit-client>', 'exec'), namespace)
+    return namespace['BybitClient']
+
+
+def test_market_transport_uses_reserved_link_and_keeps_legacy_payload_when_omitted():
+    """Changing the optional transport link must not mutate the default OLD body."""
+    client_type = _isolated_bybit_client()
+    client = object.__new__(client_type)
+    client.name = 'main'
+    bodies = []
+    client.post = lambda _path, body: bodies.append(dict(body)) or {'result': {'orderId': 'oid-1'}}
+
+    stable = 'a1' + 'b' * 26
+    client.place_market('ETHUSDT', 'Sell', 0.1, allow_quote_fallback=False, order_link_id=stable)
+    assert bodies[-1]['orderLinkId'] == stable
+    client.place_market('ETHUSDT', 'Sell', 0.1, allow_quote_fallback=False, order_link_id=stable)
+    assert bodies[-1]['orderLinkId'] == stable
+
+    client.place_market('ETHUSDT', 'Sell', 0.1, allow_quote_fallback=False)
+    assert bodies[-1] == {
+        'category': 'linear', 'symbol': 'ETHUSDT', 'side': 'Sell',
+        'orderType': 'Market', 'qty': '0.1', 'timeInForce': 'IOC',
+        'marketUnit': 'baseCoin', 'orderLinkId': 'legacy-generated-link',
+    }
+
+    gets = []
+    client.get = lambda path, params, timeout: gets.append((path, dict(params), timeout)) or {
+        'result': {'list': [{'symbol': 'ETHUSDT', 'side': 'Sell', 'orderLinkId': stable, 'orderId': 'oid-1'}]}
+    }
+    assert client.get_order_by_link_id('ETHUSDT', stable)['orderId'] == 'oid-1'
+    assert gets == [('/v5/order/realtime', {
+        'category': 'linear', 'symbol': 'ETHUSDT', 'orderLinkId': stable, 'limit': 1,
+    }, 10)]
