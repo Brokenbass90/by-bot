@@ -82,3 +82,6 @@ _to_delete/
 # Owner-local evidence must not enter public history.
 /.private/
 *.private.bundle
+
+# Local ATT1 verification environment; no credentials.
+.venv-att1-mac/

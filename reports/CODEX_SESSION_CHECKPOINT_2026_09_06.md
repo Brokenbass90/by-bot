@@ -2,6 +2,47 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — September 13, after local application failures:
+- Commits `c431231` (local buffered WebSocket fairness fix) and `fc531fa`
+  (default-off broker UID identity + Mac supervisor) are implemented. Neither
+  money binding nor the OLD fairness change has been deployed to production.
+- Account UID replaces config alias/key identity on enabled reservation/recovery;
+  signed selected-client GET, freshness and credential binding are required.
+  Legacy cfg rows block silent route creation. 81 focused local tests PASS;
+  isolated VPS Python identity smoke 22 PASS. NEW full broker lifecycle remains
+  unfinished; READY FOR OWNER ACTIVATION = FALSE.
+- Restored two missing committed scripts. Homebrew Python was missing; the
+  separate ignored `.venv-att1-mac` uses available bundled Python 3.12 and local
+  test dependencies. Do not silently redirect old Gold/research environments.
+- Native LaunchAgent `com.tradingstation.att1-research` is installed. Four fixed
+  offline ATT1 stages actually completed at 19:34:51 UTC; receipt:
+  `reports/ATT1_MAC_JOB_RECEIPT_2026_09_13.json`. OS network access and credential
+  file contents are denied; 11 supervisor tests verify crash/resume, inherited
+  lock, retries, heartbeat and caffeinate cleanup. Wake checks every 15m;
+  completed unchanged work is a no-op. Requires user login after reboot;
+  physical reboot was not tested. Changed source requires a reviewed new run.
+- First launch failure is preserved at
+  `runtime/mac_att1_research_job-first-launch-failure`; current result/status/logs
+  are in `runtime/mac_att1_research_job`. Do not delete either as cleanup.
+- Read-only VPS check around 19:32 UTC: public PID 451398, NRestarts=0,
+  heartbeat 0.35s, 51 symbols. Four sessions: ALGO/TRX have RECOVERY_GAP;
+  1000RATS/STRK have no incident yet but are not terminal. Clean terminal count=0.
+- Timed OLD stacks were collected (not an idle sample): heartbeat ages 31–73s,
+  mostly buffered trade processing; three synchronous `get_sell_pressure`
+  network waits. Fairness regression reproduced starvation and preserves
+  message order with one explicit yield. Do not claim OLD incident resolved
+  before separate deployment/observation. Capture finished its bounded run.
+- No research processes were stopped: prior inventory found no proven obsolete
+  output. After local failures only targeted fresh process check confirmed a
+  `local_research_station.py` process; old Gold/Alpaca broker state is not fresh.
+
+Next bounded work: existing broker reconciliation → NEW dispatch/protection/
+actual fees/funding/finality, alongside clean public lifecycle collection.
+Use Mac for the existing approved ATT1 jobs; no new framework or strategy.
+Owner defers server purchase until first revenue. No NEW money without approval.
+
+Earlier deployment receipt below remains valid where not superseded:
+
 Current continuation: **September 13, 13:32 UTC; ATT1 P0 only**. Read
 `reports/ATT1_CONTINUITY_DEPLOYMENT_2026_09_13.md` first; its accompanying
 `reports/ATT1_CONTINUITY_RECEIPT_2026_09_13.json` contains public evidence.

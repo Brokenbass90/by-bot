@@ -266,7 +266,7 @@ def sandbox_profile(root: Path) -> str:
         root.parent / ".private",
     )
     rules = ["(version 1)", "(allow default)", "(deny network*)"]
-    rules.extend(f'(deny file-read* (subpath "{_profile_path(path)}"))' for path in private_paths)
+    rules.extend(f'(deny file-read-data (subpath "{_profile_path(path)}"))' for path in private_paths)
     return "\n".join(rules)
 
 

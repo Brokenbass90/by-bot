@@ -1,0 +1,65 @@
+{
+  "completed_stages": [
+    {
+      "duration_seconds": 9.271,
+      "log_path": "logs/binding_tests.log",
+      "log_sha256": "8a0f6069168d3ed74f7b11dbac637f3f0337b68b5f22d525fbbab0b2ac4cc20d",
+      "name": "binding_tests",
+      "returncode": 0,
+      "timed_out": false
+    },
+    {
+      "duration_seconds": 12.492,
+      "log_path": "logs/public_parity_tests.log",
+      "log_sha256": "f6fa64f8ed93501d46e02d9ea0bff17f20350d380d413b5743c7338fdef503c7",
+      "name": "public_parity_tests",
+      "returncode": 0,
+      "timed_out": false
+    },
+    {
+      "duration_seconds": 1.864,
+      "log_path": "logs/ws_fairness_canary.log",
+      "log_sha256": "b3634ada821ed90bc490bdadc743fe74a1c5a55261f3235ef02701cf9d70934c",
+      "name": "ws_fairness_canary",
+      "returncode": 0,
+      "timed_out": false
+    },
+    {
+      "duration_seconds": 2.001,
+      "log_path": "logs/lifecycle_inspect.log",
+      "log_sha256": "7ef1f06116014c6b13f90a8f3796d71c6f728c94cfe06786ef203d34ba3da36e",
+      "name": "lifecycle_inspect",
+      "returncode": 0,
+      "timed_out": false
+    }
+  ],
+  "finished_at_utc": "2026-09-13T19:34:51Z",
+  "interval_seconds": 900,
+  "launchagent": "com.tradingstation.att1-research",
+  "limits": {
+    "backoff_seconds": [
+      120,
+      600,
+      1800
+    ],
+    "caffeinate_max_seconds": 915,
+    "max_attempts": 3,
+    "requires_login_after_reboot": true,
+    "source_changes_require_reviewed_new_run": true
+  },
+  "money_binding_deployed": false,
+  "network_authority": false,
+  "order_authority": false,
+  "private_api_authority": false,
+  "promotion_authority": false,
+  "research_only": true,
+  "source_input_sha256": "5eeabf6e10fd9ea780b4f81b28d189be6a0c704686bcb52ddc804d7117e13edd",
+  "status": "COMPLETE",
+  "validation": {
+    "focused_local_tests": 81,
+    "physical_reboot_tested": false,
+    "real_launchd_complete": true,
+    "supervisor_tests": 11,
+    "target_python_identity_tests": 22
+  }
+}
