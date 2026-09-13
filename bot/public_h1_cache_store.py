@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import errno
 import json
 import math
 import os
@@ -228,7 +229,7 @@ class CanonicalH1Cache:
             return []
         except OSError as exc:
             os.close(root_fd)
-            if getattr(exc, "errno", None) == getattr(os, "ELOOP", 62):
+            if getattr(exc, "errno", None) == errno.ELOOP:
                 raise PublicCacheViolation("cache file is a symlink") from exc
             raise PublicCacheViolation("cache file cannot be inspected") from exc
         finally:
