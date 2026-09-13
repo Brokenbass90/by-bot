@@ -6,6 +6,7 @@ complete signed evidence before any live use. No ACK manufactures a fill or
 protective stop. Synthetic fixtures exercise this boundary without credentials.
 """
 from collections.abc import Mapping
+from dataclasses import dataclass
 from fractions import Fraction
 import hashlib
 import json
@@ -21,10 +22,26 @@ SEND_ENABLED = False
 ATT1_FAMILY = 'ATT1'
 ATT1_H1_MS = 60 * 60 * 1000
 ATT1_COOLDOWN_MS = 8 * 60 * 60 * 1000
+ATT1_BROKER_IDENTITY_MAX_AGE_MS = 60 * 1000
+ATT1_BYBIT_PRODUCTION_ENDPOINT = 'https://api.bybit.com'
 
 
 class AdapterViolation(ValueError):
     """Unsupported, mismatched or incomplete broker evidence."""
+
+
+@dataclass(frozen=True)
+class ValidatedOldAtt1BrokerIdentity:
+    """Fresh, redacted account binding derived from a trusted signed response.
+
+    The caller's transport owns HTTPS, Bybit request signing, and preservation
+    of the signed ``/v5/user/query-api`` response.  This pure validator only
+    checks that supplied envelope and cannot itself prove authenticity.
+    """
+    account: str
+    endpoint: str
+    credential_binding_sha256: str
+    observed_at_ms: int
 
 
 def _require_account(account):
@@ -246,14 +263,83 @@ def _stable_link_id(account, symbol, side, h1_close_ms):
     return 'a1' + hashlib.sha256(raw).hexdigest()[:26]
 
 
-def att1_account_config_fingerprint(account_config):
-    """Stable opaque ledger account ID from the selected loaded Bybit config.
+def _selected_bybit_endpoint_and_key(account_config):
+    if not isinstance(account_config, Mapping):
+        raise AdapterViolation('selected account config required')
+    endpoint = _text(account_config.get('base'), 'account config base').rstrip('/')
+    if endpoint != ATT1_BYBIT_PRODUCTION_ENDPOINT:
+        raise AdapterViolation('ATT1 account endpoint is not allowlisted')
+    return endpoint, _text(account_config.get('key'), 'account config key')
 
-    This is deliberately not an operator-provided ATT1 account string.  It
-    binds a reservation to the account name, configured API credential and
-    endpoint selected by the existing monolith.  It is still only a local
-    configuration fingerprint; authenticated broker account proof is required
-    before any NEW route could be considered.
+
+def _positive_int(value, name):
+    if isinstance(value, bool):
+        raise AdapterViolation('invalid ' + name)
+    if isinstance(value, int):
+        parsed = value
+    elif isinstance(value, str) and value.isascii() and value.isdecimal():
+        parsed = int(value)
+    else:
+        raise AdapterViolation('invalid ' + name)
+    if parsed <= 0:
+        raise AdapterViolation('invalid ' + name)
+    return parsed
+
+
+def validate_old_att1_broker_identity(account_config, query_api_envelope, *, received_ms):
+    """Redact and bind a fresh trusted signed ``/v5/user/query-api`` result.
+
+    This function never sends or authenticates a request.  Its caller must use
+    the existing trusted Bybit transport and pass the response immediately.
+    """
+    endpoint, configured_key = _selected_bybit_endpoint_and_key(account_config)
+    if type(received_ms) is not int or received_ms <= 0:
+        raise AdapterViolation('invalid identity received clock')
+    if (not isinstance(query_api_envelope, Mapping)
+            or type(query_api_envelope.get('retCode')) is not int
+            or query_api_envelope.get('retCode') != 0):
+        raise AdapterViolation('broker identity response rejected')
+    response_ms = _positive_int(query_api_envelope.get('time'), 'identity response time')
+    if response_ms > received_ms or received_ms - response_ms > ATT1_BROKER_IDENTITY_MAX_AGE_MS:
+        raise AdapterViolation('broker identity response is stale')
+    result = query_api_envelope.get('result')
+    if not isinstance(result, Mapping) or result.get('apiKey') != configured_key:
+        raise AdapterViolation('broker identity credential mismatch')
+    user_id = _positive_int(result.get('userID'), 'broker userID')
+    account_raw = json.dumps([endpoint, user_id], separators=(',', ':'), ensure_ascii=True).encode()
+    return ValidatedOldAtt1BrokerIdentity(
+        account='uid:' + hashlib.sha256(account_raw).hexdigest(),
+        endpoint=endpoint,
+        credential_binding_sha256=hashlib.sha256(configured_key.encode()).hexdigest(),
+        observed_at_ms=received_ms,
+    )
+
+
+def _validated_old_att1_account(account_config, broker_identity, *, now_ms):
+    endpoint, configured_key = _selected_bybit_endpoint_and_key(account_config)
+    if not isinstance(broker_identity, ValidatedOldAtt1BrokerIdentity):
+        raise AdapterViolation('validated broker identity required')
+    if (type(broker_identity.observed_at_ms) is not int
+            or broker_identity.observed_at_ms <= 0):
+        raise AdapterViolation('broker identity clock malformed')
+    if (broker_identity.endpoint != endpoint
+            or broker_identity.credential_binding_sha256 != hashlib.sha256(configured_key.encode()).hexdigest()):
+        raise AdapterViolation('broker identity credential mismatch')
+    account = broker_identity.account
+    if (not isinstance(account, str) or not account.startswith('uid:') or len(account) != 68
+            or any(char not in '0123456789abcdef' for char in account[4:])):
+        raise AdapterViolation('broker identity account malformed')
+    if (type(now_ms) is not int or now_ms < broker_identity.observed_at_ms
+            or now_ms - broker_identity.observed_at_ms > ATT1_BROKER_IDENTITY_MAX_AGE_MS):
+        raise AdapterViolation('broker identity is stale')
+    return account
+
+
+def att1_account_config_fingerprint(account_config):
+    """Legacy opaque ledger ID from the selected loaded Bybit config.
+
+    Existing ``cfg:`` rows are intentionally not migrated: opt-in dispatch now
+    requires ``ValidatedOldAtt1BrokerIdentity`` and uses a broker user ID.
     """
     if not isinstance(account_config, Mapping):
         raise AdapterViolation('selected account config required')
@@ -296,7 +382,8 @@ def _consumed_h1_close_ms(rows):
 
 
 def reserve_old_att1_dispatch(db_path, account_config, *, symbol, side,
-                              consumed_h1_rows, now_ms, enabled):
+                              consumed_h1_rows, now_ms, enabled,
+                              broker_identity=None):
     """Default-off durable OLD dispatch reservation in the existing SQLite DB.
 
     With ``enabled=False`` this returns before opening SQLite, so a normal OLD
@@ -308,11 +395,21 @@ def reserve_old_att1_dispatch(db_path, account_config, *, symbol, side,
         return None
     if enabled is not True:
         raise AdapterViolation('ATT1 dispatch binding flag must be bool')
-    account = att1_account_config_fingerprint(account_config)
+    account = _validated_old_att1_account(
+        account_config, broker_identity, now_ms=now_ms,
+    )
     h1_close_ms = _consumed_h1_close_ms(consumed_h1_rows)
     if type(now_ms) is not int or now_ms < h1_close_ms:
         raise AdapterViolation('dispatch clock precedes consumed H1 close')
     with sqlite3.connect(db_path) as con:
+        init_att1_route_tables(con)
+        if con.execute('SELECT 1 FROM att1_route WHERE account=?', (account,)).fetchone() is None:
+            legacy = con.execute('''SELECT 1 FROM att1_route WHERE account LIKE 'cfg:%'
+                                    UNION ALL
+                                    SELECT 1 FROM att1_decisions WHERE account LIKE 'cfg:%'
+                                    LIMIT 1''').fetchone()
+            if legacy is not None:
+                raise AdapterViolation('legacy cfg ATT1 ledger blocks UID route creation')
         initialize_att1_route(con, account, now_ms=now_ms)
         return reserve_att1_decision(
             con, account, owner='OLD', symbol=symbol, side=side,
@@ -331,9 +428,11 @@ def bind_old_att1_dispatch_ack(db_path, decision_key, broker_order_id):
         return bind_att1_order(con, key[0], key, broker_order_id)
 
 
-def read_unresolved_old_att1_dispatches(db_path, account_config):
+def read_unresolved_old_att1_dispatches(db_path, account_config, *, broker_identity, now_ms):
     """Read pre-ACK OLD intents without creating or modifying the trade DB."""
-    account = att1_account_config_fingerprint(account_config)
+    account = _validated_old_att1_account(
+        account_config, broker_identity, now_ms=now_ms,
+    )
     try:
         uri = Path(db_path).expanduser().resolve().as_uri() + '?mode=ro'
         con = sqlite3.connect(uri, uri=True)
@@ -357,9 +456,11 @@ def read_unresolved_old_att1_dispatches(db_path, account_config):
     return [dict(zip(keys, row)) for row in rows]
 
 
-def validate_old_att1_ack_lookup(account_config, decision_key, order):
+def validate_old_att1_ack_lookup(account_config, decision_key, order, *, broker_identity, now_ms):
     """Accept an order-link lookup only for the configured account's exact OLD intent."""
-    account = att1_account_config_fingerprint(account_config)
+    account = _validated_old_att1_account(
+        account_config, broker_identity, now_ms=now_ms,
+    )
     key = _decision_key(decision_key)
     if account != key[0]:
         raise AdapterViolation('lookup account does not own ATT1 decision')

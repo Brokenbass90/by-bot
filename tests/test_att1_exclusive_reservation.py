@@ -22,6 +22,15 @@ ACCOUNT_CONFIG = {
 }
 
 
+def old_broker_identity(config=ACCOUNT_CONFIG, *, received_ms=T):
+    return a.validate_old_att1_broker_identity(
+        config,
+        {'retCode': 0, 'time': received_ms,
+         'result': {'apiKey': config['key'], 'userID': '123456789'}},
+        received_ms=received_ms,
+    )
+
+
 @pytest.fixture
 def ledger(tmp_path):
     path = tmp_path / 'trades.db'
@@ -224,6 +233,7 @@ def test_abrupt_process_exit_retains_committed_pre_send_reservation(ledger):
 import importlib.util, os, sqlite3
 spec = importlib.util.spec_from_file_location('routing_crash_fixture', sys.argv[2])
 a = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = a
 spec.loader.exec_module(a)
 con = sqlite3.connect(sys.argv[1])
 t = 500_000 * 3_600_000
@@ -354,8 +364,9 @@ def test_old_dispatch_uses_selected_account_config_and_frozen_closed_h1(tmp_path
                           [T - H1, '1', '1', '1', '1', '1']],
         now_ms=T + 1,
         enabled=True,
+        broker_identity=old_broker_identity(),
     )
-    assert reservation['account'] == a.att1_account_config_fingerprint(ACCOUNT_CONFIG)
+    assert reservation['account'] == old_broker_identity().account
     assert reservation['h1_close_ms'] == T
     with sqlite3.connect(path) as con:
         assert a.read_att1_route(con, reservation['account'])['owner'] == 'OLD'
@@ -371,12 +382,18 @@ def test_old_dispatch_crash_before_ack_and_duplicate_late_ack_keep_one_slot(tmp_
 import importlib.util, os, sys
 spec = importlib.util.spec_from_file_location('routing_crash_fixture', sys.argv[2])
 a = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = a
 spec.loader.exec_module(a)
 t = 500_000 * 3_600_000
 a.reserve_old_att1_dispatch(sys.argv[1], {'name':'main','key':'fixture-api-key','base':'https://api.bybit.com'},
                             symbol='ETHUSDT', side='Sell',
                             consumed_h1_rows=[[t-3_600_000, '1', '1', '1', '1', '1']],
-                            now_ms=t+1, enabled=True)
+                            now_ms=t+1, enabled=True,
+                            broker_identity=a.validate_old_att1_broker_identity(
+                                {'name':'main','key':'fixture-api-key','base':'https://api.bybit.com'},
+                                {'retCode':0, 'time':t,
+                                 'result':{'apiKey':'fixture-api-key','userID':'123456789'}},
+                                received_ms=t))
 os._exit(73)
 '''
     result = subprocess.run([sys.executable, '-c', code, str(path), a.__file__],
@@ -387,6 +404,7 @@ os._exit(73)
             path, ACCOUNT_CONFIG, symbol='BTCUSDT', side='Sell',
             consumed_h1_rows=[[T, '1', '1', '1', '1', '1']],
             now_ms=T + H1 + 1, enabled=True,
+            broker_identity=old_broker_identity(received_ms=T + H1),
         )
     with sqlite3.connect(path) as con:
         key = dict(zip(('account', 'family', 'symbol', 'side', 'h1_close_ms'), con.execute(
@@ -404,13 +422,16 @@ def test_unknown_old_dispatch_lookup_is_read_only_and_refuses_foreign_ack(tmp_pa
     reservation = a.reserve_old_att1_dispatch(
         path, ACCOUNT_CONFIG, symbol='ETHUSDT', side='Sell',
         consumed_h1_rows=[[T - H1, '1', '1', '1', '1', '1']],
-        now_ms=T + 1, enabled=True,
+        now_ms=T + 1, enabled=True, broker_identity=old_broker_identity(),
     )
-    pending = a.read_unresolved_old_att1_dispatches(path, ACCOUNT_CONFIG)
+    pending = a.read_unresolved_old_att1_dispatches(
+        path, ACCOUNT_CONFIG, broker_identity=old_broker_identity(), now_ms=T + 1,
+    )
     assert pending == [reservation]
     assert a.validate_old_att1_ack_lookup(
         ACCOUNT_CONFIG, reservation,
         {'symbol': 'ETHUSDT', 'side': 'Sell', 'orderLinkId': reservation['order_link_id'], 'orderId': 'ack-1'},
+        broker_identity=old_broker_identity(), now_ms=T + 1,
     ) == 'ack-1'
     for bad in (
         {'symbol': 'BTCUSDT', 'side': 'Sell', 'orderLinkId': reservation['order_link_id'], 'orderId': 'ack-1'},
@@ -418,11 +439,16 @@ def test_unknown_old_dispatch_lookup_is_read_only_and_refuses_foreign_ack(tmp_pa
         {'symbol': 'ETHUSDT', 'side': 'Sell', 'orderLinkId': 'foreign', 'orderId': 'ack-1'},
     ):
         with pytest.raises(a.AdapterViolation):
-            a.validate_old_att1_ack_lookup(ACCOUNT_CONFIG, reservation, bad)
+            a.validate_old_att1_ack_lookup(
+                ACCOUNT_CONFIG, reservation, bad,
+                broker_identity=old_broker_identity(), now_ms=T + 1,
+            )
     with sqlite3.connect(path) as con:
         assert con.execute('SELECT broker_order_id, terminal_at_ms FROM att1_decisions').fetchone() == (None, None)
     assert a.bind_old_att1_dispatch_ack(path, reservation, 'ack-1') == 'ack-1'
-    assert a.read_unresolved_old_att1_dispatches(path, ACCOUNT_CONFIG) == []
+    assert a.read_unresolved_old_att1_dispatches(
+        path, ACCOUNT_CONFIG, broker_identity=old_broker_identity(), now_ms=T + 1,
+    ) == []
     with sqlite3.connect(path) as con:
         assert con.execute('SELECT broker_order_id, terminal_at_ms FROM att1_decisions').fetchone() == ('ack-1', None)
 

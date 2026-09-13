@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.tradingstation.att1-research</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__ROOT__/.venv-research/bin/python</string>
+    <string>__ROOT__/scripts/mac_att1_research_job.py</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__ROOT__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>900</integer>
+  <key>ThrottleInterval</key>
+  <integer>120</integer>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>StandardOutPath</key>
+  <string>__ROOT__/logs/mac_att1_research_launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>__ROOT__/logs/mac_att1_research_launchd.err.log</string>
+</dict>
+</plist>

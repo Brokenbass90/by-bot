@@ -8949,6 +8949,24 @@ def _manage_all_open_runners() -> None:
             log_error(f"runner heartbeat fail {sym}: {e}")
 
 
+def _att1_read_broker_identity():
+    """Fresh signed identity through the selected production client; no cache."""
+    if not ATT1_COORDINATOR_BINDING_ENABLE:
+        return None
+    from bot import att1_coordinator_adapter as adapter
+    client = TRADE_CLIENT
+    config = _find_account_cfg(TRADE_ACCOUNT_NAME)
+    if (client is None or not isinstance(config, dict)
+            or config.get('name') != client.name
+            or config.get('key') != client.key
+            or config.get('base', '').rstrip('/') != client.base.rstrip('/')
+            or client.base.rstrip('/') != 'https://api.bybit.com'):
+        raise adapter.AdapterViolation('selected identity transport mismatch')
+    envelope = client.get('/v5/user/query-api', {}, timeout=10)
+    return adapter.validate_old_att1_broker_identity(
+        config, envelope, received_ms=int(time.time() * 1000))
+
+
 def _att1_recover_unknown_old_dispatches() -> None:
     """Read-only startup lookup for durable pre-ACK OLD ATT1 intents.
 
@@ -8970,8 +8988,11 @@ def _att1_recover_unknown_old_dispatches() -> None:
         log_error(f"ATT1 recovery unresolved: adapter unavailable: {exc}")
         return
     try:
-        pending = adapter.read_unresolved_old_att1_dispatches(TRADE_DB_PATH, account_config)
-    except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError) as exc:
+        identity = _att1_read_broker_identity()
+        pending = adapter.read_unresolved_old_att1_dispatches(
+            TRADE_DB_PATH, account_config, broker_identity=identity,
+            now_ms=int(time.time() * 1000))
+    except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError, RuntimeError, requests.RequestException) as exc:
         _diag_inc("att1_dispatch_recovery_ledger_unavailable")
         log_error(f"ATT1 recovery unresolved: durable ledger unavailable: {type(exc).__name__}: {exc}")
         return
@@ -8989,7 +9010,9 @@ def _att1_recover_unknown_old_dispatches() -> None:
             log_error(f"ATT1 recovery unresolved {symbol}: no broker order for durable orderLinkId")
             continue
         try:
-            order_id = adapter.validate_old_att1_ack_lookup(account_config, reservation, order)
+            order_id = adapter.validate_old_att1_ack_lookup(
+                account_config, reservation, order, broker_identity=identity,
+                now_ms=int(time.time() * 1000))
             adapter.bind_old_att1_dispatch_ack(TRADE_DB_PATH, reservation, order_id)
         except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError) as exc:
             _diag_inc("att1_dispatch_recovery_lookup_mismatch")
@@ -11858,7 +11881,7 @@ def _att1_record_caller_receipt(
     return True
 
 
-def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int):
+def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int, *, broker_identity=None):
     """Reserve the opted-in OLD ATT1 intent before broker submission.
 
     The normal default-off path exits before opening SQLite.  When enabled, a
@@ -11872,7 +11895,9 @@ def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int):
     if TRADE_CLIENT is None:
         return False, None
     account_config = _find_account_cfg(TRADE_ACCOUNT_NAME)
-    if not isinstance(account_config, dict) or account_config.get("name") != TRADE_CLIENT.name:
+    if (not isinstance(account_config, dict) or account_config.get("name") != TRADE_CLIENT.name
+            or account_config.get("key") != TRADE_CLIENT.key
+            or account_config.get("base", "").rstrip("/") != TRADE_CLIENT.base.rstrip("/")):
         _diag_inc("att1_dispatch_binding_account_config_missing")
         log_error("ATT1 dispatch binding blocked: selected account config missing/mismatched")
         return False, None
@@ -11891,6 +11916,7 @@ def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int):
             consumed_h1_rows=consumed_h1_rows,
             now_ms=now_ms,
             enabled=True,
+            broker_identity=broker_identity,
         )
     except (adapter.AdapterViolation, sqlite3.Error, OSError, TypeError, ValueError) as exc:
         _diag_inc("att1_dispatch_binding_reserve_failed")
@@ -12178,10 +12204,21 @@ async def try_att1_entry_async(symbol: str, price: float):
             _diag_inc("att1_skip_reserve")
             return
 
+        broker_identity = None
+        if ATT1_COORDINATOR_BINDING_ENABLE:
+            try:
+                # Identity HTTP must not block heartbeat/position management.
+                broker_identity = await asyncio.to_thread(_att1_read_broker_identity)
+            except (ImportError, RuntimeError, OSError, ValueError, TypeError, requests.RequestException) as exc:
+                _diag_inc("att1_skip_broker_identity")
+                log_error(f"ATT1 identity blocked {symbol}: {type(exc).__name__}")
+                _clear_entry_slot(symbol)
+                return
         dispatch_allowed, dispatch_reservation = _att1_reserve_old_dispatch(
             symbol,
             att1_consumed_h1_rows,
-            int(now * 1000),
+            int(time.time() * 1000) if ATT1_COORDINATOR_BINDING_ENABLE else int(now * 1000),
+            broker_identity=broker_identity,
         )
         if not dispatch_allowed:
             _diag_inc("att1_skip_dispatch_binding")
