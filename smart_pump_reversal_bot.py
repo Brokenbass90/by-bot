@@ -6684,6 +6684,43 @@ class BybitClient:
         return j
 
 
+    def get_att1_open_snapshot_pages(self):
+        """Complete signed read-only USDT position/order pages, with hard bounds."""
+        import time
+        deadline = time.monotonic() + 50
+        snapshot = {}
+        for key, path, extra in (
+            ('position_pages', '/v5/position/list', {'limit': 200}),
+            ('order_pages', '/v5/order/realtime', {'limit': 50, 'openOnly': 0}),
+        ):
+            pages, cursors = [], set()
+            params = {'category': 'linear', 'settleCoin': 'USDT', **extra}
+            for _ in range(16):
+                if time.monotonic() >= deadline:
+                    raise ValueError('ATT1 broker snapshot collection expired')
+                page = self.get(path, params, timeout=10)
+                if time.monotonic() >= deadline:
+                    raise ValueError('ATT1 broker snapshot collection expired')
+                result = page.get('result') if isinstance(page, dict) else None
+                if (not isinstance(page, dict) or type(page.get('retCode')) is not int
+                        or page['retCode'] != 0 or not isinstance(result, dict)
+                        or result.get('category') != 'linear'
+                        or not isinstance(result.get('list'), list)
+                        or not isinstance(result.get('nextPageCursor'), str)):
+                    raise ValueError('ATT1 broker snapshot envelope malformed')
+                pages.append(page)
+                cursor = result['nextPageCursor']
+                if not cursor:
+                    break
+                if cursor in cursors:
+                    raise ValueError('ATT1 broker snapshot cursor cycle')
+                cursors.add(cursor)
+                params = {**params, 'cursor': cursor}
+            else:
+                raise ValueError('ATT1 broker snapshot page bound exceeded')
+            snapshot[key] = pages
+        return snapshot
+
     def post(self, path: str, body: dict | None = None, timeout: int = 15) -> dict:
         body = body or {}
         if auth_disabled(self.name):
@@ -8965,6 +9002,30 @@ def _att1_read_broker_identity():
     envelope = client.get('/v5/user/query-api', {}, timeout=10)
     return adapter.validate_old_att1_broker_identity(
         config, envelope, received_ms=int(time.time() * 1000))
+
+
+def _att1_read_broker_snapshot():
+    """Pin signed account identity around complete read-only reconciliation."""
+    if not ATT1_COORDINATOR_BINDING_ENABLE:
+        return None, None
+    from bot import att1_coordinator_adapter as adapter
+    client = TRADE_CLIENT
+    config = dict(_find_account_cfg(TRADE_ACCOUNT_NAME) or {})
+    before = _att1_read_broker_identity()
+    if client is not TRADE_CLIENT:
+        raise adapter.AdapterViolation('snapshot client changed')
+    pages = client.get_att1_open_snapshot_pages()
+    after = _att1_read_broker_identity()
+    observed_ms = int(time.time() * 1000)
+    if (client is not TRADE_CLIENT or config != _find_account_cfg(TRADE_ACCOUNT_NAME)
+            or before.account != after.account
+            or before.credential_binding_sha256 != after.credential_binding_sha256):
+        raise adapter.AdapterViolation('snapshot account changed during collection')
+    # Validate the initial proof too: long collection cannot renew stale pages.
+    adapter._validated_old_att1_account(config, before, now_ms=observed_ms)
+    snapshot = adapter.validate_att1_broker_snapshot(
+        config, after, observed_ms=observed_ms, **pages)
+    return after, snapshot
 
 
 def _att1_recover_unknown_old_dispatches() -> None:
@@ -11881,7 +11942,7 @@ def _att1_record_caller_receipt(
     return True
 
 
-def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int, *, broker_identity=None):
+def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int, *, broker_identity=None, broker_snapshot=None):
     """Reserve the opted-in OLD ATT1 intent before broker submission.
 
     The normal default-off path exits before opening SQLite.  When enabled, a
@@ -11908,6 +11969,21 @@ def _att1_reserve_old_dispatch(symbol: str, consumed_h1_rows, now_ms: int, *, br
         log_error(f"ATT1 dispatch binding blocked: adapter unavailable: {exc}")
         return False, None
     try:
+        account = adapter._validated_old_att1_account(account_config, broker_identity, now_ms=now_ms)
+        if (not isinstance(broker_snapshot, dict)
+                or broker_snapshot.get('schema_id') != 'att1_broker_snapshot_v1'
+                or broker_snapshot.get('account') != account
+                or type(broker_snapshot.get('observed_ms')) is not int
+                or not 0 <= now_ms - broker_snapshot['observed_ms'] <= adapter.ATT1_BROKER_IDENTITY_MAX_AGE_MS
+                or broker_snapshot.get('flat_no_orders') is not True
+                or type(broker_snapshot.get('position_count')) is not int
+                or broker_snapshot['position_count'] != 0
+                or type(broker_snapshot.get('order_count')) is not int
+                or broker_snapshot['order_count'] != 0
+                or not isinstance(broker_snapshot.get('source_sha256'), str)
+                or len(broker_snapshot['source_sha256']) != 64
+                or any(c not in '0123456789abcdef' for c in broker_snapshot['source_sha256'])):
+            raise adapter.AdapterViolation('fresh bound flat broker snapshot required')
         reservation = adapter.reserve_old_att1_dispatch(
             TRADE_DB_PATH,
             account_config,
@@ -12205,10 +12281,11 @@ async def try_att1_entry_async(symbol: str, price: float):
             return
 
         broker_identity = None
+        broker_snapshot = None
         if ATT1_COORDINATOR_BINDING_ENABLE:
             try:
-                # Identity HTTP must not block heartbeat/position management.
-                broker_identity = await asyncio.to_thread(_att1_read_broker_identity)
+                # Signed reconciliation HTTP must not block position management.
+                broker_identity, broker_snapshot = await asyncio.to_thread(_att1_read_broker_snapshot)
             except (ImportError, RuntimeError, OSError, ValueError, TypeError, requests.RequestException) as exc:
                 _diag_inc("att1_skip_broker_identity")
                 log_error(f"ATT1 identity blocked {symbol}: {type(exc).__name__}")
@@ -12219,6 +12296,7 @@ async def try_att1_entry_async(symbol: str, price: float):
             att1_consumed_h1_rows,
             int(time.time() * 1000) if ATT1_COORDINATOR_BINDING_ENABLE else int(now * 1000),
             broker_identity=broker_identity,
+            broker_snapshot=broker_snapshot,
         )
         if not dispatch_allowed:
             _diag_inc("att1_skip_dispatch_binding")

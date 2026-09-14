@@ -1,0 +1,99 @@
+{
+  "agent": {
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "medium",
+    "runtime_metadata_verified": true,
+    "scope": "snapshot fixtures only"
+  },
+  "date_utc": "2026-09-14",
+  "limitations": [
+    "USDT-linear endpoints are not atomic account state and cannot prove finality",
+    "Flat snapshot never releases unresolved durable reservation",
+    "NEW production dispatch/protection/fill/cost finality binding remains unfinished",
+    "Exact effective OLD absolute risk still requires fresh runtime truth before dossier",
+    "No evidence of real net edge or permission to activate money"
+  ],
+  "mac_job": {
+    "completed_stages": [
+      {
+        "duration_seconds": 27.831,
+        "log_path": "logs/binding_tests.log",
+        "log_sha256": "8efb5eef9cfbf36a4c448da2906b6bc23dc876d5bf5584bfb4504de93d9a6d3c",
+        "name": "binding_tests",
+        "returncode": 0,
+        "timed_out": false
+      },
+      {
+        "duration_seconds": 9.159,
+        "log_path": "logs/public_parity_tests.log",
+        "log_sha256": "b4808f9daa7e65ecb23acfaa6bc8963e70f8f24de4bb296ce9498600ba0867b0",
+        "name": "public_parity_tests",
+        "returncode": 0,
+        "timed_out": false
+      },
+      {
+        "duration_seconds": 1.346,
+        "log_path": "logs/ws_fairness_canary.log",
+        "log_sha256": "ac0988b070cfb8585ee6cce3a7e8654f43da14bf7e316bc0b9277c6ad43db855",
+        "name": "ws_fairness_canary",
+        "returncode": 0,
+        "timed_out": false
+      },
+      {
+        "duration_seconds": 1.805,
+        "log_path": "logs/lifecycle_inspect.log",
+        "log_sha256": "7ef1f06116014c6b13f90a8f3796d71c6f728c94cfe06786ef203d34ba3da36e",
+        "name": "lifecycle_inspect",
+        "returncode": 0,
+        "timed_out": false
+      }
+    ],
+    "finished_at_utc": "2026-09-14T06:53:09Z",
+    "source_input_sha256": "49e45798a5795e0550c1ed3a7f578b3a024a8e3642aa0acb5f2a629df256c5a1",
+    "status": "COMPLETE"
+  },
+  "money_binding_deployed": false,
+  "owner_activation_ready": false,
+  "public": {
+    "as_of_ms": 1789368693830,
+    "clean_terminal_count": 0,
+    "epoch": "att1-public-lifecycle-20260913-continuity",
+    "gap_reasons": {
+      "public polling continuity gap": 5,
+      "rejected future/stale public book": 2
+    },
+    "heartbeat_age_ms": 565,
+    "nrestarts": 0,
+    "pid": 451398,
+    "rejected_book_age_ms": [
+      2274,
+      2113
+    ],
+    "scan_attempts": 51,
+    "session_count": 10,
+    "stale_feed_count": 1
+  },
+  "reviewed_files_sha256": {
+    "bot/att1_coordinator_adapter.py": "9763856f844b87385d3ecd9528a9a73f54c9c75f5e327e78f15ed826860138bc",
+    "scripts/mac_att1_research_job.py": "0abbb15b29e161700a3f118d6cc4428e6d11ce254a8825b9a1790abd3e7a9a42",
+    "smart_pump_reversal_bot.py": "1b62c6fcc8ca12081aa5139949042ee7125f645d2cbe0f6c0c40e367537c587b",
+    "tests/test_att1_broker_snapshot.py": "4823b14095af0076b76f0cf021abb50d73f7ede2f280e90d6f1672170e9af5d3",
+    "tests/test_att1_runtime_identity.py": "e81f6f08cd0c833576704b0d47a5d0aa98896ac7a764436d676e944c8500e99a"
+  },
+  "schema_id": "att1_reconciliation_verification_v1",
+  "scope": "DEFAULT_OFF_SIGNED_READ_ONLY_SNAPSHOT_AND_OFFLINE_BINDING_TESTS",
+  "signed_probe": {
+    "account_data": "PRIVATE_NOT_PUBLISHED",
+    "orders_sent": 0,
+    "scope": "ISOLATED_AST_HELPERS_AND_GET_ONLY_TRANSPORT_NOT_PRODUCTION_STARTUP",
+    "status": "PASS"
+  },
+  "tests": {
+    "e2e_restart_fixture": "PASS",
+    "mac_binding_focused_passed": 128,
+    "mac_supervisor_passed": 11,
+    "public_frozen_parity_passed": 1,
+    "vps_python_312_focused_passed": 102,
+    "ws_fairness_passed": 1
+  }
+}

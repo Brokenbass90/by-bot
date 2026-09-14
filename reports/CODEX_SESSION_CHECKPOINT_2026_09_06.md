@@ -2,6 +2,44 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 14, 06:51–06:55 UTC**:
+- Completed the next default-off binding increment: selected signed identity
+  before/after complete USDT-linear positions and open-order pagination, strict
+  freshness/schema/duplicate checks, and flat snapshot required before existing
+  OLD durable reservation. HTTP runs in a worker thread. Snapshot flatness
+  never releases an unresolved reservation and cannot establish trade finality.
+- Existing Bybit client only; no new coordinator/ledger. Collection is sequential,
+  bounded to 16 pages per endpoint and rejects results beyond a 50s collection
+  budget (an in-flight signed GET retains its existing timeout/retry bound).
+- **128 focused binding tests PASS**, **11 Mac supervisor tests PASS**;
+  **102 tests PASS on VPS Python 3.12** in isolated `/tmp`. A fresh signed
+  GET-only probe using the reviewed AST helpers PASS; exact account data stays
+  ignored/private. Tested adapter/monolith hashes match local files. This is
+  not a production startup or NEW execution parity verdict.
+- Money binding and OLD fairness fix remain **NOT DEPLOYED**. OLD PID and
+  deployed source unchanged during the signed check. Public PID 451398,
+  NRestarts=0, heartbeat age 565ms, 51/51 scan attempts (one stale HFT feed).
+- Public epoch now has 10 sessions, **0 clean terminal net-R**. Journal evidence
+  identifies 5 `public polling continuity gap` incidents and 2 rejected stale
+  books aged 2113/2274ms. No future clock incident in these seven. These are
+  real evidence failures, not process exits. Do not wait indefinitely for clean
+  outcomes or relax the 2s gate; localize the existing observation loop delays.
+- Native `com.tradingstation.att1-research` completed all four updated stages
+  at **06:53:09 UTC**, exit 0, caffeinate gone. Added the new reconciliation
+  fixture to its fixed allowlist. Prior completed output preserved in
+  `runtime/mac_att1_research_job-20260913-complete`. No other jobs stopped.
+- Mechanical snapshot tests used actual `gpt-5.6-luna / medium`, verified in
+  runtime thread metadata and rollout turn_context. Root reviewed/integrated.
+- Receipt: `reports/ATT1_RECONCILIATION_RECEIPT_2026_09_14.json`.
+
+**READY FOR OWNER ACTIVATION = FALSE.** Next bounded P0: finish existing NEW
+production dispatch → fills/protection → actual fees/funding/finality, and
+resolve measured public observation gaps without a new subsystem. Then clean
+2–3 terminal public lifecycles + fresh exact effective OLD absolute risk →
+micro-canary dossier. No owner approval inferred from successful tests.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — September 13, after local application failures:
 - Commits `c431231` (local buffered WebSocket fairness fix) and `fc531fa`
   (default-off broker UID identity + Mac supervisor) are implemented. Neither

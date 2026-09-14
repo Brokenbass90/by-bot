@@ -335,6 +335,69 @@ def _validated_old_att1_account(account_config, broker_identity, *, now_ms):
     return account
 
 
+def validate_att1_broker_snapshot(account_config, broker_identity, *,
+                                  position_pages, order_pages, observed_ms):
+    """Validate complete current USDT-linear truth from the trusted transport.
+
+    These endpoints are not an atomic account snapshot or trade finality.
+    A flat result cannot release a durable unresolved reservation. Raw pages
+    have no account UID: the caller must pin the signed client/identity across
+    collection. The digest is evidence identity, never money authority.
+    """
+    account = _validated_old_att1_account(account_config, broker_identity, now_ms=observed_ms)
+    counts = []
+    for kind, pages in (('positions', position_pages), ('orders', order_pages)):
+        if not isinstance(pages, list) or not 1 <= len(pages) <= 16:
+            raise AdapterViolation('incomplete/bounded broker pagination required')
+        cursors, entities, count = set(), set(), 0
+        for index, page in enumerate(pages):
+            if (not isinstance(page, Mapping) or type(page.get('retCode')) is not int
+                    or page['retCode'] != 0 or type(page.get('time')) is not int
+                    or not 0 < page['time'] <= observed_ms
+                    or observed_ms - page['time'] > ATT1_BROKER_IDENTITY_MAX_AGE_MS):
+                raise AdapterViolation('invalid/stale broker snapshot envelope')
+            result = page.get('result')
+            if (not isinstance(result, Mapping) or result.get('category') != 'linear'
+                    or not isinstance(result.get('list'), list)
+                    or not isinstance(result.get('nextPageCursor'), str)):
+                raise AdapterViolation('broker snapshot result malformed')
+            cursor = result['nextPageCursor']
+            if ((index == len(pages) - 1) != (cursor == '')
+                    or (cursor and cursor in cursors)):
+                raise AdapterViolation('incomplete/cyclic broker pagination')
+            cursors.add(cursor)
+            for row in result['list']:
+                if not isinstance(row, Mapping):
+                    raise AdapterViolation('broker snapshot row malformed')
+                symbol = _text(row.get('symbol'), 'symbol')
+                if not symbol.endswith('USDT'):
+                    raise AdapterViolation('foreign settlement in broker snapshot')
+                if kind == 'positions':
+                    size = _number(row.get('size'), 'size', nonnegative=True)
+                    idx, side = row.get('positionIdx'), row.get('side')
+                    if (type(idx) is not int or idx not in (0, 1, 2)
+                            or side not in ('', 'Buy', 'Sell') or (size > 0 and not side)):
+                        raise AdapterViolation('broker position malformed')
+                    key = (symbol, idx)
+                    count += int(size > 0)
+                else:
+                    key = _text(row.get('orderId'), 'orderId')
+                    qty = _number(row.get('qty'), 'qty', positive=True)
+                    filled = _number(row.get('cumExecQty'), 'cumExecQty', nonnegative=True)
+                    if (filled > qty or row.get('side') not in ('Buy', 'Sell')
+                            or row.get('orderStatus') not in ('New', 'PartiallyFilled', 'Untriggered', 'Triggered')):
+                        raise AdapterViolation('broker active order malformed')
+                    count += 1
+                if key in entities:
+                    raise AdapterViolation('duplicate broker snapshot entity')
+                entities.add(key)
+        counts.append(count)
+    return {'schema_id': 'att1_broker_snapshot_v1', 'account': account,
+            'observed_ms': observed_ms, 'position_count': counts[0], 'order_count': counts[1],
+            'flat_no_orders': counts == [0, 0],
+            'source_sha256': digest({'position_pages': position_pages, 'order_pages': order_pages})}
+
+
 def att1_account_config_fingerprint(account_config):
     """Legacy opaque ledger ID from the selected loaded Bybit config.
 
