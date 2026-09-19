@@ -39,22 +39,24 @@ read-only VPS checks, research scripts and documentation are already authorized.
 Separate owner confirmation is required for money authority, increased risk,
 existing money positions or irreversible sealed evidence consumption.
 
-Current owner scope: ATT1 profile/admission -> full coordinator -> durable
-restart/recovery -> end-to-end fixture -> separate public-only VPS lifecycle.
-Final L1 burn-in evaluator only at/after 2026-09-08 08:02 UTC. No new strategy
-rules or architecture layers. Alpaca, LAB_AI, Market Perception and new research
-are paused for Codex. Money canary requires clean evidence and separate approval.
+Current owner scope (September 19, supersedes earlier Alpaca pause): Codex
+owns ATT1 production/canary and the frozen Alpaca intended research packet to
+existing VPS/PAPER operational readiness. Read
+`reports/CONTINUATION_HANDOFF_2026_09_19.md` for the packet's actual sibling
+checkout path and the seven existing acceptance receipts. No strategy research,
+parameter changes, new gates or architecture layers. No new live money without
+separate owner approval. Preserve OLD risk/positions and existing shadow evidence.
 
 End each bounded cycle with reproducible evidence and an updated canonical
 checkpoint. Report raw signals separately from independent trades and net edge.
 
-## Concurrent Alpaca work
+## Coordination with Claude
 
-Claude owns Alpaca forensic lineage and the next canonical dynamic/adaptive
-selection plus entry-relative protection/HWM/ratchet/trailing version. Owner
-provided worktree: `../alpaca-wt-20260907`, branch `claude/alpaca-2026-09-07`,
-starting commit `6285530`. Do not duplicate that work or alter its worktree.
-Codex Alpaca work is currently paused, including read-only/compatibility tasks.
-Keep compatibility patches isolated in `../bybit-alpaca-safe-hold-20260907`
-until integration ownership is coordinated. Do not launch a competing paper
-lifecycle or modify existing paper positions, services or live controls.
+As of September 19 the owner assigns Alpaca operational delivery to Codex;
+Claude owns existing registry/Factory and Gold research, with bounded fallback
+on external-data blockers. Do not duplicate forensic strategy research or modify
+Claude's checkout. The latest packet/registry are in sibling `bybit-bot-clean-v28`;
+read them in place and preserve source lineage. Existing Alpaca compatibility
+worktree is `../bybit-alpaca-safe-hold-20260907`; inspect before integration.
+PAPER acceptance is authorized by scope, but no orphan ownership, live capital,
+strategy deviation or live emergency authority may be invented.

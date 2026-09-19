@@ -1,0 +1,73 @@
+{
+  "as_of_utc": "2026-09-14T10:29:11.146000+00:00",
+  "base_sha256": "aeda59e299fac9833c68816088997e927d82b8392137072521ecb76e081b2128",
+  "capture": {
+    "max_dumps": 24,
+    "max_seconds": 43200,
+    "nonblocking": true,
+    "observed": {
+      "last_kind": "START",
+      "max_heartbeat_age_s": 0,
+      "rows": 1,
+      "stacks": 0
+    },
+    "pid": 1360308,
+    "runtime": "/root/by-bot/runtime/att1-stall-capture-20260914",
+    "status": "BOUNDED_READ_ONLY_CAPTURE_ARMED",
+    "trigger_heartbeat_age_s": 30
+  },
+  "deployed_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+  "deployment": "patch on exact deployed OLD source; current recovery HEAD was NOT deployed",
+  "guards": {
+    "atomic_backup_and_rollback_prepared": true,
+    "config_unchanged": true,
+    "existing_watchdog_lock_used": true,
+    "heartbeat_before_stop_required": true,
+    "new_money_binding_deployed": false,
+    "signed_account_flat_after_stop": true,
+    "signed_account_flat_before_stop": true,
+    "source_hash_required": true
+  },
+  "incident": {
+    "exact_incident_stack_available": false,
+    "host_reboot": false,
+    "observed_utc": "2026-09-14T08:02:04Z",
+    "watchdog_heartbeat_age_s": 127,
+    "watchdog_restart_utc": "2026-09-14T08:02:07Z"
+  },
+  "limitations": [
+    "No timed stack for exact 08:02 watchdog incident; patch addresses an independently reproduced mechanism seen in earlier timed stacks",
+    "Short post-deploy window cannot prove absence of all future stalls; synchronous calls remain possible",
+    "NEW production broker lifecycle binding unfinished; public clean terminal count remains zero",
+    "First deployment attempt aborted before service stop on stale heartbeat; guard unchanged",
+    "Server purchase deferred by owner until at least 10 USD monthly profit; no profitability date promised"
+  ],
+  "mac": {
+    "last_completed_utc": "2026-09-14T06:53:09Z",
+    "other_processes_stopped": false,
+    "production_runtime_moved": false,
+    "supervised_job_status": "COMPLETE",
+    "work_this_cycle": "OLD exact deployed baseline and candidate regression ran locally"
+  },
+  "patch": "one asyncio.sleep(0) after processing each buffered Bybit public trade message",
+  "patch_commit": "c431231864b9454e589b5ed687703b4c70d75244",
+  "public": {
+    "clean_terminal_count": 0,
+    "epoch": "att1-public-lifecycle-20260913-continuity",
+    "heartbeat_age_s": 0.5316455364227295,
+    "scan_attempts": 51,
+    "session_count": 10,
+    "unit": "MainPID=451398\nNRestarts=0\nExecMainStartTimestamp=Sun 2026-09-13 07:52:11 UTC\nActiveState=active\n"
+  },
+  "schema_id": "att1_old_fairness_deployment_v1",
+  "status": "DEPLOYED_HEARTBEAT_PASS",
+  "verification": {
+    "candidate_mac_regression": "PASS",
+    "complete_ast_otherwise_identical": true,
+    "deployed_baseline_regression": "FAIL_STARVATION_REPRODUCED",
+    "post_deploy_heartbeat_age_s": 7.146645545959473,
+    "post_deploy_nrestarts": 0,
+    "post_deploy_old_pid": 1360223,
+    "target_python_regression": "PASS"
+  }
+}

@@ -1,43 +1,58 @@
-# Current roadmap
+# Current roadmap — owner scope 2026-09-19
 
-OLD/NEW profiles reconciled. READY FOR OWNER ACTIVATION = FALSE.
+Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
+`codex/recovery-20260824`. Start at the TOP of
+`reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`, then
+`reports/CONTINUATION_HANDOFF_2026_09_19.md` for source paths and exact evidence.
 
-Canonical branch: `codex/recovery-20260824`. Only ATT1 P0 is active.
-Private broker snapshots and account economics remain on local branch
-`local/private-evidence-20260908` and its verified local Git bundle. They are
-not included in this public history. Original deployed commit identities are
-retained as evidence; public export does not redeploy any runtime.
+## P0: two production tracks, no strategy research
 
-Read `reports/ATT1_PUBLIC_LIFECYCLE_2026_09_08.md`. The separate public-only
-service passed target Python smoke and exact durable restart verification.
-L1 final operational burn-in passed. These do not prove broker parity or edge.
+1. **ATT1 short — Codex.** Finish existing default-off NEW dispatch → fills /
+   protection → actual fees/funding/finality; close public continuity with the
+   same 2s gate; obtain 2–3 clean prospective filled terminal lifecycles, fresh
+   exact OLD absolute risk, then micro-canary dossier. September 19: 21 public
+   sessions, zero clean terminal. OLD fairness patch already deployed; do not
+   reapply it or deploy the full recovery monolith as a runtime-only fix.
+2. **Alpaca intended — Codex, parallel operational work.** Use the existing
+   frozen packet in sibling `bybit-bot-clean-v28/research_lab/pakety/` and
+   its linked gates. Research handoff sufficient to start; correct offline
+   9/9 receipt is `research_lab/data/alpaca_repetitsiya.json`. Operational
+   evidence confirmed from handoff: **0/7**. First read PAPER broker truth,
+   ownership and protection/HWM artifacts; then existing seven-step PAPER
+   protocol, frozen config, emergency/kill verification, dossier. No new
+   filters, tuning, gates or three-month wait for tiny-canary readiness.
 
-Read `reports/ATT1_MICRO_CANARY_RECONCILIATION_2026_09_08.md` and
-`docs/superpowers/plans/2026-09-08-att1-profile-migration.md`. NEW is canonical
-for the next canary: trendline+6.6ATR, BE/trailing OFF, 336h, frozen profile
-`79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050`.
-OLD has different signal/stop/target/management behavior and stays untouched.
+**Money stays separately owner-approved.** NEW ATT1 cannot duplicate OLD;
+max one ATT1 position, no sizing escalation. Alpaca live capital is unspecified;
+offline $1000/$700 is not owner allocation. Current readiness is FALSE for both.
 
-Prospective public ADA evidence is dirty: RECOVERY_GAP, flat simulated exposure,
-no clean final net-R. The captured 266-row journal restores identically with
-the incident. Preserve it; do not relax the 2s gate or rewrite public v1.
+## Existing candidate queue and ownership
 
-Next bounded P0: reproduce/fix public continuity; prepare send-disabled broker
-and actual-cost binding through the existing coordinator; test exclusive OLD
-pause/drain/new-H1 handoff, max one reservation, owner-bound absolute risk and
-daily loss controls, restart/protection/cost failure paths. No financial
-activation before actual PASS receipts. Owner operates the money transition.
-No fallback to OLD and no simultaneous OLD/NEW money entry.
+Use ONE existing candidate registry:
+`../bybit-bot-clean-v28/research_lab/data/reestr.json`.
+Claude owns its inventory/Factory; a Strategy Master is a view/index of this
+registry, not a second source of verdicts. Inventory does not block P0 tests.
+Each candidate needs source evidence, owner, status, next gate and blocker.
 
-Other strategies stay in the queue: ETS2S profile/timing binding is pending;
-Alpaca lineage belongs to Claude. No competing work is launched. Historical
-research/strategy queues remain in the original local archive and existing
-research reports; none becomes an automatic money promotion.
+- **SBR1 next after ATT1:** recover existing parity/config/shadow evidence.
+  A zero-risk deployment receipt already exists dated August 24; don't restart
+  from a remembered preliminary backtest or blindly repeat passed stages.
+- Then **XSEC PIT / Bull Continuation:** recover latest valid checkpoint;
+  continue its next unclosed gate. No invented present status or new research.
+- **ATT1 long:** after these existing leads; no new variants during P0.
+- **Gold — Claude, independent queue:** use existing MT5 bridge/Factory;
+  record external-data blocker and move to next existing cheap family rather
+  than idle. Reuse runner/judge/registry; no new platform. EURUSD later.
+- **ETS2S / existing Elder experiments and other shadows:** collect prospective
+  evidence unchanged. Do not merge ETS2S, ETS2M or Elder-wide identities/counts.
+- **Ordinary cross-exchange ARB:** closed. Premium events remain parked in the
+  existing registry; deposit-disabled and withdrawal-disabled are not identical.
 
-LAB_AI_V0 remains a read-only research-assistant design, not a running AI worker
-verified by this checkpoint. The existing laboratory replay, journals, fixtures
-and accounting support ATT1 now. After ATT1 gates: deterministic evidence
-catalog, quality classification, source-cited lifecycle/net-R explanations,
-then bounded historical entry/protection/exit comparisons through the same
-evidence pipeline. No new strategy, architecture, Alpaca or LAB implementation
-competes with current ATT1 P0.
+Mac remains offline research/test compute via existing native launchd runner.
+VPS remains sole production runtime. Completed unchanged Mac work is a no-op,
+not evidence of continuous overnight research. No server purchase until owner
+revisits the $10/month profit threshold. Repo cleanup follows P0, not before it.
+
+Factory/AI output never grants broker, risk, verdict or live promotion authority.
+No positive-return date is promised. Calendar session boundaries constrain
+PAPER expiry/re-arm evidence; historical profitability is a separate claim.

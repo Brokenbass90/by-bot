@@ -2,6 +2,75 @@
 
 ## Public continuation checkpoint
 
+Latest owner handoff — **September 19, analysis only**:
+- Scope updated: Codex owns ATT1 production + Alpaca frozen packet to VPS/PAPER.
+  Claude owns existing registry/Factory and Gold. Earlier Alpaca pause below
+  is superseded. No deployment, orders, strategy changes or new gates this cycle.
+- Read `reports/CONTINUATION_HANDOFF_2026_09_19.md` for the complete short
+  new-chat handoff, artifact paths/hashes and exact next action;
+  `reports/CURRENT_PROJECT_ROADMAP.md` is updated with owner/queue priorities.
+- Fresh VPS check: OLD fairness hash remains deployed, heartbeat 3.17s, service
+  starts September 18 06:38 UTC (later restart cause NOT checked). Public
+  PID 451398 unchanged, heartbeat 0.77s, 21 sessions, **0 clean filled terminal**.
+  Current scan snapshot 49 symbols, not proof of completed 51/51 this hour.
+  September 14 bounded collector finished with START/DONE only, no stacks.
+- Alpaca packet is in sibling `../bybit-bot-clean-v28/research_lab/pakety/`.
+  Research handoff sufficient to START operational work. Its wrong offline
+  evidence link is resolved to `research_lab/data/alpaca_repetitsiya.json`:
+  9/9 offline PASS, **0/7 VPS/PAPER receipts confirmed from packet artifacts**.
+  Do not conflate those counts. Actual current Alpaca broker truth was not read.
+- Next executable action: PAPER account/positions/orders plus existing ownership,
+  HWM and manager receipts. Then the packet's seven operational steps unchanged.
+  No AMZN disposition by assumption; no owner capital chosen from rehearsal.
+- Reuse existing `research_lab/data/reestr.json`; no duplicate master registry.
+  SBR1 next: restore existing shadow/parity results (August 24 deploy receipt
+  exists), not restart historical research. Preliminary +22.35R/PF2.14 unverified.
+- **READY_FOR_CANARY: ATT1 NO / Alpaca NO.** Owner live approval absent.
+  A new chat has not been opened; paste-ready continuation is in the handoff.
+
+Earlier continuation (superseded where noted):
+
+Latest continuation — **September 14, 10:29 UTC**:
+- **OLD WebSocket fairness fix DEPLOYED**, separately from money binding.
+  Exact live base `aeda59e299fac9833c68816088997e927d82b8392137072521ecb76e081b2128`
+  plus only the yield from commit `c431231`; deployed SHA256
+  `c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1`.
+  Do NOT deploy the full recovery monolith as this patch; it contains additional
+  unfinished default-off binding work.
+- Watchdog's 127s stall and restart at 08:02 UTC are confirmed. VPS did not
+  reboot. No timed stack for that exact incident. The exact deployed OLD source
+  reproduced buffered-message starvation on Mac; candidate and VPS Python
+  regression PASS. Whole AST otherwise identical. This is a targeted mechanism
+  fix, not proof all synchronous blocking calls have been eliminated.
+- Deployment required fresh signed flat/no-orders truth both before and after
+  a brief maintenance stop, source/config hash guards, existing watchdog lock,
+  atomic backup and rollback. First attempt aborted BEFORE stop on stale
+  heartbeat; second completed with guards unchanged. OLD remains active, risk
+  and config unchanged; NEW binding remains **NOT DEPLOYED**.
+- New OLD PID **1360223**, started **10:27:03 UTC**; post-check heartbeat 7.15s,
+  PID unchanged, NRestarts=0. Runtime backup/private receipt:
+  `/root/by-bot/runtime/old-fairness-release-20260914T102701Z`.
+- Existing read-only nonblocking timed collector re-armed under
+  `/root/by-bot/runtime/att1-stall-capture-20260914`: 12h/24 dumps maximum,
+  trigger heartbeat >=30s, no duplicate collector. Post-check START/no stacks.
+  September 13 collector is completed history. Existing heartbeat automation
+  now follows the new capture path and deployed patch; do not reapply it.
+- Public runtime unchanged: PID 451398, heartbeat 0.53s, 51/51 attempts,
+  10 sessions, **0 clean terminal net-R**. Public observation gap remains open.
+- Mac native research job remains COMPLETE (four stages at 06:53 UTC); exact
+  OLD baseline/candidate regression also ran on Mac this cycle. No production
+  dependency was moved and no unrelated process was stopped. Owner explicitly
+  defers server upgrade until at least $10/month profit; no purchase now.
+- Receipt: `reports/ATT1_OLD_FAIRNESS_DEPLOYMENT_2026_09_14.json`.
+
+Next: use new timed stacks if another OLD stall occurs; otherwise continue
+existing NEW dispatch/fill/protection/cost finality and public observation gap.
+A slow synchronous public orderbook request is a reproducible observation-loop
+bottleneck; changing a timeout alone does not prove continuity. Preserve 2s gate.
+**READY FOR OWNER ACTIVATION = FALSE.** No new subsystem or strategy.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 14, 06:51–06:55 UTC**:
 - Completed the next default-off binding increment: selected signed identity
   before/after complete USDT-linear positions and open-order pagination, strict
