@@ -1,5 +1,11 @@
 # Continuation handoff — 2026-09-19
 
+UPDATE: Start from checkpoint TOP and `ALPACA_PAPER_PROGRESS_2026_09_19.json`.
+Owner now prioritizes Alpaca dossier before ATT1. PAPER endpoint fixed/tested,
+not production-deployed. All five legacy position owners resolved; AMZN belongs
+to intraday. Intended broker evidence remains 0/7; legacy HWM recovery and frozen
+PAPER wiring are next. The following section records the earlier analysis snapshot.
+
 This is an analysis/handoff cycle, not permission to activate money. Owner's
 September 19 scope supersedes the older Alpaca pause. Start from the TOP of
 `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`, then this file and

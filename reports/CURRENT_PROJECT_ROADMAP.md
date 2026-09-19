@@ -5,7 +5,16 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`, then
 `reports/CONTINUATION_HANDOFF_2026_09_19.md` for source paths and exact evidence.
 
-## P0: two production tracks, no strategy research
+## P0: Alpaca first, then ATT1; no strategy research
+
+Latest owner order supersedes the numbered historical snapshot below:
+**Alpaca frozen PAPER 7/7 → dossier → ATT1 dossier → SBR1**.
+PAPER endpoint fixed and target-tested; all five legacy owners resolved.
+Next: legacy floor/HWM recovery and frozen intended PAPER wiring.
+See `reports/ALPACA_PAPER_PROGRESS_2026_09_19.json`; 0/7 intended broker receipts.
+ATT1 continues unchanged while Codex closes Alpaca.
+
+Existing track details (earlier snapshot):
 
 1. **ATT1 short — Codex.** Finish existing default-off NEW dispatch → fills /
    protection → actual fees/funding/finality; close public continuity with the

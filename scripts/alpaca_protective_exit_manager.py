@@ -33,6 +33,8 @@ from scripts.equities_alpaca_paper_bridge import (  # noqa: E402
 
 
 OPEN_ORDER_STATUSES = {"new", "accepted", "pending_new", "partially_filled", "held"}
+LIVE_ALPACA_URL = "https://api.alpaca.markets"
+PAPER_ALPACA_URL = "https://paper-api.alpaca.markets"
 
 
 def _f(value: Any, default: float = 0.0) -> float:
@@ -71,6 +73,15 @@ def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     tmp.replace(path)
+
+
+def _path_resolves_within(path: Path, parent: Path) -> bool:
+    """Return whether path, including a symlink, resolves under parent."""
+    try:
+        path.resolve(strict=False).relative_to(parent.resolve(strict=False))
+    except ValueError:
+        return False
+    return True
 
 
 def _format_price(price: float) -> str:
@@ -289,7 +300,10 @@ def _main_unlocked() -> int:
 
     key = os.getenv("ALPACA_API_KEY_ID", "").strip()
     secret = os.getenv("ALPACA_API_SECRET_KEY", "").strip()
-    base_url = os.getenv("ALPACA_BASE_URL", "https://api.alpaca.markets").strip().rstrip("/")
+    base_url = os.getenv("ALPACA_BASE_URL", LIVE_ALPACA_URL).strip().rstrip("/")
+    if base_url not in {LIVE_ALPACA_URL, PAPER_ALPACA_URL}:
+        print("error=invalid_alpaca_endpoint", file=sys.stderr)
+        return 4
     if not key or not secret:
         print("error=missing_alpaca_credentials", file=sys.stderr)
         return 2
@@ -299,16 +313,26 @@ def _main_unlocked() -> int:
     if apply_requested and ack != "PROTECTIVE_EXITS_ONLY":
         print("error=missing_protective_exit_ack", file=sys.stderr)
         return 3
-    if apply_requested and base_url != "https://api.alpaca.markets":
-        print("error=apply_requires_live_alpaca_endpoint", file=sys.stderr)
-        return 4
     if apply_requested and _env_bool("ALPACA_ALLOW_NEW_ENTRIES", True):
         print("error=protective_manager_requires_new_entries_off", file=sys.stderr)
         return 5
 
-    runtime_dir = Path(os.getenv("ALPACA_PROTECTIVE_EXIT_RUNTIME_DIR", str(ROOT / "runtime" / "alpaca_live_v38")))
+    default_runtime = ROOT / "runtime" / (
+        "alpaca_paper_protective_exit"
+        if base_url == PAPER_ALPACA_URL
+        else "alpaca_live_v38"
+    )
+    runtime_dir = Path(os.getenv("ALPACA_PROTECTIVE_EXIT_RUNTIME_DIR", str(default_runtime)))
     state_path = Path(os.getenv("ALPACA_PROTECTIVE_EXIT_HWM_PATH", str(runtime_dir / "protective_exit_hwm.json")))
     receipt_path = Path(os.getenv("ALPACA_PROTECTIVE_EXIT_RECEIPT_PATH", str(runtime_dir / "protective_exit_latest.json")))
+    if base_url == PAPER_ALPACA_URL:
+        live_runtime = ROOT / "runtime" / "alpaca_live_v38"
+        if any(
+            _path_resolves_within(path, live_runtime)
+            for path in (runtime_dir, state_path, receipt_path)
+        ):
+            print("error=paper_runtime_overlaps_live_runtime", file=sys.stderr)
+            return 8
     excluded = {s.strip().upper() for s in os.getenv("ALPACA_PROTECTIVE_EXIT_EXCLUDED_SYMBOLS", "").split(",") if s.strip()}
 
     client = AlpacaClient(base_url, key, secret)
@@ -425,7 +449,7 @@ def _main_unlocked() -> int:
 def main() -> int:
     """Serialize bridge and ratchet mutations with one per-account lock."""
     key = os.getenv("ALPACA_API_KEY_ID", "").strip()
-    base_url = os.getenv("ALPACA_BASE_URL", "https://api.alpaca.markets").strip().rstrip("/")
+    base_url = os.getenv("ALPACA_BASE_URL", LIVE_ALPACA_URL).strip().rstrip("/")
     lock_path = _alpaca_account_lock_path(base_url, key)
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)

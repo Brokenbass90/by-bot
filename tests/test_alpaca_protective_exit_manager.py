@@ -1,8 +1,98 @@
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+from scripts import alpaca_protective_exit_manager as manager
 from scripts.alpaca_protective_exit_manager import (
     _confirmed_fixed_stop,
     build_ratchet_plan,
     build_stop_replace_payload,
 )
+
+
+PAPER_URL = "https://paper-api.alpaca.markets"
+LIVE_URL = "https://api.alpaca.markets"
+
+
+class _FakeBroker:
+    instances = []
+    current_price = 105.0
+    existing_stop = 95.0
+
+    def __init__(self, base_url, key, secret):
+        self.base_url = base_url
+        self.key = key
+        self.secret = secret
+        self.replace_payloads = []
+        self.replaced_stop = None
+        type(self).instances.append(self)
+
+    def get_account(self):
+        return {"trading_blocked": False}
+
+    def get_clock(self):
+        return {"is_open": True}
+
+    def list_positions(self):
+        return [_position(price=type(self).current_price)]
+
+    def list_orders(self, *, status, limit):
+        return [{
+            **_stop(price=self.replaced_stop or type(self).existing_stop),
+            "time_in_force": "day",
+        }]
+
+    def replace_order(self, order_id, payload):
+        self.replace_payloads.append(payload)
+        self.replaced_stop = float(payload["stop_price"])
+        return {"id": "stop-2"}
+
+    def get_order(self, order_id):
+        return {**_stop(price=self.replaced_stop), "id": order_id, "time_in_force": "day"}
+
+
+def _run_manager(monkeypatch, tmp_path: Path, *, base_url=PAPER_URL, apply=False, extra_env=None, seed_state=True):
+    monkeypatch.setattr(manager, "ROOT", tmp_path)
+    monkeypatch.setattr(manager, "AlpacaClient", _FakeBroker)
+    _FakeBroker.instances = []
+    _FakeBroker.current_price = 105.0
+    _FakeBroker.existing_stop = 95.0
+    for name in (
+        "ALPACA_BASE_URL",
+        "ALPACA_PROTECTIVE_EXIT_APPLY",
+        "ALPACA_PROTECTIVE_EXIT_ACK",
+        "ALPACA_ALLOW_NEW_ENTRIES",
+        "ALPACA_PROTECTIVE_EXIT_RUNTIME_DIR",
+        "ALPACA_PROTECTIVE_EXIT_HWM_PATH",
+        "ALPACA_PROTECTIVE_EXIT_RECEIPT_PATH",
+        "ALPACA_PROTECTIVE_EXIT_EXCLUDED_SYMBOLS",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("ALPACA_API_KEY_ID", "test-key")
+    monkeypatch.setenv("ALPACA_API_SECRET_KEY", "test-secret")
+    monkeypatch.setenv("ALPACA_BASE_URL", base_url)
+    if apply:
+        monkeypatch.setenv("ALPACA_PROTECTIVE_EXIT_ACK", "PROTECTIVE_EXITS_ONLY")
+        monkeypatch.setenv("ALPACA_ALLOW_NEW_ENTRIES", "0")
+    for name, value in (extra_env or {}).items():
+        monkeypatch.setenv(name, str(value))
+    if seed_state:
+        runtime = Path((extra_env or {}).get(
+            "ALPACA_PROTECTIVE_EXIT_RUNTIME_DIR",
+            tmp_path / "runtime" / (
+                "alpaca_paper_protective_exit" if base_url == PAPER_URL else "alpaca_live_v38"
+            ),
+        ))
+        state_path = Path((extra_env or {}).get(
+            "ALPACA_PROTECTIVE_EXIT_HWM_PATH",
+            runtime / "protective_exit_hwm.json",
+        ))
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+        state_path.write_text("{}")
+    monkeypatch.setattr(sys, "argv", ["alpaca_protective_exit_manager.py"] + (["--apply"] if apply else []))
+    return manager._main_unlocked()
 
 
 def _position(price=105.0, entry=100.0, qty=0.5):
@@ -163,3 +253,114 @@ def test_confirmed_stop_requires_fixed_sell_and_full_coverage():
         symbol="SCHW",
         position_qty=0.5,
     )
+
+
+def test_paper_apply_replaces_stop_and_confirms_broker_readback(monkeypatch, tmp_path, capsys):
+    assert _run_manager(monkeypatch, tmp_path, apply=True) == 0
+
+    receipt = json.loads(capsys.readouterr().out)
+    assert _FakeBroker.instances[0].base_url == PAPER_URL
+    assert _FakeBroker.instances[0].replace_payloads == [{"stop_price": "101.32"}]
+    assert receipt["mode"] == "apply"
+    assert receipt["results"] == [{
+        "symbol": "SCHW",
+        "status": "confirmed",
+        "old_order_id": "stop-1",
+        "new_order_id": "stop-2",
+        "target_stop": 101.32,
+        "confirmed_stop": 101.32,
+        "confirmed_tif": "day",
+    }]
+
+
+def test_paper_restart_keeps_accepted_floor_and_high_water_mark(monkeypatch, tmp_path, capsys):
+    assert _run_manager(monkeypatch, tmp_path, apply=True) == 0
+    runtime = tmp_path / "runtime" / "alpaca_paper_protective_exit"
+    first_state = json.loads((runtime / "protective_exit_hwm.json").read_text())
+    assert first_state["SCHW"]["hwm"] == 105.0
+    assert first_state["SCHW"]["accepted_stop_floor"] == 101.32
+
+    _FakeBroker.current_price = 104.0
+    _FakeBroker.existing_stop = 101.32
+    # Keep the broker state across the process restart while retaining the fake
+    # client's external boundary behavior.
+    monkeypatch.setattr(manager, "AlpacaClient", _FakeBroker)
+    monkeypatch.setenv("ALPACA_API_KEY_ID", "test-key")
+    monkeypatch.setenv("ALPACA_API_SECRET_KEY", "test-secret")
+    monkeypatch.setenv("ALPACA_BASE_URL", PAPER_URL)
+    monkeypatch.setenv("ALPACA_PROTECTIVE_EXIT_ACK", "PROTECTIVE_EXITS_ONLY")
+    monkeypatch.setenv("ALPACA_ALLOW_NEW_ENTRIES", "0")
+    monkeypatch.setattr(sys, "argv", ["alpaca_protective_exit_manager.py", "--apply"])
+    assert manager._main_unlocked() == 0
+    second_state = json.loads((runtime / "protective_exit_hwm.json").read_text())
+    assert second_state["SCHW"]["hwm"] == 105.0
+    assert second_state["SCHW"]["accepted_stop_floor"] == 101.32
+    assert _FakeBroker.instances[-1].replace_payloads == []
+
+
+def test_live_apply_preserves_live_default_runtime(monkeypatch, tmp_path):
+    assert _run_manager(monkeypatch, tmp_path, base_url=LIVE_URL, apply=True) == 0
+    assert (tmp_path / "runtime" / "alpaca_live_v38" / "protective_exit_hwm.json").is_file()
+    assert not (tmp_path / "runtime" / "alpaca_paper_protective_exit").exists()
+
+
+@pytest.mark.parametrize("base_url", ["https://example.invalid", "http://paper-api.alpaca.markets"])
+def test_unapproved_endpoint_is_rejected_before_authenticated_client(monkeypatch, tmp_path, capsys, base_url):
+    assert _run_manager(monkeypatch, tmp_path, base_url=base_url, seed_state=False) == 4
+    assert _FakeBroker.instances == []
+    assert "error=invalid_alpaca_endpoint" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("base_url", "env", "expected_code", "expected_error"),
+    [
+        (base_url, env, code, error)
+        for base_url in (PAPER_URL, LIVE_URL)
+        for env, code, error in (
+            ({"ALPACA_PROTECTIVE_EXIT_ACK": ""}, 3, "error=missing_protective_exit_ack"),
+            ({"ALPACA_ALLOW_NEW_ENTRIES": "1"}, 5, "error=protective_manager_requires_new_entries_off"),
+        )
+    ],
+)
+def test_apply_keeps_ack_and_new_entry_guards(
+    monkeypatch, tmp_path, capsys, base_url, env, expected_code, expected_error,
+):
+    assert _run_manager(
+        monkeypatch, tmp_path, base_url=base_url, apply=True, extra_env=env,
+    ) == expected_code
+    assert _FakeBroker.instances == []
+    assert expected_error in capsys.readouterr().err
+
+
+def test_paper_default_runtime_is_isolated_and_explicit_paper_runtime_is_allowed(monkeypatch, tmp_path):
+    assert _run_manager(monkeypatch, tmp_path) == 0
+    default_runtime = tmp_path / "runtime" / "alpaca_paper_protective_exit"
+    assert (default_runtime / "protective_exit_hwm.json").is_file()
+    assert (default_runtime / "protective_exit_latest.json").is_file()
+
+    explicit_runtime = tmp_path / "paper-receipts"
+    assert _run_manager(
+        monkeypatch,
+        tmp_path,
+        extra_env={"ALPACA_PROTECTIVE_EXIT_RUNTIME_DIR": explicit_runtime},
+    ) == 0
+    assert (explicit_runtime / "protective_exit_hwm.json").is_file()
+    assert (explicit_runtime / "protective_exit_latest.json").is_file()
+
+
+@pytest.mark.parametrize("setting", [
+    "ALPACA_PROTECTIVE_EXIT_RUNTIME_DIR",
+    "ALPACA_PROTECTIVE_EXIT_HWM_PATH",
+    "ALPACA_PROTECTIVE_EXIT_RECEIPT_PATH",
+])
+def test_paper_rejects_live_runtime_paths_including_symlink(monkeypatch, tmp_path, capsys, setting):
+    live_runtime = tmp_path / "runtime" / "alpaca_live_v38"
+    live_runtime.mkdir(parents=True)
+    alias = tmp_path / "paper-alias"
+    alias.symlink_to(live_runtime, target_is_directory=True)
+    path = alias if setting.endswith("RUNTIME_DIR") else alias / (
+        "protective_exit_hwm.json" if setting.endswith("HWM_PATH") else "protective_exit_latest.json"
+    )
+    assert _run_manager(monkeypatch, tmp_path, extra_env={setting: path}, seed_state=False) == 8
+    assert _FakeBroker.instances == []
+    assert "error=paper_runtime_overlaps_live_runtime" in capsys.readouterr().err

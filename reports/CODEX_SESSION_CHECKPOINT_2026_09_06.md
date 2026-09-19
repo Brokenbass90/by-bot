@@ -2,6 +2,28 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 19, Alpaca first (owner reprioritized)**:
+- PAPER endpoint support implemented in existing protection manager; frozen strategy
+  unchanged. 61 focused tests PASS on Mac and VPS Python 3.12.3, 13 hashes match.
+  Candidate staged in isolated `/tmp/alpaca-paper-endpoint-20260919-v1` only;
+  production files/cron/broker orders were NOT changed. Not a service deployment.
+- All five PAPER positions traced by exact filled order IDs: ABNB/ABT/MA/SCHW
+  are legacy adaptive; AMZN is intraday (state + log + broker qty/ID match).
+  Do not treat AMZN as ownerless or adopt it into intended Alpaca.
+- Historical broker stop levels found for all four adaptive positions; current
+  open orders zero in CLOSED session. ABNB/ABT/MA HWM recovery remains unresolved;
+  monthly HWM file is empty. No synthetic HWM or floor state was written.
+- Intended operational evidence remains **0/7**, readiness FALSE. Fix/lineage
+  do not replace real intended PAPER startup/fill/DAY/re-arm/restart/kill receipts.
+- Next: audited legacy floor/HWM recovery and frozen intended PAPER wiring;
+  existing seven broker steps; dossier; owner live amount/approval. Then ATT1,
+  then SBR1. ATT1 services/risk and public shadow untouched this cycle.
+- Receipt: `reports/ALPACA_PAPER_PROGRESS_2026_09_19.json`. Full suite collection
+  remains blocked by missing yfinance; focused suite is not full-suite PASS.
+- Worker actually ran `gpt-5.6-terra / medium`, checked in runtime metadata.
+
+Earlier analysis snapshot (superseded above):
+
 Latest owner handoff — **September 19, analysis only**:
 - Scope updated: Codex owns ATT1 production + Alpaca frozen packet to VPS/PAPER.
   Claude owns existing registry/Factory and Gold. Earlier Alpaca pause below

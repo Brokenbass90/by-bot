@@ -1,0 +1,86 @@
+{
+  "generated_at_utc": "2026-09-19T13:44:34.255141+00:00",
+  "scope": "PAPER endpoint fix and read-only legacy position lineage; no strategy changes",
+  "paper_account_read": "PASS",
+  "ownership": {
+    "adaptive": [
+      "ABNB",
+      "ABT",
+      "MA",
+      "SCHW"
+    ],
+    "intraday": [
+      "AMZN"
+    ],
+    "method": "Exact broker filled buy order IDs matched to existing owner logs; AMZN also matches intraday state qty/order ID",
+    "legacy_positions_are_new_intended_evidence": false
+  },
+  "protection": {
+    "broker_historical_stop_levels": {
+      "ABNB": 180.97,
+      "ABT": 110.32,
+      "MA": 569.4,
+      "SCHW": 106.66
+    },
+    "current_open_orders": 0,
+    "clock": "market closed at snapshot",
+    "stop_history_count": 36,
+    "history_limit": 500,
+    "historical_orders_are_active_protection": false,
+    "hwm_recovery": "NOT_CONFIRMED for ABNB/ABT/MA; monthly HWM file empty; do not seed from current price",
+    "floor_recovery_applied": false
+  },
+  "endpoint_fix": {
+    "paper_apply_supported": true,
+    "live_guards_preserved": true,
+    "paper_default_state_isolated": true,
+    "known_live_path_and_symlink_rejected": true,
+    "production_deployed": false,
+    "vps_candidate_path": "/tmp/alpaca-paper-endpoint-20260919-v1",
+    "vps_candidate_is_active_service": false,
+    "file_sha256": {
+      "scripts/alpaca_protective_exit_manager.py": "1a2246fbfbcf3ad6bf84aab855fa20f4fb826e5aaa0d96e1e8ae707aa875a509",
+      "scripts/equities_alpaca_paper_bridge.py": "2b4d2b8c9f913d3595510a0d302fd0c327e5c876c631538f80d7e92adcb2dd1a",
+      "scripts/equities_earnings_filter.py": "299921b7b5aaf8ea0c13341e5d3e406988368805224e629bbc216563a95496cb",
+      "bot/alpaca_truth.py": "8e7e11ca858eff8de6e1b2f21848455ab90ff7369017b7a20d6085b62f8f1d80",
+      "tests/test_alpaca_protective_exit_manager.py": "ca83241886c511263d3a3a44d306fa12709245a5e8e66bc27178b53065d3d66a",
+      "tests/test_alpaca_truth.py": "b07d7076f770cb615acd69652ae8bf53d22bbe275079f586aceff3330ac053d3",
+      "tests/test_alpaca_monthly_trailing.py": "2931d007dc1ac7eff42e1584250bbc843e96c09d8cc36bfa8e99203d839a6976",
+      "configs/alpaca_v38_hybrid_top4_candidate.env": "aa166e5a80d782e525bbeae1f21d2a1c0ce7006273588b1dfe971c8f09e4c29e",
+      "configs/alpaca_v38_active_paper_candidate.env": "694778934ad96c776344664ca7c0f4e2c7a09579dfc2a2ba1ff8772287c12a14",
+      "configs/alpaca_paper_v36_candidate.env": "c33ac2b96ba6cd7f4ff00ac4bec0161e6d702e9b0d99466f64d47b6729a2208d",
+      "configs/alpaca_v38_whole_share_paper_default_off.env": "0edf7cf270675bb26b3ee82554a5a0e547088fd3e7734268a6b09f96d2d864a0",
+      "scripts/run_alpaca_whole_share_paper_once.sh": "9fcaddec99f662f430c0267a7295d1b9831a8c1b90e3445c571612ba2332231c",
+      "scripts/run_alpaca_live_v38_once.sh": "0005a906c690eab9d3985bbadb1915ef21fa6bc23900d30d4404eba4ad7943a1"
+    }
+  },
+  "validation": {
+    "mac_focused_tests": 61,
+    "vps_focused_tests": 61,
+    "vps_python": "3.12.3",
+    "all_13_hashes_match": true,
+    "full_suite": "Collection blocked by existing missing yfinance import in test_alpaca_adaptive_paper.py; not a full-suite PASS",
+    "initial_vps_attempt": "58 passed, 3 missing static fixture files; supplied exact fixtures, then 61 passed"
+  },
+  "operational_evidence_pass": 0,
+  "operational_evidence_total": 7,
+  "ready_for_canary": false,
+  "money_enabled": false,
+  "next_action": "Recover auditable floor/HWM for legacy-owned positions without adopting AMZN; wire frozen intended PAPER profile, then existing seven broker protocol rows",
+  "private_evidence_sha256": {
+    "intraday_ownership.json": "1a5b8db3e8246f97b1a8bc5332275ebb1d44106bc23cfb296e1be1135c9d3e72",
+    "amzn_lineage_matches.json": "b591386f4af2a0282a55a4e58b13410167e2d865acf990b606ec09246954e8fb",
+    "hwm_lineage.json": "beaa0f10ed5741c3a41f4a18830bfb054f1d9f2402161bdef9ba3f5bbbb5d2e9",
+    "adaptive_entry_lineage.json": "7ed149614c0d0ccea95838fb92bafed89d0e11338fe28f75791d6d117d21012c",
+    "owned_orders.json": "bde5fcc25b9dc23e67e8bb592e45dc704476682251f8e3c2c6d06c6d73ef7f5a",
+    "sep1_log_windows.json": "484b3296d5cb900ed9e19b2bdadf6334467b427abdcd185b0645ac8825202d01",
+    "paper_truth.json": "c802e06df11d7ab15339282fd222c663d1d53a7d172ffab3eec321b6c90a73e6"
+  },
+  "worker": {
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "verified": "thread metadata and rollout turn_context"
+  },
+  "broker_next_open_snapshot": "2026-09-21T13:30:00Z",
+  "schedule_is_completion_promise": false
+}
