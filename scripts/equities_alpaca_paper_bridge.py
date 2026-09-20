@@ -1259,6 +1259,283 @@ def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
     _atomic_write_json(path, state)
 
 
+class IntendedPaperProtectionError(RuntimeError):
+    """An intended-paper entry cannot be proven terminal and protected."""
+
+
+_INTENDED_PAPER_STRATEGY_ID = "ALPACA-BASELINE-26f7ff663dc98e87"
+
+
+def _intended_finite_positive(value: Any) -> float | None:
+    parsed = _safe_float(value, 0.0)
+    return parsed if math.isfinite(parsed) and parsed > 0 else None
+
+
+def _validated_existing_intended_lifecycle(record: Any, account_id: str) -> dict[str, Any]:
+    if not isinstance(record, dict):
+        raise IntendedPaperProtectionError("existing_lifecycle_corrupt")
+    required = {
+        "entry_order_id", "entry_price", "qty", "hwm", "accepted_stop_floor",
+        "lifecycle_first_seen_at_utc", "account_id", "strategy_id",
+    }
+    if not required.issubset(record):
+        raise IntendedPaperProtectionError("existing_lifecycle_corrupt")
+    if not str(record.get("entry_order_id") or "").strip():
+        raise IntendedPaperProtectionError("existing_lifecycle_corrupt")
+    if str(record.get("account_id") or "").strip() != account_id:
+        raise IntendedPaperProtectionError("existing_lifecycle_account_mismatch")
+    if str(record.get("strategy_id") or "").strip() != _INTENDED_PAPER_STRATEGY_ID:
+        raise IntendedPaperProtectionError("existing_lifecycle_strategy_mismatch")
+    if any(_intended_finite_positive(record.get(field)) is None for field in (
+        "entry_price", "qty", "hwm", "accepted_stop_floor"
+    )):
+        raise IntendedPaperProtectionError("existing_lifecycle_nonfinite_or_nonpositive")
+    if _parse_iso_utc(str(record.get("lifecycle_first_seen_at_utc") or "")) is None:
+        raise IntendedPaperProtectionError("existing_lifecycle_invalid_timestamp")
+    return record
+
+
+def _intended_frozen_weights(picks: Iterable[Pick]) -> dict[str, float]:
+    """Validate frozen intended-paper sleeve weights without redistributing them."""
+    weights: dict[str, float] = {}
+    for pick in picks:
+        symbol = str(pick.ticker or "").strip().upper()
+        if not symbol:
+            raise IntendedPaperProtectionError("intended_weight_missing_symbol")
+        if symbol in weights:
+            raise IntendedPaperProtectionError("intended_weight_duplicate_symbol")
+        weight = pick.weight
+        if weight is None or not math.isfinite(float(weight)) or not 0.0 < float(weight) <= 0.60:
+            raise IntendedPaperProtectionError(f"intended_weight_invalid:{symbol}")
+        weights[symbol] = float(weight)
+    if sum(weights.values()) > 1.0 + 1e-9:
+        raise IntendedPaperProtectionError("intended_weight_total_invalid")
+    return weights
+
+
+def _halt_intended_paper_entries(state_dir: Path, account_id: str, reason: str) -> None:
+    _atomic_write_json(
+        _paper_kill_state_path(state_dir),
+        {
+            "halted": True,
+            "account_id": str(account_id),
+            "reason": str(reason),
+            "updated_at_utc": datetime.now(timezone.utc).isoformat(),
+        },
+    )
+
+
+def _validate_intended_entry_readback(
+    confirmed: Any, *, order_id: str, expected_symbol: str
+) -> dict[str, Any]:
+    if not isinstance(confirmed, dict):
+        raise IntendedPaperProtectionError("entry_readback_invalid")
+    if str(confirmed.get("id") or "").strip() != order_id:
+        raise IntendedPaperProtectionError("entry_id_mismatch")
+    if str(confirmed.get("symbol") or "").strip().upper() != expected_symbol.strip().upper():
+        raise IntendedPaperProtectionError("entry_symbol_mismatch")
+    if str(confirmed.get("side") or "").strip().lower() != "buy":
+        raise IntendedPaperProtectionError("entry_side_mismatch")
+    return confirmed
+
+
+def _terminal_intended_entry(
+    client: Any,
+    entry_order: dict[str, Any],
+    *,
+    expected_symbol: str,
+    timeout_sec: float = 0.0,
+) -> dict[str, Any]:
+    """Cancel an active entry, then accept only a terminal broker readback."""
+    order_id = str(entry_order.get("id") or "").strip()
+    if not order_id:
+        raise IntendedPaperProtectionError("entry_missing_order_id")
+    try:
+        confirmed = client.get_order(order_id)
+    except Exception as exc:
+        raise IntendedPaperProtectionError("entry_readback_failed") from exc
+    confirmed = _validate_intended_entry_readback(
+        confirmed, order_id=order_id, expected_symbol=expected_symbol
+    )
+    status = str(confirmed.get("status") or "").strip().lower()
+    deadline = time.monotonic() + max(0.0, timeout_sec)
+    while status in _ACTIVE_ORDER_STATUSES and time.monotonic() < deadline:
+        time.sleep(max(0.0, min(0.25, deadline - time.monotonic())))
+        try:
+            confirmed = client.get_order(order_id)
+        except Exception as exc:
+            raise IntendedPaperProtectionError("entry_wait_readback_failed") from exc
+        confirmed = _validate_intended_entry_readback(
+            confirmed, order_id=order_id, expected_symbol=expected_symbol
+        )
+        status = str(confirmed.get("status") or "").strip().lower()
+    if status in _ACTIVE_ORDER_STATUSES:
+        try:
+            client.cancel_order(order_id)
+            confirmed = client.get_order(order_id)
+        except Exception as exc:
+            raise IntendedPaperProtectionError("entry_cancel_readback_failed") from exc
+        confirmed = _validate_intended_entry_readback(
+            confirmed, order_id=order_id, expected_symbol=expected_symbol
+        )
+        status = str(confirmed.get("status") or "").strip().lower()
+    if status not in {"filled", "canceled", "expired"}:
+        raise IntendedPaperProtectionError(f"entry_not_terminal:{status or 'unknown'}")
+    qty = _intended_finite_positive(confirmed.get("filled_qty"))
+    avg = _intended_finite_positive(confirmed.get("filled_avg_price"))
+    if qty is None or avg is None:
+        raise IntendedPaperProtectionError("entry_terminal_without_positive_fill")
+    return confirmed
+
+
+def _confirmed_intended_stop(
+    client: Any,
+    stop_order: dict[str, Any],
+    *,
+    symbol: str,
+    qty: float,
+    requested_stop: float,
+) -> dict[str, Any]:
+    """Require an exact fixed-stop broker readback before a success is recorded."""
+    order_id = str(stop_order.get("id") or "").strip()
+    if not order_id:
+        raise IntendedPaperProtectionError("stop_missing_order_id")
+    try:
+        confirmed = client.get_order(order_id)
+    except Exception as exc:
+        raise IntendedPaperProtectionError("stop_readback_failed") from exc
+    if not isinstance(confirmed, dict):
+        raise IntendedPaperProtectionError("stop_readback_invalid")
+    if str(confirmed.get("id") or "").strip() != order_id:
+        raise IntendedPaperProtectionError("stop_id_mismatch")
+    if str(confirmed.get("symbol") or "").strip().upper() != symbol.strip().upper():
+        raise IntendedPaperProtectionError("stop_symbol_mismatch")
+    if str(confirmed.get("side") or "").strip().lower() != "sell":
+        raise IntendedPaperProtectionError("stop_side_mismatch")
+    if str(confirmed.get("type") or confirmed.get("order_type") or "").strip().lower() != "stop":
+        raise IntendedPaperProtectionError("stop_type_mismatch")
+    if str(confirmed.get("status") or "").strip().lower() not in {"accepted", "new"}:
+        raise IntendedPaperProtectionError("stop_not_accepted")
+    order_qty = _intended_finite_positive(confirmed.get("qty"))
+    filled_qty = _safe_float(confirmed.get("filled_qty"), 0.0)
+    if order_qty is None or not math.isfinite(filled_qty) or filled_qty < 0:
+        raise IntendedPaperProtectionError("stop_invalid_qty")
+    if confirmed.get("leaves_qty") not in {None, ""}:
+        leaves = _safe_float(confirmed.get("leaves_qty"), 0.0)
+        if not math.isfinite(leaves) or leaves < 0:
+            raise IntendedPaperProtectionError("stop_invalid_remaining_qty")
+    remaining = _intended_finite_positive(_remaining_sell_order_qty(confirmed))
+    if remaining is None:
+        raise IntendedPaperProtectionError("stop_invalid_remaining_qty")
+    tolerance = max(1e-9, qty * 1e-6)
+    if abs(remaining - qty) > tolerance:
+        raise IntendedPaperProtectionError("stop_remaining_qty_mismatch")
+    expected_tif = _persistent_exit_tif_for_qty("", qty)
+    if str(confirmed.get("time_in_force") or "").strip().lower() != expected_tif:
+        raise IntendedPaperProtectionError("stop_tif_mismatch")
+    requested_normalized = _intended_finite_positive(_format_price(requested_stop))
+    confirmed_stop = _intended_finite_positive(confirmed.get("stop_price"))
+    if requested_normalized is None or confirmed_stop is None:
+        raise IntendedPaperProtectionError("stop_invalid_price")
+    if confirmed_stop + 1e-12 < requested_normalized:
+        raise IntendedPaperProtectionError("stop_below_requested_floor")
+    return confirmed
+
+
+def _complete_intended_paper_simple_stop(
+    *,
+    client: Any,
+    base_url: str,
+    state_dir: Path,
+    ledger_path: Path,
+    account_id: str,
+    entry_order: dict[str, Any],
+    stop_order: dict[str, Any],
+    symbol: str,
+    requested_stop: float,
+) -> dict[str, Any]:
+    """Bind a terminal intended-paper fill to its broker-confirmed fixed floor."""
+    if base_url != _PAPER_API_URL:
+        raise IntendedPaperProtectionError("intended_paper_requires_exact_paper_endpoint")
+    account_id = str(account_id or "").strip()
+    if not account_id:
+        raise IntendedPaperProtectionError("intended_paper_missing_account_id")
+    sym = str(symbol or "").strip().upper()
+    if not sym:
+        raise IntendedPaperProtectionError("intended_paper_missing_symbol")
+    try:
+        entry = _terminal_intended_entry(client, entry_order, expected_symbol=sym)
+        qty = _intended_finite_positive(entry.get("filled_qty"))
+        entry_price = _intended_finite_positive(entry.get("filled_avg_price"))
+        if qty is None or entry_price is None:
+            raise IntendedPaperProtectionError("entry_terminal_without_positive_fill")
+        stop = _confirmed_intended_stop(
+            client, stop_order, symbol=sym, qty=qty, requested_stop=requested_stop
+        )
+        first_seen = next(
+            (str(entry.get(field) or "").strip()
+             for field in ("filled_at", "submitted_at", "created_at")
+             if str(entry.get(field) or "").strip()),
+            "",
+        )
+        if not first_seen:
+            raise IntendedPaperProtectionError("entry_missing_broker_lifecycle_timestamp")
+        if _parse_iso_utc(first_seen) is None:
+            raise IntendedPaperProtectionError("entry_invalid_broker_lifecycle_timestamp")
+        state, state_error = _load_protective_floor_state(ledger_path)
+        if state_error and state_error != "state_missing":
+            raise IntendedPaperProtectionError(f"protective_floor_state_corrupt:{state_error}")
+        existing = state.get(sym)
+        entry_id = str(entry.get("id") or "").strip()
+        stop_price = _intended_finite_positive(stop.get("stop_price"))
+        if stop_price is None:
+            raise IntendedPaperProtectionError("stop_invalid_price")
+        if isinstance(existing, dict):
+            existing = _validated_existing_intended_lifecycle(existing, account_id)
+            same_lifecycle = (
+                str(existing.get("entry_order_id") or "").strip() == entry_id
+                and str(existing.get("account_id") or "").strip() == account_id
+                and str(existing.get("strategy_id") or "").strip() == _INTENDED_PAPER_STRATEGY_ID
+                and abs(_safe_float(existing.get("entry_price"), 0.0) - entry_price) <= max(0.01, entry_price * 1e-4)
+                and abs(_safe_float(existing.get("qty"), 0.0) - qty) <= max(1e-9, qty * 1e-6)
+            )
+            if not same_lifecycle:
+                raise IntendedPaperProtectionError("conflicting_existing_lifecycle")
+            if stop_price + 1e-12 < float(existing["accepted_stop_floor"]):
+                raise IntendedPaperProtectionError("stop_below_durable_floor")
+            hwm = max(entry_price, _safe_float(existing.get("hwm"), 0.0))
+            floor = max(stop_price, _safe_float(existing.get("accepted_stop_floor"), 0.0))
+            first_seen = str(existing["lifecycle_first_seen_at_utc"])
+            record = dict(existing)
+        elif existing is None:
+            hwm, floor, record = entry_price, stop_price, {}
+        else:
+            raise IntendedPaperProtectionError("existing_lifecycle_corrupt")
+        record.update({
+            "entry_price": entry_price,
+            "qty": qty,
+            "hwm": hwm,
+            "accepted_stop_floor": floor,
+            "entry_order_id": entry_id,
+            "accepted_order_id": str(stop.get("id") or "").strip(),
+            "accepted_order_tif": str(stop.get("time_in_force") or "").strip().lower(),
+            "lifecycle_first_seen_at_utc": first_seen,
+            "account_id": account_id,
+            "strategy_id": _INTENDED_PAPER_STRATEGY_ID,
+        })
+        state[sym] = record
+        _atomic_write_json(ledger_path, state)
+        return record
+    except Exception as exc:
+        try:
+            _halt_intended_paper_entries(state_dir, account_id, str(exc))
+        except Exception as halt_exc:
+            raise IntendedPaperProtectionError("intended_paper_halt_persist_failed") from halt_exc
+        if isinstance(exc, IntendedPaperProtectionError):
+            raise
+        raise IntendedPaperProtectionError("intended_paper_protection_failed") from exc
+
+
 def _update_hwm(
     state: dict[str, dict[str, Any]],
     positions: dict[str, dict[str, Any]],
@@ -1946,6 +2223,15 @@ def _main_unlocked() -> int:
     key_id = _env("ALPACA_API_KEY_ID")
     secret_key = _env("ALPACA_API_SECRET_KEY")
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
+    intended_paper = _env_bool("ALPACA_INTENDED_PAPER", False)
+    if intended_paper and base_url != _PAPER_API_URL:
+        print("error=intended_paper_requires_exact_paper_endpoint", file=sys.stderr)
+        return 8
+    try:
+        intended_frozen_weights = _intended_frozen_weights(picks) if intended_paper else {}
+    except IntendedPaperProtectionError as exc:
+        print(f"error={exc}", file=sys.stderr)
+        return 8
     paper_halt_active = paper_entry_halted(
         base_url=base_url,
         state_dir=_paper_kill_state_dir(base_url, key_id),
@@ -2063,6 +2349,13 @@ def _main_unlocked() -> int:
             picks = current_cycle_picks
             latest_entry_day = current_entry_day
             pick_age_days = current_pick_age_days
+
+    if intended_paper:
+        try:
+            intended_frozen_weights = _intended_frozen_weights(picks)
+        except IntendedPaperProtectionError as exc:
+            print(f"error={exc}", file=sys.stderr)
+            return 8
 
     stale_guard_triggered = (
         pick_age_days is not None
@@ -2243,7 +2536,17 @@ def _main_unlocked() -> int:
             base = base / max(0.5, math.sqrt(p.atr20_pct))
         return base
 
-    if (weighted_sizing or atr_adjusted_sizing) and all_active:
+    if intended_paper:
+        score_weights = {
+            p.ticker: intended_frozen_weights[p.ticker]
+            for p in all_active
+        }
+        per_ticker_notional = {
+            ticker: effective_capital * target_alloc_pct * weight
+            for ticker, weight in score_weights.items()
+        }
+        per_position_notional = 0.0
+    elif (weighted_sizing or atr_adjusted_sizing) and all_active:
         raw = {p.ticker: _raw_weight(p) for p in all_active}
         # Hard clamp: no position may exceed 60% of the sleeve.  Do not
         # renormalize capped weights upward; the unused sleeve remains cash.
@@ -2466,8 +2769,36 @@ def _main_unlocked() -> int:
             }
         )
 
+    intended_paper_entry_halted = False
+
     def _submit_buy_action(pick: Pick, *, action: str, notional: float) -> None:
+        nonlocal intended_paper_entry_halted
         score_weight = round(score_weights.get(pick.ticker, 0.0), 4)
+        if intended_paper_entry_halted or paper_entry_halted(
+            base_url=base_url,
+            state_dir=_paper_kill_state_dir(base_url, key_id),
+        ):
+            report["results"].append(
+                {
+                    "ticker": pick.ticker,
+                    "action": action,
+                    "status": "skipped_paper_entry_halted",
+                    "notional": round(notional, 2),
+                    "score_weight": score_weight,
+                }
+            )
+            return
+        if intended_paper and notional < min_dollar_order:
+            report["results"].append(
+                {
+                    "ticker": pick.ticker,
+                    "action": action,
+                    "status": "skipped_below_minimum_order",
+                    "notional": round(notional, 2),
+                    "score_weight": score_weight,
+                }
+            )
+            return
         # 2026-06-02: skip BUY submissions while market is closed.
         if not offline_dry_run and not _market_is_open:
             report["results"].append(
@@ -2533,15 +2864,36 @@ def _main_unlocked() -> int:
                     return
             elif broker_protection_order_class == "simple_stop":
                 try:
+                    if intended_paper and protective_floor_state_error not in {"", "state_missing"}:
+                        raise IntendedPaperProtectionError(
+                            f"protective_floor_state_corrupt:{protective_floor_state_error}"
+                        )
+                    if intended_paper and pick.ticker in protective_floor_state:
+                        _validated_existing_intended_lifecycle(
+                            protective_floor_state[pick.ticker],
+                            str(account.get("id") or "").strip(),
+                        )
+                        raise IntendedPaperProtectionError("existing_lifecycle_unreconciled")
                     qty = float(spec.get("qty") or 0.0)
                     if qty <= 0:
                         raise RuntimeError("simple_stop requires qty sizing")
                     entry_order = client.submit_market_buy_qty(pick.ticker, qty)  # type: ignore[union-attr]
-                    filled_qty, entry_status, filled_avg_price = _wait_for_fill_details(
-                        client,  # type: ignore[arg-type]
-                        entry_order,
-                        timeout_sec=broker_wait_fill_sec,
-                    )
+                    if intended_paper:
+                        final_entry = _terminal_intended_entry(
+                            client,
+                            entry_order,
+                            expected_symbol=pick.ticker,
+                            timeout_sec=broker_wait_fill_sec,
+                        )  # type: ignore[arg-type]
+                        filled_qty = _safe_float(final_entry.get("filled_qty"), 0.0)
+                        filled_avg_price = _safe_float(final_entry.get("filled_avg_price"), 0.0)
+                        entry_status = str(final_entry.get("status") or "").strip().lower()
+                    else:
+                        filled_qty, entry_status, filled_avg_price = _wait_for_fill_details(
+                            client,  # type: ignore[arg-type]
+                            entry_order,
+                            timeout_sec=broker_wait_fill_sec,
+                        )
                     if filled_qty <= 0:
                         order_id = str(entry_order.get("id") or "").strip()
                         if order_id:
@@ -2566,6 +2918,18 @@ def _main_unlocked() -> int:
                             filled_qty,
                         ),
                     )
+                    if intended_paper:
+                        _complete_intended_paper_simple_stop(
+                            client=client,  # type: ignore[arg-type]
+                            base_url=base_url,
+                            state_dir=_paper_kill_state_dir(base_url, key_id),
+                            ledger_path=protective_floor_state_path,
+                            account_id=str(account.get("id") or ""),
+                            entry_order=entry_order,
+                            stop_order=stop_order,
+                            symbol=pick.ticker,
+                            requested_stop=stop_price,
+                        )
                     report["results"].append(
                         {
                             "ticker": pick.ticker,
@@ -2586,15 +2950,26 @@ def _main_unlocked() -> int:
                     return
                 except RuntimeError as exc:
                     if broker_protection_required:
-                        try:
-                            client.close_position(pick.ticker)  # type: ignore[union-attr]
-                        except RuntimeError:
-                            pass
+                        if intended_paper:
+                            intended_paper_entry_halted = True
+                            try:
+                                _halt_intended_paper_entries(
+                                    _paper_kill_state_dir(base_url, key_id),
+                                    str(account.get("id") or ""),
+                                    str(exc),
+                                )
+                            except Exception:
+                                pass
+                        else:
+                            try:
+                                client.close_position(pick.ticker)  # type: ignore[union-attr]
+                            except RuntimeError:
+                                pass
                         report["results"].append(
                             {
                                 "ticker": pick.ticker,
                                 "action": "protected_market_buy" if action == "market_buy" else "replacement_protected_market_buy",
-                                "status": "error_closed_if_needed",
+                                "status": "not_confirmed_halted" if intended_paper else "error_closed_if_needed",
                                 "error": str(exc),
                                 "notional": round(notional, 2),
                                 "score_weight": score_weight,

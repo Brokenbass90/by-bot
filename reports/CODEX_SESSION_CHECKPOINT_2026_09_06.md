@@ -2,6 +2,32 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 20, intended PAPER fill/floor binding + sizing**:
+- Default-off `ALPACA_INTENDED_PAPER=1` now binds terminal actual fill and
+  broker-confirmed stop to the existing durable floor/HWM state. Partial fills
+  require cancellation + terminal readback; uncertain orders halt new entries.
+- Identity/account/strategy/finite-value checks fail closed. A broker stop below
+  durable floor cannot report protection; an unreconciled prior lifecycle blocks
+  a new buy before submission. Ratchet preserves entry ownership metadata.
+- Frozen sizing uses explicit weights without redistribution or minimum-order
+  inflation. Empty no-signal picks remain valid; small allocations are skipped.
+- Mac integration fixture proves fill → ratchet → restart lifecycle-state
+  equality → existing DAY re-arm floor calculation. Invalid quote cannot replace
+  trusted HWM. This is NOT a real broker/scheduler lifecycle receipt.
+- **120 focused Mac PASS; 131 target PASS including 11 legacy checks.** Python
+  3.12.3; all 43 source hashes match. Isolated candidate:
+  `/tmp/alpaca-paper-fill-floor-20260920-v1`. NOT production; no cron/order changes.
+- **Next code step:** broker-filled stop exit → existing 21-calendar-day reentry
+  record before lifecycle retirement; then finish existing intended runner
+  ownership/emergency/re-arm scheduling and prospective PAPER deployment.
+  Legacy missing-HWM PAPER recovery is prepared, not executed. AMZN remains
+  intraday-owned. Do not claim that the market is the only remaining blocker.
+- **0/7 real intended broker receipts; READY_FOR_CANARY=FALSE.** Receipt:
+  `reports/ALPACA_PAPER_PREPARATION_2026_09_20.json`, execution_binding_continuation.
+  ATT1/LIVE/risk unchanged. Worker `gpt-5.6-terra / medium` runtime verified.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 20, Alpaca preparation**:
 - Frozen selector/config/aggregator match the research checkout. Existing
   rehearsal reproduced 4/4 symbols, notionals and actual-fill stop distances.

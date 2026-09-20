@@ -10,9 +10,22 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 Latest owner order supersedes the numbered historical snapshot below:
 **Alpaca frozen PAPER 7/7 → dossier → ATT1 dossier → SBR1**.
 PAPER endpoint fixed and target-tested; all five legacy owners resolved.
-Next: legacy floor/HWM recovery and frozen intended PAPER wiring.
-See `reports/ALPACA_PAPER_PROGRESS_2026_09_19.json`; 0/7 intended broker receipts.
+Historical ABNB/ABT/MA HWM is unavailable; do not invent recovery values.
+The existing proof-scoped PAPER emergency path is prepared but not executed.
+Fill/floor/restart fixture and frozen sizing now pass on Mac and target Python;
+the candidate is staged, not deployed. Next: broker-stop exit reconciliation/
+reentry and existing intended runner ownership/emergency/scheduled operation. Then collect the existing
+seven receipts. See the canonical checkpoint; still 0/7 intended broker receipts.
 ATT1 continues unchanged while Codex closes Alpaca.
+
+Delivery order: deploy and verify PAPER operation → real fill/stop receipt →
+DAY expiry and next-session re-arm/restart/kill receipts → dossier → separate
+owner-approved tiny live. The cross-session check requires at least two trading
+sessions after runtime readiness; no calendar promise until deployment is proven.
+After Alpaca, finish NEW ATT1; then restore SBR1, XSEC PIT and Bull Continuation.
+Continuous operation means unattended scanning/protection/reconciliation with
+bounded failure handling. Trades occur only on valid signals. Broader opportunity
+coverage comes from independently validated sleeves, not forced daily entries.
 
 Existing track details (earlier snapshot):
 

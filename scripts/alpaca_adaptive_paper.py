@@ -177,6 +177,7 @@ def build_intended_bridge_env(
     protective_runtime = picks_csv.parent / "protective_exit"
     env.update({
         "ALPACA_BASE_URL": "https://paper-api.alpaca.markets",
+        "ALPACA_INTENDED_PAPER": "1",
         "ALPACA_API_BASE_URL": "https://paper-api.alpaca.markets",
         "ALPACA_PICKS_CSV": str(picks_csv), "ALPACA_CURRENT_CYCLE_PICKS_CSV": str(picks_csv),
         "ALPACA_SEND_ORDERS": "0", "ALPACA_ALLOW_NEW_ENTRIES": "0",

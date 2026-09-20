@@ -61,6 +61,7 @@ def _run_manager(monkeypatch, tmp_path: Path, *, base_url=PAPER_URL, apply=False
     _FakeBroker.existing_stop = 95.0
     for name in (
         "ALPACA_BASE_URL",
+        "ALPACA_INTENDED_PAPER",
         "ALPACA_PROTECTIVE_EXIT_APPLY",
         "ALPACA_PROTECTIVE_EXIT_ACK",
         "ALPACA_ALLOW_NEW_ENTRIES",
@@ -243,6 +244,7 @@ def test_confirmed_stop_requires_fixed_sell_and_full_coverage():
         symbol="SCHW",
         position_qty=0.5,
     )
+
     assert not _confirmed_fixed_stop(
         {**_stop(price=104.0), "qty": "0.25"},
         symbol="SCHW",
@@ -253,6 +255,27 @@ def test_confirmed_stop_requires_fixed_sell_and_full_coverage():
         symbol="SCHW",
         position_qty=0.5,
     )
+
+
+def test_ratchet_preserves_new_fill_identity_across_restart():
+    identity = {"entry_order_id": "entry-schw", "account_id": "paper-account",
+                "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87"}
+    prior = {"SCHW": {**identity, "entry_price": 100.0, "hwm": 110.0,
+                      "accepted_stop_floor": 102.0,
+                      "lifecycle_first_seen_at_utc": "2026-09-18T14:00:00Z"}}
+    _, after = build_ratchet_plan(
+        [_position(price=109.0)], [_stop(price=102.0)], prior,
+        activate_gain_pct=3.5, trail_pct=3.5, min_lock_gain_pct=0.5,
+        min_raise_bps=10, market_gap_bps=10,
+    )
+    assert {key: after["SCHW"].get(key) for key in identity} == identity
+    assert after["SCHW"]["hwm"] == 110.0
+    _, next_lifecycle = build_ratchet_plan(
+        [_position(price=109.0, entry=101.0)], [], prior,
+        activate_gain_pct=3.5, trail_pct=3.5, min_lock_gain_pct=0.5,
+        min_raise_bps=10, market_gap_bps=10,
+    )
+    assert "entry_order_id" not in next_lifecycle["SCHW"]
 
 
 def test_paper_apply_replaces_stop_and_confirms_broker_readback(monkeypatch, tmp_path, capsys):
@@ -302,6 +325,36 @@ def test_live_apply_preserves_live_default_runtime(monkeypatch, tmp_path):
     assert _run_manager(monkeypatch, tmp_path, base_url=LIVE_URL, apply=True) == 0
     assert (tmp_path / "runtime" / "alpaca_live_v38" / "protective_exit_hwm.json").is_file()
     assert not (tmp_path / "runtime" / "alpaca_paper_protective_exit").exists()
+
+
+def test_intended_manager_refuses_missing_lifecycle_in_existing_state(monkeypatch, tmp_path, capsys):
+    assert _run_manager(monkeypatch, tmp_path, apply=True,
+                        extra_env={"ALPACA_INTENDED_PAPER": "1"}) == 7
+    assert "intended_lifecycle_state_not_authoritative" in capsys.readouterr().err
+    assert _FakeBroker.instances[0].replace_payloads == []
+    state = tmp_path / "runtime/alpaca_paper_protective_exit/protective_exit_hwm.json"
+    assert state.read_text() == "{}"
+
+
+def test_intended_manager_cannot_run_against_live(monkeypatch, tmp_path):
+    assert _run_manager(monkeypatch, tmp_path, base_url=LIVE_URL,
+                        extra_env={"ALPACA_INTENDED_PAPER": "1"}) == 4
+    assert _FakeBroker.instances == []
+
+
+def test_intended_manager_restart_preserves_trusted_fill_state(monkeypatch, tmp_path):
+    assert _run_manager(monkeypatch, tmp_path) == 0
+    path = tmp_path / "runtime/alpaca_paper_protective_exit/protective_exit_hwm.json"
+    state = json.loads(path.read_text())
+    state["SCHW"].update({"entry_order_id": "entry-schw", "account_id": "paper-account",
+                          "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87"})
+    path.write_text(json.dumps(state))
+    monkeypatch.setenv("ALPACA_INTENDED_PAPER", "1")
+    monkeypatch.setattr(_FakeBroker, "get_account", lambda self: {"id": "paper-account"})
+    assert manager._main_unlocked() == 0
+    restored = json.loads(path.read_text())["SCHW"]
+    for field in ("hwm", "accepted_stop_floor", "entry_order_id", "account_id", "strategy_id"):
+        assert restored[field] == state["SCHW"][field]
 
 
 @pytest.mark.parametrize("base_url", ["https://example.invalid", "http://paper-api.alpaca.markets"])

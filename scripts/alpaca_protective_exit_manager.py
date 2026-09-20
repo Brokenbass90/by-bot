@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import fcntl
 import json
+import math
 import os
 import stat
 import sys
@@ -182,6 +183,10 @@ def build_ratchet_plan(
             else now
         )
         next_state[symbol] = {
+            **({key: previous[key] for key in (
+                "entry_order_id", "account_id", "strategy_id", "initial_stop_price",
+                "accepted_order_id", "accepted_order_tif", "accepted_observed_at_utc",
+            ) if key in previous} if same_lifecycle else {}),
             "hwm": max(current, previous_hwm),
             "entry_price": entry,
             "qty": qty,
@@ -304,6 +309,10 @@ def _main_unlocked() -> int:
     if base_url not in {LIVE_ALPACA_URL, PAPER_ALPACA_URL}:
         print("error=invalid_alpaca_endpoint", file=sys.stderr)
         return 4
+    intended_paper = _env_bool("ALPACA_INTENDED_PAPER", False)
+    if intended_paper and base_url != PAPER_ALPACA_URL:
+        print("error=intended_manager_requires_paper", file=sys.stderr)
+        return 4
     if not key or not secret:
         print("error=missing_alpaca_credentials", file=sys.stderr)
         return 2
@@ -354,6 +363,28 @@ def _main_unlocked() -> int:
             file=sys.stderr,
         )
         return 7
+    if intended_paper:
+        for position in positions:
+            symbol = str(position.get("symbol") or "").upper()
+            if symbol in excluded:
+                continue
+            prior = prior_state.get(symbol)
+            prior = prior if isinstance(prior, dict) else {}
+            numeric = [_f(prior.get(key)) for key in ("hwm", "entry_price", "qty", "accepted_stop_floor")]
+            entry = _f(position.get("avg_entry_price"))
+            qty = _f(position.get("qty"))
+            current = _f(position.get("current_price"))
+            if (
+                not all(math.isfinite(value) and value > 0 for value in numeric + [entry, qty, current])
+                or not prior.get("entry_order_id") or not prior.get("lifecycle_first_seen_at_utc")
+                or not account.get("id") or prior.get("account_id") != account.get("id")
+                or prior.get("strategy_id") != "ALPACA-BASELINE-26f7ff663dc98e87"
+                or abs(numeric[1] - entry) > max(1e-8, entry * 1e-6)
+                or qty > numeric[2] + max(1e-9, numeric[2] * 1e-6)
+                or str(position.get("side") or "long").lower() != "long"
+            ):
+                print(json.dumps({"error": "intended_lifecycle_state_not_authoritative", "symbol": symbol}), file=sys.stderr)
+                return 7
     plan, next_state = build_ratchet_plan(
         positions,
         orders,
