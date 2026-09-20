@@ -2,6 +2,32 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 20, Alpaca preparation**:
+- Frozen selector/config/aggregator match the research checkout. Existing
+  rehearsal reproduced 4/4 symbols, notionals and actual-fill stop distances.
+  New `--prepare-intended` mode is offline-only; it deliberately rejects orders.
+- Historical HWM for ABNB/ABT/MA cannot be proven from available artifacts.
+  Bootstrap now refuses absent/mismatched HWM instead of seeding current price.
+  No existing HWM state was replaced. Prepare emergency recovery, not fabrication.
+- Existing bridge PAPER kill action has exact account/entry proof checks,
+  durable per-account entry halt, owner scope and fresh flat confirmation.
+  Actual signed VPS GET-only dry-run validated ABNB/ABT/MA; AMZN/SCHW excluded.
+  Initial full-account 500-order cap failure fixed by scoped symbol query;
+  cap still fails closed. No broker writes, emergency execution or cron changes.
+- 89 focused checks PASS on Mac and target Python; 11 additional unchanged
+  legacy adaptive checks PASS on VPS. All 39 staged source hashes match.
+  Candidate only: `/tmp/alpaca-paper-preparation-20260919-v1`, NOT production.
+- **Next exact code step:** existing bridge `_submit_buy_action` must persist
+  terminal actual fill + confirmed stop into the existing floor/HWM state;
+  prove restart/re-arm, frozen sizing and owned scope across bridge/ratchet.
+  That execution integration remains unfinished. Do not say only market waits remain.
+- **0/7 intended broker evidence; READY_FOR_CANARY=FALSE.** Kill preparation
+  and fake-broker tests are not accepted broker lifecycle receipts.
+- Receipt: `reports/ALPACA_PAPER_PREPARATION_2026_09_20.json`. Source/proof data
+  remain private; no new framework/strategy and no ATT1 or LIVE changes.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 19, Alpaca first (owner reprioritized)**:
 - PAPER endpoint support implemented in existing protection manager; frozen strategy
   unchanged. 61 focused tests PASS on Mac and VPS Python 3.12.3, 13 hashes match.

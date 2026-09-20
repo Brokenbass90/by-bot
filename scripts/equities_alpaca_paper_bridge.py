@@ -20,6 +20,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 from urllib import error, request
+from urllib.parse import urlencode
 
 # Optional earnings filter (graceful fallback if import fails)
 try:
@@ -548,8 +549,11 @@ class AlpacaClient:
     def list_positions(self) -> list[dict[str, Any]]:
         return list(self._request("GET", "/v2/positions"))
 
-    def list_orders(self, *, status: str = "open", limit: int = 100) -> list[dict[str, Any]]:
-        return list(self._request("GET", f"/v2/orders?status={status}&direction=desc&limit={int(limit)}"))
+    def list_orders(self, *, status: str = "open", limit: int = 100, symbols: list[str] | None = None) -> list[dict[str, Any]]:
+        params = {"status": status, "direction": "desc", "limit": str(int(limit))}
+        if symbols is not None:
+            params["symbols"] = ",".join(symbols)
+        return list(self._request("GET", "/v2/orders?" + urlencode(params)))
 
     def get_order(self, order_id: str) -> dict[str, Any]:
         return self._request("GET", f"/v2/orders/{order_id}")
@@ -643,6 +647,169 @@ class AlpacaClient:
         live position is never deliberately left without broker protection.
         """
         return self._request("PATCH", f"/v2/orders/{order_id}", payload)
+
+
+_PAPER_API_URL = "https://paper-api.alpaca.markets"
+_PAPER_KILL_REASONS = {
+    "owner_kill", "restart_state_mismatch", "unprotected_after_reconcile", "missed_full_session",
+}
+_ACTIVE_ORDER_STATUSES = {"accepted", "new", "pending_new", "partially_filled", "accepted_for_bidding", "pending_replace"}
+_TERMINAL_ORDER_STATUSES = {"canceled", "expired", "filled", "rejected", "replaced", "stopped"}
+
+
+class PaperKillValidationError(RuntimeError):
+    pass
+
+
+def _paper_kill_number(value: Any, field: str) -> Decimal:
+    try:
+        parsed = Decimal(str(value))
+    except (InvalidOperation, ValueError) as exc:
+        raise PaperKillValidationError(f"invalid_{field}") from exc
+    if not parsed.is_finite() or parsed <= 0:
+        raise PaperKillValidationError(f"invalid_{field}")
+    return parsed
+
+
+def _paper_kill_state_path(state_dir: Path) -> Path:
+    return state_dir / ".paper-entry-halt.json"
+
+
+def _paper_kill_state_dir(base_url: str, key_id: str) -> Path:
+    """Keep a kill halt account-scoped, rather than sharing the locks directory."""
+    return _alpaca_account_lock_path(base_url, key_id).with_suffix(".paper-kill")
+
+
+def paper_entry_halted(*, base_url: str, state_dir: Path) -> bool:
+    """Only a paper-account halt can suppress future monthly entries."""
+    if base_url != _PAPER_API_URL:
+        return False
+    try:
+        state = json.loads(_paper_kill_state_path(state_dir).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return False
+    except Exception:
+        return True
+    if not isinstance(state, dict) or not isinstance(state.get("halted"), bool):
+        return True
+    return state["halted"]
+
+
+def _validated_paper_kill_scope(
+    *, proof: Any, client: Any, base_url: str
+) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    if base_url != _PAPER_API_URL:
+        raise PaperKillValidationError("paper_kill_requires_exact_paper_endpoint")
+    if not isinstance(proof, dict) or str(proof.get("reason") or "") not in _PAPER_KILL_REASONS:
+        raise PaperKillValidationError("invalid_paper_kill_proof_reason")
+    account = client.get_account()
+    account_id = str(account.get("id") or "").strip()
+    if not account_id or account_id != str(proof.get("account_id") or "").strip():
+        raise PaperKillValidationError("paper_kill_account_mismatch")
+    proof_rows = proof.get("positions")
+    if not isinstance(proof_rows, list) or not proof_rows:
+        raise PaperKillValidationError("invalid_paper_kill_positions")
+    scope: dict[str, dict[str, Any]] = {}
+    for row in proof_rows:
+        if not isinstance(row, dict):
+            raise PaperKillValidationError("invalid_paper_kill_position")
+        symbol = str(row.get("symbol") or "").strip().upper()
+        entry_id = str(row.get("entry_order_id") or "").strip()
+        if not symbol or not entry_id or symbol in scope:
+            raise PaperKillValidationError("invalid_or_duplicate_paper_kill_position")
+        scope[symbol] = {
+            "entry_order_id": entry_id,
+            "qty": _paper_kill_number(row.get("qty"), "proof_qty"),
+            "avg_entry_price": _paper_kill_number(row.get("avg_entry_price"), "proof_avg_entry_price"),
+        }
+    positions = client.list_positions()
+    orders = client.list_orders(status="all", limit=500, symbols=sorted(scope))
+    if len(orders) >= 500:
+        raise PaperKillValidationError("paper_kill_orders_incomplete")
+    current = {str(p.get("symbol") or "").strip().upper(): p for p in positions if isinstance(p, dict)}
+    for symbol, expected in scope.items():
+        buys = [o for o in orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() == symbol and str(o.get("side") or "").lower() == "buy" and str(o.get("status") or "").lower() == "filled"]
+        if not buys or str(buys[0].get("id") or "").strip() != expected["entry_order_id"]:
+            raise PaperKillValidationError(f"paper_kill_latest_buy_mismatch:{symbol}")
+        entry = buys[0]
+        if _paper_kill_number(entry.get("filled_qty"), "entry_filled_qty") != expected["qty"] or _paper_kill_number(entry.get("filled_avg_price"), "entry_filled_avg_price") != expected["avg_entry_price"]:
+            raise PaperKillValidationError(f"paper_kill_entry_fill_mismatch:{symbol}")
+        pos = current.get(symbol)
+        if pos is None:
+            continue
+        qty = _paper_kill_number(pos.get("qty"), "current_qty")
+        avg = _paper_kill_number(pos.get("avg_entry_price"), "current_avg_entry_price")
+        if str(pos.get("side") or "long").strip().lower() == "short" or qty > expected["qty"] or avg != expected["avg_entry_price"]:
+            raise PaperKillValidationError(f"paper_kill_position_mismatch:{symbol}")
+    return scope, positions, orders
+
+
+def run_paper_owned_kill(*, proof: Any, client: Any, base_url: str, apply: bool, state_dir: Path) -> dict[str, Any]:
+    """Validate an explicit paper-owned proof before any scoped exit action."""
+    scope, positions, orders = _validated_paper_kill_scope(proof=proof, client=client, base_url=base_url)
+    current_symbols = {str(p.get("symbol") or "").strip().upper() for p in positions if isinstance(p, dict)}
+    present = sorted(set(scope) & current_symbols)
+    receipt: dict[str, Any] = {"status": "dry_run_not_confirmed", "generated_at_utc": datetime.now(timezone.utc).isoformat(), "reason": str(proof["reason"]), "scope_symbols": sorted(scope), "present_symbols": present, "plan": [{"symbol": s, "action": "close_owned_position"} for s in present], "order_results": []}
+    if not apply:
+        return receipt
+    if _env("ALPACA_SEND_ORDERS") != "1" or _env("ALPACA_ALLOW_NEW_ENTRIES", "1") != "0" or _env("ALPACA_PAPER_KILL_ACK") != "PAPER_OWNED_EXITS_ONLY":
+        raise PaperKillValidationError("paper_kill_apply_guard_not_satisfied")
+    _atomic_write_json(_paper_kill_state_path(state_dir), {"halted": True, "account_id": str(proof["account_id"]), "reason": str(proof["reason"]), "updated_at_utc": datetime.now(timezone.utc).isoformat()})
+    clock = client.get_clock()
+    if not bool(clock.get("is_open")):
+        receipt["status"] = "awaiting_regular_session"
+        receipt["next_open"] = clock.get("next_open")
+        return receipt
+    pending_market_close = {
+        str(o.get("symbol") or "").strip().upper()
+        for o in orders
+        if isinstance(o, dict)
+        and str(o.get("symbol") or "").strip().upper() in scope
+        and str(o.get("side") or "").lower() == "sell"
+        and str(o.get("type") or "").lower() == "market"
+        and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES
+    }
+    if pending_market_close:
+        receipt["status"] = "not_confirmed_pending_close"
+        receipt["pending_symbols"] = sorted(pending_market_close)
+        return receipt
+    active_buys = [o for o in orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() in scope and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES and str(o.get("side") or "").lower() == "buy"]
+    if active_buys:
+        raise PaperKillValidationError("paper_kill_unproven_active_buy")
+    absent_with_active_order = {
+        str(o.get("symbol") or "").strip().upper()
+        for o in orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() in scope
+        and str(o.get("symbol") or "").strip().upper() not in current_symbols
+        and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES
+    }
+    if absent_with_active_order:
+        raise PaperKillValidationError("paper_kill_active_order_without_position")
+    active = [o for o in orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() in scope and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES]
+    for order in active:
+        order_id = str(order.get("id") or "").strip()
+        if not order_id:
+            raise PaperKillValidationError("paper_kill_active_order_missing_id")
+        cancelled = client.cancel_order(order_id)
+        confirmed = client.get_order(order_id)
+        receipt["order_results"].append({"order_id": order_id, "cancel_status": cancelled.get("status"), "confirmed_status": confirmed.get("status")})
+        if str(confirmed.get("status") or "").lower() not in _TERMINAL_ORDER_STATUSES:
+            raise PaperKillValidationError(f"paper_kill_cancel_not_terminal:{order_id}")
+    _, refreshed_positions, refreshed_orders = _validated_paper_kill_scope(proof=proof, client=client, base_url=base_url)
+    refreshed_symbols = {str(p.get("symbol") or "").strip().upper() for p in refreshed_positions if isinstance(p, dict)}
+    pending = {str(o.get("symbol") or "").strip().upper() for o in refreshed_orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() in scope and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES and str(o.get("side") or "").lower() in {"buy", "sell"}}
+    if pending:
+        receipt["status"] = "not_confirmed_pending_close"
+        receipt["pending_symbols"] = sorted(pending)
+        return receipt
+    for symbol in sorted(set(scope) & refreshed_symbols):
+        close = client.close_position(symbol)
+        receipt["order_results"].append({"symbol": symbol, "close_order_id": close.get("id"), "close_status": close.get("status")})
+    _, final_positions, final_orders = _validated_paper_kill_scope(proof=proof, client=client, base_url=base_url)
+    final_symbols = {str(p.get("symbol") or "").strip().upper() for p in final_positions if isinstance(p, dict)}
+    final_active = {str(o.get("symbol") or "").strip().upper() for o in final_orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() in scope and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES}
+    receipt["status"] = "confirmed_flat" if not (set(scope) & final_symbols) and not final_active else "not_confirmed"
+    receipt["remaining_symbols"] = sorted(set(scope) & final_symbols)
+    return receipt
 
 
 def _load_picks(csv_path: Path, month: str | None) -> list[Pick]:
@@ -1646,7 +1813,37 @@ def _main_unlocked() -> int:
     ap = argparse.ArgumentParser(description="Dry-run-first Alpaca paper bridge for monthly equities picks")
     ap.add_argument("--picks-csv", default=_env("ALPACA_PICKS_CSV", ""))
     ap.add_argument("--month", default=_env("ALPACA_PICKS_MONTH", ""))
+    ap.add_argument("--paper-kill-owned", metavar="PROOF_JSON")
+    ap.add_argument("--apply-kill", action="store_true")
     args = ap.parse_args()
+
+    # This deliberately runs before reading picks: an explicit owner proof is
+    # the only authority for its bounded paper-only exit scope.
+    if args.paper_kill_owned:
+        proof_path = Path(args.paper_kill_owned)
+        receipt_path = proof_path.parent / "paper_kill_receipt.json"
+        base_url = _env("ALPACA_BASE_URL", _PAPER_API_URL)
+        state_dir = _paper_kill_state_dir(base_url, _env("ALPACA_API_KEY_ID"))
+        try:
+            proof = json.loads(proof_path.read_text(encoding="utf-8"))
+            if not _env("ALPACA_API_KEY_ID") or not _env("ALPACA_API_SECRET_KEY"):
+                raise PaperKillValidationError("missing_alpaca_keys")
+            receipt = run_paper_owned_kill(
+                proof=proof,
+                client=AlpacaClient(base_url, _env("ALPACA_API_KEY_ID"), _env("ALPACA_API_SECRET_KEY")),
+                base_url=base_url,
+                apply=bool(args.apply_kill),
+                state_dir=state_dir,
+            )
+        except (OSError, json.JSONDecodeError, PaperKillValidationError, RuntimeError) as exc:
+            receipt = {"status": "rejected", "error": str(exc), "not_confirmed": True}
+            _atomic_write_json(receipt_path, receipt)
+            print(json.dumps(receipt, ensure_ascii=True, sort_keys=True), file=sys.stderr)
+            return 2
+        receipt["not_confirmed"] = receipt.get("status") != "confirmed_flat"
+        _atomic_write_json(receipt_path, receipt)
+        print(json.dumps(receipt, ensure_ascii=True, sort_keys=True))
+        return 0 if not args.apply_kill or receipt["status"] == "awaiting_regular_session" or receipt["status"] == "confirmed_flat" else 5
 
     picks_csv = Path(args.picks_csv) if args.picks_csv else _default_picks_csv()
     if picks_csv is None or not picks_csv.exists():
@@ -1749,6 +1946,12 @@ def _main_unlocked() -> int:
     key_id = _env("ALPACA_API_KEY_ID")
     secret_key = _env("ALPACA_API_SECRET_KEY")
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
+    paper_halt_active = paper_entry_halted(
+        base_url=base_url,
+        state_dir=_paper_kill_state_dir(base_url, key_id),
+    )
+    if paper_halt_active:
+        allow_new_entries = False
     if whole_share_only and (
         not broker_protection_enable
         or not broker_protection_required
@@ -2105,6 +2308,7 @@ def _main_unlocked() -> int:
         "effective_capital": round(effective_capital, 2),
         "per_position_notional": round(per_position_notional, 2),
         "allow_new_entries": bool(allow_new_entries),
+        "paper_entry_halt_active": bool(paper_halt_active),
         "close_stale_positions": bool(close_stale_positions),
         "latest_entry_day": latest_entry_day,
         "pick_age_days": pick_age_days,

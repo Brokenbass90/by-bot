@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -96,6 +97,7 @@ def build_historical_floor_state(
     orders: Iterable[dict[str, Any]],
     *,
     observed_at_utc: datetime,
+    hwm_evidence: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     observed = observed_at_utc
     if observed.tzinfo is None:
@@ -117,11 +119,26 @@ def build_historical_floor_state(
         candidates = _historical_stop_candidates(position, order_rows)
         if not candidates:
             raise PaperFloorBootstrapError(f"missing_historical_floor:{symbol}")
+        prior = (hwm_evidence or {}).get(symbol)
+        if not isinstance(prior, dict):
+            raise PaperFloorBootstrapError(f"missing_historical_hwm:{symbol}")
+        hwm = _f(prior.get("hwm"))
+        prior_entry = _f(prior.get("entry_price"))
+        prior_qty = _f(prior.get("qty"))
+        if (
+            not all(math.isfinite(v) and v > 0 for v in (hwm, prior_entry, prior_qty))
+            or abs(prior_entry - entry) > max(1e-8, entry * 1e-8)
+            or abs(prior_qty - qty) > max(1e-9, qty * 1e-6)
+        ):
+            raise PaperFloorBootstrapError(f"invalid_historical_hwm:{symbol}")
         selected = max(candidates, key=lambda row: _f(row.get("stop_price")))
         first_seen = min(str(row.get("created_at")) for row in candidates)
         floor = _f(selected.get("stop_price"))
         state[symbol] = {
-            "hwm": max(current, floor),
+            # A historical stop proves a floor, never a high-water mark.
+            # Preserve the supplied ledger value; normal observation may raise
+            # it later, after recovery has been verified.
+            "hwm": hwm,
             "entry_price": entry,
             "qty": qty,
             "lifecycle_first_seen_at_utc": first_seen,
@@ -143,6 +160,7 @@ def build_historical_floor_state(
                 "accepted_order_status": str(selected.get("status") or "").lower(),
                 "accepted_order_created_at": str(selected.get("created_at") or ""),
                 "candidate_count": len(candidates),
+                "hwm_evidence_sha256": _canonical_sha256(prior),
             }
         )
     return state, evidence
@@ -215,6 +233,7 @@ def main() -> int:
         ),
     )
     parser.add_argument("--ack", default="")
+    parser.add_argument("--hwm-evidence", help="Existing authoritative HWM JSON; never synthesized from quotes")
     args = parser.parse_args()
     if args.ack != ACK:
         print(
@@ -231,6 +250,12 @@ def main() -> int:
             )
         )
         return 2
+
+    if not args.hwm_evidence:
+        raise PaperFloorBootstrapError("missing_historical_hwm_evidence")
+    hwm_evidence = json.loads(Path(args.hwm_evidence).read_text())
+    if not isinstance(hwm_evidence, dict):
+        raise PaperFloorBootstrapError("invalid_historical_hwm_evidence")
 
     values = _read_env(Path(args.env_file))
     key = values.get("ALPACA_API_KEY_ID", "")
@@ -253,6 +278,7 @@ def main() -> int:
         positions,
         orders,
         observed_at_utc=observed,
+        hwm_evidence=hwm_evidence,
     )
     write_bootstrap_artifacts(
         Path(args.state_path),

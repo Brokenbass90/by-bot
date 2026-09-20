@@ -57,15 +57,40 @@ def test_build_uses_highest_broker_accepted_exact_qty_floor() -> None:
         positions,
         orders,
         observed_at_utc=datetime(2026, 8, 26, 6, 30, tzinfo=timezone.utc),
+        hwm_evidence={"SNOW": {"hwm": 320.0, "entry_price": 289.71, "qty": 1.18466942}},
     )
 
     assert state["SNOW"]["accepted_stop_floor"] == 312.47
     assert state["SNOW"]["entry_price"] == 289.71
     assert state["SNOW"]["qty"] == 1.18466942
-    assert state["SNOW"]["hwm"] == 316.83
+    assert state["SNOW"]["hwm"] == 320.0
     assert state["SNOW"]["accepted_order_id"] == "SNOW-312.47"
     assert state["SNOW"]["bootstrap_source"] == "historical_broker_fixed_stop_exact_qty"
     assert evidence[0]["candidate_count"] == 2
+
+
+def test_historical_stop_does_not_prove_hwm():
+    with pytest.raises(PaperFloorBootstrapError, match="missing_historical_hwm:ABNB"):
+        build_historical_floor_state(
+            [_position("ABNB", 0.5, 100, 105)],
+            [_stop("ABNB", 0.5, 95, "2026-08-26T14:00:00Z")],
+            observed_at_utc=datetime.now(timezone.utc),
+        )
+
+
+@pytest.mark.parametrize("record", [
+    {"hwm": 110, "entry_price": 99, "qty": 0.5},
+    {"hwm": float("nan"), "entry_price": 100, "qty": 0.5},
+    {"hwm": 110, "entry_price": 100, "qty": 0.4},
+])
+def test_hwm_proof_must_match_position(record):
+    with pytest.raises(PaperFloorBootstrapError, match="invalid_historical_hwm:ABNB"):
+        build_historical_floor_state(
+            [_position("ABNB", 0.5, 100, 105)],
+            [_stop("ABNB", 0.5, 95, "2026-08-26T14:00:00Z")],
+            observed_at_utc=datetime.now(timezone.utc),
+            hwm_evidence={"ABNB": record},
+        )
 
 
 def test_build_fails_closed_when_any_open_position_has_no_historical_floor() -> None:
@@ -80,6 +105,7 @@ def test_build_fails_closed_when_any_open_position_has_no_historical_floor() -> 
             positions,
             orders,
             observed_at_utc=datetime.now(timezone.utc),
+            hwm_evidence={"SCHW": {"hwm": 112.27, "entry_price": 111.75, "qty": 1.84}},
         )
 
 

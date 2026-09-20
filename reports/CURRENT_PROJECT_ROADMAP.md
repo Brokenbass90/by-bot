@@ -35,6 +35,16 @@ Existing track details (earlier snapshot):
 max one ATT1 position, no sizing escalation. Alpaca live capital is unspecified;
 offline $1000/$700 is not owner allocation. Current readiness is FALSE for both.
 
+## September 20 work ownership
+
+Codex stays on Alpaca PAPER evidence/dossier, then ATT1; no new research.
+Claude's proposed recovery order is SBR1 → XSEC PIT → Bull Continuation →
+ATT1-long, restoring existing evidence first. Existing registry remains canonical.
+Factory V1 stays with its owner: queue → preregistration → test → deterministic
+verdict → confirmation/next hypothesis. No Factory V2; the owner's requested
+10 distinct unattended hypotheses is a factory milestone, not a new canary gate.
+No background factory/recovery jobs were launched by Codex in this cycle.
+
 ## Existing candidate queue and ownership
 
 Use ONE existing candidate registry:

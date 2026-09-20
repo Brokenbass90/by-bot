@@ -1,5 +1,11 @@
 # Continuation handoff — 2026-09-19
 
+September 20 update: read checkpoint TOP and
+`ALPACA_PAPER_PREPARATION_2026_09_20.json` first. Frozen offline prepare and
+PAPER kill dry-run validated; active execution wiring still unfinished.
+Exact next location: bridge `_submit_buy_action` → existing floor/HWM persistence.
+No claim that only market opening remains; no emergency order executed.
+
 UPDATE: Start from checkpoint TOP and `ALPACA_PAPER_PROGRESS_2026_09_19.json`.
 Owner now prioritizes Alpaca dossier before ATT1. PAPER endpoint fixed/tested,
 not production-deployed. All five legacy position owners resolved; AMZN belongs
