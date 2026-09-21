@@ -12,7 +12,7 @@ LAB = Path(__file__).resolve().parents[1]
 MASTER = LAB / "STRATEGY_MASTER.md"
 VERDIKTY = Path(__file__).resolve().parent / "verdikty.jsonl"
 SLOTY = [("akcii", "Акции"), ("padenie", "Крипта: падение / флет вниз"), ("neytral", "Крипта: нейтральный / боковик"),
-         ("rost", "Крипта: рост"), ("fon", "Фоновые эксперименты"), (None, "Без слота")]
+         ("rost", "Крипта: рост"), ("predskazaniya", "Рынки предсказаний (Polymarket)"), ("fon", "Фоновые эксперименты"), (None, "Без слота")]
 
 
 def k(s, n=90):

@@ -91,7 +91,15 @@ def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01", v
                 razdel=_ms(razdel), opisanie=f"крипта PIT: {v.get('pravilo', fayl)}")
 
 
-RYNKI_P = {"akcii_pit": zagruzit_akcii, "kripto_pit": zagruzit_kripto_pit,
+def zagruzit_kripto_poly():
+    R = zagruzit_kripto_pit("basis/vselennaya_pit_usd50.json")
+    import poly_priznaki
+    pz = poly_priznaki.priznaki(R["dates"])
+    R["POLY"] = np.array([pz[int(t)]["kripto"][0] if pz[int(t)]["kripto"][0] is not None else np.nan for t in R["dates"]])
+    return R
+
+
+RYNKI_P = {"akcii_pit": zagruzit_akcii, "kripto_pit": zagruzit_kripto_pit, "kripto_pit50_poly": zagruzit_kripto_poly,
            "kripto_pit50": lambda: zagruzit_kripto_pit("basis/vselennaya_pit_usd50.json")}
 
 
@@ -243,6 +251,16 @@ def szhatie_filtr(C, DV, ctx):
 
 
 PV3 = "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md"
+PPOLY = "research_lab/fabrika/PREREG_POLY_V1_2026_09_21.md"
+
+
+def szhatie_poly(C, DV, ctx):
+    """BULL_VOL_EXPANSION_BASE, но только в дни, когда рынки предсказаний сдвинулись в risk-on (>0)"""
+    x = _szhatie_rasshirenie(C, ctx)
+    ro = ctx.get("POLY")
+    if ro is None or not np.isfinite(ro[-1]) or ro[-1] <= 0:
+        return np.where(np.isfinite(x), 0.0, np.nan)
+    return x
 
 
 # napravlenie: ls — лонг верх / шорт низ; long — только лонг верхней доли
@@ -264,6 +282,8 @@ SIGNALY = {
                                           semya="bull_leader_pullback_f", ctx=True, prereg=PV3, slot="rost"),
     "BULL_VOL_EXPANSION_BASE": dict(fn=szhatie_base, rynok="kripto_pit50", napr="long", vybor=True, H=5,
                                     semya="bull_vol_expansion", ctx=True, prereg=PV3, slot="rost"),
+    "BULL_VOL_EXPANSION_POLY": dict(fn=szhatie_poly, rynok="kripto_pit50_poly", napr="long", vybor=True, H=5,
+                                    semya="bull_vol_expansion_poly", ctx=True, prereg=PPOLY, slot="rost"),
     "BULL_VOL_EXPANSION_FILTERED": dict(fn=szhatie_filtr, rynok="kripto_pit50", napr="long", vybor=True, H=5,
                                         semya="bull_vol_expansion_f", ctx=True, prereg=PV3, slot="rost"),
 }

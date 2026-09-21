@@ -73,3 +73,4 @@
 {"kogda_utc": "2026-09-21T13:13:13Z", "perehod": {"id": "P_BULL_LEADER_PULLBACK_FILTERED", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}
 {"kogda_utc": "2026-09-21T13:13:25Z", "perehod": {"id": "P_BULL_VOL_EXPANSION_BASE", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}
 {"kogda_utc": "2026-09-21T13:13:37Z", "perehod": {"id": "P_BULL_VOL_EXPANSION_FILTERED", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:42:57Z", "perehod": {"id": "POLY_SBOR", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}

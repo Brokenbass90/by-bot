@@ -1,6 +1,6 @@
 # STRATEGY_MASTER — вид на реестр
 
-Сгенерировано 2026-09-21 13:13 UTC из `research_lab/data/reestr.json` (единственная машинная база) и `research_lab/fabrika/verdikty.jsonl` (журнал доказательств).
+Сгенерировано 2026-09-21 13:42 UTC из `research_lab/data/reestr.json` (единственная машинная база) и `research_lab/fabrika/verdikty.jsonl` (журнал доказательств).
 Руками не править: `python3 research_lab/fabrika/master.py`. Приоритеты — в `ROADMAP.md`.
 
 ## Слоты портфеля
@@ -35,6 +35,12 @@
 | P_BULL_LEADER_PULLBACK_FILTERED | HYPOTHESIS | эфф. периодов 6.0 |  |  |
 | P_BULL_VOL_EXPANSION_BASE | HYPOTHESIS | t=1.07 (порог 2.5) |  |  |
 | P_BULL_VOL_EXPANSION_FILTERED | HYPOTHESIS | эфф. периодов 12.4 |  |  |
+
+**Рынки предсказаний (Polymarket)**
+
+| id | состояние | главное | следующий шаг | владелец |
+|---|---|---|---|---|
+| POLY_SBOR | HYPOTHESIS | данных ещё нет | собрать историю; первый тест BULL_VOL_EXPANSION_POLY; снимки стакана … | Claude |
 
 **Фоновые эксперименты**
 

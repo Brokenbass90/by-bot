@@ -30,7 +30,7 @@ sys.path.insert(0, str(DIR))
 from portfeli import RYNKI_P, SIGNALY  # noqa: E402
 
 DRAWS = 50
-PROGREV = {"akcii_pit": 130, "kripto_pit": 50, "kripto_pit50": 50}
+PROGREV = {"akcii_pit": 130, "kripto_pit": 50, "kripto_pit50": 50, "kripto_pit50_poly": 50}
 
 
 def vyhod_cena(C, t, H, j):
@@ -85,6 +85,7 @@ def main():
         args = (C[:t + 1], DV[:t + 1] if DV is not None else None)
         if S.get("ctx"):
             ctx = {"M": M[:t + 1], "F": F[:t + 1] if F is not None else None,
+                   "POLY": R["POLY"][:t + 1] if R.get("POLY") is not None else None,
                    "HH": HH[:t + 1] if HH is not None else None, "VV": VV[:t + 1] if VV is not None else None}
             sc = S["fn"](*args, ctx)
         else:

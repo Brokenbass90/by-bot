@@ -1699,5 +1699,19 @@
   "znanie": 0.0,
   "cena": 1.0,
   "deystvie": "fabrika"
+ },
+ {
+  "id": "POLY_SBOR",
+  "sostoyanie": "HYPOTHESIS",
+  "slot": "predskazaniya",
+  "vladelec": "Claude",
+  "imya": "Polymarket: сборщик только на чтение + сенсор POLY_SENTIMENT_V1",
+  "edzh": "данных ещё нет",
+  "svidetelstvo": "research_lab/fabrika/PREREG_POLY_V1_2026_09_21.md",
+  "sleduyushchiy_test": "собрать историю; первый тест BULL_VOL_EXPANSION_POLY; снимки стакана копить вперёд",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
  }
 ]

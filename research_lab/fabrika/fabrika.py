@@ -312,7 +312,7 @@ def vybrat(d, V, krome=None):
 
 # ── служебное ─────────────────────────────────────────────────────────
 def otpechatok_dannyh(rynok):
-    papki = {"kripto_pit": ["data/pit_daily"], "kripto_pit50": ["data/pit_daily", "data/basis"], "xsec": ["data/pit_daily", "data/basis"], "akcii_pit": ["data/alpaca_pit_daily_v1/bars"],
+    papki = {"kripto_pit": ["data/pit_daily"], "kripto_pit50": ["data/pit_daily", "data/basis"], "xsec": ["data/pit_daily", "data/basis"], "kripto_pit50_poly": ["data/pit_daily", "data/basis", "data/poly/istoriya"], "akcii_pit": ["data/alpaca_pit_daily_v1/bars"],
              "crypto137": ["data/h1"], "gold": ["data/zoloto_h1"], "fx7": ["data/fx_h1"], "crypto137_m5": ["data/m5_posle"]}.get(rynok, [])
     n = sz = 0
     for pp in papki:
