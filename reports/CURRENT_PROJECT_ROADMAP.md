@@ -9,11 +9,10 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 
 Latest owner order supersedes the numbered historical snapshot below:
 **Alpaca frozen PAPER 7/7 → dossier → ATT1 dossier → SBR1**.
-September 21: autonomous operational PAPER deployed on VPS, **4/7** actual
-receipts PASS (startup/fractional fill/DAY stop/restart). CRM/CRWD/CVX/MRK filled
+September 21: autonomous operational PAPER deployed on VPS, **5/7** actual
+receipts PASS (startup/fractional fill/DAY stop/restart/actual DAY expiry). CRM/CRWD/CVX/MRK filled
 with complete broker protection; actual fill notional $699.94. See
-`ALPACA_AUTONOMOUS_PAPER_2026_09_21.json`. Remaining: actual DAY expiry → next-session
-re-arm → proof-scoped PAPER kill; then dossier, without changing frozen strategy.
+`ALPACA_AUTONOMOUS_PAPER_2026_09_21.json`. Remaining: next-session re-arm → proof-scoped PAPER kill; then dossier, without changing frozen strategy.
 September 22 open is the earliest next-session evidence opportunity, not a promise
 of 7/7. This acceptance probe does not imply monthly production auto-selection.
 Legacy ABNB/ABT/MA historical HWM remains unproven and must stay explicit.

@@ -2,6 +2,22 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 21, after-close broker evidence: 5/7**:
+- Read-only 20:42 UTC snapshot confirms all four intended PAPER positions retain
+  exact entry quantities/averages, zero open orders, and all four original DAY
+  stops explicitly `expired` with zero fills. **Existing row 4 PASS; total 5/7.**
+- Cron active, one intended schedule, fresh runner/evidence (~33s/~31s);
+  `WAITING_FOR_REGULAR_SESSION` is expected while broker clock is closed.
+- Receipt updated: `reports/ALPACA_AUTONOMOUS_PAPER_2026_09_21.json` includes
+  broker stop IDs, expiry timestamps and private snapshot hashes. No VPS writes,
+  orders, restarts, reseeding or deployment in this check.
+- Remaining rows **5 and 7 only**: Sep22 broker open 13:30 UTC / 16:30 Cyprus,
+  verify new accepted DAY stops and preserved floors; then proof-scoped intended
+  PAPER kill + owned-flat receipt. Never run acceptance kill before re-arm proof.
+  Legacy foreign holdings remain excluded. READY_FOR_CANARY still FALSE.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 21, autonomous Alpaca PAPER actually deployed**:
 - **AUTONOMOUS_PAPER_ACTIVE; 4/7 real operational receipts PASS.** Canonical
   receipt: `reports/ALPACA_AUTONOMOUS_PAPER_2026_09_21.json`. Read it first.
