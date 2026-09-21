@@ -1,0 +1,38 @@
+{
+ "param": {
+  "signal": "AKC_BLIZ_MAX_126",
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "rynok": "akcii_pit",
+ "H": 21,
+ "okna": {
+  "VSE": {
+   "n": 198,
+   "n_eff": 9.4,
+   "edge": -0.018552066784994898,
+   "t": -0.5674145954550174
+  },
+  "H1": {
+   "n": 99,
+   "n_eff": 4.7,
+   "edge": -0.05765740439279667,
+   "t": -1.0647204267137051
+  },
+  "H2": {
+   "n": 99,
+   "n_eff": 4.7,
+   "edge": 0.02055327082280688,
+   "t": 0.7713587812265381
+  }
+ },
+ "strategiya_srednee": -0.020222701627343773,
+ "sluchay_srednee": -0.0016706348423488776,
+ "godovyh_strategiya": -0.2426724195281253,
+ "pokrytie_vselennoy_mediana": 0.8125,
+ "chlenov_s_cenoy_mediana": 1.0,
+ "period": [
+  1739923200000,
+  1764547200000
+ ]
+}

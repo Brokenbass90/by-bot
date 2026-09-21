@@ -1,0 +1,19 @@
+{
+ "param": {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold",
+  "side": "short"
+ },
+ "monet": 1,
+ "limit": 0,
+ "okna": {
+  "O1": {
+   "n": 10,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 9,
+   "kontrol_sobran": false
+  }
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "param": {
+  "meh": "OBEM_IMPULS",
+  "rynok": "fx7",
+  "side": "short",
+  "etap": "discovery"
+ },
+ "monet": 7,
+ "limit": 0,
+ "okna": {
+  "O1": {
+   "n": 4,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 70,
+   "kontrol_sobran": true,
+   "mean": 0.17788033177417814,
+   "ctrl": -0.1396996491574065,
+   "ctrl_sd": 0.16629220715922877,
+   "edge": 0.3175799809315847,
+   "se": 0.26047129711819755,
+   "z": 1.2192513510902208,
+   "summa_R": 12.45162322419247
+  }
+ }
+}

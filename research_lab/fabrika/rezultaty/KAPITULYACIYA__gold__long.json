@@ -1,0 +1,19 @@
+{
+ "param": {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold",
+  "side": "long"
+ },
+ "monet": 1,
+ "limit": 0,
+ "okna": {
+  "O1": {
+   "n": 5,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 9,
+   "kontrol_sobran": false
+  }
+ }
+}

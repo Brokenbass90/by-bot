@@ -1,0 +1,77 @@
+{
+ "obnovleno": "2026-09-21T08:38:06+00:00",
+ "zadachi": [
+  {
+   "tip": "SHADOW_READOUT",
+   "id": "SBR1_MAJOR8_SHADOW",
+   "chto": "исторического окна не осталось: reserved OOS 2025-10…2026-07 потрачен Codex 29 авг (N=16, −3.31R, PF 0.64, INCONCLUSIVE_LOW_N). Остаётся только серверная тень с 24 авг против контроля по PREREG_SBR1_SHADOW_RANDOM_CONTROL_2026_08_24.md",
+   "kto": "Codex снимает журнал с VPS, Claude считает"
+  },
+  {
+   "tip": "DATA",
+   "id": "xsec_pit_v5",
+   "chto": "прогоняется как P_KR_XSEC_V3 (портфельный прогонщик, вселенная топ-20 по OI на дату); ждёт цен: dannye_pit_kripto.py",
+   "kto": "Claude"
+  },
+  {
+   "tip": "DATA",
+   "id": "xauusd_unchanged_replication_v1",
+   "chto": "нужен независимый источник XAUUSD (мост MT5)",
+   "kto": "Claude"
+  },
+  {
+   "tip": "ADAPTER",
+   "id": "funding_carry",
+   "chto": "нужен переходник фандинг+базис",
+   "kto": "Claude"
+  },
+  {
+   "tip": "ADAPTER",
+   "id": "simple_mean_reversion",
+   "chto": "нужен переходник VWAP",
+   "kto": "Claude"
+  },
+  {
+   "tip": "ADAPTER",
+   "id": "breakout_retest",
+   "chto": "нужен переходник",
+   "kto": "Claude"
+  },
+  {
+   "tip": "DATA",
+   "id": "cross_exchange_arbitrage_paper",
+   "chto": "нужны синхронные истории бирж",
+   "kto": "Claude"
+  },
+  {
+   "tip": "ADAPTER",
+   "id": "trend_pullback",
+   "chto": "нужен переходник + FX данные",
+   "kto": "Claude"
+  },
+  {
+   "tip": "ADAPTER",
+   "id": "session_breakout",
+   "chto": "нужен переходник + FX данные",
+   "kto": "Claude"
+  },
+  {
+   "tip": "ADAPTER",
+   "id": "range_rejection",
+   "chto": "нужен переходник",
+   "kto": "Claude"
+  },
+  {
+   "tip": "DATA",
+   "id": "P_KR_XSEC_V3",
+   "chto": "нужны свежие/глубже данные",
+   "kto": "Claude"
+  },
+  {
+   "tip": "DATA",
+   "id": "P_KR_FANDING_KERRI",
+   "chto": "нужны свежие/глубже данные",
+   "kto": "Claude"
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "param": {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold",
+  "side": "short"
+ },
+ "monet": 1,
+ "limit": 0,
+ "okna": {
+  "O1": {
+   "n": 0,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 12,
+   "kontrol_sobran": false
+  }
+ }
+}

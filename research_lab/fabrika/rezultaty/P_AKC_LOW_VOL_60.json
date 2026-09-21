@@ -1,0 +1,38 @@
+{
+ "param": {
+  "signal": "AKC_LOW_VOL_60",
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "rynok": "akcii_pit",
+ "H": 21,
+ "okna": {
+  "VSE": {
+   "n": 198,
+   "n_eff": 9.4,
+   "edge": -0.08416963411480415,
+   "t": -2.038926024366953
+  },
+  "H1": {
+   "n": 99,
+   "n_eff": 4.7,
+   "edge": -0.09407688516513436,
+   "t": -1.3623828354535408
+  },
+  "H2": {
+   "n": 99,
+   "n_eff": 4.7,
+   "edge": -0.07426238306447394,
+   "t": -1.6438055710948403
+  }
+ },
+ "strategiya_srednee": -0.08584792060653161,
+ "sluchay_srednee": -0.0016782864917274634,
+ "godovyh_strategiya": -1.0301750472783793,
+ "pokrytie_vselennoy_mediana": 0.8123635371179039,
+ "chlenov_s_cenoy_mediana": 1.0,
+ "period": [
+  1739923200000,
+  1764547200000
+ ]
+}

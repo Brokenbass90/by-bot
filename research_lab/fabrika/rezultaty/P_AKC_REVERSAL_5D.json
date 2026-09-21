@@ -1,0 +1,38 @@
+{
+ "param": {
+  "signal": "AKC_REVERSAL_5D",
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "rynok": "akcii_pit",
+ "H": 5,
+ "okna": {
+  "VSE": {
+   "n": 214,
+   "n_eff": 42.8,
+   "edge": 0.001983718403090459,
+   "t": 0.3807336785672768
+  },
+  "H1": {
+   "n": 107,
+   "n_eff": 21.4,
+   "edge": 0.003269331966694147,
+   "t": 0.43963104273433457
+  },
+  "H2": {
+   "n": 107,
+   "n_eff": 21.4,
+   "edge": 0.0006981048394867715,
+   "t": 0.09531730274787951
+  }
+ },
+ "strategiya_srednee": -7.000753920073356e-05,
+ "sluchay_srednee": -0.0020537259422911927,
+ "godovyh_strategiya": -0.0035283799757169715,
+ "pokrytie_vselennoy_mediana": 0.8117840484019592,
+ "chlenov_s_cenoy_mediana": 1.0,
+ "period": [
+  1739923200000,
+  1766448000000
+ ]
+}

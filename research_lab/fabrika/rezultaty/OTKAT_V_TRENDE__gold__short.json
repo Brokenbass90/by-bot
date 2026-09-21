@@ -1,0 +1,19 @@
+{
+ "param": {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "gold",
+  "side": "short"
+ },
+ "monet": 1,
+ "limit": 0,
+ "okna": {
+  "O1": {
+   "n": 11,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 19,
+   "kontrol_sobran": false
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "param": {
+  "signal": "KR_FANDING_KERRI",
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "rynok": "kripto_pit",
+ "H": 3,
+ "okna": {
+  "VSE": {
+   "n": 0,
+   "n_eff": 0.0
+  },
+  "H1": {
+   "n": 0,
+   "n_eff": 0.0
+  },
+  "H2": {
+   "n": 0,
+   "n_eff": 0.0
+  }
+ },
+ "strategiya_srednee": null,
+ "sluchay_srednee": null,
+ "godovyh_strategiya": null,
+ "pokrytie_vselennoy_mediana": 0.0,
+ "chlenov_s_cenoy_mediana": 0.25,
+ "period": null
+}

@@ -1,0 +1,35 @@
+{
+ "tip": "proverka_narezki",
+ "simvoly": {
+  "SOLUSDT": {
+   "odin_prohod": 2,
+   "narezka": 2,
+   "sovpadayut": true,
+   "tolko_v_odnom": [],
+   "tolko_v_narezke": []
+  },
+  "DOGEUSDT": {
+   "odin_prohod": 3,
+   "narezka": 3,
+   "sovpadayut": true,
+   "tolko_v_odnom": [],
+   "tolko_v_narezke": []
+  },
+  "WIFUSDT": {
+   "odin_prohod": 1,
+   "narezka": 1,
+   "sovpadayut": true,
+   "tolko_v_odnom": [],
+   "tolko_v_narezke": []
+  },
+  "SUIUSDT": {
+   "odin_prohod": 1,
+   "narezka": 1,
+   "sovpadayut": true,
+   "tolko_v_odnom": [],
+   "tolko_v_narezke": []
+  }
+ },
+ "sovpadayut": true,
+ "planov": 7
+}
