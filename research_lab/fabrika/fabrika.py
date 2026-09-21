@@ -40,7 +40,7 @@ VERDIKTY = DIR / "verdikty.jsonl"
 ZADACHI = DIR / "zadachi.json"
 REZ = DIR / "rezultaty"
 ZAMOK = DIR / ".zamok"
-BEGUNY = {"h1": DIR / "begun_h1.py", "meh": DIR / "begun_meh.py", "portfel": DIR / "begun_portfel.py", "bull": DIR / "begun_bull.py"}
+BEGUNY = {"h1": DIR / "begun_h1.py", "meh": DIR / "begun_meh.py", "portfel": DIR / "begun_portfel.py", "bull": DIR / "begun_bull.py", "xsec": DIR / "begun_xsec.py"}
 PREDL = DIR / "predlozheniya"
 PREREG_KATALOG_V2 = "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md"
 SUDYA_PORTFEL = {"porog_t": 2.5, "min_neff": 20, "min_pokrytie": 0.8}
@@ -54,7 +54,7 @@ MIN_V_OCHEREDI = 3
 SON = 1800
 KONEC = {"NEGATIVE", "POSITIVE_LEAD", "PLUS_NO_CONFIDENCE", "INCONCLUSIVE_LOW_N",
          "LEAD_BLOCKED_DATA", "PARITY_PASS", "CONFIRMED", "FAILED_CONFIRMATION",
-         "CONFIRMATION_INCONCLUSIVE", "BLOCKED_DATA"}
+         "CONFIRMATION_INCONCLUSIVE", "BLOCKED_DATA", "DIAGNOSTIC"}
 
 
 def seychas():
@@ -156,6 +156,11 @@ def sudya_podtv(rez, s):
 
 
 def sudit(item, rez):
+    if item["tip"] == "diagnostika":
+        v = (rez.get("okna") or {}).get("VSE") or {}
+        if not v.get("n"):
+            return "BLOCKED_DATA", "нет данных для диагностики"
+        return "DIAGNOSTIC", f"эдж {v.get('edge', float('nan')):+.5f}, t={v.get('t', float('nan')):.2f}, n_eff={v.get('n_eff')} — не вердикт, мера для сравнения"
     if item["tip"] == "paritet" and item["begun"] == "bull":
         if rez.get("sovpadayut") and rez.get("planov", 0) >= 5:
             return "PARITY_PASS", f"нарезка = один проход, планов {rez['planov']}"
@@ -164,7 +169,7 @@ def sudit(item, rez):
         return sudya_paritet(rez, item["etalon"])
     if item.get("param", {}).get("etap") == "confirmation":
         return sudya_podtv(rez, item.get("sudya", SUDYA_PODTV))
-    if item["begun"] == "portfel":
+    if item["begun"] in ("portfel", "xsec"):
         return sudya_portfel(rez, item.get("sudya", SUDYA_PORTFEL))
     v, poch = sudya(rez, item["sudya"])
     if item.get("param", {}).get("etap") == "discovery" and v == "LEAD_BLOCKED_DATA":
@@ -235,7 +240,7 @@ def schet_proverok(d, V):
     vse, neg = Counter(), Counter()
     for it in d["ochered"]:
         v = V.get(it["id"])
-        if v and v["verdikt"] in KONEC and it.get("tip") != "paritet":
+        if v and v["verdikt"] in KONEC and it.get("tip") not in ("paritet", "diagnostika"):
             key = (it.get("rynok"), it.get("semya"))
             vse[key] += 1; neg[key] += v["verdikt"] == "NEGATIVE"
     return vse, neg
@@ -265,8 +270,8 @@ def porodit(d, V, skolko):
     novye = []
     for _, hid, meh, ry, side, M in kand[:skolko]:
         if side is None:
-            it = dict(id=hid, tip="gipoteza", begun="portfel", prereg=PREREG_KATALOG_V2, sostoyanie="QUEUED",
-                      rynok=ry, semya=M["semya"], param=dict(signal=meh, etap="discovery"),
+            it = dict(id=hid, tip="gipoteza", begun="portfel", prereg=M.get("prereg", PREREG_KATALOG_V2), sostoyanie="QUEUED",
+                      rynok=ry, semya=M["semya"], slot=M.get("slot"), param=dict(signal=meh, etap="discovery"),
                       sudya=SUDYA_PORTFEL, porozhdeno=seychas().isoformat(timespec="seconds"))
         else:
             it = dict(id=hid, tip="gipoteza", begun="meh", prereg=(PREREG_KATALOG_V2 if ry == "fx7" else PREREG_KATALOG),
@@ -298,7 +303,7 @@ def vybrat(d, V, krome=None):
 
 # ── служебное ─────────────────────────────────────────────────────────
 def otpechatok_dannyh(rynok):
-    papki = {"kripto_pit": ["data/pit_daily"], "akcii_pit": ["data/alpaca_pit_daily_v1/bars"],
+    papki = {"kripto_pit": ["data/pit_daily"], "kripto_pit50": ["data/pit_daily", "data/basis"], "xsec": ["data/pit_daily", "data/basis"], "akcii_pit": ["data/alpaca_pit_daily_v1/bars"],
              "crypto137": ["data/h1"], "gold": ["data/zoloto_h1"], "fx7": ["data/fx_h1"], "crypto137_m5": ["data/m5_posle"]}.get(rynok, [])
     n = sz = 0
     for pp in papki:
@@ -367,8 +372,10 @@ def heshi(item):
     if item["begun"] == "h1":
         h["random_control"] = sha(LAB / "random_control.py")
         h["strategiya"] = sha(ROOT / "strategies" / f"{item['param']['mod']}.py")
-    elif item["begun"] == "portfel":
-        h["portfeli"] = sha(DIR / "portfeli.py")
+    elif item["begun"] in ("portfel", "xsec"):
+        h["portfeli"] = sha(DIR / "portfeli.py"); h["regime_v1"] = sha(DIR / "regime_v1.py")
+        if item["begun"] == "xsec":
+            h["xsec_v3_reference"] = sha(LAB / "xsec_v3_reference.py")
     elif item["begun"] == "bull":
         for f in ("strategies/event_expansion_retest_long_mtf_v1.py", "bot/event_long_execution_v1.py",
                   "bot/level_snapshot_v1.py"):
@@ -446,6 +453,7 @@ def odin_shag():
         zap["posmertno"] = posmertno(cur, rez, d, V)
     with VERDIKTY.open("a") as f:
         f.write(json.dumps(zap, ensure_ascii=False) + "\n")
+    obnovit_reestr(d, V)
     podtv = postavit_podtverzhdenie(d, cur) if verd == "POSITIVE_LEAD" else None
     sinhronizirovat(d, V); sohranit(d); zapisat_zadachi(d)
     print(f"■ {sled['id']}: {verd} — {pochemu}  ({sek} с)", flush=True)
@@ -454,6 +462,19 @@ def odin_shag():
     if "posmertno" in zap:
         print(f"   ↳ {zap['posmertno']['semya']}; дальше: {zap['posmertno']['sleduyushchaya']}", flush=True)
     return sled["id"]
+
+
+def obnovit_reestr(d=None, V=None):
+    """журнал → канонический реестр (под замком, атомарно) → доска-вид"""
+    try:
+        import reestr_sink, master
+        d = d or zagruzit(); V = V or verdikty()
+        n = reestr_sink.primenit(reestr_sink.iz_verdiktov(d["ochered"], V))
+        master.postroit()
+        return n
+    except Exception as e:                     # реестр не должен ронять фабрику
+        print(f"   ! реестр не обновлён: {e}", flush=True)
+        return -1
 
 
 def s_zamkom(fn):
@@ -600,11 +621,13 @@ def samoproverka():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    for k in ("demon", "otchet", "doska", "samoproverka", "povtorit_tehnicheskie"):
+    for k in ("demon", "otchet", "doska", "samoproverka", "povtorit_tehnicheskie", "reestr"):
         ap.add_argument(f"--{k}", action="store_true")
     a = ap.parse_args()
     if a.samoproverka:
         sys.exit(1 if samoproverka() else 0)
+    if a.reestr:
+        print("изменено записей реестра:", obnovit_reestr()); sys.exit(0)
     if a.otchet:
         print(otchet_stroka()); pokazat_zadachi(); sys.exit(0)
     if a.doska:

@@ -42,17 +42,18 @@ def zagruzit_akcii():
                 razdel=_ms("2026-01-01"), opisanie="Alpaca PIT, 962 тикера (262 делистинга)")
 
 
-def zagruzit_kripto_pit():
+def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01"):
     """Топ-20 по открытому интересу, известному строго до даты (basis/vselennaya_pit.json).
     Цены: data/pit_daily/*.json (скачиваются dannye_pit_kripto.py), иначе из data/h1.
     Фандинг: оттуда же и из bybit_public_archive_2023/funding."""
-    v = json.load(open(DATA / "basis/vselennaya_pit.json"))
-    S = sorted(v["simvoly"]); ser, fnd = {}, {}
+    v = json.load(open(DATA / fayl))
+    S = sorted(v["simvoly"]); ser, fnd, hv = {}, {}, {}
     for s in S:
         p = DATA / f"pit_daily/{s}.json"
         if p.exists():
             d = json.load(open(p))
             ser[s] = {int(r[0]) // DEN * DEN: float(r[4]) for r in d.get("daily", [])}
+            hv[s] = {int(r[0]) // DEN * DEN: (float(r[2]), float(r[5])) for r in d.get("daily", [])}
             fnd[s] = [(int(t), float(r)) for t, r in d.get("funding", [])]
         elif (DATA / f"h1/{s}.npz").exists():
             z = np.load(DATA / f"h1/{s}.npz"); ts = z["ts"]; c = z["ohlcv"][:, 3]
@@ -65,10 +66,12 @@ def zagruzit_kripto_pit():
     dates = np.arange(_ms("2023-01-02"), _ms("2026-09-04"), DEN, dtype=np.int64)
     di = {int(t): i for i, t in enumerate(dates)}
     C = np.full((len(dates), len(S)), np.nan); M = np.zeros_like(C, dtype=bool); F = np.zeros_like(C)
-    FOK = np.zeros_like(C, dtype=bool)
+    FOK = np.zeros_like(C, dtype=bool); HH = np.full_like(C, np.nan); VV = np.full_like(C, np.nan)
     for j, s in enumerate(S):
         for t, c in ser.get(s, {}).items():
             if t in di: C[di[t], j] = c
+        for t, (hh, vv) in hv.get(s, {}).items():
+            if t in di: HH[di[t], j] = hh; VV[di[t], j] = vv
         for t, r in fnd.get(s, []):
             k = di.get(int(t) // DEN * DEN)
             if k is not None: F[k, j] += r; FOK[k, j] = True
@@ -77,11 +80,12 @@ def zagruzit_kripto_pit():
         if k is not None:
             for s in sl:
                 M[k, S.index(s)] = True
-    return dict(dates=dates, simvoly=S, C=C, DV=None, M=M, F=F, FOK=FOK, fee_bps=7.0,
-                razdel=_ms("2025-10-01"), opisanie="крипта PIT: топ-20 по OI на дату")
+    return dict(dates=dates, simvoly=S, C=C, DV=None, M=M, F=F, FOK=FOK, HH=HH, VV=VV, fee_bps=7.0,
+                razdel=_ms(razdel), opisanie=f"крипта PIT: {v.get('pravilo', fayl)}")
 
 
-RYNKI_P = {"akcii_pit": zagruzit_akcii, "kripto_pit": zagruzit_kripto_pit}
+RYNKI_P = {"akcii_pit": zagruzit_akcii, "kripto_pit": zagruzit_kripto_pit,
+           "kripto_pit50": lambda: zagruzit_kripto_pit("basis/vselennaya_pit_usd50.json")}
 
 
 # ── сигналы: fn(C_do_t, DV_do_t) -> оценка по бумагам (NaN = не участвует) ──
@@ -151,6 +155,89 @@ def fanding_kerri(C, DV, F=None):
     return np.where(np.isfinite(C[-1]), -f7, np.nan)
 
 
+# ── пакет v3 (предрегистрация PREREG_PAKET_V3_2026_09_21.md) ─────────
+def _sma_last(C, n):
+    if C.shape[0] < n:
+        return np.full(C.shape[1], np.nan)
+    w = C[-n:]
+    return np.where(np.isfinite(w).all(axis=0), np.nanmean(w, axis=0), np.nan)
+
+
+def _shirina(C, M):
+    s50 = _sma_last(C, 50); el = M[-1] & np.isfinite(s50) & np.isfinite(C[-1])
+    return (C[-1, el] > s50[el]).mean() if el.sum() >= 8 else np.nan
+
+
+def _ne_peregret(C, ctx):
+    """фандинг монеты за 7 дней не выше медианы членов вселенной"""
+    F = ctx.get("F")
+    if F is None or F.shape[0] < 8:
+        return np.zeros(C.shape[1], dtype=bool)
+    f7 = F[-7:].sum(axis=0); el = ctx["M"][-1] & np.isfinite(C[-1])
+    return f7 <= np.median(f7[el]) if el.sum() else np.zeros(C.shape[1], dtype=bool)
+
+
+def reversal_3d(C, DV, ctx):
+    r = -_ret(C, 3); return np.where(ctx["M"][-1], r, np.nan)
+
+
+def _lider_otkat(C, ctx):
+    if C.shape[0] < 61:
+        return np.full(C.shape[1], np.nan)
+    M = ctx["M"][-1]; r30 = _ret(C, 30); r3 = _ret(C, 3)
+    with np.errstate(all="ignore"):
+        sd = np.nanstd(np.diff(np.log(C[-21:]), axis=0), axis=0, ddof=1)
+    s50 = _sma_last(C, 50)
+    el = M & np.isfinite(r30) & np.isfinite(r3) & np.isfinite(sd) & np.isfinite(s50)
+    out = np.where(el, 0.0, np.nan)
+    if el.sum() < 5:
+        return out
+    porog = np.quantile(r30[el], 0.8)
+    vyb = el & (r30 >= porog) & (r3 <= -sd * np.sqrt(3)) & (C[-1] > s50)
+    return np.where(vyb, 1.0, out)
+
+
+def lider_otkat_base(C, DV, ctx):
+    return _lider_otkat(C, ctx)
+
+
+def lider_otkat_filtr(C, DV, ctx):
+    x = _lider_otkat(C, ctx)
+    if not (_shirina(C, ctx["M"]) >= 0.55):
+        return np.where(np.isfinite(x), 0.0, np.nan)
+    return np.where(np.isfinite(x), np.where((x > 0) & _ne_peregret(C, ctx), 1.0, 0.0), np.nan)
+
+
+def _szhatie_rasshirenie(C, ctx):
+    HH, VV, M = ctx["HH"], ctx["VV"], ctx["M"][-1]
+    if C.shape[0] < 202:
+        return np.full(C.shape[1], np.nan)
+    with np.errstate(all="ignore"):
+        lr = np.diff(np.log(C[-202:]), axis=0)                       # 201 доходность
+        vol = np.array([np.nanstd(lr[i - 20:i], axis=0, ddof=1) for i in range(20, lr.shape[0] + 1)])  # 182 окна
+        vchera, istoriya = vol[-2], vol[-182:-2]
+        pct = (istoriya < vchera).mean(axis=0)
+        maks20 = np.nanmax(HH[-21:-1], axis=0); med_v = np.nanmedian(VV[-21:-1], axis=0)
+    el = M & np.isfinite(vchera) & np.isfinite(maks20) & np.isfinite(med_v) & np.isfinite(VV[-1])
+    out = np.where(el, 0.0, np.nan)
+    vyb = el & (pct <= 0.2) & (C[-1] > maks20) & (VV[-1] >= 1.5 * med_v)
+    return np.where(vyb, 1.0, out)
+
+
+def szhatie_base(C, DV, ctx):
+    return _szhatie_rasshirenie(C, ctx)
+
+
+def szhatie_filtr(C, DV, ctx):
+    x = _szhatie_rasshirenie(C, ctx)
+    if not (_shirina(C, ctx["M"]) >= 0.55):
+        return np.where(np.isfinite(x), 0.0, np.nan)
+    return np.where(np.isfinite(x), np.where((x > 0) & _ne_peregret(C, ctx), 1.0, 0.0), np.nan)
+
+
+PV3 = "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md"
+
+
 # napravlenie: ls — лонг верх / шорт низ; long — только лонг верхней доли
 SIGNALY = {
     "AKC_MOM_6_1":      dict(fn=mom_6_1, rynok="akcii_pit", napr="ls", kv=0.1, H=5, semya="xs_momentum"),
@@ -161,4 +248,15 @@ SIGNALY = {
     "KR_XSEC_V3":       dict(fn=xsec_v3, rynok="kripto_pit", napr="ls", kv=0.25, H=3, semya="xs_momentum_vol"),
     "KR_FANDING_KERRI": dict(fn=fanding_kerri, rynok="kripto_pit", napr="ls", kv=0.25, H=3, semya="funding_carry",
                              nuzhen_fanding=True),
+    # пакет v3
+    "XSEC_3D_REVERSAL": dict(fn=reversal_3d, rynok="kripto_pit50", napr="ls", kv=0.25, H=3, semya="xs_reversal",
+                             ctx=True, prereg=PV3, slot="neytral"),
+    "BULL_LEADER_PULLBACK_BASE": dict(fn=lider_otkat_base, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                                      semya="bull_leader_pullback", ctx=True, prereg=PV3, slot="rost"),
+    "BULL_LEADER_PULLBACK_FILTERED": dict(fn=lider_otkat_filtr, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                                          semya="bull_leader_pullback_f", ctx=True, prereg=PV3, slot="rost"),
+    "BULL_VOL_EXPANSION_BASE": dict(fn=szhatie_base, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                                    semya="bull_vol_expansion", ctx=True, prereg=PV3, slot="rost"),
+    "BULL_VOL_EXPANSION_FILTERED": dict(fn=szhatie_filtr, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                                        semya="bull_vol_expansion_f", ctx=True, prereg=PV3, slot="rost"),
 }

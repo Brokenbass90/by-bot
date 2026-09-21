@@ -49,8 +49,11 @@
     ]
    },
    "opisanie": "планы Bull при нарезке окнами обязаны совпасть с одним проходом целиком; нужно ≥5 планов",
-   "pid": 21280,
-   "start": "2026-09-21T08:38:06+00:00"
+   "pid": 33279,
+   "start": "2026-09-21T10:10:17+00:00",
+   "prervano": [
+    "2026-09-21T10:10:10+00:00"
+   ]
   },
   {
    "id": "ATT1_LONG_TREND",
@@ -937,7 +940,7 @@
    "tip": "gipoteza",
    "begun": "portfel",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "rynok": "akcii_pit",
    "semya": "xs_momentum",
    "param": {
@@ -950,8 +953,7 @@
     "min_pokrytie": 0.8
    },
    "porozhdeno": "2026-09-21T08:37:53+00:00",
-   "start": "2026-09-21T08:37:53+00:00",
-   "zhdyot_verdikt_posle": "2026-09-21T08:38:50+00:00",
+   "start": "2026-09-21T10:10:11+00:00",
    "popravka": "2026-09-21T08:38:50+00:00: код держал 21 день вместо 5 из предрегистрации; вердикт LOW_N снят как несоответствие кода предрегистрации (чисел эджа не было), прогон повторяется с H=5"
   },
   {
@@ -959,7 +961,7 @@
    "tip": "gipoteza",
    "begun": "portfel",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "rynok": "akcii_pit",
    "semya": "xs_momentum_long",
    "param": {
@@ -972,8 +974,7 @@
     "min_pokrytie": 0.8
    },
    "porozhdeno": "2026-09-21T08:37:53+00:00",
-   "start": "2026-09-21T08:37:55+00:00",
-   "zhdyot_verdikt_posle": "2026-09-21T08:38:50+00:00",
+   "start": "2026-09-21T10:10:13+00:00",
    "popravka": "2026-09-21T08:38:50+00:00: код держал 21 день вместо 5 из предрегистрации; вердикт LOW_N снят как несоответствие кода предрегистрации (чисел эджа не было), прогон повторяется с H=5"
   },
   {
@@ -1001,7 +1002,7 @@
    "tip": "gipoteza",
    "begun": "portfel",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "rynok": "akcii_pit",
    "semya": "low_volatility",
    "param": {
@@ -1014,8 +1015,7 @@
     "min_pokrytie": 0.8
    },
    "porozhdeno": "2026-09-21T08:37:53+00:00",
-   "start": "2026-09-21T08:37:57+00:00",
-   "zhdyot_verdikt_posle": "2026-09-21T08:38:50+00:00",
+   "start": "2026-09-21T10:10:14+00:00",
    "popravka": "2026-09-21T08:38:50+00:00: код держал 21 день вместо 5 из предрегистрации; вердикт LOW_N снят как несоответствие кода предрегистрации (чисел эджа не было), прогон повторяется с H=5"
   },
   {
@@ -1023,7 +1023,7 @@
    "tip": "gipoteza",
    "begun": "portfel",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
    "rynok": "kripto_pit",
    "semya": "xs_momentum_vol",
    "param": {
@@ -1036,14 +1036,14 @@
     "min_pokrytie": 0.8
    },
    "porozhdeno": "2026-09-21T08:37:58+00:00",
-   "start": "2026-09-21T08:37:58+00:00"
+   "start": "2026-09-21T10:10:10+00:00"
   },
   {
    "id": "P_KR_FANDING_KERRI",
    "tip": "gipoteza",
    "begun": "portfel",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "NEGATIVE",
    "rynok": "kripto_pit",
    "semya": "funding_carry",
    "param": {
@@ -1056,7 +1056,7 @@
     "min_pokrytie": 0.8
    },
    "porozhdeno": "2026-09-21T08:37:58+00:00",
-   "start": "2026-09-21T08:37:59+00:00"
+   "start": "2026-09-21T10:10:11+00:00"
   },
   {
    "id": "OTKAT_V_TRENDE__fx7__long",
@@ -1107,7 +1107,7 @@
    "tip": "gipoteza",
    "begun": "portfel",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "rynok": "akcii_pit",
    "semya": "high_proximity",
    "param": {
@@ -1120,8 +1120,7 @@
     "min_pokrytie": 0.8
    },
    "porozhdeno": "2026-09-21T08:38:00+00:00",
-   "start": "2026-09-21T08:38:00+00:00",
-   "zhdyot_verdikt_posle": "2026-09-21T08:38:50+00:00",
+   "start": "2026-09-21T10:10:15+00:00",
    "popravka": "2026-09-21T08:38:50+00:00: код держал 21 день вместо 5 из предрегистрации; вердикт LOW_N снят как несоответствие кода предрегистрации (чисел эджа не было), прогон повторяется с H=5"
   },
   {
@@ -1299,6 +1298,41 @@
    },
    "porozhdeno": "2026-09-21T08:38:05+00:00",
    "start": "2026-09-21T08:38:05+00:00"
+  },
+  {
+   "id": "XSEC_EXACT_TARGET_WEIGHTS_PIT",
+   "tip": "gipoteza",
+   "begun": "xsec",
+   "rynok": "kripto_pit50",
+   "semya": "xs_momentum_vol_exact",
+   "slot": "neytral",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+   "param": {
+    "vselennaya": "pit50",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-21T10:49:44+00:00"
+  },
+  {
+   "id": "XSEC_EXACT_TEN62_DIAG",
+   "tip": "diagnostika",
+   "begun": "xsec",
+   "rynok": "kripto_pit50",
+   "semya": "xs_momentum_vol_exact",
+   "slot": null,
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+   "param": {
+    "vselennaya": "ten62",
+    "etap": "discovery"
+   },
+   "porozhdeno": "2026-09-21T10:49:44+00:00"
   }
  ]
 }

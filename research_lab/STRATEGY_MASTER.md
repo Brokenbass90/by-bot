@@ -1,168 +1,109 @@
-# STRATEGY_MASTER — доска проекта
+# STRATEGY_MASTER — вид на реестр
 
-Версия 3, 21 сентября 2026. У каждой строки есть файл-доказательство.
-Если память и файл расходятся, прав файл. Старые отчёты решений не принимают.
+Сгенерировано 2026-09-21 10:50 UTC из `research_lab/data/reestr.json` (единственная машинная база) и `research_lab/fabrika/verdikty.jsonl` (журнал доказательств).
+Руками не править: `python3 research_lab/fabrika/master.py`. Приоритеты — в `ROADMAP.md`.
 
-Проект: много независимых «рукавов» на крипте, акциях и Gold/FX.
-Путь каждого: идея → предрегистрация → тест с издержками и случайным входом →
-подтверждение → тень → READY_FOR_BUILD → Codex → PAPER → tiny-live.
+## Слоты портфеля
 
-## Доска
+Слот — это место в портфеле, а не обещанный победитель. Умерла нога — слот ищет другую.
 
-    PRODUCTION (Codex)
-      Alpaca            PAPER до 7/7, потом canary
-      ATT1-short        тень 923/1300, потом canary
+**Акции**
 
-    SHADOW
-      SBR1-major8       SHADOW + REVALIDATION: тень на сервере с 24 авг, вердикт по тени
-      XSEC-v3           день 57, валовый +$88.9 на книге $1000, обе половины в плюсе
-
-    RESEARCH (очередь фабрики: research_lab/fabrika/)
-      Bull-Cont-v1      предрегистрация есть, ни разу не тестировалась (нужен переходник)
-      XSEC-PIT          честная вселенная с делистингами + фандинг + контроль
-      Gold-Elder        нужен путь данных (мост MT5)
-      EURUSD            нужен новый механизм
-
-    BACKGROUND
-      ETS2M (Элдер)     388/900, не чинить, не обсуждать до ворот
-
-    ARCHIVE (решений не принимает; у каждой строки записано, что её вернёт)
-      фабрика 21 сен: ATT1-long-trend, ATT1-short-trend, SBR1-long-trend — NEGATIVE
-      SBR1-research ×4 флет+, CS_OTKAT_V2, ATT1-long во флете, ATT1 номер касания,
-      FX-ордерблоки, ETS2K, ETS2L, старые ARB
-
-## Карточки
-
-### SBR1-major8 — SHADOW + REVALIDATION
-
-Одна карточка. Моя исследовательская версия (стоп ×4, фильтр «флет+», 137 монет)
-лежит в ARCHIVE отдельной строкой: печать 3 сен, 415 сделок, −23.3R,
-`research_lab/prereg/SEAL_SPENT.json`. Это другая конструкция.
-
-- Что это: родной `sloped_break_retest_v1`, 8 мажоров, родные выходы.
-- История 2023–2025: 64 сделки, +24.26R, PF 2.06, 11 из 18 месяцев в плюсе.
-  `research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json`, 23 авг.
-  Цифры +22.35R/PF 2.14 в файлах не найдены. Самое близкое — 22.36R: это итог без монеты DOT.
-- **Окно вне выборки уже потрачено.** В версии 2 этой доски я написал, что оно
-  свободно. Это неверно. Codex прогнал его 29 авг
-  (`bybit-bot-recovery-20260824/reports/ATT1_SBR1_RESERVED_OOS_RESULT_2026_08_29.md`):
-  окно 2025-10…2026-07, 16 сделок, −3.31R, PF 0.64, обе половины в минусе.
-  Формально это `INCONCLUSIVE_LOW_N`: мало сделок, чтобы убить, и знак плохой.
-- Статус: SHADOW. Тень на сервере с 24 авг, контроль объявлен заранее
-  (`PREREG_SBR1_SHADOW_RANDOM_CONTROL_2026_08_24.md`).
-- Следующие ворота: Codex снимает журнал тени с VPS (локальная копия от 24 авг).
-  Claude считает её против контроля. Сделок мало, около двух в месяц, так что
-  это медленный выстрел, а не быстрый.
-
-### XSEC-v3: живая тень, знак плюс, уверенности пока нет
-
-- Доказательство: `runtime/xsec_v3_shadow/ledger.jsonl` и `decision_latest.json`,
-  обновлено 21 сентября 00:04.
-- Тень с 26 июля, день 57, 62 замороженные монеты, ноль ордеров.
-- 55 закрытых фаз: валовый итог +$88.9 на книге $1000 (≈ +8.9% за 55 дней).
-  Половины: +45.6 и +43.3. В плюсе 27 фаз из 55. Сила сигнала t≈0.35, то есть
-  знак правильный, но уверенности нет.
-- Что сломано: вселенная «только выжившие» (нет делистингов), фандинг не вычтен,
-  нет контроля случайным портфелем. На конвейере Codex: `xsec_pit_v5 = BLOCKED_DATA_OR_PARITY`.
-- Следующие ворота: вселенная на дату (PIT) + фандинг + случайный портфель.
-  Тень не трогать.
-
-### Bull Continuation: СУЩЕСТВУЕТ. Я ошибся
-
-В прошлой версии я написал «в репозитории нет». Я искал только в своём
-репозитории, а она лежит у Codex.
-- `crypto_bull_continuation_v1`, репозиторий `bybit-bot-recovery-20260824`.
-- Стратегия `strategies/event_expansion_retest_long_mtf_v1.py`, исполнение
-  `bot/event_long_execution_v1.py`, план `docs/superpowers/plans/2026-08-29-crypto-bull-continuation-v1-implementation-plan.md`.
-- Предрегистрация (1 сен) хорошая: случайный вход, стресс, фандинг, критерии смерти.
-- Статус: `BLOCKED_ADAPTER` во всех шести прогонах конвейера. Не проверялась ни разу.
-- Это лучший кандидат номер один для фабрики: идея и правила готовы, не хватает
-  только переходника.
-
-### ATT1-long: во флете умерла, в тренде не проверялась
-
-- Доказательство: `research_lab/controls_final.log`, 19 авг, 19:55 и 20:09.
-
-      стоп ×4, флет+   окно 2024-03…2025-09  n=942  эдж +0.0486R  +1.99σ
-                       окно 2023-01…2024-02  n=376  эдж −0.0519R  −1.22σ
-      стоп ×6, флет+   +1.68σ / −1.18σ
-
-- Причина: на втором окне знак переворачивается.
-- Проверяли только режим «флет+». Лонг в режиме тренда вверх не тестировался вообще.
-  Это новая, заранее названная ось, а не подгонка. Идёт в очередь как `ATT1-long-trend`.
-
-### ETS2M: фон, только темп
-
-- `research_lab/data/yadro/ETS2M/`: 388 входов из 900, все движки закрыты у 364.
-  Последняя запись сегодня в 03:29, процесс пишет.
-- **Сигнал тревоги по темпу.** ETS2S давала 300–600 сигналов в сутки с 10 по
-  17 сентября, а с 18 сентября — около 30. Причина не установлена: это может быть рынок
-  (шорт-стратегия в росте молчит) или поломка тени. Проверка дешёвая, R не нужен.
-- Отдельно: `ten_ETS2X*.jsonl` пишутся до сих пор (04:00 сегодня), хотя ETS2X
-  выключен в `podnyat_teni.sh`. Значит, где-то работает лишний процесс. Это ровно
-  тот случай, когда «несколько стратегий лезут в одну».
-
-### Остальные
-
-| ID | статус | доказательство | следующие ворота | владелец |
+| id | состояние | главное | следующий шаг | владелец |
 |---|---|---|---|---|
-| ETS2S | информация PASS 4.22σ, деньги −329.9R | вердикт 21 сен, `STRATEGY_MASTER` v1 | ответ даёт ETS2M | Claude |
-| ATT1 номер касания | ARCHIVE, −2.55σ | вердикт 21 сен | вернёт только новый механизм | — |
-| Gold-Elder | ЧАСТИЧНО: +4.79R, 0.93σ | `ITOG.md`; на конвейере `xauusd_unchanged_replication_v1 = BLOCKED_DATA_OR_PARITY` | путь данных | Claude + владелец (мост MT5) |
-| FX-ордерблоки | ARCHIVE: −109R / −76R | 30 авг | EURUSD только с новым механизмом | Claude |
+| ALPACA_INTENDED | READY_FOR_BUILD | 14.48% годовых, DD 7.57%, PF 1.81 — история | PAPER 0/7 → 7/7 → dossier → tiny-live по решению владельца | Codex |
 
-## Фабрика — `research_lab/fabrika/`
+**Крипта: падение / флет вниз**
 
-    fabrika.py       крутит очередь, судья, доска (--doska), самопроверка (11/11 PASS)
-    begun_h1.py      прогонщик: random_control на три окна
-    ochered.json     15 пунктов: паритет, 3 новые гипотезы, SBR1-тень, 10 из очереди Codex
-    PREREG_PAKET1_2026_09_21.md   пороги и судья объявлены до прогонов
-    verdikty.jsonl   вердикты, только дописывание
+| id | состояние | главное | следующий шаг | владелец |
+|---|---|---|---|---|
+| ATT1_AGG | SHADOW | +0.055R к контролю режима при sigma 0.27; по деньгам -10.2R | 1300 решений → canary (Codex) | Codex |
 
-Первым идёт паритет: прогонщик обязан повторить старый результат ATT1-long-флет.
-Не повторил — фабрика стоит.
+**Крипта: нейтральный / боковик**
 
-## Главное открытие инвентаризации
+| id | состояние | главное | следующий шаг | владелец |
+|---|---|---|---|---|
+| XSEC_V3_TEN | SHADOW | тень 57 дн: +$88.9 валовых на $1000, половины +45.6/+43.3, t≈0.35; PIT-упрощённый в фабри… | XSEC_EXACT_TARGET_WEIGHTS_PIT | Codex (тень) / Claude (PIT) |
+| P_KR_XSEC_V3 | HYPOTHESIS | t=1.65 (порог 2.5) |  |  |
 
-У Codex уже есть конвейер: `scripts/run_research_conveyor.py`, 10 гипотез.
-**Все десять стоят в BLOCKED:** 7 ждут переходника, 3 ждут данных. Очередь есть,
-а прогонять её нечем. Поэтому Factory V1 — это не новый реестр, а прогонщик:
-он берёт гипотезы из этой очереди, прогоняет через проверенное ядро
-(издержки + случайный вход + оба окна), выносит вердикт и сам берёт следующую.
+**Крипта: рост**
 
-## Фабрика: первый пакет, 21 сентября
+| id | состояние | главное | следующий шаг | владелец |
+|---|---|---|---|---|
+| SBR1_MAJOR8 | SHADOW | история 2023–25: 64 сделки +24.26R PF 2.06; reserved OOS 2025-10…07: 16 сделок −3.31R PF … | снять журнал тени с VPS и посчитать против контроля по PREREG_SBR1_SH… | Codex (VPS) / Claude (счёт) |
 
-    паритет            PARITY_PASS (со 2-й попытки: стратегия ATT1 изменилась 23 авг)
-    ATT1_LONG_TREND    NEGATIVE  O1 эдж −0.0897 (−3.75σ), O2 +0.0055, O3 −0.0446
-    ATT1_SHORT_TREND   NEGATIVE  O1 −0.0600 (−2.24σ), O2 −0.0084, O3 −0.0300
-    SBR1_LONG_TREND    NEGATIVE  O1 −0.0104, O2 +0.0483, O3 −0.0889 (−2.80σ)
+**Фоновые эксперименты**
 
-Три гипотезы за 32 минуты, фабрика сама брала следующую.
-Доказательства: `research_lab/fabrika/verdikty.jsonl`. Условия возврата — в `ochered.json`.
-Находка: ATT1-long в тренде входит ХУЖЕ случайного (−3.75σ). Это анти-сигнал;
-его можно проверить только новой предрегистрацией на данных после 21 сентября.
+| id | состояние | главное | следующий шаг | владелец |
+|---|---|---|---|---|
+| ETS2M | SHADOW | 388/900 входов; R до когорты не считается; темп сигналов упал с 18.09 | копить до 900 и терминальности всех движков | Claude |
+| ETS2S | SHADOW | информация PASS: +0.0668R к контролю режима, 4.22σ на 2803; деньги −329.9R; избыток по по… | деньги или нет — отвечает ETS2M | Claude |
 
-## Фабрика: непрерывный режим (21 сентября, вечер)
+**Без слота**
 
-`python fabrika.py --demon` крутится без конца:
-очередь → прогон → судья → вердикт → следующая. Если в очереди меньше 3 гипотез,
-фабрика сама порождает новые из каталога v1: 7 механизмов разных семейств × крипта/золото ×
-лонг/шорт = 28 гипотез (`PREREG_KATALOG_V1_2026_09_21.md`, порог z ≥ 3.1).
-Лимит «жвачки»: 3 NEGATIVE в семействе на рынке — семейство на паузу.
-Если прогонять нечего, фабрика пишет `zadachi.json` (переходники, данные, новый пакет)
-и ждёт, перечитывая очередь каждые 30 минут. Остановка безопасна.
-Сводка: `python fabrika.py --otchet`.
+| id | состояние | главное | следующий шаг | владелец |
+|---|---|---|---|---|
+| ARB_EVENT_CLASS | POSITIVE_LEAD | EGLD: 39.6-58.4 бп чистыми, жив в 100% срезов 11 суток | месяц следить за справочниками монет четырёх бирж и ловить КАЖДУЮ нов… |  |
+| GOLD | POSITIVE_LEAD | Элдер на золоте 2019–22: +4.79R, 0.93σ (ЧАСТИЧНО); фабрика 21.09: 13 из 14 LOW_N на 2 год… | глубже история XAUUSD (мост MT5 / выгрузка) |  |
 
-## Фабрика: модернизация (21 сентября, день)
+## Гипотезы без слота (ждут данных/переходника или «плюс без уверенности»)
 
-- Портфельный прогонщик `begun_portfel.py`: вселенная на дату, лонг/шорт корзины,
-  издержки, фандинг, контроль случайными корзинами. Проверка прибора: случайный сигнал
-  t = 0.16, «ясновидец» t = 35.
-- Акции: 962 тикера Alpaca с 262 делистингами, 5 сигналов. Крипта PIT: топ-20 по OI
-  на дату, XSEC v3 и фандинг-керри (ждут цен: `fabrika/dannye_pit_kripto.py` на Mac).
-- Обнаружение и подтверждение разведены: находка сама получает прогон на нетронутых данных.
-- Bull Continuation: переходник `begun_bull.py` (хеши закреплённых файлов сверяются),
-  перед прогоном — паритет нарезки. Тяжёлый, идёт после быстрых.
-- Валюты fx7: 7 пар из MT5, 14 гипотез каталога.
-- Предложения: `fabrika/predlozheniya/*.json` → проверка → заморозка → очередь.
-- BLOCKED_DATA перезапускается сам, когда в папке данных что-то изменилось.
+- `KAPITULYACIYA__crypto137__long` — z=0.33 (порог 3.1), O3 +
+- `KAPITULYACIYA__crypto137__short` — z=1.47 (порог 3.1), O3 +
+- `KAPITULYACIYA__fx7__long` — O1: n=43
+- `KAPITULYACIYA__fx7__short` — O1: n=37
+- `KAPITULYACIYA__gold__long` — O1: n=5
+- `KAPITULYACIYA__gold__short` — O1: n=4
+- `MOMENTUM_30D__gold__long` — O1: n=11
+- `MOMENTUM_30D__gold__short` — O1: n=10
+- `NOCHNOY_RAZRYV` — НЕ ИЗМЕРЕН
+- `OBEM_IMPULS__fx7__long` — O1: n=2
+- `OBEM_IMPULS__fx7__short` — O1: n=4
+- `OBEM_IMPULS__gold__long` — O1: n=0
+- `OBEM_IMPULS__gold__short` — O1: n=0
+- `OTKAT_V_TRENDE__gold__long` — O1: n=35
+- `OTKAT_V_TRENDE__gold__short` — O1: n=11
+- `PROBOY_55__gold__short` — O1: n=46
+- `P_AKC_REVERSAL_5D` — t=0.38 (порог 2.5)
+- `RAZBROS_RYNKA` — не измерен
+- `SZHATIE_BB__crypto137__long` — z=0.86 (порог 3.1), O3 +
+- `SZHATIE_BB__crypto137__short` — z=0.74 (порог 3.1), O3 нет
+- `SZHATIE_BB__fx7__short` — z=0.97 (порог 3.1), окна O3 нет
+- `SZHATIE_BB__gold__long` — O2: n=43
+- `SZHATIE_BB__gold__short` — O2: n=39
+- `VOZVRAT_K_SREDNEY__gold__long` — O1: n=33
+- `VOZVRAT_K_SREDNEY__gold__short` — O1: n=34
+
+## Доказательства по живым строкам
+
+- `ALPACA_INTENDED`: research_lab/data/alpaca_namerennyy_ten.jsonl
+- `ATT1_AGG`: research_lab/data/ten_ATT1.jsonl
+- `ETS2M`: research_lab/data/yadro/ETS2M/
+- `ETS2S`: research_lab/data/ten_ETS2S.jsonl
+- `SBR1_MAJOR8`: research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json; bybit-bot-recovery-20260824/reports/ATT1_SBR1_RESERVED_OOS_RESULT_2026_08_…
+- `XSEC_V3_TEN`: runtime/xsec_v3_shadow/ledger.jsonl; research_lab/fabrika/verdikty.jsonl#P_KR_XSEC_V3
+- `ARB_EVENT_CLASS`: research_lab/data/arb_ten.jsonl, ITOG.md часть 67
+- `GOLD`: ветка claude/alpaca-2026-09-07, коммиты 8 сентября
+
+## Фабрика
+
+Вердиктов всего: NEGATIVE 28, INCONCLUSIVE_LOW_N 21, PLUS_NO_CONFIDENCE 7, BLOCKED_DATA 2, BLOCKED_PARITY 1, PARITY_PASS 1
+
+## Архив (NEGATIVE, 45)
+
+Решений не принимает. Хранится, чтобы не убивать второй раз.
+
+- breakout: PROBOY_55__crypto137__long, PROBOY_55__crypto137__short, PROBOY_55__fx7__long, PROBOY_55__fx7__short, PROBOY_55__gold__long
+- flow_continuation: OBEM_IMPULS__crypto137__long, OBEM_IMPULS__crypto137__short
+- funding_carry: P_KR_FANDING_KERRI
+- high_proximity: P_AKC_BLIZ_MAX_126
+- low_volatility: P_AKC_LOW_VOL_60
+- mean_reversion: VOZVRAT_K_SREDNEY__crypto137__long, VOZVRAT_K_SREDNEY__crypto137__short, VOZVRAT_K_SREDNEY__fx7__long, VOZVRAT_K_SREDNEY__fx7__short
+- sloped_retest: SBR1_LONG_TREND
+- trend_pullback: OTKAT_V_TRENDE__crypto137__long, OTKAT_V_TRENDE__crypto137__short, OTKAT_V_TRENDE__fx7__long, OTKAT_V_TRENDE__fx7__short
+- trendline_touch: ATT1_LONG_TREND, ATT1_SHORT_TREND
+- ts_momentum: MOMENTUM_30D__crypto137__long, MOMENTUM_30D__crypto137__short, MOMENTUM_30D__fx7__long, MOMENTUM_30D__fx7__short
+- volatility_expansion: SZHATIE_BB__fx7__long
+- xs_momentum: P_AKC_MOM_6_1
+- xs_momentum_long: P_AKC_MOM_6_1_LONG
+- прочее: ALPACA_A_G2, ARB_EGLD, ATT1_FILTER, ATT1_KASANIE, BETA_BTC, CS_OBOROT, IMPULS_7D, OI_KVINTIL, OI_RASHOZHDENIE, OTKAT_KRIPTA, RAZMAH_NORM, RAZMAH_SVECHI, RAZVOROT_1D, SBR1_ISSLED, TELO_SVECHI, UROVNI_OTBOY, VOZRAST_MONETY

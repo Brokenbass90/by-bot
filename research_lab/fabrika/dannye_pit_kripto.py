@@ -4,6 +4,7 @@
 Только публичные данные Bybit (без ключей, без ордеров). Запускать на Mac:
     python3 dannye_pit_kripto.py
 Кладёт research_lab/data/pit_daily/<SYMBOL>.json. Уже скачанные пропускает.
+    python3 dannye_pit_kripto.py --vse    все ~750 инструментов с суточным OI (≈30–60 мин)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
 """
@@ -65,18 +66,23 @@ def fanding(sym):
 
 
 def main():
+    import sys
     v = json.load(open(LAB / "data/basis/vselennaya_pit.json"))
     net = []
-    for i, s in enumerate(sorted(v["simvoly"])):
+    simvoly = sorted(set(v["simvoly"]) | {"BTCUSDT", "ETHUSDT"})   # BTC/ETH нужны метке режима
+    if "--vse" in sys.argv:
+        # все инструменты, у которых есть суточный OI: нужны цены, чтобы ранжировать OI в ДОЛЛАРАХ
+        simvoly = sorted(set(simvoly) | {f.stem for f in (LAB / "data/basis/oi_sutochnyy").glob("*.json")})
+    for i, s in enumerate(simvoly):
         p = OUT / f"{s}.json"
         if p.exists():
             continue
         d = svechi(s)
         if not d:
-            net.append(s); print(f"{i+1:>3}/{len(v['simvoly'])} {s}: свечей нет"); continue
+            net.append(s); print(f"{i+1:>3}/{len(simvoly)} {s}: свечей нет"); continue
         f = fanding(s)
         tmp = p.with_suffix(".tmp"); tmp.write_text(json.dumps({"symbol": s, "daily": d, "funding": f})); tmp.replace(p)
-        print(f"{i+1:>3}/{len(v['simvoly'])} {s}: дней {len(d)}, фандингов {len(f)}", flush=True)
+        print(f"{i+1:>3}/{len(simvoly)} {s}: дней {len(d)}, фандингов {len(f)}", flush=True)
     (OUT / "_net_dannyh.json").write_text(json.dumps(net))
     print("готово. без данных:", net)
 

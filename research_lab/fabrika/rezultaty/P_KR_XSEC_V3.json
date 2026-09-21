@@ -8,22 +8,31 @@
  "H": 3,
  "okna": {
   "VSE": {
-   "n": 0,
-   "n_eff": 0.0
+   "n": 950,
+   "n_eff": 316.7,
+   "edge": 0.0071851275914195005,
+   "t": 1.6468936368088223
   },
   "H1": {
-   "n": 0,
-   "n_eff": 0.0
+   "n": 475,
+   "n_eff": 158.3,
+   "edge": 0.004654485900477069,
+   "t": 0.7316066371078013
   },
   "H2": {
-   "n": 0,
-   "n_eff": 0.0
+   "n": 475,
+   "n_eff": 158.3,
+   "edge": 0.00971576928236193,
+   "t": 1.6269620560933549
   }
  },
- "strategiya_srednee": null,
- "sluchay_srednee": null,
- "godovyh_strategiya": null,
- "pokrytie_vselennoy_mediana": 0.0,
- "chlenov_s_cenoy_mediana": 0.25,
- "period": null
+ "strategiya_srednee": 0.004293929123652903,
+ "sluchay_srednee": -0.002891198467766596,
+ "godovyh_strategiya": 0.3606900463868439,
+ "pokrytie_vselennoy_mediana": 1.0,
+ "chlenov_s_cenoy_mediana": 1.0,
+ "period": [
+  1676937600000,
+  1758931200000
+ ]
 }
