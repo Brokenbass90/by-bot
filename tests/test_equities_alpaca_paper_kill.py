@@ -173,3 +173,11 @@ def test_list_orders_encodes_scoped_symbols_safely(monkeypatch):
     monkeypatch.setattr(bridge.request, "urlopen", open_url)
     bridge.AlpacaClient(PAPER, "key", "secret").list_orders(status="all", limit=500, symbols=["BRK/B", "A B"])
     assert "symbols=BRK%2FB%2CA+B" in seen["url"]
+
+
+def test_paper_kill_accepts_proven_terminal_partial_entry(tmp_path):
+    rows=_orders()
+    rows[0]['status']='canceled'
+    receipt=bridge.run_paper_owned_kill(proof=_proof(),client=FakeClient(positions=[_position()],orders=rows),
+        base_url=PAPER,apply=False,state_dir=tmp_path)
+    assert receipt['status']=='dry_run_not_confirmed'

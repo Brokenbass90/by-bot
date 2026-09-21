@@ -2,6 +2,41 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 21, autonomous Alpaca PAPER actually deployed**:
+- **AUTONOMOUS_PAPER_ACTIVE; 4/7 real operational receipts PASS.** Canonical
+  receipt: `reports/ALPACA_AUTONOMOUS_PAPER_2026_09_21.json`. Read it first.
+- Installed isolated app `/opt/bybot-research/alpaca-intended-paper/app`;
+  durable runtime `/root/by-bot/runtime/alpaca_intended_paper`. Cron enabled
+  17:22:32 UTC; first automatic execution 17:23 UTC. No manual order trigger.
+- Broker filled CRM/CRWD/CVX/MRK, all fractional; actual qty × average fill
+  totals **$699.94** against frozen PAPER capital $1000 / gross 0.70.
+  Four accepted DAY stops cover full actual quantities; actual-fill anchors.
+- Fresh 17:24 cron process restored identical floor/HWM/entry IDs/quantities;
+  subsequent cycles PASS, no duplicate BUY. Real evidence rows 1/2/3/6 PASS.
+- Stop-exit → durable 21-calendar-day block, re-arm, emergency path integrated
+  into existing bridge/runner. 151 focused checks PASS both Mac and VPS Python
+  3.12.3, 46/46 hashes matched. No new coordinator/framework or strategy change.
+- OLD PAPER manager is preserve-only (no new entries/stale rotation), with
+  intended symbols excluded and shared account lock. All other cron lines,
+  including LIVE, unchanged. All five foreign positions retain qty/entry:
+  ABNB/ABT/MA/SCHW legacy adaptive; AMZN intraday. No foreign position adopted.
+- **Next only:** collect real DAY expiry after Sept21 close, next-session new
+  stop IDs at Sept22 13:30 UTC open, then existing proof-scoped intended PAPER
+  kill + owned-flat receipt. Do not kill acceptance positions before rows 4/5.
+  Evidence collector runs GET-only from the existing cron; private snapshots
+  `runtime/alpaca_intended_paper/evidence/`, runner receipts in `receipts/`.
+- This is one-session operational PAPER acceptance, NOT monthly strategy
+  performance evidence. Entries allowed Sept21 only; later cycles maintain and
+  reconcile. No claim that monthly strategy selection is autonomously scheduled.
+- **READY_FOR_CANARY=FALSE.** Rows 4/5/7 pending. Legacy ABNB/ABT/MA historical
+  HWM remains unproven; do not fabricate it. Uncertain pre-persist order ownership
+  halts rather than auto-adopts; no durable pre-submit intent claimed.
+- Existing heartbeat repurposed to Alpaca acceptance at 16:40/23:40 Cyprus on
+  weekdays; unchanged results quiet. Raw broker artifacts remain private.
+  ATT1/LIVE/risk unchanged; no new money enabled. After Alpaca dossier → ATT1.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 20, intended PAPER fill/floor binding + sizing**:
 - Default-off `ALPACA_INTENDED_PAPER=1` now binds terminal actual fill and
   broker-confirmed stop to the existing durable floor/HWM state. Partial fills

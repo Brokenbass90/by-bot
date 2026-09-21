@@ -9,13 +9,14 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 
 Latest owner order supersedes the numbered historical snapshot below:
 **Alpaca frozen PAPER 7/7 → dossier → ATT1 dossier → SBR1**.
-PAPER endpoint fixed and target-tested; all five legacy owners resolved.
-Historical ABNB/ABT/MA HWM is unavailable; do not invent recovery values.
-The existing proof-scoped PAPER emergency path is prepared but not executed.
-Fill/floor/restart fixture and frozen sizing now pass on Mac and target Python;
-the candidate is staged, not deployed. Next: broker-stop exit reconciliation/
-reentry and existing intended runner ownership/emergency/scheduled operation. Then collect the existing
-seven receipts. See the canonical checkpoint; still 0/7 intended broker receipts.
+September 21: autonomous operational PAPER deployed on VPS, **4/7** actual
+receipts PASS (startup/fractional fill/DAY stop/restart). CRM/CRWD/CVX/MRK filled
+with complete broker protection; actual fill notional $699.94. See
+`ALPACA_AUTONOMOUS_PAPER_2026_09_21.json`. Remaining: actual DAY expiry → next-session
+re-arm → proof-scoped PAPER kill; then dossier, without changing frozen strategy.
+September 22 open is the earliest next-session evidence opportunity, not a promise
+of 7/7. This acceptance probe does not imply monthly production auto-selection.
+Legacy ABNB/ABT/MA historical HWM remains unproven and must stay explicit.
 ATT1 continues unchanged while Codex closes Alpaca.
 
 Delivery order: deploy and verify PAPER operation → real fill/stop receipt →

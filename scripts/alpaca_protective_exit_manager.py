@@ -184,7 +184,7 @@ def build_ratchet_plan(
         )
         next_state[symbol] = {
             **({key: previous[key] for key in (
-                "entry_order_id", "account_id", "strategy_id", "initial_stop_price",
+                "entry_order_id", "account_id", "strategy_id", "initial_stop_price", "entry_fill_qty",
                 "accepted_order_id", "accepted_order_tif", "accepted_observed_at_utc",
             ) if key in previous} if same_lifecycle else {}),
             "hwm": max(current, previous_hwm),
@@ -396,6 +396,11 @@ def _main_unlocked() -> int:
         market_gap_bps=max(1.0, _f(os.getenv("ALPACA_PROTECTIVE_MARKET_GAP_BPS"), 10.0)),
         excluded_symbols=excluded,
     )
+    if intended_paper:
+        present = {str(row.get("symbol") or "").upper() for row in positions}
+        for symbol, record in prior_state.items():
+            if symbol not in present and isinstance(record, dict):
+                next_state.setdefault(symbol, record)
     applied: list[dict[str, Any]] = []
     market_open = bool(clock.get("is_open"))
     account_blocked = bool(account.get("trading_blocked") or account.get("account_blocked"))

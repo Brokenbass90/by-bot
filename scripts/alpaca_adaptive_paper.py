@@ -402,6 +402,211 @@ def build_bridge_env(
     return env
 
 
+def _intended_emergency_exits(client: Any, env: dict[str, str], runtime_dir: Path,
+                              account_id: str, *, reason: str = "unprotected_after_reconcile") -> dict[str, Any]:
+    from scripts import equities_alpaca_paper_bridge as bridge
+    state, error = bridge._load_protective_floor_state(Path(env["ALPACA_PROTECTIVE_EXIT_HWM_PATH"]))
+    if error:
+        return {"status": "NOT_CONFIRMED", "error": error}
+    orders = client.list_orders(status="open", limit=100)
+    if len(orders) >= 100:
+        return {"status": "NOT_CONFIRMED", "error": "orders_incomplete"}
+    scope = []
+    for pos in client.list_positions():
+        symbol = str(pos.get("symbol") or "")
+        record = state.get(symbol)
+        if (not isinstance(record, dict) or record.get("account_id") != account_id
+            or record.get("strategy_id") != bridge._INTENDED_PAPER_STRATEGY_ID
+            or not record.get("entry_order_id")):
+            continue
+        qty = bridge._intended_finite_positive(pos.get("qty"))
+        floor = bridge._intended_finite_positive(record.get("accepted_stop_floor"))
+        covered = False
+        if qty and floor and not record.get("protection_pending") and reason != "missed_full_session":
+            stops = [o for o in orders if o.get("symbol") == symbol and o.get("side") == "sell"]
+            if len(stops) == 1:
+                try:
+                    bridge._confirmed_intended_stop(client, stops[0], symbol=symbol, qty=qty, requested_stop=floor)
+                    covered = True
+                except Exception:
+                    pass
+        if not covered:
+            scope.append({"symbol": symbol, "entry_order_id": record["entry_order_id"],
+                          "qty": record.get("entry_fill_qty", record.get("qty")),
+                          "avg_entry_price": record.get("entry_price")})
+    if not scope:
+        return {"status": "NO_UNPROTECTED_PROVEN_OWNED_POSITION"}
+    proof_path = runtime_dir / "emergency_owned_proof.json"
+    _atomic_write_private_json(proof_path, {"account_id": account_id, "reason": reason, "positions": scope})
+    kill_env = {**env, "ALPACA_SEND_ORDERS": "1", "ALPACA_ALLOW_NEW_ENTRIES": "0",
+                "ALPACA_PAPER_KILL_ACK": "PAPER_OWNED_EXITS_ONLY"}
+    result = subprocess.run([sys.executable, str(ROOT / "scripts/equities_alpaca_paper_bridge.py"),
+        "--paper-kill-owned", str(proof_path), "--apply-kill"], cwd=ROOT, env=kill_env,
+        check=False, capture_output=True, text=True, timeout=240)
+    return {"returncode": result.returncode, "receipt_path": str(runtime_dir / "paper_kill_receipt.json"),
+            "scope": [row["symbol"] for row in scope], "stdout": result.stdout, "stderr": result.stderr}
+
+
+def _intended_missed_session(client: Any, last: datetime, now: datetime) -> bool:
+    from zoneinfo import ZoneInfo
+    ny = ZoneInfo("America/New_York")
+    if last.astimezone(ny).date() == now.astimezone(ny).date():
+        return False
+    start = max(last.date(), now.date() - timedelta(days=31))
+    rows = client._request("GET", f"/v2/calendar?start={start.isoformat()}&end={now.date().isoformat()}")
+    if not isinstance(rows, list):
+        raise ValueError("broker_calendar_invalid")
+    for row in rows:
+        opening = datetime.fromisoformat(f"{row['date']}T{row['open']}").replace(tzinfo=ny)
+        closing = datetime.fromisoformat(f"{row['date']}T{row['close']}").replace(tzinfo=ny)
+        if last < opening and closing < now:
+            return True
+    return False
+
+
+def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
+                       client: Any = None) -> int:
+    """Run one PAPER acceptance cycle using the existing bridge and ratchet."""
+    import fcntl
+    from zoneinfo import ZoneInfo
+    from scripts import equities_alpaca_paper_bridge as bridge
+
+    runtime_dir.mkdir(parents=True, exist_ok=True)
+    receipt_path = runtime_dir / "latest_intended_run.json"
+    receipt: dict[str, Any] = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "phase": "paper_operational_acceptance_not_monthly_strategy_evidence",
+        "money_authority": False, "paper_orders_enabled": send_orders,
+    }
+    lock = (runtime_dir / ".runner.lock").open("a")
+    account: dict[str, Any] = {}
+    clock: dict[str, Any] = {}
+    env: dict[str, str] = {}
+    try:
+        try:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return 75
+        previous = json.loads(receipt_path.read_text()) if receipt_path.exists() else {}
+        if previous.get("last_regular_success_at_utc"):
+            receipt["last_regular_success_at_utc"] = previous["last_regular_success_at_utc"]
+        base = os.getenv("ALPACA_BASE_URL", "").rstrip("/")
+        if base != bridge._PAPER_API_URL:
+            raise ValueError("intended_runner_requires_exact_paper")
+        report = json.loads((runtime_dir / "latest_selection.json").read_text())
+        if (report.get("mode") != "intended_prepare_only"
+            or report.get("paper_capital_usd") != capital
+            or report.get("target_gross_exposure") != .70
+            or report.get("maximum_weight") != .60 or report.get("max_positions") != 4
+            or report.get("selector_source_hashes") != _frozen_source_hashes()):
+            raise ValueError("frozen_selection_or_capital_mismatch")
+        picks = runtime_dir / "current_cycle_picks.csv"
+        expected = {p["symbol"]: p for p in report.get("picks", [])}
+        parsed = bridge._load_picks(picks, None)
+        if {p.ticker for p in parsed} != set(expected) or len(parsed) != len(expected):
+            raise ValueError("frozen_picks_csv_mismatch")
+        for pick in parsed:
+            row = expected[pick.ticker]
+            if (pick.weight != row["weight"] or pick.entry_price != row["signal_close"]
+                or pick.stop_price != row["stop_price"] or pick.entry_day != report["entry_session"]):
+                raise ValueError("frozen_picks_values_mismatch")
+        ownership = json.loads((runtime_dir / "foreign_owners.json").read_text())
+        foreign = ownership.get("owners")
+        if not isinstance(foreign, dict) or any(not owner for owner in foreign.values()):
+            raise ValueError("foreign_ownership_invalid")
+        client = client or bridge.AlpacaClient(base, os.environ["ALPACA_API_KEY_ID"], os.environ["ALPACA_API_SECRET_KEY"])
+        account = client.get_account()
+        if account.get("id") != ownership.get("account_id"):
+            raise ValueError("paper_account_identity_mismatch")
+        if account.get("trading_blocked") or account.get("account_blocked"):
+            raise ValueError("paper_account_blocked")
+        clock = client.get_clock()
+        positions = client.list_positions()
+        orders = client.list_orders(status="open", limit=100)
+        if len(orders) >= 100:
+            raise ValueError("broker_orders_snapshot_incomplete")
+        env = os.environ.copy()
+        env.update(build_intended_bridge_env(report, picks_csv=picks, capital=capital))
+        state_path = Path(env["ALPACA_PROTECTIVE_EXIT_HWM_PATH"])
+        state, error = bridge._load_protective_floor_state(state_path)
+        if error not in {"", "state_missing"}:
+            raise ValueError("intended_state_corrupt")
+        if set(state) & set(foreign):
+            raise ValueError("intended_foreign_ownership_overlap")
+        unknown = {str(p.get("symbol") or "") for p in positions} - set(state) - set(foreign)
+        if unknown:
+            raise ValueError("unknown_position:" + ",".join(sorted(unknown)))
+        if any(str(o.get("symbol") or "") not in set(state) | set(foreign) for o in orders):
+            raise ValueError("unknown_active_order")
+        receipt.update({"account_id": account["id"], "market_open": bool(clock.get("is_open")),
+                        "foreign_positions": sorted({p["symbol"] for p in positions} & set(foreign)),
+                        "owned_positions": sorted({p["symbol"] for p in positions} & set(state)),
+                        "next_open": clock.get("next_open"), "entry_session": report["entry_session"]})
+        if not send_orders or not clock.get("is_open"):
+            receipt["status"] = "WAITING_FOR_REGULAR_SESSION" if send_orders else "PAPER_READ_ONLY_READY"
+            _atomic_write_private_json(receipt_path, receipt)
+            return 0
+        # Explicit one-session broker acceptance launch, never daily strategy reselection.
+        session = datetime.fromisoformat(str(clock["timestamp"]).replace("Z", "+00:00")).astimezone(ZoneInfo("America/New_York")).date()
+        prior_success = receipt.get("last_regular_success_at_utc")
+        if state and prior_success:
+            last = datetime.fromisoformat(str(prior_success).replace("Z", "+00:00"))
+            now = datetime.fromisoformat(str(clock["timestamp"]).replace("Z", "+00:00"))
+            if _intended_missed_session(client, last, now):
+                receipt["emergency"] = _intended_emergency_exits(client, env, runtime_dir,
+                    str(account["id"]), reason="missed_full_session")
+                raise RuntimeError("missed_full_regular_session")
+        env["ALPACA_SEND_ORDERS"] = "1"
+        env["ALPACA_ALLOW_NEW_ENTRIES"] = "1" if session.isoformat() == report["entry_session"] else "0"
+        env["ALPACA_ALLOW_EMPTY_PICKS_FOR_CASH"] = "1"
+        excluded_path = runtime_dir / "foreign_exclusions.json"
+        _atomic_write_private_json(excluded_path, foreign)
+        env["ALPACA_INTRADAY_STATE_PATH"] = str(excluded_path)
+        env["ALPACA_INTRADAY_ADVISORY_PATH"] = str(runtime_dir / "no_intraday_advisory.json")
+        env["ALPACA_PROTECTIVE_EXIT_EXCLUDED_SYMBOLS"] = ",".join(sorted(foreign))
+        if error == "state_missing":
+            _atomic_write_private_json(state_path, {})
+        commands = [
+            [sys.executable, str(ROOT / "scripts/equities_alpaca_paper_bridge.py"), "--picks-csv", str(picks)],
+            [sys.executable, str(ROOT / "scripts/alpaca_protective_exit_manager.py"), "--apply"],
+        ]
+        receipt["stages"] = []
+        for index, command in enumerate(commands):
+            if index == 1:
+                env["ALPACA_ALLOW_NEW_ENTRIES"] = "0"
+                env["ALPACA_PROTECTIVE_EXIT_ACK"] = "PROTECTIVE_EXITS_ONLY"
+            result = subprocess.run(command, cwd=ROOT, env=env, check=False,
+                                    capture_output=True, text=True, timeout=240)
+            with (runtime_dir / "execution.log").open("a") as log:
+                os.chmod(log.name, 0o600)
+                log.write(json.dumps({"at": datetime.now(timezone.utc).isoformat(),
+                    "stage": index, "returncode": result.returncode,
+                    "stdout": result.stdout, "stderr": result.stderr}) + "\n")
+            receipt["stages"].append({"stage": "bridge" if index == 0 else "ratchet", "returncode": result.returncode})
+            if result.returncode:
+                receipt["emergency"] = _intended_emergency_exits(client, env, runtime_dir, str(account["id"]))
+                raise RuntimeError(f"intended_stage_failed:{index}:{result.returncode}")
+        receipt["status"] = "PAPER_CYCLE_COMPLETE"
+        receipt["last_regular_success_at_utc"] = str(clock["timestamp"])
+        _atomic_write_private_json(receipt_path, receipt)
+        return 0
+    except Exception as exc:
+        if send_orders and account.get("id") and os.getenv("ALPACA_BASE_URL", "").rstrip("/") == bridge._PAPER_API_URL:
+            try:
+                bridge._halt_intended_paper_entries(
+                    bridge._paper_kill_state_dir(bridge._PAPER_API_URL, os.environ["ALPACA_API_KEY_ID"]),
+                    str(account["id"]), str(exc))
+                if send_orders and clock.get("is_open") and env and "emergency" not in receipt:
+                    receipt["emergency"] = _intended_emergency_exits(client, env, runtime_dir, str(account["id"]))
+            except Exception as emergency_error:
+                receipt["emergency_error"] = str(emergency_error)
+        receipt.update({"status": "HALTED", "error": f"{type(exc).__name__}:{exc}"})
+        _atomic_write_private_json(receipt_path, receipt)
+        return 9
+    finally:
+        lock.close()
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="adaptive_v1 Alpaca paper driver")
     ap.add_argument("--symbols", default="")
@@ -414,6 +619,8 @@ def main() -> int:
     ap.add_argument("--cache-dir", default="runtime/equities_yf_cache")
     ap.add_argument("--runtime-dir", default="")
     ap.add_argument("--send-orders", action="store_true")
+    ap.add_argument("--preserve-only", action="store_true", help="legacy PAPER protection with new entries and stale rotation disabled")
+    ap.add_argument("--run-intended", action="store_true", help="run frozen one-session PAPER acceptance and ongoing protection")
     ap.add_argument(
         "--prepare-intended", action="store_true",
         help="offline-only frozen v38 selection from local completed hourly cache",
@@ -426,6 +633,12 @@ def main() -> int:
         help="manage the last daily selection without recalculating or rotating it",
     )
     args = ap.parse_args()
+
+    if args.run_intended:
+        runtime_dir = Path(args.runtime_dir or "runtime/alpaca_intended_paper").resolve()
+        result = run_intended_cycle(runtime_dir, capital=float(args.capital), send_orders=bool(args.send_orders))
+        print(json.dumps({"intended_runner_returncode": result, "receipt": str(runtime_dir / "latest_intended_run.json")}))
+        return result
 
     if args.prepare_intended:
         if args.send_orders:
@@ -458,6 +671,7 @@ def main() -> int:
         except (OSError, ValueError, KeyError) as exc:
             print(json.dumps({"error": str(exc), "cache_dir": str(cache_dir)}))
             return 3
+        report["paper_capital_usd"] = float(args.capital)
         runtime_dir.mkdir(parents=True, exist_ok=True)
         picks_csv = runtime_dir / "current_cycle_picks.csv"
         report_path = runtime_dir / "latest_selection.json"
@@ -546,6 +760,9 @@ def main() -> int:
         target_alloc_pct=float(args.target_alloc_pct),
         send_orders=bool(args.send_orders),
     )
+    if args.preserve_only:
+        env["ALPACA_ALLOW_NEW_ENTRIES"] = "0"
+        env["ALPACA_CLOSE_STALE_POSITIONS"] = "0"
     command = [sys.executable, str(ROOT / "scripts" / "equities_alpaca_paper_bridge.py"), "--picks-csv", str(picks_csv)]
     print(
         f"preset={report.get('preset', args.preset)} refresh={not args.reuse_selection} "

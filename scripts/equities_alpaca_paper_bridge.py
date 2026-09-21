@@ -16,7 +16,7 @@ import uuid
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_DOWN
 from pathlib import Path
 from typing import Any
 from urllib import error, request
@@ -728,7 +728,7 @@ def _validated_paper_kill_scope(
         raise PaperKillValidationError("paper_kill_orders_incomplete")
     current = {str(p.get("symbol") or "").strip().upper(): p for p in positions if isinstance(p, dict)}
     for symbol, expected in scope.items():
-        buys = [o for o in orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() == symbol and str(o.get("side") or "").lower() == "buy" and str(o.get("status") or "").lower() == "filled"]
+        buys = [o for o in orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() == symbol and str(o.get("side") or "").lower() == "buy" and str(o.get("status") or "").lower() in {"filled", "canceled", "expired"} and _safe_float(o.get("filled_qty"), 0.0) > 0]
         if not buys or str(buys[0].get("id") or "").strip() != expected["entry_order_id"]:
             raise PaperKillValidationError(f"paper_kill_latest_buy_mismatch:{symbol}")
         entry = buys[0]
@@ -1033,6 +1033,76 @@ def _add_reentry_block(
     }
 
 
+def _reconcile_intended_stop_exits(
+    *, client: Any, state: dict[str, Any], state_path: Path, reentry_path: Path,
+    positions: dict[str, Any], open_orders: list[dict[str, Any]],
+    account_id: str, state_dir: Path, now: datetime | None = None,
+) -> set[str]:
+    """Persist a confirmed stop's calendar lock before retiring its lifecycle."""
+    now = now or datetime.now(timezone.utc)
+    try:
+        raw = json.loads(reentry_path.read_text(encoding="utf-8")) if reentry_path.exists() else {"symbols": {}}
+        if not isinstance(raw, dict) or not isinstance(raw.get("symbols"), dict):
+            raise IntendedPaperProtectionError("reentry_state_corrupt")
+        blocks = raw["symbols"]
+        for symbol, row in blocks.items():
+            if (not isinstance(row, dict) or symbol != symbol.upper()
+                or _parse_iso_utc(str(row.get("blocked_until") or "")) is None):
+                raise IntendedPaperProtectionError("reentry_state_corrupt")
+        if len(open_orders) >= 100:
+            raise IntendedPaperProtectionError("intended_orders_snapshot_incomplete")
+        removed: set[str] = set()
+        for symbol, record in list(state.items()):
+            _validated_existing_intended_lifecycle(record, account_id)
+            if symbol in positions:
+                continue
+            order_id = str(record.get("accepted_order_id") or "").strip()
+            order = client.get_order(order_id) if order_id else None
+            if (not isinstance(order, dict)
+                or str(order.get("id") or "") != order_id
+                or str(order.get("symbol") or "").upper() != symbol
+                or str(order.get("side") or "").lower() != "sell"
+                or str(order.get("type") or "").lower() != "stop"
+                or str(order.get("status") or "").lower() != "filled"):
+                raise IntendedPaperProtectionError(f"intended_stop_exit_not_confirmed:{symbol}")
+            qty = _intended_finite_positive(order.get("filled_qty"))
+            avg = _intended_finite_positive(order.get("filled_avg_price"))
+            exit_at = str(order.get("filled_at") or "").strip()
+            entry_at = _parse_iso_utc(str(record.get("lifecycle_first_seen_at_utc") or ""))
+            exit_dt = _parse_iso_utc(exit_at)
+            if (qty is None or avg is None or exit_dt is None or entry_at is None
+                or exit_dt < entry_at or exit_dt > now + timedelta(seconds=5)
+                or qty + max(1e-9, float(record["qty"]) * 1e-6) < float(record["qty"])):
+                raise IntendedPaperProtectionError(f"intended_stop_exit_invalid:{symbol}")
+            if any(str(o.get("symbol") or "").upper() == symbol
+                   and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES
+                   for o in open_orders):
+                raise IntendedPaperProtectionError(f"intended_stop_exit_active_conflict:{symbol}")
+            # Refresh after the order readback so an old flat snapshot cannot retire a new position.
+            if any(str(pos.get("symbol") or "").upper() == symbol for pos in client.list_positions()):
+                raise IntendedPaperProtectionError(f"intended_stop_exit_not_flat:{symbol}")
+            expected = {
+                "reason": "confirmed_intended_stop_exit", "created_at": exit_at,
+                "blocked_until": (exit_dt + timedelta(days=21)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "entry_order_id": record["entry_order_id"], "account_id": account_id,
+                "exit_order_id": order_id, "exit_qty": qty,
+                "exit_avg_price": avg, "exit_filled_at": exit_at,
+            }
+            previous = blocks.get(symbol, {})
+            if previous.get("exit_order_id") == order_id and previous != expected:
+                raise IntendedPaperProtectionError(f"intended_stop_exit_receipt_mismatch:{symbol}")
+            blocks[symbol] = expected
+            _save_reentry_block_state(reentry_path, blocks)
+            next_state = {key: row for key, row in state.items() if key != symbol}
+            _atomic_write_json(state_path, next_state)
+            state.pop(symbol)
+            removed.add(symbol)
+        return removed
+    except Exception as exc:
+        _halt_intended_paper_entries(state_dir, account_id, str(exc))
+        raise
+
+
 def _select_monthly_cycle_picks(
     picks: list[Pick],
     *,
@@ -1231,6 +1301,41 @@ def _protected_rearm_stop_price(
     return max(candidates)
 
 
+def _rearm_intended_position(
+    *, client: Any, symbol: str, position: dict[str, Any],
+    existing_stops: list[dict[str, Any]], state: dict[str, Any],
+    state_path: Path, account_id: str,
+) -> dict[str, Any]:
+    record = _validated_existing_intended_lifecycle(state.get(symbol), account_id)
+    qty = _intended_finite_positive(position.get("qty"))
+    entry = _intended_finite_positive(position.get("avg_entry_price"))
+    current = _intended_finite_positive(position.get("current_price"))
+    if (qty is None or entry is None or current is None
+        or abs(entry - float(record["entry_price"])) > max(1e-8, entry * 1e-6)
+        or qty > float(record["qty"]) + max(1e-9, float(record["qty"]) * 1e-6)
+        or str(position.get("side") or "long").lower() != "long"):
+        raise IntendedPaperProtectionError(f"intended_rearm_position_mismatch:{symbol}")
+    floor = float(record["accepted_stop_floor"])
+    if len(existing_stops) > 1:
+        raise IntendedPaperProtectionError(f"intended_rearm_multiple_stops:{symbol}")
+    if existing_stops:
+        order = existing_stops[0]
+    else:
+        if current <= floor:
+            raise IntendedPaperProtectionError(f"intended_rearm_price_below_floor:{symbol}")
+        order = client.submit_stop_sell(symbol, qty=qty, stop_price=floor,
+                                       time_in_force=_persistent_exit_tif_for_qty("", qty))
+    confirmed = _confirmed_intended_stop(client, order, symbol=symbol, qty=qty, requested_stop=floor)
+    updated = {**record, "qty": qty, "hwm": max(float(record["hwm"]), current),
+               "accepted_order_id": confirmed["id"],
+               "accepted_order_tif": confirmed["time_in_force"],
+               "accepted_stop_floor": max(floor, float(confirmed["stop_price"]))}
+    next_state = {**state, symbol: updated}
+    _atomic_write_json(state_path, next_state)
+    state[symbol] = updated
+    return confirmed
+
+
 def _single_covering_stop_needing_update(
     existing_stops: list[dict[str, Any]],
     position_qty: float,
@@ -1271,7 +1376,7 @@ def _intended_finite_positive(value: Any) -> float | None:
     return parsed if math.isfinite(parsed) and parsed > 0 else None
 
 
-def _validated_existing_intended_lifecycle(record: Any, account_id: str) -> dict[str, Any]:
+def _validated_existing_intended_lifecycle(record: Any, account_id: str, *, allow_pending: bool = False) -> dict[str, Any]:
     if not isinstance(record, dict):
         raise IntendedPaperProtectionError("existing_lifecycle_corrupt")
     required = {
@@ -1286,13 +1391,29 @@ def _validated_existing_intended_lifecycle(record: Any, account_id: str) -> dict
         raise IntendedPaperProtectionError("existing_lifecycle_account_mismatch")
     if str(record.get("strategy_id") or "").strip() != _INTENDED_PAPER_STRATEGY_ID:
         raise IntendedPaperProtectionError("existing_lifecycle_strategy_mismatch")
-    if any(_intended_finite_positive(record.get(field)) is None for field in (
-        "entry_price", "qty", "hwm", "accepted_stop_floor"
-    )):
+    fields = ["entry_price", "qty", "hwm"]
+    if not (allow_pending and record.get("protection_pending") is True and record.get("accepted_stop_floor") == 0):
+        fields.append("accepted_stop_floor")
+    if any(_intended_finite_positive(record.get(field)) is None for field in fields):
         raise IntendedPaperProtectionError("existing_lifecycle_nonfinite_or_nonpositive")
     if _parse_iso_utc(str(record.get("lifecycle_first_seen_at_utc") or "")) is None:
         raise IntendedPaperProtectionError("existing_lifecycle_invalid_timestamp")
     return record
+
+
+def _persist_intended_pending_fill(path: Path, *, account_id: str, symbol: str, entry: dict[str, Any]) -> None:
+    state, error = _load_protective_floor_state(path)
+    if error not in {"", "state_missing"} or symbol in state:
+        raise IntendedPaperProtectionError("pending_fill_state_conflict")
+    qty = _intended_finite_positive(entry.get("filled_qty"))
+    price = _intended_finite_positive(entry.get("filled_avg_price"))
+    stamp = entry.get("filled_at") or entry.get("submitted_at") or entry.get("created_at")
+    if not account_id or qty is None or price is None or not entry.get("id") or _parse_iso_utc(str(stamp or "")) is None:
+        raise IntendedPaperProtectionError("pending_fill_invalid")
+    state[symbol] = {"account_id": account_id, "strategy_id": _INTENDED_PAPER_STRATEGY_ID,
+        "entry_order_id": entry["id"], "entry_price": price, "qty": qty, "entry_fill_qty": qty, "hwm": price,
+        "accepted_stop_floor": 0, "lifecycle_first_seen_at_utc": stamp, "protection_pending": True}
+    _atomic_write_json(path, state)
 
 
 def _intended_frozen_weights(picks: Iterable[Pick]) -> dict[str, float]:
@@ -1491,7 +1612,7 @@ def _complete_intended_paper_simple_stop(
         if stop_price is None:
             raise IntendedPaperProtectionError("stop_invalid_price")
         if isinstance(existing, dict):
-            existing = _validated_existing_intended_lifecycle(existing, account_id)
+            existing = _validated_existing_intended_lifecycle(existing, account_id, allow_pending=True)
             same_lifecycle = (
                 str(existing.get("entry_order_id") or "").strip() == entry_id
                 and str(existing.get("account_id") or "").strip() == account_id
@@ -1511,9 +1632,10 @@ def _complete_intended_paper_simple_stop(
             hwm, floor, record = entry_price, stop_price, {}
         else:
             raise IntendedPaperProtectionError("existing_lifecycle_corrupt")
+        record.pop("protection_pending", None)
         record.update({
             "entry_price": entry_price,
-            "qty": qty,
+            "qty": qty, "entry_fill_qty": qty,
             "hwm": hwm,
             "accepted_stop_floor": floor,
             "entry_order_id": entry_id,
@@ -2077,6 +2199,14 @@ def _parse_iso_utc(text: str) -> datetime | None:
     s = str(text or "").strip()
     if not s:
         return None
+    if "T" in s or " " in s:
+        try:
+            dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.astimezone(timezone.utc)
+        except (TypeError, ValueError):
+            pass
     for fmt in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S"):
         try:
             dt = datetime.strptime(s, fmt)
@@ -2287,7 +2417,7 @@ def _main_unlocked() -> int:
         try:
             _clock = client.get_clock()
         except Exception as _exc:
-            _clock = {"is_open": True, "_clock_error": str(_exc)}
+            _clock = {"is_open": not intended_paper, "_clock_error": str(_exc)}
         _market_is_open = bool(_clock.get("is_open"))
         if not _market_is_open:
             _next_open = _clock.get("next_open")
@@ -2581,6 +2711,24 @@ def _main_unlocked() -> int:
         protective_floor_state, protective_floor_state_error = (
             _load_protective_floor_state(protective_floor_state_path)
         )
+    if intended_paper and send_orders:
+        try:
+            if protective_floor_state_error not in {"", "state_missing"}:
+                raise IntendedPaperProtectionError("intended_floor_state_corrupt")
+            _reconcile_intended_stop_exits(
+                client=client, state=protective_floor_state, state_path=protective_floor_state_path,
+                reentry_path=reentry_block_path, positions=current_positions, open_orders=open_orders,
+                account_id=str(account.get("id") or ""), state_dir=_paper_kill_state_dir(base_url, key_id),
+            )
+            reentry_block_state = _active_reentry_blocks(_load_reentry_block_state(reentry_block_path), now_utc)
+            blocked_reentry_symbols.update(set(reentry_block_state) - occupied_symbols)
+            active_reentry_blocks = {sym: row for sym, row in reentry_block_state.items()
+                                    if sym in blocked_reentry_symbols}
+        except Exception as exc:
+            _halt_intended_paper_entries(_paper_kill_state_dir(base_url, key_id),
+                                        str(account.get("id") or ""), str(exc))
+            print(json.dumps({"error": "intended_exit_reconciliation_not_confirmed", "detail": str(exc)}))
+            return 9
     protection_preflight_violations: list[dict[str, Any]] = []
     if (
         send_orders
@@ -2877,7 +3025,11 @@ def _main_unlocked() -> int:
                     qty = float(spec.get("qty") or 0.0)
                     if qty <= 0:
                         raise RuntimeError("simple_stop requires qty sizing")
-                    entry_order = client.submit_market_buy_qty(pick.ticker, qty)  # type: ignore[union-attr]
+                    if intended_paper:
+                        bounded_notional = float(Decimal(str(notional)).quantize(Decimal("0.01"), rounding=ROUND_DOWN))
+                        entry_order = client.submit_market_buy(pick.ticker, bounded_notional)
+                    else:
+                        entry_order = client.submit_market_buy_qty(pick.ticker, qty)  # type: ignore[union-attr]
                     if intended_paper:
                         final_entry = _terminal_intended_entry(
                             client,
@@ -2888,6 +3040,8 @@ def _main_unlocked() -> int:
                         filled_qty = _safe_float(final_entry.get("filled_qty"), 0.0)
                         filled_avg_price = _safe_float(final_entry.get("filled_avg_price"), 0.0)
                         entry_status = str(final_entry.get("status") or "").strip().lower()
+                        _persist_intended_pending_fill(protective_floor_state_path,
+                            account_id=str(account.get("id") or ""), symbol=pick.ticker, entry=final_entry)
                     else:
                         filled_qty, entry_status, filled_avg_price = _wait_for_fill_details(
                             client,  # type: ignore[arg-type]
@@ -3404,6 +3558,26 @@ def _main_unlocked() -> int:
                 pos = current_positions.get(symbol)
                 pick = picks_by_ticker.get(symbol)
                 if not pos:
+                    continue
+                if intended_paper:
+                    try:
+                        if not _market_is_open:
+                            continue
+                        confirmed = _rearm_intended_position(
+                            client=client, symbol=symbol, position=pos,
+                            existing_stops=list(open_stop_sell_orders.get(symbol) or []),
+                            state=protective_floor_state, state_path=protective_floor_state_path,
+                            account_id=str(account.get("id") or ""),
+                        )
+                        report["results"].append({"ticker": symbol, "action": "intended_rearm",
+                                                  "status": "confirmed", "order_id": confirmed["id"],
+                                                  "time_in_force": confirmed["time_in_force"]})
+                    except Exception as exc:
+                        intended_paper_entry_halted = True
+                        _halt_intended_paper_entries(_paper_kill_state_dir(base_url, key_id),
+                                                    str(account.get("id") or ""), str(exc))
+                        report["results"].append({"ticker": symbol, "action": "intended_rearm",
+                                                  "status": "not_confirmed_halted", "error": str(exc)})
                     continue
                 notional = per_ticker_notional.get(symbol, per_position_notional)
                 if pick is not None:

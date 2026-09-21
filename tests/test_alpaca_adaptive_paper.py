@@ -350,3 +350,20 @@ def test_main_stages_old_picks_before_refresh_and_uses_fresh_paper_receipt(
     assert json.loads(
         (runtime / "owned_position_lifecycles.json").read_text(encoding="utf-8")
     )["owned_symbols"] == ["BAC"]
+
+
+def test_preserve_only_disables_entries_and_rotation_after_env_build(tmp_path, monkeypatch):
+    report = _report()
+    (tmp_path / 'latest_selection.json').write_text(json.dumps(report))
+    write_bridge_picks_csv(report, tmp_path / 'current_cycle_picks.csv')
+    observed = {}
+    def run(command, *, cwd, env, check):
+        observed.update(env)
+        return SimpleNamespace(returncode=1)
+    monkeypatch.setattr(adaptive_paper.subprocess, 'run', run)
+    monkeypatch.setattr(sys, 'argv', ['driver', '--reuse-selection', '--preserve-only',
+        '--send-orders', '--runtime-dir', str(tmp_path)])
+    assert adaptive_paper.main() == 1
+    assert observed['ALPACA_SEND_ORDERS'] == '1'
+    assert observed['ALPACA_ALLOW_NEW_ENTRIES'] == '0'
+    assert observed['ALPACA_CLOSE_STALE_POSITIONS'] == '0'

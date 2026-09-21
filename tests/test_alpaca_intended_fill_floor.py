@@ -228,12 +228,28 @@ def test_unreconciled_existing_lifecycle_blocks_buy_before_submission(tmp_path, 
     monkeypatch.setattr(sys, "argv", ["bridge", "--picks-csv", str(picks)])
     monkeypatch.setattr(bridge, "AlpacaClient", Client)
 
-    assert bridge._main_unlocked() == 0
+    assert bridge._main_unlocked() == 9
     assert Client.buy_calls == 0
     report = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
-    result = next(row for row in report["results"] if row["ticker"] == "SCHW")
-    assert result["status"] == "not_confirmed_halted"
-    assert result["error"] == ("existing_lifecycle_unreconciled" if complete_record else "existing_lifecycle_corrupt")
+    assert report["error"] == "intended_exit_reconciliation_not_confirmed"
+    assert report["detail"] == ("intended_stop_exit_not_confirmed:SCHW" if complete_record else "existing_lifecycle_corrupt")
     assert bridge.paper_entry_halted(
         base_url=PAPER, state_dir=bridge._paper_kill_state_dir(PAPER, "key")
     )
+
+
+def test_pending_fill_survives_stop_failure_and_can_be_completed(tmp_path):
+    ledger=tmp_path/'floor.json'
+    bridge._persist_intended_pending_fill(ledger,account_id='acct-1',symbol='SCHW',entry=_entry())
+    pending=json.loads(ledger.read_text())['SCHW']
+    assert pending['protection_pending'] is True and pending['entry_order_id']=='entry-1'
+    broker=FakeBroker(entry_reads=[_entry()],stop=_stop('rejected'))
+    with pytest.raises(bridge.IntendedPaperProtectionError):
+        bridge._complete_intended_paper_simple_stop(client=broker,base_url=PAPER,state_dir=tmp_path,
+            ledger_path=ledger,account_id='acct-1',entry_order=_entry(),stop_order=_stop(),symbol='SCHW',requested_stop=95.25)
+    assert json.loads(ledger.read_text())['SCHW']==pending
+    broker=FakeBroker(entry_reads=[_entry()],stop=_stop())
+    bridge._complete_intended_paper_simple_stop(client=broker,base_url=PAPER,state_dir=tmp_path,
+        ledger_path=ledger,account_id='acct-1',entry_order=_entry(),stop_order=_stop(),symbol='SCHW',requested_stop=95.25)
+    completed=json.loads(ledger.read_text())['SCHW']
+    assert completed['accepted_stop_floor']==95.25 and not completed.get('protection_pending')

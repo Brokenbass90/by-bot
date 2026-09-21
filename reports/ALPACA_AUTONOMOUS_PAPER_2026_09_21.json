@@ -1,0 +1,149 @@
+{
+  "as_of_utc": "2026-09-21T17:25:13.641744+00:00",
+  "status": "AUTONOMOUS_PAPER_ACTIVE",
+  "ready_for_canary": false,
+  "evidence_pass": 4,
+  "evidence_total": 7,
+  "scope": "one-session operational broker acceptance; not monthly strategy performance evidence",
+  "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+  "deployment": {
+    "deployed_at_utc": "2026-09-21T17:22:32Z",
+    "app": "/opt/bybot-research/alpaca-intended-paper/app",
+    "runtime": "/root/by-bot/runtime/alpaca_intended_paper",
+    "paper_only": true,
+    "live_cron_unchanged": true,
+    "old_paper_entries_disabled": true,
+    "paper_capital_usd": 1000,
+    "new_cron": "* 13-21 * * 1-5 /bin/bash /root/by-bot/runtime/alpaca_intended_paper/run_intended.sh >> /root/by-bot/runtime/alpaca_intended_paper/cron.log 2>&1 # alpaca_intended_paper_manager",
+    "crontab_before_sha256": "35c972918d2a6a2683f8a258af1c7ba4c5f89b875969f27dc3902dbf5d0c50aa",
+    "crontab_after_sha256": "ba546ff5232aac3b75b9733d779eff3898a004946e9720644be3a1c8e4fdf57d",
+    "source_manifest_sha256": "bd521caa637c7e0d20ba715adca9605e78857a6a7b2ed7253662cdbf125c9395",
+    "rollback_crontab": "/root/by-bot/runtime/alpaca_intended_paper/crontab.before.20260921.txt"
+  },
+  "account_endpoint": "https://paper-api.alpaca.markets",
+  "account_identity_suffix": "86efaf",
+  "paper_capital_usd": 1000,
+  "frozen_gross_exposure": 0.7,
+  "max_intended_positions": 4,
+  "entries": [
+    {
+      "ticker": "CRM",
+      "entry_order_id": "9bd6bda9-c954-4eba-ad1a-ad69647c2f82",
+      "qty": "1.118571524",
+      "filled_avg_price": 237.848,
+      "notional": 266.07,
+      "stop_anchor": "actual_fill",
+      "stop_order_id": "46528b81-b71a-4846-a864-ede20171fa0a",
+      "broker_stop_price": "216.24",
+      "time_in_force": "day"
+    },
+    {
+      "ticker": "CVX",
+      "entry_order_id": "cf2bf014-5a94-489e-bef4-b1f4aa001204",
+      "qty": "0.874137846",
+      "filled_avg_price": 204.43,
+      "notional": 178.71,
+      "stop_anchor": "actual_fill",
+      "stop_order_id": "fc7a1b58-ae0d-449d-ae71-c9399cd1c5fb",
+      "broker_stop_price": "195.75",
+      "time_in_force": "day"
+    },
+    {
+      "ticker": "CRWD",
+      "entry_order_id": "124a8538-a39f-4b7e-87dc-6eb4a8e2367d",
+      "qty": "0.520290899",
+      "filled_avg_price": 246.958,
+      "notional": 128.5,
+      "stop_anchor": "actual_fill",
+      "stop_order_id": "7c1c61c5-c4ce-4b19-bfd5-bef4ee70e4b2",
+      "broker_stop_price": "219.34",
+      "time_in_force": "day"
+    },
+    {
+      "ticker": "MRK",
+      "entry_order_id": "1932e546-b8a3-478c-8ae2-085fef177d37",
+      "qty": "0.849537347",
+      "filled_avg_price": 149.14,
+      "notional": 126.72,
+      "stop_anchor": "actual_fill",
+      "stop_order_id": "75f92d51-65a2-4f56-a170-65eb60c1d6bb",
+      "broker_stop_price": "142.42",
+      "time_in_force": "day"
+    }
+  ],
+  "evidence_rows": [
+    {
+      "row": 1,
+      "status": "PASS",
+      "evidence": "actual cron process startup",
+      "utc": "2026-09-21T17:23:02.748419+00:00"
+    },
+    {
+      "row": 2,
+      "status": "PASS",
+      "evidence": "four broker-filled fractional market entries; exact qty and filled_avg_price"
+    },
+    {
+      "row": 3,
+      "status": "PASS",
+      "evidence": "four broker-confirmed DAY stops covering exact filled quantities; actual-fill anchor"
+    },
+    {
+      "row": 4,
+      "status": "PENDING_SESSION_CLOSE",
+      "evidence": "automatic GET-only evidence snapshots enabled"
+    },
+    {
+      "row": 5,
+      "status": "PENDING_NEXT_SESSION",
+      "next_open_broker": "2026-09-22T09:30:00-04:00"
+    },
+    {
+      "row": 6,
+      "status": "PASS",
+      "evidence": "fresh cron process restored exact floors/HWM/entry identities/qty; no duplicate buys",
+      "before_utc": "2026-09-21T17:23:02.748419+00:00",
+      "after_utc": "2026-09-21T17:24:02.731914+00:00",
+      "comparison_sha256": "797c24a7b0967d4b5c1330eaf71475a6556aa0ad26dd80191d3b948c3c1fb2c9"
+    },
+    {
+      "row": 7,
+      "status": "PENDING_ACTUAL_PAPER_KILL",
+      "evidence": "all existing owners established; proof-scoped kill prepared, not executed"
+    }
+  ],
+  "successful_process_cycles": 3,
+  "validation": {
+    "mac_tests": 151,
+    "target_tests": 151,
+    "target_python": "3.12.3",
+    "source_files": 46,
+    "hash_mismatches": 0
+  },
+  "preservation": {
+    "foreign_positions_qty_entry_unchanged": true,
+    "live_cron_unchanged": true,
+    "att1_unchanged": true,
+    "legacy_paper": "preserve-only; intended symbols excluded"
+  },
+  "limitations": [
+    "Legacy ABNB/ABT/MA historical HWM remains unproven; values not fabricated, positions not adopted.",
+    "No durable pre-submit client-order-id intent; uncertain ownership halts instead of adoption.",
+    "Rows 4/5/7 remain pending; no tiny-live readiness or profitability claim.",
+    "Entries permitted on September 21 acceptance date only; later cycles maintain/reconcile. Monthly strategy auto-refresh is not claimed."
+  ],
+  "next_action": "Retain actual DAY expiry after Sep21 close, verify new accepted stop IDs at Sep22 opening, then scoped intended PAPER kill + owned-flat receipt; prepare dossier only after all existing evidence is satisfied.",
+  "private_evidence": {
+    "first_autorun.tar": "8ff84e257c172af3439df511ebcca4d051437c93741b74d319d867ee6c56a223",
+    "repeated_autorun.tar": "ef16cc617f848227dcd235d662c0302431295ef1de8ba618c6034aa60be28faa",
+    "verified_autorun.tar": "749c860dd492996c1c531c5594d44498dd6b64a154f93923cfd1f8b0fe10d82b",
+    "paper_truth_20260921.json": "fcafc1d04f4b8e7851b61a302cc86ad30bf3ee930264e6817bf62c3bf4bd3893"
+  },
+  "runtime_wrapper_hashes": {
+    "run_intended.sh": "d1db2097ec5ac4a4bd42f8291af4241905bdc6bf36eaf05d9a89418d733df6f3",
+    "legacy_preserve.sh": "f61591405dd9533d750568e099aeb6b9fd642638f42fa4198e37cf1008ee6d61",
+    "capture_evidence.py": "834707b48114b83f105e08f60e0cdafc9463827791ee9773a2cf629c14b4e33b"
+  },
+  "bridge_allocated_notional_usd": 700.0,
+  "actual_fill_notional_usd": 699.939999464954
+}

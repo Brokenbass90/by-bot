@@ -1,5 +1,13 @@
 # Continuation handoff — 2026-09-19
 
+September 21 supersedes preparation notes below: autonomous PAPER is deployed;
+**4/7 real receipts PASS**. Read checkpoint TOP and
+`reports/ALPACA_AUTONOMOUS_PAPER_2026_09_21.json`. Do not redeploy/reseed or repeat
+entry acceptance. Only remaining broker events: DAY expiry, next-session re-arm,
+then proof-scoped PAPER kill. LIVE/ATT1 untouched; no canary authority granted.
+
+Earlier notes:
+
 September 20 update: read checkpoint TOP and
 `ALPACA_PAPER_PREPARATION_2026_09_20.json` first. Frozen offline prepare and
 PAPER kill dry-run validated; active execution wiring still unfinished.
