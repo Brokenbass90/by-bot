@@ -34,14 +34,11 @@ RAZDEL = portfeli._ms("2025-10-01")
 def zagruzit(vsel):
     if vsel == "pit50":
         return portfeli.zagruzit_kripto_pit("basis/vselennaya_pit_usd50.json")
-    R = portfeli.zagruzit_kripto_pit("basis/vselennaya_pit_usd50.json")      # цены/фандинг
     u = json.load(open(ROOT / "runtime/xsec_v3_shadow/universe.json"))
-    syms = set(u.get("symbols") or u.get("frozen_universe") or [])
-    M = np.zeros_like(R["M"])
-    for j, s in enumerate(R["simvoly"]):
-        if s in syms:
-            M[:, j] = True
-    R["M"] = M; R["ten62_naydeno"] = int(sum(s in syms for s in R["simvoly"])); R["ten62_vsego"] = len(syms)
+    syms = set(u.get("symbols") or [])
+    R = portfeli.zagruzit_kripto_pit(vse_chleny=sorted(syms))
+    M = R["M"]
+    R["M"] = M; R["ten62_naydeno"] = int(sum(np.isfinite(R["C"][:, j]).any() for j in range(len(R["simvoly"])))); R["ten62_vsego"] = len(syms)
     return R
 
 
@@ -52,9 +49,9 @@ def main():
     try:
         R = zagruzit(p.get("vselennaya", "pit50"))
     except FileNotFoundError as e_:
-    tmp = Path(a.vyhod + ".tmp"); tmp.write_text(json.dumps({"param": p, "okna": {"VSE": {"n": 0}, "H1": {}, "H2": {}},
+        tmp = Path(a.vyhod + ".tmp"); tmp.write_text(json.dumps({"param": p, "okna": {"VSE": {"n": 0}, "H1": {}, "H2": {}},
         "chlenov_s_cenoy_mediana": 0.0, "net_dannyh": str(e_)}, ensure_ascii=False)); tmp.replace(a.vyhod)
-    print("нет данных:", e_); return
+        print("нет данных:", e_); return
     dates, C, M, F = R["dates"], R["C"], R["M"], R["F"]
     if etap == "discovery":
         k = int(np.searchsorted(dates, RAZDEL)); dates, C, M, F = dates[:k], C[:k], M[:k], F[:k]

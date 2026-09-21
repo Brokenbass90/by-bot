@@ -286,8 +286,17 @@ def vybrat(d, V, krome=None):
     vse, _ = schet_proverok(d, V)
     par_ok = {it["begun"] for it in d["ochered"] if it["tip"] == "paritet" and it["sostoyanie"] == "PARITY_PASS"}
     par_est = {it["begun"] for it in d["ochered"] if it["tip"] == "paritet"}
+    sost = {it["id"]: it["sostoyanie"] for it in d["ochered"]}
+    def gotovo_posle(it):
+        """диагностика ждёт, пока родитель получит окончательный ответ (и подтверждение, если оно было)"""
+        rod = it.get("posle")
+        if not rod:
+            return True
+        if sost.get(rod) in (None, "QUEUED", "RUNNING"):
+            return False
+        return sost.get(rod) != "POSITIVE_LEAD" or sost.get(rod + "__PODTV") not in (None, "QUEUED", "RUNNING")
     run = [(i, it) for i, it in enumerate(d["ochered"]) if it["sostoyanie"] == "QUEUED"
-           and it.get("begun") in BEGUNY and it["id"] != krome
+           and it.get("begun") in BEGUNY and it["id"] != krome and gotovo_posle(it)
            and (it["tip"] == "paritet" or it["begun"] not in par_est or it["begun"] in par_ok)]
     if not run:
         return None
@@ -615,6 +624,16 @@ def samoproverka():
         okb = False
     bad += not okb
     print(f"  {'PASS' if okb else 'FAIL'}  {'результат без okna → запись вердикта':<34}{'ok' if okb else 'ошибка'}")
+    import py_compile
+    for f in sorted(DIR.glob("*.py")):
+        try:
+            py_compile.compile(str(f), doraise=True); okc = True
+        except py_compile.PyCompileError:
+            okc = False
+        bad += not okc
+        if not okc:
+            print(f"  FAIL  не компилируется: {f.name}")
+    print(f"  {'PASS' if bad == 0 else '    '}  все прогонщики компилируются")
     print("ИТОГ:", "ВСЁ ПРОШЛО" if not bad else f"ПРОВАЛОВ {bad}")
     return bad
 

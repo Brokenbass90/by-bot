@@ -66,3 +66,10 @@
 {"kogda_utc": "2026-09-21T10:44:50Z", "perehod": {"id": "MOMENTUM_30D__fx7__long", "iz": null, "v": "NEGATIVE"}, "istochnik": "fabrika"}
 {"kogda_utc": "2026-09-21T10:44:50Z", "perehod": {"id": "MOMENTUM_30D__fx7__short", "iz": null, "v": "NEGATIVE"}, "istochnik": "fabrika"}
 {"kogda_utc": "2026-09-21T10:44:50Z", "perehod": {"id": "KAPITULYACIYA__fx7__short", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:07:58Z", "perehod": {"id": "crypto_bull_continuation_v1", "iz": null, "v": "NEGATIVE"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:13:02Z", "perehod": {"id": "XSEC_EXACT_TARGET_WEIGHTS_PIT", "iz": null, "v": "NEGATIVE"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:13:06Z", "perehod": {"id": "P_XSEC_3D_REVERSAL", "iz": null, "v": "NEGATIVE"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:13:10Z", "perehod": {"id": "P_BULL_LEADER_PULLBACK_BASE", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:13:13Z", "perehod": {"id": "P_BULL_LEADER_PULLBACK_FILTERED", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:13:25Z", "perehod": {"id": "P_BULL_VOL_EXPANSION_BASE", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}
+{"kogda_utc": "2026-09-21T13:13:37Z", "perehod": {"id": "P_BULL_VOL_EXPANSION_FILTERED", "iz": null, "v": "HYPOTHESIS"}, "istochnik": "fabrika"}

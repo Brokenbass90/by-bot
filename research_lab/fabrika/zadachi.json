@@ -1,5 +1,5 @@
 {
- "obnovleno": "2026-09-21T10:10:17+00:00",
+ "obnovleno": "2026-09-21T13:13:38+00:00",
  "zadachi": [
   {
    "tip": "SHADOW_READOUT",
@@ -60,6 +60,12 @@
    "id": "range_rejection",
    "chto": "нужен переходник",
    "kto": "Claude"
+  },
+  {
+   "tip": "PROPOSER",
+   "id": "novyy_paket",
+   "kto": "Claude / агент",
+   "chto": "каталоги пройдены: положи новые предложения в predlozheniya/*.json (новые механизмы — кодом в mehanizmy.py/portfeli.py)"
   }
  ]
 }

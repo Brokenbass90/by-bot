@@ -1,0 +1,32 @@
+{
+ "param": {
+  "vselennaya": "pit50",
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "okna": {
+  "VSE": {
+   "n": 954,
+   "n_eff": 318.0,
+   "edge": 0.00018947054134044945,
+   "t": 0.38077189751037277
+  },
+  "H1": {
+   "n": 477,
+   "n_eff": 159.0,
+   "edge": 0.0007658332476540058,
+   "t": 1.011760464400206
+  },
+  "H2": {
+   "n": 477,
+   "n_eff": 159.0,
+   "edge": -0.00038689216497310674,
+   "t": -0.6010696072485758
+  }
+ },
+ "propushcheno_rebalansov": 0,
+ "rebalansov": 954,
+ "godovyh_strategiya": -0.07894084173647024,
+ "chlenov_s_cenoy_mediana": 1.0,
+ "xsec_reference_sha256": "8b184bde700b26e4"
+}

@@ -58,9 +58,9 @@ def main():
     try:
         R = RYNKI_P[ry]()
     except FileNotFoundError as e_:
-    tmp = Path(a.vyhod + ".tmp"); tmp.write_text(json.dumps({"param": p, "okna": {"VSE": {"n": 0}, "H1": {}, "H2": {}},
+        tmp = Path(a.vyhod + ".tmp"); tmp.write_text(json.dumps({"param": p, "okna": {"VSE": {"n": 0}, "H1": {}, "H2": {}},
         "chlenov_s_cenoy_mediana": 0.0, "net_dannyh": str(e_)}, ensure_ascii=False)); tmp.replace(a.vyhod)
-    print("нет данных:", e_); return
+        print("нет данных:", e_); return
     dates, C, DV, M, F = R["dates"], R["C"], R["DV"], R["M"], R["F"]
     H, kv, fee = S["H"], S.get("kv", 0.0), R["fee_bps"]
     HH, VV = R.get("HH"), R.get("VV")

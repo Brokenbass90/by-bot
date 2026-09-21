@@ -1,6 +1,6 @@
 # STRATEGY_MASTER — вид на реестр
 
-Сгенерировано 2026-09-21 10:50 UTC из `research_lab/data/reestr.json` (единственная машинная база) и `research_lab/fabrika/verdikty.jsonl` (журнал доказательств).
+Сгенерировано 2026-09-21 13:13 UTC из `research_lab/data/reestr.json` (единственная машинная база) и `research_lab/fabrika/verdikty.jsonl` (журнал доказательств).
 Руками не править: `python3 research_lab/fabrika/master.py`. Приоритеты — в `ROADMAP.md`.
 
 ## Слоты портфеля
@@ -31,6 +31,10 @@
 | id | состояние | главное | следующий шаг | владелец |
 |---|---|---|---|---|
 | SBR1_MAJOR8 | SHADOW | история 2023–25: 64 сделки +24.26R PF 2.06; reserved OOS 2025-10…07: 16 сделок −3.31R PF … | снять журнал тени с VPS и посчитать против контроля по PREREG_SBR1_SH… | Codex (VPS) / Claude (счёт) |
+| P_BULL_LEADER_PULLBACK_BASE | HYPOTHESIS | t=0.40 (порог 2.5) |  |  |
+| P_BULL_LEADER_PULLBACK_FILTERED | HYPOTHESIS | эфф. периодов 6.0 |  |  |
+| P_BULL_VOL_EXPANSION_BASE | HYPOTHESIS | t=1.07 (порог 2.5) |  |  |
+| P_BULL_VOL_EXPANSION_FILTERED | HYPOTHESIS | эфф. периодов 12.4 |  |  |
 
 **Фоновые эксперименты**
 
@@ -87,13 +91,14 @@
 
 ## Фабрика
 
-Вердиктов всего: NEGATIVE 28, INCONCLUSIVE_LOW_N 21, PLUS_NO_CONFIDENCE 7, BLOCKED_DATA 2, BLOCKED_PARITY 1, PARITY_PASS 1
+Вердиктов всего: NEGATIVE 31, INCONCLUSIVE_LOW_N 23, PLUS_NO_CONFIDENCE 9, PARITY_PASS 2, BLOCKED_DATA 2, BLOCKED_PARITY 1, DIAGNOSTIC 1
 
-## Архив (NEGATIVE, 45)
+## Архив (NEGATIVE, 48)
 
 Решений не принимает. Хранится, чтобы не убивать второй раз.
 
 - breakout: PROBOY_55__crypto137__long, PROBOY_55__crypto137__short, PROBOY_55__fx7__long, PROBOY_55__fx7__short, PROBOY_55__gold__long
+- event_continuation: crypto_bull_continuation_v1
 - flow_continuation: OBEM_IMPULS__crypto137__long, OBEM_IMPULS__crypto137__short
 - funding_carry: P_KR_FANDING_KERRI
 - high_proximity: P_AKC_BLIZ_MAX_126
@@ -106,4 +111,6 @@
 - volatility_expansion: SZHATIE_BB__fx7__long
 - xs_momentum: P_AKC_MOM_6_1
 - xs_momentum_long: P_AKC_MOM_6_1_LONG
+- xs_momentum_vol_exact: XSEC_EXACT_TARGET_WEIGHTS_PIT
+- xs_reversal: P_XSEC_3D_REVERSAL
 - прочее: ALPACA_A_G2, ARB_EGLD, ATT1_FILTER, ATT1_KASANIE, BETA_BTC, CS_OBOROT, IMPULS_7D, OI_KVINTIL, OI_RASHOZHDENIE, OTKAT_KRIPTA, RAZMAH_NORM, RAZMAH_SVECHI, RAZVOROT_1D, SBR1_ISSLED, TELO_SVECHI, UROVNI_OTBOY, VOZRAST_MONETY

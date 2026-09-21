@@ -1552,5 +1552,152 @@
   "znanie": 0.0,
   "cena": 1.0,
   "deystvie": "fabrika"
+ },
+ {
+  "id": "crypto_bull_continuation_v1",
+  "sostoyanie": "NEGATIVE",
+  "imya": "event_continuation · crypto137_m5 · {'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "event_continuation",
+  "rynok": "crypto137_m5",
+  "slot": "rost",
+  "fabrika": {
+   "verdikt": "NEGATIVE",
+   "pochemu": "эдж O1 +0.1579 (+1.52σ), O2 -0.0774 (-0.66σ)",
+   "kogda": "2026-09-21T12:48:11+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#crypto_bull_continuation_v1@2026-09-21T12:48:11+00:00",
+  "pass_fail": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/hypotheses/crypto_bull_continuation_v1/preregistration.json + research_lab/fabrika/begun_bull.py (переходник)",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "XSEC_EXACT_TARGET_WEIGHTS_PIT",
+  "sostoyanie": "NEGATIVE",
+  "imya": "xs_momentum_vol_exact · kripto_pit50 · {'vselennaya': 'pit50', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "xs_momentum_vol_exact",
+  "rynok": "kripto_pit50",
+  "slot": "neytral",
+  "fabrika": {
+   "verdikt": "NEGATIVE",
+   "pochemu": "эдж +0.0002 (t +0.38), половины +0.0008 / -0.0004",
+   "kogda": "2026-09-21T13:13:02+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#XSEC_EXACT_TARGET_WEIGHTS_PIT@2026-09-21T13:13:02+00:00",
+  "pass_fail": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "P_XSEC_3D_REVERSAL",
+  "sostoyanie": "NEGATIVE",
+  "imya": "xs_reversal · kripto_pit50 · {'signal': 'XSEC_3D_REVERSAL', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "xs_reversal",
+  "rynok": "kripto_pit50",
+  "slot": "neytral",
+  "fabrika": {
+   "verdikt": "NEGATIVE",
+   "pochemu": "эдж -0.0012 (t -0.43), половины -0.0062 / +0.0038",
+   "kogda": "2026-09-21T13:13:06+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_XSEC_3D_REVERSAL@2026-09-21T13:13:06+00:00",
+  "pass_fail": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "P_BULL_LEADER_PULLBACK_BASE",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "bull_leader_pullback · kripto_pit50 · {'signal': 'BULL_LEADER_PULLBACK_BASE', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "bull_leader_pullback",
+  "rynok": "kripto_pit50",
+  "slot": "rost",
+  "fabrika": {
+   "verdikt": "PLUS_NO_CONFIDENCE",
+   "pochemu": "t=0.40 (порог 2.5)",
+   "kogda": "2026-09-21T13:13:10+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_BULL_LEADER_PULLBACK_BASE@2026-09-21T13:13:10+00:00",
+  "pass_fail": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "P_BULL_LEADER_PULLBACK_FILTERED",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "bull_leader_pullback_f · kripto_pit50 · {'signal': 'BULL_LEADER_PULLBACK_FILTERED', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "bull_leader_pullback_f",
+  "rynok": "kripto_pit50",
+  "slot": "rost",
+  "fabrika": {
+   "verdikt": "INCONCLUSIVE_LOW_N",
+   "pochemu": "эфф. периодов 6.0",
+   "kogda": "2026-09-21T13:13:13+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_BULL_LEADER_PULLBACK_FILTERED@2026-09-21T13:13:13+00:00",
+  "pass_fail": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "P_BULL_VOL_EXPANSION_BASE",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "bull_vol_expansion · kripto_pit50 · {'signal': 'BULL_VOL_EXPANSION_BASE', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "bull_vol_expansion",
+  "rynok": "kripto_pit50",
+  "slot": "rost",
+  "fabrika": {
+   "verdikt": "PLUS_NO_CONFIDENCE",
+   "pochemu": "t=1.07 (порог 2.5)",
+   "kogda": "2026-09-21T13:13:25+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_BULL_VOL_EXPANSION_BASE@2026-09-21T13:13:25+00:00",
+  "pass_fail": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "P_BULL_VOL_EXPANSION_FILTERED",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "bull_vol_expansion_f · kripto_pit50 · {'signal': 'BULL_VOL_EXPANSION_FILTERED', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "bull_vol_expansion_f",
+  "rynok": "kripto_pit50",
+  "slot": "rost",
+  "fabrika": {
+   "verdikt": "INCONCLUSIVE_LOW_N",
+   "pochemu": "эфф. периодов 12.4",
+   "kogda": "2026-09-21T13:13:37+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_BULL_VOL_EXPANSION_FILTERED@2026-09-21T13:13:37+00:00",
+  "pass_fail": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
  }
 ]

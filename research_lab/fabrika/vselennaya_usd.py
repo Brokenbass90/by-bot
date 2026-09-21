@@ -29,6 +29,15 @@ def main():
             ceny[s] = sorted((int(r[0]), float(r[4])) for r in json.load(open(p))["daily"])
         else:
             bez_ceny.append(s)
+    dolya = len(bez_ceny) / max(1, len(oi))
+    if dolya > 0.05:
+        print(f"СТОП: у {len(bez_ceny)} из {len(oi)} инструментов с OI нет цен ({dolya:.0%}). "
+              "Вселенная из одних скачанных монет была бы смещённой — файл НЕ записан.\n"
+              "Сначала: python3 dannye_pit_kripto.py --vse")
+        if OUT.exists():
+            OUT.replace(OUT.with_suffix(".NEPOLNAYA.json"))
+            print(f"прежний файл отложен как {OUT.with_suffix('.NEPOLNAYA.json').name}")
+        return 1
     nach = int(dt.datetime(2023, 1, 2, tzinfo=dt.timezone.utc).timestamp() * 1000)
     kon = max(t for r in oi.values() for t, _ in r) + DEN
     sostav = {}
@@ -52,15 +61,15 @@ def main():
             ocenki.append((r[i - 1][1] * c[j - 1][1], s))
         if ocenki:
             ocenki.sort(reverse=True)
-            sostav[dt.datetime.utcfromtimestamp(t / 1000).strftime("%Y-%m-%d")] = [s for _, s in ocenki[:TOP_N]]
+            sostav[dt.datetime.fromtimestamp(t / 1000, dt.timezone.utc).strftime("%Y-%m-%d")] = [s for _, s in ocenki[:TOP_N]]
         t += DEN
     vse = sorted({s for v in sostav.values() for s in v})
     OUT.write_text(json.dumps({"schema_id": "pit_universe_usd_oi_v1",
                                "pravilo": f"top-{TOP_N} по OI в долларах (штуки × закрытие), обе величины строго до даты, не старше 7 суток",
-                               "bez_ceny": sorted(bez_ceny), "dat": len(sostav), "unikalnyh_simvolov": len(vse),
+                               "bez_ceny": sorted(bez_ceny), "s_cenoy": len(ceny), "dat": len(sostav), "unikalnyh_simvolov": len(vse),
                                "simvoly": vse, "sostav": sostav}, ensure_ascii=False, indent=1))
     print(f"дат {len(sostav)}, символов {len(vse)}, инструментов с OI без цены: {len(bez_ceny)}")
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main() or 0)

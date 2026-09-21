@@ -42,11 +42,16 @@ def zagruzit_akcii():
                 razdel=_ms("2026-01-01"), opisanie="Alpaca PIT, 962 тикера (262 делистинга)")
 
 
-def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01"):
+def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01", vse_chleny=None):
     """Топ-20 по открытому интересу, известному строго до даты (basis/vselennaya_pit.json).
     Цены: data/pit_daily/*.json (скачиваются dannye_pit_kripto.py), иначе из data/h1.
     Фандинг: оттуда же и из bybit_public_archive_2023/funding."""
-    v = json.load(open(DATA / fayl))
+    if vse_chleny is not None:            # фиксированный список: все всегда члены (диагностика)
+        v = {"simvoly": sorted(vse_chleny), "sostav": {}, "pravilo": f"фиксированные {len(vse_chleny)} символов"}
+    else:
+        v = json.load(open(DATA / fayl))
+    if "bez_ceny" in v and len(v["bez_ceny"]) > 0.05 * (len(v["bez_ceny"]) + v.get("s_cenoy", len(v["simvoly"]))):
+        raise FileNotFoundError(f"{fayl}: собрана без цен у {len(v['bez_ceny'])} инструментов — вселенная неполная")
     S = sorted(v["simvoly"]); ser, fnd, hv = {}, {}, {}
     for s in S:
         p = DATA / f"pit_daily/{s}.json"
@@ -75,6 +80,8 @@ def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01"):
         for t, r in fnd.get(s, []):
             k = di.get(int(t) // DEN * DEN)
             if k is not None: F[k, j] += r; FOK[k, j] = True
+    if vse_chleny is not None:
+        M[:, :] = True
     for d, sl in v["sostav"].items():
         k = di.get(_ms(d))
         if k is not None:

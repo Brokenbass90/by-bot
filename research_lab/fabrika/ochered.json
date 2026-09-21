@@ -35,7 +35,7 @@
    "id": "PARITET_BULL_NAREZKA",
    "tip": "paritet",
    "begun": "bull",
-   "sostoyanie": "RUNNING",
+   "sostoyanie": "PARITY_PASS",
    "rynok": "crypto137_m5",
    "semya": null,
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
@@ -49,7 +49,6 @@
     ]
    },
    "opisanie": "планы Bull при нарезке окнами обязаны совпасть с одним проходом целиком; нужно ≥5 планов",
-   "pid": 33279,
    "start": "2026-09-21T10:10:17+00:00",
    "prervano": [
     "2026-09-21T10:10:10+00:00"
@@ -153,7 +152,7 @@
    "id": "crypto_bull_continuation_v1",
    "tip": "gipoteza",
    "begun": "bull",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "rynok": "crypto137_m5",
    "blocker": null,
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
@@ -167,7 +166,8 @@
     "min_n_o3": 30
    },
    "prereg": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/hypotheses/crypto_bull_continuation_v1/preregistration.json + research_lab/fabrika/begun_bull.py (переходник)",
-   "perehodnik": "2026-09-21: begun_bull.py, хеши закреплённых файлов сверяются перед прогоном"
+   "perehodnik": "2026-09-21: begun_bull.py, хеши закреплённых файлов сверяются перед прогоном",
+   "start": "2026-09-21T11:07:29+00:00"
   },
   {
    "id": "xsec_pit_v5",
@@ -1306,7 +1306,7 @@
    "rynok": "kripto_pit50",
    "semya": "xs_momentum_vol_exact",
    "slot": "neytral",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
    "param": {
     "vselennaya": "pit50",
@@ -1317,7 +1317,8 @@
     "min_neff": 20,
     "min_pokrytie": 0.8
    },
-   "porozhdeno": "2026-09-21T10:49:44+00:00"
+   "porozhdeno": "2026-09-21T10:49:44+00:00",
+   "start": "2026-09-21T13:12:57+00:00"
   },
   {
    "id": "XSEC_EXACT_TEN62_DIAG",
@@ -1326,13 +1327,120 @@
    "rynok": "kripto_pit50",
    "semya": "xs_momentum_vol_exact",
    "slot": null,
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "DIAGNOSTIC",
    "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
    "param": {
     "vselennaya": "ten62",
+    "etap": "vse"
+   },
+   "porozhdeno": "2026-09-21T10:49:44+00:00",
+   "start": "2026-09-21T13:13:37+00:00",
+   "posle": "XSEC_EXACT_TARGET_WEIGHTS_PIT"
+  },
+  {
+   "id": "P_XSEC_3D_REVERSAL",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "kripto_pit50",
+   "semya": "xs_reversal",
+   "slot": "neytral",
+   "param": {
+    "signal": "XSEC_3D_REVERSAL",
     "etap": "discovery"
    },
-   "porozhdeno": "2026-09-21T10:49:44+00:00"
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-21T13:07:58+00:00",
+   "start": "2026-09-21T13:13:02+00:00"
+  },
+  {
+   "id": "P_BULL_LEADER_PULLBACK_BASE",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "kripto_pit50",
+   "semya": "bull_leader_pullback",
+   "slot": "rost",
+   "param": {
+    "signal": "BULL_LEADER_PULLBACK_BASE",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-21T13:07:58+00:00",
+   "start": "2026-09-21T13:13:06+00:00"
+  },
+  {
+   "id": "P_BULL_LEADER_PULLBACK_FILTERED",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "rynok": "kripto_pit50",
+   "semya": "bull_leader_pullback_f",
+   "slot": "rost",
+   "param": {
+    "signal": "BULL_LEADER_PULLBACK_FILTERED",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-21T13:07:58+00:00",
+   "start": "2026-09-21T13:13:10+00:00"
+  },
+  {
+   "id": "P_BULL_VOL_EXPANSION_BASE",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "kripto_pit50",
+   "semya": "bull_vol_expansion",
+   "slot": "rost",
+   "param": {
+    "signal": "BULL_VOL_EXPANSION_BASE",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-21T13:07:58+00:00",
+   "start": "2026-09-21T13:13:13+00:00"
+  },
+  {
+   "id": "P_BULL_VOL_EXPANSION_FILTERED",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "prereg": "research_lab/fabrika/PREREG_PAKET_V3_2026_09_21.md",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "rynok": "kripto_pit50",
+   "semya": "bull_vol_expansion_f",
+   "slot": "rost",
+   "param": {
+    "signal": "BULL_VOL_EXPANSION_FILTERED",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-21T13:07:58+00:00",
+   "start": "2026-09-21T13:13:25+00:00"
   }
  ]
 }
