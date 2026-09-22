@@ -15,6 +15,7 @@
 Команды (запускать на Mac, в VM нет сети):
   python3 poly_sbor.py --proverka          пара запросов, показать поля (сначала это)
   python3 poly_sbor.py --katalog           снимок каталога рынков (активные и закрытые)
+  python3 poly_sbor.py --proverka_rynkov  событие → рынок → токен ДА → точки, на ~10 рынках (до --istoriya)
   python3 poly_sbor.py --istoriya          история цен по рынкам из маппинга (poly_map.json)
   python3 poly_sbor.py --snimki [минут]    бесконечно: стакан+цена+OI по отслеживаемым рынкам, раз в N минут (15)
 Данные: research_lab/data/poly/
@@ -53,6 +54,16 @@ def js(x):
     return x
 
 
+def _sek(s):
+    import datetime as _dt
+    if not s:
+        return None
+    try:
+        return int(_dt.datetime.fromisoformat(str(s).replace("Z", "+00:00")).timestamp())
+    except Exception:
+        return None
+
+
 def sejchas():
     return int(time.time() * 1000)
 
@@ -61,8 +72,18 @@ def zagruzit_map():
     return json.loads(MAP.read_text())
 
 
+def tekst_rynka(m):
+    chasti = [str(m.get(k) or "") for k in ("question", "slug", "groupItemTitle")]
+    for e in (js(m.get("events")) or []):
+        if isinstance(e, dict):
+            chasti += [str(e.get(k) or "") for k in ("title", "slug", "seriesSlug", "ticker")]
+            for t in (e.get("tags") or []):
+                chasti.append(str(t.get("label") or t.get("slug") or "") if isinstance(t, dict) else str(t))
+    return " ".join(chasti).lower()
+
+
 def kategoriya(m, pravila):
-    tekst = " ".join(str(m.get(k) or "") for k in ("question", "slug", "description", "groupItemTitle")).lower()
+    tekst = tekst_rynka(m)
     for kat, pr in pravila.items():
         if any(re.search(p, tekst) for p in pr["iskat"]) and not any(re.search(p, tekst) for p in pr.get("isklyuchit", [])):
             return kat
@@ -85,33 +106,106 @@ def proverka():
     print("gamma /events поля:", sorted((e or [{}])[0].keys())[:60] if e else e)
 
 
+def _okno(a_dt, b_dt, closed):
+    """все рынки с датой окончания в [a, b). Gamma не листает дальше ~2000 по offset —
+    если окно заполнено до потолка, делим его пополам (рекурсивно, до часа)."""
+    import datetime as _dt
+    out, off = [], 0
+    while True:
+        r = get(GAMMA, "/markets", limit=100, offset=off, closed=closed, order="id", ascending="true",
+                end_date_min=a_dt.strftime("%Y-%m-%dT%H:%M:%SZ"), end_date_max=b_dt.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        if r is None and off >= 1900:            # упёрлись в потолок offset
+            if b_dt - a_dt <= _dt.timedelta(hours=1):
+                print(f"  ! окно {a_dt} слишком плотное, взято {len(out)}"); return out
+            m = a_dt + (b_dt - a_dt) / 2
+            return _okno(a_dt, m, closed) + _okno(m, b_dt, closed)
+        if not r:
+            return out
+        out += r; off += len(r)
+        if off >= 2000:
+            m = a_dt + (b_dt - a_dt) / 2
+            if b_dt - a_dt <= _dt.timedelta(hours=1):
+                return out
+            return _okno(a_dt, m, closed) + _okno(m, b_dt, closed)
+        time.sleep(PAUZA)
+
+
+POLYA = ("id", "question", "slug", "conditionId", "clobTokenIds", "outcomes", "startDate", "endDate", "createdAt",
+         "closed", "active", "volume", "volumeNum", "groupItemTitle", "negRisk")
+
+
+def uzko(m):
+    """только нужные поля (каталог — сотни тысяч рынков, описания не храним)"""
+    x = {k: m.get(k) for k in POLYA}
+    x["events"] = [{k: e.get(k) for k in ("id", "title", "slug", "seriesSlug", "ticker")} |
+                   {"tags": [t.get("label") or t.get("slug") for t in (e.get("tags") or []) if isinstance(t, dict)]}
+                   for e in (js(m.get("events")) or []) if isinstance(e, dict)]
+    return x
+
+
 def katalog():
-    OUT.mkdir(parents=True, exist_ok=True)
-    t0 = sejchas(); vse = []
-    for closed in ("false", "true"):
-        off = 0
-        while True:
-            r = get(GAMMA, "/markets", limit=500, offset=off, closed=closed, order="id", ascending="true")
-            if not r:
-                break
-            vse += r; off += len(r)
-            print(f"  closed={closed}: {off}", flush=True)
-            if len(r) < 500:
-                break
-            time.sleep(PAUZA)
-    put = OUT / f"katalog_{time.strftime('%Y%m%d_%H%M', time.gmtime())}.jsonl"
-    with put.open("w") as f:
-        for m in vse:
-            f.write(json.dumps({"polucheno_ms": t0, **m}, ensure_ascii=False) + "\n")
-    print(f"каталог: {len(vse)} рынков → {put.name}")
-    return put
+    """Окна по 30 дней даты окончания, каждое — отдельный файл katalog/<начало>.jsonl.
+    Готовые окна в прошлом не перекачиваются (можно прерывать и продолжать);
+    окна, которые заканчиваются позже чем 7 дней назад, обновляются всегда."""
+    import datetime as _dt
+    d = OUT / "katalog"; d.mkdir(parents=True, exist_ok=True)
+    now = _dt.datetime.now(_dt.timezone.utc)
+    a = _dt.datetime(2023, 1, 1, tzinfo=_dt.timezone.utc)
+    konec = now + _dt.timedelta(days=400)
+    vsego = 0
+    while a < konec:
+        b = min(a + _dt.timedelta(days=30), konec)
+        f = d / f"{a:%Y%m%d}.jsonl"
+        if f.exists() and b < now - _dt.timedelta(days=7):
+            vsego += sum(1 for _ in f.open()); a = b; continue
+        t0 = sejchas(); vse = {}
+        for closed in ("false", "true"):
+            for m in _okno(a, b, closed):
+                vse[m.get("id")] = uzko(m)
+        tmp = f.with_suffix(".tmp")
+        with tmp.open("w") as fh:
+            for m in vse.values():
+                fh.write(json.dumps({"polucheno_ms": t0, **m}, ensure_ascii=False) + "\n")
+        tmp.replace(f); vsego += len(vse)
+        print(f"  окно {a:%Y-%m-%d}…{b:%Y-%m-%d}: {len(vse)} рынков (всего {vsego})", flush=True)
+        a = b
+    print(f"каталог готов: {vsego} рынков в {d}")
+
+
+def otobrat_potokom():
+    """каталог читается построчно (3 млн рынков в память не грузим), остаются только рынки из маппинга;
+    итог — data/poly/otobrano.json"""
+    mp = zagruzit_map(); pr = mp["kategorii"]; mn = mp.get("min_obem_usd", 100000)
+    d = OUT / "katalog"; vse = {}; prosmotreno = 0
+    for f in sorted(d.glob("*.jsonl")):
+        with f.open() as fh:
+            for s in fh:
+                prosmotreno += 1
+                m = json.loads(s)
+                for x in otobrannye([m], pr, mn):
+                    x["sobytie"] = ((m.get("events") or [{}])[0] or {}).get("title")
+                    vse[x["conditionId"]] = x
+    out = sorted(vse.values(), key=lambda x: -x["obem"])
+    (OUT / "otobrano.json").write_text(json.dumps({"prosmotreno": prosmotreno, "rynki": out}, ensure_ascii=False))
+    return out, prosmotreno
+
+
+def otobrannye_gotovye():
+    p = OUT / "otobrano.json"
+    if not p.exists():
+        otobrat_potokom()
+    return json.loads(p.read_text())["rynki"]
 
 
 def posledniy_katalog():
-    k = sorted(OUT.glob("katalog_*.jsonl"))
-    if not k:
+    d = OUT / "katalog"
+    fs = sorted(d.glob("*.jsonl")) if d.exists() else []
+    if not fs:
         raise SystemExit("нет каталога: сначала --katalog")
-    return [json.loads(s) for s in k[-1].read_text().splitlines() if s.strip()]
+    out = []
+    for f in fs:
+        out += [json.loads(s) for s in f.read_text().splitlines() if s.strip()]
+    return out
 
 
 def otobrannye(katalog, pravila, min_obem):
@@ -136,9 +230,25 @@ def otobrannye(katalog, pravila, min_obem):
     return out
 
 
+def proverka_rynkov(n=12):
+    """событие → рынок → токен ДА → число точек истории, по 2 крупнейших рынка в каждой категории"""
+    sel = otobrannye_gotovye()
+    from collections import Counter
+    print("рынков по маппингу:", len(sel), dict(Counter(s["kat"] for s in sel)))
+    uzhe = Counter()
+    for s in sel:
+        if uzhe[s["kat"]] >= 2:
+            continue
+        uzhe[s["kat"]] += 1
+        h = get(CLOB, "/prices-history", market=s["token"], interval="max", fidelity=60)
+        n_t = len((h or {}).get("history", []))
+        print(f"  [{s['kat']}] событие «{str(s.get('sobytie'))[:40]}» → рынок «{str(s['vopros'])[:55]}» "
+              f"→ токен ДА …{str(s['token'])[-8:]} → точек {n_t}  (объём ${s['obem']:,.0f}, закрыт={s['closed']})")
+        time.sleep(PAUZA)
+
+
 def istoriya():
-    mp = zagruzit_map(); kat = posledniy_katalog()
-    sel = otobrannye(kat, mp["kategorii"], mp.get("min_obem_usd", 100000))
+    sel = otobrannye_gotovye()
     d = OUT / "istoriya"; d.mkdir(parents=True, exist_ok=True)
     print(f"рынков по маппингу: {len(sel)}")
     for i, s in enumerate(sel, 1):
@@ -146,7 +256,16 @@ def istoriya():
         if p.exists() and s["closed"]:
             continue                                   # закрытый рынок не меняется
         h = get(CLOB, "/prices-history", market=s["token"], interval="max", fidelity=60)
-        ryad = [(int(x["t"]), float(x["p"])) for x in (h or {}).get("history", [])]
+        ryad = {int(x["t"]): float(x["p"]) for x in (h or {}).get("history", [])}
+        st, kn = _sek(s["start"]), _sek(s["konec"]) or int(time.time())
+        if st and (len(ryad) < 48 or min(ryad, default=kn) > st + 86400):
+            a = st
+            while a < min(kn, int(time.time())):
+                b = min(a + 14 * 86400, kn)
+                h2 = get(CLOB, "/prices-history", market=s["token"], startTs=a, endTs=b, fidelity=60)
+                ryad.update({int(x["t"]): float(x["p"]) for x in (h2 or {}).get("history", [])})
+                a = b; time.sleep(PAUZA)
+        ryad = sorted(ryad.items())
         tmp = p.with_suffix(".tmp"); tmp.write_text(json.dumps({**s, "polucheno_ms": sejchas(), "ryad": ryad}))
         tmp.replace(p)
         if i % 25 == 0 or i == len(sel):
@@ -161,7 +280,13 @@ def snimki(minut=15):
     kat, kat_vremya = None, 0
     while True:
         if kat is None or time.time() - kat_vremya > 6 * 3600:     # обновлять список активных раз в 6 ч
-            kat = [m for m in (get(GAMMA, "/markets", limit=500, closed="false", order="volume", ascending="false") or [])]
+            kat = []
+            for off in range(0, 2000, 100):                  # 2000 самых объёмных активных рынков
+                r = get(GAMMA, "/markets", limit=100, offset=off, closed="false", order="volume", ascending="false") or []
+                kat += r
+                if not r:
+                    break
+                time.sleep(PAUZA)
             kat_vremya = time.time()
         sel = [s for s in otobrannye(kat, mp["kategorii"], mp.get("min_obem_usd", 100000)) if not s["closed"]]
         t = sejchas(); zapisi = []
@@ -182,7 +307,10 @@ def snimki(minut=15):
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    if "--proverka" in a: proverka()
+    if "--otobrat" in a:
+        r, n = otobrat_potokom(); print(f"просмотрено {n}, по маппингу {len(r)}")
+    elif "--proverka_rynkov" in a: proverka_rynkov()
+    elif "--proverka" in a: proverka()
     elif "--katalog" in a: katalog()
     elif "--istoriya" in a: istoriya()
     elif "--snimki" in a:

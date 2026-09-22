@@ -130,6 +130,8 @@ def sudya(rez, s):
 
 def sudya_portfel(rez, s):
     ok = rez["okna"]; v, h1, h2 = ok["VSE"], ok["H1"], ok["H2"]
+    if rez.get("net_dannyh"):
+        return "BLOCKED_DATA", f"нет данных: {rez['net_dannyh'][:120]}"
     if rez.get("chlenov_s_cenoy_mediana", 0) < s["min_pokrytie"] or v.get("n", 0) == 0:
         return "BLOCKED_DATA", f"у членов вселенной есть цена лишь в {rez.get('chlenov_s_cenoy_mediana', 0):.0%} случаев"
     if v.get("n_eff", 0) < s["min_neff"]:

@@ -46,11 +46,11 @@ def priznaki(dates):
             continue
         t = np.array([x[0] * 1000 for x in d["ryad"]], dtype=np.int64); p = np.array([x[1] for x in d["ryad"]])
         o = np.argsort(t)
-        rynki.append((t[o], p[o], _ms(d.get("start")), _ms(d.get("konec")), kat[d["kat"]]))
+        rynki.append((t[o], p[o], _ms(d.get("start")), _ms(d.get("konec")), dict(kat[d["kat"]], imya=d["kat"])))
     out = {}
     for T in dates:
         T = int(T); konec_dnya = T + DEN
-        vklad = {"kripto": [], "akcii": []}
+        vklad = {"kripto": {}, "akcii": {}}                 # получатель → категория → вклады
         for t, p, st, kn, K in rynki:
             if st is not None and st >= T:
                 continue
@@ -61,8 +61,10 @@ def priznaki(dates):
                 continue
             for pol in K["poluchateli"]:
                 if pol in vklad:
-                    vklad[pol].append(K["znak"] * (p1 - p0))
-        out[T] = {pol: (float(np.mean(v)) if v else None, len(v)) for pol, v in vklad.items()}
+                    vklad[pol].setdefault(K["imya"], []).append(K["znak"] * (p1 - p0))
+        # равный вес КАТЕГОРИЙ: сотни рынков «BTC выше X» не заглушают несколько рынков ФРС
+        out[T] = {pol: ((float(np.mean([np.mean(v) for v in kv.values()])) if kv else None),
+                        sum(len(v) for v in kv.values())) for pol, kv in vklad.items()}
     return out
 
 

@@ -1,12 +1,133 @@
 {
- "opisanie": "Маппинг событие → рынок. Рынок без категории в признаки НЕ попадает. znak: +1 если рост вероятности ДА = risk-on для рынка-получателя, −1 если risk-off. Заморожено в PREREG_POLY_V1.",
+ "opisanie": "Маппинг событие → рынок. Рынок без категории в признаки НЕ попадает. znak: +1 если рост вероятности ДА = risk-on для рынка-получателя, −1 если risk-off. Заморожено в PREREG_POLY_V1. Поправка 2 (до сбора истории): инфляция и рецессия — только США; признак усредняется сначала внутри категории, затем между категориями (равный вес категорий).",
  "min_obem_usd": 100000,
  "kategorii": {
-  "fed_snizhenie": {"iskat": ["fed .*(cut|lower|decrease)", "rate cut", "fomc.*(cut|decrease)", "(cut|lower) (interest )?rates?"], "isklyuchit": ["ecb", "bank of england", "boe", "boj", "bank of japan"], "znak": 1, "poluchateli": ["kripto", "akcii"]},
-  "fed_povyshenie": {"iskat": ["fed .*(hike|raise|increase)", "rate hike", "fomc.*(hike|increase)"], "isklyuchit": ["ecb", "bank of england", "boe", "boj"], "znak": -1, "poluchateli": ["kripto", "akcii"]},
-  "recessiya": {"iskat": ["recession"], "isklyuchit": [], "znak": -1, "poluchateli": ["kripto", "akcii"]},
-  "inflyaciya_vysokaya": {"iskat": ["cpi.*(above|higher|over|>)", "inflation.*(above|higher|over)"], "isklyuchit": [], "znak": -1, "poluchateli": ["kripto", "akcii"]},
-  "kripto_regulyaciya": {"iskat": ["crypto (bill|act|market structure)", "stablecoin (bill|act)", "genius act", "clarity act", "bitcoin reserve", "strategic bitcoin", "(eth|sol|xrp|ethereum|solana).*etf"], "isklyuchit": [], "znak": 1, "poluchateli": ["kripto"]},
-  "kripto_cena": {"iskat": ["bitcoin (above|reach|hit)", "btc (above|reach|hit)", "ethereum (above|reach|hit)", "eth (above|reach|hit)"], "isklyuchit": ["below", "dip"], "znak": 1, "poluchateli": ["kripto"]}
+  "fed_snizhenie": {
+   "iskat": [
+    "fed .*(cut|lower|decrease)",
+    "rate cut",
+    "fomc.*(cut|decrease)",
+    "(cut|lower) (interest )?rates?"
+   ],
+   "isklyuchit": [
+    "ecb",
+    "bank of england",
+    "boe",
+    "boj",
+    "bank of japan"
+   ],
+   "znak": 1,
+   "poluchateli": [
+    "kripto",
+    "akcii"
+   ]
+  },
+  "fed_povyshenie": {
+   "iskat": [
+    "fed .*(hike|raise|increase)",
+    "rate hike",
+    "fomc.*(hike|increase)"
+   ],
+   "isklyuchit": [
+    "ecb",
+    "bank of england",
+    "boe",
+    "boj"
+   ],
+   "znak": -1,
+   "poluchateli": [
+    "kripto",
+    "akcii"
+   ]
+  },
+  "recessiya": {
+   "iskat": [
+    "recession"
+   ],
+   "isklyuchit": [
+    "argentin",
+    "uk ",
+    "u\\.k\\.",
+    "britain",
+    "canada",
+    "ecb",
+    "japan",
+    "turkey",
+    "brazil",
+    "mexico",
+    "australia",
+    "china",
+    "india",
+    "germany",
+    "france",
+    "eurozone"
+   ],
+   "znak": -1,
+   "poluchateli": [
+    "kripto",
+    "akcii"
+   ]
+  },
+  "inflyaciya_vysokaya": {
+   "iskat": [
+    "cpi.*(above|higher|over|>)",
+    "inflation.*(above|higher|over)"
+   ],
+   "isklyuchit": [
+    "argentin",
+    "uk ",
+    "u\\.k\\.",
+    "britain",
+    "canada",
+    "euro",
+    "ecb",
+    "japan",
+    "turkey",
+    "brazil",
+    "mexico",
+    "australia",
+    "china",
+    "india",
+    "germany",
+    "france"
+   ],
+   "znak": -1,
+   "poluchateli": [
+    "kripto",
+    "akcii"
+   ]
+  },
+  "kripto_regulyaciya": {
+   "iskat": [
+    "crypto (bill|act|market structure)",
+    "stablecoin (bill|act)",
+    "genius act",
+    "clarity act",
+    "bitcoin reserve",
+    "strategic bitcoin",
+    "(eth|sol|xrp|ethereum|solana).*etf"
+   ],
+   "isklyuchit": [],
+   "znak": 1,
+   "poluchateli": [
+    "kripto"
+   ]
+  },
+  "kripto_cena": {
+   "iskat": [
+    "bitcoin (above|reach|hit)",
+    "btc (above|reach|hit)",
+    "ethereum (above|reach|hit)",
+    "eth (above|reach|hit)"
+   ],
+   "isklyuchit": [
+    "below",
+    "dip"
+   ],
+   "znak": 1,
+   "poluchateli": [
+    "kripto"
+   ]
+  }
  }
 }

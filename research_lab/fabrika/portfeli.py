@@ -95,7 +95,12 @@ def zagruzit_kripto_poly():
     R = zagruzit_kripto_pit("basis/vselennaya_pit_usd50.json")
     import poly_priznaki
     pz = poly_priznaki.priznaki(R["dates"])
-    R["POLY"] = np.array([pz[int(t)]["kripto"][0] if pz[int(t)]["kripto"][0] is not None else np.nan for t in R["dates"]])
+    R["POLY"] = np.array([pz[int(t)]["kripto"][0] if pz[int(t)]["kripto"][0] is not None and pz[int(t)]["kripto"][1] >= 3
+                          else np.nan for t in R["dates"]])
+    okno = (R["dates"] >= _ms("2023-03-01")) & (R["dates"] < R["razdel"])
+    pokr = float(np.isfinite(R["POLY"][okno]).mean()) if okno.any() else 0.0
+    if pokr < 0.6:
+        raise FileNotFoundError(f"покрытие Polymarket {pokr:.0%} дней окна обнаружения (нужно ≥60% дней с ≥3 рынками)")
     return R
 
 

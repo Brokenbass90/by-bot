@@ -1451,6 +1451,27 @@
    "semya": "predskazaniya",
    "slot": "predskazaniya",
    "blocker": "запустить на Mac: poly_sbor.py --proverka, --katalog, --istoriya; снимки стакана — --snimki (копятся вперёд)"
+  },
+  {
+   "id": "P_BULL_VOL_EXPANSION_POLY",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "prereg": "research_lab/fabrika/PREREG_POLY_V1_2026_09_21.md",
+   "sostoyanie": "BLOCKED_DATA",
+   "rynok": "kripto_pit50_poly",
+   "semya": "bull_vol_expansion_poly",
+   "slot": "rost",
+   "param": {
+    "signal": "BULL_VOL_EXPANSION_POLY",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-21T13:47:02+00:00",
+   "start": "2026-09-21T13:47:02+00:00"
   }
  ]
 }
