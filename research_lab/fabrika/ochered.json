@@ -1446,18 +1446,18 @@
    "id": "POLY_SBOR",
    "tip": "gipoteza",
    "begun": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "HYPOTHESIS",
    "rynok": "predskazaniya",
    "semya": "predskazaniya",
    "slot": "predskazaniya",
-   "blocker": "запустить на Mac: poly_sbor.py --proverka, --katalog, --istoriya; снимки стакана — --snimki (копятся вперёд)"
+   "blocker": "история собрана: 4893 рынка, покрытие 79% дней; дальше ежедневная дельта внутри фабрики"
   },
   {
    "id": "P_BULL_VOL_EXPANSION_POLY",
    "tip": "gipoteza",
    "begun": "portfel",
    "prereg": "research_lab/fabrika/PREREG_POLY_V1_2026_09_21.md",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
    "rynok": "kripto_pit50_poly",
    "semya": "bull_vol_expansion_poly",
    "slot": "rost",
@@ -1471,7 +1471,25 @@
     "min_pokrytie": 0.8
    },
    "porozhdeno": "2026-09-21T13:47:02+00:00",
-   "start": "2026-09-21T13:47:02+00:00"
+   "start": "2026-09-22T07:17:14+00:00"
+  },
+  {
+   "id": "POLY_SENSOR_INFO_3D",
+   "tip": "gipoteza",
+   "begun": "sensor",
+   "rynok": "kripto_pit50_poly",
+   "semya": "poly_sensor",
+   "slot": "predskazaniya",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_POLY_SENSOR_V1_2026_09_23.md",
+   "param": {
+    "gorizont": 3,
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_p": 0.01,
+    "min_neff": 20
+   }
   }
  ]
 }

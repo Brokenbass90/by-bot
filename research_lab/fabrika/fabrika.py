@@ -40,7 +40,11 @@ VERDIKTY = DIR / "verdikty.jsonl"
 ZADACHI = DIR / "zadachi.json"
 REZ = DIR / "rezultaty"
 ZAMOK = DIR / ".zamok"
-BEGUNY = {"h1": DIR / "begun_h1.py", "meh": DIR / "begun_meh.py", "portfel": DIR / "begun_portfel.py", "bull": DIR / "begun_bull.py", "xsec": DIR / "begun_xsec.py"}
+POLY_METKA = DIR / ".poly_posledniy"
+OTCHET_MD = DIR / "DAILY_RESEARCH_REPORT.md"
+OTCHET_JSON = DIR / "DAILY_RESEARCH_REPORT.json"
+SUTKI = 24 * 3600
+BEGUNY = {"h1": DIR / "begun_h1.py", "meh": DIR / "begun_meh.py", "portfel": DIR / "begun_portfel.py", "bull": DIR / "begun_bull.py", "xsec": DIR / "begun_xsec.py", "sensor": DIR / "begun_sensor.py"}
 PREDL = DIR / "predlozheniya"
 PREREG_KATALOG_V2 = "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md"
 SUDYA_PORTFEL = {"porog_t": 2.5, "min_neff": 20, "min_pokrytie": 0.8}
@@ -144,6 +148,23 @@ def sudya_portfel(rez, s):
     return "PLUS_NO_CONFIDENCE", f"t={v['t']:.2f} (порог {s['porog_t']})"
 
 
+SUDYA_SENSOR = {"porog_p": 0.01, "min_neff": 20}
+
+
+def sudya_sensor(rez, s):
+    """информация в признаке: перестановочный тест по дням"""
+    ok = rez["okna"]; v, h1, h2 = ok["VSE"], ok.get("H1", {}), ok.get("H2", {})
+    if rez.get("net_dannyh"):
+        return "BLOCKED_DATA", f"нет данных: {rez['net_dannyh'][:100]}"
+    if v.get("n_eff", 0) < s["min_neff"] or "edge" not in v:
+        return "INCONCLUSIVE_LOW_N", f"эфф. периодов {v.get('n_eff')}"
+    if v["edge"] <= 0:
+        return "NEGATIVE", f"эдж {v['edge']:+.5f}, p={v['p']:.3f}"
+    if v["p"] <= s["porog_p"] and h1.get("edge", -1) > 0 and h2.get("edge", -1) > 0:
+        return "POSITIVE_LEAD", f"эдж {v['edge']:+.5f}, p={v['p']:.4f}, обе половины в плюсе"
+    return "PLUS_NO_CONFIDENCE", f"эдж {v['edge']:+.5f}, p={v['p']:.3f} (порог {s['porog_p']})"
+
+
 def sudya_podtv(rez, s):
     """подтверждение на нетронутом окне (данные, которых обнаружение не видело)"""
     v = rez["okna"].get("VSE") or rez["okna"].get("O3") or {}
@@ -171,6 +192,8 @@ def sudit(item, rez):
         return sudya_paritet(rez, item["etalon"])
     if item.get("param", {}).get("etap") == "confirmation":
         return sudya_podtv(rez, item.get("sudya", SUDYA_PODTV))
+    if item["begun"] == "sensor":
+        return sudya_sensor(rez, item.get("sudya", SUDYA_SENSOR))
     if item["begun"] in ("portfel", "xsec"):
         return sudya_portfel(rez, item.get("sudya", SUDYA_PORTFEL))
     v, poch = sudya(rez, item["sudya"])
@@ -383,7 +406,7 @@ def heshi(item):
     if item["begun"] == "h1":
         h["random_control"] = sha(LAB / "random_control.py")
         h["strategiya"] = sha(ROOT / "strategies" / f"{item['param']['mod']}.py")
-    elif item["begun"] in ("portfel", "xsec"):
+    elif item["begun"] in ("portfel", "xsec", "sensor"):
         h["portfeli"] = sha(DIR / "portfeli.py"); h["regime_v1"] = sha(DIR / "regime_v1.py")
         if item["begun"] == "xsec":
             h["xsec_v3_reference"] = sha(LAB / "xsec_v3_reference.py")
@@ -509,6 +532,58 @@ def odin_prohod():
             return
 
 
+def poly_sutki():
+    """раз в сутки: дельта Polymarket (новые рынки, история нужных, круг снимков).
+    Автозапуска на машине нет: это делает та же фабрика, пока она крутится."""
+    posl = float(POLY_METKA.read_text()) if POLY_METKA.exists() else 0.0
+    if time.time() - posl < SUTKI:
+        return None
+    print(f"\n◇ суточный сбор Polymarket {seychas():%H:%M} UTC", flush=True)
+    t0 = time.time()
+    r = subprocess.run([sys.executable, str(DIR / "poly_sbor.py"), "--delta"], cwd=str(DIR))
+    POLY_METKA.write_text(str(time.time()))
+    print(f"◇ сбор закончен за {round(time.time() - t0)} с, код {r.returncode}", flush=True)
+    return r.returncode
+
+
+def otchet_dnya():
+    """короткий отчёт: что случилось за сутки и нужно ли вмешательство"""
+    d = zagruzit(); V = verdikty()
+    gran = seychas() - dt.timedelta(hours=24)
+    vv = [v for v in verdikty_vse() if dt.datetime.fromisoformat(v["kogda"]).replace(tzinfo=dt.timezone.utc) >= gran
+          and v["verdikt"] not in ("PARITY_PASS", "BLOCKED_PARITY", "FAILED_TECHNICAL")]
+    c = Counter(v["verdikt"] for v in vv)
+    sost = Counter(it["sostoyanie"] for it in d["ochered"])
+    ist = LAB / "data/poly/istoriya"
+    poly = {"rynkov_v_istorii": len(list(ist.glob("*.json"))) if ist.exists() else 0,
+            "posledniy_sbor": (dt.datetime.fromtimestamp(float(POLY_METKA.read_text()), dt.timezone.utc).isoformat(timespec="seconds")
+                               if POLY_METKA.exists() else None)}
+    lids = [it["id"] for it in d["ochered"] if it["sostoyanie"] in ("POSITIVE_LEAD", "CONFIRMED")]
+    slomano = [it["id"] for it in d["ochered"] if it["sostoyanie"] == "FAILED_TECHNICAL"]
+    nechego = not any(it["sostoyanie"] == "QUEUED" and it.get("begun") in BEGUNY for it in d["ochered"])
+    prichiny = ([f"находка: {', '.join(lids)}"] if lids else []) + \
+               ([f"упало технически: {', '.join(slomano)}"] if slomano else []) + \
+               (["очередь пуста — нужен новый пакет гипотез"] if nechego else [])
+    j = {"kogda": seychas().isoformat(timespec="seconds"), "za_sutki": dict(c), "proverok": len(vv),
+         "sostoyaniya": dict(sost), "poly": poly, "nahodki": lids,
+         "trebuetsya_vmeshatelstvo": bool(prichiny), "prichiny": prichiny}
+    OTCHET_JSON.write_text(json.dumps(j, ensure_ascii=False, indent=1))
+    t = [f"# Отчёт за сутки — {seychas():%Y-%m-%d %H:%M} UTC", "",
+         f"    проверено гипотез      {len(vv)}",
+         f"    отрицательных         {c['NEGATIVE']}",
+         f"    плюс без уверенности  {c['PLUS_NO_CONFIDENCE']}",
+         f"    мало данных           {c['INCONCLUSIVE_LOW_N']}",
+         f"    находок               {c['POSITIVE_LEAD']}",
+         f"    подтверждено          {c['CONFIRMED']}",
+         f"    ждут данных/переходника {sost['BLOCKED_DATA'] + sost['BLOCKED_ADAPTER']}",
+         f"    Polymarket: рынков в истории {poly['rynkov_v_istorii']}, последний сбор {poly['posledniy_sbor']}", "",
+         f"**ТРЕБУЕТСЯ ВМЕШАТЕЛЬСТВО: {'ДА' if prichiny else 'НЕТ'}**"]
+    if prichiny:
+        t += [""] + [f"- {x}" for x in prichiny]
+    OTCHET_MD.write_text("\n".join(t) + "\n")
+    return j
+
+
 def demon():
     print(f"Фабрика в непрерывном режиме с {seychas():%Y-%m-%d %H:%M} UTC. Ctrl+C — стоп.", flush=True)
     while True:
@@ -516,7 +591,11 @@ def demon():
         if r == "STOP":
             return
         if r is None:
-            print(f"… {seychas():%H:%M} UTC прогонять нечего; жду {SON // 60} мин. {otchet_stroka()}", flush=True)
+            if poly_sutki() is not None:
+                continue                                   # пришли новые данные — сразу проверить очередь
+            j = otchet_dnya()
+            print(f"… {seychas():%H:%M} UTC прогонять нечего; жду {SON // 60} мин. {otchet_stroka()}"
+                  f" | вмешательство: {'ДА' if j['trebuetsya_vmeshatelstvo'] else 'нет'}", flush=True)
             time.sleep(SON)
 
 
@@ -642,11 +721,13 @@ def samoproverka():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    for k in ("demon", "otchet", "doska", "samoproverka", "povtorit_tehnicheskie", "reestr"):
+    for k in ("demon", "otchet", "doska", "samoproverka", "povtorit_tehnicheskie", "reestr", "otchet_dnya"):
         ap.add_argument(f"--{k}", action="store_true")
     a = ap.parse_args()
     if a.samoproverka:
         sys.exit(1 if samoproverka() else 0)
+    if a.otchet_dnya:
+        print(json.dumps(otchet_dnya(), ensure_ascii=False, indent=1)); sys.exit(0)
     if a.reestr:
         print("изменено записей реестра:", obnovit_reestr()); sys.exit(0)
     if a.otchet:

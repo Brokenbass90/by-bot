@@ -305,9 +305,66 @@ def snimki(minut=15):
         time.sleep(max(60, minut * 60 - (sejchas() - t) / 1000))
 
 
+def delta(snimok=True):
+    """ежедневная дельта: новые и активные рынки, история только по нужным, один круг снимков"""
+    import datetime as _dt
+    mp = zagruzit_map(); pr = mp["kategorii"]; mn = mp.get("min_obem_usd", 100000)
+    now = _dt.datetime.now(_dt.timezone.utc)
+    svezhie = {}
+    for off in range(0, 2000, 100):                      # активные по объёму
+        r = get(GAMMA, "/markets", limit=100, offset=off, closed="false", order="volume", ascending="false") or []
+        for m in r:
+            svezhie[m.get("id")] = uzko(m)
+        if not r:
+            break
+        time.sleep(PAUZA)
+    for m in _okno(now - _dt.timedelta(days=45), now + _dt.timedelta(days=1), "true"):   # недавно закрытые
+        svezhie[m.get("id")] = uzko(m)
+    d = OUT / "katalog"; d.mkdir(parents=True, exist_ok=True)
+    f = d / f"delta_{now:%Y%m%d}.jsonl"
+    with f.open("w") as fh:
+        for m in svezhie.values():
+            fh.write(json.dumps({"polucheno_ms": sejchas(), **m}, ensure_ascii=False) + "\n")
+    bylo = {x["conditionId"] for x in otobrannye_gotovye()}
+    novye = [x for x in otobrannye(list(svezhie.values()), pr, mn) if x["conditionId"] not in bylo]
+    otobrat_potokom()                                     # пересобрать общий список (с дельтой)
+    print(f"дельта: рынков просмотрено {len(svezhie)}, новых по маппингу {len(novye)}")
+    istoriya()
+    if snimok:
+        try:
+            snimki_odin_krug(mp)
+        except Exception as e:
+            print("  ! снимок не снят:", e)
+    return len(svezhie), len(novye)
+
+
+def snimki_odin_krug(mp):
+    d = OUT / "snimki"; d.mkdir(parents=True, exist_ok=True)
+    kat = []
+    for off in range(0, 1000, 100):
+        r = get(GAMMA, "/markets", limit=100, offset=off, closed="false", order="volume", ascending="false") or []
+        kat += r
+        if not r:
+            break
+        time.sleep(PAUZA)
+    sel = [s for s in otobrannye(kat, mp["kategorii"], mp.get("min_obem_usd", 100000)) if not s["closed"]]
+    t = sejchas(); n = 0
+    with (d / time.strftime("%Y-%m-%d.jsonl", time.gmtime())).open("a") as f:
+        for s in sel:
+            b = get(CLOB, "/book", token_id=s["token"]) or {}
+            bids = sorted(((float(x["price"]), float(x["size"])) for x in b.get("bids", [])), reverse=True)[:10]
+            asks = sorted((float(x["price"]), float(x["size"])) for x in b.get("asks", []))[:10]
+            oi = get(DATA, "/oi", market=s["conditionId"])
+            f.write(json.dumps({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "bids": bids, "asks": asks,
+                                "oi": oi if not isinstance(oi, list) else (oi[0] if oi else None)}) + "\n")
+            n += 1; time.sleep(PAUZA)
+    print(f"  снимков стакана: {n}")
+
+
 if __name__ == "__main__":
     a = sys.argv[1:]
-    if "--otobrat" in a:
+    if "--delta" in a: delta()
+    elif "--otobrat" in a:
         r, n = otobrat_potokom(); print(f"просмотрено {n}, по маппингу {len(r)}")
     elif "--proverka_rynkov" in a: proverka_rynkov()
     elif "--proverka" in a: proverka()

@@ -1713,5 +1713,26 @@
   "znanie": 0.0,
   "cena": 1.0,
   "deystvie": "fabrika"
+ },
+ {
+  "id": "P_BULL_VOL_EXPANSION_POLY",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "bull_vol_expansion_poly · kripto_pit50_poly · {'signal': 'BULL_VOL_EXPANSION_POLY', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "bull_vol_expansion_poly",
+  "rynok": "kripto_pit50_poly",
+  "slot": "rost",
+  "fabrika": {
+   "verdikt": "INCONCLUSIVE_LOW_N",
+   "pochemu": "эфф. периодов 13.6",
+   "kogda": "2026-09-22T07:17:26+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_BULL_VOL_EXPANSION_POLY@2026-09-22T07:17:26+00:00",
+  "pass_fail": "research_lab/fabrika/PREREG_POLY_V1_2026_09_21.md",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
  }
 ]
