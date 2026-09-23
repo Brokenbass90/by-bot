@@ -1,8 +1,8 @@
 {
-  "as_of_utc": "2026-09-23T08:00:34.374346+00:00",
-  "status": "AUTONOMOUS_PAPER_ACTIVE",
+  "as_of_utc": "2026-09-23T13:44:52.861308+00:00",
+  "status": "PAPER_ACCEPTANCE_COMPLETE",
   "ready_for_canary": false,
-  "evidence_pass": 6,
+  "evidence_pass": 7,
   "evidence_total": 7,
   "scope": "one-session operational broker acceptance; not monthly strategy performance evidence",
   "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
@@ -229,8 +229,51 @@
     },
     {
       "row": 7,
-      "status": "PENDING_ACTUAL_PAPER_KILL",
-      "evidence": "all existing owners established; proof-scoped kill prepared, not executed"
+      "status": "PASS",
+      "evidence": "one existing proof-scoped PAPER kill command; four broker-filled exits; fresh intended-flat and foreign quantities/entry prices unchanged",
+      "utc": "2026-09-23T13:44:52.861308+00:00",
+      "close_orders": [
+        {
+          "symbol": "CRM",
+          "id": "bab628e6-d458-4455-8ebf-75e161315512",
+          "status": "filled",
+          "filled_qty": "1.118571524",
+          "filled_avg_price": "237.31",
+          "filled_at": "2026-09-23T13:44:51.083013942Z"
+        },
+        {
+          "symbol": "CRWD",
+          "id": "da3f6f8c-3e79-4d32-995a-570fcfa4b92e",
+          "status": "filled",
+          "filled_qty": "0.520290899",
+          "filled_avg_price": "252.614",
+          "filled_at": "2026-09-23T13:44:50.581203934Z"
+        },
+        {
+          "symbol": "CVX",
+          "id": "ff134e9f-590d-4b97-8051-34acb51b8b36",
+          "status": "filled",
+          "filled_qty": "0.874137846",
+          "filled_avg_price": "204.844",
+          "filled_at": "2026-09-23T13:44:50.865367204Z"
+        },
+        {
+          "symbol": "MRK",
+          "id": "97601070-d4ba-4d39-b9e6-851573b4ee0e",
+          "status": "filled",
+          "filled_qty": "0.849537347",
+          "filled_avg_price": "150.35",
+          "filled_at": "2026-09-23T13:44:51.156650553Z"
+        }
+      ],
+      "foreign_positions_preserved": [
+        "ABNB",
+        "ABT",
+        "AMZN",
+        "MA",
+        "SCHW"
+      ],
+      "private_receipt_path": "/root/by-bot/runtime/alpaca_intended_paper/acceptance_kill/final_receipt.json"
     }
   ],
   "successful_process_cycles": 3,
@@ -250,17 +293,19 @@
   "limitations": [
     "Legacy ABNB/ABT/MA historical HWM remains unproven; values not fabricated, positions not adopted.",
     "No durable pre-submit client-order-id intent; uncertain ownership halts instead of adoption.",
-    "Row 7 remains pending; no tiny-live readiness or profitability claim.",
-    "Entries permitted on September 21 acceptance date only; later cycles maintain/reconcile. Monthly strategy auto-refresh is not claimed."
+    "Entries permitted on September 21 acceptance date only; later cycles maintain/reconcile. Monthly strategy auto-refresh is not claimed.",
+    "All seven PAPER operational evidence rows PASS. Verified intended runner is exact-PAPER-only; live endpoint/account binding and owner capital/approval are not completed.",
+    "Acceptance cron intentionally retired only after confirmed-flat; account entry halt and raw durable evidence retained. No ongoing intended monthly auto-selection claimed."
   ],
-  "next_action": "Only row 7 remains: during next regular market session execute existing proof-scoped intended PAPER kill with fresh account/entry/position validation and confirm intended-flat / foreign unchanged. Prepare dossier only after actual receipt; no LIVE activation.",
+  "next_action": "Review TINY_LIVE_CANARY_DOSSIER_2026_09_23.md; complete exact LIVE account/profile binding default-off before seeking a concrete owner activation decision. No new strategy research/gates.",
   "private_evidence": {
     "first_autorun.tar": "8ff84e257c172af3439df511ebcca4d051437c93741b74d319d867ee6c56a223",
     "repeated_autorun.tar": "ef16cc617f848227dcd235d662c0302431295ef1de8ba618c6034aa60be28faa",
     "verified_autorun.tar": "749c860dd492996c1c531c5594d44498dd6b64a154f93923cfd1f8b0fe10d82b",
     "paper_truth_20260921.json": "fcafc1d04f4b8e7851b61a302cc86ad30bf3ee930264e6817bf62c3bf4bd3893",
     "heartbeat_20260921_close.json": "4e1c66368a67a6c94caf0a0316c2ba640f1a84dd0f04d3bba4d2d4141518d83d",
-    "heartbeat_20260923_rearm_archive.json": "08efc6f81b64e26d2111beb78da7e26ad3a859d7f2122b99c6df8a9bcb00d241"
+    "heartbeat_20260923_rearm_archive.json": "08efc6f81b64e26d2111beb78da7e26ad3a859d7f2122b99c6df8a9bcb00d241",
+    "acceptance_kill_20260923.tar": "9b9d3a7cd5190d6172c414120f33530a5e1d8a1c209d44f8007a503fee445363"
   },
   "runtime_wrapper_hashes": {
     "run_intended.sh": "d1db2097ec5ac4a4bd42f8291af4241905bdc6bf36eaf05d9a89418d733df6f3",
@@ -269,5 +314,9 @@
   },
   "bridge_allocated_notional_usd": 700.0,
   "actual_fill_notional_usd": 699.939999464954,
-  "latest_runtime_status": "WAITING_FOR_REGULAR_SESSION"
+  "latest_runtime_status": "ACCEPTANCE_CRON_RETIRED_AFTER_CONFIRMED_FLAT",
+  "paper_operational_ready": true,
+  "ready_for_owner_review": true,
+  "live_activation_ready": false,
+  "dossier": "reports/TINY_LIVE_CANARY_DOSSIER_2026_09_23.md"
 }

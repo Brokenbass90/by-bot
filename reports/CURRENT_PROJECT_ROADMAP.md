@@ -9,12 +9,13 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 
 Latest owner order supersedes the numbered historical snapshot below:
 **Alpaca frozen PAPER 7/7 → dossier → ATT1 dossier → SBR1**.
-September 21: autonomous operational PAPER deployed on VPS, **6/7** actual
-receipts PASS (startup/fractional fill/DAY stop/restart/actual DAY expiry/next-session re-arm). CRM/CRWD/CVX/MRK filled
-with complete broker protection; actual fill notional $699.94. See
-`ALPACA_AUTONOMOUS_PAPER_2026_09_21.json`. Remaining: proof-scoped PAPER kill; then dossier, without changing frozen strategy.
-September 22 re-arm is proven; row 7 awaits an actual regular-session PAPER kill. This acceptance probe does not imply monthly production auto-selection.
-Legacy ABNB/ABT/MA historical HWM remains unproven and must stay explicit.
+September 23: **Alpaca PAPER operational acceptance 7/7 PASS**. Actual proof-scoped
+kill confirmed four intended positions flat and foreign holdings unchanged.
+Dossier: `TINY_LIVE_CANARY_DOSSIER_2026_09_23.md`. Acceptance cron retired after
+flat; all other cron/LIVE preserved. Next: exact LIVE account/profile binding
+(default-off), then concrete owner-approved amount/activation. The verified
+PAPER-only runner is not already a LIVE switch. No new strategy/research gates.
+Legacy ABNB/ABT/MA historical HWM remains unproven; no fabricated recovery.
 ATT1 continues unchanged while Codex closes Alpaca.
 
 Delivery order: deploy and verify PAPER operation → real fill/stop receipt →

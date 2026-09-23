@@ -2,6 +2,26 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 23, PAPER acceptance completed: 7/7 PASS**:
+- At 13:44:52 UTC the existing proof-scoped PAPER kill command returned
+  `confirmed_flat`: four actual filled sell orders for CRM/CRWD/CVX/MRK;
+  fresh intended-flat, no open orders. Five foreign positions retain qty/entry.
+- **All seven original PAPER evidence rows PASS.** Dossier:
+  `reports/TINY_LIVE_CANARY_DOSSIER_2026_09_23.md`. Canonical JSON updated with
+  close IDs/fills and raw private receipt hash. No strategy/risk changes.
+- After confirmed-flat, removed ONLY completed intended acceptance cron;
+  other cron lines unchanged. Existing PAPER account halt and durable state
+  preserved. This acceptance run is complete, not an ongoing monthly selector.
+- READY_FOR_OWNER_REVIEW=TRUE; LIVE_ACTIVATION_READY/READY_FOR_CANARY=FALSE:
+  verified runner is exact-PAPER-only. Next concrete implementation is exact
+  LIVE account/profile binding default-off, then owner amount + activation
+  approval. Do not describe 7/7 as a ready LIVE toggle or profitability proof.
+- Legacy ABNB/ABT/MA historical HWM remains unproven; never fabricate or adopt.
+  AMZN intraday-owned. ATT1/LIVE untouched. Final broker evidence is private at
+  `/root/by-bot/runtime/alpaca_intended_paper/acceptance_kill/final_receipt.json`.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 23, next-session re-arm proven: 6/7**:
 - Archived real broker snapshots at Sep22 13:30:51 and 13:31:13 UTC prove cron
   re-armed all four fractional positions with NEW accepted DAY stop IDs, exact
