@@ -7,6 +7,15 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 
 ## P0: Alpaca first, then ATT1; no strategy research
 
+September 23 owner direction: launch approved-size Alpaca after LIVE binding;
+then crypto with independently qualified short, long and range sleeves, then
+Gold, then Factory improvements. ATT1 short remains the first crypto delivery;
+restore existing SBR1/XSEC/Bull leads before inventing replacements. Long/range
+are desired portfolio coverage, not claims that a validated strategy exists.
+Claude-owned work must be reconciled before assigning duplicate recovery work.
+LIVE account truth now confirms flat/$487.42; new canary allocation is pending.
+
+
 Latest owner order supersedes the numbered historical snapshot below:
 **Alpaca frozen PAPER 7/7 → dossier → ATT1 dossier → SBR1**.
 September 23: **Alpaca PAPER operational acceptance 7/7 PASS**. Actual proof-scoped

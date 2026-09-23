@@ -1,0 +1,29 @@
+{
+  "as_of_utc": "2026-09-23T21:47:22.849844+00:00",
+  "read_only": true,
+  "endpoint": "https://api.alpaca.markets",
+  "account_identity_suffix": "f295c6",
+  "status": "ACTIVE",
+  "equity_usd": "487.42",
+  "cash_usd": "487.42",
+  "positions_count": 0,
+  "open_orders_count": 0,
+  "trading_blocked": false,
+  "new_entries_allowed": "0",
+  "configured_legacy_capital_usd": "500",
+  "legacy_capital_is_new_owner_allocation": false,
+  "next_open": "2026-09-24T09:30:00-04:00",
+  "paper_evidence": "7/7 PASS",
+  "live_binding_complete": false,
+  "new_profile_activated": false,
+  "owner_capital_usd": null,
+  "pending_question": "Owner requested launch, but exact maximum USD allocation not specified. Async question sent; answer required before money activation.",
+  "next_step": "Bind existing frozen lifecycle to exact LIVE account/profile default-off; preserve OLD entry prohibition; test equivalent lifecycle and fail-closed/account/ownership guards. No strategy changes.",
+  "private_truth_sha256": "2dc6260764f9907335d5d1bf381856c049d75b7c952a93f53c3f2562cf843bf1",
+  "config_hashes": {
+    "alpaca_v38_hybrid_top4_candidate.env": "71b16a35b981bca68cc714520b113851b189a132513b2803c09e0e96387cf4bd",
+    "alpaca_live_v38.env": "c3f9e0c6358020fbb2ec6862614c8e41a77b0ce23c091a24993c79a0a2134bbc",
+    "alpaca_protective_exit.env": "6e9bd5fc8cfdaf1040f7cf8263287bee353743c0213529c39eed66320694db4b",
+    "alpaca_live_v38_safe_hold.env": "5cbddaa27d17ce51feb5954448e93550524a8982be31360c15645e7d939654a9"
+  }
+}

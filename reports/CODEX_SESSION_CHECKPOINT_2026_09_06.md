@@ -2,6 +2,24 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 23, owner requests LIVE preparation; account truth**:
+- Owner wants Alpaca launch, then crypto short/long/range candidates, Gold,
+  then Factory improvements. Exact tiny-LIVE capital remains unspecified;
+  asynchronous question sent. Do not treat PAPER $1000 or legacy config $500
+  as a new owner allocation. Owner intent to launch is recorded, not ignored.
+- Direct signed GET-only LIVE truth at 21:47 UTC: account suffix `f295c6`,
+  ACTIVE, cash/equity $487.42, no positions, no open orders, not trading-blocked.
+  Legacy new-entry prohibition remains `0`; no broker/config/cron writes.
+  Receipt: `reports/ALPACA_LIVE_BINDING_TRUTH_2026_09_23.json`.
+- **Next engineering step still not completed:** exact LIVE account/profile
+  binding default-off, retaining same verified lifecycle and OLD exclusive
+  routing. This is not solved merely by changing the endpoint or allowing
+  entries in the legacy manager. Only after verification + exact owner amount
+  may the requested new canary be activated. Next broker open Sep24 13:30 UTC.
+- PAPER 7/7/dossier remains valid. No money activated in this continuation.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 23, PAPER acceptance completed: 7/7 PASS**:
 - At 13:44:52 UTC the existing proof-scoped PAPER kill command returned
   `confirmed_flat`: four actual filled sell orders for CRM/CRWD/CVX/MRK;
