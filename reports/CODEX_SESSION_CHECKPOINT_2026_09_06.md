@@ -2,6 +2,25 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 23, next-session re-arm proven: 6/7**:
+- Archived real broker snapshots at Sep22 13:30:51 and 13:31:13 UTC prove cron
+  re-armed all four fractional positions with NEW accepted DAY stop IDs, exact
+  quantities and unchanged durable floors. **Existing row 5 PASS; total 6/7.**
+- Current inspection resumed Sep23 ~08:00 UTC, market CLOSED. Latest scheduled
+  Sep22 21:59 cycle is `WAITING_FOR_REGULAR_SESSION`; cron active. Overnight
+  absence of new cron receipts is expected for the 13–21 UTC schedule.
+- **Only row 7 remains:** during regular market hours, existing proof-scoped
+  intended PAPER kill → fresh owned-flat and foreign-unchanged truth. Rows 4/5
+  are now secured, so acceptance kill may proceed once broker clock is open.
+  Prepared private proof: `.private/alpaca_intended_20260919/intended_acceptance_kill_proof.json`.
+  Validator must recheck exact PAPER account, entry IDs/fills and current scope;
+  never adopt/close ABNB/ABT/MA/SCHW/AMZN. No kill command was executed this check.
+- Updated canonical receipt has both archived snapshot hashes/new broker IDs.
+  READY_FOR_CANARY remains FALSE until final actual kill evidence and dossier.
+  No deploy, reset, strategy change or LIVE action. Next open Sep23 13:30 UTC.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 21, after-close broker evidence: 5/7**:
 - Read-only 20:42 UTC snapshot confirms all four intended PAPER positions retain
   exact entry quantities/averages, zero open orders, and all four original DAY

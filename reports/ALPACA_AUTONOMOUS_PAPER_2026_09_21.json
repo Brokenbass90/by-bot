@@ -1,8 +1,8 @@
 {
-  "as_of_utc": "2026-09-21T20:42:07.374254+00:00",
+  "as_of_utc": "2026-09-23T08:00:34.374346+00:00",
   "status": "AUTONOMOUS_PAPER_ACTIVE",
   "ready_for_canary": false,
-  "evidence_pass": 5,
+  "evidence_pass": 6,
   "evidence_total": 7,
   "scope": "one-session operational broker acceptance; not monthly strategy performance evidence",
   "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
@@ -136,8 +136,88 @@
     },
     {
       "row": 5,
-      "status": "PENDING_NEXT_SESSION",
-      "next_open_broker": "2026-09-22T09:30:00-04:00"
+      "status": "PASS",
+      "evidence": "next-session cron automatically submitted four new accepted DAY stops with exact position quantities and unchanged durable floors",
+      "broker_snapshots": [
+        {
+          "snapshot_at_utc": "2026-09-22T13:30:51.224148+00:00",
+          "path": "/root/by-bot/runtime/alpaca_intended_paper/evidence/20260922T133051.224148Z.json",
+          "sha256": "4ccd0afea561d346b0296657521ce5133e311a732ad235aacae92ebc0c122965",
+          "accepted_stops": [
+            {
+              "symbol": "CRM",
+              "id": "d13d8a46-4bf0-4bd0-af58-04bbbb9cc88d",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "216.24",
+              "qty": "1.118571524"
+            },
+            {
+              "symbol": "CVX",
+              "id": "3855b11f-8ce4-41f1-9e18-d707cf60e566",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "195.75",
+              "qty": "0.874137846"
+            },
+            {
+              "symbol": "CRWD",
+              "id": "d366c4f0-7d10-4926-96bf-19ecc1c300c6",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "219.34",
+              "qty": "0.520290899"
+            },
+            {
+              "symbol": "MRK",
+              "id": "63b20289-d1e1-4804-a227-bdc97dedd47c",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "142.42",
+              "qty": "0.849537347"
+            }
+          ]
+        },
+        {
+          "snapshot_at_utc": "2026-09-22T13:31:13.465393+00:00",
+          "path": "/root/by-bot/runtime/alpaca_intended_paper/evidence/20260922T133113.465393Z.json",
+          "sha256": "d7a421e0dbda46021f64e3101244402012f5ad87dbc06193aefbbc1a8b538e7d",
+          "accepted_stops": [
+            {
+              "symbol": "CRM",
+              "id": "d13d8a46-4bf0-4bd0-af58-04bbbb9cc88d",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "216.24",
+              "qty": "1.118571524"
+            },
+            {
+              "symbol": "CVX",
+              "id": "3855b11f-8ce4-41f1-9e18-d707cf60e566",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "195.75",
+              "qty": "0.874137846"
+            },
+            {
+              "symbol": "CRWD",
+              "id": "d366c4f0-7d10-4926-96bf-19ecc1c300c6",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "219.34",
+              "qty": "0.520290899"
+            },
+            {
+              "symbol": "MRK",
+              "id": "63b20289-d1e1-4804-a227-bdc97dedd47c",
+              "status": "new",
+              "time_in_force": "day",
+              "stop_price": "142.42",
+              "qty": "0.849537347"
+            }
+          ]
+        }
+      ]
     },
     {
       "row": 6,
@@ -170,16 +250,17 @@
   "limitations": [
     "Legacy ABNB/ABT/MA historical HWM remains unproven; values not fabricated, positions not adopted.",
     "No durable pre-submit client-order-id intent; uncertain ownership halts instead of adoption.",
-    "Rows 5/7 remain pending; no tiny-live readiness or profitability claim.",
+    "Row 7 remains pending; no tiny-live readiness or profitability claim.",
     "Entries permitted on September 21 acceptance date only; later cycles maintain/reconcile. Monthly strategy auto-refresh is not claimed."
   ],
-  "next_action": "At Sep22 13:30 UTC broker open, verify four new accepted DAY stop IDs with identical-or-raised durable floors; only then execute proof-scoped intended PAPER kill and retain fresh owned-flat truth. No LIVE activation.",
+  "next_action": "Only row 7 remains: during next regular market session execute existing proof-scoped intended PAPER kill with fresh account/entry/position validation and confirm intended-flat / foreign unchanged. Prepare dossier only after actual receipt; no LIVE activation.",
   "private_evidence": {
     "first_autorun.tar": "8ff84e257c172af3439df511ebcca4d051437c93741b74d319d867ee6c56a223",
     "repeated_autorun.tar": "ef16cc617f848227dcd235d662c0302431295ef1de8ba618c6034aa60be28faa",
     "verified_autorun.tar": "749c860dd492996c1c531c5594d44498dd6b64a154f93923cfd1f8b0fe10d82b",
     "paper_truth_20260921.json": "fcafc1d04f4b8e7851b61a302cc86ad30bf3ee930264e6817bf62c3bf4bd3893",
-    "heartbeat_20260921_close.json": "4e1c66368a67a6c94caf0a0316c2ba640f1a84dd0f04d3bba4d2d4141518d83d"
+    "heartbeat_20260921_close.json": "4e1c66368a67a6c94caf0a0316c2ba640f1a84dd0f04d3bba4d2d4141518d83d",
+    "heartbeat_20260923_rearm_archive.json": "08efc6f81b64e26d2111beb78da7e26ad3a859d7f2122b99c6df8a9bcb00d241"
   },
   "runtime_wrapper_hashes": {
     "run_intended.sh": "d1db2097ec5ac4a4bd42f8291af4241905bdc6bf36eaf05d9a89418d733df6f3",
