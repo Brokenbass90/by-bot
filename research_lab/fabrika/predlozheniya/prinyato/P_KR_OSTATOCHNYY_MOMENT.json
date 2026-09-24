@@ -1,0 +1,19 @@
+{
+ "id": "P_KR_OSTATOCHNYY_MOMENT",
+ "begun": "portfel",
+ "semya": "ostatochnyy_moment",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_t": 2.5,
+  "min_neff": 20,
+  "min_pokrytie": 0.8
+ },
+ "param": {
+  "signal": "KR_OSTATOCHNYY_MOMENT",
+  "etap": "discovery"
+ },
+ "prereg_dokument": "research_lab/fabrika/PREREG_V6_OSTATOCHNYY_MOMENT_2026_09_24.md",
+ "gipoteza": "Монеты в верхних 20% по 20-дневной доходности за вычетом бета × доходность BTC за те же 20 дней обгоняют случайную корзину за следующие 5 дней.",
+ "pochemu_nezavisima": "Наивное вычитание доходности BTC порядок монет не меняет — это общая константа дня, что и вскрылось 24 сентября при калибровке. Бета у каждой монеты своя, поэтому здесь порядок действительно другой. Вопрос новый: остаётся ли инерция после снятия разной чувствительности монет к общему движению. Тень SILA этим прогоном не затрагивается.",
+ "avtor": "Claude"
+}

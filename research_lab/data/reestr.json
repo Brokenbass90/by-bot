@@ -2006,5 +2006,89 @@
   "znanie": 0.6,
   "cena": 0.05,
   "deystvie": "sam_zreet"
+ },
+ {
+  "id": "P_KR_ASIMMETRIYA_VOL",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "asimmetriya_vol · kripto_pit50 · {'signal': 'KR_ASIMMETRIYA_VOL', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "asimmetriya_vol",
+  "rynok": "kripto_pit50",
+  "slot": null,
+  "fabrika": {
+   "verdikt": "PLUS_NO_CONFIDENCE",
+   "pochemu": "t=0.65 (порог 2.5)",
+   "kogda": "2026-09-24T08:11:18+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_KR_ASIMMETRIYA_VOL@2026-09-24T08:11:18+00:00",
+  "pass_fail": "research_lab/fabrika/predlozheniya/prinyato/P_KR_ASIMMETRIYA_VOL.json",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "P_KR_OI_NAKOPLENIE",
+  "sostoyanie": "NEGATIVE",
+  "imya": "oi_nakoplenie · kripto_pit50 · {'signal': 'KR_OI_NAKOPLENIE', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "oi_nakoplenie",
+  "rynok": "kripto_pit50",
+  "slot": null,
+  "fabrika": {
+   "verdikt": "NEGATIVE",
+   "pochemu": "эдж +0.0023 (t +0.42), половины -0.0045 / +0.0090",
+   "kogda": "2026-09-24T08:11:23+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_KR_OI_NAKOPLENIE@2026-09-24T08:11:23+00:00",
+  "pass_fail": "research_lab/fabrika/predlozheniya/prinyato/P_KR_OI_NAKOPLENIE.json",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "P_KR_OSTATOCHNYY_MOMENT",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "ostatochnyy_moment · kripto_pit50 · {'signal': 'KR_OSTATOCHNYY_MOMENT', 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "ostatochnyy_moment",
+  "rynok": "kripto_pit50",
+  "slot": null,
+  "fabrika": {
+   "verdikt": "PLUS_NO_CONFIDENCE",
+   "pochemu": "t=1.99 (порог 2.5)",
+   "kogda": "2026-09-24T08:11:27+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#P_KR_OSTATOCHNYY_MOMENT@2026-09-24T08:11:27+00:00",
+  "pass_fail": "research_lab/fabrika/predlozheniya/prinyato/P_KR_OSTATOCHNYY_MOMENT.json",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
+ },
+ {
+  "id": "S_ROTACIYA_IZ_BTC",
+  "sostoyanie": "HYPOTHESIS",
+  "imya": "rotaciya_iz_btc · kripto_pit50 · {'rynok': 'kripto_pit50', 'priznak': 'ROTACIYA_IZ_BTC', 'gorizont': 5, 'etap': 'discovery'}",
+  "istochnik": "fabrika",
+  "semya": "rotaciya_iz_btc",
+  "rynok": "kripto_pit50",
+  "slot": null,
+  "fabrika": {
+   "verdikt": "PLUS_NO_CONFIDENCE",
+   "pochemu": "эдж +0.00007, p=0.496 (порог 0.01)",
+   "kogda": "2026-09-24T08:11:28+00:00",
+   "etap": "discovery"
+  },
+  "svidetelstvo": "research_lab/fabrika/verdikty.jsonl#S_ROTACIYA_IZ_BTC@2026-09-24T08:11:28+00:00",
+  "pass_fail": "research_lab/fabrika/predlozheniya/prinyato/S_ROTACIYA_IZ_BTC.json",
+  "shans": 0.0,
+  "znanie": 0.0,
+  "cena": 1.0,
+  "deystvie": "fabrika"
  }
 ]

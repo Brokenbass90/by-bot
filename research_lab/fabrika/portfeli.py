@@ -72,7 +72,14 @@ def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01", v
     di = {int(t): i for i, t in enumerate(dates)}
     C = np.full((len(dates), len(S)), np.nan); M = np.zeros_like(C, dtype=bool); F = np.zeros_like(C)
     FOK = np.zeros_like(C, dtype=bool); HH = np.full_like(C, np.nan); VV = np.full_like(C, np.nan)
+    OI = np.full_like(C, np.nan)                      # открытый интерес в штуках монеты
     for j, s in enumerate(S):
+        po = DATA / f"basis/oi_sutochnyy/{s}.json"
+        if po.exists():
+            for t_oi, v_oi in json.load(open(po)).get("ryad", []):
+                k_oi = di.get(int(t_oi) // DEN * DEN)
+                if k_oi is not None:
+                    OI[k_oi, j] = float(v_oi)
         for t, c in ser.get(s, {}).items():
             if t in di: C[di[t], j] = c
         for t, (hh, vv) in hv.get(s, {}).items():
@@ -87,7 +94,7 @@ def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01", v
         if k is not None:
             for s in sl:
                 M[k, S.index(s)] = True
-    return dict(dates=dates, simvoly=S, C=C, DV=None, M=M, F=F, FOK=FOK, HH=HH, VV=VV, fee_bps=7.0,
+    return dict(dates=dates, simvoly=S, C=C, DV=None, M=M, F=F, FOK=FOK, HH=HH, VV=VV, OI=OI, fee_bps=7.0,
                 razdel=_ms(razdel), opisanie=f"крипта PIT: {v.get('pravilo', fayl)}")
 
 
@@ -337,6 +344,7 @@ def priznak_oborot_tolchok(R):
 
 
 PRIZNAKI_DNYA = {"POLY": lambda R: R["POLY"],
+                 "ROTACIYA_IZ_BTC": lambda R: priznak_rotaciya_iz_btc(R),
                  "SHIRINA_TOLCHOK": priznak_shirina_tolchok,
                  "MAKS_MINUS_MIN": priznak_maks_minus_min,
                  "OBOROT_TOLCHOK": priznak_oborot_tolchok}
@@ -485,6 +493,99 @@ def kr_beta_ls(C, DV, ctx):
     return out
 
 
+# ── пакет v6 «рост»: четыре разных источника причинности ─────────────
+# Каждый механизм отвечает на свой вопрос и имеет свою предрегистрацию.
+# Ни один не является вариантом другого.
+P6_OI = "research_lab/fabrika/PREREG_V6_OI_NAKOPLENIE_2026_09_24.md"
+P6_ROT = "research_lab/fabrika/PREREG_V6_ROTACIYA_IZ_BTC_2026_09_24.md"
+P6_ASI = "research_lab/fabrika/PREREG_V6_ASIMMETRIYA_VOL_2026_09_24.md"
+P6_OST = "research_lab/fabrika/PREREG_V6_OSTATOCHNYY_MOMENT_2026_09_24.md"
+
+
+def oi_nakoplenie(C, DV, ctx):
+    """ДЕРИВАТИВЫ. Цена вверх И открытый интерес вверх — в позицию заходят
+    новые деньги. Цена вверх при падающем OI — это закрытие шортов, чужая
+    позиция гасится, продолжения ждать не от кого."""
+    OI = ctx.get("OI")
+    if OI is None or C.shape[0] < 6 or OI.shape[0] < 6:
+        return np.full(C.shape[1], np.nan)
+    M = ctx["M"][-1]; r5 = _ret(C, 5)
+    o0, o5 = OI[-1], OI[-6]
+    el = M & np.isfinite(r5) & np.isfinite(o0) & np.isfinite(o5) & (o5 > 0)
+    out = np.where(el, 0.0, np.nan)
+    if el.sum() < 10:
+        return out
+    doi = np.where(el, o0 / np.where(o5 > 0, o5, np.nan) - 1, np.nan)
+    porog = float(np.quantile(doi[el], 0.6))          # верхние 40% по приросту OI
+    return np.where(el & (r5 > 0) & (doi >= porog) & (doi > 0), 1.0, out)
+
+
+def priznak_rotaciya_iz_btc(R):
+    """РОТАЦИЯ. Доля BTC в долларовом открытом интересе вселенной за 10 дней.
+    Признак > 0 — доля упала, то есть деньги переливаются из биткоина в альты."""
+    OI, C, M, S = R.get("OI"), R["C"], R["M"], R["simvoly"]
+    T = len(R["dates"])
+    if OI is None or "BTCUSDT" not in S:
+        return np.full(T, np.nan)
+    b = S.index("BTCUSDT")
+    dolya = np.full(T, np.nan)
+    for t in range(T):
+        el = M[t] & np.isfinite(OI[t]) & np.isfinite(C[t])
+        if el.sum() < 10 or not (np.isfinite(OI[t, b]) and np.isfinite(C[t, b])):
+            continue
+        vsego = float((OI[t, el] * C[t, el]).sum())
+        if vsego > 0:
+            dolya[t] = float(OI[t, b] * C[t, b] / vsego)
+    out = np.full(T, np.nan)
+    for t in range(10, T):
+        if np.isfinite(dolya[t]) and np.isfinite(dolya[t - 10]):
+            out[t] = dolya[t - 10] - dolya[t]
+    return out
+
+
+def asimmetriya_vol(C, DV, ctx):
+    """ВОЛАТИЛЬНОСТЬ. За 30 дней: разброс дней роста против разброса дней
+    падения. Накопление выглядит как сильные подъёмы и мелкие откаты.
+    Это не сжатие и не пробой: тут важна ФОРМА движения, а не его размер."""
+    if C.shape[0] < 31:
+        return np.full(C.shape[1], np.nan)
+    lr = np.diff(np.log(C[-31:]), axis=0)
+    M = ctx["M"][-1]
+    out = np.full(C.shape[1], np.nan)
+    for j in np.flatnonzero(M & np.isfinite(lr).all(axis=0)):
+        x = lr[:, j]; up = x[x > 0]; dn = x[x < 0]
+        if len(up) < 5 or len(dn) < 5:
+            continue
+        sd = float(dn.std(ddof=1))
+        if sd > 0:
+            out[j] = float(up.std(ddof=1)) / sd
+    return out
+
+
+def ostatochnyy_moment(C, DV, ctx):
+    """СЕЧЕНИЕ. 20-дневная доходность за вычетом того, что объясняется бетой
+    монеты к BTC. Наивное «минус доходность BTC» порядок не меняет вовсе —
+    это общая константа дня. Бета у каждой монеты своя, и она меняет."""
+    S = ctx.get("simvoly") or []
+    if C.shape[0] < 61 or "BTCUSDT" not in S:
+        return np.full(C.shape[1], np.nan)
+    b = S.index("BTCUSDT")
+    lr = np.diff(np.log(C[-61:]), axis=0)
+    x = lr[:, b]
+    if not np.isfinite(x).all():
+        return np.full(C.shape[1], np.nan)
+    vx = float(np.var(x, ddof=1)); r20 = _ret(C, 20); r20b = r20[b]
+    el = ctx["M"][-1] & np.isfinite(r20) & np.isfinite(lr).all(axis=0)
+    out = np.full(C.shape[1], np.nan)
+    if vx <= 0 or el.sum() < 10 or not np.isfinite(r20b):
+        return out
+    idx = np.flatnonzero(el)
+    sr = lr[:, idx] - lr[:, idx].mean(axis=0)
+    cov = (sr * (x - x.mean())[:, None]).sum(axis=0) / (len(x) - 1)
+    out[idx] = r20[idx] - (cov / vx) * r20b
+    return out
+
+
 # napravlenie: ls — лонг верх / шорт низ; long — только лонг верхней доли
 SIGNALY = {
     "AKC_MOM_6_1":      dict(fn=mom_6_1, rynok="akcii_pit", napr="ls", kv=0.1, H=5, semya="xs_momentum"),
@@ -524,4 +625,11 @@ SIGNALY = {
                              semya="rs_vs_etalon_ls", ctx=True, prereg=PV5, slot="neytral"),
     "KR_BETA_LS": dict(fn=kr_beta_ls, rynok="kripto_pit50", napr="ls", kv=0.2, H=5,
                        semya="beta_k_btc", ctx=True, prereg=PV5, slot="neytral"),
+    # пакет v6 «рост»
+    "KR_OI_NAKOPLENIE": dict(fn=oi_nakoplenie, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                             semya="oi_nakoplenie", ctx=True, prereg=P6_OI, slot="rost"),
+    "KR_ASIMMETRIYA_VOL": dict(fn=asimmetriya_vol, rynok="kripto_pit50", napr="long", kv=0.2, H=5,
+                               semya="asimmetriya_vol", ctx=True, prereg=P6_ASI, slot="rost"),
+    "KR_OSTATOCHNYY_MOMENT": dict(fn=ostatochnyy_moment, rynok="kripto_pit50", napr="long", kv=0.2, H=5,
+                                  semya="ostatochnyy_moment", ctx=True, prereg=P6_OST, slot="rost"),
 }

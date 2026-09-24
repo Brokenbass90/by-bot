@@ -1727,6 +1727,91 @@
    },
    "porozhdeno": "2026-09-23T22:11:01+00:00",
    "start": "2026-09-23T22:11:08+00:00"
+  },
+  {
+   "id": "P_KR_ASIMMETRIYA_VOL",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "param": {
+    "signal": "KR_ASIMMETRIYA_VOL",
+    "etap": "discovery"
+   },
+   "prereg": "research_lab/fabrika/predlozheniya/prinyato/P_KR_ASIMMETRIYA_VOL.json",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "kripto_pit50",
+   "semya": "asimmetriya_vol",
+   "avtor": "Claude",
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-24T08:11:13+00:00",
+   "start": "2026-09-24T08:11:13+00:00"
+  },
+  {
+   "id": "P_KR_OI_NAKOPLENIE",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "param": {
+    "signal": "KR_OI_NAKOPLENIE",
+    "etap": "discovery"
+   },
+   "prereg": "research_lab/fabrika/predlozheniya/prinyato/P_KR_OI_NAKOPLENIE.json",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "kripto_pit50",
+   "semya": "oi_nakoplenie",
+   "avtor": "Claude",
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-24T08:11:13+00:00",
+   "start": "2026-09-24T08:11:18+00:00"
+  },
+  {
+   "id": "P_KR_OSTATOCHNYY_MOMENT",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "param": {
+    "signal": "KR_OSTATOCHNYY_MOMENT",
+    "etap": "discovery"
+   },
+   "prereg": "research_lab/fabrika/predlozheniya/prinyato/P_KR_OSTATOCHNYY_MOMENT.json",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "kripto_pit50",
+   "semya": "ostatochnyy_moment",
+   "avtor": "Claude",
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "porozhdeno": "2026-09-24T08:11:13+00:00",
+   "start": "2026-09-24T08:11:23+00:00"
+  },
+  {
+   "id": "S_ROTACIYA_IZ_BTC",
+   "tip": "gipoteza",
+   "begun": "sensor",
+   "param": {
+    "rynok": "kripto_pit50",
+    "priznak": "ROTACIYA_IZ_BTC",
+    "gorizont": 5,
+    "etap": "discovery"
+   },
+   "prereg": "research_lab/fabrika/predlozheniya/prinyato/S_ROTACIYA_IZ_BTC.json",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "kripto_pit50",
+   "semya": "rotaciya_iz_btc",
+   "avtor": "Claude",
+   "sudya": {
+    "porog_p": 0.01,
+    "min_neff": 20
+   },
+   "porozhdeno": "2026-09-24T08:11:13+00:00",
+   "start": "2026-09-24T08:11:27+00:00"
   }
  ]
 }

@@ -1,0 +1,20 @@
+{
+ "id": "S_ROTACIYA_IZ_BTC",
+ "begun": "sensor",
+ "semya": "rotaciya_iz_btc",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_p": 0.01,
+  "min_neff": 20
+ },
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "ROTACIYA_IZ_BTC",
+  "gorizont": 5,
+  "etap": "discovery"
+ },
+ "prereg_dokument": "research_lab/fabrika/PREREG_V6_ROTACIYA_IZ_BTC_2026_09_24.md",
+ "gipoteza": "Дни, когда доля BTC в долларовом открытом интересе вселенной упала за 10 дней, дают равновзвешенной корзине вселенной большую доходность за следующие 5 дней, чем средний день.",
+ "pochemu_nezavisima": "Мера построена на деньгах в позициях, а не на ценах. Умерший S_SHIRINA_TOLCHOK считал долю монет выше своей SMA50 — ценовую широту, которая механически следует за ростом. Доля BTC в открытом интересе может падать и в растущем, и в падающем рынке; это другая величина и другой вопрос.",
+ "avtor": "Claude"
+}

@@ -75,7 +75,7 @@ def sdvinut(R, seed, rezhim="sdvig"):
         put = seg[0] * np.concatenate([[1.0], np.exp(np.cumsum(lr))])
         novy[a_:b_ + 1, j] = np.where(np.isfinite(seg), put, np.nan)
     R = dict(R); R["C"] = novy
-    for k in ("HH", "VV"):                      # экстремумы и объём больше не согласованы с ценой
+    for k in ("HH", "VV", "OI"):                      # экстремумы и объём больше не согласованы с ценой
         if R.get(k) is not None:
             R[k] = None
     return R
@@ -98,12 +98,13 @@ def main():
         print("нет данных:", e_); return
     dates, C, DV, M, F = R["dates"], R["C"], R["DV"], R["M"], R["F"]
     H, kv, fee = S["H"], S.get("kv", 0.0), R["fee_bps"]
-    HH, VV = R.get("HH"), R.get("VV")
+    HH, VV, OI = R.get("HH"), R.get("VV"), R.get("OI")
     if etap == "discovery":                     # физически обрезать всё после раздела
         k = int(np.searchsorted(dates, R["razdel"]))
         dates, C, M = dates[:k], C[:k], M[:k]
         DV = DV[:k] if DV is not None else None; F = F[:k] if F is not None else None
         HH = HH[:k] if HH is not None else None; VV = VV[:k] if VV is not None else None
+        OI = OI[:k] if OI is not None else None
     nogi = 2 if S["napr"] == "ls" else 1
     cost = 2 * fee / 1e4 * nogi
     rng = np.random.default_rng(7)
@@ -122,6 +123,7 @@ def main():
             ctx = {"M": M[:t + 1], "F": F[:t + 1] if F is not None else None,
                    "POLY": R["POLY"][:t + 1] if R.get("POLY") is not None else None,
                    "HH": HH[:t + 1] if HH is not None else None, "VV": VV[:t + 1] if VV is not None else None,
+                   "OI": OI[:t + 1] if OI is not None else None,
                    "simvoly": R["simvoly"]}
             sc = S["fn"](*args, ctx)
         else:

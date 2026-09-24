@@ -1,0 +1,38 @@
+{
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "ROTACIYA_IZ_BTC",
+  "gorizont": 5,
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "gorizont": 5,
+ "rynok": "kripto_pit50",
+ "priznak": "ROTACIYA_IZ_BTC",
+ "okna": {
+  "VSE": {
+   "n": 490,
+   "n_eff": 98.0,
+   "edge": 6.81688300777591e-05,
+   "p": 0.4962518740629685,
+   "t": 0.3042978401408302
+  },
+  "H1": {
+   "n": 254,
+   "n_eff": 50.8,
+   "edge": 0.002105176867802893,
+   "p": 0.3663168415792104,
+   "t": 0.43614311399508343
+  },
+  "H2": {
+   "n": 236,
+   "n_eff": 47.2,
+   "edge": -0.0024409499060774774,
+   "p": 0.6096951524237881,
+   "t": 0.21488725796146316
+  }
+ },
+ "dney_vsego": 993,
+ "dney_priznak_polozhitelen": 490,
+ "chlenov_s_cenoy_mediana": 1.0
+}

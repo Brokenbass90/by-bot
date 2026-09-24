@@ -1,20 +1,20 @@
 {
- "kogda": "2026-09-24T06:41:13+00:00",
+ "kogda": "2026-09-24T08:11:29+00:00",
  "za_sutki": {
-  "PLUS_NO_CONFIDENCE": 5,
-  "NEGATIVE": 5,
+  "PLUS_NO_CONFIDENCE": 8,
+  "NEGATIVE": 6,
   "POSITIVE_LEAD": 1,
   "FAILED_CONFIRMATION": 1
  },
- "proverok": 12,
+ "proverok": 16,
  "sostoyaniya": {
   "PARITY_PASS": 2,
-  "NEGATIVE": 37,
+  "NEGATIVE": 38,
   "WAITING_SHADOW": 1,
   "BLOCKED_DATA": 3,
   "BLOCKED_ADAPTER": 6,
   "INCONCLUSIVE_LOW_N": 20,
-  "PLUS_NO_CONFIDENCE": 14,
+  "PLUS_NO_CONFIDENCE": 17,
   "DIAGNOSTIC": 1,
   "HYPOTHESIS": 1,
   "FAILED_CONFIRMATION": 1
