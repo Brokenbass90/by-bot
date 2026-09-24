@@ -230,8 +230,8 @@ def lider_otkat_filtr(C, DV, ctx):
 
 def _szhatie_rasshirenie(C, ctx):
     HH, VV, M = ctx["HH"], ctx["VV"], ctx["M"][-1]
-    if C.shape[0] < 202:
-        return np.full(C.shape[1], np.nan)
+    if C.shape[0] < 202 or HH is None or VV is None:
+        return np.full(C.shape[1], np.nan)   # без экстремумов и объёма механизм не определён
     with np.errstate(all="ignore"):
         lr = np.diff(np.log(C[-202:]), axis=0)                       # 201 доходность
         vol = np.array([np.nanstd(lr[i - 20:i], axis=0, ddof=1) for i in range(20, lr.shape[0] + 1)])  # 182 окна

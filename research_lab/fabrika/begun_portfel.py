@@ -48,6 +48,39 @@ def stat(e, H):
             "t": float(e.mean() / sd * math.sqrt(neff)) if sd > 0 else 0.0}
 
 
+def sdvinut(R, seed, rezhim="sdvig"):
+    """КАЛИБРОВКА СУДЬИ. Каждой бумаге свой круговой сдвиг её доходностей.
+
+    Собственная автокорреляция, кластеры волатильности и пропуски у бумаги
+    сохраняются; общая для всех связь во времени рвётся. Значит, любого эджа,
+    который сигнал берёт из СЕЧЕНИЯ, в таких данных нет по построению.
+    Сколько раз судья всё равно скажет «находка» — это и есть его честная
+    доля ложных тревог. Проверяем не стратегию, а линейку.
+    """
+    rng = np.random.default_rng(seed)
+    C = R["C"]; T, N = C.shape
+    novy = np.full_like(C, np.nan)
+    for j in range(N):
+        ok = np.flatnonzero(np.isfinite(C[:, j]))
+        if len(ok) < 30:
+            continue
+        a_, b_ = ok[0], ok[-1]
+        seg = C[a_:b_ + 1, j]
+        lr = np.diff(np.log(seg))
+        lr = np.where(np.isfinite(lr), lr, 0.0)
+        if rezhim == "peremeshat":
+            lr = rng.permutation(lr)              # рвётся и собственная память бумаги
+        else:
+            lr = np.roll(lr, int(rng.integers(1, max(2, len(lr)))))
+        put = seg[0] * np.concatenate([[1.0], np.exp(np.cumsum(lr))])
+        novy[a_:b_ + 1, j] = np.where(np.isfinite(seg), put, np.nan)
+    R = dict(R); R["C"] = novy
+    for k in ("HH", "VV"):                      # экстремумы и объём больше не согласованы с ценой
+        if R.get(k) is not None:
+            R[k] = None
+    return R
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--param", required=True); ap.add_argument("--vyhod", required=True)
@@ -57,6 +90,8 @@ def main():
     S = SIGNALY[p["signal"]]; ry = S["rynok"]
     try:
         R = RYNKI_P[ry]()
+        if p.get("kalibrovka") is not None:
+            R = sdvinut(R, int(p["kalibrovka"]), p.get("kalibrovka_rezhim", "sdvig"))
     except FileNotFoundError as e_:
         tmp = Path(a.vyhod + ".tmp"); tmp.write_text(json.dumps({"param": p, "okna": {"VSE": {"n": 0}, "H1": {}, "H2": {}},
         "chlenov_s_cenoy_mediana": 0.0, "net_dannyh": str(e_)}, ensure_ascii=False)); tmp.replace(a.vyhod)

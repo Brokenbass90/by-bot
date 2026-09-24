@@ -1,0 +1,14 @@
+{
+ "signal": "KR_SILA_K_BTC_LS",
+ "povtorov": 6,
+ "porog_t": 2.5,
+ "godnyh": 6,
+ "malo_dannyh": 0,
+ "upalo": 0,
+ "nahodok": 3,
+ "dolya_lozhnyh": 0.5,
+ "t_srednee": 2.5341721845096803,
+ "t_sko": 0.6746326165548395,
+ "t_95": 3.2315649411524285,
+ "t_99": 3.252629225575399
+}
