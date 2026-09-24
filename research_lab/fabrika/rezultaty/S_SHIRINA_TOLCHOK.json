@@ -1,0 +1,38 @@
+{
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "SHIRINA_TOLCHOK",
+  "gorizont": 5,
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "gorizont": 5,
+ "rynok": "kripto_pit50",
+ "priznak": "SHIRINA_TOLCHOK",
+ "okna": {
+  "VSE": {
+   "n": 214,
+   "n_eff": 42.8,
+   "edge": -0.0009631547244631396,
+   "p": 0.5462268865567217,
+   "t": 0.26262692668650855
+  },
+  "H1": {
+   "n": 99,
+   "n_eff": 19.8,
+   "edge": -0.001546369704025368,
+   "p": 0.5637181409295352,
+   "t": 0.24893798898888794
+  },
+  "H2": {
+   "n": 115,
+   "n_eff": 23.0,
+   "edge": -0.00016431903230195734,
+   "p": 0.49775112443778113,
+   "t": 0.3029877502125127
+  }
+ },
+ "dney_vsego": 943,
+ "dney_priznak_polozhitelen": 214,
+ "chlenov_s_cenoy_mediana": 1.0
+}

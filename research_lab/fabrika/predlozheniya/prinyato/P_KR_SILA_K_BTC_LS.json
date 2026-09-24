@@ -1,0 +1,19 @@
+{
+ "id": "P_KR_SILA_K_BTC_LS",
+ "begun": "portfel",
+ "semya": "rs_vs_etalon_ls",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_t": 2.5,
+  "min_neff": 20,
+  "min_pokrytie": 0.8
+ },
+ "param": {
+  "signal": "KR_SILA_K_BTC_LS",
+  "etap": "discovery"
+ },
+ "gipoteza": "Лонг верхних 20% монет по обгону BTC за 20 дней против шорта нижних 20% даёт положительный эдж к случайной паре корзин за следующие 5 дней.",
+ "pochemu_nezavisima": "P_BULL_SILA_K_BTC брал только лонг и только при растущем BTC, поэтому часть его плюса могла быть простой ставкой на рост. Здесь короткая нога снимает общий рост, а фильтра режима нет вовсе: остаётся чистый вопрос о том, есть ли эдж в самой относительной силе.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V5_2026_09_23.md"
+}

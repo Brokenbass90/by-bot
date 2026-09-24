@@ -216,6 +216,14 @@ def postavit_podtverzhdenie(d, item):
 
 
 # ── предложения (proposer → prereg → очередь) ─────────────────────────
+def _svezh(imya):
+    """модуль-каталог, перечитанный с диска. Демон живёт сутками, а новые
+    механизмы и сигналы дописываются в mehanizmy.py / portfeli.py на ходу.
+    Без этого перечитывания новый пакет гипотез требовал бы перезапуска."""
+    import importlib
+    return importlib.reload(importlib.import_module(imya))
+
+
 OBYAZ = ("id", "begun", "param", "semya", "rynok", "gipoteza", "pochemu_nezavisima", "avtor")
 
 
@@ -225,8 +233,8 @@ def prinyat_predlozheniya(d, V):
     числа и вердикт — только судья."""
     if not PREDL.exists():
         return []
-    from mehanizmy import MEHANIZMY, RYNKI
-    from portfeli import SIGNALY
+    _m = _svezh("mehanizmy"); MEHANIZMY, RYNKI = _m.MEHANIZMY, _m.RYNKI
+    SIGNALY = _svezh("portfeli").SIGNALY
     (PREDL / "prinyato").mkdir(exist_ok=True); (PREDL / "otkloneno").mkdir(exist_ok=True)
     _, neg = schet_proverok(d, V); est = {it["id"] for it in d["ochered"]}; prin = []
     for f in sorted(PREDL.glob("*.json")):
@@ -272,7 +280,7 @@ def schet_proverok(d, V):
 
 
 def porodit(d, V, skolko):
-    from mehanizmy import MEHANIZMY, RYNKI
+    _m = _svezh("mehanizmy"); MEHANIZMY, RYNKI = _m.MEHANIZMY, _m.RYNKI
     est = {it["id"] for it in d["ochered"]}
     vse, neg = schet_proverok(d, V)
     kand = []
@@ -284,7 +292,7 @@ def porodit(d, V, skolko):
                     continue
                 kand.append(((vse[(ry, M["semya"])], sum(v for (r, _), v in vse.items() if r == ry), len(kand)),
                              hid, meh, ry, side, M))
-    from portfeli import SIGNALY
+    SIGNALY = _svezh("portfeli").SIGNALY
     for sg, P in SIGNALY.items():
         hid = f"P_{sg}"
         if hid in est or neg[(P["rynok"], P["semya"])] >= LIMIT_ZHVACHKI:
@@ -366,6 +374,16 @@ def sinhronizirovat(d, V):
             for x in d["ochered"]:
                 if x["begun"] == "bull" and x["tip"] != "paritet" and x["sostoyanie"] == "QUEUED":
                     x["sostoyanie"] = "BLOCKED_ADAPTER"; x["blocker"] = "паритет нарезки не пройден"
+    # находка, не пережившая подтверждение, перестаёт быть находкой: иначе она
+    # вечно висит в дневном отчёте как повод вмешаться. Окно подтверждения
+    # потрачено, тот же механизм повторно не прогоняется.
+    sost_all = {x["id"]: x["sostoyanie"] for x in d["ochered"]}
+    for it in d["ochered"]:
+        if it["sostoyanie"] == "POSITIVE_LEAD" and sost_all.get(it["id"] + "__PODTV") == "FAILED_CONFIRMATION":
+            it["sostoyanie"] = "NEGATIVE"
+            it.setdefault("chto_vernyot", "находка не пережила подтверждение на нетронутом окне; "
+                                          "окно потрачено, повтор того же механизма запрещён — "
+                                          "вернёт только новая предрегистрация на новых данных")
     vse, neg = schet_proverok(d, V)
     for it in d["ochered"]:
         if it["sostoyanie"] == "QUEUED" and it.get("tip") != "paritet" and (
@@ -387,10 +405,10 @@ def zapisat_zadachi(d):
             Z.append(dict(tip="DATA", id=it["id"], chto="ждёт свежих данных для подтверждения", kto="Claude"))
         elif s == "WAITING_SHADOW":
             Z.append(dict(tip="SHADOW_READOUT", id=it["id"], chto=it.get("blocker", ""), kto=it.get("vladelec", "")))
-    from mehanizmy import MEHANIZMY, RYNKI
+    _m = _svezh("mehanizmy"); MEHANIZMY, RYNKI = _m.MEHANIZMY, _m.RYNKI
     est = {it["id"] for it in d["ochered"]}
     ostalos = sum(1 for m in MEHANIZMY for r in RYNKI for s in ("long", "short") if f"{m}__{r}__{s}" not in est)
-    from portfeli import SIGNALY
+    SIGNALY = _svezh("portfeli").SIGNALY
     ostalos += sum(1 for sg in SIGNALY if f"P_{sg}" not in est)
     if ostalos == 0 and not any(it["sostoyanie"] == "QUEUED" for it in d["ochered"]):
         Z.append(dict(tip="PROPOSER", id="novyy_paket", kto="Claude / агент",

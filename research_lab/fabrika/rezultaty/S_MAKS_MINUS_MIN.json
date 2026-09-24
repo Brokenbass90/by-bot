@@ -1,0 +1,38 @@
+{
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "MAKS_MINUS_MIN",
+  "gorizont": 5,
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "gorizont": 5,
+ "rynok": "kripto_pit50",
+ "priznak": "MAKS_MINUS_MIN",
+ "okna": {
+  "VSE": {
+   "n": 388,
+   "n_eff": 77.6,
+   "edge": 0.00562571766724313,
+   "p": 0.17541229385307347,
+   "t": 0.7559399721703873
+  },
+  "H1": {
+   "n": 176,
+   "n_eff": 35.2,
+   "edge": 0.004528892056293597,
+   "p": 0.31084457771114443,
+   "t": 0.5074567039453927
+  },
+  "H2": {
+   "n": 212,
+   "n_eff": 42.4,
+   "edge": 0.006642630441253218,
+   "p": 0.23638180909545228,
+   "t": 0.6263859478983999
+  }
+ },
+ "dney_vsego": 822,
+ "dney_priznak_polozhitelen": 388,
+ "chlenov_s_cenoy_mediana": 1.0
+}

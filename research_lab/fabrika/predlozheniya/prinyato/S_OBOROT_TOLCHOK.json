@@ -1,0 +1,20 @@
+{
+ "id": "S_OBOROT_TOLCHOK",
+ "begun": "sensor",
+ "semya": "oborot_tolchok",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_p": 0.01,
+  "min_neff": 20
+ },
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "OBOROT_TOLCHOK",
+  "gorizont": 5,
+  "etap": "discovery"
+ },
+ "gipoteza": "Дни, когда медианный объём членов вселенной превышает свою 20-дневную медиану более чем в 1.3 раза, дают корзине большую доходность за следующие 5 дней.",
+ "pochemu_nezavisima": "Признак построен на объёме, а не на цене. Единственный объёмный механизм проекта (OBEM_IMPULS) работал по отдельной бумаге на часах и умер; здесь это признак всего рынка на дневках.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V4_BULL_2026_09_23.md"
+}

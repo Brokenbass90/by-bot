@@ -1,0 +1,19 @@
+{
+ "id": "P_AKC_NOVYY_MAKSIMUM",
+ "begun": "portfel",
+ "semya": "new_high",
+ "rynok": "akcii_pit",
+ "sudya": {
+  "porog_t": 2.5,
+  "min_neff": 20,
+  "min_pokrytie": 0.8
+ },
+ "param": {
+  "signal": "AKC_NOVYY_MAKSIMUM",
+  "etap": "discovery"
+ },
+ "gipoteza": "Акции, закрывшиеся на 60-дневном максимуме выше своей средней за 100 дней при участии не ниже 0.50, за следующие 5 дней обгоняют случайную корзину.",
+ "pochemu_nezavisima": "На крипте пробой на новый максимум умер (P_BULL_NOVYY_MAKSIMUM, t −0.28). Акции — другой рынок с другой микроструктурой; перенос отрицательного результата без проверки был бы догадкой, а не выводом.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V5_2026_09_23.md"
+}

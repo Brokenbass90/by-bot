@@ -1,0 +1,39 @@
+{
+ "param": {
+  "signal": "AKC_NOVYY_MAKSIMUM",
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "rynok": "akcii_pit",
+ "H": 5,
+ "okna": {
+  "VSE": {
+   "n": 139,
+   "n_eff": 27.8,
+   "edge": 0.0002501179760146616,
+   "t": 0.0840329361523714
+  },
+  "H1": {
+   "n": 69,
+   "n_eff": 13.8,
+   "edge": -0.0005848324286055471,
+   "t": -0.1575279068295757
+  },
+  "H2": {
+   "n": 70,
+   "n_eff": 14.0,
+   "edge": 0.0010731405177117253,
+   "t": 0.23039608571264095
+  }
+ },
+ "po_rezhimam_REGIME_V1_diagnostika": null,
+ "strategiya_srednee": 0.0065476980385194075,
+ "sluchay_srednee": 0.006297580062504746,
+ "godovyh_strategiya": 0.33000398114137813,
+ "pokrytie_vselennoy_mediana": 0.8029978586723768,
+ "chlenov_s_cenoy_mediana": 1.0,
+ "period": [
+  1739923200000,
+  1766448000000
+ ]
+}

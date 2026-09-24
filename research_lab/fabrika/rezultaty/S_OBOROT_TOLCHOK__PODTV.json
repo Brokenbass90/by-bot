@@ -1,0 +1,38 @@
+{
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "OBOROT_TOLCHOK",
+  "gorizont": 5,
+  "etap": "confirmation"
+ },
+ "etap": "confirmation",
+ "gorizont": 5,
+ "rynok": "kripto_pit50",
+ "priznak": "OBOROT_TOLCHOK",
+ "okna": {
+  "VSE": {
+   "n": 72,
+   "n_eff": 14.4,
+   "edge": -0.016713439457399816,
+   "p": 0.9015492253873063,
+   "t": 0.0450105554302885
+  },
+  "H1": {
+   "n": 38,
+   "n_eff": 7.6,
+   "edge": -0.010295733746699585,
+   "p": 0.7316341829085458,
+   "t": 0.13570601191383833
+  },
+  "H2": {
+   "n": 34,
+   "n_eff": 6.8,
+   "edge": -0.022250951264014225,
+   "p": 0.9035482258870565,
+   "t": 0.044048662496866876
+  }
+ },
+ "dney_vsego": 333,
+ "dney_priznak_polozhitelen": 72,
+ "chlenov_s_cenoy_mediana": 1.0
+}

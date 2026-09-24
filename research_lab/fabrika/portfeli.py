@@ -268,6 +268,223 @@ def szhatie_poly(C, DV, ctx):
     return x
 
 
+# ── пакет v4 «рост» (PREREG_PAKET_V4_BULL_2026_09_23.md) ─────────────
+# Половина А: признаки дня — вопрос «отличаются ли такие дни», прогонщик sensor.
+# Половина Б: отбор бумаг внутри растущего рынка, прогонщик portfel (vybor).
+PV4 = "research_lab/fabrika/PREREG_PAKET_V4_BULL_2026_09_23.md"
+
+
+def _shirina_ryad(R):
+    """доля членов вселенной выше своей SMA50, по каждому дню"""
+    C, M, T = R["C"], R["M"], len(R["dates"])
+    out = np.full(T, np.nan)
+    for t in range(50, T):
+        s50 = _sma_last(C[:t + 1], 50)
+        el = M[t] & np.isfinite(s50) & np.isfinite(C[t])
+        if el.sum() >= 8:
+            out[t] = float((C[t, el] > s50[el]).mean())
+    return out
+
+
+def priznak_shirina_tolchok(R):
+    """толчок участия: доля членов выше своей SMA50 выросла за 10 дней больше чем на 0.15.
+    Порог выбран по числу дней (мощность), до любого счёта доходности: 0.10/0.15/0.20 дают
+    267/214/181 дня окна обнаружения — взят средний."""
+    b = _shirina_ryad(R); out = np.full(len(b), np.nan)
+    for t in range(10, len(b)):
+        if np.isfinite(b[t]) and np.isfinite(b[t - 10]):
+            out[t] = float(b[t] - b[t - 10] - 0.15)
+    return out
+
+
+def priznak_maks_minus_min(R):
+    """новые максимумы минус новые минимумы (60 дней), сверх своей медианы за 120 дней"""
+    C, M, T = R["C"], R["M"], len(R["dates"])
+    sp = np.full(T, np.nan)
+    for t in range(60, T):
+        w = C[t - 59:t + 1]
+        el = M[t] & np.isfinite(C[t]) & np.isfinite(w).all(axis=0)
+        if el.sum() < 8:
+            continue
+        mx = w[:, el].max(axis=0); mn = w[:, el].min(axis=0)
+        sp[t] = float((C[t, el] >= mx).mean() - (C[t, el] <= mn).mean())
+    out = np.full(T, np.nan)
+    for t in range(181, T):
+        h = sp[t - 120:t]
+        if np.isfinite(sp[t]) and np.isfinite(h).sum() >= 60:
+            out[t] = sp[t] - float(np.nanmedian(h))
+    return out
+
+
+def priznak_oborot_tolchok(R):
+    """толчок оборота: медианный объём членов сегодня к своей медиане за 20 дней, порог 1.3"""
+    VV, M, T = R.get("VV"), R["M"], len(R["dates"])
+    if VV is None:
+        return np.full(T, np.nan)
+    med = np.full(T, np.nan)
+    for t in range(T):
+        el = M[t] & np.isfinite(VV[t]) & (VV[t] > 0)
+        if el.sum() >= 8:
+            med[t] = float(np.median(VV[t, el]))
+    out = np.full(T, np.nan)
+    for t in range(20, T):
+        h = med[t - 20:t]
+        if np.isfinite(med[t]) and np.isfinite(h).sum() >= 15:
+            b = float(np.nanmedian(h))
+            if b > 0:
+                out[t] = med[t] / b - 1.3
+    return out
+
+
+PRIZNAKI_DNYA = {"POLY": lambda R: R["POLY"],
+                 "SHIRINA_TOLCHOK": priznak_shirina_tolchok,
+                 "MAKS_MINUS_MIN": priznak_maks_minus_min,
+                 "OBOROT_TOLCHOK": priznak_oborot_tolchok}
+
+
+def bull_novyy_maksimum(C, DV, ctx):
+    """пробой вверх: закрытие = максимум 60 дней, бумага выше SMA200, участие ≥50%"""
+    if C.shape[0] < 201:
+        return np.full(C.shape[1], np.nan)
+    M = ctx["M"][-1]; s200 = _sma_last(C, 200)
+    mx60 = np.nanmax(C[-60:], axis=0)
+    el = M & np.isfinite(C[-1]) & np.isfinite(s200) & np.isfinite(mx60)
+    out = np.where(el, 0.0, np.nan)
+    if not (_shirina(C, ctx["M"]) >= 0.50):
+        return out
+    return np.where(el & (C[-1] >= mx60) & (C[-1] > s200), 1.0, out)
+
+
+def bull_otstayushchiy(C, DV, ctx):
+    """ротация в растущем рынке: участие ≥55%, бумага выше SMA200, но в нижних 30% по 20 дням"""
+    if C.shape[0] < 201:
+        return np.full(C.shape[1], np.nan)
+    M = ctx["M"][-1]; s200 = _sma_last(C, 200); r20 = _ret(C, 20)
+    el = M & np.isfinite(C[-1]) & np.isfinite(s200) & np.isfinite(r20)
+    out = np.where(el, 0.0, np.nan)
+    if not (_shirina(C, ctx["M"]) >= 0.55):
+        return out
+    v = el & (C[-1] > s200)
+    if v.sum() < 8:
+        return out
+    porog = np.quantile(r20[v], 0.3)
+    return np.where(v & (r20 <= porog), 1.0, out)
+
+
+def bull_sila_k_btc(C, DV, ctx):
+    """лидерство альтов: BTC выше своей SMA50, бумага обгоняет BTC за 20 дней больше чем на 1 сигму"""
+    S = ctx.get("simvoly") or []
+    if C.shape[0] < 51 or "BTCUSDT" not in S:
+        return np.full(C.shape[1], np.nan)
+    b = S.index("BTCUSDT"); M = ctx["M"][-1]; r20 = _ret(C, 20)
+    s50 = _sma_last(C, 50)
+    el = M & np.isfinite(C[-1]) & np.isfinite(r20)
+    out = np.where(el, 0.0, np.nan)
+    if not (np.isfinite(s50[b]) and np.isfinite(C[-1, b]) and C[-1, b] > s50[b]):
+        return out
+    if el.sum() < 8 or not np.isfinite(r20[b]):
+        return out
+    sd = float(np.nanstd(r20[el], ddof=1))
+    if not np.isfinite(sd) or sd <= 0:
+        return out
+    return np.where(el & (r20 - r20[b] > sd), 1.0, out)
+
+
+# ── пакет v5 (PREREG_PAKET_V5_2026_09_23.md) ─────────────────────────
+# Единственный механизм роста, переживший пакет v4, — относительная сила
+# к эталону. Проверяем его в другом рынке (акции) и в другой конструкции
+# (рыночно-нейтральная), плюс два самостоятельных вопроса.
+PV5 = "research_lab/fabrika/PREREG_PAKET_V5_2026_09_23.md"
+
+
+def _indeks(C, M):
+    """равновзвешенный индекс вселенной: ряд средних доходностей членов"""
+    el = M[-1] & np.isfinite(C[-1])
+    return el
+
+
+def _r20_etalon_akcii(C, ctx):
+    """доходность равновзвешенного индекса за 20 дней и его SMA50"""
+    if C.shape[0] < 51:
+        return None, None
+    M = ctx["M"]
+    lr = np.diff(np.log(C[-21:]), axis=0)
+    el = M[-1] & np.isfinite(lr).all(axis=0)
+    if el.sum() < 10:
+        return None, None
+    r_ind = float(np.exp(lr[:, el].mean(axis=1).sum()) - 1)
+    lr50 = np.diff(np.log(C[-51:]), axis=0)
+    el2 = M[-1] & np.isfinite(lr50).all(axis=0)
+    if el2.sum() < 10:
+        return r_ind, None
+    put = np.concatenate([[1.0], np.cumprod(np.exp(lr50[:, el2].mean(axis=1)))])
+    return r_ind, bool(put[-1] > put.mean())
+
+
+def akc_sila_k_indeksu(C, DV, ctx):
+    """акция обгоняет равновзвешенный индекс за 20 дней больше чем на сигму сечения,
+    сам индекс выше своей средней за 50 дней"""
+    if C.shape[0] < 51:
+        return np.full(C.shape[1], np.nan)
+    r_ind, rastyot = _r20_etalon_akcii(C, ctx)
+    r20 = _ret(C, 20)
+    el = ctx["M"][-1] & np.isfinite(r20) & _likvid(C, DV)
+    out = np.where(el, 0.0, np.nan)
+    if r_ind is None or not rastyot or el.sum() < 10:
+        return out
+    sd = float(np.nanstd(r20[el], ddof=1))
+    if not np.isfinite(sd) or sd <= 0:
+        return out
+    return np.where(el & (r20 - r_ind > sd), 1.0, out)
+
+
+def akc_novyy_maksimum(C, DV, ctx):
+    """акция закрылась на 60-дневном максимуме, выше своей SMA100, участие ≥ 0.50"""
+    if C.shape[0] < 101:
+        return np.full(C.shape[1], np.nan)
+    s100 = _sma_last(C, 100); mx60 = np.nanmax(C[-60:], axis=0)
+    el = ctx["M"][-1] & np.isfinite(C[-1]) & np.isfinite(s100) & np.isfinite(mx60) & _likvid(C, DV)
+    out = np.where(el, 0.0, np.nan)
+    sh = _shirina(C, ctx["M"])
+    if not (np.isfinite(sh) and sh >= 0.50):
+        return out
+    return np.where(el & (C[-1] >= mx60) & (C[-1] > s100), 1.0, out)
+
+
+def kr_sila_k_btc_ls(C, DV, ctx):
+    """рыночно-нейтральная относительная сила: оценка = обгон BTC за 20 дней.
+    Режима BTC здесь нет — короткая нога снимает общий рост."""
+    S = ctx.get("simvoly") or []
+    if C.shape[0] < 21 or "BTCUSDT" not in S:
+        return np.full(C.shape[1], np.nan)
+    b = S.index("BTCUSDT"); r20 = _ret(C, 20)
+    if not np.isfinite(r20[b]):
+        return np.full(C.shape[1], np.nan)
+    el = ctx["M"][-1] & np.isfinite(r20)
+    return np.where(el, r20 - r20[b], np.nan)
+
+
+def kr_beta_ls(C, DV, ctx):
+    """бета к BTC за 60 дней; оценка = минус бета: лонг тихих, шорт разгонных"""
+    S = ctx.get("simvoly") or []
+    if C.shape[0] < 61 or "BTCUSDT" not in S:
+        return np.full(C.shape[1], np.nan)
+    b = S.index("BTCUSDT")
+    lr = np.diff(np.log(C[-61:]), axis=0)
+    x = lr[:, b]
+    if not np.isfinite(x).all():
+        return np.full(C.shape[1], np.nan)
+    vx = float(np.var(x, ddof=1))
+    el = ctx["M"][-1] & np.isfinite(lr).all(axis=0)
+    out = np.full(C.shape[1], np.nan)
+    if vx <= 0 or el.sum() < 10:
+        return out
+    idx = np.flatnonzero(el)
+    cov = ((lr[:, idx] - lr[:, idx].mean(axis=0)) * (x - x.mean())[:, None]).sum(axis=0) / (len(x) - 1)
+    out[idx] = -cov / vx
+    return out
+
+
 # napravlenie: ls — лонг верх / шорт низ; long — только лонг верхней доли
 SIGNALY = {
     "AKC_MOM_6_1":      dict(fn=mom_6_1, rynok="akcii_pit", napr="ls", kv=0.1, H=5, semya="xs_momentum"),
@@ -291,4 +508,20 @@ SIGNALY = {
                                     semya="bull_vol_expansion_poly", ctx=True, prereg=PPOLY, slot="rost"),
     "BULL_VOL_EXPANSION_FILTERED": dict(fn=szhatie_filtr, rynok="kripto_pit50", napr="long", vybor=True, H=5,
                                         semya="bull_vol_expansion_f", ctx=True, prereg=PV3, slot="rost"),
+    # пакет v4 «рост»
+    "BULL_NOVYY_MAKSIMUM": dict(fn=bull_novyy_maksimum, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                                semya="bull_new_high", ctx=True, prereg=PV4, slot="rost"),
+    "BULL_OTSTAYUSHCHIY": dict(fn=bull_otstayushchiy, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                               semya="bull_laggard", ctx=True, prereg=PV4, slot="rost"),
+    "BULL_SILA_K_BTC": dict(fn=bull_sila_k_btc, rynok="kripto_pit50", napr="long", vybor=True, H=5,
+                            semya="bull_rs_btc", ctx=True, prereg=PV4, slot="rost"),
+    # пакет v5
+    "AKC_SILA_K_INDEKSU": dict(fn=akc_sila_k_indeksu, rynok="akcii_pit", napr="long", vybor=True, H=5,
+                               semya="rs_vs_etalon", ctx=True, prereg=PV5, slot="akcii"),
+    "AKC_NOVYY_MAKSIMUM": dict(fn=akc_novyy_maksimum, rynok="akcii_pit", napr="long", vybor=True, H=5,
+                               semya="new_high", ctx=True, prereg=PV5, slot="akcii"),
+    "KR_SILA_K_BTC_LS": dict(fn=kr_sila_k_btc_ls, rynok="kripto_pit50", napr="ls", kv=0.2, H=5,
+                             semya="rs_vs_etalon_ls", ctx=True, prereg=PV5, slot="neytral"),
+    "KR_BETA_LS": dict(fn=kr_beta_ls, rynok="kripto_pit50", napr="ls", kv=0.2, H=5,
+                       semya="beta_k_btc", ctx=True, prereg=PV5, slot="neytral"),
 }

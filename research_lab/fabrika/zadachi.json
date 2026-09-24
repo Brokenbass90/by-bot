@@ -1,5 +1,5 @@
 {
- "obnovleno": "2026-09-23T09:33:46+00:00",
+ "obnovleno": "2026-09-24T06:41:13+00:00",
  "zadachi": [
   {
    "tip": "SHADOW_READOUT",
@@ -59,12 +59,6 @@
    "tip": "ADAPTER",
    "id": "range_rejection",
    "chto": "нужен переходник",
-   "kto": "Claude"
-  },
-  {
-   "tip": "DATA",
-   "id": "POLY_SBOR",
-   "chto": "запустить на Mac: poly_sbor.py --proverka, --katalog, --istoriya; снимки стакана — --snimki (копятся вперёд)",
    "kto": "Claude"
   },
   {

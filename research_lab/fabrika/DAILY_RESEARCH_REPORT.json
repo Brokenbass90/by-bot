@@ -1,24 +1,31 @@
 {
- "kogda": "2026-09-23T09:41:58+00:00",
- "za_sutki": {},
- "proverok": 0,
+ "kogda": "2026-09-24T06:41:13+00:00",
+ "za_sutki": {
+  "PLUS_NO_CONFIDENCE": 5,
+  "NEGATIVE": 5,
+  "POSITIVE_LEAD": 1,
+  "FAILED_CONFIRMATION": 1
+ },
+ "proverok": 12,
  "sostoyaniya": {
   "PARITY_PASS": 2,
-  "NEGATIVE": 31,
+  "NEGATIVE": 37,
   "WAITING_SHADOW": 1,
   "BLOCKED_DATA": 3,
   "BLOCKED_ADAPTER": 6,
   "INCONCLUSIVE_LOW_N": 20,
-  "PLUS_NO_CONFIDENCE": 9,
+  "PLUS_NO_CONFIDENCE": 14,
   "DIAGNOSTIC": 1,
   "HYPOTHESIS": 1,
-  "QUEUED": 1
+  "FAILED_CONFIRMATION": 1
  },
  "poly": {
-  "rynkov_v_istorii": 4894,
-  "posledniy_sbor": null
+  "rynkov_v_istorii": 4919,
+  "posledniy_sbor": "2026-09-23T16:01:31+00:00"
  },
  "nahodki": [],
- "trebuetsya_vmeshatelstvo": false,
- "prichiny": []
+ "trebuetsya_vmeshatelstvo": true,
+ "prichiny": [
+  "очередь пуста — нужен новый пакет гипотез"
+ ]
 }

@@ -1,0 +1,19 @@
+{
+ "id": "P_BULL_SILA_K_BTC",
+ "begun": "portfel",
+ "semya": "bull_rs_btc",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_t": 2.5,
+  "min_neff": 20,
+  "min_pokrytie": 0.8
+ },
+ "param": {
+  "signal": "BULL_SILA_K_BTC",
+  "etap": "discovery"
+ },
+ "gipoteza": "Когда BTC выше своей SMA50, монеты, обгоняющие BTC за 20 дней более чем на одну сигму сечения, за следующие 5 дней обгоняют случайную корзину.",
+ "pochemu_nezavisima": "Ни один механизм проекта не сравнивал бумагу с BTC. Это не моментум сам по себе: порог задан относительно BTC и сигмы сечения, поэтому в дни общего роста сигнал не срабатывает автоматически.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V4_BULL_2026_09_23.md"
+}

@@ -1,0 +1,20 @@
+{
+ "id": "S_MAKS_MINUS_MIN",
+ "begun": "sensor",
+ "semya": "novye_maksimumy",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_p": 0.01,
+  "min_neff": 20
+ },
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "MAKS_MINUS_MIN",
+  "gorizont": 5,
+  "etap": "discovery"
+ },
+ "gipoteza": "Дни, когда новых 60-дневных максимумов необычно много относительно новых минимумов (сверх своей медианы за 120 дней), дают корзине вселенной большую доходность за следующие 5 дней.",
+ "pochemu_nezavisima": "Ширина лидерства считается по экстремумам, а не по средним: это другой измеритель, чем доля выше SMA50, и другой, чем моментум отдельной монеты.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V4_BULL_2026_09_23.md"
+}

@@ -1,0 +1,19 @@
+{
+ "id": "P_KR_BETA_LS",
+ "begun": "portfel",
+ "semya": "beta_k_btc",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_t": 2.5,
+  "min_neff": 20,
+  "min_pokrytie": 0.8
+ },
+ "param": {
+  "signal": "KR_BETA_LS",
+  "etap": "discovery"
+ },
+ "gipoteza": "Лонг монет с низкой бетой к BTC за 60 дней против шорта монет с высокой бетой даёт положительный эдж за следующие 5 дней.",
+ "pochemu_nezavisima": "Ни один механизм проекта не измерял бету к BTC. Это не моментум и не волатильность сама по себе: оценка — наклон к BTC, а не собственный разброс; низковолатильный фактор на акциях (AKC_LOW_VOL_60) умер, и это другая величина.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V5_2026_09_23.md"
+}

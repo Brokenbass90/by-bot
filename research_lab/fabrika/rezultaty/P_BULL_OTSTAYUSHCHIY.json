@@ -1,0 +1,52 @@
+{
+ "param": {
+  "signal": "BULL_OTSTAYUSHCHIY",
+  "etap": "discovery"
+ },
+ "etap": "discovery",
+ "rynok": "kripto_pit50",
+ "H": 5,
+ "okna": {
+  "VSE": {
+   "n": 316,
+   "n_eff": 63.2,
+   "edge": -0.008895937872586216,
+   "t": -2.103069187076198
+  },
+  "H1": {
+   "n": 158,
+   "n_eff": 31.6,
+   "edge": -0.01289315750380933,
+   "t": -2.2889964059328363
+  },
+  "H2": {
+   "n": 158,
+   "n_eff": 31.6,
+   "edge": -0.004898718241363102,
+   "t": -0.7838785253611574
+  }
+ },
+ "po_rezhimam_REGIME_V1_diagnostika": {
+  "BULL": {
+   "n": 276,
+   "n_eff": 55.2,
+   "edge": -0.0099044948068016,
+   "t": -2.180979611095449
+  },
+  "SIDEWAYS": {
+   "n": 40,
+   "n_eff": 8.0,
+   "edge": -0.0019368950265000657,
+   "t": -0.16911494496130614
+  }
+ },
+ "strategiya_srednee": -0.0036873175925478366,
+ "sluchay_srednee": 0.005208620280038382,
+ "godovyh_strategiya": -0.18584080666441097,
+ "pokrytie_vselennoy_mediana": 0.86,
+ "chlenov_s_cenoy_mediana": 1.0,
+ "period": [
+  1689897600000,
+  1758326400000
+ ]
+}

@@ -28,13 +28,20 @@ def main():
     ap.add_argument("--param", required=True); ap.add_argument("--vyhod", required=True)
     a = ap.parse_args(); p = json.loads(a.param); etap = p.get("etap", "discovery")
     H = int(p.get("gorizont", 3))
+    ry = p.get("rynok", "kripto_pit50_poly")
+    imya_pr = p.get("priznak", "POLY")
+    if ry not in portfeli.RYNKI_P or imya_pr not in portfeli.PRIZNAKI_DNYA:
+        Path(a.vyhod).write_text(json.dumps({"param": p, "okna": {"VSE": {"n": 0}},
+                                             "net_dannyh": f"нет рынка {ry} или признака {imya_pr}"}, ensure_ascii=False))
+        print("нет такого рынка/признака"); return
     try:
-        R = portfeli.zagruzit_kripto_poly()
+        R = portfeli.RYNKI_P[ry]()
+        POLY = portfeli.PRIZNAKI_DNYA[imya_pr](R)
     except FileNotFoundError as e_:
         Path(a.vyhod).write_text(json.dumps({"param": p, "okna": {"VSE": {"n": 0}}, "net_dannyh": str(e_)},
                                             ensure_ascii=False))
         print("нет данных:", e_); return
-    dates, C, M, POLY, fee = R["dates"], R["C"], R["M"], R["POLY"], R["fee_bps"]
+    dates, C, M, fee = R["dates"], R["C"], R["M"], R["fee_bps"]
     r = np.full(len(dates), np.nan)
     for t in range(len(dates) - H):
         el = M[t] & np.isfinite(C[t]) & np.isfinite(C[t + H])
@@ -66,7 +73,7 @@ def main():
         s = i[POLY[i] > 0]
         return proba(s, i)
     h = len(idx) // 2
-    rez = {"param": p, "etap": etap, "gorizont": H,
+    rez = {"param": p, "etap": etap, "gorizont": H, "rynok": ry, "priznak": imya_pr,
            "okna": {"VSE": okno(idx), "H1": okno(idx[:h]), "H2": okno(idx[h:])},
            "dney_vsego": int(len(idx)), "dney_priznak_polozhitelen": int((POLY[idx] > 0).sum()),
            "chlenov_s_cenoy_mediana": 1.0}

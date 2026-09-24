@@ -86,7 +86,8 @@ def main():
         if S.get("ctx"):
             ctx = {"M": M[:t + 1], "F": F[:t + 1] if F is not None else None,
                    "POLY": R["POLY"][:t + 1] if R.get("POLY") is not None else None,
-                   "HH": HH[:t + 1] if HH is not None else None, "VV": VV[:t + 1] if VV is not None else None}
+                   "HH": HH[:t + 1] if HH is not None else None, "VV": VV[:t + 1] if VV is not None else None,
+                   "simvoly": R["simvoly"]}
             sc = S["fn"](*args, ctx)
         else:
             sc = S["fn"](*args, F[:t + 1]) if S.get("nuzhen_fanding") else S["fn"](*args)

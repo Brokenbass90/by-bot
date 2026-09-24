@@ -1,0 +1,20 @@
+{
+ "id": "S_SHIRINA_TOLCHOK",
+ "begun": "sensor",
+ "semya": "shirina_tolchok",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_p": 0.01,
+  "min_neff": 20
+ },
+ "param": {
+  "rynok": "kripto_pit50",
+  "priznak": "SHIRINA_TOLCHOK",
+  "gorizont": 5,
+  "etap": "discovery"
+ },
+ "gipoteza": "Дни, когда участие в росте расширяется (доля монет выше своей SMA50 выросла за 10 дней больше чем на 0.15), дают корзине вселенной большую доходность за следующие 5 дней, чем средний день.",
+ "pochemu_nezavisima": "Это вопрос о времени, а не о выборе бумаг: корзина всегда одна и та же — все члены вселенной поровну. Ни один механизм проекта не проверял участие как признак дня.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V4_BULL_2026_09_23.md"
+}

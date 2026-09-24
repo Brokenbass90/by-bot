@@ -1,0 +1,19 @@
+{
+ "id": "P_BULL_NOVYY_MAKSIMUM",
+ "begun": "portfel",
+ "semya": "bull_new_high",
+ "rynok": "kripto_pit50",
+ "sudya": {
+  "porog_t": 2.5,
+  "min_neff": 20,
+  "min_pokrytie": 0.8
+ },
+ "param": {
+  "signal": "BULL_NOVYY_MAKSIMUM",
+  "etap": "discovery"
+ },
+ "gipoteza": "В растущем рынке (участие ≥ 0.50) монеты, закрывшиеся на 60-дневном максимуме и находящиеся выше своей SMA200, за следующие 5 дней обгоняют случайную корзину того же размера.",
+ "pochemu_nezavisima": "Пакет v3 покупал откат лидера и выход из сжатия волатильности — оба входа на слабости или в тишине. Здесь вход ровно на силе, на новом максимуме; это противоположная сторона той же темы и отдельная проверка.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V4_BULL_2026_09_23.md"
+}

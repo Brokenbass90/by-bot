@@ -1,0 +1,19 @@
+{
+ "id": "P_AKC_SILA_K_INDEKSU",
+ "begun": "portfel",
+ "semya": "rs_vs_etalon",
+ "rynok": "akcii_pit",
+ "sudya": {
+  "porog_t": 2.5,
+  "min_neff": 20,
+  "min_pokrytie": 0.8
+ },
+ "param": {
+  "signal": "AKC_SILA_K_INDEKSU",
+  "etap": "discovery"
+ },
+ "gipoteza": "Когда равновзвешенный индекс вселенной выше своей средней за 50 дней, акции, обгоняющие индекс за 20 дней более чем на сигму сечения, за следующие 5 дней обгоняют случайную корзину того же размера.",
+ "pochemu_nezavisima": "Это тот же механизм, что выжил на крипте (P_BULL_SILA_K_BTC, t 1.43), но в другом рынке, с другим эталоном и другими издержками. Повторение в независимой вселенной — единственный честный способ отличить механизм от особенности одной выборки.",
+ "avtor": "Claude",
+ "prereg_dokument": "research_lab/fabrika/PREREG_PAKET_V5_2026_09_23.md"
+}
