@@ -7,6 +7,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import os
 import subprocess
 import sys
@@ -165,6 +166,225 @@ def write_intended_bridge_picks_csv(report: dict[str, Any], path: Path) -> None:
                 "entry_price": pick["signal_close"], "stop_price": pick["stop_price"],
                 "target_price": "", "weight": frozen_weight,
             })
+
+
+def prepare_intended_monthly_cycle(
+    runtime_dir: Path,
+    cache_dir: Path,
+    capital: float,
+    client: Any,
+    first_entry_session: str = "2026-10-01",
+    *,
+    refresh_cache: bool = False,
+) -> dict[str, Any]:
+    """Stage one frozen month-end selection from local bars and broker calendar GETs."""
+    from zoneinfo import ZoneInfo
+
+    if not math.isfinite(float(capital)) or float(capital) <= 0:
+        raise ValueError("intended_monthly_capital_invalid")
+    try:
+        first_entry = date.fromisoformat(first_entry_session)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("intended_monthly_first_entry_invalid") from exc
+    clock = client.get_clock()
+    try:
+        now = datetime.fromisoformat(str(clock["timestamp"]).replace("Z", "+00:00"))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("intended_monthly_clock_invalid") from exc
+    if now.tzinfo is None:
+        raise ValueError("intended_monthly_clock_invalid")
+    now = now.astimezone(timezone.utc)
+    start = (now.astimezone(ZoneInfo("America/New_York")).date().replace(day=1) - timedelta(days=35))
+    end = start + timedelta(days=100)
+    rows = client._request("GET", f"/v2/calendar?start={start.isoformat()}&end={end.isoformat()}")
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("intended_monthly_calendar_missing")
+    sessions: list[tuple[date, datetime, dict[str, str]]] = []
+    ny = ZoneInfo("America/New_York")
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("intended_monthly_calendar_invalid")
+        try:
+            session = date.fromisoformat(str(row["date"]))
+            close_text = str(row["close"]).strip()
+            closing = datetime.fromisoformat(f"{session.isoformat()}T{close_text}").replace(tzinfo=ny).astimezone(timezone.utc)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("intended_monthly_calendar_invalid") from exc
+        sessions.append((session, closing, {
+            "date": session.isoformat(), "open": str(row.get("open") or "").strip(), "close": close_text,
+        }))
+    if [item[0] for item in sessions] != sorted(item[0] for item in sessions) or len({item[0] for item in sessions}) != len(sessions):
+        raise ValueError("intended_monthly_calendar_invalid")
+
+    month_last: dict[tuple[int, int], int] = {}
+    for index, (session, _closing, _row) in enumerate(sessions):
+        month_last[(session.year, session.month)] = index
+    complete: list[tuple[date, date]] = []
+    pending: list[date] = []
+    for index in month_last.values():
+        if index + 1 >= len(sessions):
+            continue
+        signal, closing, _signal_row = sessions[index]
+        entry = sessions[index + 1][0]
+        if entry.year == signal.year and entry.month == signal.month:
+            raise ValueError("intended_monthly_calendar_invalid")
+        if closing <= now and entry >= first_entry:
+            complete.append((signal, entry))
+        elif closing > now and entry >= first_entry:
+            pending.append(entry)
+    if not complete:
+        if pending:
+            return {"status": "WAITING_FOR_MONTH_CLOSE", "next_entry_session": min(pending).isoformat()}
+        return {"status": "WAITING_FOR_FIRST_ENTRY_SESSION", "first_entry_session": first_entry.isoformat()}
+    signal_session, entry_session = max(complete)
+    cycle_dir = runtime_dir / "cycles" / entry_session.isoformat()
+    report_path = cycle_dir / "latest_selection.json"
+    picks_path = cycle_dir / "current_cycle_picks.csv"
+    # The broker's rolling calendar query grows each day. Freeze only the two
+    # rows that determine this cycle's signal cutoff and entry session.
+    relevant_calendar_rows = [sessions[index][2] for index, _ in enumerate(sessions)
+                              if sessions[index][0] in {signal_session, entry_session}]
+    calendar_sha256 = hashlib.sha256(
+        json.dumps(relevant_calendar_rows, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    current_hashes = _frozen_source_hashes()
+    if report_path.exists() or picks_path.exists():
+        if not report_path.exists() or not picks_path.exists():
+            raise ValueError("intended_monthly_cycle_artifacts_incomplete")
+        try:
+            existing = json.loads(report_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError("intended_monthly_cycle_report_invalid") from exc
+        if existing.get("capital_usd") != float(capital):
+            raise ValueError("intended_monthly_cycle_capital_conflict")
+        if (
+            existing.get("signal_session") != signal_session.isoformat()
+            or existing.get("entry_session") != entry_session.isoformat()
+            or existing.get("selector_source_hashes") != current_hashes
+            or (existing.get("monthly_schedule") or {}).get("calendar_sha256") != calendar_sha256
+        ):
+            raise ValueError("intended_monthly_cycle_conflict")
+        expected_fd, expected_name = tempfile.mkstemp(prefix=".expected-cycle-picks-", suffix=".csv", dir=cycle_dir)
+        os.close(expected_fd)
+        expected_picks = Path(expected_name)
+        try:
+            write_intended_bridge_picks_csv(existing, expected_picks)
+            if picks_path.read_bytes() != expected_picks.read_bytes():
+                raise ValueError("intended_monthly_cycle_picks_conflict")
+        except (KeyError, TypeError, ValueError) as exc:
+            if isinstance(exc, ValueError) and str(exc) == "intended_monthly_cycle_picks_conflict":
+                raise
+            raise ValueError("intended_monthly_cycle_picks_invalid") from exc
+        finally:
+            expected_picks.unlink(missing_ok=True)
+        return {"status": "ALREADY_PREPARED", "signal_session": signal_session.isoformat(),
+                "entry_session": entry_session.isoformat(), "cycle_dir": str(cycle_dir),
+                "report_path": str(report_path), "picks_path": str(picks_path)}
+
+    history_cache_dir = cache_dir
+    if refresh_cache:
+        import re
+
+        source_paths = sorted(cache_dir.glob("*_M5.csv"))
+        symbols: list[str] = []
+        source_file_sha256: dict[str, str] = {}
+        for path in source_paths:
+            symbol = path.stem.removesuffix("_M5")
+            if not re.fullmatch(r"[A-Z][A-Z0-9.-]*", symbol):
+                raise ValueError("intended_monthly_refresh_source_symbol_invalid")
+            symbols.append(symbol)
+            source_file_sha256[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+        if not symbols or "SPY" not in symbols:
+            raise ValueError("intended_monthly_refresh_source_spy_missing")
+        if len(symbols) != len(set(symbols)):
+            raise ValueError("intended_monthly_refresh_source_duplicate")
+        inputs_dir = runtime_dir / "inputs"
+        snapshot_dir = inputs_dir / entry_session.isoformat()
+        if snapshot_dir.exists():
+            history_cache_dir = snapshot_dir
+            if not (snapshot_dir / "SPY_M5.csv").is_file():
+                raise ValueError("intended_monthly_refresh_snapshot_spy_missing")
+        else:
+            inputs_dir.mkdir(parents=True, exist_ok=True)
+            staging_dir = Path(tempfile.mkdtemp(prefix=f".{entry_session.isoformat()}.partial-", dir=inputs_dir))
+            log_path = staging_dir / "fetch.stdout_stderr.log"
+            receipt_path = staging_dir / "fetch_receipt.json"
+            fetch_receipt: dict[str, Any] = {
+                "status": "started", "entry_session": entry_session.isoformat(),
+                "source_file_sha256": source_file_sha256, "symbols": symbols,
+                "period": "730d", "interval": "60m",
+            }
+            command = [
+                sys.executable, str(ROOT / "scripts/fetch_equities_yfinance.py"),
+                "--tickers", ",".join(symbols), "--period", "730d", "--interval", "60m",
+                "--out-dir", str(staging_dir),
+            ]
+            child_env = {
+                key: os.environ[key] for key in (
+                    "PATH", "HOME", "LANG", "LC_ALL", "TZ", "SSL_CERT_FILE", "SSL_CERT_DIR", "REQUESTS_CA_BUNDLE",
+                ) if os.environ.get(key)
+            }
+            try:
+                with log_path.open("w", encoding="utf-8") as log_handle:
+                    result = subprocess.run(command, cwd=ROOT, env=child_env, stdout=log_handle,
+                                            stderr=subprocess.STDOUT, timeout=600, check=False)
+            except subprocess.TimeoutExpired as exc:
+                fetch_receipt.update({"status": "timeout", "error": str(exc)})
+                _atomic_write_private_json(receipt_path, fetch_receipt)
+                raise ValueError("intended_monthly_refresh_timeout") from exc
+            if result.returncode != 0:
+                fetch_receipt.update({"status": "failed", "returncode": result.returncode})
+                _atomic_write_private_json(receipt_path, fetch_receipt)
+                raise ValueError("intended_monthly_refresh_failed")
+            if not (staging_dir / "SPY_M5.csv").is_file():
+                fetch_receipt.update({"status": "missing_spy_after_fetch"})
+                _atomic_write_private_json(receipt_path, fetch_receipt)
+                raise ValueError("intended_monthly_refresh_spy_missing")
+            missing_symbols = [symbol for symbol in symbols if not (staging_dir / f"{symbol}_M5.csv").is_file()]
+            if missing_symbols:
+                fetch_receipt.update({"status": "incomplete_after_fetch", "missing_symbols": missing_symbols})
+                _atomic_write_private_json(receipt_path, fetch_receipt)
+                raise ValueError("intended_monthly_refresh_incomplete")
+            from scripts.build_equities_monthly_live_cycle import _aggregate_daily
+            try:
+                spy_sessions = _aggregate_daily(staging_dir / "SPY_M5.csv")
+            except Exception as exc:
+                fetch_receipt.update({"status": "invalid_spy_after_fetch", "error": type(exc).__name__})
+                _atomic_write_private_json(receipt_path, fetch_receipt)
+                raise ValueError("intended_monthly_refresh_spy_invalid") from exc
+            if not any(str(bar.day) == signal_session.isoformat() for bar in spy_sessions):
+                fetch_receipt.update({"status": "signal_spy_missing_after_fetch", "signal_session": signal_session.isoformat()})
+                _atomic_write_private_json(receipt_path, fetch_receipt)
+                raise ValueError("intended_monthly_refresh_signal_spy_missing")
+            fetched_paths = sorted(staging_dir.glob("*_M5.csv"))
+            fetch_receipt.update({
+                "status": "completed",
+                "fetched_file_sha256": {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in fetched_paths},
+            })
+            _atomic_write_private_json(receipt_path, fetch_receipt)
+            os.replace(staging_dir, snapshot_dir)
+            history_cache_dir = snapshot_dir
+
+    report = prepare_intended_report(
+        _load_intended_hourly_history(history_cache_dir), signal_session=signal_session, entry_session=entry_session
+    )
+    report["capital_usd"] = float(capital)
+    report["monthly_schedule"] = {"signal_session": signal_session.isoformat(),
+                                  "entry_session": entry_session.isoformat(),
+                                  "calendar_sha256": calendar_sha256}
+    # A crash before publication leaves only an evidence-preserving hidden
+    # partial directory, never a visible half-frozen cycle.
+    cycles_dir = cycle_dir.parent
+    cycles_dir.mkdir(parents=True, exist_ok=True)
+    temporary_cycle_dir = Path(tempfile.mkdtemp(prefix=f".{entry_session.isoformat()}.partial-", dir=cycles_dir))
+    temporary_picks = temporary_cycle_dir / "current_cycle_picks.csv"
+    temporary_report = temporary_cycle_dir / "latest_selection.json"
+    write_intended_bridge_picks_csv(report, temporary_picks)
+    _atomic_write_private_json(temporary_report, report)
+    os.replace(temporary_cycle_dir, cycle_dir)
+    return {"status": "PREPARED", "signal_session": signal_session.isoformat(),
+            "entry_session": entry_session.isoformat(), "cycle_dir": str(cycle_dir),
+            "report_path": str(report_path), "picks_path": str(picks_path)}
 
 
 def build_intended_bridge_env(
@@ -470,8 +690,62 @@ def _intended_missed_session(client: Any, last: datetime, now: datetime) -> bool
     return False
 
 
+def _reserved_monthly_entry_positions(*, journal_path: Path, client: Any, account_id: str,
+                                      positions: list[dict[str, Any]], strategy_id: str) -> set[str]:
+    """Return only broker-proven filled positions backed by reserved entry intents."""
+    if not journal_path.exists():
+        return set()
+    try:
+        raw = json.loads(journal_path.read_text(encoding="utf-8"))
+        intents = raw.get("entry_intents", {})
+    except (OSError, json.JSONDecodeError, AttributeError) as exc:
+        raise ValueError("monthly_entry_intents_corrupt") from exc
+    if not isinstance(intents, dict):
+        raise ValueError("monthly_entry_intents_corrupt")
+    by_symbol = {str(position.get("symbol") or "").upper(): position for position in positions}
+    proven: set[str] = set()
+    for client_order_id, intent in intents.items():
+        if not isinstance(client_order_id, str) or not client_order_id or not isinstance(intent, dict):
+            raise ValueError("monthly_entry_intents_corrupt")
+        required = ("account_id", "strategy_id", "symbol", "entry_session", "notional", "status")
+        if any(field not in intent for field in required):
+            raise ValueError("monthly_entry_intents_corrupt")
+        try:
+            symbol = str(intent["symbol"])
+            date.fromisoformat(str(intent["entry_session"]))
+            notional = float(intent["notional"])
+        except (TypeError, ValueError) as exc:
+            raise ValueError("monthly_entry_intents_corrupt") from exc
+        if (not isinstance(intent["symbol"], str) or not symbol or symbol != symbol.upper() or not math.isfinite(notional) or notional <= 0
+            or intent["status"] not in {"reserved", "complete", "not_submitted"}
+            or not isinstance(intent["account_id"], str) or not isinstance(intent["strategy_id"], str)
+            or ("entry_order_id" in intent and intent["entry_order_id"] is not None
+                and not isinstance(intent["entry_order_id"], str))):
+            raise ValueError("monthly_entry_intents_corrupt")
+        if intent["status"] != "reserved" or intent["account_id"] != account_id or intent["strategy_id"] != strategy_id:
+            continue
+        position = by_symbol.get(symbol)
+        if position is None:
+            continue
+        order = client.get_order_by_client_id(client_order_id)
+        if not isinstance(order, dict):
+            raise ValueError("monthly_entry_intent_order_invalid")
+        try:
+            valid = (order.get("client_order_id") == client_order_id and order.get("symbol") == symbol
+                     and order.get("side") == "buy" and order.get("status") in {"filled", "partially_filled", "canceled", "expired", "pending_cancel"}
+                     and math.isclose(float(order["filled_qty"]), float(position["qty"]), rel_tol=1e-9)
+                     and math.isclose(float(order["filled_avg_price"]), float(position["avg_entry_price"]), rel_tol=1e-8))
+        except (KeyError, TypeError, ValueError):
+            valid = False
+        if not valid:
+            raise ValueError(f"monthly_entry_intent_position_mismatch:{symbol}")
+        proven.add(symbol)
+    return proven
+
+
 def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
-                       client: Any = None, live: bool = False) -> int:
+                       client: Any = None, live: bool = False, monthly: bool = False,
+                       cache_dir: Path | None = None) -> int:
     """Run one bound intended cycle using the existing bridge and ratchet."""
     import fcntl
     from zoneinfo import ZoneInfo
@@ -488,6 +762,7 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
     account: dict[str, Any] = {}
     clock: dict[str, Any] = {}
     env: dict[str, str] = {}
+    maintenance_only = False
     try:
         try:
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -504,9 +779,50 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
                 raise ValueError("intended_live_source_hash_mismatch")
         elif base != bridge._PAPER_API_URL:
             raise ValueError("intended_runner_requires_exact_paper")
+        if monthly:
+            if live and (binding.get("runtime_dir") != str(runtime_dir.resolve())
+                         or binding.get("account_lock_path") != os.environ.get("ALPACA_BRIDGE_LOCK_PATH")
+                         or not binding.get("account_lock_path")):
+                raise ValueError("intended_single_owner_paths_mismatch")
+            active_path = runtime_dir / "latest_selection.json"
+            try:
+                if cache_dir is None:
+                    raise ValueError("monthly_cache_dir_required")
+                client = client or bridge.AlpacaClient(base, os.environ["ALPACA_API_KEY_ID"], os.environ["ALPACA_API_SECRET_KEY"])
+                prepared = prepare_intended_monthly_cycle(runtime_dir, cache_dir, capital, client)
+                receipt["monthly_preparation"] = prepared
+            except Exception as exc:
+                if not active_path.exists():
+                    receipt.update({"status": "DATA_BLOCKED_COLD_START", "data_blocked": {"maintenance_only": False,
+                                    "reason": f"{type(exc).__name__}:{exc}"}})
+                    _atomic_write_private_json(receipt_path, receipt)
+                    return 0
+                maintenance_only = True
+                receipt["data_blocked"] = {"maintenance_only": True, "reason": f"{type(exc).__name__}:{exc}"}
+                prepared = {"status": "DATA_BLOCKED_ACTIVE_CYCLE"}
+            if prepared["status"] in {"PREPARED", "ALREADY_PREPARED"}:
+                candidate = json.loads(Path(prepared["report_path"]).read_text())
+                active = json.loads(active_path.read_text()) if active_path.exists() else {}
+                if active.get("entry_session", "") > candidate["entry_session"]:
+                    raise ValueError("monthly_cycle_regression")
+                if active.get("entry_session") != candidate["entry_session"]:
+                    prior_state, prior_error = bridge._load_protective_floor_state(runtime_dir / "protective_exit/protective_exit_hwm.json")
+                    if prior_error not in {"", "state_missing"} or any(r.get("rotation_intent") for r in prior_state.values()):
+                        raise ValueError("monthly_previous_rotation_unsettled")
+                    _atomic_write_private_json(active_path, candidate)
+                # The JSON is the atomic active selection; CSV is a derived file.
+                # Re-rendering it under the runner lock recovers a mid-write crash.
+                selected_report = json.loads(active_path.read_text())
+                temporary = runtime_dir / ".current_cycle_picks.csv.tmp"
+                write_intended_bridge_picks_csv(selected_report, temporary)
+                os.replace(temporary, runtime_dir / "current_cycle_picks.csv")
+            elif not active_path.exists():
+                receipt["status"] = prepared["status"]
+                _atomic_write_private_json(receipt_path, receipt)
+                return 0
         report = json.loads((runtime_dir / "latest_selection.json").read_text())
         if (report.get("mode") != "intended_prepare_only"
-            or report.get("capital_usd" if live else "paper_capital_usd") != capital
+            or report.get("capital_usd" if live or monthly else "paper_capital_usd") != capital
             or report.get("target_gross_exposure") != .70
             or report.get("maximum_weight") != .60 or report.get("max_positions") != 4
             or report.get("selector_source_hashes") != _frozen_source_hashes()):
@@ -533,6 +849,9 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
             if fresh_binding != binding:
                 raise ValueError("intended_live_binding_changed")
             receipt["money_authority"] = bool(send_orders)
+            if not maintenance_only:
+                receipt["monthly_schedule"] = validate_intended_live_schedule(client, report)
+        elif monthly and not maintenance_only:
             receipt["monthly_schedule"] = validate_intended_live_schedule(client, report)
         if account.get("id") != ownership.get("account_id"):
             raise ValueError("paper_account_identity_mismatch")
@@ -545,17 +864,38 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
             raise ValueError("broker_orders_snapshot_incomplete")
         env = os.environ.copy()
         env.update(build_intended_bridge_env(report, picks_csv=picks, capital=capital, live=live))
+        if monthly and not maintenance_only:
+            env.update(ALPACA_INTENDED_MONTHLY="1", ALPACA_INTENDED_ENTRY_SESSION=str(report["entry_session"]))
+        elif monthly:
+            env.update(ALPACA_INTENDED_MONTHLY="0", ALPACA_ALLOW_NEW_ENTRIES="0")
         state_path = Path(env["ALPACA_PROTECTIVE_EXIT_HWM_PATH"])
         state, error = bridge._load_protective_floor_state(state_path)
         if error not in {"", "state_missing"}:
             raise ValueError("intended_state_corrupt")
         if set(state) & set(foreign):
             raise ValueError("intended_foreign_ownership_overlap")
-        unknown = {str(p.get("symbol") or "") for p in positions} - set(state) - set(foreign)
+        reserved_entry_positions = set()
+        if monthly:
+            reserved_entry_positions = _reserved_monthly_entry_positions(
+                journal_path=Path(env["MONTHLY_REENTRY_BLOCK_STATE_PATH"]), client=client,
+                account_id=str(account.get("id") or ""), positions=positions,
+                strategy_id=bridge._INTENDED_PAPER_STRATEGY_ID,
+            )
+        unknown = {str(p.get("symbol") or "") for p in positions} - set(state) - set(foreign) - reserved_entry_positions
         if unknown:
             raise ValueError("unknown_position:" + ",".join(sorted(unknown)))
-        if any(str(o.get("symbol") or "") not in set(state) | set(foreign) for o in orders):
-            raise ValueError("unknown_active_order")
+        intent_path = Path(env["MONTHLY_REENTRY_BLOCK_STATE_PATH"])
+        entry_intents = json.loads(intent_path.read_text()).get("entry_intents", {}) if monthly and intent_path.exists() else {}
+        for order in orders:
+            if str(order.get("symbol") or "") in set(state) | set(foreign):
+                continue
+            intent = entry_intents.get(order.get("client_order_id"), {})
+            if not (intent.get("status") == "reserved" and intent.get("account_id") == account["id"]
+                    and intent.get("strategy_id") == bridge._INTENDED_PAPER_STRATEGY_ID
+                    and intent.get("symbol") == order.get("symbol") and order.get("side") == "buy"
+                    and order.get("type") == "market" and order.get("time_in_force") == "day"
+                    and math.isclose(float(order.get("notional", -1)), float(intent.get("notional", -2)), abs_tol=1e-6)):
+                raise ValueError("unknown_active_order")
         receipt.update({"account_id": account["id"], "market_open": bool(clock.get("is_open")),
                         "foreign_positions": sorted({p["symbol"] for p in positions} & set(foreign)),
                         "owned_positions": sorted({p["symbol"] for p in positions} & set(state)),
@@ -567,7 +907,7 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
         # Explicit one-session broker acceptance launch, never daily strategy reselection.
         session = datetime.fromisoformat(str(clock["timestamp"]).replace("Z", "+00:00")).astimezone(ZoneInfo("America/New_York")).date()
         prior_success = receipt.get("last_regular_success_at_utc")
-        if state and prior_success:
+        if state and prior_success and not maintenance_only:
             last = datetime.fromisoformat(str(prior_success).replace("Z", "+00:00"))
             now = datetime.fromisoformat(str(clock["timestamp"]).replace("Z", "+00:00"))
             if _intended_missed_session(client, last, now):
@@ -575,7 +915,7 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
                     str(account["id"]), reason="missed_full_session")
                 raise RuntimeError("missed_full_regular_session")
         env["ALPACA_SEND_ORDERS"] = "1"
-        env["ALPACA_ALLOW_NEW_ENTRIES"] = "1" if session.isoformat() == report["entry_session"] else "0"
+        env["ALPACA_ALLOW_NEW_ENTRIES"] = "1" if not maintenance_only and session.isoformat() == report["entry_session"] else "0"
         env["ALPACA_ALLOW_EMPTY_PICKS_FOR_CASH"] = "1"
         excluded_path = runtime_dir / "foreign_exclusions.json"
         _atomic_write_private_json(excluded_path, foreign)
@@ -585,14 +925,19 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
         if error == "state_missing":
             _atomic_write_private_json(state_path, {})
         commands = [
-            [sys.executable, str(ROOT / "scripts/equities_alpaca_paper_bridge.py"), "--picks-csv", str(picks)],
-            [sys.executable, str(ROOT / "scripts/alpaca_protective_exit_manager.py"), "--apply"],
+            ("bridge", [sys.executable, str(ROOT / "scripts/equities_alpaca_paper_bridge.py"), "--picks-csv", str(picks)]),
+            ("ratchet", [sys.executable, str(ROOT / "scripts/alpaca_protective_exit_manager.py"), "--apply"]),
         ]
         receipt["stages"] = []
-        for index, command in enumerate(commands):
-            if index == 1:
-                env["ALPACA_ALLOW_NEW_ENTRIES"] = "0"
+        for index, (stage, command) in enumerate(commands):
+            env["ALPACA_ALLOW_NEW_ENTRIES"] = "1" if (not maintenance_only and stage == "bridge"
+                                                        and session.isoformat() == report["entry_session"]) else "0"
+            if stage != "bridge":
                 env["ALPACA_PROTECTIVE_EXIT_ACK"] = "PROTECTIVE_EXITS_ONLY"
+                # An accepted pending market exit owns its remaining quantity.
+                # Continue protecting retained names without placing a second sell.
+                pending_rotation = {s for s, r in state.items() if r.get("rotation_intent")}
+                env["ALPACA_PROTECTIVE_EXIT_EXCLUDED_SYMBOLS"] = ",".join(sorted(set(foreign) | pending_rotation))
             result = subprocess.run(command, cwd=ROOT, env=env, check=False,
                                     capture_output=True, text=True, timeout=240)
             with (runtime_dir / "execution.log").open("a") as log:
@@ -600,7 +945,11 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
                 log.write(json.dumps({"at": datetime.now(timezone.utc).isoformat(),
                     "stage": index, "returncode": result.returncode,
                     "stdout": result.stdout, "stderr": result.stderr}) + "\n")
-            receipt["stages"].append({"stage": "bridge" if index == 0 else "ratchet", "returncode": result.returncode})
+            receipt["stages"].append({"stage": stage, "returncode": result.returncode})
+            if monthly and stage == "bridge" and result.returncode == 77:
+                receipt["status"] = "WAITING_FOR_ROTATION_FINALITY"
+                _atomic_write_private_json(receipt_path, receipt)
+                return 0
             if result.returncode:
                 receipt["emergency"] = _intended_emergency_exits(client, env, runtime_dir, str(account["id"]))
                 raise RuntimeError(f"intended_stage_failed:{index}:{result.returncode}")
@@ -722,6 +1071,9 @@ def main() -> int:
     ap.add_argument("--preserve-only", action="store_true", help="legacy PAPER protection with new entries and stale rotation disabled")
     ap.add_argument("--preflight-intended-live", action="store_true", help="GET-only initial LIVE account binding; cannot submit orders")
     ap.add_argument("--run-intended-live", action="store_true", help="run explicitly account-bound frozen LIVE lifecycle; disabled without binding approval")
+    ap.add_argument("--prepare-intended-monthly", action="store_true", help="read-only broker-calendar preparation with a fresh private cache snapshot")
+    ap.add_argument("--prepare-intended-monthly-live", action="store_true", help="prepare against the explicitly bound LIVE account; never sends orders")
+    ap.add_argument("--monthly", action="store_true", help="use frozen month-end selection and owned monthly rotation")
     ap.add_argument("--run-intended", action="store_true", help="run frozen one-session PAPER acceptance and ongoing protection")
     ap.add_argument(
         "--prepare-intended", action="store_true",
@@ -735,22 +1087,68 @@ def main() -> int:
         help="manage the last daily selection without recalculating or rotating it",
     )
     args = ap.parse_args()
+    modes = (args.preflight_intended_live, args.run_intended_live, args.run_intended,
+             args.prepare_intended_monthly, args.prepare_intended_monthly_live, args.prepare_intended,
+             args.preserve_only)
+    if sum(bool(mode) for mode in modes) > 1:
+        print(json.dumps({"error": "conflicting_intended_execution_modes"}))
+        return 2
+    if args.monthly and not (args.run_intended or args.run_intended_live):
+        print(json.dumps({"error": "monthly_requires_intended_runner"}))
+        return 2
 
     if args.preflight_intended_live:
-        if args.send_orders or args.run_intended or args.run_intended_live or args.prepare_intended or args.preserve_only:
+        if args.send_orders or args.run_intended or args.run_intended_live or args.prepare_intended or args.prepare_intended_monthly or args.preserve_only:
             print(json.dumps({"error": "live_preflight_rejects_order_or_execution_flags"}))
             return 2
         runtime_dir = Path(args.runtime_dir or "runtime/alpaca_intended_live").resolve()
         return preflight_intended_live(runtime_dir)
 
-    if args.run_intended_live and (args.run_intended or args.prepare_intended or args.preserve_only):
+    if args.run_intended_live and (args.run_intended or args.prepare_intended or args.prepare_intended_monthly or args.preserve_only):
         print(json.dumps({"error": "conflicting_intended_execution_modes"}))
         return 2
     if args.run_intended or args.run_intended_live:
         runtime_dir = Path(args.runtime_dir or ("runtime/alpaca_intended_live" if args.run_intended_live else "runtime/alpaca_intended_paper")).resolve()
-        result = run_intended_cycle(runtime_dir, capital=float(args.capital), send_orders=bool(args.send_orders), live=bool(args.run_intended_live))
+        result = run_intended_cycle(runtime_dir, capital=float(args.capital), send_orders=bool(args.send_orders), live=bool(args.run_intended_live),
+                                    monthly=bool(args.monthly), cache_dir=Path(args.cache_dir).resolve())
         print(json.dumps({"intended_runner_returncode": result, "receipt": str(runtime_dir / "latest_intended_run.json")}))
         return result
+
+    if args.prepare_intended_monthly or args.prepare_intended_monthly_live:
+        if (args.send_orders or args.run_intended or args.run_intended_live or args.prepare_intended
+            or args.preserve_only or args.monthly):
+            print(json.dumps({"error": "prepare_intended_monthly_rejects_execution_flags"}))
+            return 2
+        from scripts import equities_alpaca_paper_bridge as bridge
+        live_prepare = bool(args.prepare_intended_monthly_live)
+        base = os.getenv("ALPACA_BASE_URL", "").rstrip("/")
+        if live_prepare:
+            try:
+                bridge._load_intended_live_binding(base_url=base, capital=float(args.capital))
+            except Exception as exc:
+                print(json.dumps({"error": f"intended_live_prepare_binding:{exc}"}))
+                return 2
+        elif base != bridge._PAPER_API_URL:
+            print(json.dumps({"error": "prepare_intended_monthly_requires_exact_paper"}))
+            return 2
+        key, secret = os.getenv("ALPACA_API_KEY_ID", ""), os.getenv("ALPACA_API_SECRET_KEY", "")
+        if not key or not secret:
+            print(json.dumps({"error": "prepare_intended_monthly_credentials_missing"}))
+            return 2
+        runtime_dir = Path(args.runtime_dir or ("runtime/alpaca_intended_live" if live_prepare else "runtime/alpaca_intended_paper")).resolve()
+        try:
+            prepared = prepare_intended_monthly_cycle(
+                runtime_dir, Path(args.cache_dir).resolve(), float(args.capital),
+                bridge.AlpacaClient(base, key, secret), refresh_cache=True,
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            print(json.dumps({"status": "NOT_CONFIRMED", "error": str(exc), "orders_submitted": False}))
+            return 3
+        receipt = {"status": prepared["status"], "orders_submitted": False, "broker_writes": 0,
+                   "live_prepare": live_prepare, "preparation": prepared}
+        _atomic_write_private_json(runtime_dir / "latest_monthly_preparation.json", receipt)
+        print(json.dumps(receipt))
+        return 0
 
     if args.prepare_intended:
         if args.send_orders:

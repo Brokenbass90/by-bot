@@ -206,7 +206,7 @@ def test_unreconciled_existing_lifecycle_blocks_buy_before_submission(tmp_path, 
     class Client:
         buy_calls = 0
         def __init__(self, *_args): pass
-        def get_account(self): return {"id": "acct-1", "buying_power": "1000", "cash": "1000"}
+        def get_account(self): return {"id": "acct-1", "buying_power": "1000", "cash": "1000", "equity": "1000"}
         def list_positions(self): return []
         def list_orders(self, **_kwargs): return []
         def get_clock(self): return {"is_open": True}

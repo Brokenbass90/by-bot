@@ -1,0 +1,97 @@
+{
+  "status": "READY_FOR_OWNER_ACTIVATION",
+  "live_enabled": false,
+  "money_activated": false,
+  "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+  "capital_usd": 487.42,
+  "target_gross": 0.7,
+  "maximum_weight": 0.6,
+  "max_positions": 4,
+  "next_signal_session": "2026-09-30",
+  "next_entry_session": "2026-10-01",
+  "deployment": {
+    "installed_at_utc": "2026-09-24T22:44:22Z",
+    "release": "/opt/bybot-research/alpaca-intended-live/releases/73345c03fa823d82",
+    "app": "/opt/bybot-research/alpaca-intended-live/app",
+    "runtime": "/root/by-bot/runtime/alpaca_intended_live",
+    "manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+    "files_verified": 58,
+    "enabled": false,
+    "broker_writes": 0,
+    "account_suffix": "f295c6",
+    "cash_usd": "487.42",
+    "capital_usd": 487.42,
+    "positions": 0,
+    "open_orders": 0,
+    "modes": {
+      "--preflight": 0,
+      "--read-only": 0,
+      "--prepare": 0
+    },
+    "exclusive_guard": "PASS_OLD_CRON_BLOCKS_NEW",
+    "legacy_config_unchanged": true,
+    "legacy_cron_lines_unchanged": true,
+    "flat_rollback_cron_roundtrip": "PASS",
+    "cron_before_sha256": "cdcf8eb945ad7485a0952dda3dcd677811023531e63c2d54e34cba497b58f6b6",
+    "cron_after_sha256": "9f029e91658c599e3890406d19ca3f7240d9f041b9c427c147ad56c4ffab16d2"
+  },
+  "verification": {
+    "local_tests": 243,
+    "vps_tests": 243,
+    "target_python": "3.12.3",
+    "vps_hashes_matched": 58,
+    "monthly_rotation": "PASS_PAPER_AND_LIVE_FIXTURES_NOT_REAL_MONTH_END",
+    "restart_nonflat": "PASS_FIXTURES_LOST_BUY_RESPONSE_LOST_STOP_RESPONSE_PARTIAL_FILL_AND_DAY_REARM",
+    "restart_vps": {
+      "verified_at_utc": "2026-09-24T22:45:52Z",
+      "files_verified": 58,
+      "restart_codes": [
+        0,
+        0
+      ],
+      "state_before": {
+        "binding.json": "3bcbd18e981ed468e2a7e10bd716b438164f3b58de7da66b6e5e1b6783cd25b1",
+        "foreign_owners.json": "01dc8e9ba8191bf07838e7a26e1d15c2fd13f4e1c96df09c5ef73c6bd83acdcc",
+        "protective_exit/protective_exit_hwm.json": null,
+        "monthly_reentry_block.json": null,
+        "latest_selection.json": null
+      },
+      "state_after": {
+        "binding.json": "3bcbd18e981ed468e2a7e10bd716b438164f3b58de7da66b6e5e1b6783cd25b1",
+        "foreign_owners.json": "01dc8e9ba8191bf07838e7a26e1d15c2fd13f4e1c96df09c5ef73c6bd83acdcc",
+        "protective_exit/protective_exit_hwm.json": null,
+        "monthly_reentry_block.json": null,
+        "latest_selection.json": null
+      },
+      "state_identity": "PASS_FLAT_DISABLED",
+      "binding_disabled_guard": "PASS",
+      "new_money_cron_count": 0,
+      "new_readonly_data_jobs": 2,
+      "old_writer_jobs_preserved": 2,
+      "single_profile_money_authority": "OLD_ONLY_NEW_FAIL_CLOSED",
+      "latest_status": "WAITING_FOR_MONTH_CLOSE",
+      "latest_generated_at_utc": "2026-09-24T22:45:51.376069+00:00",
+      "broker_writes": 0
+    },
+    "kill": "PASS_FOCUSED_LIVE_PROOF_TESTS_REAL_PAPER_7_OF_7_PRIOR_ACCEPTANCE_NO_LIVE_KILL",
+    "review": "Root focused review completed; independent agent found two corrected defects then reached usage limit; not a completed independent sign-off."
+  },
+  "owner_activation_remaining": [
+    "fresh exact LIVE account/flat truth",
+    "retire only OLD alpaca_live_v38_manager and alpaca_protective_exit_only cron lines, wait for their processes to end",
+    "owner explicitly enables private binding and changes only NEW read-only runner cron to --send-orders; preparation job stays read-only"
+  ],
+  "rollback": "Before money and while broker-flat: remove only two NEW tagged cron lines; preserve runtime/evidence. With owned exposure: entry halt plus SAME lifecycle protection/proof-scoped kill; never restore OLD manager over NEW positions or disable all protection.",
+  "blocker": null,
+  "scope_limits": [
+    "Actual next monthly transition is a future market event. Selection is not precomputed before Sep30 close.",
+    "This readiness is operational, not proof of positive economics.",
+    "No legacy PAPER positions or historical HWM adopted; ATT1/LIVE risk unchanged."
+  ],
+  "raw_evidence_sha256": {
+    "monthly_local_tests_20260925.log": "a771cdc9926ef75c5a8462874432c06b0045807b6dbd170a2ec7689f22c9f384",
+    "monthly_vps_tests_20260925.log": "06f6bc15280ebf6bdd0d4fe0c0c6be4f9a3f495d14165d285f11c20b5dde0a15",
+    "monthly_disabled_deploy_20260925.json": "6c9290db7c96e07fe9beab5d28bed84f622b813b724b81314fa626acdd31a675",
+    "monthly_disabled_restart_20260925.json": "6f71e1f6109bfd898d0b83fae8a37a1ea04f4390b13496d9ddefc2a3be33851f"
+  }
+}

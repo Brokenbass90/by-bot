@@ -7,6 +7,18 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 
 ## P0: Alpaca first, then ATT1; no strategy research
 
+**September 25 current status:** Alpaca monthly LIVE-capable contour is installed
+**disabled**, READY_FOR_OWNER_ACTIVATION. 243 focused tests pass locally and on
+VPS Python; 58 hashes match. Runtime/receipt and exact owner handoff are at the
+TOP of the canonical checkpoint and `ALPACA_MONTHLY_LIVE_DEFAULT_OFF_2026_09_25.json`.
+Frozen signal Sep30 close → possible Oct1 entry. No money activation; old
+Alpaca/ATT1 runtime is unchanged. Finish commit/push before any subsequent work.
+The next owner-approved queue is existing equity history extension → read-only
+SBR1 N/verdict → ATT1 dispatch/fills/protection/costs/finality dossier.
+
+The September 24 and earlier snapshots below are historical and superseded.
+
+
 September 24 owner amount update: current balance requested for Alpaca canary.
 Authenticated broker currency is USD: **$487.42**, not EUR. Local exact-account
 configuration prepared disabled; frozen gross remains 0.70 (~$341.19 initial

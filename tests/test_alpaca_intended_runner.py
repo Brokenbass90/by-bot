@@ -91,14 +91,15 @@ def test_full_missed_session_uses_broker_calendar_not_weekdays():
     assert driver._intended_missed_session(Calendar(),last,datetime(2026,9,22,14,tzinfo=utc))
 
 
+@pytest.mark.parametrize("monthly", [False, True])
 @pytest.mark.parametrize("live", [False, True])
-def test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network(tmp_path,monkeypatch,live):
+def test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network(tmp_path,monkeypatch,live,monthly):
     import io,contextlib,subprocess,sys
     from datetime import datetime,timedelta,timezone
     from scripts import equities_alpaca_paper_bridge as bridge
     from scripts import alpaca_protective_exit_manager as manager
     setup(tmp_path,monkeypatch)
-    if live:
+    if live or monthly:
         class FrozenDatetime(datetime):
             @classmethod
             def now(cls, tz=None):
@@ -106,10 +107,12 @@ def test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network(t
                 return value.astimezone(tz) if tz else value.replace(tzinfo=None)
         datetime=FrozenDatetime
         for module in [driver,bridge,manager]:monkeypatch.setattr(module,'datetime',FrozenDatetime)
+    if live:
         cfg={'schema_version':1,'strategy_id':bridge._INTENDED_PAPER_STRATEGY_ID,
              'endpoint':'https://api.alpaca.markets','account_id':'paper-1','enabled':True,
              'capital_usd':1000,'max_positions':4,'gross_exposure':.70,'maximum_weight':.60,
-             'selector_source_hashes':driver._frozen_source_hashes()}
+             'selector_source_hashes':driver._frozen_source_hashes(),
+             'runtime_dir':str(tmp_path.resolve()),'account_lock_path':str(tmp_path/'account.lock')}
         (tmp_path/'live_binding.json').write_text(json.dumps(cfg))
         for k,v in {'ALPACA_BASE_URL':'https://api.alpaca.markets',
           'ALPACA_INTENDED_LIVE_BINDING_PATH':str(tmp_path/'live_binding.json'),
@@ -117,7 +120,9 @@ def test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network(t
           'ALPACA_LIVE_CONFIRM':'MONTHLY_V38_LIVE','ALPACA_LIVE_MAX_CAPITAL_USD':'1000'}.items():monkeypatch.setenv(k,v)
     now=datetime.now(timezone.utc)
     report=json.loads((tmp_path/'latest_selection.json').read_text())
-    if live:report.update(signal_session='2026-09-30',capital_usd=1000)
+    if live or monthly:report.update(signal_session='2026-09-30',capital_usd=1000)
+    if monthly:
+        monkeypatch.setattr(driver,'prepare_intended_monthly_cycle',lambda *args,**kw:{'status':'ALREADY_PREPARED','entry_session':'2026-10-01','report_path':str(tmp_path/'latest_selection.json'),'picks_path':str(tmp_path/'current_cycle_picks.csv')})
 
     report['entry_session']=now.date().isoformat()
     report['picks']=[{'symbol':'CRM','weight':.6,'signal_close':100.,'stop_price':94.,'rawscore':1.,'atr20_pct':3.}]
@@ -127,17 +132,17 @@ def test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network(t
         buys=0
         position=None
         orders={}
-        def get_account(self):return {'id':'paper-1','status':'ACTIVE','cash':'10000','buying_power':'10000'}
+        def get_account(self):return {'id':'paper-1','status':'ACTIVE','currency':'USD','cash':'10000','equity':'10000','buying_power':'10000'}
         def get_clock(self):return {'is_open':True,'timestamp':datetime.now(timezone.utc).isoformat()}
         def list_positions(self):return [dict(self.position)] if self.position else []
         def list_orders(self,**kwargs):return [dict(v) for v in self.orders.values() if v['status']=='new']
         def get_order(self,key):return dict(self.orders[key])
-        def submit_market_buy(self,symbol,notional):
+        def submit_market_buy(self,symbol,notional,*,client_order_id):
             assert notional == 420.0
             qty = notional / 101.0
             self.buys+=1
-            row={'id':'entry','symbol':symbol,'side':'buy','type':'market','status':'filled',
-                 'filled_qty':str(qty),'filled_avg_price':'101','filled_at':datetime.now(timezone.utc).isoformat()}
+            row={'id':'entry','client_order_id':client_order_id,'symbol':symbol,'side':'buy','type':'market','status':'filled',
+                 'notional':str(notional),'time_in_force':'day','filled_qty':str(qty),'filled_avg_price':'101','filled_at':datetime.now(timezone.utc).isoformat()}
             self.orders['entry']=row
             self.position={'symbol':symbol,'qty':str(qty),'avg_entry_price':'101','current_price':'110','side':'long'}
             return dict(row)
@@ -145,12 +150,14 @@ def test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network(t
             key='stop-'+str(len(self.orders))
             self.orders[key]={'id':key,'symbol':symbol,'side':'sell','type':'stop','status':'new',
                 'qty':str(kwargs['qty']),'filled_qty':'0','stop_price':str(kwargs['stop_price']),
-                'time_in_force':kwargs['time_in_force']}
+                'time_in_force':kwargs['time_in_force'],'client_order_id':kwargs.get('client_order_id')}
             return dict(self.orders[key])
+        def get_order_by_client_id(self, client_order_id):
+            return next((dict(row) for row in self.orders.values() if row.get('client_order_id') == client_order_id), None)
         def replace_order(self,key,payload):
             old=self.orders[key];old['status']='replaced'
             return self.submit_stop_sell(old['symbol'],qty=float(old['qty']),stop_price=float(payload['stop_price']),time_in_force=old['time_in_force'])
-        def _request(self,*args):return [{"date":"2026-09-30"},{"date":"2026-10-01"}] if live else []
+        def _request(self,*args):return [{"date":"2026-09-30"},{"date":"2026-10-01"}] if live or monthly else []
     broker=Exchange()
     monkeypatch.setattr(bridge,'AlpacaClient',lambda *args:broker)
     monkeypatch.setattr(manager,'AlpacaClient',lambda *args:broker)
@@ -164,19 +171,19 @@ def test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network(t
                 else:rc=manager._main_unlocked()
             return subprocess.CompletedProcess(command,rc,out.getvalue(),err.getvalue())
     monkeypatch.setattr(driver.subprocess,'run',run)
-    assert driver.run_intended_cycle(tmp_path,capital=1000,send_orders=True,client=broker,live=live)==0
+    assert driver.run_intended_cycle(tmp_path,capital=1000,send_orders=True,client=broker,live=live,monthly=monthly,cache_dir=tmp_path)==0
     state_path=tmp_path/'protective_exit/protective_exit_hwm.json'
     first=json.loads(state_path.read_text())['CRM']
     assert first['hwm']==110 and first['accepted_stop_floor']>101
     broker.orders[first['accepted_order_id']]['status']='expired'
-    assert driver.run_intended_cycle(tmp_path,capital=1000,send_orders=True,client=broker,live=live)==0
+    assert driver.run_intended_cycle(tmp_path,capital=1000,send_orders=True,client=broker,live=live,monthly=monthly,cache_dir=tmp_path)==0
     after=json.loads(state_path.read_text())['CRM']
     assert after['accepted_order_id']!=first['accepted_order_id']
     assert after['accepted_stop_floor']==first['accepted_stop_floor'] and after['hwm']==110
     closed=broker.orders[after['accepted_order_id']]
     closed.update(status='filled',filled_qty=closed['qty'],filled_avg_price='106',filled_at=datetime.now(timezone.utc).isoformat())
     broker.position=None
-    assert driver.run_intended_cycle(tmp_path,capital=1000,send_orders=True,client=broker,live=live)==0
+    assert driver.run_intended_cycle(tmp_path,capital=1000,send_orders=True,client=broker,live=live,monthly=monthly,cache_dir=tmp_path)==0
     assert broker.buys==1 and json.loads(state_path.read_text())=={}
     block=json.loads((tmp_path/'monthly_reentry_block.json').read_text())['symbols']['CRM']
     assert block['exit_order_id']==closed['id']

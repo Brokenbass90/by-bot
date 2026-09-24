@@ -511,6 +511,12 @@ def _alpaca_ai_advisory(
     return advisory
 
 
+class AlpacaAPIError(RuntimeError):
+    def __init__(self, status_code: int, message: str):
+        super().__init__(message)
+        self.status_code = status_code
+
+
 class AlpacaClient:
     def __init__(self, base_url: str, key_id: str, secret_key: str):
         self.base_url = base_url.rstrip("/")
@@ -537,7 +543,7 @@ class AlpacaClient:
                 return json.loads(raw) if raw else {}
         except error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
-            raise RuntimeError(f"{method} {path} failed: {exc.code} {detail}") from exc
+            raise AlpacaAPIError(exc.code, f"{method} {path} failed: {exc.code} {detail}") from exc
 
     def get_account(self) -> dict[str, Any]:
         return self._request("GET", "/v2/account")
@@ -558,7 +564,21 @@ class AlpacaClient:
     def get_order(self, order_id: str) -> dict[str, Any]:
         return self._request("GET", f"/v2/orders/{order_id}")
 
-    def submit_market_buy(self, symbol: str, notional: float) -> dict[str, Any]:
+    def get_order_by_client_id(self, client_id: str) -> dict[str, Any] | None:
+        try:
+            return self._request("GET", "/v2/orders:by_client_order_id?" + urlencode({"client_order_id": client_id}))
+        except AlpacaAPIError as exc:
+            if exc.status_code == 404:
+                return None
+            raise
+
+    def submit_market_sell_qty(self, symbol: str, qty: float, *, client_order_id: str) -> dict[str, Any]:
+        return self._request("POST", "/v2/orders", {
+            "symbol": symbol, "qty": _format_qty(qty), "side": "sell",
+            "type": "market", "time_in_force": "day", "client_order_id": client_order_id,
+        })
+
+    def submit_market_buy(self, symbol: str, notional: float, *, client_order_id: str | None = None) -> dict[str, Any]:
         payload = {
             "symbol": symbol,
             "notional": f"{notional:.2f}",
@@ -566,6 +586,8 @@ class AlpacaClient:
             "type": "market",
             "time_in_force": "day",
         }
+        if client_order_id:
+            payload["client_order_id"] = client_order_id
         return self._request("POST", "/v2/orders", payload)
 
     def submit_market_buy_qty(self, symbol: str, qty: float) -> dict[str, Any]:
@@ -605,7 +627,7 @@ class AlpacaClient:
             raise RuntimeError("bracket buy requires qty or notional")
         return self._request("POST", "/v2/orders", payload)
 
-    def submit_stop_sell(self, symbol: str, *, qty: float, stop_price: float, time_in_force: str = "day") -> dict[str, Any]:
+    def submit_stop_sell(self, symbol: str, *, qty: float, stop_price: float, time_in_force: str = "day", client_order_id: str | None = None) -> dict[str, Any]:
         payload = {
             "symbol": symbol,
             "qty": _format_qty(qty),
@@ -614,6 +636,8 @@ class AlpacaClient:
             "time_in_force": time_in_force,
             "stop_price": _format_price(stop_price),
         }
+        if client_order_id:
+            payload["client_order_id"] = client_order_id
         return self._request("POST", "/v2/orders", payload)
 
     def submit_trailing_stop_sell(
@@ -1021,7 +1045,10 @@ def _load_reentry_block_state(path: Path) -> dict[str, dict[str, Any]]:
 
 
 def _save_reentry_block_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
-    payload = {"symbols": dict(sorted(state.items()))}
+    payload = json.loads(path.read_text()) if path.exists() else {}
+    if not isinstance(payload, dict):
+        raise ValueError("reentry_state_corrupt")
+    payload["symbols"] = dict(sorted(state.items()))
     _atomic_write_json(path, payload)
 
 
@@ -1079,6 +1106,8 @@ def _reconcile_intended_stop_exits(
         removed: set[str] = set()
         for symbol, record in list(state.items()):
             _validated_existing_intended_lifecycle(record, account_id)
+            if record.get("rotation_intent"):
+                continue  # Reconciled by the same-cycle market-exit path.
             if symbol in positions:
                 continue
             order_id = str(record.get("accepted_order_id") or "").strip()
@@ -1126,6 +1155,126 @@ def _reconcile_intended_stop_exits(
     except Exception as exc:
         _halt_intended_paper_entries(state_dir, account_id, str(exc))
         raise
+
+
+def _rotate_intended_monthly(
+    *, client: Any, base_url: str, account_id: str, capital: float,
+    state_path: Path, reentry_path: Path, selected_symbols: set[str],
+    entry_session: str, now: datetime | None = None,
+) -> dict[str, Any]:
+    """Under the account writer lock, settle owned month-turn exits before buys."""
+    from zoneinfo import ZoneInfo
+    now = now or datetime.now(timezone.utc)
+    if not _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True):
+        raise IntendedPaperProtectionError("rotation_requires_intended_mode")
+    if str(client.get_account().get("id") or "") != account_id:
+        raise IntendedPaperProtectionError("rotation_account_mismatch")
+    clock = client.get_clock()
+    session = datetime.fromisoformat(str(clock["timestamp"]).replace("Z", "+00:00")).astimezone(ZoneInfo("America/New_York")).date()
+    cycle = date.fromisoformat(entry_session)
+    if not clock.get("is_open") or session < cycle:
+        return {"status": "PENDING", "reason": "awaiting_entry_session"}
+    state, state_error = _load_protective_floor_state(state_path)
+    if state_error not in {"", "state_missing"}:
+        raise IntendedPaperProtectionError("rotation_state_corrupt")
+    raw = json.loads(reentry_path.read_text()) if reentry_path.exists() else {"symbols": {}}
+    if not isinstance(raw, dict) or not isinstance(raw.get("symbols"), dict) or not isinstance(raw.get("rotation_exits", {}), dict):
+        raise IntendedPaperProtectionError("rotation_receipts_corrupt")
+    completed = []
+    for symbol, record in list(state.items()):
+        _validated_existing_intended_lifecycle(record, account_id)
+        intent = record.get("rotation_intent")
+        if symbol in selected_symbols and not intent:
+            continue
+        entry = client.get_order(str(record["entry_order_id"]))
+        if (str(entry.get("id")) != record["entry_order_id"] or entry.get("symbol") != symbol
+            or entry.get("side") != "buy" or entry.get("status") not in {"filled", "canceled", "expired"}
+            or not math.isclose(_safe_float(entry.get("filled_avg_price")), float(record["entry_price"]), rel_tol=1e-9)
+            or not math.isclose(_safe_float(entry.get("filled_qty")), float(record.get("entry_fill_qty", record["qty"])), rel_tol=1e-9)):
+            raise IntendedPaperProtectionError(f"rotation_entry_identity_mismatch:{symbol}")
+        identity = hashlib.sha256(f"{account_id}|{_INTENDED_PAPER_STRATEGY_ID}|{record['entry_order_id']}|{entry_session}|{symbol}".encode()).hexdigest()[:32]
+        expected = {"entry_session": entry_session, "client_order_id": "alp-rotate-" + identity, "qty": record["qty"]}
+        if intent is not None and intent != expected:
+            raise IntendedPaperProtectionError(f"rotation_intent_mismatch:{symbol}")
+        existing = client.get_order_by_client_id(expected["client_order_id"])
+        positions = {p["symbol"]: p for p in client.list_positions()}
+        orders = client.list_orders(status="open", limit=100)
+        if len(orders) >= 100:
+            raise IntendedPaperProtectionError("rotation_orders_incomplete")
+        owned_orders = [o for o in orders if o.get("symbol") == symbol]
+        allowed_ids = {record.get("accepted_order_id"), (existing or {}).get("id")}
+        if any(not o.get("id") or o["id"] not in allowed_ids for o in owned_orders):
+            raise IntendedPaperProtectionError(f"rotation_unknown_order:{symbol}")
+        if existing is None:
+            pos = positions.get(symbol)
+            if pos is None:
+                # A stop can fill before/during cancellation. Let its exact receipt
+                # create the 21-day lock; never replace it with a market exit.
+                record.pop("rotation_intent", None)
+                _atomic_write_json(state_path, state)
+                _reconcile_intended_stop_exits(client=client, state=state, state_path=state_path,
+                    reentry_path=reentry_path, positions=positions, open_orders=orders,
+                    account_id=account_id, state_dir=_paper_kill_state_dir(base_url, _env("ALPACA_API_KEY_ID")), now=now)
+                continue
+            if (pos.get("side", "long") != "long"
+                or not math.isclose(_safe_float(pos.get("qty")), float(record["qty"]), rel_tol=1e-9)
+                or not math.isclose(_safe_float(pos.get("avg_entry_price")), float(record["entry_price"]), rel_tol=1e-9)):
+                raise IntendedPaperProtectionError(f"rotation_position_mismatch:{symbol}")
+            if session != cycle:
+                raise IntendedPaperProtectionError(f"rotation_missed_entry_session:{symbol}")
+            if not intent:
+                record["rotation_intent"] = expected
+                _atomic_write_json(state_path, state)  # fsync before cancel/submit
+            stop_id = str(record.get("accepted_order_id") or "")
+            stop = client.get_order(stop_id)
+            if (stop.get("symbol") != symbol or stop.get("side") != "sell" or stop.get("type") != "stop"):
+                raise IntendedPaperProtectionError(f"rotation_stop_identity_mismatch:{symbol}")
+            if stop.get("status") not in _TERMINAL_ORDER_STATUSES:
+                client.cancel_order(stop_id)
+                stop = client.get_order(stop_id)
+            if stop.get("status") not in _TERMINAL_ORDER_STATUSES:
+                return {"status": "PENDING", "reason": "stop_cancel_pending", "symbol": symbol}
+            if _safe_float(stop.get("filled_qty")) > 0:
+                record.pop("rotation_intent", None)
+                _atomic_write_json(state_path, state)
+                return {"status": "PENDING", "reason": "stop_fill_requires_reconciliation", "symbol": symbol}
+            fresh = next((p for p in client.list_positions() if p.get("symbol") == symbol), None)
+            if fresh is None or not math.isclose(_safe_float(fresh.get("qty")), float(record["qty"]), rel_tol=1e-9):
+                raise IntendedPaperProtectionError(f"rotation_position_changed_after_cancel:{symbol}")
+            # Recheck exact LIVE approval immediately before the broker write.
+            _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
+            existing = client.submit_market_sell_qty(symbol, float(record["qty"]), client_order_id=expected["client_order_id"])
+        if (existing.get("client_order_id") != expected["client_order_id"] or existing.get("symbol") != symbol
+            or existing.get("side") != "sell" or existing.get("type") != "market" or not existing.get("id")
+            or not math.isclose(_safe_float(existing.get("qty")), float(record["qty"]), rel_tol=1e-9)):
+            raise IntendedPaperProtectionError(f"rotation_exit_identity_mismatch:{symbol}")
+        if existing.get("status") in _ACTIVE_ORDER_STATUSES:
+            return {"status": "PENDING", "reason": "market_exit_pending", "symbol": symbol}
+        filled_at = _parse_iso_utc(str(existing.get("filled_at") or ""))
+        if (existing.get("status") != "filled" or filled_at is None or filled_at > now + timedelta(seconds=5)
+            or filled_at < _parse_iso_utc(record["lifecycle_first_seen_at_utc"])
+            or not math.isclose(_safe_float(existing.get("filled_qty")), float(record["qty"]), rel_tol=1e-9)
+            or _intended_finite_positive(existing.get("filled_avg_price")) is None):
+            raise IntendedPaperProtectionError(f"rotation_exit_not_confirmed:{symbol}")
+        if any(p.get("symbol") == symbol for p in client.list_positions()):
+            return {"status": "PENDING", "reason": "awaiting_flat_truth", "symbol": symbol}
+        fresh_orders = client.list_orders(status="open", limit=100)
+        if len(fresh_orders) >= 100 or any(o.get("symbol") == symbol for o in fresh_orders):
+            raise IntendedPaperProtectionError(f"rotation_flat_orders_not_confirmed:{symbol}")
+        # Existing re-entry artifact retains exit receipts without adding a block.
+        raw = json.loads(reentry_path.read_text()) if reentry_path.exists() else {"symbols": {}}
+        exits = raw.setdefault("rotation_exits", {})
+        receipt = {"entry_order_id": record["entry_order_id"], "account_id": account_id,
+                   "symbol": symbol, "entry_session": entry_session, "exit_order": existing,
+                   "retired_lifecycle": record}
+        if identity in exits and exits[identity] != receipt:
+            raise IntendedPaperProtectionError(f"rotation_receipt_mismatch:{symbol}")
+        exits[identity] = receipt
+        _atomic_write_json(reentry_path, raw)
+        state.pop(symbol)
+        _atomic_write_json(state_path, state)
+        completed.append(symbol)
+    return {"status": "COMPLETE", "closed_symbols": completed}
 
 
 def _select_monthly_cycle_picks(
@@ -1547,6 +1696,114 @@ def _persist_intended_pending_fill(path: Path, *, account_id: str, symbol: str, 
         "entry_order_id": entry["id"], "entry_price": price, "qty": qty, "entry_fill_qty": qty, "hwm": price,
         "accepted_stop_floor": 0, "lifecycle_first_seen_at_utc": stamp, "protection_pending": True}
     _atomic_write_json(path, state)
+
+
+def _finish_intended_entry_intent(*, client: Any, base_url: str, account_id: str,
+    capital: float, payload: dict[str, Any], client_id: str, entry: dict[str, Any],
+    reentry_path: Path, state_path: Path, state_dir: Path, timeout_sec: float = 0) -> dict[str, Any]:
+    """Recover only a reserved broker order; never infer ownership from a ticker."""
+    intent = payload["entry_intents"][client_id]
+    symbol = intent["symbol"]
+    if (entry.get("client_order_id") != client_id or entry.get("symbol") != symbol
+        or entry.get("side") != "buy" or entry.get("type") != "market"
+        or entry.get("time_in_force") != "day"
+        or not math.isclose(_safe_float(entry.get("notional")), intent["notional"], abs_tol=.000001)):
+        raise IntendedPaperProtectionError("reserved_entry_order_mismatch")
+    final = _terminal_intended_entry(client, entry, expected_symbol=symbol, timeout_sec=timeout_sec)
+    qty, price = float(final["filled_qty"]), float(final["filled_avg_price"])
+    positions = [p for p in client.list_positions() if p.get("symbol") == symbol]
+    if (len(positions) != 1 or positions[0].get("side", "long") != "long"
+        or not math.isclose(_safe_float(positions[0].get("qty")), qty, rel_tol=1e-9, abs_tol=1e-9)
+        or not math.isclose(_safe_float(positions[0].get("avg_entry_price")), price, rel_tol=1e-9, abs_tol=1e-8)):
+        raise IntendedPaperProtectionError("reserved_entry_position_mismatch")
+    floor = price - float(intent["risk_distance"])
+    if not math.isfinite(floor) or not 0 < floor < price:
+        raise IntendedPaperProtectionError("reserved_entry_floor_invalid")
+    state, error = _load_protective_floor_state(state_path)
+    if error not in {"", "state_missing"}:
+        raise IntendedPaperProtectionError("reserved_entry_state_corrupt")
+    if symbol not in state:
+        _persist_intended_pending_fill(state_path, account_id=account_id, symbol=symbol, entry=final)
+    else:
+        record = _validated_existing_intended_lifecycle(state[symbol], account_id, allow_pending=True)
+        if record["entry_order_id"] != final["id"] or not math.isclose(float(record["qty"]), qty, rel_tol=1e-9):
+            raise IntendedPaperProtectionError("reserved_entry_lifecycle_conflict")
+        floor = max(floor, float(record["accepted_stop_floor"]))
+    stop_id = client_id.replace("alp-entry-", "alp-floor-", 1)
+    stop = client.get_order_by_client_id(stop_id)
+    open_orders = client.list_orders(status="open", limit=100)
+    if len(open_orders) >= 100 or any(o.get("symbol") == symbol and o.get("id") != (stop or {}).get("id") for o in open_orders):
+        raise IntendedPaperProtectionError("reserved_entry_unknown_open_order")
+    if stop is None:
+        _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
+        stop = client.submit_stop_sell(symbol, qty=qty, stop_price=floor,
+            time_in_force=_persistent_exit_tif_for_qty("", qty), client_order_id=stop_id)
+    if stop.get("client_order_id") != stop_id:
+        raise IntendedPaperProtectionError("reserved_stop_identity_mismatch")
+    record = _complete_intended_paper_simple_stop(client=client, base_url=base_url, state_dir=state_dir,
+        ledger_path=state_path, account_id=account_id, entry_order=final, stop_order=stop,
+        symbol=symbol, requested_stop=floor, intended_live=_env_bool("ALPACA_INTENDED_LIVE", False), capital=capital)
+    intent.update(status="complete", entry_order_id=final["id"], stop_order_id=stop["id"])
+    _atomic_write_json(reentry_path, payload)
+    return record
+
+
+def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: str,
+    capital: float, reentry_path: Path, state_path: Path, state_dir: Path,
+    pick: Pick, notional: float, timeout_sec: float) -> dict[str, Any]:
+    _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
+    if client.get_account().get("id") != account_id:
+        raise IntendedPaperProtectionError("reserved_entry_account_mismatch")
+    distance = float(pick.entry_price) - float(pick.stop_price)
+    if not math.isfinite(distance) or distance <= 0 or not math.isfinite(notional) or notional <= 0:
+        raise IntendedPaperProtectionError("reserved_entry_parameters_invalid")
+    client_id = "alp-entry-" + hashlib.sha256(f"{account_id}|{_INTENDED_PAPER_STRATEGY_ID}|{pick.entry_day}|{pick.ticker}".encode()).hexdigest()[:32]
+    payload = json.loads(reentry_path.read_text()) if reentry_path.exists() else {"symbols": {}}
+    intent = {"account_id": account_id, "strategy_id": _INTENDED_PAPER_STRATEGY_ID,
+        "symbol": pick.ticker, "entry_session": pick.entry_day, "notional": notional,
+        "risk_distance": distance, "status": "reserved"}
+    entries = payload.setdefault("entry_intents", {})
+    if client_id in entries:
+        if entries[client_id].get("status") != "reserved":
+            raise IntendedPaperProtectionError("entry_cycle_already_consumed")
+        if entries[client_id] != intent:
+            raise IntendedPaperProtectionError("reserved_entry_changed")
+    else:
+        if any(p.get("symbol") == pick.ticker for p in client.list_positions()):
+            raise IntendedPaperProtectionError("reserved_entry_existing_position")
+        entries[client_id] = intent
+        _atomic_write_json(reentry_path, payload)
+    entry = client.get_order_by_client_id(client_id)
+    if entry is None:
+        entry = client.submit_market_buy(pick.ticker, notional, client_order_id=client_id)
+    return _finish_intended_entry_intent(client=client, base_url=base_url, account_id=account_id, capital=capital,
+        payload=payload, client_id=client_id, entry=entry, reentry_path=reentry_path,
+        state_path=state_path, state_dir=state_dir, timeout_sec=timeout_sec)
+
+
+def _recover_intended_entry_intents(*, client: Any, base_url: str, account_id: str,
+    capital: float, reentry_path: Path, state_path: Path, state_dir: Path) -> None:
+    if not reentry_path.exists():
+        return
+    payload = json.loads(reentry_path.read_text())
+    for client_id, intent in payload.get("entry_intents", {}).items():
+        if intent.get("status") != "reserved":
+            continue
+        _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
+        if intent.get("account_id") != account_id or intent.get("strategy_id") != _INTENDED_PAPER_STRATEGY_ID or client.get_account().get("id") != account_id:
+            raise IntendedPaperProtectionError("reserved_entry_account_mismatch")
+        entry = client.get_order_by_client_id(client_id)
+        if entry is None:
+            if any(p.get("symbol") == intent["symbol"] for p in client.list_positions()):
+                raise IntendedPaperProtectionError("reserved_entry_unknown_position")
+            # Crash before dispatch: consume the reservation, never create new
+            # exposure in a recovery pass or retry a different session's entry.
+            intent["status"] = "not_submitted"
+            _atomic_write_json(reentry_path, payload)
+            continue
+        _finish_intended_entry_intent(client=client, base_url=base_url, account_id=account_id, capital=capital,
+            payload=payload, client_id=client_id, entry=entry, reentry_path=reentry_path,
+            state_path=state_path, state_dir=state_dir)
 
 
 def _intended_frozen_weights(picks: Iterable[Pick]) -> dict[str, float]:
@@ -2583,9 +2840,64 @@ def _main_unlocked() -> int:
                 f"[paper_bridge] market closed (next_open={_next_open}); skipping new BUY submissions this run",
                 flush=True,
             )
+    if intended_paper and send_orders and _market_is_open:
+        try:
+            _recover_intended_entry_intents(client=client, base_url=base_url,
+                account_id=str(account.get("id") or ""), capital=capital_override_usd,
+                reentry_path=reentry_block_path, state_path=_protective_exit_hwm_state_path(),
+                state_dir=_paper_kill_state_dir(base_url, key_id))
+            positions = client.list_positions()
+            open_orders = client.list_orders(status="open", limit=100)
+        except Exception as exc:
+            _halt_intended_paper_entries(_paper_kill_state_dir(base_url, key_id), str(account.get("id") or ""), str(exc))
+            print(json.dumps({"error": "entry_recovery_not_confirmed", "detail": str(exc)}))
+            return 9
+    if intended_paper and send_orders and _env_bool("ALPACA_INTENDED_MONTHLY", False):
+        try:
+            monthly_entry = _env("ALPACA_INTENDED_ENTRY_SESSION")
+            if not monthly_entry or any(p.entry_day != monthly_entry for p in picks):
+                raise IntendedPaperProtectionError("rotation_picks_session_mismatch")
+            monthly_state_path = _protective_exit_hwm_state_path()
+            monthly_state, monthly_error = _load_protective_floor_state(monthly_state_path)
+            if monthly_error not in {"", "state_missing"}:
+                raise IntendedPaperProtectionError("rotation_state_corrupt")
+            _reconcile_intended_stop_exits(client=client, state=monthly_state,
+                state_path=monthly_state_path, reentry_path=reentry_block_path,
+                positions={p["symbol"]: p for p in positions}, open_orders=open_orders,
+                account_id=str(account.get("id") or ""), state_dir=_paper_kill_state_dir(base_url, key_id))
+            # DAY orders on retained names may have expired overnight. Restore
+            # their durable floors before waiting on any stale-name market exit.
+            selected_monthly = {p.ticker for p in picks}
+            for position in positions:
+                symbol = position.get("symbol")
+                if symbol not in monthly_state or symbol not in selected_monthly or monthly_state[symbol].get("rotation_intent"):
+                    continue
+                _rearm_intended_position(client=client, symbol=symbol, position=position,
+                    existing_stops=[o for o in open_orders if o.get("symbol") == symbol and o.get("type") == "stop" and o.get("side") == "sell"],
+                    state=monthly_state, state_path=monthly_state_path, account_id=str(account.get("id") or ""))
+            rotation = _rotate_intended_monthly(client=client, base_url=base_url,
+                account_id=str(account.get("id") or ""), capital=capital_override_usd,
+                state_path=monthly_state_path, reentry_path=reentry_block_path,
+                selected_symbols={p.ticker for p in picks}, entry_session=monthly_entry)
+            if rotation["status"] != "COMPLETE":
+                print(json.dumps({"monthly_rotation": rotation}))
+                return 77  # Known pending exit: no buys, no duplicate dispatch.
+            account = client.get_account()
+            positions = client.list_positions()
+            open_orders = client.list_orders(status="open", limit=100)
+        except Exception as exc:
+            _halt_intended_paper_entries(_paper_kill_state_dir(base_url, key_id), str(account.get("id") or ""), str(exc))
+            print(json.dumps({"error": "monthly_rotation_not_confirmed", "detail": str(exc)}))
+            return 9
     buying_power = float(account.get("buying_power") or account.get("cash") or 0.0)
     cash = float(account.get("cash") or 0.0)
     effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
+    if intended_paper and not offline_dry_run:
+        equity = _intended_finite_positive(account.get("equity"))
+        if equity is None:
+            print(json.dumps({"error": "intended_equity_not_confirmed"}))
+            return 8
+        effective_capital = min(equity, capital_override_usd) if capital_override_usd > 0 else equity
     current_positions = {str(p.get("symbol") or "").strip().upper(): p for p in positions if str(p.get("symbol") or "").strip()}
     pending_buy_orders: dict[str, list[dict[str, Any]]] = {}
     open_sell_orders: dict[str, list[dict[str, Any]]] = {}
@@ -2649,6 +2961,7 @@ def _main_unlocked() -> int:
         pick_age_days is not None
         and pick_age_days > max_pick_age_days
         and not allow_stale_picks
+        and not (intended_paper and not allow_new_entries)
     )
     if stale_guard_triggered and refreshed_recently:
         if current_cycle_picks and current_pick_age_days is not None and current_pick_age_days <= max_pick_age_days:
@@ -3184,8 +3497,25 @@ def _main_unlocked() -> int:
                     if qty <= 0:
                         raise RuntimeError("simple_stop requires qty sizing")
                     if intended_paper:
-                        bounded_notional = float(Decimal(str(notional)).quantize(Decimal("0.01"), rounding=ROUND_DOWN))
-                        entry_order = client.submit_market_buy(pick.ticker, bounded_notional)
+                        fresh_cash = _safe_float(client.get_account().get("cash"), -1)
+                        if not math.isfinite(fresh_cash) or fresh_cash < 0:
+                            raise IntendedPaperProtectionError("intended_cash_not_confirmed")
+                        bounded_notional = float(Decimal(str(min(notional, fresh_cash))).quantize(Decimal("0.01"), rounding=ROUND_DOWN))
+                        if bounded_notional < min_dollar_order:
+                            report["results"].append({"ticker": pick.ticker, "status": "skipped_cash_below_minimum"})
+                            return
+                        record = _submit_intended_reserved_entry(client=client, base_url=base_url,
+                            account_id=str(account.get("id") or ""), capital=capital_override_usd,
+                            reentry_path=reentry_block_path, state_path=protective_floor_state_path,
+                            state_dir=_paper_kill_state_dir(base_url, key_id), pick=pick,
+                            notional=bounded_notional, timeout_sec=broker_wait_fill_sec)
+                        report["results"].append({"ticker": pick.ticker, "action": "protected_market_buy",
+                            "entry_order_id": record["entry_order_id"], "entry_status": "terminal",
+                            "stop_order_id": record["accepted_order_id"], "notional": bounded_notional,
+                            "qty": _format_qty(record["qty"]), "filled_avg_price": record["entry_price"],
+                            "stop_price": record["accepted_stop_floor"], "stop_anchor": "actual_fill",
+                            "score_weight": score_weight})
+                        return
                     else:
                         entry_order = client.submit_market_buy_qty(pick.ticker, qty)  # type: ignore[union-attr]
                     if intended_paper:

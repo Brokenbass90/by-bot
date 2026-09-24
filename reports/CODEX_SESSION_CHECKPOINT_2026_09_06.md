@@ -2,6 +2,51 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 25 local / September 24 22:45 UTC: Alpaca monthly contour installed OFF**:
+- **READY_FOR_OWNER_ACTIVATION=TRUE, LIVE entries OFF.** Exact-account cap
+  $487.42, frozen gross .70, maximum weight .60, four positions. Current broker
+  account suffix f295c6 is flat; no broker writes, no money activation.
+- Installed immutable release `/opt/bybot-research/alpaca-intended-live/releases/73345c03fa823d82`;
+  app symlink `/opt/bybot-research/alpaca-intended-live/app`, runtime
+  `/root/by-bot/runtime/alpaca_intended_live`. Private binding `enabled=false`.
+  Source manifest SHA256 `73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2`.
+- **243 focused tests PASS on Mac and VPS Python 3.12.3; 58/58 hashes match.**
+  PAPER/LIVE fixtures prove Sep30-close → Oct1-open staging, stale owned sell
+  exactly once, retained floor/HWM preserved, new buy once, restart after lost
+  buy/stop response, partial fill protection and later DAY re-arm. Real future
+  month-end is NOT already observed; original real PAPER acceptance stays 7/7.
+- Durable entry/rotation intents use the existing re-entry/HWM journals and
+  stable broker client IDs. No new ledger/coordinator, strategy or sizing rules.
+  Sizing uses equity capped by the owner amount and available cash, never margin
+  buying power. Missing new data/calendar holds entries/rotation while maintaining
+  existing protection. Consumed pre-submit intents carry no ownership authority.
+- Two NEW native cron jobs are read-only: regular-cycle checks and bounded
+  month-end cache preparation (existing fetch utility, same 59-symbol universe).
+  Two fresh VPS read-only restarts preserve binding/state exactly; latest status
+  WAITING_FOR_MONTH_CLOSE. This VPS restart proof is flat/disabled, not a live fill.
+- OLD Alpaca cron/config and ATT1 are unchanged. NEW execution launcher rejects
+  active OLD cron/processes; NEW money cron count is zero. Single money profile
+  remains OLD until the OWNER performs the exclusive handoff. No duplicate
+  OLD/NEW dispatch is authorized. Amount is settled; no allocation question.
+- Owner activation is a concrete operational handoff: fresh exact flat truth;
+  retire ONLY old `alpaca_live_v38_manager` + `alpaca_protective_exit_only` cron
+  lines and wait for their processes; enable private binding and explicitly
+  switch NEW runner from --read-only to --send-orders. The assistant has NOT
+  performed these money actions. Monthly entry remains Oct1 only after selection.
+- Flat rollback: remove only the two NEW cron tags, retaining all evidence.
+  With exposure, retain the SAME journal/protection and halt new entries;
+  use exact proof-scoped kill if required. Never revert OLD over NEW holdings.
+- Critical review defects corrected and regression-tested; primary agent finished
+  bounded review after both child agents reached allowance limits. Do not claim
+  a completed independent final review. Receipt:
+  `reports/ALPACA_MONTHLY_LIVE_DEFAULT_OFF_2026_09_25.json`.
+- Latest owner scope: finish this checkpoint + commit/push only. No Factory,
+  research, equity backfill, SBR1 or ATT1 changes in this turn. Those remain the
+  subsequent queue, not work silently started here.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 24 07:20 UTC, owner specifies Alpaca balance**:
 - Owner requests use of the existing Alpaca balance for the canary. Fresh signed
   GET-only truth confirms **USD 487.42**, not EUR; account suffix `f295c6`,

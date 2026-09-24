@@ -53,7 +53,7 @@ def test_tiny_frozen_allocation_is_skipped_without_buy(tmp_path, monkeypatch, ca
     class Client:
         buy_calls = 0
         def __init__(self, *_args): pass
-        def get_account(self): return {"id": "acct-1", "buying_power": "100", "cash": "100"}
+        def get_account(self): return {"id": "acct-1", "buying_power": "100", "cash": "100", "equity": "100"}
         def list_positions(self): return []
         def list_orders(self, **_kwargs): return []
         def get_clock(self): return {"is_open": True}
