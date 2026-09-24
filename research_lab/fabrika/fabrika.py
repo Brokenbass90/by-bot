@@ -579,11 +579,17 @@ def otchet_dnya():
     lids = [it["id"] for it in d["ochered"] if it["sostoyanie"] in ("POSITIVE_LEAD", "CONFIRMED")]
     slomano = [it["id"] for it in d["ochered"] if it["sostoyanie"] == "FAILED_TECHNICAL"]
     nechego = not any(it["sostoyanie"] == "QUEUED" and it.get("begun") in BEGUNY for it in d["ochered"])
+    zhdut = sum(1 for it in d["ochered"] if it["sostoyanie"] in ("BLOCKED_DATA", "BLOCKED_ADAPTER",
+                                                                "CONFIRMATION_WAITING_DATA"))
+    # Пустая очередь при пунктах, ждущих данных, — это НЕ «кончились идеи».
+    # Требовать вмешательства каждый день по такому поводу значит приучить
+    # владельца не читать отчёт.
     prichiny = ([f"находка: {', '.join(lids)}"] if lids else []) + \
                ([f"упало технически: {', '.join(slomano)}"] if slomano else []) + \
-               (["очередь пуста — нужен новый пакет гипотез"] if nechego else [])
+               (["очередь пуста и ничто не ждёт данных — нужен новый пакет гипотез"]
+                if nechego and not zhdut else [])
     j = {"kogda": seychas().isoformat(timespec="seconds"), "za_sutki": dict(c), "proverok": len(vv),
-         "sostoyaniya": dict(sost), "poly": poly, "nahodki": lids,
+         "sostoyaniya": dict(sost), "poly": poly, "nahodki": lids, "zhdut_dannyh": zhdut,
          "trebuetsya_vmeshatelstvo": bool(prichiny), "prichiny": prichiny}
     OTCHET_JSON.write_text(json.dumps(j, ensure_ascii=False, indent=1))
     t = [f"# Отчёт за сутки — {seychas():%Y-%m-%d %H:%M} UTC", "",
@@ -598,6 +604,9 @@ def otchet_dnya():
          f"**ТРЕБУЕТСЯ ВМЕШАТЕЛЬСТВО: {'ДА' if prichiny else 'НЕТ'}**"]
     if prichiny:
         t += [""] + [f"- {x}" for x in prichiny]
+    if nechego and zhdut:
+        t += ["", f"Очередь пуста намеренно: {zhdut} пунктов ждут данных или переходника.",
+              "Что именно нужно — в `zadachi.json`."]
     OTCHET_MD.write_text("\n".join(t) + "\n")
     return j
 
