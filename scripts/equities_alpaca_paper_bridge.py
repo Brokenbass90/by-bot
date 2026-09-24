@@ -681,8 +681,9 @@ def _paper_kill_state_dir(base_url: str, key_id: str) -> Path:
 
 
 def paper_entry_halted(*, base_url: str, state_dir: Path) -> bool:
-    """Only a paper-account halt can suppress future monthly entries."""
-    if base_url != _PAPER_API_URL:
+    """Suppress intended PAPER or explicitly enabled intended LIVE entries after a durable halt."""
+    intended_live = base_url == "https://api.alpaca.markets" and _env_bool("ALPACA_INTENDED_LIVE", False)
+    if base_url != _PAPER_API_URL and not intended_live:
         return False
     try:
         state = json.loads(_paper_kill_state_path(state_dir).read_text(encoding="utf-8"))
@@ -696,14 +697,24 @@ def paper_entry_halted(*, base_url: str, state_dir: Path) -> bool:
 
 
 def _validated_paper_kill_scope(
-    *, proof: Any, client: Any, base_url: str
+    *, proof: Any, client: Any, base_url: str, intended_live: bool = False
 ) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
-    if base_url != _PAPER_API_URL:
+    if intended_live:
+        if base_url != "https://api.alpaca.markets":
+            raise PaperKillValidationError("intended_live_kill_requires_exact_live_endpoint")
+    elif base_url != _PAPER_API_URL:
         raise PaperKillValidationError("paper_kill_requires_exact_paper_endpoint")
     if not isinstance(proof, dict) or str(proof.get("reason") or "") not in _PAPER_KILL_REASONS:
         raise PaperKillValidationError("invalid_paper_kill_proof_reason")
     account = client.get_account()
     account_id = str(account.get("id") or "").strip()
+    if intended_live:
+        try:
+            _load_intended_live_binding(
+                base_url=base_url, account_id=account_id, require_enabled=True
+            )
+        except IntendedPaperProtectionError as exc:
+            raise PaperKillValidationError(f"intended_live_kill_binding_invalid:{exc}") from exc
     if not account_id or account_id != str(proof.get("account_id") or "").strip():
         raise PaperKillValidationError("paper_kill_account_mismatch")
     proof_rows = proof.get("positions")
@@ -744,15 +755,25 @@ def _validated_paper_kill_scope(
     return scope, positions, orders
 
 
-def run_paper_owned_kill(*, proof: Any, client: Any, base_url: str, apply: bool, state_dir: Path) -> dict[str, Any]:
+def run_paper_owned_kill(
+    *, proof: Any, client: Any, base_url: str, apply: bool, state_dir: Path,
+    intended_live: bool = False,
+) -> dict[str, Any]:
     """Validate an explicit paper-owned proof before any scoped exit action."""
-    scope, positions, orders = _validated_paper_kill_scope(proof=proof, client=client, base_url=base_url)
+    scope, positions, orders = _validated_paper_kill_scope(
+        proof=proof, client=client, base_url=base_url, intended_live=intended_live
+    )
     current_symbols = {str(p.get("symbol") or "").strip().upper() for p in positions if isinstance(p, dict)}
     present = sorted(set(scope) & current_symbols)
     receipt: dict[str, Any] = {"status": "dry_run_not_confirmed", "generated_at_utc": datetime.now(timezone.utc).isoformat(), "reason": str(proof["reason"]), "scope_symbols": sorted(scope), "present_symbols": present, "plan": [{"symbol": s, "action": "close_owned_position"} for s in present], "order_results": []}
     if not apply:
         return receipt
-    if _env("ALPACA_SEND_ORDERS") != "1" or _env("ALPACA_ALLOW_NEW_ENTRIES", "1") != "0" or _env("ALPACA_PAPER_KILL_ACK") != "PAPER_OWNED_EXITS_ONLY":
+    if _env("ALPACA_SEND_ORDERS") != "1" or _env("ALPACA_ALLOW_NEW_ENTRIES", "1") != "0":
+        raise PaperKillValidationError("paper_kill_apply_guard_not_satisfied")
+    if intended_live:
+        if _env("ALPACA_INTENDED_LIVE_KILL_ACK") != "INTENDED_OWNED_EXITS_ONLY":
+            raise PaperKillValidationError("intended_live_kill_ack_not_satisfied")
+    elif _env("ALPACA_PAPER_KILL_ACK") != "PAPER_OWNED_EXITS_ONLY":
         raise PaperKillValidationError("paper_kill_apply_guard_not_satisfied")
     _atomic_write_json(_paper_kill_state_path(state_dir), {"halted": True, "account_id": str(proof["account_id"]), "reason": str(proof["reason"]), "updated_at_utc": datetime.now(timezone.utc).isoformat()})
     clock = client.get_clock()
@@ -794,7 +815,9 @@ def run_paper_owned_kill(*, proof: Any, client: Any, base_url: str, apply: bool,
         receipt["order_results"].append({"order_id": order_id, "cancel_status": cancelled.get("status"), "confirmed_status": confirmed.get("status")})
         if str(confirmed.get("status") or "").lower() not in _TERMINAL_ORDER_STATUSES:
             raise PaperKillValidationError(f"paper_kill_cancel_not_terminal:{order_id}")
-    _, refreshed_positions, refreshed_orders = _validated_paper_kill_scope(proof=proof, client=client, base_url=base_url)
+    _, refreshed_positions, refreshed_orders = _validated_paper_kill_scope(
+        proof=proof, client=client, base_url=base_url, intended_live=intended_live
+    )
     refreshed_symbols = {str(p.get("symbol") or "").strip().upper() for p in refreshed_positions if isinstance(p, dict)}
     pending = {str(o.get("symbol") or "").strip().upper() for o in refreshed_orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() in scope and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES and str(o.get("side") or "").lower() in {"buy", "sell"}}
     if pending:
@@ -804,7 +827,9 @@ def run_paper_owned_kill(*, proof: Any, client: Any, base_url: str, apply: bool,
     for symbol in sorted(set(scope) & refreshed_symbols):
         close = client.close_position(symbol)
         receipt["order_results"].append({"symbol": symbol, "close_order_id": close.get("id"), "close_status": close.get("status")})
-    _, final_positions, final_orders = _validated_paper_kill_scope(proof=proof, client=client, base_url=base_url)
+    _, final_positions, final_orders = _validated_paper_kill_scope(
+        proof=proof, client=client, base_url=base_url, intended_live=intended_live
+    )
     final_symbols = {str(p.get("symbol") or "").strip().upper() for p in final_positions if isinstance(p, dict)}
     final_active = {str(o.get("symbol") or "").strip().upper() for o in final_orders if isinstance(o, dict) and str(o.get("symbol") or "").strip().upper() in scope and str(o.get("status") or "").lower() in _ACTIVE_ORDER_STATUSES}
     receipt["status"] = "confirmed_flat" if not (set(scope) & final_symbols) and not final_active else "not_confirmed"
@@ -1371,6 +1396,114 @@ class IntendedPaperProtectionError(RuntimeError):
 _INTENDED_PAPER_STRATEGY_ID = "ALPACA-BASELINE-26f7ff663dc98e87"
 
 
+def _load_intended_live_binding(
+    *,
+    base_url: str,
+    account_id: str | None = None,
+    capital: float | None = None,
+    require_enabled: bool = False,
+) -> dict[str, Any]:
+    """Load the explicit binding required for an intended LIVE sleeve."""
+    if str(base_url).rstrip("/") != "https://api.alpaca.markets":
+        raise IntendedPaperProtectionError("intended_live_binding_requires_exact_live_endpoint")
+    raw_path = _env("ALPACA_INTENDED_LIVE_BINDING_PATH")
+    if not raw_path:
+        raise IntendedPaperProtectionError("intended_live_binding_path_missing")
+    try:
+        binding = json.loads(Path(raw_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise IntendedPaperProtectionError("intended_live_binding_unreadable") from exc
+    if not isinstance(binding, dict):
+        raise IntendedPaperProtectionError("intended_live_binding_not_object")
+    if type(binding.get("schema_version")) is not int or binding["schema_version"] != 1:
+        raise IntendedPaperProtectionError("intended_live_binding_schema_version_invalid")
+    if binding.get("endpoint") != "https://api.alpaca.markets":
+        raise IntendedPaperProtectionError("intended_live_binding_endpoint_invalid")
+    if str(binding.get("strategy_id") or "") != _INTENDED_PAPER_STRATEGY_ID:
+        raise IntendedPaperProtectionError("intended_live_binding_strategy_id_invalid")
+    configured_account = binding.get("account_id")
+    if not isinstance(configured_account, str) or not configured_account.strip():
+        raise IntendedPaperProtectionError("intended_live_binding_account_id_missing")
+    configured_account_id = configured_account.strip()
+    enabled = binding.get("enabled")
+    if not isinstance(enabled, bool):
+        raise IntendedPaperProtectionError("intended_live_binding_enabled_invalid")
+
+    for field, expected in (("max_positions", 4), ("gross_exposure", 0.70), ("maximum_weight", 0.60)):
+        value = binding.get(field)
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)) or float(value) != expected:
+            raise IntendedPaperProtectionError(f"intended_live_binding_{field}_invalid")
+
+    if "capital_usd" not in binding:
+        raise IntendedPaperProtectionError("intended_live_binding_capital_missing")
+    configured_capital = binding["capital_usd"]
+    if configured_capital is None:
+        if enabled:
+            raise IntendedPaperProtectionError("intended_live_binding_enabled_capital_missing")
+    elif isinstance(configured_capital, bool) or not isinstance(configured_capital, (int, float)) or not math.isfinite(float(configured_capital)) or float(configured_capital) <= 0:
+        raise IntendedPaperProtectionError("intended_live_binding_capital_invalid")
+
+    if account_id is not None and str(account_id).strip() != configured_account_id:
+        raise IntendedPaperProtectionError("intended_live_binding_account_id_mismatch")
+    if capital is not None:
+        if isinstance(capital, bool):
+            raise IntendedPaperProtectionError("intended_live_binding_capital_mismatch")
+        try:
+            requested_capital = float(capital)
+        except (TypeError, ValueError) as exc:
+            raise IntendedPaperProtectionError("intended_live_binding_capital_mismatch") from exc
+        if not math.isfinite(requested_capital):
+            raise IntendedPaperProtectionError("intended_live_binding_capital_mismatch")
+        if configured_capital is None:
+            if enabled or requested_capital != 0:
+                raise IntendedPaperProtectionError("intended_live_binding_capital_mismatch")
+        elif requested_capital != float(configured_capital):
+            raise IntendedPaperProtectionError("intended_live_binding_capital_mismatch")
+
+    if require_enabled:
+        if not enabled:
+            raise IntendedPaperProtectionError("intended_live_binding_disabled")
+        if configured_capital is None:
+            raise IntendedPaperProtectionError("intended_live_binding_enabled_capital_missing")
+        if _env("ALPACA_INTENDED_LIVE_ACK") != "INTENDED_LIVE_CANARY":
+            raise IntendedPaperProtectionError("intended_live_binding_ack_missing")
+        errors = _live_order_guard_errors(
+            base_url=base_url,
+            send_orders=True,
+            capital_override_usd=float(configured_capital),
+        )
+        if errors:
+            raise IntendedPaperProtectionError("intended_live_binding_live_guard_failed:" + "; ".join(errors))
+    return binding
+
+
+def _intended_lifecycle_enabled(
+    base_url: str,
+    *,
+    require_enabled: bool = False,
+    account_id: str | None = None,
+    capital: float | None = None,
+) -> bool:
+    """Select the explicit intended PAPER or LIVE lifecycle mode, if any."""
+    intended_paper = _env_bool("ALPACA_INTENDED_PAPER", False)
+    intended_live = _env_bool("ALPACA_INTENDED_LIVE", False)
+    if intended_paper and intended_live:
+        raise IntendedPaperProtectionError("intended_lifecycle_modes_mutually_exclusive")
+    if intended_paper:
+        if base_url != _PAPER_API_URL:
+            raise IntendedPaperProtectionError("intended_paper_requires_exact_paper_endpoint")
+        return True
+    if intended_live:
+        _load_intended_live_binding(
+            base_url=base_url,
+            account_id=account_id,
+            capital=capital,
+            require_enabled=require_enabled,
+        )
+        return True
+    return False
+
+
 def _intended_finite_positive(value: Any) -> float | None:
     parsed = _safe_float(value, 0.0)
     return parsed if math.isfinite(parsed) and parsed > 0 else None
@@ -1574,9 +1707,18 @@ def _complete_intended_paper_simple_stop(
     stop_order: dict[str, Any],
     symbol: str,
     requested_stop: float,
+    intended_live: bool = False,
+    capital: float | None = None,
 ) -> dict[str, Any]:
     """Bind a terminal intended-paper fill to its broker-confirmed fixed floor."""
-    if base_url != _PAPER_API_URL:
+    if intended_live:
+        _load_intended_live_binding(
+            base_url=base_url,
+            account_id=account_id,
+            capital=capital,
+            require_enabled=True,
+        )
+    elif base_url != _PAPER_API_URL:
         raise IntendedPaperProtectionError("intended_paper_requires_exact_paper_endpoint")
     account_id = str(account_id or "").strip()
     if not account_id:
@@ -2220,14 +2362,17 @@ def _main_unlocked() -> int:
     ap = argparse.ArgumentParser(description="Dry-run-first Alpaca paper bridge for monthly equities picks")
     ap.add_argument("--picks-csv", default=_env("ALPACA_PICKS_CSV", ""))
     ap.add_argument("--month", default=_env("ALPACA_PICKS_MONTH", ""))
-    ap.add_argument("--paper-kill-owned", metavar="PROOF_JSON")
+    kill_group = ap.add_mutually_exclusive_group()
+    kill_group.add_argument("--paper-kill-owned", metavar="PROOF_JSON")
+    kill_group.add_argument("--intended-live-kill-owned", metavar="PROOF_JSON")
     ap.add_argument("--apply-kill", action="store_true")
     args = ap.parse_args()
 
     # This deliberately runs before reading picks: an explicit owner proof is
     # the only authority for its bounded paper-only exit scope.
-    if args.paper_kill_owned:
-        proof_path = Path(args.paper_kill_owned)
+    if args.paper_kill_owned or args.intended_live_kill_owned:
+        intended_live_kill = bool(args.intended_live_kill_owned)
+        proof_path = Path(args.intended_live_kill_owned or args.paper_kill_owned)
         receipt_path = proof_path.parent / "paper_kill_receipt.json"
         base_url = _env("ALPACA_BASE_URL", _PAPER_API_URL)
         state_dir = _paper_kill_state_dir(base_url, _env("ALPACA_API_KEY_ID"))
@@ -2241,6 +2386,7 @@ def _main_unlocked() -> int:
                 base_url=base_url,
                 apply=bool(args.apply_kill),
                 state_dir=state_dir,
+                intended_live=intended_live_kill,
             )
         except (OSError, json.JSONDecodeError, PaperKillValidationError, RuntimeError) as exc:
             receipt = {"status": "rejected", "error": str(exc), "not_confirmed": True}
@@ -2353,11 +2499,12 @@ def _main_unlocked() -> int:
     key_id = _env("ALPACA_API_KEY_ID")
     secret_key = _env("ALPACA_API_SECRET_KEY")
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
-    intended_paper = _env_bool("ALPACA_INTENDED_PAPER", False)
-    if intended_paper and base_url != _PAPER_API_URL:
-        print("error=intended_paper_requires_exact_paper_endpoint", file=sys.stderr)
-        return 8
     try:
+        intended_paper = _intended_lifecycle_enabled(
+            base_url,
+            require_enabled=send_orders,
+            capital=capital_override_usd,
+        )
         intended_frozen_weights = _intended_frozen_weights(picks) if intended_paper else {}
     except IntendedPaperProtectionError as exc:
         print(f"error={exc}", file=sys.stderr)
@@ -2407,6 +2554,17 @@ def _main_unlocked() -> int:
     else:
         client = AlpacaClient(base_url, key_id, secret_key)
         account = client.get_account()
+        if intended_paper:
+            try:
+                _intended_lifecycle_enabled(
+                    base_url,
+                    require_enabled=send_orders,
+                    account_id=str(account.get("id") or ""),
+                    capital=capital_override_usd,
+                )
+            except IntendedPaperProtectionError as exc:
+                print(f"error={exc}", file=sys.stderr)
+                return 8
         positions = client.list_positions()
         open_orders = client.list_orders(status="open", limit=100)
         # 2026-06-02: pre-flight market clock check.
@@ -3083,6 +3241,8 @@ def _main_unlocked() -> int:
                             stop_order=stop_order,
                             symbol=pick.ticker,
                             requested_stop=stop_price,
+                            intended_live=_env_bool("ALPACA_INTENDED_LIVE", False),
+                            capital=capital_override_usd,
                         )
                     report["results"].append(
                         {

@@ -2,6 +2,36 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 24, LIVE binding candidate verified default-off**:
+- Owner requested LIVE and one-month observation. Exact canary capital remains
+  unanswered; never infer $487.42 balance, old $500 or PAPER $1000 as allocation.
+- Shared intended driver/bridge/protection now support explicit LIVE mode with
+  exact account/profile/capital binding, disabled by default. PAPER kill remains
+  PAPER-only; separate LIVE proof-scoped exit path requires its own binding/ack.
+- Same lifecycle fixture covers PAPER and LIVE: fill-relative floor, fresh runner,
+  ratchet, DAY re-arm, terminal stop and 21-day block. **188 focused tests PASS
+  on Mac and VPS Python 3.12.3; 49/49 candidate files verified.**
+- Candidate only: `/tmp/alpaca-live-binding-20260924-v1`. Not installed as a
+  production service; no cron enabled. Authenticated GET-only candidate preflight
+  confirmed LIVE suffix `f295c6`, $487.42 cash, 0 positions/0 orders. Binding
+  `enabled=false`, `capital_usd=null`; old LIVE config hashes/cron unchanged.
+- Frozen strategy is MONTHLY: last-session close selection → next-session open.
+  Broker calendar confirms Sep30 → Oct1. Sep21 PAPER was an acceptance probe;
+  its mid-month picks must not become today's LIVE strategy entry. Existing code
+  now rejects an invalid monthly schedule before any LIVE dispatch.
+- **Remaining software work:** connect existing frozen preparation/data refresh
+  to month-end; implement owned stale rotation/finality without resetting
+  retained holdings' HWM/floor, then default-off production/exclusive handoff.
+  No new strategy/architecture/research. Existing uncertain pre-persist ownership
+  still halts; do not claim durable pre-submit order intent or full monthly auto-run.
+- Receipt: `reports/ALPACA_LIVE_BINDING_VERIFICATION_2026_09_24.json`.
+  LIVE_ACTIVATION_READY=FALSE. PAPER 7/7 remains complete. ATT1 unchanged.
+- Bounded cheap agent used for bridge/tests; actual runtime verified
+  `gpt-5.6-terra` / `medium`. Root reviewed account/capital boundaries and target
+  evidence. Next: finish monthly operational wiring while owner amount is pending.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 23, owner requests LIVE preparation; account truth**:
 - Owner wants Alpaca launch, then crypto short/long/range candidates, Gold,
   then Factory improvements. Exact tiny-LIVE capital remains unspecified;

@@ -7,6 +7,15 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 
 ## P0: Alpaca first, then ATT1; no strategy research
 
+September 24 update: shared LIVE binding candidate is default-off and verified
+(188 focused tests on Mac and target Python, authenticated GET-only account truth).
+Remaining Alpaca implementation: frozen monthly preparation/refresh → owned
+month-turn rotation/finality → exclusive default-off deployment. Amount pending.
+Next frozen signal/entry sessions, confirmed by broker: Sep30 close / Oct1 open;
+a mid-month first buy would deviate from the intended monthly strategy. One month
+of canary observation measures operation and realized outcomes, not proven edge.
+See `ALPACA_LIVE_BINDING_VERIFICATION_2026_09_24.json`. No LIVE activation today.
+
 September 23 owner direction: launch approved-size Alpaca after LIVE binding;
 then crypto with independently qualified short, long and range sleeves, then
 Gold, then Factory improvements. ATT1 short remains the first crypto delivery;

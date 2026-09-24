@@ -168,9 +168,9 @@ def write_intended_bridge_picks_csv(report: dict[str, Any], path: Path) -> None:
 
 
 def build_intended_bridge_env(
-    report: dict[str, Any], *, picks_csv: Path, capital: float
+    report: dict[str, Any], *, picks_csv: Path, capital: float, live: bool = False
 ) -> dict[str, str]:
-    """Frozen PAPER environment; this preparation mode never enables orders."""
+    """Frozen endpoint-specific environment; preparation never enables orders."""
     # Do not return inherited credentials; callers can source this generated
     # override file only in a separately approved broker-runtime step.
     env: dict[str, str] = {}
@@ -202,6 +202,10 @@ def build_intended_bridge_env(
         "MONTHLY_HWM_STATE_PATH": str(picks_csv.parent / "monthly_hwm.json"),
         "MONTHLY_REENTRY_BLOCK_STATE_PATH": str(picks_csv.parent / "monthly_reentry_block.json"),
     })
+    if live:
+        env.update({"ALPACA_BASE_URL": "https://api.alpaca.markets",
+                    "ALPACA_API_BASE_URL": "https://api.alpaca.markets",
+                    "ALPACA_INTENDED_PAPER": "0", "ALPACA_INTENDED_LIVE": "1"})
     return env
 
 
@@ -438,10 +442,12 @@ def _intended_emergency_exits(client: Any, env: dict[str, str], runtime_dir: Pat
         return {"status": "NO_UNPROTECTED_PROVEN_OWNED_POSITION"}
     proof_path = runtime_dir / "emergency_owned_proof.json"
     _atomic_write_private_json(proof_path, {"account_id": account_id, "reason": reason, "positions": scope})
+    live = env.get("ALPACA_INTENDED_LIVE") == "1"
     kill_env = {**env, "ALPACA_SEND_ORDERS": "1", "ALPACA_ALLOW_NEW_ENTRIES": "0",
-                "ALPACA_PAPER_KILL_ACK": "PAPER_OWNED_EXITS_ONLY"}
+                ("ALPACA_INTENDED_LIVE_KILL_ACK" if live else "ALPACA_PAPER_KILL_ACK"):
+                ("INTENDED_OWNED_EXITS_ONLY" if live else "PAPER_OWNED_EXITS_ONLY")}
     result = subprocess.run([sys.executable, str(ROOT / "scripts/equities_alpaca_paper_bridge.py"),
-        "--paper-kill-owned", str(proof_path), "--apply-kill"], cwd=ROOT, env=kill_env,
+        "--intended-live-kill-owned" if live else "--paper-kill-owned", str(proof_path), "--apply-kill"], cwd=ROOT, env=kill_env,
         check=False, capture_output=True, text=True, timeout=240)
     return {"returncode": result.returncode, "receipt_path": str(runtime_dir / "paper_kill_receipt.json"),
             "scope": [row["symbol"] for row in scope], "stdout": result.stdout, "stderr": result.stderr}
@@ -465,8 +471,8 @@ def _intended_missed_session(client: Any, last: datetime, now: datetime) -> bool
 
 
 def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
-                       client: Any = None) -> int:
-    """Run one PAPER acceptance cycle using the existing bridge and ratchet."""
+                       client: Any = None, live: bool = False) -> int:
+    """Run one bound intended cycle using the existing bridge and ratchet."""
     import fcntl
     from zoneinfo import ZoneInfo
     from scripts import equities_alpaca_paper_bridge as bridge
@@ -475,8 +481,8 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
     receipt_path = runtime_dir / "latest_intended_run.json"
     receipt: dict[str, Any] = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "phase": "paper_operational_acceptance_not_monthly_strategy_evidence",
-        "money_authority": False, "paper_orders_enabled": send_orders,
+        "phase": "live_monthly_canary" if live else "paper_operational_acceptance_not_monthly_strategy_evidence",
+        "money_authority": False, "paper_orders_enabled": send_orders and not live,
     }
     lock = (runtime_dir / ".runner.lock").open("a")
     account: dict[str, Any] = {}
@@ -491,11 +497,16 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
         if previous.get("last_regular_success_at_utc"):
             receipt["last_regular_success_at_utc"] = previous["last_regular_success_at_utc"]
         base = os.getenv("ALPACA_BASE_URL", "").rstrip("/")
-        if base != bridge._PAPER_API_URL:
+        binding = None
+        if live:
+            binding = bridge._load_intended_live_binding(base_url=base, capital=capital, require_enabled=send_orders)
+            if binding.get("selector_source_hashes") != _frozen_source_hashes():
+                raise ValueError("intended_live_source_hash_mismatch")
+        elif base != bridge._PAPER_API_URL:
             raise ValueError("intended_runner_requires_exact_paper")
         report = json.loads((runtime_dir / "latest_selection.json").read_text())
         if (report.get("mode") != "intended_prepare_only"
-            or report.get("paper_capital_usd") != capital
+            or report.get("capital_usd" if live else "paper_capital_usd") != capital
             or report.get("target_gross_exposure") != .70
             or report.get("maximum_weight") != .60 or report.get("max_positions") != 4
             or report.get("selector_source_hashes") != _frozen_source_hashes()):
@@ -516,6 +527,13 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
             raise ValueError("foreign_ownership_invalid")
         client = client or bridge.AlpacaClient(base, os.environ["ALPACA_API_KEY_ID"], os.environ["ALPACA_API_SECRET_KEY"])
         account = client.get_account()
+        if live:
+            fresh_binding = bridge._load_intended_live_binding(base_url=base,
+                account_id=str(account.get("id") or ""), capital=capital, require_enabled=send_orders)
+            if fresh_binding != binding:
+                raise ValueError("intended_live_binding_changed")
+            receipt["money_authority"] = bool(send_orders)
+            receipt["monthly_schedule"] = validate_intended_live_schedule(client, report)
         if account.get("id") != ownership.get("account_id"):
             raise ValueError("paper_account_identity_mismatch")
         if account.get("trading_blocked") or account.get("account_blocked"):
@@ -526,7 +544,7 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
         if len(orders) >= 100:
             raise ValueError("broker_orders_snapshot_incomplete")
         env = os.environ.copy()
-        env.update(build_intended_bridge_env(report, picks_csv=picks, capital=capital))
+        env.update(build_intended_bridge_env(report, picks_csv=picks, capital=capital, live=live))
         state_path = Path(env["ALPACA_PROTECTIVE_EXIT_HWM_PATH"])
         state, error = bridge._load_protective_floor_state(state_path)
         if error not in {"", "state_missing"}:
@@ -543,7 +561,7 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
                         "owned_positions": sorted({p["symbol"] for p in positions} & set(state)),
                         "next_open": clock.get("next_open"), "entry_session": report["entry_session"]})
         if not send_orders or not clock.get("is_open"):
-            receipt["status"] = "WAITING_FOR_REGULAR_SESSION" if send_orders else "PAPER_READ_ONLY_READY"
+            receipt["status"] = "WAITING_FOR_REGULAR_SESSION" if send_orders else ("LIVE_READ_ONLY_READY" if live else "PAPER_READ_ONLY_READY")
             _atomic_write_private_json(receipt_path, receipt)
             return 0
         # Explicit one-session broker acceptance launch, never daily strategy reselection.
@@ -586,15 +604,15 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
             if result.returncode:
                 receipt["emergency"] = _intended_emergency_exits(client, env, runtime_dir, str(account["id"]))
                 raise RuntimeError(f"intended_stage_failed:{index}:{result.returncode}")
-        receipt["status"] = "PAPER_CYCLE_COMPLETE"
+        receipt["status"] = "LIVE_CYCLE_COMPLETE" if live else "PAPER_CYCLE_COMPLETE"
         receipt["last_regular_success_at_utc"] = str(clock["timestamp"])
         _atomic_write_private_json(receipt_path, receipt)
         return 0
     except Exception as exc:
-        if send_orders and account.get("id") and os.getenv("ALPACA_BASE_URL", "").rstrip("/") == bridge._PAPER_API_URL:
+        if send_orders and account.get("id") and (base == bridge._PAPER_API_URL or (live and base == "https://api.alpaca.markets")):
             try:
                 bridge._halt_intended_paper_entries(
-                    bridge._paper_kill_state_dir(bridge._PAPER_API_URL, os.environ["ALPACA_API_KEY_ID"]),
+                    bridge._paper_kill_state_dir(base, os.environ["ALPACA_API_KEY_ID"]),
                     str(account["id"]), str(exc))
                 if send_orders and clock.get("is_open") and env and "emergency" not in receipt:
                     receipt["emergency"] = _intended_emergency_exits(client, env, runtime_dir, str(account["id"]))
@@ -605,6 +623,88 @@ def run_intended_cycle(runtime_dir: Path, *, capital: float, send_orders: bool,
         return 9
     finally:
         lock.close()
+
+
+def validate_intended_live_schedule(client: Any, report: dict[str, Any]) -> dict[str, Any]:
+    """Check the frozen month-end/next-open rule against the broker calendar."""
+    import calendar
+    signal = date.fromisoformat(str(report["signal_session"]))
+    entry = date.fromisoformat(str(report["entry_session"]))
+    next_month = (signal.replace(day=28) + timedelta(days=4)).replace(day=1)
+    if entry.year != next_month.year or entry.month != next_month.month:
+        raise ValueError("intended_live_requires_monthly_schedule")
+    start = signal.replace(day=1)
+    end = entry.replace(day=calendar.monthrange(entry.year, entry.month)[1])
+    rows = client._request("GET", f"/v2/calendar?start={start.isoformat()}&end={end.isoformat()}")
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("intended_monthly_calendar_missing")
+    sessions = [date.fromisoformat(str(row["date"])) for row in rows]
+    if len(set(sessions)) != len(sessions) or any(d < start or d > end for d in sessions):
+        raise ValueError("intended_monthly_calendar_invalid")
+    prior = [d for d in sessions if (d.year, d.month) == (signal.year, signal.month)]
+    following = [d for d in sessions if (d.year, d.month) == (entry.year, entry.month)]
+    if not prior or not following or signal != max(prior) or entry != min(following):
+        raise ValueError("intended_live_requires_monthly_schedule")
+    return {"signal_session": signal.isoformat(), "entry_session": entry.isoformat(),
+            "calendar_sha256": hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest()}
+
+
+def preflight_intended_live(runtime_dir: Path, *, client: Any = None) -> int:
+    """Validate initial LIVE account binding with GETs only; never dispatch orders."""
+    from scripts import equities_alpaca_paper_bridge as bridge
+    receipt: dict[str, Any] = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "money_authority": False, "broker_writes": 0, "activation_ready": False,
+        "execution_binding_complete": False,
+    }
+    try:
+        base = os.getenv("ALPACA_BASE_URL", "").rstrip("/")
+        binding = bridge._load_intended_live_binding(base_url=base)
+        if binding.get("selector_source_hashes") != _frozen_source_hashes():
+            raise ValueError("intended_live_source_hash_mismatch")
+        key = os.environ.get("ALPACA_API_KEY_ID", "")
+        secret = os.environ.get("ALPACA_API_SECRET_KEY", "")
+        if not key or not secret:
+            raise ValueError("intended_live_credentials_missing")
+        client = client or bridge.AlpacaClient(base, key, secret)
+        account = client.get_account()
+        if binding != bridge._load_intended_live_binding(base_url=base, account_id=str(account.get("id") or "")):
+            raise ValueError("intended_live_binding_changed_during_preflight")
+        if (account.get("status") != "ACTIVE" or account.get("currency") != "USD"
+            or account.get("trading_blocked") or account.get("account_blocked")):
+            raise ValueError("intended_live_account_not_eligible")
+        cash = bridge._intended_finite_positive(account.get("cash"))
+        if cash is None:
+            raise ValueError("intended_live_cash_not_confirmed")
+        if binding["capital_usd"] is not None and float(binding["capital_usd"]) > cash:
+            raise ValueError("intended_live_capital_exceeds_cash")
+        clock = client.get_clock()
+        positions = client.list_positions()
+        orders = client.list_orders(status="open", limit=100)
+        if not isinstance(positions, list) or not isinstance(orders, list) or len(orders) >= 100:
+            raise ValueError("intended_live_truth_incomplete")
+        # Initial binding cannot quietly adopt an OLD lifecycle or pending order.
+        if positions or orders:
+            raise ValueError("intended_live_initial_binding_requires_flat_account")
+        binding_bytes = Path(os.environ["ALPACA_INTENDED_LIVE_BINDING_PATH"]).read_bytes()
+        if json.loads(binding_bytes) != binding:
+            raise ValueError("intended_live_binding_changed_during_preflight")
+        receipt.update({
+            "status": "LIVE_ACCOUNT_BOUND_READ_ONLY", "endpoint": base,
+            "account_id": account["id"], "cash_usd": cash,
+            "capital_usd": binding["capital_usd"], "binding_enabled": binding["enabled"],
+            "positions_count": len(positions), "open_orders_count": len(orders),
+            "market_open": clock.get("is_open"), "next_open": clock.get("next_open"),
+            "strategy_id": binding["strategy_id"],
+            "selector_source_hashes": binding["selector_source_hashes"],
+            "binding_sha256": hashlib.sha256(binding_bytes).hexdigest(),
+        })
+        _atomic_write_private_json(runtime_dir / "live_binding_preflight.json", receipt)
+        return 0
+    except Exception as exc:
+        receipt.update({"status": "NOT_CONFIRMED", "error": f"{type(exc).__name__}:{exc}"})
+        _atomic_write_private_json(runtime_dir / "live_binding_preflight.json", receipt)
+        return 9
 
 
 def main() -> int:
@@ -620,6 +720,8 @@ def main() -> int:
     ap.add_argument("--runtime-dir", default="")
     ap.add_argument("--send-orders", action="store_true")
     ap.add_argument("--preserve-only", action="store_true", help="legacy PAPER protection with new entries and stale rotation disabled")
+    ap.add_argument("--preflight-intended-live", action="store_true", help="GET-only initial LIVE account binding; cannot submit orders")
+    ap.add_argument("--run-intended-live", action="store_true", help="run explicitly account-bound frozen LIVE lifecycle; disabled without binding approval")
     ap.add_argument("--run-intended", action="store_true", help="run frozen one-session PAPER acceptance and ongoing protection")
     ap.add_argument(
         "--prepare-intended", action="store_true",
@@ -634,9 +736,19 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    if args.run_intended:
-        runtime_dir = Path(args.runtime_dir or "runtime/alpaca_intended_paper").resolve()
-        result = run_intended_cycle(runtime_dir, capital=float(args.capital), send_orders=bool(args.send_orders))
+    if args.preflight_intended_live:
+        if args.send_orders or args.run_intended or args.run_intended_live or args.prepare_intended or args.preserve_only:
+            print(json.dumps({"error": "live_preflight_rejects_order_or_execution_flags"}))
+            return 2
+        runtime_dir = Path(args.runtime_dir or "runtime/alpaca_intended_live").resolve()
+        return preflight_intended_live(runtime_dir)
+
+    if args.run_intended_live and (args.run_intended or args.prepare_intended or args.preserve_only):
+        print(json.dumps({"error": "conflicting_intended_execution_modes"}))
+        return 2
+    if args.run_intended or args.run_intended_live:
+        runtime_dir = Path(args.runtime_dir or ("runtime/alpaca_intended_live" if args.run_intended_live else "runtime/alpaca_intended_paper")).resolve()
+        result = run_intended_cycle(runtime_dir, capital=float(args.capital), send_orders=bool(args.send_orders), live=bool(args.run_intended_live))
         print(json.dumps({"intended_runner_returncode": result, "receipt": str(runtime_dir / "latest_intended_run.json")}))
         return result
 
@@ -672,6 +784,7 @@ def main() -> int:
             print(json.dumps({"error": str(exc), "cache_dir": str(cache_dir)}))
             return 3
         report["paper_capital_usd"] = float(args.capital)
+        report["capital_usd"] = float(args.capital)
         runtime_dir.mkdir(parents=True, exist_ok=True)
         picks_csv = runtime_dir / "current_cycle_picks.csv"
         report_path = runtime_dir / "latest_selection.json"

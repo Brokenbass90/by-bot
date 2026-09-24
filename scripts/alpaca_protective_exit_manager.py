@@ -30,6 +30,8 @@ from scripts.equities_alpaca_paper_bridge import (  # noqa: E402
     _acquire_account_writer_lock,
     _alpaca_account_lock_path,
     _remaining_sell_order_qty,
+    _intended_lifecycle_enabled,
+    IntendedPaperProtectionError,
 )
 
 
@@ -309,9 +311,12 @@ def _main_unlocked() -> int:
     if base_url not in {LIVE_ALPACA_URL, PAPER_ALPACA_URL}:
         print("error=invalid_alpaca_endpoint", file=sys.stderr)
         return 4
-    intended_paper = _env_bool("ALPACA_INTENDED_PAPER", False)
-    if intended_paper and base_url != PAPER_ALPACA_URL:
-        print("error=intended_manager_requires_paper", file=sys.stderr)
+    apply_requested = bool(args.apply or _env_bool("ALPACA_PROTECTIVE_EXIT_APPLY", False))
+    try:
+        intended_paper = _intended_lifecycle_enabled(base_url, require_enabled=apply_requested,
+            capital=_f(os.getenv("ALPACA_CAPITAL_OVERRIDE_USD"), 0))
+    except IntendedPaperProtectionError as exc:
+        print(f"error={exc}", file=sys.stderr)
         return 4
     if not key or not secret:
         print("error=missing_alpaca_credentials", file=sys.stderr)
@@ -346,6 +351,12 @@ def _main_unlocked() -> int:
 
     client = AlpacaClient(base_url, key, secret)
     account = client.get_account()
+    try:
+        _intended_lifecycle_enabled(base_url, require_enabled=apply_requested,
+            account_id=str(account.get("id") or ""), capital=_f(os.getenv("ALPACA_CAPITAL_OVERRIDE_USD"), 0))
+    except IntendedPaperProtectionError as exc:
+        print(f"error={exc}", file=sys.stderr)
+        return 4
     clock = client.get_clock()
     positions = client.list_positions()
     orders = client.list_orders(status="open", limit=200)
