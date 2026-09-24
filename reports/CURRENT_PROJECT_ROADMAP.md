@@ -7,6 +7,12 @@ Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
 
 ## P0: Alpaca first, then ATT1; no strategy research
 
+September 24 owner amount update: current balance requested for Alpaca canary.
+Authenticated broker currency is USD: **$487.42**, not EUR. Local exact-account
+configuration prepared disabled; frozen gross remains 0.70 (~$341.19 initial
+allocation). Amount is no longer pending. Software monthly lifecycle/exclusive
+handoff remains unfinished; no LIVE activation or production write occurred.
+
 September 24 update: shared LIVE binding candidate is default-off and verified
 (188 focused tests on Mac and target Python, authenticated GET-only account truth).
 Remaining Alpaca implementation: frozen monthly preparation/refresh → owned

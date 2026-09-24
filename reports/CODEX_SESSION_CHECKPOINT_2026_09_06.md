@@ -2,6 +2,27 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 24 07:20 UTC, owner specifies Alpaca balance**:
+- Owner requests use of the existing Alpaca balance for the canary. Fresh signed
+  GET-only truth confirms **USD 487.42**, not EUR; account suffix `f295c6`,
+  ACTIVE, zero positions/open orders. The amount question is answered: record
+  the current $487.42 as requested capital, not an unlimited future-balance rule.
+- Prepared local private `owner_requested_binding.default_off.json` with exact
+  account/profile and capital $487.42, `enabled=false`. Validator accepts the
+  identity/capital and rejects execution as disabled. Frozen gross 0.70 implies
+  initial target allocation about $341.19, with four slots and weight cap 0.60;
+  owner saying "all" does not change frozen exposure or strategy rules.
+- No broker writes, VPS configuration changes, activation, new orders, or existing
+  LIVE/ATT1 changes. Amount is no longer a blocker; remaining software work below
+  is unchanged. LIVE_ACTIVATION_READY=FALSE. Do not issue a usable activation
+  instruction until the monthly lifecycle and exclusive handoff are complete.
+- Automated real-money trading must be enabled by the owner directly; the
+  assistant may prepare/review code, disabled config and read-only checks.
+- Private fresh truth: `.private/alpaca_live_binding_20260923/owner_capital_truth_20260924.json`;
+  SHA256 `5c54527dd01a6c679504d169ddfa872f096407c2ef31946c2cd7ffa320a013c2`.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **September 24, LIVE binding candidate verified default-off**:
 - Owner requested LIVE and one-month observation. Exact canary capital remains
   unanswered; never infer $487.42 balance, old $500 or PAPER $1000 as allocation.
