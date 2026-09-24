@@ -145,13 +145,19 @@ def fanding_za(sym, ot_ms, do_ms):
 
 def otkryt(s, den, syms, C):
     """решение на закрытии дня den: лонг верхних 20% по обгону BTC, шорт нижних"""
+    data = dt.datetime.utcfromtimestamp(den / 1000).strftime("%Y-%m-%d")
     if den <= den_ms(s["nachalo_ms"]):
-        return None                                   # день начался до старта тени
+        pervyy = dt.datetime.utcfromtimestamp((den_ms(s["nachalo_ms"]) + DEN) / 1000).strftime("%Y-%m-%d")
+        print(f"  день {data} начался до старта тени — не засчитывается. "
+              f"Первый засчитываемый день: {pervyy}, решение по нему появится на следующие сутки.", flush=True)
+        return None
     if any(z["den"] == den for z in zhurnal()):
-        return None                                   # уже есть решение на этот день
+        print(f"  решение за {data} уже есть", flush=True)
+        return None
     ran = den - OKNO * DEN
     btc = C.get("BTCUSDT", {})
     if den not in btc or ran not in btc:
+        print(f"  {data}: нет закрытия BTC на день или на день минус {OKNO} — день пропущен", flush=True)
         return None
     r_btc = btc[den] / btc[ran] - 1
     ocenki = []
@@ -162,6 +168,7 @@ def otkryt(s, den, syms, C):
         if den in r and ran in r and r[ran] > 0:
             ocenki.append((r[den] / r[ran] - 1 - r_btc, x, r[den]))
     if len(ocenki) < MIN_CHLENOV:
+        print(f"  {data}: членов с полной историей {len(ocenki)}, нужно {MIN_CHLENOV} — день пропущен", flush=True)
         return None
     ocenki.sort()
     k = max(1, int(DOLYA * len(ocenki)))
@@ -172,7 +179,7 @@ def otkryt(s, den, syms, C):
              "vse": [{"sym": x, "cena": c} for _, x, c in ocenki],
              "zakryto": False, "zapisano": seychas_ms()}
     dopisat(zapis)
-    print(f"  решение {zapis['data']}: лонг {k}, шорт {k}, членов {len(ocenki)}")
+    print(f"  решение {zapis['data']}: лонг {k}, шорт {k}, членов {len(ocenki)}", flush=True)
     return zapis
 
 
@@ -251,7 +258,7 @@ def krug():
         perezapisat(zs)
     otkr = sum(1 for z in zs if not z.get("zakryto"))
     zak = sum(1 for z in zs if z.get("zakryto"))
-    print(f"  состав вселенной от {den_v}; открытых решений {otkr}, закрытых {zak} из {VOROTA}")
+    print(f"  состав вселенной от {den_v}; открытых решений {otkr}, закрытых {zak} из {VOROTA}", flush=True)
 
 
 def otchet():
