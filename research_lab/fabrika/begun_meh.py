@@ -96,7 +96,7 @@ def main():
             o, h, l, c, v = (np.ascontiguousarray(x[:k_]) for x in (o, h, l, c, v))
         if len(ts) < PROGREV + 300:
             continue
-        L, S, atr_ = M["fn"](o, h, l, c, v)
+        L, S, atr_ = M["fn"](o, h, l, c, v, ts) if M.get("nuzhen_ts") else M["fn"](o, h, l, c, v)
         sig = S if short else L
         month = ts // (30 * 86400000); idx = np.arange(len(ts))
         block = -1

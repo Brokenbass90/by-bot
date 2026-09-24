@@ -134,6 +134,84 @@ def momentum_30d(o, h, l, c, v):
     return ok & (pr <= 0) & (r720 > 0) & (r120 > 0), ok & (pr >= 0) & (r720 < 0) & (r120 < 0), a
 
 
+# ── пакет «золото»: механизмы структуры торгового дня, а не формы цены ──
+# Предрегистрации: PREREG_ZOLOTO_*_2026_09_24.md. Этим механизмам нужны
+# отметки времени баров, поэтому у них в описании стоит nuzhen_ts=True.
+def _chas(ts):
+    return (ts // 3600000) % 24
+
+
+def _den(ts):
+    return ts // 86400000
+
+
+def london_proboy(o, h, l, c, v, ts):
+    """ЛИКВИДНОСТЬ СЕССИИ. Азия (00:00-07:00 UTC) торгуется тонко и рисует
+    узкий диапазон; Лондон приносит объём. Ставка: выход за азиатский
+    диапазон в лондонские часы продолжается."""
+    a, _ = atr(h, l, c, 20)
+    n = len(c); L = np.zeros(n, bool); S = np.zeros(n, bool)
+    ch = _chas(ts); dn = _den(ts)
+    vrh = np.full(n, np.nan); niz = np.full(n, np.nan)
+    tek_d = -1; vh = -np.inf; vl = np.inf
+    for i in range(n):
+        if dn[i] != tek_d:
+            tek_d = dn[i]; vh = -np.inf; vl = np.inf
+        if ch[i] < 7:
+            vh = max(vh, h[i]); vl = min(vl, l[i])
+        elif np.isfinite(vh) and vh > -np.inf and vl < np.inf:
+            vrh[i] = vh; niz[i] = vl
+    okno = (ch >= 7) & (ch < 12) & np.isfinite(vrh)
+    L[okno] = c[okno] > vrh[okno]
+    S[okno] = c[okno] < niz[okno]
+    return L, S, a
+
+
+def svip_urovnya(o, h, l, c, v, ts):
+    """ОХОТА ЗА СТОПАМИ. Цена выносит вчерашний экстремум и закрывается
+    обратно внутри дня. Ставка обратная пробою: пробой был ложным."""
+    a, _ = atr(h, l, c, 20)
+    n = len(c); dn = _den(ts)
+    pdh = np.full(n, np.nan); pdl = np.full(n, np.nan)
+    tek_d = dn[0]; vh = -np.inf; vl = np.inf; ph = np.nan; pl = np.nan
+    for i in range(n):
+        if dn[i] != tek_d:
+            ph, pl = vh, vl; tek_d = dn[i]; vh = -np.inf; vl = np.inf
+        pdh[i] = ph; pdl[i] = pl
+        vh = max(vh, h[i]); vl = min(vl, l[i])
+    ok = np.isfinite(pdh) & np.isfinite(pdl)
+    S = ok & (h > pdh) & (c < pdh)
+    L = ok & (l < pdl) & (c > pdl)
+    return L, S, a
+
+
+def gep_vyhodnyh(o, h, l, c, v, ts):
+    """ПЕРЕОЦЕНКА ЗА ВЫХОДНЫЕ. Первый бар после перерыва больше 12 часов
+    открывается с разрывом. Ставка: разрыв закрывается, вход против него."""
+    a, _ = atr(h, l, c, 20)
+    n = len(c); L = np.zeros(n, bool); S = np.zeros(n, bool)
+    razryv = np.concatenate([[False], np.diff(ts) > 12 * 3600000])
+    for i in np.flatnonzero(razryv):
+        if i == 0 or not (a[i - 1] > 0):
+            continue
+        gep = o[i] - c[i - 1]
+        if gep > 0.3 * a[i - 1]:
+            S[i] = True
+        elif gep < -0.3 * a[i - 1]:
+            L[i] = True
+    return L, S, a
+
+
+def nochnoy_dreyf(o, h, l, c, v, ts):
+    """ПРЕМИЯ ЗА ВРЕМЯ СУТОК. Безусловный вход в один и тот же час: после
+    закрытия Нью-Йорка. Условий по цене нет вовсе — проверяется только
+    время. Контроль случайным часом того же месяца отвечает ровно на это."""
+    a, _ = atr(h, l, c, 20)
+    ch = _chas(ts)
+    v21 = ch == 21
+    return v21.copy(), v21.copy(), a
+
+
 # stop — в ATR, rr1/rr2 — цели в R, f1 — доля на первой цели, hold — часов
 MEHANIZMY = {
     "PROBOY_55":        dict(fn=proboy_55, semya="breakout", stop=2.0, rr1=2.0, rr2=4.0, f1=0.5, hold=168,
@@ -150,6 +228,19 @@ MEHANIZMY = {
                              opisanie="объём больше 5 медиан, закрытие у экстремума бара — продолжение"),
     "MOMENTUM_30D":     dict(fn=momentum_30d, semya="ts_momentum", stop=3.0, rr1=2.0, rr2=5.0, f1=0.5, hold=336,
                              opisanie="доходность 30 дней меняет знак, 5 дней в ту же сторону"),
+    # пакет «золото»: структура торгового дня
+    "LONDON_PROBOY":    dict(fn=london_proboy, semya="sessiya_proboy", stop=1.5, rr1=1.5, rr2=3.0, f1=0.5, hold=12,
+                             nuzhen_ts=True,
+                             opisanie="выход за диапазон азиатской сессии в лондонские часы 07-12 UTC"),
+    "SVIP_UROVNYA":     dict(fn=svip_urovnya, semya="lozhnyy_proboy", stop=1.0, rr1=1.5, rr2=3.0, f1=0.5, hold=24,
+                             nuzhen_ts=True,
+                             opisanie="вынос вчерашнего экстремума с закрытием обратно внутрь — ставка против пробоя"),
+    "GEP_VYHODNYH":     dict(fn=gep_vyhodnyh, semya="gep_pereocenka", stop=1.5, rr1=1.0, rr2=2.0, f1=0.5, hold=48,
+                             nuzhen_ts=True,
+                             opisanie="разрыв после перерыва больше 12 часов, вход против разрыва"),
+    "NOCHNOY_DREYF":    dict(fn=nochnoy_dreyf, semya="premiya_za_chas", stop=2.0, rr1=1.0, rr2=2.0, f1=0.5, hold=10,
+                             nuzhen_ts=True,
+                             opisanie="безусловный вход в 21:00 UTC, держать 10 часов — премия за время суток"),
 }
 
 # рынки: где лежат данные, издержки на сторону, окна

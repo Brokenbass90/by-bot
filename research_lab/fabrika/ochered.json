@@ -285,7 +285,7 @@
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "breakout",
    "param": {
@@ -299,14 +299,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:23:57+00:00",
-   "start": "2026-09-21T07:24:01+00:00"
+   "start": "2026-09-21T07:24:01+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "SZHATIE_BB__gold__long",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "volatility_expansion",
    "param": {
@@ -320,14 +322,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:23:57+00:00",
-   "start": "2026-09-21T07:23:59+00:00"
+   "start": "2026-09-21T07:23:59+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "SZHATIE_BB__gold__short",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "volatility_expansion",
    "param": {
@@ -341,14 +345,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:23:57+00:00",
-   "start": "2026-09-21T07:24:47+00:00"
+   "start": "2026-09-21T07:24:47+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "OTKAT_V_TRENDE__gold__long",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "trend_pullback",
    "param": {
@@ -362,14 +368,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:23:57+00:00",
-   "start": "2026-09-21T07:24:00+00:00"
+   "start": "2026-09-21T07:24:00+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "OTKAT_V_TRENDE__gold__short",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "trend_pullback",
    "param": {
@@ -383,7 +391,9 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:23:57+00:00",
-   "start": "2026-09-21T07:24:48+00:00"
+   "start": "2026-09-21T07:24:48+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "PROBOY_55__crypto137__long",
@@ -558,7 +568,7 @@
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "mean_reversion",
    "param": {
@@ -572,14 +582,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:39+00:00",
-   "start": "2026-09-21T07:25:39+00:00"
+   "start": "2026-09-21T07:25:39+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "VOZVRAT_K_SREDNEY__gold__short",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "mean_reversion",
    "param": {
@@ -593,14 +605,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:39+00:00",
-   "start": "2026-09-21T07:25:40+00:00"
+   "start": "2026-09-21T07:25:40+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "KAPITULYACIYA__gold__long",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "liquidation_reversal",
    "param": {
@@ -614,14 +628,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:39+00:00",
-   "start": "2026-09-21T07:25:39+00:00"
+   "start": "2026-09-21T07:25:39+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "KAPITULYACIYA__gold__short",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "liquidation_reversal",
    "param": {
@@ -635,14 +651,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:39+00:00",
-   "start": "2026-09-21T07:25:47+00:00"
+   "start": "2026-09-21T07:25:47+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "OBEM_IMPULS__gold__long",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "flow_continuation",
    "param": {
@@ -656,14 +674,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:44+00:00",
-   "start": "2026-09-21T07:25:44+00:00"
+   "start": "2026-09-21T07:25:44+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "OBEM_IMPULS__gold__short",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "flow_continuation",
    "param": {
@@ -677,14 +697,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:44+00:00",
-   "start": "2026-09-21T07:25:52+00:00"
+   "start": "2026-09-21T07:25:52+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "MOMENTUM_30D__gold__long",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "ts_momentum",
    "param": {
@@ -698,14 +720,16 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:44+00:00",
-   "start": "2026-09-21T07:25:44+00:00"
+   "start": "2026-09-21T07:25:44+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "MOMENTUM_30D__gold__short",
    "tip": "gipoteza",
    "begun": "meh",
    "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
-   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
    "semya": "ts_momentum",
    "param": {
@@ -719,7 +743,9 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-21T07:25:44+00:00",
-   "start": "2026-09-21T07:25:53+00:00"
+   "start": "2026-09-21T07:25:53+00:00",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "popravka": "2026-09-24: INCONCLUSIVE_LOW_N — это не вердикт, а отсутствие вердикта. Пункт переведён в ожидание данных, чтобы фабрика перезапустила его сама, когда папка data/zoloto_h1 изменится. Пороги предрегистрации не менялись."
   },
   {
    "id": "KAPITULYACIYA__crypto137__long",
@@ -1812,6 +1838,220 @@
    },
    "porozhdeno": "2026-09-24T08:11:13+00:00",
    "start": "2026-09-24T08:11:27+00:00"
+  },
+  {
+   "id": "LONDON_PROBOY__gold__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "sessiya_proboy",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_LONDON_PROBOY_2026_09_24.md",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "gold",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "LONDON_PROBOY__gold__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "sessiya_proboy",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_LONDON_PROBOY_2026_09_24.md",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "gold",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "SVIP_UROVNYA__gold__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "lozhnyy_proboy",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_SVIP_UROVNYA_2026_09_24.md",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "gold",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "SVIP_UROVNYA__gold__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "lozhnyy_proboy",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_SVIP_UROVNYA_2026_09_24.md",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "gold",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "GEP_VYHODNYH__gold__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "gep_pereocenka",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_GEP_VYHODNYH_2026_09_24.md",
+   "param": {
+    "meh": "GEP_VYHODNYH",
+    "rynok": "gold",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "GEP_VYHODNYH__gold__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "gep_pereocenka",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_GEP_VYHODNYH_2026_09_24.md",
+   "param": {
+    "meh": "GEP_VYHODNYH",
+    "rynok": "gold",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "NOCHNOY_DREYF__gold__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "premiya_za_chas",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_NOCHNOY_DREYF_2026_09_24.md",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "gold",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "NOCHNOY_DREYF__gold__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold",
+   "semya": "premiya_za_chas",
+   "slot": null,
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
+   "prereg": "research_lab/fabrika/PREREG_ZOLOTO_NOCHNOY_DREYF_2026_09_24.md",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "gold",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
+  },
+  {
+   "id": "P_AKC_OSTATOCHNYY_MOMENT",
+   "tip": "gipoteza",
+   "begun": "portfel",
+   "rynok": "akcii_pit",
+   "semya": "ostatochnyy_moment",
+   "slot": "akcii",
+   "sostoyanie": "BLOCKED_DATA",
+   "blocker": "нужна глубокая история Alpaca (с 2016 вместо 2024-08-12): сейчас 349 дней обнаружения, из них две трети уходят на прогрев. Задание: research_lab/ZADANIE_CODEX_ISTORIYA_AKCIY_2026_09_23.md",
+   "prereg": "research_lab/fabrika/PREREG_AKC_OSTATOCHNYY_MOMENT_2026_09_24.md",
+   "param": {
+    "signal": "AKC_OSTATOCHNYY_MOMENT",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_t": 2.5,
+    "min_neff": 20,
+    "min_pokrytie": 0.8
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T15:39:31+00:00"
   }
  ]
 }

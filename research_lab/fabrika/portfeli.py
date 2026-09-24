@@ -586,6 +586,48 @@ def ostatochnyy_moment(C, DV, ctx):
     return out
 
 
+# ── независимая проверка остаточного моментума на акциях ─────────────
+# Ждёт глубокой истории Alpaca. Правила заморожены 24.09.2026 до прогона.
+P7 = "research_lab/fabrika/PREREG_AKC_OSTATOCHNYY_MOMENT_2026_09_24.md"
+
+
+def _indeks_ryad(C, M, n):
+    """равновзвешенный индекс вселенной за n дней: ряд средних лог-доходностей"""
+    if C.shape[0] < n + 1:
+        return None
+    lr = np.diff(np.log(C[-n - 1:]), axis=0)
+    el = M[-1] & np.isfinite(lr).all(axis=0)
+    if el.sum() < 10:
+        return None
+    return lr[:, el].mean(axis=1)
+
+
+def akc_ostatochnyy_moment(C, DV, ctx):
+    """То же, что KR_OSTATOCHNYY_MOMENT, но эталон — равновзвешенный индекс
+    вселенной акций, а не BTC. Бета считается за 60 дней, из 20-дневной
+    доходности вычитается бета × доходность индекса за те же 20 дней."""
+    M = ctx["M"]
+    ind = _indeks_ryad(C, M, 60)
+    if ind is None or C.shape[0] < 61:
+        return np.full(C.shape[1], np.nan)
+    vx = float(np.var(ind, ddof=1))
+    r20 = _ret(C, 20)
+    ind20 = _indeks_ryad(C, M, 20)
+    if ind20 is None or vx <= 0:
+        return np.full(C.shape[1], np.nan)
+    r20i = float(np.exp(ind20.sum()) - 1)
+    lr = np.diff(np.log(C[-61:]), axis=0)
+    el = M[-1] & np.isfinite(r20) & np.isfinite(lr).all(axis=0) & _likvid(C, DV)
+    out = np.full(C.shape[1], np.nan)
+    if el.sum() < 10:
+        return out
+    idx = np.flatnonzero(el)
+    sr = lr[:, idx] - lr[:, idx].mean(axis=0)
+    cov = (sr * (ind - ind.mean())[:, None]).sum(axis=0) / (len(ind) - 1)
+    out[idx] = r20[idx] - (cov / vx) * r20i
+    return out
+
+
 # napravlenie: ls — лонг верх / шорт низ; long — только лонг верхней доли
 SIGNALY = {
     "AKC_MOM_6_1":      dict(fn=mom_6_1, rynok="akcii_pit", napr="ls", kv=0.1, H=5, semya="xs_momentum"),
@@ -632,4 +674,6 @@ SIGNALY = {
                                semya="asimmetriya_vol", ctx=True, prereg=P6_ASI, slot="rost"),
     "KR_OSTATOCHNYY_MOMENT": dict(fn=ostatochnyy_moment, rynok="kripto_pit50", napr="long", kv=0.2, H=5,
                                   semya="ostatochnyy_moment", ctx=True, prereg=P6_OST, slot="rost"),
+    "AKC_OSTATOCHNYY_MOMENT": dict(fn=akc_ostatochnyy_moment, rynok="akcii_pit", napr="long", kv=0.2, H=5,
+                                   semya="ostatochnyy_moment", ctx=True, prereg=P7, slot="akcii"),
 }
