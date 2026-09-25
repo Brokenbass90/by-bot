@@ -1,0 +1,49 @@
+{
+  "snapshot": {
+    "captured_at_utc": "2026-09-24T23:08:13Z",
+    "source": "/opt/bybot-research/sbr1-zero-risk-shadow/runtime/sbr1_zero_risk_shadow/events.jsonl",
+    "prefix_bytes": 56257863,
+    "partial_tail_bytes_not_copied": 0,
+    "sha256": "c5aa3c483ef25ff9776e7161b74c1da85a5120b1a032c6d3b759fa44679d28d5",
+    "service": "Result=timeout\nNRestarts=0\nExecMainStartTimestamp=Thu 2026-09-24 23:05:24 UTC\nExecMainStatus=15\nId=sbr1-zero-risk-shadow.service\nActiveState=failed\n\nResult=success\nId=sbr1-zero-risk-shadow.timer\nActiveState=active\n"
+  },
+  "journal_integrity": "PASS_HASH_CHAIN_IDS_UNIQUE_CLAIMS",
+  "journal_rows": 40768,
+  "event_types": {
+    "regime_bootstrap": 1,
+    "evaluation": 39197,
+    "regime_update": 759,
+    "evaluation_fetch_error": 62,
+    "evaluation_unavailable": 749
+  },
+  "admitted_decisions": 0,
+  "fills": 0,
+  "completed_trades": 0,
+  "N_completed": 0,
+  "status_by_evidence_role": {
+    "MISSING": {
+      "no_signal": 93,
+      "missed_decision_window": 3
+    },
+    "major8_existing_lifecycle": {
+      "no_signal": 3161,
+      "missed_decision_window": 2696
+    },
+    "preparity_raw_not_final_n": {
+      "missed_decision_window": 13937,
+      "raw_no_signal": 19256,
+      "raw_signal_observed": 51
+    }
+  },
+  "reasons": {
+    "MISSING": 22561,
+    "production_or_regime_decision_clock_missed": 16636
+  },
+  "observation_first_utc": "2026-08-24T08:02:54.768000+00:00",
+  "observation_last_utc": "2026-09-24T23:00:46.377000+00:00",
+  "final_journal_hash": "f49da7ac011d9a5d2beb6043d1ec57622ecc6b7a378bab5edad27284748082e6",
+  "money_authority_claims": 0,
+  "data_errors_or_unavailable": 811,
+  "verdict": "NO_COMPLETED_TRADE_EVIDENCE_NOT_A_STRATEGY_VERDICT",
+  "vps_mutated": false
+}

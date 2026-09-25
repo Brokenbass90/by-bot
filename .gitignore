@@ -85,3 +85,6 @@ _to_delete/
 
 # Local ATT1 verification environment; no credentials.
 .venv-att1-mac/
+
+# Large local research archive; tracked manifest and hashes are under reports/.
+/research_lab/data/alpaca_pit_daily_deep_20260925/

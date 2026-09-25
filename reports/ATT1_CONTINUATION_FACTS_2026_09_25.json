@@ -1,0 +1,52 @@
+{
+  "as_of_ms": 1790317015145,
+  "read_only": true,
+  "public_epoch": "att1-public-lifecycle-20260913-continuity",
+  "public_heartbeat_age_seconds": 1.106,
+  "old_heartbeat_age_seconds": 6.144999980926514,
+  "sessions": 27,
+  "clean_filled_terminal": 0,
+  "recovery_gap_sessions": 18,
+  "scanned_symbols_at_snapshot": 28,
+  "full_coverage_proven": false,
+  "units": {
+    "bybot.service": "MainPID=389925\nNRestarts=0\nExecMainStartTimestamp=Wed 2026-09-23 14:16:05 UTC\nActiveState=active\n",
+    "att1-lifecycle-zero-risk-v2.service": "MainPID=59094\nNRestarts=0\nExecMainStartTimestamp=Tue 2026-09-22 06:54:55 UTC\nActiveState=active\n"
+  },
+  "old_source_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+  "capture_tail": [
+    {
+      "deadline_seconds": 43200,
+      "kind": "START",
+      "max_dumps": 24,
+      "nonblocking": true,
+      "read_only": true,
+      "ts_ms": 1789381688298
+    },
+    {
+      "dumps": 0,
+      "kind": "DONE",
+      "ts_ms": 1789424889028
+    }
+  ],
+  "broker_or_service_writes": 0,
+  "next_production_task": "Existing NEW binding dispatch/fills/protection/cost finality remains unfinished; no canary approval. Public clean cohort gate still 0.",
+  "gap_reasons": {
+    "public polling continuity gap": 16,
+    "rejected future/stale public book": 2
+  },
+  "event_counts": {
+    "START": 27,
+    "ENTRY_ACK": 27,
+    "ENTRY_FILL": 30,
+    "PROTECTION_ACK": 30,
+    "ENTRY_FINAL": 27,
+    "RECOVERY_GAP": 18,
+    "EXIT_ACK": 21,
+    "EXIT_FILL": 28,
+    "EXIT_FINAL": 21,
+    "FUNDING_COVERAGE": 18
+  },
+  "local_existing_binding_tests_passed": 80,
+  "service_restart_counters_are_since_current_start_only": true
+}

@@ -2,6 +2,48 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 25 local: equity history + SBR1 facts + owner procedure; LIVE remains OFF**:
+- Owner accepted installed Alpaca monthly checkpoint. No frozen Alpaca source,
+  runtime/cron/binding, capital/risk or broker positions changed in this cycle.
+- Deep equity snapshot obtained on Mac: 961/962 validated files, 2,032,108 daily
+  bars; 618 symbols reach 2016, 671 reach 2018 or earlier. Date range requested
+  2016-01-01 → completed 2026-09-23. Actual source Alpaca SIP, split-only,
+  `asof=-`, same legacy bar encoding. Massive older history HTTP403 plan limit.
+- Original accepted archive and its 962-symbol membership/reference are unchanged.
+  New local dataset `research_lab/data/alpaca_pit_daily_deep_20260925`; tracked
+  manifest/quality and exact Factory handoff: `reports/EQUITY_FACTORY_HANDOFF_2026_09_25.md`.
+  Full fixed-universe acceptance remains BLOCKED_DATA: SPCX positive volume with
+  zero VWAP (2024-11-20); XTKG 23 bars after frozen delisting boundary. Do not
+  silently drop symbols, fabricate VWAP, change prereg or execute confirmation.
+  Original selection/survivorship bias remains; deeper history is not full PIT.
+- Download complete; no heavy Mac process needs to remain awake. Raw receipts
+  retained privately; cache requests now bound to exact request identity. Ten
+  downloader tests PASS; all accepted archive hashes/schema/time windows checked.
+- SBR1 VPS read-only snapshot: 40,768 journal rows; 39,197 evaluation rows;
+  admissions/fills/completed trades = **0/0/0**. 51 raw observations are NOT N.
+  Existing chain/claim validator PASS; 16,636 missed-window evaluations and
+  811 unavailable/fetch-error rows mean integrity is not full market coverage.
+  `reports/SBR1_SHADOW_FACTS_2026_09_25.json`. Strategy/service unchanged.
+- Exact owner-only Alpaca handoff, enable, verify, durable entry halt, scoped kill
+  and flat rollback prepared in `reports/ALPACA_OWNER_ACTIVATION_2026_09_30.md`.
+  Six shell blocks + embedded Python syntax checked, NONE executed. Source release
+  remains 74b7214; initial cap $487.42/gross .70 and Sep30→Oct1 timing unchanged.
+- Resumed ATT1 with fresh VPS facts: 27 public sessions, **0 clean terminal**,
+  18 RECOVERY_GAP (16 polling continuity, 2 rejected stale/future books), no new
+  timed OLD stack (capture completed with zero dumps). Fresh heartbeat public
+  1.1s / OLD 6.1s. Both active/NRestarts=0, but starts changed to Sep22/Sep23;
+  do NOT claim uninterrupted uptime since Sep13. Snapshot scan 28/51 is partial,
+  not proof of complete hourly coverage. Full receipt:
+  `reports/ATT1_CONTINUATION_FACTS_2026_09_25.json`.
+- 80 existing ATT1 binding/accounting/identity tests PASS. NEW production binding
+  remains unfinished; no code change or new canary-readiness claim. Next bounded
+  production work: existing default-off dispatch → fill/protection reconciliation
+  → actual fee/funding finality. Public continuity gate still fails; do not wait
+  passively for cohort growth or weaken 2s/reset dirty evidence. No NEW money.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 25 local / September 24 22:45 UTC: Alpaca monthly contour installed OFF**:
 - **READY_FOR_OWNER_ACTIVATION=TRUE, LIVE entries OFF.** Exact-account cap
   $487.42, frozen gross .70, maximum weight .60, four positions. Current broker
