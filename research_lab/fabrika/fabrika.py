@@ -373,8 +373,16 @@ def sinhronizirovat(d, V):
             if bylo is None:
                 it["otpechatok_pri_postanovke"] = otpechatok_dannyh(it.get("rynok"))
             elif bylo != otpechatok_dannyh(it.get("rynok")):
-                it["sostoyanie"] = "QUEUED"
-                it["dannye_prishli"] = seychas().isoformat(timespec="seconds")
+                # Данные ИЗМЕНИЛИСЬ — это ещё не значит, что они ГОДНЫ.
+                # Пункт с пометкой trebuet_priyomki ждёт человека: у акций
+                # вселенная может оказаться списком выживших, у золота окна
+                # надо переобъявить до прогона. Автовзвод здесь потратил бы
+                # замороженный тест на непроверенных данных.
+                if it.get("trebuet_priyomki"):
+                    it["dannye_izmenilis"] = seychas().isoformat(timespec="seconds")
+                else:
+                    it["sostoyanie"] = "QUEUED"
+                    it["dannye_prishli"] = seychas().isoformat(timespec="seconds")
                 continue
         v = V.get(it["id"])
         if (v and it["sostoyanie"] in ("BLOCKED_DATA", "CONFIRMATION_WAITING_DATA") and v.get("dannye")
@@ -761,6 +769,10 @@ def otchet_dnya():
             nuzhno.append(f"владелец: тень {it['id']} молчит {it['ten_molchit_chasov']:.0f} ч — поднять заново")
     if slomano:
         nuzhno.append(f"разобрать технический сбой: {', '.join(slomano)}")
+    priyomka = [it["id"] for it in d["ochered"]
+                if it.get("trebuet_priyomki") and it.get("dannye_izmenilis")]
+    if priyomka:
+        nuzhno.append("данные изменились, нужна ПРИЁМКА до прогона: " + ", ".join(priyomka))
     if zhdut_dannyh:
         nuzhno.append(f"нужны данные для {len(zhdut_dannyh)} пунктов — что именно, в zadachi.json")
     if ochered_pusta and not zhdut_dannyh and not zhdut_perehodnika and not teni:
@@ -787,6 +799,7 @@ def otchet_dnya():
          "ochered_pusta": ochered_pusta, "pochemu_pusto": pochemu_pusto,
          "za_sutki": dict(c), "sostoyaniya": dict(sost), "poly": poly,
          "owner_action": nuzhno, "trebuetsya_vmeshatelstvo": bool(nuzhno),
+         "zhdut_priyomki": priyomka,
          "potolok": POTOLOK}
     OTCHET_JSON.write_text(json.dumps(j, ensure_ascii=False, indent=1))
 
@@ -945,6 +958,17 @@ def samoproverka():
         okt = dt_["ochered"][0]["sostoyanie"] == "QUEUED"
     except Exception:
         okt = False
+    okpr = True
+    try:
+        dp_ = {"ochered": [dict(id="TP", tip="gipoteza", begun="portfel", rynok="akcii_pit", semya="proverka",
+                               sostoyanie="BLOCKED_DATA", otpechatok_pri_postanovke="0:0",
+                               trebuet_priyomki=True)]}
+        sinhronizirovat(dp_, {})
+        okpr = dp_["ochered"][0]["sostoyanie"] == "BLOCKED_DATA" and dp_["ochered"][0].get("dannye_izmenilis")
+    except Exception:
+        okpr = False
+    bad += not okpr
+    print(f"  {'PASS' if okpr else 'FAIL'}  {'данные годны? ждёт приёмки, не прогона':<34}{'ok' if okpr else 'ВЗВЁЛСЯ САМ'}")
     bad += not okt
     print(f"  {'PASS' if okt else 'FAIL'}  {'данные пришли → пункт сам в очередь':<34}{'ok' if okt else 'не взвёлся'}")
 
