@@ -2,6 +2,49 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 28 08:14 UTC: measured ATT1 public blocking call fixed and deployed**:
+- Owner prioritizes crypto now; no new LAB/Factory work. Existing OLD LIVE and
+  Alpaca money authority/configuration remain unchanged. NEW money remains OFF.
+- Proven public bottleneck: scan journal reached 14,232 rows / 8,554,273 bytes.
+  Each append replayed the entire chain on the market-observation thread. Target
+  read-only timing: 6.465s wall / 1.937s CPU, already beyond strict 2s gate;
+  full 28-session state replay additionally cost 1.463s wall. Probe was outside
+  production's 30% CPU quota, so not a promise of production latency.
+- Changed only existing public driver: same scan events/IDs/hash-chain contract,
+  bounded per-closed-H1 files `scans/<close_ms>.jsonl`; no historical scan reads
+  on the hot path. State cache invalidates/replays only changed session journals,
+  with before/after signatures and unchanged full replay state/hash oracle.
+  No strategy, coordinator, ledger core, market gate or API rate changes.
+- **162 focused tests PASS local/target Python 3.12.3** (local 161 + added rollover
+  regression separately). Target historical receipts for all 28 sessions identical.
+  Target persistence benchmark max scan append 0.02635s; all 51 appends 0.646s;
+  changed-session state 0.088s. These are isolated tests, NOT new prospective trades.
+- Deployed existing `att1-lifecycle-zero-risk-v2.service`, new epoch/runtime
+  `att1-public-lifecycle-20260928-bounded-scan` /
+  `/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-bounded-scan`.
+  Driver commit `1cc9536517d56d2eeaefb52f1da55b932900067e`, SHA256
+  `d04807260b7bc265e9c9e0bac16b1a20d1d05a18467ad2911e9511ce39d97f8c`.
+  Only driver + public config replaced after flat check; 17 unchanged core/profile
+  pins verified. Seeded closed-H1 cache only; prior raw evidence untouched.
+- Postcheck at ~80s: PID 2314187 active, NRestarts=0, heartbeat 1.09s,
+  no poll errors, zero broker/order calls. OLD PID 2150553 unchanged; Alpaca binding
+  and cron unchanged. All 208 retired evidence files match saved hashes. Prior
+  cohort stays **28 sessions / 19 gaps / 0 clean terminal**, not relabeled/reset.
+- Deployment occurred after the H1 scan window. New epoch **0 sessions / 0 scan**
+  at postcheck: full 51/51 prospective coverage is PENDING next normal H1 window
+  (09:00 UTC + existing 20–300s window). Do NOT claim live continuity/cohort PASS.
+- Read-only cheap agent `gpt-5.6-luna / medium` runtime verified; bounded diff
+  review and existing NEW binding map only. NEW dispatch/fills/protection/cost
+  transport wiring remains incomplete. ACK/flat alone never release reservation.
+  Next: verify real H1 coverage; continue default-off existing NEW binding, then
+  2–3 clean filled terminal lifecycles + fresh exact OLD risk → canary dossier.
+- Receipt: `reports/ATT1_PUBLIC_RUNTIME_FIX_2026_09_28.json`; raw pre/post evidence
+  and rollback receipts in `.private/att1_runtime_20260928` and VPS
+  `/opt/bybot-research/att1-lifecycle-zero-risk-v2/rollback-bounded-scan-20260928`.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 25 local: equity history + SBR1 facts + owner procedure; LIVE remains OFF**:
 - Owner accepted installed Alpaca monthly checkpoint. No frozen Alpaca source,
   runtime/cron/binding, capital/risk or broker positions changed in this cycle.

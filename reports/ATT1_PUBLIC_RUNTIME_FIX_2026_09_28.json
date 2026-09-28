@@ -1,0 +1,88 @@
+{
+  "status": "DEPLOYED_PUBLIC_ONLY",
+  "source_commit": "1cc9536517d56d2eeaefb52f1da55b932900067e",
+  "as_of_ms": 1790583277546,
+  "driver_sha256": "d04807260b7bc265e9c9e0bac16b1a20d1d05a18467ad2911e9511ce39d97f8c",
+  "config_sha256": "a97f1b737dbcd359a8bcc84fb14bb7d146dc8a45a421c617f2be7bb206f7fac5",
+  "epoch": "att1-public-lifecycle-20260928-bounded-scan",
+  "runtime": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-bounded-scan",
+  "old_runtime": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260913-continuity",
+  "retired_evidence_files": 208,
+  "old_pid_unchanged": "2150553",
+  "alpaca_binding_and_cron_unchanged": true,
+  "broker_calls": 0,
+  "order_calls": 0,
+  "target_verification": {
+    "python": "3.12.3",
+    "focused_tests_pass": true,
+    "verified_files": 12,
+    "unchanged_core_profile_pins": 17,
+    "historical_session_receipts_identical": true,
+    "sessions_replayed": 28,
+    "changed_session_state_seconds": 0.08802510425448418,
+    "max_scan_append_seconds": 0.02634914219379425,
+    "total_51_scan_appends_seconds": 0.6459663957357407,
+    "scan_evidence": "synthetic persistence benchmark, NOT prospective scan/trades",
+    "money_changes": false
+  },
+  "unit": "MainPID=2314187\nNRestarts=0\nActiveState=active\n",
+  "before_benchmark": [
+    {
+      "read_only": true,
+      "unthrottled_probe": true,
+      "measurements": [
+        {
+          "sessions": 1,
+          "wall_seconds": 0.08969217538833618,
+          "cpu_seconds": 0.029300912999999984
+        },
+        {
+          "sessions": 28,
+          "wall_seconds": 1.463344007730484,
+          "cpu_seconds": 0.526589828
+        }
+      ],
+      "note": "Production unit CPUQuota=30%; this read-only probe is not running in that cgroup."
+    },
+    {
+      "scan_rows": 14232,
+      "scan_bytes": 8554273,
+      "scan_validation_wall_seconds": 6.4651075676083565,
+      "scan_validation_cpu_seconds": 1.9366563149999998
+    }
+  ],
+  "postcheck": {
+    "as_of_ms": 1790583358300,
+    "public_heartbeat_age_s": 1.0855858325958252,
+    "public_uptime_s": 80.121,
+    "unit": "MainPID=2314187\nNRestarts=0\nActiveState=active\n",
+    "epoch_id": "att1-public-lifecycle-20260928-bounded-scan",
+    "session_count": 0,
+    "scanned_symbols": 0,
+    "full_51_prospective_proven": false,
+    "poll_errors": {},
+    "old_pid_unchanged": true,
+    "retired_evidence_unchanged": true,
+    "broker_calls": 0,
+    "order_calls": 0
+  },
+  "retired_evidence_manifest_private": ".private/att1_runtime_20260928/deployment_receipt.json",
+  "local_tests": 162,
+  "target_tests": 162,
+  "independent_review": {
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "runtime_verified": true,
+    "scope": "bounded read-only binding map and runtime diff review; root critical review"
+  },
+  "public_full_coverage_pending": true,
+  "clean_prospective_terminals_new_epoch": 0,
+  "historical_dirty_cohort": {
+    "sessions": 28,
+    "clean_terminals": 0,
+    "gap_sessions": 19
+  },
+  "new_money_enabled": false,
+  "new_broker_binding_complete": false,
+  "next_action": "After next normal H1 window verify 51/51 scan and continuity; continue default-off NEW dispatch/fill/protection/accounting binding."
+}
