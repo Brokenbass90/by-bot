@@ -2,6 +2,53 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 28 18:16 UTC: public timing diagnostics deployed; offline NEW recovery binding advanced**:
+- Current owner P0 only ATT1. OLD LIVE PID2150553, Alpaca config/cron, risk and
+  positions unchanged. No real orders. No weakening of recovery/integrity gates.
+- Retired public epoch `20260928-bounded-scan`: **10 complete H1 cycles × 51/51**,
+  2 filled simulations (TRX/MNT), **2 RECOVERY_GAP / 0 clean terminal**. Journals
+  replay without validation errors and duplicate event IDs=0. External transition
+  completeness remains NOT_CONFIRMED because observation gaps exist.
+- Previous telemetry could not localize the residual blocking call. A bounded
+  30-GET probe had max653.6ms/request but one book age2514ms; this is NOT proof
+  of historical cause or full continuity. Do not claim gap fixed.
+- Deployed **diagnostics only** from `f3a2a42129d20b1d335e7c38ceb1cd3279d0468e`:
+  epoch `att1-public-lifecycle-20260928-observation-timing`, runtime
+  `/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-observation-timing`.
+  Driver SHA256 `00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f`.
+  Existing driver now retains 64 elapsed-operation records and persists them as
+  source evidence when strict2s gap fires. Heartbeat has recent slow operations.
+  No coordinator/core/profile or strategy change. 164 tests PASS Mac/VPS3.12.3;
+  historical receipt/state oracle identical; 17 unchanged pins verified.
+- One planned public restart for deployment; automatic NRestarts=0. Fresh public
+  PID2768300, heartbeat0.42s. New epoch has **0 sessions / 0 completed H1** at this
+  postcheck, not a clean cohort. All 25 retired evidence files remain hash-identical.
+- Existing adapter advanced locally only: NEW reservation/account/profile/H1
+  binding → durable normalized receipts → restart recovery → final slot release.
+  Later receipt-time redelivery keeps original fsynced row; conflicting economic
+  payload fails closed. Root fixed same-batch dedupe and receive-clock validation.
+  Flat without funding completion keeps the slot; crash after durable terminal
+  before release is restart-idempotent. **115 focused tests PASS Mac and target
+  VPS Python**, target isolated in /tmp; adapter NOT installed in production.
+  SEND_ENABLED=False. This is **offline binding**, not authenticated NEW transport,
+  real broker reconciliation, production dispatch or prospective terminal proof.
+- Both delegated workers hit allowance limit; no retry/replacement. Implementation
+  worker model/effort gpt-5.6-terra/high verified from runtime metadata. Root did
+  critical review/repairs; independent agent review is NOT marked completed.
+- Old heartbeat automation did not exist. Created bounded hourly thread heartbeat
+  `att1-bounded-continuity-evidence`: one read-only VPS check; quiet if unchanged;
+  report and pause on sourced blocking call / clean terminal / material failure,
+  or after six complete H1 cycles. Do not reset epochs or redeploy automatically.
+- **CANARY_READY=false**. Next: obtain gap timing source, fix measured operation;
+  independently finish authenticated NEW dispatch/fill/protection/accounting with
+  money OFF. Actual filled clean terminal count remains0; synthetic tests do not
+  satisfy prospective cohort. Then existing2–3 clean gate + fresh exact OLD risk.
+- Receipt: `reports/ATT1_GAP_DIAGNOSTICS_AND_BINDING_2026_09_28.json`.
+  Private replay/target/deploy/postcheck evidence: `.private/att1_gap_20260928`.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 28 13:03 UTC: deep equities handed off; ATT1 coverage proven, continuity still fails**:
 - Owner current scope: separate deep-equity handoff + ATT1 production. No Factory
   redesign, hypothesis run, Gold acquisition or Alpaca code/money changes.

@@ -1,0 +1,223 @@
+{
+  "status": "PUBLIC_DIAGNOSTICS_DEPLOYED_NOT_A_CONFIRMED_GAP_FIX",
+  "source_commit": "f3a2a42129d20b1d335e7c38ceb1cd3279d0468e",
+  "as_of_ms": 1790619232602,
+  "driver_sha256": "00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f",
+  "config_sha256": "5d7e1fd17888ae1d74f218b431abf121cdbdd98e567324c4fb0aa1b694597931",
+  "epoch": "att1-public-lifecycle-20260928-observation-timing",
+  "runtime": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-observation-timing",
+  "old_runtime": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-bounded-scan",
+  "retired_evidence_files": 25,
+  "old_pid_unchanged": "2150553",
+  "alpaca_binding_and_cron_unchanged": true,
+  "broker_calls": 0,
+  "order_calls": 0,
+  "target_verification": {
+    "python": "3.12.3",
+    "focused_tests_pass": true,
+    "verified_files": 12,
+    "unchanged_core_profile_pins": 17,
+    "historical_session_receipts_identical": true,
+    "sessions_replayed": 1,
+    "changed_session_state_seconds": 0.05012371763586998,
+    "max_scan_append_seconds": 0.0214855819940567,
+    "total_51_scan_appends_seconds": 0.516803678125143,
+    "scan_evidence": "synthetic persistence benchmark, NOT prospective scan/trades",
+    "money_changes": false
+  },
+  "unit": "MainPID=2768300\nNRestarts=0\nActiveState=active\n",
+  "public_local_tests": 164,
+  "public_target_tests": 164,
+  "binding_local_tests": 115,
+  "binding_target_tests": 115,
+  "new_binding_status": "OFFLINE_RESERVATION_JOURNAL_FINALITY_CONNECTED; AUTHENTICATED_DISPATCH_NOT_CONNECTED",
+  "binding_live_deployed": false,
+  "independent_agent_review_completed": false,
+  "agent_limit": "Both delegated workers hit usage limit; root reviewed and repaired the partial adapter diff; no replacement agents spawned.",
+  "canary_ready": false,
+  "source_gap_localized": false,
+  "gap_diagnostics": "Bounded 64 completed-operation records; persist exact observation interval and timings on first continuity gap. Monotonic durations; strict 2s unchanged.",
+  "transport_probe": {
+    "public_requests": 30,
+    "outside_production_cpu_quota": true,
+    "max_request_wall_ms": 653.576,
+    "max_book_age_ms": 2514,
+    "causal_conclusion": "No historical blocking call proven. Short healthy network probe cannot rule out intermittent delays."
+  },
+  "postcheck": {
+    "as_of_ms": 1790619411767,
+    "epochs": [
+      {
+        "name": "20260928-bounded-scan",
+        "heartbeat_age_s": 184.34241461753845,
+        "pid": 2314187,
+        "heartbeat_status": "STOPPED",
+        "sessions": [
+          {
+            "decision_id": "08bac33283cb1ec2c7dd09f48e716546ac8832e2c0cc81379675502cae710413",
+            "symbol": "MNTUSDT",
+            "lifecycle_terminal": false,
+            "held_qty": "0",
+            "final_net_r": null,
+            "incidents": [
+              "RECOVERY_GAP"
+            ],
+            "event_kinds": [
+              "START",
+              "ENTRY_ACK",
+              "ENTRY_FILL",
+              "PROTECTION_ACK",
+              "ENTRY_FILL",
+              "PROTECTION_ACK",
+              "ENTRY_FINAL",
+              "RECOVERY_GAP",
+              "EXIT_ACK",
+              "EXIT_FILL",
+              "EXIT_FILL",
+              "EXIT_FINAL",
+              "FUNDING_COVERAGE"
+            ]
+          },
+          {
+            "decision_id": "cd9dc75a5cc346f583a94186491af561c04895bb001aa0b4dc2a7ca63742e606",
+            "symbol": "TRXUSDT",
+            "lifecycle_terminal": false,
+            "held_qty": "0",
+            "final_net_r": null,
+            "incidents": [
+              "RECOVERY_GAP"
+            ],
+            "event_kinds": [
+              "START",
+              "ENTRY_ACK",
+              "ENTRY_FILL",
+              "PROTECTION_ACK",
+              "ENTRY_FINAL",
+              "RECOVERY_GAP",
+              "EXIT_ACK",
+              "EXIT_FILL",
+              "EXIT_FINAL",
+              "FUNDING_COVERAGE"
+            ]
+          }
+        ],
+        "clean_terminal": 0,
+        "gaps": [
+          {
+            "event": {
+              "event_id": "recovery_gap:f1e64536cc867bbaa342d9222539ab0dc8ec9f2c34ecc513f991a9facd89533b",
+              "exchange_ms": 1790596928012,
+              "kind": "RECOVERY_GAP",
+              "reason": "public polling continuity gap",
+              "received_ms": 1790596928012,
+              "schema_id": "att1_lifecycle_event_v1",
+              "source_sha256": "c6f7a41704713b6c1ae992ef7ca3f32e9d7c6bed8df34653ae2fe0ee2a2ae050"
+            },
+            "timing_source": null
+          },
+          {
+            "event": {
+              "event_id": "recovery_gap:3be161dee6a002a92b389cf2c073be68880bc923c05d0fe9cfccb5a0c092bc6e",
+              "exchange_ms": 1790604141124,
+              "kind": "RECOVERY_GAP",
+              "reason": "public polling continuity gap",
+              "received_ms": 1790604141124,
+              "schema_id": "att1_lifecycle_event_v1",
+              "source_sha256": "9f46e93e2b8eb201ca3b5d75335b9b61fe3b3b07d61907014cc91505ea68b412"
+            },
+            "timing_source": null
+          }
+        ],
+        "duplicate_events": 0,
+        "journal_validation_errors": [],
+        "hours": [
+          {
+            "close_ms": 1790586000000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790589600000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790593200000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790596800000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790600400000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790604000000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790607600000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790611200000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790614800000,
+            "count": 51,
+            "unique_symbols": 51
+          },
+          {
+            "close_ms": 1790618400000,
+            "count": 51,
+            "unique_symbols": 51
+          }
+        ],
+        "recent_slow_operations": [],
+        "broker_calls": 0,
+        "order_calls": 0
+      },
+      {
+        "name": "20260928-observation-timing",
+        "heartbeat_age_s": 0.416658878326416,
+        "pid": 2768300,
+        "heartbeat_status": "RUNNING",
+        "sessions": [],
+        "clean_terminal": 0,
+        "gaps": [],
+        "duplicate_events": 0,
+        "journal_validation_errors": [],
+        "hours": [],
+        "recent_slow_operations": [],
+        "broker_calls": 0,
+        "order_calls": 0
+      }
+    ],
+    "public_unit": "MainPID=2768300\nNRestarts=0\nActiveState=active\n",
+    "old_unit": "MainPID=2150553\nNRestarts=0\nActiveState=active\n",
+    "retired_evidence_hashes_unchanged": true
+  },
+  "restart_accounting": {
+    "planned_public_restart_this_deployment": 1,
+    "automatic_restarts_since_deployment": 0,
+    "old_live_restarts_by_this_task": 0
+  },
+  "missing_transitions": "No journal/reducer validation errors in retained public sessions; completeness versus unobserved external market remains NOT_CONFIRMED.",
+  "automation": {
+    "id": "att1-bounded-continuity-evidence",
+    "status": "ACTIVE",
+    "interval": "hourly",
+    "stop_when": "sourced blocking operation, clean filled terminal, material failure, or six completed H1 cycles",
+    "unchanged_notifications": false
+  },
+  "next_action": "Collect actual operation timing at next gap and fix only proven cause; continue existing authenticated dispatch binding with send OFF. No prospective gate PASS yet."
+}
