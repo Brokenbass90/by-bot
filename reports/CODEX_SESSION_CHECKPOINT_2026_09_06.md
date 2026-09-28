@@ -2,6 +2,46 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **September 28 13:03 UTC: deep equities handed off; ATT1 coverage proven, continuity still fails**:
+- Owner current scope: separate deep-equity handoff + ATT1 production. No Factory
+  redesign, hypothesis run, Gold acquisition or Alpaca code/money changes.
+- Copied existing archive into `../bybit-bot-clean-v28/research_lab/data/alpaca_pit_daily_deep_20260925`:
+  **965/965 files hash-identical, 961 symbols, 2,032,108 bars**. Original research
+  archive (1,006 files), canonical source archive and Factory queue unchanged.
+  Separate consumer packet `research_lab/pakety/CODEX_DEEP_EQUITY_HANDOFF_20260928`.
+  No data redownload or accepted archive replacement. Source identity/hash receipt:
+  `reports/EQUITY_DEEP_HANDOFF_RECEIPT_2026_09_28.json`; concise handoff
+  `reports/EQUITY_DEEP_HANDOFF_2026_09_28.md`.
+- **BLOCKED_DATA remains**. Claude already inspected the source in place and
+  independently rejected it (`VALIDACIYA_DEEP_EQUITY_2026_09_28.md` in research repo).
+  Deep bars do not fix historical membership/survivorship bias. Data acceptance
+  is distinct from LIVE authority; do not flip a flag or consume sealed evidence.
+- Two primary provider reference GETs confirm **SPCX ticker reuse**: 2024 ETF
+  FIGI BBG00YJ8L8T5 versus June 2026 common stock FIGI BBG000NQF3Z5. No honest
+  continuous security history is established. XTKG's 23 post-delisting records
+  all have volume/trade-count/VWAP zero; not proof of real post-delisting trades.
+  Existing integrity rules unchanged; neither problem repaired by deletion.
+- Explicit requested push `origin/research/fabrika-v1` completed and remote verified
+  **4acaa850c03ca606c6e80907ca38976f53fb25b5**. Only committed named ref pushed;
+  sibling dirty `codex/dynamic-symbol-filters` checkout and unrelated work untouched.
+- ATT1 public new epoch now has **four H1 scan cycles, 51/51 distinct attempts each**
+  (09/10/11/12 UTC); input rejections preserved, so this is not 51 valid signals.
+  First admitted/filled TRX simulation is **RECOVERY_GAP**, flat with scenario costs
+  complete but final_net_R=null. **1 session / 0 clean terminals**: prospective
+  continuity has NOT passed. PID2314187/NRestarts0, heartbeat0.96s at 13:04 UTC.
+  No process exit occurred; the gap is distinct from restart. Ordinary quote marks
+  are not journaled; time between lifecycle events cannot localize the blocking call.
+- All 32 deployed release files verified, including systemd unit physical mapping;
+  release manifest sealed to source6ecc090, driver code1cc9536 (hash below).
+  Existing public scan hot-path fix stays deployed; no second redeploy/epoch reset.
+  OLD LIVE and Alpaca unchanged; NEW broker binding remains incomplete/default OFF.
+- Next ATT1 work: localize residual loop delay using elapsed operation evidence,
+  and finish existing NEW dispatch/fill/protection/accounting transport independently.
+  Then 2–3 clean filled terminal sessions + fresh exact OLD risk → canary dossier.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 28 08:14 UTC: measured ATT1 public blocking call fixed and deployed**:
 - Owner prioritizes crypto now; no new LAB/Factory work. Existing OLD LIVE and
   Alpaca money authority/configuration remain unchanged. NEW money remains OFF.

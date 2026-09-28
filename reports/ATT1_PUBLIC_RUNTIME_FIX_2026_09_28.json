@@ -75,7 +75,7 @@
     "runtime_verified": true,
     "scope": "bounded read-only binding map and runtime diff review; root critical review"
   },
-  "public_full_coverage_pending": true,
+  "public_full_coverage_pending": false,
   "clean_prospective_terminals_new_epoch": 0,
   "historical_dirty_cohort": {
     "sessions": 28,
@@ -84,5 +84,69 @@
   },
   "new_money_enabled": false,
   "new_broker_binding_complete": false,
-  "next_action": "After next normal H1 window verify 51/51 scan and continuity; continue default-off NEW dispatch/fill/protection/accounting binding."
+  "next_action": "Localize residual public polling gap with actual elapsed operation evidence; independently finish existing default-off NEW dispatch/fills/protection/accounting binding. Do not weaken 2s gate or activate NEW money.",
+  "prospective_postcheck": {
+    "as_of_ms": 1790600317613,
+    "hours": [
+      {
+        "close_ms": 1790586000000,
+        "rows": 51,
+        "symbols": 51,
+        "results": {
+          "NO_SIGNAL": 50,
+          "STALE_CLOSED_BAR": 1
+        }
+      },
+      {
+        "close_ms": 1790589600000,
+        "rows": 51,
+        "symbols": 51,
+        "results": {
+          "NO_SIGNAL": 49,
+          "SCAN_REJECTED": 1,
+          "STALE_CLOSED_BAR": 1
+        }
+      },
+      {
+        "close_ms": 1790593200000,
+        "rows": 51,
+        "symbols": 51,
+        "results": {
+          "NO_SIGNAL": 50,
+          "STALE_CLOSED_BAR": 1
+        }
+      },
+      {
+        "close_ms": 1790596800000,
+        "rows": 51,
+        "symbols": 51,
+        "results": {
+          "NO_SIGNAL": 48,
+          "SCAN_REJECTED": 1,
+          "STALE_CLOSED_BAR": 1,
+          "ADMITTED": 1
+        }
+      }
+    ],
+    "files_verified": 32,
+    "closure_sha256": "add08f882bc341447156ef9e9658ead6f6d5e933a7794335693f3c7e17d4a34a",
+    "source_commit": "6ecc09079d99c700cd643fd66aba4f5513a4b433",
+    "installed_path_overrides": {
+      "deploy/systemd/att1-lifecycle-zero-risk-v2.service": "/etc/systemd/system/att1-lifecycle-zero-risk-v2.service"
+    },
+    "unit": "MainPID=2314187\nNRestarts=0\nActiveState=active\n",
+    "heartbeat_age_s": 0.962733268737793,
+    "heartbeat_checked_at_ms": 1790600669260,
+    "session_count": 1,
+    "filled_sessions": 1,
+    "clean_terminal_sessions": 0,
+    "recovery_gap_sessions": 1,
+    "gap_symbol": "TRXUSDT",
+    "gap_received_ms": 1790596928012,
+    "gap_reason": "public polling continuity gap",
+    "process_exit_observed": false,
+    "gap_call_localized": false,
+    "note": "51/51 scan attempts each hour; rejected/stale inputs remain rejected. Ordinary book marks are not journaled, so spacing between lifecycle events does not measure the exact observation gap."
+  },
+  "prospective_continuity_pass": false
 }
