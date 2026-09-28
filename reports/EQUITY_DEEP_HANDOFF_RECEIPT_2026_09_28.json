@@ -1033,5 +1033,14 @@
     "interpretation": "Zero-trade observations, not proof of post-delisting executions; existing integrity rejection unchanged."
   },
   "research_branch_pushed": "4acaa850c03ca606c6e80907ca38976f53fb25b5",
-  "acceptance_note": "Copy integrity PASS; statistical dataset acceptance BLOCKED_DATA. Historical PIT provenance is required. Research acceptance is not LIVE authority."
+  "acceptance_note": "Copy integrity PASS; statistical dataset acceptance BLOCKED_DATA. Historical PIT provenance is required. Research acceptance is not LIVE authority.",
+  "later_shared_checkout_observation": {
+    "queue_sha256": "1cd311b315b734b9f99249acb5513db900e808206c45b1fd9a4703ffb9437226",
+    "queue_mtime_utc": "2026-09-28T13:05:06.292701+00:00",
+    "queue_changed_after_copy_verification": true,
+    "queue_written_by_this_task": false,
+    "hypothesis_status": "BLOCKED_DATA",
+    "acceptance_required": true,
+    "note": "Concurrent shared-checkout change observed after 13:03 copy receipt; preserved, not reverted. queue_unchanged above describes the bounded copy operation."
+  }
 }

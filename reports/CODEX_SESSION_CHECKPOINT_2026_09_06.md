@@ -9,6 +9,8 @@ Latest continuation — **September 28 13:03 UTC: deep equities handed off; ATT1
   **965/965 files hash-identical, 961 symbols, 2,032,108 bars**. Original research
   archive (1,006 files), canonical source archive and Factory queue unchanged.
   Separate consumer packet `research_lab/pakety/CODEX_DEEP_EQUITY_HANDOFF_20260928`.
+  Queue changed concurrently at 13:05 after copy verification; preserved, still
+  BLOCKED_DATA/acceptance required. This task did not write the queue.
   No data redownload or accepted archive replacement. Source identity/hash receipt:
   `reports/EQUITY_DEEP_HANDOFF_RECEIPT_2026_09_28.json`; concise handoff
   `reports/EQUITY_DEEP_HANDOFF_2026_09_28.md`.
