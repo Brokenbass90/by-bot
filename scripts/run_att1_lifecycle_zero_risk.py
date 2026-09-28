@@ -251,7 +251,11 @@ def verify_state(paths: list[Path], profile: Mapping[str, object]) -> dict[str, 
         normalized["full_receipt_sha256"] = hashlib.sha256(_canonical(receipt)).hexdigest()
         normalized["receipt_sha256"] = hashlib.sha256(_canonical(normalized)).hexdigest()
         sessions.append(normalized)
-    sessions.sort(key=lambda value: str(value["decision_id"]))
+    return _state_from_sessions(sessions)
+
+
+def _state_from_sessions(sessions):
+    sessions=sorted(sessions,key=lambda value: str(value["decision_id"]))
     state = {
         "schema_id": "att1_lifecycle_public_state_v1", "authority": dict(AUTHORITY),
         "continuous_market_path_verified": False, "execution_parity": False,
@@ -533,7 +537,7 @@ class PublicLifecycleRuntime:
         self.profile=build_profile(ROOT)
         if config['profile_sha256']!=self.profile['profile_sha256']:raise RunnerViolation('profile hash mismatch')
         self.root=Path(config['runtime_dir'])
-        for path in [self.root,self.root/'sessions',self.root/'sources',self.root/'cache']:
+        for path in [self.root,self.root/'sessions',self.root/'sources',self.root/'cache',self.root/'scans']:
             # Reject symlink ancestry before and after creating only the configured runtime.
             for parent in [path,*path.parents]:
                 if parent.is_symlink():raise RunnerViolation('runtime symlink')
@@ -546,14 +550,16 @@ class PublicLifecycleRuntime:
         if not epoch.exists() and _runtime_sessions(self.root):raise RunnerViolation('missing epoch for existing journals')
         _save_json_once(epoch,identity)
         self.cache=CanonicalH1Cache(self.root/'cache',max_bars=2880)
-        self.scan_journal=LifecycleJournal(self.root/'scan_journal.jsonl')
+        # Same event/chain contract, bounded to at most one fixed-universe H1.
+        # Historical scan validation must not block the market observation loop.
+        self.scan_journal=self._scan_journal_for(self.clock()//H1_MS*H1_MS)
         self.sessions={}
         for path in _runtime_sessions(self.root):
             session=LifecycleSession(path,self.profile)
             decision=session.receipt['plan']['decision_id']
             if path.name!=decision+'.jsonl' or decision in self.sessions:raise RunnerViolation('session path identity')
             self.sessions[decision]=session
-        self._state_cache=None
+        self._state_cache=None;self._session_state_cache={}
         self.start_ms=self.clock();self.start_state=self.state()
         self.last_observed={};self.last_funding={};self.scanned=set();self.scan_close=None
         self.poll_errors={};self.scan_results={};self.get_count=0;self.running=True
@@ -564,9 +570,21 @@ class PublicLifecycleRuntime:
         paths=[s.journal.path for s in self.sessions.values()]; before=_journal_signature(paths)
         if self._state_cache is not None and self._state_cache[0]==before:
             return deepcopy(self._state_cache[1])
-        state=verify_state(paths,self.profile); after=_journal_signature(paths)
+        next_cache={};receipts=[]
+        for signature in before:
+            path=signature[0];cached=self._session_state_cache.get(path)
+            receipt=(cached[1] if cached is not None and cached[0]==signature else
+                     verify_state([Path(path)],self.profile)['sessions'][0])
+            next_cache[path]=(signature,receipt);receipts.append(receipt)
+        state=_state_from_sessions(receipts); after=_journal_signature(paths)
         if before!=after: raise RunnerViolation('journal changed during state verification')
+        self._session_state_cache=next_cache
         self._state_cache=(after,deepcopy(state)); return deepcopy(state)
+
+    def _scan_journal_for(self,close):
+        if type(close) is not int or close<0 or close%H1_MS:
+            raise RunnerViolation('scan journal H1 cutoff')
+        return LifecycleJournal(self.root/'scans'/(str(close)+'.jsonl'))
 
     def _get(self,path,symbol,**params):
         params={'category':'linear','symbol':symbol,**params}
@@ -809,8 +827,10 @@ class PublicLifecycleRuntime:
                     'signal_source_sha256':signal['source_sha256'],'data_sha256':signal['data_sha256']}
         row={'schema_id':'att1_lifecycle_event_v1','event_id':'scan:'+self.config['epoch_id']+':'+symbol+':'+str(close),
              'kind':'SCAN','symbol':symbol,'bar_close_ms':close,'received_ms':self.clock(),**result}
-        self.scan_journal.append(row)
+        journal=self._scan_journal_for(close)
+        journal.append(row)
         if close==self.scan_close:
+            self.scan_journal=journal
             self.scanned.add(symbol);self.scan_results[symbol]=result['result']
 
     def tick(self):
@@ -838,6 +858,7 @@ class PublicLifecycleRuntime:
         now=self.clock();close=now//H1_MS*H1_MS
         if self.scan_close!=close:
             self.scan_close=close;self.scanned=set();self.scan_results={}
+            self.scan_journal=self._scan_journal_for(close)
             for event in self.scan_journal.read():
                 if event.get('bar_close_ms')==close:self.scanned.add(event['symbol']);self.scan_results[event['symbol']]=event['result']
         if self.scan_future is not None and self.scan_future[2].done():

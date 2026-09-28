@@ -332,3 +332,67 @@ def test_scan_journal_identity_and_restart_dedupe_are_deterministic(tmp_path):
     assert 'BTCUSDT' in restart.scanned
     assert restart.scan_journal.path.read_bytes()==before
     if restart.scan_executor:restart.scan_executor.shutdown(wait=True)
+
+
+def test_current_scan_append_never_replays_previous_hours(tmp_path, monkeypatch):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);close=intent['signal']['bar_close_ms'];rt.scan_close=close
+    rt.finish_scan(close,'BTCUSDT',{'result':'NO_SIGNAL'})
+    old=rt.scan_journal.path;before=old.read_bytes()
+    tape.now+=runner.H1_MS;rt.scan_close=close+runner.H1_MS
+    original=runner.LifecycleJournal._load
+    def no_old_replay(self,fd):
+        assert self.path!=old, 'previous H1 scan journal replayed on hot path'
+        return original(self,fd)
+    monkeypatch.setattr(runner.LifecycleJournal,'_load',no_old_replay)
+    rt.finish_scan(close+runner.H1_MS,'BTCUSDT',{'result':'NO_SIGNAL'})
+    assert rt.scan_journal.path!=old
+    assert old.read_bytes()==before
+    assert len(rt.scan_journal.read())==1
+
+
+def test_state_update_replays_only_changed_session_with_identical_oracle(tmp_path, monkeypatch):
+    rt,session=_runtime_with_session(tmp_path)
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);intent['book']='second-independent-book'
+    other=LifecycleSession(tmp_path/'other.jsonl',rt.profile,intent=intent)
+    rt.sessions['other']=other
+    rt.state();calls=[];original=runner.verify_state
+    def counted(paths,profile):
+        calls.append(tuple(paths));return original(paths,profile)
+    monkeypatch.setattr(runner,'verify_state',counted)
+    rt._emit(session,'CLOCK')
+    updated=rt.state()
+    assert calls==[(session.journal.path,)]
+    assert updated==original([s.journal.path for s in rt.sessions.values()],rt.profile)
+
+
+def test_late_previous_hour_scan_does_not_contaminate_current_coverage(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);old_close=intent['signal']['bar_close_ms']
+    tape.now+=runner.H1_MS;rt.scan_close=old_close+runner.H1_MS
+    rt.finish_scan(rt.scan_close,'ETHUSDT',{'result':'NO_SIGNAL'})
+    current=rt.scan_journal.path;current_bytes=current.read_bytes()
+    rt.finish_scan(old_close,'BTCUSDT',{'result':'NO_SIGNAL'})
+    assert rt.scanned=={'ETHUSDT'}
+    assert rt.scan_journal.path==current and current.read_bytes()==current_bytes
+    assert rt._scan_journal_for(old_close).read()[0]['bar_close_ms']==old_close
+
+
+def test_changed_cached_archive_is_revalidated_and_rejected(tmp_path):
+    rt,session=_runtime_with_session(tmp_path);rt.state()
+    # Same length / original mtime cannot hide corruption: ctime participates.
+    import os
+    p=session.journal.path;before=p.stat();raw=p.read_bytes()
+    p.write_bytes(raw.replace(b'"START"',b'"STORT"',1))
+    os.utime(p,ns=(before.st_atime_ns,before.st_mtime_ns))
+    with pytest.raises(JournalViolation):rt.state()
+
+
+def test_real_hour_rollover_rejects_old_candidate_by_existing_age_contract(tmp_path):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);old_close=intent['signal']['bar_close_ms']
+    tape.now+=runner.H1_MS;rt.scan_close=old_close+runner.H1_MS
+    rt.finish_scan(old_close,'BTCUSDT',{'result':'CANDIDATE','signal':intent['signal'],'instrument':intent['instrument']})
+    assert not rt.sessions
+    assert rt._scan_journal_for(old_close).read()[0]['result']!='ADMITTED'
+    assert not rt.scanned
