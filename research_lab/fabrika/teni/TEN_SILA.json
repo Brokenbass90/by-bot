@@ -1,0 +1,38 @@
+{
+ "id": "TEN_SILA",
+ "porozhdena": "2026-09-24T07:01:24+00:00",
+ "iz_verdikta": "research_lab/fabrika/verdikty.jsonl#P_KR_SILA_K_BTC_LS@2026-09-23T22:11",
+ "prereg": "research_lab/PREREG_TEN_SILA_2026_09_23.md",
+ "rynok": "kripto_pit50",
+ "semya": "rs_vs_etalon_ls",
+ "slot": "neytral",
+ "begun": "portfel",
+ "strategiya_zamorozhena": {
+  "signal": "KR_SILA_K_BTC_LS",
+  "H": 5,
+  "kv": 0.2,
+  "napr": "ls"
+ },
+ "heshi_koda": null,
+ "vorota": {
+  "resheniy": 100,
+  "min_neff": 20,
+  "porog_t": 2.0
+ },
+ "trebovaniya_k_svidetelstvam": [
+  "журнал только дописывается",
+  "момент старта на диске, при перезапуске не сбрасывается",
+  "засчитываются только дни после первого запуска",
+  "издержки 28 б.п. и фандинг вычитаются по факту",
+  "контроль: 50 случайных пар корзин того же дня"
+ ],
+ "zhurnal": "research_lab/data/ten_SILA.jsonl",
+ "ocenshchik": [
+  "python3",
+  "research_lab/ten_sila.py",
+  "--otchet"
+ ],
+ "komanda_zapuska": "cd <корень> && nohup caffeinate -i .venv-research/bin/python research_lab/ten_sila.py --minut 100000 --pauza 21600 >> research_lab/data/ten_SILA.log 2>&1 &",
+ "sostoyanie": "RABOTAET",
+ "popravka": "28.09: процесс умер 25.09 в 07:22 (машина выключалась), три дня решений потеряны. Момент старта не сбрасывается, пропуск честно остаётся дырой в журнале: пропущенные дни выбраны выключенным компьютером, а не результатом, смещения не вносят."
+}

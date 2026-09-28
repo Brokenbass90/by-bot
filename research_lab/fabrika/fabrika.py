@@ -58,7 +58,15 @@ MIN_V_OCHEREDI = 3
 SON = 1800
 KONEC = {"NEGATIVE", "POSITIVE_LEAD", "PLUS_NO_CONFIDENCE", "INCONCLUSIVE_LOW_N",
          "LEAD_BLOCKED_DATA", "PARITY_PASS", "CONFIRMED", "FAILED_CONFIRMATION",
-         "CONFIRMATION_INCONCLUSIVE", "BLOCKED_DATA", "DIAGNOSTIC"}
+         "CONFIRMATION_INCONCLUSIVE", "BLOCKED_DATA", "DIAGNOSTIC",
+         "SHADOW_WAITING", "SHADOW_RUNNING", "SHADOW_FAILED", "READY_FOR_BUILD"}
+
+# ПОТОЛОК. Дальше этого фабрика не идёт НИКОГДА и ни при каких результатах.
+# Привязка к брокеру, деньги и LIVE — только Codex и письменное решение владельца.
+POTOLOK = "READY_FOR_BUILD"
+TENI = DIR / "teni"          # спецификации теней, порождённые подтверждением
+DOSE = DIR / "dose"          # пакеты READY_FOR_BUILD для Codex
+MOLCHIT_CHASOV = 18          # тень, не писавшая столько часов, считается упавшей
 
 
 def seychas():
@@ -358,6 +366,16 @@ def otpechatok_dannyh(rynok):
 
 def sinhronizirovat(d, V):
     for it in d["ochered"]:
+        # пункт, созданный сразу в ожидании данных, вердикта ещё не имеет: сравнивать
+        # не с чем. Поэтому отпечаток папки запоминается в момент постановки.
+        if it["sostoyanie"] == "BLOCKED_DATA" and not V.get(it["id"]):
+            bylo = it.get("otpechatok_pri_postanovke")
+            if bylo is None:
+                it["otpechatok_pri_postanovke"] = otpechatok_dannyh(it.get("rynok"))
+            elif bylo != otpechatok_dannyh(it.get("rynok")):
+                it["sostoyanie"] = "QUEUED"
+                it["dannye_prishli"] = seychas().isoformat(timespec="seconds")
+                continue
         v = V.get(it["id"])
         if (v and it["sostoyanie"] in ("BLOCKED_DATA", "CONFIRMATION_WAITING_DATA") and v.get("dannye")
                 and v["dannye"] != otpechatok_dannyh(it.get("rynok"))):
@@ -474,6 +492,8 @@ def odin_shag():
     prin = prinyat_predlozheniya(d, V)
     if prin:
         print(f"＋ принято предложений: {', '.join(prin)}", flush=True)
+    for sob in proverit_teni(d):
+        print(f"◆ {sob}", flush=True)
     queued = sum(1 for it in d["ochered"] if it["sostoyanie"] == "QUEUED" and it.get("begun") in BEGUNY)
     if queued < MIN_V_OCHEREDI:
         novye = porodit(d, V, 2 * MIN_V_OCHEREDI - queued)
@@ -507,13 +527,145 @@ def odin_shag():
         f.write(json.dumps(zap, ensure_ascii=False) + "\n")
     obnovit_reestr(d, V)
     podtv = postavit_podtverzhdenie(d, cur) if verd == "POSITIVE_LEAD" else None
+    ten = postavit_ten(d, cur, zap) if verd == "CONFIRMED" else None
     sinhronizirovat(d, V); sohranit(d); zapisat_zadachi(d)
     print(f"■ {sled['id']}: {verd} — {pochemu}  ({sek} с)", flush=True)
     if podtv:
         print(f"   ↳ поставлено подтверждение на нетронутых данных: {podtv}", flush=True)
+    if ten:
+        print(f"   ↳ порождена спецификация тени: {ten} (запускает владелец)", flush=True)
     if "posmertno" in zap:
         print(f"   ↳ {zap['posmertno']['semya']}; дальше: {zap['posmertno']['sleduyushchaya']}", flush=True)
     return sled["id"]
+
+
+def postavit_ten(d, it, zap):
+    """CONFIRMED → спецификация тени. Порождается автоматически, но ЗАПУСКАЕТ
+    процесс владелец: автозапуска на этой машине нет и не будет."""
+    TENI.mkdir(exist_ok=True)
+    f = TENI / f"{it['id']}.json"
+    if f.exists():
+        return None
+    zhurnal = f"research_lab/data/ten_{it['id']}.jsonl"
+    spec = {
+        "id": it["id"], "porozhdena": seychas().isoformat(timespec="seconds"),
+        "iz_verdikta": f"research_lab/fabrika/verdikty.jsonl#{it['id']}@{zap['kogda']}",
+        "prereg": it.get("prereg"), "rynok": it.get("rynok"), "semya": it.get("semya"),
+        "slot": it.get("slot"), "begun": it.get("begun"),
+        "strategiya_zamorozhena": it.get("param"),
+        "heshi_koda": zap.get("heshi"),
+        "vorota": {"resheniy": 100, "min_neff": 20, "porog_t": 2.0},
+        "trebovaniya_k_svidetelstvam": [
+            "журнал только дописывается, задним числом не правится",
+            "момент старта фиксируется на диске один раз и не сбрасывается при перезапуске",
+            "засчитываются только дни, начавшиеся ПОСЛЕ первого запуска",
+            "издержки и фандинг вычитаются по факту, не моделируются постфактум",
+            "контроль: случайная корзина того же размера в тот же день",
+            "R и деньги до ворот не считаются и не показываются",
+        ],
+        "zhurnal": zhurnal,
+        "ocenshchik": None,        # команда; должна печатать строку «ИТОГ: PASS|FAIL|MALO ...»
+        "komanda_zapuska": None,
+        "sostoyanie": "ZHDYOT_PROGONSHCHIKA",
+        "chto_nuzhno_ot_cheloveka": ("написать прогонщик тени для этого механизма по образцу "
+                                     "research_lab/ten_sila.py, вписать сюда ocenshchik и komanda_zapuska, "
+                                     "затем запустить процесс вручную"),
+    }
+    f.write_text(json.dumps(spec, ensure_ascii=False, indent=1), encoding="utf-8")
+    it["sostoyanie"] = "SHADOW_WAITING"; it["ten_spec"] = str(f.relative_to(ROOT))
+    return str(f.relative_to(ROOT))
+
+
+def _itog_teni(vyvod):
+    """последняя строка вида «ИТОГ: PASS|FAIL|MALO …» — единственное, что читается"""
+    for ln in reversed((vyvod or "").splitlines()):
+        if ln.strip().startswith("ИТОГ:"):
+            sl = ln.split(":", 1)[1].strip().split()
+            return (sl[0] if sl else ""), ln.strip()
+    return "", ""
+
+
+def proverit_teni(d):
+    """каждый круг: жива ли тень, дошла ли до ворот, и если дошла — вердикт.
+    Вердикт выносит объявленный заранее оценщик, а не фабрика."""
+    if not TENI.exists():
+        return []
+    sobytiya = []
+    sost = {it["id"]: it for it in d["ochered"]}
+    for f in sorted(TENI.glob("*.json")):
+        try:
+            sp = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        it = sost.get(sp["id"])
+        if it is None or it["sostoyanie"] not in ("SHADOW_WAITING", "SHADOW_RUNNING"):
+            continue
+        zh = ROOT / sp["zhurnal"]
+        if zh.exists():
+            it["sostoyanie"] = "SHADOW_RUNNING"
+            molchit = (time.time() - zh.stat().st_mtime) / 3600
+            it["ten_molchit_chasov"] = round(molchit, 1)
+            if molchit > MOLCHIT_CHASOV:
+                sobytiya.append(f"тень {sp['id']} молчит {molchit:.0f} ч — процесс, похоже, упал")
+                continue
+        else:
+            it["ten_molchit_chasov"] = None
+        if not sp.get("ocenshchik"):
+            continue
+        try:
+            n = sum(1 for x in zh.read_text(encoding="utf-8").splitlines()
+                    if x.strip() and json.loads(x).get("zakryto")) if zh.exists() else 0
+        except Exception:
+            n = 0
+        it["ten_resheniy"] = n
+        if n < sp["vorota"]["resheniy"]:
+            continue
+        r = subprocess.run(sp["ocenshchik"], capture_output=True, text=True, cwd=str(ROOT), shell=isinstance(sp["ocenshchik"], str))
+        itog, stroka = _itog_teni(r.stdout)
+        if itog == "PASS":
+            put = sobrat_dose(it, sp, stroka)
+            it["sostoyanie"] = POTOLOK; it["dose"] = put
+            sobytiya.append(f"тень {sp['id']} прошла ворота → {POTOLOK}: {put}")
+        elif itog == "FAIL":
+            it["sostoyanie"] = "SHADOW_FAILED"; it["chto_vernyot"] = f"тень не прошла ворота: {stroka}"
+            sobytiya.append(f"тень {sp['id']} не прошла ворота: {stroka}")
+    return sobytiya
+
+
+def sobrat_dose(it, sp, stroka):
+    """READY_FOR_BUILD: всё, что нужно Codex, и ничего, что нужно брокеру."""
+    DOSE.mkdir(exist_ok=True)
+    f = DOSE / f"{it['id']}_READY_FOR_BUILD.md"
+    t = [f"# {it['id']} — READY_FOR_BUILD", "",
+         f"Собрано фабрикой автоматически {seychas():%Y-%m-%d %H:%M} UTC.",
+         "Это ПОТОЛОК автоматизации. Привязка к брокеру, размер позиции, деньги и LIVE —",
+         "только Codex и отдельное письменное решение владельца. Фабрика к ним не прикасается.",
+         "", "## Замороженная стратегия", "",
+         "    " + json.dumps(sp.get("strategiya_zamorozhena"), ensure_ascii=False),
+         f"    прогонщик: {sp.get('begun')}",
+         f"    предрегистрация: {sp.get('prereg')}",
+         f"    хеши кода на момент вердикта: {json.dumps(sp.get('heshi_koda'), ensure_ascii=False)}",
+         "", "## Контракт на данные", "",
+         f"    рынок: {sp.get('rynok')}",
+         f"    журнал тени: {sp.get('zhurnal')}",
+         "    вход считается только по барам, закрывшимся строго ДО решения",
+         "    членство во вселенной — на дату, с делистингами",
+         "", "## Издержки и допущения о риске", "",
+         "    издержки и фандинг вычтены по факту, не смоделированы",
+         "    проскальзывание НЕ моделировалось: это работа Codex на PAPER",
+         "    заёмные ограничения на шорт НЕ моделировались",
+         "    размер книги не моделировался",
+         "", "## Требования к паритету и свидетельствам", "",
+         "    прогонщик Codex обязан повторить журнал тени бар в бар на том же окне",
+         "    расхождение хотя бы в одном решении — стоп, разбор причины до продолжения",
+         "    порог тени и ворота менять запрещено: они объявлены в предрегистрации",
+         "", "## Итог тени", "", f"    {stroka}",
+         "", "## Что дальше делает человек", "",
+         "    1. Codex: паритет прогонщика против журнала тени",
+         "    2. Codex: PAPER со стоп-краном",
+         "    3. владелец: письменное решение о деньгах. Не раньше."]
+    f.write_text("\n".join(t) + "\n", encoding="utf-8")
+    return str(f.relative_to(ROOT))
 
 
 def obnovit_reestr(d=None, V=None):
@@ -565,7 +717,11 @@ def poly_sutki():
 
 
 def otchet_dnya():
-    """короткий отчёт: что случилось за сутки и нужно ли вмешательство"""
+    """Одна строка состояния конвейера и короткий список того, что ждёт человека.
+
+    Формат строки задан владельцем:
+        tested | killed | leads | confirmed | shadows | ready_for_build | blocked | owner_action
+    """
     d = zagruzit(); V = verdikty()
     gran = seychas() - dt.timedelta(hours=24)
     vv = [v for v in verdikty_vse() if dt.datetime.fromisoformat(v["kogda"]).replace(tzinfo=dt.timezone.utc) >= gran
@@ -576,40 +732,68 @@ def otchet_dnya():
     poly = {"rynkov_v_istorii": len(list(ist.glob("*.json"))) if ist.exists() else 0,
             "posledniy_sbor": (dt.datetime.fromtimestamp(float(POLY_METKA.read_text()), dt.timezone.utc).isoformat(timespec="seconds")
                                if POLY_METKA.exists() else None)}
-    lids = [it["id"] for it in d["ochered"] if it["sostoyanie"] in ("POSITIVE_LEAD", "CONFIRMED")]
+
+    ubito = c["NEGATIVE"] + c["FAILED_CONFIRMATION"]
+    lidy = [it["id"] for it in d["ochered"] if it["sostoyanie"] == "POSITIVE_LEAD"]
+    podtv = [it["id"] for it in d["ochered"] if it["sostoyanie"] == "CONFIRMED"]
+    teni = [it for it in d["ochered"] if it["sostoyanie"] in ("SHADOW_WAITING", "SHADOW_RUNNING")]
+    gotovo = [it["id"] for it in d["ochered"] if it["sostoyanie"] == POTOLOK]
+    zhdut_dannyh = [it["id"] for it in d["ochered"] if it["sostoyanie"] in ("BLOCKED_DATA", "CONFIRMATION_WAITING_DATA")]
+    zhdut_perehodnika = [it["id"] for it in d["ochered"] if it["sostoyanie"] == "BLOCKED_ADAPTER"]
     slomano = [it["id"] for it in d["ochered"] if it["sostoyanie"] == "FAILED_TECHNICAL"]
-    nechego = not any(it["sostoyanie"] == "QUEUED" and it.get("begun") in BEGUNY for it in d["ochered"])
-    zhdut = sum(1 for it in d["ochered"] if it["sostoyanie"] in ("BLOCKED_DATA", "BLOCKED_ADAPTER",
-                                                                "CONFIRMATION_WAITING_DATA"))
-    # Пустая очередь при пунктах, ждущих данных, — это НЕ «кончились идеи».
-    # Требовать вмешательства каждый день по такому поводу значит приучить
-    # владельца не читать отчёт.
-    prichiny = ([f"находка: {', '.join(lids)}"] if lids else []) + \
-               ([f"упало технически: {', '.join(slomano)}"] if slomano else []) + \
-               (["очередь пуста и ничто не ждёт данных — нужен новый пакет гипотез"]
-                if nechego and not zhdut else [])
-    j = {"kogda": seychas().isoformat(timespec="seconds"), "za_sutki": dict(c), "proverok": len(vv),
-         "sostoyaniya": dict(sost), "poly": poly, "nahodki": lids, "zhdut_dannyh": zhdut,
-         "trebuetsya_vmeshatelstvo": bool(prichiny), "prichiny": prichiny}
+    ochered_pusta = not any(it["sostoyanie"] == "QUEUED" and it.get("begun") in BEGUNY for it in d["ochered"])
+
+    # ЧТО ЖДЁТ ЧЕЛОВЕКА. Только то, где машина физически не может продолжить сама.
+    nuzhno = []
+    if gotovo:
+        nuzhno.append(f"Codex: принять пакет READY_FOR_BUILD — {', '.join(gotovo)}")
+    for it in teni:
+        sp = it.get("ten_spec")
+        if it["sostoyanie"] == "SHADOW_WAITING":
+            nuzhno.append(f"владелец: запустить тень {it['id']} (спецификация {sp})")
+        elif it.get("ten_molchit_chasov") and it["ten_molchit_chasov"] > MOLCHIT_CHASOV:
+            nuzhno.append(f"владелец: тень {it['id']} молчит {it['ten_molchit_chasov']:.0f} ч — поднять заново")
+    if slomano:
+        nuzhno.append(f"разобрать технический сбой: {', '.join(slomano)}")
+    if zhdut_dannyh:
+        nuzhno.append(f"нужны данные для {len(zhdut_dannyh)} пунктов — что именно, в zadachi.json")
+    if ochered_pusta and not zhdut_dannyh and not zhdut_perehodnika and not teni:
+        nuzhno.append("механизмы исчерпаны: очередь пуста и ничто не ждёт ни данных, ни тени")
+
+    # ТРИ РАЗНЫХ ПУСТЫХ ОЧЕРЕДИ
+    if not ochered_pusta:
+        pochemu_pusto = None
+    elif teni:
+        pochemu_pusto = "ждём тень"
+    elif zhdut_dannyh or zhdut_perehodnika:
+        pochemu_pusto = "ждём данные"
+    else:
+        pochemu_pusto = "механизмы исчерпаны"
+
+    stroka = (f"tested {len(vv)} | killed {ubito} | leads {len(lidy)} | confirmed {len(podtv)} | "
+              f"shadows {len(teni)} | ready_for_build {len(gotovo)} | "
+              f"blocked {len(zhdut_dannyh) + len(zhdut_perehodnika)} | owner_action {len(nuzhno)}")
+
+    j = {"kogda": seychas().isoformat(timespec="seconds"), "stroka": stroka,
+         "tested": len(vv), "killed": ubito, "leads": lidy, "confirmed": podtv,
+         "shadows": [x["id"] for x in teni], "ready_for_build": gotovo,
+         "blocked": {"dannye": zhdut_dannyh, "perehodnik": zhdut_perehodnika},
+         "ochered_pusta": ochered_pusta, "pochemu_pusto": pochemu_pusto,
+         "za_sutki": dict(c), "sostoyaniya": dict(sost), "poly": poly,
+         "owner_action": nuzhno, "trebuetsya_vmeshatelstvo": bool(nuzhno),
+         "potolok": POTOLOK}
     OTCHET_JSON.write_text(json.dumps(j, ensure_ascii=False, indent=1))
-    t = [f"# Отчёт за сутки — {seychas():%Y-%m-%d %H:%M} UTC", "",
-         f"    проверено гипотез      {len(vv)}",
-         f"    отрицательных         {c['NEGATIVE']}",
-         f"    плюс без уверенности  {c['PLUS_NO_CONFIDENCE']}",
-         f"    мало данных           {c['INCONCLUSIVE_LOW_N']}",
-         f"    находок               {c['POSITIVE_LEAD']}",
-         f"    подтверждено          {c['CONFIRMED']}",
-         f"    ждут данных/переходника {sost['BLOCKED_DATA'] + sost['BLOCKED_ADAPTER']}",
-         f"    Polymarket: рынков в истории {poly['rynkov_v_istorii']}, последний сбор {poly['posledniy_sbor']}", "",
-         f"**ТРЕБУЕТСЯ ВМЕШАТЕЛЬСТВО: {'ДА' if prichiny else 'НЕТ'}**"]
-    if prichiny:
-        t += [""] + [f"- {x}" for x in prichiny]
-    if nechego and zhdut:
-        t += ["", f"Очередь пуста намеренно: {zhdut} пунктов ждут данных или переходника.",
-              "Что именно нужно — в `zadachi.json`."]
+
+    t = [f"# Отчёт за сутки — {seychas():%Y-%m-%d %H:%M} UTC", "", "    " + stroka, ""]
+    if pochemu_pusto:
+        t += [f"Очередь пуста: {pochemu_pusto}.", ""]
+    t += [f"Polymarket: рынков {poly['rynkov_v_istorii']}, последний сбор {poly['posledniy_sbor']}", "",
+          f"**ТРЕБУЕТСЯ ВМЕШАТЕЛЬСТВО: {'ДА' if nuzhno else 'НЕТ'}**"]
+    if nuzhno:
+        t += [""] + [f"- {x}" for x in nuzhno]
+    t += ["", f"Потолок автоматизации: {POTOLOK}. Брокер, деньги и LIVE — Codex и владелец."]
     OTCHET_MD.write_text("\n".join(t) + "\n")
     return j
-
 
 def demon():
     print(f"Фабрика в непрерывном режиме с {seychas():%Y-%m-%d %H:%M} UTC. Ctrl+C — стоп.", flush=True)
@@ -732,6 +916,32 @@ def samoproverka():
         okb = False
     bad += not okb
     print(f"  {'PASS' if okb else 'FAIL'}  {'результат без okna → запись вердикта':<34}{'ok' if okb else 'ошибка'}")
+    # ── потолок автоматизации и запрет двигать планку ─────────────────
+    okp = POTOLOK == "READY_FOR_BUILD" and not any(
+        x in KONEC for x in ("LIVE", "TINY_LIVE", "PRODUCTION", "BROKER_BOUND"))
+    bad += not okp
+    print(f"  {'PASS' if okp else 'FAIL'}  {'потолок фабрики — READY_FOR_BUILD':<34}{POTOLOK}")
+
+    d4 = {"ochered": [dict(id="L2", tip="gipoteza", begun="portfel", rynok="akcii_pit", semya="x",
+                           param={"signal": "AKC_MOM_6_1", "etap": "discovery"}, sostoyanie="POSITIVE_LEAD"),
+                      dict(id="L2__PODTV", tip="gipoteza", begun="portfel", rynok="akcii_pit", semya="x",
+                           param={"signal": "AKC_MOM_6_1", "etap": "confirmation"},
+                           sostoyanie="FAILED_CONFIRMATION", roditel="L2")]}
+    okr = postavit_podtverzhdenie(d4, d4["ochered"][0]) is None
+    bad += not okr
+    print(f"  {'PASS' if okr else 'FAIL'}  {'окно подтверждения не тратится дважды':<34}{'ok' if okr else 'ПОВТОР'}")
+
+    okt = True
+    try:
+        dt_ = {"ochered": [dict(id="TQ", tip="gipoteza", begun="meh", rynok="gold", semya="proverka",
+                               sostoyanie="BLOCKED_DATA", otpechatok_pri_postanovke="0:0")]}
+        sinhronizirovat(dt_, {})
+        okt = dt_["ochered"][0]["sostoyanie"] == "QUEUED"
+    except Exception:
+        okt = False
+    bad += not okt
+    print(f"  {'PASS' if okt else 'FAIL'}  {'данные пришли → пункт сам в очередь':<34}{'ok' if okt else 'не взвёлся'}")
+
     import py_compile
     for f in sorted(DIR.glob("*.py")):
         try:

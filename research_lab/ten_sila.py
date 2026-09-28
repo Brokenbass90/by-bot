@@ -268,17 +268,25 @@ def otchet():
     print(f"  старт: {s['nachalo']}")
     print(f"  закрытых решений: {len(zs)} из {VOROTA}")
     if not zs:
-        print("  ещё нечего считать."); return
+        print("  ещё нечего считать.")
+        print(f"ИТОГ: MALO resheniy=0 iz={VOROTA}"); return
     ib = np.array([z["izbytok"] for z in zs]); it = np.array([z["itog"] for z in zs])
     n_eff = len(zs) / DERZHAT
     t = float(ib.mean() / (ib.std(ddof=1) / np.sqrt(n_eff))) if len(zs) > 1 and ib.std(ddof=1) > 0 else 0.0
     print(f"  итог стратегии (с издержками и фандингом): {it.mean():+.4f} за решение")
     print(f"  случайная пара корзин:                     {it.mean() - ib.mean():+.4f}")
     print(f"  избыток над случайностью:                  {ib.mean():+.4f}, t={t:+.2f} при n_eff {n_eff:.1f}")
-    if len(zs) >= VOROTA:
-        print("  ВОРОТА ДОСТИГНУТЫ: пора выносить вердикт по предрегистрации.")
-    else:
+    if len(zs) < VOROTA:
         print(f"  до ворот ещё {VOROTA - len(zs)} решений — вердикта нет и быть не может.")
+        print(f"ИТОГ: MALO resheniy={len(zs)} iz={VOROTA}")
+    elif n_eff < 20:
+        print(f"ИТОГ: MALO n_eff={n_eff:.1f}")
+    elif ib.mean() > 0 and t >= 2.0:
+        print(f"ИТОГ: PASS izbytok={ib.mean():+.5f} t={t:+.2f} n_eff={n_eff:.1f} resheniy={len(zs)}")
+    elif t <= -2.0 or (np.mean(ib[:len(ib)//2]) < 0 and np.mean(ib[len(ib)//2:]) < 0):
+        print(f"ИТОГ: FAIL izbytok={ib.mean():+.5f} t={t:+.2f} n_eff={n_eff:.1f} resheniy={len(zs)}")
+    else:
+        print(f"ИТОГ: MALO izbytok={ib.mean():+.5f} t={t:+.2f} — ни PASS, ни FAIL по предрегистрации")
 
 
 def main():

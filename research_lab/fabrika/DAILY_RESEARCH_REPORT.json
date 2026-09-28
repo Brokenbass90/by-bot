@@ -1,31 +1,71 @@
 {
- "kogda": "2026-09-24T08:11:29+00:00",
- "za_sutki": {
-  "PLUS_NO_CONFIDENCE": 8,
-  "NEGATIVE": 6,
-  "POSITIVE_LEAD": 1,
-  "FAILED_CONFIRMATION": 1
+ "kogda": "2026-09-28T09:19:14+00:00",
+ "stroka": "tested 0 | killed 0 | leads 0 | confirmed 0 | shadows 0 | ready_for_build 0 | blocked 31 | owner_action 1",
+ "tested": 0,
+ "killed": 0,
+ "leads": [],
+ "confirmed": [],
+ "shadows": [],
+ "ready_for_build": [],
+ "blocked": {
+  "dannye": [
+   "xsec_pit_v5",
+   "xauusd_unchanged_replication_v1",
+   "cross_exchange_arbitrage_paper",
+   "PROBOY_55__gold__short",
+   "SZHATIE_BB__gold__long",
+   "SZHATIE_BB__gold__short",
+   "OTKAT_V_TRENDE__gold__long",
+   "OTKAT_V_TRENDE__gold__short",
+   "VOZVRAT_K_SREDNEY__gold__long",
+   "VOZVRAT_K_SREDNEY__gold__short",
+   "KAPITULYACIYA__gold__long",
+   "KAPITULYACIYA__gold__short",
+   "OBEM_IMPULS__gold__long",
+   "OBEM_IMPULS__gold__short",
+   "MOMENTUM_30D__gold__long",
+   "MOMENTUM_30D__gold__short",
+   "LONDON_PROBOY__gold__long",
+   "LONDON_PROBOY__gold__short",
+   "SVIP_UROVNYA__gold__long",
+   "SVIP_UROVNYA__gold__short",
+   "GEP_VYHODNYH__gold__long",
+   "GEP_VYHODNYH__gold__short",
+   "NOCHNOY_DREYF__gold__long",
+   "NOCHNOY_DREYF__gold__short",
+   "P_AKC_OSTATOCHNYY_MOMENT"
+  ],
+  "perehodnik": [
+   "funding_carry",
+   "simple_mean_reversion",
+   "breakout_retest",
+   "trend_pullback",
+   "session_breakout",
+   "range_rejection"
+  ]
  },
- "proverok": 16,
+ "ochered_pusta": true,
+ "pochemu_pusto": "ждём данные",
+ "za_sutki": {},
  "sostoyaniya": {
   "PARITY_PASS": 2,
-  "NEGATIVE": 38,
+  "NEGATIVE": 45,
   "WAITING_SHADOW": 1,
-  "BLOCKED_DATA": 3,
+  "BLOCKED_DATA": 25,
   "BLOCKED_ADAPTER": 6,
-  "INCONCLUSIVE_LOW_N": 20,
-  "PLUS_NO_CONFIDENCE": 17,
+  "PLUS_NO_CONFIDENCE": 23,
+  "INCONCLUSIVE_LOW_N": 10,
   "DIAGNOSTIC": 1,
   "HYPOTHESIS": 1,
   "FAILED_CONFIRMATION": 1
  },
  "poly": {
-  "rynkov_v_istorii": 4919,
-  "posledniy_sbor": "2026-09-23T16:01:31+00:00"
+  "rynkov_v_istorii": 4928,
+  "posledniy_sbor": "2026-09-27T20:17:17+00:00"
  },
- "nahodki": [],
+ "owner_action": [
+  "нужны данные для 25 пунктов — что именно, в zadachi.json"
+ ],
  "trebuetsya_vmeshatelstvo": true,
- "prichiny": [
-  "очередь пуста — нужен новый пакет гипотез"
- ]
+ "potolok": "READY_FOR_BUILD"
 }

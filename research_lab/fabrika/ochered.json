@@ -2039,7 +2039,7 @@
    "semya": "ostatochnyy_moment",
    "slot": "akcii",
    "sostoyanie": "BLOCKED_DATA",
-   "blocker": "нужна глубокая история Alpaca (с 2016 вместо 2024-08-12): сейчас 349 дней обнаружения, из них две трети уходят на прогрев. Задание: research_lab/ZADANIE_CODEX_ISTORIYA_AKCIY_2026_09_23.md",
+   "blocker": "НАБОР ДАННЫХ НЕ ДОПУЩЕН. Архив не обновлялся: 501 бар, 2024-08-12…2026-08-11, status.json от 12 августа; глубокой истории нет. Сверх того в «чистом» подмножестве из 962 тикеров остались склейки разных компаний под одним тикером: SPCX — скачок +632% 12.06.2026 (21.98 → 160.95) без делистинга, диапазон 21.71…201.80; XTKG — диапазон 0.59…1440.00, делистинг 02.04.2026. Оба НЕ в карантине. Фильтр ликвидности их не спасает: через 11 дней после скачка медиана оборота SPCX 4.8 млрд, фильтр пройден, а 20-дневное окно доходности ещё содержит фальшивый +632%. Механизм ранжирует по 20-дневной доходности, поэтому такая бумага гарантированно окажется в лонг-корзине. Вдобавок скачок лежит ПОСЛЕ даты раздела, то есть отравил бы окно подтверждения, которое заменить нечем. В membership_intervals.json: source_archive_integrity_pass=false, promotion_authorized=false. Задание: research_lab/ZADANIE_CODEX_ISTORIYA_AKCIY_2026_09_23.md",
    "prereg": "research_lab/fabrika/PREREG_AKC_OSTATOCHNYY_MOMENT_2026_09_24.md",
    "param": {
     "signal": "AKC_OSTATOCHNYY_MOMENT",
@@ -2051,7 +2051,365 @@
     "min_pokrytie": 0.8
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "proveryal": "2026-09-28T09:20:41+00:00"
+  },
+  {
+   "id": "LONDON_PROBOY__fx7__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "fx7",
+   "semya": "sessiya_proboy",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "fx7",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:30+00:00",
+   "start": "2026-09-24T15:41:30+00:00"
+  },
+  {
+   "id": "LONDON_PROBOY__fx7__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "fx7",
+   "semya": "sessiya_proboy",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "fx7",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:30+00:00",
+   "start": "2026-09-24T15:41:33+00:00"
+  },
+  {
+   "id": "SVIP_UROVNYA__fx7__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "fx7",
+   "semya": "lozhnyy_proboy",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "fx7",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:30+00:00",
+   "start": "2026-09-24T15:41:32+00:00"
+  },
+  {
+   "id": "SVIP_UROVNYA__fx7__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "fx7",
+   "semya": "lozhnyy_proboy",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "fx7",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:30+00:00",
+   "start": "2026-09-24T15:41:46+00:00"
+  },
+  {
+   "id": "GEP_VYHODNYH__fx7__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "fx7",
+   "semya": "gep_pereocenka",
+   "param": {
+    "meh": "GEP_VYHODNYH",
+    "rynok": "fx7",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:30+00:00",
+   "start": "2026-09-24T15:41:32+00:00"
+  },
+  {
+   "id": "GEP_VYHODNYH__fx7__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "rynok": "fx7",
+   "semya": "gep_pereocenka",
+   "param": {
+    "meh": "GEP_VYHODNYH",
+    "rynok": "fx7",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:30+00:00",
+   "start": "2026-09-24T15:41:46+00:00"
+  },
+  {
+   "id": "LONDON_PROBOY__crypto137__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "crypto137",
+   "semya": "sessiya_proboy",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "crypto137",
+    "side": "long"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:34+00:00",
+   "start": "2026-09-24T15:41:34+00:00"
+  },
+  {
+   "id": "LONDON_PROBOY__crypto137__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "crypto137",
+   "semya": "sessiya_proboy",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "crypto137",
+    "side": "short"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:34+00:00",
+   "start": "2026-09-24T15:41:58+00:00"
+  },
+  {
+   "id": "SVIP_UROVNYA__crypto137__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "crypto137",
+   "semya": "lozhnyy_proboy",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "crypto137",
+    "side": "long"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:34+00:00",
+   "start": "2026-09-24T15:41:39+00:00"
+  },
+  {
+   "id": "SVIP_UROVNYA__crypto137__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "crypto137",
+   "semya": "lozhnyy_proboy",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "crypto137",
+    "side": "short"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:34+00:00",
+   "start": "2026-09-24T15:42:03+00:00"
+  },
+  {
+   "id": "GEP_VYHODNYH__crypto137__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "rynok": "crypto137",
+   "semya": "gep_pereocenka",
+   "param": {
+    "meh": "GEP_VYHODNYH",
+    "rynok": "crypto137",
+    "side": "long"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:47+00:00",
+   "start": "2026-09-24T15:41:47+00:00"
+  },
+  {
+   "id": "GEP_VYHODNYH__crypto137__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
+   "rynok": "crypto137",
+   "semya": "gep_pereocenka",
+   "param": {
+    "meh": "GEP_VYHODNYH",
+    "rynok": "crypto137",
+    "side": "short"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:47+00:00",
+   "start": "2026-09-24T15:42:12+00:00"
+  },
+  {
+   "id": "NOCHNOY_DREYF__crypto137__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "crypto137",
+   "semya": "premiya_za_chas",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "crypto137",
+    "side": "long"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:47+00:00",
+   "start": "2026-09-24T15:41:48+00:00"
+  },
+  {
+   "id": "NOCHNOY_DREYF__crypto137__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "crypto137",
+   "semya": "premiya_za_chas",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "crypto137",
+    "side": "short"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:41:47+00:00",
+   "start": "2026-09-24T15:42:13+00:00"
+  },
+  {
+   "id": "NOCHNOY_DREYF__fx7__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "NEGATIVE",
+   "rynok": "fx7",
+   "semya": "premiya_za_chas",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "fx7",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:42:10+00:00",
+   "start": "2026-09-24T15:42:10+00:00"
+  },
+  {
+   "id": "NOCHNOY_DREYF__fx7__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
+   "rynok": "fx7",
+   "semya": "premiya_za_chas",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "fx7",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "porozhdeno": "2026-09-24T15:42:10+00:00",
+   "start": "2026-09-24T15:42:11+00:00"
+  },
+  {
+   "id": "TEN_SILA",
+   "tip": "ten",
+   "begun": null,
+   "rynok": "kripto_pit50",
+   "semya": "rs_vs_etalon_ls",
+   "slot": "neytral",
+   "sostoyanie": "SHADOW_RUNNING",
+   "ten_spec": "research_lab/fabrika/teni/TEN_SILA.json",
+   "prereg": "research_lab/PREREG_TEN_SILA_2026_09_23.md",
+   "avtor": "Claude",
+   "porozhdeno": "2026-09-24T07:01:24+00:00"
   }
  ]
 }
