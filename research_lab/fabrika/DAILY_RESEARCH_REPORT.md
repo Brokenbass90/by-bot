@@ -1,8 +1,8 @@
-# Отчёт за сутки — 2026-09-28 09:19 UTC
+# Отчёт за сутки — 2026-09-28 09:35 UTC
 
-    tested 0 | killed 0 | leads 0 | confirmed 0 | shadows 0 | ready_for_build 0 | blocked 31 | owner_action 1
+    tested 0 | killed 0 | leads 0 | confirmed 0 | shadows 1 | ready_for_build 0 | blocked 31 | owner_action 1
 
-Очередь пуста: ждём данные.
+Очередь пуста: ждём тень.
 
 Polymarket: рынков 4928, последний сбор 2026-09-27T20:17:17+00:00
 

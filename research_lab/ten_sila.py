@@ -46,6 +46,11 @@ MIN_CHLENOV = 14   # меньше — день пропускаем
 VOROTA = 100       # закрытых решений до вердикта
 
 
+def _utc(sek):
+    """без предупреждений об устаревании: лог тени должен читаться, а не тонуть в них"""
+    return dt.datetime.fromtimestamp(sek, dt.timezone.utc)
+
+
 def seychas_ms():
     return int(time.time() * 1000)
 
@@ -169,9 +174,9 @@ def fanding_za(sym, ot_ms, do_ms):
 
 def otkryt(s, den, syms, C):
     """решение на закрытии дня den: лонг верхних 20% по обгону BTC, шорт нижних"""
-    data = dt.datetime.utcfromtimestamp(den / 1000).strftime("%Y-%m-%d")
+    data = _utc(den / 1000).strftime("%Y-%m-%d")
     if den <= den_ms(s["nachalo_ms"]):
-        pervyy = dt.datetime.utcfromtimestamp((den_ms(s["nachalo_ms"]) + DEN) / 1000).strftime("%Y-%m-%d")
+        pervyy = _utc((den_ms(s["nachalo_ms"]) + DEN) / 1000).strftime("%Y-%m-%d")
         print(f"  день {data} начался до старта тени — не засчитывается. "
               f"Первый засчитываемый день: {pervyy}, решение по нему появится на следующие сутки.", flush=True)
         return None
@@ -196,7 +201,7 @@ def otkryt(s, den, syms, C):
         return None
     ocenki.sort()
     k = max(1, int(DOLYA * len(ocenki)))
-    zapis = {"den": den, "data": dt.datetime.utcfromtimestamp(den / 1000).strftime("%Y-%m-%d"),
+    zapis = {"den": den, "data": _utc(den / 1000).strftime("%Y-%m-%d"),
              "chlenov": len(ocenki), "k": k, "r_btc": r_btc,
              "long": [{"sym": x, "cena": c, "ocenka": o} for o, x, c in ocenki[-k:]],
              "short": [{"sym": x, "cena": c, "ocenka": o} for o, x, c in ocenki[:k]],

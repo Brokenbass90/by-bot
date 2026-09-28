@@ -177,7 +177,8 @@
    "rynok": "crypto",
    "blocker": "прогоняется как P_KR_XSEC_V3 (портфельный прогонщик, вселенная топ-20 по OI на дату); ждёт цен: dannye_pit_kripto.py",
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
-   "semya": "cross_sectional"
+   "semya": "cross_sectional",
+   "otpechatok_pri_postanovke": "0:0"
   },
   {
    "id": "xauusd_unchanged_replication_v1",
@@ -187,7 +188,8 @@
    "rynok": "gold",
    "blocker": "нужен независимый источник XAUUSD (мост MT5)",
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
-   "semya": "intraday_replication"
+   "semya": "intraday_replication",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "funding_carry",
@@ -227,7 +229,8 @@
    "rynok": "crypto",
    "blocker": "нужны синхронные истории бирж",
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
-   "semya": "cross_exchange_arbitrage_paper"
+   "semya": "cross_exchange_arbitrage_paper",
+   "otpechatok_pri_postanovke": "0:0"
   },
   {
    "id": "trend_pullback",
@@ -1861,7 +1864,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "LONDON_PROBOY__gold__short",
@@ -1885,7 +1889,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "SVIP_UROVNYA__gold__long",
@@ -1909,7 +1914,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "SVIP_UROVNYA__gold__short",
@@ -1933,7 +1939,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "GEP_VYHODNYH__gold__long",
@@ -1957,7 +1964,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "GEP_VYHODNYH__gold__short",
@@ -1981,7 +1989,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "NOCHNOY_DREYF__gold__long",
@@ -2005,7 +2014,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "NOCHNOY_DREYF__gold__short",
@@ -2029,7 +2039,8 @@
     "min_n_o3": 30
    },
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T15:39:31+00:00"
+   "porozhdeno": "2026-09-24T15:39:31+00:00",
+   "otpechatok_pri_postanovke": "1:645812"
   },
   {
    "id": "P_AKC_OSTATOCHNYY_MOMENT",
@@ -2052,7 +2063,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
-   "proveryal": "2026-09-28T09:20:41+00:00"
+   "proveryal": "2026-09-28T09:20:41+00:00",
+   "otpechatok_pri_postanovke": "1000:44993239"
   },
   {
    "id": "LONDON_PROBOY__fx7__long",
@@ -2409,7 +2421,9 @@
    "ten_spec": "research_lab/fabrika/teni/TEN_SILA.json",
    "prereg": "research_lab/PREREG_TEN_SILA_2026_09_23.md",
    "avtor": "Claude",
-   "porozhdeno": "2026-09-24T07:01:24+00:00"
+   "porozhdeno": "2026-09-24T07:01:24+00:00",
+   "ten_molchit_chasov": null,
+   "ten_resheniy": 0
   }
  ]
 }

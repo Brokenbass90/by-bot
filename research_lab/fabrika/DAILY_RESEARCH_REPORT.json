@@ -1,11 +1,13 @@
 {
- "kogda": "2026-09-28T09:19:14+00:00",
- "stroka": "tested 0 | killed 0 | leads 0 | confirmed 0 | shadows 0 | ready_for_build 0 | blocked 31 | owner_action 1",
+ "kogda": "2026-09-28T09:35:05+00:00",
+ "stroka": "tested 0 | killed 0 | leads 0 | confirmed 0 | shadows 1 | ready_for_build 0 | blocked 31 | owner_action 1",
  "tested": 0,
  "killed": 0,
  "leads": [],
  "confirmed": [],
- "shadows": [],
+ "shadows": [
+  "TEN_SILA"
+ ],
  "ready_for_build": [],
  "blocked": {
   "dannye": [
@@ -45,7 +47,7 @@
   ]
  },
  "ochered_pusta": true,
- "pochemu_pusto": "ждём данные",
+ "pochemu_pusto": "ждём тень",
  "za_sutki": {},
  "sostoyaniya": {
   "PARITY_PASS": 2,
@@ -57,7 +59,8 @@
   "INCONCLUSIVE_LOW_N": 10,
   "DIAGNOSTIC": 1,
   "HYPOTHESIS": 1,
-  "FAILED_CONFIRMATION": 1
+  "FAILED_CONFIRMATION": 1,
+  "SHADOW_RUNNING": 1
  },
  "poly": {
   "rynkov_v_istorii": 4928,
