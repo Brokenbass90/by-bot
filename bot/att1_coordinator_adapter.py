@@ -263,6 +263,12 @@ def _stable_link_id(account, symbol, side, h1_close_ms):
     return 'a1' + hashlib.sha256(raw).hexdigest()[:26]
 
 
+def att1_broker_account_fingerprint(account):
+    """Opaque UID binding for an offline BROKER_REPLAY lifecycle journal."""
+    return digest({'schema_id': 'att1_broker_replay_account_binding_v1',
+                   'family': ATT1_FAMILY, 'account': _require_account(account)})
+
+
 def _selected_bybit_endpoint_and_key(account_config):
     if not isinstance(account_config, Mapping):
         raise AdapterViolation('selected account config required')
@@ -636,6 +642,98 @@ def finalize_att1_reservation(con, account, decision_key, *, flat, order_final,
     return True
 
 
+def _validate_new_lifecycle_session(session, key):
+    """Prove a pre-existing offline journal belongs to one NEW reservation."""
+    from research_lab.att1_lifecycle_session import LifecycleSession
+
+    if not isinstance(session, LifecycleSession):
+        raise AdapterViolation('ATT1 lifecycle session required')
+    if session.profile.get('profile_id') != 'BROKER_REPLAY_ATT1_V1':
+        raise AdapterViolation('ATT1 session is not broker replay')
+    binding = session.profile.get('broker_binding')
+    if (not isinstance(binding, Mapping)
+            or binding.get('account_fingerprint_sha256') != att1_broker_account_fingerprint(key[0])):
+        raise AdapterViolation('ATT1 session account binding mismatch')
+    records = session.journal.read()
+    if not records:
+        raise AdapterViolation('ATT1 session journal missing')
+    intent = records[0].get('intent')
+    if not isinstance(intent, Mapping):
+        raise AdapterViolation('ATT1 session intent missing')
+    signal = intent.get('signal')
+    if (not isinstance(signal, Mapping) or signal.get('symbol') != key[2]
+            or signal.get('side') != 'short' or signal.get('bar_close_ms') != key[4]
+            or intent.get('book') != 'ATT1_BROKER_REPLAY:' + binding['account_fingerprint_sha256']):
+        raise AdapterViolation('ATT1 session reservation mismatch')
+    session.refresh()
+    plan = session.receipt.get('plan')
+    if not isinstance(plan, Mapping) or plan.get('symbol') != key[2]:
+        raise AdapterViolation('ATT1 session plan mismatch')
+
+
+def reconcile_new_att1_lifecycle_receipts(db_path, decision_key, *, session,
+                                          broker_order_id, events, now_ms):
+    """Offline-only reconciliation from normalized receipts into a NEW journal.
+
+    This function neither sends nor authenticates broker traffic.  Callers own
+    transport and may supply only already-normalized mapper events.  A durable
+    NEW reservation is released only from the recovered session's complete,
+    incident-free lifecycle receipt; it never accepts caller finality flags.
+    """
+    key = _decision_key(decision_key)
+    if not isinstance(events, (list, tuple)):
+        raise AdapterViolation('ATT1 normalized events required')
+    if type(now_ms) is not int or now_ms <= 0:
+        raise AdapterViolation('invalid reconciliation clock')
+    _validate_new_lifecycle_session(session, key)
+    durable = {event['event_id']: event for event in session.journal.read()}
+    if any(event.get('received_ms', 0) > now_ms for event in durable.values()):
+        raise AdapterViolation('reconciliation clock precedes durable evidence')
+    for event in events:
+        if not isinstance(event, Mapping):
+            raise AdapterViolation('ATT1 normalized event malformed')
+        ex, rx = event.get('exchange_ms'), event.get('received_ms')
+        if type(ex) is not int or type(rx) is not int or not 0 < ex <= rx <= now_ms:
+            raise AdapterViolation('invalid normalized event clock')
+        _text(event.get('event_id'), 'event_id')
+    with sqlite3.connect(db_path) as con:
+        route = read_att1_route(con, key[0])
+        row = con.execute('''SELECT owner,symbol,side,h1_close_ms,reserved_at_ms
+                             FROM att1_decisions
+                             WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''',
+                          key).fetchone()
+        if (route['owner'] != 'NEW_READY' or row is None or row[0] != 'NEW'
+                or tuple(row[1:4]) != key[2:]):
+            raise AdapterViolation('ATT1 NEW reservation binding mismatch')
+        if now_ms < row[4]:
+            raise AdapterViolation('reconciliation clock precedes reservation')
+        bind_att1_order(con, key[0], key, broker_order_id)
+    for event in events:
+        previous = durable.get(event.get('event_id'))
+        if previous is not None:
+            # Broker re-poll timestamps are local observability metadata.  Keep
+            # the first fsynced row, but reject any changed normalized evidence.
+            prior_economic = {k: v for k, v in previous.items() if k != 'received_ms'}
+            current_economic = {k: v for k, v in event.items() if k != 'received_ms'}
+            if prior_economic != current_economic:
+                raise AdapterViolation('conflicting normalized broker event')
+            continue
+        session.apply(event)
+        durable[event['event_id']] = dict(event)
+    receipt = session.refresh()
+    finality = {
+        'flat': receipt.get('held_qty') == '0',
+        'order_final': receipt.get('exposure_terminal') is True,
+        'costs_complete': receipt.get('accounting', {}).get('costs_complete') is True,
+    }
+    if receipt.get('lifecycle_terminal') is True and all(finality.values()):
+        with sqlite3.connect(db_path) as con:
+            finalize_att1_reservation(
+                con, key[0], key, now_ms=now_ms, **finality,
+            )
+    return receipt
+
+
 def _text(value, name):
     if not isinstance(value, str) or not value or len(value) > 256:
         raise AdapterViolation('missing/invalid ' + name)
@@ -656,7 +754,10 @@ def _event(row, kind, identity, exchange_text, received_ms, fields):
     if type(received_ms) is not int or not 0 < ex <= received_ms:
         raise AdapterViolation('invalid receive clock')
     source = digest(row)
-    return {'schema_id':'att1_lifecycle_event_v1','event_id':'bybit:'+kind+':'+identity+':'+str(received_ms),
+    # Receipt time is observability metadata, not broker identity.  Re-polls
+    # of an unchanged record must retain the initial durable event; the journal
+    # compares every other normalized field (including source hash) on reuse.
+    return {'schema_id':'att1_lifecycle_event_v1','event_id':'bybit:'+kind+':'+identity+':'+str(ex),
             'kind':kind,'exchange_ms':ex,'received_ms':received_ms,'source_sha256':source,**fields}
 
 
