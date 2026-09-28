@@ -396,3 +396,41 @@ def test_real_hour_rollover_rejects_old_candidate_by_existing_age_contract(tmp_p
     assert not rt.sessions
     assert rt._scan_journal_for(old_close).read()[0]['result']!='ADMITTED'
     assert not rt.scanned
+
+
+def test_gap_preserves_bounded_operation_timing_source_without_cleaning_evidence(tmp_path, monkeypatch):
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape);session=rt.admit_candidate(intent['signal'],intent['instrument'])
+    perf=[0];monkeypatch.setattr(runner.time,'perf_counter_ns',lambda:perf[0])
+    original=rt.transport
+    def delayed(*args,**kwargs):
+        perf[0]+=2_100_000_000;tape.now+=2100
+        return original(*args,**kwargs)
+    rt.transport=delayed
+    rt.manage(session)
+    gap=next(e for e in session.journal.read() if e['kind']=='RECOVERY_GAP')
+    source=json.loads((rt.root/'sources'/(gap['source_sha256']+'.json')).read_text())
+    assert source['observation_gap_ms']>2000
+    assert any(t['operation']=='public_get' and t['path']=='/v5/market/orderbook'
+               and t['elapsed_ms']==2100 for t in source['operation_timings'])
+    assert session.receipt['incidents']==['RECOVERY_GAP']
+    assert session.receipt['final_net_r'] is None
+    for i in range(100):
+        with rt._timed('probe'):perf[0]+=1_000_000
+    timings=rt._operation_timings()
+    assert len(timings)==64
+    timings[0]['operation']='poison'
+    assert rt._operation_timings()[0]['operation']=='probe'
+
+
+def test_failed_public_get_retains_timing_and_exception_type(tmp_path, monkeypatch):
+    tape=PublicTape(FIXTURE['cases'][0]['intent']['submit_ms']);rt=make_runtime(tmp_path,tape)
+    perf=[0];monkeypatch.setattr(runner.time,'perf_counter_ns',lambda:perf[0])
+    def timeout(*args,**kwargs):
+        perf[0]+=3_000_000_000;raise TimeoutError('test')
+    rt.transport=timeout
+    with pytest.raises(TimeoutError):rt._get('/v5/market/orderbook','BTCUSDT',limit=50)
+    timings=rt._operation_timings()
+    assert timings[-1]['operation']=='public_get'
+    assert timings[-1]['elapsed_ms']==3000
+    assert timings[-1]['error']=='TimeoutError'

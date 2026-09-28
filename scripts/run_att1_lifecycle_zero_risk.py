@@ -16,6 +16,8 @@ import fcntl
 import shutil
 import signal as signal_module
 from copy import deepcopy
+from collections import deque
+from contextlib import contextmanager
 from concurrent.futures import ThreadPoolExecutor
 from threading import BoundedSemaphore, Lock, Event
 from urllib.request import Request, HTTPRedirectHandler, ProxyHandler, build_opener
@@ -531,6 +533,7 @@ class PublicLifecycleRuntime:
     def __init__(self,config,*,clock_ms=None,transport=None,sleep_fn=None):
         self.config=config
         self.clock=clock_ms or (lambda:time.time_ns()//1_000_000)
+        self._timing_lock=Lock();self._timings=deque(maxlen=64)
         self.scan_wakeup=Event()
         self.sleep=sleep_fn or self.scan_wakeup.wait
         self.transport=transport or network_transport
@@ -586,7 +589,28 @@ class PublicLifecycleRuntime:
             raise RunnerViolation('scan journal H1 cutoff')
         return LifecycleJournal(self.root/'scans'/(str(close)+'.jsonl'))
 
+    @contextmanager
+    def _timed(self,operation,**details):
+        started_ms=self.clock();started=time.perf_counter_ns();error=None
+        try:
+            yield
+        except BaseException as exc:
+            error=type(exc).__name__
+            raise
+        finally:
+            row={'operation':operation,'started_ms':started_ms,'finished_ms':self.clock(),
+                 'elapsed_ms':(time.perf_counter_ns()-started)/1_000_000,
+                 'error':error,**details}
+            with self._timing_lock:self._timings.append(row)
+
+    def _operation_timings(self):
+        with self._timing_lock:return deepcopy(list(self._timings))
+
     def _get(self,path,symbol,**params):
+        with self._timed('public_get',path=path,symbol=symbol):
+            return self._get_timed(path,symbol,**params)
+
+    def _get_timed(self,path,symbol,**params):
         params={'category':'linear','symbol':symbol,**params}
         with self.public_slots:
             # One scan worker and the management thread share a conservative
@@ -595,7 +619,8 @@ class PublicLifecycleRuntime:
                 wait=max(0.0,self.next_public_start-time.monotonic())
                 if wait:time.sleep(wait)
                 self.next_public_start=time.monotonic()+0.125
-            value=request_public(self.transport,path,params,symbol=symbol,max_response_bytes=self.config['max_response_bytes'])
+            with self._timed('request_io',path=path,symbol=symbol):
+                value=request_public(self.transport,path,params,symbol=symbol,max_response_bytes=self.config['max_response_bytes'])
             with self.public_rate_lock:self.get_count+=1
         return value,self.clock()
 
@@ -628,7 +653,10 @@ class PublicLifecycleRuntime:
     def _mark_observation_gap(self,session,observed_ms):
         decision=session.receipt['plan']['decision_id'];last=self.last_observed.get(decision)
         if last is not None and observed_ms-last>2000 and 'RECOVERY_GAP' not in session.receipt['incidents']:
-            self._emit(session,'RECOVERY_GAP',exchange_ms=observed_ms,received_ms=observed_ms,reason='public polling continuity gap')
+            source=self._save_source({'previous_observed_ms':last,'observed_ms':observed_ms,
+                'observation_gap_ms':observed_ms-last,'operation_timings':self._operation_timings()})
+            self._emit(session,'RECOVERY_GAP',exchange_ms=observed_ms,received_ms=observed_ms,
+                       source=source,reason='public polling continuity gap')
 
     def book_state(self,symbol):
         related=[s for s in self.sessions.values() if s.receipt['plan']['symbol']==symbol]
@@ -784,6 +812,10 @@ class PublicLifecycleRuntime:
         self.last_funding[receipt['plan']['decision_id']]=self.clock()
 
     def scan_symbol(self,symbol):
+        with self._timed('scan_symbol',symbol=symbol):
+            return self._scan_symbol_timed(symbol)
+
+    def _scan_symbol_timed(self,symbol):
         rows,_=self.cache.load(symbol)
         if not rows:
             cached=_read_json_file(Path(self.config['l1_cache_dir'])/(symbol+'.json'))
@@ -838,7 +870,7 @@ class PublicLifecycleRuntime:
         for session in list(self.sessions.values()):
             decision=session.receipt['plan']['decision_id']
             try:
-                self.manage(session)
+                with self._timed('manage',decision_id=decision):self.manage(session)
                 self.poll_errors.pop(decision,None)
             except PublicBookTimeViolation as exc:
                 if 'RECOVERY_GAP' not in session.receipt['incidents']:
@@ -851,7 +883,7 @@ class PublicLifecycleRuntime:
             for session in list(self.sessions.values()):
                 decision=session.receipt['plan']['decision_id']
                 try:
-                    self.reconcile_funding(session)
+                    with self._timed('funding',decision_id=decision):self.reconcile_funding(session)
                     self.poll_errors.pop(decision,None)
                 except (URLError,TimeoutError,ConnectionError) as exc:
                     self.poll_errors[decision]=type(exc).__name__
@@ -866,7 +898,7 @@ class PublicLifecycleRuntime:
             try:result=future.result()
             except (RunnerViolation,PublicCacheViolation,ProfileViolation,URLError,TimeoutError) as exc:
                 result={'result':'SCAN_REJECTED','error':type(exc).__name__+':'+str(exc)[:180]}
-            self.finish_scan(task_close,symbol,result)
+            with self._timed('finish_scan',symbol=symbol):self.finish_scan(task_close,symbol,result)
             self.scan_future=None
         if self.scan_future is None and 20000<=now-close<=300000:
             symbol=next((s for s in FIXED51_UNIVERSE if s not in self.scanned),None)
@@ -874,7 +906,7 @@ class PublicLifecycleRuntime:
                 if self.scan_executor is None:self.scan_executor=ThreadPoolExecutor(max_workers=1,thread_name_prefix='att1-public-scan')
                 self.scan_future=(close,symbol,self.scan_executor.submit(self.scan_symbol,symbol))
                 self.scan_future[2].add_done_callback(lambda _future:self.scan_wakeup.set())
-        self.publish()
+        with self._timed('publish'):self.publish()
 
     def publish(self,status='RUNNING'):
         state=self.state()
@@ -889,6 +921,7 @@ class PublicLifecycleRuntime:
             'scan_coverage_complete':len(self.scanned)==len(FIXED51_UNIVERSE),
             'scan_results':self.scan_results,'poll_errors':self.poll_errors,
             'last_public_observed_ms':self.last_observed,
+            'recent_slow_operations':[t for t in self._operation_timings() if t['elapsed_ms']>=250][-8:],
             'valuation_note':'durable state updates on lifecycle transitions; ordinary quote marks are not journaled'})
 
     def run(self,*,once=False):
@@ -904,7 +937,7 @@ class PublicLifecycleRuntime:
             while self.running:
                 self.scan_wakeup.clear()
                 started=self.clock()
-                self.tick()
+                with self._timed('tick'):self.tick()
                 if once:break
                 self.sleep(max(0,self.config['poll_seconds']-(self.clock()-started)/1000))
             self.publish('STOPPED' if not once else 'ONCE_COMPLETE')
