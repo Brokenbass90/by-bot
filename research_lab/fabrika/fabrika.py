@@ -564,6 +564,7 @@ def postavit_ten(d, it, zap):
             "R и деньги до ворот не считаются и не показываются",
         ],
         "zhurnal": zhurnal,
+        "bienie": f"research_lab/data/ten_{it['id']}.bienie",
         "ocenshchik": None,        # команда; должна печатать строку «ИТОГ: PASS|FAIL|MALO ...»
         "komanda_zapuska": None,
         "sostoyanie": "ZHDYOT_PROGONSHCHIKA",
@@ -601,9 +602,14 @@ def proverit_teni(d):
         if it is None or it["sostoyanie"] not in ("SHADOW_WAITING", "SHADOW_RUNNING"):
             continue
         zh = ROOT / sp["zhurnal"]
-        if zh.exists():
+        # Живость меряем по БИЕНИЮ, а не по журналу решений: тень может честно
+        # работать неделями и не принять ни одного решения (ждёт своих дней),
+        # и это не повод считать её мёртвой. Журнал — запасной вариант.
+        bien = ROOT / sp["bienie"] if sp.get("bienie") else None
+        istochnik = bien if (bien and bien.exists()) else (zh if zh.exists() else None)
+        if istochnik is not None:
             it["sostoyanie"] = "SHADOW_RUNNING"
-            molchit = (time.time() - zh.stat().st_mtime) / 3600
+            molchit = (time.time() - istochnik.stat().st_mtime) / 3600
             it["ten_molchit_chasov"] = round(molchit, 1)
             if molchit > MOLCHIT_CHASOV:
                 sobytiya.append(f"тень {sp['id']} молчит {molchit:.0f} ч — процесс, похоже, упал")

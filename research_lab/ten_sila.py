@@ -54,14 +54,38 @@ def den_ms(ms):
     return ms // DEN * DEN
 
 
-def zamok():
+BIENIE = DATA / "ten_SILA.bienie"
+
+
+def zamok(pauza=21600):
+    """Замок по БИЕНИЮ, а не по одному лишь номеру процесса.
+
+    Дефект 28 сентября: тень умерла 25-го, pid-файл остался, а номер 24595
+    операционная система успела отдать другому процессу. Проверка kill(pid,0)
+    сказала «жив», и тень три дня отказывалась подниматься со словами
+    «уже работает». Номер процесса сам по себе ничего не доказывает.
+
+    Теперь замок держится, только если процесс жив И биение свежее двух
+    пауз. Иначе замок считается брошенным и его забирают.
+    """
     if PIDF.exists():
+        zhiv = False
         try:
-            os.kill(int(PIDF.read_text()), 0)
-            print(f"Тень СИЛА уже работает, процесс {PIDF.read_text().strip()}."); sys.exit(0)
+            os.kill(int(PIDF.read_text()), 0); zhiv = True
         except (OSError, ValueError):
-            pass
-    PIDF.write_text(str(os.getpid()))
+            zhiv = False
+        svezho = BIENIE.exists() and (time.time() - float(BIENIE.read_text() or 0)) < max(2 * pauza, 3 * 3600)
+        if zhiv and svezho:
+            print(f"Тень СИЛА уже работает, процесс {PIDF.read_text().strip()}, биение свежее."); sys.exit(0)
+        if zhiv and not svezho:
+            vozrast = (time.time() - float(BIENIE.read_text() or 0)) / 3600 if BIENIE.exists() else float("inf")
+            print(f"Замок брошен: процесс {PIDF.read_text().strip()} числится живым, но биения нет "
+                  f"{vozrast:.0f} ч. Это чужой процесс с тем же номером. Забираю замок.")
+    PIDF.write_text(str(os.getpid())); bit()
+
+
+def bit():
+    BIENIE.write_text(str(time.time()))
 
 
 def sostoyanie():
@@ -297,16 +321,18 @@ def main():
     a = ap.parse_args()
     if a.otchet:
         otchet(); return
-    zamok()
+    zamok(a.pauza)
     kon = time.time() + a.minut * 60
     n = 0
     while True:
         n += 1
         print(f"\n--- проход {n}  {dt.datetime.now(dt.timezone.utc):%Y-%m-%d %H:%M} UTC ---", flush=True)
+        bit()
         try:
             krug()
         except Exception as e:
             print("  сбой прохода:", repr(e), flush=True)
+        bit()
         if time.time() >= kon:
             break
         time.sleep(a.pauza)
