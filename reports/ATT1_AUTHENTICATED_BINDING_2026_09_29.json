@@ -1,0 +1,116 @@
+{
+  "schema_id": "att1_authenticated_binding_progress_v1",
+  "as_of_utc": "2026-09-29T17:15:41.259000+00:00",
+  "binding_complete": false,
+  "canary_ready": false,
+  "completed_code": [
+    "pinned_signed_GET_transport",
+    "account_identity_and_complete_position_order_pages",
+    "exact_entry_orderLinkId_lost_response_recovery",
+    "preflight_before_journal_write",
+    "conditional_position_stop_validation",
+    "coordinator_exit_identity_and_fill_recovery",
+    "actual_cash_vs_independent_funding_schedule",
+    "late_cash_keeps_reservation_occupied",
+    "fresh_broker_flat_plus_journal_terminal_finality",
+    "restart_idempotent_existing_SQLite_and_journal"
+  ],
+  "critical_blocker": "BROKER_NATIVE_STOP_WITHOUT_COORDINATOR_EXIT_INTENT: exact stop-trigger fill cannot currently be adopted without inventing intent/receive timestamps; fail closed; do not activate NEW.",
+  "fresh_broker": {
+    "authenticated_reconciliation": "PASS",
+    "account_fingerprint": "uid:2c5e4f13768ea15927fe2dbaa3aacce67faaa656b9df33bf2f7df5e060c5aef8",
+    "positions": 0,
+    "open_orders": 0,
+    "transaction_log_pages": 1,
+    "transaction_log_rows": 0,
+    "raw_receipt_sha256": "094ac118fbe651831f55b1e3827f56179f9335435bc68030e34df29dd0ada45e",
+    "transaction_log_fix": "category per row; observed explicit null cursor accepted only for empty transaction list; raw envelope preserved"
+  },
+  "verification": {
+    "local_focused_tests": 166,
+    "target_python": "3.12.3",
+    "target_focused_tests": 166,
+    "target_files_verified": 13,
+    "real_new_fills": 0,
+    "fixtures_are_prospective_evidence": false,
+    "synthetic_checks": [
+      "entry lost response",
+      "exit lost response",
+      "native SL unsupported fails closed",
+      "protection identity",
+      "cash delayed then terminal",
+      "restart journal identity and no duplicate fees/fills",
+      "reservation locked if cash missing or broker orders remain"
+    ]
+  },
+  "orders_off_proof": {
+    "SEND_ENABLED": false,
+    "transport_methods": [
+      "GET"
+    ],
+    "endpoint_create_cancel_trading_stop_allowlisted": false,
+    "new_service_installed": false,
+    "real_orders_submitted": 0,
+    "old_service_pid": 2150553,
+    "public_service_pid": 2768300,
+    "old_pid_unchanged": true,
+    "strategy_and_public_2s_gate_modified": false
+  },
+  "public_observation": {
+    "epoch_id": "att1-public-lifecycle-20260928-observation-timing",
+    "session_count": 2,
+    "clean_terminal_count": 0,
+    "sessions_with_recovery_gap": 1,
+    "new_filled_session": "1000RATSUSDT",
+    "entry_fill_events": 2,
+    "automatic_restarts": 0,
+    "heartbeat_age_ms": 196,
+    "gap_source_sha256": "cfe230979c51ad53ea5ca8195c06e20c80d7a6c702f86cf04cef05020277b70e",
+    "gap_ms": 2091,
+    "orderbook_request_io_ms": 1691.765551,
+    "between_previous_observation_and_request_start_ms": 400,
+    "cause_limit": "Measured request_io plus elapsed local processing; no attribution to DNS, TLS, exchange, CPU or scheduler without finer evidence. Public unchanged."
+  },
+  "private_evidence_directory": ".private/att1_binding_20260929",
+  "candidate_manifest": {
+    "files": {
+      "bot/att1_coordinator_adapter.py": "b9765993c388a20cf524936d4cd0c028374f11fe401be0e7184f69f2b59012c0",
+      "scripts/live_bybit_evidence_20260706.py": "84659dddf81e89efaa8765c4781e693529a295797101984debba198d64706878",
+      "smart_pump_reversal_bot.py": "1b62c6fcc8ca12081aa5139949042ee7125f645d2cbe0f6c0c40e367537c587b",
+      "tests/test_att1_lifecycle_coordinator.py": "b7a52c49f9314c2d849fd6980011f3bddb4b2cb9f63fafb74ce8074e0ab7f2fc",
+      "tests/test_att1_authenticated_entry_recovery.py": "d4ef8af5cc2c1494f314e28f0ffe1f589251d03ce69b58851168d8568f35da5b",
+      "tests/test_att1_authenticated_finality.py": "ac457b7a36db458022935e345c0a8b278c7cdbc71a7fa469763685b5162ecf0e",
+      "tests/test_att1_authenticated_transport.py": "3529aaeb788561bb7744c116bd40f93d3f0b5183f54235a572a9bae62b3307e5",
+      "tests/test_att1_new_broker_lifecycle_binding.py": "dc0697af5237b2ce30e6ea60ab5083b402853d8d2dd7697711616c9d4a1f8d5a",
+      "tests/test_att1_broker_replay_binding.py": "ced1c7391eb9993b64d8b3adbe4b5df58075e0539ee99ef7fbeaf843f95c9639",
+      "tests/test_att1_exclusive_reservation.py": "6bcfd6345943e90b672b86616f3da2307946b0054dce33ee75909a4abd1969a4",
+      "tests/test_att1_account_identity.py": "99705ebb7d4e0cbd3910f5017eb91f07008604071f447b5599342f7d0d6cff09",
+      "tests/test_att1_broker_snapshot.py": "4823b14095af0076b76f0cf021abb50d73f7ede2f280e90d6f1672170e9af5d3",
+      "tests/test_att1_broker_cash_accounting.py": "6c8af010dd4e876e8a90538f03dc8c0ed417905f8a504af844dee6ae9d8e6043"
+    },
+    "tests": [
+      "tests/test_att1_authenticated_entry_recovery.py",
+      "tests/test_att1_authenticated_finality.py",
+      "tests/test_att1_authenticated_transport.py",
+      "tests/test_att1_new_broker_lifecycle_binding.py",
+      "tests/test_att1_broker_replay_binding.py",
+      "tests/test_att1_exclusive_reservation.py",
+      "tests/test_att1_account_identity.py",
+      "tests/test_att1_broker_snapshot.py",
+      "tests/test_att1_broker_cash_accounting.py"
+    ]
+  },
+  "model_orchestration": {
+    "worker_model": "gpt-5.6-terra",
+    "worker_effort": "high",
+    "runtime_metadata_verified": true,
+    "worker_limit_hit": true,
+    "worker_retried": false,
+    "critical_review": "root",
+    "independent_final_review_completed": false
+  },
+  "source_docs": [
+    "https://bybit-exchange.github.io/docs/v5/account/transaction-log"
+  ],
+  "next_action": "Resolve broker-native conditional stop trigger attribution within existing coordinator contract; keep orders OFF. Then finish complete-path verification, separately fix the measured public observation budget."
+}

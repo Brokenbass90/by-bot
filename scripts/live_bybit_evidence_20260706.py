@@ -181,6 +181,264 @@ class BybitClient:
             return json.loads(response.read().decode("utf-8"))
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Fail closed instead of following a signed request to another URL."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: D401
+        return None
+
+
+class StrictAtt1ReadClient:
+    """Signed, bounded Bybit V5 evidence reader with no mutable API surface.
+
+    It accepts exactly one selected account mapping and never reads credentials
+    from the environment or account fallback lists.  Responses remain raw full
+    Bybit envelopes so the ATT1 lifecycle owner can persist and validate them.
+    """
+
+    BASE_URL = "https://api.bybit.com"
+    TIMEOUT_SECONDS = 10
+    MAX_RESPONSE_BYTES = 1_000_000
+    MAX_PAGES = 16
+    MAX_AGE_MS = 60_000
+    _ALLOWLIST = {
+        "/v5/user/query-api": frozenset(),
+        "/v5/position/list": frozenset({"category", "symbol", "settleCoin", "limit", "cursor"}),
+        "/v5/order/realtime": frozenset({"category", "symbol", "baseCoin", "settleCoin", "orderId", "orderLinkId", "openOnly", "limit", "cursor"}),
+        "/v5/order/history": frozenset({"category", "symbol", "baseCoin", "orderId", "orderLinkId", "startTime", "endTime", "limit", "cursor"}),
+        "/v5/execution/list": frozenset({"category", "symbol", "baseCoin", "orderId", "orderLinkId", "execType", "startTime", "endTime", "limit", "cursor"}),
+        "/v5/account/transaction-log": frozenset({"category", "accountType", "currency", "baseCoin", "type", "startTime", "endTime", "limit", "cursor"}),
+        "/v5/market/funding/history": frozenset({"category", "symbol", "startTime", "endTime", "limit"}),
+    }
+    _PAGE_ENDPOINTS = frozenset({
+        "/v5/position/list", "/v5/order/realtime", "/v5/order/history",
+        "/v5/execution/list", "/v5/account/transaction-log",
+    })
+    _LIMIT_MAX = {
+        "/v5/position/list": 200,
+        "/v5/order/realtime": 50,
+        "/v5/order/history": 50,
+        "/v5/execution/list": 100,
+        "/v5/account/transaction-log": 50,
+        "/v5/market/funding/history": 200,
+    }
+
+    def __init__(self, config: dict[str, str], *, opener=None, clock_ms=None):
+        if not isinstance(config, dict) or set(config) != {"key", "secret", "base"}:
+            raise ValueError("explicit selected ATT1 account config required")
+        key, secret, base = config["key"], config["secret"], config["base"]
+        if (not all(isinstance(value, str) and value for value in (key, secret, base))
+                or base.rstrip("/") != self.BASE_URL):
+            raise ValueError("ATT1 endpoint or credentials rejected")
+        self._key = key
+        self._secret = secret
+        self._base = self.BASE_URL
+        self._opener = opener or urllib.request.build_opener(
+            urllib.request.ProxyHandler({}), _NoRedirect(),
+        )
+        self._clock_ms = clock_ms or (lambda: int(time.time() * 1000))
+        self.last_received_ms: int | None = None
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(config={{'key': '<redacted>', 'base': {self._base!r}}})"
+
+    @property
+    def timeout_seconds(self) -> int:
+        return self.TIMEOUT_SECONDS
+
+    @property
+    def config(self) -> dict[str, str]:
+        """Return the selected public config without the signing secret."""
+        return {"key": self._key, "base": self._base}
+
+    @property
+    def redacted_config(self) -> dict[str, str]:
+        return self.config
+
+    @staticmethod
+    def _text(value: Any, name: str) -> str:
+        if not isinstance(value, str) or not value or len(value) > 512 or "\x00" in value:
+            raise ValueError(f"invalid {name}")
+        return value
+
+    def _validated_params(self, path: str, params: dict[str, Any]) -> dict[str, str]:
+        if path not in self._ALLOWLIST or not isinstance(params, dict):
+            raise ValueError("GET path or params rejected")
+        if set(params) - self._ALLOWLIST[path]:
+            raise ValueError("GET params not allowlisted")
+        if path == "/v5/user/query-api" and params:
+            raise ValueError("query-api parameters rejected")
+        normalized: dict[str, str] = {}
+        for key, value in params.items():
+            if not isinstance(key, str) or not key.isascii():
+                raise ValueError("invalid GET parameter name")
+            if isinstance(value, bool):
+                raise ValueError("invalid GET parameter value")
+            if isinstance(value, int):
+                if value < 0:
+                    raise ValueError("invalid GET parameter value")
+                text = str(value)
+            else:
+                text = self._text(value, "GET parameter value")
+            normalized[key] = text
+        if path != "/v5/user/query-api" and normalized.get("category") != "linear":
+            raise ValueError("ATT1 category must be linear")
+        if "limit" in normalized:
+            try:
+                limit = int(normalized["limit"])
+            except ValueError as exc:
+                raise ValueError("invalid page limit") from exc
+            if (not 1 <= limit <= self._LIMIT_MAX[path]
+                    or str(limit) != normalized["limit"]):
+                raise ValueError("invalid page limit")
+        timestamps: dict[str, int] = {}
+        for name in ("startTime", "endTime"):
+            if name in normalized:
+                try:
+                    parsed = int(normalized[name])
+                except ValueError as exc:
+                    raise ValueError("invalid evidence time window") from exc
+                if parsed <= 0 or str(parsed) != normalized[name]:
+                    raise ValueError("invalid evidence time window")
+                timestamps[name] = parsed
+        if path == "/v5/account/transaction-log" and len(timestamps) == 2:
+            if not 0 <= timestamps["endTime"] - timestamps["startTime"] <= 7 * 24 * 60 * 60 * 1000:
+                raise ValueError("transaction-log time window exceeds seven days")
+        if path == "/v5/market/funding/history" and "symbol" not in normalized:
+            raise ValueError("funding history symbol required")
+        return normalized
+
+    def _request_url(self, path: str, params: dict[str, str]) -> tuple[str, str]:
+        query = urllib.parse.urlencode(sorted(params.items()), safe="")
+        return self._base + path + (("?" + query) if query else ""), query
+
+    def _validate_envelope(self, envelope: Any, received_ms: int) -> dict[str, Any]:
+        if (not isinstance(envelope, dict) or type(envelope.get("retCode")) is not int
+                or envelope["retCode"] != 0 or type(envelope.get("time")) is not int
+                or not isinstance(envelope.get("result"), dict)):
+            raise ValueError("malformed Bybit evidence envelope")
+        response_ms = envelope["time"]
+        if not 0 < response_ms <= received_ms or received_ms - response_ms > self.MAX_AGE_MS:
+            raise ValueError("stale or future Bybit evidence envelope")
+        return envelope
+
+    @staticmethod
+    def _strict_object(pairs):
+        parsed = {}
+        for key, value in pairs:
+            if key in parsed:
+                raise ValueError("duplicate JSON key")
+            parsed[key] = value
+        return parsed
+
+    @staticmethod
+    def _reject_nonfinite_json(value):
+        raise ValueError("non-finite JSON literal: " + value)
+
+    def _validate_result_category(self, path: str, result: dict[str, Any]) -> None:
+        if path == "/v5/user/query-api":
+            return
+        if path == "/v5/account/transaction-log":
+            rows = result.get("list")
+            if not isinstance(rows, list):
+                raise ValueError("transaction-log result rows rejected")
+            for row in rows:
+                if not isinstance(row, dict) or row.get("category") != "linear":
+                    raise ValueError("transaction-log row category rejected")
+            return
+        if result.get("category") != "linear":
+            raise ValueError("Bybit response category rejected")
+        if path == "/v5/market/funding/history" and not isinstance(result.get("list"), list):
+            raise ValueError("funding history result rows rejected")
+
+    def get(self, path: str, params: dict[str, Any]) -> dict[str, Any]:
+        """Fetch one exact signed GET envelope from the pinned Bybit endpoint."""
+        normalized = self._validated_params(path, params)
+        url, query = self._request_url(path, normalized)
+        timestamp = str(int(self._clock_ms()))
+        if not timestamp.isdecimal() or int(timestamp) <= 0:
+            raise ValueError("invalid local receive clock")
+        recv_window = "5000"
+        signature = hmac.new(
+            self._secret.encode(),
+            (timestamp + self._key + recv_window + query).encode(),
+            hashlib.sha256,
+        ).hexdigest()
+        request = urllib.request.Request(
+            url,
+            headers={
+                "X-BAPI-API-KEY": self._key,
+                "X-BAPI-TIMESTAMP": timestamp,
+                "X-BAPI-RECV-WINDOW": recv_window,
+                "X-BAPI-SIGN": signature,
+            },
+            method="GET",
+        )
+        with self._opener.open(request, timeout=self.TIMEOUT_SECONDS) as response:
+            if response.geturl() != url:
+                raise ValueError("Bybit redirect rejected")
+            raw = response.read(self.MAX_RESPONSE_BYTES + 1)
+        if not isinstance(raw, bytes) or len(raw) > self.MAX_RESPONSE_BYTES:
+            raise ValueError("Bybit response exceeds bounded size")
+        try:
+            envelope = json.loads(
+                raw.decode("utf-8"), object_pairs_hook=self._strict_object,
+                parse_constant=self._reject_nonfinite_json,
+            )
+        except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+            raise ValueError("Bybit response is not JSON") from exc
+        received_ms = int(self._clock_ms())
+        if received_ms <= 0:
+            raise ValueError("invalid local receive clock")
+        envelope = self._validate_envelope(envelope, received_ms)
+        self._validate_result_category(path, envelope["result"])
+        self.last_received_ms = received_ms
+        return envelope
+
+    def pages(self, path: str, params: dict[str, Any]) -> list[dict[str, Any]]:
+        """Return a complete, bounded, non-cyclic linear pagination chain."""
+        base_params = self._validated_params(path, params)
+        if path not in self._PAGE_ENDPOINTS or "cursor" in base_params:
+            raise ValueError("pagination path or initial cursor rejected")
+        pages: list[dict[str, Any]] = []
+        seen_cursors: set[str] = set()
+        cursor = ""
+        while True:
+            request_params = dict(base_params)
+            if cursor:
+                request_params["cursor"] = cursor
+            envelope = self.get(path, request_params)
+            result = envelope["result"]
+            next_cursor = result.get("nextPageCursor")
+            # Observed on the authenticated UTA endpoint: empty list with an
+            # explicit JSON null cursor. Preserve the raw envelope unchanged.
+            if (path == "/v5/account/transaction-log" and result.get("list") == []
+                    and "nextPageCursor" in result and next_cursor is None):
+                next_cursor = ""
+            if not isinstance(result.get("list"), list) or not isinstance(next_cursor, str):
+                raise ValueError("malformed Bybit linear page")
+            pages.append(envelope)
+            if not next_cursor:
+                return pages
+            if next_cursor in seen_cursors or len(pages) >= self.MAX_PAGES:
+                raise ValueError("cyclic or oversized Bybit pagination")
+            seen_cursors.add(next_cursor)
+            cursor = next_cursor
+
+    def identity(self):
+        """Refresh a redacted UID binding from the pinned signed query-api call."""
+        envelope = self.get("/v5/user/query-api", {})
+        if self.last_received_ms is None:  # Defensive: get only sets it after validation.
+            raise ValueError("identity receive clock missing")
+        if str(ROOT) not in os.sys.path:
+            os.sys.path.insert(0, str(ROOT))
+        from bot.att1_coordinator_adapter import validate_old_att1_broker_identity
+
+        return validate_old_att1_broker_identity(
+            self.config, envelope, received_ms=self.last_received_ms,
+        )
+
+
 def _bybit_evidence(symbol: str, lookback_hours: int) -> dict[str, Any]:
     client = BybitClient(_load_env())
     end = int(time.time() * 1000)

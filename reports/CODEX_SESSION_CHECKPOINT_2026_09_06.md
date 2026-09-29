@@ -2,6 +2,68 @@
 
 ## Public continuation checkpoint
 
+
+Latest continuation — **September 29 13:15 UTC: authenticated GET binding advanced, NOT activation-ready**:
+- Owner scope remains ATT1 only, real order submission OFF. Local + isolated VPS
+  Python3.12.3 focused suite **166 PASS**; 13 candidate files hash verified.
+  No production install/restart, OLD PID2150553 / public PID2768300 unchanged,
+  NRestarts0 on both. Existing strategy, public2s gate, risk and positions unchanged.
+- Existing adapter now wires pinned signed GET account/position/order truth,
+  exact deterministic entry orderLinkId → ACK/fills → conditional stop proof,
+  coordinator exit order/fill recovery, delayed actual funding vs public schedule,
+  broker-flat + journal terminal finality. Same SQLite reservation/journal reused.
+  Lost-response/restart/dedupe/cost tests are **synthetic**, NOT clean terminals.
+- Direct main account GET reconciliation PASS: **0 positions / 0 open orders**.
+  Actual transaction-log returned empty list with explicit null cursor. Fixed
+  parser endpoint-specific category and this observed empty-page representation;
+  raw response remains unchanged. Final signed GET collection PASS after fix.
+- **binding_complete=false / CANARY_READY=false**. One concrete binding defect:
+  broker-native SL fill without an existing coordinator exit-intent is not yet
+  causally attributable; adapter fails closed instead of inventing timestamps or
+  accepting a foreign exit. Regression test proves slot stays locked. Next work:
+  finish that broker-native stop-trigger path in the existing contract, orders OFF.
+- Public independently gained a filled 1000RATSUSDT simulation: **2 sessions,
+  0 clean terminal, 1 RECOVERY_GAP**. Heartbeat196ms at signed snapshot. Gap source
+  cfe230979c51ad53ea5ca8195c06e20c80d7a6c702f86cf04cef05020277b70e proves2091ms:
+  orderbook request_io1691.766ms +400ms between prior observation and next GET.
+  No process restart. This is measured cycle budget overrun, not proof of network
+  sub-cause or CPU starvation. Preserved source privately; no public runtime edits.
+- Receipt `reports/ATT1_AUTHENTICATED_BINDING_2026_09_29.json`; private raw GET,
+  target/local logs, manifests and gap source `.private/att1_binding_20260929/`.
+  Orders OFF structurally: SEND_ENABLED=False; allowlisted GET only, no mutation
+  endpoint; no NEW live service installed. Actual NEW fills remain0.
+- Transport delegated to gpt-5.6-terra/high (model/effort verified in turn_context).
+  Worker hit allowance after code/tests; no retry. Root reviewed/finished real
+  endpoint compatibility. Independent final review is not claimed completed.
+
+Earlier continuation (superseded where noted):
+
+Latest continuation — **September 29 12:01 UTC: bounded ATT1 monitor finished, PENDING**:
+- Owner follow-up12:06 UTC: now18 complete51/51 cycles. Read actual session
+  journal and source: sole MNT session is ENTRY_FINAL=CANCELLED, **no ENTRY_FILL**.
+  Book cts1790672484426 precedes submit1790672484786 by360ms; existing simulation
+  causality rule returns no fills. This is a confirmed nonfill, not clean terminal.
+  Zero new gaps therefore does not establish continuity under an open position.
+  Runtime unchanged; next engineering priority remains authenticated NEW binding.
+- One read-only SSH snapshot confirms diagnostic epoch still RUNNING, PID2768300,
+  heartbeat0.62s, automatic NRestarts0. No VPS mutations, redeploy, orders or risk changes.
+- **17 complete H1 cycles × 51/51**, plus current 12:00 cycle31/51 still within its
+  scan window. One session; **clean filled terminal0 / RECOVERY_GAP0**. Lightweight
+  heartbeat does not prove whether that session filled; no clean/cohort PASS.
+- No sourced blocking operation captured. Duplicate/missing transitions were NOT
+  validated by this lightweight check. Healthy scanning does not prove continuity
+  under held exposure or explain earlier gaps. **CANARY_READY=false**.
+- Monitor limit (six completed H1) passed. App confirmed automation
+  `att1-bounded-continuity-evidence` **PAUSED**; public service itself stays running.
+  Previous23:36 SSH timeout did not establish a runtime failure; current access works.
+- Receipt `reports/ATT1_BOUNDED_MONITOR_VERDICT_2026_09_29.json`; raw snapshot
+  `.private/att1_gap_20260928/heartbeat_20260929_1200.json` preserved privately.
+- NEW authenticated dispatch remains unfinished/default-off. Next active work must
+  distinguish that engineering gap from the still-pending prospective cohort.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 28 18:16 UTC: public timing diagnostics deployed; offline NEW recovery binding advanced**:
 - Current owner P0 only ATT1. OLD LIVE PID2150553, Alpaca config/cron, risk and
   positions unchanged. No real orders. No weakening of recovery/integrity gates.

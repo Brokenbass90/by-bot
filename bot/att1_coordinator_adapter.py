@@ -1,6 +1,8 @@
-"""Bybit evidence -> existing ATT1 event contract. No transport or send API.
+"""Bybit evidence -> existing ATT1 event contract. No order-send API.
 
-These pure mappers validate broker-shaped records, not their authenticity.
+Pure mappers validate broker-shaped records, not their authenticity.
+Explicit GET-only collectors below pin account truth and reuse the existing
+journal/reservation; none runs a background service or submits an order.
 The owning process must durably bind account/order identities and collect
 complete signed evidence before any live use. No ACK manufactures a fill or
 protective stop. Synthetic fixtures exercise this boundary without credentials.
@@ -672,7 +674,7 @@ def _validate_new_lifecycle_session(session, key):
 
 
 def reconcile_new_att1_lifecycle_receipts(db_path, decision_key, *, session,
-                                          broker_order_id, events, now_ms):
+                                          broker_order_id, events, now_ms, release_reservation=True):
     """Offline-only reconciliation from normalized receipts into a NEW journal.
 
     This function neither sends nor authenticates broker traffic.  Callers own
@@ -726,7 +728,9 @@ def reconcile_new_att1_lifecycle_receipts(db_path, decision_key, *, session,
         'order_final': receipt.get('exposure_terminal') is True,
         'costs_complete': receipt.get('accounting', {}).get('costs_complete') is True,
     }
-    if receipt.get('lifecycle_terminal') is True and all(finality.values()):
+    if type(release_reservation) is not bool:
+        raise AdapterViolation('invalid reservation release mode')
+    if release_reservation and receipt.get('lifecycle_terminal') is True and all(finality.values()):
         with sqlite3.connect(db_path) as con:
             finalize_att1_reservation(
                 con, key[0], key, now_ms=now_ms, **finality,
@@ -894,3 +898,493 @@ def map_protection(position, stop_order, *, receipt, received_ms):
                    str(max(e['exchange_ms'] for e in events)),received_ms,
                    {'qty':_decimal_text(held),'stop':p['original_stop']})
     return result
+
+
+def _complete_att1_rows(pages, *, received_ms, identity_field, category_on_rows=False):
+    """Check bounded pages again at the journal boundary, before any mutation."""
+    if not isinstance(pages, list) or not 1 <= len(pages) <= 16:
+        raise AdapterViolation('incomplete broker pagination')
+    rows, cursors, identities = [], set(), set()
+    for index, page in enumerate(pages):
+        if (not isinstance(page, Mapping) or type(page.get('retCode')) is not int
+                or page['retCode'] != 0 or type(page.get('time')) is not int
+                or not 0 < page['time'] <= received_ms
+                or received_ms - page['time'] > ATT1_BROKER_IDENTITY_MAX_AGE_MS):
+            raise AdapterViolation('invalid/stale broker envelope')
+        result = page.get('result')
+        if (not isinstance(result, Mapping) or (not category_on_rows and result.get('category') != 'linear')
+                or not isinstance(result.get('list'), list)):
+            raise AdapterViolation('invalid broker rows')
+        cursor = result.get('nextPageCursor')
+        if category_on_rows and result['list']==[] and 'nextPageCursor' in result and cursor is None:
+            cursor=''
+        if (not isinstance(cursor, str) or ((index == len(pages)-1) != (cursor == ''))
+                or (cursor and cursor in cursors)):
+            raise AdapterViolation('incomplete/cyclic broker pagination')
+        cursors.add(cursor)
+        for row in result['list']:
+            if not isinstance(row, Mapping):
+                raise AdapterViolation('invalid broker row')
+            if category_on_rows and row.get('category')!='linear':
+                raise AdapterViolation('foreign transaction category')
+            identity = _text(row.get(identity_field), identity_field)
+            if identity in identities:
+                raise AdapterViolation('duplicate broker entity')
+            identities.add(identity)
+            rows.append(row)
+    return rows
+
+
+def recover_new_att1_broker_entry(db_path, decision_key, *, session, account_config,
+                                 broker_identity, order_pages, execution_pages, received_ms,
+                                 protection=None):
+    """Recover an already-existing NEW entry, including a lost submit response.
+
+    Pure boundary: caller must collect these pages using the same signed client.
+    No missing-order result authorizes a retry/send, and no ACK invents a fill.
+    Preflight the entire batch before binding or appending, then reuse the
+    existing fsynced journal and SQLite reservation. Broker funding finality and
+    protection are deliberately not inferred from an entry fill or account flat.
+    """
+    from research_lab.att1_lifecycle_coordinator import replay_lifecycle
+
+    key = _decision_key(decision_key)
+    account = _validated_old_att1_account(account_config, broker_identity, now_ms=received_ms)
+    if account != key[0]:
+        raise AdapterViolation('NEW recovery account mismatch')
+    _validate_new_lifecycle_session(session, key)
+    with sqlite3.connect(db_path) as con:
+        route = read_att1_route(con, account)
+        row = con.execute('''SELECT owner,order_link_id,broker_order_id,reserved_at_ms
+            FROM att1_decisions WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''', key).fetchone()
+    if (row is None or row[0] != 'NEW' or route['owner'] != 'NEW_READY'
+            or row[1] != _stable_link_id(account, key[2], key[3], key[4])
+            or received_ms < row[3]):
+        raise AdapterViolation('NEW recovery reservation mismatch')
+    orders = _complete_att1_rows(order_pages, received_ms=received_ms, identity_field='orderId')
+    fills = _complete_att1_rows(execution_pages, received_ms=received_ms, identity_field='execId')
+    dispatch = {'order_link_id': row[1], 'broker_order_id': row[2],
+                'source_sha256': digest(order_pages), 'send_enabled': False}
+    if not orders:
+        if fills:
+            raise AdapterViolation('executions without bound broker order')
+        dispatch['status'] = 'SEND_DISABLED_UNRESOLVED'
+        return {'orders_allowed': False, 'dispatch': dispatch, 'receipt': session.refresh()}
+    if len(orders) != 1:
+        raise AdapterViolation('ambiguous NEW broker order')
+    order = orders[0]
+    p = session.receipt['plan']
+    for field, expected in (('symbol',key[2]), ('orderLinkId',row[1]), ('side','Sell'),
+                            ('timeInForce','IOC'), ('orderType','Market')):
+        if order.get(field) != expected:
+            raise AdapterViolation('NEW order contract mismatch: '+field)
+    if (order.get('reduceOnly') is not False or type(order.get('positionIdx')) is not int
+            or order['positionIdx'] != 0
+            or _number(order.get('qty'),'qty',positive=True) != Fraction(p['requested_qty'])):
+        raise AdapterViolation('NEW order exposure mismatch')
+    oid = _text(order.get('orderId'),'orderId')
+    if row[2] is not None and row[2] != oid:
+        raise AdapterViolation('conflicting broker order identity')
+    created = _positive_int(order.get('createdTime'),'createdTime')
+    if not p['submit_ms'] <= created <= received_ms:
+        raise AdapterViolation('order predates durable intent')
+    events = []
+    records = session.journal.read()
+    durable = {event['event_id']:event for event in records[1:]}
+    if not any(e['kind']=='ENTRY_ACK' for e in durable.values()):
+        # Only immutable order identity fields: a later terminal status must
+        # not change an ACK's source hash on restart.
+        ack_source = {k:order[k] for k in ('symbol','orderId','orderLinkId','createdTime')}
+        events.append(_event(ack_source,'ENTRY_ACK',oid,str(created),received_ms,{}))
+    for fill in fills:
+        events.append(map_execution(fill, symbol=key[2], expected_order_id=oid,
+            expected_order_link_id=row[1], kind='ENTRY_FILL', received_ms=received_ms))
+    events.sort(key=lambda event:(event['exchange_ms'], event['kind']!='ENTRY_ACK',event['event_id']))
+    def preview(batch):
+        additions = []
+        for event in batch:
+            previous = durable.get(event['event_id'])
+            if previous is not None:
+                if ({k:v for k,v in previous.items() if k!='received_ms'} !=
+                        {k:v for k,v in event.items() if k!='received_ms'}):
+                    raise AdapterViolation('conflicting normalized broker event')
+            else:
+                additions.append(event)
+        return replay_lifecycle(session.profile,records[0]['intent'],list(records[1:])+additions)
+    interim = preview(events)
+    if _number(order.get('cumExecQty'),'cumExecQty',nonnegative=True) != Fraction(interim['accounting']['aggregate_entry_qty']):
+        raise AdapterViolation('unreconciled order executions')
+    if order.get('orderStatus') in {'Filled','Cancelled','Rejected','PartiallyFilledCanceled'}:
+        events.append(map_order_final(order,receipt=interim,expected_order_id=oid,
+            expected_order_link_id=row[1],received_ms=received_ms,entry=True))
+    elif order.get('orderStatus') not in {'New','PartiallyFilled'}:
+        raise AdapterViolation('unsupported entry status')
+    else:
+        qty = Fraction(interim['accounting']['aggregate_entry_qty'])
+        if ((order['orderStatus']=='New' and qty!=0) or
+                (order['orderStatus']=='PartiallyFilled' and not 0<qty<Fraction(p['requested_qty']))):
+            raise AdapterViolation('inconsistent active order status')
+    if protection is not None:
+        if not isinstance(protection,(tuple,list)) or len(protection)!=2:
+            raise AdapterViolation('invalid protection evidence pair')
+        events.append(map_protection(protection[0],protection[1],receipt=interim,received_ms=received_ms))
+        events.sort(key=lambda event:(event['exchange_ms'],event['kind']!='ENTRY_ACK',event['event_id']))
+    preview(events)
+    receipt = reconcile_new_att1_lifecycle_receipts(db_path,key,session=session,
+        broker_order_id=oid,events=events,now_ms=received_ms,release_reservation=False)
+    dispatch.update(status='EXISTING_ORDER_RECOVERED',broker_order_id=oid)
+    return {'orders_allowed':False,'dispatch':dispatch,'receipt':receipt}
+
+
+def collect_att1_authenticated_snapshot(client):
+    """GET-only account reconciliation. Does not open or mutate a trading DB."""
+    identity = client.identity()
+    positions = client.pages('/v5/position/list',
+        {'category':'linear','settleCoin':'USDT','limit':200})
+    orders = client.pages('/v5/order/realtime',
+        {'category':'linear','settleCoin':'USDT','openOnly':0,'limit':50})
+    snapshot = validate_att1_broker_snapshot(client.redacted_config,identity,
+        position_pages=positions,order_pages=orders,observed_ms=client.last_received_ms)
+    return {'identity':identity,'snapshot':snapshot,'position_pages':positions,'order_pages':orders,
+            'orders_allowed':False}
+
+
+def collect_new_att1_entry_recovery(client, db_path, decision_key, *, session, source_dir):
+    """Connect the existing signed GET client to NEW entry recovery, sends OFF.
+
+    Raw pages and mapper source records are fsynced privately before journal
+    writes. This is an explicit recovery operation, not a background owner or
+    permission to create an order. Empty history never means safe to retry.
+    """
+    import os
+    import stat
+    from scripts.run_att1_lifecycle_zero_risk import _save_json_once
+
+    key = _decision_key(decision_key)
+    _validate_new_lifecycle_session(session,key)
+    root = Path(source_dir)
+    root.mkdir(mode=0o700,parents=True,exist_ok=True)
+    info = root.lstat()
+    if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid()
+            or stat.S_IMODE(info.st_mode) & 0o077):
+        raise AdapterViolation('private evidence directory required')
+    def save(value):
+        sha = digest(value)
+        _save_json_once(root/(sha+'.json'),value)
+        return sha
+    truth = collect_att1_authenticated_snapshot(client)
+    if truth['identity'].account != key[0]:
+        raise AdapterViolation('NEW recovery account mismatch')
+    snapshot_sha = save({'snapshot':truth['snapshot'],'position_pages':truth['position_pages'],
+                         'order_pages':truth['order_pages']})
+    link = _stable_link_id(key[0],key[2],key[3],key[4])
+    order_pages = client.pages('/v5/order/history',
+        {'category':'linear','symbol':key[2],'orderLinkId':link,'limit':50,
+         'startTime':session.receipt['plan']['submit_ms'],
+         'endTime':min(client.last_received_ms,session.receipt['plan']['submit_ms']+7*86400000)})
+    rows = _complete_att1_rows(order_pages,received_ms=client.last_received_ms,identity_field='orderId')
+    if len(rows)>1:
+        raise AdapterViolation('ambiguous NEW broker order')
+    if rows:
+        executions = client.pages('/v5/execution/list',{'category':'linear','symbol':key[2],
+            'orderId':_text(rows[0].get('orderId'),'orderId'),'limit':100,
+            'startTime':session.receipt['plan']['submit_ms'],
+            'endTime':min(client.last_received_ms,session.receipt['plan']['submit_ms']+7*86400000)})
+    else:
+        executions = [{'retCode':0,'time':client.last_received_ms,
+            'result':{'category':'linear','list':[],'nextPageCursor':''}}]
+    # The empty execution envelope is not a broker query and is labelled in
+    # the receipt. No ACK/fill/finality is ever derived from it.
+    source_sha = save({'order_pages':order_pages,'execution_pages':executions,
+        'executions_queried':bool(rows),'received_ms':client.last_received_ms,
+        'account':key[0],'snapshot_sha256':snapshot_sha})
+    for row in rows:
+        save(row)
+        save({k:row[k] for k in ('symbol','orderId','orderLinkId','createdTime')})
+    for page in executions:
+        for row in page['result']['list']:
+            save(row)
+    protection=None
+    positions=[r for pg in truth['position_pages'] for r in pg['result']['list']
+               if r.get('symbol')==key[2] and _number(r.get('size'),'size',nonnegative=True)>0]
+    stops=[r for pg in truth['order_pages'] for r in pg['result']['list']
+           if r.get('symbol')==key[2] and r.get('stopOrderType')=='StopLoss']
+    if len(positions)==1 and len(stops)==1 and rows:
+        protection=(positions[0],stops[0])
+        save({'position':positions[0],'stop_order':stops[0]})
+    result = recover_new_att1_broker_entry(db_path,key,session=session,
+        account_config=client.redacted_config,broker_identity=truth['identity'],
+        order_pages=order_pages,execution_pages=executions,received_ms=client.last_received_ms,
+        protection=protection)
+    result.update(authenticated_account=key[0],source_sha256=source_sha,
+                  blocker='PROTECTION_AND_EXIT_FUNDING_BINDING_PENDING')
+    return result
+
+
+def reconcile_new_att1_broker_finality(db_path, decision_key, *, session, account_config,
+        broker_identity, transaction_pages, funding_pages, coverage_start_ms,
+        coverage_end_ms, position_pages, order_pages, received_ms):
+    """Reconcile actual funding cash against independently collected settlements.
+
+    The trusted signed caller supplies full, explicitly bounded query windows.
+    Empty cash pages never imply no funding. An absent expected cash settlement
+    keeps net-R null and the reservation occupied. Direct flat/no-orders truth
+    is necessary in addition to complete incident-free journal accounting.
+    """
+    key = _decision_key(decision_key)
+    account = _validated_old_att1_account(account_config,broker_identity,now_ms=received_ms)
+    if account!=key[0]:raise AdapterViolation('finality account mismatch')
+    _validate_new_lifecycle_session(session,key)
+    snapshot = validate_att1_broker_snapshot(account_config,broker_identity,
+        position_pages=position_pages,order_pages=order_pages,observed_ms=received_ms)
+    if not snapshot['flat_no_orders']:
+        raise AdapterViolation('broker flat/no-orders finality not confirmed')
+    records = list(session.journal.read())
+    receipt = session.refresh()
+    fills = [e for e in records if e['kind'] in {'ENTRY_FILL','EXIT_FILL'}]
+    exits = [e for e in fills if e['kind']=='EXIT_FILL']
+    if (not exits or receipt['held_qty']!='0' or receipt['pending_exit'] is not None
+            or receipt['entry_status'] not in {'FILLED','CANCELLED','REJECTED','EXPIRED'}):
+        raise AdapterViolation('exposure finality not confirmed')
+    start,end = coverage_start_ms,coverage_end_ms
+    if (type(start) is not int or type(end) is not int or not 0<start<end<=received_ms-60000
+            or start>min(e['exchange_ms'] for e in fills)-5000
+            or end<max(e['exchange_ms'] for e in exits)+5000):
+        raise AdapterViolation('funding coverage window incomplete or publication pending')
+    if not isinstance(funding_pages,list) or not 1<=len(funding_pages)<=16:
+        raise AdapterViolation('funding pagination incomplete')
+    upper=end;times=set()
+    for index,page in enumerate(funding_pages):
+        if (not isinstance(page,Mapping) or type(page.get('retCode')) is not int or page['retCode']!=0
+                or type(page.get('time')) is not int or not 0<page['time']<=received_ms
+                or received_ms-page['time']>60000):
+            raise AdapterViolation('invalid public funding envelope')
+        result=page.get('result')
+        if not isinstance(result,Mapping) or result.get('category')!='linear' or not isinstance(result.get('list'),list):
+            raise AdapterViolation('invalid public funding rows')
+        batch=result['list']
+        if len(batch)>200:raise AdapterViolation('funding page bound')
+        local=[]
+        for row in batch:
+            when=_positive_int(row.get('fundingRateTimestamp'),'funding timestamp')
+            if row.get('symbol')!=key[2] or not start<=when<=upper or when in times:
+                raise AdapterViolation('foreign/duplicate funding schedule')
+            _number(row.get('fundingRate'),'funding rate')
+            times.add(when);local.append(when)
+        complete=len(batch)<200 or (local and min(local)==start)
+        if complete != (index==len(funding_pages)-1):raise AdapterViolation('funding pagination incomplete')
+        if local:upper=min(local)-1
+    if transaction_pages and isinstance(transaction_pages[0],Mapping) and 'pages' in transaction_pages[0]:
+        rows=[];next_start=start;seen_ids=set()
+        for window in transaction_pages:
+            lo,hi=window.get('start_ms'),window.get('end_ms')
+            if (type(lo) is not int or type(hi) is not int or lo!=next_start
+                    or not lo<=hi<=end or hi-lo>7*86400000):
+                raise AdapterViolation('transaction window gap/overlap')
+            batch=_complete_att1_rows(window['pages'],received_ms=received_ms,identity_field='id',category_on_rows=True)
+            for row in batch:
+                if row['id'] in seen_ids or not lo<=_positive_int(row.get('transactionTime'),'transaction time')<=hi:
+                    raise AdapterViolation('transaction window duplicate/mismatch')
+                seen_ids.add(row['id'])
+            rows.extend(batch);next_start=hi+1
+        if next_start!=end+1:raise AdapterViolation('incomplete transaction windows')
+    else:
+        if end-start>7*86400000:raise AdapterViolation('transaction window exceeds API bound')
+        rows=_complete_att1_rows(transaction_pages,received_ms=received_ms,identity_field='id',category_on_rows=True)
+    events=[]
+    for row in rows:
+        when=_positive_int(row.get('transactionTime'),'transaction time')
+        if not start<=when<=end:raise AdapterViolation('transaction outside coverage window')
+        if row.get('symbol')!=key[2]:continue
+        if row.get('type')!='SETTLEMENT':raise AdapterViolation('unexpected transaction type')
+        if when not in times:raise AdapterViolation('cash settlement absent from funding schedule')
+        events.append(map_funding(row,symbol=key[2],received_ms=received_ms))
+    events.sort(key=lambda event:(event['exchange_ms'],event['event_id']))
+    # Stable identity independent of the arrival of delayed cash or re-poll time.
+    coverage_source={'symbol':key[2],'start_ms':start,'end_ms':end,'settlement_ms':sorted(times)}
+    source=digest(coverage_source)
+    events.append({'schema_id':'att1_lifecycle_event_v1','event_id':'bybit:coverage:'+source,
+        'kind':'FUNDING_COVERAGE','exchange_ms':end,'received_ms':received_ms,
+        'source_sha256':source,'start_ms':start,'end_ms':end,'settlement_ms':sorted(times),'complete':True})
+    with sqlite3.connect(db_path) as con:
+        row=con.execute('''SELECT broker_order_id FROM att1_decisions
+            WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''',key).fetchone()
+    if row is None or not row[0]:raise AdapterViolation('entry broker binding absent')
+    result=reconcile_new_att1_lifecycle_receipts(db_path,key,session=session,
+        broker_order_id=row[0],events=events,now_ms=received_ms,release_reservation=False)
+    if result['lifecycle_terminal']:
+        with sqlite3.connect(db_path) as con:
+            finalize_att1_reservation(con,key[0],key,flat=True,order_final=True,
+                costs_complete=result['accounting']['costs_complete'],now_ms=received_ms)
+    return result
+
+
+def att1_exit_order_link_id(decision_key, exit_order_id):
+    """Stable lookup identity for one existing coordinator exit; not a send API."""
+    key=_decision_key(decision_key)
+    return 'a1x'+digest([*key,_text(exit_order_id,'exit_order_id')])[:26]
+
+
+def recover_new_att1_broker_exit(db_path, decision_key, *, session, account_config,
+        broker_identity, order_pages, execution_pages, received_ms):
+    """Recover exact reduce-only exit receipts with entry reservation still held."""
+    from research_lab.att1_lifecycle_coordinator import replay_lifecycle
+    key=_decision_key(decision_key)
+    if _validated_old_att1_account(account_config,broker_identity,now_ms=received_ms)!=key[0]:
+        raise AdapterViolation('exit account mismatch')
+    _validate_new_lifecycle_session(session,key)
+    orders=_complete_att1_rows(order_pages,received_ms=received_ms,identity_field='orderId')
+    fills=_complete_att1_rows(execution_pages,received_ms=received_ms,identity_field='execId')
+    if not orders:
+        if fills:raise AdapterViolation('exit fills without order')
+        return {'orders_allowed':False,'dispatch':{'status':'SEND_DISABLED_UNRESOLVED'},'receipt':session.receipt}
+    if len(orders)!=1:raise AdapterViolation('ambiguous exit order')
+    order=orders[0]; records=list(session.journal.read()); existing=records[1:]
+    pending=session.receipt['pending_exit']
+    ids={e['exit_order_id'] for e in existing if e['kind']=='EXIT_ACK'}
+    if pending:ids.add(pending['exit_order_id'])
+    matches=[x for x in ids if att1_exit_order_link_id(key,x)==order.get('orderLinkId')]
+    if len(matches)!=1:raise AdapterViolation('foreign exit link')
+    xid=matches[0];oid=_text(order.get('orderId'),'orderId')
+    # Recover the original pending intent even when EXIT_FINAL was fsynced
+    # before a process crash. This replay is read-only and never rewrites history.
+    final_index=next((i for i,e in enumerate(existing) if e['kind']=='EXIT_FINAL' and e['exit_order_id']==xid),len(existing))
+    before_final=replay_lifecycle(session.profile,records[0]['intent'],existing[:final_index])
+    pending=before_final['pending_exit']
+    if pending is None or pending['exit_order_id']!=xid:
+        raise AdapterViolation('exit intent not recoverable')
+    for field,value in (('symbol',key[2]),('side','Buy'),('timeInForce','IOC'),('orderType','Market')):
+        if order.get(field)!=value:raise AdapterViolation('exit contract mismatch: '+field)
+    if (order.get('reduceOnly') is not True or type(order.get('positionIdx')) is not int
+            or order['positionIdx']!=0 or _number(order.get('qty'),'exit qty',positive=True)!=Fraction(pending['qty'])):
+        raise AdapterViolation('exit exposure mismatch')
+    created=_positive_int(order.get('createdTime'),'createdTime')
+    if not pending['submit_ms']<=created<=received_ms:raise AdapterViolation('exit clock mismatch')
+    ack_source={k:order[k] for k in ('symbol','orderId','orderLinkId','createdTime')}
+    ack=_event(ack_source,'EXIT_ACK',oid,str(created),received_ms,{'exit_order_id':xid})
+    prior_ack=[e for e in existing if e['kind']=='EXIT_ACK' and e['exit_order_id']==xid]
+    if prior_ack and any(e['event_id']!=ack['event_id'] or e['source_sha256']!=ack['source_sha256'] for e in prior_ack):
+        raise AdapterViolation('conflicting exit broker binding')
+    events=[ack]+[map_execution(f,symbol=key[2],expected_order_id=oid,
+        expected_order_link_id=order['orderLinkId'],kind='EXIT_FILL',received_ms=received_ms,
+        exit_order_id=xid) for f in fills]
+    events.sort(key=lambda e:(e['exchange_ms'],e['kind']!='EXIT_ACK',e['event_id']))
+    durable={e['event_id']:e for e in existing}
+    additions=[]
+    for event in events:
+        old=durable.get(event['event_id'])
+        if old is not None:
+            if {k:v for k,v in old.items() if k!='received_ms'}!={k:v for k,v in event.items() if k!='received_ms'}:
+                raise AdapterViolation('conflicting exit execution')
+        else:additions.append(event)
+    interim=replay_lifecycle(session.profile,records[0]['intent'],existing[:final_index]+additions)
+    if order.get('orderStatus') in {'Filled','Cancelled','Rejected','PartiallyFilledCanceled'}:
+        events.append(map_order_final(order,receipt=interim,expected_order_id=oid,
+            expected_order_link_id=order['orderLinkId'],received_ms=received_ms,entry=False))
+    else:
+        filled=Fraction(pending['qty'])-Fraction(interim['pending_exit']['remaining_qty'])
+        if (order.get('orderStatus') not in {'New','PartiallyFilled'}
+                or _number(order.get('cumExecQty'),'cumExecQty',nonnegative=True)!=filled
+                or (order['orderStatus']=='New' and filled!=0)
+                or (order['orderStatus']=='PartiallyFilled' and not 0<filled<Fraction(pending['qty']))):
+            raise AdapterViolation('exit status/executions mismatch')
+    # Whole batch preflight avoids releasing or partially persisting an invalid final order.
+    unseen=[e for e in events if e['event_id'] not in durable]
+    replay_lifecycle(session.profile,records[0]['intent'],existing+unseen)
+    with sqlite3.connect(db_path) as con:
+        row=con.execute('''SELECT broker_order_id FROM att1_decisions
+            WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''',key).fetchone()
+    if row is None or not row[0]:raise AdapterViolation('entry binding absent')
+    result=reconcile_new_att1_lifecycle_receipts(db_path,key,session=session,
+        broker_order_id=row[0],events=events,now_ms=received_ms,release_reservation=False)
+    return {'orders_allowed':False,'dispatch':{'status':'EXISTING_ORDER_RECOVERED',
+        'order_link_id':order['orderLinkId'],'broker_order_id':oid},'receipt':result}
+
+
+def reconcile_new_att1_authenticated(client, db_path, decision_key, *, session, source_dir):
+    """One explicit read-only recovery pass through the existing NEW lifecycle.
+
+    Does not scan, create intents, run a service, or submit an order. The caller
+    supplies the existing durable session. Broker stop-trigger exits that do
+    not have the coordinator's deterministic exit link fail closed for operator
+    reconciliation; they are not silently adopted as strategy exits.
+    """
+    from scripts.run_att1_lifecycle_zero_risk import _save_json_once
+    key=_decision_key(decision_key)
+    outcome=collect_new_att1_entry_recovery(client,db_path,key,session=session,source_dir=source_dir)
+    root=Path(source_dir)
+    def save(value):
+        sha=digest(value);_save_json_once(root/(sha+'.json'),value);return sha
+    pending=session.receipt['pending_exit']
+    if pending is not None:
+        link=att1_exit_order_link_id(key,pending['exit_order_id'])
+        start=pending['submit_ms']
+        orders=client.pages('/v5/order/history',{'category':'linear','symbol':key[2],
+            'orderLinkId':link,'startTime':start,'endTime':min(client.last_received_ms,start+7*86400000),'limit':50})
+        rows=_complete_att1_rows(orders,received_ms=client.last_received_ms,identity_field='orderId')
+        if len(rows)>1:raise AdapterViolation('ambiguous exit order')
+        if not rows:
+            outcome['blocker']='EXIT_SEND_DISABLED_UNRESOLVED'
+            return outcome
+        executions=client.pages('/v5/execution/list',{'category':'linear','symbol':key[2],
+            'orderId':rows[0]['orderId'],'startTime':start,
+            'endTime':min(client.last_received_ms,start+7*86400000),'limit':100})
+        save({'orders':orders,'executions':executions,'account':key[0],'received_ms':client.last_received_ms})
+        for row in rows:
+            save(row);save({k:row[k] for k in ('symbol','orderId','orderLinkId','createdTime')})
+        for page in executions:
+            for row in page['result']['list']:save(row)
+        identity=client.identity()
+        outcome=recover_new_att1_broker_exit(db_path,key,session=session,account_config=client.redacted_config,
+            broker_identity=identity,order_pages=orders,execution_pages=executions,received_ms=client.last_received_ms)
+    receipt=session.refresh()
+    if receipt['held_qty']!='0' or receipt['pending_exit'] is not None:
+        outcome.update(blocker='EXPOSURE_STILL_OPEN_ORDERS_OFF',receipt=receipt)
+        return outcome
+    fills=[e for e in session.journal.read() if e['kind'] in {'ENTRY_FILL','EXIT_FILL'}]
+    exits=[e for e in fills if e['kind']=='EXIT_FILL']
+    if not exits:
+        outcome.update(blocker='NO_FILLED_TERMINAL',receipt=receipt)
+        return outcome
+    start=min(e['exchange_ms'] for e in fills)-5000
+    end=max(e['exchange_ms'] for e in exits)+5000
+    if client.last_received_ms<end+60000:
+        outcome.update(blocker='FUNDING_PUBLICATION_PENDING',receipt=receipt)
+        return outcome
+    transactions=[];lo=start
+    while lo<=end:
+        if len(transactions)>=4:raise AdapterViolation('transaction lifetime query bound')
+        hi=min(end,lo+7*86400000)
+        pages=client.pages('/v5/account/transaction-log',{'category':'linear','accountType':'UNIFIED',
+            'currency':'USDT','type':'SETTLEMENT','startTime':lo,'endTime':hi,'limit':50})
+        transactions.append({'start_ms':lo,'end_ms':hi,'pages':pages});lo=hi+1
+    funding=[];upper=end
+    for _ in range(16):
+        page=client.get('/v5/market/funding/history',{'category':'linear','symbol':key[2],
+            'startTime':start,'endTime':upper,'limit':200})
+        funding.append(page);rows=page['result']['list']
+        if len(rows)<200:break
+        earliest=min(_positive_int(r.get('fundingRateTimestamp'),'funding timestamp') for r in rows)
+        if earliest<=start:break
+        if earliest>=upper:raise AdapterViolation('funding pagination stalled')
+        upper=earliest-1
+    else:raise AdapterViolation('funding pagination incomplete')
+    truth=collect_att1_authenticated_snapshot(client)
+    save({'account':key[0],'funding_pages':funding,'transaction_windows':transactions,
+        'snapshot':truth['snapshot'],'position_pages':truth['position_pages'],
+        'order_pages':truth['order_pages'],'received_ms':client.last_received_ms})
+    for window in transactions:
+        for page in window['pages']:
+            for row in page['result']['list']:save(row)
+    times=sorted({_positive_int(r.get('fundingRateTimestamp'),'funding timestamp')
+                  for p in funding for r in p['result']['list']})
+    save({'symbol':key[2],'start_ms':start,'end_ms':end,'settlement_ms':times})
+    result=reconcile_new_att1_broker_finality(db_path,key,session=session,
+        account_config=client.redacted_config,broker_identity=truth['identity'],
+        transaction_pages=transactions,funding_pages=funding,coverage_start_ms=start,
+        coverage_end_ms=end,position_pages=truth['position_pages'],order_pages=truth['order_pages'],
+        received_ms=client.last_received_ms)
+    outcome.update(receipt=result,orders_allowed=False,
+        blocker=None if result['lifecycle_terminal'] else 'COSTS_OR_INTEGRITY_NOT_FINAL',
+        authenticated_account=key[0])
+    return outcome
