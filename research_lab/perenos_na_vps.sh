@@ -18,7 +18,19 @@ set -euo pipefail
 
 SERVER="${SERVER:-root@64.226.73.119}"
 UDAL="${UDAL:-/root/research-24x7/by-bot}"
+KLYUCH="${KLYUCH:-$HOME/.ssh/by-bot}"
 KOREN="$(cd "$(dirname "$0")/.." && pwd)"
+
+# Ключ к VPS. Обычный ~/.ssh/id_* к этому серверу не подходит:
+# доступ идёт по отдельному ключу by-bot. Если его нет — работаем
+# на том, что настроено в ~/.ssh/config, и честно об этом пишем.
+SSH_OPT=(-o StrictHostKeyChecking=accept-new)
+if [ -f "$KLYUCH" ]; then
+  SSH_OPT+=(-i "$KLYUCH")
+  KLYUCH_VID="$KLYUCH"
+else
+  KLYUCH_VID="не найден ($KLYUCH) — по умолчанию из ~/.ssh/config"
+fi
 
 # ── БЕЛЫЙ СПИСОК. Только состояние, которого нет в git. ───────────────
 VEZYOM=(
@@ -38,6 +50,7 @@ rezhim="${1:---proverka}"
 
 echo "источник : $KOREN"
 echo "цель     : $SERVER:$UDAL"
+echo "ключ     : $KLYUCH_VID"
 echo "режим    : $rezhim"
 echo
 
@@ -62,12 +75,12 @@ if [ "$rezhim" != "--vezti" ]; then
 fi
 
 echo "готовлю каталог на сервере…"
-ssh -o StrictHostKeyChecking=accept-new "$SERVER" "mkdir -p '$UDAL/research_lab/data'"
+ssh "${SSH_OPT[@]}" "$SERVER" "mkdir -p '$UDAL/research_lab/data'"
 
 for p in "${VEZYOM[@]}"; do
   [ -e "$KOREN/$p" ] || continue
   echo "→ $p"
-  rsync -az --info=stats1 --relative "$KOREN/./$p" "$SERVER:$UDAL/"
+  rsync -az --info=stats1 --relative -e "ssh ${SSH_OPT[*]}" "$KOREN/./$p" "$SERVER:$UDAL/"
 done
 
 echo
