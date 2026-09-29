@@ -1,53 +1,32 @@
 #!/bin/bash
-# vps_zapusk.sh — поднять три долгоживущих исследовательских процесса НА VPS.
-#
-# Ни ордеров, ни ключей, ни брокера: всё три ходят только в публичные
-# endpoint'ы Bybit и Polymarket методом GET. Деньги здесь невозможны
-# по построению.
-#
-# Запускать ТОЛЬКО из отдельного каталога исследования, не из продакшна Codex.
+# vps_zapusk.sh — поднять три службы исследования. Запускать НА VPS.
+# Запуск разрешён только после PASS от vps_sverka.sh.
 set -euo pipefail
-
-KOREN="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$KOREN"
+KOREN="$(cd "$(dirname "$0")/.." && pwd)"; cd "$KOREN"
 
 case "$KOREN" in
   */research-24x7/*) : ;;
-  *) echo "СТОП: это не каталог исследования ($KOREN)."
-     echo "Ожидается путь вида /root/research-24x7/by-bot — чтобы никогда"
-     echo "не пересечься с продакшном Codex в /root/by-bot."; exit 1 ;;
+  *) echo "СТОП: это не каталог исследования ($KOREN)."; exit 1 ;;
 esac
 
-PY=""
-for K in "$KOREN/.venv-research/bin/python3" "$KOREN/.venv/bin/python3" "$(command -v python3)"; do
-  [ -x "$K" ] || continue
-  "$K" -c 'import numpy' >/dev/null 2>&1 && { PY="$K"; break; }
-done
-[ -n "$PY" ] || { echo "НЕ НАШЁЛ python3 с numpy. Ничего не поднято."; exit 1; }
-echo "питон: $PY"
-
-LOGI="$KOREN/research_lab/data"
-mkdir -p "$LOGI"
-
-podnyat () {
-  local imya="$1"; shift
-  local marker="$1"; shift
-  if pgrep -f "$marker" >/dev/null 2>&1; then
-    echo "  $imya: уже работает (pgrep '$marker')"; return
+if [ "${PROPUSTIT_SVERKU:-}" != "da" ]; then
+  echo "== сверка состояния перед запуском =="
+  if ! bash research_lab/vps_sverka.sh > /tmp/sverka_pered_zapuskom.txt 2>&1; then
+    tail -20 /tmp/sverka_pered_zapuskom.txt
+    echo
+    echo "СТОП: сверка не прошла. Запуск на расходящемся состоянии начнёт"
+    echo "вторую историю там, где должна продолжиться первая."
+    echo "Полный вывод: /tmp/sverka_pered_zapuskom.txt"
+    exit 1
   fi
-  nohup "$PY" "$@" >> "$LOGI/vps_${imya}.log" 2>&1 &
-  echo "  $imya: поднят, процесс $!"
-}
+  echo "  сверка: PASS"
+  echo
+fi
 
-echo "ПОДНИМАЮ ИССЛЕДОВАНИЕ  $(date -u '+%Y-%m-%d %H:%M UTC')"
-podnyat "yadro_ETS2M" "yadro.py --epoha ETS2M" \
-        research_lab/yadro.py --epoha ETS2M --minut 100000000 --pauza 3600
-sleep 2
-podnyat "ten_SILA"    "ten_sila.py" \
-        research_lab/ten_sila.py --minut 100000000 --pauza 21600
-sleep 2
-podnyat "fabrika"     "fabrika.py --demon" \
-        research_lab/fabrika/fabrika.py --demon
+for s in research-yadro_ETS2M research-ten_SILA research-fabrika; do
+  systemctl start "$s"
+  printf "  %-26s %s\n" "$s" "$(systemctl is-active "$s")"
+done
 
 echo
-echo "проверить:  bash research_lab/vps_proverka.sh"
+echo "через минуту:  bash research_lab/vps_zdorovye.sh"
