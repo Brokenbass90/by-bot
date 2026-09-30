@@ -1,0 +1,675 @@
+{
+  "schema": "att1_native_sl_resize_checkpoint_v1",
+  "observed_utc": "2026-09-30T04:42:24.994000+00:00",
+  "base_commit": "d3a40ee5e821c5969c943c15183a31980309b27e",
+  "native_sl_wired": true,
+  "net_r_finality_verified_in_fixtures": true,
+  "binding_complete_orders_off": true,
+  "production_install": false,
+  "canary_ready": false,
+  "orders_off_proof": {
+    "SEND_ENABLED": false,
+    "transport": "pinned signed GET allowlist; no mutation endpoint",
+    "new_live_service_installed": false,
+    "new_real_fills": 0
+  },
+  "implementation": {
+    "path": "existing reconcile_new_att1_authenticated -> recover_new_att1_native_stop -> existing broker finality",
+    "identity": "durable PROTECTION_ACK plus immutable hash-bound position/stop source; exact stop ID and armed attributes",
+    "timestamps": "broker execTime/updatedTime; no synthetic PRICE or fake local exit submission",
+    "costs": "actual execution fees plus transaction settlement cash vs public funding schedule",
+    "reservation": "remains locked after exit fill and until funding complete plus fresh broker flat/no-order finality",
+    "recovery": "restart before trigger, fill, order final, funding cash and coverage; repeated evidence identical; changed fill fee rejects; partial native fill preserves reservation",
+    "profile_compatibility": "broker-only additive event in existing coordinator; existing public journals require original implementation hash. Candidate was NOT installed over existing epochs."
+  },
+  "tests": {
+    "local_passed": 346,
+    "vps_passed": 346,
+    "vps_python": "3.12.3",
+    "native_stop_cases": 16,
+    "manifest_complete": true,
+    "files_hash_verified": 42,
+    "candidate_dir": "/tmp/att1-native-stop-20260930-candidate",
+    "public_receipts_equal": 2,
+    "fixture_evidence_is_prospective": false,
+    "review": "root critical review; no independent code-review claim"
+  },
+  "broker_snapshot": {
+    "positions": 0,
+    "open_orders": 0,
+    "private_receipts": ".private/att1_safety_20260930/post_reboot.json"
+  },
+  "old_live": {
+    "parity": "NOT_PROVEN_FULL_HISTORICAL_PIT",
+    "broker_entry_price_qty_matches": {
+      "count": 3,
+      "entry_comparisons": [
+        {
+          "broker_entry_avgPrice": "84143.2",
+          "broker_entry_cumExecQty": "0.001",
+          "db_broker_price_match": true,
+          "db_broker_qty_match": true,
+          "db_entry_price": 84143.2,
+          "db_entry_qty": 0.001,
+          "db_entry_utc": "2026-09-29T09:49:54Z",
+          "matched_db_entry_present": true,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "broker_entry_avgPrice": "71.87",
+          "broker_entry_cumExecQty": "0.4",
+          "db_broker_price_match": true,
+          "db_broker_qty_match": true,
+          "db_entry_price": 71.87,
+          "db_entry_qty": 0.4,
+          "db_entry_utc": "2026-09-27T10:10:31Z",
+          "matched_db_entry_present": true,
+          "symbol": "LTCUSDT"
+        },
+        {
+          "broker_entry_avgPrice": "86299.8",
+          "broker_entry_cumExecQty": "0.001",
+          "db_broker_price_match": true,
+          "db_broker_qty_match": true,
+          "db_entry_price": 86299.8,
+          "db_entry_qty": 0.001,
+          "db_entry_utc": "2026-09-22T20:40:43Z",
+          "matched_db_entry_present": true,
+          "symbol": "BTCUSDT"
+        }
+      ],
+      "interpretation": "Supplied proof entries agree with DB entry qty and price in the compared fields; this does not establish full lifecycle parity, all fills, fees, or exact historical runtime/config parity."
+    },
+    "current_rules": {
+      "longs": false,
+      "shorts": true,
+      "risk_multiplier": "0.10",
+      "trend_guard_bars": 0,
+      "caller_receipt_enabled": false
+    },
+    "interpretation": "local resistance short can be allowed during broad market rise; no enabled broad bear-only admission proven. Latest reason values are compatible with current minR2/minPivots/RSI thresholds. Historical admission equality cannot be certified without original causal snapshots/config lineage.",
+    "last_three_close_db_net_usdt": "-0.89179792",
+    "net_note": "DB pnl is recorded net of fees; not reduced by fees again, not a complete independent performance audit",
+    "source_hashes": {
+      "smart_pump_reversal_bot.py": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+      "strategies/alt_trendline_touch_v1.py": "541035d08baec55a35fa95c9c5d65ef1b919281377c323cec795d493a561123b",
+      "strategies/att1_live.py": "5f9d3a09049859e9885955509805255c32b42fcc38a76241dbd99f79d1acbc2a"
+    },
+    "source_hashes_unchanged_from_pre_resize": true,
+    "live_modified": false
+  },
+  "post_resize": {
+    "cpu_count": 2,
+    "mem_available_kib": 1520856,
+    "swap_used_kib": 167208,
+    "psi": {
+      "cpu": "some avg10=0.66 avg60=0.67 avg300=3.05 total=2682463978\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+      "io": "some avg10=0.00 avg60=0.02 avg300=0.13 total=192780408\nfull avg10=0.00 avg60=0.02 avg300=0.12 total=146085568\n",
+      "memory": "some avg10=0.00 avg60=0.02 avg300=0.15 total=66439519\nfull avg10=0.00 avg60=0.02 avg300=0.13 total=58903246\n"
+    },
+    "old_pid": 781,
+    "public_pid": 999,
+    "automatic_restarts_since_boot": 0,
+    "external_reboot_utc": "2026-09-29T18:11:11+00:00",
+    "session_deploys_this_turn": 0,
+    "heartbeat_age_ms": 110,
+    "density_collector_needed_for_current_att1_paths": false,
+    "density_status": "OFF; no systemd/cron owner or production/public ATT1 consumer found; no claim about uninspected research consumers",
+    "services": "OLD/public/liquidation running; regime/L1/SBR timers active",
+    "sbr_failure": "not healthy: repeated TimeoutStartSec ~120s; latest cycle exited3 ZERO_RISK_SHADOW_DEGRADED_PUBLIC_DATA, observed11 + structural1 + errors39 of51; no restart or config change made"
+  },
+  "prospective": {
+    "epoch": "att1-public-lifecycle-20260928-observation-timing",
+    "sessions_total": 2,
+    "clean_filled_terminal": 0,
+    "gaps_epoch_before_resize": 1,
+    "gaps_epoch_after_resize": 0,
+    "new_filled_sessions_after_resize": 0,
+    "h1_cycles_full_51_of_51_total": 34,
+    "h1_cycles_full_after_resize": 10,
+    "duplicate_event_ids": 0,
+    "missing_external_transitions": "NOT_PROVEN; prior gap retained",
+    "strict_2s_gate_unchanged": true,
+    "deployed_source_hashes": {
+      "scripts/run_att1_lifecycle_zero_risk.py": "00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f",
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    },
+    "interpretation": "zero post-resize gaps with zero new held sessions is not proof of fixed continuity or profitable edge"
+  },
+  "gap_root_cause": {
+    "historical_gaps": 29,
+    "sar_intervals_available": 7,
+    "cpu_idle_below_1_percent_intervals": 7,
+    "sbr_exact_overlap": 2,
+    "sbr_not_running": 1,
+    "sbr_unknown": 26,
+    "last_measured_gap_ms": 2091,
+    "last_request_wall_ms": 1691.766,
+    "prior_observation_to_next_get_ms": 400,
+    "conclusion": "VPS contention and active swapping confirmed around measured gap intervals; exact per-gap network vs scheduler split NOT_PROVEN. Latest gap did not directly overlap SBR run; cannot blame all gaps on SBR or Bybit.",
+    "historical_density_per_second_load": "unavailable; historical collector present, no attributable request-level timeline",
+    "interval_caveat": "SAR ~600-second aggregates, not instantaneous request PSI",
+    "interval_rows": [
+      {
+        "gap_utc": "2026-09-09T14:05:05.119000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "v2",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-09T15:05:01.553000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "v2",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-10T16:06:20.723000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260910-stability",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-10T23:03:58.006000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260910-stability",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-11T03:04:06.574000+00:00",
+        "reason": "restart lost public observation continuity",
+        "epoch": "20260910-stability",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-11T08:02:22.525000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260910-stability",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-11T10:27:16.416000+00:00",
+        "reason": "restart lost public observation continuity",
+        "epoch": "20260910-stability",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-13T11:07:28.076000+00:00",
+        "reason": "rejected future/stale public book",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-13T17:02:00.055000+00:00",
+        "reason": "rejected future/stale public book",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-13T22:00:28.828000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-13T22:00:30.144000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-13T22:01:15.106000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-14T04:01:41.841000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-14T04:01:54.914000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-14T11:02:40.036000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-14T13:00:46.300000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-14T15:01:06.554000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-14T22:02:07.517000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-15T21:01:42.370000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-16T16:00:42.496000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-16T22:00:43.307000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-20T23:05:03.051000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": null
+      },
+      {
+        "gap_utc": "2026-09-22T00:04:26.894000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": {
+          "date": "2026-09-22",
+          "time": "00:10:00",
+          "utc": 1,
+          "interval": 599
+        },
+        "cpu": {
+          "cpu": "all",
+          "usr": 68.17,
+          "nice": 13.05,
+          "sys": 14.12,
+          "iowait": 1.1,
+          "steal": 1.07,
+          "irq": 0.0,
+          "soft": 1.84,
+          "guest": 0.0,
+          "gnice": 0.0,
+          "idle": 0.64
+        },
+        "swap_pages_per_second": {
+          "pswpin": 2574.72,
+          "pswpout": 2572.35
+        },
+        "memory": {
+          "avail": 176984,
+          "swpused": 890872,
+          "memused-percent": 61.64
+        }
+      },
+      {
+        "gap_utc": "2026-09-24T20:04:18.305000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": {
+          "date": "2026-09-24",
+          "time": "20:10:00",
+          "utc": 1,
+          "interval": 598
+        },
+        "cpu": {
+          "cpu": "all",
+          "usr": 67.1,
+          "nice": 13.91,
+          "sys": 14.66,
+          "iowait": 1.26,
+          "steal": 1.07,
+          "irq": 0.0,
+          "soft": 1.81,
+          "guest": 0.0,
+          "gnice": 0.0,
+          "idle": 0.19
+        },
+        "swap_pages_per_second": {
+          "pswpin": 2602.19,
+          "pswpout": 2650.57
+        },
+        "memory": {
+          "avail": 188388,
+          "swpused": 720144,
+          "memused-percent": 60.48
+        }
+      },
+      {
+        "gap_utc": "2026-09-24T23:03:34.039000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": {
+          "date": "2026-09-24",
+          "time": "23:10:00",
+          "utc": 1,
+          "interval": 600
+        },
+        "cpu": {
+          "cpu": "all",
+          "usr": 66.22,
+          "nice": 13.36,
+          "sys": 14.85,
+          "iowait": 2.62,
+          "steal": 0.59,
+          "irq": 0.0,
+          "soft": 1.5,
+          "guest": 0.0,
+          "gnice": 0.0,
+          "idle": 0.86
+        },
+        "swap_pages_per_second": {
+          "pswpin": 2812.61,
+          "pswpout": 2801.44
+        },
+        "memory": {
+          "avail": 147512,
+          "swpused": 850704,
+          "memused-percent": 64.65
+        }
+      },
+      {
+        "gap_utc": "2026-09-26T06:01:56.167000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260913-continuity",
+        "sbr_running": null,
+        "sbr_run": [],
+        "sar_interval_end": {
+          "date": "2026-09-26",
+          "time": "06:10:00",
+          "utc": 1,
+          "interval": 598
+        },
+        "cpu": {
+          "cpu": "all",
+          "usr": 64.92,
+          "nice": 14.35,
+          "sys": 13.93,
+          "iowait": 3.91,
+          "steal": 0.58,
+          "irq": 0.0,
+          "soft": 1.41,
+          "guest": 0.0,
+          "gnice": 0.0,
+          "idle": 0.9
+        },
+        "swap_pages_per_second": {
+          "pswpin": 3152.85,
+          "pswpout": 3037.76
+        },
+        "memory": {
+          "avail": 260020,
+          "swpused": 639272,
+          "memused-percent": 53.2
+        }
+      },
+      {
+        "gap_utc": "2026-09-28T12:02:08.012000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260928-bounded-scan",
+        "sbr_running": true,
+        "sbr_run": [
+          {
+            "start": "2026-09-28T12:00:20.247780+00:00",
+            "end": "2026-09-28T12:02:23.393295+00:00"
+          }
+        ],
+        "sar_interval_end": {
+          "date": "2026-09-28",
+          "time": "12:10:00",
+          "utc": 1,
+          "interval": 598
+        },
+        "cpu": {
+          "cpu": "all",
+          "usr": 71.51,
+          "nice": 4.67,
+          "sys": 17.53,
+          "iowait": 2.0,
+          "steal": 2.35,
+          "irq": 0.0,
+          "soft": 1.89,
+          "guest": 0.0,
+          "gnice": 0.0,
+          "idle": 0.06
+        },
+        "swap_pages_per_second": {
+          "pswpin": 3134.8,
+          "pswpout": 2952.66
+        },
+        "memory": {
+          "avail": 128944,
+          "swpused": 642660,
+          "memused-percent": 66.49
+        }
+      },
+      {
+        "gap_utc": "2026-09-28T14:02:21.124000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260928-bounded-scan",
+        "sbr_running": true,
+        "sbr_run": [
+          {
+            "start": "2026-09-28T14:00:20.557420+00:00",
+            "end": "2026-09-28T14:02:23.669508+00:00"
+          }
+        ],
+        "sar_interval_end": {
+          "date": "2026-09-28",
+          "time": "14:10:00",
+          "utc": 1,
+          "interval": 598
+        },
+        "cpu": {
+          "cpu": "all",
+          "usr": 68.56,
+          "nice": 5.67,
+          "sys": 19.28,
+          "iowait": 1.83,
+          "steal": 2.27,
+          "irq": 0.0,
+          "soft": 2.33,
+          "guest": 0.0,
+          "gnice": 0.0,
+          "idle": 0.06
+        },
+        "swap_pages_per_second": {
+          "pswpin": 3479.58,
+          "pswpout": 3263.23
+        },
+        "memory": {
+          "avail": 92968,
+          "swpused": 695452,
+          "memused-percent": 70.13
+        }
+      },
+      {
+        "gap_utc": "2026-09-29T16:03:02.315000+00:00",
+        "reason": "public polling continuity gap",
+        "epoch": "20260928-observation-timing",
+        "sbr_running": false,
+        "sbr_run": [],
+        "sar_interval_end": {
+          "date": "2026-09-29",
+          "time": "16:10:00",
+          "utc": 1,
+          "interval": 599
+        },
+        "cpu": {
+          "cpu": "all",
+          "usr": 68.97,
+          "nice": 7.17,
+          "sys": 17.67,
+          "iowait": 1.59,
+          "steal": 1.75,
+          "irq": 0.0,
+          "soft": 2.56,
+          "guest": 0.0,
+          "gnice": 0.0,
+          "idle": 0.28
+        },
+        "swap_pages_per_second": {
+          "pswpin": 3147.41,
+          "pswpout": 2986.01
+        },
+        "memory": {
+          "avail": 84712,
+          "swpused": 701484,
+          "memused-percent": 70.93
+        }
+      }
+    ]
+  },
+  "exact_canary_blocker": "0 clean prospective filled terminal lifecycles; required existing cohort 2-3 not met",
+  "next_action": "Keep public epoch collecting unchanged. At 2-3 clean filled terminal lifecycles, refresh exact OLD absolute risk and prepare exclusive handoff/micro-canary dossier. No owner activation is authorized by this report.",
+  "delegation": {
+    "task": "bounded local evidence parsing",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "runtime_verified": "turn_context in rollout-2026-09-30T07-38-16-01a0f09b-2de8-7122-a3bf-7c9caabe0ffa.jsonl"
+  },
+  "candidate_manifest": {
+    "files": {
+      "bot/att1_coordinator_adapter.py": "62e7a14f11efd9f56e1aa91641d4c28e67628ab5af92cd7258650754e9e73099",
+      "bot/att1_ets2s_signal_shadow_contract.py": "155976e0eb65cb9f40324a11e23771cfec54753c48e6f0fb77c7e73e047f7752",
+      "bot/live_native_decision_contract.py": "a8ad6115d1bb7d86f64c2cddb70695a814e4f7acf0db13fbc977acbd88f95f70",
+      "bot/public_h1_cache_store.py": "b33e8d4f67d6e99b019be3411fe59a01d73b0d361b33160540e87485b60e3787",
+      "bot/sbr1_universe.py": "4594c3a9192d1620f207d5591495d4e7f1640f6e17dabbb6aa8016290964de07",
+      "research_lab/att1_ets2s_accounting.py": "235a0f9da68893b1dd282a335d7c49218025bf6b263fbcc89418f25e6a40a9e2",
+      "research_lab/att1_ets2s_lifecycle.py": "68c1612edacf3cfe0d1c28614bb332803bf9177afe47399aa8a10a7c183867db",
+      "research_lab/att1_ets2s_signal_shadow_parity.py": "26e5fc3496c409d9de843b7542421d582d08445515a4ea7f4f3bf15ab1ecc1f0",
+      "research_lab/att1_lifecycle_coordinator.py": "420e957b79a22eef0804626bb01285c76c2a715dec90539d7b7e81aa47fcda1f",
+      "research_lab/att1_lifecycle_journal.py": "48b9465eaf1c09bb9ef87160610eac57cb2afb62f206b1b5c18c75c196f681eb",
+      "research_lab/att1_lifecycle_profile.py": "36509007fa444c54d9aaa7f76b500a5a97a11222e2eb937c3edc02615021cb04",
+      "research_lab/att1_lifecycle_public_inputs.py": "315bbb2311eb52cf5882a0bad2a8433cb9507595b0a6d221fa4f188a342d21bc",
+      "research_lab/att1_lifecycle_session.py": "94d8c60782885273ec9126208f8af50ae79170c589d37ef24962db5fe7a9da2e",
+      "research_lab/research_ohlcv_store.py": "843ef55280cd29fabf6424aa50131fbd97d53c984f59934e889549b543cf9636",
+      "scripts/live_bybit_evidence_20260706.py": "84659dddf81e89efaa8765c4781e693529a295797101984debba198d64706878",
+      "scripts/run_att1_lifecycle_zero_risk.py": "00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f",
+      "smart_pump_reversal_bot.py": "1b62c6fcc8ca12081aa5139949042ee7125f645d2cbe0f6c0c40e367537c587b",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812",
+      "strategies/att1_live.py": "08e31bac4690fff367ab1e699d16fd9fdc6f3bf6b8f5977f1cb34b4bb24bb7c8",
+      "strategies/live_kline_utils.py": "2d26bc689ee4ee67d06e06f4a26861143791aa3884f36f3714cf3fded466dbd7",
+      "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c",
+      "tests/fixtures/att1_lifecycle/att1_end_to_end_v1.json": "37e4139c8bd447c5c7b4aaf95fe5f9f40119931233b18db6cf547605d136cb66",
+      "tests/test_att1_account_identity.py": "99705ebb7d4e0cbd3910f5017eb91f07008604071f447b5599342f7d0d6cff09",
+      "tests/test_att1_authenticated_entry_recovery.py": "d4ef8af5cc2c1494f314e28f0ffe1f589251d03ce69b58851168d8568f35da5b",
+      "tests/test_att1_authenticated_finality.py": "ac457b7a36db458022935e345c0a8b278c7cdbc71a7fa469763685b5162ecf0e",
+      "tests/test_att1_authenticated_transport.py": "3529aaeb788561bb7744c116bd40f93d3f0b5183f54235a572a9bae62b3307e5",
+      "tests/test_att1_broker_cash_accounting.py": "6c8af010dd4e876e8a90538f03dc8c0ed417905f8a504af844dee6ae9d8e6043",
+      "tests/test_att1_broker_replay_binding.py": "ced1c7391eb9993b64d8b3adbe4b5df58075e0539ee99ef7fbeaf843f95c9639",
+      "tests/test_att1_broker_snapshot.py": "4823b14095af0076b76f0cf021abb50d73f7ede2f280e90d6f1672170e9af5d3",
+      "tests/test_att1_ets2s_accounting.py": "a31e0a791564d4113ab7a6117e1f543492ea6342460ad5f150fc7274726a5b01",
+      "tests/test_att1_ets2s_lifecycle.py": "6f98caf68719a4120b27a2621ae15322f6396b90843c33db548b88e4dd496221",
+      "tests/test_att1_exclusive_reservation.py": "6bcfd6345943e90b672b86616f3da2307946b0054dce33ee75909a4abd1969a4",
+      "tests/test_att1_lifecycle_coordinator.py": "b7a52c49f9314c2d849fd6980011f3bddb4b2cb9f63fafb74ce8074e0ab7f2fc",
+      "tests/test_att1_lifecycle_journal.py": "b28372e4ddf988ecc20e09ffa8c0712257de6870fd88cd87a4335738b1bbc3fd",
+      "tests/test_att1_lifecycle_profile.py": "2ad68c1f4da355918da0ab2097b1999dd9fac4655c9ee74d35bbffc9d5d622c5",
+      "tests/test_att1_lifecycle_public_inputs.py": "ac0b4027e31663046e7a3df1c1b6d609a0d732d0466f0865af1d5f475e3a452e",
+      "tests/test_att1_lifecycle_public_runner.py": "ddc0194696a2794c34a006ee634d7f659fcc2c0544c2b44c856c77a6772c2027",
+      "tests/test_att1_lifecycle_runtime_cycle.py": "a249a054a01a398546b638e2cc5badf5878ee15fafd4df85baeb4eab7a7fa93f",
+      "tests/test_att1_lifecycle_session.py": "f7eef7d606f669bdeeaadc8fde973639f4c1a6a270add6bee6cbe6a9a9db2617",
+      "tests/test_att1_native_stop_recovery.py": "8ee783669094becc2e7cb7b536399eb5ece484b037968fcda3054bae39474a63",
+      "tests/test_att1_new_broker_lifecycle_binding.py": "dc0697af5237b2ce30e6ea60ab5083b402853d8d2dd7697711616c9d4a1f8d5a",
+      "tests/test_verify_att1_lifecycle.py": "b9edccd94a299ae81e34b3f67637fad41df24f2dd81737001805c6094d26e122"
+    },
+    "tests": [
+      "tests/test_att1_authenticated_entry_recovery.py",
+      "tests/test_att1_authenticated_finality.py",
+      "tests/test_att1_authenticated_transport.py",
+      "tests/test_att1_new_broker_lifecycle_binding.py",
+      "tests/test_att1_broker_replay_binding.py",
+      "tests/test_att1_exclusive_reservation.py",
+      "tests/test_att1_account_identity.py",
+      "tests/test_att1_broker_snapshot.py",
+      "tests/test_att1_broker_cash_accounting.py",
+      "tests/test_att1_lifecycle_runtime_cycle.py",
+      "tests/test_att1_lifecycle_public_runner.py",
+      "tests/test_att1_lifecycle_public_inputs.py",
+      "tests/test_att1_lifecycle_journal.py",
+      "tests/test_att1_lifecycle_session.py",
+      "tests/test_att1_lifecycle_coordinator.py",
+      "tests/test_att1_lifecycle_profile.py",
+      "tests/test_att1_ets2s_lifecycle.py",
+      "tests/test_att1_ets2s_accounting.py",
+      "tests/test_verify_att1_lifecycle.py",
+      "tests/test_att1_native_stop_recovery.py"
+    ],
+    "orders_allowed": false,
+    "production_deploy": false
+  },
+  "private_evidence": {
+    "local_tests.log": "b8d5cc5ebcd62e38a8f64d43a98766fc8701d2d75516c70b3a27e80ba5ce2c32",
+    "target_tests.log": "32ddcef10abe90007f78078a53761501b1431248cc0fe9d586993d33e71d465e",
+    "public_verify.json": "47fe015399ed139a72c079f8b03fd07562a816bea26bd1e1c6660054fdd3ddb4",
+    "public_receipt_parity.json": "00169aacd0e97a39cf2b9b379b09fe23ca66a0645c401a688425dee33b5cb7da",
+    "gap_intervals.json": "06ae203c2bc3787d64fe10c0b871c56cb143b1a32fb003d2862834303cf710e2",
+    "correlation.json": "8be157e67c939b680d458b93f7bd98cfbc2a1fa9f183566f309ee56b1354e19a",
+    "coverage_verify.json": "4f093c8411e1b1923a161831c16e84cc345856ec5ee5f26a71e97acd47a6f656",
+    "post_reboot.json": "be26ec15f805f065fd5ddace4d2463adf3d2a2e03658cbec54ac543663f44369"
+  }
+}

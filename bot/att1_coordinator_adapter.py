@@ -766,12 +766,15 @@ def _event(row, kind, identity, exchange_text, received_ms, fields):
 
 
 def map_execution(row, *, symbol, expected_order_id, expected_order_link_id,
-                  kind, received_ms, exit_order_id=None):
+                  kind, received_ms, exit_order_id=None, native_stop=False):
     """Map Trade only. Funding execFee has a different sign and is refused."""
     if not isinstance(row, Mapping) or kind not in {'ENTRY_FILL','EXIT_FILL'}:
         raise AdapterViolation('invalid execution input/kind')
+    if type(native_stop) is not bool or (native_stop and kind!='EXIT_FILL'):
+        raise AdapterViolation('native stop fill mode')
     for name, expected in (('symbol',symbol),('orderId',expected_order_id),('orderLinkId',expected_order_link_id)):
-        _text(expected,name)
+        if not (native_stop and name=='orderLinkId' and expected==''):
+            _text(expected,name)
         if row.get(name) != expected:
             raise AdapterViolation('foreign ' + name)
     if row.get('execType') != 'Trade' or row.get('side') != ('Sell' if kind=='ENTRY_FILL' else 'Buy'):
@@ -1305,9 +1308,9 @@ def reconcile_new_att1_authenticated(client, db_path, decision_key, *, session, 
     """One explicit read-only recovery pass through the existing NEW lifecycle.
 
     Does not scan, create intents, run a service, or submit an order. The caller
-    supplies the existing durable session. Broker stop-trigger exits that do
-    not have the coordinator's deterministic exit link fail closed for operator
-    reconciliation; they are not silently adopted as strategy exits.
+    supplies the existing durable session. Native exchange SL executions bind
+    to the original durably acknowledged protective order and its raw source;
+    missing or conflicting protection identity still fails closed.
     """
     from scripts.run_att1_lifecycle_zero_risk import _save_json_once
     key=_decision_key(decision_key)
@@ -1316,7 +1319,43 @@ def reconcile_new_att1_authenticated(client, db_path, decision_key, *, session, 
     def save(value):
         sha=digest(value);_save_json_once(root/(sha+'.json'),value);return sha
     pending=session.receipt['pending_exit']
-    if pending is not None:
+    native_pending=pending is not None and pending['exit_order_id'].startswith('broker-stop:')
+    if native_pending or (pending is None and Fraction(session.receipt['held_qty'])>0):
+        armed_ack,armed_source=_att1_saved_protection(session,source_dir)
+        stop=armed_source['stop_order']
+        start=_positive_int(stop.get('createdTime'),'stop creation time')
+        orders=client.pages('/v5/order/history',{'category':'linear','symbol':key[2],
+            'orderId':stop['orderId'],'startTime':start,'endTime':min(client.last_received_ms,start+7*86400000),'limit':50})
+        rows=_complete_att1_rows(orders,received_ms=client.last_received_ms,identity_field='orderId')
+        if len(rows)>1:raise AdapterViolation('ambiguous native stop')
+        if rows and rows[0].get('orderStatus') in {'Filled','PartiallyFilled','PartiallyFilledCanceled','Cancelled'} and _number(rows[0].get('cumExecQty'),'stop cumExecQty',nonnegative=True)>0:
+            # Include the complete bounded execution history, never just the
+            # default last-seven-days window. Raw windows are retained below.
+            windows=[];lo=armed_ack['exchange_ms'];end=client.last_received_ms
+            while lo<=end:
+                if len(windows)>=4:raise AdapterViolation('native stop recovery history bound')
+                hi=min(end,lo+7*86400000)
+                pages=client.pages('/v5/execution/list',{'category':'linear','symbol':key[2],
+                    'orderId':stop['orderId'],'startTime':lo,'endTime':hi,'limit':100})
+                windows.append({'start_ms':lo,'end_ms':hi,'pages':pages});lo=hi+1
+            flat=[];seen=set()
+            for window in windows:
+                for row in _complete_att1_rows(window['pages'],received_ms=client.last_received_ms,identity_field='execId'):
+                    when=_positive_int(row.get('execTime'),'execTime')
+                    if not window['start_ms']<=when<=window['end_ms'] or row['execId'] in seen:
+                        raise AdapterViolation('native stop execution window conflict')
+                    seen.add(row['execId']);flat.append(row)
+            # Derived page shape for the pure mapper; it is NOT a broker receipt.
+            executions=[{'retCode':0,'time':client.last_received_ms,'result':{'category':'linear',
+                'list':flat,'nextPageCursor':''}}]
+            save({'account':key[0],'order_pages':orders,'execution_windows':windows,
+                  'received_ms':client.last_received_ms,'execution_page_is_derived':True})
+            identity=client.identity()
+            outcome['receipt']=recover_new_att1_native_stop(db_path,key,session=session,
+                account_config=client.redacted_config,broker_identity=identity,order_pages=orders,
+                execution_pages=executions,source_dir=source_dir,received_ms=client.last_received_ms)
+        pending=session.receipt['pending_exit']
+    if pending is not None and not pending['exit_order_id'].startswith('broker-stop:'):
         link=att1_exit_order_link_id(key,pending['exit_order_id'])
         start=pending['submit_ms']
         orders=client.pages('/v5/order/history',{'category':'linear','symbol':key[2],
@@ -1388,3 +1427,98 @@ def reconcile_new_att1_authenticated(client, db_path, decision_key, *, session, 
         blocker=None if result['lifecycle_terminal'] else 'COSTS_OR_INTEGRITY_NOT_FINAL',
         authenticated_account=key[0])
     return outcome
+
+
+def _att1_saved_protection(session, source_dir):
+    """Load the immutable broker source for the last durably acknowledged stop."""
+    from research_lab.att1_lifecycle_coordinator import replay_lifecycle
+    from research_lab.att1_lifecycle_journal import _pairs, _constant
+    records=list(session.journal.read())
+    matches=[(i,e) for i,e in enumerate(records) if e.get('kind')=='PROTECTION_ACK']
+    if not matches:raise AdapterViolation('durable protection receipt missing')
+    index,ack=matches[-1];p=Path(source_dir)/(ack['source_sha256']+'.json')
+    try:
+        if p.is_symlink() or p.stat().st_size>1000000:raise ValueError('unsafe source')
+        source=json.loads(p.read_text(),object_pairs_hook=_pairs,parse_constant=_constant)
+        if digest(source)!=ack['source_sha256']:raise ValueError('source hash')
+        before=replay_lifecycle(session.profile,records[0]['intent'],records[1:index])
+        mapped=map_protection(source['position'],source['stop_order'],receipt=before,received_ms=ack['received_ms'])
+        if mapped!=ack:raise ValueError('source does not reproduce acknowledgement')
+    except (OSError,ValueError,KeyError,TypeError) as exc:
+        raise AdapterViolation('protection source not verified') from exc
+    return ack,source
+
+
+def recover_new_att1_native_stop(db_path, decision_key, *, session, account_config,
+        broker_identity, order_pages, execution_pages, source_dir, received_ms):
+    """Account for execution of a durably armed exchange SL, without fake PRICE.
+
+    The protective order identity, immutable creation time and frozen stop must
+    match the original raw source. Missing/competing protection fails closed.
+    No reservation is released here: cash/funding plus fresh broker finality
+    still use the existing finality reconciler.
+    """
+    from research_lab.att1_lifecycle_coordinator import replay_lifecycle
+    from scripts.run_att1_lifecycle_zero_risk import _save_json_once
+    key=_decision_key(decision_key)
+    if _validated_old_att1_account(account_config,broker_identity,now_ms=received_ms)!=key[0]:
+        raise AdapterViolation('native stop account mismatch')
+    _validate_new_lifecycle_session(session,key)
+    ack,source=_att1_saved_protection(session,source_dir);armed=source['stop_order']
+    orders=_complete_att1_rows(order_pages,received_ms=received_ms,identity_field='orderId')
+    fills=_complete_att1_rows(execution_pages,received_ms=received_ms,identity_field='execId')
+    if len(orders)!=1 or not fills:raise AdapterViolation('native stop order/executions incomplete')
+    order=orders[0]
+    for field in ('orderId','symbol','orderLinkId','createdTime','triggerPrice','stopOrderType','positionIdx','side','closeOnTrigger','reduceOnly'):
+        if field not in armed or order.get(field)!=armed[field]:
+            raise AdapterViolation('native stop differs from armed identity: '+field)
+    if order.get('orderType')!='Market' or order.get('orderStatus') not in {'Filled','PartiallyFilled','PartiallyFilledCanceled','Cancelled'}:
+        raise AdapterViolation('native stop execution type/status')
+    if type(order.get('positionIdx')) is not int or order.get('closeOnTrigger') is not True or order.get('reduceOnly') is not True:
+        raise AdapterViolation('native stop mode/authority')
+    records=list(session.journal.read());durable={e['event_id']:e for e in records[1:]}
+    xid='broker-stop:'+digest([key[0],order['orderId']])
+    previous=[e for e in records[1:] if e.get('kind')=='BROKER_STOP_TRIGGER' and e['exit_order_id']==xid]
+    from research_lab.att1_lifecycle_profile import _decimal_text
+    quantity=previous[0]['qty'] if previous else _decimal_text(Fraction(session.receipt['held_qty']))
+    if _number(order.get('qty'),'stop quantity',positive=True)!=Fraction(quantity):
+        raise AdapterViolation('native stop quantity mismatch')
+    first=min(_positive_int(f.get('execTime'),'execTime') for f in fills)
+    trigger_source={'orderId':order['orderId'],'account':key[0],'protection_source_sha256':ack['source_sha256'],
+                    'first_execution_ms':first,'qty':quantity}
+    events=[_event(trigger_source,'BROKER_STOP_TRIGGER',order['orderId'],str(first),received_ms,
+        {'exit_order_id':xid,'protection_event_id':ack['event_id'],'qty':quantity,'stop':armed['triggerPrice']})]
+    events.extend(sorted([map_execution(f,symbol=key[2],expected_order_id=order['orderId'],
+        expected_order_link_id=order['orderLinkId'],kind='EXIT_FILL',received_ms=received_ms,
+        exit_order_id=xid,native_stop=True) for f in fills],key=lambda e:(e['exchange_ms'],e['event_id'])))
+    def additions(batch):
+        out=[]
+        for e in batch:
+            old=durable.get(e['event_id'])
+            if old is not None:
+                if {k:v for k,v in old.items() if k!='received_ms'}!={k:v for k,v in e.items() if k!='received_ms'}:
+                    raise AdapterViolation('conflicting native stop evidence')
+            else:out.append(e)
+        return out
+    # Replay up to its final receipt for repeat polls of an already-final order.
+    end=next((i for i,e in enumerate(records) if e.get('kind')=='EXIT_FINAL' and e['exit_order_id']==xid),len(records))
+    interim=replay_lifecycle(session.profile,records[0]['intent'],records[1:end]+additions(events))
+    pending=interim['pending_exit']
+    if pending is None:raise AdapterViolation('native stop intent not recoverable')
+    filled=Fraction(quantity)-Fraction(pending['remaining_qty'])
+    if _number(order.get('cumExecQty'),'stop cumExecQty',nonnegative=True)!=filled:
+        raise AdapterViolation('native stop executions incomplete')
+    statuses={'Filled':'FILLED','PartiallyFilledCanceled':'CANCELLED','Cancelled':'CANCELLED'}
+    if order['orderStatus'] in statuses:
+        if order['orderStatus']=='Filled' and pending['remaining_qty']!='0':
+            raise AdapterViolation('native stop incomplete filled status')
+        events.append(_event(order,'EXIT_FINAL',order['orderId'],order.get('updatedTime'),received_ms,
+            {'exit_order_id':xid,'status':statuses[order['orderStatus']]}))
+    replay_lifecycle(session.profile,records[0]['intent'],records[1:]+additions(events))
+    for value in (trigger_source,order,*fills):
+        _save_json_once(Path(source_dir)/(digest(value)+'.json'),value)
+    with sqlite3.connect(db_path) as con:
+        row=con.execute('''SELECT broker_order_id FROM att1_decisions WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''',key).fetchone()
+    if row is None or not row[0]:raise AdapterViolation('native stop entry binding absent')
+    return reconcile_new_att1_lifecycle_receipts(db_path,key,session=session,
+        broker_order_id=row[0],events=events,now_ms=received_ms,release_reservation=False)

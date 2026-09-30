@@ -33,6 +33,7 @@ FIELDS = {
     'FUNDING_CASH': {'settlement_id', 'settlement_ms', 'qty_at_settlement', 'cash_amount', 'currency'},
     'FUNDING_COVERAGE': {'start_ms', 'end_ms', 'settlement_ms', 'complete'},
     'RECOVERY_GAP': {'reason'},
+    'BROKER_STOP_TRIGGER': {'exit_order_id','protection_event_id','qty','stop'},
 }
 
 
@@ -148,6 +149,7 @@ def _replay(profile, intent, events):
     last_ask = None
     valuation_horizon = None
     entry_final_seen = False
+    protection_records = {}
 
     def held():
         return Fraction(exposure.held_qty)
@@ -294,7 +296,25 @@ def _replay(profile, intent, events):
                 raise CoordinatorViolation('frozen stop changed; BE/trailing disabled')
             expose(e,kind,_decimal_text(number(e['qty'],'qty',positive=True)))
             protection_stop=stop
+            protection_records[e['event_id']]=dict(e)
             if exposure.unprotected_qty == 0: unprotected_since=None
+        elif kind == 'BROKER_STOP_TRIGGER':
+            # The exchange is executing an already armed stop, not accepting a
+            # new local order. Preserve the original protective acceptance clock.
+            if not broker_replay:
+                raise CoordinatorViolation('native stop requires broker profile')
+            armed=protection_records.get(text(e['protection_event_id'],'protection_event_id'))
+            quantity=number(e['qty'],'native stop qty',positive=True)
+            if (armed is None or pending_exit is not None or not exposure.entry_final
+                    or held()!=quantity or Fraction(exposure.protected_qty)<quantity
+                    or protection_stop!=original_stop or number(e['stop'],'stop',positive=True)!=original_stop
+                    or number(armed['qty'],'armed qty',positive=True)<quantity
+                    or armed['exchange_ms']>ex or armed['received_ms']>ex):
+                raise CoordinatorViolation('native stop not causally armed or competing exit')
+            pending_exit={'exit_order_id':text(e['exit_order_id'],'exit_order_id'),'reason':'SL',
+                          'qty':quantity,'remaining_qty':quantity,
+                          'submit_ms':armed['exchange_ms'],'acknowledged':True}
+            forced_reason='SL'
         elif kind == 'UNKNOWN_PROTECTION':
             expose(e,kind)
             protection_stop=None

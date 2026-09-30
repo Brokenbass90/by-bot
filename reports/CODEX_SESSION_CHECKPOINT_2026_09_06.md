@@ -3,6 +3,57 @@
 ## Public continuation checkpoint
 
 
+Latest continuation — **September 30 04:42 UTC: native-SL binding complete with orders OFF; canary NOT ready**:
+- Closed the concrete `exchange SL without local exit-intent` defect in the existing
+  authenticated reconcile path. Exact armed stop identity + hash-bound durable
+  PROTECTION_ACK → real execution timestamps/fills/fees → actual funding → finality.
+  No synthetic PRICE/local order invented. Reservation stays locked until full
+  costs and fresh broker-flat/no-order truth. Lost-response/restart and partial
+  fill recovery preserve identities; changed economic receipts fail closed.
+- **346 PASS locally + 346 PASS isolated VPS Python3.12.3; 42 candidate hashes**.
+  Manifest includes native-stop suite (16 cases). Crash points before trigger,
+  fill, final, funding cash/coverage verified. Candidate replays both existing
+  public journals to identical receipts. Tests remain fixtures, not prospective
+  fills. Root critical review completed; no independent code review claimed.
+- **binding_complete_orders_off=true; CANARY_READY=false**. SEND_ENABLED=False,
+  signed GET-only allowlist; no NEW production install, no live sends, actual
+  NEW fills0. The additive broker-only event changes coordinator implementation
+  hash: do NOT overlay candidate onto old public journals or rewrite their pins.
+- Post-resize/reboot verified: 2vCPU, available RAM1,520,856KiB, swap167,208KiB
+  (no longer zero), CPU/IO/memory PSI avg60=0.67/0.02/0.02%. OLD PID781/public999,
+  NRestarts0 since external reboot Sep29 18:11 UTC. Heartbeat110ms. No deployment,
+  restart, config/risk/position changes made by Codex. OLD source hashes unchanged.
+- Public existing epoch: **34 complete H1 ×51 unique symbols**, including10
+  after reboot. 2 total sessions: one nonfill, one dirty filled terminal path;
+  **clean filled terminal0; gaps1 pre-resize /0 post-resize; new filled sessions
+  post-resize0**. Duplicate event IDs0; external missing transitions NOT_PROVEN.
+  No claim that resize fixed continuity without a new exposure-bearing lifecycle.
+- Historical29 gaps correlated with available telemetry:7 have SAR intervals,
+  all CPU idle<1% with active swap. SBR running during2 gaps, not during1,
+  unknown for26. SAR~600s does not split individual GET network/scheduler latency.
+  Latest sourced2091ms gap =1691.766ms request wall +400ms preceding wait; neither
+  Bybit-only nor SBR-only causation is proven. Density historical load unmeasured.
+- Density stays OFF: no systemd/cron owner, no current OLD/public ATT1 consumer
+  found. No blind restart. **SBR1 is not healthy**: timer active, repeated120s
+  timeouts and latest degraded-public-data exit3 (11 observed/1 structural/39
+  errors). Recorded separately; no SBR repair/new research scope opened.
+- Direct authenticated broker snapshot:0 positions/0 open orders. Last3 OLD
+  entries match broker qty/price. OLD is short-only, current trend_guard_bars=0,
+  caller receipt disabled; local descending-resistance entry is not a broad
+  bearish-regime filter. Short during a rising market is not alone a parity bug.
+  Full historical PIT parity NOT_PROVEN without original snapshots/config lineage.
+  Last3 DB close net total -0.89179792USDT; not profitability proof either way.
+- Exact next canary blocker: **0/2–3 clean prospective filled terminals**. Public
+  continues unchanged. After cohort: fresh exact OLD absolute risk → exclusive
+  handoff dossier → owner decision. No money activation in this receipt.
+- Receipt `reports/ATT1_NATIVE_SL_AND_RESIZE_2026_09_30.json`; raw private evidence
+  `.private/att1_safety_20260929/` + `.private/att1_safety_20260930/`.
+  Bounded evidence worker gpt-6-luna/medium verified from runtime turn_context.
+  Preserve unrelated untracked `configs/allowlist_change_log.json`.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 29 13:15 UTC: authenticated GET binding advanced, NOT activation-ready**:
 - Owner scope remains ATT1 only, real order submission OFF. Local + isolated VPS
   Python3.12.3 focused suite **166 PASS**; 13 candidate files hash verified.
