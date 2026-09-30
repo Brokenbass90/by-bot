@@ -329,7 +329,9 @@ def rynki_sobytiy(kripto_iz):
         r = get(GAMMA, "/events", limit=100, offset=off, closed="false", order="volume", ascending="false") or []
         for e in r:
             ms = [m for m in (e.get("markets") or []) if not m.get("closed")]
-            if not e.get("negRisk") or len(ms) < 2:
+            # v3: без мега-событий (первый круг v2 забрал одно событие на 128 исходов, у многих
+            # исходов стакана нет — 404) — сумму исходов можно проверить только на событиях до 30 исходов
+            if not e.get("negRisk") or not (2 <= len(ms) <= 30):
                 continue
             chast = []
             for m in ms:
@@ -340,7 +342,7 @@ def rynki_sobytiy(kripto_iz):
                 chast.append({"conditionId": m.get("conditionId"), "kat": "negrisk", "token": yes,
                               "sobytie": e.get("id"), "iskhodov_v_sobytii": len(ms), "vopros": m.get("question")})
             if len(vybor) + len(chast) > SNIMKI_MAX - 100:
-                return vybor + [z for z in kripto_iz if z["kat"] == "kripto"][:100]
+                continue                       # не влезает целиком — пропустить, искать меньшие
             vybor += chast
         if not r:
             break
@@ -374,7 +376,7 @@ def snimki(minut=15):
             asks = sorted((float(x["price"]), float(x["size"])) for x in b.get("asks", []))[:10]
             oi = get(DATA, "/oi", market=s["conditionId"])
             zapisi.append({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "sobytie": s.get("sobytie"),
-                           "iskhodov_v_sobytii": s.get("iskhodov_v_sobytii"), "otbor": "v2",
+                           "iskhodov_v_sobytii": s.get("iskhodov_v_sobytii"), "otbor": "v3",
                            "bids": bids, "asks": asks,
                            "oi": oi if not isinstance(oi, list) else (oi[0] if oi else None)})
             time.sleep(PAUZA)
