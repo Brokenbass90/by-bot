@@ -2482,7 +2482,7 @@
    "begun": "meh",
    "rynok": "fx7_glub",
    "semya": "gep_pereocenka",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "QUEUED",
    "prereg": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
    "param": {
     "meh": "GEP_VYHODNYH",
@@ -2499,7 +2499,7 @@
    "porozhdeno": "2026-09-30T08:28:46+00:00",
    "trebuet_priyomki": true,
    "prezhniy_verdikt": "GEP_VYHODNYH__fx7__short: INCONCLUSIVE_LOW_N",
-   "blocker": "ждёт ПРИЁМКИ данных человеком: fabrika.py --prinyat fx7_glub"
+   "vzveden": "2026-09-30T08:33:36+00:00: ре-тест по PREREG_GLUBINA после приёмки владельца"
   },
   {
    "id": "PROBOY_55__gold_glub__short",
@@ -2507,7 +2507,7 @@
    "begun": "meh",
    "rynok": "gold_glub",
    "semya": "breakout",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "QUEUED",
    "prereg": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
    "param": {
     "meh": "PROBOY_55",
@@ -2524,7 +2524,7 @@
    "porozhdeno": "2026-09-30T08:28:46+00:00",
    "trebuet_priyomki": true,
    "prezhniy_verdikt": "PROBOY_55__gold__short: INCONCLUSIVE_LOW_N",
-   "blocker": "ждёт ПРИЁМКИ данных человеком: fabrika.py --prinyat gold_glub"
+   "vzveden": "2026-09-30T08:33:36+00:00: ре-тест по PREREG_GLUBINA после приёмки владельца"
   },
   {
    "id": "SZHATIE_BB__gold_glub__long",
@@ -2532,7 +2532,7 @@
    "begun": "meh",
    "rynok": "gold_glub",
    "semya": "volatility_expansion",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "QUEUED",
    "prereg": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
    "param": {
     "meh": "SZHATIE_BB",
@@ -2549,7 +2549,7 @@
    "porozhdeno": "2026-09-30T08:28:46+00:00",
    "trebuet_priyomki": true,
    "prezhniy_verdikt": "SZHATIE_BB__gold__long: INCONCLUSIVE_LOW_N",
-   "blocker": "ждёт ПРИЁМКИ данных человеком: fabrika.py --prinyat gold_glub"
+   "vzveden": "2026-09-30T08:33:36+00:00: ре-тест по PREREG_GLUBINA после приёмки владельца"
   },
   {
    "id": "SZHATIE_BB__gold_glub__short",
@@ -2557,7 +2557,7 @@
    "begun": "meh",
    "rynok": "gold_glub",
    "semya": "volatility_expansion",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "QUEUED",
    "prereg": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
    "param": {
     "meh": "SZHATIE_BB",
@@ -2574,7 +2574,7 @@
    "porozhdeno": "2026-09-30T08:28:46+00:00",
    "trebuet_priyomki": true,
    "prezhniy_verdikt": "SZHATIE_BB__gold__short: INCONCLUSIVE_LOW_N",
-   "blocker": "ждёт ПРИЁМКИ данных человеком: fabrika.py --prinyat gold_glub"
+   "vzveden": "2026-09-30T08:33:36+00:00: ре-тест по PREREG_GLUBINA после приёмки владельца"
   },
   {
    "id": "VOZVRAT_K_SREDNEY__gold_glub__long",
@@ -2582,7 +2582,7 @@
    "begun": "meh",
    "rynok": "gold_glub",
    "semya": "mean_reversion",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "QUEUED",
    "prereg": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
    "param": {
     "meh": "VOZVRAT_K_SREDNEY",
@@ -2599,7 +2599,7 @@
    "porozhdeno": "2026-09-30T08:28:46+00:00",
    "trebuet_priyomki": true,
    "prezhniy_verdikt": "VOZVRAT_K_SREDNEY__gold__long: INCONCLUSIVE_LOW_N",
-   "blocker": "ждёт ПРИЁМКИ данных человеком: fabrika.py --prinyat gold_glub"
+   "vzveden": "2026-09-30T08:33:36+00:00: ре-тест по PREREG_GLUBINA после приёмки владельца"
   },
   {
    "id": "VOZVRAT_K_SREDNEY__gold_glub__short",
@@ -2607,7 +2607,7 @@
    "begun": "meh",
    "rynok": "gold_glub",
    "semya": "mean_reversion",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "QUEUED",
    "prereg": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
    "param": {
     "meh": "VOZVRAT_K_SREDNEY",
@@ -2624,7 +2624,7 @@
    "porozhdeno": "2026-09-30T08:28:46+00:00",
    "trebuet_priyomki": true,
    "prezhniy_verdikt": "VOZVRAT_K_SREDNEY__gold__short: INCONCLUSIVE_LOW_N",
-   "blocker": "ждёт ПРИЁМКИ данных человеком: fabrika.py --prinyat gold_glub"
+   "vzveden": "2026-09-30T08:33:36+00:00: ре-тест по PREREG_GLUBINA после приёмки владельца"
   }
  ]
 }
