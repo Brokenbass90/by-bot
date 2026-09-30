@@ -1,0 +1,41 @@
+{
+ "T1": {
+  "n": 29,
+  "dney": 26,
+  "edge_bps": -13.0,
+  "t": -0.32,
+  "polovinki_bps": [
+   -94.2,
+   68.1
+  ],
+  "syroy_bps": 0.3,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "T2": {
+  "n": 138,
+  "dney": 128,
+  "edge_bps": -149.9,
+  "t": -2.57,
+  "polovinki_bps": [
+   -322.5,
+   22.6
+  ],
+  "syroy_bps": -160.1,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "T3": {
+  "n": 34,
+  "dney": 10,
+  "edge_bps": -13.5,
+  "t": -3.02,
+  "polovinki_bps": [
+   -8.0,
+   -19.0
+  ],
+  "syroy_bps": -15.3,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ }
+}

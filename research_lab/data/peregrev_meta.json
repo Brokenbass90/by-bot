@@ -1,0 +1,215 @@
+{
+ "kogda": "2026-09-30T11:53:09Z",
+ "simvoly": {
+  "BLESSUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 1800000.0,
+   "price": 0.008767,
+   "risk_limit_1": 15000.0
+  },
+  "BICOUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 310000.0,
+   "price": 0.022102,
+   "risk_limit_1": 5000.0
+  },
+  "ACEUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 130000.0,
+   "price": 0.17928,
+   "risk_limit_1": 5000.0
+  },
+  "USELESSUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 500000.0,
+   "price": 0.23765,
+   "risk_limit_1": 15000.0
+  },
+  "AKEUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 15000000.0,
+   "price": 0.031771,
+   "risk_limit_1": 5000.0
+  },
+  "CYSUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 50000.0,
+   "price": 0.1588,
+   "risk_limit_1": 15000.0
+  },
+  "HFTUSDT": {
+   "status": "Closed",
+   "min_notional": 5.0,
+   "max_mkt_qty": 560000.0,
+   "price": null,
+   "risk_limit_1": null
+  },
+  "VELVETUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 21000.0,
+   "price": 0.0559,
+   "risk_limit_1": 5000.0
+  },
+  "MAGMAUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 55000.0,
+   "price": 0.1901,
+   "risk_limit_1": 5000.0
+  },
+  "APRUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 25000.0,
+   "price": 0.1206,
+   "risk_limit_1": 5000.0
+  },
+  "HUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 370000.0,
+   "price": 0.06991,
+   "risk_limit_1": 15000.0
+  },
+  "BEATUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 18000.0,
+   "price": 0.09092,
+   "risk_limit_1": 5000.0
+  },
+  "BTRUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 650000.0,
+   "price": 0.04812,
+   "risk_limit_1": 5000.0
+  },
+  "BTWUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 601000.0,
+   "price": 1.1861,
+   "risk_limit_1": 10000.0
+  },
+  "LYNUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 468000.0,
+   "price": 0.03615,
+   "risk_limit_1": 5000.0
+  },
+  "ARIAUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 79000.0,
+   "price": 0.03544,
+   "risk_limit_1": 5000.0
+  },
+  "FOLKSUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 9300.0,
+   "price": 2.5518,
+   "risk_limit_1": 5000.0
+  },
+  "TRUTHUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 1320000.0,
+   "price": 0.012942,
+   "risk_limit_1": 5000.0
+  },
+  "PTBUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 2250000.0,
+   "price": 0.0009326,
+   "risk_limit_1": 5000.0
+  },
+  "ASPUSDT": {
+   "status": "Closed",
+   "min_notional": 5.0,
+   "max_mkt_qty": 600000.0,
+   "price": null,
+   "risk_limit_1": null
+  },
+  "PLAYSOUTUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 125000.0,
+   "price": 0.03196,
+   "risk_limit_1": 15000.0
+  },
+  "STBLUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 140000.0,
+   "price": 0.02634,
+   "risk_limit_1": 5000.0
+  },
+  "SPORTFUNUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 312000.0,
+   "price": 0.01781,
+   "risk_limit_1": 5000.0
+  },
+  "XNYUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 900000.0,
+   "price": 0.006851,
+   "risk_limit_1": 5000.0
+  },
+  "AIOUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 73000.0,
+   "price": 0.03905,
+   "risk_limit_1": 5000.0
+  },
+  "QUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 350000.0,
+   "price": 0.02285,
+   "risk_limit_1": 25000.0
+  },
+  "THEUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 22000.0,
+   "price": 0.07769,
+   "risk_limit_1": 5000.0
+  },
+  "1000TAGUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 5150.0,
+   "price": 0.8601,
+   "risk_limit_1": 5000.0
+  },
+  "INXUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 1250000.0,
+   "price": 0.005879,
+   "risk_limit_1": 15000.0
+  },
+  "BMNRUSDT": {
+   "status": "Trading",
+   "min_notional": 5.0,
+   "max_mkt_qty": 4000.0,
+   "price": 26.966,
+   "risk_limit_1": 50000.0
+  }
+ }
+}
