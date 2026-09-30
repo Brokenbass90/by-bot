@@ -1,0 +1,138 @@
+{
+ "D6": {
+  "n": 184,
+  "dney": 184,
+  "edge_bps": -42.2,
+  "t": -1.67,
+  "polovinki_bps": [
+   -27.9,
+   -56.5
+  ],
+  "syroy_bps": -42.2,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "D7": {
+  "n": 185,
+  "dney": 185,
+  "edge_bps": -47.7,
+  "t": -1.6,
+  "polovinki_bps": [
+   -37.8,
+   -57.5
+  ],
+  "syroy_bps": -47.7,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "D8": {
+  "n": 18,
+  "verdikt": "KILLED",
+  "prichina": "мало событий (18)",
+  "sverka_razresheniya": "совпало 296, расходится 16"
+ },
+ "D3": {
+  "n": 212,
+  "dney": 173,
+  "edge_bps": 392.8,
+  "t": 1.57,
+  "polovinki_bps": [
+   113.3,
+   669.1
+  ],
+  "syroy_bps": 830.2,
+  "verdikt": "KILLED",
+  "prichina": "t=1.57 < 2"
+ },
+ "D3p": {
+  "n": 111,
+  "dney": 12,
+  "edge_bps": -3005.1,
+  "t": -2.29,
+  "polovinki_bps": [
+   -2935.1,
+   -3075.1
+  ],
+  "syroy_bps": -153.5,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "D4": {
+  "n": 143,
+  "dney": 143,
+  "edge_bps": 2004.3,
+  "t": 1.0,
+  "polovinki_bps": [
+   148.1,
+   3834.7
+  ],
+  "syroy_bps": 2004.3,
+  "verdikt": "KILLED",
+  "prichina": "t=1.00 < 2"
+ },
+ "D5": {
+  "n": 149,
+  "dney": 135,
+  "edge_bps": 80.4,
+  "t": 1.02,
+  "polovinki_bps": [
+   60.0,
+   100.5
+  ],
+  "syroy_bps": 141.8,
+  "verdikt": "KILLED",
+  "prichina": "t=1.02 < 2"
+ },
+ "D1": {
+  "n": 11263,
+  "dney": 571,
+  "edge_bps": -7.7,
+  "t": -2.24,
+  "polovinki_bps": [
+   -13.0,
+   -2.5
+  ],
+  "syroy_bps": -9.2,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "D2": {
+  "n": 11263,
+  "dney": 571,
+  "edge_bps": -1.4,
+  "t": -0.36,
+  "polovinki_bps": [
+   -7.1,
+   4.2
+  ],
+  "syroy_bps": -10.1,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "D9": {
+  "n": 185,
+  "dney": 185,
+  "edge_bps": -59.2,
+  "t": -1.86,
+  "polovinki_bps": [
+   -31.2,
+   -86.9
+  ],
+  "syroy_bps": -59.2,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "D10": {
+  "n": 76,
+  "dney": 76,
+  "edge_bps": -22.4,
+  "t": -0.47,
+  "polovinki_bps": [
+   -24.1,
+   -20.7
+  ],
+  "syroy_bps": -22.4,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ }
+}
