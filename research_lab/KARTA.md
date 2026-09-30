@@ -3,7 +3,7 @@
 Единственный файл состояния. Обновляется на месте; история — в git.
 Не отчёт и не план: только SLEEVE → STATUS → EVIDENCE → GATE → NEXT → OWNER.
 Прогресс = смена статуса на PASS / FAIL / KILLED / READY / LIVE, а не новые файлы.
-Обновлено: 2026-09-30, Claude. Строки Codex — по его хендоффу, Claude их не проверял.
+Обновлено: 2026-09-30 (после прохода 08:34 UTC), Claude. Строки Codex — по его хендоффу, Claude их не проверял.
 
 ## MONEY lane (Codex)
 
@@ -18,25 +18,36 @@
 | SLEEVE | STATUS | EVIDENCE | GATE | NEXT | OWNER |
 |---|---|---|---|---|---|
 | SHORT_HVOST_FANDING | PREREG, ждём | поиск: 60 событий, t=2.64 после штрафа 30 bps; будущие: 0/30 | `fanding_hvost.py`: n≥30, t≥2, медиана>0, монета≤50% | тени фандинга должны работать; ~конец октября | Claude |
-| Золото/FX глубина | 6 ре-тестов ждут приёмки | окна `gold_glub`/`fx7_glub` заморожены по частоте | `--prinyat gold_glub`, `--prinyat fx7_glub` | прогон 6 пунктов → вердикты | владелец → Claude |
-| Золото/FX прочее | закрыто | 18 NEGATIVE, 6 PNC, 14 структурно LOW_N | — | не трогать | — |
+| Золото/FX | **ЗАКРЫТ** 2026-09-30 | 6 ре-тестов на глубине 2018–2023: все NEGATIVE; ранее 18 NEGATIVE, 6 PNC, 14 структурно LOW_N | — | 12 геометрических механизмов каталога на H1 золота и FX не воскрешать. Рынок вернётся только с новым экономическим механизмом и данными издержек (спреды/свопы) | — |
 | ETS2M | ждём вердикт | 1004 входа, когорта 900 заморожена | 2026-10-10 19:00 UTC | запустить evaluator, не менять | Claude |
 | Тень SILA | идёт медленно | 3/100 решений | 100 решений | не выключать Mac | Claude |
-| Фабрика | демон погашен, защита исправлена | самопроверка ВСЁ ПРОШЛО | окна объявлены + приёмка | поднять демон после приёмки | владелец |
+| Фабрика | демон погашен, защищён | самопроверка ВСЁ ПРОШЛО; очередь пуста | нужна новая предрегистрация | не поднимать до Discovery | владелец |
 
-## Живые острова вне фабрики (найдены 30.09, статус по их же файлам)
+## Фоновые процессы на Mac (решение владельца 30.09)
+
+Нужны замороженным экспериментам — НЕ гасить:
+
+| процесс | как живёт | питает |
+|---|---|---|
+| тень фандинга dynamic | screen `research_funding_dynamic` → `scripts/run_funding_positioning_dynamic_shadow_loop.sh` | SHORT_HVOST_FANDING |
+| тень фандинга post_n42 | screen `research_funding_frozen` → `scripts/run_funding_positioning_post_n42_frozen_loop.sh` | SHORT_HVOST_FANDING |
+| ETS2M / ETS2S, тень ATT1, SILA | nohup-процессы `research_lab/ten.py` и `ten_sila.py` | вердикт ETS2M 10.10, SILA |
+
+После перезагрузки Mac screen-тени фандинга поднимать вручную (станция больше не поднимает):
+`screen -dmS research_funding_dynamic /bin/bash -lc scripts/run_funding_positioning_dynamic_shadow_loop.sh`
+`screen -dmS research_funding_frozen /bin/bash -lc scripts/run_funding_positioning_post_n42_frozen_loop.sh`
+(из корня репозитория; второй экземпляр сам откажется по замку).
 
 | SLEEVE | STATUS | EVIDENCE | NEXT | OWNER |
 |---|---|---|---|---|
-| Тень арбитража (`live_mirror/arb_roi_estimate.json`) | **отрицательная** | 500 циклов, win 27%, mean −0.07%/цикл, p25 проекция −5.6%/мес | кандидат в KILL, решает владелец | владелец |
-| Тень PUMP4 (`data/ten_pump4.log`) | **мертва** | каждый проход: `Operation not permitted` (у запускающего python нет доступа к Documents) | чинить или закрыть | владелец |
+| Тень арбитража (arb_ten) | **KILLED** 2026-09-30 | 500 циклов, win 27%, mean −0.07%/цикл, проекция −5.6%/мес | реализацию не исследовать и не тюнить; семейство вернётся только с новым механизмом | — |
+| research_station (launchd) + project_audit (launchd, screen) | **гасится** | audit/model/sync-live — не нужны экспериментам | команды владельцу 30.09 | владелец |
+| inplay_eth_prospective | гасится | evidence не обновлялось 16 дней | — | владелец |
+| Тень PUMP4 | **DEFERRED** | петля падает `Operation not permitted`; сильного обоснования нет | не чинить | — |
+| xsec_v3, alpaca_adaptive shadow | идут, контур Codex | XSEC_V3: 57 дн, t≈0.35 | решение Codex | Codex |
 | Тень ATT1 (`data/ten_ATT1.log`) | идёт | 1082 закрытых из порога 400 | свести с вердиктом Codex по ATT1 | Codex |
-| Тень ETS2S | идёт | 223 прохода | статус по prereg не сведён | Claude |
-| Тени фандинга dynamic / post_n42 | идут, питают SHORT_HVOST | в леджерах дубли записи исхода | не менять скрипты до вердикта | — |
-| research_station (launchd) | работает | `logs/research_station_launchd.log` | противоречит правилу «без автозапуска на Mac» — решение владельца | владелец |
-| xsec_v3, alpaca_adaptive shadow | идут | не сведены | свести при следующем проходе | Claude |
 
-## DISCOVERY lane — закрыта до вердиктов по золоту/FX
+## DISCOVERY lane — золото/FX закрыт, ждёт решения об открытии
 Первые домены: фандинг/базис хвоста, Polymarket, малоликвидный хвост pit_daily.
 
 ## Запрещено

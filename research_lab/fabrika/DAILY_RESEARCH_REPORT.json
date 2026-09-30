@@ -1,8 +1,8 @@
 {
- "kogda": "2026-09-28T09:35:05+00:00",
- "stroka": "tested 0 | killed 0 | leads 0 | confirmed 0 | shadows 1 | ready_for_build 0 | blocked 31 | owner_action 1",
- "tested": 0,
- "killed": 0,
+ "kogda": "2026-09-30T07:10:00+00:00",
+ "stroka": "tested 8 | killed 4 | leads 0 | confirmed 0 | shadows 1 | ready_for_build 0 | blocked 22 | owner_action 1",
+ "tested": 8,
+ "killed": 4,
  "leads": [],
  "confirmed": [],
  "shadows": [
@@ -12,7 +12,6 @@
  "blocked": {
   "dannye": [
    "xsec_pit_v5",
-   "xauusd_unchanged_replication_v1",
    "cross_exchange_arbitrage_paper",
    "PROBOY_55__gold__short",
    "SZHATIE_BB__gold__long",
@@ -27,14 +26,6 @@
    "OBEM_IMPULS__gold__short",
    "MOMENTUM_30D__gold__long",
    "MOMENTUM_30D__gold__short",
-   "LONDON_PROBOY__gold__long",
-   "LONDON_PROBOY__gold__short",
-   "SVIP_UROVNYA__gold__long",
-   "SVIP_UROVNYA__gold__short",
-   "GEP_VYHODNYH__gold__long",
-   "GEP_VYHODNYH__gold__short",
-   "NOCHNOY_DREYF__gold__long",
-   "NOCHNOY_DREYF__gold__short",
    "P_AKC_OSTATOCHNYY_MOMENT"
   ],
   "perehodnik": [
@@ -48,15 +39,20 @@
  },
  "ochered_pusta": true,
  "pochemu_pusto": "ждём тень",
- "za_sutki": {},
+ "za_sutki": {
+  "NEGATIVE": 4,
+  "INCONCLUSIVE_LOW_N": 2,
+  "PLUS_NO_CONFIDENCE": 2
+ },
  "sostoyaniya": {
   "PARITY_PASS": 2,
-  "NEGATIVE": 45,
+  "NEGATIVE": 49,
   "WAITING_SHADOW": 1,
-  "BLOCKED_DATA": 25,
+  "BLOCKED_DATA": 16,
+  "QUEUED": 1,
   "BLOCKED_ADAPTER": 6,
-  "PLUS_NO_CONFIDENCE": 23,
-  "INCONCLUSIVE_LOW_N": 10,
+  "PLUS_NO_CONFIDENCE": 25,
+  "INCONCLUSIVE_LOW_N": 12,
   "DIAGNOSTIC": 1,
   "HYPOTHESIS": 1,
   "FAILED_CONFIRMATION": 1,
@@ -64,10 +60,10 @@
  },
  "poly": {
   "rynkov_v_istorii": 4928,
-  "posledniy_sbor": "2026-09-27T20:17:17+00:00"
+  "posledniy_sbor": "2026-09-29T12:09:50+00:00"
  },
  "owner_action": [
-  "нужны данные для 25 пунктов — что именно, в zadachi.json"
+  "нужны данные для 16 пунктов — что именно, в zadachi.json"
  ],
  "trebuetsya_vmeshatelstvo": true,
  "potolok": "READY_FOR_BUILD"
