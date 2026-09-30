@@ -7,6 +7,7 @@
     python3 dannye_pit_kripto.py --vse    все ~750 инструментов с суточным OI (≈30–60 мин)
     python3 dannye_pit_kripto.py --vse --obnovit   то же, но перекачать уже скачанные (для проверки вперёд)
     python3 dannye_pit_kripto.py --kvartaly        квартальные фьючерсы BTC/ETH/SOL 2023–2026 (один раз)
+    python3 dannye_pit_kripto.py --chasy           часовые свечи перпов на золото/нефть/акции/индексы (один раз)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
 """
@@ -35,10 +36,10 @@ def get(path, **q):
     return None
 
 
-def svechi(sym):
+def svechi(sym, interval="D"):
     out, end = {}, int(time.time() * 1000)
     while end > START:
-        r = get("kline", category="linear", symbol=sym, interval="D", start=START, end=end, limit=1000)
+        r = get("kline", category="linear", symbol=sym, interval=interval, start=START, end=end, limit=1000)
         rows = (r or {}).get("list") or []
         if not rows:
             break
@@ -101,10 +102,30 @@ def kvartaly():
     print("готово. биржа не отдала:", len(net), "из", len(imena))
 
 
+TRADFI = ["PAXGUSDT", "XAUTUSDT", "XAGUSDT", "CLUSDT", "BZUSDT", "SPXUSDT", "SPYUSDT", "QQQUSDT", "EWYUSDT",
+          "AAPLUSDT", "NVDAUSDT", "TSLAUSDT", "MSTRUSDT", "COINUSDT", "HOODUSDT", "INTCUSDT", "CRCLUSDT", "BMNRUSDT"]
+
+
+def chasy():
+    """Одна ограниченная выгрузка часовых свечей перпов на традиционные активы (торгуются 24/7, когда
+    базовый рынок закрыт) — для семейства TRADFI_CLOSED_MARKET. Кладёт research_lab/data/tradfi_h1/<SYM>.json."""
+    out = LAB / "data/tradfi_h1"; out.mkdir(exist_ok=True)
+    for i, s in enumerate(TRADFI):
+        p = out / f"{s}.json"
+        if p.exists():
+            continue
+        d = svechi(s, interval="60")
+        if d:
+            p.write_text(json.dumps({"symbol": s, "h1": d}))
+        print(f"{i+1:>2}/{len(TRADFI)} {s}: часов {len(d)}", flush=True)
+
+
 def main():
     import sys
     if "--kvartaly" in sys.argv:
         return kvartaly()
+    if "--chasy" in sys.argv:
+        return chasy()
     v = json.load(open(LAB / "data/basis/vselennaya_pit.json"))
     net = []
     simvoly = sorted(set(v["simvoly"]) | {"BTCUSDT", "ETHUSDT"})   # BTC/ETH нужны метке режима

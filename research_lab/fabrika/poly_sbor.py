@@ -331,7 +331,8 @@ def rynki_sobytiy(kripto_iz):
             ms = [m for m in (e.get("markets") or []) if not m.get("closed")]
             # v3: без мега-событий (первый круг v2 забрал одно событие на 128 исходов, у многих
             # исходов стакана нет — 404) — сумму исходов можно проверить только на событиях до 30 исходов
-            if not e.get("negRisk") or not (2 <= len(ms) <= 30):
+            strike = bool(re.search(r"(bitcoin|ethereum|solana|xrp)\b.*\babove\b", e.get("title") or "", re.I))
+            if not (e.get("negRisk") or strike) or not (2 <= len(ms) <= 30):
                 continue
             chast = []
             for m in ms:
@@ -339,7 +340,7 @@ def rynki_sobytiy(kripto_iz):
                 if not toks:
                     continue
                 yes = next((t for t, o in zip(toks, outc) if str(o).lower() == "yes"), toks[0])
-                chast.append({"conditionId": m.get("conditionId"), "kat": "negrisk", "token": yes,
+                chast.append({"conditionId": m.get("conditionId"), "kat": "strike" if strike else "negrisk", "token": yes,
                               "sobytie": e.get("id"), "iskhodov_v_sobytii": len(ms), "vopros": m.get("question")})
             if len(vybor) + len(chast) > SNIMKI_MAX - 100:
                 continue                       # не влезает целиком — пропустить, искать меньшие
