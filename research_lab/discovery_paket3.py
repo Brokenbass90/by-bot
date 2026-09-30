@@ -104,11 +104,51 @@ def T3(M, K, R):
     return P.itog(sob, s_kontrolem=False)
 
 
+def L1(M, K, R):
+    """FORCED_FLOW_LIQ: час, когда ликвидации лонгов по монете в долларах ≥ 99-го перцентиля её часов
+    (и ≥ $50k), → лонг на 4 часа со следующего часа: вынужденные продавцы продали ниже справедливой.
+    Зеркально для шортов. Данные: runtime/liquidations (16.06–13.09.2026), часы — data/h1 (до 11.08).
+    Контроль: случайный час той же монеты ±15 дней, та же сторона."""
+    import collections
+    rng = np.random.default_rng(5)
+    liq = collections.defaultdict(lambda: collections.defaultdict(float))
+    for line in open(P.LAB.parent / "runtime/liquidations/bybit_liquidations.jsonl"):
+        try:
+            z = json.loads(line)
+        except Exception:
+            continue
+        h = z["ts_ms"] // 3600000 * 3600000
+        liq[(z["symbol"], z["side"])][h] += float(z["usd"])
+    sob = []
+    for (sym, side_l), hrs in liq.items():
+        f = D / "h1" / f"{sym}.npz"
+        if not f.exists() or len(hrs) < 50:
+            continue
+        z = np.load(str(f)); ts = z["ts"].astype(np.int64); o = z["ohlcv"][:, 0]
+        vals = np.array(list(hrs.values())); porog = max(np.percentile(vals, 99), 50_000)
+        side = 1 if side_l == "long" else -1          # ликвидировали лонги → цена продавлена → лонг
+        blok = -1
+        for h, usd in sorted(hrs.items()):
+            if usd < porog or h <= blok:
+                continue
+            i = int(np.searchsorted(ts, h + 3600000))
+            if i + 4 >= len(ts) or ts[i] != h + 3600000 or ts[i + 4] != h + 5 * 3600000:
+                continue
+            r = side * (o[i + 4] / o[i] - 1) - P.KOM_KRIPTO
+            kk = []
+            for _ in range(20):
+                j = int(rng.integers(0, len(ts) - 5))
+                if abs(ts[j] - h) < 15 * DEN and ts[j + 4] == ts[j] + 4 * 3600000:
+                    kk.append(side * (o[j + 4] / o[j] - 1) - P.KOM_KRIPTO)
+            sob.append((int(h), r, float(np.mean(kk)) if kk else None)); blok = h + 4 * 3600000
+    return P.itog(sob)
+
+
 if __name__ == "__main__":
     M = P.zagruzit_kripto(); K = kontrakty(); R = ryad(M, K)
     print("контрактов", len(K), "наблюдений базиса", len(R),
           "годовой базис медиана", round(float(np.median([r["ann"] for r in R])) * 100, 1), "%")
     rez = {}
-    for k, f in [("T1", T1), ("T2", T2), ("T3", T3)]:
+    for k, f in [("T1", T1), ("T2", T2), ("T3", T3), ("L1", L1)]:
         rez[k] = f(M, K, R); print(k, rez[k], flush=True)
     json.dump(rez, open(D / "discovery_paket3.json", "w"), ensure_ascii=False, indent=1)

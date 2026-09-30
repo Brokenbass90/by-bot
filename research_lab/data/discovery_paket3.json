@@ -37,5 +37,18 @@
   "syroy_bps": -15.3,
   "verdikt": "KILLED",
   "prichina": "эдж ≤ 0"
+ },
+ "L1": {
+  "n": 43,
+  "dney": 17,
+  "edge_bps": -53.2,
+  "t": -1.51,
+  "polovinki_bps": [
+   -46.6,
+   -59.1
+  ],
+  "syroy_bps": -94.2,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
  }
 }
