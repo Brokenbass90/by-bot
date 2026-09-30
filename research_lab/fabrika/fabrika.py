@@ -70,7 +70,7 @@ MOLCHIT_CHASOV = 18          # тень, не писавшая столько ч
 PRIYOMKA = DIR / "priyomka.json"   # приёмка данных человеком: рынок → принятый отпечаток
 # Рынки, где смена данных НЕ даёт права на прогон без человека: у золота и FX
 # окна надо переобъявить, у акций вселенная может быть списком выживших.
-RYNKI_S_PRIYOMKOY = {"gold", "fx7", "akcii_pit"}
+RYNKI_S_PRIYOMKOY = {"gold", "fx7", "akcii_pit", "gold_glub", "fx7_glub"}
 _PRIYOMKA_TEST = None        # подмена файла приёмки в самопроверке
 
 
@@ -299,6 +299,8 @@ def porodit(d, V, skolko):
     kand = []
     for meh, M in MEHANIZMY.items():
         for ry in RYNKI:
+            if RYNKI[ry].get("porozhdat") is False:        # только явный ре-тест
+                continue
             for side in ("long", "short"):
                 hid = f"{meh}__{ry}__{side}"
                 if hid in est or neg[(ry, M["semya"])] >= LIMIT_ZHVACHKI:
@@ -359,7 +361,7 @@ def vybrat(d, V, krome=None):
 # ── служебное ─────────────────────────────────────────────────────────
 def otpechatok_dannyh(rynok):
     papki = {"kripto_pit": ["data/pit_daily"], "kripto_pit50": ["data/pit_daily", "data/basis"], "xsec": ["data/pit_daily", "data/basis"], "kripto_pit50_poly": ["data/pit_daily", "data/basis", "data/poly/istoriya"], "akcii_pit": ["data/alpaca_pit_daily_v1/bars"],
-             "crypto137": ["data/h1"], "gold": ["data/zoloto_h1"], "fx7": ["data/fx_h1"], "crypto137_m5": ["data/m5_posle"]}.get(rynok, [])
+             "crypto137": ["data/h1"], "gold": ["data/zoloto_h1"], "fx7": ["data/fx_h1"], "gold_glub": ["data/zoloto_h1"], "fx7_glub": ["data/fx_h1"], "crypto137_m5": ["data/m5_posle"]}.get(rynok, [])
     n = sz = 0
     for pp in papki:
         q = LAB / pp
@@ -1058,6 +1060,10 @@ def samoproverka():
                       (ok3, "пометка в QUEUED → не бежит, назад"), (ok4, "приёмка: только текущий отпечаток")]:
         bad += not ok_
         print(f"  {'PASS' if ok_ else 'FAIL'}  {name:<34}{'ok' if ok_ else 'ДЫРА'}")
+    nov_ = porodit({"ochered": []}, {}, 10**6)
+    okg = not any("_glub__" in x for x in nov_)
+    bad += not okg
+    print(f"  {'PASS' if okg else 'FAIL'}  {'глубина: генератор не порождает':<34}{'ok' if okg else 'ВОСКРЕШАЕТ'}")
     k1 = kod_otpechatok(); okk = k1 == kod_otpechatok() and "NET_FAYLA" not in k1
     bad += not okk
     print(f"  {'PASS' if okk else 'FAIL'}  {'отпечаток кода для демона':<34}{'ok' if okk else 'нет'}")
