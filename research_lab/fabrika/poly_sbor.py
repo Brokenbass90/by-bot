@@ -319,6 +319,35 @@ def otobrat_dlya_snimkov(katalog):
     return vybor
 
 
+def rynki_sobytiy(kripto_iz):
+    """Отбор v2 (30.09, после первых 3 кругов): события берутся ЦЕЛИКОМ через /events — из списка
+    самых оборотных рынков события попадали кусками (сумма асков по событию выходила 0.07, то есть
+    проверка суммы исходов была невозможна). negRisk-события по убыванию оборота, все их открытые
+    исходы; плюс до 100 крипто-страйков из обычного отбора."""
+    vybor = []
+    for off in range(0, 500, 100):
+        r = get(GAMMA, "/events", limit=100, offset=off, closed="false", order="volume", ascending="false") or []
+        for e in r:
+            ms = [m for m in (e.get("markets") or []) if not m.get("closed")]
+            if not e.get("negRisk") or len(ms) < 2:
+                continue
+            chast = []
+            for m in ms:
+                toks = js(m.get("clobTokenIds")) or []; outc = js(m.get("outcomes")) or []
+                if not toks:
+                    continue
+                yes = next((t for t, o in zip(toks, outc) if str(o).lower() == "yes"), toks[0])
+                chast.append({"conditionId": m.get("conditionId"), "kat": "negrisk", "token": yes,
+                              "sobytie": e.get("id"), "iskhodov_v_sobytii": len(ms), "vopros": m.get("question")})
+            if len(vybor) + len(chast) > SNIMKI_MAX - 100:
+                return vybor + [z for z in kripto_iz if z["kat"] == "kripto"][:100]
+            vybor += chast
+        if not r:
+            break
+        time.sleep(PAUZA)
+    return vybor + [z for z in kripto_iz if z["kat"] == "kripto"][:100]
+
+
 def snimki(minut=15):
     mp = zagruzit_map()
     d = OUT / "snimki"; d.mkdir(parents=True, exist_ok=True)
@@ -334,7 +363,7 @@ def snimki(minut=15):
                     break
                 time.sleep(PAUZA)
             kat_vremya = time.time()
-        sel = otobrat_dlya_snimkov(kat)
+        sel = rynki_sobytiy(otobrat_dlya_snimkov(kat))
         if not sel:
             print("  !! отобрано 0 рынков — снимков нет, файл не пишу. Проверь отбор.", flush=True)
             time.sleep(minut * 60); continue
@@ -345,6 +374,7 @@ def snimki(minut=15):
             asks = sorted((float(x["price"]), float(x["size"])) for x in b.get("asks", []))[:10]
             oi = get(DATA, "/oi", market=s["conditionId"])
             zapisi.append({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "sobytie": s.get("sobytie"),
+                           "iskhodov_v_sobytii": s.get("iskhodov_v_sobytii"), "otbor": "v2",
                            "bids": bids, "asks": asks,
                            "oi": oi if not isinstance(oi, list) else (oi[0] if oi else None)})
             time.sleep(PAUZA)
