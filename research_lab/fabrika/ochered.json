@@ -184,16 +184,17 @@
    "id": "xauusd_unchanged_replication_v1",
    "tip": "gipoteza",
    "begun": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "DEFERRED",
    "rynok": "gold",
-   "blocker": "ждёт ПРИЁМКИ данных gold; к тому же нет бегуна (begun=None) — сам запуститься не мог",
+   "blocker": null,
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
    "semya": "intraday_replication",
    "otpechatok_pri_postanovke": "1:645812",
    "trebuet_priyomki": true,
    "dannye_prishli": "2026-09-30T07:09:54+00:00",
    "reshenie_2026_09_30": "возвращён в BLOCKED_DATA осознанно (Claude). Взвод 07:09 — работа демона со старым кодом до 4acaa85",
-   "dannye_izmenilis": "2026-09-30T08:34:26+00:00"
+   "dannye_izmenilis": "2026-09-30T08:34:26+00:00",
+   "otlozheno": "2026-09-30T09:33:58+00:00: этап Gold/FX закрыт; бегуна нет (begun=None), репликация чужого манифеста не является механизмом"
   },
   {
    "id": "funding_carry",
@@ -240,21 +241,23 @@
    "id": "trend_pullback",
    "tip": "gipoteza",
    "begun": null,
-   "sostoyanie": "BLOCKED_ADAPTER",
+   "sostoyanie": "DEFERRED",
    "rynok": "fx",
-   "blocker": "нужен переходник + FX данные",
+   "blocker": null,
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
-   "semya": "trend_pullback"
+   "semya": "trend_pullback",
+   "otlozheno": "2026-09-30T09:33:58+00:00: этап Gold/FX закрыт; семейство trend_pullback на золоте уже NEGATIVE, переходник не строим"
   },
   {
    "id": "session_breakout",
    "tip": "gipoteza",
    "begun": null,
-   "sostoyanie": "BLOCKED_ADAPTER",
+   "sostoyanie": "DEFERRED",
    "rynok": "fx",
-   "blocker": "нужен переходник + FX данные",
+   "blocker": null,
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
-   "semya": "session_breakout"
+   "semya": "session_breakout",
+   "otlozheno": "2026-09-30T09:33:58+00:00: этап Gold/FX закрыт; семейство sessiya_proboy на золоте уже NEGATIVE, переходник не строим"
   },
   {
    "id": "range_rejection",

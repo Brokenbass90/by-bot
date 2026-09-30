@@ -59,7 +59,8 @@ SON = 1800
 KONEC = {"NEGATIVE", "POSITIVE_LEAD", "PLUS_NO_CONFIDENCE", "INCONCLUSIVE_LOW_N",
          "LEAD_BLOCKED_DATA", "PARITY_PASS", "CONFIRMED", "FAILED_CONFIRMATION",
          "CONFIRMATION_INCONCLUSIVE", "BLOCKED_DATA", "DIAGNOSTIC",
-         "SHADOW_WAITING", "SHADOW_RUNNING", "SHADOW_FAILED", "READY_FOR_BUILD"}
+         "SHADOW_WAITING", "SHADOW_RUNNING", "SHADOW_FAILED", "READY_FOR_BUILD",
+         "DEFERRED"}   # отложено решением: не бежит, не ждёт данных, вернётся только новой предрегистрацией
 
 # ПОТОЛОК. Дальше этого фабрика не идёт НИКОГДА и ни при каких результатах.
 # Привязка к брокеру, деньги и LIVE — только Codex и письменное решение владельца.
