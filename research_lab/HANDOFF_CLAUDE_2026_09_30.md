@@ -5,6 +5,32 @@
 **Claude — research и фабрика**; **Codex — production и деньги**, его контур
 не трогаем.
 
+## Куда всё это идёт (общая система, а не одна стратегия)
+
+Цель — автономная multi-market фабрика с полным конвейером:
+
+    DISCOVERY → CANDIDATES → PREREG/TEST → CONFIRM → SHADOW →
+    READY_FOR_BUILD → CODEX → PAPER/TINY-LIVE → SCALE/KILL
+
+Не одна стратегия, а независимые рукава: крипта, акции, золото и FX,
+предсказательные рынки.
+
+Роли:
+
+    Owner                решения и деньги; только он включает LIVE
+    ChatGPT              менеджер и roadmap, не даёт агентам расползаться
+    Claude               research, discovery, фабрика
+    Codex                production, брокер, исполнение
+    Детерминированные    финальная власть по статистике, PnL, издержкам
+    судьи                и паритету. Это НЕ языковая модель
+
+Claude и Codex работают параллельно и не лезут в контуры друг друга без
+явной передачи. Главный запрет для обоих: не уходить снова в бесконечные
+аудиты и инфраструктуру — время до денег важнее.
+
+---
+
+
 ---
 
 ## 0. СНАЧАЛА ЭТО. Дефект защиты фабрики, демон погашен
@@ -119,17 +145,36 @@ SVIP_UROVNYA, GEP_VYHODNYH, NOCHNOY_DREYF — long и short. Все восемь
 
 ## 4. Пригодность механизмов к тесту
 
-47 пунктов по золоту и FX. **Слепых нет ни одного.**
+47 пунктов по золоту и FX. Категории ниже **взаимоисключающие**, сумма 47.
+**Слепых нет ни одного:** у каждого есть хотя бы один вердикт.
 
-    13  BLOCKED_DATA, все золото, у каждого есть прежний вердикт
-        KAPITULYACIYA, MOMENTUM_30D, OBEM_IMPULS, OTKAT_V_TRENDE,
-        PROBOY_55__short, SZHATIE_BB, VOZVRAT_K_SREDNEY (long/short)
-     8  получили первый вердикт сегодня на O1/O2 (см. раздел 0)
-     7  INCONCLUSIVE_LOW_N: GEP_VYHODNYH (fx7 short, gold long/short),
-        KAPITULYACIYA (fx7 long/short), OBEM_IMPULS (fx7 long/short)
-    18  NEGATIVE  — остаются мёртвыми
-     6  PLUS_NO_CONFIDENCE — остаются мёртвыми
-     2  BLOCKED_ADAPTER
+    13  BLOCKED_DATA         всё золото, у каждого один прежний вердикт
+                             и otpechatok_pri_postanovke = None → вне защиты
+                             KAPITULYACIYA, MOMENTUM_30D, OBEM_IMPULS,
+                             OTKAT_V_TRENDE, PROBOY_55__short, SZHATIE_BB,
+                             VOZVRAT_K_SREDNEY (long/short)
+     7  INCONCLUSIVE_LOW_N   GEP_VYHODNYH (fx7 short, gold long/short),
+                             KAPITULYACIYA (fx7 long/short),
+                             OBEM_IMPULS (fx7 long/short)
+    18  NEGATIVE             остаются мёртвыми
+     6  PLUS_NO_CONFIDENCE   остаются мёртвыми
+     2  BLOCKED_ADAPTER      session_breakout, trend_pullback
+     1  QUEUED               xauusd_unchanged_replication_v1 — см. ниже
+    ──
+    47
+
+**Сквозная пометка, не отдельная категория.** Восемь пунктов, получивших
+первый вердикт сегодня в 07:09–07:10 (раздел 0), уже посчитаны выше:
+4 попали в NEGATIVE, 2 в PLUS_NO_CONFIDENCE, 2 в INCONCLUSIVE_LOW_N.
+Отдельной строкой их считать нельзя — это было бы двойным счётом.
+
+**ВНИМАНИЕ, живая опасность.** `xauusd_unchanged_replication_v1`
+(золото, `trebuet_priyomki=True`) стоит сейчас в состоянии **QUEUED**,
+то есть взведён и ждёт прогона. Это второе срабатывание дефекта из
+раздела 0. Пока демон погашен, он не запустится. Поднимать демон, не
+разобравшись с этим пунктом, нельзя: он уйдёт в прогон на исчерпанных
+окнах. Решение по нему — вернуть в BLOCKED_DATA осознанно либо принять
+осознанно, но не дать ему запуститься по умолчанию.
 
 Правило: NEGATIVE и PLUS_NO_CONFIDENCE не воскрешать. Это ровно та жвачка,
 против которой заведён лимит трёх NEGATIVE в паре (рынок, семейство);
@@ -137,8 +182,10 @@ SVIP_UROVNYA, GEP_VYHODNYH, NOCHNOY_DREYF — long и short. Все восемь
 
 ## 5. Порядок работы следующего чата. Не менять
 
-    0  исправить дефект раздела 0, добавить самопроверку на оба случая:
-       отпечаток отсутствует; у пункта есть прежний вердикт
+    0  исправить дефект раздела 0, добавить самопроверку на ТРИ случая:
+       отпечаток отсутствует; у пункта есть прежний вердикт;
+       пункт с trebuet_priyomki не может оказаться в QUEUED сам.
+       Отдельно решить судьбу xauusd_unchanged_replication_v1 (сейчас QUEUED)
     1  chastota — она НЕ смотрит доходность и НЕ знает про окна
        (проверено по исходнику), поэтому ничего не тратит и идёт ПЕРВОЙ.
        Частота — вход для нарезки окон, а не выход: пока неизвестно,
