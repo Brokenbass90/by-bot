@@ -1,0 +1,54 @@
+{
+ "W1": {
+  "n": 59,
+  "dney": 47,
+  "edge_bps": 3.8,
+  "t": 0.48,
+  "polovinki_bps": [
+   14.3,
+   -6.2
+  ],
+  "syroy_bps": -2.2,
+  "verdikt": "KILLED",
+  "prichina": "t=0.48 < 2"
+ },
+ "W4": {
+  "n": 38,
+  "dney": 22,
+  "edge_bps": -42.7,
+  "t": -1.69,
+  "polovinki_bps": [
+   -63.5,
+   -21.9
+  ],
+  "syroy_bps": -42.6,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "W2": {
+  "n": 224,
+  "dney": 95,
+  "edge_bps": 42.6,
+  "t": 1.15,
+  "polovinki_bps": [
+   100.6,
+   -14.3
+  ],
+  "syroy_bps": 4.7,
+  "verdikt": "KILLED",
+  "prichina": "t=1.15 < 2"
+ },
+ "W3": {
+  "n": 864,
+  "dney": 354,
+  "edge_bps": 16.5,
+  "t": 0.8,
+  "polovinki_bps": [
+   24.3,
+   8.7
+  ],
+  "syroy_bps": -15.0,
+  "verdikt": "KILLED",
+  "prichina": "t=0.80 < 2"
+ }
+}
