@@ -186,11 +186,13 @@
    "begun": null,
    "sostoyanie": "BLOCKED_DATA",
    "rynok": "gold",
-   "blocker": "нужен независимый источник XAUUSD (мост MT5)",
+   "blocker": "ждёт ПРИЁМКИ данных gold; к тому же нет бегуна (begun=None) — сам запуститься не мог",
    "istochnik": "bybit-bot-recovery-20260824/runtime/research_conveyor/manual_20260901_v5/manifest_snapshot.json",
    "semya": "intraday_replication",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "reshenie_2026_09_30": "возвращён в BLOCKED_DATA осознанно (Claude). Взвод 07:09 — работа демона со старым кодом до 4acaa85"
   },
   {
    "id": "funding_carry",
@@ -1863,7 +1865,7 @@
    "rynok": "gold",
    "semya": "sessiya_proboy",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "NEGATIVE",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_LONDON_PROBOY_2026_09_24.md",
    "param": {
@@ -1880,7 +1882,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:54+00:00"
   },
   {
    "id": "LONDON_PROBOY__gold__short",
@@ -1889,7 +1893,7 @@
    "rynok": "gold",
    "semya": "sessiya_proboy",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "NEGATIVE",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_LONDON_PROBOY_2026_09_24.md",
    "param": {
@@ -1906,7 +1910,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:58+00:00"
   },
   {
    "id": "SVIP_UROVNYA__gold__long",
@@ -1915,7 +1921,7 @@
    "rynok": "gold",
    "semya": "lozhnyy_proboy",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "NEGATIVE",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_SVIP_UROVNYA_2026_09_24.md",
    "param": {
@@ -1932,7 +1938,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:56+00:00"
   },
   {
    "id": "SVIP_UROVNYA__gold__short",
@@ -1941,7 +1949,7 @@
    "rynok": "gold",
    "semya": "lozhnyy_proboy",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_SVIP_UROVNYA_2026_09_24.md",
    "param": {
@@ -1958,7 +1966,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:58+00:00"
   },
   {
    "id": "GEP_VYHODNYH__gold__long",
@@ -1967,7 +1977,7 @@
    "rynok": "gold",
    "semya": "gep_pereocenka",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_GEP_VYHODNYH_2026_09_24.md",
    "param": {
@@ -1984,7 +1994,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:57+00:00"
   },
   {
    "id": "GEP_VYHODNYH__gold__short",
@@ -1993,7 +2005,7 @@
    "rynok": "gold",
    "semya": "gep_pereocenka",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "INCONCLUSIVE_LOW_N",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_GEP_VYHODNYH_2026_09_24.md",
    "param": {
@@ -2010,7 +2022,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:59+00:00"
   },
   {
    "id": "NOCHNOY_DREYF__gold__long",
@@ -2019,7 +2033,7 @@
    "rynok": "gold",
    "semya": "premiya_za_chas",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_NOCHNOY_DREYF_2026_09_24.md",
    "param": {
@@ -2036,7 +2050,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:57+00:00"
   },
   {
    "id": "NOCHNOY_DREYF__gold__short",
@@ -2045,7 +2061,7 @@
    "rynok": "gold",
    "semya": "premiya_za_chas",
    "slot": null,
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "NEGATIVE",
    "blocker": "нужна часовая история XAUUSD с 2018 года: нынешний файл 13444 бара (2023-06-22…2025-09-29), окна O1 и O2 им полностью покрыты, резервного окна подтверждения у золота нет. Спецификация: research_lab/ZADANIE_XAUUSD_H1_2018_2026_09_24.md",
    "prereg": "research_lab/fabrika/PREREG_ZOLOTO_NOCHNOY_DREYF_2026_09_24.md",
    "param": {
@@ -2062,7 +2078,9 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "otpechatok_pri_postanovke": "1:645812",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-09-30T07:09:54+00:00",
+   "start": "2026-09-30T07:09:59+00:00"
   },
   {
    "id": "P_AKC_OSTATOCHNYY_MOMENT",
@@ -2445,7 +2463,7 @@
    "prereg": "research_lab/PREREG_TEN_SILA_2026_09_23.md",
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T07:01:24+00:00",
-   "ten_molchit_chasov": null,
+   "ten_molchit_chasov": 1.1,
    "ten_resheniy": 0
   }
  ]

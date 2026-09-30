@@ -67,6 +67,11 @@ POTOLOK = "READY_FOR_BUILD"
 TENI = DIR / "teni"          # спецификации теней, порождённые подтверждением
 DOSE = DIR / "dose"          # пакеты READY_FOR_BUILD для Codex
 MOLCHIT_CHASOV = 18          # тень, не писавшая столько часов, считается упавшей
+PRIYOMKA = DIR / "priyomka.json"   # приёмка данных человеком: рынок → принятый отпечаток
+# Рынки, где смена данных НЕ даёт права на прогон без человека: у золота и FX
+# окна надо переобъявить, у акций вселенная может быть списком выживших.
+RYNKI_S_PRIYOMKOY = {"gold", "fx7", "akcii_pit"}
+_PRIYOMKA_TEST = None        # подмена файла приёмки в самопроверке
 
 
 def seychas():
@@ -337,7 +342,7 @@ def vybrat(d, V, krome=None):
             return False
         return sost.get(rod) != "POSITIVE_LEAD" or sost.get(rod + "__PODTV") not in (None, "QUEUED", "RUNNING")
     run = [(i, it) for i, it in enumerate(d["ochered"]) if it["sostoyanie"] == "QUEUED"
-           and it.get("begun") in BEGUNY and it["id"] != krome and gotovo_posle(it)
+           and it.get("begun") in BEGUNY and mozhno_progonyat(it) and it["id"] != krome and gotovo_posle(it)
            and (it["tip"] == "paritet" or it["begun"] not in par_est or it["begun"] in par_ok)]
     if not run:
         return None
@@ -364,22 +369,52 @@ def otpechatok_dannyh(rynok):
     return f"{n}:{sz}"
 
 
+def prinyatye():
+    if _PRIYOMKA_TEST is not None:
+        return _PRIYOMKA_TEST
+    try:
+        return json.loads(PRIYOMKA.read_text()) if PRIYOMKA.exists() else {}
+    except Exception:
+        return {}                       # битый файл приёмки = ничего не принято
+
+
+def mozhno_progonyat(it):
+    """Единственные ворота перед прогоном. Рынок с приёмкой (или пункт с пометкой
+    trebuet_priyomki) прогоняется только если человек принял ИМЕННО текущий
+    отпечаток данных. Проверяется и при синхронизации, и в момент выбора —
+    чтобы ни одна ветка не смогла взвести пункт в обход."""
+    ry = it.get("rynok")
+    if ry not in RYNKI_S_PRIYOMKOY and not it.get("trebuet_priyomki"):
+        return True
+    return prinyatye().get(ry, {}).get("otpechatok") == otpechatok_dannyh(ry)
+
+
+def kod_otpechatok():
+    """Отпечаток кода фабрики. 30.09 демон, запущенный 28.09 в 09:35, крутил код
+    ДО исправления 10:04 (Python не перечитывает модуль) и вынес 8 вердиктов по
+    старой логике. Демон обязан замечать, что его код сменился, и останавливаться."""
+    fayly = [Path(__file__).resolve(), DIR / "mehanizmy.py", *BEGUNY.values()]
+    return "|".join(sha(f) for f in fayly)
+
+
 def sinhronizirovat(d, V):
     for it in d["ochered"]:
         # пункт, созданный сразу в ожидании данных, вердикта ещё не имеет: сравнивать
         # не с чем. Поэтому отпечаток папки запоминается в момент постановки.
-        if it["sostoyanie"] == "BLOCKED_DATA" and not V.get(it["id"]):
+        if it["sostoyanie"] == "BLOCKED_DATA" and (not V.get(it["id"]) or it.get("trebuet_priyomki")):
             bylo = it.get("otpechatok_pri_postanovke")
             if bylo is None:
+                # первая встреча: запомнить и НЕ проваливаться дальше
                 it["otpechatok_pri_postanovke"] = otpechatok_dannyh(it.get("rynok"))
+                continue
             elif bylo != otpechatok_dannyh(it.get("rynok")):
                 # Данные ИЗМЕНИЛИСЬ — это ещё не значит, что они ГОДНЫ.
                 # Пункт с пометкой trebuet_priyomki ждёт человека: у акций
                 # вселенная может оказаться списком выживших, у золота окна
                 # надо переобъявить до прогона. Автовзвод здесь потратил бы
                 # замороженный тест на непроверенных данных.
-                if it.get("trebuet_priyomki"):
-                    it["dannye_izmenilis"] = seychas().isoformat(timespec="seconds")
+                if it.get("trebuet_priyomki") or not mozhno_progonyat(it):
+                    it.setdefault("dannye_izmenilis", seychas().isoformat(timespec="seconds"))
                 else:
                     it["sostoyanie"] = "QUEUED"
                     it["dannye_prishli"] = seychas().isoformat(timespec="seconds")
@@ -387,6 +422,9 @@ def sinhronizirovat(d, V):
         v = V.get(it["id"])
         if (v and it["sostoyanie"] in ("BLOCKED_DATA", "CONFIRMATION_WAITING_DATA") and v.get("dannye")
                 and v["dannye"] != otpechatok_dannyh(it.get("rynok"))):
+            if not mozhno_progonyat(it):
+                it.setdefault("dannye_izmenilis", seychas().isoformat(timespec="seconds"))
+                continue
             it["sostoyanie"] = "QUEUED"; it["zhdyot_verdikt_posle"] = seychas().isoformat(timespec="seconds")
             continue
         if it.get("zhdyot_verdikt_posle") and v and v["kogda"] < it["zhdyot_verdikt_posle"]:
@@ -410,6 +448,13 @@ def sinhronizirovat(d, V):
             it.setdefault("chto_vernyot", "находка не пережила подтверждение на нетронутом окне; "
                                           "окно потрачено, повтор того же механизма запрещён — "
                                           "вернёт только новая предрегистрация на новых данных")
+    # последний рубеж: взведённый без приёмки пункт возвращается в ожидание,
+    # откуда бы он ни пришёл (генератор, старая ветка, ручная правка)
+    for it in d["ochered"]:
+        if it["sostoyanie"] == "QUEUED" and not mozhno_progonyat(it):
+            it["sostoyanie"] = "BLOCKED_DATA"
+            it["blocker"] = f"ждёт ПРИЁМКИ данных рынка {it.get('rynok')} человеком (fabrika.py --prinyat {it.get('rynok')})"
+            it.setdefault("vozvrashchen_iz_queued", seychas().isoformat(timespec="seconds"))
     vse, neg = schet_proverok(d, V)
     for it in d["ochered"]:
         if it["sostoyanie"] == "QUEUED" and it.get("tip") != "paritet" and (
@@ -816,7 +861,12 @@ def otchet_dnya():
 
 def demon():
     print(f"Фабрика в непрерывном режиме с {seychas():%Y-%m-%d %H:%M} UTC. Ctrl+C — стоп.", flush=True)
+    kod0 = kod_otpechatok()
     while True:
+        if kod_otpechatok() != kod0:
+            print(f"!! {seychas():%H:%M} UTC код фабрики изменился после запуска — демон ОСТАНОВЛЕН, "
+                  "чтобы не судить старой логикой. Перезапустить вручную.", flush=True)
+            return
         r = odin_shag()
         if r == "STOP":
             return
@@ -952,7 +1002,7 @@ def samoproverka():
 
     okt = True
     try:
-        dt_ = {"ochered": [dict(id="TQ", tip="gipoteza", begun="meh", rynok="gold", semya="proverka",
+        dt_ = {"ochered": [dict(id="TQ", tip="gipoteza", begun="meh", rynok="crypto137", semya="proverka",
                                sostoyanie="BLOCKED_DATA", otpechatok_pri_postanovke="0:0")]}
         sinhronizirovat(dt_, {})
         okt = dt_["ochered"][0]["sostoyanie"] == "QUEUED"
@@ -972,6 +1022,46 @@ def samoproverka():
     bad += not okt
     print(f"  {'PASS' if okt else 'FAIL'}  {'данные пришли → пункт сам в очередь':<34}{'ok' if okt else 'не взвёлся'}")
 
+    # ── дефект 30.09: три случая + ворота + старый код ────────────────
+    global _PRIYOMKA_TEST
+    _PRIYOMKA_TEST = {}
+    try:
+        def G(**kw):
+            base = dict(tip="gipoteza", begun="meh", rynok="gold", semya="proverka", sostoyanie="BLOCKED_DATA")
+            base.update(kw); return base
+        # 1: отпечатка нет → запомнить, не взвестись, не провалиться дальше
+        d5 = {"ochered": [G(id="T1", trebuet_priyomki=True)]}
+        sinhronizirovat(d5, {})
+        ok1 = d5["ochered"][0]["sostoyanie"] == "BLOCKED_DATA" and d5["ochered"][0].get("otpechatok_pri_postanovke")
+        # 2: есть прежний вердикт со старым отпечатком → не взвестись
+        d6 = {"ochered": [G(id="T2", trebuet_priyomki=True, otpechatok_pri_postanovke="0:0")]}
+        sinhronizirovat(d6, {"T2": {"verdikt": "INCONCLUSIVE_LOW_N", "dannye": "0:0", "kogda": "2026-01-01"}})
+        ok2 = d6["ochered"][0]["sostoyanie"] == "BLOCKED_DATA" and d6["ochered"][0].get("dannye_izmenilis")
+        d6b = {"ochered": [G(id="T2b", rynok="fx7")]}          # без пометки, но рынок с приёмкой
+        sinhronizirovat(d6b, {"T2b": {"verdikt": "INCONCLUSIVE_LOW_N", "dannye": "0:0", "kogda": "2026-01-01"}})
+        ok2 = ok2 and d6b["ochered"][0]["sostoyanie"] == "BLOCKED_DATA"
+        # 3: пункт с пометкой, оказавшийся в QUEUED, не выбирается и возвращается назад
+        d7 = {"ochered": [G(id="T3", trebuet_priyomki=True, sostoyanie="QUEUED")]}
+        ok3 = vybrat(d7, {}) is None
+        sinhronizirovat(d7, {})
+        ok3 = ok3 and d7["ochered"][0]["sostoyanie"] == "BLOCKED_DATA"
+        # 4: после приёмки ИМЕННО текущего отпечатка ворота открываются
+        _PRIYOMKA_TEST = {"gold": {"otpechatok": otpechatok_dannyh("gold")}}
+        ok4 = mozhno_progonyat(G(id="T4", trebuet_priyomki=True))
+        _PRIYOMKA_TEST = {"gold": {"otpechatok": "1:1"}}
+        ok4 = ok4 and not mozhno_progonyat(G(id="T4", trebuet_priyomki=True))
+    except Exception as e:
+        print("  исключение:", e); ok1 = ok2 = ok3 = ok4 = False
+    finally:
+        _PRIYOMKA_TEST = None
+    for ok_, name in [(ok1, "нет отпечатка → ждёт, не взводится"), (ok2, "есть прежний вердикт → не взводится"),
+                      (ok3, "пометка в QUEUED → не бежит, назад"), (ok4, "приёмка: только текущий отпечаток")]:
+        bad += not ok_
+        print(f"  {'PASS' if ok_ else 'FAIL'}  {name:<34}{'ok' if ok_ else 'ДЫРА'}")
+    k1 = kod_otpechatok(); okk = k1 == kod_otpechatok() and "NET_FAYLA" not in k1
+    bad += not okk
+    print(f"  {'PASS' if okk else 'FAIL'}  {'отпечаток кода для демона':<34}{'ok' if okk else 'нет'}")
+
     import py_compile
     for f in sorted(DIR.glob("*.py")):
         try:
@@ -990,7 +1080,15 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     for k in ("demon", "otchet", "doska", "samoproverka", "povtorit_tehnicheskie", "reestr", "otchet_dnya"):
         ap.add_argument(f"--{k}", action="store_true")
+    ap.add_argument("--prinyat", metavar="RYNOK", help="человеческая приёмка текущих данных рынка")
     a = ap.parse_args()
+    if a.prinyat:
+        pr = prinyatye(); ot = otpechatok_dannyh(a.prinyat)
+        pr[a.prinyat] = {"otpechatok": ot, "kogda": seychas().isoformat(timespec="seconds"),
+                         "kto": "владелец, ручной запуск --prinyat"}
+        PRIYOMKA.write_text(json.dumps(pr, ensure_ascii=False, indent=1))
+        print(f"принят рынок {a.prinyat}, отпечаток {ot}. Пункты сами в очередь НЕ встают — "
+              "ре-тест ставится отдельным предрегистрированным решением."); sys.exit(0)
     if a.samoproverka:
         sys.exit(1 if samoproverka() else 0)
     if a.otchet_dnya:
