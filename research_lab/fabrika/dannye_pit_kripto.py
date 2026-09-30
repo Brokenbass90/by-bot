@@ -5,6 +5,7 @@
     python3 dannye_pit_kripto.py
 Кладёт research_lab/data/pit_daily/<SYMBOL>.json. Уже скачанные пропускает.
     python3 dannye_pit_kripto.py --vse    все ~750 инструментов с суточным OI (≈30–60 мин)
+    python3 dannye_pit_kripto.py --vse --obnovit   то же, но перекачать уже скачанные (для проверки вперёд)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
 """
@@ -75,7 +76,7 @@ def main():
         simvoly = sorted(set(simvoly) | {f.stem for f in (LAB / "data/basis/oi_sutochnyy").glob("*.json")})
     for i, s in enumerate(simvoly):
         p = OUT / f"{s}.json"
-        if p.exists():
+        if p.exists() and "--obnovit" not in sys.argv:     # --obnovit: перекачать, чтобы появились новые дни
             continue
         d = svechi(s)
         if not d:

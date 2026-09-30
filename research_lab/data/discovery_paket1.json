@@ -1,0 +1,158 @@
+{
+ "C1": {
+  "n": 185,
+  "dney": 185,
+  "edge_bps": -12.5,
+  "t": -0.51,
+  "polovinki_bps": [
+   24.7,
+   -49.3
+  ],
+  "syroy_bps": -12.5,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "C2": {
+  "n": 3897,
+  "dney": 984,
+  "edge_bps": -343.9,
+  "t": -6.76,
+  "polovinki_bps": [
+   -260.6,
+   -427.3
+  ],
+  "syroy_bps": 38.1,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "C3": {
+  "n": 149,
+  "dney": 97,
+  "edge_bps": 253.0,
+  "t": 0.76,
+  "polovinki_bps": [
+   1000.9,
+   -479.5
+  ],
+  "syroy_bps": 814.5,
+  "verdikt": "KILLED",
+  "prichina": "t=0.76 < 2"
+ },
+ "C4": {
+  "n": 512,
+  "dney": 330,
+  "edge_bps": 5.6,
+  "t": 0.02,
+  "polovinki_bps": [
+   -349.7,
+   360.8
+  ],
+  "syroy_bps": 9.9,
+  "verdikt": "KILLED",
+  "prichina": "t=0.02 < 2"
+ },
+ "C5": {
+  "n": 539,
+  "dney": 413,
+  "edge_bps": 914.6,
+  "t": 5.54,
+  "polovinki_bps": [
+   451.0,
+   1376.0
+  ],
+  "syroy_bps": -48.7,
+  "verdikt": "KILLED",
+  "prichina": "против контроля плюс, но сырой доход ≤ 0 — не торгуется"
+ },
+ "C6": {
+  "n": 299,
+  "dney": 147,
+  "edge_bps": 265.3,
+  "t": 0.96,
+  "polovinki_bps": [
+   210.5,
+   319.3
+  ],
+  "syroy_bps": 844.6,
+  "verdikt": "KILLED",
+  "prichina": "t=0.96 < 2"
+ },
+ "C7": {
+  "n": 9950,
+  "dney": 70,
+  "edge_bps": -44.5,
+  "t": -0.85,
+  "polovinki_bps": [
+   -98.2,
+   9.3
+  ],
+  "syroy_bps": -22.7,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "C8": {
+  "n": 618,
+  "dney": 191,
+  "edge_bps": 282.4,
+  "t": 2.37,
+  "polovinki_bps": [
+   306.1,
+   259.0
+  ],
+  "syroy_bps": 314.9,
+  "verdikt": "SURVIVED",
+  "prichina": "t≥2, обе половины > 0, сырой доход > 0"
+ },
+ "P1": {
+  "n": 593,
+  "dney": 275,
+  "edge_bps": -119.1,
+  "t": -1.25,
+  "polovinki_bps": [
+   -188.3,
+   -50.4
+  ],
+  "syroy_bps": -113.9,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "P2": {
+  "n": 253,
+  "dney": 198,
+  "edge_bps": -214.8,
+  "t": -1.2,
+  "polovinki_bps": [
+   -398.2,
+   -31.5
+  ],
+  "syroy_bps": -273.0,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "P3": {
+  "n": 1506,
+  "dney": 330,
+  "edge_bps": 97.9,
+  "t": 0.23,
+  "polovinki_bps": [
+   850.4,
+   -654.5
+  ],
+  "syroy_bps": 331.1,
+  "verdikt": "KILLED",
+  "prichina": "t=0.23 < 2"
+ },
+ "P4": {
+  "n": 209,
+  "dney": 124,
+  "edge_bps": 435.6,
+  "t": 0.26,
+  "polovinki_bps": [
+   1021.0,
+   -149.8
+  ],
+  "syroy_bps": 1155.0,
+  "verdikt": "KILLED",
+  "prichina": "t=0.26 < 2"
+ }
+}
