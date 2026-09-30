@@ -17,6 +17,7 @@
 
 | SLEEVE | STATUS | EVIDENCE | GATE | NEXT | OWNER |
 |---|---|---|---|---|---|
+| PEREGREV_HVOSTA: ворота исполнимости (P0) | сбор стаканов | критерии заморожены 30.09 в `peregrev_ispolnimost.py`: 30 символов, $100/$500/$2000, p90 круга ≤ 60 bps, ≥80% шортопригодны | EXECUTABLE / TOO_EXPENSIVE / INSUFFICIENT_DATA | 3 ч сбора на Mac → вердикт | владелец → Claude |
 | PEREGREV_HVOSTA тест 1: SHORT_HVOST_FANDING | PREREG, ждём | поиск: 60 событий, t=2.64 после штрафа 30 bps; будущие: 0/30 | `fanding_hvost.py`: n≥30, t≥2, медиана>0, монета≤50% | тени фандинга должны работать; ~конец октября | Claude |
 | PEREGREV_HVOSTA тест 2: C8 (дневной) | PREREG, ждём | история: 618 соб., сырой +315 bps, t 2.37 (2025 в минусе); будущие с 2026-09-30 12:00 UTC: 0/30. Одно семейство с тестом 1 — доказательства не складываются; перед READY_FOR_BUILD ворота исполнимости | `discovery_paket1.py C8V` после `dannye_pit_kripto.py --vse --obnovit` | обновлять данные раз в месяц; ~конец декабря | владелец → Claude |
 | Золото/FX | **ЗАКРЫТ** 2026-09-30 | 53 пункта = 47 исходных + 6 ре-тестов: 24 NEGATIVE (18 + 6 ре-тестов), 6 PNC, 20 LOW_N (14 структурно + 6 исходных, чьи ре-тесты NEGATIVE), 3 DEFERRED (xauusd_unchanged_replication_v1, trend_pullback, session_breakout) | — | 12 геометрических механизмов каталога на H1 золота и FX не воскрешать. Рынок вернётся только с новым экономическим механизмом и данными издержек (спреды/свопы) | — |
@@ -45,14 +46,15 @@
 | research_station (launchd) + project_audit (launchd, screen) | **гасится** | audit/model/sync-live — не нужны экспериментам | команды владельцу 30.09 | владелец |
 | inplay_eth_prospective | гасится | evidence не обновлялось 16 дней | — | владелец |
 | Тень PUMP4 | **DEFERRED** | петля падает `Operation not permitted`; сильного обоснования нет | не чинить | — |
+| Сборщик снимков Polymarket (`poly_sbor.py --snimki`) | починен 30.09 (писал пустые файлы: регэксп и порог оборота) | нужен для B4 и структурных механизмов | screen на 14 дней, стоп 2026-10-14 | владелец |
 | xsec_v3, alpaca_adaptive shadow | идут, контур Codex | XSEC_V3: 57 дн, t≈0.35 | решение Codex | Codex |
 | Тень ATT1 (`data/ten_ATT1.log`) | идёт | 1082 закрытых из порога 400 | свести с вердиктом Codex по ATT1 | Codex |
 
 ## DISCOVERY lane — ОТКРЫТА 2026-09-30
 Пачка 1 (DISCOVERY_PAKET1_2026_09_30.md): 12 экранов → 11 KILLED, 1 SURVIVED (C8), 3 BLOCKED_DATA.
 Пачка 2 (DISCOVERY_PAKET2_2026_09_30.md): 10 экранов → 10 KILLED; 3 BLOCKED_DATA; XEX — закрыт ещё 01.08.
-Независимых от PEREGREV семейств с плюсом: только CARRY_BASKET (измерен 13.08, ≈+5.5% годовых на пару).
-Дальше: CARRY_BASKET → заморозка и проспективная бумага; ремонт сборщика снимков Polymarket (пишет 0 строк);
+Независимых от PEREGREV семейств с плюсом: нет. CARRY — NO-GO подтверждён сверкой (≈1.5–3.8% на капитал, порог 4%).
+Дальше: ворота исполнимости PEREGREV (`peregrev_ispolnimost.py`); ремонт сборщика снимков Polymarket (пишет 0 строк);
 выгрузка квартальных фьючерсов. C5+стоп и перевёрнутый C2 — производные, только prereg + будущие данные.
 Правило пачек: 12–20 разных механизмов с family ID. Домены: фандинг/базис/carry, Polymarket,
 ёмкостно ограниченное, кросс-рыночное. Итог — таблица candidate → rationale → data →

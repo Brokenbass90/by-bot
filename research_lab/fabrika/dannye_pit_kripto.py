@@ -6,6 +6,7 @@
 Кладёт research_lab/data/pit_daily/<SYMBOL>.json. Уже скачанные пропускает.
     python3 dannye_pit_kripto.py --vse    все ~750 инструментов с суточным OI (≈30–60 мин)
     python3 dannye_pit_kripto.py --vse --obnovit   то же, но перекачать уже скачанные (для проверки вперёд)
+    python3 dannye_pit_kripto.py --kvartaly        квартальные фьючерсы BTC/ETH/SOL 2023–2026 (один раз)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
 """
@@ -66,8 +67,44 @@ def fanding(sym):
     return [[k, out[k]] for k in sorted(out)]
 
 
+def kvartaly():
+    """Одна ограниченная выгрузка квартальных USDT-фьючерсов Bybit (BTC, ETH, SOL) 2023–2026:
+    дневные свечи каждого контракта, живого и истёкшего. Для семейства TERM_STRUCTURE.
+    Имена истёкших строятся по календарю (последняя пятница квартала); чего биржа не отдаёт —
+    записывается в _net_dannyh.json. Кладёт research_lab/data/kvartaly/<КОНТРАКТ>.json."""
+    import calendar, datetime as dt
+    out = LAB / "data/kvartaly"; out.mkdir(exist_ok=True)
+    mes = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+    imena = set()
+    r = get("instruments-info", category="linear", limit=1000) or {}
+    for x in r.get("list") or []:
+        if x.get("contractType") == "LinearFutures" and x.get("baseCoin") in ("BTC", "ETH", "SOL"):
+            imena.add(x["symbol"])
+    for god in (2023, 2024, 2025, 2026):
+        for m in (3, 6, 9, 12):
+            d = max(w[4] for w in calendar.monthcalendar(god, m) if w[4])      # последняя пятница
+            for base in ("BTC", "ETH", "SOL"):
+                tag = f"{d:02d}{mes[m - 1]}{str(god)[2:]}"
+                imena.add(f"{base}USDT-{tag}")          # USDT-расчётные
+                imena.add(f"{base}-{tag}")              # USDC-расчётные (так назывались до 2025)
+    net = []
+    for i, s in enumerate(sorted(imena)):
+        p = out / f"{s}.json"
+        if p.exists():
+            continue
+        d = svechi(s)
+        if not d:
+            net.append(s); continue
+        p.write_text(json.dumps({"symbol": s, "daily": d}))
+        print(f"{i+1:>3}/{len(imena)} {s}: дней {len(d)}", flush=True)
+    (out / "_net_dannyh.json").write_text(json.dumps(net))
+    print("готово. биржа не отдала:", len(net), "из", len(imena))
+
+
 def main():
     import sys
+    if "--kvartaly" in sys.argv:
+        return kvartaly()
     v = json.load(open(LAB / "data/basis/vselennaya_pit.json"))
     net = []
     simvoly = sorted(set(v["simvoly"]) | {"BTCUSDT", "ETHUSDT"})   # BTC/ETH нужны метке режима

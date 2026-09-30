@@ -273,6 +273,52 @@ def istoriya():
         time.sleep(PAUZA)
 
 
+SNIMKI_MAX = 300          # рынков за круг: 2 запроса на рынок × PAUZA ≈ 2.5 мин
+
+
+def otobrat_dlya_snimkov(katalog):
+    """Отбор для снимков стакана. НЕ poly_map: тот заморожен в PREREG_POLY_V1 и за 30.09 не нашёл
+    ни одного активного рынка (регэксп 'bitcoin above' не видит основной формулировки
+    'price of Bitcoin be above', а порог $100k оборота живые дневные рынки не набирают) —
+    сборщик неделю писал пустые файлы. Здесь: все активные рынки событий с несколькими исходами
+    (negRisk — нужны для проверки суммы исходов) и крипто-страйки, оборот ≥ $1000, самые оборотные."""
+    import re as _re
+    kr = _re.compile(r"(bitcoin|ethereum|solana|xrp|btc|eth)\b.*\b(above|below|reach|hit|dip)", _re.I)
+    out = []
+    for m in katalog:
+        if m.get("closed"):
+            continue
+        q = m.get("question") or ""
+        neg = bool(m.get("negRisk"))
+        if not (neg or kr.search(q)):
+            continue
+        try:
+            obem = float(m.get("volume") or m.get("volumeNum") or 0)
+        except Exception:
+            obem = 0.0
+        toks = js(m.get("clobTokenIds")) or []; outc = js(m.get("outcomes")) or []
+        if not toks or (not neg and obem < 1000):
+            continue
+        yes = next((t for t, o in zip(toks, outc) if str(o).lower() == "yes"), toks[0])
+        ev = (m.get("events") or [{}])[0]
+        out.append({"conditionId": m.get("conditionId"), "kat": "negrisk" if neg else "kripto", "token": yes,
+                    "sobytie": ev.get("id"), "vopros": q, "obem": obem})
+    # события с несколькими исходами берутся ЦЕЛИКОМ (сумма исходов бессмысленна по части),
+    # по убыванию суммарного оборота события; крипто-страйки — до 100 самых оборотных
+    ev_obem = {}
+    for z in out:
+        if z["kat"] == "negrisk":
+            ev_obem[z["sobytie"]] = ev_obem.get(z["sobytie"], 0.0) + z["obem"]
+    vybor = []
+    for e in sorted(ev_obem, key=lambda k: -ev_obem[k]):
+        chast = [z for z in out if z["kat"] == "negrisk" and z["sobytie"] == e]
+        if len(vybor) + len(chast) > SNIMKI_MAX - 100:
+            break
+        vybor += chast
+    vybor += sorted((z for z in out if z["kat"] == "kripto"), key=lambda z: -z["obem"])[:100]
+    return vybor
+
+
 def snimki(minut=15):
     mp = zagruzit_map()
     d = OUT / "snimki"; d.mkdir(parents=True, exist_ok=True)
@@ -288,14 +334,18 @@ def snimki(minut=15):
                     break
                 time.sleep(PAUZA)
             kat_vremya = time.time()
-        sel = [s for s in otobrannye(kat, mp["kategorii"], mp.get("min_obem_usd", 100000)) if not s["closed"]]
+        sel = otobrat_dlya_snimkov(kat)
+        if not sel:
+            print("  !! отобрано 0 рынков — снимков нет, файл не пишу. Проверь отбор.", flush=True)
+            time.sleep(minut * 60); continue
         t = sejchas(); zapisi = []
         for s in sel:
             b = get(CLOB, "/book", token_id=s["token"]) or {}
             bids = sorted(((float(x["price"]), float(x["size"])) for x in b.get("bids", [])), reverse=True)[:10]
             asks = sorted((float(x["price"]), float(x["size"])) for x in b.get("asks", []))[:10]
             oi = get(DATA, "/oi", market=s["conditionId"])
-            zapisi.append({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "bids": bids, "asks": asks,
+            zapisi.append({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "sobytie": s.get("sobytie"),
+                           "bids": bids, "asks": asks,
                            "oi": oi if not isinstance(oi, list) else (oi[0] if oi else None)})
             time.sleep(PAUZA)
         with (d / time.strftime("%Y-%m-%d.jsonl", time.gmtime())).open("a") as f:
@@ -347,7 +397,9 @@ def snimki_odin_krug(mp):
         if not r:
             break
         time.sleep(PAUZA)
-    sel = [s for s in otobrannye(kat, mp["kategorii"], mp.get("min_obem_usd", 100000)) if not s["closed"]]
+    sel = otobrat_dlya_snimkov(kat)
+    if not sel:
+        print("  !! отобрано 0 рынков — снимков нет"); return
     t = sejchas(); n = 0
     with (d / time.strftime("%Y-%m-%d.jsonl", time.gmtime())).open("a") as f:
         for s in sel:
@@ -355,7 +407,8 @@ def snimki_odin_krug(mp):
             bids = sorted(((float(x["price"]), float(x["size"])) for x in b.get("bids", [])), reverse=True)[:10]
             asks = sorted((float(x["price"]), float(x["size"])) for x in b.get("asks", []))[:10]
             oi = get(DATA, "/oi", market=s["conditionId"])
-            f.write(json.dumps({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "bids": bids, "asks": asks,
+            f.write(json.dumps({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "sobytie": s.get("sobytie"),
+                                "bids": bids, "asks": asks,
                                 "oi": oi if not isinstance(oi, list) else (oi[0] if oi else None)}) + "\n")
             n += 1; time.sleep(PAUZA)
     print(f"  снимков стакана: {n}")

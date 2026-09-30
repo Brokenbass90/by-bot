@@ -164,6 +164,28 @@ def density_snapshot(
     }
 
 
+def impact_bps(book: Dict[str, Dict[float, float]], notional_usd: float, side: str) -> Optional[float]:
+    """Средняя цена исполнения рыночного ордера на notional_usd против mid, в bps (всегда ≥ 0).
+
+    side="sell" — идём по бидам (вход в шорт), side="buy" — по аскам (выход из шорта).
+    None, если видимой глубины не хватило: это честный признак «не влезает»."""
+    bids, asks = book.get("bids") or {}, book.get("asks") or {}
+    if not bids or not asks:
+        return None
+    mid = 0.5 * (max(bids) + min(asks))
+    levels = sorted(bids.items(), reverse=True) if side == "sell" else sorted(asks.items())
+    left, qty, cost = float(notional_usd), 0.0, 0.0
+    for price, size in levels:
+        take = min(size, left / price)
+        qty += take; cost += take * price; left -= take * price
+        if left <= 1e-9:
+            break
+    if left > 1e-6 or qty <= 0:
+        return None
+    avg = cost / qty
+    return abs(avg / mid - 1.0) * 10_000.0
+
+
 def _atomic_json(path: Path, payload: Dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
@@ -264,6 +286,12 @@ async def collect(args: argparse.Namespace) -> None:  # pragma: no cover - netwo
                                     if float(wall["size_usd"]) >= float(args.min_usd)
                                 ]
                                 observation["wall_count"] = len(observation["walls"])
+                                if args.impact_notionals:
+                                    observation["impact_bps"] = {
+                                        side: {str(n): impact_bps(books[sym], float(n), side)
+                                               for n in args.impact_notionals.split(",")}
+                                        for side in ("sell", "buy")
+                                    }
                                 f.write(json.dumps(observation, separators=(",", ":"), sort_keys=True) + "\n")
                                 observations += 1
                         if now - last_heartbeat >= float(args.heartbeat_interval_sec):
@@ -321,6 +349,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--heartbeat-interval-sec", type=float, default=15.0)
     p.add_argument("--max-file-gb", type=float, default=8.0)
     p.add_argument("--min-free-gb", type=float, default=50.0)
+    p.add_argument("--impact-notionals", default="",
+                   help="например 100,500,2000: записывать ожидаемый impact рыночного ордера (bps от mid)")
     return p
 
 
