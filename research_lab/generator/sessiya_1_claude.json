@@ -1,0 +1,112 @@
+[
+ {
+  "semya": "EQ_LOW_VOL",
+  "kto_platit": "инвесторы с ограничением плеча переплачивают за волатильные бумаги",
+  "pochemu": "betting-against-beta",
+  "tip": "xs",
+  "xs": {
+   "priznak": "vol20",
+   "znak": -1,
+   "hold": 20
+  }
+ },
+ {
+  "semya": "EQ_MOMENTUM_60",
+  "kto_platit": "медленная реакция на новости, недореакция",
+  "pochemu": "среднесрочный моментум",
+  "tip": "xs",
+  "xs": {
+   "priznak": "r60",
+   "znak": 1,
+   "hold": 20
+  }
+ },
+ {
+  "semya": "EQ_OVERNIGHT_CLIENTELE",
+  "kto_platit": "розница, покупающая на открытии",
+  "pochemu": "бумаги с высокой ночной доходностью переоценены розничным спросом",
+  "tip": "xs",
+  "xs": {
+   "priznak": "noch20",
+   "znak": -1,
+   "hold": 20
+  }
+ },
+ {
+  "semya": "EQ_INTRADAY_INSTITUTIONAL",
+  "kto_platit": "неинформированная сторона против институционального дневного потока",
+  "pochemu": "дневной поток институционалов информативен",
+  "tip": "xs",
+  "xs": {
+   "priznak": "den20",
+   "znak": 1,
+   "hold": 20
+  }
+ },
+ {
+  "semya": "EQ_LOW_PRICE",
+  "kto_platit": "розница, путающая дешёвую цену с дешёвой бумагой",
+  "pochemu": "низкая номинальная цена переоценена",
+  "tip": "xs",
+  "xs": {
+   "priznak": "cena",
+   "znak": 1,
+   "hold": 20
+  }
+ },
+ {
+  "semya": "EQ_ILLIQUIDITY",
+  "kto_platit": "те, кому нужна ликвидность, платят премию держателям неликвида",
+  "pochemu": "премия за неликвидность",
+  "tip": "xs",
+  "xs": {
+   "priznak": "oborot20",
+   "znak": -1,
+   "hold": 20
+  }
+ },
+ {
+  "semya": "EQ_QUIET_DROP_REVERSAL",
+  "kto_platit": "вынужденные/неинформированные продавцы на тихом объёме",
+  "pochemu": "падение без объёма — шум, не информация",
+  "tip": "sobytie",
+  "sobytie": {
+   "usloviya": [
+    [
+     "r5",
+     "<",
+     -0.15
+    ],
+    [
+     "obem_x",
+     "<",
+     1.5
+    ]
+   ],
+   "storona": 1,
+   "hold": 10
+  }
+ },
+ {
+  "semya": "EQ_FROG_IN_PAN",
+  "kto_platit": "инвесторы недооценивают плавные тренды (внимание к скачкам)",
+  "pochemu": "плавный рост без скачков продолжается",
+  "tip": "sobytie",
+  "sobytie": {
+   "usloviya": [
+    [
+     "r60",
+     ">",
+     0.2
+    ],
+    [
+     "max_r20",
+     "<",
+     0.03
+    ]
+   ],
+   "storona": 1,
+   "hold": 20
+  }
+ }
+]

@@ -1,0 +1,134 @@
+[
+ {
+  "semya": "FUNDING_CARRY_XS",
+  "prichina": "пачка 1"
+ },
+ {
+  "semya": "SQUEEZE_FUEL",
+  "prichina": "пачка 1"
+ },
+ {
+  "semya": "FORCED_FLOW",
+  "prichina": "пачки 1, 3"
+ },
+ {
+  "semya": "LISTING_SUPPLY",
+  "prichina": "пачка 1"
+ },
+ {
+  "semya": "PEREGREV_HVOSTA",
+  "prichina": "живое семейство, заморожено — варианты запрещены"
+ },
+ {
+  "semya": "DIFFUSION_LAG",
+  "prichina": "пачка 1"
+ },
+ {
+  "semya": "POLY_CALIBRATION",
+  "prichina": "пачка 1"
+ },
+ {
+  "semya": "POLY_OVERREACTION",
+  "prichina": "пачка 1"
+ },
+ {
+  "semya": "POLY_VS_MODEL",
+  "prichina": "пачка 1"
+ },
+ {
+  "semya": "SETTLEMENT_FLOW",
+  "prichina": "пачка 2"
+ },
+ {
+  "semya": "CAP_STRESS",
+  "prichina": "пачка 2"
+ },
+ {
+  "semya": "BASIS",
+  "prichina": "пачка 2"
+ },
+ {
+  "semya": "OI_CROWDING",
+  "prichina": "пачка 2"
+ },
+ {
+  "semya": "LIQ_PROVISION",
+  "prichina": "пачка 2"
+ },
+ {
+  "semya": "POLY_PATH",
+  "prichina": "пачка 2"
+ },
+ {
+  "semya": "LOTTERY_DEMAND",
+  "prichina": "пачки 2, 5 (max доходности)"
+ },
+ {
+  "semya": "SPECULATION_SHARE",
+  "prichina": "пачка 2"
+ },
+ {
+  "semya": "CARRY_BASKET",
+  "prichina": "NO-GO"
+ },
+ {
+  "semya": "XEX_FUNDING",
+  "prichina": "закрыто 01.08"
+ },
+ {
+  "semya": "TERM_CARRY",
+  "prichina": "пачка 3"
+ },
+ {
+  "semya": "TERM_SIGNAL",
+  "prichina": "пачка 3"
+ },
+ {
+  "semya": "ROLL_PRESSURE",
+  "prichina": "пачка 3"
+ },
+ {
+  "semya": "FORCED_FLOW_LIQ",
+  "prichina": "пачка 3"
+ },
+ {
+  "semya": "TOKEN_GOLD_DISLOCATION",
+  "prichina": "пачка 4"
+ },
+ {
+  "semya": "TRADFI_CLOSED_MARKET",
+  "prichina": "пачка 4"
+ },
+ {
+  "semya": "POLY_MICROSTRUCTURE",
+  "prichina": "пачка 4"
+ },
+ {
+  "semya": "WEEKLY_REVERSAL",
+  "prichina": "пачка 5 (r5, недельный откат)"
+ },
+ {
+  "semya": "OVERNIGHT_PREMIUM",
+  "prichina": "пачка 5 (ночная доходность всей вселенной)"
+ },
+ {
+  "semya": "NEAR_52W_HIGH",
+  "prichina": "пачка 5"
+ },
+ {
+  "semya": "GAP_VOLUME",
+  "prichina": "пачка 5; живая производная ATTENTION_SHORT_ETB — варианты запрещены"
+ },
+ {
+  "semya": "TURN_OF_MONTH",
+  "prichina": "пачка 5"
+ },
+ {
+  "semya": "GOLD_FX_GEOMETRY",
+  "prichina": "этап Gold/FX закрыт"
+ },
+ {
+  "semya": "NOCHNOY_DREYF",
+  "prichina": "живое (FX), варианты запрещены"
+ }
+]
