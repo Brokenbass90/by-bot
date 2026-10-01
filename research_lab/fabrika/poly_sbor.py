@@ -352,37 +352,40 @@ def rynki_sobytiy(kripto_iz):
 
 
 def kripto_lestnicy(maks=100):
-    """v4: полные «лестницы» крипто-страйков (BTC/ETH/SOL/XRP above K), заканчивающиеся в ближайшие 3 суток.
-    В списке самых оборотных рынков их нет (дневные рынки малы) — за круг попадало 3–4 страйка, а для
-    проверки монотонности и запаздывания нужна вся лестница события. Запрос по дате окончания."""
+    """v5 (01.10): полные «лестницы» крипто-страйков («Bitcoin above ___ on <дата>?»), заканчивающиеся в ближайшие
+    3 суток. v4 искал их в /markets по окну дат — там первые 500 рынков вообще не крипта (диагностика
+    --test-lestnicy: 0 совпадений). v5 ищет события через /public-search и берёт рынки события из /events/<id>."""
     import datetime as _dt
-    now = _dt.datetime.now(_dt.timezone.utc)
-    kr = re.compile(r"(bitcoin|ethereum|solana|xrp)\b.*\babove\b", re.I)
-    po_sob = {}
-    for off in range(0, 1500, 100):
-        r = get(GAMMA, "/markets", limit=100, offset=off, closed="false",
-                end_date_min=now.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                end_date_max=(now + _dt.timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%SZ")) or []
-        for m in r:
-            if m.get("closed") or not kr.search(m.get("question") or ""):
+    now = _dt.datetime.now(_dt.timezone.utc); do = now + _dt.timedelta(days=3)
+    sobytiya = {}
+    for q in ("bitcoin above", "ethereum above", "solana above", "xrp above"):
+        r = get(GAMMA, "/public-search", q=q, limit_per_type=20, events_status="active") or {}
+        for e in r.get("events") or []:
+            try:
+                kon = _dt.datetime.fromisoformat((e.get("endDate") or "").replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if now < kon <= do and "above" in (e.get("title") or "").lower():
+                sobytiya[e["id"]] = e.get("title")
+        time.sleep(PAUZA)
+    out = []
+    for ev in sobytiya:
+        e = get(GAMMA, f"/events/{ev}") or {}
+        ms = []
+        for m in e.get("markets") or []:
+            if m.get("closed"):
                 continue
             toks = js(m.get("clobTokenIds")) or []; outc = js(m.get("outcomes")) or []
             if not toks:
                 continue
             yes = next((t for t, o in zip(toks, outc) if str(o).lower() == "yes"), toks[0])
-            ev = (m.get("events") or [{}])[0].get("id")
-            po_sob.setdefault(ev, []).append({"conditionId": m.get("conditionId"), "kat": "strike", "token": yes,
-                                               "sobytie": ev, "vopros": m.get("question")})
-        if not r:
-            break
+            ms.append({"conditionId": m.get("conditionId"), "kat": "strike", "token": yes, "sobytie": ev,
+                       "vopros": m.get("question"), "strike_txt": m.get("groupItemTitle")})
+        if ms and len(out) + len(ms) <= maks:
+            for z in ms:
+                z["iskhodov_v_sobytii"] = len(ms)
+            out += ms
         time.sleep(PAUZA)
-    out = []
-    for ev, ms in sorted(po_sob.items(), key=lambda kv: -len(kv[1])):
-        if len(out) + len(ms) > maks:
-            continue
-        for z in ms:
-            z["iskhodov_v_sobytii"] = len(ms)
-        out += ms
     return out
 
 
@@ -413,7 +416,8 @@ def snimki(minut=15):
             asks = sorted((float(x["price"]), float(x["size"])) for x in b.get("asks", []))[:10]
             oi = get(DATA, "/oi", market=s["conditionId"])
             zapisi.append({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "sobytie": s.get("sobytie"),
-                           "iskhodov_v_sobytii": s.get("iskhodov_v_sobytii"), "otbor": "v4",
+                           "iskhodov_v_sobytii": s.get("iskhodov_v_sobytii"), "otbor": "v5",
+                           "vopros": s.get("vopros") if s["kat"] == "strike" else None,
                            "bids": bids, "asks": asks,
                            "oi": oi if not isinstance(oi, list) else (oi[0] if oi else None)})
             time.sleep(PAUZA)
