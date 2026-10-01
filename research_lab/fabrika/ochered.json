@@ -2489,7 +2489,7 @@
    "prereg": "research_lab/PREREG_TEN_SILA_2026_09_23.md",
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T07:01:24+00:00",
-   "ten_molchit_chasov": 2.5,
+   "ten_molchit_chasov": 3.3,
    "ten_resheniy": 0
   },
   {
@@ -2654,7 +2654,7 @@
    "begun": "meh",
    "rynok": "gold_glub_utc",
    "semya": "sessiya_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "LONDON_PROBOY",
@@ -2669,7 +2669,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:32+00:00"
   },
   {
    "id": "LONDON_PROBOY__gold_glub_utc__short",
@@ -2677,7 +2678,7 @@
    "begun": "meh",
    "rynok": "gold_glub_utc",
    "semya": "sessiya_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "LONDON_PROBOY",
@@ -2692,7 +2693,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:35+00:00"
   },
   {
    "id": "NOCHNOY_DREYF__gold_glub_utc__long",
@@ -2700,7 +2702,7 @@
    "begun": "meh",
    "rynok": "gold_glub_utc",
    "semya": "premiya_za_chas",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "NOCHNOY_DREYF",
@@ -2715,7 +2717,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:33+00:00"
   },
   {
    "id": "NOCHNOY_DREYF__gold_glub_utc__short",
@@ -2723,7 +2726,7 @@
    "begun": "meh",
    "rynok": "gold_glub_utc",
    "semya": "premiya_za_chas",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "NOCHNOY_DREYF",
@@ -2738,7 +2741,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:36+00:00"
   },
   {
    "id": "SVIP_UROVNYA__gold_glub_utc__long",
@@ -2746,7 +2750,7 @@
    "begun": "meh",
    "rynok": "gold_glub_utc",
    "semya": "lozhnyy_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "SVIP_UROVNYA",
@@ -2761,7 +2765,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:34+00:00"
   },
   {
    "id": "SVIP_UROVNYA__gold_glub_utc__short",
@@ -2769,7 +2774,7 @@
    "begun": "meh",
    "rynok": "gold_glub_utc",
    "semya": "lozhnyy_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "SVIP_UROVNYA",
@@ -2784,7 +2789,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:38+00:00"
   },
   {
    "id": "LONDON_PROBOY__fx7_glub_utc__long",
@@ -2792,7 +2798,7 @@
    "begun": "meh",
    "rynok": "fx7_glub_utc",
    "semya": "sessiya_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "LONDON_PROBOY",
@@ -2807,7 +2813,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:32+00:00"
   },
   {
    "id": "LONDON_PROBOY__fx7_glub_utc__short",
@@ -2815,7 +2822,7 @@
    "begun": "meh",
    "rynok": "fx7_glub_utc",
    "semya": "sessiya_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "LONDON_PROBOY",
@@ -2830,7 +2837,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:35+00:00"
   },
   {
    "id": "NOCHNOY_DREYF__fx7_glub_utc__long",
@@ -2838,7 +2846,7 @@
    "begun": "meh",
    "rynok": "fx7_glub_utc",
    "semya": "premiya_za_chas",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "POSITIVE_LEAD",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "NOCHNOY_DREYF",
@@ -2853,7 +2861,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:33+00:00"
   },
   {
    "id": "NOCHNOY_DREYF__fx7_glub_utc__short",
@@ -2861,7 +2870,7 @@
    "begun": "meh",
    "rynok": "fx7_glub_utc",
    "semya": "premiya_za_chas",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "NOCHNOY_DREYF",
@@ -2876,7 +2885,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:36+00:00"
   },
   {
    "id": "SVIP_UROVNYA__fx7_glub_utc__long",
@@ -2884,7 +2894,7 @@
    "begun": "meh",
    "rynok": "fx7_glub_utc",
    "semya": "lozhnyy_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "NEGATIVE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "SVIP_UROVNYA",
@@ -2899,7 +2909,8 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:34+00:00"
   },
   {
    "id": "SVIP_UROVNYA__fx7_glub_utc__short",
@@ -2907,7 +2918,7 @@
    "begun": "meh",
    "rynok": "fx7_glub_utc",
    "semya": "lozhnyy_proboy",
-   "sostoyanie": "QUEUED",
+   "sostoyanie": "PLUS_NO_CONFIDENCE",
    "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
    "param": {
     "meh": "SVIP_UROVNYA",
@@ -2922,7 +2933,32 @@
    },
    "avtor": "Claude",
    "porozhdeno": "2026-10-01T09:20:22+00:00",
-   "trebuet_priyomki": true
+   "trebuet_priyomki": true,
+   "start": "2026-10-01T09:23:38+00:00"
+  },
+  {
+   "id": "NOCHNOY_DREYF__fx7_glub_utc__long__PODTV",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "sostoyanie": "SHADOW_WAITING",
+   "rynok": "fx7_glub_utc",
+   "semya": "premiya_za_chas",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "fx7_glub_utc",
+    "side": "long",
+    "etap": "confirmation"
+   },
+   "sudya": {
+    "porog_t": 2.0,
+    "min_neff": 10
+   },
+   "roditel": "NOCHNOY_DREYF__fx7_glub_utc__long",
+   "porozhdeno": "2026-10-01T09:23:34+00:00",
+   "start": "2026-10-01T09:23:39+00:00",
+   "ten_spec": "research_lab/fabrika/teni/NOCHNOY_DREYF__fx7_glub_utc__long__PODTV.json",
+   "ten_molchit_chasov": null
   }
  ]
 }

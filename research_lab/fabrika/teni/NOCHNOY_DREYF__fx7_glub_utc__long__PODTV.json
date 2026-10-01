@@ -1,0 +1,41 @@
+{
+ "id": "NOCHNOY_DREYF__fx7_glub_utc__long__PODTV",
+ "porozhdena": "2026-10-01T09:23:39+00:00",
+ "iz_verdikta": "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__fx7_glub_utc__long__PODTV@2026-10-01T09:23:39+00:00",
+ "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+ "rynok": "fx7_glub_utc",
+ "semya": "premiya_za_chas",
+ "slot": null,
+ "begun": "meh",
+ "strategiya_zamorozhena": {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "etap": "confirmation"
+ },
+ "heshi_koda": {
+  "begun": "3839d08a33badd4a",
+  "fabrika": "1a69b54f554e8444",
+  "mehanizmy": "c0c7c5617a97fa5e",
+  "prereg": "ba478ee41de1d814"
+ },
+ "vorota": {
+  "resheniy": 100,
+  "min_neff": 20,
+  "porog_t": 2.0
+ },
+ "trebovaniya_k_svidetelstvam": [
+  "журнал только дописывается, задним числом не правится",
+  "момент старта фиксируется на диске один раз и не сбрасывается при перезапуске",
+  "засчитываются только дни, начавшиеся ПОСЛЕ первого запуска",
+  "издержки и фандинг вычитаются по факту, не моделируются постфактум",
+  "контроль: случайная корзина того же размера в тот же день",
+  "R и деньги до ворот не считаются и не показываются"
+ ],
+ "zhurnal": "research_lab/data/ten_NOCHNOY_DREYF__fx7_glub_utc__long__PODTV.jsonl",
+ "bienie": "research_lab/data/ten_NOCHNOY_DREYF__fx7_glub_utc__long__PODTV.bienie",
+ "ocenshchik": null,
+ "komanda_zapuska": null,
+ "sostoyanie": "ZHDYOT_PROGONSHCHIKA",
+ "chto_nuzhno_ot_cheloveka": "написать прогонщик тени для этого механизма по образцу research_lab/ten_sila.py, вписать сюда ocenshchik и komanda_zapuska, затем запустить процесс вручную"
+}
