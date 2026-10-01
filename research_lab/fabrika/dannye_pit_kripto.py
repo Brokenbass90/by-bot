@@ -8,7 +8,7 @@
     python3 dannye_pit_kripto.py --vse --obnovit   то же, но перекачать уже скачанные (для проверки вперёд)
     python3 dannye_pit_kripto.py --kvartaly        квартальные фьючерсы BTC/ETH/SOL 2023–2026 (один раз)
     python3 dannye_pit_kripto.py --chasy           часовые свечи перпов на золото/нефть/акции/индексы (один раз)
-    python3 dannye_pit_kripto.py --lsr             доля лонг-аккаунтов (long/short ratio) по дням, все ~750 (≈ 15 мин)
+    python3 dannye_pit_kripto.py --lsr [--obnovit] доля лонг-аккаунтов (long/short ratio) по дням, все ~750 (≈ 15 мин)
     python3 dannye_pit_kripto.py --poz-chas        часовые OI и long/short для ~290 монет PIT-топ-50 (≈ 1–2 ч, можно прерывать)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
@@ -143,6 +143,7 @@ def pozicii(chas):
     """01.10, новый класс №2 — позиционирование толпы. Дневной OI уже есть (basis/oi_sutochnyy) и потрачен
     (OI_RASHOZHDENIE, OI_FLUSH_REBOUND, OI_CROWDING) — новое здесь: доля лонг-аккаунтов (account-ratio),
     и часовой OI/ratio для внутридневных механизмов. Делистинг биржа не отдаёт → _net_dannyh.json."""
+    import sys
     if chas:
         out = LAB / "data/poz_chas"; per = "1h"
         simvoly = json.load(open(LAB / "data/basis/vselennaya_pit_usd50.json"))["simvoly"]
@@ -158,7 +159,7 @@ def pozicii(chas):
     net = []
     for i, s in enumerate(simvoly):
         p = out / f"{s}.json"
-        if p.exists():
+        if p.exists() and "--obnovit" not in sys.argv:      # --obnovit: перекачать (для проверки вперёд)
             continue
         lsr = ryad("account-ratio", "timestamp", "buyRatio", "period", per, s, 500)
         z = {"symbol": s, "lsr": lsr}
@@ -166,6 +167,14 @@ def pozicii(chas):
             z["oi"] = ryad("open-interest", "timestamp", "openInterest", "intervalTime", "1h", s, 200)
         if not lsr and not z.get("oi"):
             net.append(s); continue
+        if not chas and "--obnovit" in sys.argv:          # вперёд: дописать суточный OI для PIT-вселенной
+            fo = LAB / "data/basis/oi_sutochnyy" / f"{s}.json"
+            if fo.exists():
+                st = json.load(open(fo)); m = {int(t): v for t, v in st["ryad"]}
+                for t, v in ryad("open-interest", "timestamp", "openInterest", "intervalTime", "1d", s, 200)[-120:]:
+                    m[t] = v
+                st["ryad"] = [[t, m[t]] for t in sorted(m)]; st["end"] = max(m)
+                fo.write_text(json.dumps(st))
         p.write_text(json.dumps(z))
         print(f"{i+1:>3}/{len(simvoly)} {s}: lsr {len(lsr)}" + (f", oi {len(z['oi'])}" if chas else ""), flush=True)
     (out / "_net_dannyh.json").write_text(json.dumps(net))
