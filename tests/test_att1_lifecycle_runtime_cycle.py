@@ -434,3 +434,191 @@ def test_failed_public_get_retains_timing_and_exception_type(tmp_path, monkeypat
     assert timings[-1]['operation']=='public_get'
     assert timings[-1]['elapsed_ms']==3000
     assert timings[-1]['error']=='TimeoutError'
+
+
+def _two_book_runtime(tmp_path,symbols=('BTCUSDT','ETHUSDT')):
+    """Real journals for two symbols; replace only external public transport."""
+    intent=deepcopy(FIXTURE['cases'][0]['intent']);tape=PublicTape(intent['submit_ms'])
+    rt=make_runtime(tmp_path,tape)
+    def multi_symbol(url,params,**kwargs):
+        data=json.loads(tape(url,params,**kwargs))
+        if url.endswith('/orderbook'):data['result']['s']=params['symbol']
+        return json.dumps(data).encode()
+    rt.transport=multi_symbol;sessions=[]
+    for symbol in symbols:
+        signal=deepcopy(intent['signal']);signal['symbol']=symbol
+        instrument=deepcopy(intent['instrument']);instrument['symbol']=symbol
+        sessions.append(rt.admit_candidate(signal,instrument))
+    assert all(s.receipt['held_qty']=='1/10' for s in sessions)
+    return rt,tape,sessions
+
+
+def _stop_observation_workers(rt):
+    # Resource cleanup stays in test utilities; run() owns it in production.
+    executor=getattr(rt,'observation_executor',None)
+    if executor is not None:executor.shutdown(wait=True,cancel_futures=True)
+
+
+def test_two_fresh_books_do_not_sum_individual_request_latency_into_recovery_gap(tmp_path):
+    """Serial1100ms+1100ms polling wrongly dirties otherwise fresh observations."""
+    import time
+    rt,tape,sessions=_two_book_runtime(tmp_path)
+    origin=time.monotonic();base=tape.now
+    rt.clock=lambda:base+int((time.monotonic()-origin)*1000)
+    rt.last_observed={s.receipt['plan']['decision_id']:base for s in sessions}
+    def delayed_book(url,params,**kwargs):
+        assert url.endswith('/orderbook')
+        time.sleep(1.1);now=rt.clock()
+        result={'s':params['symbol'],'b':[['100','10']],'a':[['100.01','10']],
+                'ts':now,'cts':now,'u':now,'seq':now}
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    rt.transport=delayed_book
+    try:
+        rt.tick()
+        assert [s.receipt['incidents'] for s in sessions]==[[],[]]
+        assert [s.receipt['held_qty'] for s in sessions]==['1/10','1/10']
+        assert all(s.receipt['final_net_r'] is None for s in sessions)
+    finally:_stop_observation_workers(rt)
+
+
+@pytest.mark.parametrize('cts_offset',[-2643,5000])
+def test_parallel_books_keep_stale_and_future_observations_dirty(tmp_path,cts_offset):
+    rt,tape,sessions=_two_book_runtime(tmp_path)
+    now=tape.now+100;rt.clock=lambda:now
+    def invalid_book(url,params,**kwargs):
+        result={'s':params['symbol'],'b':[['100','10']],'a':[['100.01','10']],
+                'ts':now,'cts':now+cts_offset,'u':now,'seq':now}
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    rt.transport=invalid_book
+    try:
+        rt.tick()
+        assert [s.receipt['incidents'] for s in sessions]==[['RECOVERY_GAP'],['RECOVERY_GAP']]
+        assert [s.receipt['held_qty'] for s in sessions]==['1/10','1/10']
+        assert all(s.receipt['final_net_r'] is None for s in sessions)
+        assert rt.state()==runner.verify_state([s.journal.path for s in sessions],rt.profile)
+    finally:_stop_observation_workers(rt)
+
+
+@pytest.mark.parametrize('age,accepted',[(2000,True),(2001,False)])
+def test_prefetched_book_is_rechecked_at_consumption_without_retiming(tmp_path,age,accepted):
+    rt,tape,sessions=_two_book_runtime(tmp_path);rx=tape.now+100
+    raw={'retCode':0,'result':{'s':'BTCUSDT','b':[['100','10']],'a':[['100.01','10']],
+                             'ts':rx,'cts':rx,'u':rx,'seq':rx},'time':rx}
+    rt.clock=lambda:rx+age
+    if accepted:
+        snapshot,received,observed=rt._book('BTCUSDT',observation=(raw,rx))
+        assert received==rx and snapshot['cts']==rx and observed==raw
+    else:
+        with pytest.raises(runner.PublicBookTimeViolation) as failure:
+            rt._book('BTCUSDT',observation=(raw,rx))
+        source=json.loads((rt.root/'sources'/(failure.value.source_sha256+'.json')).read_text())
+        assert source['received_ms']==rx and source['consumed_ms']==rx+age
+        assert source['public_response']==raw
+
+
+def test_parallel_books_preserve_serial_receipts_and_one_journal_writer(tmp_path,monkeypatch):
+    import threading
+    serial_dir=tmp_path/'serial';parallel_dir=tmp_path/'parallel'
+    serial_dir.mkdir();parallel_dir.mkdir()
+    serial,serial_tape,serial_sessions=_two_book_runtime(serial_dir)
+    parallel,parallel_tape,parallel_sessions=_two_book_runtime(parallel_dir)
+    now=max(serial_tape.now,parallel_tape.now)+100
+    def target_book(url,params,**kwargs):
+        result={'s':params['symbol'],'b':[['87.99','10']],'a':[['88','10']],
+                'ts':now,'cts':now,'u':now,'seq':now}
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    for rt in (serial,parallel):rt.clock=lambda:now;rt.transport=target_book
+    for session in serial_sessions:serial.manage(session)
+    main=threading.get_ident();writers=[];sources=[]
+    original_apply=LifecycleSession.apply;original_save=parallel._save_source
+    def checked_apply(self,event):
+        writers.append(threading.get_ident());return original_apply(self,event)
+    def checked_save(value):
+        sources.append(threading.get_ident());return original_save(value)
+    monkeypatch.setattr(LifecycleSession,'apply',checked_apply)
+    monkeypatch.setattr(parallel,'_save_source',checked_save)
+    try:
+        parallel.tick()
+        assert writers and sources and set(writers+sources)=={main}
+        for expected,actual in zip(serial_sessions,parallel_sessions):
+            assert actual.receipt['held_qty']=='1/20'
+            assert actual.receipt==expected.receipt
+            assert actual.journal.path.read_bytes()==expected.journal.path.read_bytes()
+        assert parallel.state()==serial.state()
+        assert parallel.state()==runner.verify_state([s.journal.path for s in parallel_sessions],parallel.profile)
+    finally:_stop_observation_workers(parallel)
+
+
+@pytest.mark.parametrize('pending_index',[0,1])
+def test_prefetch_cannot_cross_or_delay_an_earlier_pending_exit(tmp_path,pending_index):
+    from threading import Event,Lock
+    symbols=('BTCUSDT','ETHUSDT','XRPUSDT','ADAUSDT')[:3+pending_index]
+    rt,tape,sessions=_two_book_runtime(tmp_path,symbols)
+    now=tape.now+100;rt.clock=lambda:now
+    pending=sessions[pending_index];pending_symbol=symbols[pending_index]
+    rt._emit(pending,'PRICE',bid='87.99',ask='88',exchange_ms=now,received_ms=now)
+    assert pending.receipt['pending_exit'] is not None
+    later_started=Event();starts=[];lock=Lock();original_manage=rt.manage
+    def guarded_manage(session,**kwargs):
+        if session is pending:later_started.wait(.3)
+        return original_manage(session,**kwargs)
+    def book(url,params,**kwargs):
+        symbol=params['symbol']
+        with lock:starts.append(symbol)
+        if symbols.index(symbol)>pending_index:later_started.set()
+        bid,ask=('87.99','88') if symbol==pending_symbol else ('100','100.01')
+        result={'s':symbol,'b':[[bid,'10']],'a':[[ask,'10']],
+                'ts':now,'cts':now,'u':now,'seq':now}
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    rt.manage=guarded_manage;rt.transport=book
+    try:
+        rt.tick()
+        assert pending.receipt['held_qty']=='1/20'
+        assert starts.index(pending_symbol)<min(starts.index(s) for s in symbols[pending_index+1:])
+        assert rt.state()==runner.verify_state([s.journal.path for s in sessions],rt.profile)
+    finally:_stop_observation_workers(rt)
+
+
+def test_failed_prefetch_keeps_other_observations_and_journals_replayable(tmp_path):
+    rt,tape,sessions=_two_book_runtime(tmp_path,('BTCUSDT','ETHUSDT','XRPUSDT'))
+    now=tape.now+100;rt.clock=lambda:now
+    def book(url,params,**kwargs):
+        if params['symbol']=='BTCUSDT':raise TimeoutError('synthetic observation timeout')
+        result={'s':params['symbol'],'b':[['87.99','10']],'a':[['88','10']],
+                'ts':now,'cts':now,'u':now,'seq':now}
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    rt.transport=book
+    try:
+        rt.tick()
+        assert rt.poll_errors[sessions[0].receipt['plan']['decision_id']]=='TimeoutError'
+        assert [s.receipt['held_qty'] for s in sessions]==['1/10','1/20','1/20']
+        assert rt.state()==runner.verify_state([s.journal.path for s in sessions],rt.profile)
+    finally:_stop_observation_workers(rt)
+
+
+def test_new_exit_fresh_ioc_cannot_compete_with_observation_workers(tmp_path):
+    import time
+    from threading import Event,Lock,get_ident
+    rt,tape,sessions=_two_book_runtime(tmp_path)
+    now=tape.now+100;rt.clock=lambda:now
+    main=get_ident();eth_started=Event();lock=Lock();active=[0]
+    def book(url,params,**kwargs):
+        worker=get_ident()!=main
+        if worker:
+            with lock:active[0]+=1
+            if params['symbol']=='ETHUSDT':eth_started.set();time.sleep(.2)
+            else:assert eth_started.wait(2)
+        else:
+            with lock:assert active[0]==0, 'fresh exit IOC competed with prefetched observations'
+        result={'s':params['symbol'],'b':[['87.99','10']],'a':[['88','10']],
+                'ts':now,'cts':now,'u':now,'seq':now}
+        if worker:
+            with lock:active[0]-=1
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    rt.transport=book
+    try:
+        rt.tick()
+        assert [s.receipt['held_qty'] for s in sessions]==['1/20','1/20']
+        assert all(not s.receipt['incidents'] for s in sessions)
+        assert rt.state()==runner.verify_state([s.journal.path for s in sessions],rt.profile)
+    finally:_stop_observation_workers(rt)

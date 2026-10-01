@@ -1,7 +1,8 @@
 # MASTER HANDOFF — 2026-10-01
 
 Canonical migration entry point. Latest production snapshot
-**2026-10-01 17:07 UTC / 20:07 Cyprus**; original migration snapshot14:18UTC.
+**2026-10-01 17:07 UTC / 20:07 Cyprus**; ATT1 engineering18:13UTC;
+original migration snapshot14:18UTC. No new Alpaca broker read in engineering cycle.
 runtime facts must be refreshed, never inferred from this document's age.
 Read this document, then `NEW_CHAT_START_HERE.md`, then only the relevant section
 at the TOP of `CODEX_SESSION_CHECKPOINT_2026_09_06.md`. Older sections are history.
@@ -165,12 +166,25 @@ All8 filled simulations flat and dirty:1000RATS/BCH/JTO/ACE/GALA/AVAX/DOGE/PAXG.
 **8 RECOVERY_GAP total**. New AVAX2094ms/DOGE2602ms gaps span sequential
 management of two held books; no recorded individual book request crossed2s.
 Disposable local reproduction confirms aggregate serial budget can fail with two
-fresh books at1100ms/request. It is not deployed evidence or a fix. New PAXG gap
+fresh books at1100ms/request. The subsequently tested candidate fixes that
+reproducer; it is not deployed evidence. New PAXG gap
 is an actually stale book2643ms; scheduling cannot alone certify stale sources.
 **71 H1 cycles, each51/51 unique symbols; duplicate journal event IDs0**.
 Missing external transitions remain NOT_PROVEN because gaps occurred. Current
 driver/core/strategy pins unchanged. Full source evidence is preserved privately;
 `CONTINUATION_EVIDENCE_2026_10_01.json` carries counts and timing receipts.
+
+Oct1 18:13 engineering result: adjacent-pair public observations, drained before
+ordered management; pending exits/protection are never bypassed, fresh exit IOC
+cannot compete with observation workers. Hard2s/freshness and single writer remain.
+54 targeted tests PASS on current local core, captured deployed core and VPS;
+old9 sessions/113 records replay identically. Only driver is overlaid on the actual
+deployed closure. Do not deploy local newer coordinator over those journal pins.
+Public service/source/PID remain unchanged; clean prospective terminals still0.
+Release/preflight/file rollback ready, **not deployed; live rollback not tested**.
+Use `ATT1_AGGREGATE_BUDGET_CANDIDATE_2026_10_01.json` for exact hashes, private
+archive, fresh epoch and bounded cutover/rollback gates. Refresh public flat/pins
+before cutover; retire old evidence intact. Alpaca Oct2 re-arm remains first.
 
 NEW authenticated binding native SL→fees/funding→finality code complete **orders OFF**,
 commit834990d, 346 local +346 isolated VPS tests, 42 candidate hashes. Not installed
@@ -220,6 +234,10 @@ carefully implementing and measuring it. Reward measured progress, kill weak lea
 preserve capital and optionality. Profit is a hypothesis to test, not a deadline promise.
 
 Production priority: protect/observe Alpaca LIVE → ATT1 existing gate/dossier.
+Oct1 owner-manager scope: Claude only PM2 after valid v5 snapshots and TOLPA_1D
+after≥90% hourly coverage. SBR1 parked, no new research directions until those
+results; no Factory rewrite or Alpaca expansion. Owner FX Raw/ECN MT5 demo is
+the external cost-data step for NOCHNOY_DREYF, not accepted production net edge.
 Existing leads were reconciled read-only against current registry Oct1. SBR1
 comparison is blocked at0 main outcomes/no control journal; deployed fixed51 is
 preparity raw, so existing prereg section7 certification remains necessary.

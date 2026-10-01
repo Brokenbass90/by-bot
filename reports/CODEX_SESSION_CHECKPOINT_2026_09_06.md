@@ -2,6 +2,45 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October 1 18:13 UTC / 21:13 Cyprus: ATT1 aggregate-budget candidate verified; public deployment prepared, not executed**:
+- Owner-manager scope: no new LIVE today; Alpaca unchanged. Oct2 DAY expiry/re-arm
+  remains P0 at13:30UTC/16:30Cyprus; observe the existing manager, then direct broker
+  truth and floors/HWM/single-manager. Last Alpaca broker baseline is17:07UTC below,
+  not a new18:13 broker read. No manual activation or NEW ATT1 money authority.
+- Existing observation driver now fetches at most two adjacent eligible books
+  together and drains both before ordered main-thread management. No lookahead
+  past pending exits/protection; fresh exit IOC cannot compete with those workers.
+  Hard2s/freshness, actual received/cts, semaphore2/request starts8/s, strategy,
+  admission, coordinator, risk and one journal writer retained. Single-book path
+  stays serial. Prefetched data is checked again at consumption.
+- TDD: original two1100ms-book defect RED→GREEN. Independent review found a new
+  pending-exit starvation edge; three regressions RED→GREEN after pair barrier.
+  **54 tests PASS** on local current core, local captured deployed core and VPS
+  Python3.12.3. Full old9-session/113-record replay and journal bytes identical;
+  profile79d23e38…128050/core kept; synthetic23 restart boundaries PASS.
+- gpt-6-astra/high critical review + bounded fix check READY; actual model/effort
+  verified. Mechanical capture gpt-6-luna/medium fallback verified. Candidate
+  overlays only driver on actual32-file closure, never local newer coordinator.
+- Target preflight and atomic file restore PASS in isolated VPS/tmp. No live
+  rollback/restart/deploy performed. Production driver00b25de8…736ae48f/config
+  5d7e1fd1…597931 and unit unchanged; public/OLD PIDs492814/492970, NRestarts0,
+  public RUNNING, broker/order calls0, open simulations0 at18:13. **0 clean terminal**.
+- Prepared113252-byte release archive is private; driver97239996…345d6885,
+  fresh public epoch/runtime20261002-paired-observation. Only driver + epoch/runtime
+  metadata differ; old journals remain under their original core/profile pins.
+  Packet receipt and bounded cutover/rollback gates:
+  `reports/ATT1_AGGREGATE_BUDGET_CANDIDATE_2026_10_01.json`.
+- This closes the reproduced defect in the tested candidate, not production
+  continuity or net edge. Existing IOC post-fetch continuity marking is unchanged;
+  certify clean cohort only from existing2s evidence, never receipt labels alone.
+  Next: after Alpaca P0, refresh pins/public-flat gate,
+  execute bounded public-only cutover, capture actual service/rollback receipts,
+  then prospective cohort. NEW orders OFF until2–3 clean filled terminals/net-R.
+  Claude scope PM2(valid v5)/TOLPA_1D(≥90% hourly); SBR1 parked; FX real costs missing.
+  No new Factory/Gold/crypto scope. Foreign allowlist diff preserved.
+
+Earlier continuation (superseded where noted):
+
 
 Latest continuation — **October 1 17:07 UTC / 20:07 Cyprus: LIVE preserved; ATT1 budget blocker reproduced; SBR1 comparison blocked at N=0**:
 - Fresh GET-only Alpaca receipt: AMD/CRWD/META, all3 accepted `new` DAY sell

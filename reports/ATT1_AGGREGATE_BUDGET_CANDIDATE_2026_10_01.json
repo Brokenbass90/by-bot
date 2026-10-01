@@ -1,0 +1,121 @@
+{
+  "as_of_utc": "2026-10-01T18:13:23.403000+00:00",
+  "authority": {
+    "money_authority": false,
+    "orders_allowed": false,
+    "private_api_allowed": false,
+    "promotion_authority": false
+  },
+  "base_git_head": "37ea6c88bb566e50906f3db16300c1ad2eb342a6",
+  "behavior": {
+    "freshness_and_continuity_ms": 2000,
+    "observations": "At most two adjacent eligible sessions fetched together, drained before management; no lookahead past pending exit/protection and no refill during decisions",
+    "shared_transport_limits": "Existing two public slots, eight request starts per second, ten-second transport timeout unchanged",
+    "single_book_and_pending_ioc_paths_preserved": true,
+    "single_journal_writer": true,
+    "strategy_admission_coordinator_risk_unchanged": true,
+    "timestamps": "Original received_ms/cts preserved; prefetched book checked again at consumption"
+  },
+  "delegation": {
+    "critical_review": "gpt-6-astra/high runtime turn_context verified; one review plus bounded fix check; no further workers",
+    "mechanical_capture": "gpt-6-luna/medium runtime turn_context verified; fallback because AGENTS gpt-5.6-luna unavailable in spawn tool"
+  },
+  "deployment_packet": {
+    "archive_bytes": 113252,
+    "archive_sha256": "82ff52d0b9797ce6d88261a2bb618d2139c0f220856de6b0cb27ea176d450cc8",
+    "candidate_config_sha256": "4f35079c591fc744d9624e1231fc9a4329a5bc52f0dde09c4a35b6a8cee1825c",
+    "candidate_driver_sha256": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+    "changed_paths": [
+      "app/configs/research/att1_lifecycle_public_v2.json",
+      "app/scripts/run_att1_lifecycle_zero_risk.py"
+    ],
+    "epoch_id": "att1-public-lifecycle-20261002-paired-observation",
+    "execution_order": [
+      "Oct2 Alpaca DAY re-arm/broker truth remains P0; no production change today.",
+      "Before any cutover, refresh all32 deployed pins, public flat held/pending quantities, heartbeat freshness, free-space guard and service ownership; reject drift or public exposure.",
+      "Back up actual old driver/config/unit with hashes. Stop ONLY att1-lifecycle-zero-risk-v2.service, recheck public flat, hash/retire old journals/epoch/source evidence; if not flat, restart old unchanged and record BLOCKED.",
+      "Use reviewed adjacent-pair driver and new epoch/runtime metadata only. Preserve old dependency closure and source/profile pins; never rewrite existing journal implementation pins. Create fresh runtime owned by bybot-research; reuse only validated closed-H1 cache.",
+      "Atomically replace only driver/config; run target preflight; start ONLY existing public unit. Check fresh RUNNING heartbeat/new epoch, broker/order calls0, public singleton and exact source hashes; verify retired evidence, OLD PID and Alpaca binding/cron hashes.",
+      "On failed checks: stop only public unit, atomically restore pinned old driver/config and restart same public unit on old runtime. Preserve new epoch evidence; record exact deployment and rollback outcomes."
+    ],
+    "manifest_sha256": "70364322d7d0b435fa71dedd8cbeafa12d26ff5d6982ae20437ff6529a69d515",
+    "private_archive": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/att1_budget_20261001/release_ready.tar.gz",
+    "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
+    "rollback": {
+      "file_roundtrip_mac": "PASS",
+      "file_roundtrip_vps": "PASS",
+      "live_runtime_rollback": "NOT_TESTED; no production restart/deploy executed",
+      "restored_config_sha256": "5d7e1fd17888ae1d74f218b431abf121cdbdd98e567324c4fb0aa1b694597931",
+      "restored_driver_sha256": "00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f"
+    },
+    "runtime_dir": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20261002-paired-observation",
+    "status": "PREPARED_NOT_DEPLOYED",
+    "target_staging_directory": "/tmp/att1-budget-release-ready-97239996",
+    "unit_core_profile_strategy_l1_cache_unchanged": true
+  },
+  "foreign_allowlist_diff_preserved_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "limits": [
+    "Isolated tests do not establish production timing under service CPU/memory quotas.",
+    "More books, slower requests, exits, publication or stale source data can still breach2s; fail-closed semantics remain required.",
+    "No prospective gap-free cohort, financial authority or positive net edge established.",
+    "Existing IOC post-fetch continuity marking is unchanged and outside this patch; a clean prospective verdict still requires the existing2s continuity evidence, not merely receipt labels or these tests."
+  ],
+  "next_priorities": {
+    "Claude": "Only PM2 after valid v5 snapshots and TOLPA_1D after>=90% hourly data; user-manager scope, not new research verdict",
+    "FX": "Owner Raw/ECN MT5 demo; NOCHNOY_DREYF needs real spread/swap/commission before net-edge acceptance",
+    "P0": "2026-10-02 13:30UTC/16:30Cyprus existing Alpaca manager DAY expiry/re-arm; first completed cycle/protection by13:35UTC; no manual activation",
+    "SBR1": "Parked; raw signals remain outside admitted/fill/control evidence"
+  },
+  "private_evidence_sha256": {
+    "baseline_archive": "b7db19061048b4039ac829d832f95cc3e678ef1c12fd8b1cade716cc65bd6a88",
+    "target_preflight_and_rollback": "2d9b62cb8227c9584a97e3d1259193a5cda648a56139be51583bad044c69b71b",
+    "target_receipt": "797d41bed665699e9a64723026942d45193eb8aeb1e12fa31718b100fa8563ad"
+  },
+  "production": {
+    "alpaca_actions": false,
+    "both_nrestarts": 0,
+    "broker_calls": 0,
+    "clean_prospective_filled_terminals": 0,
+    "config_sha256": "5d7e1fd17888ae1d74f218b431abf121cdbdd98e567324c4fb0aa1b694597931",
+    "driver_sha256": "00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f",
+    "epoch_id": "att1-public-lifecycle-20260928-observation-timing",
+    "modified": false,
+    "money_gate": "2-3 clean prospective filled terminals with net-R; NEW ATT1 orders remain OFF",
+    "old_crypto_pid": 492970,
+    "open_simulations": 0,
+    "order_calls": 0,
+    "public_pid": 492814,
+    "status": "RUNNING"
+  },
+  "schema_id": "att1_aggregate_budget_candidate_v1",
+  "scope": "Existing public observation driver only; ordered main-thread decisions and journal writes",
+  "status": "MEASURED_SERIAL_DEFECT_FIXED_IN_CANDIDATE_PUBLIC_DEPLOYMENT_PREPARED_NOT_EXECUTED",
+  "tdd": {
+    "coverage": "stale/future, consumption2000/2001ms boundary, identical serial receipts/journal bytes on fixed tape, main writer, pending exits before later observations, fresh new-exit IOC, failed worker",
+    "initial_serial_reproducer": "RED: two fresh1100ms requests produced RECOVERY_GAP; candidate GREEN",
+    "review_priority_regressions": "RED: three regressions exposed starvation; all GREEN after adjacent-pair barrier"
+  },
+  "verification": {
+    "candidate_changes_in_captured_closure": [
+      "app/scripts/run_att1_lifecycle_zero_risk.py"
+    ],
+    "deployed_file_closure_count": 32,
+    "independent_review": "gpt-6-astra/high; P1 starvation fixed and targeted7 tests passed; READY subject to deployed-core gates, now passed",
+    "local_captured_deployed_core_tests": 54,
+    "local_current_core_tests": 54,
+    "local_deployment_config_preflight": "Rejected VPS-only L1 cache path on Mac; final preflight verified on VPS",
+    "local_python": "3.12.8",
+    "old_journal_bytes_identical": true,
+    "old_receipts_identical": true,
+    "old_records_replayed": 113,
+    "old_sessions_replayed": 9,
+    "old_state_sha256": "3f71b429acd134265eec9ddc147b75084ce533ec11c9c0fa2cfcf287cc16189e",
+    "synthetic_cases": 2,
+    "synthetic_public_restart_oracle": "PASS; synthetic arithmetic, not realized net edge",
+    "synthetic_restart_boundaries": 23,
+    "target_preflight": "PASS, network_used=false, runtime_mutated=false",
+    "vps_pytest_output": "54 passed in 29.40s",
+    "vps_python": "3.12.3",
+    "vps_tests": 54
+  }
+}

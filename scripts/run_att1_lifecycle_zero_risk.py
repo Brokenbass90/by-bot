@@ -18,7 +18,7 @@ import signal as signal_module
 from copy import deepcopy
 from collections import deque
 from contextlib import contextmanager
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, wait
 from threading import BoundedSemaphore, Lock, Event
 from urllib.request import Request, HTTPRedirectHandler, ProxyHandler, build_opener
 from urllib.parse import urlencode
@@ -566,7 +566,7 @@ class PublicLifecycleRuntime:
         self.start_ms=self.clock();self.start_state=self.state()
         self.last_observed={};self.last_funding={};self.scanned=set();self.scan_close=None
         self.poll_errors={};self.scan_results={};self.get_count=0;self.running=True
-        self.scan_executor=None;self.scan_future=None
+        self.scan_executor=None;self.scan_future=None;self.observation_executor=None
         self.public_slots=BoundedSemaphore(2);self.public_rate_lock=Lock();self.next_public_start=0.0
 
     def state(self):
@@ -613,7 +613,7 @@ class PublicLifecycleRuntime:
     def _get_timed(self,path,symbol,**params):
         params={'category':'linear','symbol':symbol,**params}
         with self.public_slots:
-            # One scan worker and the management thread share a conservative
+            # Scan, observation workers and management share a conservative
             # request-start budget. Hold no journal lock while waiting on I/O.
             with self.public_rate_lock:
                 wait=max(0.0,self.next_public_start-time.monotonic())
@@ -681,14 +681,19 @@ class PublicLifecycleRuntime:
         self.execute_ioc(session,entry=True)
         return session
 
-    def _book(self,symbol):
-        raw,rx=self._get('/v5/market/orderbook',symbol,limit=50)
+    def _book(self,symbol,*,observation=None):
+        raw,rx=(self._get('/v5/market/orderbook',symbol,limit=50)
+                if observation is None else observation)
         result=raw['result']
+        if result['s']!=symbol:raise RunnerViolation('observation symbol mismatch')
         snapshot={k:result[k] for k in ('ts','cts','u','seq','b','a')}
         _snapshot_levels(snapshot,'bid');_snapshot_levels(snapshot,'ask')
         if Fraction(snapshot['b'][0][0])>Fraction(snapshot['a'][0][0]):raise RunnerViolation('crossed book')
-        if snapshot['cts']>rx or rx-snapshot['cts']>2000:
-            source=self._save_source({'public_response':raw,'received_ms':rx,'rejected':'future/stale public book'})
+        consumed=self.clock() if observation is not None else rx
+        if snapshot['cts']>rx or rx-snapshot['cts']>2000 or consumed<rx or consumed-snapshot['cts']>2000:
+            rejected={'public_response':raw,'received_ms':rx,'rejected':'future/stale public book'}
+            if observation is not None:rejected['consumed_ms']=consumed
+            source=self._save_source(rejected)
             raise PublicBookTimeViolation(source)
         return snapshot,rx,raw
 
@@ -737,7 +742,7 @@ class PublicLifecycleRuntime:
                 # A simulated IOC cannot remain outstanding across process recovery.
                 self._emit(session,'ENTRY_FINAL',status='CANCELLED')
 
-    def manage(self,session):
+    def manage(self,session,*,observation=None):
         receipt=session.receipt;p=receipt['plan'];decision=p['decision_id']
         if Fraction(receipt['held_qty'])<=0 and receipt['pending_exit'] is None:
             return
@@ -750,7 +755,7 @@ class PublicLifecycleRuntime:
                 self._emit(session,'EXIT_FINAL',exit_order_id=session.receipt['pending_exit']['exit_order_id'],status='CANCELLED')
             else:
                 self.execute_ioc(session);return
-        snapshot,rx,raw=self._book(p['symbol'])
+        snapshot,rx,raw=self._book(p['symbol'],observation=observation)
         self._mark_observation_gap(session,rx)
         self.last_observed[decision]=rx
         source=_hash({'public_response':raw,'received_ms':rx})
@@ -867,10 +872,33 @@ class PublicLifecycleRuntime:
 
     def tick(self):
         if shutil.disk_usage(self.root).free<self.config['min_free_bytes']:raise RunnerViolation('runtime free space guard')
-        for session in list(self.sessions.values()):
+        sessions=list(self.sessions.values())
+        # Workers fetch/validate public responses only. Book freshness, decisions,
+        # source persistence and lifecycle journal mutation stay on this thread.
+        def eligible(session):
+            return (Fraction(session.receipt['held_qty'])>0
+                    and session.receipt['pending_exit'] is None
+                    and session.receipt['intents']['protect_qty']=='0')
+        observations={}
+        for index,session in enumerate(sessions):
             decision=session.receipt['plan']['decision_id']
+            pair=sessions[index:index+2]
+            if not observations and len(pair)==2 and all(eligible(s) for s in pair):
+                if self.observation_executor is None:
+                    self.observation_executor=ThreadPoolExecutor(max_workers=2,thread_name_prefix='att1-public-book')
+                observations={s.receipt['plan']['decision_id']:self.observation_executor.submit(
+                    self._get,'/v5/market/orderbook',s.receipt['plan']['symbol'],limit=50) for s in pair}
+                # Drain this pair before decisions can require a fresh exit IOC.
+                # Never look past an earlier pending/protection session or refill
+                # while main-thread management still needs the public slots.
+                wait(observations.values())
             try:
-                with self._timed('manage',decision_id=decision):self.manage(session)
+                with self._timed('manage',decision_id=decision):
+                    observation=None;future=observations.pop(decision,None)
+                    if future is not None:
+                        self._mark_observation_gap(session,self.clock())
+                        observation=future.result()
+                    self.manage(session,observation=observation)
                 self.poll_errors.pop(decision,None)
             except PublicBookTimeViolation as exc:
                 if 'RECOVERY_GAP' not in session.receipt['incidents']:
@@ -943,6 +971,7 @@ class PublicLifecycleRuntime:
             self.publish('STOPPED' if not once else 'ONCE_COMPLETE')
         finally:
             if self.scan_executor is not None:self.scan_executor.shutdown(wait=True,cancel_futures=True)
+            if self.observation_executor is not None:self.observation_executor.shutdown(wait=True,cancel_futures=True)
             os.close(lock)
 
 

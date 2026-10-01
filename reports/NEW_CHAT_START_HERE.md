@@ -48,6 +48,11 @@ sealed evidence или доверия ради красивого PASS. Не п�
   0 clean terminal,8 gaps,0 открытых simulations. AVAX/DOGE/PAXG закрыты dirty.
   Gate2–3 clean terminal не пройден. Новые gaps и локальное воспроизведение
   serial2s budget — `CONTINUATION_EVIDENCE_2026_10_01.json`; PAXG book был stale2643ms.
+- ATT1 engineering18:13UTC: узкий adjacent-pair candidate прошёл54 теста локально
+  и на VPS с фактическим deployed core; replay9 сессий/113 записей идентичен.
+  Public deployment/новый epoch подготовлены, **не выполнены**; production driver
+  сохранён, live rollback не проверялся. Точный пакет и gates:
+  `ATT1_AGGREGATE_BUDGET_CANDIDATE_2026_10_01.json`.
 - LTC id257:0.4 entry закрыт двумя0.2 exits; последний0.2 SL корректен для остатка.
   Непрерывная первоначальная защита исторически не доказана; не выдумывай её.
 - Research Claude находится в другом checkout. Не перепутай ветки и данные.
@@ -64,20 +69,23 @@ sealed evidence или доверия ради красивого PASS. Не п�
 переключение выполняет владелец; Codex готовит, проверяет и наблюдает read-only.
 Наличие старого разрешения не даёт нового размера риска или другой стратегии.
 
-**P1: довести ATT1.** Не создавать новый coordinator/ledger. Существующий orders-OFF
-binding сохраняется. Для новых gaps извлекать измеренную причину: время запроса,
+**P1: довести ATT1.** После Alpaca P0 — fresh public-flat/source-pins gate и bounded
+public-only cutover подготовленного aggregate-budget candidate с новым epoch и
+rollback receipt. Не ставить local newer coordinator поверх старых journal pins.
+Не создавать новый coordinator/ledger. Существующий orders-OFF binding сохраняется.
+Для новых gaps извлекать измеренную причину: время запроса,
 scheduler/state/journal и доступную системную нагрузку. Не ослаблять2s. Обновлять
 причину по evidence, не объявлять VPS или Bybit виновным по одному впечатлению.
 После clean cohort — fresh exact OLD absolute risk, exclusive handoff dossier,
 явный owner step. Пока рынок не дал сигнал, есть другие ограниченные полезные задачи.
 
-**P2: существующие зацепки.** Сначала согласовать с фактическим registry и работой
-Claude: SBR1, XSEC PIT, Bull Continuation, отдельные long/range семейства, Elder/ETS2M,
-Gold/FX. Не начинать заново уже сделанное. Для каждой: evidence → текущий статус →
-один next_gate → owner → исполнимый шаг. Старые +22.35R/PF2.14 — lead, не live edge.
-Не менять очередь механически, если существующее evidence показывает более короткий путь.
+**P2: текущие зацепки.** Owner-manager scope01.10: Claude только PM2 после валидных
+v5 snapshots и TOLPA_1D после≥90% hourly data. Сначала verify actual branch/registry.
+SBR1 паркуется; XSEC/Bull Continuation и Gold H1 не реанимировать. FX external step:
+Raw/ECN MT5 demo с реальными spread/swap/commission для NOCHNOY_DREYF.
+Новых research-направлений до terminal verdict этих линий не открывать.
 
-**P3: Factory и новые механизмы.** Только после приоритета защиты LIVE и сверки
+**P3: Factory и новые механизмы.** Сейчас отложены. Только после приоритета защиты LIVE и сверки
 существующих дефектов evidence-acceptance. Используй текущий `reestr.json`, очередь,
 runner/judge и promotion packets. Цель — автономное исследование до READY_FOR_BUILD,
 затем независимая production-проверка; никакого самостоятельного наделения деньгами.
