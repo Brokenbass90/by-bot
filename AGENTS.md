@@ -52,6 +52,16 @@ checkpoint. Report raw signals separately from independent trades and net edge.
 
 ## Coordination with Claude
 
+October 1 clarification: authoritative research work is on
+`research/fabrika-v1`, committed through Git plumbing. The sibling checkout's
+`codex/dynamic-symbol-filters` HEAD is intentionally unchanged and does not imply
+branch drift. Read current `research_lab/KARTA.md` from the research ref (use
+`git show research/fabrika-v1:research_lab/KARTA.md`), especially its Codex-sync
+section; old September handoffs, STRATEGY_MASTER and reestr are historical maps.
+Verify local research ref and actual origin separately, without switching or
+cleaning Claude's dirty checkout. Current Claude scope is PM2 and TOLPA_1D only;
+Factory remains OFF. Production/Alpaca/ATT1/VPS/cron remain Codex scope.
+
 As of September 19 the owner assigns Alpaca operational delivery to Codex;
 Claude owns existing registry/Factory and Gold research, with bounded fallback
 on external-data blockers. Do not duplicate forensic strategy research or modify

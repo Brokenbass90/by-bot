@@ -56,7 +56,15 @@ sealed evidence или доверия ради красивого PASS. Не п�
 - LTC id257:0.4 entry закрыт двумя0.2 exits; последний0.2 SL корректен для остатка.
   Непрерывная первоначальная защита исторически не доказана; не выдумывай её.
 - Research Claude находится в другом checkout. Не перепутай ветки и данные.
-  Текущий research branch отличается от старого handoff; сначала verify, потом merge/push.
+  Его рабочий ref — research/fabrika-v1 через Git plumbing; выписанная
+  codex/dynamic-symbol-filters намеренно не меняется, это не рассинхрон.
+  Читай git show research/fabrika-v1:research_lab/KARTA.md, особенно синхронизацию
+  с Codex. Старые HANDOFF_CLAUDE/STRATEGY_MASTER/reestr — исторические карты.
+  Local497600d и actual origin5ce1402 на вечернем read различались: refresh remote
+  отдельно. Не переключай/чисти чужой checkout и не merge вслепую.
+- TOLPA_1D: cheap-screen SURVIVED при96.9% coverage; +16.3bps/day после модельных
+  12bps/funding, t_NW2.14,1283 дня, половины1.5/31. Это не подтверждённый net edge.
+  Следующий шаг Claude — дневной prospective judge; weekly L1 evidence не складывать.
 - SBR1 уже проверен по свежему VPS journal:47,968 events,53 raw signals,0 admitted/
   fills/outcomes,control отсутствует. Это raw pre-parity, не N50; сравнение с control
   блокируется существующими lifecycle/control prerequisites. XSEC exact PIT и Bull
@@ -80,7 +88,10 @@ scheduler/state/journal и доступную системную нагрузк�
 явный owner step. Пока рынок не дал сигнал, есть другие ограниченные полезные задачи.
 
 **P2: текущие зацепки.** Owner-manager scope01.10: Claude только PM2 после валидных
-v5 snapshots и TOLPA_1D после≥90% hourly data. Сначала verify actual branch/registry.
+v5 snapshots и prospective TOLPA_1D: ≥90% hourly/cheap-screen уже пройдены.
+PM2: только v5 с01.10 16:09:19UTC, финал после≥3 календарных дат данных по frozen
+judge; до этого диагностика, после EXECUTABLE отдельный execution gate.
+Сначала verify research ref/origin и актуальную KARTA, а не checkout HEAD.
 SBR1 паркуется; XSEC/Bull Continuation и Gold H1 не реанимировать. FX external step:
 Raw/ECN MT5 demo с реальными spread/swap/commission для NOCHNOY_DREYF.
 Новых research-направлений до terminal verdict этих линий не открывать.

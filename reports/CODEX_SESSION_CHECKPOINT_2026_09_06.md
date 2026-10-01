@@ -2,6 +2,34 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October 1 evening: Claude research ref/map correction; TOLPA_1D cheap-screen synced, no runtime changes**:
+- Corrected earlier interpretation: research work is `research/fabrika-v1` via
+  Git plumbing. Checkout codex/dynamic-symbol-filters@76fc63c intentionally stays
+  unchanged; this is not branch drift. Local research ref497600d vs actual origin
+  5ce1402 during18:57UTC sync; publication still pending at that read. No Codex
+  research push/merge, checkout switch, dirty-file edits or research rerun.
+- Current research entry is `git show research/fabrika-v1:research_lab/KARTA.md`,
+  section "Синхронизация с Codex". HANDOFF_CLAUDE/STRATEGY_MASTER/reestr are history.
+  Read immutable ref blobs, do not equate working-copy HEAD with research commits.
+- TOLPA_1D result at497600d verified against result JSON and source: SURVIVED,
+  coverage96.9%,16.3bps/day after model12bps plus funding,t_NW2.14,1283 days,
+  halves1.5/31bps. This is a borderline cheap-screen, not confirmation or broker
+  net-edge evidence. Same family as weekly L1; no evidence addition. Claude next
+  writes/freeze prospective daily judge, preserving packet8 rules. Existing
+  tolpa_vpered.py is weekly L1, not that pending daily judge.
+- PM2 source/map agree: only v5 afterOct1 16:09:19UTC; ≥3 calendar data dates in
+  frozen judge, diagnostics earlier. EXECUTABLE remains pricing-screen evidence,
+  separate both-leg/cost/execution gate before money. Claude scope only these2.
+- Factory stoppedSep30/not restarted is Claude's statement, not a new independent
+  process-history audit; keep OFF. FX CONFIRMED/COST_GATE_PENDING, not net edge;
+  ETS2M earliestOct10 19:00UTC; SBR1 parked. No new research families/thresholds.
+- Codex production facts below retain their original timestamps; no fresh broker
+  or VPS check in this Git/docs-only cycle. Alpaca Oct2 13:30UTC/16:30Cyprus re-arm
+  remains P0; then bounded ATT1 public cutover. Candidate88fd734 not deployed;
+  NEW crypto orders OFF. Foreign allowlist file preserved; own handoff updated.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **October 1 18:13 UTC / 21:13 Cyprus: ATT1 aggregate-budget candidate verified; public deployment prepared, not executed**:
 - Owner-manager scope: no new LIVE today; Alpaca unchanged. Oct2 DAY expiry/re-arm
   remains P0 at13:30UTC/16:30Cyprus; observe the existing manager, then direct broker

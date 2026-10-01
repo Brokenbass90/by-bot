@@ -249,15 +249,27 @@ is a historical lead, not fresh/live profitability. Strategy diversification is
 a goal; it is not permission to force trades or loosen admissions.
 
 Research owner Claude: sibling `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28`.
-Actual checkout observed branch **codex/dynamic-symbol-filters**, HEAD
-`76fc63ccbe43197e24452e3e4e28ae79a719e4ef`. Old handoff says research/fabrika-v1:
-**branch mismatch — verify before any push/merge, do not use old command blindly**.
-Read only these entry points before bounded reconciliation:
+Authoritative research branch is **research/fabrika-v1**, commits via Git plumbing.
+Oct1 18:57UTC local ref `497600d0340c5fefb9720746240c7f11c4db7cc4`; actual origin
+read `5ce1402fe45ebe9cd0809de9fa5346aeb4b12485` during this sync, so latest two
+research commits were not yet published at that observation. Refresh origin
+before calling497600d remote. No research push/merge/checkout mutation by Codex.
+The deliberately unchanged working checkout **codex/dynamic-symbol-filters**,
+HEAD `76fc63ccbe43197e24452e3e4e28ae79a719e4ef`, is not the research work ref.
+Earlier "branch mismatch" interpretation was incorrect and is superseded here.
+Read `research_lab/KARTA.md` from the immutable research ref, especially
+"Синхронизация с Codex"; use `git show research/fabrika-v1:research_lab/KARTA.md`.
+Old HANDOFF_CLAUDE_2026_09_30*, STRATEGY_MASTER and reestr.json are historical maps.
+The frozen Alpaca packet retains its independent operational lineage; the old
+CODEX_ATT1_ONE_SESSION_HANDOFF is superseded for native-SL wiring.
 
-- `research_lab/HANDOFF_CLAUDE_2026_09_30-1.md` and `HANDOFF_CLAUDE_2026_09_30.md`.
-- `research_lab/STRATEGY_MASTER.md`, `research_lab/data/reestr.json` (existing registry).
-- `research_lab/pakety/PROMOTION_PACKET_ALPACA_INTENDED.md` (frozen packet).
-- `research_lab/CODEX_ATT1_ONE_SESSION_HANDOFF_2026_09_30.md` is superseded for native-SL wiring.
+TOLPA_1D cheap-screen at497600d: SURVIVED, edge16.3bps/day with model12bps/funding,
+t_NW2.14,1283 days, halves1.5/31bps, coverage96.9%. Result/source read, not rerun;
+same family as weekly L1, evidence must not be added. Next Claude step is a
+separate frozen prospective judge; the existing tolpa_vpered.py is weekly L1.
+PM2 evidence only valid v5 from Oct1 16:09:19UTC; frozen judge requires at least
+three calendar data dates, preliminary diagnostics before then. EXECUTABLE means
+pricing-screen evidence and still needs both-leg/cost/execution gates before money.
 
 Claude handoff reports Factory acceptance-guard defects and exhausted O1/O2 windows;
 daemon stopped, equities BLOCKED_DATA on survivorship/universe, not merely two tickers.
