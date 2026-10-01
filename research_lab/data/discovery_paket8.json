@@ -1,0 +1,14 @@
+{
+ "n": 1283,
+ "dney": 1283,
+ "edge_bps": 16.3,
+ "t": 2.14,
+ "polovinki_bps": [
+  1.5,
+  31.0
+ ],
+ "syroy_bps": 16.3,
+ "verdikt": "SURVIVED",
+ "prichina": "t≥2, обе половины > 0, сырой доход > 0",
+ "pokrytie": 0.969
+}
