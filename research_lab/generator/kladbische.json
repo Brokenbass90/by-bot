@@ -162,5 +162,33 @@
  {
   "semya": "EQ_FROG_IN_PAN",
   "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "INFORMATION_FLOW",
+  "prichina": "генератор, сессия 3 (qwen3): t 2.2 < 2.81"
+ },
+ {
+  "semya": "MARKET_MICROSTRUCTURE",
+  "prichina": "сессия 3: эдж < 0"
+ },
+ {
+  "semya": "ORDER_BOOK_IMBALANCE",
+  "prichina": "сессия 3: эдж < 0"
+ },
+ {
+  "semya": "PRICE_ADJUSTMENT_DELAY",
+  "prichina": "сессия 3: 0 событий"
+ },
+ {
+  "semya": "ORDER_FLOW_MISMATCH",
+  "prichina": "сессия 3: t 1.07, 29 дат"
+ },
+ {
+  "semya": "PRICE_DISLOCATION",
+  "prichina": "сессия 3: эдж < 0"
+ },
+ {
+  "semya": "OVERNIGHT_VOLUME",
+  "prichina": "сессия 3: экран +692 bps t 5.06, но на бумагах, доступных для шорта, с издержками ворот: +222 bps, t НВ 1.54, 2026 −18 — эффект в трудных для заёма; не исполнимо"
  }
 ]
