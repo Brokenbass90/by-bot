@@ -9,9 +9,12 @@
 Исполнимый размер — минимум объёмов на лучшем уровне двух ног (в долях, $ = доли × цена).
 
 Данные: data/poly/snimki/*.jsonl, kat == "strike" (сборщик v5), дубли (t, conditionId) убираются.
-Вердикт (минимум 3 календарных дня снимков):
+Вердикт (минимум 3 календарных дня снимков; раньше — только предварительная диагностика):
   EXECUTABLE — нарушений с прибылью ≥ 2¢ после издержек и размером ≥ $20: ≥ 10 кругов на ≥ 3 разных днях;
   NOT_EXECUTABLE — иначе; ЖДЁМ — меньше 3 дней данных.
+EXECUTABLE здесь — только «ценовая несогласованность есть». До LIVE отдельные ворота исполнимости (не меняют этого
+судью): обе ноги реально исполнимы нужным объёмом, реальная модель комиссий, никакого голого шорта (только покупка
+YES и покупка NO), риск неатомарного исполнения ног.
     python3 research_lab/pm2_monotonnost.py
 """
 import collections, glob, json, re
@@ -19,6 +22,8 @@ from pathlib import Path
 
 D = Path(__file__).resolve().parent / "data/poly/snimki"
 IZD = 0.02; MIN_PRIB = 0.02; MIN_USD = 20.0
+GRANICA_MS = 1790870959643      # 2026-10-01 16:09:19 UTC — первый валидный снимок v5 после перезапуска одним сборщиком.
+                                # Всё раньше (v4, дубли четырёх сборщиков) в вердикт не входит. Уточнение 01.10 до данных.
 RE_K = re.compile(r"above\s*\$?([\d,\.]+)\s*(k)?", re.I)
 
 
@@ -38,7 +43,7 @@ def main():
             if '"strike"' not in l:
                 continue
             z = json.loads(l)
-            if z.get("kat") != "strike":
+            if z.get("kat") != "strike" or z.get("otbor") != "v5" or z["t"] < GRANICA_MS:
                 continue
             K = strike(z)
             if K is None or not z["bids"] or not z["asks"]:
@@ -59,7 +64,7 @@ def main():
                     narush.append((t, ev, K1, K2, round(prib, 3), round(razm, 1)))
     po_dnyam = collections.Counter(__import__("time").strftime("%Y-%m-%d", __import__("time").gmtime(t / 1000)) for t, *_ in narush)
     krugov = len({(t, ev) for t, ev, *_ in narush})
-    v = ("ЖДЁМ" if len(dni) < 3 else
+    v = ("ПРЕДВАРИТЕЛЬНО (диагностика, не вердикт)" if len(dni) < 3 else
          "EXECUTABLE" if krugov >= 10 and len(po_dnyam) >= 3 else "NOT_EXECUTABLE")
     print(f"PM2: дней {len(dni)}, кругов лестниц {len(kruge)}, нарушений {len(narush)} в {krugov} кругах, по дням {dict(po_dnyam)} → {v}")
     for x in sorted(narush, key=lambda x: -x[4])[:5]:

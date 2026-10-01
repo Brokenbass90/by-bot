@@ -176,7 +176,7 @@ def pozicii(chas):
                 st["ryad"] = [[t, m[t]] for t in sorted(m)]; st["end"] = max(m)
                 fo.write_text(json.dumps(st))
         p.write_text(json.dumps(z))
-        print(f"{i+1:>3}/{len(simvoly)} {s}: lsr {len(lsr)}" + (f", oi {len(z['oi'])}" if chas else ""), flush=True)
+        print(f"{i+1:>3}/{len(simvoly)} {s}: lsr {len(lsr)}" + (f", oi {len(z['oi'])}" if "oi" in z else ""), flush=True)
     (out / "_net_dannyh.json").write_text(json.dumps(net))
     print("готово. биржа не отдала:", len(net), "из", len(simvoly))
 
