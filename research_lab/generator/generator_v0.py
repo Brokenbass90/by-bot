@@ -41,6 +41,8 @@ def dannye():
     dates, px, cs = A.zagruzit()
     k = sum(1 for d in dates if d < GRAN)
     dates = dates[:k]
+    px = {t: {i: v for i, v in d.items() if i < k} for t, d in px.items()}   # окно после GRAN физически отрезано
+    px = {t: d for t, d in px.items() if d}
     tick, O, C, U = A.matricy(dates, px)
     with np.errstate(all="ignore"):
         r1 = C[1:] / C[:-1] - 1; r1 = np.vstack([np.full(C.shape[1], np.nan), r1])
@@ -78,7 +80,7 @@ def proverit(k, D):
     sob = []
     if k["tip"] == "xs":
         x = k["xs"]; h = int(x["hold"])
-        for i0 in range(60, len(dates) - h, h):
+        for i0 in range(60, len(dates) - h, 5):          # ребаланс раз в 5 дней, перекрытие учтено НВ
             un = A.vselennaya(C, U, i0); f = priznak(x["priznak"], i0, O, C, U, r1, noch, den)
             if f is None:
                 continue
@@ -110,7 +112,8 @@ def proverit(k, D):
             r = [z - st * m - A.KOM for z in r if z is not None and m is not None]
             if r:
                 sob.append((i0 * P.DEN, float(np.mean(r)), None))
-    return P.itog(sob, s_kontrolem=False)
+    lag = (int(k["xs"]["hold"]) // 5) if k["tip"] == "xs" else int(k["sobytie"]["hold"])
+    return P.itog(sob, s_kontrolem=False, lag=lag)      # t Ньюи–Уэста: удержания перекрываются
 
 
 def kladbische():

@@ -130,5 +130,37 @@
  {
   "semya": "NOCHNOY_DREYF",
   "prichina": "живое (FX), варианты запрещены"
+ },
+ {
+  "semya": "EQ_LOW_VOL",
+  "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "EQ_MOMENTUM_60",
+  "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "EQ_OVERNIGHT_CLIENTELE",
+  "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "EQ_INTRADAY_INSTITUTIONAL",
+  "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "EQ_LOW_PRICE",
+  "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "EQ_ILLIQUIDITY",
+  "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "EQ_QUIET_DROP_REVERSAL",
+  "prichina": "генератор, сессия 1 (01.10)"
+ },
+ {
+  "semya": "EQ_FROG_IN_PAN",
+  "prichina": "генератор, сессия 1 (01.10)"
  }
 ]

@@ -64,7 +64,19 @@ def sdelka(x, i, hold, side):
     return r
 
 
-def itog(sob, s_kontrolem=True):
+def t_nw(v, lag):
+    """t среднего с поправкой Ньюи–Уэста: соседние даты с перекрывающимся удержанием коррелированы,
+    обычный t их считает независимыми и завышает. lag = длина удержания в наблюдениях."""
+    v = np.asarray(v, float); n = len(v)
+    if n < 3:
+        return 0.0
+    e = v - v.mean(); g0 = float(e @ e) / n; s = g0
+    for k in range(1, min(lag, n - 1) + 1):
+        s += 2 * (1 - k / (lag + 1)) * float(e[k:] @ e[:-k]) / n
+    return float(v.mean() / math.sqrt(s / n)) if s > 0 else 0.0
+
+
+def itog(sob, s_kontrolem=True, lag=0):
     """sob: список (ts_входа, доход, доход_контроля|None). t по кластерам дат."""
     if len(sob) < 20:
         return dict(n=len(sob), verdikt="KILLED", prichina=f"мало событий ({len(sob)})")
@@ -73,6 +85,8 @@ def itog(sob, s_kontrolem=True):
         po_dnyam[t // DEN].append(r - (k if (s_kontrolem and k is not None) else 0.0))
     dni = sorted(po_dnyam); v = np.array([np.mean(po_dnyam[d]) for d in dni])
     m = v.mean(); t = m / (v.std(ddof=1) / math.sqrt(len(v))) if len(v) > 2 and v.std() > 0 else 0.0
+    if lag:                      # перекрывающиеся удержания: t Ньюи–Уэста (добавлено 01.10, по умолчанию выключено)
+        t = t_nw(v, lag)
     h = len(v) // 2; m1, m2 = v[:h].mean(), v[h:].mean()
     syroy = float(np.mean([r for _, r, _ in sob]))          # то, что реально попадёт на счёт
     ok = m > 0 and t >= 2.0 and m1 > 0 and m2 > 0 and syroy > 0
@@ -256,7 +270,7 @@ def C8V(M):
     po = defaultdict(list)
     for _, t, r in rows:
         po[t // DEN].append(r)
-    v = np.array([np.mean(q) for q in po.values()]); t_ = v.mean() / (v.std(ddof=1) / math.sqrt(len(v)))
+    v = np.array([np.mean(po[d]) for d in sorted(po)]); t_ = t_nw(v, 7)    # 01.10: НВ-поправка, до данных
     r = np.array([q for *_, q in rows]); plus = defaultdict(float)
     for s, _, q in rows:
         plus[s] += q
