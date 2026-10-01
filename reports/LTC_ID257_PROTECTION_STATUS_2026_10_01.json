@@ -1,0 +1,33 @@
+{
+  "entry_db_id": 257,
+  "symbol": "LTCUSDT",
+  "status": "QUANTITY_DISCREPANCY_EXPLAINED_CLOSED_FLAT",
+  "entry_qty": "0.4",
+  "entry_price": "71.87",
+  "exits": [
+    {
+      "qty": "0.2",
+      "price": "70.96",
+      "execution_ms": 1790514435615,
+      "stop_order_type": "",
+      "reduce_only": true
+    },
+    {
+      "qty": "0.2",
+      "price": "70.99",
+      "execution_ms": 1790514450383,
+      "stop_order_type": "StopLoss",
+      "reduce_only": true
+    }
+  ],
+  "seconds_between_exits": 14.768,
+  "gross_usdt": "0.358",
+  "execution_fees_usdt": "0.0314259",
+  "price_pnl_less_execution_fees_usdt": "0.3265741",
+  "db_close_net_usdt": "0.3265741",
+  "funding_note": "Funding transactions not independently queried here; execution-fee net matches recorded DB net. No broader lifetime cost-finality claim.",
+  "current_position_qty": "0",
+  "initial_stop_and_continuous_full_qty_protection": "NOT_PROVEN_FROM_FINAL_ORDER_SNAPSHOT",
+  "conclusion": "0.2 final SL matches remaining0.2 after earlier reduce-only buy; not proof original0.4 was half protected. Generic reduce-only exit is not attributed to TP1 without runner evidence. No OLD change warranted solely by this quantity discrepancy.",
+  "raw_evidence_sha256": "9d9e5418dab428abef0d32802d3e2889a4e3394e3db1b738f3b7db94136f4869"
+}

@@ -3,6 +3,34 @@
 ## Public continuation checkpoint
 
 
+Latest continuation — **October 1 14:18 UTC: migration truth refreshed, no trading changes**:
+- NEW CHAT START: `reports/MASTER_HANDOFF.md` + `reports/NEW_CHAT_START_HERE.md`.
+  Master includes exact production state, jobs, Oct2 PASS/FAIL/ALERT protocol,
+  read-only commands, DO NOT TOUCH, Claude pointers and future delivery priorities.
+- Alpaca next maintenance14:15UTC LIVE_CYCLE_COMPLETE; all3 owned positions/stops
+  still broker-matched, floors/HWM retained, exactly1 NEW money cron/zero OLD.
+  Next mandatory check Oct2 13:30UTC/16:30Cyprus: actual DAY expiry/re-arm and
+  broker ownership/protection, same manager. No live restart/kill experiment.
+- ATT1 FRESH counters supersede previous snapshot:7 sessions,6 filled simulations,
+  1 nonfill,0 clean terminal,5 RECOVERY_GAP,1 open AVAX simulationqty1. 68 H1 cycles
+  each51/51; duplicate journal IDs0. Four gaps AFTER resize: stale/future2,
+  polling continuity2. Preserve evidence/2s gate. Do not claim resize fixed gaps.
+  Both OLD/public service starts now Sep30 06:17UTC, NRestarts0 since those starts;
+  start reason/actor not investigated in documentation-only scope.
+- LTC id257 quantity question RESOLVED: broker entry0.4, first reduce-only exit0.2,
+  then stop remaining0.2 after14.768s. All flat, execution-fee net+0.3265741 matches
+  DB close. Initial/continuous full protection remains NOT_PROVEN; no code fix
+  needed solely for0.4/0.2 discrepancy. See dedicated LTC receipt.
+- SBR timer active/last unit failed vs Claude's healthy-data claim preserved as
+  different evidence levels. Research checkout now codex/dynamic-symbol-filters,
+  HEAD76fc63c; old research/fabrika-v1 handoff command must not be followed blindly.
+  Factory acceptance defects/stopped-daemon claim read only; not fixed/restarted.
+- Unrelated configs/allowlist_change_log.json preserved. No credentials committed.
+  Migration summary `reports/MIGRATION_STATE_2026_10_01.json`; raw private only.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **October 1 14:11 UTC / 17:11 Cyprus: ALPACA LIVE FIRST FILLS + DAY PROTECTION CONFIRMED**:
 - Owner personally executed activation script; backup owner_activation_20261001T140549Z.
   Codex performed GET-only postcheck, no financial writes. DO NOT rerun activation.

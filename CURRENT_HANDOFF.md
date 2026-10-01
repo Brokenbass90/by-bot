@@ -1,3 +1,12 @@
+# Current handoff — 2026-10-01
+
+Start with `reports/MASTER_HANDOFF.md`, then `reports/NEW_CHAT_START_HERE.md`
+and the TOP of `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`.
+Alpaca is LIVE with owned protected positions; never rerun activation.
+ATT1 NEW orders remain OFF. Older snapshots below are archived, not current authority.
+
+## Archived pointer and historical handoff
+
 # Current handoff — 2026-09-06
 
 Canonical tree: `bybit-bot-recovery-20260824`.

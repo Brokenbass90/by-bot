@@ -1,0 +1,84 @@
+{
+  "observed_utc": "2026-10-01T14:18:29.790000+00:00",
+  "branch": "codex/recovery-20260824",
+  "head_before_handoff_commit": "f361f7e80739afbb46514e59746a91b02734f7ba",
+  "scope": "migration documentation and read-only evidence; no trading logic/runtime modifications",
+  "alpaca": {
+    "enabled": true,
+    "capital": 487.42,
+    "gross": 0.7,
+    "positions": [
+      {
+        "symbol": "AMD",
+        "qty": 0.186377282,
+        "entry_price": 609.57,
+        "hwm": 609.57,
+        "accepted_stop_floor": 560.9,
+        "accepted_order_tif": "day",
+        "broker_match": true
+      },
+      {
+        "symbol": "CRWD",
+        "qty": 0.469970151,
+        "entry_price": 265.336,
+        "hwm": 265.336,
+        "accepted_stop_floor": 242.13,
+        "accepted_order_tif": "day",
+        "broker_match": true
+      },
+      {
+        "symbol": "META",
+        "qty": 0.141939508,
+        "entry_price": 724.534,
+        "hwm": 724.66,
+        "accepted_stop_floor": 668.76,
+        "accepted_order_tif": "day",
+        "broker_match": true
+      }
+    ],
+    "latest_status": "LIVE_CYCLE_COMPLETE",
+    "latest_cycle": "2026-10-01T14:15:05.810203+00:00",
+    "next_open": "2026-10-02T09:30:00-04:00",
+    "next_close": "2026-10-01T16:00:00-04:00",
+    "single_new_cron": 1,
+    "old_processes": 0,
+    "old_cron_count": 0,
+    "hashes_match": true
+  },
+  "att1": {
+    "sessions": 7,
+    "filled_sessions": 6,
+    "clean_terminal": 0,
+    "nonfill_sessions": 1,
+    "recovery_gaps": 5,
+    "open_simulated_positions": [
+      [
+        "AVAXUSDT",
+        "1"
+      ]
+    ],
+    "duplicate_event_ids": 0,
+    "full51_h1_cycles": 68,
+    "heartbeat_age_ms": 480,
+    "missing_external_transitions": "NOT_PROVEN",
+    "canary_ready": false,
+    "deployed_source_hashes": {
+      "scripts/run_att1_lifecycle_zero_risk.py": "00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f",
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    }
+  },
+  "ltc_id257": "QUANTITY_DISCREPANCY_EXPLAINED_CLOSED_FLAT; continuous initial protection NOT_PROVEN",
+  "sbr1": "timer active; last service result failed. Claude research-health claim separately attributed, no dataset-health conclusion here.",
+  "raw_sha256": {
+    "ltc_truth.json": "9d9e5418dab428abef0d32802d3e2889a4e3394e3db1b738f3b7db94136f4869",
+    "units.json": "9fedfe62a22cfd6d00df24640f0b544debfa9f399f6f73b958a752978a10c25c",
+    "snapshot.json": "1d2defa025639d6dfc0175fb8b4fe500af5620612833ab5cc41734de49927671"
+  },
+  "delegation": {
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "runtime_verified": true,
+    "scope": "local bounded LTC/handoff artifact lookup, no changes"
+  }
+}

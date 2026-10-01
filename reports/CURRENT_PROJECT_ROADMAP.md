@@ -1,3 +1,11 @@
+# Current roadmap — 2026-10-01 migration pointer
+
+Current source: `reports/MASTER_HANDOFF.md` and `reports/NEW_CHAT_START_HERE.md`.
+Alpaca LIVE first fills + protection confirmed. Next: Oct2 DAY re-arm verification,
+then ATT1 existing cohort/dossier; reconcile Claude registry before existing leads
+or bounded research/Factory repairs. No trading logic changes in migration.
+The Sep25 disabled-LIVE status and earlier plans below are historical only.
+
 # Current roadmap — owner scope 2026-09-19
 
 Canonical production checkout/branch: `bybit-bot-recovery-20260824` /
