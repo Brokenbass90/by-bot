@@ -351,6 +351,41 @@ def rynki_sobytiy(kripto_iz):
     return vybor + [z for z in kripto_iz if z["kat"] == "kripto"][:100]
 
 
+def kripto_lestnicy(maks=100):
+    """v4: полные «лестницы» крипто-страйков (BTC/ETH/SOL/XRP above K), заканчивающиеся в ближайшие 3 суток.
+    В списке самых оборотных рынков их нет (дневные рынки малы) — за круг попадало 3–4 страйка, а для
+    проверки монотонности и запаздывания нужна вся лестница события. Запрос по дате окончания."""
+    import datetime as _dt
+    now = _dt.datetime.now(_dt.timezone.utc)
+    kr = re.compile(r"(bitcoin|ethereum|solana|xrp)\b.*\babove\b", re.I)
+    po_sob = {}
+    for off in range(0, 1500, 100):
+        r = get(GAMMA, "/markets", limit=100, offset=off, closed="false",
+                end_date_min=now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                end_date_max=(now + _dt.timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%SZ")) or []
+        for m in r:
+            if m.get("closed") or not kr.search(m.get("question") or ""):
+                continue
+            toks = js(m.get("clobTokenIds")) or []; outc = js(m.get("outcomes")) or []
+            if not toks:
+                continue
+            yes = next((t for t, o in zip(toks, outc) if str(o).lower() == "yes"), toks[0])
+            ev = (m.get("events") or [{}])[0].get("id")
+            po_sob.setdefault(ev, []).append({"conditionId": m.get("conditionId"), "kat": "strike", "token": yes,
+                                               "sobytie": ev, "vopros": m.get("question")})
+        if not r:
+            break
+        time.sleep(PAUZA)
+    out = []
+    for ev, ms in sorted(po_sob.items(), key=lambda kv: -len(kv[1])):
+        if len(out) + len(ms) > maks:
+            continue
+        for z in ms:
+            z["iskhodov_v_sobytii"] = len(ms)
+        out += ms
+    return out
+
+
 def snimki(minut=15):
     mp = zagruzit_map()
     d = OUT / "snimki"; d.mkdir(parents=True, exist_ok=True)
@@ -366,7 +401,8 @@ def snimki(minut=15):
                     break
                 time.sleep(PAUZA)
             kat_vremya = time.time()
-        sel = rynki_sobytiy(otobrat_dlya_snimkov(kat))
+        sel = [z for z in rynki_sobytiy(otobrat_dlya_snimkov(kat)) if z["kat"] != "kripto"]
+        sel += kripto_lestnicy()
         if not sel:
             print("  !! отобрано 0 рынков — снимков нет, файл не пишу. Проверь отбор.", flush=True)
             time.sleep(minut * 60); continue
@@ -377,7 +413,7 @@ def snimki(minut=15):
             asks = sorted((float(x["price"]), float(x["size"])) for x in b.get("asks", []))[:10]
             oi = get(DATA, "/oi", market=s["conditionId"])
             zapisi.append({"t": t, "conditionId": s["conditionId"], "kat": s["kat"], "sobytie": s.get("sobytie"),
-                           "iskhodov_v_sobytii": s.get("iskhodov_v_sobytii"), "otbor": "v3",
+                           "iskhodov_v_sobytii": s.get("iskhodov_v_sobytii"), "otbor": "v4",
                            "bids": bids, "asks": asks,
                            "oi": oi if not isinstance(oi, list) else (oi[0] if oi else None)})
             time.sleep(PAUZA)
