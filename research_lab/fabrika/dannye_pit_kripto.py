@@ -9,6 +9,7 @@
     python3 dannye_pit_kripto.py --kvartaly        квартальные фьючерсы BTC/ETH/SOL 2023–2026 (один раз)
     python3 dannye_pit_kripto.py --chasy           часовые свечи перпов на золото/нефть/акции/индексы (один раз)
     python3 dannye_pit_kripto.py --lsr [--obnovit] доля лонг-аккаунтов (long/short ratio) по дням, все ~750 (≈ 15 мин)
+    python3 dannye_pit_kripto.py --poz-chas --bez-oi --dopolnit   дописать новые часы long/short (для TOLPA_1D вперёд)
     python3 dannye_pit_kripto.py --poz-chas [--bez-oi] часовые OI и long/short для ~290 монет PIT-топ-50 (≈ 1–2 ч, можно прерывать)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
@@ -122,11 +123,12 @@ def chasy():
         print(f"{i+1:>2}/{len(TRADFI)} {s}: часов {len(d)}", flush=True)
 
 
-def ryad(path, pole_ts, pole_v, interval_key, interval, sym, limit):
-    """общая выкачка истории назад по endTime: open-interest или account-ratio"""
+def ryad(path, pole_ts, pole_v, interval_key, interval, sym, limit, ot=None):
+    """общая выкачка истории назад по endTime: open-interest или account-ratio (ot — с какого ts, по умолчанию START)"""
+    ot = ot or START
     out, end = {}, int(time.time() * 1000)
-    while end > START:
-        r = get(path, category="linear", symbol=sym, **{interval_key: interval}, startTime=START, endTime=end, limit=limit)
+    while end > ot:
+        r = get(path, category="linear", symbol=sym, **{interval_key: interval}, startTime=ot, endTime=end, limit=limit)
         rows = (r or {}).get("list") or []
         if not rows:
             break
@@ -159,6 +161,12 @@ def pozicii(chas):
     net = []
     for i, s in enumerate(simvoly):
         p = out / f"{s}.json"
+        if chas and "--dopolnit" in sys.argv and p.exists():  # вперёд: дописать только новые часы (минуты, а не часы)
+            z = json.load(open(p)); m = {int(t): v for t, v in z["lsr"]}
+            nach = max(m) - 6 * 3_600_000 if m else None
+            for t, v in ryad("account-ratio", "timestamp", "buyRatio", "period", per, s, 500, ot=nach):
+                m[t] = v
+            z["lsr"] = [[t, m[t]] for t in sorted(m)]; p.write_text(json.dumps(z)); continue
         if p.exists() and "--obnovit" not in sys.argv:      # --obnovit: перекачать (для проверки вперёд)
             continue
         lsr = ryad("account-ratio", "timestamp", "buyRatio", "period", per, s, 500)
