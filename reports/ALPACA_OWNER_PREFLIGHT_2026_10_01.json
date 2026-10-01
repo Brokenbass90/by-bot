@@ -1,0 +1,39 @@
+{
+  "status": "READ_ONLY_PREFLIGHT_PASS_OWNER_STEP_PREPARED",
+  "observed_utc": "2026-10-01T13:53:06.334686+00:00",
+  "owner_requested_activation": true,
+  "live_enabled": false,
+  "broker_writes": 0,
+  "live_fills": 0,
+  "capital_usd": 487.42,
+  "target_gross": 0.7,
+  "target_notional_usd": 341.194,
+  "account_suffix": "f295c6",
+  "cash_usd": 487.42,
+  "positions": 0,
+  "open_orders": 0,
+  "market_open": true,
+  "source_commit": "74b7214b2d722b9e45c12024065d9a78c162567f",
+  "source_manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+  "files_verified": 58,
+  "selection": {
+    "signal_session": "2026-09-30",
+    "entry_session": "2026-10-01",
+    "gate_ok": true,
+    "symbols": [
+      "CRWD",
+      "AMD",
+      "META"
+    ],
+    "generated_at_utc": "2026-09-30T20:12:25.199848+00:00"
+  },
+  "single_owner": "NEW disabled; two OLD cron tags remain; manual procedure retires both before enabling NEW; active OLD processes0 at snapshot",
+  "owner_script": "scripts/owner_activate_alpaca_intended_live.sh",
+  "owner_script_sha256": "c109dfb2e63ceb7c49838ec40631f9c84d4255dc5c1092d6a9e4e229acf46477",
+  "verification": "bash -n + ast.parse PASS; exact extraction of previously prepared runbook blocks 1/2, not executed",
+  "preflight_flags_note": "read-only preflight intentionally retains activation_ready=false and execution_binding_complete=false; does not certify live execution",
+  "historical_tests": "243 local/VPS on Sep25; not rerun because frozen code unchanged, 58 deployed hashes reverified",
+  "raw_receipt_sha256": "3c071674ca52ecf299aed31832e467819f54501248422b7d647a4ad96717a1a2",
+  "next": "Owner runs exact exclusive handoff/enable script. Then read-only check next scheduled receipt: fills, DAY stop IDs, floor/HWM, one manager. Do not call enabled=true a proven lifecycle.",
+  "claude_work_review": "deferred, not reviewed or merged in this turn"
+}

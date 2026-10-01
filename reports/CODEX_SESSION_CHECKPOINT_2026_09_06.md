@@ -3,6 +3,42 @@
 ## Public continuation checkpoint
 
 
+Latest continuation — **October 1 13:53 UTC / 16:53 Cyprus: Alpaca owner preflight PASS; LIVE still OFF**:
+- Owner explicitly requested Alpaca production activation within existing cap
+  $487.42 / gross0.70. Codex completed read-only preparation only; actual financial
+  order automation switch must be executed by owner. Do not claim money enabled.
+- Installed frozen release unchanged: source74b7214b2d722b9e45c12024065d9a78c162567f,
+  manifest73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2,
+  all58 files match. Historical243 tests unchanged; not rerun this turn.
+- Fresh signed LIVE preflight: account suffixf295c6, USDcash487.42, positions0,
+  open orders0, market open, statusLIVE_ACCOUNT_BOUND_READ_ONLY. Diagnostic fields
+  activation_ready/execution_binding_complete remain false by read-only design.
+- Real Sep30 completed-session preparation exists, generated20:12 UTC: gate_ok,
+  picksCRWD/AMD/META; Oct1 entry session. Latest cron LIVE_READ_ONLY_READY.
+  This is selection evidence, not executed trades or profitability evidence.
+- NEW binding disabled/read-only cron. Two exact OLD money-manager cron tags
+  still present; active OLD processes0 at snapshot. Monthly autopilot default
+  environment is PAPER. Do not enable NEW alongside OLD.
+- Created `scripts/owner_activate_alpaca_intended_live.sh`, EXACT extraction of
+  preflight+handoff blocks1/2 from `reports/ALPACA_OWNER_ACTIVATION_2026_09_30.md`.
+  Shell/Python syntax checked; no execution. Owner runs via SSH bash -s; it repeats
+  hashes/fresh flat truth, retires two OLD tags, waits, locks, then enables NEW.
+  Existing runbook sections3–6 contain verification, entry halt, owned kill and
+  flat-only rollback. No code/config/strategy/cron/risk mutation made this turn.
+- Receipt `reports/ALPACA_OWNER_PREFLIGHT_2026_10_01.json`; raw private receipt
+  `.private/alpaca_activation_20261001/receipt.json`. Never commit credentials.
+- NEXT CHAT: read this TOP first; verify whether owner actually executed handoff.
+  If enabled, do NOT rerun activation; collect actual broker fills, accepted DAY
+  protection IDs, durable floor/HWM and unique owner. If disabled, do not claim
+  production running. Preserve monthly timing and cap; no catch-up rule invented.
+- ATT1 remains at Sept30 checkpoint below; no changes/readiness upgrade here.
+  Claude/Factory changes have NOT been reviewed or merged this turn. After Alpaca
+  operational receipts, consolidate their real handoff with a bounded read-only
+  review; do not present unverified research claims as live readiness.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **September 30 04:42 UTC: native-SL binding complete with orders OFF; canary NOT ready**:
 - Closed the concrete `exchange SL without local exit-intent` defect in the existing
   authenticated reconcile path. Exact armed stop identity + hash-bound durable
