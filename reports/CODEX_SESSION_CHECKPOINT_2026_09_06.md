@@ -3,6 +3,33 @@
 ## Public continuation checkpoint
 
 
+Latest continuation — **October 1 14:11 UTC / 17:11 Cyprus: ALPACA LIVE FIRST FILLS + DAY PROTECTION CONFIRMED**:
+- Owner personally executed activation script; backup owner_activation_20261001T140549Z.
+  Codex performed GET-only postcheck, no financial writes. DO NOT rerun activation.
+- NEW binding enabled, exactly1 NEW --send-orders cron, both OLD manager tags
+  removed, OLD processes0. Frozen deployed58-file manifest still matches.
+- First scheduled14:10UTC cycle LIVE_CYCLE_COMPLETE, bridge0/ratchet0.
+  Broker confirms3 filled buys +3 accepted `new` DAY sell stops, exact qty and
+  order IDs match durable entry/floor/HWM state; no foreign positions.
+- CRWD qty0.469970151 @265.336, stop242.13; AMD qty0.186377282 @609.57,
+  stop560.90; META qty0.141939508 @724.534, stop668.76.
+  Actual entry notional$341.149999, capital cap487.42 / gross0.70 unchanged.
+  LIVE account suffixf295c6. No closed lifecycle or profitability evidence yet.
+- First latest_intended_run owned_positions=[] is pre-entry snapshot; do NOT
+  treat it as fresh-flat truth. Direct broker + durable state confirms3 positions.
+- NEXT: read-only maintenance receipt, DAY expiry -> Oct2 regular-session stop
+  re-arm with durable floors/HWM, then actual exits/costs. Never rerun initial-flat
+  preflight as a live health gate; it must reject while positions exist. Do not
+  disable manager or restore OLD over NEW exposure. Runbook sections4–6 describe
+  owner entry halt / scoped kill / flat-only rollback; no live kill test performed.
+- Receipt `reports/ALPACA_LIVE_LAUNCH_2026_10_01.json`; raw privately preserved in
+  `.private/alpaca_activation_20261001/first_live_cycle.json`.
+- ATT1 unchanged. Claude/Factory work still unreviewed; consolidate separately
+  after preserving this launch checkpoint. This TOP is the new-chat starting point.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **October 1 13:53 UTC / 16:53 Cyprus: Alpaca owner preflight PASS; LIVE still OFF**:
 - Owner explicitly requested Alpaca production activation within existing cap
   $487.42 / gross0.70. Codex completed read-only preparation only; actual financial
