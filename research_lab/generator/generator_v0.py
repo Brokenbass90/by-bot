@@ -140,11 +140,14 @@ def kladbische():
 def prompt():
     kl = "\n".join(f"- {x['semya']}: {x['prichina']}" for x in kladbische())
     pr = "\n".join(f"- {k}: {v}" for k, v in PRIZNAKI.items())
+    pod = sorted({str(podpis(z["kandidat"])) for z in zhurnal()} - {"None"})
+    kl += "\nУже проверенные сочетания (любой порог, срок и знак = отказ без прогона):\n" + "\n".join(pod)
     return (f"Ты исследователь рынка акций США. Предложи до {MAX_KAND} РАЗНЫХ экономических механизмов, "
             "где кто-то систематически оставляет деньги на столе. Не параметры — механизмы.\n"
             f"Доступные признаки (на дату, только прошлое):\n{pr}\n"
             f"Уже убитые семейства — НЕ предлагать ни их, ни их варианты:\n{kl}\n"
-            "Ответ — ТОЛЬКО JSON-список объектов вида "
+            'Ответ — ТОЛЬКО JSON вида {"kandidaty": [ ... ]}, внутри объекты вида '
+            
             '{"semya":"...","kto_platit":"...","pochemu":"...","tip":"xs","xs":{"priznak":"r20","znak":-1,"hold":10}} '
             'или {"semya":"...","kto_platit":"...","pochemu":"...","tip":"sobytie","sobytie":{"usloviya":[["obem_x",">",3]],"storona":-1,"hold":10}}. '
             "hold только 5, 10 или 20.")
@@ -156,11 +159,15 @@ def ot_ollama():
     if "--model" in sys.argv:
         model = sys.argv[sys.argv.index("--model") + 1]
     elif imena:
-        model = max(tags["models"], key=lambda m: m.get("size", 0))["name"]     # самая крупная локальная
+        # текстовые модели раньше визуальных (llava/qwen2.5vl плохо держат JSON), внутри — самая крупная
+        model = max(tags["models"], key=lambda m: ("vision" not in (m.get("capabilities") or []),
+                                                    m.get("size", 0)))["name"]
     else:
         sys.exit("в Ollama нет моделей: ollama pull qwen2.5:14b")
     print(f"Ollama: модели {imena}, берём {model}")
-    body = json.dumps({"model": model, "prompt": prompt(), "stream": False, "format": "json"}).encode()
+    body = json.dumps({"model": model, "prompt": prompt(), "stream": False, "format": "json", "think": False,
+                       "options": {"temperature": 0.7, "num_ctx": 8192}}).encode()
+    print("жду ответ модели (обычно 1–5 мин)…", flush=True)
     r = json.loads(urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:11434/api/generate", body,
                                                                 {"Content-Type": "application/json"}), timeout=600).read())
     out = json.loads(r["response"])
