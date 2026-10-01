@@ -10,7 +10,7 @@
 | SLEEVE | STATUS | EVIDENCE | GATE | NEXT | OWNER |
 |---|---|---|---|---|---|
 | OLD ATT1 LIVE | LIVE, убыточен | 12 закрытий ≈ −1.20 USDT, паритет PASS | автомат просадки (мягкий порог) | вопрос LTC id257 (SL 0.2 при входе 0.4) | Codex |
-| Alpaca | LIVE OFF, процедура готова | recovery: `reports/ALPACA_OWNER_ACTIVATION_2026_09_30.md` | frozen rules дают вход + все guards PASS | Sep30 selection → broker truth → OLD→NEW | Codex → владелец |
+| Alpaca | **LIVE с 2026-10-01 17:10 (Кипр)**, со слов Codex: CRWD/AMD/META на $341 из $487, DAY-стопы подтверждены брокером, один NEW manager | доходность не доказана; receipt f361f7e (репо Codex) | 02.10: DAY-стопы истекли и восстановлены; дальше реальные выходы и издержки | Codex без лимита до 05.10 → 02.10 проверяет владелец глазами в приложении Alpaca | Codex → владелец |
 | NEW ATT1 | binding готов, canary_ready=false | 0 проспективных терминалов | 2–3 чистых заполненных терминала | ждать рынок, без нового кода | Codex |
 
 ## EVIDENCE lane (Claude)
