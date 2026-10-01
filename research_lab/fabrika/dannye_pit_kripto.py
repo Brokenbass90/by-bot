@@ -9,7 +9,7 @@
     python3 dannye_pit_kripto.py --kvartaly        квартальные фьючерсы BTC/ETH/SOL 2023–2026 (один раз)
     python3 dannye_pit_kripto.py --chasy           часовые свечи перпов на золото/нефть/акции/индексы (один раз)
     python3 dannye_pit_kripto.py --lsr [--obnovit] доля лонг-аккаунтов (long/short ratio) по дням, все ~750 (≈ 15 мин)
-    python3 dannye_pit_kripto.py --poz-chas        часовые OI и long/short для ~290 монет PIT-топ-50 (≈ 1–2 ч, можно прерывать)
+    python3 dannye_pit_kripto.py --poz-chas [--bez-oi] часовые OI и long/short для ~290 монет PIT-топ-50 (≈ 1–2 ч, можно прерывать)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
 """
@@ -163,7 +163,7 @@ def pozicii(chas):
             continue
         lsr = ryad("account-ratio", "timestamp", "buyRatio", "period", per, s, 500)
         z = {"symbol": s, "lsr": lsr}
-        if chas:
+        if chas and "--bez-oi" not in sys.argv:            # пачке 8 нужен только long/short — в 4 раза быстрее
             z["oi"] = ryad("open-interest", "timestamp", "openInterest", "intervalTime", "1h", s, 200)
         if not lsr and not z.get("oi"):
             net.append(s); continue

@@ -483,9 +483,32 @@ def snimki_odin_krug(mp):
     print(f"  снимков стакана: {n}")
 
 
+def test_lestnicy():
+    """диагностика v4: почему в снимках 0 крипто-лестниц. Только чтение, ~10 запросов."""
+    import datetime as _dt
+    now = _dt.datetime.now(_dt.timezone.utc)
+    kr = re.compile(r"(bitcoin|ethereum|solana|xrp)\b.*\babove\b", re.I)
+    vse, sovp = [], []
+    for off in range(0, 500, 100):
+        r = get(GAMMA, "/markets", limit=100, offset=off, closed="false",
+                end_date_min=now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                end_date_max=(now + _dt.timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%SZ")) or []
+        vse += r; sovp += [m for m in r if kr.search(m.get("question") or "")]
+        if not r:
+            break
+    print(f"рынков в окне 3 суток: {len(vse)}, из них по шаблону: {len(sovp)}")
+    print("примеры в окне:", [m.get("question") for m in vse[:5]])
+    print("совпавшие:", [m.get("question") for m in sovp[:5]])
+    r = get(GAMMA, "/public-search", q="bitcoin above", limit_per_type=10) or {}
+    ev = r.get("events") or []
+    print("поиск 'bitcoin above' — событий:", len(ev), [(e.get("title"), e.get("endDate"), len(e.get("markets") or [])) for e in ev[:6]])
+    print("лестница сейчас:", len(kripto_lestnicy()))
+
+
 if __name__ == "__main__":
     a = sys.argv[1:]
-    if "--delta" in a: delta()
+    if "--test-lestnicy" in a: test_lestnicy()
+    elif "--delta" in a: delta()
     elif "--otobrat" in a:
         r, n = otobrat_potokom(); print(f"просмотрено {n}, по маппингу {len(r)}")
     elif "--proverka_rynkov" in a: proverka_rynkov()

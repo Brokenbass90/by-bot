@@ -210,5 +210,13 @@
  {
   "semya": "L3_TOLPA_PROTIV_ROSTA",
   "prichina": "пачка 7: t 0.36; подтв. < 0"
+ },
+ {
+  "semya": "V1_PREMIYA_ZA_STRAH",
+  "prichina": "пачка 9: +95 bps, t 0.9, вторая половина < 0"
+ },
+ {
+  "semya": "V2_VSPLESK_STRAHA",
+  "prichina": "пачка 9: 8 событий"
  }
 ]
