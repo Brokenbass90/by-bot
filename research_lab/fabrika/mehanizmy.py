@@ -243,6 +243,23 @@ MEHANIZMY = {
                              opisanie="безусловный вход в 21:00 UTC, держать 10 часов — премия за время суток"),
 }
 
+def mt5_v_utc(ts):
+    """Метки MT5 MetaQuotes-Demo — время сервера EET/EEST (UTC+2 зимой, UTC+3 летом, переход ЕС:
+    последнее вс марта 01:00 UTC — последнее вс октября 01:00 UTC). Проверено 01.10: после перевода
+    неделя золота начинается в вс 22:00/23:00 UTC (400 из 404 недель). DEFEKT_VREMYA_MT5_2026_09_30.md"""
+    import calendar, datetime as _dt
+    ts = np.asarray(ts, dtype=np.int64); out = ts - 2 * 3600000
+    for y in range(1990, 2100):
+        lm = max(w[6] for w in calendar.monthcalendar(y, 3) if w[6])
+        lo = max(w[6] for w in calendar.monthcalendar(y, 10) if w[6])
+        # границы в часах сервера: летнее с 03:00 сервера (01:00 UTC) до 04:00 сервера (01:00 UTC)
+        a = int(_dt.datetime(y, 3, lm, 3, tzinfo=_dt.timezone.utc).timestamp() * 1000)
+        b = int(_dt.datetime(y, 10, lo, 4, tzinfo=_dt.timezone.utc).timestamp() * 1000)
+        m = (ts >= a) & (ts < b)
+        out[m] = ts[m] - 3 * 3600000
+    return out
+
+
 # рынки: где лежат данные, издержки на сторону, окна
 RYNKI = {
     "crypto137": dict(papka="data/h1", fee_bps=6.0,
@@ -259,6 +276,14 @@ RYNKI = {
                       okna={"O2": (1514851200000, 1577836800000),    # 2018-01-02 … 2020-01-01
                             "O1": (1577836800000, 1640995200000),    # 2020-01-01 … 2022-01-01
                             "O3": (1640995200000, 1687392000000)}),  # 2022-01-01 … 2023-06-22 подтверждение
+    # Ре-тест 01.10 (решение владельца и менеджера по DEFEKT_VREMYA_MT5): те же окна глубины, метки переведены
+    # в UTC; только механизмы, зависящие от часа суток. PREREG_TZ_RETEST_2026_10_01.md
+    "gold_glub_utc": dict(papka="data/zoloto_h1", fee_bps=3.0, porozhdat=False, ts_mt5=True,
+                          okna={"O2": (1514851200000, 1577836800000), "O1": (1577836800000, 1640995200000),
+                                "O3": (1640995200000, 1687392000000)}),
+    "fx7_glub_utc": dict(papka="data/fx_h1", fee_bps=1.0, porozhdat=False, ts_mt5=True,
+                         okna={"O2": (1545609600000, 1601510400000), "O1": (1601510400000, 1656633600000),
+                               "O3": (1656633600000, 1688169600000)}),
     "fx7_glub": dict(papka="data/fx_h1", fee_bps=1.0, porozhdat=False,
                      okna={"O2": (1545609600000, 1601510400000),     # 2018-12-24 … 2020-10-01
                            "O1": (1601510400000, 1656633600000),     # 2020-10-01 … 2022-07-01

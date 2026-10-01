@@ -1897,7 +1897,8 @@
    "otpechatok_pri_postanovke": "1:645812",
    "trebuet_priyomki": true,
    "dannye_prishli": "2026-09-30T07:09:54+00:00",
-   "start": "2026-09-30T07:09:54+00:00"
+   "start": "2026-09-30T07:09:54+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "LONDON_PROBOY__gold__short",
@@ -1925,7 +1926,8 @@
    "otpechatok_pri_postanovke": "1:645812",
    "trebuet_priyomki": true,
    "dannye_prishli": "2026-09-30T07:09:54+00:00",
-   "start": "2026-09-30T07:09:58+00:00"
+   "start": "2026-09-30T07:09:58+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "SVIP_UROVNYA__gold__long",
@@ -1953,7 +1955,8 @@
    "otpechatok_pri_postanovke": "1:645812",
    "trebuet_priyomki": true,
    "dannye_prishli": "2026-09-30T07:09:54+00:00",
-   "start": "2026-09-30T07:09:56+00:00"
+   "start": "2026-09-30T07:09:56+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "SVIP_UROVNYA__gold__short",
@@ -1981,7 +1984,8 @@
    "otpechatok_pri_postanovke": "1:645812",
    "trebuet_priyomki": true,
    "dannye_prishli": "2026-09-30T07:09:54+00:00",
-   "start": "2026-09-30T07:09:58+00:00"
+   "start": "2026-09-30T07:09:58+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "GEP_VYHODNYH__gold__long",
@@ -2065,7 +2069,8 @@
    "otpechatok_pri_postanovke": "1:645812",
    "trebuet_priyomki": true,
    "dannye_prishli": "2026-09-30T07:09:54+00:00",
-   "start": "2026-09-30T07:09:57+00:00"
+   "start": "2026-09-30T07:09:57+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "NOCHNOY_DREYF__gold__short",
@@ -2093,7 +2098,8 @@
    "otpechatok_pri_postanovke": "1:645812",
    "trebuet_priyomki": true,
    "dannye_prishli": "2026-09-30T07:09:54+00:00",
-   "start": "2026-09-30T07:09:59+00:00"
+   "start": "2026-09-30T07:09:59+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "P_AKC_OSTATOCHNYY_MOMENT",
@@ -2140,7 +2146,8 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-24T15:41:30+00:00",
-   "start": "2026-09-24T15:41:30+00:00"
+   "start": "2026-09-24T15:41:30+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "LONDON_PROBOY__fx7__short",
@@ -2162,7 +2169,8 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-24T15:41:30+00:00",
-   "start": "2026-09-24T15:41:33+00:00"
+   "start": "2026-09-24T15:41:33+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "SVIP_UROVNYA__fx7__long",
@@ -2184,7 +2192,8 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-24T15:41:30+00:00",
-   "start": "2026-09-24T15:41:32+00:00"
+   "start": "2026-09-24T15:41:32+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "SVIP_UROVNYA__fx7__short",
@@ -2206,7 +2215,8 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-24T15:41:30+00:00",
-   "start": "2026-09-24T15:41:46+00:00"
+   "start": "2026-09-24T15:41:46+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "GEP_VYHODNYH__fx7__long",
@@ -2441,7 +2451,8 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-24T15:42:10+00:00",
-   "start": "2026-09-24T15:42:10+00:00"
+   "start": "2026-09-24T15:42:10+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "NOCHNOY_DREYF__fx7__short",
@@ -2463,7 +2474,8 @@
     "min_n_o3": 30
    },
    "porozhdeno": "2026-09-24T15:42:10+00:00",
-   "start": "2026-09-24T15:42:11+00:00"
+   "start": "2026-09-24T15:42:11+00:00",
+   "invalid_test_tz": "проверялся в часах сервера MT5, не в заявленных UTC — см. DEFEKT_VREMYA_MT5; ре-тест: PREREG_TZ_RETEST_2026_10_01"
   },
   {
    "id": "TEN_SILA",
@@ -2635,6 +2647,282 @@
    "prezhniy_verdikt": "VOZVRAT_K_SREDNEY__gold__short: INCONCLUSIVE_LOW_N",
    "vzveden": "2026-09-30T08:33:36+00:00: ре-тест по PREREG_GLUBINA после приёмки владельца",
    "start": "2026-09-30T08:34:28+00:00"
+  },
+  {
+   "id": "LONDON_PROBOY__gold_glub_utc__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold_glub_utc",
+   "semya": "sessiya_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "gold_glub_utc",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "LONDON_PROBOY__gold_glub_utc__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold_glub_utc",
+   "semya": "sessiya_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "gold_glub_utc",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "NOCHNOY_DREYF__gold_glub_utc__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold_glub_utc",
+   "semya": "premiya_za_chas",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "gold_glub_utc",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "NOCHNOY_DREYF__gold_glub_utc__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold_glub_utc",
+   "semya": "premiya_za_chas",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "gold_glub_utc",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "SVIP_UROVNYA__gold_glub_utc__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold_glub_utc",
+   "semya": "lozhnyy_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "gold_glub_utc",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "SVIP_UROVNYA__gold_glub_utc__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "gold_glub_utc",
+   "semya": "lozhnyy_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "gold_glub_utc",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "LONDON_PROBOY__fx7_glub_utc__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "fx7_glub_utc",
+   "semya": "sessiya_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "fx7_glub_utc",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "LONDON_PROBOY__fx7_glub_utc__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "fx7_glub_utc",
+   "semya": "sessiya_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "LONDON_PROBOY",
+    "rynok": "fx7_glub_utc",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "NOCHNOY_DREYF__fx7_glub_utc__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "fx7_glub_utc",
+   "semya": "premiya_za_chas",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "fx7_glub_utc",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "NOCHNOY_DREYF__fx7_glub_utc__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "fx7_glub_utc",
+   "semya": "premiya_za_chas",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "NOCHNOY_DREYF",
+    "rynok": "fx7_glub_utc",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "SVIP_UROVNYA__fx7_glub_utc__long",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "fx7_glub_utc",
+   "semya": "lozhnyy_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "fx7_glub_utc",
+    "side": "long",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
+  },
+  {
+   "id": "SVIP_UROVNYA__fx7_glub_utc__short",
+   "tip": "gipoteza",
+   "begun": "meh",
+   "rynok": "fx7_glub_utc",
+   "semya": "lozhnyy_proboy",
+   "sostoyanie": "QUEUED",
+   "prereg": "research_lab/fabrika/PREREG_TZ_RETEST_2026_10_01.md",
+   "param": {
+    "meh": "SVIP_UROVNYA",
+    "rynok": "fx7_glub_utc",
+    "side": "short",
+    "etap": "discovery"
+   },
+   "sudya": {
+    "porog_z": 3.1,
+    "min_n": 50,
+    "min_n_o3": 30
+   },
+   "avtor": "Claude",
+   "porozhdeno": "2026-10-01T09:20:22+00:00",
+   "trebuet_priyomki": true
   }
  ]
 }

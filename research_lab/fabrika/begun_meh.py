@@ -90,6 +90,9 @@ def main():
     rng = np.random.default_rng(7)
     for k, fp in enumerate(files):
         d = np.load(fp); ts = d["ts"].astype(np.int64)
+        if RY.get("ts_mt5"):                                # время сервера MT5 → UTC (DEFEKT_VREMYA_MT5)
+            from mehanizmy import mt5_v_utc
+            ts = mt5_v_utc(ts)
         o, h, l, c, v = (np.ascontiguousarray(d["ohlcv"][:, j], dtype=np.float64) for j in range(5))
         if obrez is not None:
             k_ = int(np.searchsorted(ts, obrez)); ts = ts[:k_]
