@@ -68,7 +68,7 @@ def vselennaya(C, U, i):
 def vyhod(C, j, i0, hold, side):
     """доход позиции с закрытия i0 на hold дней, с правилом делистинга"""
     i1 = i0 + hold
-    if i1 >= C.shape[0]:
+    if i1 >= C.shape[0] or not np.isfinite(C[i0, j]):    # нет цены в день входа — сделки нет (исправление ошибки 01.10)
         return None
     if np.isfinite(C[i1, j]):
         return side * (C[i1, j] / C[i0, j] - 1)

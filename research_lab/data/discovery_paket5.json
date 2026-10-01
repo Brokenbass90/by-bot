@@ -1,0 +1,72 @@
+{
+ "A1": {
+  "n": 69,
+  "dney": 69,
+  "edge_bps": -33.4,
+  "t": -1.92,
+  "polovinki_bps": [
+   -13.6,
+   -52.7
+  ],
+  "syroy_bps": -33.4,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "A2": {
+  "n": 349,
+  "dney": 349,
+  "edge_bps": -7.1,
+  "t": -1.64,
+  "polovinki_bps": [
+   -8.4,
+   -5.8
+  ],
+  "syroy_bps": -7.1,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "A3": {
+  "n": 5,
+  "verdikt": "KILLED",
+  "prichina": "мало событий (5)"
+ },
+ "A4": {
+  "n": 339,
+  "dney": 339,
+  "edge_bps": -179.4,
+  "t": -3.66,
+  "polovinki_bps": [
+   -157.5,
+   -201.1
+  ],
+  "syroy_bps": -179.4,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "A5": {
+  "n": 34,
+  "dney": 34,
+  "edge_bps": -20.6,
+  "t": -0.42,
+  "polovinki_bps": [
+   -13.6,
+   -27.7
+  ],
+  "syroy_bps": -20.6,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ },
+ "A6": {
+  "n": 33,
+  "dney": 33,
+  "edge_bps": -15.2,
+  "t": -0.18,
+  "polovinki_bps": [
+   -141.5,
+   103.6
+  ],
+  "syroy_bps": -15.2,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0"
+ }
+}
