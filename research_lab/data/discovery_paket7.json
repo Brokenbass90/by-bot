@@ -1,0 +1,41 @@
+{
+ "L1": {
+  "n": 161,
+  "dney": 161,
+  "edge_bps": 152.3,
+  "t": 3.35,
+  "polovinki_bps": [
+   151.1,
+   153.5
+  ],
+  "syroy_bps": 152.3,
+  "verdikt": "SURVIVED",
+  "prichina": "t≥2, обе половины > 0, сырой доход > 0"
+ },
+ "L2": {
+  "n": 161,
+  "dney": 161,
+  "edge_bps": 70.1,
+  "t": 1.64,
+  "polovinki_bps": [
+   24.8,
+   114.7
+  ],
+  "syroy_bps": 70.1,
+  "verdikt": "KILLED",
+  "prichina": "t=1.64 < 2"
+ },
+ "L3": {
+  "n": 833,
+  "dney": 459,
+  "edge_bps": 42.8,
+  "t": 0.36,
+  "polovinki_bps": [
+   122.1,
+   -36.2
+  ],
+  "syroy_bps": 40.7,
+  "verdikt": "KILLED",
+  "prichina": "t=0.36 < 2"
+ }
+}

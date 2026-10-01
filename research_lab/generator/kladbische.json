@@ -190,5 +190,25 @@
  {
   "semya": "OVERNIGHT_VOLUME",
   "prichina": "сессия 3: экран +692 bps t 5.06, но на бумагах, доступных для шорта, с издержками ворот: +222 bps, t НВ 1.54, 2026 −18 — эффект в трудных для заёма; не исполнимо"
+ },
+ {
+  "semya": "E1_PREMIA_PERED_OTCHETOM",
+  "prichina": "пачка 6: −37 bps, t −1.1"
+ },
+ {
+  "semya": "E2_DREYF_POSLE_OTCHETA",
+  "prichina": "пачка 6: +14 bps, t 0.43"
+ },
+ {
+  "semya": "E3_OPOZDAVSHIY",
+  "prichina": "пачка 6: −64 bps"
+ },
+ {
+  "semya": "L2_SDVIG_TOLPY_XS",
+  "prichina": "пачка 7: t 1.64; подтв. t 0.45"
+ },
+ {
+  "semya": "L3_TOLPA_PROTIV_ROSTA",
+  "prichina": "пачка 7: t 0.36; подтв. < 0"
  }
 ]

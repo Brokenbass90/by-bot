@@ -1,0 +1,44 @@
+{
+ "E1": {
+  "n": 258,
+  "dney": 258,
+  "edge_bps": -36.8,
+  "t": -1.14,
+  "polovinki_bps": [
+   -68.2,
+   -5.3
+  ],
+  "syroy_bps": -36.8,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0",
+  "sobytiy": 9330
+ },
+ "E2": {
+  "n": 323,
+  "dney": 323,
+  "edge_bps": 13.9,
+  "t": 0.43,
+  "polovinki_bps": [
+   59.5,
+   -31.4
+  ],
+  "syroy_bps": 13.9,
+  "verdikt": "KILLED",
+  "prichina": "t=0.43 < 2",
+  "sobytiy": 6544
+ },
+ "E3": {
+  "n": 171,
+  "dney": 171,
+  "edge_bps": -64.4,
+  "t": -0.52,
+  "polovinki_bps": [
+   28.8,
+   -156.5
+  ],
+  "syroy_bps": -64.4,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0",
+  "sobytiy": 2122
+ }
+}
