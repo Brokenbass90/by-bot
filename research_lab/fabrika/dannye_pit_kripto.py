@@ -8,6 +8,8 @@
     python3 dannye_pit_kripto.py --vse --obnovit   то же, но перекачать уже скачанные (для проверки вперёд)
     python3 dannye_pit_kripto.py --kvartaly        квартальные фьючерсы BTC/ETH/SOL 2023–2026 (один раз)
     python3 dannye_pit_kripto.py --chasy           часовые свечи перпов на золото/нефть/акции/индексы (один раз)
+    python3 dannye_pit_kripto.py --lsr             доля лонг-аккаунтов (long/short ratio) по дням, все ~750 (≈ 15 мин)
+    python3 dannye_pit_kripto.py --poz-chas        часовые OI и long/short для ~290 монет PIT-топ-50 (≈ 1–2 ч, можно прерывать)
 Делистингованные контракты биржа может не отдавать — такие попадут в
 pit_daily/_net_dannyh.json, и прогонщик честно покажет недостающее покрытие.
 """
@@ -120,8 +122,60 @@ def chasy():
         print(f"{i+1:>2}/{len(TRADFI)} {s}: часов {len(d)}", flush=True)
 
 
+def ryad(path, pole_ts, pole_v, interval_key, interval, sym, limit):
+    """общая выкачка истории назад по endTime: open-interest или account-ratio"""
+    out, end = {}, int(time.time() * 1000)
+    while end > START:
+        r = get(path, category="linear", symbol=sym, **{interval_key: interval}, startTime=START, endTime=end, limit=limit)
+        rows = (r or {}).get("list") or []
+        if not rows:
+            break
+        for x in rows:
+            out[int(x[pole_ts])] = float(x[pole_v])
+        oldest = min(int(x[pole_ts]) for x in rows)
+        if oldest >= end:
+            break
+        end = oldest - 1; time.sleep(0.12)
+    return [[k, out[k]] for k in sorted(out)]
+
+
+def pozicii(chas):
+    """01.10, новый класс №2 — позиционирование толпы. Дневной OI уже есть (basis/oi_sutochnyy) и потрачен
+    (OI_RASHOZHDENIE, OI_FLUSH_REBOUND, OI_CROWDING) — новое здесь: доля лонг-аккаунтов (account-ratio),
+    и часовой OI/ratio для внутридневных механизмов. Делистинг биржа не отдаёт → _net_dannyh.json."""
+    if chas:
+        out = LAB / "data/poz_chas"; per = "1h"
+        simvoly = json.load(open(LAB / "data/basis/vselennaya_pit_usd50.json"))["simvoly"]
+    else:
+        out = LAB / "data/lsr_sutochnyy"; per = "1d"
+        simvoly = sorted(f.stem for f in (LAB / "data/basis/oi_sutochnyy").glob("*.json"))
+    out.mkdir(exist_ok=True)
+    t = ryad("account-ratio", "timestamp", "buyRatio", "period", per, "BTCUSDT", 500)
+    if not t:
+        print("проба BTCUSDT: биржа не отдала long/short — СТОП"); return
+    import datetime as dt
+    print(f"проба BTCUSDT {per}: точек {len(t)}, с {dt.datetime.utcfromtimestamp(t[0][0]/1000):%Y-%m-%d}", flush=True)
+    net = []
+    for i, s in enumerate(simvoly):
+        p = out / f"{s}.json"
+        if p.exists():
+            continue
+        lsr = ryad("account-ratio", "timestamp", "buyRatio", "period", per, s, 500)
+        z = {"symbol": s, "lsr": lsr}
+        if chas:
+            z["oi"] = ryad("open-interest", "timestamp", "openInterest", "intervalTime", "1h", s, 200)
+        if not lsr and not z.get("oi"):
+            net.append(s); continue
+        p.write_text(json.dumps(z))
+        print(f"{i+1:>3}/{len(simvoly)} {s}: lsr {len(lsr)}" + (f", oi {len(z['oi'])}" if chas else ""), flush=True)
+    (out / "_net_dannyh.json").write_text(json.dumps(net))
+    print("готово. биржа не отдала:", len(net), "из", len(simvoly))
+
+
 def main():
     import sys
+    if "--lsr" in sys.argv or "--poz-chas" in sys.argv:
+        return pozicii("--poz-chas" in sys.argv)
     if "--kvartaly" in sys.argv:
         return kvartaly()
     if "--chasy" in sys.argv:
