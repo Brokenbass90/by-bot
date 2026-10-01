@@ -1,0 +1,334 @@
+{
+  "schema_id": "production_continuation_evidence_v1",
+  "observed_utc": "2026-10-01T17:07:06.967000+00:00",
+  "git_start_head": "8ffe20816fab2ebb6b64dfab5372341ca708ce7e",
+  "branch": "codex/recovery-20260824",
+  "remote_branch_head_at_start": "8ffe20816fab2ebb6b64dfab5372341ca708ce7e",
+  "scope": "read-only broker/VPS snapshots, existing-lead reconciliation and disposable local reproduction; no trading/source/runtime/strategy/risk/cron changes",
+  "status": "BOUNDED_CYCLE_COMPLETE_LIVE_PROTECTION_MATCHED_NO_EDGE_PROMOTION",
+  "alpaca": {
+    "status": "INTRADAY_BROKER_PROTECTION_MATCH",
+    "snapshot_utc": "2026-10-01T17:07:05.211000+00:00",
+    "account_suffix": "f295c6",
+    "capital_usd": 487.42,
+    "gross": 0.7,
+    "positions": [
+      {
+        "symbol": "AMD",
+        "qty": "0.186377282",
+        "entry_price": 609.57,
+        "stop_floor": 560.9,
+        "hwm": 612.37,
+        "broker_stop_status": "new",
+        "tif": "day",
+        "full_remaining_qty_protected": true,
+        "entry_lineage_unchanged": true,
+        "floor_hwm_monotonic_vs_1418_baseline": true
+      },
+      {
+        "symbol": "CRWD",
+        "qty": "0.469970151",
+        "entry_price": 265.336,
+        "stop_floor": 242.13,
+        "hwm": 266.57,
+        "broker_stop_status": "new",
+        "tif": "day",
+        "full_remaining_qty_protected": true,
+        "entry_lineage_unchanged": true,
+        "floor_hwm_monotonic_vs_1418_baseline": true
+      },
+      {
+        "symbol": "META",
+        "qty": "0.141939508",
+        "entry_price": 724.534,
+        "stop_floor": 668.76,
+        "hwm": 729.8101,
+        "broker_stop_status": "new",
+        "tif": "day",
+        "full_remaining_qty_protected": true,
+        "entry_lineage_unchanged": true,
+        "floor_hwm_monotonic_vs_1418_baseline": true
+      }
+    ],
+    "latest_cycle": "2026-10-01T17:05:05.769138+00:00",
+    "latest_cycle_status": "LIVE_CYCLE_COMPLETE",
+    "source_files_verified": 58,
+    "manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+    "single_new_money_cron": 1,
+    "old_crons": 0,
+    "old_processes": 0,
+    "clock": {
+      "is_open": true,
+      "next_close": "2026-10-01T16:00:00-04:00",
+      "next_open": "2026-10-02T09:30:00-04:00",
+      "timestamp": "2026-10-01T13:07:05.441353673-04:00"
+    },
+    "closed_real_lifecycles": 0,
+    "baseline_private_path": ".private/continuation_20261001/alpaca_baseline_20261001T170706Z.json",
+    "baseline_sha256": "78276a787a2c84ec9755fe8ccd80add643999a0feedcde0c98747db751517850",
+    "baseline_kind": "intraday_not_end_of_session",
+    "oct2_expiry_rearm": "NOT_DUE_NOT_VERIFIED",
+    "next_gate": "actual Oct1 stop expiry or fill -> Oct2 regular maintenance completed -> newly accepted protection of exact residual qty with unchanged entry/account lineage and monotonic floor/HWM; observe only"
+  },
+  "att1": {
+    "epoch": "att1-public-lifecycle-20260928-observation-timing",
+    "heartbeat_age_ms": 78,
+    "services": "MainPID=492970\nNRestarts=0\nExecMainStartTimestamp=Wed 2026-09-30 06:17:33 UTC\nId=bybot.service\nActiveState=active\n\nMainPID=492814\nNRestarts=0\nExecMainStartTimestamp=Wed 2026-09-30 06:17:25 UTC\nId=att1-lifecycle-zero-risk-v2.service\nActiveState=active\n",
+    "session_count": 9,
+    "filled_simulations": 8,
+    "nonfills": 1,
+    "clean_filled_terminal": 0,
+    "recovery_gaps": 8,
+    "new_gaps_since_1418": [
+      {
+        "symbol": "DOGEUSDT",
+        "received_utc": "2026-10-01T15:01:39.157000+00:00",
+        "reason": "public polling continuity gap",
+        "canonical_source_sha256": "e509ab7e93568039e5e3a256bdab6e9a0726818003eff46ee1a4f152c9c83a93",
+        "source_raw_sha256": "d5483232741be400ef6f4c768782c37ab080df1203a736943630fc08675433ba",
+        "observation_gap_ms": 2602,
+        "classification": "serial_management_aggregate_budget_overrun",
+        "network_cpu_or_scan_subcause": "NOT_PROVEN; nested/overlapping timings must not be summed"
+      },
+      {
+        "symbol": "PAXGUSDT",
+        "received_utc": "2026-10-01T17:05:51.835000+00:00",
+        "reason": "rejected future/stale public book",
+        "canonical_source_sha256": "4f7e4775e9c9c1fcc978afac6281bcaff67775d69960f725b07022be06f6aa18",
+        "source_raw_sha256": "ce2812dd7f7c5e54906b14c11e66549a40a82488b44dab582cb88b0131513369",
+        "book_age_ms": 2643,
+        "book_ts_age_ms": 2329,
+        "exchange_response_age_ms": 83,
+        "classification": "actual_stale_book_not_future",
+        "network_subcause": "NOT_PROVEN"
+      },
+      {
+        "symbol": "AVAXUSDT",
+        "received_utc": "2026-10-01T15:01:37.547000+00:00",
+        "reason": "public polling continuity gap",
+        "canonical_source_sha256": "f6850e0c5541254d0b551d79295a1aff2495e72c99ca1004d46018ef2d129cb3",
+        "source_raw_sha256": "40658f09390c0e2ed60ea04215a89c694ced04b394ea628de4f75c5fec3f3811",
+        "observation_gap_ms": 2094,
+        "classification": "serial_management_aggregate_budget_overrun",
+        "network_cpu_or_scan_subcause": "NOT_PROVEN; nested/overlapping timings must not be summed"
+      }
+    ],
+    "open_simulations": 0,
+    "duplicate_ids": 0,
+    "complete_51_symbol_h1_cycles": 71,
+    "deployed_hashes": {
+      "scripts/run_att1_lifecycle_zero_risk.py": "00b25de88c1601174e4f5ae1de90cd3913d2186ab808e9a086c1bf40736ae48f",
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    },
+    "canary_ready": false,
+    "diagnostic_reproduction": {
+      "result": "SERIAL_AGGREGATE_BUDGET_REPRODUCED",
+      "one_book_at_1100ms": "no incidents",
+      "two_books_at_1100ms": "second book RECOVERY_GAP",
+      "freshness_age_ms": 0,
+      "scope": "synthetic LOCAL driver, no scan/publish cost, no deployed fix or prospective proof"
+    },
+    "next_engineering_action": "local candidate in existing observation driver for multi-book latency budget; retain exact 2s/book freshness and single journal writer. Independently stale books remain disqualifying. No public deployment authorized by this receipt.",
+    "next_money_gate": "2-3 clean prospective filled terminals with terminal net-R, then exact OLD absolute risk/exclusive handoff dossier/owner action",
+    "gap_budget_decomposition_ms": {
+      "AVAX": {
+        "prior_manage_tail": 323,
+        "DOGE_manage": 885,
+        "scan_finish": 5,
+        "publish": 194,
+        "other_clock_ms": 2,
+        "next_AVAX_request": 685,
+        "total": 2094
+      },
+      "DOGE": {
+        "prior_manage_tail": 106,
+        "scan_finish_publish_loop": 201,
+        "AVAX_manage_including_exit": 1492,
+        "next_DOGE_request": 803,
+        "total": 2602
+      },
+      "caveat": "source wall-clock interval partitions in integer milliseconds; nested and concurrent scan operations not added"
+    },
+    "dirty_flat_symbols": [
+      "GALAUSDT",
+      "BCHUSDT",
+      "ACEUSDT",
+      "1000RATSUSDT",
+      "DOGEUSDT",
+      "PAXGUSDT",
+      "AVAXUSDT",
+      "JTOUSDT"
+    ]
+  },
+  "sbr1": {
+    "captured_at_utc": "2026-10-01T17:13:50Z",
+    "status": "CONTROL_COMPARISON_BLOCKED_NO_ADMITTED_MAIN_OR_CONTROL_OUTCOMES",
+    "journal_integrity": "PASS_HASH_CHAIN_EVENT_IDS_UNIQUE_CLAIMS",
+    "journal_rows": 47968,
+    "journal_sha256": "e23c254dbd44c3e78423950aaebdfd123e80de85b84bc106782a361f73adc4fd",
+    "event_types": {
+      "regime_bootstrap": 1,
+      "evaluation": 46063,
+      "regime_update": 921,
+      "evaluation_fetch_error": 72,
+      "evaluation_unavailable": 911
+    },
+    "evaluation_statuses": {
+      "no_signal": 3382,
+      "missed_decision_window": 22414,
+      "raw_no_signal": 20214,
+      "raw_signal_observed": 53
+    },
+    "status_by_evidence_role": {
+      "MISSING": {
+        "no_signal": 93,
+        "missed_decision_window": 3
+      },
+      "major8_existing_lifecycle": {
+        "no_signal": 3289,
+        "missed_decision_window": 3553
+      },
+      "preparity_raw_not_final_n": {
+        "missed_decision_window": 18858,
+        "raw_no_signal": 20214,
+        "raw_signal_observed": 53
+      }
+    },
+    "raw_signals": 53,
+    "admitted_main": 0,
+    "fills": 0,
+    "main_outcomes": 0,
+    "control_journal_exists": false,
+    "source_closure_matches": true,
+    "preregistration_sha256": "dffa60b17b785b9182560b1bace7105eef9d715488866dd665df77825cac7b68",
+    "last_unit_result": "timeout",
+    "timer_active": true,
+    "interpretation": "intact dataset and failed scheduled cycle are distinct. No strategy NEGATIVE/PASS or profitability inference. The deployed fixed51 stream is preparity raw, not final N; raw signals are not trades. Current N=0 cannot support the existing preregistered comparison.",
+    "next_gate": "close the EXISTING prereg section7 fixed51 parity-certified lifecycle/control prerequisites; no relabeling of raw data or consumed windows; Claude accounting/owner coordination before production changes"
+  },
+  "research": {
+    "branch": {
+      "path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28",
+      "branch": "codex/dynamic-symbol-filters",
+      "head": "76fc63ccbe43197e24452e3e4e28ae79a719e4ef",
+      "upstream": "origin/codex/dynamic-symbol-filters",
+      "ahead_behind": {
+        "ahead": 6,
+        "behind": 2,
+        "basis": "local cached tracking refs only; not freshly fetched"
+      },
+      "porcelain_entries": 1040,
+      "conflict": "HANDOFF_CLAUDE_2026_09_30-1.md says branch research/fabrika-v1 and lists six unpublished commits. Actual checkout contradicts that; its status is not safe for edits."
+    },
+    "sources": [
+      {
+        "path": "research_lab/HANDOFF_CLAUDE_2026_09_30-1.md",
+        "sha256": "a396b37422330632f0be9f09a8e1d3d6b9c946cc5a0c013eb8003fb804bd584b"
+      },
+      {
+        "path": "research_lab/HANDOFF_CLAUDE_2026_09_30.md",
+        "sha256": "51b4f8a8f3c4c53abcebd744fe3495b016eeb8da67ce922b87cea3fd161aac45"
+      },
+      {
+        "path": "research_lab/STRATEGY_MASTER.md",
+        "sha256": "5c54525ec7f107c7ad7e06ca11ef7da1742cdabec6d33c0ed871efa6b15160ab"
+      },
+      {
+        "path": "research_lab/data/reestr.json",
+        "sha256": "7668e1ae8527454fc0e6f39423da7649ee3f07380aee21b3d2e9ba9d957561dd"
+      },
+      {
+        "path": "research_lab/pakety/PROMOTION_PACKET_ALPACA_INTENDED.md",
+        "sha256": "4274cce3ea64a32435b5e029a3ce92a0a3102e08114e5b7e8c023bb654c69c2b"
+      },
+      {
+        "path": "research_lab/fabrika/fabrika.py",
+        "sha256": "1a69b54f554e8444962dbbdb49328cce06ea7d8e83189b3122c24186defd4060"
+      },
+      {
+        "path": "research_lab/fabrika/verdikty.jsonl",
+        "sha256": "8409f8e34538e6cd5e353e907ee52ed3b241f6e65e7cac1b2cc456e5c2c511d6"
+      },
+      {
+        "path": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
+        "sha256": "797022cce0f8ec3d1b5c6ebfd726b63e707ae25d6e2035ea4c5346d7cfca4304"
+      },
+      {
+        "path": "reports/MASTER_HANDOFF.md",
+        "sha256": "a2334349bcc243e0edc0095d7149aecbe3b055b82250dd83f4e97ad5b137fb3e",
+        "line_refs": "20-35,100-124"
+      },
+      {
+        "path": "reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md",
+        "sha256": "853075b06bd1cbf13f05f8470aa459583f376c94682135f536cff189e85be4ee",
+        "line_refs": "34-50"
+      }
+    ],
+    "interpretation": "candidate/confirmed FX statistics are Claude research claims; demo data and absent spread/swap prevent proven net edge. XSEC exact PIT and bull continuation NEGATIVE variants remain closed. ETS2M verdict no earlier Oct10 19:00UTC; no new/sealed research consumed.",
+    "final_source_recheck": {
+      "stable_lab_sources": 8,
+      "drifts": [],
+      "worker_hash_transcription_correction": {
+        "path": "research_lab/fabrika/PREREG_GLUBINA_ZOLOTO_FX_2026_09_30.md",
+        "worker_transcribed_sha256": "797022cce0f8ec3d1b5c6ebfd726b63e707ae25d6e2035ea4c5346d7cfca4308",
+        "actual_tool_output_sha256": "797022cce0f8ec3d1b5c6ebfd726b63e707ae25d6e2035ea4c5346d7cfca4304",
+        "basis": "worker custom_tool_call_output at2026-10-01T17:06:48.089Z; same bytes at final check; no source drift"
+      },
+      "snapshot_scope": "source hashes refer to captured research snapshot; all8 lab sources rechecked unchanged. Production report sources were read before this cycle documentation edits."
+    },
+    "lead_statuses": {
+      "NOCHNOY_DREYF__fx7_glub_utc__long__PODTV": "CANDIDATE; factory confirmation verdict CONFIRMED",
+      "XSEC_V3_TEN / XSEC_EXACT_TARGET_WEIGHTS_PIT": "shadow lead / exact PIT test NEGATIVE",
+      "crypto_bull_continuation_v1 and bull pullback/expansion hypotheses": "continuation NEGATIVE; related bull hypotheses HYPOTHESIS",
+      "ETS2M / Elder": "SHADOW; frozen cohort pending WIDE terminal outcomes",
+      "Gold / FX factory acceptance": "GOLD POSITIVE_LEAD; broad gold/FX catalog mostly blocked, low-N, or negative; no net edge established",
+      "Alpaca intended strategy packet (historical context)": "packet says CANDIDATE; superseded operationally by owner-activated LIVE state"
+    },
+    "remaining_gates": {
+      "XSEC_exact_PIT_and_bull_continuation": "NEGATIVE tested variants remain closed",
+      "ETS2M_WIDE": "frozen terminal cohort verdict no earlier2026-10-10T19:00:00Z",
+      "FX_confirmation": "reported by Claude; human dataset acceptance and absent spread/swap still block proven net edge",
+      "Factory": "acceptance fingerprint defects; no start/merge/consumption of new windows"
+    }
+  },
+  "verification": {
+    "local_python": "3.12.8",
+    "targeted_command": ".venv/bin/python -m pytest -q tests/test_att1_lifecycle_runtime_cycle.py -k \"slow_observation or bad_book_time or gap_preserves\"",
+    "result": "5 passed, 24 deselected",
+    "disposable_reproduction_command": ".venv/bin/python .private/continuation_20261001/reproduce_serial_budget.py",
+    "target_production_code_changed": false,
+    "historical_346_tests_not_rerun": true
+  },
+  "delegation": {
+    "agent_path": "/root/research_reconcile",
+    "requested_model": "gpt-6-luna",
+    "actual_model": "gpt-6-luna",
+    "actual_effort": "medium",
+    "runtime_verified": true,
+    "metadata_thread_id": "01a0f86d-c2b4-7771-abb9-4d6a5ff3614b",
+    "basis": "session_meta parent_thread_id/agent_path and turn_context model/effort",
+    "fallback_reason": "AGENTS listed gpt-5.6-luna not in current spawn allowlist"
+  },
+  "private_evidence_sha256": {
+    ".private/continuation_20261001/snapshot.json": "13ea78d8971c81cf8b39907448b00e7942a776aa1a536c51a18424c4c922373e",
+    ".private/continuation_20261001/new_gap_sources.json": "50e03a13279bee9fe471a6744c621362f77cfe2bc0b0d9a11ea8fba2afe04c8c",
+    ".private/continuation_20261001/research_reconciliation.json": "74590ed5650fd9aa044a7e3a253478bf0e2de171241c5fcd4e239b9ca08a0b14",
+    ".private/continuation_20261001/reproduce_serial_budget.py": "a2aa2e2319f713f0568772bdbb76e0089b58eccde927918790178998f88b7fff",
+    ".private/continuation_20261001/serial_budget_reproduction.json": "07a7e2bf4dffe5498dcee9414827e76a7e443e3a6cf9f707852646dac82e20df",
+    ".private/continuation_20261001/sbr1/snapshot.json": "621df97ecc6eecd1dfb7af0d28463f7aa2269525f4f75f9b641e5e20ddc1ca83",
+    ".private/continuation_20261001/sbr1/config.json": "19f8d41f06f01734502adfe36148b0c7366fc1b63c23fa2c9a73338c555b9dea",
+    ".private/continuation_20261001/research_reconciliation_worker_original.json": "ddcf746d8db656a0a545c4dacd190ee17acf6e105464a5a137b98f315de965d5",
+    ".private/continuation_20261001/full_cycle_summary.json": "a3fadea4abc98dd19d48e121ca728e136d41332bc5db566589a095a7ebe5c8fa"
+  },
+  "foreign_diff": {
+    "path": "configs/allowlist_change_log.json",
+    "sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "preserved_untracked": true
+  },
+  "next_actions": [
+    "Oct2 13:30UTC/16:30Cyprus observe existing scheduled Alpaca re-arm; inspect unresolved first-cycle/protection by13:35UTC. No manual send-orders/activation/kill/restart. Prefer end-of-session private baseline.",
+    "ATT1 local measured observation-budget work before relying on another batch of public signals; preserve current epoch and dirty evidence.",
+    "SBR1 current compare gate blocked at N=0; existing fixed51 lifecycle/control certification prerequisite, not another backtest or timer cosmetic repair."
+  ]
+}

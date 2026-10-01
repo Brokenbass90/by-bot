@@ -1,6 +1,7 @@
 # MASTER HANDOFF — 2026-10-01
 
-Canonical migration entry point. Snapshot **2026-10-01 14:18 UTC / 17:18 Cyprus**;
+Canonical migration entry point. Latest production snapshot
+**2026-10-01 17:07 UTC / 20:07 Cyprus**; original migration snapshot14:18UTC.
 runtime facts must be refreshed, never inferred from this document's age.
 Read this document, then `NEW_CHAT_START_HERE.md`, then only the relevant section
 at the TOP of `CODEX_SESSION_CHECKPOINT_2026_09_06.md`. Older sections are history.
@@ -9,12 +10,16 @@ at the TOP of `CODEX_SESSION_CHECKPOINT_2026_09_06.md`. Older sections are histo
 
 - Production checkout: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`.
 - Branch: `codex/recovery-20260824`; remote: `origin` (Brokenbass90/by-bot).
-- Last committed/pushed HEAD **before this migration-only commit**:
+- Migration commit verified against actual origin at continuation start:
+  `8ffe20816fab2ebb6b64dfab5372341ca708ce7e`; branch/head matched. Subsequent
+  evidence/documentation commits must be resolved from current Git, not this value.
+- Last committed/pushed HEAD **before the migration-only commit**:
   `f361f7e80739afbb46514e59746a91b02734f7ba`, `Record owner Alpaca live launch and protected broker fills`.
 - Other exact milestones: `c5745a3` owner activation procedure; `834990d` ATT1 native SL recovery;
   `74b7214b2d722b9e45c12024065d9a78c162567f` installed Alpaca source.
-- This file cannot embed its own future commit hash. Resolve migration commit with
-  `git log -1 --format='%H %s' -- reports/MASTER_HANDOFF.md`; verify current HEAD against origin.
+- This file cannot embed its own future commit hash. Resolve the latest document
+  version with `git log -1 --format='%H %s' -- reports/MASTER_HANDOFF.md`;
+  migration commit is8ffe208. Verify current HEAD against origin.
 - Preserved unrelated untracked file: `configs/allowlist_change_log.json`. Do not stage or delete it.
 - VPS: `root@64.226.73.119`; SSH key path `~/.ssh/by-bot`; VPS cron timezone **Etc/UTC**.
 - Owner performed actual Alpaca activation on Oct1 at 14:05:49 UTC. Codex only
@@ -31,13 +36,13 @@ The cap is allocated capital, not a guaranteed maximum loss. Stops do not elimin
 
 Frozen signal session Sep30 → entry session Oct1. Selection CRWD/AMD/META prepared
 Sep30 20:12 UTC. First actual scheduled LIVE cycle Oct1 14:10 UTC; bridge0/ratchet0.
-Latest maintenance receipt **14:15:05 UTC**, `LIVE_CYCLE_COMPLETE`, owned names all3.
+Latest checked maintenance receipt **17:05:05 UTC**, `LIVE_CYCLE_COMPLETE`, owned names all3.
 
 | Symbol | Actual qty | Broker avg entry | Accepted DAY stop / durable floor | Durable HWM at snapshot |
 |---|---:|---:|---:|---:|
-| AMD | 0.186377282 | 609.57 | 560.90 | 609.57 |
-| CRWD | 0.469970151 | 265.336 | 242.13 | 265.336 |
-| META | 0.141939508 | 724.534 | 668.76 | 724.66 |
+| AMD | 0.186377282 | 609.57 | 560.90 | 612.37 |
+| CRWD | 0.469970151 | 265.336 | 242.13 | 266.57 |
+| META | 0.141939508 | 724.534 | 668.76 | 729.8101 |
 
 All three original buys filled. Three open sell stops have broker status `new`,
 TIF `day`, exact held quantities. Entry/stop order IDs match durable ownership state.
@@ -89,10 +94,13 @@ VPS services/timers freshly observed:
 - `att1-fixed51-raw-shadow.timer`, `att1-ets2s-signal-shadow.timer`,
   `btc-h1-regime-updater.timer` active/enabled. L1 signal service itself was
   inactive/dead, Result=success, unit disabled: normal timer-triggered oneshot, not a missing daemon.
-- `sbr1-zero-risk-shadow.timer` active/enabled; last service result exit-code/failed.
+- `sbr1-zero-risk-shadow.timer` active/enabled; last checked17:10 service result timeout/failed.
   Claude describes valid underlying coverage and a misleading summary counter.
   Keep both facts; systemd failure alone does not prove the research dataset broken,
   and Claude's note alone does not prove current operational health. No restart/repair today.
+  Fresh17:13UTC prefix:47,968 events, valid chain,0 admitted/fills/outcomes,
+  control journal absent; last17:10 run timed out. This blocks comparison, not
+  a strategy verdict or evidence-corruption conclusion. See continuation receipt.
 - Density collector remains OFF, no required OLD/public ATT1 consumer found in checked code.
   Do not resurrect a manual screen collector to make a process list look complete.
 - Existing unrelated cron entries are **preserve-as-is**, not approval to revive
@@ -111,6 +119,9 @@ These dates are broker-backed snapshot facts; later DST/calendar changes must no
 
 1. Preserve an end-of-session baseline privately: owned positions, full remaining qty,
    last accepted stop IDs/status, durable floor/HWM/entry IDs, latest successful receipt.
+   An interim17:07UTC baseline is already saved as
+   `.private/continuation_20261001/alpaca_baseline_20261001T170706Z.json`.
+   It is intraday; prefer the later end-of-session baseline when available.
 2. Query those stop IDs after expiry. Position-present + actual `expired` DAY receipt
    establishes expiry; absence from open orders alone does not. Filled stops require
    real fill/remaining-position reconciliation instead of assumed expiry.
@@ -149,13 +160,17 @@ No live kill/restart experiment is authorized for acceptance evidence.
 
 Epoch `att1-public-lifecycle-20260928-observation-timing`, runtime
 `/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-observation-timing`.
-At Oct1 14:18 UTC: **7 sessions; 6 filled simulations; 1 nonfill; 0 clean filled terminal**.
-Five dirty filled sessions flat: 1000RATS/BCH/JTO/ACE/GALA. One open simulated
-AVAXUSDT position qty1, no recorded incident yet, final net-R absent.
-**5 RECOVERY_GAP total**, four after resize; ACE/GALA are rejected stale/future
-books, BCH/JTO polling continuity. Do not carry forward Sept30's zero-new-gap statement.
-**68 H1 cycles, each51/51 unique symbols; duplicate journal event IDs0**.
-Missing external transitions remain NOT_PROVEN because gaps occurred. Heartbeat480ms.
+At Oct1 17:07 UTC: **9 sessions; 8 filled simulations; 1 nonfill; 0 clean filled terminal**.
+All8 filled simulations flat and dirty:1000RATS/BCH/JTO/ACE/GALA/AVAX/DOGE/PAXG.
+**8 RECOVERY_GAP total**. New AVAX2094ms/DOGE2602ms gaps span sequential
+management of two held books; no recorded individual book request crossed2s.
+Disposable local reproduction confirms aggregate serial budget can fail with two
+fresh books at1100ms/request. It is not deployed evidence or a fix. New PAXG gap
+is an actually stale book2643ms; scheduling cannot alone certify stale sources.
+**71 H1 cycles, each51/51 unique symbols; duplicate journal event IDs0**.
+Missing external transitions remain NOT_PROVEN because gaps occurred. Current
+driver/core/strategy pins unchanged. Full source evidence is preserved privately;
+`CONTINUATION_EVIDENCE_2026_10_01.json` carries counts and timing receipts.
 
 NEW authenticated binding native SL→fees/funding→finality code complete **orders OFF**,
 commit834990d, 346 local +346 isolated VPS tests, 42 candidate hashes. Not installed
@@ -205,8 +220,13 @@ carefully implementing and measuring it. Reward measured progress, kill weak lea
 preserve capital and optionality. Profit is a hypothesis to test, not a deadline promise.
 
 Production priority: protect/observe Alpaca LIVE → ATT1 existing gate/dossier.
-Then reconcile existing SBR1, XSEC PIT, Bull Continuation and long/range candidates
-with current registry before assigning new work. Preliminary SBR1 +22.35R/PF2.14
+Existing leads were reconciled read-only against current registry Oct1. SBR1
+comparison is blocked at0 main outcomes/no control journal; deployed fixed51 is
+preparity raw, so existing prereg section7 certification remains necessary.
+XSEC exact PIT and Bull Continuation tested variants are NEGATIVE; do not revive.
+ETS2M WIDE frozen-cohort verdict is no earlier Oct10 19:00UTC. Claude's FX
+confirmation claim still lacks spread/swap and accepted net-cost evidence.
+Preliminary SBR1 +22.35R/PF2.14
 is a historical lead, not fresh/live profitability. Strategy diversification is
 a goal; it is not permission to force trades or loosen admissions.
 
@@ -348,7 +368,12 @@ Do not display `.env`/`profile.env`, use `set -x`, execute a trading script to
 - `ATT1_NATIVE_SL_AND_RESIZE_2026_09_30.json`: code tests/manifest, historical VPS snapshot.
 - `LTC_ID257_PROTECTION_STATUS_2026_10_01.json`: resolved final-qty discrepancy and limits.
 - `MIGRATION_STATE_2026_10_01.json`: current snapshot summary/hashes, no credentials.
+- `CONTINUATION_EVIDENCE_2026_10_01.json`:17:07 LIVE check, new ATT1 source timing/
+  local reproduction, fresh SBR1 comparison blocker and registry reconciliation.
 - Raw financial receipts: `.private/migration_20261001/{snapshot,ltc_truth,units}.json`,
   `.private/alpaca_activation_20261001/first_live_cycle.json`. Local only, ignored by Git.
+- Latest raw snapshots and interim baseline: `.private/continuation_20261001/`.
+  SBR1 fixed append-only prefix is in its `sbr1/` subdirectory. No private receipt
+  is staged; the public JSON contains only a summary and hashes.
 - Keep the canonical checkpoint's top synchronized with new operational facts;
   do not create competing truth documents or rewrite historical evidence.

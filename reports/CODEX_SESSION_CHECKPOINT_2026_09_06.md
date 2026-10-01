@@ -3,6 +3,52 @@
 ## Public continuation checkpoint
 
 
+Latest continuation — **October 1 17:07 UTC / 20:07 Cyprus: LIVE preserved; ATT1 budget blocker reproduced; SBR1 comparison blocked at N=0**:
+- Fresh GET-only Alpaca receipt: AMD/CRWD/META, all3 accepted `new` DAY sell
+  stops on exact held qty; entry/account lineage unchanged. Cap487.42/gross0.70,
+  all58 deployed source hashes and manifest unchanged. Floors560.90/242.13/668.76
+  retained; HWM now612.37/266.57/729.8101. Latest17:05 LIVE_CYCLE_COMPLETE,
+  bridge0/ratchet0; exactly1 NEW money cron, zero OLD manager cron/processes.
+  No real closed lifecycle/profitability claim. No activation/preflight-flat rerun.
+- Private baseline `.private/continuation_20261001/alpaca_baseline_20261001T170706Z.json`
+  pins actual stop/entry IDs and floor/HWM. This is **intraday**, not an end-of-session
+  baseline; prefer a later baseline if available. Oct2 expiry/re-arm is NOT_DUE,
+  not PASS: observe existing manager at13:30UTC/16:30Cyprus; inspect unresolved
+  protection/first completed cycle by13:35UTC. No next-day automation installed.
+- ATT1 now9 sessions/8 filled simulations/1 nonfill; **0 clean filled terminal,
+  8 RECOVERY_GAP, 0 open simulations**. AVAX closed dirty; new DOGE/PAXG also
+  dirty. 71 complete H1 cycles ×51/51; duplicate IDs0. Deployed driver/core/strategy
+  pins unchanged; OLD/public PIDs492970/492814, NRestarts0 since Sep30 starts.
+- New sourced gaps: AVAX2094ms and DOGE2602ms at15:01UTC span sequential
+  management of two held books. Recorded individual book requests stayed below2s;
+  remaining management/journal and publish time contributed. A disposable local
+  diagnostic reproduces a gap with two fresh books and1100ms/request, while one
+  book stays clean. This proves an aggregate-budget defect, not a network/CPU
+  sub-cause or a deployed fix. PAXG17:05UTC is separately **stale book2643ms**,
+  not future time; faster scheduling alone cannot certify that source.
+- Five targeted fail-closed/timing tests PASS locally Python3.12.8. No code or
+  runtime change; no346-test rerun claimed. Next engineering work belongs in the
+  existing observation driver, with exact2s/freshness gates and one journal writer.
+  Orders-OFF binding remains ready; money gate still2–3 clean prospective terminals.
+- SBR1 registry next action was checked against an actual immutable VPS prefix:
+  **47,968 events; chain/claims PASS; 53 raw signals, 0 admitted, 0 fills/outcomes,
+  control journal absent**. Source closure/prereg hash match. Fixed51 is explicitly
+  `preparity_raw_not_final_n`; current collection cannot supply the prereg N50/control
+  comparison merely by relabeling raw signals. Existing prereg section7 lifecycle/
+  control prerequisites remain the gate. Last17:10 unit timed out; intact evidence
+  and failed run are separate facts. No timer/strategy repair or NEGATIVE verdict.
+- Claude branch/head freshly verified locally: codex/dynamic-symbol-filters@76fc63c,
+  1040 dirty entries; cached tracking ahead6/behind2 is NOT a fresh remote check.
+  No merge/edit. Exact XSEC PIT and Bull Continuation variants are NEGATIVE and
+  stay closed; ETS2M frozen WIDE verdict no earlier Oct10 19:00UTC. FX confirmation
+  claim has no spread/swap evidence and no accepted net-edge conclusion.
+- Receipt `reports/CONTINUATION_EVIDENCE_2026_10_01.json`; raw receipts, gap sources,
+  SBR1 prefix and disposable reproduction private only. gpt-6-luna/medium bounded
+  worker model/effort verified from session metadata. Foreign allowlist file kept.
+
+Earlier continuation (superseded where noted):
+
+
 Latest continuation — **October 1 14:18 UTC: migration truth refreshed, no trading changes**:
 - NEW CHAT START: `reports/MASTER_HANDOFF.md` + `reports/NEW_CHAT_START_HERE.md`.
   Master includes exact production state, jobs, Oct2 PASS/FAIL/ALERT protocol,

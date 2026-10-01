@@ -44,12 +44,18 @@ sealed evidence или доверия ради красивого PASS. Не п�
   фактический re-arm на остаток позиций без снижения floor/HWM. Проверь broker clock.
 - Crypto OLD ATT1 LIVE сохранён. NEW ATT1 binding orders-OFF code complete,
   346 focused local/VPS тестов — инженерное evidence, не real clean cohort.
-- ATT1 public на последнем snapshot:7 sessions,6 filled simulations,1 nonfill,
-  0 clean terminal,5 gaps,1 открытый AVAX lifecycle. Gate2–3 clean terminal не пройден.
+- ATT1 public на snapshot01.10 17:07UTC:9 sessions,8 filled simulations,1 nonfill,
+  0 clean terminal,8 gaps,0 открытых simulations. AVAX/DOGE/PAXG закрыты dirty.
+  Gate2–3 clean terminal не пройден. Новые gaps и локальное воспроизведение
+  serial2s budget — `CONTINUATION_EVIDENCE_2026_10_01.json`; PAXG book был stale2643ms.
 - LTC id257:0.4 entry закрыт двумя0.2 exits; последний0.2 SL корректен для остатка.
   Непрерывная первоначальная защита исторически не доказана; не выдумывай её.
 - Research Claude находится в другом checkout. Не перепутай ветки и данные.
   Текущий research branch отличается от старого handoff; сначала verify, потом merge/push.
+- SBR1 уже проверен по свежему VPS journal:47,968 events,53 raw signals,0 admitted/
+  fills/outcomes,control отсутствует. Это raw pre-parity, не N50; сравнение с control
+  блокируется существующими lifecycle/control prerequisites. XSEC exact PIT и Bull
+  Continuation NEGATIVE, ETS2M verdict не раньше10.10 19:00UTC, FX costs не доказаны.
 
 ## Порядок приоритетов
 
