@@ -13,7 +13,7 @@
 порог выживания t ≥ 2.0 + поправка на число проверок за сессию (Бонферрони: t ≥ z(1 − 0.025/N)).
 Выживший получает только черновик предрегистрации; дальше — человек/Claude и обычная фабрика. Никаких денег.
 
-    python3 generator_v0.py --ollama            кандидаты от локальной модели (Mac, 127.0.0.1:11434)
+    python3 generator_v0.py --ollama [--model имя] кандидаты от локальной модели (Mac, 127.0.0.1:11434)
     python3 generator_v0.py --fayl kand.json    кандидаты из файла (например, от Claude)
 """
 import json, math, sys, urllib.request
@@ -27,6 +27,7 @@ import discovery_paket1 as P          # noqa: E402
 import discovery_paket5 as A          # noqa: E402
 
 GRAN = "2026-04-01"; MAX_KAND = 10
+MAX_SESSIY = 3          # менеджер 01.10: на этих свечах акций — сессия 1 + ещё максимум 2, потом датасет исчерпан
 KLADBISCHE = GEN / "kladbische.json"; ZHURNAL = GEN / "zhurnal.jsonl"
 PRIZNAKI = {
     "r5": "доходность 5 дней", "r20": "доходность 20 дней", "r60": "доходность 60 дней",
@@ -116,6 +117,22 @@ def proverit(k, D):
     return P.itog(sob, s_kontrolem=False, lag=lag)      # t Ньюи–Уэста: удержания перекрываются
 
 
+def podpis(k):
+    """сигнатура механизма без параметров и без знака: другой порог/срок или разворот проверенного механизма —
+    тот же тест (разворот = производная, только через prereg на новых данных, правило менеджера)"""
+    try:
+        if k["tip"] == "xs":
+            return ("xs", k["xs"]["priznak"])
+        s = k["sobytie"]
+        return ("sob", tuple(sorted((n, op) for n, op, _ in s["usloviya"])))
+    except Exception:
+        return None
+
+
+def zhurnal():
+    return [json.loads(l) for l in ZHURNAL.open() if l.strip()] if ZHURNAL.exists() else []
+
+
 def kladbische():
     return json.load(open(KLADBISCHE)) if KLADBISCHE.exists() else []
 
@@ -135,7 +152,14 @@ def prompt():
 
 def ot_ollama():
     tags = json.loads(urllib.request.urlopen("http://127.0.0.1:11434/api/tags", timeout=10).read())
-    model = tags["models"][0]["name"]
+    imena = [m["name"] for m in tags.get("models", [])]
+    if "--model" in sys.argv:
+        model = sys.argv[sys.argv.index("--model") + 1]
+    elif imena:
+        model = max(tags["models"], key=lambda m: m.get("size", 0))["name"]     # самая крупная локальная
+    else:
+        sys.exit("в Ollama нет моделей: ollama pull qwen2.5:14b")
+    print(f"Ollama: модели {imena}, берём {model}")
     body = json.dumps({"model": model, "prompt": prompt(), "stream": False, "format": "json"}).encode()
     r = json.loads(urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:11434/api/generate", body,
                                                                 {"Content-Type": "application/json"}), timeout=600).read())
@@ -160,19 +184,28 @@ def main():
     else:
         kand = json.load(open(sys.argv[sys.argv.index("--fayl") + 1])); istochnik = "fayl"
     kand = kand[:MAX_KAND]
-    mertvye = {x["semya"].lower() for x in kladbische()}
+    zh = zhurnal()
+    sessii = {z.get("sessiya", 1) for z in zh}
+    sessiya = max(sessii, default=0) + 1
+    if sessiya > MAX_SESSIY:
+        sys.exit(f"лимит сессий на этом датасете ({MAX_SESSIY}) исчерпан — нужны новые данные, не новые идеи")
+    mertvye = {x["semya"].lower() for x in kladbische()} | {z["kandidat"].get("semya", "").lower() for z in zh}
+    podpisi = {podpis(z["kandidat"]) for z in zh} - {None}
     D = dannye(); N = len(kand); porog = max(2.0, NormalDist().inv_cdf(1 - 0.025 / max(N, 1)))
-    print(f"кандидатов {N}, источник {istochnik}, порог t ≥ {porog:.2f}, данные до {D[0][-1]}")
+    print(f"сессия {sessiya}/{MAX_SESSIY}, кандидатов {N}, источник {istochnik}, порог t ≥ {porog:.2f}, данные до {D[0][-1]}")
     for k in kand:
         if not valid(k) or not k.get("kto_platit"):
             itog = {"verdikt": "ОТКАЗ", "prichina": "не по шаблону или без «кто платит»"}
         elif k["semya"].lower() in mertvye:
             itog = {"verdikt": "ОТКАЗ", "prichina": "семейство на кладбище"}
+        elif podpis(k) in podpisi:
+            itog = {"verdikt": "ОТКАЗ", "prichina": "вариант/разворот уже проверенного механизма"}
         else:
+            podpisi.add(podpis(k))
             itog = proverit(k, D)
             if itog.get("verdikt") == "SURVIVED" and itog.get("t", 0) < porog:
                 itog["verdikt"] = "KILLED"; itog["prichina"] = f"t {itog['t']} < {porog:.2f} (поправка на {N} проверок)"
-        zap = {"kandidat": k, "istochnik": istochnik, "itog": itog}
+        zap = {"kandidat": k, "istochnik": istochnik, "sessiya": sessiya, "itog": itog}
         with ZHURNAL.open("a") as f:
             f.write(json.dumps(zap, ensure_ascii=False) + "\n")
         print(f"{k.get('semya','?'):28s} {itog['verdikt']:9s} {itog.get('edge_bps','')} t={itog.get('t','')} {itog.get('prichina','')}")

@@ -11,7 +11,7 @@
 Можно прерывать: уже скачанные дни пропускаются.
 
     python3 dannye_akcii_grouped.py --spravochnik     справочник CS активные + снятые (минуты)
-    python3 dannye_akcii_grouped.py                   дневки по дням за 2 года (≈ 2 часа)
+    python3 dannye_akcii_grouped.py                   ETB-снимок Alpaca на сегодня + докачка дневок
 Кладёт research_lab/data/akcii_grouped/<YYYY-MM-DD>.json и spravochnik_{active,inactive}.json.
 """
 import datetime as dt, json, sys, time, urllib.error, urllib.request
@@ -75,6 +75,31 @@ def dnevki(k):
     print("готово")
 
 
+def etb_snimok():
+    """01.10: снимок shortable/easy_to_borrow Alpaca на сегодня — для ATTENTION_SHORT_ETB «ETB на дату события».
+    Только чтение списка активов (GET /v2/assets, paper-ключ из configs/alpaca_paper_local.env, не печатается).
+    Кладёт data/etb_snimki/<YYYY-MM-DD>.json: {символ: [shortable, easy_to_borrow]}. Ордеров нет."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import materialize_alpaca_pit_daily as M
+    e = M._load_env(ROOT / "configs/alpaca_paper_local.env")
+    k, s = e.get("ALPACA_API_KEY_ID", ""), e.get("ALPACA_API_SECRET_KEY", "")
+    if not k or not s:
+        print("ETB-снимок пропущен: нет ключа Alpaca paper"); return
+    p = LAB / "data/etb_snimki" / f"{dt.date.today().isoformat()}.json"; p.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        a = M._alpaca_asset_array(k, s)
+    except Exception as ex:
+        print(f"ETB-снимок не получен: {type(ex).__name__}"); return
+    d = {r["symbol"]: [bool(r.get("shortable")), bool(r.get("easy_to_borrow"))] for r in a if r.get("symbol")}
+    p.write_text(json.dumps(d))
+    print(f"ETB-снимок {p.name}: бумаг {len(d)}, ETB {sum(v[1] for v in d.values())}")
+
+
 if __name__ == "__main__":
     k = kluch()
-    spravochnik(k) if "--spravochnik" in sys.argv else dnevki(k)
+    if "--spravochnik" in sys.argv:
+        spravochnik(k)
+    else:
+        if "--bez-etb" not in sys.argv:
+            etb_snimok()
+        dnevki(k)
