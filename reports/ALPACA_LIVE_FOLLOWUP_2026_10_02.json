@@ -1,0 +1,42 @@
+{
+  "schema_id": "alpaca_live_followup_v1",
+  "as_of_utc": "2026-10-02T19:12:24.835000+00:00",
+  "status": "PASS_CURRENT_BROKER_PROTECTION",
+  "manager_cycle_utc": "2026-10-02T19:10:05.403371+00:00",
+  "positions": [
+    {
+      "symbol": "AMD",
+      "qty": "0.186377282",
+      "accepted_day_stop": "622.24",
+      "hwm": 644.811,
+      "ownership_quantity_floor_hwm": "PASS"
+    },
+    {
+      "symbol": "CRWD",
+      "qty": "0.469970151",
+      "accepted_day_stop": "242.13",
+      "hwm": 273.335,
+      "ownership_quantity_floor_hwm": "PASS"
+    },
+    {
+      "symbol": "META",
+      "qty": "0.141939508",
+      "accepted_day_stop": "668.76",
+      "hwm": 736.33,
+      "ownership_quantity_floor_hwm": "PASS"
+    }
+  ],
+  "one_new_manager": true,
+  "old_managers_absent": true,
+  "source_hashes_unchanged": true,
+  "cap_usd": 487.42,
+  "gross": 0.7,
+  "broker_writes_by_codex": 0,
+  "closed_real_lifecycles": 0,
+  "private_snapshot_sha256": "fe6b17083f57abf6f019bb8351bd46f3f67e5f40abf52ca7cc779da32435a696",
+  "previous_day_rearm_receipt": "ALPACA_DAY_REARM_2026_10_02.json",
+  "next_gate": "Oct5 next regular open: remaining quantity, new accepted DAY stop IDs, floor/HWM and single manager; no activation/re-entry.",
+  "limits": [
+    "DAY stops expire, no continuous overnight coverage or guaranteed fill/net profit."
+  ]
+}

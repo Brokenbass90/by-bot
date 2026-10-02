@@ -1,0 +1,240 @@
+{
+  "schema_id": "att1_canary_orders_off_readiness_v1",
+  "generated_utc": "2026-10-02T19:20:53.283976+00:00",
+  "status": "IMPLEMENTED_ORDERS_OFF_ACTUAL_BINDING_BLOCKED",
+  "engineering_acceptance": "PASS_WITH_REPORTED_BASELINE_FAILURES",
+  "actual_build_readiness": "BLOCKED_ACTUAL_INPUTS",
+  "orders_allowed": false,
+  "owner_go": false,
+  "money_gate_met": false,
+  "clean_filled_terminals": 0,
+  "installed_on_money_service": false,
+  "production_db_migrated": false,
+  "broker_writes_by_codex": 0,
+  "source_code_commit": "3f999c9646809a6744fbddfc82cbaa3ddfebde25",
+  "files_sha256": {
+    "bot/att1_canary_preparation.py": "df5df349065c6b6d396db845e561cfb874a605820e00a1b71087d2644823abad",
+    "bot/att1_coordinator_adapter.py": "6c3cedc72599d73d9209e38e1a057a035845da0702e570d0bd01331dc6ab5292",
+    "smart_pump_reversal_bot.py": "5f8c91b884a141655c6e8df1c0ebd089b22b4c43d8da5799b57f25f0908afb25",
+    "scripts/package_att1_canary_orders_off.py": "5a3c41ad0d6040a6cb81c770a8605200bf1179e9a2a86f23da0fec9527421a8d",
+    "tests/test_att1_canary_budget.py": "3f7022987d28eb900381f037a7c165d81ad0d6a06026c2c9c6b406be6f77b846",
+    "tests/test_att1_canary_preparation.py": "cffab8cfc4498d2281400e9cccbcf192e2bbbcd09f2cb7cd9499899da070ef0c",
+    "tests/test_att1_exclusive_reservation.py": "93f1eff6eb32117935555004cbd4077831387dae56e6c2fa389144a214d08b41",
+    "tests/test_package_att1_canary_orders_off.py": "605ab9236d08771db2ab8994b232673216ac532184a68f0181d952648718d197"
+  },
+  "tasks": {
+    "1_fixed_cash_limits": "DELIVERED_604131e",
+    "2_atomic_reservation_finality": "DELIVERED_85913e0_WITH_3f999c9_REVIEW_FIX",
+    "3_captured_commands_recovery": "DELIVERED_4b31b1a",
+    "4_package_runbook_receipt": "DELIVERED_83d2f0b_WITH_3f999c9_CLOSURE_FIX"
+  },
+  "tests": {
+    "local_targeted_passed": 242,
+    "target_passed": 233,
+    "local_packaging_cases_included": 9,
+    "target_python": "3.12.3",
+    "enabled_seam": "CAPTURE_AND_LOOKUP_ONLY_NO_SEND",
+    "full_before": {
+      "passed": 3267,
+      "failed": 57
+    },
+    "full_after": {
+      "passed": 3329,
+      "failed": 57
+    },
+    "new_failure_nodeids": [],
+    "baseline_failed_nodeids": [
+      "tests/test_alpaca_bakeoff_v2_preflight.py::test_preflight_freezes_future_window_but_stays_blocked_on_inputs",
+      "tests/test_alpaca_exact_parity_materialization.py::test_materializer_records_real_blockers_without_performance_or_live_authority",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_manifest_source_closure_is_hash_bound_to_config_and_required_paths",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_repository_contract_is_default_off_and_binds_att1_ets2s_fixed51",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_runtime_paths_are_beneath_caller_root_and_reject_escape_and_symlink",
+      "tests/test_att1_fixed51_shadow.py::test_all_att1_environment_inputs_are_restored_after_cycle",
+      "tests/test_att1_fixed51_shadow.py::test_events_are_raw_only_include_runtime_reason_hashes_and_diagnostic_regime",
+      "tests/test_att1_fixed51_shadow.py::test_expected_hft_unavailable_is_explicit_but_unknown_gap_fails_partial",
+      "tests/test_att1_fixed51_shadow.py::test_next_closed_h1_creates_new_raw_event_per_symbol",
+      "tests/test_att1_fixed51_shadow.py::test_observation_and_open_bar_changes_are_idempotent_but_closed_mutation_conflicts",
+      "tests/test_att1_fixed51_shadow.py::test_preflight_is_no_network_and_reports_evidence_money_separation",
+      "tests/test_att1_fixed51_shadow.py::test_repository_config_pins_exact_fixed51_manifest_and_major8_money_universe",
+      "tests/test_att1_fixed51_shadow.py::test_zero_success_is_raw_fail_closed",
+      "tests/test_audit_alpaca_protection_challenger_v2.py::test_committed_alpaca_v2_receipt_passes_independent_audit",
+      "tests/test_audit_att1_pivot_sequence_v1.py::test_committed_att1_pivot_sequence_receipt_passes",
+      "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_does_not_import_runner",
+      "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_is_metadata_only_and_ready",
+      "tests/test_audit_frequent_crypto_rehab_v2.py::test_receipt_is_research_only_and_evidence_backed",
+      "tests/test_audit_inplay_causal_receipt.py::test_current_inplay_receipt_is_shadow_only_not_capital",
+      "tests/test_build_recovery_session_report.py::test_report_separates_scenarios_from_money_authority",
+      "tests/test_collect_inplay_prospective_shadow.py::test_replay_records_signal_parity_diagnostics",
+      "tests/test_horizontal_breakout_long_72h_sealed_v1_runner.py::test_default_preflight_fails_before_any_market_row_is_opened",
+      "tests/test_mac_att1_research_job.py::test_caffeinate_process_is_released_when_stage_finishes",
+      "tests/test_mac_att1_research_job.py::test_changed_hashed_input_refuses_to_reuse_completed_receipt",
+      "tests/test_mac_att1_research_job.py::test_completed_immutable_job_is_a_noop_on_later_launchd_wakeup",
+      "tests/test_mac_att1_research_job.py::test_crash_after_committed_stage_resumes_only_unfinished_stage",
+      "tests/test_mac_att1_research_job.py::test_failed_stage_persists_backoff_then_retries_within_attempt_limit",
+      "tests/test_mac_att1_research_job.py::test_inherited_lock_survives_parent_crash_until_active_child_exits",
+      "tests/test_mac_att1_research_job.py::test_os_sandbox_denies_network_and_local_credentials",
+      "tests/test_mac_att1_research_job.py::test_runner_strips_secrets_and_cli_rejects_arbitrary_command_input",
+      "tests/test_mac_att1_research_job.py::test_stage_heartbeat_updates_while_child_runs",
+      "tests/test_preflight_event_expansion_retest_long_v1_phase1.py::test_current_phase1_identity_is_clean_but_performance_and_live_are_blocked",
+      "tests/test_public_cashcarry_station_v1.py::test_corrupt_state_and_adapter_identity_fail_closed",
+      "tests/test_public_cashcarry_station_v1.py::test_one_cycle_is_per_symbol_durable_and_resume_reconciles_without_overwrite",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_bootstrap_parse_failure_keeps_consumed_claim_and_partial_forensics",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_claim_is_durable_before_scorer_callback",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_existing_claim_refuses_before_scorer_callback",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[extra]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[symlink]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_interrupt_after_claim_writes_terminal_receipt",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[drifted]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[malformed]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[gap]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[hash]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[infinite_ohlc]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[records_sha]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[schema]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[window]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_missing_authorization_never_opens_market_or_creates_claim",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_semantic_reserved_failure_preserves_observed_rows_and_staged_accounting",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_stale_output_refuses_before_claim",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_success_receipt_has_exact_forensic_identity_and_inventory",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_symlinked_output_refuses_before_claim",
+      "tests/test_sbr1_fixed51_universe.py::test_preflight_rejects_fixed51_identity_or_provenance_drift",
+      "tests/test_sbr1_zero_risk_shadow.py::test_repository_config_pins_verified_manifest_and_full_source_closure",
+      "tests/test_strategy_env_prefix_isolation.py::test_legacy_asb1_prefix_remains_a_fallback",
+      "tests/test_strategy_promotion_queue.py::test_queue_fails_when_active_wip_exceeds_limit"
+    ]
+  },
+  "critical_review": {
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "runtime_turn_context_verified": true,
+    "rollout_id": "01a0fdfd-d604-71a3-b527-cf48159d639a",
+    "range": "3caf369..83d2f0b",
+    "independent_verdict": "CHANGES_REQUIRED",
+    "findings": [
+      {
+        "severity": "P1",
+        "issue": "terminal cash could zero true lifecycle loss/fees before slot release",
+        "fix": "matching saved profile/intent/command/binding + complete source identities and exact economic totals, then atomic debit/release"
+      },
+      {
+        "severity": "P1",
+        "issue": "direct cash-aware reserve omitted handoff",
+        "fix": "mandatory handoff inside BEGIN IMMEDIATE, no public API bypass"
+      }
+    ],
+    "fix_commit": "3f999c9",
+    "primary_fix_regressions": "RED4_THEN_GREEN_LOCAL_AND_TARGET",
+    "independent_review_repeated": false
+  },
+  "historical_oracle": {
+    "oracle_sha256": "e4ffacd1723ea410789301d85e75406bc0679514d686a7e1e548e00bf5bf67cc",
+    "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
+    "records": 162,
+    "scope": "Read-only captured hash chains and pure frozen receipt oracle. Preexisting repository native-stop extension has a different implementation pin; old public sessions may only reopen with their captured deployed closure, never this broker candidate. No header rewrite.",
+    "sessions": 14,
+    "state_sha256": "b85269ac3e63d6b660602360e538e56aafabb277afb62b7b2c8d460059bcd377",
+    "status": "PASS_BYTE_IDENTICAL_RECEIPT_ORACLE"
+  },
+  "fixture_archive": {
+    "archive_sha256": "61013e8ecaf7c1c03624b256b446bbbc1ccba837202e54935fa5676acba2ca4d",
+    "closure_sha256": "de4de2c3bb184ba2d60a4bbf4c5b75e2ef75936c9889b2c19993f153f08d915a",
+    "files": 34,
+    "installed_on_money_service": false,
+    "money_gate_met": false,
+    "orders_allowed": false,
+    "owner_go": false,
+    "private_binding_sha256": "390381fbb33386388978435e6d6c4174234477e2baca8b06447cdee08f0b6a6f",
+    "readiness": "ENGINEERING_FIXTURE_ONLY",
+    "source_tree_head": "3f999c9646809a6744fbddfc82cbaa3ddfebde25"
+  },
+  "fixture_limits": "Synthetic unit-test caps only; not an authenticated proposal for the owner account.",
+  "actual_inputs_missing": [
+    "fresh complete effective OLD absolute USDT risk source/config/equity/breaker/volatility/notional inputs",
+    "authenticated selected-account fee tier and source-bound conservative funding reserve",
+    "complete economic-day OLD+NEW cash attribution/fees/funding and historical finality coverage",
+    "complete actual OLD intent/finality inventory and source-bound consumed-H1/cooldown/terminal watermarks for all8 symbols",
+    "authentic actual numeric proposal/handoff acceptance bound to source/target/review receipts"
+  ],
+  "activation_requirements": [
+    "2–3 prospective filled clean terminals with terminal net-R under unchanged2s evidence",
+    "fresh absolute OLD comparison and exact exclusive single-owner handoff dossier",
+    "separately reviewed selected-client autonomous money dispatch, protection/recovery/cost acceptance",
+    "separate explicit owner GO"
+  ],
+  "old_runtime": {
+    "as_of_utc": "2026-10-02T18:55:44.023000+00:00",
+    "pid": 492970,
+    "positions": 0,
+    "orders": 0,
+    "pagination_complete": true,
+    "new_entries_paused": true,
+    "source_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "control_sha256": "239a24050a91155358a1aa545d67e6c720fa3bef4da54a53c2951b4570bf02ef",
+    "service_restarted": false
+  },
+  "public_runtime": {
+    "as_of_utc": "2026-10-02T18:55:45.262000+00:00",
+    "pid": 1584802,
+    "epoch": "att1-public-lifecycle-20261002-paired-observation",
+    "sessions": 1,
+    "records": 3,
+    "filled": 0,
+    "clean_filled_terminals": 0,
+    "journal_sha256": "322789a238e4324630e4179ac1f5730cb7bc827f3d611fdbd0942f997f300ecd",
+    "sequence": [
+      "START",
+      "ENTRY_ACK",
+      "ENTRY_FINAL"
+    ],
+    "scope": "Simulated IOC nonfill; does not verify held-position aggregate timing."
+  },
+  "alpaca_followup_receipt": "ALPACA_LIVE_FOLLOWUP_2026_10_02.json",
+  "claude_research": {
+    "origin_ref_verified": "e965b68bf183713e2bff9355567c8b05a3214fe1",
+    "map": "research_lab/KARTA.md",
+    "local_sibling_ref": "c1fb5671a4ec000e5fa2119ed838ee990744586f",
+    "scope": "Immutable read, no judge/window rerun, checkout write or merge.",
+    "NOCHNOY_FX": "KILLED_NOT_EXECUTABLE_BOTH_PREREGISTERED_BROKERS",
+    "TOLPA": "FORWARD_DATA_PENDING_PIT_REFRESH",
+    "PM2": "FROZEN_VERDICT_PENDING_VALID_DATA_DATES"
+  },
+  "foreign_sha256_preserved": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "private_evidence_sha256": {
+    "canary_build_broker_truth.json": "e67fe778d8656087db011f35f546cb02551184442f595e68b4bcf0a0dbec5c2f",
+    "canary_build_public_truth.json": "232787dad651171de29be16eb9a19977b6d4e47211246a0cb1e8173992642cbd",
+    "canary_target_acceptance_final.log": "df9f3fb10afc06081041bf247099a007ed3f4f3448d42659550bba71e649150b",
+    "canary_historical_oracle.json": "ce57efd93057b31a8ffd1549b615a430c587d708d1909a307ea7680b4b4ead80",
+    "canary_fixture/offline_acceptance.tar": "6bf241cec32de324d83a83e7f3cb3526f150a3048647d9f4f3f420632e0f0f93",
+    "claude_karta_current.md": "33e7c22e05a5106f979190951ae9235dedcf9eeed39f5dd2817f1866b9379239"
+  },
+  "verification_logs_sha256": {
+    "baseline.log": "415197d8521a28dda500079b5dc74e95602a4be9f3fe6e2c894d2388fa0bec23",
+    "final-full.log": "cace3cab57a96ce5ceb4bce9081152f536a8e80ae8f0547c44660c25a0976dd0",
+    "final-targeted.log": "a918a8de0cb197dcd1905520982434005d1846c1f9629ddb94f875c5a930f3e0"
+  },
+  "limitations": [
+    "Full suite is not globally green; the exact57 baseline failure node IDs are unchanged.",
+    "Declared hashes/pure validation are not proof of signed provenance or money authority.",
+    "Engineering tests and captured commands do not prove real protection, continuous execution or positive net edge.",
+    "Old public recovery uses its original deployed closure; broker candidate cannot adopt old journal implementation pins.",
+    "Actual account package is not BUILD_READY until the named authentic inputs/acceptance are complete.",
+    "Daily admission budget is not a guaranteed loss bound after market gaps/slippage."
+  ],
+  "runbook": "ATT1_CANARY_ORDERS_OFF_HANDOFF_2026_10_02.md",
+  "next_bounded_cycle": "Collect missing actual-account risk/cost/OLD handoff inputs and an explicit blocked-input receipt; public collection continues. No NEW orders.",
+  "test_side_effects": {
+    "file": "configs/allowlist_change_log.json",
+    "cause": "Existing full-suite AllowlistWatcher tests write real local CHANGE_LOG",
+    "own_suffix_removed_only_after_original_prefix_hash_match": true,
+    "original_bytes_restored": true,
+    "private_forensic_copy_sha256": "28583ed54d77abc9fa52a0a963bfc9e5dd332eb35b364fe96220ae4ba9dbeb27",
+    "future_suite_rule": "Redirect watcher CHANGE_LOG and RESTART_FLAG into a temporary test directory before pytest.main; do not modify financial runtime."
+  },
+  "orchestration": {
+    "native_execution": "PRIMARY_IN_CURRENT_WORKING_TREE",
+    "tasks_1_2_not_restarted": true,
+    "critical_reviews": 1,
+    "mechanical_evidence_worker": "USAGE_LIMIT_RECORDED_NO_EXPENSIVE_REPLACEMENT",
+    "critical_model_effort_verified_from_runtime": true
+  }
+}

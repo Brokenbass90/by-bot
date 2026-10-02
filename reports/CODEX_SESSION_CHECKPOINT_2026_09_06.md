@@ -2,6 +2,51 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October2 engineering delivery: Native Tasks1–4 complete, NEW ordersOFF; actual account binding BLOCKED**:
+- Implementation commits604131e/85913e0/4b31b1a/83d2f0b, critical fixes3f999c9.
+  Source-proven declared fixedUSDT limits/daily OLD+NEW budget, atomic slot/cash,
+  mandatory pause/drain/watermarks, captured frozen entry/protection/exit and stable
+  recovery links; full preparation persists before exposure. No NEW send API,
+  money service install, production DB migration or runtime flag change.
+- Local242 focusedPASS; target233PASS on VPS Python3.12.3 in isolated/tmp,
+  enabled seam capture/lookup only. Historical14-session/162-record pure receipt
+  oracle byte-identical. Old public recovery still requires its original deployed
+  implementation closure; the preexisting broker-native-stop extension has a
+  different pin. No sealed journal header rewritten or public source changed.
+- One fresh6-astra/high critical review verified runtime turn_context. It returned
+  CHANGES_REQUIRED: finality could understate actual costs; direct reserve could
+  omit handoff. Both reproduced RED and fixed; primary local/target regressions
+  PASS. Independent review was not repeated or retrospectively called PASS.
+- Full suite57 failed/3329 passed; failed node IDs exactly match57 baseline
+  failures/3267 passed. Existing watcher tests appended own fixture rows to the
+  untracked allowlist log; archived privately and removed only those rows after
+  proving exact original prefix SHA. Foreign bytes restored add587…f19a1, unstaged.
+- Dedicated deterministic34-file archive is ENGINEERING_FIXTURE_ONLY, synthetic
+  caps. Actual BUILD_READY blocked by fresh effective OLD risk/fee/funding/cash
+  provenance and complete actual intent/drain/H1/cooldown packet. Pure hashes do
+  not establish authenticity.2–3 prospective filled clean terminals/net-R, fresh
+  exclusive dossier and separate owner GO remain mandatory; ordersfalse.
+- Broker18:55:44UTC OLD PID492970 same,0 positions/orders/full pages, native pause
+  true; public18:55:45UTC PID1584802 RUNNING/same epoch/1 IOC nonfill3 rows,
+ 0filled/clean. These retain timestamps, not a claim of continuous flatness.
+- Alpaca19:12:24UTC read-only broker PASS: same AMD/CRWD/META quantities/ownership,
+  full DAY stops622.24/242.13/668.76; HWM644.811/273.335/736.33 monotonic.
+  One NEW scheduled manager, OLD absent, unchanged58 hashes. Cycle19:10UTC
+  complete. Original13:38UTC DAY re-arm PASS remains historical; next openOct5.
+- Claude latest actual research origin/ref e965b68 verified and KARTA read without
+  checkout writes/merges/judge reruns. **NOCHNOY FX KILLED/NOT_EXECUTABLE** both
+  preregistered brokers; remove from LIVE queue. TOLPA forward blocked by PIT data
+  refresh at17:29UTC health snapshot; PM2 frozen valid-date verdict pending.
+  FactoryOFF/self-check claimsPASS/emptyqueue; verify current defects before fixes.
+- Receipts: ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json + HANDOFF runbook;
+  ALPACA_LIVE_FOLLOWUP_2026_10_02.json. Updated CURRENT_PROJECT_ROADMAP separates
+  immediate evidence/input work from oneFactorye2e, independent mechanisms, later
+  governor/AI proposals/web view/ML and dependency-safe cleanup. Nothing started.
+  Next bounded Codex cycle: actual account risk/cost/OLD handoff inputs while
+  public evidence accumulates; regime/Elder stays separate/nonblocking.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **October2 15:36–16:02UTC: owner-authorized OLD entry pause executed and runtime-confirmed; NEW canary orders-OFF plan written**:
 - Direct owner approval: native pause OLD new entries after fresh broker flat/
   no-open-orders + postcheck; keep service/exits/protection. Applied

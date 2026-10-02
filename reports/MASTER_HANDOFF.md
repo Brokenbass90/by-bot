@@ -1,18 +1,27 @@
 # MASTER HANDOFF — 2026-10-02
 
-Canonical migration entry point. Latest Alpaca broker snapshot **Oct2 13:38:52 UTC /
-16:38:52 Cyprus**; Alpaca DAY expiry/re-arm **PASS**. ATT1 public-only cutover
-completed **13:57:43 UTC**, with separate postchecks; NEW crypto money remains OFF.
-Later read-only follow-up14:29–14:36UTC measured regime input/path prerequisites;
-written prospective availability design is DRAFT, awaiting owner review.
-Owner-authorized OLD ATT1 new-entry pause applied **15:36:43UTC /18:36:43 Cyprus**;
-direct Bybit postchecks flat/no orders immediately, after90s and **16:02:50UTC**.
-OLD service/management preserved; next-H1 runtime pause counter115, entries unchanged.
-Persistent control readback16:02:50UTC;
-NEW public first C98 session is an IOC nonfill, **0 clean filled terminals**.
-Canary orders-OFF implementation plan written; build/financial activation pending.
-Read this document, NEW_CHAT_START_HERE.md, then the TOP checkpoint. Old dated
-receipts retain their original facts; verify drift-prone broker/runtime truth.
+Canonical production entry point; October2 owner-approved Tasks1–4 engineering
+is delivered. Current code3f999c9; resolve subsequent documentation HEAD from Git.
+Read NEW_CHAT_START_HERE.md and TOP checkpoint next. NEW ordersOFF, actual account
+BUILD_READY blocked by the named risk/cost/drain/watermark inputs and clean cohort.
+Local242/target233 focused tests PASS; unchanged57 baseline full-suite failures
+are explicitly reported. Independent financial review's two P1 findings were fixed
+and primary-verified; its original CHANGES_REQUIRED verdict remains recorded.
+
+Latest broker follow-ups: Alpaca **19:12:24UTC /22:12 Cyprus**, same3 holdings,
+accepted full DAY stops, floor/HWM monotonic and one NEW manager. Original
+Oct2 DAY expiry/re-arm PASS at13:38UTC is retained with its timestamp. OLD ATT1
+native new-entry pause already applied15:36UTC; signed18:55UTC GET flat/no orders,
+service PID492970 preserved. Public18:55UTC:1 IOC nonfill,0filled/clean, PID1584802.
+No money/service/cron/risk changes in this engineering delivery.
+
+Current receipts/runbook: ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json,
+ATT1_CANARY_ORDERS_OFF_HANDOFF_2026_10_02.md, ALPACA_LIVE_FOLLOWUP_2026_10_02.json.
+CURRENT_PROJECT_ROADMAP.md now includes the manager's staged development queue.
+Fresh Claude KARTA from originresearch/fabrika-v1@e965b68 supersedes old FX claims:
+NOCHNOY is KILLED/NOT_EXECUTABLE; TOLPA first needs current PIT inputs. Research
+was read only, no merge/evaluator/window consumption. Drift-prone facts must be
+refreshed before future action; historical sections keep their original dates.
 
 ## 1. Repository, authority and delivery
 
@@ -47,7 +56,13 @@ The cap is allocated capital, not a guaranteed maximum loss. Stops do not elimin
 
 Frozen signal session Sep30 → entry session Oct1. Selection CRWD/AMD/META prepared
 Sep30 20:12 UTC. First actual scheduled LIVE cycle Oct1 14:10 UTC; bridge0/ratchet0.
-Latest checked maintenance receipt **Oct2 13:35:02 UTC**, `LIVE_CYCLE_COMPLETE`,
+Latest follow-up **Oct2 19:12:24UTC**: same3 held quantities/lineage, full DAY
+stops AMD622.24/CRWD242.13/META668.76, HWM644.811/273.335/736.33;
+one NEW manager, all58 hashes unchanged, latest completed cycle19:10:05UTC.
+See `ALPACA_LIVE_FOLLOWUP_2026_10_02.json`. No filled sell/closed lifecycle.
+
+The DAY re-arm acceptance snapshot below retains its original13:38UTC time:
+maintenance receipt **Oct2 13:35:02 UTC**, `LIVE_CYCLE_COMPLETE`,
 bridge0/ratchet0, owned names all3; direct broker truth at13:38:52UTC.
 
 | Symbol | Actual qty | Broker avg entry | Accepted DAY stop / durable floor | Durable HWM at snapshot |
@@ -271,9 +286,10 @@ Four bounded tasks reuse existing process/reservation/coordinator: source-proven
 fixedUSDT risk and daily OLD+NEW budget; atomic reserve/finality cash transfer;
 captured entry/protection/exit/recovery commands; inert source closure plus
 rollback/handoff dossier. No second money daemon or one-flag activation.
-Written critical review corrected cash transfer before slot release, command-bound
-reserves and entry gates that must not block management/exits. Plan owner review
-pending; no new canary code/build installed or numeric risk approval claimed.
+Owner approved the Native plan; Tasks1–4 are now delivered locally/Git.
+Engineering242 local/233 targetPASS; actual numeric source acceptance remains
+BLOCKED. Runbook/receipt above include the two implemented critical review fixes.
+No code/build installed on money service and no numeric risk approval claimed.
 Regime/Elder separate and nonblocking. Public collection continues during build;
 NEW money requires clean cohort + fresh absolute-risk/exclusive dossier + owner GO.
 

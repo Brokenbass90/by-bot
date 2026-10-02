@@ -1,10 +1,79 @@
-# Current roadmap — 2026-10-01 migration pointer
+# Current roadmap — owner scope October 2, 2026
 
-Current source: `reports/MASTER_HANDOFF.md` and `reports/NEW_CHAT_START_HERE.md`.
-Alpaca LIVE first fills + protection confirmed. Next: Oct2 DAY re-arm verification,
-then ATT1 existing cohort/dossier; reconcile Claude registry before existing leads
-or bounded research/Factory repairs. No trading logic changes in migration.
-The Sep25 disabled-LIVE status and earlier plans below are historical only.
+Authoritative production state: MASTER_HANDOFF.md, NEW_CHAT_START_HERE.md and
+TOP CODEX_SESSION_CHECKPOINT_2026_09_06.md. Latest engineering delivery:
+ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json and its HANDOFF runbook.
+This section supersedes the historical roadmap below. The owner's approved
+Tasks1–4 are delivered; no NEW money, Factory start or architecture work was
+added to their implementation scope.
+
+## Immediate queue: finish current evidence and actual inputs
+
+| Work | Next measurable result | Boundary / owner |
+|---|---|---|
+| Alpaca LIVE | Preserve full-quantity accepted DAY stops, monotonic floor/HWM, single manager; next regular open Oct5 | Codex operations; no reactivation/size increase. Latest broker19:12UTC: AMD floor622.24, same3 holdings |
+| NEW ATT1 | Engineering commands-only acceptance delivered; complete actual risk/cost/OLD-drain/watermark packet, then source-bound numeric proposal | Codex; actual build BLOCKED_INPUTS; real ordersOFF. Public2–3 clean filled/net-R gate + fresh exclusive dossier + owner GO remain |
+| PM2 | Frozen judge after≥3 valid data dates; a positive price violation result then needs separate two-leg execution/cost gate | Claude; no direct LIVE promotion |
+| TOLPA_1D / weekly | First restore current PIT daily/top50 inputs, then frozen forward observations/180–365-day looks | Claude; same family evidence is not additive; no cheap-screen→LIVE shortcut |
+| ETS2M | Frozen verdict no earlier Oct10 19:00UTC | Claude; no retuning or early evidence consumption |
+| PEREGREV | Required prospective events/days and frozen verdict | Claude; execution baseline alone is not net edge |
+| NOCHNOY FX | **KILLED / NOT_EXECUTABLE** on BullWaves and preregistered FxPro Raw+ retry | Removed from LIVE queue; no third broker shopping or resurrection |
+| SBR1 / XSEC / Bull / old Gold H1 | Respect parked/negative verdicts; new mechanism/data required to reopen a family | No current accepted long/range candidate asserted |
+
+Claude source read in place and fetched only into recovery's remote ref:
+`research/fabrika-v1@e965b68bf183713e2bff9355567c8b05a3214fe1`,
+`research_lab/KARTA.md`, latest visible health snapshot17:29UTC. Local sibling ref
+c1fb567 is a concurrent historical point, not checkout drift. Research verdicts
+above are Claude registry claims read without rerunning judges/holdouts. The
+older Codex-sync paragraph still says FX COST_GATE_PENDING; current MONEY/
+EVIDENCE table supersedes it. No Claude checkout/diff or evaluator was modified.
+
+## Next accepted development cycle
+
+After current lead verdicts free capacity, use the existing Factory for **one**
+preregistered independent mechanism and prove hypothesis → falsification → frozen
+judge → READY_FOR_BUILD/KILL with source/lineage/evidence acceptance. Current KARTA
+reports self-check PASS, daemonOFF and empty queue: verify a present defect before
+repairing it; old acceptance defects are not automatic new work. Factory remains
+OFF until its owner's accepted Discovery plan. A freed PM2 slot can permit this next bounded experiment; long TOLPA forward
+observation continues in the background rather than freezing development for months.
+Claude owns research/Factory; Codex accepts qualified production packets and closes execution boundaries.
+
+Regime/Elder remains a separate preregistered baseline-vs-regime experiment after
+causal availability is archived. UNKNOWN/missing causal inputs cannot become
+retrospective ALLOW. No blanket trend filter or live regime router is introduced.
+More entries are useful only with net expectancy, executable liquidity/costs and
+independent portfolio contribution; count/frequency is not the success metric.
+
+## Later queue agreed with the manager
+
+Build only when the preceding evidence exposes a concrete need:
+
+1. Independent mechanism coverage: crypto long/range, volatility/events,
+   basis/carry, cross-market or prediction-market mechanisms; family IDs prevent
+   recycled thresholds and killed variants from masquerading as new evidence.
+2. Production packet acceptance and shared operational controls: exact risk,
+   owner handoff, source/target parity, protection/cost/finality/recovery, bounded
+   canary and rollback. Reuse existing modules; open-source dependencies only for
+   a measured missing capability and tested import/runtime boundary.
+3. Portfolio governor/capital allocation after several independently accepted
+   sleeves and prospective costs/correlation/capacity evidence. No capital
+   escalation to compensate for absent edge.
+4. Server AI/operator and a web operations view only as read-only diagnostics,
+   proposals and provenance views first. AI cannot submit orders, change risk,
+   strategy, frozen judges or financial authority. Meta-ML can later compare
+   preregistered frozen policies under separate evidence; no online tuning in LIVE.
+5. Safe cleanup: inventory → dependency/active-state mapping → archive with
+   hashes/references → restore/dependency verification → scoped deletion. Preserve
+   sealed evidence, active runtime, credentials and all unknown/foreign dirty files.
+
+Automation of research/operations does not authorize autonomous money promotion.
+Every bounded cycle ends in a measured blocker closed, PASS/KILL verdict or an
+exact missing-input receipt; implementation tests do not establish profitability.
+
+---
+
+Historical roadmap snapshots follow; use their dates and do not reapply old plans.
 
 # Current roadmap — owner scope 2026-09-19
 

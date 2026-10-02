@@ -7,6 +7,34 @@
 2 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
 над старыми отчётами. При конфликте укажи источник и границу знания.
 
+## Latest October2 delivery — use before historical details below
+
+Владелец подтвердил Native Tasks1–4; они реализованы, повторять Tasks1–2 не надо.
+Читайте ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json и HANDOFF runbook.
+Engineering242 local/233 VPS Python3.12 testsPASS,9 package cases included locally;
+full suite57 old failures unchanged/3329PASS. Один critical6-astra/high review:
+2P1 corrected with RED→GREEN; original CHANGES_REQUIRED retained, no repeat review.
+No NEW send API or production install. Actual account BUILD_READY BLOCKED:
+нужны полные свежие risk/cost/cash/OLD intent/H1/cooldown источники, затем private
+numeric proposal. Синтетический archive ENGINEERING_FIXTURE_ONLY не разрешает деньги.
+Gate2–3 clean prospective filled terminal/net-R +fresh exclusive dossier +ownerGO
+сохранён. Следующий cycle — сбор actual inputs, public продолжает наблюдение.
+
+Свежие снимки: Alpaca19:12UTC same3 holdings, stops622.24/242.13/668.76,
+HWM644.811/273.335/736.33 monotonic/single NEW manager. OLD18:55UTC flat0orders/
+PID492970/native pausetrue; public18:55UTC PID1584802,1nonfill/0filled/clean.
+Дата/время ограничивают знание; не превращать snapshot в постоянную гарантию.
+Foreign original allowlist bytes restored/hash verified after full-suite watcher
+side effects; untracked file remains unstaged. Future full suites redirect watcher
+CHANGE_LOG/RESTART_FLAG to temporary files; never blindly clean foreign data.
+
+Актуальная Claude KARTA/origin research/fabrika-v1@e965b68: NOCHNOY FX **KILLED /
+NOT_EXECUTABLE** на BullWaves/FxPro Raw+; remove LIVE lead, no third retry.
+TOLPA forward first needs PIT daily/top50 refresh; PM2 awaits frozen valid dates.
+No Claude checkout mutation, merge or judge/window rerun. CURRENT_PROJECT_ROADMAP
+has the agreed immediate queue and later Factory e2e/governor/AI proposals/cleanup.
+Do not implement later architecture as part of this delivered canary cycle.
+
 ## Миссия и рабочий настрой
 
 Мы строим устойчивую multi-market систему поиска, проверки и эксплуатации
@@ -108,12 +136,12 @@ Historical `ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md` подготовлен1
 Не повторять pause, не resume и не останавливать сервис/позиции/защиту.
 At15:53UTC NEW public1session C98: START/ACK/FINAL CANCELLED,0 fills/clean terminals,
 valid3-record chain,0 open/calls. IOC nonfill не проверяет held lifecycle.
-Следующий build-план: `docs/superpowers/plans/2026-10-02-att1-canary-orders-off.md`:
+Выполненный build-план: `docs/superpowers/plans/2026-10-02-att1-canary-orders-off.md`:
 fixedUSDT risk provenance + общий UTC daily budget OLD+NEW; atomic reserve and
 terminal cash-spend transfer; captured entry/protection/exit/recovery commands;
 inert package/target acceptance/rollback-handoff. Existing coordinator/process/
-reservation reuse, все NEW ordersOFF. Written critical gaps addressed; owner
-plan review pending, code/build/точный numeric risk ещё не готовы. Public clean
+reservation reuse, все NEW ordersOFF. Native plan approved and implemented; engineering acceptance PASS. Actual numeric
+source acceptance BLOCKED; no money installation/activation. Public clean
 cohort копится параллельно, ожидание не блокирует engineering. Перед деньгами
 fresh absolute OLD comparison/exclusive dossier и отдельный owner GO.
 
@@ -136,23 +164,18 @@ cooldown; просто убрать сделки baseline недостаточн
 policy ещё нет. LIVE и текущий2s burn-in не менять; новый scorer не запускался.
 Latest owner direction: regime/Elder experiment не блокирует основной canary path.
 
-**P2: текущие зацепки.** Owner-manager scope01.10: Claude только PM2 после валидных
-v5 snapshots и prospective TOLPA_1D: ≥90% hourly/cheap-screen уже пройдены.
-Latest immutable research ref/local and actual origin f6f2e20; checkout unchanged.
-KARTA now reports PM2 preliminary2 dates/496 rounds/0 violations and Factory
-self-check PASS/daemon stopped/queue empty/new preregistration needed. Historical
-defect handoffs are not current test/runtime proof. FX collector accepts intended
-broker/type demo but frozen report requests live costs; equivalence NOT_VERIFIED.
-All7-pair full costs/summer+winter/commission+swap gate pending, not quick-live promise.
-Owner now reports connected BullWaves-LIVE: read-only actual server/account/type
-binding and costs exporter → Claude frozen cost judge. Owner report не является
-проверенной выгрузкой; возможен insufficient-data verdict, orders не отправлять.
-PM2: только v5 с01.10 16:09:19UTC, финал после≥3 календарных дат данных по frozen
-judge; до этого диагностика, после EXECUTABLE отдельный execution gate.
-Сначала verify research ref/origin и актуальную KARTA, а не checkout HEAD.
-SBR1 паркуется; XSEC/Bull Continuation и Gold H1 не реанимировать. FX external step:
-Raw/ECN MT5 demo с реальными spread/swap/commission для NOCHNOY_DREYF.
-Новых research-направлений до terminal verdict этих линий не открывать.
+**P2: текущие зацепки.** Сначала immutable research ref и actual origin/KARTA,
+а не выписанная ветка Claude. Latest fetched origin e965b68, local siblingc1fb567:
+обычная конкурентная работа, checkout не менять. NOCHNOY FX теперь KILLED /
+NOT_EXECUTABLE на обоих заранее объявленных брокерах; старый COST_GATE_PENDING
+superseded. Судьи не пересчитаны Codex. PM2 frozen verdict after≥3 valid calendar
+ dates; positive price violation then separate execution gate. TOLPA daily/weekly
+first refresh stale PIT daily/top50 sources, then frozen forward thresholds/looks;
+same family evidence is not additive. ETS2M no earlier10.10 19UTC; PEREGREV waits
+prospective events. SBR1 parked; XSEC/Bull/old Gold H1 not revived.
+Factory remainsOFF/queueempty, map self-checkPASS: present defect proof before any
+repair. Next after queue frees: ONE accepted preregistered independent Factory e2e;
+then scale the validated process. See CURRENT_PROJECT_ROADMAP for later phases.
 
 **P3: Factory и новые механизмы.** Сейчас отложены. Только после приоритета защиты LIVE и сверки
 существующих дефектов evidence-acceptance. Используй текущую KARTA из verified research ref, очередь,
