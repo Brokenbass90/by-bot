@@ -1,0 +1,145 @@
+{
+  "schema_id": "att1_regime_gate_readiness_v1",
+  "status": "BLOCKED_CAUSAL_DATA_SUPPLY_AND_CALLER_WIRING",
+  "scope": "Read-only prerequisites and draft design; no strategy/filter/financial/deployment change in this cycle",
+  "observations_utc": {
+    "runtime": "2026-10-02T14:29:12.125000+00:00",
+    "paths": "2026-10-02T14:32:52.467000+00:00",
+    "current_config_chain": "2026-10-02T14:33:47.634000+00:00",
+    "scan_timeline": "2026-10-02T14:36:41.150000+00:00"
+  },
+  "public_timing_epoch": {
+    "epoch_id": "att1-public-lifecycle-20261002-paired-observation",
+    "pid": 1584802,
+    "status": "RUNNING",
+    "heartbeat_age_ms": 180,
+    "source_sha256": {
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "scripts/run_att1_lifecycle_zero_risk.py": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    },
+    "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
+    "sessions": 0,
+    "open_simulations": 0,
+    "broker_calls": 0,
+    "order_calls": 0,
+    "authority": {
+      "money_authority": false,
+      "orders_allowed": false,
+      "private_api_allowed": false,
+      "promotion_authority": false
+    },
+    "scan_count": 51,
+    "scan_results": {
+      "NO_SIGNAL": 50,
+      "STALE_CLOSED_BAR": 1
+    },
+    "poll_errors": {},
+    "cohort_verdict": "NOT_OBSERVED_YET; no new filled session to test timing fix"
+  },
+  "old_caller_prerequisites": {
+    "current_files_flags": {
+      "ATT1_CALLER_MAX_DECISION_AGE_MS": null,
+      "ATT1_CALLER_RECEIPT_ENABLE": null,
+      "ATT1_CALLER_RECEIPT_JOURNAL": null,
+      "ATT1_CALLER_REGIME_RECEIPT_PATH": null,
+      "ATT1_CALLER_REGIME_RECEIPT_REQUIRED": null,
+      "ATT1_CALLER_SOURCE_MANIFEST": null,
+      "ATT1_TREND_GUARD_BARS": null,
+      "ENABLE_ATT1_TRADING": "1",
+      "REGIME_OVERLAY_ENABLE": "0"
+    },
+    "config_limit": "Read reproduces startup dotenv precedence from current files, not mutable in-process state or historical admissions.",
+    "source_manifest": {
+      "exists": false,
+      "is_symlink": false,
+      "path": "/root/by-bot/configs/research/att1_sbr1_live_native_parity_v1.json"
+    },
+    "regime_receipt_default": {
+      "exists": false,
+      "is_symlink": false,
+      "path": "/root/by-bot/runtime/live_native_parity/btc_h1_regime.json"
+    },
+    "journal_default": {
+      "exists": false,
+      "is_symlink": false,
+      "path": "/root/by-bot/runtime/live_native_parity/att1_caller.jsonl"
+    },
+    "source_pin_comparison": "NOT_RUN_MANIFEST_MISSING",
+    "caller_journal_limit": "Absent journal expected when caller OFF; no broken-writer conclusion",
+    "activation_consequence": "Simply enabling caller would require missing source manifest and regime input; do not toggle OLD money flag"
+  },
+  "actual_updater": {
+    "bytes": 1176,
+    "closed_h1_ts_ms": 1790949600000,
+    "exists": true,
+    "is_symlink": false,
+    "mode": "0o600",
+    "mtime_ms": 1790949786841,
+    "path": "/opt/bybot-research/live-caller-parity/runtime/live_native_parity/btc_h1_regime.json",
+    "receipt_sha256": "729eb206a8aca2d6b1205a4ab9799ef1d3b2fca7ce9f9f68c205d49cac032bb2",
+    "schema_id": "btc_closed_h1_ema200_receipt_v1",
+    "sha256": "fb19a96df9335b76c94f20466106c04a14d356544faef4c9da9256c238d52f3b",
+    "value": "above_band"
+  },
+  "same_hour_timeline": {
+    "closed_h1_ms": 1790949600000,
+    "closed_h1_utc": "2026-10-02T14:00:00+00:00",
+    "first_scan_complete_ms": 1790949623369,
+    "first_scan_complete_utc": "2026-10-02T14:00:23.369000+00:00",
+    "last_scan_complete_ms": 1790949733126,
+    "last_scan_complete_utc": "2026-10-02T14:02:13.126000+00:00",
+    "current_regime_file_write_ms": 1790949786841,
+    "current_regime_file_write_utc": "2026-10-02T14:03:06.841000+00:00",
+    "write_after_last_scan_ms": 53715,
+    "scans_before_current_write": 51,
+    "scan_chain_and_reconstructed_bytes": "PASS",
+    "duplicate_event_ids": 0,
+    "regime_receipt_hash_validation": "PASS BTCRegimeReceipt.from_dict",
+    "scans": [
+      {
+        "bytes": 30997,
+        "filename": "1790949600000.jsonl",
+        "sha256": "ee8e6b2f9678bc0d44e9c740c9883ab5327029885d157a364c81e922a13f863e"
+      }
+    ],
+    "availability_limit": "mtime records this current file replacement, not independently a network-observation timestamp or complete historical availability archive",
+    "policy_limit": "No signal/decision present here. SCAN completion is not admission. Current late receipt cannot certify causal availability at earlier decision; no complete historical receipt archive"
+  },
+  "existing_gate": {
+    "symbol": "BTCUSDT",
+    "timeframe": "H1",
+    "ema_period": 200,
+    "band_pct": 2,
+    "ATT1_allowed": [
+      "flat_down"
+    ],
+    "below_band_allowed": false,
+    "freshness_ms": 300000,
+    "meaning": "Existing declared gate is narrower than all bear regimes and is not a per-alt trend classifier"
+  },
+  "next_artifact": "docs/superpowers/specs/2026-10-02-att1-regime-prospective-design.md",
+  "design_stage": "DRAFT_OWNER_REVIEW_PENDING_NOT_IMPLEMENTED",
+  "next_engineering_gate": "Prospective immutable regime availability archive + complete scan/source audit; independent policy comparison remains blocked until its own causal observations and admission states exist",
+  "profitability_limit": "No filtered-return comparison or net-edge verdict. Public costs remain scenarios, clean terminal count is operational evidence only",
+  "preserved": "Alpaca/OLD money/current public burn-in; 2s/freshness/core/profile/strategy/admission/risk/one lifecycle writer; Claude checkout; sealed/consumed outcomes; foreign allowlist diff",
+  "delegation": {
+    "inventory": "gpt-6-luna/medium verified actual turn_context; mechanical requested gpt-5.6-luna unavailable, documented fallback",
+    "critical_review": "gpt-6-astra/high verified actual turn_context; two important design issues found (missing-scan denominator and archive resource isolation), addressed in draft; no implementation approval"
+  },
+  "private_receipt_sha256": {
+    "att1_followup_runtime.json": "dcd3884773e1ae002360182db15893c4c1cc255637d24187d18b2b8ba2ca79f6",
+    "gate_path_config.json": "f7b2594aaefa7533554a9ef3ce7390fe67f0791340f7c046e5f9713131ea3818",
+    "gate_readiness.json": "7933281c864b01d4877b5e5cbdc1911f08bf97a0e96fcadb404a3948b3c5859c",
+    "scan_gate_timeline.json": "344cde52c16536f4d75db852b368fdcb9ba19bfb8dba5d5d369ef20aac42860b"
+  },
+  "local_source_sha256": {
+    "bot/live_native_regime_gate.py": "cd34e715ec8b6d77d104d9b5413fa330550424e1ed7858b94eadcd0b0b8173ef",
+    "bot/persisted_btc_h1_regime.py": "6cb773fa6538b986cca4c4aa544f58a9a51a47e6dca6409ed9a44043474e4e4d",
+    "bot/btc_h1_regime_updater.py": "aaaf4593e5cc3a2804837595779df582d30270dc7053dd088d63eac51ef1a88e",
+    "scripts/update_btc_h1_regime.py": "9f78aeca97d470ddcbbc59ff7f82e1bef675f21b2082311719836c1cb7be159f",
+    "scripts/run_att1_lifecycle_zero_risk.py": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+    "research_lab/att1_lifecycle_profile.py": "36509007fa444c54d9aaa7f76b500a5a97a11222e2eb937c3edc02615021cb04"
+  },
+  "builder_sha256": "68ffd75b5ce82cc5e42901fd5d8fcf730ec5753f0cc53dbe7ff68884bfcd9d22"
+}

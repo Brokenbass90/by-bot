@@ -2,6 +2,42 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October 2 14:36UTC: ATT1 regime supply/wiring blockers measured; prospective availability design DRAFT**:
+- Read-only public snapshot14:29:12UTC: same epoch/PID1584802, driver/core/
+  strategy/profile pins unchanged; RUNNING, heartbeat180ms,51 scanned,
+  50 NO_SIGNAL/1 stale HFT,0 sessions/open/poll errors, broker/order calls0,
+  all NEW financial authority false. No filled case yet to verify timing fix.
+- Current OLD config-chain path overrides absent; caller remains defaultOFF.
+  Default source manifest and regime input under/root/by-bot are missing;
+  updater writes under/opt/bybot-research/live-caller-parity. Caller journal
+  absent is expected when OFF, not broken-writer proof. Source-pin comparison
+  NOT_RUN_MANIFEST_MISSING. No OLD flags/positions/risk changed.
+- All51 new14:00 H1 scan events/hash-chain/bytes verified: completed
+  14:00:23.369–14:02:13.126UTC. Current same-H1 regime file replaced14:03:06.841,
+  53715ms after last scan. Mtime is not a complete historical availability
+  archive; no signal here, SCAN completion is not admission. This late tip
+  cannot certify an earlier decision and must not create retrospective ALLOW.
+  BTC receipt hash-valid; existing ATT1 gate only flat_down, including no
+  below_band permission. Narrow wiring/data verdict, not strategy/PnL verdict.
+- `ATT1_REGIME_GATE_READINESS_2026_10_02.json` + written DRAFT
+  `docs/superpowers/specs/2026-10-02-att1-regime-prospective-design.md`:
+  first capture immutable prospective availability and complete scan inventory;
+  separate missing/late/invalid UNKNOWN from market BLOCK. Independent policy
+  comparison needs its own admission/cooldown state and common causal book tape;
+  dropping baseline trades is insufficient. No comparison/net-edge scorer run.
+- Critical gpt-6-astra/high review found missing-scan denominator and disk/
+  resource interference risks; draft now requires expected hour×51 inventory,
+  omissions retained, quotas/reserve/automatic audit-only suspension. Model/
+  effort verified from current turn_context; mechanical gpt-6-luna/medium fallback
+  verified. Draft owner review pending; no product implementation/deployment.
+- Alpaca13:38 broker snapshot/DAY PASS retained with original timestamp; no new
+  broker check in this cycle. Public2s burn-in, OLD/Alpaca/Claude/Factory/sealed
+  evidence preserved. Foreign allowlist diff remains untouched. Next: review
+  concrete audit design, then plan; ATT1 money still requires clean cohort and
+  separate exact-risk/exclusive handoff/owner gate. No universal router now.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **October 2: Alpaca DAY transition PASS; ATT1 paired observation installed PUBLIC ONLY; existing regime/Elder inventory reconciled**:
 - Direct GET-only broker snapshot13:38:52UTC:3 previous DAY stops explicitly
   expired Oct1;3 newly accepted DAY stops on exact residual qty, original entry/

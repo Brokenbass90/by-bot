@@ -3,6 +3,8 @@
 Canonical migration entry point. Latest broker snapshot **Oct2 13:38:52 UTC /
 16:38:52 Cyprus**; Alpaca DAY expiry/re-arm **PASS**. ATT1 public-only cutover
 completed **13:57:43 UTC**, with separate postchecks; NEW crypto money remains OFF.
+Later read-only follow-up14:29–14:36UTC measured regime input/path prerequisites;
+written prospective availability design is DRAFT, awaiting owner review.
 Read this document, NEW_CHAT_START_HERE.md, then the TOP checkpoint. Old dated
 receipts retain their original facts; verify drift-prone broker/runtime truth.
 
@@ -226,9 +228,26 @@ ATT1_CALLER_RECEIPT_ENABLE; current config chain leaves it absent/defaultOFF,
 legacy ATT1_TREND_GUARD_BARS absent/default0, REGIME_OVERLAY_ENABLE0. This config
 read is not mutable process-state or historical PnL proof. No money setting changed.
 Existing native research contract allows ATT1 only flat_down, not every bear regime.
-Next proposal: exact consumer/admission receipts, then one separately preregistered
-prospective baseline-vs-existing-gate comparison. Global bull/bear/range routing
-is a new policy design pending owner discussion, not this timing deployment.
+Follow-up14:29UTC: same public epoch/PID/pins, RUNNING, heartbeat180ms,
+51 scan results(50 NO_SIGNAL/1 stale HFT),0 sessions/open/poll errors,
+broker/order calls0, financial authority false. No prospective filled case yet.
+Current OLD path overrides also absent: default manifest and regime input missing
+under/root/by-bot; updater's real input is under/opt/bybot-research/live-caller-parity.
+Default caller journal absent expectedOFF; no broken-writer verdict. Do not simply
+enable caller: source-pin comparison cannot run without actual manifest.
+
+14:00H1 scan51/51 hash-chain/bytes validated: completion14:00:23.369–14:02:13.126UTC.
+Current same-hour BTC file replacement14:03:06.841 is53715ms after last scan;
+mtime does not prove complete historical availability. Late receipt is not
+causal input for earlier decisions, and SCAN completion is not admission.
+`ATT1_REGIME_GATE_READINESS_2026_10_02.json` records exact timestamps, pins and limits.
+Next written DRAFT: `docs/superpowers/specs/2026-10-02-att1-regime-prospective-design.md`.
+First immutable receipt availability archive + expected hour×51 scan/source audit,
+with UNKNOWN/omissions and bounded resource isolation; then a separately frozen
+policy comparison with independent admission/cooldown and common causal book tape.
+Filtering existing trades alone cannot prove policy improvement. Draft reviewed
+critically; owner written-spec approval still pending, no product implementation.
+Global bull/bear/range routing is separate; public timing burn-in stays unchanged.
 `REGIME_ELDER_INVENTORY_2026_10_02.json` records findings and limits.
 
 ## 6. LTC id257 — final bounded conclusion

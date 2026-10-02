@@ -96,8 +96,18 @@ Read-only inventory уже сделан (REGIME_ELDER_INVENTORY_2026_10_02.json)
 BTC H1 EMA200 есть, caller boundary в OLD конфиге defaultOFF/guard0. Это не
 доказательство причин убытков. Три экрана в Elder уже есть: trend→pullback→entry;
 baseH4/H1/M15 и frozenETS2S D1/H4/H1 — разные профили. Не переключать frozen shorts
-в longs ради bull-market. Узкий baseline-vs-existing-gate proposal обсуждается с
-owner; общего router/новой trading policy ещё нет, LIVE и baseline не изменять.
+в longs ради bull-market. Последний read-only follow-up14:29–14:36UTC:
+public RUNNING/0 new sessions; default OLD manifest/regime paths missing,
+actual updater в другом каталоге, path overrides отсутствуют/callerOFF.
+14:00 скан завершён14:02:13, текущий BTC tip записан14:03:06.841. Поздний receipt
+нельзя считать доступным при более раннем решении; mtime не исторический archive.
+Читайте `ATT1_REGIME_GATE_READINESS_2026_10_02.json` и DRAFT
+`docs/superpowers/specs/2026-10-02-att1-regime-prospective-design.md`.
+Следующий этап: prospective availability archive + expected hour×51 audit,
+UNKNOWN/omissions и reserve/quotas/audit-only suspension; owner spec review pending.
+Независимое сравнение политик требует causal tape и собственного admission/
+cooldown; просто убрать сделки baseline недостаточно. Общего router/новой trading
+policy ещё нет. LIVE и текущий2s burn-in не менять; новый scorer не запускался.
 
 **P2: текущие зацепки.** Owner-manager scope01.10: Claude только PM2 после валидных
 v5 snapshots и prospective TOLPA_1D: ≥90% hourly/cheap-screen уже пройдены.
