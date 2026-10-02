@@ -1,10 +1,16 @@
 # MASTER HANDOFF — 2026-10-02
 
-Canonical migration entry point. Latest broker snapshot **Oct2 13:38:52 UTC /
+Canonical migration entry point. Latest Alpaca broker snapshot **Oct2 13:38:52 UTC /
 16:38:52 Cyprus**; Alpaca DAY expiry/re-arm **PASS**. ATT1 public-only cutover
 completed **13:57:43 UTC**, with separate postchecks; NEW crypto money remains OFF.
 Later read-only follow-up14:29–14:36UTC measured regime input/path prerequisites;
 written prospective availability design is DRAFT, awaiting owner review.
+Owner-authorized OLD ATT1 new-entry pause applied **15:36:43UTC /18:36:43 Cyprus**;
+direct Bybit postchecks flat/no orders immediately, after90s and **16:02:50UTC**.
+OLD service/management preserved; next-H1 runtime pause counter115, entries unchanged.
+Persistent control readback16:02:50UTC;
+NEW public first C98 session is an IOC nonfill, **0 clean filled terminals**.
+Canary orders-OFF implementation plan written; build/financial activation pending.
 Read this document, NEW_CHAT_START_HERE.md, then the TOP checkpoint. Old dated
 receipts retain their original facts; verify drift-prone broker/runtime truth.
 
@@ -26,6 +32,9 @@ receipts retain their original facts; verify drift-prone broker/runtime truth.
 - VPS: `root@64.226.73.119`; SSH key path `~/.ssh/by-bot`; VPS cron timezone **Etc/UTC**.
 - Owner performed actual Alpaca activation on Oct1 at 14:05:49 UTC. Codex only
   observed broker GETs afterward. No further activation, sizing escalation or live experiment is authorized by this handoff.
+- Separate direct owner instruction Oct2 authorized the native OLD ATT1 new-entry
+  pause and NEW canary preparation orders-OFF. Pause executed15:36:43UTC with fresh
+  broker pre/postchecks; this does not authorize NEW money or OLD resumption.
 - No trading code, service, risk, cron or strategy changes in the migration turn.
 
 ## 2. Alpaca LIVE — actually operating
@@ -231,9 +240,42 @@ remain required; question about tiny LIVE does not waive frozen clean-cohort gat
 OLD capital override absent/percentage-equity model/minqty fallback defaulttrue:
 do not substitute old0.10 multiplier or virtual public risk1 for money cap.
 Verified hot-read OLD new-entry pause proposal:
-`ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md`, PREPARED_NOT_EXECUTED/owner choice pending.
-Service/position management remains; no financial/pause/restart action in this cycle.
+`ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md` was PREPARED_NOT_EXECUTED at14:55UTC.
 Receipt `ATT1_EARLY_LIVE_AND_LEADS_2026_10_02.json`; refresh truth before any action.
+
+**Later owner-approved pause executed15:36:43.296–15:36:43.300UTC.** Native
+`bot.operator_strategy_controls.pause('att1', source='owner_codex_20261002')`
+wrote `/root/by-bot/runtime/operator_strategy_controls.json`; only ATT1 new
+entries paused, no other sleeve key changed. Fresh signed GET immediately before,
+immediately after,90.167s after,692.768s after and nextH1 at16:02:50UTC:0 positions/0 open orders,
+complete pagination. OLD PID492970 unchanged; no service stop/restart, env/risk/
+strategy/SL/TP/position change or broker write by this procedure.
+Control readbacks15:53:21UTC and16:02:50UTC: is_pausedtrue, no read error, SHA
+`239a24050a91155358a1aa545d67e6c720fa3bef4da54a53c2951b4570bf02ef`.
+Module/source hot-read entry boundary verified. After nextH1, actual daemon
+`att1_skip_operator_pause=115`, ATT1 schedule delta115 and entries unchanged1.
+These are suppressed entry-handler calls, not115 signals/trades. No restart test.
+Base heartbeat still reports ATT1enabled/money config: operator pause is a separate
+hot-read gate. Existing control missing/damage fails OPEN; pause is not a hard
+kill, instant drain or finality proof. No automatic resume; a late fill remains
+OLD management's responsibility and blocks handoff.
+`ATT1_OLD_ENTRY_PAUSE_EXECUTED_2026_10_02.json` contains sanitized receipts/hashes.
+
+At15:53 public NEW PID1584802 RUNNING, calls0/open0, same epoch: **1 C98 session,
+0 filled simulations/0 clean filled terminals**. Its three-record valid chain is
+START→ENTRY_ACK→ENTRY_FINAL CANCELLED, no fill. This simulated IOC nonfill does
+not verify held-position timing or satisfy the2–3 clean terminal gate.
+
+Owner's next build scope: `docs/superpowers/plans/2026-10-02-att1-canary-orders-off.md`.
+Four bounded tasks reuse existing process/reservation/coordinator: source-proven
+fixedUSDT risk and daily OLD+NEW budget; atomic reserve/finality cash transfer;
+captured entry/protection/exit/recovery commands; inert source closure plus
+rollback/handoff dossier. No second money daemon or one-flag activation.
+Written critical review corrected cash transfer before slot release, command-bound
+reserves and entry gates that must not block management/exits. Plan owner review
+pending; no new canary code/build installed or numeric risk approval claimed.
+Regime/Elder separate and nonblocking. Public collection continues during build;
+NEW money requires clean cohort + fresh absolute-risk/exclusive dossier + owner GO.
 
 Oct2 read-only regime/Elder inventory: existing BTC H1 EMA200±2% updater is alive
 and hash-bound; at13:45UTC its13:00 closed-H1 receipt was above_band (+3.416%) but
@@ -284,7 +326,8 @@ was done in this bounded check. Reference `LTC_ID257_PROTECTION_STATUS_2026_10_0
 - Alpaca frozen selection/sizing/exits, capital cap, live endpoint binding,
   current positions/protection/orders, entry intents, locks, floor/HWM, same manager.
 - Do not rerun owner activation or initial-flat preflight on the now nonflat account.
-- OLD ATT1 LIVE configuration/risk/positions; NEW order submission remains OFF.
+- OLD ATT1 configuration/risk/positions/management and **applied new-entry pause**;
+  no auto-resume or service stop. NEW order submission remains OFF.
 - Public ATT12s gate, current epoch/journals, dirty/retired evidence, implementation pins.
 - Consumed/sealed research windows, original datasets/manifests, private broker evidence.
 - Foreign legacy PAPER ABNB/ABT/MA/SCHW and intraday AMZN; no silent adoption/liquidation.
@@ -303,8 +346,10 @@ Oct1 owner-manager scope: Claude only PM2 after valid v5 snapshots and TOLPA_1D
 after≥90% hourly coverage. SBR1 parked, no new research directions until those
 results; no Factory rewrite or Alpaca expansion. Owner Oct2 additionally asked Codex to
 assess existing trend/Elder/range components; inventory is read-only and policy
-changes remain a separately reviewed design. Owner FX Raw/ECN MT5 demo is
-the external cost-data step for NOCHNOY_DREYF, not accepted production net edge.
+changes remain a separately reviewed design. Latest owner Oct2 direction keeps
+regime work separate/nonblocking and reports a connected `BullWaves-LIVE` account
+for read-only FX costs. This owner report is not independently verified exporter
+binding or accepted NOCHNOY_DREYF net-edge evidence.
 Existing leads were reconciled read-only against current registry Oct1. SBR1
 comparison is blocked at0 main outcomes/no control journal; deployed fixed51 is
 preparity raw, so existing prereg section7 certification remains necessary.

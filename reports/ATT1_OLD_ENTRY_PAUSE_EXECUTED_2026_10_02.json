@@ -1,0 +1,202 @@
+{
+  "broker_checks": [
+    {
+      "complete_pagination": true,
+      "observed_utc": "2026-10-02T15:35:01.848Z",
+      "open_orders": 0,
+      "positions": 0,
+      "seconds_from_pause_end": -101.452,
+      "stage": "fresh_precheck"
+    },
+    {
+      "complete_pagination": true,
+      "observed_utc": "2026-10-02T15:36:42.917Z",
+      "open_orders": 0,
+      "positions": 0,
+      "seconds_from_pause_end": -0.383,
+      "stage": "immediately_before_write"
+    },
+    {
+      "complete_pagination": true,
+      "observed_utc": "2026-10-02T15:36:43.654Z",
+      "open_orders": 0,
+      "positions": 0,
+      "seconds_from_pause_end": 0.354,
+      "stage": "immediately_after_write"
+    },
+    {
+      "complete_pagination": true,
+      "observed_utc": "2026-10-02T15:38:13.467Z",
+      "open_orders": 0,
+      "positions": 0,
+      "seconds_from_pause_end": 90.167,
+      "stage": "late_fill_90s"
+    },
+    {
+      "complete_pagination": true,
+      "observed_utc": "2026-10-02T15:48:16.068Z",
+      "open_orders": 0,
+      "positions": 0,
+      "seconds_from_pause_end": 692.768,
+      "stage": "late_fill_final"
+    },
+    {
+      "complete_pagination": true,
+      "observed_utc": "2026-10-02T16:02:50.049Z",
+      "open_orders": 0,
+      "positions": 0,
+      "seconds_from_pause_end": 1566.749,
+      "stage": "post_next_h1_runtime_pause_check"
+    }
+  ],
+  "canary": {
+    "autonomous_money_runner_installed": false,
+    "clean_gate": "2–3 clean prospective filled terminals with terminal net-R",
+    "financial_activation": "SEPARATE_OWNER_GO_REQUIRED",
+    "inert_canary_build_completed": false,
+    "orders_allowed": false,
+    "plan": "docs/superpowers/plans/2026-10-02-att1-canary-orders-off.md",
+    "plan_status": "WRITTEN_CRITICAL_GAPS_ADDRESSED_OWNER_REVIEW_PENDING",
+    "regime_work_blocks_canary_engineering": false,
+    "risk_cap_numeric_binding": "PENDING_FRESH_OLD_PROVENANCE_AND_PRIVATE_PROPOSAL"
+  },
+  "delegation": {
+    "critical_plan_review": {
+      "effort": "high",
+      "findings_addressed": [
+        "terminal cash spend-transfer before slot release",
+        "reserves bound to exact admitted command",
+        "entry gates must not block management/exits"
+      ],
+      "model": "gpt-6-astra",
+      "runtime_turn_context_verified": true
+    },
+    "inventory": {
+      "effort": "medium",
+      "fallback_reason": "configured gpt-5.6-luna unavailable",
+      "model": "gpt-6-luna",
+      "runtime_turn_context_verified": true
+    },
+    "no_workers_edit_money_or_private_state": true
+  },
+  "foreign_file": {
+    "path": "configs/allowlist_change_log.json",
+    "preserved": true,
+    "sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+  },
+  "limits": [
+    "Hot-read entry control is not instantaneous drain; later fills must still be reconciled.",
+    "Flat snapshots do not establish finality for all old intents, costs or watermarks.",
+    "Existing control damage/missing state fails open; NEW boundary must require valid pause/drain evidence.",
+    "Public IOC nonfill is not held-position lifecycle or money readiness.",
+    "Alpaca13:38UTC snapshot retained; no new Alpaca check/change in this cycle.",
+    "115 hot-read pause skips observed after the next H1; these are entry-handler calls, not115 strategy signals/trades."
+  ],
+  "native_control": {
+    "actual_service_restart_test": "NOT_RUN",
+    "att1_sched_delta": 115,
+    "att1_skip_operator_pause": 115,
+    "control_sha256": "239a24050a91155358a1aa545d67e6c720fa3bef4da54a53c2951b4570bf02ef",
+    "dispatch_pause_counter": "OBSERVED_AFTER_NEXT_H1",
+    "entrypoint_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "existing_missing_or_malformed_state_behavior": "FAIL_OPEN",
+    "initial_readback_utc": "2026-10-02T15:53:21.839Z",
+    "is_paused": true,
+    "module_sha256": "a61dde4fae0fa4a32c8680de4279fb2d306725842cb1c81a19b099dba6dddad3",
+    "new_entry_count_increase": 0,
+    "path": "/root/by-bot/runtime/operator_strategy_controls.json",
+    "paused_sleeves": [
+      "att1"
+    ],
+    "persisted_state": true,
+    "prior_control_present": false,
+    "read_error": null,
+    "readback_utc": "2026-10-02T16:02:50.049Z",
+    "source": "owner_codex_20261002"
+  },
+  "new_public_prospective": {
+    "clean_filled_terminals": 0,
+    "counts_toward_clean_filled_gate": false,
+    "entry_status": "SIMULATED_IOC_CANCELLED_WITHOUT_FILL",
+    "event_kinds": [
+      "START",
+      "ENTRY_ACK",
+      "ENTRY_FINAL"
+    ],
+    "filled_simulations": 0,
+    "hash_chain_verified": true,
+    "journal_records": 3,
+    "journal_sha256": "322789a238e4324630e4179ac1f5730cb7bc827f3d611fdbd0942f997f300ecd",
+    "latest_heartbeat_utc": "2026-10-02T16:02:50.049Z",
+    "observed_utc": "2026-10-02T15:53:21.839Z",
+    "open_positions": 0,
+    "sessions": 1,
+    "symbol": "C98USDT",
+    "terminal_net_r": null
+  },
+  "owner_authorization": "Direct owner message2026-10-02: native OLD new-entry pause after fresh flat/no-open-orders and postcheck; preserve service/exits/protection; NEW ordersOFF",
+  "pause_completed_utc": "2026-10-02T15:36:43.300Z",
+  "pause_started_utc": "2026-10-02T15:36:43.296Z",
+  "private_originals": [
+    {
+      "path": ".private/continuation_20261002/att1_preapproved_pause_truth.json",
+      "sha256": "aadb30c18aeace5f0b6bd9454681c7d4f6a75c072679558b352fdb8d4d43b4be"
+    },
+    {
+      "path": ".private/continuation_20261002/att1_pause_applied.json",
+      "sha256": "81eccdebfec2ea85e02969fc397c33f789cacd53c57b9d2b7ea2036158b9490a"
+    },
+    {
+      "path": ".private/continuation_20261002/att1_pause_delayed_truth.json",
+      "sha256": "629a8f0231a059e53b7cc2f9d659f21b4cb830b06b86057a3f428c74bbc5263f"
+    },
+    {
+      "path": ".private/continuation_20261002/att1_pause_final_truth.json",
+      "sha256": "0636a7f7b5328bba1bb0d1c964be71a04c29aab88f9e5aa9182198c92e636ace"
+    },
+    {
+      "path": ".private/continuation_20261002/att1_pause_control_final.json",
+      "sha256": "f15cabfd72ef698b2124e001d6638787ec3dc82c54280681011f93e41731a873"
+    },
+    {
+      "path": ".private/continuation_20261002/att1_pause_post_h1_truth.json",
+      "sha256": "aac5d48e9c10b2ae0966f8167a5146bc43e4260a705160c914f9c50e1dbabd2b"
+    }
+  ],
+  "runtime": {
+    "base_att1_enabled": true,
+    "base_dry_run": false,
+    "base_trade_on": true,
+    "broker_write_called_by_pause_procedure": false,
+    "latest_observed_utc": "2026-10-02T16:02:50.049Z",
+    "management_or_sl_tp_changed": false,
+    "new_authority": {
+      "money_authority": false,
+      "orders_allowed": false,
+      "private_api_allowed": false,
+      "promotion_authority": false
+    },
+    "new_broker_calls": 0,
+    "new_order_calls": 0,
+    "new_public_epoch": "att1-public-lifecycle-20261002-paired-observation",
+    "new_public_pid": 1584802,
+    "new_public_status": "RUNNING",
+    "old_pid_after": 492970,
+    "old_pid_before": 492970,
+    "old_service": "bybot.service",
+    "operator_pause_is_separate_from_base_config_authority": true,
+    "restart_or_stop_performed": false
+  },
+  "schema_id": "att1_old_entry_pause_execution_v1",
+  "scope": "OLD ATT1 new_entries_only",
+  "status": "APPLIED_POSTCHECK_FLAT",
+  "verification": {
+    "broker_and_control_assertions": "PASS",
+    "native_operator_controls_tests": {
+      "command": ".venv/bin/python -m pytest tests/test_operator_strategy_controls.py -q",
+      "result": "3 passed",
+      "scope": "local unchanged native control; not a money acceptance suite"
+    },
+    "public_nonfill_chain_assertions": "PASS"
+  }
+}

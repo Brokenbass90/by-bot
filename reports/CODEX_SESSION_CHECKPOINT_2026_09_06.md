@@ -2,6 +2,46 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October2 15:36–16:02UTC: owner-authorized OLD entry pause executed and runtime-confirmed; NEW canary orders-OFF plan written**:
+- Direct owner approval: native pause OLD new entries after fresh broker flat/
+  no-open-orders + postcheck; keep service/exits/protection. Applied
+  15:36:43.296–15:36:43.300UTC /18:36:43Cyprus. Signed GET immediately before,
+  immediately after,90.167s after,15:48:16UTC and16:02:50UTC:0positions/0orders, complete
+  pagination. OLD492970 unchanged; no restart, broker write, env/risk/SL/TP change.
+- Native control readback15:53:21UTC and16:02:50UTC: paused_sleeves[att1],is_pausedtrue,
+  read_errornull, SHA239a2405…02ef. Verified deployed hot-read entry boundary.
+  Next-H1 actual daemon skip_operator_pause115, ATT1schedule delta115, entry
+  count unchanged1. These are entry-handler calls, not115 signals; restart not tested. Base
+  heartbeat ATT1enabled/money configuration is separate from operator control.
+  Existing missing/malformed control failsOPEN; not instant drain/hard kill.
+  Late fill remains OLD management's responsibility and blocks handoff; no
+  auto-resume. `ATT1_OLD_ENTRY_PAUSE_EXECUTED_2026_10_02.json` is current receipt;
+  prior proposal/early-money snapshot retain their original historical timestamps.
+- NEW public1584802 RUNNING/calls0/open0; same epoch has1C98session,0 filled/
+  clean terminals. Verified three-record chain START→ENTRY_ACK→ENTRY_FINAL
+  CANCELLED with no fill. Simulated IOC nonfill is not held-lifecycle acceptance
+  or a counted prospective clean terminal. Frozen2–3 filled clean/net-R gate unchanged.
+- Written `docs/superpowers/plans/2026-10-02-att1-canary-orders-off.md`: four
+  bounded tasks reuse existing money process/reservation/coordinator. FixedUSDT
+  risk provenance, OLD+NEW UTC daily budget, atomic reserve/finality spend-transfer,
+  captured entry/native-protection/exit/recovery commands, inert source package/
+  target tests/rollback-handoff. Numeric risk proposal not yet source-complete;
+  ordersOFF build/code not installed. Owner plan review pending; no NEW money.
+- Critical gpt-6-astra/high review identified three material gaps, addressed
+  in prose: terminal spend-transfer before slot release; command-bound reserves;
+  admission gates cannot block protection/reconciliation/exits. Model/effort
+  verified from actual turn_context; inventory fallback gpt-6-luna/medium verified.
+  These are plan findings, not code acceptance. Local native operator-control
+  tests3PASS; no other historical tests represented as rerun.
+- Public collection proceeds during engineering. Regime/Elder separate and
+  nonblocking; current written audit remains DRAFT. Owner reports BullWaves-LIVE
+  connected: read-only actual broker binding/full7-pair seasonal costs → Claude
+  frozen cost gate, no accepted export/net-edge verdict yet. PM2/TOLPA_1D remain
+  Claude scope; Factory not started. Alpaca13:38UTC DAY PASS retained with its
+  timestamp, no new Alpaca broker check/change. Foreign allowlist SHA preserved.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **October 2 14:55UTC: early NEW money question reconciled; OLD flat, entry-pause proposal prepared**:
 - Signed GET-only Bybit truth14:55:22UTC:0 linearUSDT positions/0 open orders,
   complete pagination; OLD PID492970 unchanged, trade_ontrue/dry_runfalse,

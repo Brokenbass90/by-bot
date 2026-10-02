@@ -2,6 +2,11 @@
 
 Статус: PREPARED_NOT_EXECUTED, 2026-10-02. Это не переключение NEW на деньги.
 
+**Историческое предложение14:55UTC; позже владелец разрешил его выполнение.**
+Фактическая пауза15:36:43UTC с broker postchecks и сохранённым сервисом:
+`ATT1_OLD_ENTRY_PAUSE_EXECUTED_2026_10_02.json`. Команды ниже сохранены как история,
+не инструкция повторно применить pause/resume. NEW orders остаются OFF.
+
 Прямой подписанный broker GET14:55:22UTC:0 linearUSDT positions/0 open orders,
 полная пагинация. OLD PID492970 сохранён, trade_on=true/dry_run=false.
 Public NEW PID1584802 RUNNING,0 sessions/open/broker/order calls.

@@ -47,7 +47,15 @@ sealed evidence или доверия ради красивого PASS. Не п�
   Software ratchet works every5min; DAY expiry does not give overnight coverage.
   Next broker-backed transition05.10 13:30UTC/16:30Cyprus; refresh broker calendar.
   Receipt ALPACA_DAY_REARM_2026_10_02.json;0 real closed trades/net-edge conclusion.
-- Crypto OLD ATT1 LIVE сохранён. NEW ATT1 binding orders-OFF code complete,
+- Crypto OLD ATT1 service/management сохранён; **new entries paused по прямому
+  разрешению владельца02.10 15:36:43UTC**. Broker0positions/0orders до/после,
+  через90s,15:48:16UTC и16:02:50UTC; PID492970 unchanged. Native control readback16:02UTC,
+  is_pausedtrue/read_errornull. Pause не hard kill/instant drain; existing damage/
+  missing state failOPEN. После nextH1 daemon skip_operator_pause115, ATT1schedule
+  delta115/entries unchanged1; это entry-handler calls, не115 signals. Restart
+  не тестировался. Late fill требует OLD reconciliation; авто-resume запрещён.
+  Receipt ATT1_OLD_ENTRY_PAUSE_EXECUTED_2026_10_02.json.
+  NEW ATT1 binding orders-OFF code complete,
   346 focused local/VPS тестов — инженерное evidence, не real clean cohort.
 - ATT1 public cutover installed02.10 13:57UTC, driver97239996/new public epoch
   att1-public-lifecycle-20261002-paired-observation. Core/strategy/2s/profile/risk
@@ -95,9 +103,19 @@ breaker5 trades/net-1.0271USDT (diagnostic21-day aggregate, not full PnL audit).
 NEWpublic RUNNING/0sessions. GET-only native-stop/cost/finality binding is not
 an installed autonomous money runner; no one-flag switch. OLD percentage/equity/
 minqty model not pinned absoluteUSDT risk. Existing clean gate remains unmet.
-Concrete `ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md` prepared, owner choice pending;
-не применять pause/resume по предположению, сервис/позиции/защиту не останавливать.
-Latest decision/source receipt `ATT1_EARLY_LIVE_AND_LEADS_2026_10_02.json`.
+Historical `ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md` подготовлен14:55UTC;
+последующее прямое разрешение владельца исполнено15:36:43UTC, receipt выше.
+Не повторять pause, не resume и не останавливать сервис/позиции/защиту.
+At15:53UTC NEW public1session C98: START/ACK/FINAL CANCELLED,0 fills/clean terminals,
+valid3-record chain,0 open/calls. IOC nonfill не проверяет held lifecycle.
+Следующий build-план: `docs/superpowers/plans/2026-10-02-att1-canary-orders-off.md`:
+fixedUSDT risk provenance + общий UTC daily budget OLD+NEW; atomic reserve and
+terminal cash-spend transfer; captured entry/protection/exit/recovery commands;
+inert package/target acceptance/rollback-handoff. Existing coordinator/process/
+reservation reuse, все NEW ordersOFF. Written critical gaps addressed; owner
+plan review pending, code/build/точный numeric risk ещё не готовы. Public clean
+cohort копится параллельно, ожидание не блокирует engineering. Перед деньгами
+fresh absolute OLD comparison/exclusive dossier и отдельный owner GO.
 
 Owner Oct2 direction: исследовать допуск по режимам и существующие экраны Элдера.
 Read-only inventory уже сделан (REGIME_ELDER_INVENTORY_2026_10_02.json): classifier
@@ -111,11 +129,12 @@ actual updater в другом каталоге, path overrides отсутств
 нельзя считать доступным при более раннем решении; mtime не исторический archive.
 Читайте `ATT1_REGIME_GATE_READINESS_2026_10_02.json` и DRAFT
 `docs/superpowers/specs/2026-10-02-att1-regime-prospective-design.md`.
-Следующий этап: prospective availability archive + expected hour×51 audit,
+Отдельный следующий этап: prospective availability archive + expected hour×51 audit,
 UNKNOWN/omissions и reserve/quotas/audit-only suspension; owner spec review pending.
 Независимое сравнение политик требует causal tape и собственного admission/
 cooldown; просто убрать сделки baseline недостаточно. Общего router/новой trading
 policy ещё нет. LIVE и текущий2s burn-in не менять; новый scorer не запускался.
+Latest owner direction: regime/Elder experiment не блокирует основной canary path.
 
 **P2: текущие зацепки.** Owner-manager scope01.10: Claude только PM2 после валидных
 v5 snapshots и prospective TOLPA_1D: ≥90% hourly/cheap-screen уже пройдены.
@@ -125,6 +144,9 @@ self-check PASS/daemon stopped/queue empty/new preregistration needed. Historica
 defect handoffs are not current test/runtime proof. FX collector accepts intended
 broker/type demo but frozen report requests live costs; equivalence NOT_VERIFIED.
 All7-pair full costs/summer+winter/commission+swap gate pending, not quick-live promise.
+Owner now reports connected BullWaves-LIVE: read-only actual server/account/type
+binding and costs exporter → Claude frozen cost judge. Owner report не является
+проверенной выгрузкой; возможен insufficient-data verdict, orders не отправлять.
 PM2: только v5 с01.10 16:09:19UTC, финал после≥3 календарных дат данных по frozen
 judge; до этого диагностика, после EXECUTABLE отдельный execution gate.
 Сначала verify research ref/origin и актуальную KARTA, а не checkout HEAD.
