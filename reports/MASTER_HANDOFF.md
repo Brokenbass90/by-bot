@@ -23,6 +23,12 @@ NOCHNOY is KILLED/NOT_EXECUTABLE; TOLPA first needs current PIT inputs. Research
 was read only, no merge/evaluator/window consumption. Drift-prone facts must be
 refreshed before future action; historical sections keep their original dates.
 
+October2 roadmap clarification: use admissible history/replay before market waiting;
+inventory existing coverage and close named gaps, preserving sealed windows.
+Receipt compatibility is separate from net edge;2–3 clean terminals are operational
+acceptance. See CURRENT_PROJECT_ROADMAP.md, "History and replay before market waiting".
+This clarification ran no replay/evaluator and changed no code/runtime/money gate.
+
 ## 1. Repository, authority and delivery
 
 - Production checkout: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`.

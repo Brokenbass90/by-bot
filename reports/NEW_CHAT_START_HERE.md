@@ -35,6 +35,12 @@ No Claude checkout mutation, merge or judge/window rerun. CURRENT_PROJECT_ROADMA
 has the agreed immediate queue and later Factory e2e/governor/AI proposals/cleanup.
 Do not implement later architecture as part of this delivered canary cycle.
 
+Roadmap уточнён: сначала использовать допустимую историю/replay; inventory уже
+проверенного → только конкретные пробелы.14/162 oracle не доказывает net edge,
+2–3 clean terminal — operational gate. Не расходовать sealed windows и не менять
+frozen judges; OHLC не доказывает2s/broker execution. Actual inputs остаются первым
+шагом. В этом уточнении новых replay/evaluator/runtime действий не было.
+
 ## Миссия и рабочий настрой
 
 Мы строим устойчивую multi-market систему поиска, проверки и эксплуатации

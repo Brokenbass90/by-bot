@@ -28,6 +28,50 @@ above are Claude registry claims read without rerunning judges/holdouts. The
 older Codex-sync paragraph still says FX COST_GATE_PENDING; current MONEY/
 EVIDENCE table supersedes it. No Claude checkout/diff or evaluator was modified.
 
+## History and replay before market waiting
+
+Close every question that available, admissible historical evidence can answer
+before waiting for prospective events. Start with a bounded archive/coverage
+inventory: code/profile pins, period, data frequency, PIT availability, costs,
+consumed versus untouched windows and the exact unanswered question. Reuse
+existing results and tests; repeated inspection of used history adds no independent
+confirmation. Sealed windows remain protected; no evaluator rerun is authorized
+by this roadmap update.
+
+For ATT1, actual authenticated risk/cost/cash/OLD-handoff inputs remain first in
+the engineering queue. In parallel, identify gaps in existing canary acceptance
+and cover only those gaps with captured-event replay or explicitly synthetic fault
+scenarios using existing modules. Keep frozen strategy, admission, risk authority,
+2s threshold and one journal writer. No second replay engine, tuning or new regime
+filter. Each added case must close a named uncovered failure, rather than repeat
+the delivered242/233 tests or14-session/162-record receipt oracle.
+
+That byte-identical oracle proves receipt compatibility, not historical net edge.
+OHLC bars cannot prove2s observation continuity, queue fills, broker protection ACK
+timing or intra-bar execution order. Missing tick/book/broker evidence must remain
+MODELLED/UNKNOWN or DATA_GAP; scenarios cannot certify actual execution. PIT tests
+can expose look-ahead; a few prospective terminals alone cannot certify its absence.
+
+Prior research already includes an ATT1 presealed regime replay:468 trades over
+19 months, base PF1.057 and stress PF0.982 without the regime gate. These are
+historical research-model results, not a verdict for the current NEW canary code;
+read source/profile/cost bindings before reuse. Receipt:
+`research_lab/results/att1_major8_regime_replay_presealed_v1_20260826/receipt.json`.
+Regime-gated results remain research-only and do not authorize a LIVE filter.
+
+Any separate edge replay needs an accepted frozen research contract and mapped
+PIT/cost/execution assumptions. Claude owns research; Codex owns canary engineering.
+The2–3 prospective filled clean/net-R terminals are operational acceptance, not a
+statistical profitability/degradation test or a calendar promise. They do not
+replace authentic inputs, fresh exclusive handoff, reviewed selected-account
+dispatch/protection/finality integration and separate owner GO. NEW orders stayOFF.
+
+Factory uses history → cheap falsification → frozen walk-forward/untouched holdout
+before prospective confirmation where independent history is exhausted. Respect
+each existing preregistration; TOLPA's consumed history and frozen180/365-day forward
+looks cannot be recycled into new confirmation. Its background observation does
+not freeze the rest of development.
+
 ## Next accepted development cycle
 
 After current lead verdicts free capacity, use the existing Factory for **one**

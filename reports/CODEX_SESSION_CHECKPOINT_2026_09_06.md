@@ -2,6 +2,15 @@
 
 ## Public continuation checkpoint
 
+October2 history/replay roadmap clarification (documentation only): first inventory
+admissible archived evidence and current test coverage, then close named gaps in
+existing modules while public collection continues. Actual risk/cost/handoff inputs
+remain first.14/162 receipt oracle is not a net-edge backtest;2–3 clean filled
+terminals are operational acceptance. OHLC/scenarios do not establish2s/current
+broker execution; consumed history is not independent confirmation. Sealed windows,
+frozen judges and money gates unchanged. No replay/evaluator/code/runtime action
+in this clarification; see CURRENT_PROJECT_ROADMAP.md's history/replay section.
+
 Latest continuation — **October2 engineering delivery: Native Tasks1–4 complete, NEW ordersOFF; actual account binding BLOCKED**:
 - Implementation commits604131e/85913e0/4b31b1a/83d2f0b, critical fixes3f999c9.
   Source-proven declared fixedUSDT limits/daily OLD+NEW budget, atomic slot/cash,
