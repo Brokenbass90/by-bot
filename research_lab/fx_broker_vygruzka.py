@@ -188,8 +188,8 @@ def main():
     acc = m.account()
     server = str(acc.get("server", "")); company = str(acc.get("company", ""))
     print(f"брокер: {company} | сервер: {server} | режим: {acc.get('trade_mode')}")
-    if "icmarkets" not in server.lower().replace(" ", "") and "bullwaves" not in server.lower():
-        print("  !! ВНИМАНИЕ: заранее выбранная площадка повтора — IC Markets EU Raw Spread. Этот сервер в вердикт не идёт.")
+    if not any(k in server.lower() for k in ("fxpro", "bullwaves")):
+        print("  !! ВНИМАНИЕ: площадка повтора зафиксирована — FxPro (сырой спред). Этот сервер в вердикт не идёт.")
     if "MetaQuotes" in server or "MetaQuotes" in company:
         sys.exit("это MetaQuotes-Demo — нужен счёт реального брокера (можно его демо того же типа)")
     print(f"валюта счёта: {acc.get('currency')} | плечо: {acc.get('leverage')} | группа: {acc.get('group') or '-'}")
