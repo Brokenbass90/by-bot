@@ -112,8 +112,8 @@ def validate_canary_budget_inputs(binding: Mapping, old_budget_evidence: Mapping
         'schema_id', 'account_fingerprint_sha256', 'observed_ms', 'coverage_start_ms',
         'coverage_end_ms', 'owners', 'complete', 'unresolved_prior_day_costs', 'source_sha256', 'events',
     }
-    if isinstance(cash_evidence, Mapping) and 'prior_day_coverage_sha256' in cash_evidence:
-        cash_fields.add('prior_day_coverage_sha256')
+    if isinstance(cash_evidence, Mapping):
+        cash_fields.update(set(cash_evidence) & {'prior_day_coverage_sha256','prior_command_events'})
     c = _mapping(cash_evidence, cash_fields, 'cash coverage')
     if 'prior_day_coverage_sha256' in c:
         _sha(c['prior_day_coverage_sha256'], 'prior-day coverage')
@@ -128,24 +128,37 @@ def validate_canary_budget_inputs(binding: Mapping, old_budget_evidence: Mapping
             or type(c['coverage_end_ms']) is not int or c['coverage_end_ms'] != c['observed_ms']
             or not start <= c['coverage_end_ms'] <= now_ms or not isinstance(c['events'], list)):
         raise AdapterViolation('cash coverage incomplete')
-    seen, spent, normalized = {}, Fraction(0), []
-    for value in c['events']:
+    history = c.get('prior_command_events', [])
+    if not isinstance(history,list) or (history and 'prior_day_coverage_sha256' not in c):
+        raise AdapterViolation('prior command cash coverage/hash required')
+    seen, spent, normalized, prior_normalized = {}, Fraction(0), [], []
+    for historical, value in [(False,x) for x in c['events']] + [(True,x) for x in history]:
         fields = {
             'source_id', 'source_sha256', 'account_fingerprint_sha256', 'owner',
             'economic_ms', 'received_ms', 'gross_realized_usdt', 'execution_fee_usdt', 'funding_cash_usdt',
         }
-        if isinstance(value, Mapping) and 'command_sha256' in value:
-            fields.add('command_sha256')
+        if isinstance(value, Mapping):
+            fields.update(set(value) & {'command_sha256','lifecycle_sources'})
         row = _mapping(value, fields, 'cash event')
         if 'command_sha256' in row:
             _sha(row['command_sha256'], 'cash command')
+        if 'lifecycle_sources' in row:
+            if not isinstance(row['lifecycle_sources'],list):
+                raise AdapterViolation('invalid lifecycle source inventory')
+            for source in row['lifecycle_sources']:
+                source = _mapping(source,{'event_id','source_sha256'},'lifecycle source')
+                if not isinstance(source['event_id'],str) or not source['event_id']:
+                    raise AdapterViolation('invalid lifecycle source identity')
+                _sha(source['source_sha256'],'lifecycle source')
         sid = row['source_id']
         if not isinstance(sid, str) or not 1 <= len(sid) <= 256:
             raise AdapterViolation('cash event identity missing')
         _sha(row['source_sha256'], 'cash event')
         ex, rx = row['economic_ms'], row['received_ms']
         if (row['owner'] not in {'OLD', 'NEW'} or row['account_fingerprint_sha256'] != b['account_fingerprint_sha256']
-                or type(ex) is not int or type(rx) is not int or not start <= ex <= rx <= c['observed_ms']):
+                or type(ex) is not int or type(rx) is not int or not 0 < ex <= rx <= c['observed_ms']
+                or (not historical and ex < start) or (historical and (ex >= start
+                    or row['owner'] != 'NEW' or 'command_sha256' not in row))):
             raise AdapterViolation('cash event outside complete coverage')
         economic = {k: v for k, v in row.items() if k != 'received_ms'}
         if sid in seen:
@@ -156,9 +169,14 @@ def validate_canary_budget_inputs(binding: Mapping, old_budget_evidence: Mapping
         gross = _number(row['gross_realized_usdt'], 'gross realized')
         fee = _number(row['execution_fee_usdt'], 'execution fee', nonnegative=True)
         funding = _number(row['funding_cash_usdt'], 'funding cash')
-        spent += max(-gross, 0) + fee + max(-funding, 0)
-        normalized.append(row)
+        if historical:
+            prior_normalized.append(row)
+        else:
+            spent += max(-gross, 0) + fee + max(-funding, 0)
+            normalized.append(row)
     c['events'] = normalized
+    if 'prior_command_events' in c:
+        c['prior_command_events'] = prior_normalized
     out = {'schema_id': 'att1_canary_validated_budget_v1', 'binding': deepcopy(b),
            'old_budget_evidence': deepcopy(o), 'cash_evidence': deepcopy(c),
            'now_ms': now_ms, 'day_utc': _day(now_ms), 'spent_usdt': _decimal_text(spent),

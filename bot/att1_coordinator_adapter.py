@@ -140,7 +140,8 @@ def init_att1_route_tables(con):
         additions = {
             'att1_decisions': {'risk_reserve_usdt': 'TEXT', 'cost_reserve_usdt': 'TEXT',
                 'budget_day_utc': 'TEXT', 'budget_evidence_sha256': 'TEXT',
-                'execution_binding_sha256': 'TEXT', 'command_sha256': 'TEXT', 'preparation_json': 'TEXT'},
+                'execution_binding_sha256': 'TEXT', 'command_sha256': 'TEXT', 'preparation_json': 'TEXT',
+                'terminal_evidence_sha256': 'TEXT'},
             'att1_route': {'budget_day_utc': 'TEXT', 'spent_debits_usdt': 'TEXT',
                 'cash_coverage_sha256': 'TEXT', 'cash_finality_frontier_ms': 'INTEGER',
                 'cash_event_fingerprints_json': 'TEXT', 'risk_cap_usdt': 'TEXT', 'notional_cap_usdt': 'TEXT'},
@@ -661,6 +662,8 @@ def reserve_new_att1_preparation(con, account, *, symbol, side, h1_close_ms, now
     _begin(con)
     try:
         v = _apply_canary_cash_tx(con, account, validated_budget, now_ms)
+        if not v.get('handoff_binding'):
+            raise AdapterViolation('complete handoff required for cash-aware reservation')
         attachment = v.get('command_binding')
         if not isinstance(attachment, Mapping):
             raise AdapterViolation('admitted command reserve binding required')
@@ -741,7 +744,7 @@ def bind_att1_order(con, account, decision_key, broker_order_id):
 
 
 def finalize_att1_reservation(con, account, decision_key, *, flat, order_final,
-                              costs_complete, now_ms, validated_budget=None):
+                              costs_complete, now_ms, validated_budget=None, lifecycle_session=None):
     key = _decision_key(decision_key)
     if _require_account(account) != key[0]:
         raise AdapterViolation('decision account mismatch')
@@ -754,7 +757,8 @@ def finalize_att1_reservation(con, account, decision_key, *, flat, order_final,
     where = 'account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?'
     _begin(con)
     try:
-        row = con.execute(f'SELECT reserved_at_ms,command_sha256,terminal_at_ms FROM att1_decisions WHERE {where}', key).fetchone()
+        row = con.execute(f'''SELECT reserved_at_ms,command_sha256,terminal_at_ms,
+            execution_binding_sha256,preparation_json FROM att1_decisions WHERE {where}''', key).fetchone()
         if row is None:
             raise AdapterViolation('ATT1 decision missing')
         if now_ms < row[0]:
@@ -762,10 +766,39 @@ def finalize_att1_reservation(con, account, decision_key, *, flat, order_final,
         if row[1] is not None and row[2] is None:
             if validated_budget is None:
                 raise AdapterViolation('budget-bound cash finality required')
+            _validate_new_lifecycle_session(lifecycle_session,key)
+            records = lifecycle_session.journal.read()
+            receipt = lifecycle_session._replay(records)
+            saved = json.loads(row[4] or '{}')
+            if (receipt['lifecycle_terminal'] is not True
+                    or receipt['accounting']['costs_complete'] is not True
+                    or any(e.get('received_ms',0)>now_ms for e in records)
+                    or saved.get('profile') != lifecycle_session.profile
+                    or saved.get('intent') != records[0]['intent']
+                    or digest(saved.get('command')) != row[1]
+                    or digest(lifecycle_session.profile['broker_binding']) != row[3]):
+                raise AdapterViolation('terminal lifecycle/preparation provenance mismatch')
             v = _apply_canary_cash_tx(con,key[0],validated_budget,now_ms)
-            if not any(e.get('command_sha256')==row[1] and e['owner']=='NEW'
-                       for e in v['cash_evidence']['events']):
+            cash = [e for e in [*v['cash_evidence']['events'],*v['cash_evidence'].get('prior_command_events',[])] if e.get('command_sha256')==row[1] and e['owner']=='NEW']
+            if not cash:
                 raise AdapterViolation('terminal command cash coverage missing')
+            expected_sources = {e['event_id']:e['source_sha256'] for e in records
+                                if e['kind'] in {'ENTRY_FILL','EXIT_FILL','FUNDING_CASH'}}
+            sources = {}
+            for e in cash:
+                for source in e.get('lifecycle_sources',[]):
+                    sid = source['event_id']
+                    if sid in sources:
+                        raise AdapterViolation('terminal lifecycle source duplicated')
+                    sources[sid] = source['source_sha256']
+            totals = tuple(sum((_number(e[field],field) for e in cash),Fraction(0)) for field in
+                           ('gross_realized_usdt','execution_fee_usdt','funding_cash_usdt'))
+            economics = tuple(Fraction(receipt['accounting'][field]) for field in
+                              ('gross_realized','known_fee_total','settled_funding'))
+            if sources != expected_sources or totals != economics:
+                raise AdapterViolation('terminal lifecycle cash totals/source identities mismatch')
+            con.execute(f'UPDATE att1_decisions SET terminal_evidence_sha256=? WHERE {where}',
+                        (digest({'receipt':receipt,'records':records,'cash':cash}),*key))
             con.execute('''UPDATE att1_route SET cash_finality_frontier_ms=?,updated_ms=? WHERE account=?''',
                         (now_ms,now_ms,key[0]))
         con.execute(f'''UPDATE att1_decisions SET terminal_at_ms=?, costs_complete=1
@@ -867,7 +900,8 @@ def reconcile_new_att1_lifecycle_receipts(db_path, decision_key, *, session,
     if release_reservation and receipt.get('lifecycle_terminal') is True and all(finality.values()):
         with sqlite3.connect(db_path) as con:
             finalize_att1_reservation(
-                con, key[0], key, now_ms=now_ms, validated_budget=validated_budget, **finality,
+                con, key[0], key, now_ms=now_ms, validated_budget=validated_budget,
+                lifecycle_session=session, **finality,
             )
     return receipt
 
@@ -1353,7 +1387,7 @@ def reconcile_new_att1_broker_finality(db_path, decision_key, *, session, accoun
         with sqlite3.connect(db_path) as con:
             finalize_att1_reservation(con,key[0],key,flat=True,order_final=True,
                 costs_complete=result['accounting']['costs_complete'],now_ms=received_ms,
-                validated_budget=validated_budget)
+                validated_budget=validated_budget,lifecycle_session=session)
     return result
 
 

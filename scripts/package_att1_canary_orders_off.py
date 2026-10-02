@@ -11,7 +11,8 @@ from bot.att1_canary_preparation import _revalidate, MAX_EVIDENCE_AGE_MS
 from scripts.package_att1_lifecycle import SOURCES as PUBLIC_SOURCES
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCES = (*PUBLIC_SOURCES,'bot/att1_coordinator_adapter.py','bot/att1_canary_preparation.py')
+SOURCES = (*PUBLIC_SOURCES,'bot/att1_coordinator_adapter.py','bot/att1_canary_preparation.py',
+           'scripts/live_bybit_evidence_20260706.py')
 CHECKS = {'local_targeted','target_python','historical_receipts','critical_review'}
 AUTHORITY = {'money_authority':False,'orders_allowed':False,'promotion_authority':False}
 

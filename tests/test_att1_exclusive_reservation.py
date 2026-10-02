@@ -37,6 +37,8 @@ def canary_budget(*, now):
     intent['submit_ms'] = now
     intent['book'] = 'ATT1_BROKER_REPLAY:' + b['account_fingerprint_sha256']
     v = api().validate_canary_budget_inputs(b, old, cash, now_ms=now)
+    from test_att1_canary_preparation import handoff_inputs
+    v = api().bind_canary_handoff(v, **handoff_inputs(now))
     assert hasattr(api(), 'bind_canary_command_budget'), 'admitted command binding missing'
     link = a._stable_link_id(ACCOUNT, 'BTCUSDT', 'SELL', intent['signal']['bar_close_ms'])
     return api().bind_canary_command_budget(v, profile, intent, order_link_id=link)
@@ -101,7 +103,7 @@ def test_bound_finality_cannot_bypass_spend_transfer(ledger):
     assert con.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0] is None
 
 
-def test_release_crash_then_stale_cash_retry_blocks(ledger):
+def test_release_crash_then_stale_cash_retry_blocks(ledger,tmp_path):
     canary_reservation_api()
     from test_att1_canary_budget import cash_event, api
     con,path=ledger
@@ -113,8 +115,10 @@ def test_release_crash_then_stale_cash_retry_blocks(ledger):
     base.pop('command_binding')
     cash=base['cash_evidence'];cash['observed_ms']=cash['coverage_end_ms']=T+H1+100
     cash['events']=[cash_event(account_fingerprint_sha256=a.att1_broker_account_fingerprint(ACCOUNT), owner='NEW',economic_ms=T+H1+90,received_ms=T+H1+100,command_sha256=budget['command_binding']['command_sha256'])]
+    session=_toy_cash_terminal(tmp_path,budget)
+    cash['events'][0]['lifecycle_sources']=[{'event_id':e['event_id'],'source_sha256':e['source_sha256']} for e in session.journal.read() if e['kind'] in {'ENTRY_FILL','EXIT_FILL','FUNDING_CASH'}]
     terminal=api().validate_canary_budget_inputs(base['binding'],base['old_budget_evidence'],cash,now_ms=T+H1+100)
-    a.finalize_att1_reservation(con,ACCOUNT,key,flat=True,order_final=True,costs_complete=True,now_ms=T+H1+100,validated_budget=terminal)
+    a.finalize_att1_reservation(con,ACCOUNT,key,flat=True,order_final=True,costs_complete=True,now_ms=T+H1+100,validated_budget=terminal,lifecycle_session=session)
     con.close()
     with sqlite3.connect(path) as restored:
         assert restored.execute('SELECT spent_debits_usdt FROM att1_route').fetchone()[0]=='0.3'
@@ -179,7 +183,8 @@ def test_pre_c_signal_and_old_cooldown_are_preserved(ledger):
     assert con.execute('SELECT COUNT(*) FROM att1_decisions').fetchone()[0]==1
 
 
-def test_budget_finality_threads_through_existing_lifecycle_reconciliation(ledger,tmp_path):
+@pytest.mark.parametrize('defect',[None,'zero_cash','missing_source','wrong_source','past_day_completion'])
+def test_budget_finality_threads_through_existing_lifecycle_reconciliation(ledger,tmp_path,defect):
     canary_reservation_api()
     from test_att1_canary_budget import api,cash_event
     from research_lab.att1_lifecycle_session import LifecycleSession
@@ -197,12 +202,31 @@ def test_budget_finality_threads_through_existing_lifecycle_reconciliation(ledge
         event('EXIT_FINAL',13,exit_order_id=xid,status='FILLED'),event('FUNDING_COVERAGE',20,start_ms=now,end_ms=now+20,settlement_ms=[],complete=True)]
     cash=deepcopy(budget['cash_evidence']);cash['observed_ms']=cash['coverage_end_ms']=now+30
     cash['events']=[cash_event(account_fingerprint_sha256=a.att1_broker_account_fingerprint(ACCOUNT),owner='NEW',economic_ms=now+12,received_ms=now+30,
-                              gross_realized_usdt='-0.48',execution_fee_usdt='0.00848',command_sha256=attach['command_sha256'])]
-    v=api().validate_canary_budget_inputs(budget['binding'],budget['old_budget_evidence'],cash,now_ms=now+30)
-    result=a.reconcile_new_att1_lifecycle_receipts(path,row,session=s,broker_order_id='entry-fixture',events=terminal_events,now_ms=now+30,validated_budget=v)
+                              gross_realized_usdt='-0.48',execution_fee_usdt='0.00848',command_sha256=attach['command_sha256'],
+                              lifecycle_sources=[{'event_id':e['event_id'],'source_sha256':e['source_sha256']} for e in [*events,*terminal_events] if e['kind'] in {'ENTRY_FILL','EXIT_FILL','FUNDING_CASH'}])]
+    if defect=='zero_cash':cash['events'][0].update(gross_realized_usdt='0',execution_fee_usdt='0')
+    if defect=='missing_source':cash['events'][0]['lifecycle_sources']=[]
+    if defect=='wrong_source':cash['events'][0]['lifecycle_sources'][0]['source_sha256']='f'*64
+    final_now=now+30
+    binding,old=budget['binding'],budget['old_budget_evidence']
+    if defect=='past_day_completion':
+        final_now=now+86400000+30
+        fresh=canary_budget(now=final_now);binding,old=fresh['binding'],fresh['old_budget_evidence']
+        cash['prior_command_events']=cash['events'];cash['events']=[]
+        cash['prior_day_coverage_sha256']=budget['cash_coverage_sha256']
+        cash['coverage_start_ms']=final_now//86400000*86400000
+        cash['observed_ms']=cash['coverage_end_ms']=final_now
+    v=api().validate_canary_budget_inputs(binding,old,cash,now_ms=final_now)
+    if defect in {'zero_cash','missing_source','wrong_source'}:
+        with pytest.raises(a.AdapterViolation,match='terminal|lifecycle'):
+            a.reconcile_new_att1_lifecycle_receipts(path,row,session=s,broker_order_id='entry-fixture',events=terminal_events,now_ms=now+30,validated_budget=v)
+        assert con.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0] is None
+        assert con.execute('SELECT spent_debits_usdt FROM att1_route').fetchone()[0]=='0'
+        return
+    result=a.reconcile_new_att1_lifecycle_receipts(path,row,session=s,broker_order_id='entry-fixture',events=terminal_events,now_ms=final_now,validated_budget=v)
     assert result['lifecycle_terminal'] is True
-    assert con.execute('SELECT spent_debits_usdt FROM att1_route').fetchone()[0]=='0.48848'
-    assert con.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0]==now+30
+    assert con.execute('SELECT spent_debits_usdt FROM att1_route').fetchone()[0]==('0' if defect=='past_day_completion' else '0.48848')
+    assert con.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0]==final_now
 
 H1 = 3_600_000
 T = 500_000 * H1
@@ -710,3 +734,25 @@ def test_market_transport_uses_reserved_link_and_keeps_legacy_payload_when_omitt
     assert gets == [('/v5/order/realtime', {
         'category': 'linear', 'symbol': 'ETHUSDT', 'orderLinkId': stable, 'limit': 1,
     }, 10)]
+
+
+def test_cash_aware_direct_reserve_requires_complete_handoff(ledger):
+    from bot.att1_canary_preparation import validate_canary_budget_inputs,bind_canary_command_budget
+    con,_=ledger;ready_for_canary(con);now=T+H1+40;v=canary_budget(now=now);cmd=v['command_binding']
+    bare=validate_canary_budget_inputs(v['binding'],v['old_budget_evidence'],v['cash_evidence'],now_ms=now)
+    bare=bind_canary_command_budget(bare,cmd['profile'],cmd['intent'],order_link_id=cmd['command']['orderLinkId'])
+    with pytest.raises(a.AdapterViolation,match='handoff'):
+        new_cash_reserve(con,now=now,budget=bare)
+    assert con.execute('SELECT COUNT(*) FROM att1_decisions').fetchone()[0]==0
+
+
+def _toy_cash_terminal(tmp_path,budget):
+    from research_lab.att1_lifecycle_session import LifecycleSession
+    attach=budget['command_binding'];now=budget['now_ms']
+    s=LifecycleSession(tmp_path/'toy-finality.jsonl',attach['profile'],intent=attach['intent'])
+    def e(kind,offset,**fields):
+        return {'schema_id':'att1_lifecycle_event_v1','event_id':kind+str(offset),'kind':kind,'exchange_ms':now+offset,'received_ms':now+offset+1,'source_sha256':'a'*64,**fields}
+    for event in [e('ENTRY_ACK',1),e('ENTRY_FILL',2,execution_id='entry-toy',qty='0.04',price='100',fee_amount='0.04',fee_source_sha256='a'*64,liquidity='TAKER'),e('PROTECTION_ACK',3,qty='0.04',stop='110'),e('ENTRY_FINAL',4,status='FILLED'),e('PRICE',10,bid='111',ask='112')]:s.apply(event)
+    xid=s.receipt['pending_exit']['exit_order_id']
+    for event in [e('EXIT_ACK',11,exit_order_id=xid),e('EXIT_FILL',50,exit_order_id=xid,execution_id='exit-toy',qty='0.04',price='105',fee_amount='0.06',fee_source_sha256='a'*64,liquidity='TAKER'),e('EXIT_FINAL',51,exit_order_id=xid,status='FILLED'),e('FUNDING_COVERAGE',55,start_ms=now,end_ms=now+55,settlement_ms=[],complete=True)]:s.apply(event)
+    return s
