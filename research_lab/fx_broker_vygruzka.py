@@ -107,6 +107,10 @@ def _oshibka(m, tool, e):
 
 def istoriya_spreda(m, s, imya, ot, do):
     ts, spr, bt = [], [], []
+    try:                                     # история отдаётся только по символам, выбранным в Обзоре рынка (selected)
+        m.add_symbol(imya)
+    except MT5Error as e:
+        print(f"  {imya}: не добавился в Обзор рынка ({str(e)[:120]})")
     tek = ot
     while tek < do:
         kraj = min(tek + dt.timedelta(days=30), do + dt.timedelta(days=1))
@@ -128,6 +132,15 @@ def istoriya_spreda(m, s, imya, ot, do):
                 ts.append(t); spr.append(float(x["spread"]))
         tek = kraj
     return ts, spr, sorted(set(bt))
+
+
+def _den_trojnogo(sp):
+    """день тройного свопа: MT5 0=вс … 6=сб → Python 0=пн … 6=вс; мост отдаёт swap_rollover3day(s), бывает float"""
+    v = sp.get("swap_rollover3days", sp.get("swap_rollover3day"))
+    try:
+        return (int(float(v)) - 1) % 7
+    except (TypeError, ValueError):
+        return 2
 
 
 def _sdvig(pravilo, d):
@@ -205,7 +218,7 @@ def main():
             print(f"{s}: нет в Обзоре рынка ({e}) — добавь символ (с суффиксом брокера, если он есть)"); continue
         spec[s] = {"point": sp.get("point"), "contract_size": sp.get("trade_contract_size") or sp.get("contract_size"),
                    "swap_long": sp.get("swap_long"), "swap_mode": {1: "points", 2: "money_per_lot"}.get(sp.get("swap_mode"), sp.get("swap_mode")),
-                   "swap_3day": sp.get("swap_rollover3days", 3) - 1 if isinstance(sp.get("swap_rollover3days"), int) else 2,
+                   "swap_3day": _den_trojnogo(sp),
                    "commission_usd_per_lot_side": a.komissiya, "imya_u_brokera": imya, "_syroe": sp}
         ts, spr, bt = istoriya_spreda(m, s, imya, ot, do)
         BARY[s] = bt
