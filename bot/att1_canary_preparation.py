@@ -9,6 +9,9 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from fractions import Fraction
 import re
+import hashlib
+import json
+from pathlib import Path
 
 from bot.att1_coordinator_adapter import AdapterViolation, _number
 from research_lab.att1_lifecycle_coordinator import digest
@@ -171,6 +174,8 @@ def _revalidate(validated):
     try:
         value = validate_canary_budget_inputs(validated['binding'], validated['old_budget_evidence'],
                                               validated['cash_evidence'], now_ms=validated['now_ms'])
+        if 'handoff_binding' in validated:
+            value = bind_canary_handoff(value, **validated['handoff_binding']['inputs'])
         if 'command_binding' in validated:
             attachment = validated['command_binding']
             value = bind_canary_command_budget(value, attachment['profile'], attachment['intent'],
@@ -255,3 +260,178 @@ def project_att1_daily_budget(validated: Mapping, occupied: list[Mapping], *,
            'orders_allowed': False}
     out['projection_sha256'] = digest(out)
     return out
+
+
+def validate_canary_handoff(*, pause_snapshot: Mapping, broker_snapshot: Mapping,
+                            old_intent_inventory: Mapping, old_watermarks: Mapping,
+                            now_ms: int) -> dict:
+    """Validate declarations of complete drain, without activating a route."""
+    from bot.att1_coordinator_adapter import _require_account, ATT1_H1_MS
+    if type(now_ms) is not int or now_ms <= 0:
+        raise AdapterViolation('invalid handoff clock')
+    p = _mapping(pause_snapshot, {'account','observed_ms','source_sha256','control'}, 'pause')
+    b = _mapping(broker_snapshot, {'schema_id','account','observed_ms','position_count',
+                                  'order_count','flat_no_orders','source_sha256'}, 'broker snapshot')
+    o = _mapping(old_intent_inventory, {'account','observed_ms','source_sha256','complete',
+            'finality_complete','costs_complete','unresolved','drained_at_ms'}, 'OLD inventory')
+    w = _mapping(old_watermarks, {'account','observed_ms','source_sha256','complete',
+                                 'last_old_h1_ms','symbols'}, 'OLD watermarks')
+    account = _require_account(p['account'])
+    for name, obj in (('pause',p), ('broker',b), ('inventory',o), ('watermarks',w)):
+        if obj['account'] != account:
+            raise AdapterViolation('handoff account mismatch')
+        _clock(obj['observed_ms'], now_ms, name)
+        _sha(obj['source_sha256'], name)
+    control = _mapping(p['control'], {'exists','scope','read_error','paused_sleeves'}, 'pause control')
+    if (control['exists'] is not True or control['read_error'] is not None
+            or control['scope'] != 'new_entries_only' or not isinstance(control['paused_sleeves'], list)
+            or 'att1' not in control['paused_sleeves']):
+        raise AdapterViolation('valid OLD entry pause required')
+    if (b['schema_id'] != 'att1_broker_snapshot_v1' or b['flat_no_orders'] is not True
+            or type(b['position_count']) is not int or b['position_count'] != 0
+            or type(b['order_count']) is not int or b['order_count'] != 0):
+        raise AdapterViolation('handoff broker is not flat/no orders')
+    drain = o['drained_at_ms']; last = w['last_old_h1_ms']
+    if (o['complete'] is not True or o['finality_complete'] is not True
+            or o['costs_complete'] is not True or o['unresolved'] != []
+            or type(drain) is not int or not 0 < drain <= o['observed_ms']
+            or w['complete'] is not True or type(last) is not int
+            or not 0 < last <= drain or last % ATT1_H1_MS):
+        raise AdapterViolation('OLD drain/finality/watermarks incomplete')
+    rows = w['symbols']
+    symbols = {'ADAUSDT','BTCUSDT','DOTUSDT','ETHUSDT','LINKUSDT','LTCUSDT','SOLUSDT','SUIUSDT'}
+    if not isinstance(rows, list) or len(rows) != len(symbols):
+        raise AdapterViolation('OLD symbol watermarks incomplete')
+    seen = set()
+    for row in rows:
+        r = _mapping(row, {'symbol','latest_h1_ms','cooldown_until_ms','last_terminal_ms'}, 'watermark')
+        if r['symbol'] not in symbols or r['symbol'] in seen:
+            raise AdapterViolation('OLD symbol watermark mismatch')
+        seen.add(r['symbol'])
+        h1, cooldown, terminal = r['latest_h1_ms'], r['cooldown_until_ms'], r['last_terminal_ms']
+        if (type(h1) is not int or not 0 <= h1 <= last or h1 % ATT1_H1_MS
+                or type(cooldown) is not int or cooldown < h1
+                or type(terminal) is not int or not 0 <= terminal <= drain
+                or cooldown < terminal):
+            raise AdapterViolation('invalid OLD symbol watermark/cooldown')
+    out = {'account':account, 'drained_at_ms':drain, 'last_old_h1_ms':last,
+           'minimum_cutover_ms':(max(drain,last)//ATT1_H1_MS+1)*ATT1_H1_MS,
+           'symbols':deepcopy(rows), 'orders_allowed':False}
+    out['handoff_sha256'] = digest({'pause':p,'broker':b,'inventory':o,'watermarks':w,'now_ms':now_ms})
+    return out
+
+
+def bind_canary_handoff(validated: Mapping, **inputs) -> dict:
+    v = _revalidate(validated)
+    if 'handoff_binding' in v or 'command_binding' in v:
+        raise AdapterViolation('handoff must precede command binding')
+    result = validate_canary_handoff(**inputs)
+    from bot.att1_coordinator_adapter import att1_broker_account_fingerprint
+    if (inputs['now_ms'] != v['now_ms'] or att1_broker_account_fingerprint(result['account'])
+            != v['binding']['account_fingerprint_sha256']):
+        raise AdapterViolation('handoff budget account/clock mismatch')
+    v.pop('validation_sha256')
+    v['handoff_binding'] = {'inputs':deepcopy(inputs), 'result':result}
+    v['validation_sha256'] = digest(v)
+    return v
+
+
+def preparation_implementation_hash() -> str:
+    root = Path(__file__).resolve().parents[1]
+    files = ('bot/att1_canary_preparation.py','bot/att1_coordinator_adapter.py')
+    from research_lab.att1_lifecycle_session import implementation_hash
+    return digest({'preparation':{p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in files},
+                   'lifecycle_implementation_sha256':implementation_hash()})
+
+
+def prepare_new_att1_entry(con, account: str, *, profile: Mapping, intent: Mapping,
+                           validated_budget: Mapping, now_ms: int) -> dict:
+    from bot import att1_coordinator_adapter as a
+    try:
+        key = a._decision_key((account,a.ATT1_FAMILY,intent['signal']['symbol'],'SELL',intent['signal']['bar_close_ms']))
+    except (KeyError, TypeError) as exc:
+        raise AdapterViolation('invalid entry intent') from exc
+    # Existing uncertain command is recovery-owned. Do not pass new-entry gates
+    # or expose another command, even after a crash before a journal START.
+    saved = con.execute('''SELECT owner,order_link_id,preparation_json,command_sha256,terminal_at_ms
+        FROM att1_decisions WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''',key).fetchone()
+    if saved is not None:
+        if saved[0] != 'NEW' or not saved[2]:
+            raise AdapterViolation('decision occupied without NEW preparation provenance')
+        state = json.loads(saved[2])
+        if (state['profile'] != profile or state['intent'] != intent
+                or digest(state['command']) != saved[3]
+                or state['implementation_sha256'] != preparation_implementation_hash()):
+            raise AdapterViolation('persisted preparation identity changed')
+        return {'status':'RECOVERY_REQUIRED_LOOKUP_ONLY','commands':[], 'order_link_id':saved[1],
+                'orders_allowed':False, 'preparation':state}
+    v = _revalidate(validated_budget)
+    handoff = v.get('handoff_binding', {}).get('result')
+    if not handoff or handoff['account'] != account or now_ms != v['now_ms']:
+        raise AdapterViolation('fresh source-bound handoff required')
+    route = a.read_att1_route(con, account)
+    if route['owner'] != 'NEW_READY' or route['cutover_ms'] < handoff['minimum_cutover_ms']:
+        raise AdapterViolation('NEW route/drain cutover mismatch')
+    v = bind_canary_command_budget(v,profile,intent,order_link_id=a._stable_link_id(key[0],key[2],key[3],key[4]))
+    attachment = v['command_binding']
+    reservation = a.reserve_new_att1_preparation(con,account,symbol=key[2],side=key[3],h1_close_ms=key[4],
+        now_ms=now_ms,validated_budget=v,proposed_risk_usdt=attachment['required_risk_usdt'],
+        proposed_cost_reserve_usdt=attachment['required_cost_reserve_usdt'])
+    return {'status':'PREPARED_ORDERS_OFF','commands':[deepcopy(attachment['command'])],
+            'reservation':reservation, 'orders_allowed':False, 'broker_order_id':None,
+            'execution_evidence':'CAPTURED_COMMAND_NO_BROKER_ORDER',
+            'implementation_sha256':preparation_implementation_hash()}
+
+
+def prepare_new_att1_management(*, session, coordinator_intent: Mapping,
+                                binding: Mapping, now_ms: int) -> dict:
+    from bot import att1_coordinator_adapter as a
+    from research_lab.att1_lifecycle_session import LifecycleSession
+    if not isinstance(session, LifecycleSession) or not isinstance(binding, Mapping):
+        raise AdapterViolation('owned lifecycle session/binding required')
+    account = binding.get('reservation_account')
+    frozen = {k:v for k,v in binding.items() if k != 'reservation_account'}
+    if frozen != session.profile.get('broker_binding'):
+        raise AdapterViolation('management execution binding mismatch')
+    receipt = session.refresh()
+    key = a._decision_key((account,a.ATT1_FAMILY,receipt['plan']['symbol'],'SELL',receipt['plan']['bar_close_ms']))
+    a._validate_new_lifecycle_session(session,key)
+    records = session.journal.read()
+    if (type(now_ms) is not int or now_ms <= 0
+            or any(e.get('received_ms',0)>now_ms for e in records)):
+        raise AdapterViolation('management clock precedes journal')
+    if coordinator_intent != {'intents':receipt['intents'], 'pending_exit':receipt['pending_exit']}:
+        raise AdapterViolation('coordinator intent changed/stale')
+    shared = {'category':'linear','symbol':key[2],'positionIdx':0,'orders_allowed':False,
+              'account_fingerprint_sha256':frozen['account_fingerprint_sha256'],
+              'execution_binding_sha256':digest(frozen), 'profile_sha256':session.profile['profile_sha256'],
+              'decision_id':receipt['plan']['decision_id']}
+    commands, lookup = [], []
+    protect = Fraction(receipt['intents']['protect_qty'])
+    held = Fraction(receipt['held_qty'])
+    if protect:
+        if protect != held:
+            raise AdapterViolation('protection must cover actual remainder')
+        commands.append({**shared,'kind':'NATIVE_PROTECTION','tpslMode':'Full',
+                         'size':_decimal_text(held),'stopLoss':receipt['plan']['original_stop']})
+    entry_link = a._stable_link_id(key[0],key[2],key[3],key[4])
+    if receipt['intents']['cancel_entry']:
+        commands.append({**shared,'kind':'CANCEL_ENTRY','orderLinkId':entry_link})
+    pending = receipt['pending_exit']
+    if pending:
+        link = a.att1_exit_order_link_id(key,pending['exit_order_id'])
+        remaining = Fraction(pending['remaining_qty'])
+        if remaining > held:
+            raise AdapterViolation('exit exceeds actual held remainder')
+        if receipt['intents']['cancel_exit']:
+            commands.append({**shared,'kind':'CANCEL_EXIT','orderLinkId':link})
+            lookup.append(link)
+        elif pending['acknowledged'] or remaining != Fraction(pending['qty']) or not remaining:
+            lookup.append(link)
+        else:
+            commands.append({**shared,'kind':'EXIT','side':'Buy','orderType':'Market','timeInForce':'IOC',
+                             'qty':_decimal_text(remaining),'reduceOnly':True,'orderLinkId':link,
+                             'exit_order_id':pending['exit_order_id'],'reason':pending['reason']})
+    return {'status':'RECOVERY_REQUIRED_LOOKUP_ONLY' if lookup else 'PREPARED_ORDERS_OFF',
+            'orders_allowed':False, 'commands':commands, 'lookup_order_links':lookup,
+            'execution_evidence':'CAPTURED_COMMAND_NO_BROKER_ORDER', 'broker_order_id':None}

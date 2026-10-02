@@ -140,7 +140,7 @@ def init_att1_route_tables(con):
         additions = {
             'att1_decisions': {'risk_reserve_usdt': 'TEXT', 'cost_reserve_usdt': 'TEXT',
                 'budget_day_utc': 'TEXT', 'budget_evidence_sha256': 'TEXT',
-                'execution_binding_sha256': 'TEXT', 'command_sha256': 'TEXT'},
+                'execution_binding_sha256': 'TEXT', 'command_sha256': 'TEXT', 'preparation_json': 'TEXT'},
             'att1_route': {'budget_day_utc': 'TEXT', 'spent_debits_usdt': 'TEXT',
                 'cash_coverage_sha256': 'TEXT', 'cash_finality_frontier_ms': 'INTEGER',
                 'cash_event_fingerprints_json': 'TEXT', 'risk_cap_usdt': 'TEXT', 'notional_cap_usdt': 'TEXT'},
@@ -655,7 +655,7 @@ def _apply_canary_cash_tx(con, account, validated_budget, now_ms):
 
 def reserve_new_att1_preparation(con, account, *, symbol, side, h1_close_ms, now_ms,
                                 validated_budget, proposed_risk_usdt, proposed_cost_reserve_usdt):
-    from bot.att1_canary_preparation import project_att1_daily_budget
+    from bot.att1_canary_preparation import project_att1_daily_budget, preparation_implementation_hash
     from research_lab.att1_lifecycle_profile import _decimal_text
     account, _, symbol, side, h1_close_ms = _decision_key((account,ATT1_FAMILY,symbol,side,h1_close_ms))
     _begin(con)
@@ -681,14 +681,30 @@ def reserve_new_att1_preparation(con, account, *, symbol, side, h1_close_ms, now
                                             proposed_cost_reserve_usdt=proposed_cost_reserve_usdt)
         if not budget['admitted']:
             raise AdapterViolation('canary budget blocked: '+budget['reason'])
+        handoff = v.get('handoff_binding', {}).get('result')
+        if handoff:
+            route = read_att1_route(con,account)
+            if (handoff['account'] != account or route['owner'] != 'NEW_READY'
+                    or route['cutover_ms'] < handoff['minimum_cutover_ms']):
+                raise AdapterViolation('NEW route/drain cutover mismatch')
+            for state in handoff['symbols']:
+                con.execute('''INSERT INTO att1_symbol_state
+                    (account,family,symbol,latest_h1_ms,cooldown_until_ms) VALUES (?,?,?,?,?)
+                    ON CONFLICT(account,family,symbol) DO UPDATE SET
+                    latest_h1_ms=MAX(latest_h1_ms,excluded.latest_h1_ms),
+                    cooldown_until_ms=MAX(cooldown_until_ms,excluded.cooldown_until_ms)''',
+                    (account,ATT1_FAMILY,state['symbol'],state['latest_h1_ms'],state['cooldown_until_ms']))
         result = _reserve_att1_decision_tx(con,account,owner='NEW',symbol=symbol,side=side,
             h1_close_ms=h1_close_ms,now_ms=now_ms,budget_authorized=True)
         key = (account,ATT1_FAMILY,symbol,side,h1_close_ms)
         con.execute('''UPDATE att1_decisions SET risk_reserve_usdt=?,cost_reserve_usdt=?,
-            budget_day_utc=?,budget_evidence_sha256=?,execution_binding_sha256=?,command_sha256=?
+            budget_day_utc=?,budget_evidence_sha256=?,execution_binding_sha256=?,command_sha256=?,preparation_json=?
             WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''',
             (_decimal_text(risk),_decimal_text(costs),v['day_utc'],v['validation_sha256'],
-             v['binding_sha256'],attachment['command_sha256'],*key))
+             v['binding_sha256'],attachment['command_sha256'],
+             json.dumps({**attachment,'implementation_sha256':preparation_implementation_hash(),
+                         'handoff_sha256':handoff['handoff_sha256'] if handoff else None},
+                         sort_keys=True,separators=(',',':')),*key))
         con.commit()
         result.update(orders_allowed=False,budget=budget,command_sha256=attachment['command_sha256'])
         return result

@@ -821,6 +821,7 @@ _ATT1_LAST_TRY: dict[str, float] = {}
 # Default-off OLD dispatch reservation only.  This never enables NEW transport,
 # risk, or management; it just makes an opted-in OLD intent durable before send.
 ATT1_COORDINATOR_BINDING_ENABLE = _env_bool("ATT1_COORDINATOR_BINDING_ENABLE", False)
+ATT1_CANARY_PREPARATION_ENABLE = _env_bool("ATT1_CANARY_PREPARATION_ENABLE", False)
 ATT1_CALLER_RECEIPT_ENABLE = _env_bool("ATT1_CALLER_RECEIPT_ENABLE", False)
 ATT1_CALLER_REGIME_RECEIPT_REQUIRED = _env_bool(
     "ATT1_CALLER_REGIME_RECEIPT_REQUIRED", True
@@ -12022,8 +12023,25 @@ def _att1_bind_old_dispatch_ack(reservation, order_id: str) -> bool:
     return True
 
 
+def _att1_prepare_new_canary(context):
+    """Explicit offline context only; this seam has no money dispatch path."""
+    if not ATT1_CANARY_PREPARATION_ENABLE:
+        return {"status": "PREPARATION_DISABLED", "orders_allowed": False, "commands": []}
+    from bot.att1_canary_preparation import prepare_new_att1_entry
+    from bot.att1_coordinator_adapter import AdapterViolation
+    if not isinstance(context, dict) or set(context) != {
+            "con", "account", "profile", "intent", "validated_budget", "now_ms"}:
+        raise AdapterViolation("explicit orders-OFF preparation context required")
+    return prepare_new_att1_entry(**context)
+
+
 async def try_att1_entry_async(symbol: str, price: float):
     """Try ATT1 trendline-touch entry for a symbol."""
+    if ATT1_CANARY_PREPARATION_ENABLE:
+        # A preparation config edit can suppress OLD entry, never dispatch NEW
+        # or fall back to OLD on a failed preparation. Management is unaffected.
+        _diag_inc("att1_skip_new_preparation_orders_off")
+        return
     if not ENABLE_ATT1_TRADING:
         _diag_inc("att1_skip_disabled")
         return
