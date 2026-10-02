@@ -2,6 +2,38 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October 2 14:55UTC: early NEW money question reconciled; OLD flat, entry-pause proposal prepared**:
+- Signed GET-only Bybit truth14:55:22UTC:0 linearUSDT positions/0 open orders,
+  complete pagination; OLD PID492970 unchanged, trade_ontrue/dry_runfalse,
+  ATT1enabled/Elderdisabled. Breaker21-day snapshot5 trades/net-1.0271USDT,
+  winrate40%; diagnostic aggregate, not full account/ledger net-edge audit.
+- NEW public PID1584802 RUNNING/0 sessions/open/calls at same capture.
+  Clarification: native-stop/cost/finality binding complete means GET-only
+  evidence/reconciliation, SEND_ENABLEDfalse, not an installed autonomous
+  money runner. Broker replay binding enforces send_enabledfalse. Early tiny
+  LIVE is not one flag; current2–3 clean cohort gate remains unmet/unwaived.
+- OLD sizing is percentage/equity based, configured BOT_CAPITAL_USD absent,
+  minqty fallback defaulttrue. Multiplier0.10 is not a pinned absolute USDT cap.
+  Future money package needs exact risk/daily/notional caps, unique owner,
+  transport/management acceptance, costs/protection/finality and concrete owner GO.
+- Verified actual hot-read entry-pause source/module/path; no operator state
+  currently present. `ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md` is concrete
+  PREPARED_NOT_EXECUTED. Owner choice pending; preserves service/positions/SL/TP,
+  no restart/order action; hot-read pause not instantaneous drain, state fail-open.
+- Claude immutable research ref and actual origin now f6f2e20, checkout untouched.
+  Current map: PM2 preliminary2 dates/496 ladder rounds/0 violations; TOLPA_1D
+  frozen180/365 daily looks; FX full costs summer/winter + swap/commission.
+  New FX exporter permits same-broker/type demo, report asks intended live broker:
+  demo/live cost equivalence NOT_VERIFIED; do not certify costs from assertion.
+- Factory map now reports self-check PASS, daemon stopped/queue empty/new
+  preregistration needed. Old acceptance-defect handoffs are historical; no fresh
+  daemon/self-test audit. No accepted bull/range deployment candidate identified;
+  no research scorer/merge/start. `ATT1_EARLY_LIVE_AND_LEADS_2026_10_02.json`.
+- Current written regime-audit design approval still pending; no financial or
+  product mutation. Mechanical gpt-6-luna/medium actual turn_context verified.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **October 2 14:36UTC: ATT1 regime supply/wiring blockers measured; prospective availability design DRAFT**:
 - Read-only public snapshot14:29:12UTC: same epoch/PID1584802, driver/core/
   strategy/profile pins unchanged; RUNNING, heartbeat180ms,51 scanned,

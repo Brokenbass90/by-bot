@@ -1,0 +1,143 @@
+{
+  "schema_id": "att1_early_money_and_existing_leads_decision_v1",
+  "status": "EARLY_CUTOVER_NOT_READY_OLD_ENTRY_PAUSE_PROPOSED_NOT_EXECUTED",
+  "scope": "Read-only broker/runtime/source and current research map; no trading mutation, scorer, research merge or Factory start",
+  "broker_observed_utc": "2026-10-02T14:55:22.244000+00:00",
+  "old": {
+    "pid": 492970,
+    "positions": 0,
+    "open_orders": 0,
+    "pagination_complete": true,
+    "trade_on": true,
+    "dry_run": false,
+    "att1_enabled": true,
+    "elder_enabled": false,
+    "breaker_att1": {
+      "blocked": false,
+      "enabled": true,
+      "expired": false,
+      "lookback_days": 21.0,
+      "max_consec_losses": 2,
+      "min_trades": 6,
+      "net_pnl": -1.0271,
+      "reason": "",
+      "risk_mult": 1.0,
+      "strategy": "att1_trendline_touch",
+      "trades": 5,
+      "winrate": 40.0
+    },
+    "performance_limit": "Heartbeat breaker diagnostic, not complete broker/account PnL audit or proof of regime-caused losses",
+    "configured_risk_mult": "0.10",
+    "configured_capital_usd": null,
+    "risk_per_trade_pct_heartbeat": 0.44,
+    "absolute_USDT_cap": "NOT_BOUND; percentage/equity model plus venue quantity/fallback is not pinned absolute money cap",
+    "minqty_fallback_default": true
+  },
+  "new_public": {
+    "epoch": "att1-public-lifecycle-20261002-paired-observation",
+    "pid": 1584802,
+    "status": "RUNNING",
+    "sessions": 0,
+    "open_simulations": 0,
+    "scan_symbols": 51,
+    "coverage_complete": true,
+    "broker_calls": 0,
+    "order_calls": 0,
+    "poll_errors": {},
+    "clean_cohort": "NOT_OBSERVED; zero sessions after paired-observation cutover"
+  },
+  "financial_path": {
+    "native_stop_cost_finality_binding": "Existing GET-only authenticated reconciliation code, orders-OFF; not autonomous installed money runner",
+    "send_enabled": false,
+    "broker_replay_binding_requires_send_enabled": false,
+    "missing_for_financial_cutover": [
+      "new cohort evidence under unchanged 2s",
+      "exact owner-bound absolute-risk/daily/notional package",
+      "production dispatch/management installation and exclusive OLD-to-NEW handoff acceptance",
+      "separate concrete owner financial GO"
+    ],
+    "early_live_question_does_not_waive_existing_gate": true,
+    "limit": "Transport ACK is not broker fill/protection; tiny account does not replace correctness or prove net edge"
+  },
+  "pause_proposal": {
+    "file": "reports/ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md",
+    "stage": "PREPARED_NOT_EXECUTED_OWNER_CHOICE_PENDING",
+    "scope": "OLD ATT1 new entries only; same service and existing protective management remain",
+    "verified_module_sha256": "a61dde4fae0fa4a32c8680de4279fb2d306725842cb1c81a19b099dba6dddad3",
+    "entrypoint_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "current_control_path": "/root/by-bot/runtime/operator_strategy_controls.json",
+    "current_path_exists": false,
+    "pause_functions_present": true,
+    "limit": "Hot-read entry pause is not instant drain; already in-flight admission may finish. State damage/missing file fail-open; postcheck required"
+  },
+  "research_ref": {
+    "local": "f6f2e20a3b88bfcad41d1cdc1fa7b98fa2a0687b",
+    "actual_origin_verified": "f6f2e20a3b88bfcad41d1cdc1fa7b98fa2a0687b",
+    "checkout_untouched": true,
+    "map": "research_lab/KARTA.md",
+    "source_sha256": {
+      "research_lab/KARTA.md": "f2c9fceed902d16f9bf982dc94c60032836372dc6b476ae3fa6e365c011429d6",
+      "research_lab/NOCHNOY_DREYF_FX_CONFIRMED_2026_10_01.md": "293dcb48cba2cf76698a0ebaf1a72e445f274725558af502d99f96c93e98042f",
+      "research_lab/fx_broker_vygruzka.py": "61e4ec72eb11e9ea11d57b35a057e5f5024d6c6663211f6ae77130d5a46e3411",
+      "research_lab/pm2_monotonnost.py": "0a53e44a8aeb91607c61104f3f57d540263f71de84b5f5737aa4067beee70c21",
+      "research_lab/tolpa1d_vpered.py": "6882ac79e8909b4d119dc1303ccb81b400b1e29c7ac573d71c45e77c1d5a8c11"
+    }
+  },
+  "existing_leads": {
+    "FX_NOCHNOY_DREYF": {
+      "status": "CONFIRMED_COST_GATE_PENDING",
+      "nominal_cadence": "scheduled daily seven-pair basket, not independent 7x evidence",
+      "next_gate": "full frozen spread/slippage/commission/swap costs, summer and winter, all seven pairs; NET_EXECUTABLE not yet",
+      "cost_source_conflict": "Report asks actual intended live broker (not demo); current collector allows same-broker/type demo and asserts identical costs. Demo/live equivalence NOT_VERIFIED by Codex; demo may begin collection, not certify live costs",
+      "new_cost_exporter_exists": true
+    },
+    "ETS2M": {
+      "status": "FROZEN_PROSPECTIVE_PENDING",
+      "not_before": "2026-10-10T19:00:00Z",
+      "cohort": "900 frozen events; current map mentions1004 inputs",
+      "next_gate": "unchanged frozen evaluator, then execution package if accepted"
+    },
+    "PM2": {
+      "status": "PRELIMINARY_PENDING",
+      "map_observation": "2 calendar dates /496 ladder rounds /0 violations; map summary read, raw datasets not recounted",
+      "gate": "at least10 qualifying violations across at least3 calendar data dates, then separate both-leg/fees/no-naked-short/leg-risk execution gate",
+      "frequency": "future eligible opportunities UNKNOWN"
+    },
+    "TOLPA_1D": {
+      "status": "CHEAP_SCREEN_SURVIVED_BORDERLINE_PROSPECTIVE_PENDING",
+      "nominal_cadence": "daily basket with adequate eligible PIT names/data",
+      "gate": "frozen180/365 eligible daily observations; NWlag1>=2.2, mean and both halves positive",
+      "limit": "weekly/daily same family, not additive evidence; not a fast confirmation promise"
+    },
+    "PEREGREV": {
+      "status": "EXECUTION_BASELINE_PASS_PROSPECTIVE_EDGE_PENDING",
+      "map_observation": "SHORT_HVOST/C8 each0/30, historical overlap corrected",
+      "gate": "frozen forward event/day and cost/execution rules; no calendar-time replacement",
+      "frequency": "event driven, UNKNOWN"
+    },
+    "bull_range": {
+      "status": "NO_CURRENT_ACCEPTED_DEPLOYABLE_LEAD",
+      "Elder": "third screen already implemented; current OLD flag false; frozen prospective gate distinct",
+      "SBR1": "parked: outcomes/control missing in last production evidence",
+      "BOUNCE1": "historical exploratory audit BLOCKED before shadow",
+      "XSEC_BullContinuation": "exact tested variants NEGATIVE, remain closed"
+    }
+  },
+  "factory": {
+    "map_status": "self-check PASS reported; daemon stopped, queue empty; new preregistered Discovery item needed",
+    "verification_limit": "immutable map/source read, not fresh daemon/process or rerun self-test proof",
+    "current_authorized_research": "PM2 and TOLPA_1D; no start/merge/new family in this cycle",
+    "recommendation": "finish existing verdicts, then one bounded accepted Discovery packet with new causal input/cost contract; no broad rewrite or repeated dead hypotheses"
+  },
+  "increasing_useful_entries": "Fix data/execution omissions first, then validated mechanisms across regimes/markets; trend filter may reduce entry count. Do not loosen frozen filters/cooldown, multiply correlated trades or force minqty fills to inflate activity",
+  "private_receipt_sha256": {
+    "att1_money_question_truth.json": "eb5d90d6bdb1afdabf81a768f600fa87b4595b783d04500bd2547267ee62188c",
+    "pause_prereqs.json": "11d63ad90f0f0b60aacd59c786b0d4fa4911ba024d5601a0630845ea4cc03ba2"
+  },
+  "delegation": "gpt-6-luna/medium bounded immutable research-source reader, actual latest turn_context verified; root financial interpretation; no worker writes",
+  "official_execution_docs": [
+    "https://bybit-exchange.github.io/docs/v5/order/create-order",
+    "https://bybit-exchange.github.io/docs/v5/position/trading-stop"
+  ],
+  "new_tests": "None: read-only facts/docs; JSON/source hashes validated; no product code changes"
+}

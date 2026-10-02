@@ -220,6 +220,21 @@ prospective filled terminals with terminal net-R**, then fresh exact OLD absolut
 risk, exclusive handoff/canary dossier and explicit owner financial action.
 OLD risk_multiplier0.10 alone is not absolute USD per-trade risk.
 
+Oct2 early-LIVE follow-up14:55:22UTC signed Bybit GET:0 linearUSDT positions,
+0 open orders/complete pagination; OLD492970 unchanged, ATT1enabled/Elderdisabled.
+Breaker21-day5 trades/net-1.0271USDT/winrate40% is diagnostic, not full account PnL.
+Public NEW still RUNNING/0 sessions/open/calls at this capture. Code-complete
+binding above is GET-only evidence/reconciliation, SEND_ENABLEDfalse; no installed
+autonomous NEW money runner or one-flag activation. Replay profile enforces
+send_enabledfalse. Exact absolute risk and exclusive financial installation
+remain required; question about tiny LIVE does not waive frozen clean-cohort gate.
+OLD capital override absent/percentage-equity model/minqty fallback defaulttrue:
+do not substitute old0.10 multiplier or virtual public risk1 for money cap.
+Verified hot-read OLD new-entry pause proposal:
+`ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md`, PREPARED_NOT_EXECUTED/owner choice pending.
+Service/position management remains; no financial/pause/restart action in this cycle.
+Receipt `ATT1_EARLY_LIVE_AND_LEADS_2026_10_02.json`; refresh truth before any action.
+
 Oct2 read-only regime/Elder inventory: existing BTC H1 EMA200±2% updater is alive
 and hash-bound; at13:45UTC its13:00 closed-H1 receipt was above_band (+3.416%) but
 older than the5min admission freshness gate. It is not proof of every alt's trend.
@@ -306,6 +321,9 @@ Oct2 local and cached tracking ref both
 `c12af845575337933fb2a5e2be8a615680b2b625`; actual origin independently verified
 at same SHA. Earlier Oct1 publication divergence is historical and resolved.
 No research push/merge/checkout mutation by Codex.
+Later Oct2 source reconciliation: local research ref and actual origin both
+`f6f2e20a3b88bfcad41d1cdc1fa7b98fa2a0687b`, current KARTA/protocols read from that
+immutable ref. Cached tracking not refreshed/claimed. No Codex research mutation.
 The deliberately unchanged working checkout **codex/dynamic-symbol-filters**,
 HEAD `76fc63ccbe43197e24452e3e4e28ae79a719e4ef`, is not the research work ref.
 Earlier "branch mismatch" interpretation was incorrect and is superseded here.
@@ -328,6 +346,14 @@ pricing-screen evidence and still needs both-leg/cost/execution gates before mon
 
 Claude handoff reports Factory acceptance-guard defects and exhausted O1/O2 windows;
 daemon stopped, equities BLOCKED_DATA on survivorship/universe, not merely two tickers.
+These defect claims are historical: current f6f2e20 KARTA reports self-check PASS,
+daemon stopped/queue empty, new preregistered Discovery item required. Source/map
+read only, not independently rerun tests or fresh Mac process audit. Current PM2
+preliminary2 calendar dates/496 ladder rounds/0 violations; complete its frozen
+judge before new direction. FX current exporter permits same-broker/type demo
+while report requests intended live-broker costs; equivalence NOT_VERIFIED.
+Full frozen gate requires summer/winter spread, slippage, commission and swap
+for all7 pairs. Demo can begin collecting, cannot itself certify LIVE costs.
 Do not start momentum/Gold tests or consume new windows from this document. These
 research claims were not independently revalidated or merged in migration.
 Future queue: resolve existing evidence/acceptance defects → repair existing leads →

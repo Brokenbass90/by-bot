@@ -90,6 +90,14 @@ sealed evidence или доверия ради красивого PASS. Не п�
 Для gaps извлекай фактическое request/scheduler/journal timing, не ослабляй2s.
 Orders-OFF binding сохраняется. После2–3 clean filled terminals/net-R — fresh
 OLD absolute risk/exclusive handoff dossier и explicit owner money step.
+Oct2 early-LIVE question: signed14:55UTC Bybit truth OLDflat/0orders, ATT1enabled,
+breaker5 trades/net-1.0271USDT (diagnostic21-day aggregate, not full PnL audit).
+NEWpublic RUNNING/0sessions. GET-only native-stop/cost/finality binding is not
+an installed autonomous money runner; no one-flag switch. OLD percentage/equity/
+minqty model not pinned absoluteUSDT risk. Existing clean gate remains unmet.
+Concrete `ATT1_OLD_ENTRY_PAUSE_PROPOSAL_2026_10_02.md` prepared, owner choice pending;
+не применять pause/resume по предположению, сервис/позиции/защиту не останавливать.
+Latest decision/source receipt `ATT1_EARLY_LIVE_AND_LEADS_2026_10_02.json`.
 
 Owner Oct2 direction: исследовать допуск по режимам и существующие экраны Элдера.
 Read-only inventory уже сделан (REGIME_ELDER_INVENTORY_2026_10_02.json): classifier
@@ -111,6 +119,12 @@ policy ещё нет. LIVE и текущий2s burn-in не менять; нов
 
 **P2: текущие зацепки.** Owner-manager scope01.10: Claude только PM2 после валидных
 v5 snapshots и prospective TOLPA_1D: ≥90% hourly/cheap-screen уже пройдены.
+Latest immutable research ref/local and actual origin f6f2e20; checkout unchanged.
+KARTA now reports PM2 preliminary2 dates/496 rounds/0 violations and Factory
+self-check PASS/daemon stopped/queue empty/new preregistration needed. Historical
+defect handoffs are not current test/runtime proof. FX collector accepts intended
+broker/type demo but frozen report requests live costs; equivalence NOT_VERIFIED.
+All7-pair full costs/summer+winter/commission+swap gate pending, not quick-live promise.
 PM2: только v5 с01.10 16:09:19UTC, финал после≥3 календарных дат данных по frozen
 judge; до этого диагностика, после EXECUTABLE отдельный execution gate.
 Сначала verify research ref/origin и актуальную KARTA, а не checkout HEAD.
