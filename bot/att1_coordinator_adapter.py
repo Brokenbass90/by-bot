@@ -137,6 +137,19 @@ def init_att1_route_tables(con):
         for statement in schema.split(';'):
             if statement.strip():
                 con.execute(statement)
+        additions = {
+            'att1_decisions': {'risk_reserve_usdt': 'TEXT', 'cost_reserve_usdt': 'TEXT',
+                'budget_day_utc': 'TEXT', 'budget_evidence_sha256': 'TEXT',
+                'execution_binding_sha256': 'TEXT', 'command_sha256': 'TEXT'},
+            'att1_route': {'budget_day_utc': 'TEXT', 'spent_debits_usdt': 'TEXT',
+                'cash_coverage_sha256': 'TEXT', 'cash_finality_frontier_ms': 'INTEGER',
+                'cash_event_fingerprints_json': 'TEXT', 'risk_cap_usdt': 'TEXT', 'notional_cap_usdt': 'TEXT'},
+        }
+        for table, fields in additions.items():
+            present = {row[1] for row in con.execute(f'PRAGMA table_info({table})')}
+            for name, kind in fields.items():
+                if name not in present:
+                    con.execute(f'ALTER TABLE {table} ADD COLUMN {name} {kind}')
         con.commit()
     except Exception:
         con.rollback()
@@ -549,47 +562,142 @@ def validate_old_att1_ack_lookup(account_config, decision_key, order, *, broker_
     return _text(order.get('orderId'), 'broker_order_id')
 
 
-def reserve_att1_decision(con, account, *, owner, symbol, side, h1_close_ms, now_ms):
+def _reserve_att1_decision_tx(con, account, *, owner, symbol, side, h1_close_ms, now_ms,
+                             budget_authorized=False):
     account, _, symbol, side, h1_close_ms = _decision_key(
         (account, ATT1_FAMILY, symbol, side, h1_close_ms))
     if owner not in {'OLD', 'NEW'} or type(now_ms) is not int or now_ms < h1_close_ms:
         raise AdapterViolation('invalid ATT1 reservation input')
     link_id = _stable_link_id(account, symbol, side, h1_close_ms)
+    route = read_att1_route(con, account)
+    if owner == 'NEW' and route.get('risk_cap_usdt') is not None and not budget_authorized:
+        raise AdapterViolation('NEW cash-aware budget reservation required')
+    if (owner == 'OLD' and route['owner'] != 'OLD') or (owner == 'NEW' and route['owner'] != 'NEW_READY'):
+        raise AdapterViolation('ATT1 route owner mismatch')
+    if now_ms < route['updated_ms']:
+        raise AdapterViolation('reservation clock regressed')
+    if owner == 'NEW' and h1_close_ms < route['cutover_ms']:
+        raise AdapterViolation('NEW decision is before cutover')
+    state = con.execute('''SELECT latest_h1_ms,cooldown_until_ms FROM att1_symbol_state
+                           WHERE account=? AND family=? AND symbol=?''',
+                        (account, ATT1_FAMILY, symbol)).fetchone()
+    if state and (h1_close_ms <= int(state[0]) or h1_close_ms < int(state[1])):
+        raise AdapterViolation('ATT1 symbol H1 cooldown/watermark blocks decision')
+    con.execute('''INSERT INTO att1_decisions
+        (account,family,symbol,side,h1_close_ms,owner,order_link_id,reserved_at_ms)
+        VALUES (?,?,?,?,?,?,?,?)''',
+        (account, ATT1_FAMILY, symbol, side, h1_close_ms, owner, link_id, now_ms))
+    con.execute('''INSERT INTO att1_symbol_state
+        (account,family,symbol,latest_h1_ms,cooldown_until_ms) VALUES (?,?,?,?,?)
+        ON CONFLICT(account,family,symbol) DO UPDATE SET latest_h1_ms=excluded.latest_h1_ms,
+        cooldown_until_ms=excluded.cooldown_until_ms''',
+        (account, ATT1_FAMILY, symbol, h1_close_ms, h1_close_ms + ATT1_COOLDOWN_MS))
+    con.execute('UPDATE att1_route SET latest_h1_ms=MAX(COALESCE(latest_h1_ms,0),?),updated_ms=? WHERE account=?',
+                (h1_close_ms, now_ms, account))
+    return {'account': account, 'family': ATT1_FAMILY, 'symbol': symbol,
+            'side': side, 'h1_close_ms': h1_close_ms, 'order_link_id': link_id,
+            'owner': owner, 'reserved_at_ms': now_ms}
+
+
+def reserve_att1_decision(con, account, *, owner, symbol, side, h1_close_ms, now_ms):
     _begin(con)
     try:
-        route = read_att1_route(con, account)
-        if (owner == 'OLD' and route['owner'] != 'OLD') or (owner == 'NEW' and route['owner'] != 'NEW_READY'):
-            raise AdapterViolation('ATT1 route owner mismatch')
-        if now_ms < route['updated_ms']:
-            raise AdapterViolation('reservation clock regressed')
-        if owner == 'NEW' and h1_close_ms < route['cutover_ms']:
-            raise AdapterViolation('NEW decision is before cutover')
-        state = con.execute('''SELECT latest_h1_ms,cooldown_until_ms FROM att1_symbol_state
-                               WHERE account=? AND family=? AND symbol=?''',
-                            (account, ATT1_FAMILY, symbol)).fetchone()
-        if state and (h1_close_ms <= int(state[0]) or h1_close_ms < int(state[1])):
-            raise AdapterViolation('ATT1 symbol H1 cooldown/watermark blocks decision')
-        con.execute('''INSERT INTO att1_decisions
-            (account,family,symbol,side,h1_close_ms,owner,order_link_id,reserved_at_ms)
-            VALUES (?,?,?,?,?,?,?,?)''',
-            (account, ATT1_FAMILY, symbol, side, h1_close_ms, owner, link_id, now_ms))
-        con.execute('''INSERT INTO att1_symbol_state
-            (account,family,symbol,latest_h1_ms,cooldown_until_ms) VALUES (?,?,?,?,?)
-            ON CONFLICT(account,family,symbol) DO UPDATE SET latest_h1_ms=excluded.latest_h1_ms,
-            cooldown_until_ms=excluded.cooldown_until_ms''',
-            (account, ATT1_FAMILY, symbol, h1_close_ms, h1_close_ms + ATT1_COOLDOWN_MS))
-        con.execute('UPDATE att1_route SET latest_h1_ms=MAX(COALESCE(latest_h1_ms,0),?),updated_ms=? WHERE account=?',
-                    (h1_close_ms, now_ms, account))
+        result = _reserve_att1_decision_tx(con, account, owner=owner, symbol=symbol,
+            side=side, h1_close_ms=h1_close_ms, now_ms=now_ms)
         con.commit()
+        return result
     except sqlite3.IntegrityError as exc:
         con.rollback()
         raise AdapterViolation('ATT1 decision duplicate or account slot occupied') from exc
     except Exception:
         con.rollback()
         raise
-    return {'account': account, 'family': ATT1_FAMILY, 'symbol': symbol,
-            'side': side, 'h1_close_ms': h1_close_ms, 'order_link_id': link_id,
-            'owner': owner, 'reserved_at_ms': now_ms}
+
+
+def _apply_canary_cash_tx(con, account, validated_budget, now_ms):
+    from bot.att1_canary_preparation import _revalidate
+    from research_lab.att1_lifecycle_profile import _decimal_text
+    v = _revalidate(validated_budget)
+    route = read_att1_route(con, account)
+    if (v['binding']['account_fingerprint_sha256'] != att1_broker_account_fingerprint(account)
+            or v['now_ms'] != now_ms or now_ms < route['updated_ms']):
+        raise AdapterViolation('canary cash account/clock mismatch')
+    old_day = route.get('budget_day_utc')
+    old_r = route.get('risk_cap_usdt')
+    old_n = route.get('notional_cap_usdt')
+    if old_r is not None and (_number(old_r, 'fixed risk') != _number(v['binding']['absolute_risk_cap'], 'fixed risk')
+            or _number(v['binding']['max_notional'], 'notional') > _number(old_n, 'fixed notional')):
+        raise AdapterViolation('fixed canary cash caps changed')
+    frontier = route.get('cash_finality_frontier_ms') or 0
+    if v['cash_evidence']['observed_ms'] < frontier:
+        raise AdapterViolation('cash finality frontier not covered')
+    if old_day is not None and v['day_utc'] < old_day:
+        raise AdapterViolation('cash day clock regressed')
+    fingerprints = {row['source_id']: digest({k:x for k,x in row.items() if k!='received_ms'})
+                    for row in v['cash_evidence']['events']}
+    prior = json.loads(route.get('cash_event_fingerprints_json') or '{}')
+    spent = _number(v['spent_usdt'], 'spent cash', nonnegative=True)
+    if old_day == v['day_utc']:
+        if any(fingerprints.get(k) != value for k, value in prior.items()):
+            raise AdapterViolation('cash coverage omits/conflicts with prior source identities')
+        if spent < _number(route.get('spent_debits_usdt') or '0', 'prior spent'):
+            raise AdapterViolation('cash spent projection regressed')
+    elif old_day is not None and frontier:
+        if v['cash_evidence'].get('prior_day_coverage_sha256') != route['cash_coverage_sha256']:
+            raise AdapterViolation('prior-day cash finality coverage required')
+    con.execute('''UPDATE att1_route SET budget_day_utc=?,spent_debits_usdt=?,
+        cash_coverage_sha256=?,cash_event_fingerprints_json=?,risk_cap_usdt=?,notional_cap_usdt=?
+        WHERE account=?''', (v['day_utc'], _decimal_text(spent), v['cash_coverage_sha256'],
+        json.dumps(fingerprints,sort_keys=True,separators=(',',':')),
+        old_r or v['binding']['absolute_risk_cap'], old_n or v['binding']['max_notional'], account))
+    return v
+
+
+def reserve_new_att1_preparation(con, account, *, symbol, side, h1_close_ms, now_ms,
+                                validated_budget, proposed_risk_usdt, proposed_cost_reserve_usdt):
+    from bot.att1_canary_preparation import project_att1_daily_budget
+    from research_lab.att1_lifecycle_profile import _decimal_text
+    account, _, symbol, side, h1_close_ms = _decision_key((account,ATT1_FAMILY,symbol,side,h1_close_ms))
+    _begin(con)
+    try:
+        v = _apply_canary_cash_tx(con, account, validated_budget, now_ms)
+        attachment = v.get('command_binding')
+        if not isinstance(attachment, Mapping):
+            raise AdapterViolation('admitted command reserve binding required')
+        cmd = attachment['command']
+        if (cmd['symbol'] != symbol or cmd['side'].upper() != side or cmd['h1_close_ms'] != h1_close_ms
+                or cmd['orderLinkId'] != _stable_link_id(account,symbol,side,h1_close_ms)):
+            raise AdapterViolation('command decision identity mismatch')
+        risk = _number(proposed_risk_usdt, 'proposed reserve risk', positive=True)
+        costs = _number(proposed_cost_reserve_usdt, 'proposed reserve costs', nonnegative=True)
+        if (risk < _number(attachment['required_risk_usdt'], 'command risk')
+                or costs < _number(attachment['required_cost_reserve_usdt'], 'command costs')):
+            raise AdapterViolation('command reserves understated')
+        rows = con.execute('''SELECT risk_reserve_usdt,cost_reserve_usdt FROM att1_decisions
+                              WHERE account=? AND family=? AND terminal_at_ms IS NULL''',
+                           (account,ATT1_FAMILY)).fetchall()
+        occupied = [dict(zip(('risk_reserve_usdt','cost_reserve_usdt'), row)) for row in rows]
+        budget = project_att1_daily_budget(v,occupied,proposed_risk_usdt=proposed_risk_usdt,
+                                            proposed_cost_reserve_usdt=proposed_cost_reserve_usdt)
+        if not budget['admitted']:
+            raise AdapterViolation('canary budget blocked: '+budget['reason'])
+        result = _reserve_att1_decision_tx(con,account,owner='NEW',symbol=symbol,side=side,
+            h1_close_ms=h1_close_ms,now_ms=now_ms,budget_authorized=True)
+        key = (account,ATT1_FAMILY,symbol,side,h1_close_ms)
+        con.execute('''UPDATE att1_decisions SET risk_reserve_usdt=?,cost_reserve_usdt=?,
+            budget_day_utc=?,budget_evidence_sha256=?,execution_binding_sha256=?,command_sha256=?
+            WHERE account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?''',
+            (_decimal_text(risk),_decimal_text(costs),v['day_utc'],v['validation_sha256'],
+             v['binding_sha256'],attachment['command_sha256'],*key))
+        con.commit()
+        result.update(orders_allowed=False,budget=budget,command_sha256=attachment['command_sha256'])
+        return result
+    except sqlite3.IntegrityError as exc:
+        con.rollback()
+        raise AdapterViolation('ATT1 decision duplicate or account slot occupied') from exc
+    except Exception:
+        con.rollback()
+        raise
 
 
 def bind_att1_order(con, account, decision_key, broker_order_id):
@@ -617,7 +725,7 @@ def bind_att1_order(con, account, decision_key, broker_order_id):
 
 
 def finalize_att1_reservation(con, account, decision_key, *, flat, order_final,
-                              costs_complete, now_ms):
+                              costs_complete, now_ms, validated_budget=None):
     key = _decision_key(decision_key)
     if _require_account(account) != key[0]:
         raise AdapterViolation('decision account mismatch')
@@ -630,11 +738,20 @@ def finalize_att1_reservation(con, account, decision_key, *, flat, order_final,
     where = 'account=? AND family=? AND symbol=? AND side=? AND h1_close_ms=?'
     _begin(con)
     try:
-        row = con.execute(f'SELECT reserved_at_ms FROM att1_decisions WHERE {where}', key).fetchone()
+        row = con.execute(f'SELECT reserved_at_ms,command_sha256,terminal_at_ms FROM att1_decisions WHERE {where}', key).fetchone()
         if row is None:
             raise AdapterViolation('ATT1 decision missing')
         if now_ms < row[0]:
             raise AdapterViolation('finality clock precedes reservation')
+        if row[1] is not None and row[2] is None:
+            if validated_budget is None:
+                raise AdapterViolation('budget-bound cash finality required')
+            v = _apply_canary_cash_tx(con,key[0],validated_budget,now_ms)
+            if not any(e.get('command_sha256')==row[1] and e['owner']=='NEW'
+                       for e in v['cash_evidence']['events']):
+                raise AdapterViolation('terminal command cash coverage missing')
+            con.execute('''UPDATE att1_route SET cash_finality_frontier_ms=?,updated_ms=? WHERE account=?''',
+                        (now_ms,now_ms,key[0]))
         con.execute(f'''UPDATE att1_decisions SET terminal_at_ms=?, costs_complete=1
                         WHERE {where} AND terminal_at_ms IS NULL''', (now_ms, *key))
         con.commit()
@@ -674,7 +791,8 @@ def _validate_new_lifecycle_session(session, key):
 
 
 def reconcile_new_att1_lifecycle_receipts(db_path, decision_key, *, session,
-                                          broker_order_id, events, now_ms, release_reservation=True):
+                                          broker_order_id, events, now_ms, release_reservation=True,
+                                          validated_budget=None):
     """Offline-only reconciliation from normalized receipts into a NEW journal.
 
     This function neither sends nor authenticates broker traffic.  Callers own
@@ -733,7 +851,7 @@ def reconcile_new_att1_lifecycle_receipts(db_path, decision_key, *, session,
     if release_reservation and receipt.get('lifecycle_terminal') is True and all(finality.values()):
         with sqlite3.connect(db_path) as con:
             finalize_att1_reservation(
-                con, key[0], key, now_ms=now_ms, **finality,
+                con, key[0], key, now_ms=now_ms, validated_budget=validated_budget, **finality,
             )
     return receipt
 
@@ -1126,7 +1244,7 @@ def collect_new_att1_entry_recovery(client, db_path, decision_key, *, session, s
 
 def reconcile_new_att1_broker_finality(db_path, decision_key, *, session, account_config,
         broker_identity, transaction_pages, funding_pages, coverage_start_ms,
-        coverage_end_ms, position_pages, order_pages, received_ms):
+        coverage_end_ms, position_pages, order_pages, received_ms, validated_budget=None):
     """Reconcile actual funding cash against independently collected settlements.
 
     The trusted signed caller supplies full, explicitly bounded query windows.
@@ -1218,7 +1336,8 @@ def reconcile_new_att1_broker_finality(db_path, decision_key, *, session, accoun
     if result['lifecycle_terminal']:
         with sqlite3.connect(db_path) as con:
             finalize_att1_reservation(con,key[0],key,flat=True,order_final=True,
-                costs_complete=result['accounting']['costs_complete'],now_ms=received_ms)
+                costs_complete=result['accounting']['costs_complete'],now_ms=received_ms,
+                validated_budget=validated_budget)
     return result
 
 
@@ -1304,7 +1423,8 @@ def recover_new_att1_broker_exit(db_path, decision_key, *, session, account_conf
         'order_link_id':order['orderLinkId'],'broker_order_id':oid},'receipt':result}
 
 
-def reconcile_new_att1_authenticated(client, db_path, decision_key, *, session, source_dir):
+def reconcile_new_att1_authenticated(client, db_path, decision_key, *, session, source_dir,
+                                      validated_budget=None):
     """One explicit read-only recovery pass through the existing NEW lifecycle.
 
     Does not scan, create intents, run a service, or submit an order. The caller
@@ -1422,7 +1542,7 @@ def reconcile_new_att1_authenticated(client, db_path, decision_key, *, session, 
         account_config=client.redacted_config,broker_identity=truth['identity'],
         transaction_pages=transactions,funding_pages=funding,coverage_start_ms=start,
         coverage_end_ms=end,position_pages=truth['position_pages'],order_pages=truth['order_pages'],
-        received_ms=client.last_received_ms)
+        received_ms=client.last_received_ms,validated_budget=validated_budget)
     outcome.update(receipt=result,orders_allowed=False,
         blocker=None if result['lifecycle_terminal'] else 'COSTS_OR_INTEGRITY_NOT_FINAL',
         authenticated_account=key[0])

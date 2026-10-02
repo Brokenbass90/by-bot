@@ -3,6 +3,7 @@ import sqlite3
 import subprocess
 import sys
 import ast
+from copy import deepcopy
 from typing import Optional, Tuple
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
@@ -11,6 +12,197 @@ from pathlib import Path
 import pytest
 
 from bot import att1_coordinator_adapter as a
+
+
+def canary_reservation_api():
+    assert hasattr(a, 'reserve_new_att1_preparation'), 'cash-aware reservation missing'
+    return a.reserve_new_att1_preparation
+
+
+def canary_budget(*, now):
+    from test_att1_canary_budget import inputs, api
+    from test_att1_lifecycle_coordinator import fixture
+    from research_lab.att1_lifecycle_profile import bind_broker_replay_profile
+    b, old, cash = inputs()
+    b['account_fingerprint_sha256'] = old['account_fingerprint_sha256'] = cash['account_fingerprint_sha256'] = a.att1_broker_account_fingerprint(ACCOUNT)
+    b['observed_ms'] = old['observed_ms'] = now - 20
+    cash['observed_ms'] = cash['coverage_end_ms'] = now
+    cash['coverage_start_ms'] = now // 86400000 * 86400000
+    base, intent = fixture()
+    profile = bind_broker_replay_profile(base, b)
+    intent['signal']['bar_close_ms'] = now // H1 * H1
+    intent['signal']['source_available_ms'] = now - 30
+    intent['signal']['signal_ready_ms'] = now - 20
+    intent['instrument']['observed_ms'] = now - 20
+    intent['submit_ms'] = now
+    intent['book'] = 'ATT1_BROKER_REPLAY:' + b['account_fingerprint_sha256']
+    v = api().validate_canary_budget_inputs(b, old, cash, now_ms=now)
+    assert hasattr(api(), 'bind_canary_command_budget'), 'admitted command binding missing'
+    link = a._stable_link_id(ACCOUNT, 'BTCUSDT', 'SELL', intent['signal']['bar_close_ms'])
+    return api().bind_canary_command_budget(v, profile, intent, order_link_id=link)
+
+
+def new_cash_reserve(con, *, now, budget=None, **changes):
+    args = dict(symbol='BTCUSDT', side='Sell', h1_close_ms=now // H1 * H1,
+                now_ms=now, validated_budget=budget or canary_budget(now=now),
+                proposed_risk_usdt='0.44', proposed_cost_reserve_usdt='0.0176')
+    args.update(changes)
+    return canary_reservation_api()(con, ACCOUNT, **args)
+
+
+def ready_for_canary(con):
+    a.pause_att1_route(con, ACCOUNT, T + 10)
+    a.prepare_att1_cutover(con, ACCOUNT, cutover_ms=T + H1, last_old_h1_ms=T,
+                          drained_at_ms=T + 20, broker_truth_sha256='a'*64, now_ms=T + 21)
+
+
+def test_budget_and_slot_checked_in_one_transaction(ledger):
+    canary_reservation_api()
+    con, _ = ledger
+    ready_for_canary(con)
+    row = new_cash_reserve(con, now=T+H1+40)
+    assert row['orders_allowed'] is False
+    assert con.execute('SELECT risk_reserve_usdt,cost_reserve_usdt FROM att1_decisions').fetchone() == ('0.44', '0.0176')
+    assert con.execute('PRAGMA synchronous').fetchone()[0] == 2
+    with pytest.raises(a.AdapterViolation):
+        new_cash_reserve(con, now=T+H1+40)
+    assert con.execute('SELECT COUNT(*) FROM att1_decisions').fetchone()[0] == 1
+
+
+def test_missing_reserve_migration_blocks_new(ledger):
+    canary_reservation_api()
+    con, _ = ledger
+    ready_for_canary(con)
+    # A legacy unresolved row must never be priced as zero exposure.
+    a.reserve_att1_decision(con, ACCOUNT, owner='NEW', symbol='ETHUSDT', side='Sell', h1_close_ms=T+H1, now_ms=T+H1+1)
+    with pytest.raises(a.AdapterViolation):
+        new_cash_reserve(con, now=T+H1+40)
+    assert con.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0] is None
+
+
+@pytest.mark.parametrize('field,value', [('proposed_risk_usdt','0.4'), ('proposed_cost_reserve_usdt','0'), ('symbol','ETHUSDT')])
+def test_reserve_matches_admitted_command_and_binding(ledger, field, value):
+    canary_reservation_api()
+    con, _ = ledger
+    ready_for_canary(con)
+    with pytest.raises(a.AdapterViolation, match='command|reserve'):
+        new_cash_reserve(con, now=T+H1+40, **{field:value})
+    assert con.execute('SELECT COUNT(*) FROM att1_decisions').fetchone()[0] == 0
+
+
+def test_bound_finality_cannot_bypass_spend_transfer(ledger):
+    canary_reservation_api()
+    con, _ = ledger
+    ready_for_canary(con)
+    row = new_cash_reserve(con, now=T+H1+40)
+    key=(ACCOUNT,'ATT1','BTCUSDT','Sell',T+H1)
+    with pytest.raises(a.AdapterViolation, match='budget|cash'):
+        a.finalize_att1_reservation(con,ACCOUNT,key,flat=True,order_final=True,costs_complete=True,now_ms=T+H1+100)
+    assert con.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0] is None
+
+
+def test_release_crash_then_stale_cash_retry_blocks(ledger):
+    canary_reservation_api()
+    from test_att1_canary_budget import cash_event, api
+    con,path=ledger
+    ready_for_canary(con)
+    budget=canary_budget(now=T+H1+40)
+    new_cash_reserve(con,now=T+H1+40,budget=budget)
+    key=(ACCOUNT,'ATT1','BTCUSDT','Sell',T+H1)
+    base=deepcopy(budget)
+    base.pop('command_binding')
+    cash=base['cash_evidence'];cash['observed_ms']=cash['coverage_end_ms']=T+H1+100
+    cash['events']=[cash_event(account_fingerprint_sha256=a.att1_broker_account_fingerprint(ACCOUNT), owner='NEW',economic_ms=T+H1+90,received_ms=T+H1+100,command_sha256=budget['command_binding']['command_sha256'])]
+    terminal=api().validate_canary_budget_inputs(base['binding'],base['old_budget_evidence'],cash,now_ms=T+H1+100)
+    a.finalize_att1_reservation(con,ACCOUNT,key,flat=True,order_final=True,costs_complete=True,now_ms=T+H1+100,validated_budget=terminal)
+    con.close()
+    with sqlite3.connect(path) as restored:
+        assert restored.execute('SELECT spent_debits_usdt FROM att1_route').fetchone()[0]=='0.3'
+        assert restored.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0]==T+H1+100
+        with pytest.raises(a.AdapterViolation, match='frontier|coverage|clock'):
+            new_cash_reserve(restored,now=T+2*H1+40)
+    # Restore the fixture-owned connection so its finalizer remains safe.
+    # sqlite.Connection.close is idempotent; the original fixture may close twice.
+
+
+def test_two_connections_cannot_spend_same_budget(ledger):
+    canary_reservation_api()
+    con,path=ledger
+    ready_for_canary(con)
+    budget=canary_budget(now=T+H1+40)
+    barrier=Barrier(2)
+    def attempt():
+        with sqlite3.connect(path,timeout=10) as other:
+            barrier.wait()
+            try:
+                return new_cash_reserve(other,now=T+H1+40,budget=budget)['orders_allowed']
+            except a.AdapterViolation:
+                return 'BLOCKED'
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results=list(pool.map(lambda _:attempt(),range(2)))
+    assert results.count(False)==1 and results.count('BLOCKED')==1
+    assert con.execute('SELECT COUNT(*) FROM att1_decisions').fetchone()[0]==1
+
+
+def test_restart_and_route_switch_do_not_refill(ledger):
+    canary_reservation_api()
+    con,path=ledger
+    ready_for_canary(con)
+    new_cash_reserve(con,now=T+H1+40)
+    with sqlite3.connect(path) as reopened:
+        with pytest.raises(a.AdapterViolation):
+            a.pause_att1_route(reopened,ACCOUNT,T+H1+50)
+        with pytest.raises(a.AdapterViolation):
+            new_cash_reserve(reopened,now=T+H1+40)
+        assert reopened.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0] is None
+
+
+def test_unknown_order_and_late_old_fill_keep_handoff_draining(ledger):
+    canary_reservation_api()
+    con,_=ledger
+    key=reserve(con)
+    a.pause_att1_route(con,ACCOUNT,T+5)
+    a.bind_att1_order(con,ACCOUNT,key,'late-old-fill')
+    with pytest.raises(a.AdapterViolation,match='occupied'):
+        cutover(con)
+    assert a.read_att1_route(con,ACCOUNT)['owner']=='OLD_PAUSED'
+
+
+def test_pre_c_signal_and_old_cooldown_are_preserved(ledger):
+    canary_reservation_api()
+    con,_=ledger
+    key=reserve(con,symbol='BTCUSDT')
+    finish(con,key)
+    ready_for_canary(con)
+    with pytest.raises(a.AdapterViolation,match='cooldown'):
+        new_cash_reserve(con,now=T+H1+40)
+    assert con.execute('SELECT COUNT(*) FROM att1_decisions').fetchone()[0]==1
+
+
+def test_budget_finality_threads_through_existing_lifecycle_reconciliation(ledger,tmp_path):
+    canary_reservation_api()
+    from test_att1_canary_budget import api,cash_event
+    from research_lab.att1_lifecycle_session import LifecycleSession
+    con,path=ledger;ready_for_canary(con);now=T+H1+40
+    budget=canary_budget(now=now);row=new_cash_reserve(con,now=now,budget=budget)
+    attach=budget['command_binding'];s=LifecycleSession(tmp_path/'cash-aware.jsonl',attach['profile'],intent=attach['intent'])
+    def event(kind,offset,**fields):
+        return {'schema_id':'att1_lifecycle_event_v1','event_id':kind+str(offset),'kind':kind,
+                'exchange_ms':now+offset,'received_ms':now+offset+1,'source_sha256':'a'*64,**fields}
+    events=[event('ENTRY_ACK',1),event('ENTRY_FILL',2,execution_id='entry-cash',qty='0.04',price='100',fee_amount='0.004',fee_source_sha256='a'*64,liquidity='TAKER'),
+            event('PROTECTION_ACK',3,qty='0.04',stop='110'),event('ENTRY_FINAL',4,status='FILLED'),event('PRICE',10,bid='111',ask='112')]
+    for e in events:s.apply(e)
+    xid=s.receipt['pending_exit']['exit_order_id']
+    terminal_events=[event('EXIT_ACK',11,exit_order_id=xid),event('EXIT_FILL',12,exit_order_id=xid,execution_id='exit-cash',qty='0.04',price='112',fee_amount='0.00448',fee_source_sha256='a'*64,liquidity='TAKER'),
+        event('EXIT_FINAL',13,exit_order_id=xid,status='FILLED'),event('FUNDING_COVERAGE',20,start_ms=now,end_ms=now+20,settlement_ms=[],complete=True)]
+    cash=deepcopy(budget['cash_evidence']);cash['observed_ms']=cash['coverage_end_ms']=now+30
+    cash['events']=[cash_event(account_fingerprint_sha256=a.att1_broker_account_fingerprint(ACCOUNT),owner='NEW',economic_ms=now+12,received_ms=now+30,
+                              gross_realized_usdt='-0.48',execution_fee_usdt='0.00848',command_sha256=attach['command_sha256'])]
+    v=api().validate_canary_budget_inputs(budget['binding'],budget['old_budget_evidence'],cash,now_ms=now+30)
+    result=a.reconcile_new_att1_lifecycle_receipts(path,row,session=s,broker_order_id='entry-fixture',events=terminal_events,now_ms=now+30,validated_budget=v)
+    assert result['lifecycle_terminal'] is True
+    assert con.execute('SELECT spent_debits_usdt FROM att1_route').fetchone()[0]=='0.48848'
+    assert con.execute('SELECT terminal_at_ms FROM att1_decisions').fetchone()[0]==now+30
 
 H1 = 3_600_000
 T = 500_000 * H1

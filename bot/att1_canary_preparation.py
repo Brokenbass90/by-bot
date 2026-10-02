@@ -105,10 +105,15 @@ def validate_canary_budget_inputs(binding: Mapping, old_budget_evidence: Mapping
         rate = _number(o[key], key, nonnegative=True)
         if rate >= 1:
             raise AdapterViolation('invalid cost reserve rate')
-    c = _mapping(cash_evidence, {
+    cash_fields = {
         'schema_id', 'account_fingerprint_sha256', 'observed_ms', 'coverage_start_ms',
         'coverage_end_ms', 'owners', 'complete', 'unresolved_prior_day_costs', 'source_sha256', 'events',
-    }, 'cash coverage')
+    }
+    if isinstance(cash_evidence, Mapping) and 'prior_day_coverage_sha256' in cash_evidence:
+        cash_fields.add('prior_day_coverage_sha256')
+    c = _mapping(cash_evidence, cash_fields, 'cash coverage')
+    if 'prior_day_coverage_sha256' in c:
+        _sha(c['prior_day_coverage_sha256'], 'prior-day coverage')
     _clock(c['observed_ms'], now_ms, 'cash')
     _sha(c['source_sha256'], 'cash source')
     start = now_ms // DAY_MS * DAY_MS
@@ -122,10 +127,15 @@ def validate_canary_budget_inputs(binding: Mapping, old_budget_evidence: Mapping
         raise AdapterViolation('cash coverage incomplete')
     seen, spent, normalized = {}, Fraction(0), []
     for value in c['events']:
-        row = _mapping(value, {
+        fields = {
             'source_id', 'source_sha256', 'account_fingerprint_sha256', 'owner',
             'economic_ms', 'received_ms', 'gross_realized_usdt', 'execution_fee_usdt', 'funding_cash_usdt',
-        }, 'cash event')
+        }
+        if isinstance(value, Mapping) and 'command_sha256' in value:
+            fields.add('command_sha256')
+        row = _mapping(value, fields, 'cash event')
+        if 'command_sha256' in row:
+            _sha(row['command_sha256'], 'cash command')
         sid = row['source_id']
         if not isinstance(sid, str) or not 1 <= len(sid) <= 256:
             raise AdapterViolation('cash event identity missing')
@@ -161,11 +171,60 @@ def _revalidate(validated):
     try:
         value = validate_canary_budget_inputs(validated['binding'], validated['old_budget_evidence'],
                                               validated['cash_evidence'], now_ms=validated['now_ms'])
+        if 'command_binding' in validated:
+            attachment = validated['command_binding']
+            value = bind_canary_command_budget(value, attachment['profile'], attachment['intent'],
+                                                order_link_id=attachment['command']['orderLinkId'])
     except KeyError as exc:
         raise AdapterViolation('validated budget malformed') from exc
     if value != validated:
         raise AdapterViolation('validated budget projection/provenance changed')
     return value
+
+
+def bind_canary_command_budget(validated: Mapping, profile: Mapping, intent: Mapping, *,
+                               order_link_id: str) -> dict:
+    """Bind reserves to exact frozen admission/quantity and an inert payload."""
+    from research_lab.att1_lifecycle_profile import admit_signal
+    v = _revalidate(validated)
+    if 'command_binding' in v:
+        raise AdapterViolation('command already bound')
+    if (not isinstance(profile, Mapping) or profile.get('broker_binding') != v['binding']
+            or not isinstance(intent, Mapping) or intent.get('submit_ms') != v['now_ms']
+            or not isinstance(order_link_id, str) or not 1 <= len(order_link_id) <= 36):
+        raise AdapterViolation('command execution binding mismatch')
+    try:
+        admitted = admit_signal(profile, intent['signal'], intent['instrument'], intent['book_state'],
+                                book=intent['book'], submit_ms=intent['submit_ms'])
+    except (KeyError, ValueError, TypeError) as exc:
+        raise AdapterViolation('invalid command admission inputs') from exc
+    if not admitted['accepted']:
+        raise AdapterViolation('command admission rejected: ' + admitted['code'])
+    plan = admitted['plan']
+    qty = _number(plan['requested_qty'], 'command qty', positive=True)
+    stop = _number(plan['original_stop'], 'command stop', positive=True)
+    entry = _number(plan['nominal_entry'], 'command entry', positive=True)
+    expansion = _number(profile['execution']['max_adverse_risk_expansion'], 'expansion', nonnegative=True)
+    risk = qty * (stop - entry) * (1 + expansion)
+    old = v['old_budget_evidence']
+    costs = qty * stop * (2 * _number(old['taker_fee_rate'], 'fee rate')
+                           + _number(old['funding_cost_reserve_rate'], 'funding reserve'))
+    command = {'category': 'linear', 'symbol': plan['symbol'], 'side': 'Sell',
+               'orderType': 'Market', 'timeInForce': 'IOC', 'qty': plan['requested_qty'],
+               'positionIdx': 0, 'reduceOnly': False, 'orderLinkId': order_link_id,
+               'account_fingerprint_sha256': v['binding']['account_fingerprint_sha256'],
+               'execution_binding_sha256': v['binding_sha256'],
+               'profile_sha256': profile['profile_sha256'], 'decision_id': plan['decision_id'],
+               'h1_close_ms': plan['bar_close_ms'], 'nominal_entry': plan['nominal_entry'],
+               'original_stop': plan['original_stop'], 'orders_allowed': False}
+    v = deepcopy(v)
+    v.pop('validation_sha256')
+    v['command_binding'] = {'profile': deepcopy(dict(profile)), 'intent': deepcopy(dict(intent)),
+                            'command': command, 'command_sha256': digest(command),
+                            'required_risk_usdt': _decimal_text(risk),
+                            'required_cost_reserve_usdt': _decimal_text(costs)}
+    v['validation_sha256'] = digest(v)
+    return v
 
 
 def project_att1_daily_budget(validated: Mapping, occupied: list[Mapping], *,
