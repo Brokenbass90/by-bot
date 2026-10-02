@@ -1,11 +1,10 @@
-# MASTER HANDOFF — 2026-10-01
+# MASTER HANDOFF — 2026-10-02
 
-Canonical migration entry point. Latest production snapshot
-**2026-10-01 17:07 UTC / 20:07 Cyprus**; ATT1 engineering18:13UTC;
-original migration snapshot14:18UTC. No new Alpaca broker read in engineering cycle.
-runtime facts must be refreshed, never inferred from this document's age.
-Read this document, then `NEW_CHAT_START_HERE.md`, then only the relevant section
-at the TOP of `CODEX_SESSION_CHECKPOINT_2026_09_06.md`. Older sections are history.
+Canonical migration entry point. Latest broker snapshot **Oct2 13:38:52 UTC /
+16:38:52 Cyprus**; Alpaca DAY expiry/re-arm **PASS**. ATT1 public-only cutover
+completed **13:57:43 UTC**, with separate postchecks; NEW crypto money remains OFF.
+Read this document, NEW_CHAT_START_HERE.md, then the TOP checkpoint. Old dated
+receipts retain their original facts; verify drift-prone broker/runtime truth.
 
 ## 1. Repository, authority and delivery
 
@@ -37,17 +36,30 @@ The cap is allocated capital, not a guaranteed maximum loss. Stops do not elimin
 
 Frozen signal session Sep30 → entry session Oct1. Selection CRWD/AMD/META prepared
 Sep30 20:12 UTC. First actual scheduled LIVE cycle Oct1 14:10 UTC; bridge0/ratchet0.
-Latest checked maintenance receipt **17:05:05 UTC**, `LIVE_CYCLE_COMPLETE`, owned names all3.
+Latest checked maintenance receipt **Oct2 13:35:02 UTC**, `LIVE_CYCLE_COMPLETE`,
+bridge0/ratchet0, owned names all3; direct broker truth at13:38:52UTC.
 
 | Symbol | Actual qty | Broker avg entry | Accepted DAY stop / durable floor | Durable HWM at snapshot |
 |---|---:|---:|---:|---:|
-| AMD | 0.186377282 | 609.57 | 560.90 | 612.37 |
-| CRWD | 0.469970151 | 265.336 | 242.13 | 266.57 |
-| META | 0.141939508 | 724.534 | 668.76 | 729.8101 |
+| AMD | 0.186377282 | 609.57 | 615.24 | 637.5625 |
+| CRWD | 0.469970151 | 265.336 | 242.13 | 273.335 |
+| META | 0.141939508 | 724.534 | 668.76 | 735.79 |
 
 All three original buys filled. Three open sell stops have broker status `new`,
 TIF `day`, exact held quantities. Entry/stop order IDs match durable ownership state.
 Raw IDs are in private broker receipts and durable state; no account credentials in Git.
+
+Oct2 direct order history proves all3 previous DAY stops expired after Oct1 close;
+new stop IDs cover exact remaining quantities. Original fills/account/lifecycle
+identity unchanged, floor/HWM monotonic versus Oct1 intraday baseline.
+`ALPACA_DAY_REARM_2026_10_02.json` is PASS for this operational transition only.
+
+Software trailing is already working: every5min the same manager ratchets a fixed
+DAY broker stop using lifecycle HWM, default activation+3.5%, trail3.5%, minimum
+locked gain0.5%. Profile/base env has no overrides for those keys. AMD stop moved
+560.90→612.61→615.24, above entry609.57; CRWD/META not yet trail-armed at snapshot.
+This is periodic software control and DAY protection, not continuous overnight
+coverage or a guaranteed fill/profit at the stop price.
 No closed real lifecycle / realized-profit conclusion yet. Initial execution-fee-free
 entry-to-stop distance sum was $27.893643758238, **not a guaranteed loss cap**.
 
@@ -86,11 +98,12 @@ Alpaca schedules below are UTC, weekdays unless otherwise stated.
 | `alpaca_adaptive_v1_refresh` / lively shadow | Preserve PAPER research schedules13:10 /12:40 UTC; do not adopt their holdings |
 | monthly autopilot `bybit-bot-managed` | Preserve09:30 UTC day1; inspected default env endpoint is PAPER, not NEW LIVE |
 
-VPS services/timers freshly observed:
+VPS services/timers: Oct1 inventory retained unless explicitly refreshed below:
 
 - `bybot.service` OLD crypto LIVE running/enabled, PID492970; `att1-lifecycle-zero-risk-v2.service`
-  running/enabled, PID492814. Both NRestarts0 **since their current starts Sep30 06:17 UTC**.
-  This is not zero lifetime restarts; actor/reason of those starts not audited here.
+  running/enabled, NEW public PID1584802 after authorized Oct2 cutover. Both
+  NRestarts0 since their respective current starts; OLD PID492970 unchanged.
+  This is not zero lifetime restarts; earlier OLD start reason not audited here.
 - `liquidation-collector.service` running/enabled PID492740.
 - `att1-fixed51-raw-shadow.timer`, `att1-ets2s-signal-shadow.timer`,
   `btc-h1-regime-updater.timer` active/enabled. L1 signal service itself was
@@ -112,11 +125,18 @@ VPS services/timers freshly observed:
   process-list lookup was unavailable (`sysmond service not found`), so current daemon
   state is NOT_CONFIRMED. Do not start it or new launchd jobs from this handoff.
 
-## 4. Mandatory operational check — October 2
+## 4. DAY operational check — October 2 PASS; next October 5
 
-Broker clock observed Oct1: next close **Oct1 20:00 UTC /23:00 Cyprus**;
-next open **Oct2 13:30 UTC /16:30 Cyprus**. Verify broker clock/calendar again.
-These dates are broker-backed snapshot facts; later DST/calendar changes must not be hardcoded.
+Oct2 check completed PASS by direct broker history, accepted full-qty protection,
+monotonic lifecycle floors/HWM, completed manager cycle and single NEW owner.
+Receipt `ALPACA_DAY_REARM_2026_10_02.json`; no manual activation or order writes.
+Comparison used saved **Oct1 17:07 intraday** baseline, not an EOD HWM snapshot.
+
+Fresh broker clock: next close **Oct2 20:00 UTC /23:00 Cyprus**; next regular
+open **Oct5 13:30 UTC /16:30 Cyprus**. Apply the same acceptance procedure below
+to remaining owned positions; genuine filled exits require reconciliation. All
+calendar times are broker-backed snapshot facts; later DST/calendar must be refreshed.
+The numbered Oct2 protocol below is retained as the acceptance method/history.
 
 1. Preserve an end-of-session baseline privately: owned positions, full remaining qty,
    last accepted stop IDs/status, durable floor/HWM/entry IDs, latest successful receipt.
@@ -157,48 +177,59 @@ Entry halt retains SAME protection manager; kill is proof-scoped, flat rollback
 requires fresh broker-flat. Never disable all protection or resurrect OLD over NEW positions.
 No live kill/restart experiment is authorized for acceptance evidence.
 
-## 5. ATT1 fresh prospective state and next gate
+## 5. ATT1 current public epoch and money gate
 
-Epoch `att1-public-lifecycle-20260928-observation-timing`, runtime
-`/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-observation-timing`.
-At Oct1 17:07 UTC: **9 sessions; 8 filled simulations; 1 nonfill; 0 clean filled terminal**.
-All8 filled simulations flat and dirty:1000RATS/BCH/JTO/ACE/GALA/AVAX/DOGE/PAXG.
-**8 RECOVERY_GAP total**. New AVAX2094ms/DOGE2602ms gaps span sequential
-management of two held books; no recorded individual book request crossed2s.
-Disposable local reproduction confirms aggregate serial budget can fail with two
-fresh books at1100ms/request. The subsequently tested candidate fixes that
-reproducer; it is not deployed evidence. New PAXG gap
-is an actually stale book2643ms; scheduling cannot alone certify stale sources.
-**71 H1 cycles, each51/51 unique symbols; duplicate journal event IDs0**.
-Missing external transitions remain NOT_PROVEN because gaps occurred. Current
-driver/core/strategy pins unchanged. Full source evidence is preserved privately;
-`CONTINUATION_EVIDENCE_2026_10_01.json` carries counts and timing receipts.
+**Oct2 13:57:43UTC DEPLOYED_PUBLIC_ONLY_COHORT_PENDING.** Existing public unit
+`att1-lifecycle-zero-risk-v2.service` now runs epoch
+`att1-public-lifecycle-20261002-paired-observation`, runtime
+`/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20261002-paired-observation`.
+Driver97239996…345d6885/config4f35079c…1825c. Only observation driver and fresh
+epoch/runtime metadata changed; other30 deployed pins, old core/profile/strategy,
+unit, 2s/freshness, admission/risk and single journal writer preserved.
 
-Oct1 18:13 engineering result: adjacent-pair public observations, drained before
-ordered management; pending exits/protection are never bypassed, fresh exit IOC
-cannot compete with observation workers. Hard2s/freshness and single writer remain.
-54 targeted tests PASS on current local core, captured deployed core and VPS;
-old9 sessions/113 records replay identically. Only driver is overlaid on the actual
-deployed closure. Do not deploy local newer coordinator over those journal pins.
-Public service/source/PID remain unchanged; clean prospective terminals still0.
-Release/preflight/file rollback ready, **not deployed; live rollback not tested**.
-Use `ATT1_AGGREGATE_BUDGET_CANDIDATE_2026_10_01.json` for exact hashes, private
-archive, fresh epoch and bounded cutover/rollback gates. Refresh public flat/pins
-before cutover; retire old evidence intact. Alpaca Oct2 re-arm remains first.
+All32 old pins matched before cutover; fresh14-session/162-record replay and
+journal bytes identical with candidate. Old epoch has12 filled simulations,
+2 nonfills,12 recovery gaps,0 clean filled terminal,0 held/pending. Retired209
+journal/source/epoch/scan evidence files preserved with exact hashes. Old labels
+remain dirty; no journal pins were rewritten or sessions imported into new epoch.
+51 hash/geometry/closed-H1 validated caches seeded; no old lifecycle import.
+Oct1 54 local/VPS targeted tests remain the engineering proof, not a new Oct2 rerun.
 
-NEW authenticated binding native SL→fees/funding→finality code complete **orders OFF**,
-commit834990d, 346 local +346 isolated VPS tests, 42 candidate hashes. Not installed
-over production; fixtures are not prospective broker executions. Existing journal
-implementation pins must not be rewritten to accept changed coordinator code.
+Target preflight read-only/no network passed as bybot-research; fresh RUNNING
+heartbeat/public PID1584802 and broker/order calls0. OLD PID492970, Alpaca binding,
+all58 source pins and complete cron unchanged. First new H1 scan complete51/51
+at14:07UTC:50 NO_SIGNAL,1 HFT stale-bar rejection;0 sessions,0 poll errors.
+Heartbeat fresh388ms. Successful scanning is not a cohort PASS. See
+`ATT1_PUBLIC_CUTOVER_2026_10_02.json` for latest postcheck and exact receipts.
+Backup driver/config/unit in `rollback-paired-observation-20261002`; file restore
+roundtrip PASS Oct1, actual runtime rollback NOT_NEEDED_NOT_TESTED. If future
+rollback is needed, stop only public unit and preserve all new epoch evidence.
 
-Next gate: existing **2–3 clean prospective filled terminals with terminal net-R**.
-Localize any new gap from actual source timing, preserve2s gate and dirty evidence.
-Then fresh exact OLD absolute risk → exclusive handoff/canary dossier → owner action.
-OLD risk_multiplier0.10 is NOT itself absolute per-trade USD risk; refresh actual
-effective sizing/breaker/rounding before a monetary comparison. No NEW crypto activation.
-OLD's local trendline short need not align with a broad-market uptrend; trend_guard0
-is a frozen default. Broker entry qty/price checks passed, full historical PIT parity
-was not proven by Codex. Claude reports parityPASS; preserve that attribution distinction.
+The tested fix fetches at most2 adjacent eligible books, drains before ordered
+management, never bypasses pending exits/protection and rechecks freshness at
+consumption. Existing IOC post-fetch continuity marking remains outside this
+patch: a clean verdict requires actual2s source/consumption/continuity evidence,
+not receipt labels alone. Any new gap stays fail-closed and must be localized.
+
+NEW authenticated binding native SL→fees/funding→finality is code complete,
+**orders OFF**, not installed over OLD money service. Existing346 local/VPS tests
+are engineering evidence, not broker cohort. Next money gate remains **2–3 clean
+prospective filled terminals with terminal net-R**, then fresh exact OLD absolute
+risk, exclusive handoff/canary dossier and explicit owner financial action.
+OLD risk_multiplier0.10 alone is not absolute USD per-trade risk.
+
+Oct2 read-only regime/Elder inventory: existing BTC H1 EMA200±2% updater is alive
+and hash-bound; at13:45UTC its13:00 closed-H1 receipt was above_band (+3.416%) but
+older than the5min admission freshness gate. It is not proof of every alt's trend.
+Actual OLD entrypoint already has caller regime code behind default-OFF
+ATT1_CALLER_RECEIPT_ENABLE; current config chain leaves it absent/defaultOFF,
+legacy ATT1_TREND_GUARD_BARS absent/default0, REGIME_OVERLAY_ENABLE0. This config
+read is not mutable process-state or historical PnL proof. No money setting changed.
+Existing native research contract allows ATT1 only flat_down, not every bear regime.
+Next proposal: exact consumer/admission receipts, then one separately preregistered
+prospective baseline-vs-existing-gate comparison. Global bull/bear/range routing
+is a new policy design pending owner discussion, not this timing deployment.
+`REGIME_ELDER_INVENTORY_2026_10_02.json` records findings and limits.
 
 ## 6. LTC id257 — final bounded conclusion
 
@@ -236,7 +267,9 @@ preserve capital and optionality. Profit is a hypothesis to test, not a deadline
 Production priority: protect/observe Alpaca LIVE → ATT1 existing gate/dossier.
 Oct1 owner-manager scope: Claude only PM2 after valid v5 snapshots and TOLPA_1D
 after≥90% hourly coverage. SBR1 parked, no new research directions until those
-results; no Factory rewrite or Alpaca expansion. Owner FX Raw/ECN MT5 demo is
+results; no Factory rewrite or Alpaca expansion. Owner Oct2 additionally asked Codex to
+assess existing trend/Elder/range components; inventory is read-only and policy
+changes remain a separately reviewed design. Owner FX Raw/ECN MT5 demo is
 the external cost-data step for NOCHNOY_DREYF, not accepted production net edge.
 Existing leads were reconciled read-only against current registry Oct1. SBR1
 comparison is blocked at0 main outcomes/no control journal; deployed fixed51 is
@@ -250,10 +283,10 @@ a goal; it is not permission to force trades or loosen admissions.
 
 Research owner Claude: sibling `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28`.
 Authoritative research branch is **research/fabrika-v1**, commits via Git plumbing.
-Oct1 18:57UTC local ref `497600d0340c5fefb9720746240c7f11c4db7cc4`; actual origin
-read `5ce1402fe45ebe9cd0809de9fa5346aeb4b12485` during this sync, so latest two
-research commits were not yet published at that observation. Refresh origin
-before calling497600d remote. No research push/merge/checkout mutation by Codex.
+Oct2 local and cached tracking ref both
+`c12af845575337933fb2a5e2be8a615680b2b625`; actual origin independently verified
+at same SHA. Earlier Oct1 publication divergence is historical and resolved.
+No research push/merge/checkout mutation by Codex.
 The deliberately unchanged working checkout **codex/dynamic-symbol-filters**,
 HEAD `76fc63ccbe43197e24452e3e4e28ae79a719e4ef`, is not the research work ref.
 Earlier "branch mismatch" interpretation was incorrect and is superseded here.
@@ -265,8 +298,11 @@ CODEX_ATT1_ONE_SESSION_HANDOFF is superseded for native-SL wiring.
 
 TOLPA_1D cheap-screen at497600d: SURVIVED, edge16.3bps/day with model12bps/funding,
 t_NW2.14,1283 days, halves1.5/31bps, coverage96.9%. Result/source read, not rerun;
-same family as weekly L1, evidence must not be added. Next Claude step is a
-separate frozen prospective judge; the existing tolpa_vpered.py is weekly L1.
+same family as weekly L1, evidence must not be added. Current c12af845 already contains
+`tolpa1d_vpered.py`: prospective beginsOct2, fixed180/365 daily observations,
+t_NW lag1>=2.2; source read only, no evaluator rerun. Expected historical effect
+has low power even at365 days; do not promise quick confirmation. Weekly L1
+`tolpa_vpered.py` is separate and evidence is not additive.
 PM2 evidence only valid v5 from Oct1 16:09:19UTC; frozen judge requires at least
 three calendar data dates, preliminary diagnostics before then. EXECUTABLE means
 pricing-screen evidence and still needs both-leg/cost/execution gates before money.

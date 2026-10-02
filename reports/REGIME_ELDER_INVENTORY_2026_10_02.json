@@ -1,0 +1,87 @@
+{
+  "schema_id": "regime_elder_existing_inventory_v1",
+  "status": "EXISTING_COMPONENTS_FOUND_POLICY_DESIGN_PENDING",
+  "as_of_utc": "2026-10-02T13:45:00.542000+00:00",
+  "scope": "Read-only current source/runtime inventory; no new filter/strategy/money policy implemented",
+  "btc_h1_classifier": {
+    "actual_state_path": "/opt/bybot-research/live-caller-parity/runtime/live_native_parity/btc_h1_regime.json",
+    "closed_h1_utc": "2026-10-02T13:00:00+00:00",
+    "close": "86786",
+    "ema200": "83918.98090484076629052882941",
+    "deviation": "0.03416413145448306002463756476",
+    "value": "above_band",
+    "band_pct": 2,
+    "receipt_sha256": "132a68324ea9049dd63ab38d3ad96074dc3c155e8a4766a04c4efd331a99e84e",
+    "receipt_hash_validation": "PASS via BTCRegimeReceipt.from_dict",
+    "age_at_capture_ms": 2700542,
+    "fresh_under_300000ms_gate_at_capture": false,
+    "timer": "hourly minute03 UTC; active/waiting; Result success",
+    "authority": "research only; money/promotion false",
+    "existing_allowed_states": {
+      "ATT1": [
+        "flat_down"
+      ],
+      "SBR1": [
+        "flat_up"
+      ]
+    },
+    "limit": "above_band is one BTC H1 EMA classification, not proof of regime on every altcoin or of caused LIVE losses; point-in-time gate must use fresh same-cutoff receipt"
+  },
+  "old_att1_wiring": {
+    "actual_entrypoint": "/root/by-bot/smart_pump_reversal_bot.py",
+    "entrypoint_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "current_config_chain_flags": {
+      "ATT1_CALLER_MAX_DECISION_AGE_MS": null,
+      "ATT1_CALLER_RECEIPT_ENABLE": null,
+      "ATT1_CALLER_REGIME_RECEIPT_PATH": null,
+      "ATT1_CALLER_REGIME_RECEIPT_REQUIRED": null,
+      "ATT1_TREND_GUARD_BARS": null,
+      "ENABLE_ATT1_TRADING": "1",
+      "REGIME_OVERLAY_ENABLE": "0"
+    },
+    "observed_source": "_att1_record_caller_receipt returns True before receipt/regime loading when ATT1_CALLER_RECEIPT_ENABLE is disabled; defaults false. Legacy ATT1_TREND_GUARD_BARS defaults0. REGIME_OVERLAY_ENABLE resolves0.",
+    "conclusion": "Existing configured source path does not establish an active trend filter; current files resolve legacy guard0/caller boundaryOFF by defaults. Exact mutable process state and historical per-entry gate/PnL need runtime receipts.",
+    "config_read_limit": "Read reproduces startup dotenv precedence from current files, not mutable in-process state or historical admissions.",
+    "money_settings_changed": false
+  },
+  "elder": {
+    "base_source": "strategies/elder_triple_screen_v2.py",
+    "base_screens": {
+      "first": "H4 MACD histogram slope with EMA-side gate: trend",
+      "second": "H1 Force Index(2): pullback",
+      "third": "M15 breakout: entry timing"
+    },
+    "third_screen_already_exists": true,
+    "separate_frozen_ets2s_source": "strategies/elder_live.py",
+    "frozen_ets2s_screens": [
+      "D1",
+      "H4",
+      "H1"
+    ],
+    "frozen_ets2s_direction": "short-only, live wrapper defaultOFF",
+    "ets2m_frozen_verdict_not_before": "2026-10-10T19:00:00Z",
+    "new_enable_or_parameter_change": false
+  },
+  "existing_leads": {
+    "SBR1": "parked:0 admitted/fills/outcomes/control missing in last verifiedOct1 receipt",
+    "BOUNCE1": "historical exploratory range lead; existing independent July audit BLOCKED before shadow, not ready production",
+    "XSEC_and_Bull_Continuation_exact_tested_variants": "NEGATIVE; remain closed"
+  },
+  "proposed_next_decision": "Audit exact admission consumer + point-in-time regime/entry receipts, then one separately preregistered prospective ATT1 baseline-vs-existing-gate comparison; do not attach a universal gate or Elder entry screen to frozen baseline. Full multi-strategy router design remains separate.",
+  "claude_sync": {
+    "research_ref": "research/fabrika-v1",
+    "local_and_tracking_ref": "c12af845575337933fb2a5e2be8a615680b2b625",
+    "actual_origin_verified_same_this_turn": true,
+    "current_map": "research_lab/KARTA.md",
+    "tolpa1d_daily_judge_exists": "research_lab/tolpa1d_vpered.py: startsOct2, fixed180/365 daily observations, t_NW lag1>=2.2; read source only, no evaluator/data rerun",
+    "scope": "PM2 validv5 and TOLPA_1D prospective only; no Codex merge/write/Factory start"
+  },
+  "delegation": "gpt-6-luna/medium inventory fallback and gpt-6-astra/high cutover review; actual model/effort verified from runtime turn_context; no worker edits",
+  "private_evidence_sha256": {
+    "runtime_prereqs.json": "ae0c57caf2423ce215207f7ddeea01378cc8015c070daeb15272754a74be4d16",
+    "old_regime_read.json": "c0d9135d33c669f703c37ccf2b2576f0e148e601ef4276870032049ed1157cf0",
+    "old_entrypoint.json": "3b860f14efd5e78dabb753680fc679208fd0d0485e45c1643d9e1ff4a71af252",
+    "old_caller_read.json": "abce8de53927cab154e885bec2ccf70b6fcf54bcb7f986d1638565ff61655363",
+    "old_gate_config.json": "4c713038d34f6e947b7b1668b731d83de036cb68b91b45946218033cb95371da"
+  }
+}

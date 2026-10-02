@@ -2,6 +2,65 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October 2: Alpaca DAY transition PASS; ATT1 paired observation installed PUBLIC ONLY; existing regime/Elder inventory reconciled**:
+- Direct GET-only broker snapshot13:38:52UTC:3 previous DAY stops explicitly
+  expired Oct1;3 newly accepted DAY stops on exact residual qty, original entry/
+  account/lifecycle identities intact. Floors AMD615.24/CRWD242.13/META668.76;
+  HWM637.5625/273.335/735.79 monotonic vs saved Oct1 intraday baseline. Latest
+  13:35 successful cycle bridge0/ratchet0; one NEW writer with locks, zero OLD
+  writer cron/processes, all58 source hashes unchanged.0 real closed lifecycle.
+  Software ratchet already moved AMD stop above609.57 entry. No activation,
+  order write, Alpaca code/config/cron/risk change. DAY is not overnight coverage.
+  `ALPACA_DAY_REARM_2026_10_02.json`: operational PASS only; next broker calendar
+  openOct5 13:30UTC/16:30Cyprus, refresh then. No EOD baseline claim.
+- ATT1 public cutover13:57:43UTC: driver97239996/config4f35079c installed, new
+  epoch att1-public-lifecycle-20261002-paired-observation, PID1584802. Only
+  driver/epoch metadata; other30 pins, core/profile/strategy/risk/admission/2s/
+  freshness/unit/single journal writer unchanged. NEW private/orders/money/
+  promotion authority all false. OLD crypto PID492970 and Alpaca binding/all58
+  source hashes/complete crontab unchanged. No new coordinator overlay.
+- Fresh old prefix14 sessions/162 records replayed identically on candidate;
+  12 filled simulations,2 nonfills,12 recovery gaps,0 clean filled terminal,
+  0 held/pending. Retired209 evidence files hash-preserved;51 validated closed-H1
+  caches copied into new runtime, no sessions imported.54 local/VPS tests are
+  Oct1 proof, not rerun today. Target read-only preflight passed as journal owner;
+  first root replay precheck rejected owner/mode BEFORE stop/backup/config edits,
+  corrected to runuser bybot-research without weakening journal checks.
+- New epoch fresh RUNNING; startup alone does not prove timing/cohort. First
+  H1 scan complete51/51 at14:07UTC:50 NO_SIGNAL,1 HFT stale-bar rejection,
+  0 sessions/open,0 poll errors, fresh heartbeat388ms. See latest public receipt
+  `ATT1_PUBLIC_CUTOVER_2026_10_02.json`. Backup exact olddriver/config/unit;
+  file restore tests PASS Oct1, runtime rollback NOT_NEEDED_NOT_TESTED. Existing
+  IOC post-fetch continuity caveat unchanged: certify clean only from original2s
+  observation/source/consumption evidence. Next2–3 clean prospective filled
+  terminals/net-R, then exact OLD absolute risk + exclusive owner money step.
+- Owner Oct2 asked about trend/Elder/bull/range routing. Read-only inventory:
+  existing BTC H1 EMA200±2% receipt validated,13:00 close86786 vs EMA83918.98,
+  above_band(+3.416%); age45min at13:45 capture so NOT fresh under5min admission
+  gate. Timer alive; this is one BTC H1 classification, not all-alt regime or
+  proof that regime caused losses. Existing native ATT1 allowed state flat_down
+  is narrower than "all bear". OLD actual entrypoint has caller gate behind
+  default-OFF flag; current override chain leaves guard0/callerOFF, overlay0.
+  Config files are not mutable process memory/historical per-entry proof.
+- Elder third screen already implemented: baseH4 trend/H1 pullback/M15 entry;
+  frozen ETS2S is separateD1/H4/H1 short-only/defaultOFF. ETS2M verdict remains
+  no earlierOct10 19:00UTC. No strategy/filter/financial policy changed. Proposed
+  next design: exact consumer receipts then one separately preregistered
+  baseline-vs-existing-gate prospective comparison, preserving timing epoch and
+  frozen baseline; global router requires separate owner-reviewed design.
+  `REGIME_ELDER_INVENTORY_2026_10_02.json`; SBR1 parked, BOUNCE1 exploratory/
+  auditBLOCKED, exact XSEC/Bull Continuation NEGATIVE remain closed.
+- Claude local/tracking/actual origin research/fabrika-v1 all c12af845 verified,
+  no branch mismatch/merge/edit. Current KARTA and daily tolpa1d_vpered.py read
+  from immutable ref: daily judge exists, fromOct2, fixed180/365 observations,
+  t_NW lag1>=2.2; no quick-live deadline. PM2 only validv5, separate execution
+  gate. Factory OFF; FX actual costs still missing. No consumed-window rerun.
+- Bounded read worker gpt-6-luna/medium fallback and critical cutover reviewer
+  gpt-6-astra/high verified from runtime turn_context. Foreign untracked allowlist
+  shaadd587f1…19a1 preserved. Own receipts/entrypoints only scoped for Git.
+
+Earlier continuation (superseded where noted):
+
 Latest continuation — **October 1 evening: Claude research ref/map correction; TOLPA_1D cheap-screen synced, no runtime changes**:
 - Corrected earlier interpretation: research work is `research/fabrika-v1` via
   Git plumbing. Checkout codex/dynamic-symbol-filters@76fc63c intentionally stays

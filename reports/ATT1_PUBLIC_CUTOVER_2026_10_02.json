@@ -1,0 +1,106 @@
+{
+  "schema_id": "att1_public_paired_observation_deployment_v1",
+  "status": "DEPLOYED_PUBLIC_ONLY_COHORT_PENDING",
+  "installed_utc": "2026-10-02T13:57:43.099000+00:00",
+  "postcheck_utc": "2026-10-02T14:07:45.795000+00:00",
+  "source_commit": "88fd734218470bbe7aff5789276cec95bf9a2a08",
+  "authority": {
+    "money_authority": false,
+    "orders_allowed": false,
+    "private_api_allowed": false,
+    "promotion_authority": false
+  },
+  "epoch_id": "att1-public-lifecycle-20261002-paired-observation",
+  "runtime_dir": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20261002-paired-observation",
+  "driver_sha256": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+  "config_sha256": "4f35079c591fc744d9624e1231fc9a4329a5bc52f0dde09c4a35b6a8cee1825c",
+  "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
+  "changed_paths": [
+    "scripts/run_att1_lifecycle_zero_risk.py",
+    "configs/research/att1_lifecycle_public_v2.json (epoch/runtime metadata only)"
+  ],
+  "unchanged": "core/profile/strategy/admission/risk/freshness/2000ms threshold/unit/coordinator/journal writer; other30 deployed pins unchanged",
+  "checks": {
+    "all32_target_pins": true,
+    "retired_evidence_unchanged": true,
+    "old_money_pid_unchanged": true,
+    "alpaca_all58_sources_binding_and_cron_unchanged": true,
+    "sole_systemd_public_manager": true,
+    "broker_and_order_calls_zero": true
+  },
+  "old_epoch": {
+    "epoch_id": "att1-public-lifecycle-20260928-observation-timing",
+    "sessions": 14,
+    "records": 162,
+    "filled_simulations": 12,
+    "nonfill_sessions": 2,
+    "recovery_gap_sessions": 12,
+    "clean_filled_terminals": 0,
+    "open_or_pending": 0,
+    "retired_evidence_files": 209,
+    "retired_evidence_unchanged": true,
+    "state_sha256": "b85269ac3e63d6b660602360e538e56aafabb277afb62b7b2c8d460059bcd377"
+  },
+  "fresh_replay": {
+    "status": "PASS_FRESH_FROZEN_PREFIX_IDENTICAL",
+    "sessions": 14,
+    "records": 162,
+    "filled_simulations": 12,
+    "recovery_gap_sessions": 12,
+    "clean_filled_terminal": 0,
+    "state_sha256": "b85269ac3e63d6b660602360e538e56aafabb277afb62b7b2c8d460059bcd377",
+    "old_journal_bytes_identical": true,
+    "old_receipts_identical": true,
+    "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
+    "deployed_closure_unchanged": true
+  },
+  "verification": {
+    "oct1_targeted_tests": 54,
+    "oct1_tests_current_deployed_and_vps_cores_pass": true,
+    "oct2_target_preflight_network_used": false,
+    "oct2_target_preflight_runtime_mutated": false,
+    "validated_closed_h1_cache_files_copied": 51,
+    "oct2_focused_suite_rerun": false,
+    "independent_critical_cutover_review": "gpt-6-astra/high verified from runtime turn_context; READY; root corrected read-only replay precheck user after first owner-mode rejection before stop/backup/config mutation"
+  },
+  "services": {
+    "public_pid": 1584802,
+    "old_crypto_pid": 492970,
+    "both_nrestarts_since_current_starts": 0
+  },
+  "new_epoch_postcheck": {
+    "status": "RUNNING",
+    "session_count": 0,
+    "open_positions": 0,
+    "scanned_symbols": 51,
+    "scan_coverage_complete": true,
+    "broker_calls": 0,
+    "order_calls": 0,
+    "promotion_pass": false,
+    "poll_errors": {},
+    "scan_results_counts": {
+      "NO_SIGNAL": 50,
+      "STALE_CLOSED_BAR": 1
+    }
+  },
+  "rollback": {
+    "backup_directory": "/opt/bybot-research/att1-lifecycle-zero-risk-v2/rollback-paired-observation-20261002",
+    "exact_original_driver_config_unit_backed_up": true,
+    "file_roundtrip_local_and_vps": "PASS Oct1",
+    "runtime_status": "NOT_NEEDED_NOT_TESTED",
+    "new_epoch_evidence_must_be_preserved": true
+  },
+  "limits": [
+    "Startup/deployment PASS does not prove aggregate production timing or prospective continuity.",
+    "Certify any clean terminal from original2s source/consumption/continuity evidence, not labels only; unchanged IOC post-fetch continuity caveat remains.",
+    "NEW authenticated ATT1 broker orders OFF; public simulation is not broker execution or confirmed net edge."
+  ],
+  "next_gate": "2\u20133 clean prospective filled terminals with terminal net-R; then exact OLD absolute risk/exclusive handoff dossier and owner money step.",
+  "private_evidence_sha256": {
+    "cutover_receipt": "acde349a98cfa1f64be72a7a52f90592928ef70140e1c38a67fe7f1614a5ce62",
+    "fresh_prefix_archive": "61128c41583c5a14bf4555c2e108a250e296751754d9f183aa13f649b93f4ae3",
+    "fresh_replay_result": "ef850db02f4ea1f9752826bd886f1a5fc8c42c5ef2efcfa63fba9b3b7b491b0c",
+    "postcheck": "d9cf6c1ca7f4c11db4975c30c7ff4eb9b7067c8b4058785bd876f30dc7bfd539",
+    "cutover_script": "4a32595969b348363dc5a8adbd1a282f63f58622d7c246ce0a4791fc652066c0"
+  }
+}

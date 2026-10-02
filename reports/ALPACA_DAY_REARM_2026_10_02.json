@@ -1,0 +1,95 @@
+{
+  "schema_id": "alpaca_day_rearm_acceptance_v1",
+  "status": "PASS_OPERATIONAL_TRANSITION_ONLY",
+  "as_of_utc": "2026-10-02T13:38:52.653000+00:00",
+  "broker_clock": {
+    "is_open": true,
+    "next_close": "2026-10-02T16:00:00-04:00",
+    "next_open": "2026-10-05T09:30:00-04:00",
+    "timestamp": "2026-10-02T09:38:52.887854444-04:00"
+  },
+  "manager_completed_cycle_utc": "2026-10-02T13:35:02.887150+00:00",
+  "positions": [
+    {
+      "symbol": "AMD",
+      "qty": "0.186377282",
+      "entry_price": "609.57",
+      "previous_stop": 560.9,
+      "accepted_stop": 615.24,
+      "previous_hwm": 612.37,
+      "hwm": 637.5625,
+      "previous_day_stop_status": "expired",
+      "new_stop_status": "new",
+      "new_stop_tif": "day",
+      "new_stop_created_utc": "2026-10-02T13:35:12.910678556Z",
+      "quantity_lineage_and_monotonicity": "PASS"
+    },
+    {
+      "symbol": "CRWD",
+      "qty": "0.469970151",
+      "entry_price": "265.336",
+      "previous_stop": 242.13,
+      "accepted_stop": 242.13,
+      "previous_hwm": 266.57,
+      "hwm": 273.335,
+      "previous_day_stop_status": "expired",
+      "new_stop_status": "new",
+      "new_stop_tif": "day",
+      "new_stop_created_utc": "2026-10-02T13:30:11.991309Z",
+      "quantity_lineage_and_monotonicity": "PASS"
+    },
+    {
+      "symbol": "META",
+      "qty": "0.141939508",
+      "entry_price": "724.534",
+      "previous_stop": 668.76,
+      "accepted_stop": 668.76,
+      "previous_hwm": 729.8101,
+      "hwm": 735.79,
+      "previous_day_stop_status": "expired",
+      "new_stop_status": "new",
+      "new_stop_tif": "day",
+      "new_stop_created_utc": "2026-10-02T13:30:12.633386Z",
+      "quantity_lineage_and_monotonicity": "PASS"
+    }
+  ],
+  "binding_cap_usd": 487.42,
+  "gross_exposure": 0.7,
+  "source_manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+  "all58_source_hashes_unchanged": true,
+  "broker_writes_by_codex": 0,
+  "closed_real_lifecycles": 0,
+  "checks": {
+    "broker_order_history_complete_under_limit": true,
+    "unchanged_original_filled_entries": true,
+    "previous_three_day_stops_directly_expired": true,
+    "three_current_full_quantity_day_stops_accepted": true,
+    "unchanged_ownership_lineage": true,
+    "floor_hwm_monotonic_vs_intraday_baseline": true,
+    "foreign_positions_or_new_buys_or_filled_sells": false,
+    "one_new_scheduled_writer_with_locks": true,
+    "old_writer_crons_and_processes_absent": true,
+    "fresh_successful_post_open_cycle": true
+  },
+  "baseline_limit": "Oct1 17:07 UTC intraday baseline; no end-of-session baseline saved, so no end-of-session HWM claim",
+  "software_trailing": {
+    "cadence_minutes": 5,
+    "broker_order_type": "fixed STOP, DAY",
+    "activation_peak_gain_pct": 3.5,
+    "trail_from_hwm_pct": 3.5,
+    "min_lock_gain_pct": 0.5,
+    "configuration_proof": "profile/base env whitelist absent; unchanged deployed manager defaults; AMD actual accepted ratchet matches 637.5625*0.965 rounded down to cents",
+    "amd_stop_above_entry": true
+  },
+  "limits": [
+    "This proves Oct1-to-Oct2 DAY expiry/re-arm only, not continuous overnight protection.",
+    "Gap/stop execution price and realized net profit are not guaranteed.",
+    "No new money authority, code/service/cron/risk changes or manual activation."
+  ],
+  "next_gate": "Broker calendar next open Oct5 13:30 UTC / 16:30 Cyprus: repeat DAY expiry/re-arm on remaining quantities and lifecycle floor/HWM; reconcile genuine exits if any.",
+  "private_evidence_sha256": {
+    "broker_snapshot": "4275526fe32f997083e6f44011f6814442f0175cd4dbf6bf8dd0edb07531804d",
+    "intraday_baseline": "78276a787a2c84ec9755fe8ccd80add643999a0feedcde0c98747db751517850",
+    "runtime_prereqs": "ae0c57caf2423ce215207f7ddeea01378cc8015c070daeb15272754a74be4d16"
+  }
+}

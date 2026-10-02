@@ -4,7 +4,7 @@
 Сначала прочитай `AGENTS.md`, `reports/MASTER_HANDOFF.md` и TOP
 `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`. Не восстанавливай месяцы истории
 по чатам, если ответ уже есть в этих источниках. Даты и факты ниже — snapshot
-1 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
+2 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
 над старыми отчётами. При конфликте укажи источник и границу знания.
 
 ## Миссия и рабочий настрой
@@ -31,8 +31,9 @@ sealed evidence или доверия ради красивого PASS. Не п�
 1. Проверь branch/head/origin и локальный diff. Не удаляй и не коммить чужие изменения.
 2. Сними один bounded read-only production snapshot по командам MASTER HANDOFF.
 3. Alpaca уже LIVE: не запускай activation/preflight-flat повторно, не восстанавливай OLD.
-4. Если наступило 02.10: проверь DAY expiry → re-arm, broker quantity/order identity,
-   floor/HWM и единственного менеджера. Сначала actual broker truth, затем отчёт.
+4. Oct2 DAY expiry/re-arm PASS; следующий broker-backed open05.10 13:30UTC.
+   Повторяй quantity/order identity, floor/HWM и single-manager check на остатках.
+   Сначала actual broker truth, затем отчёт; genuine exit не означает forced re-entry.
 5. Назови текущий узкий blocker и заверши один измеримый рабочий цикл.
 
 ## Текущее состояние, которое нельзя потерять
@@ -40,19 +41,24 @@ sealed evidence или доверия ради красивого PASS. Не п�
 - Alpaca: владелец активировал LIVE 01.10; cap $487.42, gross0.70, позиции AMD/CRWD/META.
   Фактические fills/защитные DAY stops и durable ownership доказаны. Детали в MASTER.
   Одновременно работает только NEW manager; OLD managers удалены из cron.
-- Следующий обязательный переход: 02.10 регулярное открытие13:30UTC/16:30Кипр,
-  фактический re-arm на остаток позиций без снижения floor/HWM. Проверь broker clock.
+- Oct2 broker check13:38UTC PASS: old3 DAY stops directly expired, new3 accepted
+  full-qty stops; AMDfloor615.24 above entry609.57, CRWD242.13/META668.76;
+  HWM637.5625/273.335/735.79. Original fills/ownership intact, one NEW writer.
+  Software ratchet works every5min; DAY expiry does not give overnight coverage.
+  Next broker-backed transition05.10 13:30UTC/16:30Cyprus; refresh broker calendar.
+  Receipt ALPACA_DAY_REARM_2026_10_02.json;0 real closed trades/net-edge conclusion.
 - Crypto OLD ATT1 LIVE сохранён. NEW ATT1 binding orders-OFF code complete,
   346 focused local/VPS тестов — инженерное evidence, не real clean cohort.
-- ATT1 public на snapshot01.10 17:07UTC:9 sessions,8 filled simulations,1 nonfill,
-  0 clean terminal,8 gaps,0 открытых simulations. AVAX/DOGE/PAXG закрыты dirty.
-  Gate2–3 clean terminal не пройден. Новые gaps и локальное воспроизведение
-  serial2s budget — `CONTINUATION_EVIDENCE_2026_10_01.json`; PAXG book был stale2643ms.
-- ATT1 engineering18:13UTC: узкий adjacent-pair candidate прошёл54 теста локально
-  и на VPS с фактическим deployed core; replay9 сессий/113 записей идентичен.
-  Public deployment/новый epoch подготовлены, **не выполнены**; production driver
-  сохранён, live rollback не проверялся. Точный пакет и gates:
-  `ATT1_AGGREGATE_BUDGET_CANDIDATE_2026_10_01.json`.
+- ATT1 public cutover installed02.10 13:57UTC, driver97239996/new public epoch
+  att1-public-lifecycle-20261002-paired-observation. Core/strategy/2s/profile/risk
+  unchanged, NEW ordersOFF, public broker/order calls0. PID1584802, OLD492970.
+  Receipt ATT1_PUBLIC_CUTOVER_2026_10_02.json carries latest postcheck.
+- Old epoch retired intact:14 sessions/162 records,12 filled simulations/2 nonfills,
+  12 gaps/0 clean filled terminals/0 held or pending. Candidate replay identical;
+  209 old evidence files hashes preserved,51 validated closed-H1 caches copied.
+  Historical Oct1 54 local/VPS tests PASS; no Oct2 suite rerun. Backup/rollback
+  packet exact, actual runtime rollback not needed/not tested. Startup is not a
+  clean cohort; existing IOC post-fetch continuity caveat needs original2s evidence.
 - LTC id257:0.4 entry закрыт двумя0.2 exits; последний0.2 SL корректен для остатка.
   Непрерывная первоначальная защита исторически не доказана; не выдумывай её.
 - Research Claude находится в другом checkout. Не перепутай ветки и данные.
@@ -60,11 +66,12 @@ sealed evidence или доверия ради красивого PASS. Не п�
   codex/dynamic-symbol-filters намеренно не меняется, это не рассинхрон.
   Читай git show research/fabrika-v1:research_lab/KARTA.md, особенно синхронизацию
   с Codex. Старые HANDOFF_CLAUDE/STRATEGY_MASTER/reestr — исторические карты.
-  Local497600d и actual origin5ce1402 на вечернем read различались: refresh remote
-  отдельно. Не переключай/чисти чужой checkout и не merge вслепую.
+  Oct2 local/tracking/actual origin all c12af845 verified. No Claude checkout,
+  dirty files, research evaluator/windows or publication changed by Codex.
 - TOLPA_1D: cheap-screen SURVIVED при96.9% coverage; +16.3bps/day после модельных
   12bps/funding, t_NW2.14,1283 дня, половины1.5/31. Это не подтверждённый net edge.
-  Следующий шаг Claude — дневной prospective judge; weekly L1 evidence не складывать.
+  Дневной judge уже написан: tolpa1d_vpered.py fromOct2, fixed180/365 daily
+  observations,t_NW lag1>=2.2. Не обещать быстрый PASS; weekly evidence не складывать.
 - SBR1 уже проверен по свежему VPS journal:47,968 events,53 raw signals,0 admitted/
   fills/outcomes,control отсутствует. Это raw pre-parity, не N50; сравнение с control
   блокируется существующими lifecycle/control prerequisites. XSEC exact PIT и Bull
@@ -77,15 +84,20 @@ sealed evidence или доверия ради красивого PASS. Не п�
 переключение выполняет владелец; Codex готовит, проверяет и наблюдает read-only.
 Наличие старого разрешения не даёт нового размера риска или другой стратегии.
 
-**P1: довести ATT1.** После Alpaca P0 — fresh public-flat/source-pins gate и bounded
-public-only cutover подготовленного aggregate-budget candidate с новым epoch и
-rollback receipt. Не ставить local newer coordinator поверх старых journal pins.
-Не создавать новый coordinator/ledger. Существующий orders-OFF binding сохраняется.
-Для новых gaps извлекать измеренную причину: время запроса,
-scheduler/state/journal и доступную системную нагрузку. Не ослаблять2s. Обновлять
-причину по evidence, не объявлять VPS или Bybit виновным по одному впечатлению.
-После clean cohort — fresh exact OLD absolute risk, exclusive handoff dossier,
-явный owner step. Пока рынок не дал сигнал, есть другие ограниченные полезные задачи.
+**P1: довести ATT1.** Public-only timing cutover уже выполнен после Alpaca P0.
+Собирай prospective новой эпохи и проверяй clean terminals по исходному2s evidence,
+а не labels. Ничего поверх старого core/journal pins. Не создавать новый ledger.
+Для gaps извлекай фактическое request/scheduler/journal timing, не ослабляй2s.
+Orders-OFF binding сохраняется. После2–3 clean filled terminals/net-R — fresh
+OLD absolute risk/exclusive handoff dossier и explicit owner money step.
+
+Owner Oct2 direction: исследовать допуск по режимам и существующие экраны Элдера.
+Read-only inventory уже сделан (REGIME_ELDER_INVENTORY_2026_10_02.json): classifier
+BTC H1 EMA200 есть, caller boundary в OLD конфиге defaultOFF/guard0. Это не
+доказательство причин убытков. Три экрана в Elder уже есть: trend→pullback→entry;
+baseH4/H1/M15 и frozenETS2S D1/H4/H1 — разные профили. Не переключать frozen shorts
+в longs ради bull-market. Узкий baseline-vs-existing-gate proposal обсуждается с
+owner; общего router/новой trading policy ещё нет, LIVE и baseline не изменять.
 
 **P2: текущие зацепки.** Owner-manager scope01.10: Claude только PM2 после валидных
 v5 snapshots и prospective TOLPA_1D: ≥90% hourly/cheap-screen уже пройдены.
@@ -97,7 +109,7 @@ Raw/ECN MT5 demo с реальными spread/swap/commission для NOCHNOY_DRE
 Новых research-направлений до terminal verdict этих линий не открывать.
 
 **P3: Factory и новые механизмы.** Сейчас отложены. Только после приоритета защиты LIVE и сверки
-существующих дефектов evidence-acceptance. Используй текущий `reestr.json`, очередь,
+существующих дефектов evidence-acceptance. Используй текущую KARTA из verified research ref, очередь,
 runner/judge и promotion packets. Цель — автономное исследование до READY_FOR_BUILD,
 затем независимая production-проверка; никакого самостоятельного наделения деньгами.
 
