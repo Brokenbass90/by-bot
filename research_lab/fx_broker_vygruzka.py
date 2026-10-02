@@ -114,13 +114,18 @@ def istoriya_spreda(m, s, imya, ot, do):
     tek = ot
     while tek < do:
         kraj = min(tek + dt.timedelta(days=30), do + dt.timedelta(days=1))
-        try:
-            r = m.call("get_chart_history", timeout=90.0, symbol=imya, period="H1",
-                       datetime_from=tek.strftime("%Y-%m-%dT00:00:00"), datetime_to=kraj.strftime("%Y-%m-%dT00:00:00"),
-                       limit=1000)
-        except MT5Error as e:
-            _oshibka(m, "get_chart_history", e); tek = kraj; continue
-        bary = _spisok(r, ("history", "candles", "rates", "bars", "data", "items"))
+        bary = []
+        for popytka in range(4):             # терминал подкачивает историю с сервера при первом запросе — пусто ≠ нет данных
+            try:
+                r = m.call("get_chart_history", timeout=90.0, symbol=imya, period="H1",
+                           datetime_from=tek.strftime("%Y-%m-%dT00:00:00"), datetime_to=kraj.strftime("%Y-%m-%dT00:00:00"),
+                           limit=1000)
+            except MT5Error as e:
+                _oshibka(m, "get_chart_history", e); break
+            bary = _spisok(r, ("history", "candles", "rates", "bars", "data", "items"))
+            if bary:
+                break
+            __import__("time").sleep(3)
         if bary and "bary" not in _pokazano:
             _pokazano.add("bary"); print(f"  ключи бара: {sorted(bary[0].keys())}")
         for x in bary:
@@ -183,6 +188,8 @@ def main():
     acc = m.account()
     server = str(acc.get("server", "")); company = str(acc.get("company", ""))
     print(f"брокер: {company} | сервер: {server} | режим: {acc.get('trade_mode')}")
+    if "icmarkets" not in server.lower().replace(" ", "") and "bullwaves" not in server.lower():
+        print("  !! ВНИМАНИЕ: заранее выбранная площадка повтора — IC Markets EU Raw Spread. Этот сервер в вердикт не идёт.")
     if "MetaQuotes" in server or "MetaQuotes" in company:
         sys.exit("это MetaQuotes-Demo — нужен счёт реального брокера (можно его демо того же типа)")
     print(f"валюта счёта: {acc.get('currency')} | плечо: {acc.get('leverage')} | группа: {acc.get('group') or '-'}")
