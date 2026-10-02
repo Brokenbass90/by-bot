@@ -59,8 +59,9 @@ def opredelit_vremya(ts_ms):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--komissiya", type=float, required=True,
-                                                    help="USD за 1 лот за одну сторону (0 для счёта без комиссии)")
+    ap = argparse.ArgumentParser(); ap.add_argument("--komissiya", type=float, default=None,
+                                                    help="USD за 1 лот за одну сторону (0 для счёта без комиссии); "
+                                                         "без аргумента — только разведка счёта и комиссии из истории, без выгрузки")
     ap.add_argument("--dney", type=int, default=400)
     a = ap.parse_args(); OUT.mkdir(parents=True, exist_ok=True)
     m = MT5MCP(config.MT5_URL, config.MT5_TOKEN); m.connect()
@@ -69,6 +70,27 @@ def main():
     print(f"брокер: {company} | сервер: {server} | режим: {acc.get('trade_mode')}")
     if "MetaQuotes" in server or "MetaQuotes" in company:
         sys.exit("это MetaQuotes-Demo — нужен счёт реального брокера (можно его демо того же типа)")
+    print(f"валюта счёта: {acc.get('currency')} | плечо: {acc.get('leverage')} | группа: {acc.get('group') or '-'}")
+    if a.komissiya is None:                 # 02.10: разведка комиссии по истории закрытых позиций (только чтение)
+        try:
+            r = m.call("get_trading_history_positions", timeout=60.0,
+                       date_from=(dt.date.today() - dt.timedelta(days=400)).isoformat(), date_to=dt.date.today().isoformat())
+        except MT5Error as e:
+            sys.exit(f"мост не отдал историю позиций ({str(e)[:120]}) — посмотри комиссию в MT5 руками")
+        poz = r if isinstance(r, list) else next((r[k] for k in ("positions", "history", "items", "data")
+                                                  if isinstance(r, dict) and isinstance(r.get(k), list)), [])
+        if not poz:
+            sys.exit("закрытых позиций в истории нет (новый/демо-счёт) — комиссию из истории не узнать")
+        print("поля позиции:", sorted(poz[0].keys()))
+        kom = sum(float(p.get("commission") or 0) for p in poz); ob = sum(float(p.get("volume") or 0) for p in poz)
+        po_simv = {}
+        for p in poz:
+            q = po_simv.setdefault(p.get("symbol"), [0, 0.0, 0.0]); q[0] += 1
+            q[1] += float(p.get("volume") or 0); q[2] += float(p.get("commission") or 0)
+        print(f"позиций {len(poz)}, лотов {ob:.2f}, комиссия всего {kom:.2f} {acc.get('currency')}")
+        for k, (n, v, c) in sorted(po_simv.items(), key=lambda kv: -kv[1][0])[:10]:
+            print(f"  {k}: позиций {n}, лотов {v:.2f}, комиссия {c:.2f} → {abs(c) / v if v else 0:.2f} за лот за круг")
+        sys.exit("разведка окончена; выгрузка не делалась")
     spec = {"broker": company, "server": server, "vremya": None, "trade_mode": acc.get("trade_mode"),
             "kogda": dt.datetime.utcnow().isoformat(timespec="seconds")}
     do = dt.date.today(); ot = do - dt.timedelta(days=a.dney)
