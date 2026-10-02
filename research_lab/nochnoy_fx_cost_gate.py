@@ -82,6 +82,18 @@ def sdelki():
     return out
 
 
+def ny_close_v_utc(ts):
+    """сервер «нью-йоркского закрытия»: UTC+3 в летнее время США (2-е вс марта — 1-е вс ноября), иначе UTC+2"""
+    ts = np.asarray(ts, dtype=np.int64); out = ts - 2 * 3600000
+    for y in range(1990, 2100):
+        vs = lambda m, n: [w[6] for w in calendar.monthcalendar(y, m) if w[6]][n]
+        a = int(dt.datetime(y, 3, vs(3, 1), 2 + 2, tzinfo=dt.timezone.utc).timestamp() * 1000)   # 02:00 NY → время сервера
+        b = int(dt.datetime(y, 11, vs(11, 0), 2 + 3, tzinfo=dt.timezone.utc).timestamp() * 1000)
+        msk = (ts >= a) & (ts < b)
+        out[msk] = ts[msk] - 3 * 3600000
+    return out
+
+
 def zagruzit_brokera():
     sp = BROKER / "spec.json"
     if not sp.exists():
@@ -93,8 +105,13 @@ def zagruzit_brokera():
         if s not in spec or not all(k in spec[s] for k in need) or not f.exists():
             return None, f"нет спецификации или спредов для {s}"
         z = json.load(open(f)); ts = np.array(z["ts"], dtype=np.int64)
-        if spec.get("vremya") == "mt5_eet":
+        vr = spec.get("vremya")             # 02.10: правило времени сервера — явное, определено выгрузкой, без умолчаний
+        if vr == "mt5_eet":
             ts = mt5_v_utc(ts)
+        elif vr == "ny_close":
+            ts = ny_close_v_utc(ts)
+        elif vr != "utc":
+            return None, f"время сервера брокера не определено ({vr}) — спреды по часам UTC не разложить"
         sprd = np.array(z["spread_points"], float) * spec[s]["point"]
         leto = np.array([leto_ssha(int(t)) for t in ts]); chas = (ts // CH) % 24
         if not leto.any() or leto.all():

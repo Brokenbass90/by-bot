@@ -10,7 +10,7 @@
 
     cd signal_copy && ../.venv/bin/python3 ../research_lab/fx_broker_vygruzka.py --komissiya 3.5
 """
-import argparse, datetime as dt, json, sys
+import argparse, calendar, datetime as dt, json, sys
 from pathlib import Path
 
 KOREN = Path(__file__).resolve().parents[1]; sys.path.insert(0, str(KOREN / "signal_copy"))
@@ -19,6 +19,43 @@ from mt5_mcp import MT5MCP, MT5Error       # noqa: E402
 
 PARY = ["AUDUSD", "EURUSD", "GBPUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY"]
 OUT = KOREN / "research_lab/data/fx_broker"
+
+
+def _vs(y, m, n):
+    """n-е воскресенье месяца (n=-1 — последнее)"""
+    d = [w[6] for w in calendar.monthcalendar(y, m) if w[6]]
+    return d[n] if n < 0 else d[n - 1]
+
+
+def leto_us(d):
+    a = dt.date(d.year, 3, _vs(d.year, 3, 2)); b = dt.date(d.year, 11, _vs(d.year, 11, 1)); return a <= d < b
+
+
+def leto_eu(d):
+    a = dt.date(d.year, 3, _vs(d.year, 3, -1)); b = dt.date(d.year, 10, _vs(d.year, 10, -1)); return a <= d < b
+
+
+def opredelit_vremya(ts_ms):
+    """02.10: время сервера НЕ предполагается. Рынок FX открывается в вс 17:00 Нью-Йорка = 21:00 UTC (лето США) /
+    22:00 UTC (зима США). По часу сервера первого бара каждой недели считаем сдвиг сервер−UTC и проверяем правила:
+      utc       — сдвиг 0;
+      ny_close  — +3 летом США, +2 зимой США (открытие недели всегда 00:00 сервера);
+      mt5_eet   — +3 летом ЕС, +2 зимой ЕС (как MetaQuotes-Demo).
+    Правило принимается, если совпало ≥ 95% недель и оно единственное лучшее; иначе 'neopredeleno' — ворота откажут."""
+    ts = sorted(ts_ms); otkr = [ts[i] for i in range(1, len(ts)) if ts[i] - ts[i - 1] > 24 * 3600_000]
+    pravila = {"utc": lambda d: 0, "ny_close": lambda d: 3 if leto_us(d) else 2, "mt5_eet": lambda d: 3 if leto_eu(d) else 2}
+    sovp = {k: 0 for k in pravila}; sdvigi = {}
+    for t in otkr:
+        srv = dt.datetime.utcfromtimestamp(t / 1000)
+        d = srv.date() if srv.hour >= 12 else srv.date() - dt.timedelta(days=1)    # воскресенье открытия
+        utc_chas = 21 if leto_us(d) else 22
+        sd = (srv.hour - utc_chas) % 24; sdvigi[sd] = sdvigi.get(sd, 0) + 1
+        for k, f in pravila.items():
+            sovp[k] += sd == f(d)
+    n = max(len(otkr), 1); dol = {k: v / n for k, v in sovp.items()}
+    luchshie = [k for k, v in dol.items() if v == max(dol.values())]
+    rez = luchshie[0] if len(luchshie) == 1 and dol[luchshie[0]] >= 0.95 else "neopredeleno"
+    return rez, {"nedel": len(otkr), "doli": {k: round(v, 3) for k, v in dol.items()}, "sdvigi_chasov": sdvigi}
 
 
 def main():
@@ -32,7 +69,7 @@ def main():
     print(f"брокер: {company} | сервер: {server} | режим: {acc.get('trade_mode')}")
     if "MetaQuotes" in server or "MetaQuotes" in company:
         sys.exit("это MetaQuotes-Demo — нужен счёт реального брокера (можно его демо того же типа)")
-    spec = {"broker": company, "server": server, "vremya": "mt5_eet", "trade_mode": acc.get("trade_mode"),
+    spec = {"broker": company, "server": server, "vremya": None, "trade_mode": acc.get("trade_mode"),
             "kogda": dt.datetime.utcnow().isoformat(timespec="seconds")}
     do = dt.date.today(); ot = do - dt.timedelta(days=a.dney)
     for s in PARY:
@@ -67,6 +104,18 @@ def main():
         print(f"{s}: часов со спредом {len(ts)}; своп long {spec[s]['swap_long']} ({spec[s]['swap_mode']})")
         if not ts:
             print("  !! мост не отдаёт поле spread — пришли вывод, сделаем иначе")
+    est = [json.load(open(OUT / f"{q}.json"))["ts"] for q in ("EURUSD", "GBPUSD") if (OUT / f"{q}.json").exists()]
+    vr, diag = opredelit_vremya(est[0]) if est and est[0] else ("neopredeleno", {"prichina": "нет часовой истории"})
+    try:                                   # независимая проверка: время последнего тика (сервер) против UTC сейчас
+        tik = m.symbol("EURUSD").get("time")
+        if isinstance(tik, (int, float)) and tik > 0:
+            diag["sdvig_po_tiku_chasov"] = round((tik - dt.datetime.now(dt.timezone.utc).timestamp()) / 3600, 2)
+    except Exception:
+        pass
+    spec["vremya"] = vr; spec["vremya_diagnostika"] = diag
+    print(f"время сервера: {vr} | {diag}")
+    if vr == "neopredeleno":
+        print("  !! правило времени сервера не определено — ворота издержек откажут (INSUFFICIENT_DATA); пришли этот вывод")
     (OUT / "spec.json").write_text(json.dumps(spec, ensure_ascii=False, indent=1, default=str))
     print("готово:", OUT)
 
