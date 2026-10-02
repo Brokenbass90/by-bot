@@ -27,8 +27,9 @@ def naiti_simvol(m, s):
                 if dobavit:
                     m.add_symbol(c)
                 sp = m.symbol(c)
-                if str(sp.get("name") or sp.get("symbol") or c).upper().startswith(s):
-                    return c, sp
+                nastoyashchee = str(sp.get("name") or sp.get("symbol") or c)
+                if nastoyashchee.upper().startswith(s):
+                    return nastoyashchee, sp
             except MT5Error:
                 continue
     raise MT5Error(f"{s}: не найден ни под одним суффиксом")
