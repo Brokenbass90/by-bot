@@ -75,6 +75,91 @@ def opredelit_vremya(ts_ms):
     return rez, {"nedel": len(otkr), "doli": {k: round(v, 3) for k, v in dol.items()}, "sdvigi_chasov": sdvigi}
 
 
+BARY = {}
+CHASY_TIKOV = {20, 21, 22, 6, 7, 8}          # вокруг входа 21 UTC и выхода +10 ч
+_pokazano = set()
+
+
+def _vremya(t):
+    if isinstance(t, (int, float)):
+        return int(t) * 1000 if t < 10**11 else int(t)
+    t = str(t).replace("Z", "").replace(".", "-", 2).replace(" ", "T")
+    return int(dt.datetime.fromisoformat(t).replace(tzinfo=dt.timezone.utc).timestamp() * 1000)
+
+
+def _spisok(r, klyuchi):
+    return r if isinstance(r, list) else next((r[k] for k in klyuchi if isinstance(r, dict) and isinstance(r.get(k), list)), [])
+
+
+def _oshibka(m, tool, e):
+    if tool in _pokazano:
+        return
+    _pokazano.add(tool)
+    print(f"  !! {tool}: {str(e)[:600]}")
+    try:
+        resp, _ = m._post({"jsonrpc": "2.0", "id": 98, "method": "tools/list", "params": {}})
+        for t in ((resp or {}).get("result") or {}).get("tools") or []:
+            if t.get("name") == tool:
+                print(f"  схема {tool}: {json.dumps(t.get('inputSchema'), ensure_ascii=False)[:600]}")
+    except Exception:
+        pass
+
+
+def istoriya_spreda(m, s, imya, ot, do):
+    ts, spr, bt = [], [], []
+    tek = ot
+    while tek < do:
+        kraj = min(tek + dt.timedelta(days=30), do + dt.timedelta(days=1))
+        try:
+            r = m.call("get_chart_history", timeout=90.0, symbol=imya, period="H1",
+                       datetime_from=tek.strftime("%Y-%m-%dT00:00:00"), datetime_to=kraj.strftime("%Y-%m-%dT00:00:00"),
+                       limit=1000)
+        except MT5Error as e:
+            _oshibka(m, "get_chart_history", e); tek = kraj; continue
+        bary = _spisok(r, ("history", "candles", "rates", "bars", "data", "items"))
+        if bary and "bary" not in _pokazano:
+            _pokazano.add("bary"); print(f"  ключи бара: {sorted(bary[0].keys())}")
+        for x in bary:
+            t = x.get("time") or x.get("datetime")
+            if t is None:
+                continue
+            t = _vremya(t); bt.append(t)
+            if x.get("spread") is not None:
+                ts.append(t); spr.append(float(x["spread"]))
+        tek = kraj
+    return ts, spr, sorted(set(bt))
+
+
+def _sdvig(pravilo, d):
+    return {"utc": 0, "ny_close": 3 if leto_us(d) else 2, "mt5_eet": 3 if leto_eu(d) else 2}[pravilo]
+
+
+def spred_iz_tikov(m, imya, point, pravilo, ot, do):
+    ts, spr = [], []
+    d = ot
+    while d < do:
+        if d.weekday() < 5:
+            for h in sorted(CHASY_TIKOV):
+                utc = dt.datetime(d.year, d.month, d.day, h)
+                srv = utc + dt.timedelta(hours=_sdvig(pravilo, d))
+                try:
+                    r = m.call("get_chart_ticks_history", timeout=90.0, symbol=imya,
+                               datetime_from=srv.strftime("%Y-%m-%dT%H:%M:%S"),
+                               datetime_to=(srv + dt.timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S"), limit=20000)
+                except MT5Error as e:
+                    _oshibka(m, "get_chart_ticks_history", e); continue
+                tiki = _spisok(r, ("ticks", "history", "data", "items"))
+                if tiki and "tiki" not in _pokazano:
+                    _pokazano.add("tiki"); print(f"  ключи тика: {sorted(tiki[0].keys())}")
+                v = [float(x["ask"]) - float(x["bid"]) for x in tiki
+                     if x.get("ask") and x.get("bid") and float(x["ask"]) > 0 and float(x["bid"]) > 0]
+                if len(v) >= 5:
+                    ts.append(int(srv.replace(tzinfo=dt.timezone.utc).timestamp() * 1000))
+                    spr.append(float(sorted(v)[len(v) // 2]) / point)
+        d += dt.timedelta(days=4)
+    return ts, spr
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--komissiya", type=float, default=None,
                                                     help="USD за 1 лот за одну сторону (0 для счёта без комиссии); "
@@ -122,31 +207,17 @@ def main():
                    "swap_long": sp.get("swap_long"), "swap_mode": {1: "points", 2: "money_per_lot"}.get(sp.get("swap_mode"), sp.get("swap_mode")),
                    "swap_3day": sp.get("swap_rollover3days", 3) - 1 if isinstance(sp.get("swap_rollover3days"), int) else 2,
                    "commission_usd_per_lot_side": a.komissiya, "imya_u_brokera": imya, "_syroe": sp}
-        ts, spr = [], []
-        tek = ot
-        while tek < do:
-            kraj = min(tek + dt.timedelta(days=90), do)
-            try:
-                r = m.call("get_chart_history", timeout=90.0, symbol=imya, period="H1",
-                           datetime_from=tek.isoformat(), datetime_to=kraj.isoformat(), limit=100000)
-            except MT5Error as e:
-                print(f"  {s} {tek}: {str(e)[:100]}"); tek = kraj; continue
-            bary = r if isinstance(r, list) else next((r[k] for k in ("candles", "rates", "bars", "history", "data", "items")
-                                                         if isinstance(r, dict) and isinstance(r.get(k), list)), [])
-            for b in bary:
-                t = b.get("time") or b.get("datetime"); v = b.get("spread")
-                if t is None or v is None:
-                    continue
-                if isinstance(t, str):
-                    t = int(dt.datetime.fromisoformat(t.replace("Z", "")).replace(tzinfo=dt.timezone.utc).timestamp())
-                ts.append(int(t) * 1000 if t < 10**11 else int(t)); spr.append(float(v))
-            tek = kraj
+        ts, spr, bt = istoriya_spreda(m, s, imya, ot, do)
+        BARY[s] = bt
         (OUT / f"{s}.json").write_text(json.dumps({"ts": ts, "spread_points": spr}))
-        print(f"{s}: часов со спредом {len(ts)}; своп long {spec[s]['swap_long']} ({spec[s]['swap_mode']})")
-        if not ts:
-            print("  !! мост не отдаёт поле spread — пришли вывод, сделаем иначе")
-    est = [json.load(open(OUT / f"{q}.json"))["ts"] for q in ("EURUSD", "GBPUSD") if (OUT / f"{q}.json").exists()]
-    vr, diag = opredelit_vremya(est[0]) if est and est[0] else ("neopredeleno", {"prichina": "нет часовой истории"})
+        print(f"{s}: баров H1 {len(bt)}, часов со спредом {len(ts)}; своп long {spec[s]['swap_long']} ({spec[s]['swap_mode']})")
+    vr, diag = opredelit_vremya(BARY.get("EURUSD") or []) if BARY.get("EURUSD") else ("neopredeleno", {"prichina": "нет часовых баров"})
+    if vr != "neopredeleno" and any(BARY[q] and not json.load(open(OUT / f"{q}.json"))["ts"] for q in BARY):
+        print(f"в барах нет поля spread — беру спред из тиков (выборка: каждый 4-й день, часы UTC {sorted(CHASY_TIKOV)}), правило времени {vr}")
+        for q in BARY:
+            ts, spr = spred_iz_tikov(m, spec[q]["imya_u_brokera"], spec[q]["point"], vr, ot, do)
+            (OUT / f"{q}.json").write_text(json.dumps({"ts": ts, "spread_points": spr, "istochnik": "tiki"}))
+            print(f"  {q}: часов со спредом из тиков {len(ts)}")
     try:                                   # независимая проверка: время последнего тика (сервер) против UTC сейчас
         tik = naiti_simvol(m, "EURUSD")[1].get("time")
         if isinstance(tik, (int, float)) and tik > 0:
