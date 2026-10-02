@@ -15,7 +15,23 @@ from pathlib import Path
 
 KOREN = Path(__file__).resolve().parents[1]; sys.path.insert(0, str(KOREN / "signal_copy"))
 import config                              # noqa: E402
-from mt5_mcp import MT5MCP, MT5Error       # noqa: E402
+from mt5_mcp import MT5MCP, MT5Error, SUFFIXES   # noqa: E402
+
+
+def naiti_simvol(m, s):
+    """02.10: у брокера пары могут быть с суффиксом (Bullwaves: EURUSD!). Пробуем тот же инструмент с суффиксами
+    площадки; если в Обзоре рынка нет — добавляем в Обзор (витрина котировок, не торговая операция)."""
+    for c in [s, s + "!"] + [s + x for x in SUFFIXES]:
+        for dobavit in (False, True):
+            try:
+                if dobavit:
+                    m.add_symbol(c)
+                sp = m.symbol(c)
+                if str(sp.get("name") or sp.get("symbol") or c).upper().startswith(s):
+                    return c, sp
+            except MT5Error:
+                continue
+    raise MT5Error(f"{s}: не найден ни под одним суффиксом")
 
 PARY = ["AUDUSD", "EURUSD", "GBPUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY"]
 OUT = KOREN / "research_lab/data/fx_broker"
@@ -96,19 +112,21 @@ def main():
     do = dt.date.today(); ot = do - dt.timedelta(days=a.dney)
     for s in PARY:
         try:
-            sp = m.symbol(s)
+            imya, sp = naiti_simvol(m, s)
+            if imya != s:
+                print(f"{s}: у брокера называется {imya}")
         except MT5Error as e:
             print(f"{s}: нет в Обзоре рынка ({e}) — добавь символ (с суффиксом брокера, если он есть)"); continue
         spec[s] = {"point": sp.get("point"), "contract_size": sp.get("trade_contract_size") or sp.get("contract_size"),
                    "swap_long": sp.get("swap_long"), "swap_mode": {1: "points", 2: "money_per_lot"}.get(sp.get("swap_mode"), sp.get("swap_mode")),
                    "swap_3day": sp.get("swap_rollover3days", 3) - 1 if isinstance(sp.get("swap_rollover3days"), int) else 2,
-                   "commission_usd_per_lot_side": a.komissiya, "_syroe": sp}
+                   "commission_usd_per_lot_side": a.komissiya, "imya_u_brokera": imya, "_syroe": sp}
         ts, spr = [], []
         tek = ot
         while tek < do:
             kraj = min(tek + dt.timedelta(days=90), do)
             try:
-                r = m.call("get_chart_history", timeout=90.0, symbol=s, period="H1",
+                r = m.call("get_chart_history", timeout=90.0, symbol=imya, period="H1",
                            datetime_from=tek.isoformat(), datetime_to=kraj.isoformat(), limit=100000)
             except MT5Error as e:
                 print(f"  {s} {tek}: {str(e)[:100]}"); tek = kraj; continue
@@ -129,7 +147,7 @@ def main():
     est = [json.load(open(OUT / f"{q}.json"))["ts"] for q in ("EURUSD", "GBPUSD") if (OUT / f"{q}.json").exists()]
     vr, diag = opredelit_vremya(est[0]) if est and est[0] else ("neopredeleno", {"prichina": "нет часовой истории"})
     try:                                   # независимая проверка: время последнего тика (сервер) против UTC сейчас
-        tik = m.symbol("EURUSD").get("time")
+        tik = naiti_simvol(m, "EURUSD")[1].get("time")
         if isinstance(tik, (int, float)) and tik > 0:
             diag["sdvig_po_tiku_chasov"] = round((tik - dt.datetime.now(dt.timezone.utc).timestamp()) / 3600, 2)
     except Exception:
