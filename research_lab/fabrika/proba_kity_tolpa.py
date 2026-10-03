@@ -9,6 +9,11 @@
      по ~60 монетам на 00:00 UTC < 0.8 (иначе это та же TOLPA);
   Q3 сигнал доступен вживую: публичный /futures/data/topLongShortAccountRatio отвечает (история API ~30 дней —
      поэтому вперёд копить нужно самим, а прошлое — только архив).
+Поправка 03.10 после Q2 FAIL (rho 0.98/0.93 для count_toptrader — это головы топ-счетов, почти та же толпа):
+  Q2b — тот же порог 0.8 для sum_toptrader_long_short_ratio (ПОЗИЦИИ топ-трейдеров, деньги, а не головы)
+  и для справки sum_taker_long_short_vol_ratio (поток тейкеров). Исходы по-прежнему не смотрим.
+  PASS Q2b → кандидат переименовывается в KITY_POZICII; FAIL → семья KITY KILLED, слот → REBALANCING_PRESSURE.
+    python3 research_lab/fabrika/proba_kity_tolpa.py --q2b
 Запускать на Mac (сеть VM к Binance закрыта):
     python3 research_lab/fabrika/proba_kity_tolpa.py
 """
@@ -39,7 +44,32 @@ def spearman(a, b):
     return cov / (va * vb) if va and vb else float("nan")
 
 
+def q2b():
+    papki, _ = B.listing("data/futures/um/daily/metrics/")
+    sim = sorted({p.rstrip('/').split('/')[-1] for p in papki if p.rstrip('/').endswith('USDT') and '_' not in p})
+    res = {}
+    for d in ("2023-06-01", "2025-06-01"):
+        a, b, c = [], [], []
+        for s in sim:
+            if len(a) >= 60:
+                break
+            r = stroki(s, d)
+            if not r or "sum_toptrader_long_short_ratio" not in r[0]:
+                continue
+            h = r[0]; x = r[1]
+            v = [B.fl(x[h.index(k)]) for k in ("sum_toptrader_long_short_ratio", "count_long_short_ratio", "sum_taker_long_short_vol_ratio")]
+            if None not in v:
+                a.append(v[0]); b.append(v[1]); c.append(v[2])
+        r1 = spearman(a, b) if len(a) >= 20 else float("nan"); r2 = spearman(c, b) if len(c) >= 20 else float("nan")
+        print(f"  {d}: монет {len(a)}, rho(позиции топов, толпа) = {r1:.2f}; справка rho(тейкеры, толпа) = {r2:.2f}")
+        res[d] = r1
+    ok = all(v == v for v in res.values())
+    print("Q2b:", ("PASS" if all(v < 0.8 for v in res.values()) else "FAIL") if ok else "BLOCKED")
+
+
 def main():
+    if "--q2b" in sys.argv:
+        return q2b()
     print("Q1 колонки и заполненность (BTCUSDT):")
     q1 = True
     for d in DATY:
