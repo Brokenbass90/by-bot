@@ -17,7 +17,7 @@ PREREG_TOLPA_BINANCE_REPLICATION_2021_2022.md. Написано и закомм�
     python3 research_lab/fabrika/dannye_binance.py            скачать
     python3 research_lab/fabrika/dannye_binance.py --proverka только самопроверка
 """
-import csv, datetime as dt, io, json, re, sys, time, urllib.error, urllib.request, zipfile
+import csv, datetime as dt, io, json, re, sys, time, urllib.error, urllib.parse, urllib.request, zipfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -32,6 +32,7 @@ POTOKI = 12
 
 
 def get(url, popytki=4):
+    url = urllib.parse.quote(url, safe=":/?&=%")   # символы с не-ASCII именами (03.10: 哈基米USDT уронил загрузку)
     for k in range(popytki):
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "research"}), timeout=60) as r:
