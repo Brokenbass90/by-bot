@@ -32,8 +32,8 @@ def samaya_rannyaya(path, pole_ts, interval_key, interval, sym, limit):
     """идём назад от 2023-01-01, пока биржа отдаёт; возвращаем самую раннюю дату и число точек до 2023"""
     end, vse = T1 - 1, set()
     for _ in range(60):
-        r = get(path, category="linear", symbol=sym, **({interval_key: interval} if interval_key else {}),
-                startTime=T0, endTime=end, limit=limit, **({"start": T0, "end": end} if path == "kline" else {}))
+        okno = {"start": T0, "end": end} if path == "kline" else {"startTime": T0, "endTime": end}
+        r = get(path, category="linear", symbol=sym, **{interval_key: interval}, limit=limit, **okno)
         rows = (r or {}).get("list") or []
         if not rows:
             break
