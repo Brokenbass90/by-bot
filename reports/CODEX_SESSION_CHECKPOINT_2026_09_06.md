@@ -2,6 +2,44 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October3 06:06UTC bounded result: six broker cash islands reconciled; legacy watermarks BLOCKED_DATA; NEW ordersOFF**:
+- Exactly6 known7-day symbol windows,36 signed GET pages. Full execution↔cash joins,
+  unique same-time cash-size chains and closed-PnL totals reconcile.4 isolated
+  known ATT1 entries;2 ADA mixed additional entries97+94=191/180+90=270. Account
+  exits/cash resolved, mixed PnL not clean ATT1. No journal/label rewrite, all-history
+  finality or initial-protection proof. Stop archive expansion after this cycle.
+- Current OLD source pins/PID492970 unchanged. Engine has no state export API;
+  `_last_tf_ts`/`_cooldown` live in instances, cooldown decrements on calls before
+  H1 comparison and pause prevents evaluation. Exact legacy handoff unavailable
+  through file/GET sources: BLOCKED_DATA. Proposed fresh-epoch design at existing
+  boundary is NOT_IMPLEMENTED; explicit cold-policy acceptance required. No fake
+  legacy watermark, runtime injection/restart/resume or relaxed default denial.
+- Mode probe limit200 repeats LINK hedge1/2 and terminal placeholder-like0;
+ 6 duplicated symbol/index chains remain. Global authenticated06:05:50UTC strict
+  flat0positions/0orders PASS is exposure evidence, not global one-way mode proof.
+  Frozen14-day funding policy pending. Modelled full draft-risk/minimal-notional
+  current-limit shock exceeds D0.8 for OLD8; not all51/smaller-quantity impossibility.
+- Public06:06:15UTC PID1584802/same epoch:3sessions/18records,2IOC nonfills,
+ 1SEI filled simulation/1RECOVERY_GAP/0clean/0held,0broker/order calls. Referenced
+  raw book received age2485ms>2000ms, server-response age105ms; correct fail-closed
+  freshness rejection.18.584s entry→gap interval is NOT measured discontinuity or
+  new aggregate-budget defect.118 simulated units exited, funding coverage captured,
+  final_net_R absent. Preserve original gap; gate2–3 clean/net-R +ownerGO unchanged.
+- Alpaca06:06:13UTC same3 holdings, floor/HWM monotonic,58hashes/oneNEW/OLD absent;
+  open stops0 after previously observed DAY expiry. NextOct5 13:30UTC/16:30Cyprus
+  re-arm NOT_DUE, no current weekend stop coverage asserted. No runtime changes.
+- Fresh7 existing handoff-denial testsPASS/13deselected; exact private six checksPASS.
+  Mechanical worker gpt-5.6-luna/medium verified from runtime. Financial review
+  outcome is recorded in the bounded receipt; review is evidence/design, not approval.
+- Actual Claude origin0bf5dcb/KARTA: **PM2 KILLED / NOT_EXECUTABLE**,3dates/792rounds/
+ 0 qualifying violations.2020–2022 availability probe code, no usable untouched
+  PIT holdout proven. No merge/judge rerun; freed slot allows planning one accepted
+  independent Discovery experiment under Claude, Factory remainsOFF.
+- Receipts: ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json and
+  ATT1_FRESH_HANDOFF_DESIGN_2026_10_03.md. Next is explicit migration-policy
+  review/acceptance plus viable funding/mode/dispatch, not another broad archive
+  search or calendar-based promotion. Tasks1–4 already delivered.
+
 Latest continuation — **October3 morning actual inputs: progress, actual build BLOCKED, NEW ordersOFF**:
 - Signed authenticated account-wide positions/orders05:17:18UTC accepted by exact
   existing pure validators:0positions/0orders. Identity matches the earlier actual

@@ -1,5 +1,39 @@
 # MASTER HANDOFF — 2026-10-03
 
+Latest bounded continuation **Oct3 06:06 UTC /09:06 Cyprus**: all six named legacy
+account cash islands reconciled from 36 signed broker GET pages, exact execution /
+cash joins, uniquely reconstructed size chains and closed-PnL totals. Four isolated
+known ATT1 entries; two ADA positions include additional entries (97+94=191 and
+180+90=270). Mixed PnL is not clean ATT1 evidence. Legacy journals/labels unchanged;
+no all-history finality or initial-protection proof claimed. Stop archive expansion.
+Actual old engine has no export API for `_last_tf_ts` / `_cooldown` call counter;
+pause precedes evaluation. Legacy watermarks now **BLOCKED_DATA** in available
+sources, not a reason to fabricate values or restart OLD. Read
+`ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json` and proposed
+`ATT1_FRESH_HANDOFF_DESIGN_2026_10_03.md`. Fresh epoch is NOT_IMPLEMENTED and needs
+explicit migration-policy acceptance; existing legacy denial stays unchanged.
+LINK limit200 repeats hedge indices1/2 and terminal placeholder-like0; declared
+oneway binding blocked. Frozen14-day funding reserve policy remains pending;
+full draft-risk/minimal-notional current-limit stress does not fit daily cash.
+
+Public **06:06:15UTC**:3 sessions/18 records,2 IOC nonfills, **1 filled SEI simulation /
+1 RECOVERY_GAP /0 clean terminals /0 held**, same PID1584802 and broker/order calls0.
+SEI source proves book age **2485ms**, response age105ms: strict2000ms rejection
+worked. Entry→gap receipt interval18.584s is not measured observation discontinuity;
+this response does not establish another aggregate-budget defect. Do not weaken
+freshness, reset epoch or erase gap. Money ordersOFF / clean gate2–3 unchanged.
+Authenticated global **06:05:50UTC** flat0positions/0orders; OLD492970 unchanged.
+Alpaca **06:06:13UTC** same3 holdings, monotonic floor/HWM,58hashes/one NEW manager;
+open stops0 after previously observed DAY expiry. Oct5 13:30UTC re-arm NOT_DUE.
+Fresh7 existing handoff-denial tests PASS; numerical/source checks in private receipt.
+
+Claude actual origin advanced to **0bf5dcb**; published KARTA now says **PM2 KILLED /
+NOT_EXECUTABLE** (3 dates/792 rounds/0 qualifying violations). Remove PM2 from LIVE
+queue. Historical2020–2022 availability probe code is published; usable untouched
+PIT holdout is not established. Freed research slot permits one accepted independent
+Discovery experiment under Claude; Factory staysOFF pending that plan. No merge,
+research evaluator rerun, money/runtime change or automatic Factory activation.
+
 October 3 morning continuation: actual-input collection progressed; NEW orders
 remain OFF and actual BUILD_READY is still BLOCKED. Tasks 1–4 are already done.
 Read `ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json` and
@@ -89,12 +123,12 @@ The cap is allocated capital, not a guaranteed maximum loss. Stops do not elimin
 
 Frozen signal session Sep30 → entry session Oct1. Selection CRWD/AMD/META prepared
 Sep30 20:12 UTC. First actual scheduled LIVE cycle Oct1 14:10 UTC; bridge0/ratchet0.
-Latest follow-up **Oct3 04:45:45UTC**: same3 held quantities/lineage, DAY stops
+Latest follow-up **Oct3 06:06:13UTC**: same3 held quantities/lineage, DAY stops
 expired after Friday close, **0 open stops**, no filled sells observed. Durable
 floors622.24/242.13/668.76 and HWM644.811/273.335/736.33 remain monotonic.
 One NEW manager and all58 deployed hashes unchanged. Latest manager receipt waits
 for the regular session; next broker openOct5 13:30UTC, re-arm NOT_DUE.
-See `ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json`; expired DAY orders are not
+See `ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json`; expired DAY orders are not
 continuous overnight/weekend protection.
 
 Earlier follow-up **Oct2 19:12:24UTC**: same3 held quantities/lineage, full DAY
@@ -246,6 +280,15 @@ requires fresh broker-flat. Never disable all protection or resurrect OLD over N
 No live kill/restart experiment is authorized for acceptance evidence.
 
 ## 5. ATT1 current public epoch and money gate
+
+Latest **Oct3 06:06:15UTC** supersedes the04:45 snapshot below:3sessions/18records,
+2nonfills/1filled SEI/1gap/0clean/0held, same public PID/epoch and0broker/order calls.
+Rejected book source age2485ms exceeded hard2000ms; response age105ms. Source pin
+and original receipts preserved. Exit simulated118 units, funding coverage captured,
+final_net_R absent; flat does not make this a clean terminal. No driver defect
+inferred solely from entry-to-gap receipt interval. Actual packet remains
+BLOCKED_DATA legacy-watermarks + mode/funding/dispatch prerequisites; fresh handoff
+is proposed only. Six legacy account cash islands reconciled, two mixed/not clean.
 
 Latest **Oct3 04:45:46UTC**: same public PID1584802/epoch,2 IOC nonfills/6 records,
 0 filled simulations/0 clean terminals/0 held/broker or order calls. OLD PID492970
@@ -584,6 +627,12 @@ Do not display `.env`/`profile.env`, use `set -x`, execute a trading script to
 
 ## 10. Evidence index
 
+- `ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json`: six broker cash islands reconciled,
+  unavailable legacy watermarks, mode/funding limits, retained SEI stale-book gap,
+  refreshed production snapshots and published PM2 KILL; ordersOFF.
+- `ATT1_FRESH_HANDOFF_DESIGN_2026_10_03.md`: proposed explicit cold migration,
+  not implemented/approved money authority; legacy gates/defaults unchanged.
+- Latest bounded private sources/verification: `.private/continuation_20261003_bounded/`.
 - `ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json`: authenticated global flat, effective
   OLD risk/fees/recent cash and exact remaining handoff/mode/funding gaps; ordersOFF.
 - `ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md`: source-bound progress and next bounded

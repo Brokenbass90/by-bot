@@ -7,7 +7,36 @@
 3 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
 над старыми отчётами. При конфликте укажи источник и границу знания.
 
-## Latest October3 actual-input progress — use first
+## Latest October3 bounded result — use first
+
+Читай ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json и proposed
+ATT1_FRESH_HANDOFF_DESIGN_2026_10_03.md. За один bounded cycle сверены все6 cash
+islands с брокером:4 isolated known entries,2 ADA mixed (97+94=191,180+90=270).
+Exit/cash закрыты на уровне этих позиций; смешанный PnL не чистый ATT1, полного
+all-history audit/protection proof нет. Journals не меняли; дальше архив не расширять.
+Точные legacy H1/cooldown **BLOCKED_DATA**: нет export API, `_cooldown` счётчик
+вызовов, pause предшествует engine. Не заменять state wall-clock/zeros/restart.
+Предложен fresh epoch на existing boundary с explicit cold migration policy;
+NOT_IMPLEMENTED, требует acceptance, existing legacy fail-closed не ослаблять.
+LINK limit200 повторил hedge1/2 + terminal0; funding14-day reserve ещё не выбран,
+full-risk/minimal-notional current-limit stress не помещается в draft daily cash.
+
+Public06:06:15UTC samePID/epoch:3sessions/18records,2nonfills/1filled SEI/1gap /
+0clean/held/broker/order calls. Raw rejected book age2485ms>2000ms, responseage105ms:
+freshness denial правильный.18.584s entry→gap НЕ continuity measurement. Не
+объявлять новый aggregate defect, не reset epoch/erase gap/relax2s. Clean gate2–3
+и ownerGO сохраняются. Global06:05:50UTC flat0positions/0orders; OLD492970 unchanged.
+Alpaca06:06:13UTC same3/floors/HWM/one NEW manager/58hashes; open stops0, next
+re-arm05.10 13:30UTC/16:30Cyprus NOT_DUE. Fresh7 handoff-denial testsPASS.
+
+Claude origin теперь0bf5dcb: **PM2 KILLED / NOT_EXECUTABLE**,3dates/792rounds/0
+qualifying violations в published KARTA. Нет LIVE-кандидата PM2. Historical
+2020–2022 probe code опубликован, пригодный untouched PIT holdout не доказан.
+Один свободный research slot — под accepted independent Discovery/Claude; Factory
+OFF до плана. Не merge/не запускать judge или Factory. Сроки менеджера — ориентиры,
+не gate; manual engineering phase не считать завершённой по orders-OFF tests.
+
+## Earlier October3 actual-input progress — retained snapshot
 
 Tasks1–4 завершены; их не начинать заново. Читай
 ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json и ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md.

@@ -3,11 +3,15 @@
 Authoritative production state: MASTER_HANDOFF.md, NEW_CHAT_START_HERE.md and
 TOP CODEX_SESSION_CHECKPOINT_2026_09_06.md. Latest engineering delivery:
 ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json and its HANDOFF runbook.
-Latest actual-input progress: ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json and
-ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md. This morning authenticated global
-flat acceptance, effective OLD risk chain, fee coverage50/51 and eight cash joins
-are confirmed; actual watermarks, six specific exit/cost closures, position mode
-and frozen14-day funding reserve remain incomplete. Numeric draft is not buildable.
+Latest actual-input result: `ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json` and
+proposed `ATT1_FRESH_HANDOFF_DESIGN_2026_10_03.md`. Six named account cash islands
+are reconciled (four isolated known entries, two mixed). Legacy watermarks are
+BLOCKED_DATA in available sources; archive expansion has stopped. Fresh epoch
+requires explicit migration-policy acceptance and implementation. Position mode
+and the frozen14-day funding reserve remain unresolved; no buildable actual packet.
+Earlier morning risk/fee/cash inputs remain in
+ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json. Public now3sessions/18records/1filled
+SEI/1stale-book gap/0clean at06:06UTC. PM2 is KILLED in published Claude KARTA.
 This section supersedes the historical roadmap below. The owner's approved
 Tasks1–4 are delivered; no NEW money, Factory start or architecture work was
 added to their implementation scope.
@@ -17,8 +21,8 @@ added to their implementation scope.
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
 | Alpaca LIVE | Oct3 same3 holdings/floors/HWM/single manager; DAY stops expired, open stops0. Observe exact-quantity accepted re-arm at Oct5 regular open13:30UTC/16:30Cyprus | Codex operations; NOT_DUE, no current weekend stop protection asserted; no reactivation/size increase |
-| NEW ATT1 | Exact OLD watermark source/export or local handoff candidate; close six known intent exit/cost gaps, position-mode evidence and source-bound funding reserve/minimum viability | Codex; engineering delivered, actual build BLOCKED_INPUTS, real ordersOFF. Public2nonfills/0clean at04:45UTC;2–3 clean filled/net-R + fresh exclusive dossier + ownerGO remain |
-| PM2 | Frozen judge after≥3 valid data dates; a positive price violation result then needs separate two-leg execution/cost gate | Claude; no direct LIVE promotion |
+| NEW ATT1 | Review explicit fresh-epoch handoff policy after legacy-watermark BLOCKED_DATA; resolve declared-oneway conflict and viable source-bound funding reserve, then actual orders-OFF packet / selected-account integration | Codex; archive expansion stopped, six account cash islands reconciled (two mixed). Public3sessions/1filled/1gap/0clean at06:06UTC;2–3 clean/net-R +fresh dossier +ownerGO remain |
+| PM2 | **KILLED / NOT_EXECUTABLE** in published Oct3 KARTA:3 dates/792 rounds/0 qualifying violations | Claude terminal registry verdict; removed from LIVE queue, slot freed; no judge rerun |
 | TOLPA_1D / weekly | First restore current PIT daily/top50 inputs, then frozen forward observations/180–365-day looks | Claude; same family evidence is not additive; no cheap-screen→LIVE shortcut |
 | ETS2M | Frozen verdict no earlier Oct10 19:00UTC | Claude; no retuning or early evidence consumption |
 | PEREGREV | Required prospective events/days and frozen verdict | Claude; execution baseline alone is not net edge |
@@ -26,16 +30,24 @@ added to their implementation scope.
 | SBR1 / XSEC / Bull / old Gold H1 | Respect parked/negative verdicts; new mechanism/data required to reopen a family | No current accepted long/range candidate asserted |
 
 Claude source read in place and fetched only into recovery's remote ref:
-`research/fabrika-v1@e965b68bf183713e2bff9355567c8b05a3214fe1`,
+`research/fabrika-v1@0bf5dcbab1f9fa50eedd39404b31a233e1b3e0d3`,
 `research_lab/KARTA.md`, latest visible health snapshot17:29UTC. Local sibling ref
 c1fb567 is a concurrent historical point, not checkout drift. Research verdicts
 above are Claude registry claims read without rerunning judges/holdouts.
-Origin ref was reverified unchanged October3; latest visible KARTA health remains
-October2 17:29UTC, not a fresh October3 operational/research verdict. The
+Origin advanced October3 and published PM2 KILL. Other health rows still retain
+October2 17:29UTC; no fresh data-health/holdout verdict is invented. The
 older Codex-sync paragraph still says FX COST_GATE_PENDING; current MONEY/
 EVIDENCE table supersedes it. No Claude checkout/diff or evaluator was modified.
 
 ## History and replay before market waiting
+
+Bounded-work limit accepted October3: one or two cycles on named ATT1 legacy
+inputs, then exact BLOCKED_DATA and a separate safe fresh-handoff design if the
+sources cannot establish state. The first such cycle reconciled six broker cash
+islands and proved no native OLD export seam; stop expanding old archive searches.
+Historical2020–2022 is only useful if the actual signal inputs, universe, PIT and
+non-consumption provenance are available. Publishing an availability probe does
+not establish an untouched usable holdout. Claude owns that investigation.
 
 Close every question that available, admissible historical evidence can answer
 before waiting for prospective events. Start with a bounded archive/coverage
@@ -86,7 +98,9 @@ preregistered independent mechanism and prove hypothesis → falsification → f
 judge → READY_FOR_BUILD/KILL with source/lineage/evidence acceptance. Current KARTA
 reports self-check PASS, daemonOFF and empty queue: verify a present defect before
 repairing it; old acceptance defects are not automatic new work. Factory remains
-OFF until its owner's accepted Discovery plan. A freed PM2 slot can permit this next bounded experiment; long TOLPA forward
+OFF until its owner's accepted Discovery plan. PM2 is now terminal KILLED and has
+freed that slot; prepare one new independent mechanism, not automatic daemon
+activation or multiple markets. Long TOLPA forward
 observation continues in the background rather than freezing development for months.
 Claude owns research/Factory; Codex accepts qualified production packets and closes execution boundaries.
 
@@ -121,6 +135,15 @@ Build only when the preceding evidence exposes a concrete need:
 Automation of research/operations does not authorize autonomous money promotion.
 Every bounded cycle ends in a measured blocker closed, PASS/KILL verdict or an
 exact missing-input receipt; implementation tests do not establish profitability.
+
+Mid-October is a planning horizon, not a forced verdict date. ATT1's operational
+READY/BLOCKED status, frozen research PASS/KILL, and statistical net edge are
+different outputs. Orders-OFF Tasks1–4 do not finish autonomous selected-account
+dispatch/protection/finality or eliminate owner capital decisions. Continuous
+Factory operation follows one accepted end-to-end experiment, not PM2's calendar
+deadline alone. Existing registry/acceptance tools come before a replacement
+Strategy Registry or execution/risk refactor; later web/AI/promotion/governor queue
+retains its earlier evidence gates.
 
 ---
 
