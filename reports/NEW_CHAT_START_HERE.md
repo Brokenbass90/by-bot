@@ -4,10 +4,35 @@
 Сначала прочитай `AGENTS.md`, `reports/MASTER_HANDOFF.md` и TOP
 `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`. Не восстанавливай месяцы истории
 по чатам, если ответ уже есть в этих источниках. Даты и факты ниже — snapshot
-2 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
+3 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
 над старыми отчётами. При конфликте укажи источник и границу знания.
 
-## Latest October2 delivery — use before historical details below
+## Latest October3 actual-input progress — use first
+
+Tasks1–4 завершены; их не начинать заново. Читай
+ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json и ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md.
+Signed global account snapshot05:17:18UTC прошёл существующие строгие validators:
+flat/0orders, реальная identity, без dedup. OLD492970/native pausetrue сохраняется.
+Риск OLD по heartbeat:1%×0.55×0.8=0.44%, затем ATT1×0.1; один env не даёт ceiling.
+Fee tier0.00055 taker/0.0002 maker подтверждён для50/51 NEW (HFT отсутствует).
+8 executions↔8 cash rows и3 recent CLOSE reconciled; это не полный PnL audit.
+Остались точные all-eight consumed-H1/cooldown (в памяти OLD, logs недостаточны),
+6 известных Filled entries без доказанной exit/cost closure, broker mode/pagination
+и funding reserve для frozen14-day hold. Global flat PASS не доказывает ONE_WAY.
+Private numeric proposal DRAFT_NOT_BUILDABLE; real ordersOFF, gate2–3 clean/net-R
+и separate ownerGO без изменений. Следующий bounded cycle — source/export seam
+или local handoff candidate для watermarks и6 конкретных lifecycle gaps.
+
+Alpaca04:45:45UTC: same3 holdings, monotonic floors/HWM, single NEW manager/58hashes.
+Все3 DAY stops expired после Friday close; сейчас0open stops. Не называть это
+current/weekend protection. Next open05.10 13:30UTC/16:30Cyprus, re-arm NOT_DUE.
+Public04:45:46UTC:2IOC nonfills/6records/0filled/clean/held/broker or ordercalls,
+samePID1584802. Fresh30 broker-snapshot testsPASS, один6-astra/high evidence review
+PASS_WITH_SCOPE_LIMITS до final global GET; его update проверил primary, не reviewer.
+Ни broker/runtime changes, ни research/judge reruns. Claude origin e965b68 unchanged;
+latest visible KARTA health всё ещё02.10 17:29UTC. Нет нового verdict/Factory start.
+
+## October2 delivery — retained engineering evidence
 
 Владелец подтвердил Native Tasks1–4; они реализованы, повторять Tasks1–2 не надо.
 Читайте ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json и HANDOFF runbook.
@@ -70,10 +95,11 @@ sealed evidence или доверия ради красивого PASS. Не п�
    Сначала actual broker truth, затем отчёт; genuine exit не означает forced re-entry.
 5. Назови текущий узкий blocker и заверши один измеримый рабочий цикл.
 
-## Текущее состояние, которое нельзя потерять
+## Сохранённые контуры и датированные receipts — свежий статус выше
 
 - Alpaca: владелец активировал LIVE 01.10; cap $487.42, gross0.70, позиции AMD/CRWD/META.
-  Фактические fills/защитные DAY stops и durable ownership доказаны. Детали в MASTER.
+  Фактические fills/durable ownership доказаны; прежние DAY stops expired после
+  Friday close, текущих open stops0. Детали и следующий re-arm в MASTER.
   Одновременно работает только NEW manager; OLD managers удалены из cron.
 - Oct2 broker check13:38UTC PASS: old3 DAY stops directly expired, new3 accepted
   full-qty stops; AMDfloor615.24 above entry609.57, CRWD242.13/META668.76;

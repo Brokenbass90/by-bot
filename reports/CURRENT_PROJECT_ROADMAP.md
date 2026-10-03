@@ -1,8 +1,13 @@
-# Current roadmap — owner scope October 2, 2026
+# Current roadmap — owner scope October 3, 2026
 
 Authoritative production state: MASTER_HANDOFF.md, NEW_CHAT_START_HERE.md and
 TOP CODEX_SESSION_CHECKPOINT_2026_09_06.md. Latest engineering delivery:
 ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json and its HANDOFF runbook.
+Latest actual-input progress: ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json and
+ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md. This morning authenticated global
+flat acceptance, effective OLD risk chain, fee coverage50/51 and eight cash joins
+are confirmed; actual watermarks, six specific exit/cost closures, position mode
+and frozen14-day funding reserve remain incomplete. Numeric draft is not buildable.
 This section supersedes the historical roadmap below. The owner's approved
 Tasks1–4 are delivered; no NEW money, Factory start or architecture work was
 added to their implementation scope.
@@ -11,8 +16,8 @@ added to their implementation scope.
 
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
-| Alpaca LIVE | Preserve full-quantity accepted DAY stops, monotonic floor/HWM, single manager; next regular open Oct5 | Codex operations; no reactivation/size increase. Latest broker19:12UTC: AMD floor622.24, same3 holdings |
-| NEW ATT1 | Engineering commands-only acceptance delivered; complete actual risk/cost/OLD-drain/watermark packet, then source-bound numeric proposal | Codex; actual build BLOCKED_INPUTS; real ordersOFF. Public2–3 clean filled/net-R gate + fresh exclusive dossier + owner GO remain |
+| Alpaca LIVE | Oct3 same3 holdings/floors/HWM/single manager; DAY stops expired, open stops0. Observe exact-quantity accepted re-arm at Oct5 regular open13:30UTC/16:30Cyprus | Codex operations; NOT_DUE, no current weekend stop protection asserted; no reactivation/size increase |
+| NEW ATT1 | Exact OLD watermark source/export or local handoff candidate; close six known intent exit/cost gaps, position-mode evidence and source-bound funding reserve/minimum viability | Codex; engineering delivered, actual build BLOCKED_INPUTS, real ordersOFF. Public2nonfills/0clean at04:45UTC;2–3 clean filled/net-R + fresh exclusive dossier + ownerGO remain |
 | PM2 | Frozen judge after≥3 valid data dates; a positive price violation result then needs separate two-leg execution/cost gate | Claude; no direct LIVE promotion |
 | TOLPA_1D / weekly | First restore current PIT daily/top50 inputs, then frozen forward observations/180–365-day looks | Claude; same family evidence is not additive; no cheap-screen→LIVE shortcut |
 | ETS2M | Frozen verdict no earlier Oct10 19:00UTC | Claude; no retuning or early evidence consumption |
@@ -24,7 +29,9 @@ Claude source read in place and fetched only into recovery's remote ref:
 `research/fabrika-v1@e965b68bf183713e2bff9355567c8b05a3214fe1`,
 `research_lab/KARTA.md`, latest visible health snapshot17:29UTC. Local sibling ref
 c1fb567 is a concurrent historical point, not checkout drift. Research verdicts
-above are Claude registry claims read without rerunning judges/holdouts. The
+above are Claude registry claims read without rerunning judges/holdouts.
+Origin ref was reverified unchanged October3; latest visible KARTA health remains
+October2 17:29UTC, not a fresh October3 operational/research verdict. The
 older Codex-sync paragraph still says FX COST_GATE_PENDING; current MONEY/
 EVIDENCE table supersedes it. No Claude checkout/diff or evaluator was modified.
 

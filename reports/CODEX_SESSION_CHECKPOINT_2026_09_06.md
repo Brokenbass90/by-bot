@@ -2,6 +2,42 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October3 morning actual inputs: progress, actual build BLOCKED, NEW ordersOFF**:
+- Signed authenticated account-wide positions/orders05:17:18UTC accepted by exact
+  existing pure validators:0positions/0orders. Identity matches the earlier actual
+  account/key capture; no synthetic identity/dedup in this global acceptance.
+  Per-symbol full page chains still duplicate symbol/index on6 symbols, LINK
+  returns1/2/0: mode NOT_CONFIRMED; synthetic-wrapper row replay is explicitly scoped.
+- Runtime OLD sizing confirmed1%×0.55×0.8=0.44%, ATT1×0.1/breaker1/vol1. Base env
+  does not establish absolute cap. Authenticated923-row fee table covers50/51 NEW,
+  HFT absent; no guessed cost/universe change.8executions↔8cash rows and3 recent
+  close receipts match exact amounts. Current UTC-day published rows0 at capture;
+ 6known submitted IDs return Filled entries, exit/cost finality still unproven.
+- All-eight actual consumed-H1/cooldown unavailable in durable OLD logs/caller
+  journal/DB; values live in engine memory. Do not synthesize zeros/wall-clock.
+  Frozen NEW4032×5min=14-day hold needs a source-bound funding reserve policy and
+  budget/minimum viability. Current-limit43-settlement shock is a model, not a
+  guaranteed future cap. Private numeric proposal DRAFT_NOT_BUILDABLE.
+- OLD492970/native pausetrue unchanged; public04:45:46UTC samePID1584802,2IOC
+  nonfills/6records/0filled/clean/held/broker or ordercalls. Gate2–3 prospective
+  clean filled terminal/net-R + reviewed actual dispatch/handoff + ownerGO retained.
+- Alpaca04:45:45UTC same3 holdings, monotonic floors622.24/242.13/668.76 and
+  HWM644.811/273.335/736.33, one NEW manager/OLD absent/58hashes match. All3 DAY
+  stops expired after Friday close,0open stoporders now; no filled sells observed.
+  Expiry is not weekend/current broker protection. Next broker openOct5 13:30UTC /
+ 16:30Cyprus; re-arm NOT_DUE. Preserve existing manager, no reactivation/preflight.
+- Fresh30 broker-snapshot testsPASS. One bounded6-astra/high evidence review
+  PASS_WITH_SCOPE_LIMITS, runtime verified; final authenticated global GET/update
+  occurred afterward and was primary-verified only. No broker/runtime changes,
+  research evaluator/holdout consumption or foreign diff changes. Oct2 engineering
+  counts remain historical, not rerun. Claude origin e965b68 unchanged/no new verdict.
+- Receipts: ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json and
+  ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md. Next bounded engineering result:
+  actual watermark export/source or local handoff candidate, plus specific6-intent
+  exit/cost closure/data-gap receipt. No strategy/Factory scope expansion.
+
+Earlier October2 continuations (use original timestamps):
+
 October2 history/replay roadmap clarification (documentation only): first inventory
 admissible archived evidence and current test coverage, then close named gaps in
 existing modules while public collection continues. Actual risk/cost/handoff inputs

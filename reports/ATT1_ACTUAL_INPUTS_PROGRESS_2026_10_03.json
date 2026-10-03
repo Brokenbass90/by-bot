@@ -1,0 +1,255 @@
+{
+  "schema_id": "att1_actual_input_progress_v1",
+  "status": "INPUT_COLLECTION_PROGRESS_ACTUAL_BUILD_BLOCKED",
+  "generated_at_utc": "2026-10-03T05:18:57.319396+00:00",
+  "source_head": "3fc65f8c10ad341edb3b8cdc1c0ecec25da29d04",
+  "read_only": true,
+  "orders_allowed": false,
+  "owner_go": false,
+  "broker_writes": 0,
+  "runtime_code_changed": false,
+  "runtime_restart": false,
+  "snapshots": {
+    "old_broker_utc": "2026-10-03T04:45:42.241000+00:00",
+    "alpaca_utc": "2026-10-03T04:45:45.198000+00:00",
+    "public_utc": "2026-10-03T04:45:46.612000+00:00",
+    "actual_inputs_utc": "2026-10-03T04:49:24.902000+00:00",
+    "account_modes_utc": "2026-10-03T04:59:39.187000+00:00",
+    "validated_global_broker_utc": "2026-10-03T05:17:18.807000+00:00"
+  },
+  "risk": {
+    "status": "SNAPSHOT_ARITHMETIC_CONFIRMED_NOT_LIVE_BINDING",
+    "base_percent": 1.0,
+    "orchestrator_multiplier": 0.55,
+    "allocator_multiplier": 0.8,
+    "effective_percent": 0.44,
+    "att1_multiplier": 0.1,
+    "breaker_multiplier": 1.0,
+    "volatility_multiplier": 1.0,
+    "deployed_sizing_source_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "numeric_proposal": "private DRAFT_NOT_BUILDABLE, refresh all inputs before build",
+    "limitation": "Runtime heartbeat outranks base env/current overlay. Neither proves historical admissions or future unchanged sizing."
+  },
+  "fees": {
+    "status": "AUTHENTICATED_SOURCE_CAPTURED",
+    "derivatives_rate_rows": 923,
+    "fixed51_covered": 50,
+    "unavailable_symbols": [
+      "HFTUSDT"
+    ],
+    "covered_symbols_taker_rate": "0.00055",
+    "covered_symbols_maker_rate": "0.0002",
+    "missing_symbol_policy": "No fee guess or universe change. Exact selected signal must have source-bound costs."
+  },
+  "cash": {
+    "status": "RECENT_PUBLISHED_ROWS_RECONCILED_FULL_INTENT_FINALITY_NOT_PROVEN",
+    "start_utc": "2026-09-27T00:00:00+00:00",
+    "end_utc": "2026-10-03T04:49:23.788000+00:00",
+    "transactions": 8,
+    "executions": 8,
+    "matched_trade_ids": 8,
+    "matched_recent_old_closed_lifecycles": 3,
+    "today_published_transaction_count": 0,
+    "funding_cash_in_returned_rows": "0",
+    "signed_change_formula": "cashFlow + funding - fee",
+    "historical_known_submitted_orders": 47,
+    "orders_without_same_id_close_receipt": 6,
+    "missing_close_order_lookup_result": "6 Filled entries; entry finality does not establish exit/cost finality",
+    "complete_old_intent_inventory": false,
+    "full_cash_finality": false
+  },
+  "handoff": {
+    "status": "BLOCKED_MISSING_DURABLE_OLD_WATERMARKS_AND_FINALITY",
+    "old_pid": 492970,
+    "old_entry_pause": true,
+    "positions": 0,
+    "open_orders": 0,
+    "same_pid": true,
+    "trade_events_rows": 262,
+    "coordinator_tables_present": false,
+    "full_live_event_rows": 508,
+    "att1_signal_trace_rows": 441,
+    "trace_has_exact_watermarks": false,
+    "caller_journal_present": false,
+    "required_symbols": [
+      "ADAUSDT",
+      "BTCUSDT",
+      "DOTUSDT",
+      "ETHUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "SOLUSDT",
+      "SUIUSDT"
+    ],
+    "limitation": "Actual deployed engine keeps last consumed bar/cooldown only in memory. Trace wall time, signal anchors and CLOSE DB rows cannot establish all8 exact consumed-H1/cooldown records. No zero or wall-clock substitute."
+  },
+  "broker_position_rows": {
+    "status": "GLOBAL_AUTHENTICATED_FLAT_PASS_SYMBOL_MODE_NOT_CONFIRMED",
+    "global_snapshot": {
+      "account": "uid:2c5e4f13768ea15927fe2dbaa3aacce67faaa656b9df33bf2f7df5e060c5aef8",
+      "flat_no_orders": true,
+      "observed_ms": 1791004638807,
+      "order_count": 0,
+      "position_count": 0,
+      "schema_id": "att1_broker_snapshot_v1",
+      "source_sha256": "97f8e7314c5cfe780959c602e683584e4b3308557bb72d8e8d73491b463d1ed0"
+    },
+    "global_collector": "Exact AST-selected existing pure validators; no trading module imports, synthetic identity or dedup",
+    "duplicated_symbol_position_idx_on_complete_pages": [
+      "ADAUSDT",
+      "BTCUSDT",
+      "DOTUSDT",
+      "ETHUSDT",
+      "LTCUSDT",
+      "SOLUSDT"
+    ],
+    "link_returned_position_indices": [
+      1,
+      2,
+      0
+    ],
+    "row_replay_scope": "Existing row gate using complete captured page chains; synthetic identity/order wrapper. Not an authenticated snapshot or one-way-mode verdict. Initial attempt tested single nonterminal pages and was corrected to complete chains.",
+    "mode_not_changed": true,
+    "limitation": "Do not discard terminal-page placeholder-like rows or force one-way before proving broker pagination/mode semantics."
+  },
+  "funding": {
+    "status": "SOURCE_LIMITS_CAPTURED_RESERVE_POLICY_PENDING",
+    "frozen_new_time_stop_bars_5m": 4032,
+    "frozen_hold_minutes": 20160,
+    "illustrative_stress": [
+      {
+        "symbol": "ADAUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.0058",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.2494"
+      },
+      {
+        "symbol": "BTCUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.00333",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.14319"
+      },
+      {
+        "symbol": "DOTUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.0033",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.1419"
+      },
+      {
+        "symbol": "ETHUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.00333",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.14319"
+      },
+      {
+        "symbol": "LINKUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.0066",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.2838"
+      },
+      {
+        "symbol": "LTCUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.0066",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.2838"
+      },
+      {
+        "symbol": "SOLUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.005",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.215"
+      },
+      {
+        "symbol": "SUIUSDT",
+        "funding_interval_minutes": 480,
+        "current_lower_funding_rate": "-0.01",
+        "illustrative_settlements_with_boundary_margin": 43,
+        "illustrative_full_hold_debit_rate": "0.43"
+      }
+    ],
+    "limitation": "Published limits/interval may change; constant stop-notional full-hold shock is a model, not historical funding or a guaranteed future cap. Reserve plus fees/risk must fit daily cash; no latest-rate shortcut or time-stop change."
+  },
+  "public": {
+    "pid": 1584802,
+    "epoch": "att1-public-lifecycle-20261002-paired-observation",
+    "heartbeat_age_ms": 714,
+    "sessions": 2,
+    "records": 6,
+    "filled_simulations": 0,
+    "clean_filled_terminals": 0,
+    "open_positions": 0,
+    "broker_calls": 0,
+    "order_calls": 0,
+    "cohort_gate": "2–3 prospective filled clean terminals with terminal net-R remains unchanged"
+  },
+  "alpaca": {
+    "status": "EXPECTED_WEEKEND_DAY_EXPIRY_OBSERVED_NEXT_REARM_NOT_DUE",
+    "positions": [
+      {
+        "symbol": "AMD",
+        "held_qty": "0.186377282",
+        "durable_hwm": 644.811,
+        "durable_floor": 622.24,
+        "last_owned_day_stop_status": "expired",
+        "expired_at": "2026-10-02T20:05:03.269804Z"
+      },
+      {
+        "symbol": "CRWD",
+        "held_qty": "0.469970151",
+        "durable_hwm": 273.335,
+        "durable_floor": 242.13,
+        "last_owned_day_stop_status": "expired",
+        "expired_at": "2026-10-02T20:05:03.260419Z"
+      },
+      {
+        "symbol": "META",
+        "held_qty": "0.141939508",
+        "durable_hwm": 736.33,
+        "durable_floor": 668.76,
+        "last_owned_day_stop_status": "expired",
+        "expired_at": "2026-10-02T20:05:03.269754Z"
+      }
+    ],
+    "open_stop_orders": 0,
+    "broker_market_open": false,
+    "next_broker_open": "2026-10-05T09:30:00-04:00",
+    "one_new_manager_cron": true,
+    "old_managers_absent": true,
+    "source_hashes_match": true,
+    "floor_hwm_monotonic": true,
+    "no_filled_sells": true,
+    "limitation": "Expired DAY stops are not current broker protection or overnight/weekend coverage. Next-session re-arm remains to be observed."
+  },
+  "verification": {
+    "cash_decimal_checks": "PASS eight exact ID/amount joins, three CLOSED event net checks, unique cash IDs and original raw-body SHAs",
+    "risk_decimal_check": "PASS effective runtime chain; numeric result kept private",
+    "captured_position_row_replay": "six duplicate-entity rejections using all original pages, synthetic identity/order wrapper explicitly labelled",
+    "fresh_targeted_tests": ".venv/bin/python -m pytest -q tests/test_att1_broker_snapshot.py →30 passed",
+    "prior_242_local_233_target": "October2 historical delivery counts, not rerun here",
+    "no_sealed_or_research_evaluator_consumption": true,
+    "critical_review": {
+      "result": "PASS_WITH_SCOPE_LIMITS",
+      "reviewed_report_sha256": "3d7b8fc453ec5bd8943e4d719c8c4632dad5ae502145d5aba877198a93b2849e",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "runtime_model_effort_verified": true,
+      "runtime_session_id": "01a1002d-8050-7062-b6c8-0d098cb34fa7",
+      "findings": [],
+      "scope": "Input packet before final account-wide validated GET; no tests/network rerun, no implementation review. Additional global GET and resulting factual update verified by primary only."
+    }
+  },
+  "private_evidence_manifest_sha256": "08f81f9d1977c54402a044361f8d663ada9ad027eecd6e4419d413773469789a",
+  "next_boundaries": [
+    "Account-wide exact-validator flat snapshot now PASS; resolve per-symbol cursor/mode evidence before asserting ONE_WAY. No broker mode write or silent dedup.",
+    "Close legacy OLD submitted/exit/cost inventory and obtain exact consumed-H1/cooldown source; do not stamp complete from flat GET.",
+    "Source-bind a conservative funding reserve policy for frozen hold and test its cash/minimum viability.",
+    "Build refreshed selected-account orders-OFF proposal only when all actual inputs pass. Public collection continues; owner GO is later."
+  ]
+}

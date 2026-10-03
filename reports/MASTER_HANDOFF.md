@@ -1,4 +1,31 @@
-# MASTER HANDOFF — 2026-10-02
+# MASTER HANDOFF — 2026-10-03
+
+October 3 morning continuation: actual-input collection progressed; NEW orders
+remain OFF and actual BUILD_READY is still BLOCKED. Tasks 1–4 are already done.
+Read `ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json` and
+`ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md` before the dated October 2 delivery below.
+Signed account-wide identity/positions/orders at **05:17:18 UTC /08:17 Cyprus**
+passed the existing exact pure validators: flat, 0 orders. OLD pause true / PID492970
+unchanged. Symbol-filtered duplicates/mixed indices do not establish position mode.
+Runtime risk chain confirmed: base1% ×0.55 ×0.8 =0.44%, then ATT1×0.1; snapshot
+arithmetic, not installed NEW risk. Authenticated costs cover50/51 NEW symbols
+(HFT absent); eight executions/cash rows and three recent close receipts reconcile.
+Six older submitted IDs have Filled entries but no proven exit/cost closure.
+Exact all-eight OLD consumed-H1/cooldown values remain unavailable in durable logs;
+funding reserve for the frozen14-day hold remains unbound. Private proposal is
+DRAFT_NOT_BUILDABLE, not approval. Fresh30 broker-snapshot tests PASS; one bounded
+financial evidence review PASS_WITH_SCOPE_LIMITS before the final global GET,
+which was primary-verified only. No runtime, broker or research writes.
+
+Alpaca **04:45:45 UTC**: same3 holdings, floor/HWM monotonic, one NEW manager and
+58 source hashes match. All3 owned DAY stops expired after Friday close; **0 open
+stop orders now**, no filled sells observed. This is expected DAY expiry, not
+current broker/weekend protection. Next regular re-arm **Oct5 13:30 UTC /16:30
+Cyprus** remains NOT_DUE. Public **04:45:46 UTC**:2 IOC nonfills /6 records,
+0 filled/clean/held, same PID1584802, broker/order calls0. Clean gate remains2–3.
+Claude research origin e965b68 unchanged; no new verdict or Factory start.
+
+October 2 engineering delivery (historical snapshots follow):
 
 Canonical production entry point; October2 owner-approved Tasks1–4 engineering
 is delivered. Current code3f999c9; resolve subsequent documentation HEAD from Git.
@@ -62,7 +89,15 @@ The cap is allocated capital, not a guaranteed maximum loss. Stops do not elimin
 
 Frozen signal session Sep30 → entry session Oct1. Selection CRWD/AMD/META prepared
 Sep30 20:12 UTC. First actual scheduled LIVE cycle Oct1 14:10 UTC; bridge0/ratchet0.
-Latest follow-up **Oct2 19:12:24UTC**: same3 held quantities/lineage, full DAY
+Latest follow-up **Oct3 04:45:45UTC**: same3 held quantities/lineage, DAY stops
+expired after Friday close, **0 open stops**, no filled sells observed. Durable
+floors622.24/242.13/668.76 and HWM644.811/273.335/736.33 remain monotonic.
+One NEW manager and all58 deployed hashes unchanged. Latest manager receipt waits
+for the regular session; next broker openOct5 13:30UTC, re-arm NOT_DUE.
+See `ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json`; expired DAY orders are not
+continuous overnight/weekend protection.
+
+Earlier follow-up **Oct2 19:12:24UTC**: same3 held quantities/lineage, full DAY
 stops AMD622.24/CRWD242.13/META668.76, HWM644.811/273.335/736.33;
 one NEW manager, all58 hashes unchanged, latest completed cycle19:10:05UTC.
 See `ALPACA_LIVE_FOLLOWUP_2026_10_02.json`. No filled sell/closed lifecycle.
@@ -164,8 +199,9 @@ monotonic lifecycle floors/HWM, completed manager cycle and single NEW owner.
 Receipt `ALPACA_DAY_REARM_2026_10_02.json`; no manual activation or order writes.
 Comparison used saved **Oct1 17:07 intraday** baseline, not an EOD HWM snapshot.
 
-Fresh broker clock: next close **Oct2 20:00 UTC /23:00 Cyprus**; next regular
-open **Oct5 13:30 UTC /16:30 Cyprus**. Apply the same acceptance procedure below
+Oct3 04:45UTC broker clock: market closed; last owned DAY stops have actual
+expired receipts after Oct2 close, current open stops0. Next regular
+open **Oct5 13:30 UTC /16:30 Cyprus** remains NOT_DUE. Apply the same acceptance procedure below
 to remaining owned positions; genuine filled exits require reconciliation. All
 calendar times are broker-backed snapshot facts; later DST/calendar must be refreshed.
 The numbered Oct2 protocol below is retained as the acceptance method/history.
@@ -210,6 +246,14 @@ requires fresh broker-flat. Never disable all protection or resurrect OLD over N
 No live kill/restart experiment is authorized for acceptance evidence.
 
 ## 5. ATT1 current public epoch and money gate
+
+Latest **Oct3 04:45:46UTC**: same public PID1584802/epoch,2 IOC nonfills/6 records,
+0 filled simulations/0 clean terminals/0 held/broker or order calls. OLD PID492970
+unchanged, native pause true. Authenticated global broker snapshot05:17:18UTC:
+flat0positions/0orders, existing strict validators PASS. Actual-input progress
+and remaining watermark/intent-finality/mode/funding gaps are in the October3
+receipt/runbook; numeric proposal still private DRAFT_NOT_BUILDABLE. No money
+runner installed;2–3 clean filled/net-R + fresh handoff/dossier + owner GO remain.
 
 **Oct2 13:57:43UTC DEPLOYED_PUBLIC_ONLY_COHORT_PENDING.** Existing public unit
 `att1-lifecycle-zero-risk-v2.service` now runs epoch
@@ -532,7 +576,7 @@ artifact, not permission to reseed runtime. Cheap ATT1 heartbeat/log inspection:
 
 ```bash
 ssh -i ~/.ssh/by-bot -o BatchMode=yes -o StrictHostKeyChecking=yes root@64.226.73.119 \
-  'cat /opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20260928-observation-timing/heartbeat.json; journalctl -u att1-lifecycle-zero-risk-v2.service -n 30 --no-pager; journalctl -u sbr1-zero-risk-shadow.service -n 20 --no-pager'
+  'cat /opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20261002-paired-observation/heartbeat.json; journalctl -u att1-lifecycle-zero-risk-v2.service -n 30 --no-pager; journalctl -u sbr1-zero-risk-shadow.service -n 20 --no-pager'
 ```
 
 Do not display `.env`/`profile.env`, use `set -x`, execute a trading script to
@@ -540,6 +584,12 @@ Do not display `.env`/`profile.env`, use `set -x`, execute a trading script to
 
 ## 10. Evidence index
 
+- `ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json`: authenticated global flat, effective
+  OLD risk/fees/recent cash and exact remaining handoff/mode/funding gaps; ordersOFF.
+- `ATT1_ACTUAL_INPUTS_NEXT_STEPS_2026_10_03.md`: source-bound progress and next bounded
+  engineering work; expired Alpaca DAY stops and Oct5 NOT_DUE re-arm explicitly separated.
+- Current raw captures/helpers and hash manifest: `.private/continuation_20261003/`;
+  private account/API bodies must never be staged or displayed.
 - `ALPACA_LIVE_LAUNCH_2026_10_01.json`: first actual3 fills/3 stops.
 - `ALPACA_OWNER_PREFLIGHT_2026_10_01.json`: historical pre-entry flat verification.
 - `ALPACA_OWNER_ACTIVATION_2026_09_30.md`: owner-only emergency/rollback procedures.
