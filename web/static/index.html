@@ -2798,7 +2798,7 @@ function AIInlineSetupCard({ card }) {
 
 function AIChatPage() {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Привет. Я вижу текущий snapshot бота: режим, рукава, сделки, Alpaca и health-состояние. Если данные старые или неполные, я должен сказать об этом прямо. Спроси, что проверить.' }
+    { role: 'assistant', content: 'Я — ИИ-аналитик эксплуатации. Разбираю snapshot и актуальные отчёты проекта, указываю источники и предлагаю проверки. Датированные отчёты не подтверждают текущее состояние брокера. Торговые действия недоступны.' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -2806,10 +2806,16 @@ function AIChatPage() {
   const [cmdConfirm, setCmdConfirm] = useState(false);
   const [feed, setFeed] = useState([]);
   const [prefillCard, setPrefillCard] = useState(null);
+  const [aiBudget, setAiBudget] = useState(null);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  useEffect(() => {
+    let alive = true;
+    api('/api/ai/budget').then(value => { if (alive) setAiBudget(value); }).catch(() => {});
+    return () => { alive = false; };
+  }, [loading]);
   useEffect(() => {
     api('/api/ai/history')
       .then(res => {
@@ -2919,6 +2925,9 @@ function AIChatPage() {
 
   return React.createElement('div', { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
     React.createElement('div', { className: 'section-title' }, '🤖 AI Assistant'),
+    React.createElement('div', { style: { fontSize: '12px', color: 'var(--text3)', marginBottom: '10px' } },
+      aiBudget ? `Общий лимит Telegram/web: $${(aiBudget.cap_usd_micros / 1000000).toFixed(2)} / месяц UTC · остаток $${(aiBudget.remaining_usd_micros / 1000000).toFixed(3)} · только анализ и предложения`
+        : 'Только анализ и предложения · бюджет пока не подтверждён'),
 
     // Operational feed reconstructed from trade events and the pulse digest.
     React.createElement('div', { className: 'card', style: { marginBottom: '10px', maxHeight: '170px', overflowY: 'auto' } },

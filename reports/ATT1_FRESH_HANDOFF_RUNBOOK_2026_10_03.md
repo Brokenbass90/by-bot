@@ -1,5 +1,18 @@
 # ATT1 cold migration — local candidate, orders OFF
 
+Latest actual input update **October3 11:24UTC**:
+`AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md` binds the signed collector
+receipt. Full LINK pagination contains1/2 then0 -> BLOCKED_MODE_CONFLICT. HFT
+instrumentClosed -> BLOCKED_CONTRACT_INELIGIBLE; fee remains unknown. Collector
+is local/isolated-target only, no mode write, universe change or money install.
+OLD native new-entry pause confirmed after guarded same-core AI reload at11:10UTC:
+bybotPID1623970, signedpositions0/orders0. Heartbeat sleeve `att1` is OLD, not NEW;
+open_trades0 is exposure evidence, not the cause of no entries. Native pause is
+not durable retirement. Actual retirement/96-bar quarantine, reviewed mode /
+contract handling, funding policy and selected-account lifecycle remain BLOCKED.
+Public11:15UTC samePID1584802/epoch:4sessions/1filled SEI/3nonfills/1gap/0clean/
+0held,0broker/ordercalls. Preserve original gap; no fresh epoch manufactured.
+
 Owner accepted the existing fresh-epoch direction for orders-OFF implementation
 on October3. Scope: the existing preparation/route boundary. Tasks1–4, strategy,
 public epoch,2s freshness, risk caps and money authority remain unchanged.
@@ -49,14 +62,16 @@ approval hash records migration acceptance; it is never owner money GO.
 - The source-bound funding policy for frozen14-day hold is unresolved. Captured
   full-limit stress at full draft R0.4/minimal notional5 exceeds D0.8 for OLD8.
   Smaller quantities can differ; no risk increase/hold change/latest-rate shortcut.
-- Actual HFT fee coverage is missing. No guessed fee or symbol removal.
+- HFT is broker-reported `Closed` at11:24UTC; symbol-scoped fee GET rejected.
+  Missing fee is not zero cost. Reviewed ineligible-contract handling is required;
+  no guessed fee, universe removal or frozen-profile change was performed.
 - Existing selected-account GET/capture/recovery code is retained. Autonomous
   money dispatch/protection/exit/finality integration remains a separate delivery;
   this cold-path implementation does not claim it is finished.
 
 Actual-account archive is **BLOCKED_ACTUAL_INPUTS**, not BUILD_READY. No actual
-packet was manufactured from synthetic declarations. Public snapshot06:50:33UTC
-still3sessions/18records/1filled SEI/1gap/0clean/0held and0broker/order calls.
+packet was manufactured from synthetic declarations. Latest public11:15UTC
+snapshot is4sessions/1filled SEI/3nonfills/1gap/0clean/0held and0broker/order calls.
 
 Rollback remains NEW ordersOFF; do not automatically resume OLD entries. If any
 future exposure exists, preserve its owning protection/exit manager. Flat rollback

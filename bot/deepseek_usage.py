@@ -16,12 +16,20 @@ import sqlite3
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 
 CURRENT_DEEPSEEK_MODEL = "deepseek-v4-flash"
 RETIRED_DEEPSEEK_MODELS = frozenset({"deepseek-chat", "deepseek-reasoner"})
+# Source checked 2026-10-03: https://api-docs.deepseek.com/quick_start/pricing/
+# Flash uncached peak: $0.30 input / $1.20 output per million tokens. Always
+# charge this ceiling, including off-peak/cache hits; this is not a provider bill.
+DEEPSEEK_PRICE_VALID_UNTIL_TS = 1793491200  # 2026-11-01 00:00 UTC
+_FLASH_MODELS = ("deepseek-v4-flash", "deepseek-flash", "deepseek-v4-flash-vision-exp")
+_MAX_MONTHLY_USD_MICROS = 1_000_000
+_PRICE_POLICY = "flash-20261003-peak-utf8-envelope-v1"
 _TOKEN_FIELDS = (
     "prompt_tokens",
     "completion_tokens",
@@ -101,6 +109,8 @@ def extract_usage(response_payload: Mapping[str, Any] | None) -> dict[str, int]:
         if isinstance(value, bool):
             continue
         try:
+            if isinstance(value, float):
+                continue  # Fractional/non-finite provider counters are not billing evidence.
             number = int(value)
         except (TypeError, ValueError):
             continue
@@ -139,7 +149,114 @@ def _attempt_connection(path: Path) -> sqlite3.Connection:
     connection.execute(_ATTEMPT_SCHEMA)
     connection.execute(_MIGRATION_SCHEMA)
     connection.commit()
+    # Migrate under a write lock, including concurrent first starts. The triggers
+    # also protect an already-loaded legacy Telegram INSERT without a core restart.
+    connection.execute("BEGIN IMMEDIATE")
+    columns = {row[1] for row in connection.execute("PRAGMA table_info(provider_attempts)")}
+    for name, kind in (("reserved_usd_micros", "INTEGER"), ("charge_usd_micros", "INTEGER"),
+                       ("pricing_policy", "TEXT")):
+        if name not in columns:
+            connection.execute(f"ALTER TABLE provider_attempts ADD COLUMN {name} {kind}")
+    connection.execute("""CREATE TABLE IF NOT EXISTS ai_budget_months (
+        month_utc TEXT PRIMARY KEY, cap_usd_micros INTEGER NOT NULL)""")
+    # Unknown historical billing occupies the entire envelope; no retroactive
+    # 'zero cost' inference. Existing token counters may only lower a known bound.
+    connection.execute("""UPDATE provider_attempts SET
+        reserved_usd_micros = CASE WHEN source='legacy_audit_migration' THEN 1000000
+            ELSE ((max(0,prompt_chars)*4+8192)*3+max(0,max_tokens)*12+9)/10 END,
+        charge_usd_micros = CASE WHEN source='legacy_audit_migration' THEN 1000000
+            WHEN status='ok' AND prompt_tokens>=0 AND completion_tokens>=0
+                 AND total_tokens=prompt_tokens+completion_tokens
+            THEN (prompt_tokens*3+completion_tokens*12+9)/10
+            ELSE ((max(0,prompt_chars)*4+8192)*3+max(0,max_tokens)*12+9)/10 END,
+        pricing_policy='flash-20261003-peak-utf8-envelope-v1'
+        WHERE charge_usd_micros IS NULL""")
+    ceiling = "((NEW.prompt_chars*4+8192)*3+NEW.max_tokens*12+9)/10"
+    model_sql = ",".join("'" + value + "'" for value in _FLASH_MODELS)
+    connection.execute(f"""CREATE TRIGGER IF NOT EXISTS ai_cash_before_attempt_v1
+        BEFORE INSERT ON provider_attempts WHEN NEW.source != 'legacy_audit_migration'
+        BEGIN
+          SELECT CASE WHEN NEW.model NOT IN ({model_sql}) OR NEW.ts >= {DEEPSEEK_PRICE_VALID_UNTIL_TS}
+            OR NEW.prompt_chars<0 OR NEW.prompt_chars>100000 OR NEW.max_tokens<=0 OR NEW.max_tokens>1200
+            THEN RAISE(ABORT,'DeepSeek cash policy denies model/time/size') END;
+          SELECT CASE WHEN EXISTS(SELECT 1 FROM provider_attempts WHERE status='billing_contract_breach')
+            THEN RAISE(ABORT,'DeepSeek billing contract breach') END;
+          SELECT CASE WHEN (SELECT COALESCE(SUM(charge_usd_micros),0) FROM provider_attempts
+              WHERE substr(day_utc,1,7)=strftime('%Y-%m',NEW.ts,'unixepoch')) + {ceiling}
+              > COALESCE((SELECT cap_usd_micros FROM ai_budget_months
+                  WHERE month_utc=strftime('%Y-%m',NEW.ts,'unixepoch')),1000000)
+            THEN RAISE(ABORT,'DeepSeek monthly cash budget exhausted') END;
+        END""")
+    connection.execute(f"""CREATE TRIGGER IF NOT EXISTS ai_cash_after_attempt_v1
+        AFTER INSERT ON provider_attempts
+        BEGIN
+          UPDATE provider_attempts SET
+            reserved_usd_micros=CASE WHEN NEW.source='legacy_audit_migration' THEN 1000000 ELSE {ceiling} END,
+            charge_usd_micros=CASE WHEN NEW.source='legacy_audit_migration' THEN 1000000 ELSE {ceiling} END,
+            pricing_policy='{_PRICE_POLICY}' WHERE id=NEW.id;
+        END""")
+    connection.execute("""CREATE TRIGGER IF NOT EXISTS ai_cash_after_finalize_v1
+        AFTER UPDATE OF status,prompt_tokens,completion_tokens,total_tokens ON provider_attempts
+        WHEN NEW.status='ok' AND typeof(NEW.prompt_tokens)='integer'
+          AND typeof(NEW.completion_tokens)='integer' AND NEW.prompt_tokens>=0 AND NEW.completion_tokens>=0
+          AND NEW.total_tokens=NEW.prompt_tokens+NEW.completion_tokens
+        BEGIN
+          UPDATE provider_attempts SET
+            status=CASE WHEN NEW.prompt_tokens>NEW.prompt_chars*4+8192
+                  OR NEW.completion_tokens>NEW.max_tokens
+                  OR (NEW.prompt_tokens*3+NEW.completion_tokens*12+9)/10>NEW.reserved_usd_micros
+                THEN 'billing_contract_breach' ELSE 'ok' END,
+            charge_usd_micros=CASE WHEN NEW.prompt_tokens>NEW.prompt_chars*4+8192
+                  OR NEW.completion_tokens>NEW.max_tokens
+                  OR (NEW.prompt_tokens*3+NEW.completion_tokens*12+9)/10>NEW.reserved_usd_micros
+                THEN max(NEW.reserved_usd_micros,(NEW.prompt_tokens*3+NEW.completion_tokens*12+9)/10)
+                ELSE (NEW.prompt_tokens*3+NEW.completion_tokens*12+9)/10 END
+            WHERE id=NEW.id;
+        END""")
+    connection.commit()
     return connection
+
+
+def _monthly_cap_usd_micros() -> int:
+    try:
+        value = Decimal(os.getenv("DEEPSEEK_MONTHLY_USD_CAP", "1"))
+        if not value.is_finite() or value <= 0:
+            return 0
+        return min(_MAX_MONTHLY_USD_MICROS, int(value * 1_000_000))
+    except (InvalidOperation, ValueError, OverflowError):
+        return 0
+
+
+def _persist_monthly_cap(connection: sqlite3.Connection, month: str, cap: int) -> None:
+    connection.execute('BEGIN IMMEDIATE')
+    connection.execute('''INSERT INTO ai_budget_months(month_utc,cap_usd_micros) VALUES(?,?)
+        ON CONFLICT(month_utc) DO UPDATE SET cap_usd_micros=min(cap_usd_micros,excluded.cap_usd_micros)''',
+        (month,cap))
+    connection.commit()  # Persist reductions even when the next attempt is denied.
+
+
+def deepseek_cash_budget_status(*, path: Path | None = None, now_ts: int | None = None) -> dict[str, Any]:
+    stamp = datetime.fromtimestamp(time.time() if now_ts is None else now_ts, tz=timezone.utc)
+    month = stamp.strftime("%Y-%m")
+    result = {"month_utc": month, "cap_usd_micros": 0, "charged_usd_micros": 0,
+              "remaining_usd_micros": 0, "pricing_policy": _PRICE_POLICY, "accounting_ok": False}
+    connection = None
+    try:
+        connection = _attempt_connection(path or attempt_ledger_path())
+        _persist_monthly_cap(connection,month,_monthly_cap_usd_micros())
+        cap_row = connection.execute("SELECT cap_usd_micros FROM ai_budget_months WHERE month_utc=?", (month,)).fetchone()
+        cap = min(_monthly_cap_usd_micros(), int(cap_row[0]) if cap_row else _MAX_MONTHLY_USD_MICROS)
+        charged = int(connection.execute("SELECT COALESCE(SUM(charge_usd_micros),0) FROM provider_attempts WHERE substr(day_utc,1,7)=?", (month,)).fetchone()[0])
+        breach = connection.execute("SELECT 1 FROM provider_attempts WHERE status='billing_contract_breach' LIMIT 1").fetchone()
+        valid = stamp.timestamp() < DEEPSEEK_PRICE_VALID_UNTIL_TS and not breach and cap > 0
+        result.update(cap_usd_micros=cap, charged_usd_micros=charged,
+                      remaining_usd_micros=max(0,cap-charged) if valid else 0, accounting_ok=bool(valid))
+    except (OSError, sqlite3.Error, TypeError, ValueError):
+        pass
+    finally:
+        if connection is not None:
+            connection.close()
+    return result
 
 
 def seed_attempt_ledger_from_legacy_audit(
@@ -249,8 +366,7 @@ def reserve_deepseek_attempt(
     ``None`` so callers cannot spend without durable accounting.
     """
     cap = max(0, int(daily_cap or 0))
-    if cap <= 0:
-        return None
+    cash_cap = _monthly_cap_usd_micros()
     ts = int(time.time() if now_ts is None else now_ts)
     stamp = datetime.fromtimestamp(ts, tz=timezone.utc)
     day = stamp.strftime("%Y-%m-%d")
@@ -258,6 +374,9 @@ def reserve_deepseek_attempt(
     connection: sqlite3.Connection | None = None
     try:
         connection = _attempt_connection(destination)
+        _persist_monthly_cap(connection,day[:7],cash_cap)
+        if cap<=0 or cash_cap<=0:
+            return None
         connection.execute("BEGIN IMMEDIATE")
         used = int(
             connection.execute(
@@ -315,12 +434,26 @@ def finalize_deepseek_attempt(
     try:
         connection = _attempt_connection(reservation.path)
         connection.execute("BEGIN IMMEDIATE")
+        previous = connection.execute("SELECT reserved_usd_micros,prompt_chars,max_tokens FROM provider_attempts WHERE id=? AND status='reserved'", (reservation.attempt_id,)).fetchone()
+        if previous is None:
+            connection.rollback()
+            return False
+        charge = int(previous[0])
+        actual_cost = None
+        if all(key in usage for key in ("prompt_tokens", "completion_tokens", "total_tokens")):
+            if usage['total_tokens'] == usage['prompt_tokens'] + usage['completion_tokens']:
+                actual_cost = (usage['prompt_tokens']*3 + usage['completion_tokens']*12+9)//10
+                if usage['prompt_tokens'] > int(previous[1])*4+8192 or usage['completion_tokens'] > int(previous[2]) or actual_cost > charge:
+                    status = 'billing_contract_breach'
+                    charge = max(charge, actual_cost)
+                elif status == 'ok':
+                    charge = actual_cost
         cursor = connection.execute(
             """
             UPDATE provider_attempts SET
                 status = ?, finalized_ts = ?, latency_ms = ?, error_type = ?,
                 prompt_tokens = ?, completion_tokens = ?, total_tokens = ?,
-                prompt_cache_hit_tokens = ?, prompt_cache_miss_tokens = ?
+                prompt_cache_hit_tokens = ?, prompt_cache_miss_tokens = ?, charge_usd_micros = ?
             WHERE id = ? AND status = 'reserved'
             """,
             (
@@ -333,6 +466,7 @@ def finalize_deepseek_attempt(
                 usage.get("total_tokens"),
                 usage.get("prompt_cache_hit_tokens"),
                 usage.get("prompt_cache_miss_tokens"),
+                charge,
                 int(reservation.attempt_id),
             ),
         )

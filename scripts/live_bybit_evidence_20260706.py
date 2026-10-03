@@ -209,6 +209,8 @@ class StrictAtt1ReadClient:
         "/v5/execution/list": frozenset({"category", "symbol", "baseCoin", "orderId", "orderLinkId", "execType", "startTime", "endTime", "limit", "cursor"}),
         "/v5/account/transaction-log": frozenset({"category", "accountType", "currency", "baseCoin", "type", "startTime", "endTime", "limit", "cursor"}),
         "/v5/market/funding/history": frozenset({"category", "symbol", "startTime", "endTime", "limit"}),
+        "/v5/market/instruments-info": frozenset({"category", "symbol"}),
+        "/v5/account/fee-rate": frozenset({"category", "symbol"}),
     }
     _PAGE_ENDPOINTS = frozenset({
         "/v5/position/list", "/v5/order/realtime", "/v5/order/history",
@@ -306,6 +308,11 @@ class StrictAtt1ReadClient:
                 raise ValueError("transaction-log time window exceeds seven days")
         if path == "/v5/market/funding/history" and "symbol" not in normalized:
             raise ValueError("funding history symbol required")
+        if path in {"/v5/market/instruments-info", "/v5/account/fee-rate"}:
+            symbol = normalized.get("symbol", "")
+            if (not symbol.endswith("USDT") or not symbol.isascii()
+                    or not symbol.isalnum() or symbol != symbol.upper()):
+                raise ValueError("exact uppercase USDT symbol required")
         return normalized
 
     def _request_url(self, path: str, params: dict[str, str]) -> tuple[str, str]:
@@ -337,6 +344,12 @@ class StrictAtt1ReadClient:
 
     def _validate_result_category(self, path: str, result: dict[str, Any]) -> None:
         if path == "/v5/user/query-api":
+            return
+        if path == "/v5/account/fee-rate":
+            # Official derivatives response omits category; request is pinned
+            # to linear and the pure mapper requires the exact symbol.
+            if ('category' in result or not isinstance(result.get('list'), list)):
+                raise ValueError("derivatives fee response rejected")
             return
         if path == "/v5/account/transaction-log":
             rows = result.get("list")

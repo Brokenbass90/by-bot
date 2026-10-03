@@ -1,35 +1,31 @@
 # Current roadmap — owner scope October 3, 2026
 
-Authoritative production state: MASTER_HANDOFF.md, NEW_CHAT_START_HERE.md and
-TOP CODEX_SESSION_CHECKPOINT_2026_09_06.md. Latest engineering delivery:
-ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json and its HANDOFF runbook.
-Latest local delivery: `ATT1_FRESH_HANDOFF_READINESS_2026_10_03.json` and
-`ATT1_FRESH_HANDOFF_RUNBOOK_2026_10_03.md`. Owner-approved cold path implemented
-ordersOFF at the existing route/preparation boundary; actual packet still blocked
-on authenticated retirement/quarantine, mode, funding/fee coverage and money
-integration. Six named legacy cash islands reconciled (four isolated, two mixed),
-legacy watermarks unavailable; do not restart archive expansion or Tasks1–4.
-Public06:50UTC3sessions/18records/1filled/1gap/0clean; money gates unchanged.
-`ALPACA_DAY_GTC_REVIEW_2026_10_03.md`: current fractions requireDAY; dynamicHWM/floor
-already implemented. Next-session DAYqueue proof is a separate PAPER candidate,
-no weekendLIVE change. This section supersedes historical roadmap snapshots.
-
-October3 weekend continuation: source/pricing assessment at09:58UTC is in
-`WEEKEND_PRIORITIES_AND_AI_ASSESSMENT_2026_10_03.md`. Next production result is
-the existing ATT1 actual-input/integration receipt or queued fractionalDAY PAPER
-acceptance; no new broker/VPS snapshot or activation occurred in that assessment.
-After KITY's terminal cycle, independent coverage priority is one crypto long
-mechanism, then one range/mean-reversion cycle; Claude keeps one Factory slot.
-AI return is assessed as an event-driven operations analyst, proposal-only with
-source citations and a future hard USD budget. Paid API use, budget amounts and
-hosted adapter remain proposals, not enabled runtime or money authority.
+Authoritative state: MASTER_HANDOFF.md, NEW_CHAT_START_HERE.md and TOP checkpoint.
+Latest delivery `AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md`: existing
+Telegram/web operations analyst installed, on-demand, proposal-only, shared atomic
+$1/UTC-month and8attempts/day; three provider calls, $0.011128 conservative charge; OLD/NEW distinction QA PASS.
+No automatic paid schedule, model command execution or financial authority.
+At11:10UTC signed OLD flat/no orders/native pause true after same-core AI reload;
+heartbeat `att1` is OLD. This is not durable retirement/quarantine evidence.
+At11:24UTC collector proves LINK pagination1/2+0 conflict and HFT contractClosed,
+unknown fee. Local/isolated candidate only; actual packet still BLOCKED on
+retirement/96 real closedM5 quarantine, reviewed mode/ineligible-contract handling,
+source-bound14-day funding and selected-account lifecycle integration. Do not
+restart Tasks1–4 or unavailable-watermark archive expansion.
+Public11:15UTC4sessions/1filled/3nonfills/1gap/0clean/0held, epoch/2s preserved.
+Alpaca same3fractions/HWM/floor/58hashes/oneNEWmanager,0openDAYstops; nextOct5
+13:30UTC/16:30Cyprus re-armP0. Queued next-session DAYstop needs separate PAPER
+acceptance; no weekendLIVE protection change. This supersedes dated snapshots.
+After KITY terminal: one independent crypto long, then one range/mean-reversion
+cycle underClaude's one Factory slot. No READY sleeve is invented from frequency.
 
 ## Immediate queue: finish current evidence and actual inputs
 
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
 | Alpaca LIVE | Observe exact-quantity accepted DAY re-arm Oct5 13:30UTC/16:30Cyprus. Separately validate queued next-session fractionalDAY stop in PAPER | Codex operations; currentGTC unsupported, queue acceptanceNOT_PROVEN, no weekendLIVE change/capital increase |
-| NEW ATT1 | Local cold-path implementation delivered. Collect actual durable-retirement/quarantine proof, resolve LINKmode/funding/HFTcost inputs; actual ordersOFF packet and selected-account integration remain | Codex; no runtime migration/money. Public06:50UTC3sessions/1filled/1gap/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
+| NEW ATT1 | Cold path and signed symbol collector delivered. LINK full pagination mode conflict and HFT contractClosed classified; finish reviewed handling, durable retirement/quarantine, funding and selected-account ordersOFF lifecycle integration | Codex; no broker mode write, universe change or money install. Public11:15UTC4sessions/1filled/1gap/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
+| Operations analyst | Existing Telegram/web deployed with shared $1 cash envelope; retain dated citations, confirm OLD/NEW distinction, label at least30 proposals before claiming precision | Codex; on-demand diagnostics, no auto-tuning/executor/paid cron/money authority; invoice and unrelated API callers outside ledger guarantee |
 | PM2 | **KILLED / NOT_EXECUTABLE** in published Oct3 KARTA:3 dates/792 rounds/0 qualifying violations | Claude terminal registry verdict; removed from LIVE queue, slot freed; no judge rerun |
 | TOLPA_1D / weekly | Published Binance2021–2022 cross-venue replication loading; frozen judge after download; restore PIT forward inputs in parallel | Claude; replication is not untouched Bybitholdout, same-family evidence not additive; no cheap-screen→LIVE |
 | KITY_POZICII | Prereg/loader/judge published before data; download after TOLPA, then frozen primary/replication/independence gates | Claude; one Factory slot, not READY_FOR_BUILD; no extra families until terminal/rescue budget |
@@ -143,13 +139,16 @@ Build only when the preceding evidence exposes a concrete need:
    proposals and provenance views first. AI cannot submit orders, change risk,
    strategy, frozen judges or financial authority. Meta-ML can later compare
    preregistered frozen policies under separate evidence; no online tuning in LIVE.
-   A thin event-driven operations analyst may be evaluated in parallel without
-   blocking production: reuse the approved LAB_AI_V0 evidence/authority contract
-   and existing DeepSeek accounting seam. Old signal block/reduce, auto-tuning and
-   env executor stay outside this path. Current accounting caps attempts, notUSD;
-   a hosted pilot requires source-bound prices, atomic cash reservations and a
-   labelled usefulness test before paid activation. See the October3 assessment;
-   no paid request/schedule or runtime flag is enabled by this roadmap.
+   The thin on-demand analyst is now deployed in existing Telegram/web with the
+   approved LAB_AI_V0 authority boundary, allowlisted public project sources and
+   the shared atomic $1 cash envelope. Three actual provider calls establish route
+   connectivity, not accuracy. Label at least30 proposals before reporting
+   precision; distinguish OLD pause, NEW gate and broker snapshots. Source-bound
+   Flash peak pricing expiresNov1 and fails closed pending refresh. Old signal
+   block/reduce, auto-tuning and env executor stay outside this path; no autonomous
+   paid cron was enabled. Any later incident/digest schedule needs a measured
+   usefulness/cost result, not an infrastructure rewrite. Current runbook:
+   `AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md`.
 5. Safe cleanup: inventory → dependency/active-state mapping → archive with
    hashes/references → restore/dependency verification → scoped deletion. Preserve
    sealed evidence, active runtime, credentials and all unknown/foreign dirty files.

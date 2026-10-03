@@ -7,7 +7,36 @@
 3 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
 над старыми отчётами. При конфликте укажи источник и границу знания.
 
-## Latest October3 cold-path implementation — use first
+## Latest October3 analyst and ATT1 input delivery — use first
+
+Читай `AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md`: ИИ уже установлен в
+существующие web AI Chat и Telegram `/ai`; общий atomic cap $1/UTC-month и8
+attempts/day, public context path/SHA, только диагностика/предложения. Два реальных
+API вызова и короткий QA прошли, всего3; conservative ledger $0.011128, не bill.
+11:38UTC QA правильно различил OLD native pause и NEW money gate.
+Web authenticated HTTP проверен; Telegram adapter/provider проверен, фактическую
+доставку сообщения не тестировали. Не запускать paid cron, auto-tuning или executor.
+Guarded same-core reload bybot -> PID1623970; signed11:10UTC flat0orders/native
+OLD pausetrue, effective money scope сохранён. Heartbeat `att1` — OLD, не NEW;
+native pause и reload не доказывают durable retirement/96-bar clock.
+
+ATT1 signed collector реализован локально/в isolated target; на money service
+не установлен.11:24UTC LINK full pages hedge1/2+terminal0 -> MODE_CONFLICT;
+HFT instrumentClosed -> CONTRACT_INELIGIBLE, feeUNKNOWN. Не игнорировать строки,
+не писать mode, не удалять символ и не выдумывать zero fee. Actual packet BLOCKED:
+retirement/96 реальных closedM5, mode/ineligible handling, funding14day и выбранный
+account dispatch/protection/exit/finality. Tasks1–4 не повторять; OLD archive не
+расширять. Следующий результат — существующая ordersOFF integration/actual inputs.
+Public11:15UTC samePID1584802/epoch:4sessions/1filled SEI/3nonfills/1gap/0clean/
+0held/0broker/ordercalls. Gate2–3 clean/net-R +fresh dossier+ownerGO без изменений.
+Alpaca11:15UTC same3fractions/HWM/floor/58hashes/one NEWmanager,0openDAYstops;
+05.10 13:30UTC/16:30Cyprus re-armP0, queuedDAY PAPERNOT_PROVEN, LIVE не расширять.
+AI88local/67target,ATT1160local/85targetPASS; full3416PASS/те же57baselineFAIL,
+новых нет. Reviews PASS_WITH_SCOPE_LIMITS; foreignallowlist exact originalSHA
+restored, не stage. Claude actualorigin0505f9d: KITY/TOLPA, daemonOFF; не merge,
+не judge/start. Снимки и прежние планы ниже — история с указанной датой.
+
+## Earlier October3 cold-path implementation — retained snapshot
 
 Planning continuation09:58UTC: читай
 `WEEKEND_PRIORITIES_AND_AI_ASSESSMENT_2026_10_03.md`. Следующий bounded результат —

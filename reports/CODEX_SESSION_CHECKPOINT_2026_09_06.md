@@ -2,6 +2,34 @@
 
 ## Public continuation checkpoint
 
+Latest delivery **October3 11:24UTC evidence**: read
+`AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md` and latest MASTER_HANDOFF first.
+Existing Telegram `/ai` and web AI chat now have a shared atomic $1/UTC-month
+cash ceiling, daily8 attempts, path/SHA project context and proposal-only replies.
+Three real calls passed; conservative charge $0.011128, not provider invoice.
+11:38UTC short QA correctly distinguished OLD native pause from NEW gate.
+Web authenticated HTTP tested; Telegram adapter/provider tested, delivery not
+tested. No background paid schedule, model command execution or money authority.
+Same-core guarded bybot AI reload PID1623970; signed11:10UTC flat/no orders and
+native OLD new-entry pause true. Public PID1584802 unchanged. Heartbeat `att1`
+means OLD; pause is not durable retirement or NEW cold-epoch readiness.
+
+New ATT1 signed symbol collector: full LINK1/2 then0 pagination -> MODE_CONFLICT;
+HFT instrumentClosed -> CONTRACT_INELIGIBLE, unknown fee.11:24UTC actual receipt,
+0 broker writes; local+isolated candidate only, not installed money integration.
+Actual packet BLOCKED on retirement/96 real closedM5 quarantine, reviewed mode /
+ineligible-contract handling,14-day funding policy and selected-account lifecycle.
+Public11:15UTC4sessions/1filled SEI/3nonfills/1gap/0clean/0held/broker/ordercalls0;
+preserve2s, frozen rules, epoch and gate2–3clean/net-R+fresh dossier+ownerGO.
+Alpaca11:15UTC same3fractions/HWM/floor/58hashes/oneNEWmanager,0openDAYstops;
+nextOct5 13:30UTC/16:30Cyprus re-armP0, queuedDAY PAPER stillNOT_PROVEN.
+AI88local/67target andATT1160local/85targetPASS. Final3416PASS/57FAIL,
+exact57baseline/no new nodeids. Reviews PASS_WITH_SCOPE_LIMITS. Foreign original
+allowlist SHA restored; leave unstaged. Claude0505f9d/KITY+TOLPA, daemonOFF unchanged.
+Historical entries below are dated evidence, not the present action plan.
+
+Earlier planning snapshot (superseded by the delivery above):
+
 Latest planning continuation **October3 09:58UTC**:
 `WEEKEND_PRIORITIES_AND_AI_ASSESSMENT_2026_10_03.md` records ATT1 actual inputs /
 ordersOFF integration and queued fractionalDAY PAPER acceptance as the next

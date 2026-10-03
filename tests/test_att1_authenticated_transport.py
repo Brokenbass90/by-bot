@@ -270,3 +270,17 @@ def test_missing_cursor_still_rejected_on_empty_cash_page():
     client,_=_client((_envelope({'list':[]}),url))
     with pytest.raises(ValueError,match='page'):
         client.pages('/v5/account/transaction-log',{'category':'linear'})
+
+
+@pytest.mark.parametrize('path', ['/v5/account/fee-rate', '/v5/market/instruments-info'])
+def test_symbol_input_gets_are_pinned_signed_and_symbol_scoped(path):
+    url = 'https://api.bybit.com'+path+'?category=linear&symbol=LINKUSDT'
+    result = {'list': []}
+    if path == '/v5/market/instruments-info': result['category'] = 'linear'
+    client, opener = _client((_envelope(result), url))
+    assert client.get(path, {'category': 'linear', 'symbol': 'LINKUSDT'})['retCode'] == 0
+    assert opener.requests[0][0].get_method() == 'GET'
+    with pytest.raises(ValueError): client.get(path, {'category': 'linear'})
+    with pytest.raises(ValueError): client.get(path, {'category': 'linear', 'symbol': 'linkusdt'})
+    with pytest.raises(ValueError): client.get(path, {'category': 'linear', 'symbol': 'BTCUSDC'})
+    assert len(opener.requests) == 1

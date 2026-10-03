@@ -1,5 +1,11 @@
 # Weekend priorities and AI return assessment — October 3, 2026
 
+Historical assessment below is superseded for implementation/runtime status by
+`AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md` and latest MASTER_HANDOFF.
+Owner subsequently authorized the bounded analyst; monthly USD guard and
+Telegram/web deployment are now delivered. This assessment's original09:58UTC
+no-activation/no-paid-call claims apply only to that earlier planning cycle.
+
 Status: **ASSESSMENT_ONLY_NO_ACTIVATION**. Source review at 09:58 UTC.
 This cycle inspected the current checkout and official provider documentation;
 it did not make a fresh broker/VPS capture, submit PAPER/LIVE orders, call a paid

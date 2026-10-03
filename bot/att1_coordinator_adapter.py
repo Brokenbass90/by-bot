@@ -1283,6 +1283,114 @@ def collect_att1_authenticated_snapshot(client):
             'orders_allowed':False}
 
 
+def validate_att1_symbol_input_evidence(account_config, broker_identity, *, symbol,
+        position_pages, instrument_page, fee_page, observed_ms):
+    """Classify source-bound symbol inputs; never authorizes orders or removes symbols.
+
+    Pure validation cannot prove HTTPS/signing. The selected GET-only collector
+    below owns transport provenance. Flat account-wide absence is not mode proof.
+    COMPLETE_ONEWAY_INPUTS is only this input subset, never canary readiness.
+    """
+    account = _validated_old_att1_account(account_config, broker_identity, now_ms=observed_ms)
+    symbol = _text(symbol, 'symbol')
+    if (not symbol.endswith('USDT') or not symbol.isascii()
+            or not symbol.isalnum() or symbol != symbol.upper()):
+        raise AdapterViolation('exact uppercase USDT symbol required')
+
+    def rows(page, *, fee=False):
+        if (not isinstance(page, Mapping) or type(page.get('retCode')) is not int
+                or page['retCode'] != 0 or type(page.get('time')) is not int
+                or not 0 < page['time'] <= observed_ms
+                or observed_ms-page['time'] > ATT1_BROKER_IDENTITY_MAX_AGE_MS):
+            raise AdapterViolation('invalid/stale symbol envelope')
+        result = page.get('result')
+        if (not isinstance(result, Mapping) or not isinstance(result.get('list'), list)
+                or (fee and 'category' in result)
+                or (not fee and result.get('category') != 'linear')):
+            raise AdapterViolation('symbol result malformed')
+        batch = result['list']
+        if len(batch) > 2 or any(not isinstance(r, Mapping) or r.get('symbol') != symbol for r in batch):
+            raise AdapterViolation('foreign/bounded symbol rows')
+        return result, batch
+
+    if not isinstance(position_pages, list) or not 1 <= len(position_pages) <= 16:
+        raise AdapterViolation('complete bounded symbol position pages required')
+    positions, cursors = [], set()
+    for index, page in enumerate(position_pages):
+        result, batch = rows(page)
+        cursor = result.get('nextPageCursor')
+        if (not isinstance(cursor, str) or (index==len(position_pages)-1)!=(cursor=='')
+                or (cursor and cursor in cursors)):
+            raise AdapterViolation('incomplete/cyclic symbol position page')
+        cursors.add(cursor); positions.extend(batch)
+    indices = set()
+    for position in positions:
+        idx = position.get('positionIdx')
+        size = _number(position.get('size'), 'size', nonnegative=True)
+        side = position.get('side')
+        if (type(idx) is not int or idx not in (0,1,2) or idx in indices
+                or side not in ('','Buy','Sell') or (size>0 and not side)
+                or (idx==1 and side=='Sell') or (idx==2 and side=='Buy')):
+            raise AdapterViolation('ambiguous symbol position mode')
+        indices.add(idx)
+    # Observed LINK pagination: hedge1/2 then a flat idx0 placeholder. Retain
+    # every page and report CONFLICT; never let the terminal0 certify one-way.
+    mode = ('CONFLICT' if 0 in indices and len(indices)>1 else
+            'ONEWAY' if indices=={0} else 'HEDGE' if indices=={1,2} else 'UNKNOWN')
+    status = 'COMPLETE_ONEWAY_INPUTS' if mode=='ONEWAY' else 'BLOCKED_MODE_'+mode
+    instrument = fee = None
+    if instrument_page is None:
+        status = 'BLOCKED_INSTRUMENT_UNKNOWN'
+    else:
+        result, batch = rows(instrument_page)
+        if result.get('nextPageCursor','') != '' or len(batch)>1:
+            raise AdapterViolation('ambiguous instrument source')
+        if not batch:
+            status = 'BLOCKED_INSTRUMENT_UNKNOWN'
+        else:
+            instrument = batch[0]
+            if (instrument.get('status')!='Trading' or instrument.get('contractType')!='LinearPerpetual'
+                    or instrument.get('settleCoin')!='USDT' or instrument.get('quoteCoin')!='USDT'):
+                status = 'BLOCKED_CONTRACT_INELIGIBLE'
+            else:
+                for group, names in [('priceFilter',('tickSize',)),
+                        ('lotSizeFilter',('qtyStep','minOrderQty','minNotionalValue'))]:
+                    fields = instrument.get(group)
+                    if not isinstance(fields, Mapping):raise AdapterViolation('missing instrument filters')
+                    for name in names:_number(fields.get(name), name, positive=True)
+    if fee_page is not None:
+        _, batch = rows(fee_page, fee=True)
+        if len(batch)!=1:raise AdapterViolation('missing/ambiguous actual fee')
+        fee = batch[0]
+        _number(fee.get('takerFeeRate'), 'taker fee', nonnegative=True)
+        _number(fee.get('makerFeeRate'), 'maker fee', nonnegative=True)
+    elif status=='COMPLETE_ONEWAY_INPUTS':
+        status = 'BLOCKED_FEE_UNKNOWN'
+    complete = status=='COMPLETE_ONEWAY_INPUTS'
+    return {'schema_id':'att1_symbol_input_evidence_v1','account':account,'symbol':symbol,
+        'observed_ms':observed_ms,'position_mode':mode,'input_status':status,
+        'instrument_status':instrument.get('status') if instrument is not None else None,
+        'taker_fee_rate':str(_number(fee['takerFeeRate'],'taker fee')) if complete else None,
+        'orders_allowed':False,'money_ready':False,
+        'source_sha256':digest({'position_pages':position_pages,'instrument_page':instrument_page,'fee_page':fee_page})}
+
+
+def collect_att1_symbol_input_evidence(client, symbol):
+    """Explicit selected-account GET pass; no DB, mode writes, filtering or money runner."""
+    identity = client.identity()
+    positions = client.pages('/v5/position/list', {'category':'linear','symbol':symbol,'limit':200})
+    sources = {}; failures = {}
+    for name, path in [('instrument_page','/v5/market/instruments-info'),('fee_page','/v5/account/fee-rate')]:
+        try:sources[name] = client.get(path, {'category':'linear','symbol':symbol})
+        except ValueError as error:
+            # A rejected/malformed/negative envelope never becomes a guessed fee.
+            sources[name] = None; failures[name] = type(error).__name__
+    evidence = validate_att1_symbol_input_evidence(client.redacted_config, identity,
+        symbol=symbol, position_pages=positions, observed_ms=client.last_received_ms, **sources)
+    return {'evidence':evidence,'position_pages':positions,**sources,
+        'collection_failures':failures,'orders_allowed':False}
+
+
 def collect_new_att1_entry_recovery(client, db_path, decision_key, *, session, source_dir):
     """Connect the existing signed GET client to NEW entry recovery, sends OFF.
 

@@ -1,5 +1,49 @@
 # MASTER HANDOFF — 2026-10-03
 
+Latest delivery **October3 11:24UTC evidence** — use this section first:
+`AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md` contains deployment, source
+hashes, acceptance limits, commands and rollback. DeepSeek operations analyst is
+installed in the existing web chat and Telegram adapter: shared atomic **$1 per
+UTC month**, daily8 attempts, no paid fallback, dated path/SHA evidence. Three real
+provider calls passed; conservative ledger charge $0.011128, not a provider bill.
+11:38UTC short QA correctly distinguished OLD native pause from NEW money gate.
+Telegram delivery itself was not tested. No autonomous paid schedule was enabled.
+The analyst proposes checks; it cannot execute model-generated commands or gain
+broker/risk/strategy/verdict authority. Existing env executor remains quarantined.
+
+**OLD ATT1 is natively paused for new entries** since Oct2 15:36UTC. Runtime
+heartbeat sleeve `att1` refers to OLD, not NEW. Flat/open_trades=0 does not explain
+the pause or prove NEW readiness. A guarded same-core AI reload changed bybot PID
+to1623970; signed11:10UTC positions0/orders0 and native pause true. Core hash and
+effective money scope preserved. This reload is not durable retirement/quarantine
+proof. Public NEW PID1584802 and its epoch were preserved; orders remain OFF.
+
+ATT1 input collector delivered locally and in an isolated VPS candidate, **not
+installed on the money service**. Signed11:24UTC complete LINK pages contain
+hedge1/2 then terminal0: `BLOCKED_MODE_CONFLICT`, never one-way by last-row choice.
+HFT instrument `Closed`: `BLOCKED_CONTRACT_INELIGIBLE`, fee unknown, not zero.
+Actual packet remains BLOCKED: durable retirement +96 actual closedM5 quarantine,
+reviewed mode/ineligible-contract handling, source-bound14-day funding reserve and
+selected-account dispatch/protection/exit/finality integration. No broker mode
+write, universe change, actual binding or NEW money. Next work is those named
+inputs/integration, not another old-watermark archive search or Tasks1–4 restart.
+
+Public11:15UTC:4sessions/1filled SEI/3nonfills/1RECOVERY_GAP/**0clean**/0held,
+broker/order calls0. Gate2–3 clean filled terminals/net-R + fresh dossier + ownerGO
+unchanged. Alpaca11:15UTC: same AMD/CRWD/META fractions, sameHWM/floor,58hashes,
+one NEW manager, cap487.42/gross0.70; **0 open stops** after DAY expiry. No current
+weekend broker protection claimed. Oct5 13:30UTC/16:30Cyprus re-arm P0/NOT_DUE;
+queued next-session fractionalDAY PAPER acceptance still NOT_PROVEN.
+
+Verification: AI88 local/67 isolated-target PASS; ATT1160 local/85 target PASS.
+Final full3416PASS/57FAIL: exact same57 baseline nodeids, no new failures. Bounded
+financial/security reviews PASS_WITH_SCOPE_LIMITS; actual broker collection was
+primary-verified. Foreign allowlist original bytes/hash restored and left unstaged.
+Claude actualorigin0505f9d still KITY prereg/TOLPA replication, Factory daemonOFF;
+no Codex merge/start/judge. Historical snapshots below retain their own dates.
+
+Earlier planning snapshot (superseded by the delivery above):
+
 Latest planning continuation **October3 09:58UTC**:
 `WEEKEND_PRIORITIES_AND_AI_ASSESSMENT_2026_10_03.md` records ATT1 actual inputs /
 ordersOFF integration and queued fractionalDAY PAPER acceptance as the next

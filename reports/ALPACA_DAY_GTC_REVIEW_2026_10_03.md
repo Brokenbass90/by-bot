@@ -1,5 +1,12 @@
 # Alpaca protection lifecycle — bounded review, October 3
 
+Follow-up read-only broker capture **11:15UTC** after the separate AI reload:
+same AMD0.186377282/CRWD0.469970151/META0.141939508, marketclosed,0openorders/stops.
+HWM/floor byte-identical to06:50 artifact,58 deployed hashes match, one active
+NEWsend cron, OLDprocesses absent. No Alpaca reload/code/config/order change.
+Oct5 13:30UTC/16:30Cyprus re-arm remains P0/NOT_DUE. Queue PAPER acceptance
+remains NOT_PROVEN. Receipt: AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md.
+
 Verdict: **GTC is unsupported for the three current fractional positions.**
 No LIVE code, config, manager, quantity or order was changed. The dynamic
 HWM/floor mechanism already exists; its broker order lifetime is the limitation.
