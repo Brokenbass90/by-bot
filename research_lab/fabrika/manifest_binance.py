@@ -6,7 +6,9 @@
   python3 research_lab/fabrika/manifest_binance.py tolpa|kity --kvitanciya квитанция: хэш манифеста + хэш результата судьи
 
 Покрытие (ворота ДО судьи; FAIL → BLOCKED: чинить данные, не правила):
-  C1 снятые монеты на месте: LUNAUSDT и FTTUSDT имеют признак и бары до своего краха (2022-05 / 2022-11);
+  C0 источник вселенной — архивный листинг (снятые контракты включены), не текущий список живых символов;
+  C1 сторожа-делистинги на месте (признак и бары в указанном месяце): TOLPA — LUNA 2022-05, FTT 2022-11, SRM 2022-11;
+     KITY — те же + MATIC 2024-08, OCEAN 2024-06, AGIX 2024-06 (уточнение 03.10 до окончания загрузки);
   C2 есть монеты, чьи бары кончаются раньше конца данных (делистинги включены), ≥ 10;
   C3 доля дат сетки, где во вселенной топ-50 ≥ 30 монет с признаком и баром: ≥ 90%;
   C4 PIT: вселенная даты d строится только из значений дня d−1 (проверка, что ключ d в выборке не используется).
@@ -51,7 +53,10 @@ def main():
     def est(s, mes):
         return any(d.startswith(mes) and v[c["pr"]] is not None for d, v in met.get(s, {}).items()) and \
                any(x.isoformat().startswith(mes) for x in bary.get(s, ()))
-    C1 = est("LUNAUSDT", "2022-05") and est("FTTUSDT", "2022-11")
+    storozha = [("LUNAUSDT", "2022-05"), ("FTTUSDT", "2022-11"), ("SRMUSDT", "2022-11")]
+    if k == "kity":
+        storozha += [("MATICUSDT", "2024-08"), ("OCEANUSDT", "2024-06"), ("AGIXUSDT", "2024-06")]
+    C1_det = {s: est(s, m) for s, m in storozha}; C1 = all(C1_det.values())
     konec_rano = sorted(s for s, b in bary.items() if max(b) < c["konec"])
     C2 = len(konec_rano) >= 10
     a, b = c["setka"]; vsego = ok = 0; d = a
@@ -64,7 +69,7 @@ def main():
         d += dt.timedelta(days=7 if k == "kity" else 1)
     C3 = vsego > 0 and ok / vsego >= 0.9
     C4 = True   # вселенная выше берётся только по ключу vch = d−1 — так же, как в судьях
-    pokr = dict(C1_snyatye_LUNA_FTT=C1, C2_delistingov=len(konec_rano), C2=C2, C3_dat_ok=f"{ok}/{vsego}", C3=C3, C4_PIT=C4,
+    pokr = dict(C0_istochnik="архивный листинг data.binance.vision", C1_storozha=C1_det, C1=C1, C2_delistingov=len(konec_rano), C2=C2, C3_dat_ok=f"{ok}/{vsego}", C3=C3, C4_PIT=C4,
                 primery_delistingov=konec_rano[:15])
     status = "PASS" if all((C1, C2, C3, C4)) else "BLOCKED"
     mf.write_text(json.dumps(dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), nabor=k,
