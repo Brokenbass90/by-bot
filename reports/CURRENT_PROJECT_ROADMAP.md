@@ -14,6 +14,16 @@ Public06:50UTC3sessions/18records/1filled/1gap/0clean; money gates unchanged.
 already implemented. Next-session DAYqueue proof is a separate PAPER candidate,
 no weekendLIVE change. This section supersedes historical roadmap snapshots.
 
+October3 weekend continuation: source/pricing assessment at09:58UTC is in
+`WEEKEND_PRIORITIES_AND_AI_ASSESSMENT_2026_10_03.md`. Next production result is
+the existing ATT1 actual-input/integration receipt or queued fractionalDAY PAPER
+acceptance; no new broker/VPS snapshot or activation occurred in that assessment.
+After KITY's terminal cycle, independent coverage priority is one crypto long
+mechanism, then one range/mean-reversion cycle; Claude keeps one Factory slot.
+AI return is assessed as an event-driven operations analyst, proposal-only with
+source citations and a future hard USD budget. Paid API use, budget amounts and
+hosted adapter remain proposals, not enabled runtime or money authority.
+
 ## Immediate queue: finish current evidence and actual inputs
 
 | Work | Next measurable result | Boundary / owner |
@@ -104,6 +114,11 @@ one frozen cycle; no automatic daemon activation or multiple markets. Long TOLPA
 observation continues in the background rather than freezing development for months.
 Claude owns research/Factory; Codex accepts qualified production packets and closes execution boundaries.
 
+After KITY terminal/rescue completion, prioritize one independent crypto long
+mechanism; after that cycle terminates, one range/mean-reversion mechanism.
+This does not authorize parallel extra families, daemon start, threshold variants
+of killed families or automatic promotion. Accepted long/range sleeves remain absent.
+
 Regime/Elder remains a separate preregistered baseline-vs-regime experiment after
 causal availability is archived. UNKNOWN/missing causal inputs cannot become
 retrospective ALLOW. No blanket trend filter or live regime router is introduced.
@@ -128,6 +143,13 @@ Build only when the preceding evidence exposes a concrete need:
    proposals and provenance views first. AI cannot submit orders, change risk,
    strategy, frozen judges or financial authority. Meta-ML can later compare
    preregistered frozen policies under separate evidence; no online tuning in LIVE.
+   A thin event-driven operations analyst may be evaluated in parallel without
+   blocking production: reuse the approved LAB_AI_V0 evidence/authority contract
+   and existing DeepSeek accounting seam. Old signal block/reduce, auto-tuning and
+   env executor stay outside this path. Current accounting caps attempts, notUSD;
+   a hosted pilot requires source-bound prices, atomic cash reservations and a
+   labelled usefulness test before paid activation. See the October3 assessment;
+   no paid request/schedule or runtime flag is enabled by this roadmap.
 5. Safe cleanup: inventory → dependency/active-state mapping → archive with
    hashes/references → restore/dependency verification → scoped deletion. Preserve
    sealed evidence, active runtime, credentials and all unknown/foreign dirty files.
