@@ -50,9 +50,9 @@ def main():
         kl = json.loads(f.read_text())
         if kl:
             bary[f.stem] = {dt.datetime.fromtimestamp(r[0] / 1000, dt.timezone.utc).date() for r in kl}
-    def est(s, mes):
-        return any(d.startswith(mes) and v[c["pr"]] is not None for d, v in met.get(s, {}).items()) and \
-               any(x.isoformat().startswith(mes) for x in bary.get(s, ()))
+    def est(s, mes):   # бары требуются, только если монета вообще получала цены (была в топ-50); иначе — признак
+        m_ok = any(d.startswith(mes) and v[c["pr"]] is not None for d, v in met.get(s, {}).items())
+        return m_ok and (s not in bary or any(x.isoformat().startswith(mes) for x in bary[s]))
     storozha = [("LUNAUSDT", "2022-05"), ("FTTUSDT", "2022-11"), ("SRMUSDT", "2022-11")]
     if k == "kity":
         storozha += [("MATICUSDT", "2024-08"), ("OCEANUSDT", "2024-06"), ("AGIXUSDT", "2024-06")]
