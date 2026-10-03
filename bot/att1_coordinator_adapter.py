@@ -74,8 +74,29 @@ def _route_row(row):
         raise AdapterViolation('ATT1 route H1 malformed')
     if row['owner'] != 'OLD' and row['paused_at_ms'] is None:
         raise AdapterViolation('ATT1 route pause malformed')
+    fresh = row.get('fresh_epoch_json')
+    kind = row.get('handoff_kind')
+    if kind not in (None, 'FRESH_EPOCH_V1') or (kind == 'FRESH_EPOCH_V1') != (fresh is not None):
+        raise AdapterViolation('fresh route declaration missing/invalid')
+    if fresh is not None:
+        from bot.att1_canary_preparation import validate_canary_fresh_handoff
+        try:
+            epoch = json.loads(fresh)
+            proof = validate_canary_fresh_handoff(**epoch['inputs'])
+            if (set(epoch) != {'inputs','declaration_sha256','handoff_sha256'}
+                    or proof['declaration_sha256'] != epoch['declaration_sha256']
+                    or proof['handoff_sha256'] != epoch['handoff_sha256']
+                    or row['owner'] != 'NEW_READY'
+                    or row['updated_ms'] < epoch['inputs']['now_ms']
+                    or row['cutover_ms'] != proof['minimum_cutover_ms']
+                    or row['drained_at_ms'] != proof['drained_at_ms']
+                    or row['broker_truth_sha256'] != epoch['inputs']['broker_snapshot']['source_sha256']):
+                raise AdapterViolation('fresh route provenance malformed')
+        except (ValueError, KeyError, TypeError) as exc:
+            raise AdapterViolation('fresh route provenance malformed') from exc
     if row['owner'] == 'NEW_READY' and (
-        any(row[k] is None for k in ('cutover_ms', 'latest_h1_ms', 'drained_at_ms', 'broker_truth_sha256'))
+        any(row[k] is None for k in ('cutover_ms', 'drained_at_ms', 'broker_truth_sha256'))
+        or (not fresh and row['latest_h1_ms'] is None)
         or row['cutover_ms'] % ATT1_H1_MS
         or row['cutover_ms'] <= row['drained_at_ms']
         or not row['paused_at_ms'] <= row['drained_at_ms'] <= row['updated_ms']
@@ -144,7 +165,8 @@ def init_att1_route_tables(con):
                 'terminal_evidence_sha256': 'TEXT'},
             'att1_route': {'budget_day_utc': 'TEXT', 'spent_debits_usdt': 'TEXT',
                 'cash_coverage_sha256': 'TEXT', 'cash_finality_frontier_ms': 'INTEGER',
-                'cash_event_fingerprints_json': 'TEXT', 'risk_cap_usdt': 'TEXT', 'notional_cap_usdt': 'TEXT'},
+                'cash_event_fingerprints_json': 'TEXT', 'risk_cap_usdt': 'TEXT', 'notional_cap_usdt': 'TEXT',
+                'fresh_epoch_json': 'TEXT', 'handoff_kind': 'TEXT'},
         }
         for table, fields in additions.items():
             present = {row[1] for row in con.execute(f'PRAGMA table_info({table})')}
@@ -251,6 +273,45 @@ def prepare_att1_cutover(con, account, *, cutover_ms, last_old_h1_ms,
         con.rollback()
         raise
     return result
+
+
+def prepare_att1_fresh_cutover(con, account, **inputs):
+    """Persist the accepted cold declaration in the existing orders-OFF ledger.
+
+    This does not retire OLD in the runtime, connect to a broker or enable NEW.
+    Its caller must supply authenticated retirement/finality/bar provenance.
+    """
+    from bot.att1_canary_preparation import validate_canary_fresh_handoff
+    account = _require_account(account)
+    proof = validate_canary_fresh_handoff(**inputs)
+    if proof['account'] != account:
+        raise AdapterViolation('fresh cutover account mismatch')
+    now, retired = inputs['now_ms'], inputs['declaration']['retired_at_ms']
+    _begin(con)
+    try:
+        route = read_att1_route(con, account)
+        if (route['owner'] != 'OLD_PAUSED' or route.get('fresh_epoch_json') is not None
+                or not route['paused_at_ms'] <= retired <= proof['drained_at_ms']
+                or now < route['updated_ms']
+                or (route['latest_h1_ms'] or 0) > proof['fence_h1_ms']):
+            raise AdapterViolation('fresh cutover retirement/route mismatch')
+        if con.execute('''SELECT 1 FROM att1_decisions WHERE account=? AND family=?
+                AND (terminal_at_ms IS NULL OR costs_complete!=1 OR terminal_at_ms>?) LIMIT 1''',
+                (account, ATT1_FAMILY, proof['drained_at_ms'])).fetchone():
+            raise AdapterViolation('fresh cutover has unresolved reservations/costs')
+        epoch = {'inputs':inputs, 'declaration_sha256':proof['declaration_sha256'],
+                 'handoff_sha256':proof['handoff_sha256']}
+        con.execute('''UPDATE att1_route SET owner='NEW_READY',handoff_kind='FRESH_EPOCH_V1',cutover_ms=?,drained_at_ms=?,
+                       broker_truth_sha256=?,updated_ms=?,fresh_epoch_json=? WHERE account=?''',
+            (proof['minimum_cutover_ms'],proof['drained_at_ms'],
+             inputs['broker_snapshot']['source_sha256'],now,
+             json.dumps(epoch,sort_keys=True,separators=(',',':')),account))
+        result = read_att1_route(con, account)
+        con.commit()
+        return result
+    except Exception:
+        con.rollback()
+        raise
 
 
 def _decision_key(value):
@@ -571,7 +632,7 @@ def _reserve_att1_decision_tx(con, account, *, owner, symbol, side, h1_close_ms,
         raise AdapterViolation('invalid ATT1 reservation input')
     link_id = _stable_link_id(account, symbol, side, h1_close_ms)
     route = read_att1_route(con, account)
-    if owner == 'NEW' and route.get('risk_cap_usdt') is not None and not budget_authorized:
+    if owner == 'NEW' and (route.get('risk_cap_usdt') is not None or route.get('fresh_epoch_json')) and not budget_authorized:
         raise AdapterViolation('NEW cash-aware budget reservation required')
     if (owner == 'OLD' and route['owner'] != 'OLD') or (owner == 'NEW' and route['owner'] != 'NEW_READY'):
         raise AdapterViolation('ATT1 route owner mismatch')
@@ -687,6 +748,8 @@ def reserve_new_att1_preparation(con, account, *, symbol, side, h1_close_ms, now
         handoff = v.get('handoff_binding', {}).get('result')
         if handoff:
             route = read_att1_route(con,account)
+            from bot.att1_canary_preparation import validate_fresh_route_handoff
+            validate_fresh_route_handoff(route, handoff)
             if (handoff['account'] != account or route['owner'] != 'NEW_READY'
                     or route['cutover_ms'] < handoff['minimum_cutover_ms']):
                 raise AdapterViolation('NEW route/drain cutover mismatch')

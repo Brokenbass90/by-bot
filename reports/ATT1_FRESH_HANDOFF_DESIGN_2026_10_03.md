@@ -1,8 +1,11 @@
-# ATT1 fresh handoff — proposed, orders OFF
+# ATT1 fresh handoff — design and local candidate, orders OFF
 
-Status: `PROPOSED_NOT_IMPLEMENTED`. This is a concrete alternative to impossible
-legacy-state reconstruction from the available file/GET sources. It is not an
-approved money transition or a substitute for the existing strict handoff.
+Status: `LOCAL_IMPLEMENTED_ORDERS_OFF`. Owner accepted this direction for
+orders-OFF implementation on October3. Local declaration/96-bar validation, atomic
+route persistence and existing inert preparation integration are delivered; see
+ATT1_FRESH_HANDOFF_RUNBOOK_2026_10_03.md and its readiness receipt. Actual retirement
+provenance, runtime migration and selected-account money integration are not
+delivered. This is not money approval or a replacement of strict legacy validation.
 Evidence: `ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json`.
 
 ## Why the legacy path is blocked
@@ -44,7 +47,7 @@ Existing journals and contamination labels stay unchanged.
    Proposed migration quarantine: **96 consecutive closed 5-minute bars after the
    fence**, matching NEW's frozen eight-hour cooldown length. Missing bars extend
    it. This is a deliberate cold migration policy, **not preservation or proof of
-   OLD's call counter**. Its adoption needs explicit review/approval; no new
+   OLD's call counter**. Owner accepted its orders-OFF implementation; actual adoption still needs source-bound retirement/quarantine evidence; no new
    strategy/profile parameter, live regime filter or public epoch reset.
 4. After the fence/quarantine, assemble fresh actual risk/fees/mode/cash/funding
    inputs in the existing builder. Enforce one entry owner, one slot, min-qty /
@@ -87,7 +90,7 @@ OLD resume or rollback over positions. Preserve old and public journals, profile
 source pins and receipts. Future held exposure must retain its owning protection /
 exit manager; account-flat is mandatory for a flat rollback.
 
-Next engineering decision is whether to approve this explicit cold migration policy
-or require a native legacy-state export instead. Until reviewed and accepted, the
-existing actual-account packet remains BLOCKED_DATA. Implementing this proposal
-does not itself authorize NEW money or satisfy the prospective cohort.
+Next engineering gates are authenticated durable retirement/quarantine provenance,
+viable mode/funding/fee inputs and selected-account integration. The existing
+actual-account packet remains BLOCKED_ACTUAL_INPUTS. Local implementation and
+financial review do not authorize NEW money or satisfy the prospective cohort.

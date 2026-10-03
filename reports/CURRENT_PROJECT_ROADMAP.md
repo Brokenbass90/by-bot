@@ -3,38 +3,37 @@
 Authoritative production state: MASTER_HANDOFF.md, NEW_CHAT_START_HERE.md and
 TOP CODEX_SESSION_CHECKPOINT_2026_09_06.md. Latest engineering delivery:
 ATT1_CANARY_ORDERS_OFF_READINESS_2026_10_02.json and its HANDOFF runbook.
-Latest actual-input result: `ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json` and
-proposed `ATT1_FRESH_HANDOFF_DESIGN_2026_10_03.md`. Six named account cash islands
-are reconciled (four isolated known entries, two mixed). Legacy watermarks are
-BLOCKED_DATA in available sources; archive expansion has stopped. Fresh epoch
-requires explicit migration-policy acceptance and implementation. Position mode
-and the frozen14-day funding reserve remain unresolved; no buildable actual packet.
-Earlier morning risk/fee/cash inputs remain in
-ATT1_ACTUAL_INPUTS_PROGRESS_2026_10_03.json. Public now3sessions/18records/1filled
-SEI/1stale-book gap/0clean at06:06UTC. PM2 is KILLED in published Claude KARTA.
-This section supersedes the historical roadmap below. The owner's approved
-Tasks1–4 are delivered; no NEW money, Factory start or architecture work was
-added to their implementation scope.
+Latest local delivery: `ATT1_FRESH_HANDOFF_READINESS_2026_10_03.json` and
+`ATT1_FRESH_HANDOFF_RUNBOOK_2026_10_03.md`. Owner-approved cold path implemented
+ordersOFF at the existing route/preparation boundary; actual packet still blocked
+on authenticated retirement/quarantine, mode, funding/fee coverage and money
+integration. Six named legacy cash islands reconciled (four isolated, two mixed),
+legacy watermarks unavailable; do not restart archive expansion or Tasks1–4.
+Public06:50UTC3sessions/18records/1filled/1gap/0clean; money gates unchanged.
+`ALPACA_DAY_GTC_REVIEW_2026_10_03.md`: current fractions requireDAY; dynamicHWM/floor
+already implemented. Next-session DAYqueue proof is a separate PAPER candidate,
+no weekendLIVE change. This section supersedes historical roadmap snapshots.
 
 ## Immediate queue: finish current evidence and actual inputs
 
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
-| Alpaca LIVE | Oct3 same3 holdings/floors/HWM/single manager; DAY stops expired, open stops0. Observe exact-quantity accepted re-arm at Oct5 regular open13:30UTC/16:30Cyprus | Codex operations; NOT_DUE, no current weekend stop protection asserted; no reactivation/size increase |
-| NEW ATT1 | Review explicit fresh-epoch handoff policy after legacy-watermark BLOCKED_DATA; resolve declared-oneway conflict and viable source-bound funding reserve, then actual orders-OFF packet / selected-account integration | Codex; archive expansion stopped, six account cash islands reconciled (two mixed). Public3sessions/1filled/1gap/0clean at06:06UTC;2–3 clean/net-R +fresh dossier +ownerGO remain |
+| Alpaca LIVE | Observe exact-quantity accepted DAY re-arm Oct5 13:30UTC/16:30Cyprus. Separately validate queued next-session fractionalDAY stop in PAPER | Codex operations; currentGTC unsupported, queue acceptanceNOT_PROVEN, no weekendLIVE change/capital increase |
+| NEW ATT1 | Local cold-path implementation delivered. Collect actual durable-retirement/quarantine proof, resolve LINKmode/funding/HFTcost inputs; actual ordersOFF packet and selected-account integration remain | Codex; no runtime migration/money. Public06:50UTC3sessions/1filled/1gap/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
 | PM2 | **KILLED / NOT_EXECUTABLE** in published Oct3 KARTA:3 dates/792 rounds/0 qualifying violations | Claude terminal registry verdict; removed from LIVE queue, slot freed; no judge rerun |
-| TOLPA_1D / weekly | First restore current PIT daily/top50 inputs, then frozen forward observations/180–365-day looks | Claude; same family evidence is not additive; no cheap-screen→LIVE shortcut |
+| TOLPA_1D / weekly | Published Binance2021–2022 cross-venue replication loading; frozen judge after download; restore PIT forward inputs in parallel | Claude; replication is not untouched Bybitholdout, same-family evidence not additive; no cheap-screen→LIVE |
+| KITY_POZICII | Prereg/loader/judge published before data; download after TOLPA, then frozen primary/replication/independence gates | Claude; one Factory slot, not READY_FOR_BUILD; no extra families until terminal/rescue budget |
 | ETS2M | Frozen verdict no earlier Oct10 19:00UTC | Claude; no retuning or early evidence consumption |
 | PEREGREV | Required prospective events/days and frozen verdict | Claude; execution baseline alone is not net edge |
 | NOCHNOY FX | **KILLED / NOT_EXECUTABLE** on BullWaves and preregistered FxPro Raw+ retry | Removed from LIVE queue; no third broker shopping or resurrection |
 | SBR1 / XSEC / Bull / old Gold H1 | Respect parked/negative verdicts; new mechanism/data required to reopen a family | No current accepted long/range candidate asserted |
 
 Claude source read in place and fetched only into recovery's remote ref:
-`research/fabrika-v1@0bf5dcbab1f9fa50eedd39404b31a233e1b3e0d3`,
+`research/fabrika-v1@0505f9d564cf042f2a160a33a458aa7d28c76d1a`,
 `research_lab/KARTA.md`, latest visible health snapshot17:29UTC. Local sibling ref
 c1fb567 is a concurrent historical point, not checkout drift. Research verdicts
 above are Claude registry claims read without rerunning judges/holdouts.
-Origin advanced October3 and published PM2 KILL. Other health rows still retain
+Origin advanced October3: PM2KILL plus KITY_POZICII prereg and TOLPA Binance replication plan. Other health rows still retain
 October2 17:29UTC; no fresh data-health/holdout verdict is invented. The
 older Codex-sync paragraph still says FX COST_GATE_PENDING; current MONEY/
 EVIDENCE table supersedes it. No Claude checkout/diff or evaluator was modified.
@@ -47,7 +46,8 @@ sources cannot establish state. The first such cycle reconciled six broker cash
 islands and proved no native OLD export seam; stop expanding old archive searches.
 Historical2020–2022 is only useful if the actual signal inputs, universe, PIT and
 non-consumption provenance are available. Publishing an availability probe does
-not establish an untouched usable holdout. Claude owns that investigation.
+not establish an untouched usable holdout. Current accepted workaround is separate
+Binance2021–2022 replication, explicitly not Bybit holdout. Claude owns research.
 
 Close every question that available, admissible historical evidence can answer
 before waiting for prospective events. Start with a bounded archive/coverage
@@ -99,8 +99,8 @@ judge → READY_FOR_BUILD/KILL with source/lineage/evidence acceptance. Current 
 reports self-check PASS, daemonOFF and empty queue: verify a present defect before
 repairing it; old acceptance defects are not automatic new work. Factory remains
 OFF until its owner's accepted Discovery plan. PM2 is now terminal KILLED and has
-freed that slot; prepare one new independent mechanism, not automatic daemon
-activation or multiple markets. Long TOLPA forward
+freed that slot; current mechanism is preregistered KITY_POZICII. Complete its
+one frozen cycle; no automatic daemon activation or multiple markets. Long TOLPA forward
 observation continues in the background rather than freezing development for months.
 Claude owns research/Factory; Codex accepts qualified production packets and closes execution boundaries.
 

@@ -2,6 +2,38 @@
 
 ## Public continuation checkpoint
 
+Latest continuation — **October3 cold-path candidate delivered ordersOFF; Alpaca DAY/GTC review complete**:
+- Owner accepted fresh-epoch direction for orders-OFF implementation. New local
+  interfaces validate UNKNOWN legacy state, durable-retirement declarations and96
+  actual consecutive closedM5 bars; gaps extend the initial quarantine. Atomic
+  existing route ledger records the epoch; restart/late drain/changed or missing
+  declaration/cash-bypass deny. First maturity stays fixed across fresh observation.
+  Legacy handoff remains strict; no invented OLD watermark/cooldown.
+- Local128 targetedPASS (34 new cold tests), reviewer119PASS; full3363PASS/57
+  baseline failures, exact same57nodeids/no new failures. One bounded6-astra/high
+  financial review PASS_WITH_SCOPE_LIMITS. No target-Python run or old14-session
+  oracle rerun this cycle; no frozen strategy/lifecycle/public driver change.
+- Actual packet BLOCKED: durable retirement/quarantine provenance, LINKhedge1/2
+  versus bindingidx0,14day funding reserve policy,HFTfee coverage and autonomous
+  selected-account money integration. No actual binding/archive fabricated. No
+  VPS runtime/DB migration, broker mode write, risk increase or NEW money.
+- Authenticated Alpaca06:50:32UTC: same3 fractional holdings,0openorders/stops,
+  samefloor/HWM,58deployed hashes,oneNEWsend cron,OLDprocesses absent. DAY stops
+  expired; broker protection is absent now. GTCfractionalSTOP unsupported in current
+  official matrix; dynamic HWM/floor already exist. Separate next-session DAYqueue
+  candidate needs PAPER acceptance/restart/idempotence proof; NOT_PROVEN, no orders
+  or LIVE changes. Oct5 13:30UTC/16:30Cyprus existing re-arm stays P0/NOT_DUE.
+- Public06:50:33UTC remains3sessions/18records/1SEIfilled/1gap/0clean/0held,
+  broker/order calls0. Preservegap/2s/epoch. Gate2–3clean/net-R+dossier+ownerGO.
+- Claude actualorigin0505f9d: KITY_POZICII PREREG, download afterTOLPA; TOLPA
+  Binance2021–2022 cross-venue replication loading, not an untouched Bybitholdout.
+  One Factory researchslot underClaude; daemon stillOFF in registry, no Codexstart,
+  merge orjudge. PM2 staysKILLED; ETS2M>=Oct10 19UTC. No READY claim for KITY.
+- Fullsuite appended4entries to foreignallowlist journal through existing watcher
+  tests; exact originalSHA restored, sideeffect archived privately; neverstage it.
+- Read ATT1_FRESH_HANDOFF_READINESS_2026_10_03.json,
+  ATT1_FRESH_HANDOFF_RUNBOOK_2026_10_03.md and ALPACA_DAY_GTC_REVIEW_2026_10_03.md.
+
 Latest continuation — **October3 06:06UTC bounded result: six broker cash islands reconciled; legacy watermarks BLOCKED_DATA; NEW ordersOFF**:
 - Exactly6 known7-day symbol windows,36 signed GET pages. Full execution↔cash joins,
   unique same-time cash-size chains and closed-PnL totals reconcile.4 isolated

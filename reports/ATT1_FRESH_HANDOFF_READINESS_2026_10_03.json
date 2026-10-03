@@ -1,0 +1,114 @@
+{
+  "schema_id": "att1_fresh_handoff_readiness_v1",
+  "generated_at_utc": "2026-10-03T07:01:44.017821+00:00",
+  "status": "LOCAL_FRESH_HANDOFF_IMPLEMENTED_ORDERS_OFF_ACTUAL_BLOCKED",
+  "source_head_before_change": "a3282fe3b680c5419f9b5613a089db1789dcb834",
+  "orders_allowed": false,
+  "owner_money_go": false,
+  "money_gate_met": false,
+  "deployed": false,
+  "production_db_migrated": false,
+  "broker_writes": 0,
+  "runtime_writes": 0,
+  "source_hashes": {
+    "bot/att1_canary_preparation.py": "eed64135c236fa6913efb5ea5c838a675e21c3d6f095a72b96d4c9a95abfa553",
+    "bot/att1_coordinator_adapter.py": "350aa186a6a190526a886b25f4fef283bf21e47684204ee3cc6d586210d6ffe5",
+    "tests/test_att1_fresh_handoff.py": "da173f0e386d3780c1536e6eef29386873af879f7ea69ab3a14e4aa49f397d76",
+    "reports/ATT1_FRESH_HANDOFF_RUNBOOK_2026_10_03.md": "badd4c14dd35562874b87768970c77181da3495fa0f9e75522474354377feb28",
+    "reports/ALPACA_DAY_GTC_REVIEW_2026_10_03.md": "72db4e0a5a1813aa254d355f9ed9d9fa4a27711ed2c9313405a9be298f47bb92"
+  },
+  "scope": "Explicit cold-policy validation, atomic local route persistence and existing inert entry/cash preparation; no money runner or actual-account package manufactured",
+  "tests": {
+    "primary_targeted_passed": 128,
+    "new_cold_path_tests_passed": 34,
+    "reviewer_targeted_passed": 119,
+    "alpaca_focused_passed": 49,
+    "full_passed": 3363,
+    "full_failed": 57,
+    "baseline_failure_nodeids_identical": true,
+    "new_failure_nodeids": [],
+    "full_warning_count": 1,
+    "full_log_sha256": "fc567929d84a90a549a5c53412cd4126d833a38159d8a1fedee45202a93ed37f",
+    "target_python_this_cycle": "NOT_RUN",
+    "old_14_session_oracle_this_cycle": "NOT_RERUN; frozen strategy/lifecycle/public driver untouched; Oct2 pinned receipt retained",
+    "full_warning": "passlib crypt deprecation under Python3.12"
+  },
+  "critical_review": {
+    "outcome": "PASS_WITH_SCOPE_LIMITS",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "runtime_verified": true,
+    "session_id": "01a1002d-8050-7062-b6c8-0d098cb34fa7",
+    "scope": "Local code/design consistency; not deployment/migration evidence or money GO"
+  },
+  "critical_review_sha256": "2785d83f45b23a3d674bce77c6d1a2864564a0511921e6a4a0aa756e175eab2a",
+  "public": {
+    "observed_ms": 1791010233526,
+    "sessions": 3,
+    "records": 18,
+    "filled_simulations": 1,
+    "clean_filled_terminals": 0,
+    "incident_sessions": 1,
+    "held_positions": 0,
+    "broker_calls": 0,
+    "order_calls": 0
+  },
+  "alpaca": {
+    "observed_ms": 1791010232114,
+    "current_positions": [
+      "AMD",
+      "CRWD",
+      "META"
+    ],
+    "fractional": true,
+    "open_orders": 0,
+    "open_stop_orders": 0,
+    "market_open": false,
+    "next_open": "2026-10-05T09:30:00-04:00",
+    "hashes_match": true,
+    "one_new_send_cron": true,
+    "old_processes_absent": true,
+    "day_gtc_verdict": "DAY_SUPPORTED_GTC_UNSUPPORTED_FOR_CURRENT_FRACTIONS",
+    "queued_fractional_stop_acceptance": "NOT_PROVEN",
+    "live_changes": false
+  },
+  "live_snapshot_sha256": "22f4ac88a25bfb8e1b1e7b37cc35cef7c5190b35e3af7d007842d3a52ab1f5d6",
+  "actual_packet": {
+    "status": "BLOCKED_ACTUAL_INPUTS",
+    "missing": [
+      "authenticated durable OLD retirement and96closedM5 quarantine provenance",
+      "LINK hedge indices1/2 conflict with declaredoneway/positionIdx0",
+      "approved source-bound14day funding reserve policy",
+      "HFT actual fee coverage",
+      "autonomous selected-account money dispatch/protection/exit/finality integration"
+    ],
+    "binding_mode_changed": false,
+    "risk_increased": false,
+    "symbols_removed": false,
+    "money_runner_implemented": false
+  },
+  "claude": {
+    "origin_head": "0505f9d564cf042f2a160a33a458aa7d28c76d1a",
+    "karta_sha256": "44bbf8f082d9349225088e70e302dc516029b3952ec67cea719f1a2403e4defc",
+    "kity": "KITY_POZICII prereg; download after TOLPA; one Factory slot, not READY_FOR_BUILD",
+    "tolpa": "TOLPA_BINANCE_REPLICATION_2021_2022 loading; cross-venue replication, not untouched Bybit holdout",
+    "pm2": "KILLED_NOT_EXECUTABLE",
+    "factory_daemon": "OFF in published KARTA; no daemon verification/start by Codex",
+    "research_merge": false,
+    "judge_rerun": false
+  },
+  "foreign_diff": {
+    "path": "configs/allowlist_change_log.json",
+    "sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "status": "Original bytes restored exactly after4existing-suite test appends; sideeffect archived privately; excluded from commit"
+  },
+  "next_gate": "Source-bound actual retirement/quarantine+mode/cost resolution+actual ordersOFF packet and selected-account integration;2\u20133 clean prospective filled/net-R+separate owner GO unchanged",
+  "private_manifest_sha256": "753a3afbdb05b51bca83322d6e82cf3f27d399c2bf5ba8177be5242f3f2cebf1",
+  "alpaca_worker": {
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "runtime_verified": true,
+    "session_id": "01a1007e-b556-7100-aa53-c13759bebd4e",
+    "inventory_sha256": "4ea1f2ef94a78e999c3f5aef1b6a1149c9008add20e0cab2776243f51ded1938"
+  }
+}

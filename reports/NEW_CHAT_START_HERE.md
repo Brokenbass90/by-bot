@@ -7,7 +7,29 @@
 3 октября 2026, а не вечная истина. Свежие broker/runtime facts имеют приоритет
 над старыми отчётами. При конфликте укажи источник и границу знания.
 
-## Latest October3 bounded result — use first
+## Latest October3 cold-path implementation — use first
+
+Owner approved fresh-epoch implementation orders-OFF. Читай
+ATT1_FRESH_HANDOFF_READINESS_2026_10_03.json, ATT1_FRESH_HANDOFF_RUNBOOK_2026_10_03.md
+и ALPACA_DAY_GTC_REVIEW_2026_10_03.md. Локально реализованы declaration/96-bar
+validation, atomic route persistence и существующая inert preparation integration.
+UNKNOWN OLD state не подменён, legacy denial сохранён; actual retirement/96-bar
+provenance и money integration не готовы. Tasks1–4 не повторять.
+128 targetedPASS/34новых; full3363PASS/те же57baselinefailures; reviewer119PASS,
+financial review PASS_WITH_SCOPE_LIMITS. TargetPython/oracle14sessions не повторены.
+Actual packet BLOCKED: retirement/quarantine, LINKhedge vsidx0, fundingpolicy,
+HFTfee, selected-account money integration. Никаких VPS/DB/runtime/order изменений.
+Alpaca06:50:32UTC same3fractions,0openstops/orders,floors/HWM/singlemanager/58hashes.
+GTCfractionalSTOP официально не поддерживается. HWM/floor динамические уже есть;
+отдельно проверить queued next-session DAY в PAPER, не менять LIVE на выходных.
+Re-arm05.10 13:30UTC/16:30Cyprus P0. Public06:50:33UTC same3/18/1fill/1gap/0clean,
+0held/broker/ordercalls;2s+clean/net-R+ownerGO unchanged.
+Claude actualorigin0505f9d: KITY_POZICII PREREG/downloadafterTOLPA; Binance2021–22
+replicationloading, не untouched Bybitholdout. FactorydaemonOFF; Claudeowner,
+no Codexmerge/judge/start. Fullpytest дописал4строки foreignallowlist; исходные байты
+точно восстановлены поSHA, sideeffect сохранён приватно, файл не stage.
+
+## Earlier October3 bounded result — retained snapshot
 
 Читай ATT1_BOUNDED_INPUTS_RESULT_2026_10_03.json и proposed
 ATT1_FRESH_HANDOFF_DESIGN_2026_10_03.md. За один bounded cycle сверены все6 cash

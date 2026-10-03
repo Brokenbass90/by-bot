@@ -193,7 +193,9 @@ def _revalidate(validated):
         value = validate_canary_budget_inputs(validated['binding'], validated['old_budget_evidence'],
                                               validated['cash_evidence'], now_ms=validated['now_ms'])
         if 'handoff_binding' in validated:
-            value = bind_canary_handoff(value, **validated['handoff_binding']['inputs'])
+            handoff = validated['handoff_binding']
+            binder = bind_canary_fresh_handoff if handoff.get('kind') == 'FRESH_EPOCH_V1' else bind_canary_handoff
+            value = binder(value, **handoff['inputs'])
         if 'command_binding' in validated:
             attachment = validated['command_binding']
             value = bind_canary_command_budget(value, attachment['profile'], attachment['intent'],
@@ -354,6 +356,119 @@ def bind_canary_handoff(validated: Mapping, **inputs) -> dict:
     return v
 
 
+def validate_canary_fresh_handoff(*, declaration: Mapping, retirement_snapshot: Mapping,
+                                pause_snapshot: Mapping, broker_snapshot: Mapping,
+                                old_intent_inventory: Mapping, closed_bars: Mapping,
+                                now_ms: int) -> dict:
+    """Validate an explicit cold policy; declarations are not authentication.
+
+    Neither retired guard assertions nor source hashes prove runtime provenance.
+    The accepted collector/review owns that proof. UNKNOWN legacy state remains
+    UNKNOWN; this does not manufacture a legacy H1 or a legacy cooldown.
+    """
+    from bot.att1_coordinator_adapter import _require_account, ATT1_H1_MS
+    if type(now_ms) is not int or now_ms <= 0:
+        raise AdapterViolation('invalid fresh handoff clock')
+    d = _mapping(declaration, {'schema_id','policy_id','account','base_profile_sha256',
+        'implementation_sha256','policy_approval_sha256','legacy_state','retired_at_ms',
+        'fence_h1_ms'}, 'fresh declaration')
+    account = _require_account(d['account'])
+    for key in ('base_profile_sha256','implementation_sha256','policy_approval_sha256'):
+        _sha(d[key], key)
+    if (d['schema_id'] != 'att1_fresh_epoch_v1' or d['policy_id'] != 'COLD_96_CLOSED_M5_V1'
+            or d['legacy_state'] != 'UNKNOWN' or d['base_profile_sha256'] != BASE_PROFILE_SHA
+            or d['implementation_sha256'] != preparation_implementation_hash()):
+        raise AdapterViolation('unaccepted fresh handoff declaration/profile')
+    retired, fence = d['retired_at_ms'], d['fence_h1_ms']
+    if (type(retired) is not int or not 0 < retired <= now_ms or type(fence) is not int
+            or fence != (retired + ATT1_H1_MS - 1) // ATT1_H1_MS * ATT1_H1_MS):
+        raise AdapterViolation('fresh retirement/fence mismatch')
+    common = {'account','observed_ms','source_sha256'}
+    r = _mapping(retirement_snapshot, common | {'retired_at_ms','entry_guard_disabled',
+        'config_reload_verified','restart_entry_denied','management_preserved'}, 'retirement')
+    p = _mapping(pause_snapshot, common | {'control'}, 'pause')
+    b = _mapping(broker_snapshot, common | {'schema_id','position_count','order_count','flat_no_orders'}, 'broker')
+    o = _mapping(old_intent_inventory, common | {'complete','finality_complete','costs_complete',
+                                               'unresolved','drained_at_ms'}, 'inventory')
+    bars = _mapping(closed_bars, common | {'complete','fence_available_ms','bars'}, 'closed bars')
+    for name, obj in (('retirement',r), ('pause',p), ('broker',b), ('inventory',o), ('bars',bars)):
+        if obj['account'] != account:
+            raise AdapterViolation('fresh handoff account mismatch')
+        _clock(obj['observed_ms'], now_ms, name)
+        _sha(obj['source_sha256'], name)
+    if (r['retired_at_ms'] != retired or any(r[k] is not True for k in
+            ('entry_guard_disabled','config_reload_verified','restart_entry_denied','management_preserved'))):
+        raise AdapterViolation('durable OLD retirement not established')
+    control = _mapping(p['control'], {'exists','scope','read_error','paused_sleeves'}, 'pause control')
+    if (control['exists'] is not True or control['scope'] != 'new_entries_only'
+            or control['read_error'] is not None or not isinstance(control['paused_sleeves'], list)
+            or 'att1' not in control['paused_sleeves']):
+        raise AdapterViolation('valid OLD entry pause required')
+    if (b['schema_id'] != 'att1_broker_snapshot_v1' or b['flat_no_orders'] is not True
+            or type(b['position_count']) is not int or b['position_count'] != 0
+            or type(b['order_count']) is not int or b['order_count'] != 0):
+        raise AdapterViolation('fresh handoff broker is not flat/no orders')
+    drain = o['drained_at_ms']
+    if (any(o[k] is not True for k in ('complete','finality_complete','costs_complete'))
+            or o['unresolved'] != [] or type(drain) is not int
+            or not retired <= drain <= min(o['observed_ms'], b['observed_ms'])):
+        raise AdapterViolation('fresh handoff drain/costs incomplete')
+    available = bars['fence_available_ms']
+    if (bars['complete'] is not True or type(available) is not int
+            or not fence <= available <= bars['observed_ms'] or not isinstance(bars['bars'], list)):
+        raise AdapterViolation('fresh closed-bar coverage incomplete')
+    previous, run, completed = fence, 0, None
+    for value in bars['bars']:
+        row = _mapping(value, {'close_ms','source_sha256'}, 'closed bar')
+        _sha(row['source_sha256'], 'closed bar')
+        close = row['close_ms']
+        if (type(close) is not int or close % 300_000 or not previous < close <= bars['observed_ms']
+                or close <= available):
+            raise AdapterViolation('duplicate/future/unavailable quarantine bar')
+        run = run + 1 if close == previous + 300_000 else 1
+        previous = close
+        if run == 96 and completed is None:
+            completed = close
+    if completed is None or now_ms - previous >= 300_000 or completed < drain:
+        raise AdapterViolation('96 consecutive current closed M5 bars required')
+    out = {'account':account, 'drained_at_ms':drain, 'last_old_h1_ms':None,
+        'minimum_cutover_ms':(completed + ATT1_H1_MS - 1)//ATT1_H1_MS*ATT1_H1_MS,
+        'symbols':[], 'orders_allowed':False, 'handoff_kind':'FRESH_EPOCH_V1',
+        'legacy_state':'UNKNOWN', 'fence_h1_ms':fence, 'quarantine_complete_ms':completed,
+        'declaration_sha256':digest(d)}
+    out['handoff_sha256'] = digest({'declaration':d,'retirement':r,'pause':p,'broker':b,
+                                   'inventory':o,'bars':bars,'now_ms':now_ms})
+    return out
+
+
+def bind_canary_fresh_handoff(validated: Mapping, **inputs) -> dict:
+    v = _revalidate(validated)
+    if 'handoff_binding' in v or 'command_binding' in v:
+        raise AdapterViolation('handoff must precede command binding')
+    result = validate_canary_fresh_handoff(**inputs)
+    from bot.att1_coordinator_adapter import att1_broker_account_fingerprint
+    if (inputs['now_ms'] != v['now_ms'] or att1_broker_account_fingerprint(result['account'])
+            != v['binding']['account_fingerprint_sha256']):
+        raise AdapterViolation('fresh handoff budget account/clock mismatch')
+    v.pop('validation_sha256')
+    v['handoff_binding'] = {'kind':'FRESH_EPOCH_V1','inputs':deepcopy(inputs),'result':result}
+    v['validation_sha256'] = digest(v)
+    return v
+
+
+def validate_fresh_route_handoff(route: Mapping, handoff: Mapping) -> None:
+    """Require the current declaration to match the durable preparation epoch."""
+    saved = route.get('fresh_epoch_json')
+    if saved:
+        epoch = json.loads(saved)
+        if (handoff.get('handoff_kind') != 'FRESH_EPOCH_V1'
+                or handoff.get('declaration_sha256') != epoch['declaration_sha256']
+                or handoff.get('drained_at_ms') != epoch['inputs']['old_intent_inventory']['drained_at_ms']):
+            raise AdapterViolation('fresh route declaration changed')
+    elif handoff.get('handoff_kind') == 'FRESH_EPOCH_V1':
+        raise AdapterViolation('fresh handoff requires a fresh route')
+
+
 def preparation_implementation_hash() -> str:
     root = Path(__file__).resolve().parents[1]
     files = ('bot/att1_canary_preparation.py','bot/att1_coordinator_adapter.py')
@@ -388,6 +503,7 @@ def prepare_new_att1_entry(con, account: str, *, profile: Mapping, intent: Mappi
     if not handoff or handoff['account'] != account or now_ms != v['now_ms']:
         raise AdapterViolation('fresh source-bound handoff required')
     route = a.read_att1_route(con, account)
+    validate_fresh_route_handoff(route, handoff)
     if route['owner'] != 'NEW_READY' or route['cutover_ms'] < handoff['minimum_cutover_ms']:
         raise AdapterViolation('NEW route/drain cutover mismatch')
     v = bind_canary_command_budget(v,profile,intent,order_link_id=a._stable_link_id(key[0],key[2],key[3],key[4]))
