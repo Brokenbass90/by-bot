@@ -1,5 +1,41 @@
 # ATT1 cold migration — running retirement, orders OFF
 
+Latest ATT1 terminal cycle **October4 08:47–08:56UTC** — read
+`ATT1_TERMINAL_READINESS_2026_10_04.md` and its JSON receipt first.
+Result **BLOCKED_DATA; NEW orders OFF**. Exact source costs now reach the
+existing inert command preparation/atomic reserve and deterministic revalidation;
+quantity/risk/hold/2s rules unchanged, infeasible sizes reject before reservation.
+An explicit reviewed zero-template rule accepts six retainedidx0 sources;
+strict default unchanged, SUI ordinaryPASS, **LINK1/2/0 still conflicts**.
+No broker mode write, silent removal, production binding/route install or restart.
+
+**50 known OLD identities have broker terminal cash coverage**:47 submitted+3
+older filled-only identities in the same pinned current file. All5 empty-ID
+closes link to earlier terminal broker quantities/time.41 newly collected windows,
+3 prior recent lifecycles and6 prior islands verified.19 delayed local fill-clock
+windows corrected from saved submit clocks; original captures preserved.
+Known-scope finality/costs complete, all-history NOT_PROVEN; mixedADA/earlyLONG
+attribution stays separate from current frozenSHORT/clean promotion. No DB rewrite.
+
+Signed positions0/orders0 before+after, mainPID1648585 retired, core/guard preserved.
+Published UTC-day executions/cash0 through08:46:48UTC with60s lag; coverage to
+current clock and actual inert cash/handoff declaration are not yet validated.
+Dated OLD reference risk ceiling0.4493950071116USDT. DraftR0.4/D0.8/N100 stays
+unapproved/uninstalled. Last public ETH signal sizes belowminqty at that draft;
+minimum0.01 risks0.41635 plus3.937356662 conditional14-daycosts. No caps/hold retune.
+
+Observer **71/96**, current=true, first completionnull at08:56UTC; earliest96
+11:00UTC/14:00Cyprus conditional. Preserve first receipt, no backdated drain.
+Public7sessions/39records/3filled simulations/2gaps/**0clean**, ETH simulated0.02
+held/protected without incident, samePID/epoch/3sourcehashes, broker/ordercalls0.
+Local223/VPS223 targetedPASS; bounded verified6-astra/high review83PASS plus
+forwarding14PASS. Full3490PASS/57 exact oldFAIL/no newfailures; foreignSHA intact.
+Next: first96 + LINK decision/evidence + contemporary actual cash/handoff packet.
+Then2–3clean filled terminals/net-R +fresh exclusive dossier+separate ownerGO.
+No AI/Factory/newstrategy scope. Alpaca Oct5 re-armP0 unchanged/not freshly checked.
+
+Earlier snapshots below are historical and superseded by this terminal result.
+
 Latest continuation **October4 07:09–07:12UTC** — read
 `ATT1_ACTUAL_INPUT_CONTINUATION_2026_10_04.md` and JSON first.
 Terminal **BLOCKED_ACTUAL_PACKET; NEW orders OFF**. MainPID1648585 still

@@ -1284,7 +1284,7 @@ def collect_att1_authenticated_snapshot(client):
 
 
 def validate_att1_symbol_input_evidence(account_config, broker_identity, *, symbol,
-        position_pages, instrument_page, fee_page, observed_ms):
+        position_pages, instrument_page, fee_page, observed_ms, zero_template_rule=None):
     """Classify source-bound symbol inputs; never authorizes orders or removes symbols.
 
     Pure validation cannot prove HTTPS/signing. The selected GET-only collector
@@ -1323,12 +1323,48 @@ def validate_att1_symbol_input_evidence(account_config, broker_identity, *, symb
                 or (cursor and cursor in cursors)):
             raise AdapterViolation('incomplete/cyclic symbol position page')
         cursors.add(cursor); positions.extend(batch)
+    compatibility = None
+    if zero_template_rule is not None:
+        policy = 'FLAT_IDX0_HISTORICAL_PLUS_ZERO_TEMPLATE_V1'
+        if (not isinstance(zero_template_rule, Mapping)
+                or set(zero_template_rule) != {'policy_id','flat_broker_snapshot'}
+                or zero_template_rule['policy_id'] != policy):
+            raise AdapterViolation('invalid explicit zero-template rule')
+        snapshot = zero_template_rule['flat_broker_snapshot']
+        if (not isinstance(snapshot, Mapping) or snapshot.get('schema_id') != 'att1_broker_snapshot_v1'
+                or snapshot.get('account') != account or snapshot.get('flat_no_orders') is not True
+                or type(snapshot.get('position_count')) is not int or snapshot['position_count'] != 0
+                or type(snapshot.get('order_count')) is not int or snapshot['order_count'] != 0
+                or type(snapshot.get('observed_ms')) is not int
+                or not 0 < snapshot['observed_ms'] <= observed_ms
+                or observed_ms-snapshot['observed_ms'] > ATT1_BROKER_IDENTITY_MAX_AGE_MS):
+            raise AdapterViolation('zero-template rule requires fresh same-account flat broker evidence')
+        source_hash = snapshot.get('source_sha256')
+        if (not isinstance(source_hash,str) or len(source_hash) != 64
+                or any(c not in '0123456789abcdef' for c in source_hash)):
+            raise AdapterViolation('invalid flat broker source hash')
+        diagnostic = diagnose_att1_symbol_position_sources(position_pages, symbol=symbol, observed_ms=observed_ms)
+        if (len(position_pages) != 2 or any(len(p['result']['list']) != 1 for p in position_pages)
+                or diagnostic['position_indices'] != [0,0]
+                or diagnostic['uninitialized_zero_template_rows'] != [1]):
+            raise AdapterViolation('zero-template source pattern mismatch')
+        normal = positions[0]
+        created, updated = normal.get('createdTime'), normal.get('updatedTime')
+        if (any(_number(r['size'],'size') != 0 or r['side'] != '' for r in positions)
+                or normal.get('positionStatus') != 'Normal' or type(normal.get('seq')) is not int
+                or normal['seq'] < 0 or not isinstance(created,str) or not created.isdigit()
+                or not isinstance(updated,str) or not updated.isdigit()
+                or not 0 < int(created) <= int(updated) <= observed_ms
+                or any(normal.get(k) != '' and _number(normal.get(k),k) != 0
+                       for k in ('stopLoss','takeProfit','trailingStop'))):
+            raise AdapterViolation('zero-template historical row is not unprotected flat Normal')
+        compatibility = {**diagnostic, 'policy_id':policy, 'flat_broker_source_sha256':snapshot['source_sha256']}
     indices = set()
     for position in positions:
         idx = position.get('positionIdx')
         size = _number(position.get('size'), 'size', nonnegative=True)
         side = position.get('side')
-        if (type(idx) is not int or idx not in (0,1,2) or idx in indices
+        if (type(idx) is not int or idx not in (0,1,2) or (idx in indices and compatibility is None)
                 or side not in ('','Buy','Sell') or (size>0 and not side)
                 or (idx==1 and side=='Sell') or (idx==2 and side=='Buy')):
             raise AdapterViolation('ambiguous symbol position mode')
@@ -1367,12 +1403,17 @@ def validate_att1_symbol_input_evidence(account_config, broker_identity, *, symb
     elif status=='COMPLETE_ONEWAY_INPUTS':
         status = 'BLOCKED_FEE_UNKNOWN'
     complete = status=='COMPLETE_ONEWAY_INPUTS'
-    return {'schema_id':'att1_symbol_input_evidence_v1','account':account,'symbol':symbol,
+    out = {'schema_id':'att1_symbol_input_evidence_v1','account':account,'symbol':symbol,
         'observed_ms':observed_ms,'position_mode':mode,'input_status':status,
         'instrument_status':instrument.get('status') if instrument is not None else None,
         'taker_fee_rate':str(_number(fee['takerFeeRate'],'taker fee')) if complete else None,
         'orders_allowed':False,'money_ready':False,
         'source_sha256':digest({'position_pages':position_pages,'instrument_page':instrument_page,'fee_page':fee_page})}
+    if compatibility is not None:
+        out['compatibility_rule'] = compatibility
+        out['source_sha256'] = digest({'position_pages':position_pages,'instrument_page':instrument_page,
+                                      'fee_page':fee_page,'zero_template_rule':zero_template_rule})
+    return out
 
 
 def diagnose_att1_symbol_position_sources(position_pages, *, symbol, observed_ms):

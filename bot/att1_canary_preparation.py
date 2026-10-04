@@ -273,7 +273,8 @@ def _revalidate(validated):
         if 'command_binding' in validated:
             attachment = validated['command_binding']
             value = bind_canary_command_budget(value, attachment['profile'], attachment['intent'],
-                                                order_link_id=attachment['command']['orderLinkId'])
+                                                order_link_id=attachment['command']['orderLinkId'],
+                                                cost_sources=attachment.get('cost_sources'))
     except KeyError as exc:
         raise AdapterViolation('validated budget malformed') from exc
     if value != validated:
@@ -282,7 +283,7 @@ def _revalidate(validated):
 
 
 def bind_canary_command_budget(validated: Mapping, profile: Mapping, intent: Mapping, *,
-                               order_link_id: str) -> dict:
+                               order_link_id: str, cost_sources: Mapping | None = None) -> dict:
     """Bind reserves to exact frozen admission/quantity and an inert payload."""
     from research_lab.att1_lifecycle_profile import admit_signal
     v = _revalidate(validated)
@@ -308,6 +309,42 @@ def bind_canary_command_budget(validated: Mapping, profile: Mapping, intent: Map
     old = v['old_budget_evidence']
     costs = qty * stop * (2 * _number(old['taker_fee_rate'], 'fee rate')
                            + _number(old['funding_cost_reserve_rate'], 'funding reserve'))
+    assessment = None
+    if cost_sources is not None:
+        sources = _mapping(cost_sources, {'account_fingerprint_sha256', 'observed_ms',
+                                         'instrument_page', 'fee_page'}, 'command cost sources')
+        _clock(sources['observed_ms'], v['now_ms'], 'command cost sources')
+        if sources['account_fingerprint_sha256'] != v['binding']['account_fingerprint_sha256']:
+            raise AdapterViolation('command cost account mismatch')
+        assessment = assess_att1_14day_quantity(symbol=plan['symbol'],
+            instrument_page=sources['instrument_page'], fee_page=sources['fee_page'], now_ms=v['now_ms'],
+            requested_qty=plan['requested_qty'], entry_price=plan['nominal_entry'],
+            original_stop=plan['original_stop'], absolute_risk_usdt=v['binding']['absolute_risk_cap'],
+            daily_remaining_usdt=_decimal_text(max(Fraction(0),
+                _number(v['binding']['daily_loss_cap'], 'daily cap') - _number(v['spent_usdt'], 'spent'))),
+            max_notional_usdt=v['binding']['max_notional'])
+        if assessment['status'] != 'CONDITIONAL_SCENARIO_ONLY':
+            raise AdapterViolation('command cost assessment: ' + assessment['status'])
+        instrument = sources['instrument_page']['result']['list'][0]
+        fee = sources['fee_page']['result']['list'][0]
+        projection = intent['instrument']
+        fields = {'tick_size':instrument['priceFilter']['tickSize'],
+                  'qty_step':instrument['lotSizeFilter']['qtyStep'],
+                  'min_order_qty':instrument['lotSizeFilter']['minOrderQty'],
+                  'min_notional':instrument['lotSizeFilter']['minNotionalValue'],
+                  'max_market_qty':instrument['lotSizeFilter']['maxMktOrderQty']}
+        funding = assessment['funding_settlements'] * max(
+            -_number(instrument['lowerFundingRate'], 'funding lower bound'), Fraction(0))
+        if (profile['strategy']['time_stop_bars_5m'] != 4032 or expansion != Fraction('0.1')
+                or projection['source_sha256'] != digest(sources['instrument_page'])
+                or old['funding_source_sha256'] != digest(sources['instrument_page'])
+                or old['fee_source_sha256'] != digest(sources['fee_page'])
+                or _number(old['taker_fee_rate'], 'declared fee') != _number(fee['takerFeeRate'], 'actual fee')
+                or _number(old['funding_cost_reserve_rate'], 'declared funding') != funding
+                or any(_number(projection[k], k) != _number(value, k) for k, value in fields.items())
+                or _number(assessment['required_risk_usdt'], 'assessed risk') != risk
+                or _number(assessment['required_cost_reserve_usdt'], 'assessed costs') != costs):
+            raise AdapterViolation('command cost projection/source provenance mismatch')
     command = {'category': 'linear', 'symbol': plan['symbol'], 'side': 'Sell',
                'orderType': 'Market', 'timeInForce': 'IOC', 'qty': plan['requested_qty'],
                'positionIdx': 0, 'reduceOnly': False, 'orderLinkId': order_link_id,
@@ -322,6 +359,8 @@ def bind_canary_command_budget(validated: Mapping, profile: Mapping, intent: Map
                             'command': command, 'command_sha256': digest(command),
                             'required_risk_usdt': _decimal_text(risk),
                             'required_cost_reserve_usdt': _decimal_text(costs)}
+    if assessment is not None:
+        v['command_binding'].update(cost_sources=deepcopy(dict(cost_sources)), cost_assessment=assessment)
     v['validation_sha256'] = digest(v)
     return v
 
@@ -552,7 +591,7 @@ def preparation_implementation_hash() -> str:
 
 
 def prepare_new_att1_entry(con, account: str, *, profile: Mapping, intent: Mapping,
-                           validated_budget: Mapping, now_ms: int) -> dict:
+                           validated_budget: Mapping, now_ms: int, cost_sources: Mapping | None = None) -> dict:
     from bot import att1_coordinator_adapter as a
     try:
         key = a._decision_key((account,a.ATT1_FAMILY,intent['signal']['symbol'],'SELL',intent['signal']['bar_close_ms']))
@@ -580,7 +619,8 @@ def prepare_new_att1_entry(con, account: str, *, profile: Mapping, intent: Mappi
     validate_fresh_route_handoff(route, handoff)
     if route['owner'] != 'NEW_READY' or route['cutover_ms'] < handoff['minimum_cutover_ms']:
         raise AdapterViolation('NEW route/drain cutover mismatch')
-    v = bind_canary_command_budget(v,profile,intent,order_link_id=a._stable_link_id(key[0],key[2],key[3],key[4]))
+    v = bind_canary_command_budget(v,profile,intent,
+        order_link_id=a._stable_link_id(key[0],key[2],key[3],key[4]), cost_sources=cost_sources)
     attachment = v['command_binding']
     reservation = a.reserve_new_att1_preparation(con,account,symbol=key[2],side=key[3],h1_close_ms=key[4],
         now_ms=now_ms,validated_budget=v,proposed_risk_usdt=attachment['required_risk_usdt'],

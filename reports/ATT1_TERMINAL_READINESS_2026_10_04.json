@@ -1,0 +1,587 @@
+{
+  "schema_id": "att1_terminal_readiness_receipt_v1",
+  "terminal_result": "BLOCKED_DATA",
+  "orders_allowed": false,
+  "money_ready": false,
+  "owner_go": false,
+  "code_base": "662d32272541e461acf0b07698d21eb4ccbf1466",
+  "broker_snapshot_utc": "2026-10-04T08:47:58Z",
+  "public_snapshot_utc": "2026-10-04T08:56:42Z",
+  "broker": {
+    "flat_before_after": true,
+    "main_pid": 1648585,
+    "public_pid": 1584802,
+    "core_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "retirement_guard_sha256": "5aa4814aa48dbec1cc7659d8bb4356622bb2cac1302ffdd0d4c8a3c856e7dd01",
+    "broker_writes": 0,
+    "broker_mode_writes": 0,
+    "service_restarts": 0
+  },
+  "public": {
+    "sessions": 7,
+    "journal_records": 39,
+    "simulated_fills": 3,
+    "gap_tainted_sessions": 2,
+    "clean_filled_terminals": 0,
+    "held": [
+      {
+        "symbol": "ETHUSDT",
+        "quantity": "1/50",
+        "incidents": [],
+        "protected_quantity": "1/50"
+      }
+    ],
+    "broker_calls": 0,
+    "order_calls": 0,
+    "source_hashes": {
+      "scripts/run_att1_lifecycle_zero_risk.py": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    },
+    "source_hashes_unchanged": true
+  },
+  "quarantine": {
+    "consecutive_closed_m5": 71,
+    "current": true,
+    "first_quarantine_complete_ms": null,
+    "fence_h1_ms": 1791082800000,
+    "retirement_receipt_sha256": "42150a9e0b0c5d645a110b59c878ba5fa6eb4d6af92f0f834f413c63b88ab3b0",
+    "capture_sha256": "405cef79d34d75696d4e14c03e262eeebbf8d52fda67ec8521adc88dec7fdd0c",
+    "status": "QUARANTINE_IN_PROGRESS",
+    "scope": "initial eight execution-admitted symbols; Fixed51 bootstrap not established"
+  },
+  "symbol_mode_inputs": {
+    "ADAUSDT": {
+      "strict": {
+        "input_status": "BLOCKED_SOURCE_REJECTED",
+        "reason": "ambiguous symbol position mode"
+      },
+      "explicit_rule": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "ADAUSDT",
+        "observed_ms": 1791103669662,
+        "position_mode": "ONEWAY",
+        "input_status": "COMPLETE_ONEWAY_INPUTS",
+        "instrument_status": "Trading",
+        "taker_fee_rate": "11/20000",
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "041f8a5724a59239405f6c3ceddf816e7b0fc395ff50b78b89786171d13d4464",
+        "compatibility_rule": {
+          "schema_id": "att1_position_source_diagnostic_v1",
+          "symbol": "ADAUSDT",
+          "status": "BLOCKED_DUPLICATE_POSITION_INDEX",
+          "raw_row_count": 2,
+          "position_indices": [
+            0,
+            0
+          ],
+          "uninitialized_zero_template_rows": [
+            1
+          ],
+          "row_sources": [
+            {
+              "page": 0,
+              "row": 0,
+              "row_sha256": "4919d98b5d4c7766f74d4ff48424818559ecc1bc44efe563e8087c891778ce03"
+            },
+            {
+              "page": 1,
+              "row": 0,
+              "row_sha256": "be24a93800bbca264f197aff4383f1a61ee1e04b5f028ca4d7632116e99d328f"
+            }
+          ],
+          "rows_discarded": 0,
+          "source_sha256": "ae3163403b58ad3df20c663464be377da6d090d64ee7260251642d525ce257d5",
+          "orders_allowed": false,
+          "money_ready": false,
+          "policy_id": "FLAT_IDX0_HISTORICAL_PLUS_ZERO_TEMPLATE_V1",
+          "flat_broker_source_sha256": "cff563d4422a123ea0348ab1ae50f633f1fff77ce750191578debc5f303b3169"
+        }
+      }
+    },
+    "BTCUSDT": {
+      "strict": {
+        "input_status": "BLOCKED_SOURCE_REJECTED",
+        "reason": "ambiguous symbol position mode"
+      },
+      "explicit_rule": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "BTCUSDT",
+        "observed_ms": 1791103670581,
+        "position_mode": "ONEWAY",
+        "input_status": "COMPLETE_ONEWAY_INPUTS",
+        "instrument_status": "Trading",
+        "taker_fee_rate": "11/20000",
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "7ec45608f66a7d6113728cfc54d44eda69e96b5340363f8a7de640204478b4ef",
+        "compatibility_rule": {
+          "schema_id": "att1_position_source_diagnostic_v1",
+          "symbol": "BTCUSDT",
+          "status": "BLOCKED_DUPLICATE_POSITION_INDEX",
+          "raw_row_count": 2,
+          "position_indices": [
+            0,
+            0
+          ],
+          "uninitialized_zero_template_rows": [
+            1
+          ],
+          "row_sources": [
+            {
+              "page": 0,
+              "row": 0,
+              "row_sha256": "6e1732ec826afa68d6ba083e1a563b42652b00d60486bdf8feaf4a67038790e0"
+            },
+            {
+              "page": 1,
+              "row": 0,
+              "row_sha256": "2efb6b408bd97c04e47333360906cefc1971a00334f78108de3de628014cc3f1"
+            }
+          ],
+          "rows_discarded": 0,
+          "source_sha256": "5508bc764dcc5bdc497631c15753464dcef8a54e08006c2dcdc34edcd682f9c5",
+          "orders_allowed": false,
+          "money_ready": false,
+          "policy_id": "FLAT_IDX0_HISTORICAL_PLUS_ZERO_TEMPLATE_V1",
+          "flat_broker_source_sha256": "cff563d4422a123ea0348ab1ae50f633f1fff77ce750191578debc5f303b3169"
+        }
+      }
+    },
+    "DOTUSDT": {
+      "strict": {
+        "input_status": "BLOCKED_SOURCE_REJECTED",
+        "reason": "ambiguous symbol position mode"
+      },
+      "explicit_rule": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "DOTUSDT",
+        "observed_ms": 1791103671496,
+        "position_mode": "ONEWAY",
+        "input_status": "COMPLETE_ONEWAY_INPUTS",
+        "instrument_status": "Trading",
+        "taker_fee_rate": "11/20000",
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "7f66a575d5bc3c72a80599c72f4566e2d261e0a1fdedfcb4ec5e5b414add2f9a",
+        "compatibility_rule": {
+          "schema_id": "att1_position_source_diagnostic_v1",
+          "symbol": "DOTUSDT",
+          "status": "BLOCKED_DUPLICATE_POSITION_INDEX",
+          "raw_row_count": 2,
+          "position_indices": [
+            0,
+            0
+          ],
+          "uninitialized_zero_template_rows": [
+            1
+          ],
+          "row_sources": [
+            {
+              "page": 0,
+              "row": 0,
+              "row_sha256": "9093f6aa4ac89dd54d9c2e26f2940eb4a84ef0b4d568eff75fdfc6ba7fd7cf35"
+            },
+            {
+              "page": 1,
+              "row": 0,
+              "row_sha256": "6e51a27c1be6e095ee0970da1a41efbe17a10b10e2deadd73535370e45f59d00"
+            }
+          ],
+          "rows_discarded": 0,
+          "source_sha256": "eed40a2df84815544a0c40778313464530f2a9c22ff2e33f97e699a119696970",
+          "orders_allowed": false,
+          "money_ready": false,
+          "policy_id": "FLAT_IDX0_HISTORICAL_PLUS_ZERO_TEMPLATE_V1",
+          "flat_broker_source_sha256": "cff563d4422a123ea0348ab1ae50f633f1fff77ce750191578debc5f303b3169"
+        }
+      }
+    },
+    "ETHUSDT": {
+      "strict": {
+        "input_status": "BLOCKED_SOURCE_REJECTED",
+        "reason": "ambiguous symbol position mode"
+      },
+      "explicit_rule": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "ETHUSDT",
+        "observed_ms": 1791103672745,
+        "position_mode": "ONEWAY",
+        "input_status": "COMPLETE_ONEWAY_INPUTS",
+        "instrument_status": "Trading",
+        "taker_fee_rate": "11/20000",
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "4b8d1fe015b2dbb49c6d797d305a077a7f50d75b29af1319c4b33cbcf32659ca",
+        "compatibility_rule": {
+          "schema_id": "att1_position_source_diagnostic_v1",
+          "symbol": "ETHUSDT",
+          "status": "BLOCKED_DUPLICATE_POSITION_INDEX",
+          "raw_row_count": 2,
+          "position_indices": [
+            0,
+            0
+          ],
+          "uninitialized_zero_template_rows": [
+            1
+          ],
+          "row_sources": [
+            {
+              "page": 0,
+              "row": 0,
+              "row_sha256": "17d877550bdc0d63df9ecd52a9eb044ec61d5d69c007b2f180cdfa6ee9816473"
+            },
+            {
+              "page": 1,
+              "row": 0,
+              "row_sha256": "d1051bd06aaa66b78704d99287e9948225ee38c15d9a11cb34e087adafe1da1c"
+            }
+          ],
+          "rows_discarded": 0,
+          "source_sha256": "a83c39b31394fe82d9bd63eaca61d4ff65576194e3c6f8725be02875aa3ab350",
+          "orders_allowed": false,
+          "money_ready": false,
+          "policy_id": "FLAT_IDX0_HISTORICAL_PLUS_ZERO_TEMPLATE_V1",
+          "flat_broker_source_sha256": "cff563d4422a123ea0348ab1ae50f633f1fff77ce750191578debc5f303b3169"
+        }
+      }
+    },
+    "LINKUSDT": {
+      "strict": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "LINKUSDT",
+        "observed_ms": 1791103673653,
+        "position_mode": "CONFLICT",
+        "input_status": "BLOCKED_MODE_CONFLICT",
+        "instrument_status": "Trading",
+        "taker_fee_rate": null,
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "fa39901deae30fe728ebfba561a8d5992a88e5c581438375e0e428f67f49607b"
+      },
+      "explicit_rule": {
+        "input_status": "BLOCKED_EXPLICIT_RULE",
+        "reason": "zero-template source pattern mismatch"
+      }
+    },
+    "LTCUSDT": {
+      "strict": {
+        "input_status": "BLOCKED_SOURCE_REJECTED",
+        "reason": "ambiguous symbol position mode"
+      },
+      "explicit_rule": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "LTCUSDT",
+        "observed_ms": 1791103674574,
+        "position_mode": "ONEWAY",
+        "input_status": "COMPLETE_ONEWAY_INPUTS",
+        "instrument_status": "Trading",
+        "taker_fee_rate": "11/20000",
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "28ee4e3353f234e76880ec38139fb7145f2e6db6d824f853bb67cf294546a849",
+        "compatibility_rule": {
+          "schema_id": "att1_position_source_diagnostic_v1",
+          "symbol": "LTCUSDT",
+          "status": "BLOCKED_DUPLICATE_POSITION_INDEX",
+          "raw_row_count": 2,
+          "position_indices": [
+            0,
+            0
+          ],
+          "uninitialized_zero_template_rows": [
+            1
+          ],
+          "row_sources": [
+            {
+              "page": 0,
+              "row": 0,
+              "row_sha256": "29e54afa90e18c72953ed5a13e2e08d74fc07e69b8abeb8650609c5098a221f3"
+            },
+            {
+              "page": 1,
+              "row": 0,
+              "row_sha256": "8970a08e9f851c321195322a97dd11e37efce530d064cf42f3d9bff46dbff38a"
+            }
+          ],
+          "rows_discarded": 0,
+          "source_sha256": "f21afb41ad3dda787876fbcb1f958e74af262aa9979b33192751a735f44d6426",
+          "orders_allowed": false,
+          "money_ready": false,
+          "policy_id": "FLAT_IDX0_HISTORICAL_PLUS_ZERO_TEMPLATE_V1",
+          "flat_broker_source_sha256": "cff563d4422a123ea0348ab1ae50f633f1fff77ce750191578debc5f303b3169"
+        }
+      }
+    },
+    "SOLUSDT": {
+      "strict": {
+        "input_status": "BLOCKED_SOURCE_REJECTED",
+        "reason": "ambiguous symbol position mode"
+      },
+      "explicit_rule": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "SOLUSDT",
+        "observed_ms": 1791103675816,
+        "position_mode": "ONEWAY",
+        "input_status": "COMPLETE_ONEWAY_INPUTS",
+        "instrument_status": "Trading",
+        "taker_fee_rate": "11/20000",
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "2a9498db2025ff476ba7a14cd1c8f6526f40d2d7c1045ca5b12f51958e2902aa",
+        "compatibility_rule": {
+          "schema_id": "att1_position_source_diagnostic_v1",
+          "symbol": "SOLUSDT",
+          "status": "BLOCKED_DUPLICATE_POSITION_INDEX",
+          "raw_row_count": 2,
+          "position_indices": [
+            0,
+            0
+          ],
+          "uninitialized_zero_template_rows": [
+            1
+          ],
+          "row_sources": [
+            {
+              "page": 0,
+              "row": 0,
+              "row_sha256": "c380f51ae829649d2a358f40f6ba37432f8471b654c8b14dcdf122c6eccbc032"
+            },
+            {
+              "page": 1,
+              "row": 0,
+              "row_sha256": "eede2cb323a5dae434224a7747ac5c6dcc60f5ae6300e9a67664cb5c236e035a"
+            }
+          ],
+          "rows_discarded": 0,
+          "source_sha256": "6fa23ced03e1d967a45a5add518cc62d87a9dd32605aa57fa288b5fdaa921484",
+          "orders_allowed": false,
+          "money_ready": false,
+          "policy_id": "FLAT_IDX0_HISTORICAL_PLUS_ZERO_TEMPLATE_V1",
+          "flat_broker_source_sha256": "cff563d4422a123ea0348ab1ae50f633f1fff77ce750191578debc5f303b3169"
+        }
+      }
+    },
+    "SUIUSDT": {
+      "strict": {
+        "schema_id": "att1_symbol_input_evidence_v1",
+        "symbol": "SUIUSDT",
+        "observed_ms": 1791103676551,
+        "position_mode": "ONEWAY",
+        "input_status": "COMPLETE_ONEWAY_INPUTS",
+        "instrument_status": "Trading",
+        "taker_fee_rate": "11/20000",
+        "orders_allowed": false,
+        "money_ready": false,
+        "source_sha256": "8747d2d02cd9327cd8914be49f38964871bdb1b7c5ff96fad816375af06de7f2"
+      },
+      "explicit_rule": {
+        "input_status": "BLOCKED_EXPLICIT_RULE",
+        "reason": "zero-template source pattern mismatch"
+      }
+    }
+  },
+  "known_old_cash_inventory": {
+    "known_submitted": 47,
+    "additional_known_filled": 3,
+    "known_identities": 50,
+    "broker_cash_terminal_coverage": 50,
+    "empty_id_close_records_linked": 5,
+    "known_identity_costs_complete": true,
+    "known_identity_finality_complete": true,
+    "all_history_proven": false,
+    "mixed_attribution_preserved": true,
+    "source_sha256": "25c8cedc0487b038ef5be40cb4baae88cca814ae06899fa38c540d74219ea9a8"
+  },
+  "current_utc_day": {
+    "execution_rows": 0,
+    "cash_rows": 0,
+    "coverage_end_ms": 1791103608394,
+    "publication_lag_ms": 60000,
+    "coverage_to_current_clock_claimed": false
+  },
+  "old_absolute_risk_reference": {
+    "risk_ceiling_usdt": "0.4493950071116",
+    "notional_ceiling_usdt": "1021.35228889",
+    "effective_risk_pct": "0.44",
+    "att1_risk_mult": "0.1",
+    "breaker_risk_mult": "1",
+    "voladj_mult": "1",
+    "actual_entry_authority": "RETIRED",
+    "comparison_kind": "configured OLD sizing reference, not current permission to enter",
+    "source_pins": {
+      "wallet": "08ec4f68b608ec157aa1ae661d909501a4d2a6c83a34598b87e687b6db1ec6f1",
+      "heartbeat": "ff2a1b6a1b40257af417d65e3b4d645407352e63568ffce091c99ce6397cf2ee",
+      "core": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+      "selected_trade_projection": "148713f83c0935266715254004ea7bd1cfbab2a5a852b5b0a6a772eff74c8fbf"
+    }
+  },
+  "draft_caps": {
+    "risk_usdt": "0.4",
+    "daily_usdt": "0.8",
+    "max_notional_usdt": "100",
+    "owner_approved": false,
+    "installed": false
+  },
+  "last_eth_quantity_diagnostic": {
+    "source_kind": "unchanged archived public START intent; not a fresh actionable signal",
+    "intent_sha256": "2f1c3ec1e7be1f9d1ac4dbc6e68bcc58756144d6a6af5d924dbcc6489325e94f",
+    "entry": "2690.93",
+    "rounded_original_stop": "2728.78",
+    "frozen_sizing_quantity_at_draft_risk": "0",
+    "historical_min_qty": "0.01",
+    "admission_price_quantity_verdict": "BELOW_MIN_QTY",
+    "current_source_dated_14day_assessments": {
+      "0.01": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "ETHUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "0.01",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "b6493435d2a7eb80571d9608b46648055c4ed9b2eb9fdfbf521baa6b00758a76",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.41635",
+        "required_cost_reserve_usdt": "3.937356662",
+        "risk_and_cost_usdt": "4.353706662",
+        "status": "BLOCKED_RISK_OR_NOTIONAL_CAP"
+      },
+      "0.02": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "ETHUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "0.02",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "b6493435d2a7eb80571d9608b46648055c4ed9b2eb9fdfbf521baa6b00758a76",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.8327",
+        "required_cost_reserve_usdt": "7.874713324",
+        "risk_and_cost_usdt": "8.707413324",
+        "status": "BLOCKED_RISK_OR_NOTIONAL_CAP"
+      }
+    },
+    "historical_authenticated_broker_truth": false
+  },
+  "implementation": {
+    "preparation_sha256": "b31e2543340a69639af291185de6d3b8e06f7012354efc9f997a9d44e35456cf",
+    "scope": "optional explicit mode rule and exact cost forwarding in existing inert preparation; no money runner installed",
+    "native_protection_exit_finality": "existing controlled HTTPS selected-transport test; no actual NEW held lifecycle"
+  },
+  "hard_packet_blockers": [
+    "LINK remains1/2/0 conflict against fixed one-way idx0 binding; no mode write or silent removal allowed",
+    "real quarantine not96/96 yet; preserve first valid completion when emitted",
+    "actual inert budget/handoff declaration is not validated from a contemporaneous complete current cash frontier and fresh broker/source packet"
+  ],
+  "money_gate": {
+    "required_clean_filled_terminals": "2–3 with terminal net-R",
+    "fresh_exclusive_dossier_and_old_risk_comparison": true,
+    "separate_owner_go": true
+  },
+  "verification": {
+    "targeted_local_pass": 223,
+    "targeted_vps_pass": 223,
+    "new_tests_pass": 26,
+    "critical_review_pass": 83,
+    "critical_forwarding_check_pass": 14,
+    "critical_model": "gpt-6-astra",
+    "critical_effort": "high",
+    "mechanical_model": "gpt-5.6-luna",
+    "mechanical_effort": "medium",
+    "runtime_model_proof_sha256": "520ba914da906d90a04a07c55a19717ec51ded93462f5029ddb75f6ec59fa200",
+    "full_suite_pass": 3490,
+    "full_suite_fail": 57,
+    "new_failures": [],
+    "failed_nodeids": [
+      "tests/test_alpaca_bakeoff_v2_preflight.py::test_preflight_freezes_future_window_but_stays_blocked_on_inputs",
+      "tests/test_alpaca_exact_parity_materialization.py::test_materializer_records_real_blockers_without_performance_or_live_authority",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_manifest_source_closure_is_hash_bound_to_config_and_required_paths",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_repository_contract_is_default_off_and_binds_att1_ets2s_fixed51",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_runtime_paths_are_beneath_caller_root_and_reject_escape_and_symlink",
+      "tests/test_att1_fixed51_shadow.py::test_all_att1_environment_inputs_are_restored_after_cycle",
+      "tests/test_att1_fixed51_shadow.py::test_events_are_raw_only_include_runtime_reason_hashes_and_diagnostic_regime",
+      "tests/test_att1_fixed51_shadow.py::test_expected_hft_unavailable_is_explicit_but_unknown_gap_fails_partial",
+      "tests/test_att1_fixed51_shadow.py::test_next_closed_h1_creates_new_raw_event_per_symbol",
+      "tests/test_att1_fixed51_shadow.py::test_observation_and_open_bar_changes_are_idempotent_but_closed_mutation_conflicts",
+      "tests/test_att1_fixed51_shadow.py::test_preflight_is_no_network_and_reports_evidence_money_separation",
+      "tests/test_att1_fixed51_shadow.py::test_repository_config_pins_exact_fixed51_manifest_and_major8_money_universe",
+      "tests/test_att1_fixed51_shadow.py::test_zero_success_is_raw_fail_closed",
+      "tests/test_audit_alpaca_protection_challenger_v2.py::test_committed_alpaca_v2_receipt_passes_independent_audit",
+      "tests/test_audit_att1_pivot_sequence_v1.py::test_committed_att1_pivot_sequence_receipt_passes",
+      "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_does_not_import_runner",
+      "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_is_metadata_only_and_ready",
+      "tests/test_audit_frequent_crypto_rehab_v2.py::test_receipt_is_research_only_and_evidence_backed",
+      "tests/test_audit_inplay_causal_receipt.py::test_current_inplay_receipt_is_shadow_only_not_capital",
+      "tests/test_build_recovery_session_report.py::test_report_separates_scenarios_from_money_authority",
+      "tests/test_collect_inplay_prospective_shadow.py::test_replay_records_signal_parity_diagnostics",
+      "tests/test_horizontal_breakout_long_72h_sealed_v1_runner.py::test_default_preflight_fails_before_any_market_row_is_opened",
+      "tests/test_mac_att1_research_job.py::test_caffeinate_process_is_released_when_stage_finishes",
+      "tests/test_mac_att1_research_job.py::test_changed_hashed_input_refuses_to_reuse_completed_receipt",
+      "tests/test_mac_att1_research_job.py::test_completed_immutable_job_is_a_noop_on_later_launchd_wakeup",
+      "tests/test_mac_att1_research_job.py::test_crash_after_committed_stage_resumes_only_unfinished_stage",
+      "tests/test_mac_att1_research_job.py::test_failed_stage_persists_backoff_then_retries_within_attempt_limit",
+      "tests/test_mac_att1_research_job.py::test_inherited_lock_survives_parent_crash_until_active_child_exits",
+      "tests/test_mac_att1_research_job.py::test_os_sandbox_denies_network_and_local_credentials",
+      "tests/test_mac_att1_research_job.py::test_runner_strips_secrets_and_cli_rejects_arbitrary_command_input",
+      "tests/test_mac_att1_research_job.py::test_stage_heartbeat_updates_while_child_runs",
+      "tests/test_preflight_event_expansion_retest_long_v1_phase1.py::test_current_phase1_identity_is_clean_but_performance_and_live_are_blocked",
+      "tests/test_public_cashcarry_station_v1.py::test_corrupt_state_and_adapter_identity_fail_closed",
+      "tests/test_public_cashcarry_station_v1.py::test_one_cycle_is_per_symbol_durable_and_resume_reconciles_without_overwrite",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_bootstrap_parse_failure_keeps_consumed_claim_and_partial_forensics",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_claim_is_durable_before_scorer_callback",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_existing_claim_refuses_before_scorer_callback",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[extra]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[symlink]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_interrupt_after_claim_writes_terminal_receipt",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[drifted]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[malformed]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[gap]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[hash]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[infinite_ohlc]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[records_sha]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[schema]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[window]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_missing_authorization_never_opens_market_or_creates_claim",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_semantic_reserved_failure_preserves_observed_rows_and_staged_accounting",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_stale_output_refuses_before_claim",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_success_receipt_has_exact_forensic_identity_and_inventory",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_symlinked_output_refuses_before_claim",
+      "tests/test_sbr1_fixed51_universe.py::test_preflight_rejects_fixed51_identity_or_provenance_drift",
+      "tests/test_sbr1_zero_risk_shadow.py::test_repository_config_pins_verified_manifest_and_full_source_closure",
+      "tests/test_strategy_env_prefix_isolation.py::test_legacy_asb1_prefix_remains_a_fallback",
+      "tests/test_strategy_promotion_queue.py::test_queue_fails_when_active_wip_exceeds_limit"
+    ],
+    "full_suite_log_sha256": "0d4782f094a8b2953d67d81abe220a16d86350a2570b01a466bf39b9ab66c574",
+    "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "foreign_restored": true,
+    "target_initial_fixture_failures": "3 missing AST seams, then1 missing helper; completed exact guarded AST fixture and final223PASS"
+  },
+  "source_pins": {
+    ".private/att1_terminal_packet_20261004/finite_private.json": "2ba98e6650dfc41337b1f7aafbd813b251bf02efd06f6554174160e7ce60b1c5",
+    ".private/att1_terminal_packet_20261004/financial_components.json": "ec8fb3680b4e653eff28dce51c9e882e8c2d0bb46e9e64dff572c12396afd147",
+    ".private/att1_terminal_packet_20261004/known_cash_inventory.json": "25c8cedc0487b038ef5be40cb4baae88cca814ae06899fa38c540d74219ea9a8",
+    ".private/att1_terminal_packet_20261004/public_final.json": "5186dee6957ca022f56ed98fd186f199687c160ab784b8671e27acdde5a08744",
+    ".private/att1_terminal_packet_20261004/candidate/candidate_manifest.json": "50c2e7f4dc7f9f5b248488fd13ddd7085e472d41b1ac2e31e00263a14855364b",
+    ".private/att1_terminal_packet_20261004/ast_test_source_receipt.json": "fe8e9de6c769d50eae9ab8db2cba8115db1a3b17b5ba609aecd2c5c37b57befa"
+  },
+  "unrelated_scope": "Alpaca, AI, Claude/Factory, sealed research and foreign diff preserved; no fresh operational claims for them"
+}
