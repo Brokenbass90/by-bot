@@ -1,0 +1,34 @@
+{
+ "kogda": "2026-10-04T19:12:10+00:00",
+ "manifest_sha256": "3d78370f67f7cef08bd2ddd27116a8d2e58e4f4c08de513854defdbdf447bf98",
+ "rezultat_sha256": "6d229ba779f47ebafb0422d090cd75b71ed2ada81e8eb6510f07c3af833b62ca",
+ "rezultat": {
+  "prereg": "PREREG_KITY_POZICII_2026_10_03.md",
+  "kogda": "2026-10-04T19:12:09+00:00",
+  "PRIMARY": {
+   "n": 194,
+   "dney": 194,
+   "edge_bps": -53.6,
+   "t": -1.41,
+   "polovinki_bps": [
+    -7.2,
+    -100.0
+   ],
+   "syroy_bps": -53.6,
+   "verdikt": "KILLED",
+   "prichina": "эдж ≤ 0"
+  },
+  "REPLICATION": {
+   "n": 11,
+   "verdikt": "KILLED",
+   "prichina": "мало событий (11)",
+   "status": "BLOCKED_DATA"
+  },
+  "nezavisimost": {
+   "korr_s_TOLPA_L1": -0.36,
+   "nedel": 205,
+   "nezavisima": true
+  },
+  "status": "PNL_FAIL → причинный постмортем (бюджет спасения: 1 вариант)"
+ }
+}

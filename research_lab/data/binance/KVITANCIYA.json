@@ -1,0 +1,39 @@
+{
+ "kogda": "2026-10-04T19:12:07+00:00",
+ "manifest_sha256": "6a8560be78351b494a02b5258fb8382002a2e26bf52c8371bcb62434de993ff6",
+ "rezultat_sha256": "f1b7f70c62fa84ebede97edc2e2bc4a202bd326ce5bc76af1843d929232b8d97",
+ "rezultat": {
+  "prereg": "PREREG_TOLPA_BINANCE_REPLICATION_2021_2022.md",
+  "kogda": "2026-10-04T19:12:07+00:00",
+  "PRIMARY_L1": {
+   "n": 54,
+   "dney": 54,
+   "edge_bps": 20.2,
+   "t": 0.27,
+   "polovinki_bps": [
+    36.6,
+    3.7
+   ],
+   "syroy_bps": 20.2,
+   "verdikt": "KILLED",
+   "prichina": "t=0.27 < 2",
+   "dat_propushcheno_lt30": 25
+  },
+  "SECONDARY_1D": {
+   "n": 370,
+   "dney": 370,
+   "edge_bps": 0.4,
+   "t": 0.03,
+   "polovinki_bps": [
+    -1.8,
+    2.5
+   ],
+   "syroy_bps": 0.4,
+   "verdikt": "KILLED",
+   "prichina": "t=0.03 < 2",
+   "dat_propushcheno_lt30": 179
+  },
+  "status": "TOLPA_FAMILY_KILLED",
+  "primechanie": "1D поддерживающая и не спасает primary; деньги — только решением владельца"
+ }
+}
