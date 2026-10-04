@@ -1,5 +1,42 @@
 # Current roadmap — owner scope October 4, 2026
 
+Latest bounded ATT1 diagnosis **October 4; final runtime 13:06:37 UTC** — read
+`ATT1_GAP_FUNDING_CASH_DIAGNOSIS_2026_10_04.md` and JSON first. Continue from555e9e1.
+**ROOT_CAUSE_FOUND+FIX_PROPOSAL; actual packet BLOCKED_DATA; NEW orders OFF.**
+Four original gaps replay unchanged: SEI/SUI CTS was stale already at source;
+ETH exceeded the book-ready frontier by2442ms (tail+HTTP); ETC GET completed within
+1680ms, but consume-clock marked2399ms (at least719ms processing delay). Returnedrx
+is inferred/bracketed, not directly serialized. CTS/use freshness is a separate2s
+gate. No source/restart defect found; no deployed fix or cleaned receipt.
+
+Funding history:32561 retained rows /32225 windows /8 symbols. The frozen5× test
+returns **POLICY_OVERCONSERVATIVE relative to history**; envelope/worst5.50–99.69×.
+It does not validate a future hard bound or reduce policy. Initial SUI19.74h is
+censored; published8h grid has no interior holes; future interval/limit/notional
+bounds are unproven. Draft8/8 REJECT and ETH/SUI exactqty0 persist. Risk/hold/fees
+unchanged. Prior74s cash delta was chosen60s cutoff+collection time, not measured
+broker lag. Two fixed-cutoff empty signed GETs20672ms apart show published rows
+only; publication finality/handoff remain BLOCKED. Causal reconciliation proposal
+prepared; validator unchanged. LINK's prior terminal conflict was not reopened.
+
+**First real96/96 preserved:** completion11:00 UTC, original capture11:01:55.581 UTC,
+SHAb57706ac…; all8 original M5/pure fields replay PASS. No backdated money handoff.
+Fresh signed account flat/no orders before+after; main PID1648585 retired, public
+PID1584802, NRestarts0, core/guard/public source hashes unchanged. Public:
+**10 sessions /68 records /5 simfills /4 gaps /0 clean /1 held ADA**; simulated102,
+protected102, no incident at capture. Four trigger replays/48-record oracle PASS;
+54 local targeted PASS;32225 exact-Fraction windows verified. One6-astra review
+was partial due usage limit; findings corrected by primary, no final signoff/retry.
+Prior full3501PASS/57FAIL is historical, not rerun. Foreign allowlist hash intact,
+unstaged. No production install/restart/broker write or money-policy change.
+
+Next: bounded local observation fix and REST/WS diagnostic; separate reviewed
+reserve/cash proposals. Keep2–3 clean filled terminals/net-R +fresh dossier
++separate ownerGO. Alpaca October5 re-arm remains P0. Claude KITY→LONG→RANGE queue
+is last-verified context; no new research/runtime progress claimed this cycle.
+
+Earlier dated snapshots below are historical; cash-lag wording is superseded.
+
 Latest ATT1 feasibility cycle **October4 09:29–09:35UTC** — read
 `ATT1_FEASIBILITY_VERDICT_2026_10_04.md` and JSON first. Continuee33e253;
 Tasks1–4/50 known OLD cash identities stay closed;0historical windows this cycle.
@@ -182,7 +219,7 @@ No directional diversification or greater signal count establishes net edge.
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
 | Alpaca LIVE | Observe exact-quantity accepted DAY re-arm Oct5 13:30UTC/16:30Cyprus. Separately validate queued next-session fractionalDAY stop in PAPER | Codex operations; currentGTC unsupported, queue acceptanceNOT_PROVEN, no weekendLIVE change/capital increase |
-| NEW ATT1 | Oct4 actual packetBLOCKED_DATA: first96 pending78/96; LINK1/2/0; lagged cash frontier; all8draftR0.4/D0.8 reserve/sizing infeasible at captured bids. Diagnose newly preserved ETH/ETC public gaps before another timing change | Codex;50knownOLDcash complete/do not reopen; no mode write, universe/risk/hold/cost change or money install. Public9sessions/4filled/4gaps/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
+| NEW ATT1 | First96/96 preserved/replayed. Close local observation candidate: ETH aggregate budget, ETC receive/consume distinction, bounded SEI/SUI stale-source transport diagnostic. Historical funding5× criterion passes all8; prepare separately reviewed reserve/cash contracts. Current draft still8/8 REJECT; LINK conflict and actual packetBLOCKED | Codex;2s/frozen strategy/risk/hold/quantity unchanged; no money install or policy reduction. Public13:06UTC:10sessions/5fills/4gaps/0clean/1simulatedheldADA.50knownOLD cash stays closed;2–3clean/net-R+fresh dossier+ownerGO remain |
 | Operations analyst | Existing Telegram/web deployed with shared $1 cash envelope; retain dated citations, confirm OLD/NEW distinction, label at least30 proposals before claiming precision | Codex; on-demand diagnostics, no auto-tuning/executor/paid cron/money authority; invoice and unrelated API callers outside ledger guarantee |
 | PM2 | **KILLED / NOT_EXECUTABLE** in published Oct3 KARTA:3 dates/792 rounds/0 qualifying violations | Claude terminal registry verdict; removed from LIVE queue, slot freed; no judge rerun |
 | TOLPA_1D / weekly | Published Binance2021–2022 cross-venue replication loading; frozen judge after download; restore PIT forward inputs in parallel | Claude; replication is not untouched Bybitholdout, same-family evidence not additive; no cheap-screen→LIVE |
@@ -221,10 +258,13 @@ existing results and tests; repeated inspection of used history adds no independ
 confirmation. Sealed windows remain protected; no evaluator rerun is authorized
 by this roadmap update.
 
-For ATT1, actual authenticated risk/cost/cash/OLD-handoff inputs remain first in
-the engineering queue. In parallel, identify gaps in existing canary acceptance
-and cover only those gaps with captured-event replay or explicitly synthetic fault
-scenarios using existing modules. Keep frozen strategy, admission, risk authority,
+For ATT1, October4 bounded diagnosis supersedes further packet polishing: first
+close the measured observation-budget/frontier defects and stale-source diagnostic.
+The reserve study supports a separately reviewed policy candidate, not a money
+change. Cash requires causal cutoff/event reconciliation; completed96 is preserved.
+Do not reopen known50 OLD history or repeat LINK queries without new authoritative
+evidence. Cover named canary failures with captured-event replay or explicitly
+synthetic fault scenarios using existing modules. Keep frozen strategy, admission, risk authority,
 2s threshold and one journal writer. No second replay engine, tuning or new regime
 filter. Each added case must close a named uncovered failure, rather than repeat
 the delivered242/233 tests or14-session/162-record receipt oracle.

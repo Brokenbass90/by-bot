@@ -1,0 +1,1720 @@
+{
+  "schema_id": "att1_gap_funding_cash_diagnosis_v1",
+  "source_head": "555e9e142628f7e8cfc16469ef84313088890643",
+  "diagnosis_status": "ROOT_CAUSE_FOUND+FIX_PROPOSAL",
+  "actual_packet_status": "BLOCKED_DATA",
+  "remaining_blockers": [
+    "public0cleanfilledterminals",
+    "LINK_MODE_CONFLICT",
+    "CASH_PUBLICATION_FINALITY_AND_HANDOFF_CONTRACT",
+    "draft8of8quantitycostREJECT"
+  ],
+  "gap": {
+    "schema_id": "att1_gap_diagnosis_v1",
+    "verdict": "ROOT_CAUSE_FOUND+FIX_PROPOSAL",
+    "source_manifest_sha256": "35ddd3c2ba63e7195877ac8f9bf42de2ed77b17317a431c5e04b86cfc5c93d24",
+    "diagnoses": [
+      {
+        "symbol": "SUIUSDT",
+        "event_id": "recovery_gap:c307d800992449a993b68485eee810cf11fe3a5b4743162c14779f34d5158c56",
+        "source_sha256": "35e9340d3a646381f031c1917c6c56eab6f3a8c5170331b4599ada70f6526f0c",
+        "reason": "rejected future/stale public book",
+        "gate_ms": 2000,
+        "cts": 1791066356867,
+        "response_time": 1791066359035,
+        "received_ms": 1791066359116,
+        "received_book_age_ms": 2249,
+        "server_book_age_ms": 2168,
+        "local_delivery_ms": 81,
+        "trigger_reproduced": true,
+        "status": "SOURCE_BOOK_AGE_EXCEEDED_2S",
+        "underlying_stale_source_cause": "NOT_PROVEN: cache/stale publication/quiet market cannot be separated from this snapshot"
+      },
+      {
+        "symbol": "ETHUSDT",
+        "event_id": "recovery_gap:bc6558ed696d7a55ccbd3cc575a5f337a741cc9cd3978a42b65ae53c4269e4ee",
+        "source_sha256": "4daecf9cac8ceea4706ae0b82313952d75a2eab1c9f24533b47ea120bede2d81",
+        "reason": "public polling continuity gap",
+        "gate_ms": 2000,
+        "previous_received_ms": 1791104489084,
+        "marked_at_ms": 1791104491526,
+        "clock_gap_ms": 2442,
+        "latest_captured_get_finished_ms": 1791104491526,
+        "get_finished_minus_previous_received_ms": 2442,
+        "get_finished_to_mark_delay_ms": 0,
+        "receive_timestamp_directly_pinned": false,
+        "receive_timestamp_scope": "returned rx occurs after request_io finish and before public_get finish; timing record is GET-completion clock",
+        "received_gap_upper_bound_ms": 2442,
+        "receive_to_mark_delay_lower_bound_ms": 0,
+        "trigger_reproduced": true,
+        "status": "BOOK_READY_FRONTIER_EXCEEDED_2S",
+        "timings_sha256": "edd3cf90c994e273e5c928bf9de13ac6c69971a62ae6e7296560e7d10c14d6a7",
+        "arithmetic": {
+          "previous_received_to_tick_end_ms": 1087,
+          "next_request_start_after_tick_end_ms": 50,
+          "current_request_to_get_finished_ms": 1305
+        },
+        "request_io_finished_ms": 1791104491526,
+        "inferred_return_rx_bracket_ms": [
+          1791104491526,
+          1791104491526
+        ],
+        "bracket_assumption": "local wall clock does not step backwards between nested operation completions; direct returned rx is not in timing source"
+      },
+      {
+        "symbol": "SEIUSDT",
+        "event_id": "recovery_gap:74546ac316831d9a185cf253f08d964142831ec7ed895c3cb0cb300a7db638c7",
+        "source_sha256": "2240c2e0c3fe56518260793b12038709dbf8bbf2c3c765985e23b5a0c2bb237b",
+        "reason": "rejected future/stale public book",
+        "gate_ms": 2000,
+        "cts": 1791003706740,
+        "response_time": 1791003709120,
+        "received_ms": 1791003709225,
+        "received_book_age_ms": 2485,
+        "server_book_age_ms": 2380,
+        "local_delivery_ms": 105,
+        "trigger_reproduced": true,
+        "status": "SOURCE_BOOK_AGE_EXCEEDED_2S",
+        "underlying_stale_source_cause": "NOT_PROVEN: cache/stale publication/quiet market cannot be separated from this snapshot"
+      },
+      {
+        "symbol": "ETCUSDT",
+        "event_id": "recovery_gap:a31f9b30f591473f4b79a059f5c0e2ab9d296997cb5c112411f008a206a5ae83",
+        "source_sha256": "42543c8e60cdceef71bef208b67144ed413883aeb9f04087facfab898b0b6e65",
+        "reason": "public polling continuity gap",
+        "gate_ms": 2000,
+        "previous_received_ms": 1791104489753,
+        "marked_at_ms": 1791104492152,
+        "clock_gap_ms": 2399,
+        "latest_captured_get_finished_ms": 1791104491433,
+        "get_finished_minus_previous_received_ms": 1680,
+        "get_finished_to_mark_delay_ms": 719,
+        "receive_timestamp_directly_pinned": false,
+        "receive_timestamp_scope": "returned rx occurs after request_io finish and before public_get finish; timing record is GET-completion clock",
+        "received_gap_upper_bound_ms": 1680,
+        "receive_to_mark_delay_lower_bound_ms": 719,
+        "trigger_reproduced": true,
+        "status": "CONSUME_CLOCK_FRONTIER_FALSE_CONTINUITY_GAP",
+        "timings_sha256": "ccb0962a150c77f0388f24ccd47514fea7622f048f78e73ce75c045c30ec469e",
+        "request_io_finished_ms": 1791104491433,
+        "inferred_return_rx_bracket_ms": [
+          1791104491433,
+          1791104491433
+        ],
+        "bracket_assumption": "local wall clock does not step backwards between nested operation completions; direct returned rx is not in timing source"
+      }
+    ],
+    "oracle": {
+      "sessions": 4,
+      "records": 48,
+      "byte_identical": true,
+      "state_sha256": "9832b9f7a04c3d7c9ab31bc6f38e5d9e7462c6764fa70605a2adf0d4101c7b83",
+      "source_files_unchanged": true,
+      "captured_heartbeat_byte_identical": true,
+      "frozen_driver_trigger_replay_cases": 4
+    },
+    "money_allowed": false,
+    "threshold_or_collector_changed": false
+  },
+  "funding_study": {
+    "schema_id": "att1_funding_reserve_study_v1",
+    "verdict": "POLICY_OVERCONSERVATIVE",
+    "interpretation": "historical dominance classification at constant unit stop-notional only; does not validate a replacement reserve or a future pathwise risk bound",
+    "raw_manifest_sha256": "ab7aafa6f96995930a69cc8e3a275de71139be44fec8952e7c86f1ed5689d8fa",
+    "prereg_plan_sha256": "27dd0b011257a005d82a2e86f577e3bc83e46055164a63c09513fdf11c7279be",
+    "frozen_threshold": "all8 current lower limits*43 >5*observed worst14d adverse-only debit on complete>=180d published8h grid samples",
+    "symbols": {
+      "ADAUSDT": {
+        "source_rows_raw": 4117,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 4116,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "a89814912dbbc25bf8a80fccad751de811b5a21f6e900909199b58bdd27a4c98",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "937c248f80ed88b942dd7eac75ab23bc015e97d2bd384e0cf9c21d9a657a7a61",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "f06be03992e104e77577635e5a7b785f4b06ef8c2d71e490994d36ddbb400cbc",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "5761cab25cb43d0419a4358c0436acc89ca51c1a8d32c4453a67abbf20fec36d",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "ef77f9de4a45e357583073e0873d8bfe15abf06bf36dc7c2f71d478dded96655",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "c77a0cf450b1ef6e307934a4620889122f7e3c36beb6fb286fc249badffd0988",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "0fbd8b311828c2b4d2483cc99fc405bfb3cc588254f741e5bb62c6dc098df1c0",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "2e5ae8f940cdbfd2fc5e57242ad7c3b8138ec4079b8493a77909093720d4746e",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "24651f160dc0c0ff0bf369a76699894a5113fd10b40a91881ca2f621d76d8a2a",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "62d04081a29d9d3047770210a020d688da0fac7b5703b436a0791bd652a27915",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "5c72d65e8fdea981566f8a40146f1171ae251039b26f8b48086851d85dd9e9bc",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "08c5399ce621cc910a5cdae59fcb066e5d00ef00e332d662b3fdf8238d37c41c",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "56cf9def3206b3d72d214c5b000da8414d687d34e6cd6e18cdae267c120cd12d",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "3631c0cf75a3c5388a14322559bbdcac846ef9965bcbda7fc5b8e81e0dcc8db0",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "11c9cb97c08793e9e22c9f0f26b8eb23dfd0b1be2141c9d75561606cb136f990",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "21644c3dcf3bc4969d4d82c821515037b4940e9d65a6357f00a8aafbb716ffe4",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "54193a641e6c415e02a8930778ce0e1e97d379258bec734fb4a55b657404e667",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "43749e61acdcf9f4dee016e2bb48333026da1928edf317d7b7c9c9e27d682aea",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "41851fcc4d4db468eb9ef72ae82e5629d9f477c91208b7e92e452f0d77bdb3c7",
+            "rows": 200
+          },
+          {
+            "page": 19,
+            "raw_sha256": "fc5ae8428f106175a9e412938c57497b4327338e670dd23dd2fdc29976c5b331",
+            "rows": 200
+          },
+          {
+            "page": 20,
+            "raw_sha256": "e368321e0392abbc6b79e3e8419dea7a70b6cb43d53531f48f117653a8d9759c",
+            "rows": 117
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1672531200000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1371.6666666666667,
+          "requested_start_ms": 1672531200000,
+          "launch_time_ms": 1610668800000,
+          "initial_unverified_or_censored_ms": 0,
+          "interval_counts_ms": {
+            "28800000": 4115
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 4074,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000301585",
+          "p95": "0.0020075700",
+          "p99": "0.0056275465",
+          "max": "0.00636935",
+          "stress_2x_max": "0.01273870",
+          "stress_5x_max": "0.03184675",
+          "worst_windows": [
+            {
+              "end_ms": 1761321600000,
+              "start_exclusive_ms": 1760112000000,
+              "end_utc": "2025-10-24T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T16:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.002549105",
+          "p95": "0.0005943945",
+          "p99": "0.0027638007",
+          "max": "0.00504634"
+        },
+        "current_limit": "0.0058",
+        "policy_43_envelope": "0.2494",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "39.15627183307558856084215815",
+        "observed_43_consecutive_adverse_max": "0.00636935",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "55d592542d5e9fb7a8fa5cc09447bff6794e6cfff937579ab3649e7a70d6eeec",
+          "observed_ms": 1791106156950,
+          "lowerFundingRate": "-0.0058",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      },
+      "BTCUSDT": {
+        "source_rows_raw": 4117,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 4116,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "2a78dd7e5bb9538b62e15b731c9c1471542a41f6acde756fe2ae3f42981a7bda",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "508365540cf7e6d727a5278618b198d11f2361072de30f7b8f2b74217747b8a6",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "77afb181fe7a45bfc48ad4164787c124989515325797bf5ca6782c7dc2684d11",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "8634e40fc2bd4cfbe1a812010c68fe9e638441380836840864538f0bad8f3d1f",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "cc6def08872f383d8b0c0165966aa76546b1c205d774e7fe4538956fda430915",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "44ea5ebd9e9e656be205dcdbefde31302446e25899ea14001df0da2e19350ea3",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "31931246a0bdc13bea419fa5b3872e97533f663096c2b4a328c4d5da4374ee98",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "ea5d184c873ef0c300a370aef2e50e7f827ce782ab2bd5e3fb889954201d1b70",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "02fb4e826be0cd03f0e95e1c96d607a7f79813dca410d62a1e5ace9a38db6eac",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "cf6ad3b90ad1547d3262bed40006f731c518055f705dd116049faf4633aaf00f",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "ead7f677cd5f4d5153706b0c5f612f0324b536946048e7265f7c10fbc33d3e60",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "4df990f370df315e146feff4760df17e3527acf8d7d14ce232a15e8bbef644ed",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "4a6a6219c426c6cba5e25703c0c759c0cac94274a8122e155c5763280282f66f",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "81587347b0e93e308024ac1e75991c2630c0ef68ce381d043ec888940cc69fcf",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "27b89579133a7c919f8a544d2dcf1dd2ad3c3a359cbd071698255c293ac98996",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "e3cf0b4d1bc9a1873f275ce021cc148da2996312d9c860ceb42ba76cd73f55c5",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "b1eeea1b348bca42a8bbda4d5992b5e3e67c691f9c8f5186c2ef7870720cc415",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "92342eb1102de2d18a446803ce9fc1582355668b24cdebeeae23f2eac1913b81",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "6836eff364331f4255e311a91eb2b14a2934c021c2adde2979643a7175088bc1",
+            "rows": 200
+          },
+          {
+            "page": 19,
+            "raw_sha256": "efe3bef65c809892e6617f269d2f3a8bc22592cb78746ab99e82a3fd335ab571",
+            "rows": 200
+          },
+          {
+            "page": 20,
+            "raw_sha256": "33ab5fe7fd6e4806054e48145776718fc4524909dff3d00810aa08783e3129b9",
+            "rows": 117
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1672531200000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1371.6666666666667,
+          "requested_start_ms": 1672531200000,
+          "launch_time_ms": 1584230400000,
+          "initial_unverified_or_censored_ms": 0,
+          "interval_counts_ms": {
+            "28800000": 4115
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 4074,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000123990",
+          "p95": "0.0008730440",
+          "p99": "0.0016085400",
+          "max": "0.00355414",
+          "stress_2x_max": "0.00710828",
+          "stress_5x_max": "0.01777070",
+          "worst_windows": [
+            {
+              "end_ms": 1674201600000,
+              "start_exclusive_ms": 1672992000000,
+              "end_utc": "2023-01-20T08:00:00+00:00",
+              "start_exclusive_utc": "2023-01-06T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1674230400000,
+              "start_exclusive_ms": 1673020800000,
+              "end_utc": "2023-01-20T16:00:00+00:00",
+              "start_exclusive_utc": "2023-01-06T16:00:00+00:00"
+            },
+            {
+              "end_ms": 1674259200000,
+              "start_exclusive_ms": 1673049600000,
+              "end_utc": "2023-01-21T00:00:00+00:00",
+              "start_exclusive_utc": "2023-01-07T00:00:00+00:00"
+            },
+            {
+              "end_ms": 1674288000000,
+              "start_exclusive_ms": 1673078400000,
+              "end_utc": "2023-01-21T08:00:00+00:00",
+              "start_exclusive_utc": "2023-01-07T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1674316800000,
+              "start_exclusive_ms": 1673107200000,
+              "end_utc": "2023-01-21T16:00:00+00:00",
+              "start_exclusive_utc": "2023-01-07T16:00:00+00:00"
+            },
+            {
+              "end_ms": 1674345600000,
+              "start_exclusive_ms": 1673136000000,
+              "end_utc": "2023-01-22T00:00:00+00:00",
+              "start_exclusive_utc": "2023-01-08T00:00:00+00:00"
+            },
+            {
+              "end_ms": 1674374400000,
+              "start_exclusive_ms": 1673164800000,
+              "end_utc": "2023-01-22T08:00:00+00:00",
+              "start_exclusive_utc": "2023-01-08T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1674403200000,
+              "start_exclusive_ms": 1673193600000,
+              "end_utc": "2023-01-22T16:00:00+00:00",
+              "start_exclusive_utc": "2023-01-08T16:00:00+00:00"
+            },
+            {
+              "end_ms": 1674432000000,
+              "start_exclusive_ms": 1673222400000,
+              "end_utc": "2023-01-23T00:00:00+00:00",
+              "start_exclusive_utc": "2023-01-09T00:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.002227755",
+          "p95": "-0.0000618270",
+          "p99": "0.0009614052",
+          "max": "0.00157243"
+        },
+        "current_limit": "0.00333",
+        "policy_43_envelope": "0.14319",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "40.28822725047409499907150534",
+        "observed_43_consecutive_adverse_max": "0.00357573",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "9b675565662229f3b62367c299ea1428b3c2cafe6f795a51a85a27608abdd1d2",
+          "observed_ms": 1791106158726,
+          "lowerFundingRate": "-0.00333",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      },
+      "DOTUSDT": {
+        "source_rows_raw": 4117,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 4116,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "e6bbc8552c999468d4d5dd4985f6fd578f09a870871cf2fdf9f495c046532e6a",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "5d6a1421a372418999c05d1d566223ae0629d3e00d02f0a1fc26b7a9abef0635",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "f32fd8d52d6a374d8d4e36648b9d633cfd414c0e676e6235cd68dd921cb51676",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "8c846c5b86fc737efd19d0b82d4f13affe27509e904813509afc6eaffa22012a",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "3ca3f9b9f4e04bcf0b51cc0f653a3409601a8347265bd9165f98f0171c536dab",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "2730955414823a1f80817a7673f1044a48c4dfd3a7a8023746efee01ca8bd27d",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "59b3c70cc9cc22e7c2aafdc897c36522182e0a1ca84341d329c98213e5fef5ca",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "c965c70cca83751bf296c98ba47b9abd36836477e23b78716730e35f758b4ffc",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "54c15d460d64e8978fc731279b7febdf4632a7af9c9b2833acd2da28a9988d53",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "68434701011335d65a43c4f2e2ba491d5a5ac9e379cc830ab7bbccf44f714983",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "d665fdcc48adcbc24d632dfc2af1d238e414eb9d2a5a4f1c15988fc8fee80c49",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "2a0423378b01763f330c08eb5662ce884d525f8896e4bd0696caf08bd24a3633",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "e85b2b52b5300f90a503d028566c12e96baeb6c76603f76bf697e054b6923422",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "99311868a96ecf5e0b25ec42b3a6dc68b6da4d9e923a1a6501bc14ce0416b047",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "a1e4f4a98734dc2afbd610be7122ce8a8c2120438b0abdd9f4ab6e9e91469a2a",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "a408af1ceac800851ddb8ab017b0b43304728661face7e538c08db04dc4bd6be",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "325c7b436f26517a558d5a5452fcefc7919bfc126fc41b959fff3a072a51f01c",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "0e405d73cd954b4a4abd966793fc4728d65859c7e747f6ba14c8d165874dcd88",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "17cfc0631abcba26df8106b1260e44ce9763a9bcaa7287bb9baec6b5ef90da95",
+            "rows": 200
+          },
+          {
+            "page": 19,
+            "raw_sha256": "ee454605a5322a0d371d923ab0b8ce9bd6c5a86dba724216dbac8d8a5d73f561",
+            "rows": 200
+          },
+          {
+            "page": 20,
+            "raw_sha256": "13db121b4143f3ccede7df8ef58191f5878edaf76e52076bb2627fdcc424872f",
+            "rows": 117
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1672531200000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1371.6666666666667,
+          "requested_start_ms": 1672531200000,
+          "launch_time_ms": 1616060040000,
+          "initial_unverified_or_censored_ms": 0,
+          "interval_counts_ms": {
+            "28800000": 4115
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 4074,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000467850",
+          "p95": "0.0070105860",
+          "p99": "0.0117619300",
+          "max": "0.01698703",
+          "stress_2x_max": "0.03397406",
+          "stress_5x_max": "0.08493515",
+          "worst_windows": [
+            {
+              "end_ms": 1776297600000,
+              "start_exclusive_ms": 1775088000000,
+              "end_utc": "2026-04-16T00:00:00+00:00",
+              "start_exclusive_utc": "2026-04-02T00:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.002224550",
+          "p95": "0.0061283495",
+          "p99": "0.0109629989",
+          "max": "0.01612038"
+        },
+        "current_limit": "0.0033",
+        "policy_43_envelope": "0.1419",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "8.353432000767644491120578465",
+        "observed_43_consecutive_adverse_max": "0.01722284",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "73af8faed1d2891a775e86e1761c85a390485012f3e3500463e53652a378960b",
+          "observed_ms": 1791106160817,
+          "lowerFundingRate": "-0.0033",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      },
+      "ETHUSDT": {
+        "source_rows_raw": 4117,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 4116,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "76c4f096d6b64e42239e7d7581d64890c01d8ec1b95d4a2df2c52b3eedf4a80f",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "d4ccea4a86fdd8dc60c7530a905f39d2af00d10ed07777b961f4f3e445972777",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "9246b71c4113da1f8c282d8eb80977b43f003fc3d96d481bcb1340f254c64242",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "bd8abc5a9dfa0df59adbda3998b2f607586ed484ac18abc314dd8082fca92e07",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "bbe5a9430a5fe66b6d347c3df639bdda514054f8744f7d3990e08a859c49bdec",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "5cf518ddaa0226992162e1d4679a5a16974de1d4625c6c692373ea0e72e8f274",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "cd8e73269286512aa1abb8a9c82f0f96a6b9228f0e2fc598beba314ef06f0a4c",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "c2ca3f686a234707abefeacf3babf176261dd19256e5cc126a44c563652fdffc",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "f636005ccf5fcfb560c58874b65fb437f3ef93b124e37af281d1d2b48d4ec9f1",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "94d11967e3925df2845f88364e9eaff38012853827c4580ee228d4257c0af87b",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "9a4f7f3b18dd6606cf637c9296ca461b39cb36a8b4322e4f3af61d810b9a8bcf",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "244711ce8bb047c52a5c15bbc5c4aaf7c600511544f02052e2642b3c94ab3035",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "4996572b8a2e5aa3b307ff4bd14d85219c49d19df2eabd3ad2a3015733ef2bcd",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "37825a141a46039e664357a919f1932186bb21c00c6effe924904187bd2dd837",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "164e8c3b53f04e05daedd94ac97640d82343b22691eb207fba28850bd12901e9",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "fb7d2064de1e32f1ec1b15fb2bc9c55be98dda2d5bd50a5b6a49d37390087ce1",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "46b659042bf45ec732cce50369cc2b9e0d544895a2fe4b48cadd6c9ad0bfeb85",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "ebe2670deaa54cf7bc2eecdb6c7ca66b6dd3d4098e4c37cd91a3b7dd50307b00",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "0f4a7a18fd87cb3abc9cdec56298509d2507785220e41e8b9536cc41f7cf54d5",
+            "rows": 200
+          },
+          {
+            "page": 19,
+            "raw_sha256": "41ce0b44638145f826ba12c6b79620d8dd831a6ea6d37b6b82b417915b1c10f2",
+            "rows": 200
+          },
+          {
+            "page": 20,
+            "raw_sha256": "bf4f9497a0790b20c86db3cbd48085b630291d00dcb1ce1b8aa4fdf5f456abbb",
+            "rows": 117
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1672531200000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1371.6666666666667,
+          "requested_start_ms": 1672531200000,
+          "launch_time_ms": 1615766400000,
+          "initial_unverified_or_censored_ms": 0,
+          "interval_counts_ms": {
+            "28800000": 4115
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 4074,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000195610",
+          "p95": "0.0009989065",
+          "p99": "0.0017250700",
+          "max": "0.00275407",
+          "stress_2x_max": "0.00550814",
+          "stress_5x_max": "0.01377035",
+          "worst_windows": [
+            {
+              "end_ms": 1674230400000,
+              "start_exclusive_ms": 1673020800000,
+              "end_utc": "2023-01-20T16:00:00+00:00",
+              "start_exclusive_utc": "2023-01-06T16:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.002217535",
+          "p95": "-0.0000282405",
+          "p99": "0.0007608048",
+          "max": "0.00133655"
+        },
+        "current_limit": "0.00333",
+        "policy_43_envelope": "0.14319",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "51.99214253813447007519779817",
+        "observed_43_consecutive_adverse_max": "0.00275407",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "65bfafef2d13129c444d3ee2b06f326e11e27dae3a42f36bdea2df749885aa18",
+          "observed_ms": 1791106162257,
+          "lowerFundingRate": "-0.00333",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      },
+      "LINKUSDT": {
+        "source_rows_raw": 4117,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 4116,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "809eacb823bf51a8157158d2bc947b29c1a17f527eca12c658a26512d0513cf1",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "de4479110de469c672becec069e166a5a5c4817e1eb50c7af8692b6c36597b9d",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "49ad173975541e7d1a202ad31c49bfdbea9decaf4c34331f388bdd5556552982",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "79402d2181ae1baa7d65d35c8b3bd83a46c16461f359d5181518cbe254e83333",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "ea1d785fac5feb750dec6d7790bf293aacfffce195ba313ff4281f8950135be7",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "57729ded4c151e4e4e7feed8e7ab0b8394492353cf0df9ed82de7933218b2fc2",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "a8fd886674fa5af37cd270e7328c1aa1701a74348cccf8a6acd2c0b34c305608",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "aa5e3a3e794909e41e70cd3be9d5a191de8c48cb29823e713ac456b432470c50",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "76b92f49d3c1de8da649a02d2e6a5ff151c91a76d4ffa656cf21f5c2780364ef",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "e05257853b60eaf42697878e48ca0da3e2e4f6852cf5f9317428e181534d2da3",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "06b086ca23426437748647a71698984f3350ae2f0818e8ac84dec3dfe4972378",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "58c977e7f967102bad154bb0785526494266ba30765278643c301359dafe8ddc",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "5d1aa73169cb1e4060d50d1a63f0567c6dece77b07ed6e295a4a548d902e1048",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "f64585f94e45ae21529e60a4186be34aa703810b0e09f50843961366fea03d98",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "e9c386aa270ea031f7fae2192228e9459c9e9492961cb667031b477ba036ea75",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "51569259d1d704afd51340a7be2997b6fb075581e56011034d79e397161086a3",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "54b82f911c8f112087c55bd042c084067ffb0b36da33a060e006c403547d548c",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "03b8dba49ae1745ba12aeebc3ea3f5e7f0e44cf362d9a1e984110b68f4b5b710",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "2725cbb17aac8aaeb65145c745ae0846dcea41028cf6e992c1c320a1b2b846e1",
+            "rows": 200
+          },
+          {
+            "page": 19,
+            "raw_sha256": "ebea0e5388b3751124ec5491fd09ed5f6e822bc9daa1f265916851e82734ea97",
+            "rows": 200
+          },
+          {
+            "page": 20,
+            "raw_sha256": "5ecd844da6c42e6e657a16273e9bff9a9dbb97e4b8b002451f3aa4cd8f820a01",
+            "rows": 117
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1672531200000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1371.6666666666667,
+          "requested_start_ms": 1672531200000,
+          "launch_time_ms": 1514764800000,
+          "initial_unverified_or_censored_ms": 0,
+          "interval_counts_ms": {
+            "28800000": 4115
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 4074,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000258745",
+          "p95": "0.0011046695",
+          "p99": "0.0083234200",
+          "max": "0.00865537",
+          "stress_2x_max": "0.01731074",
+          "stress_5x_max": "0.04327685",
+          "worst_windows": [
+            {
+              "end_ms": 1761148800000,
+              "start_exclusive_ms": 1759939200000,
+              "end_utc": "2025-10-22T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-08T16:00:00+00:00"
+            },
+            {
+              "end_ms": 1761177600000,
+              "start_exclusive_ms": 1759968000000,
+              "end_utc": "2025-10-23T00:00:00+00:00",
+              "start_exclusive_utc": "2025-10-09T00:00:00+00:00"
+            },
+            {
+              "end_ms": 1761206400000,
+              "start_exclusive_ms": 1759996800000,
+              "end_utc": "2025-10-23T08:00:00+00:00",
+              "start_exclusive_utc": "2025-10-09T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1761235200000,
+              "start_exclusive_ms": 1760025600000,
+              "end_utc": "2025-10-23T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-09T16:00:00+00:00"
+            },
+            {
+              "end_ms": 1761264000000,
+              "start_exclusive_ms": 1760054400000,
+              "end_utc": "2025-10-24T00:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T00:00:00+00:00"
+            },
+            {
+              "end_ms": 1761292800000,
+              "start_exclusive_ms": 1760083200000,
+              "end_utc": "2025-10-24T08:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1761321600000,
+              "start_exclusive_ms": 1760112000000,
+              "end_utc": "2025-10-24T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T16:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.002670650",
+          "p95": "-0.0005251675",
+          "p99": "0.0053694535",
+          "max": "0.00711045"
+        },
+        "current_limit": "0.0066",
+        "policy_43_envelope": "0.2838",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "32.78889290694678563712469831",
+        "observed_43_consecutive_adverse_max": "0.00865537",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "9926c98b9f570faf52fda670284ad69ab4c9544e9d4e091409e638eea1fb0540",
+          "observed_ms": 1791106163704,
+          "lowerFundingRate": "-0.0066",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      },
+      "LTCUSDT": {
+        "source_rows_raw": 4117,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 4116,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "45ac12b07f2001a8d90fddee7d6fd0097608eaf5c708f8de16b875f4ad547539",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "dd35db8b3811c52a258df99034c9bb82c88c675088266417baab6d77bbf0db86",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "94f77c518db546de9ebbcfd3f324c5195fa09a3234f94744327faf84f4bb2e83",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "791f3506f0fbad34bc4195aa756a82ae706d3c4bbd3f103ceefa0467997025d0",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "3acc2b4a621755f17b2573c008ec0e3205d9bd88cc411e6f3a26374a47c75852",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "74bc5e8a862a1c4706e01337b9ec69a44dd74dad81f141a05203f24ffaabd964",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "757c6afd5c5818732ccf08111d7602cc55d981a8eef7e917ea5e756b7fe20d72",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "a18cd6935d1d7d3933c66262c367f30f75eb5a25c96b84ca7bbd3fad6dec8eaa",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "d7319666c4cbdf8eb2d2da68af5f01dddc68a60c2fec00e33702125a6bf1946c",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "b00c650e8250fdd4e873b0ea16dcba99972d3f04444b8a2bec78cd409756e57e",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "d4ea6b129dc22da4810e43d8c61fcf29826a7b5620db7b0b31831cbcc2f75dfc",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "d8c9acc6eabfa8cc85e86e4b6035597e3d89b11aedb1ecea61ec2b8eff09a0cd",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "f5ff15fbead9aa82e999cfb40eecd7b54dbbf30abb208e3f60bf6f1522e1a643",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "15ac3bb4349b3bd697602b454e86f9c2bdc342ddb5d4bbb97e9285070dd03d64",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "1d7dcf23ea85dad2a230229a896fb9eaf3c20a3bcf880f4741364bc5a58da81b",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "8676ce52c9009ed869a15d79362512f86d878b6e86490a102a78c57c6ba44a83",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "840ed6eee5e84c6f32b1e67ceb353d5dc604f4323c23fc52a6a81cd904ea81d4",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "59f330f3061b0df92da7c678aca70ed540c91554b1c45dc7f304c2980c17bc99",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "79e98ab3abc377e9c8ac3638f0a482e97e566c041cb1e27207da6e225c28c824",
+            "rows": 200
+          },
+          {
+            "page": 19,
+            "raw_sha256": "eaa8f4e076f4088c923ee16329cd8dd18a1167901d8735b141f65ddb4aff08aa",
+            "rows": 200
+          },
+          {
+            "page": 20,
+            "raw_sha256": "f13e015f4c18245251e745bc8e29211483a59330be1d955d67a678b2461de3e2",
+            "rows": 117
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1672531200000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1371.6666666666667,
+          "requested_start_ms": 1672531200000,
+          "launch_time_ms": 1514764800000,
+          "initial_unverified_or_censored_ms": 0,
+          "interval_counts_ms": {
+            "28800000": 4115
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 4074,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000166550",
+          "p95": "0.0009346400",
+          "p99": "0.0023996500",
+          "max": "0.00284674",
+          "stress_2x_max": "0.00569348",
+          "stress_5x_max": "0.01423370",
+          "worst_windows": [
+            {
+              "end_ms": 1761321600000,
+              "start_exclusive_ms": 1760112000000,
+              "end_utc": "2025-10-24T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T16:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.002673925",
+          "p95": "-0.0003360045",
+          "p99": "0.0001617612",
+          "max": "0.00117281"
+        },
+        "current_limit": "0.0066",
+        "policy_43_envelope": "0.2838",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "99.69298214800087117193702270",
+        "observed_43_consecutive_adverse_max": "0.00284674",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "d3433070e92e73fe17b4d87a5b47060531a2bd62d0c37d57423edc0ecf4db35c",
+          "observed_ms": 1791106165153,
+          "lowerFundingRate": "-0.0066",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      },
+      "SOLUSDT": {
+        "source_rows_raw": 4117,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 4116,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "383b350478a2fd2c8caf662af6fd6a136ea7eb0b8e86cffd9184dea6491e30b0",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "22d4f3b4d6a28c09666dea1b11f644e8ed213c56c1acaaeaff553f65a424c72e",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "f87d9b7e1f41198b74252a04beb07307f7f2ad544b9c6e0085d3d1060c3d05ca",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "17733fd4303181c6a1d7c9acebfd0cd54be55199ac7f36bae8583657059262af",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "190cc64931547466438499257cb75e5a7f68abbb4a27dda12dcbaac432d21f4d",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "29c865291b38ba4dc470e7a4d1ea3302902274cce986e13137fb878906ce67f7",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "fc29dd07976c896b765dadb2bed57b9e85185cb76a8408d3fe21d72b2b6df6ba",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "8480a376cdd67627049a9111a4dfcc1f2664bd531e3df68c5ca14c19513a1021",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "ee32e0ff516071133b9f63cc06bb5310c31647f088c1ccecf7778617b34f0c08",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "c559cb45981655e0c2d84a77a43ff3cc50d3387a9d7233eb313e23ddfb78fd97",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "feecf74eebf560f4d2edf6df6ab16f90e644b19337e1302bd7941e86fd862005",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "5cc29d06b9bf43b982d3e13696b1da9c2704313be521b2bb26cd81f23e280d3e",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "f2330c307e84ebc72a85af7f24ad891908a150a026170008570be42a4ed7b295",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "def1a4c6d59b92c98d110bd9b61eb04288a96934b9e41524c51afa08d07d6f6d",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "cee135767c86b63c3c2d995d8672c8a493a643420edf94d19ab1943e5545a6ef",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "47c9729badd26db50934c00d5e789a46f2da8936a7e7d2520fba74fd796ac877",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "3645f7072f684e747b229f9b6c27d6e2944cd5b8029aea565c4616ad7b8b4178",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "b0ddcfcf732672ef9786937a9af78bd1aa3f31993e2c3066e743e6b088ee9448",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "b95d7594abe353bf9e3269b6ee9c2bbeb2c70f48c7bc35c256128532c09862fd",
+            "rows": 200
+          },
+          {
+            "page": 19,
+            "raw_sha256": "6c7074db6cfc9a0311eb83990b6bc6d6c55c4eaf89109285be3c9c8c9d68a506",
+            "rows": 200
+          },
+          {
+            "page": 20,
+            "raw_sha256": "64868210b684eef81d94aa9a9a5e62e6ba77b4cb6c75a912ddde1b6e0cd9695c",
+            "rows": 117
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1672531200000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1371.6666666666667,
+          "requested_start_ms": 1672531200000,
+          "launch_time_ms": 1634256000000,
+          "initial_unverified_or_censored_ms": 0,
+          "interval_counts_ms": {
+            "28800000": 4115
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 4074,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000608155",
+          "p95": "0.0032940200",
+          "p99": "0.0110105487",
+          "max": "0.03909301",
+          "stress_2x_max": "0.07818602",
+          "stress_5x_max": "0.19546505",
+          "worst_windows": [
+            {
+              "end_ms": 1673740800000,
+              "start_exclusive_ms": 1672531200000,
+              "end_utc": "2023-01-15T00:00:00+00:00",
+              "start_exclusive_utc": "2023-01-01T00:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.001759410",
+          "p95": "0.0024675630",
+          "p99": "0.0093364414",
+          "max": "0.03770226"
+        },
+        "current_limit": "0.005",
+        "policy_43_envelope": "0.215",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "5.499704422862296865859139524",
+        "observed_43_consecutive_adverse_max": "0.04022841",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "1392bdf1583b8af0f7508f2353ff6115d4c493f1f5ea91ecbf137383455ecc4c",
+          "observed_ms": 1791106166604,
+          "lowerFundingRate": "-0.005",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      },
+      "SUIUSDT": {
+        "source_rows_raw": 3750,
+        "exclusive_end_rows_explicitly_excluded": 1,
+        "retained_rows": 3749,
+        "duplicate_rows": 0,
+        "raw_page_hashes": [
+          {
+            "page": 0,
+            "raw_sha256": "aa824f1e66761826d2cf36ca48f6768fe45a893ee35a7e7b631e0f0df2bd36a5",
+            "rows": 200
+          },
+          {
+            "page": 1,
+            "raw_sha256": "862a40927edc83876bc9257017f5d182218b684b31306d0ca846a1c9db369c3f",
+            "rows": 200
+          },
+          {
+            "page": 2,
+            "raw_sha256": "255cfd6dc46a43a1099bc9a07bc731fa081dcde49a77656c436362c8a28ae1c8",
+            "rows": 200
+          },
+          {
+            "page": 3,
+            "raw_sha256": "77cbbd471ae4ac4d5007f89b38fe37f54242c4a330f49c08004dac183e8dbe5c",
+            "rows": 200
+          },
+          {
+            "page": 4,
+            "raw_sha256": "084041f0a45494cc40fe79e3ab1e6017228011f5678e6d7e971cd2072091d9e9",
+            "rows": 200
+          },
+          {
+            "page": 5,
+            "raw_sha256": "9aa8955eac19a516dc0bea65d69f2bcd40c9276b0bc77b1b53a9e45edfb6fc5a",
+            "rows": 200
+          },
+          {
+            "page": 6,
+            "raw_sha256": "21f5879e69251f3d495ed43b876adbcdb55479a91e49e0832f921f11152283f8",
+            "rows": 200
+          },
+          {
+            "page": 7,
+            "raw_sha256": "8220967004cd72829ec34204bee595a8561007dad9943f0d70a84d6d8bf74636",
+            "rows": 200
+          },
+          {
+            "page": 8,
+            "raw_sha256": "3d2aa6347e26a52c0f7af108dfd399866fe6b05e93f10b92dc27727d4796ce83",
+            "rows": 200
+          },
+          {
+            "page": 9,
+            "raw_sha256": "ab3335df30c45b0a85f50087ea8858a2bb5b05f8a297ec6e44412afbbae8e639",
+            "rows": 200
+          },
+          {
+            "page": 10,
+            "raw_sha256": "1bb5409033b807f763c0cf48a4877b0fb7a5523f1fd46f48f3102308db55daaa",
+            "rows": 200
+          },
+          {
+            "page": 11,
+            "raw_sha256": "4aa88b80df678e3e4d2a10254575dcafa505c138d8fd671f45fc54e5382a1cfd",
+            "rows": 200
+          },
+          {
+            "page": 12,
+            "raw_sha256": "834c29fd38df12a9bb6086e54fd57b6d4a275e217f646472ba0efbc176b2e506",
+            "rows": 200
+          },
+          {
+            "page": 13,
+            "raw_sha256": "7c11eedfd922b05f0420b5ed19d3ba4001fdc37122b7f028437dc47212d6be0e",
+            "rows": 200
+          },
+          {
+            "page": 14,
+            "raw_sha256": "215bebc87440501244e87f0f64c2165ffdc842e38c06a783b9933a749caea9cf",
+            "rows": 200
+          },
+          {
+            "page": 15,
+            "raw_sha256": "9b23976e4d4b032d8086dd1baca2e6b79c4441bd524d608d20fff10bab63bdea",
+            "rows": 200
+          },
+          {
+            "page": 16,
+            "raw_sha256": "34d8ff2f92a26351573e81fe5a9714849995cb2573d6807ec3b046c35c73426b",
+            "rows": 200
+          },
+          {
+            "page": 17,
+            "raw_sha256": "ad489e28166c4425adff6ff74044e0fcebefb519e9a2e07ef8394b142cc6fffb",
+            "rows": 200
+          },
+          {
+            "page": 18,
+            "raw_sha256": "064e5f57d04da528c036f2c710d829a853738c716ff5ebf4b4e2ad3e18f97f7f",
+            "rows": 150
+          },
+          {
+            "page": 19,
+            "raw_sha256": "416ba2ec21c030be9e5a3c644c4910e26d17ee1b7cd373b8f66a29256b44d305",
+            "rows": 0
+          }
+        ],
+        "quality": {
+          "verified_grid_start_ms": 1683100800000,
+          "verified_grid_end_ms": 1791043200000,
+          "verified_grid_days": 1249.3333333333333,
+          "requested_start_ms": 1683029724000,
+          "launch_time_ms": 1683029724000,
+          "initial_unverified_or_censored_ms": 71076000,
+          "interval_counts_ms": {
+            "28800000": 3748
+          },
+          "interior_missing_settlements_on_8h_grid": 0,
+          "boundary_end_grid_complete": true,
+          "claim": "published 8h grid completeness only; venue cannot certify unpublished events or historical interval metadata"
+        },
+        "windows": 3707,
+        "window_definition": "(end-14d,end], constant unit stop-notional,42settlements on observed8h grid; initial14d censored; overlapping windows not independent",
+        "adverse_14d": {
+          "p50": "0.000382640",
+          "p95": "0.0030294890",
+          "p99": "0.0052459268",
+          "max": "0.00588743",
+          "stress_2x_max": "0.01177486",
+          "stress_5x_max": "0.02943715",
+          "worst_windows": [
+            {
+              "end_ms": 1761120000000,
+              "start_exclusive_ms": 1759910400000,
+              "end_utc": "2025-10-22T08:00:00+00:00",
+              "start_exclusive_utc": "2025-10-08T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1761148800000,
+              "start_exclusive_ms": 1759939200000,
+              "end_utc": "2025-10-22T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-08T16:00:00+00:00"
+            },
+            {
+              "end_ms": 1761177600000,
+              "start_exclusive_ms": 1759968000000,
+              "end_utc": "2025-10-23T00:00:00+00:00",
+              "start_exclusive_utc": "2025-10-09T00:00:00+00:00"
+            },
+            {
+              "end_ms": 1761206400000,
+              "start_exclusive_ms": 1759996800000,
+              "end_utc": "2025-10-23T08:00:00+00:00",
+              "start_exclusive_utc": "2025-10-09T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1761235200000,
+              "start_exclusive_ms": 1760025600000,
+              "end_utc": "2025-10-23T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-09T16:00:00+00:00"
+            },
+            {
+              "end_ms": 1761264000000,
+              "start_exclusive_ms": 1760054400000,
+              "end_utc": "2025-10-24T00:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T00:00:00+00:00"
+            },
+            {
+              "end_ms": 1761292800000,
+              "start_exclusive_ms": 1760083200000,
+              "end_utc": "2025-10-24T08:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T08:00:00+00:00"
+            },
+            {
+              "end_ms": 1761321600000,
+              "start_exclusive_ms": 1760112000000,
+              "end_utc": "2025-10-24T16:00:00+00:00",
+              "start_exclusive_utc": "2025-10-10T16:00:00+00:00"
+            }
+          ]
+        },
+        "net_14d": {
+          "definition": "signed short cash debit; negative values are net funding credits, never offset against reserve",
+          "p50": "-0.002384300",
+          "p95": "0.0015537760",
+          "p99": "0.0025218336",
+          "max": "0.00392476"
+        },
+        "current_limit": "0.01",
+        "policy_43_envelope": "0.43",
+        "envelope_over_5x_max": true,
+        "envelope_to_max": "73.03696179827191151317298040",
+        "observed_43_consecutive_adverse_max": "0.00588743",
+        "envelope_over_5x_observed_43": true,
+        "current_limit_source": {
+          "endpoint": "/v5/market/instruments-info",
+          "envelope_sha256": "ded2779b7c656c6ce4ba11fbd7060bca207a70df6327e184aebde6231868a6b6",
+          "observed_ms": 1791106168553,
+          "lowerFundingRate": "-0.01",
+          "fundingInterval": 480,
+          "wire_bytes_preserved": false
+        }
+      }
+    },
+    "future_limit_changes_bound": false,
+    "mark_to_stop_price_bound": false,
+    "historical_holdout_consumed": false,
+    "money_policy_changed": false,
+    "orders_allowed": false,
+    "limit_capture_private_sha256": "4b6a55c575e19bf3a6f3476421eee60b0b14afcdc6a486365198d98ce56f6042"
+  },
+  "cash_frontier": {
+    "utc": "2026-10-04T10:07:41Z",
+    "bybot_pid": 1648585,
+    "public_pid": 1584802,
+    "source_sha256": "536d707d0718eebbdb3505cb3b9b3c0ef5b62953e1d3fa074cc46a1de49cf36a",
+    "flat_before_after": true,
+    "economic_cutoff_ms": 1791108440342,
+    "passes": [
+      {
+        "pass": 1,
+        "received_after_ms": 1791108440716,
+        "executions_rows": 0,
+        "cash_rows": 0,
+        "complete_cursor_chains": true
+      },
+      {
+        "pass": 2,
+        "received_after_ms": 1791108461388,
+        "executions_rows": 0,
+        "cash_rows": 0,
+        "complete_cursor_chains": true
+      }
+    ],
+    "publication_finality": "NOT_PROVEN",
+    "actual_publication_lag_ms": null,
+    "quarantine_count": 84,
+    "first_quarantine_complete_ms": null,
+    "observer_sha256": "8d210e93c2a64eec6e1ec204cdd3a125794976e1f3844133c13f6cb0fa5f867e",
+    "core_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "control_sha256": "5aa4814aa48dbec1cc7659d8bb4356622bb2cac1302ffdd0d4c8a3c856e7dd01",
+    "orders_allowed": false,
+    "broker_writes": 0
+  },
+  "quarantine_first96": {
+    "first_capture_sha256": "b57706acf068d1eb16f167d951a9e013fb11f8a6feab9d87032ce0d4f0311cf1",
+    "observation_sha256": "c2a22f7ad0d8b15c04bc2bcd138f38eb4657072d12710bb324488c4b78732a55",
+    "all_pure_fields_identical": true,
+    "consecutive_closed_m5": 96,
+    "completion_ms": 1791111600000,
+    "original_observed_ms": 1791111715581,
+    "actual_handoff_ready": false,
+    "orders_allowed": false
+  },
+  "fresh_runtime": {
+    "utc": "2026-10-04T13:06:37Z",
+    "source_sha256": "5607a866aa04cfa52f4d4159310e6f59b8735d89526b7657783c5d15e1285965",
+    "public_as_of_ms": 1791119196439,
+    "public_counts": {
+      "sessions": 10,
+      "records": 68,
+      "simulated_filled_sessions": 5,
+      "recovery_gap_sessions": 4,
+      "clean_filled_terminals": 0,
+      "simulated_held": 1
+    },
+    "held": [
+      {
+        "symbol": "ADAUSDT",
+        "held_qty": "102",
+        "protected_qty": "102",
+        "incidents": [],
+        "final_net_r": null
+      }
+    ],
+    "flat_before_after": true,
+    "core_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "control_sha256": "5aa4814aa48dbec1cc7659d8bb4356622bb2cac1302ffdd0d4c8a3c856e7dd01",
+    "services": {
+      "bybot": "MainPID=1648585\nNRestarts=0\nActiveState=active\n",
+      "att1-lifecycle-zero-risk-v2": "MainPID=1584802\nNRestarts=0\nActiveState=active\n"
+    },
+    "public_source_pins": {
+      "scripts/run_att1_lifecycle_zero_risk.py": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    },
+    "orders_allowed": false,
+    "broker_writes": 0,
+    "broker_calls_public": 0,
+    "order_calls_public": 0
+  },
+  "verification": {
+    "exact_fraction_windows": 32225,
+    "symbols": 8,
+    "funding_maxima_signed_medians_pass": true,
+    "cash_hash_cutoff_two_empty_chains_pass": true,
+    "corrections": [
+      "net funding distribution preserves signed credits; adverse reserve ignores credits",
+      "initial cash assertion expected int but signed client normalizes params strings; exact integer comparison PASS"
+    ],
+    "orders_allowed": false,
+    "current_local_targeted_tests": 54,
+    "current_local_targeted_command": ".venv/bin/python -m pytest -q tests/test_att1_lifecycle_runtime_cycle.py tests/test_att1_lifecycle_public_runner.py tests/test_att1_lifecycle_public_inputs.py",
+    "targeted_log_sha256": "4ff125e40f103126ea8e61658dee4c78628acc22f76f391acccf2a160ca2b9a2",
+    "current_full_suite_rerun": false,
+    "prior_555e9e1_suite": "3501PASS/57sameFAIL; historical, suite not green",
+    "critical_review": {
+      "requested_model": "gpt-6-astra",
+      "requested_effort": "high",
+      "actual_model": "gpt-6-astra",
+      "actual_effort": "high",
+      "rollout_id": "01a10663-13d1-7603-b500-2f674e6a2ad8",
+      "status": "PARTIAL_REVIEW_USAGE_LIMIT_NO_FINAL_SIGNOFF",
+      "findings": [
+        "signed funding distribution clipped credits; corrected to signed -sum and independent exact-Fraction median/max checks PASS",
+        "timing records are GET completion clocks, returned rx not directly serialized; precision/bounds and bracket assumption corrected"
+      ],
+      "final_review_complete": false,
+      "expensive_retry_performed": false,
+      "primary_final_verification_complete": true
+    },
+    "mechanical_collection": {
+      "actual_model": "gpt-5.6-luna",
+      "actual_effort": "medium",
+      "rollout_id": "01a10654-6d05-7811-ad80-94ea8d7c50ae",
+      "pages": 167,
+      "elapsed_seconds": 46.80358673998853
+    },
+    "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+  },
+  "private_repro_root": ".private/att1_gap_policy_20261004/",
+  "private_repro_sha256": {
+    "capture_gaps.py": "e8c7d57d5514d4d7d356e64c08920f2505beecea81fe29e9c817758d955fbe50",
+    "capture_deployed.py": "519af5793e852539982789d2354772d5613abe46c9fc3917cd039bb57555ef9e",
+    "replay_gaps.py": "e408a5aa88a0b86270189b2bc1e979f9d6e12d4f65b9f81bf72e93d059100ea8",
+    "funding/collect_public_funding.py": "91b8fd61d8b426a47db425f9dc304fe19e55ee419ea9140ca2e82c4c134ac642",
+    "analyze_funding.py": "0f9128225e96f43b8880d4a6545b8962c95434f6a8a1ebb455d2c727b70dcdc0",
+    "capture_cash_frontier.py": "6c7e3e761e34bf81ff1f56f22348981f6f3f8befb00cf831226d20a79ae8effd",
+    "capture_final_runtime.py": "9b8ce7839e2d60a2b74b285dad9e6ada7f7863a2c3a048a87c83d3d48c58808f",
+    "cash_and_fix_proposal.md": "e69db3e031737d535bbe7740e9dc923b4d1349856c6fb6afff25f67a811dd546"
+  },
+  "runtime_code_changes": false,
+  "policy_changes": false,
+  "broker_writes": 0,
+  "orders_allowed": false,
+  "owner_money_GO": false
+}

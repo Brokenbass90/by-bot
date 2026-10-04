@@ -1,5 +1,42 @@
 # MASTER HANDOFF — 2026-10-04
 
+Latest bounded ATT1 diagnosis **October 4; final runtime 13:06:37 UTC** — read
+`ATT1_GAP_FUNDING_CASH_DIAGNOSIS_2026_10_04.md` and JSON first. Continue from555e9e1.
+**ROOT_CAUSE_FOUND+FIX_PROPOSAL; actual packet BLOCKED_DATA; NEW orders OFF.**
+Four original gaps replay unchanged: SEI/SUI CTS was stale already at source;
+ETH exceeded the book-ready frontier by2442ms (tail+HTTP); ETC GET completed within
+1680ms, but consume-clock marked2399ms (at least719ms processing delay). Returnedrx
+is inferred/bracketed, not directly serialized. CTS/use freshness is a separate2s
+gate. No source/restart defect found; no deployed fix or cleaned receipt.
+
+Funding history:32561 retained rows /32225 windows /8 symbols. The frozen5× test
+returns **POLICY_OVERCONSERVATIVE relative to history**; envelope/worst5.50–99.69×.
+It does not validate a future hard bound or reduce policy. Initial SUI19.74h is
+censored; published8h grid has no interior holes; future interval/limit/notional
+bounds are unproven. Draft8/8 REJECT and ETH/SUI exactqty0 persist. Risk/hold/fees
+unchanged. Prior74s cash delta was chosen60s cutoff+collection time, not measured
+broker lag. Two fixed-cutoff empty signed GETs20672ms apart show published rows
+only; publication finality/handoff remain BLOCKED. Causal reconciliation proposal
+prepared; validator unchanged. LINK's prior terminal conflict was not reopened.
+
+**First real96/96 preserved:** completion11:00 UTC, original capture11:01:55.581 UTC,
+SHAb57706ac…; all8 original M5/pure fields replay PASS. No backdated money handoff.
+Fresh signed account flat/no orders before+after; main PID1648585 retired, public
+PID1584802, NRestarts0, core/guard/public source hashes unchanged. Public:
+**10 sessions /68 records /5 simfills /4 gaps /0 clean /1 held ADA**; simulated102,
+protected102, no incident at capture. Four trigger replays/48-record oracle PASS;
+54 local targeted PASS;32225 exact-Fraction windows verified. One6-astra review
+was partial due usage limit; findings corrected by primary, no final signoff/retry.
+Prior full3501PASS/57FAIL is historical, not rerun. Foreign allowlist hash intact,
+unstaged. No production install/restart/broker write or money-policy change.
+
+Next: bounded local observation fix and REST/WS diagnostic; separate reviewed
+reserve/cash proposals. Keep2–3 clean filled terminals/net-R +fresh dossier
++separate ownerGO. Alpaca October5 re-arm remains P0. Claude KITY→LONG→RANGE queue
+is last-verified context; no new research/runtime progress claimed this cycle.
+
+Earlier dated snapshots below are historical; cash-lag wording is superseded.
+
 Latest ATT1 feasibility cycle **October4 09:29–09:35UTC** — read
 `ATT1_FEASIBILITY_VERDICT_2026_10_04.md` and JSON first. Continuee33e253;
 Tasks1–4/50 known OLD cash identities stay closed;0historical windows this cycle.
