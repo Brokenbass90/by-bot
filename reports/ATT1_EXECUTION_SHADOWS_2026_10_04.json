@@ -1,0 +1,170 @@
+{
+  "schema_id": "att1_execution_shadow_delivery_v1",
+  "base_git_head": "4cb51e1fb843f915b7038618feb1d1691860c576",
+  "verdict": "LOCAL_TIMING_CANDIDATE_TESTED_AND_48H_PROBES_RUNNING",
+  "actual_packet_verdict": "BLOCKED_DATA",
+  "orders_allowed": false,
+  "candidate_driver_deployed": false,
+  "production_transport_changed": false,
+  "money_policy_changed": false,
+  "studies": {
+    "transport": {
+      "pid": 1676226,
+      "status": "RUNNING",
+      "started_ms": 1791123145311,
+      "deadline_ms": 1791295945311,
+      "spec_sha256": "71740e9a1ffa08fe759d984ee601ec8fcfd46bba877acabac71a608aa44086fc",
+      "context_sha256": "5b7d909e70648d7126f6e230a8be1b092f624fd6003e9c1a790b509721cf9a37",
+      "max_capture_bytes": 4294967296,
+      "min_free_bytes": 5368709120
+    },
+    "funding": {
+      "pid": 1676227,
+      "status": "RUNNING",
+      "started_ms": 1791123145515,
+      "deadline_ms": 1791295945515,
+      "spec_sha256": "e5a0195d145a68f88d9e27a24f19bb1394a8be39b2421bd8c396011f5b3f3a77",
+      "context_sha256": "5b7d909e70648d7126f6e230a8be1b092f624fd6003e9c1a790b509721cf9a37",
+      "max_capture_bytes": 4294967296,
+      "min_free_bytes": 5368709120
+    }
+  },
+  "funding_baseline_headers": 10,
+  "funding_population": "only future public START intents, not all raw signals",
+  "funding_parameters": {
+    "risk_draft_usdt": "0.4",
+    "daily_draft_usdt": "0.8",
+    "notional_draft_usdt": "100",
+    "stress_multiplier": 5,
+    "history_events": 43,
+    "history_interval_minutes": 480,
+    "notional_sensitivity": [
+      "1",
+      "1.1",
+      "1.5"
+    ],
+    "liability_usdt": [
+      "0",
+      "0.4"
+    ],
+    "exit_gap_stress_usdt": [
+      "0",
+      "0.4"
+    ],
+    "dated_fees_only": true,
+    "synthetic_binding_is_account_evidence": false,
+    "candidate_money_ready": false
+  },
+  "runtime_snapshot": {
+    "utc": "2026-10-04T14:18:14Z",
+    "source_sha256": "c05f4b6dfb1e10590bfaa26b609d6c00ae1d87df3960815e89dbb77a281d2da2",
+    "flat_before_after": true,
+    "sessions": 10,
+    "records": 68,
+    "filled_sessions": 5,
+    "gap_sessions": 4,
+    "clean_filled_terminals": 0,
+    "held": [
+      {
+        "symbol": "ADAUSDT",
+        "held_qty": "102",
+        "protected_qty": "102",
+        "incidents": []
+      }
+    ],
+    "source_pins": {
+      "scripts/run_att1_lifecycle_zero_risk.py": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    },
+    "services": {
+      "bybot": "MainPID=1648585\nNRestarts=0\nActiveState=active\n",
+      "att1-lifecycle-zero-risk-v2": "MainPID=1584802\nNRestarts=0\nActiveState=active\n"
+    }
+  },
+  "old_gap_oracle": {
+    "sessions": 4,
+    "records": 48,
+    "byte_identical": true,
+    "state_sha256": "9832b9f7a04c3d7c9ab31bc6f38e5d9e7462c6764fa70605a2adf0d4101c7b83",
+    "source_files_unchanged": true,
+    "captured_heartbeat_byte_identical": true,
+    "frozen_driver_trigger_replay_cases": 4
+  },
+  "verification": {
+    "targeted_local": 77,
+    "isolated_probe_tests_vps": 16,
+    "full_suite": {
+      "exit_code": 1,
+      "failed_count": 57,
+      "baseline_failed_count": 57,
+      "new_failures": [],
+      "removed_failures": [],
+      "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+      "foreign_restored": true,
+      "log_sha256": "2dccc4c34394ff2c651136408b7d14178b845cde3da02036bad059304cd04209",
+      "tail": "57 failed, 3521 passed, 1 warning in 166.23s (0:02:46)"
+    },
+    "critical_review": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "completed": true,
+      "must_fix": 3,
+      "primary_fixes_tested": true,
+      "independent_rereview": false
+    },
+    "model_routing": [
+      {
+        "path": "/Users/nikolay.bulgakov/.codex/sessions/2026/10/04/rollout-2026-10-04T17-01-10-01a10737-f689-79d2-a98c-a805dbc7aac0.jsonl",
+        "source": {
+          "subagent": {
+            "thread_spawn": {
+              "parent_thread_id": "01a0f86b-2ee7-7d23-9bda-00a144085086",
+              "depth": 1,
+              "agent_path": "/root/att1_execution_shadow_review_oct4",
+              "agent_nickname": "Tesla",
+              "agent_role": null
+            }
+          }
+        },
+        "model": "gpt-6-astra",
+        "effort": "high"
+      },
+      {
+        "path": "/Users/nikolay.bulgakov/.codex/sessions/2026/10/04/rollout-2026-10-04T16-32-31-01a1071d-bce8-72a0-b4af-d0b8adb894e7.jsonl",
+        "source": {
+          "subagent": {
+            "thread_spawn": {
+              "parent_thread_id": "01a0f86b-2ee7-7d23-9bda-00a144085086",
+              "depth": 1,
+              "agent_path": "/root/att1_transport_inventory_oct4",
+              "agent_nickname": "Nash",
+              "agent_role": null
+            }
+          }
+        },
+        "model": "gpt-5.6-luna",
+        "effort": "medium"
+      }
+    ],
+    "additional_tests_after_full_suite": "capture short writes/durability and two frozen-sizing integration cases PASS"
+  },
+  "cash_finality": "CAUSAL_DESIGN_ONLY_NOT_IMPLEMENTED_OR_MONEY_APPROVED",
+  "money_gate": [
+    "LINK mode conflict",
+    "actual cash/finality/handoff declaration",
+    "reviewed economically feasible risk/cost contract",
+    "selected-account lifecycle verification",
+    "2-3 clean prospective filled terminals with net-R",
+    "fresh exclusive dossier and separate owner GO"
+  ],
+  "automation": {
+    "id": "att1-bounded-continuity-evidence",
+    "name": "ATT1 execution probes 48h",
+    "status": "ACTIVE",
+    "interval_hours": 6,
+    "bounded_runs": 8,
+    "quiet_unchanged": true
+  },
+  "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}

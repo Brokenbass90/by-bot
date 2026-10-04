@@ -596,6 +596,19 @@ def test_failed_prefetch_keeps_other_observations_and_journals_replayable(tmp_pa
     finally:_stop_observation_workers(rt)
 
 
+def test_failed_futures_still_mark_real_continuity_gaps(tmp_path):
+    rt,tape,sessions=_two_book_runtime(tmp_path);rt.clock=lambda:tape.now+5000
+    rt.last_observed={s.receipt['plan']['decision_id']:tape.now for s in sessions}
+    def failed(*args,**kwargs):raise TimeoutError('captured acquisition failure')
+    rt.transport=failed
+    try:
+        rt.tick()
+        assert all(s.receipt['incidents']==['RECOVERY_GAP'] for s in sessions)
+        assert all(v=='TimeoutError' for v in rt.poll_errors.values())
+        assert rt.state()==runner.verify_state([s.journal.path for s in sessions],rt.profile)
+    finally:_stop_observation_workers(rt)
+
+
 def test_new_exit_fresh_ioc_cannot_compete_with_observation_workers(tmp_path):
     import time
     from threading import Event,Lock,get_ident
@@ -622,3 +635,97 @@ def test_new_exit_fresh_ioc_cannot_compete_with_observation_workers(tmp_path):
         assert all(not s.receipt['incidents'] for s in sessions)
         assert rt.state()==runner.verify_state([s.journal.path for s in sessions],rt.profile)
     finally:_stop_observation_workers(rt)
+
+
+def test_received_prefetch_does_not_use_consume_clock_as_continuity_frontier(tmp_path):
+    rt,tape,sessions=_two_book_runtime(tmp_path)
+    session=sessions[0];previous=tape.now;rx=previous+1680
+    rt.last_observed[session.receipt['plan']['decision_id']]=previous
+    rt.clock=lambda:previous+2399
+    raw={'retCode':0,'result':{'s':'BTCUSDT','b':[['100','10']],'a':[['100.01','10']],
+         'cts':rx,'ts':rx,'u':1,'seq':1},'time':rx}
+    rt.manage(session,observation=(raw,rx))
+    assert session.receipt['incidents']==[]
+    assert rt.last_observed[session.receipt['plan']['decision_id']]==rx
+    assert session.receipt['held_qty']=='1/10'
+
+
+def test_true_received_prefetch_gap_is_not_hidden_by_fresh_cts(tmp_path):
+    rt,tape,sessions=_two_book_runtime(tmp_path);session=sessions[0]
+    previous=tape.now;rx=previous+2442;rt.clock=lambda:rx
+    rt.last_observed[session.receipt['plan']['decision_id']]=previous
+    raw={'retCode':0,'result':{'s':'BTCUSDT','b':[['100','10']],'a':[['100.01','10']],
+         'cts':rx,'ts':rx,'u':1,'seq':1},'time':rx}
+    rt.transport=lambda *args,**kwargs:json.dumps(raw).encode()
+    rt.manage(session,observation=(raw,rx))
+    assert session.receipt['incidents']==['RECOVERY_GAP']
+
+
+def test_fast_book_management_does_not_wait_for_unrelated_slow_peer(tmp_path):
+    from threading import Event
+    rt,tape,sessions=_two_book_runtime(tmp_path);managed=Event();now=tape.now+100
+    rt.clock=lambda:now;original=rt.manage
+    def manage(session,**kw):
+        result=original(session,**kw)
+        if session is sessions[0]:managed.set()
+        return result
+    rt.manage=manage
+    def transport(url,params,**kw):
+        if params['symbol']=='ETHUSDT':assert managed.wait(2),'slow peer blocked fast management'
+        result={'s':params['symbol'],'b':[['100','10']],'a':[['100.01','10']],
+                'cts':now,'ts':now,'u':1,'seq':1}
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    rt.transport=transport
+    try:
+        rt.tick()
+        assert all(not s.receipt['incidents'] for s in sessions)
+    finally:_stop_observation_workers(rt)
+
+
+def test_continuous_prefetch_overlaps_publication_tail_without_worker_writes(tmp_path):
+    from threading import Event,get_ident
+    rt,tape,sessions=_two_book_runtime(tmp_path);count=[0];during_publish=Event();now=tape.now+100
+    rt.clock=lambda:now
+    def transport(url,params,**kw):
+        count[0]+=1
+        if count[0]>2:during_publish.set()
+        result={'s':params['symbol'],'b':[['100','10']],'a':[['100.01','10']],
+                'cts':now,'ts':now,'u':1,'seq':1}
+        return json.dumps({'retCode':0,'result':result,'time':now}).encode()
+    rt.transport=transport;original_publish=rt.publish
+    def publish(*args,**kw):
+        assert during_publish.wait(2),'next acquisition starts only after publication'
+        return original_publish(*args,**kw)
+    rt.publish=publish
+    try:rt.tick(prefetch_next=True)
+    finally:_stop_observation_workers(rt)
+
+
+def test_continuous_candidate_closes_captured_tail_plus_http_budget_overrun(tmp_path):
+    import time
+    rt,tape,sessions=_two_book_runtime(tmp_path)
+    base=tape.now;origin=time.monotonic()
+    rt.clock=lambda:base+int((time.monotonic()-origin)*1000)
+    rt.last_observed={s.receipt['plan']['decision_id']:base for s in sessions}
+    def book(url,params,**kw):
+        time.sleep(1.305);rx=rt.clock()
+        result={'s':params['symbol'],'b':[['100','10']],'a':[['100.01','10']],
+                'cts':rx,'ts':rx,'u':rx,'seq':rx}
+        return json.dumps({'retCode':0,'result':result,'time':rx}).encode()
+    rt.transport=book;publish=rt.publish
+    def slow_publish(*args,**kw):time.sleep(1.087);return publish(*args,**kw)
+    rt.publish=slow_publish
+    try:
+        rt.tick(prefetch_next=True);first=dict(rt.last_observed)
+        rt.tick(prefetch_next=True)
+        intervals={k:v-first[k] for k,v in rt.last_observed.items()}
+        assert all(0<v<=2000 for v in intervals.values())
+        assert all(not s.receipt['incidents'] for s in sessions)
+        assert rt.state()==runner.verify_state([s.journal.path for s in sessions],rt.profile)
+    finally:_stop_observation_workers(rt)
+
+
+def test_public_get_timings_pin_returned_receive_clock(tmp_path):
+    rt,session=_runtime_with_session(tmp_path)
+    raw,rx=rt._get('/v5/market/orderbook','BTCUSDT',limit=50)
+    assert rt._operation_timings()[-1]['returned_receive_ms']==rx

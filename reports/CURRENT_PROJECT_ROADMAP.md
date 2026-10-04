@@ -1,5 +1,24 @@
 # Current roadmap — owner scope October 4, 2026
 
+Latest execution cycle **October4; signed runtime14:18:14UTC** — read
+`ATT1_EXECUTION_SHADOWS_2026_10_04.md` and JSON first. Continue current branch HEAD; cycle baseline4cb51e1.
+**Two48h public-only probes RUNNING; local timing candidate tested; actual packet
+BLOCKED_DATA; NEW orders OFF.** TransportSEI/SUI1676226; fundingfutureSTART1676227,
+10-header baseline; deadlineOct6 14:12:25UTC/~17:12Cyprus, persistent/no restart.
+Each4GiB capture/5GiB free; only new research runtime writable, no credentials.
+6-hour bounded app heartbeat ACTIVE, quiet unchanged; VPS collectors are independent.
+Driver remainsLOCAL: immutable returnedrx +consumedCTS2s, exit barrier, tail overlap;
+77local targeted/16VPS probe testsPASS; four gaps/48record frozen-closure oracle
+byte-identical, old dirty receipts unchanged. Full3521PASS/57sameFAIL, no newfailures.
+One completed6-astra/high review3findings fixed/tested byprimary, no rereview claim.
+Fresh accountflat/noorders; main1648585retired/public1584802/web1623208 unchanged.
+Public10sessions/68records/5simfills/4gaps/**0clean**; ADAheld102/protected102.
+First96/96 preserved. Cash causalcontract isdesign-only; LINK/cash/finality/cost
+policy/selected-account integration remainBLOCKED. Keep2–3clean/netR+freshdossier
++separateGO. No broadresearch/Claude writes, foreigndiff preserved. AlpacaOct5P0.
+
+Earlier dated snapshots below are history; latest readiness is the block above.
+
 Latest bounded ATT1 diagnosis **October 4; final runtime 13:06:37 UTC** — read
 `ATT1_GAP_FUNDING_CASH_DIAGNOSIS_2026_10_04.md` and JSON first. Continue from555e9e1.
 **ROOT_CAUSE_FOUND+FIX_PROPOSAL; actual packet BLOCKED_DATA; NEW orders OFF.**

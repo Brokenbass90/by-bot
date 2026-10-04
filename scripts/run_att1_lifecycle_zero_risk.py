@@ -567,6 +567,7 @@ class PublicLifecycleRuntime:
         self.last_observed={};self.last_funding={};self.scanned=set();self.scan_close=None
         self.poll_errors={};self.scan_results={};self.get_count=0;self.running=True
         self.scan_executor=None;self.scan_future=None;self.observation_executor=None
+        self.observation_futures={};self._exit_observation_barrier=[]
         self.public_slots=BoundedSemaphore(2);self.public_rate_lock=Lock();self.next_public_start=0.0
 
     def state(self):
@@ -593,7 +594,7 @@ class PublicLifecycleRuntime:
     def _timed(self,operation,**details):
         started_ms=self.clock();started=time.perf_counter_ns();error=None
         try:
-            yield
+            yield details
         except BaseException as exc:
             error=type(exc).__name__
             raise
@@ -607,8 +608,10 @@ class PublicLifecycleRuntime:
         with self._timing_lock:return deepcopy(list(self._timings))
 
     def _get(self,path,symbol,**params):
-        with self._timed('public_get',path=path,symbol=symbol):
-            return self._get_timed(path,symbol,**params)
+        with self._timed('public_get',path=path,symbol=symbol) as timing:
+            result=self._get_timed(path,symbol,**params)
+            timing['returned_receive_ms']=result[1]
+            return result
 
     def _get_timed(self,path,symbol,**params):
         params={'category':'linear','symbol':symbol,**params}
@@ -700,6 +703,8 @@ class PublicLifecycleRuntime:
     def execute_ioc(self,session,*,entry=False):
         receipt=session.receipt;p=receipt['plan'];pending=receipt['pending_exit']
         if not entry and pending is None:return
+        # A fresh exit retains all public slots after outstanding observations drain.
+        if not entry:wait(self._exit_observation_barrier)
         order=p['order_id'] if entry else pending['exit_order_id']
         submit=p['submit_ms'] if entry else pending['submit_ms']
         requested=p['requested_qty'] if entry else _fraction_text(Fraction(pending['remaining_qty']))
@@ -746,7 +751,9 @@ class PublicLifecycleRuntime:
         receipt=session.receipt;p=receipt['plan'];decision=p['decision_id']
         if Fraction(receipt['held_qty'])<=0 and receipt['pending_exit'] is None:
             return
-        self._mark_observation_gap(session,self.clock())
+        # A prefetched response has an immutable receive frontier. CTS is still
+        # checked again at consumption; delayed processing cannot retime it.
+        if observation is None:self._mark_observation_gap(session,self.clock())
         if session.receipt['intents']['protect_qty']!='0':
             self._emit(session,'PROTECTION_ACK',qty=_fraction_text(Fraction(session.receipt['held_qty'])),stop=p['original_stop'])
         if session.receipt['pending_exit'] is not None:
@@ -870,7 +877,7 @@ class PublicLifecycleRuntime:
             self.scan_journal=journal
             self.scanned.add(symbol);self.scan_results[symbol]=result['result']
 
-    def tick(self):
+    def tick(self,*,prefetch_next=False):
         if shutil.disk_usage(self.root).free<self.config['min_free_bytes']:raise RunnerViolation('runtime free space guard')
         sessions=list(self.sessions.values())
         # Workers fetch/validate public responses only. Book freshness, decisions,
@@ -879,7 +886,8 @@ class PublicLifecycleRuntime:
             return (Fraction(session.receipt['held_qty'])>0
                     and session.receipt['pending_exit'] is None
                     and session.receipt['intents']['protect_qty']=='0')
-        observations={}
+        observations=self.observation_futures;self.observation_futures={}
+        self._exit_observation_barrier=list(observations.values())
         for index,session in enumerate(sessions):
             decision=session.receipt['plan']['decision_id']
             pair=sessions[index:index+2]
@@ -888,16 +896,13 @@ class PublicLifecycleRuntime:
                     self.observation_executor=ThreadPoolExecutor(max_workers=2,thread_name_prefix='att1-public-book')
                 observations={s.receipt['plan']['decision_id']:self.observation_executor.submit(
                     self._get,'/v5/market/orderbook',s.receipt['plan']['symbol'],limit=50) for s in pair}
-                # Drain this pair before decisions can require a fresh exit IOC.
-                # Never look past an earlier pending/protection session or refill
-                # while main-thread management still needs the public slots.
-                wait(observations.values())
+                # Manage the first book as soon as it arrives. Any resulting
+                # exit IOC drains the pair before acquiring a public slot.
+                self._exit_observation_barrier=list(observations.values())
             try:
                 with self._timed('manage',decision_id=decision):
                     observation=None;future=observations.pop(decision,None)
-                    if future is not None:
-                        self._mark_observation_gap(session,self.clock())
-                        observation=future.result()
+                    if future is not None:observation=future.result()
                     self.manage(session,observation=observation)
                 self.poll_errors.pop(decision,None)
             except PublicBookTimeViolation as exc:
@@ -906,7 +911,11 @@ class PublicLifecycleRuntime:
                                reason='rejected future/stale public book')
                 self.poll_errors[decision]=str(exc)
             except (URLError,TimeoutError,ConnectionError) as exc:
+                # Failed acquisition has no receive frontier; elapsed missing
+                # observation time remains a real continuity gap.
+                self._mark_observation_gap(session,self.clock())
                 self.poll_errors[decision]=type(exc).__name__
+        self._exit_observation_barrier=[]
         if not self._observation_required():
             for session in list(self.sessions.values()):
                 decision=session.receipt['plan']['decision_id']
@@ -934,6 +943,17 @@ class PublicLifecycleRuntime:
                 if self.scan_executor is None:self.scan_executor=ThreadPoolExecutor(max_workers=1,thread_name_prefix='att1-public-scan')
                 self.scan_future=(close,symbol,self.scan_executor.submit(self.scan_symbol,symbol))
                 self.scan_future[2].add_done_callback(lambda _future:self.scan_wakeup.set())
+        if prefetch_next:
+            # At most one unconsumed observation per book; no worker decisions.
+            # Prime only an adjacent eligible prefix, after all exits/admission.
+            first=next((i for i,s in enumerate(sessions) if Fraction(s.receipt['held_qty'])>0
+                        or s.receipt['pending_exit'] is not None),None)
+            pair=[] if first is None else sessions[first:first+2]
+            if pair and all(eligible(s) for s in pair):
+                if self.observation_executor is None:
+                    self.observation_executor=ThreadPoolExecutor(max_workers=2,thread_name_prefix='att1-public-book')
+                self.observation_futures={s.receipt['plan']['decision_id']:self.observation_executor.submit(
+                    self._get,'/v5/market/orderbook',s.receipt['plan']['symbol'],limit=50) for s in pair}
         with self._timed('publish'):self.publish()
 
     def publish(self,status='RUNNING'):
@@ -965,7 +985,7 @@ class PublicLifecycleRuntime:
             while self.running:
                 self.scan_wakeup.clear()
                 started=self.clock()
-                with self._timed('tick'):self.tick()
+                with self._timed('tick'):self.tick(prefetch_next=not once)
                 if once:break
                 self.sleep(max(0,self.config['poll_seconds']-(self.clock()-started)/1000))
             self.publish('STOPPED' if not once else 'ONCE_COMPLETE')

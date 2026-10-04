@@ -1,0 +1,36 @@
+[Unit]
+Description=ATT1 future START funding research (no money authority)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bybot-research
+Group=bybot-research
+WorkingDirectory=/opt/bybot-research/att1-execution-research-20261004/app
+ExecStart=/opt/bybot-research/att1-execution-research-20261004/venv/bin/python -B scripts/run_att1_execution_probe.py --kind funding --runtime /opt/bybot-research/att1-execution-research-20261004/runtime/funding --context /opt/bybot-research/att1-execution-research-20261004/app/context.json
+BindReadOnlyPaths=/root/by-bot/.venv:/opt/bybot-research/att1-execution-research-20261004/venv
+Restart=no
+RuntimeMaxSec=172815
+KillSignal=SIGINT
+TimeoutStopSec=15
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+CapabilityBoundingSet=
+ReadOnlyPaths=/opt/bybot-research/att1-lifecycle-zero-risk-v2/runtime/20261002-paired-observation/sessions
+ReadWritePaths=/opt/bybot-research/att1-execution-research-20261004/runtime/funding
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=160M
+CPUQuota=10%
+TasksMax=8
+LimitNOFILE=128
+
+[Install]
+WantedBy=multi-user.target
