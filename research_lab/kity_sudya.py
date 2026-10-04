@@ -87,8 +87,9 @@ def main():
         it["verdikt"] = "KILLED"; it["prichina"] = f"недель {it.get('dney')} < 52"
     rez["PRIMARY"] = it
     sr = okno(*REPLIK, M2, +1); ir = P.itog(sr, s_kontrolem=False, lag=1)
-    ir["status"] = ("CROSS_PERIOD_PASS" if ir["verdikt"] == "SURVIVED" else
-                    ("SAME_SIGN" if ir.get("edge_bps", 0) > 0 else "OPPOSITE"))
+    ir["status"] = ("BLOCKED_DATA" if ir.get("n", 0) < 20 else      # поправка A1 04.10, до прогона
+                    ("CROSS_PERIOD_PASS" if ir["verdikt"] == "SURVIVED" else
+                     ("SAME_SIGN" if ir.get("edge_bps", 0) > 0 else "OPPOSITE")))
     rez["REPLICATION"] = ir
     tolpa = dict((t, r) for t, r, _ in okno(PRIMARY[0], PRIMARY[1], TOLPA, -1) + okno(*REPLIK, TOLPA, -1))
     para = [(r, tolpa[t]) for t, r, _ in sp + sr if t in tolpa]
@@ -96,7 +97,8 @@ def main():
     rez["nezavisimost"] = dict(korr_s_TOLPA_L1=None if korr is None else round(korr, 2), nedel=len(para),
                                nezavisima=korr is not None and abs(korr) < 0.5)
     pr_ok = it["verdikt"] == "SURVIVED"
-    rez["status"] = ("CANDIDATE_FOR_COST_GATE" if pr_ok and ir["status"] != "OPPOSITE" and rez["nezavisimost"]["nezavisima"]
+    pom = " (репликация BLOCKED_DATA)" if ir["status"] == "BLOCKED_DATA" else ""
+    rez["status"] = ("CANDIDATE_FOR_COST_GATE" + pom if pr_ok and ir["status"] != "OPPOSITE" and rez["nezavisimost"]["nezavisima"]
                      else ("PRIMARY_PASS_BUT_" + ("REPLICATION_OPPOSITE" if ir["status"] == "OPPOSITE" else "TOLPA_DEPENDENT")
                            if pr_ok else "PNL_FAIL → причинный постмортем (бюджет спасения: 1 вариант)"))
     REZ.write_text(json.dumps(rez, ensure_ascii=False, indent=1))

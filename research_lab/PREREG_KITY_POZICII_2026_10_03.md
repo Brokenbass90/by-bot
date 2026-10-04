@@ -43,3 +43,10 @@ PnL FAIL → причинный постмортем (данные, прокси
 Публичный Binance /futures/data/topLongShortPositionRatio (история API ~30 дней — вперёд копим сами). Площадка — перпы.
 
 Загрузка: `research_lab/fabrika/dannye_binance_kity.py`. Судья: `research_lab/kity_sudya.py`.
+
+## Поправка A1 — 2026-10-04, ДО любого PnL
+Ворота покрытия: PRIMARY 2023-01…2026-09 покрыт полностью (194/194 недель ≥ 30 монет); сторожа 2024 (MATIC, OCEAN, AGIX) на месте,
+делистингов 14. В 2021–2022 в архиве у альтов НЕТ sum_toptrader_long_short_ratio (M2), поэтому сторожа 2022 (LUNA/FTT/SRM) по M2
+неприменимы, а **REPLICATION = BLOCKED_DATA** (не FAIL и не OPPOSITE). Исправление маркировки судьи до прогона: < 20 недель →
+BLOCKED_DATA (раньше ошибочно давало OPPOSITE). Итоговый статус при PRIMARY PASS — с пометкой «репликация BLOCKED_DATA»,
+независимое второе свидетельство тогда нужно отдельно (вперёд-тень). Пороги не меняются.

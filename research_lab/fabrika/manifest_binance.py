@@ -56,7 +56,6 @@ def main():
     storozha = [("LUNAUSDT", "2022-05"), ("FTTUSDT", "2022-11"), ("SRMUSDT", "2022-11")]
     if k == "kity":
         storozha += [("MATICUSDT", "2024-08"), ("OCEANUSDT", "2024-06"), ("AGIXUSDT", "2024-06")]
-    C1_det = {s: est(s, m) for s, m in storozha}; C1 = all(C1_det.values())
     konec_rano = sorted(s for s, b in bary.items() if max(b) < c["konec"])
     C2 = len(konec_rano) >= 10
     a, b = c["setka"]; vsego = ok = 0; d = a
@@ -68,6 +67,20 @@ def main():
             vsego += 1; ok += n >= 30
         d += dt.timedelta(days=7 if k == "kity" else 1)
     C3 = vsego > 0 and ok / vsego >= 0.9
+    if k == "tolpa":            # поправка A1 04.10 (до PnL): архив до 2021-12 — только BTC; достаточно ≥ 52 недель
+        C3 = ok >= 52
+    if k == "kity":             # A1: C3 по PRIMARY (2023+); сторожа 2022 неприменимы к M2 (нет в архиве)
+        vsego = ok = 0; d = dt.date(2023, 1, 1)
+        while d <= b:
+            if (d - a).days % 7 == 0:
+                vch = (d - dt.timedelta(days=1)).isoformat()
+                oi = sorted([(v[vch][c["oi"]], s) for s, v in met.items() if vch in v and v[vch][c["oi"]]], reverse=True)[:50]
+                n = sum(1 for _, s in oi if met[s][vch][c["pr"]] is not None and d in bary.get(s, ()))
+                vsego += 1; ok += n >= 30
+            d += dt.timedelta(days=1)
+        C3 = ok / vsego >= 0.9
+        storozha = [x for x in storozha if x[1] >= "2023"]
+    C1_det = {s: est(s, m) for s, m in storozha}; C1 = all(C1_det.values())
     C4 = True   # вселенная выше берётся только по ключу vch = d−1 — так же, как в судьях
     pokr = dict(C0_istochnik="архивный листинг data.binance.vision", C1_storozha=C1_det, C1=C1, C2_delistingov=len(konec_rano), C2=C2, C3_dat_ok=f"{ok}/{vsego}", C3=C3, C4_PIT=C4,
                 primery_delistingov=konec_rano[:15])
