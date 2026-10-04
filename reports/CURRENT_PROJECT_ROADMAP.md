@@ -1,4 +1,40 @@
-# Current roadmap — owner scope October 3, 2026
+# Current roadmap — owner scope October 4, 2026
+
+Latest delivery **October4 03:06UTC** — read
+`ATT1_RETIREMENT_AND_COLD_OBSERVATION_2026_10_04.md` and its JSON receipt first.
+OLD entry authority is now process-pinned retired: bybotPID1648585, initial
+ATT1_ENTRY_RETIRED=1, effective heartbeat money sleeves[], native pause intact,
+signed positions0/orders0. Only control module + one override key ENABLE_ATT1=0
++ bybot systemd flag changed; risk0.10/core/management preserved. Old PID exited.
+Retirement clock02:38:58UTC, H1fence03:00UTC; separate non-root public observer is
+running, **1/96 actual common closedM5**, earliest96 at11:00UTC conditional on data.
+This is not actual handoff readiness or a money GO; historical state staysUNKNOWN.
+
+Signed03:02UTC eight-symbol pass captured all taker0.00055/maker0.0002 fees.
+SUI passes current one-way validator; six duplicatedidx0 sources reject, LINK1/2/0
+remains MODE_CONFLICT. No dedup/mode write/universe change. Per-symbol14day funding
+stress sourced, policy/price envelope/minqty viability unapproved. ADA MLid86 OPEN
+still conflicts with flat broker; no label rewrite or all-history finality claim.
+Next: bounded duplicate-source handling/LINK, ADA86/current cash/finality, viable
+funding/quantity policy and selected-account protection/exit/finality ordersOFF
+integration while the observer collects. Do not restart Tasks1–4 or OLD archives.
+
+Public02:55UTC **6sessions/34records/2filled simulations/4nonfills/2gaps/0clean/0held**,
+PID1584802/epoch/2s/one journal unchanged, broker/ordercalls0. Both fills gap-tainted;
+no clean/net-R evidence. Gate2–3clean +actual packet+fresh OLD absolute-risk
+comparison/exclusive dossier+separate ownerGO remains. Alpaca same3fractions,
+HWM/floor exactly same,58hashes/one NEW manager, **0 active stops** afterDAY expiry;
+Oct5 13:30UTC/16:30Cyprus re-armP0/NOT_DUE, queuedDAY PAPERNOT_PROVEN. No change.
+
+Local97targetedPASS; VPS13guard+15observerPASS; actual6-astra/high review verified.
+Final full3440PASS/58FAIL:57 old baseline +one unchanged-HEAD Alpaca PAPER failure
+reproduced on today's clock. No unexpected added regression; suite is not green.
+Foreign allowlist originalSHA restored/unstaged. AI stays on-demand/proposal-only,
+$1/UTCmonth, no new paid calls/features/schedule; Telegram delivery still untested.
+Claude registry/Factory not rechecked or changed this cycle; Oct3 snapshots remain
+historical. Rollback never restores OLD entry authority automatically.
+
+Earlier dated snapshots below are retained history, superseded by this delivery.
 
 Authoritative state: MASTER_HANDOFF.md, NEW_CHAT_START_HERE.md and TOP checkpoint.
 Latest delivery `AI_ANALYST_AND_ATT1_INPUTS_DELIVERY_2026_10_03.md`: existing
@@ -24,7 +60,7 @@ cycle underClaude's one Factory slot. No READY sleeve is invented from frequency
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
 | Alpaca LIVE | Observe exact-quantity accepted DAY re-arm Oct5 13:30UTC/16:30Cyprus. Separately validate queued next-session fractionalDAY stop in PAPER | Codex operations; currentGTC unsupported, queue acceptanceNOT_PROVEN, no weekendLIVE change/capital increase |
-| NEW ATT1 | Cold path and signed symbol collector delivered. LINK full pagination mode conflict and HFT contractClosed classified; finish reviewed handling, durable retirement/quarantine, funding and selected-account ordersOFF lifecycle integration | Codex; no broker mode write, universe change or money install. Public11:15UTC4sessions/1filled/1gap/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
+| NEW ATT1 | Running OLD retirement delivered; observer collects96realM5 (1/96 at03:06UTC). All8fees captured; bound six duplicatedidx0 sources/LINKconflict, ADA86cash/finality, viable14day funding/qty and selected-account ordersOFF lifecycle integration | Codex; no broker mode write, universe change or money install. PublicOct4 02:55UTC6sessions/2filled/2gaps/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
 | Operations analyst | Existing Telegram/web deployed with shared $1 cash envelope; retain dated citations, confirm OLD/NEW distinction, label at least30 proposals before claiming precision | Codex; on-demand diagnostics, no auto-tuning/executor/paid cron/money authority; invoice and unrelated API callers outside ledger guarantee |
 | PM2 | **KILLED / NOT_EXECUTABLE** in published Oct3 KARTA:3 dates/792 rounds/0 qualifying violations | Claude terminal registry verdict; removed from LIVE queue, slot freed; no judge rerun |
 | TOLPA_1D / weekly | Published Binance2021–2022 cross-venue replication loading; frozen judge after download; restore PIT forward inputs in parallel | Claude; replication is not untouched Bybitholdout, same-family evidence not additive; no cheap-screen→LIVE |

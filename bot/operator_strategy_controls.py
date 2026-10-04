@@ -5,9 +5,9 @@ logic.  Only an explicit operator command writes it.  A paused sleeve stops
 creating new entries; existing positions and their protective management are
 left untouched.
 
-Missing or malformed state is fail-open and reported in ``snapshot()``.  That
-matches the operating rule that monitoring/control-file damage must not
-silently switch trading off.
+Missing or malformed pause state is fail-open and reported in ``snapshot()``.
+An explicitly retired OLD ATT1 process is the exception: its entry authority
+cannot be restored by pause-file damage or a later configuration reload.
 """
 
 from __future__ import annotations
@@ -22,6 +22,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PATH = ROOT / "runtime" / "operator_strategy_controls.json"
 SCHEMA_ID = "operator_strategy_controls_v1"
+# Imported before dotenv/overlay loading by the OLD service. Capture once so
+# later strategy overrides cannot restore a retired process's entry authority.
+# Unset and exactly "0" preserve legacy behavior; a present invalid flag denies.
+_ATT1_ENTRY_RETIRED = os.environ.get("ATT1_ENTRY_RETIRED", "0") != "0"
 
 ALIASES = {
     "att1": "att1",
@@ -157,6 +161,8 @@ def resume(
     path: Path | str | None = None,
 ) -> dict[str, Any]:
     normalized = normalize_sleeve(sleeve)
+    if normalized == "att1" and _ATT1_ENTRY_RETIRED:
+        raise OperatorControlError("OLD ATT1 entry authority is retired for this process")
     target = _path(path)
     payload, error = _read(target)
     if error:
@@ -174,6 +180,8 @@ def is_paused(sleeve: str, *, path: Path | str | None = None) -> bool:
         normalized = normalize_sleeve(sleeve)
     except OperatorControlError:
         return False
+    if normalized == "att1" and _ATT1_ENTRY_RETIRED:
+        return True
     payload, error = _read(path)
     if error:
         return False
@@ -183,6 +191,7 @@ def is_paused(sleeve: str, *, path: Path | str | None = None) -> bool:
 def snapshot(path: Path | str | None = None) -> dict[str, Any]:
     target = _path(path)
     payload, error = _read(target)
+    retired = ["att1"] if _ATT1_ENTRY_RETIRED else []
     return {
         "schema_id": SCHEMA_ID,
         "path": str(target),
@@ -191,22 +200,28 @@ def snapshot(path: Path | str | None = None) -> dict[str, Any]:
         "fail_open_on_error": True,
         "scope": "new_entries_only",
         "paused": dict(payload.get("paused") or {}),
-        "paused_sleeves": sorted((payload.get("paused") or {}).keys()),
+        "paused_sleeves": sorted(set(payload.get("paused") or {}) | set(retired)),
+        "retired_sleeves": retired,
+        "retirement_source": "process_start_environment" if retired else None,
         "updated_at_utc": payload.get("updated_at_utc"),
     }
 
 
 def format_status(path: Path | str | None = None) -> str:
     state = snapshot(path)
+    retirement = (
+        "\nRetired new entries: " + ", ".join(state["retired_sleeves"])
+        if state["retired_sleeves"] else ""
+    )
     if state["read_error"]:
         return (
             "Operator strategy controls: ERROR, fail-open\n"
-            f"{state['read_error']}"
+            f"{state['read_error']}" + retirement
         )
     paused = state["paused_sleeves"]
     if not paused:
         return "Operator strategy controls: all sleeves allowed"
     return (
         "Operator strategy controls: paused new entries for "
-        + ", ".join(paused)
+        + ", ".join(paused) + retirement
     )

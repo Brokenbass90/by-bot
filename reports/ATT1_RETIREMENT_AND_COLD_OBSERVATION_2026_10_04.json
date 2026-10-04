@@ -1,0 +1,653 @@
+{
+  "schema_id": "att1_cold_epoch_delivery_v1",
+  "status": "RUNNING_RETIREMENT_AND_PUBLIC_OBSERVATION_ORDERS_OFF",
+  "orders_allowed": false,
+  "actual_build_ready": false,
+  "retirement": {
+    "schema_id": "att1_old_retirement_receipt_v1",
+    "observed_utc": "2026-10-04T02:38:58Z",
+    "retirement_verified": true,
+    "retired_at_ms": 1791081538175,
+    "fence_h1_ms": 1791082800000,
+    "old_pid": 1623970,
+    "new_pid": 1648585,
+    "old_process_exited": true,
+    "single_service_process": [
+      1648585
+    ],
+    "initial_process_retirement_flag": "1",
+    "core_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "control_module_sha256": "5aa4814aa48dbec1cc7659d8bb4356622bb2cac1302ffdd0d4c8a3c856e7dd01",
+    "dropin_sha256": "c457ce1001533e24944c120b7b6033f6aa8248d385ad2dc916786407c25a01cb",
+    "executor_sha256": "746a88c4abbf678a087bbc404970066a0d1a429ac2c779215dec507ce0a83c5a",
+    "override_before_sha256": "250d9f1110356d4c377c463f05fb6afc65b5437930865074119281821b573317",
+    "override_after_sha256": "8de3fb9751d2a685954ebb072a0273d385e270cf06e4541f6d04daa2def8711b",
+    "override_changed_keys": [
+      "ENABLE_ATT1_TRADING"
+    ],
+    "native_pause": {
+      "schema_id": "operator_strategy_controls_v1",
+      "path": "/root/by-bot/runtime/operator_strategy_controls.json",
+      "exists": true,
+      "read_error": null,
+      "fail_open_on_error": true,
+      "scope": "new_entries_only",
+      "paused": {
+        "att1": {
+          "paused_at_utc": "2026-10-02T15:36:43.296984+00:00",
+          "reason": "Owner-approved new-entry hold pending NEW execution gate",
+          "scope": "new_entries_only",
+          "source": "owner_codex_20261002"
+        }
+      },
+      "paused_sleeves": [
+        "att1"
+      ],
+      "retired_sleeves": [
+        "att1"
+      ],
+      "retirement_source": "process_start_environment",
+      "updated_at_utc": "2026-10-02T15:36:43.296984+00:00"
+    },
+    "effective_live_money_sleeves": [],
+    "att1_risk_mult_preserved": "1/10",
+    "management": {
+      "runner_heartbeat_enabled": "1",
+      "same_core_independent_entry_guard": true,
+      "source_sha256": "74b410ea8d9750e8f8a879511efddc0641763a9f1743dae5851e18a36c140760"
+    },
+    "signed_pre_accounts": [
+      {
+        "account_name": "main",
+        "key_sha256": "2907b16ced6f29d2f74f0139d09f548b3af5428564dab8b19f6677b400789629",
+        "positions": 0,
+        "orders": 0,
+        "source_sha256": "d40c153922781fc29ce72b89f94ce17a1118ea8d1ea13fc0d92e5f3a2fc580f0"
+      }
+    ],
+    "signed_post_accounts": [
+      [
+        {
+          "account_name": "main",
+          "key_sha256": "2907b16ced6f29d2f74f0139d09f548b3af5428564dab8b19f6677b400789629",
+          "positions": 0,
+          "orders": 0,
+          "source_sha256": "cb0046abc44ea1062302b1e404ce9319063b3470a8049e57395b9351196f8e15"
+        }
+      ],
+      [
+        {
+          "account_name": "main",
+          "key_sha256": "2907b16ced6f29d2f74f0139d09f548b3af5428564dab8b19f6677b400789629",
+          "positions": 0,
+          "orders": 0,
+          "source_sha256": "c787309c4ea7896d6b8e39c2ce8a5343f00bacdec30c33c063bd24ab0f898a73"
+        }
+      ]
+    ],
+    "pre_snapshot_sha256": "c360da978f8d2fccd5448658110e9ffe453c020a918b34286335171fff44a804",
+    "post_snapshot_sha256": "fc1320d4081b5731e7a334afdb8385ecd2e5c6feadb5834496e06320fa8d1f8b",
+    "historical_inventory_complete": false,
+    "historical_finality_complete": false,
+    "historical_costs_complete": false,
+    "db_current_ml_status": [
+      [
+        "att1_trendline_touch",
+        "OPEN",
+        1
+      ]
+    ],
+    "quarantine_status": "NOT_STARTED",
+    "shadow_pid": 1584802,
+    "web_pid": 1623208,
+    "public_epoch_changed": false,
+    "alpaca_changed": false,
+    "orders_allowed": false,
+    "broker_writes": 0,
+    "rollback": "Preserve retirement flag and native pause; do not restore ENABLE_ATT1_TRADING=1 or restart legacy entry authority automatically."
+  },
+  "latest_main_check": {
+    "observed_utc": "2026-10-04T03:06:36Z",
+    "pid": 1648585,
+    "effective_live_money_sleeves": [],
+    "signed_accounts": [
+      {
+        "account_name": "main",
+        "key_sha256": "2907b16ced6f29d2f74f0139d09f548b3af5428564dab8b19f6677b400789629",
+        "positions": 0,
+        "orders": 0,
+        "source_sha256": "827314c6cd18c6849c198b965d970f31abbe044634820704e3f3657f7abcdfd6"
+      }
+    ],
+    "initial_retirement_flag": "1",
+    "core_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "management": {
+      "runner_heartbeat_enabled": "1",
+      "same_core_independent_entry_guard": true,
+      "source_sha256": "74b410ea8d9750e8f8a879511efddc0641763a9f1743dae5851e18a36c140760"
+    }
+  },
+  "quarantine": {
+    "actual_handoff_ready": false,
+    "broker_writes": 0,
+    "capture_path": "/var/lib/att1-fresh-epoch-observer/capture_1791083174072.json",
+    "capture_sha256": "4bbc58bd478d095b45098e94aacb96417358794fbe194260a4dd748f8ceb29fe",
+    "common_bars": [
+      {
+        "close_ms": 1791083100000,
+        "source_sha256": "098db54ad074e4f6379cd4c5e881ad854eb482f265ca45a327481e22a4f19b8c"
+      }
+    ],
+    "consecutive_closed_m5": 1,
+    "current": true,
+    "fence_available": true,
+    "fence_h1_ms": 1791082800000,
+    "first_quarantine_complete_ms": null,
+    "observed_ms": 1791083174072,
+    "orders_allowed": false,
+    "per_symbol_closed_bars": {
+      "ADAUSDT": 1,
+      "BTCUSDT": 1,
+      "DOTUSDT": 1,
+      "ETHUSDT": 1,
+      "LINKUSDT": 1,
+      "LTCUSDT": 1,
+      "SOLUSDT": 1,
+      "SUIUSDT": 1
+    },
+    "private_api_calls": 0,
+    "quarantine_complete_ms": null,
+    "retirement_receipt_sha256": "42150a9e0b0c5d645a110b59c878ba5fa6eb4d6af92f0f834f413c63b88ab3b0",
+    "scope": "initial eight execution-admitted symbols; Fixed51 bootstrap not established",
+    "status": "QUARANTINE_IN_PROGRESS",
+    "symbols": [
+      "ADAUSDT",
+      "BTCUSDT",
+      "DOTUSDT",
+      "ETHUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "SOLUSDT",
+      "SUIUSDT"
+    ]
+  },
+  "observer_install": {
+    "target_python_tests": "...............                                                          [100%]\n15 passed in 0.64s",
+    "observer_manifest_sha256": "784c3536fcb80abe49aa4a3eb47c216be8076bc6e2790fdedcd084f7e57340b8",
+    "collector_sha256": "f687be37536764d7399eb6b5d8e704cb46264bc95b3111aed3a32c6c20b5de30",
+    "retirement_receipt_sha256": "42150a9e0b0c5d645a110b59c878ba5fa6eb4d6af92f0f834f413c63b88ab3b0",
+    "service_sha256": "07f35b00ed0fd09d240ff8e1ff97454bb4faae0e2e6f17b627f6778068957891",
+    "timer_sha256": "a9ccce8703834871316a9bf735515ced44b93fd753a1b4f2f64be179e839628f",
+    "runtime_state_path": "/var/lib/att1-fresh-epoch-observer/observation.json",
+    "existing_service_pids": {
+      "bybot": 1648585,
+      "trading-journal-web": 1623208,
+      "att1-lifecycle-zero-risk-v2": 1584802
+    },
+    "dynamic_user": true,
+    "orders_allowed": false,
+    "broker_writes": 0
+  },
+  "current_limit_funding_scenarios": {
+    "ADAUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "1247/1000",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-29/5000",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "d29fbdb318494d72e70dea47b36cc746e56fad811b6cbfdf1680eee71141725f",
+      "symbol": "ADAUSDT",
+      "upper_rate": "29/5000"
+    },
+    "BTCUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "14319/20000",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-333/100000",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "502c29668833319bef96c26497d462730a5c8e900343a51c3bde099c6f8cb952",
+      "symbol": "BTCUSDT",
+      "upper_rate": "333/100000"
+    },
+    "DOTUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "1419/2000",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-33/10000",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "71affa7a19d6ab68c4f562da18f4ce131c3bd59a6dca5f8d9c727f725ed124f0",
+      "symbol": "DOTUSDT",
+      "upper_rate": "33/10000"
+    },
+    "ETHUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "14319/20000",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-333/100000",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "12fe17ca962b73e50bd6d3fdbbfdbe5c9c1717855ada43b6d983d50ae15c6b13",
+      "symbol": "ETHUSDT",
+      "upper_rate": "333/100000"
+    },
+    "LINKUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "1419/1000",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-33/5000",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "7e84f1b40195479f81c45500bf0a35ecd8d44a82411f23733ab3c7660e03019a",
+      "symbol": "LINKUSDT",
+      "upper_rate": "33/5000"
+    },
+    "LTCUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "1419/1000",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-33/5000",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "4e513ba9215c3ce3f75003d545b1f100539321a4c684740b02bb357fde5fd5f7",
+      "symbol": "LTCUSDT",
+      "upper_rate": "33/5000"
+    },
+    "SOLUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "43/40",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-1/200",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "3096b5ac2a6594ceb7aaf15999226116a9022220c2efc987f5603bf27715a550",
+      "symbol": "SOLUSDT",
+      "upper_rate": "1/200"
+    },
+    "SUIUSDT": {
+      "assumption": "Current interval/limits persist; fixed notional envelope. Excludes fees/slippage and price-envelope growth.",
+      "events_with_phase_reserve": 43,
+      "funding_interval_minutes": 480,
+      "funding_usdt": "43/20",
+      "future_ceiling_proven": false,
+      "hold_minutes": 20160,
+      "lower_rate": "-1/100",
+      "notional_envelope_usdt": "5",
+      "policy_approved": false,
+      "side": "SHORT",
+      "source_sha256": "785cf15b0d8155da31a4e708656218cda2efe847e10da56e21069b3193052e41",
+      "symbol": "SUIUSDT",
+      "upper_rate": "1/100"
+    }
+  },
+  "eight_symbol_inputs": {
+    "observed_utc": "2026-10-04T03:02:54Z",
+    "symbols": {
+      "ADAUSDT": {
+        "status": "BLOCKED_SOURCE_REJECTED",
+        "error_type": "AdapterViolation",
+        "reason": "ambiguous symbol position mode",
+        "source_sha256": "f4413d148b88f60cb97115f7f0c0d9ff338c3ce002427279ab2cbe89eca360a2",
+        "position_indices": [
+          0,
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "ADAUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      },
+      "BTCUSDT": {
+        "status": "BLOCKED_SOURCE_REJECTED",
+        "error_type": "AdapterViolation",
+        "reason": "ambiguous symbol position mode",
+        "source_sha256": "fa8d784ae437b758aeb7d51c459457bdb6c04fb5bc2cd16b93b57406a4aee52d",
+        "position_indices": [
+          0,
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "BTCUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      },
+      "DOTUSDT": {
+        "status": "BLOCKED_SOURCE_REJECTED",
+        "error_type": "AdapterViolation",
+        "reason": "ambiguous symbol position mode",
+        "source_sha256": "9c37b6c202cb288903bde1a741817048d3bd59acbdf1f143f73fb0cb76dae78c",
+        "position_indices": [
+          0,
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "DOTUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      },
+      "ETHUSDT": {
+        "status": "BLOCKED_SOURCE_REJECTED",
+        "error_type": "AdapterViolation",
+        "reason": "ambiguous symbol position mode",
+        "source_sha256": "f4282262612977173ea095a1545e2a16242b86d8ab1551eb501fba3a687d4b0f",
+        "position_indices": [
+          0,
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "ETHUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      },
+      "LINKUSDT": {
+        "evidence": {
+          "schema_id": "att1_symbol_input_evidence_v1",
+          "account": "uid:2c5e4f13768ea15927fe2dbaa3aacce67faaa656b9df33bf2f7df5e060c5aef8",
+          "symbol": "LINKUSDT",
+          "observed_ms": 1791082972375,
+          "position_mode": "CONFLICT",
+          "input_status": "BLOCKED_MODE_CONFLICT",
+          "instrument_status": "Trading",
+          "taker_fee_rate": null,
+          "orders_allowed": false,
+          "money_ready": false,
+          "source_sha256": "628a4dc6d1460a074b645039aacd580819483a61e4f47919cd955590c32ec4d5"
+        },
+        "collection_failures": {},
+        "position_indices": [
+          1,
+          2,
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "LINKUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      },
+      "LTCUSDT": {
+        "status": "BLOCKED_SOURCE_REJECTED",
+        "error_type": "AdapterViolation",
+        "reason": "ambiguous symbol position mode",
+        "source_sha256": "39fd038ce4d9472033963806daa589c39a71b3c20edcdb00b778af62e8f1473d",
+        "position_indices": [
+          0,
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "LTCUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      },
+      "SOLUSDT": {
+        "status": "BLOCKED_SOURCE_REJECTED",
+        "error_type": "AdapterViolation",
+        "reason": "ambiguous symbol position mode",
+        "source_sha256": "841154174d2134e199a85f387d135eb50bf0d6e900d8c4dbf3c5bd58408e3e6b",
+        "position_indices": [
+          0,
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "SOLUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      },
+      "SUIUSDT": {
+        "evidence": {
+          "schema_id": "att1_symbol_input_evidence_v1",
+          "account": "uid:2c5e4f13768ea15927fe2dbaa3aacce67faaa656b9df33bf2f7df5e060c5aef8",
+          "symbol": "SUIUSDT",
+          "observed_ms": 1791082974976,
+          "position_mode": "ONEWAY",
+          "input_status": "COMPLETE_ONEWAY_INPUTS",
+          "instrument_status": "Trading",
+          "taker_fee_rate": "11/20000",
+          "orders_allowed": false,
+          "money_ready": false,
+          "source_sha256": "de0dbf12ca7ee07a5a5bb3df297a00a0c78a61c87eb86c4337bcae83646a610c"
+        },
+        "collection_failures": {},
+        "position_indices": [
+          0
+        ],
+        "captured_fee_rows": [
+          {
+            "symbol": "SUIUSDT",
+            "takerFeeRate": "0.00055",
+            "makerFeeRate": "0.0002",
+            "rpiMakerFeeRate": ""
+          }
+        ]
+      }
+    },
+    "private_source_sha256": "09a43a67429a883c4ebfa5058762128f65cc4ac8cf8e7030a8892cd85505c0c6",
+    "orders_allowed": false,
+    "broker_writes": 0,
+    "broker_mode_writes": 0,
+    "installed_money_binding": false
+  },
+  "operations": {
+    "observed_ms": 1791082513317,
+    "raw_capture_sha256": "7657e16f444bb1de940130e829bc42c8a20ed4af1d5ec86fd1d63b0783caaa9b",
+    "alpaca": {
+      "same_fractional_quantities": true,
+      "positions": [
+        {
+          "symbol": "AMD",
+          "qty": "0.186377282"
+        },
+        {
+          "symbol": "CRWD",
+          "qty": "0.469970151"
+        },
+        {
+          "symbol": "META",
+          "qty": "0.141939508"
+        }
+      ],
+      "open_stop_orders": 0,
+      "open_orders": 0,
+      "hwm_floor_exact_same": true,
+      "deployed_hashes_match": true,
+      "capital_usd": 487.42,
+      "gross": 0.7,
+      "old_processes_absent": true,
+      "new_send_manager_cron_count": 1,
+      "clock": {
+        "is_open": false,
+        "next_close": "2026-10-05T16:00:00-04:00",
+        "next_open": "2026-10-05T09:30:00-04:00",
+        "timestamp": "2026-10-03T22:55:11.947759788-04:00"
+      },
+      "rearm_due_utc": "2026-10-05T13:30:00Z",
+      "rearm_status": "NOT_DUE"
+    },
+    "public_att1": {
+      "pid": 1584802,
+      "epoch_id": "att1-public-lifecycle-20261002-paired-observation",
+      "session_count": 6,
+      "record_count": 34,
+      "filled_simulations": 2,
+      "clean_filled_terminals": 0,
+      "recovery_gap_sessions": 2,
+      "terminal_nonfills": 4,
+      "held_positions": 0,
+      "broker_calls": 0,
+      "order_calls": 0,
+      "sessions": [
+        {
+          "symbol": "C98USDT",
+          "records": 3,
+          "entry_status": "CANCELLED",
+          "aggregate_entry_qty": "0",
+          "gap": false,
+          "terminal_nonfill": true,
+          "lifecycle_terminal": false,
+          "final_net_r": null
+        },
+        {
+          "symbol": "1000RATSUSDT",
+          "records": 3,
+          "entry_status": "CANCELLED",
+          "aggregate_entry_qty": "0",
+          "gap": false,
+          "terminal_nonfill": true,
+          "lifecycle_terminal": false,
+          "final_net_r": null
+        },
+        {
+          "symbol": "SEIUSDT",
+          "records": 12,
+          "entry_status": "FILLED",
+          "aggregate_entry_qty": "118",
+          "gap": true,
+          "terminal_nonfill": false,
+          "lifecycle_terminal": false,
+          "final_net_r": null
+        },
+        {
+          "symbol": "BICOUSDT",
+          "records": 3,
+          "entry_status": "CANCELLED",
+          "aggregate_entry_qty": "0",
+          "gap": false,
+          "terminal_nonfill": true,
+          "lifecycle_terminal": false,
+          "final_net_r": null
+        },
+        {
+          "symbol": "STRKUSDT",
+          "records": 3,
+          "entry_status": "CANCELLED",
+          "aggregate_entry_qty": "0",
+          "gap": false,
+          "terminal_nonfill": true,
+          "lifecycle_terminal": false,
+          "final_net_r": null
+        },
+        {
+          "symbol": "SUIUSDT",
+          "records": 10,
+          "entry_status": "FILLED",
+          "aggregate_entry_qty": "10",
+          "gap": true,
+          "terminal_nonfill": false,
+          "lifecycle_terminal": false,
+          "final_net_r": null
+        }
+      ]
+    },
+    "broker_writes": 0
+  },
+  "historical_inventory_issue": {
+    "ml_sample_id": 86,
+    "symbol": "ADAUSDT",
+    "status": "OPEN",
+    "broker_flat": true,
+    "label_rewritten": false,
+    "all_history_finality_complete": false
+  },
+  "verification": {
+    "local_targeted": "97 PASS",
+    "vps_guard_targeted": "13 PASS + exact-core seam",
+    "vps_observer_targeted": "15 PASS",
+    "full_suite": {
+      "exit_code": 1,
+      "failed_count": 58,
+      "baseline_failed_count": 57,
+      "new_failures": [
+        "tests/test_alpaca_intended_runner.py::test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network[False-False]"
+      ],
+      "removed_failures": [],
+      "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+      "foreign_restored": true,
+      "log_sha256": "6e400494f4ce1ea4cae80bf94f09038223314f329ab5b914692ff619f77713f9",
+      "tail": "58 failed, 3440 passed, 1 warning in 159.43s (0:02:39)",
+      "reproduced_on_unmodified_HEAD_today": [
+        "tests/test_alpaca_intended_runner.py::test_real_driver_bridge_ratchet_rearm_and_stop_exit_without_broker_network[False-False]"
+      ],
+      "unexpected_new_failures": []
+    },
+    "financial_review": "PASS_WITH_SCOPE_LIMITS",
+    "review_actual_model": "gpt-6-astra",
+    "review_actual_effort": "high",
+    "review_runtime_source_sha256": "cd27525f6f627fbe7282aa53209a4b9a8a9ce1e48b6a650e56a56fb38a06faaa"
+  },
+  "source_files": {
+    "retirement_receipt.json": "42150a9e0b0c5d645a110b59c878ba5fa6eb4d6af92f0f834f413c63b88ab3b0",
+    "observer_install_receipt.json": "ee7a99d4abe1ca5bea58949d0860353c1ae97a5740d76a1dd6215db1430ed04d",
+    "final_operational_check.json": "189a9ea648dfacd02851e2f5318edefedb198c12f8292d7ff849287c0362b3b8",
+    "alpaca_public_snapshot.json": "7657e16f444bb1de940130e829bc42c8a20ed4af1d5ec86fd1d63b0783caaa9b",
+    "eight_symbol_inputs_receipt.json": "548d54b82730db847c0382dd728934d4898a688a049541d440c8ccd0ab4057c4",
+    "full_suite_summary.json": "7cf841e5b2c1c0b8541d3a034a2e0033502dc6d263b83cbac1571ae16f1f1bb2",
+    "preflight.py": "ebf28a4230af29737e176bd89dfd4a6a88b995d59d91a958eebae3faa4465100",
+    "install_retirement.py": "05a35bd32b2f85be3f9a0e4f3661561390c9643d8a096a081022e854a224855c",
+    "finalize_retirement.py": "b9ddcc9e5c3e4f0f36526972b0bdd9998f8379ab3d404e4e31502332b4625ee2",
+    "collect_eight_inputs.py": "3848989f2191b196df08b8c8876cc25d8c91f4347b05144c7f73d437d98cd764"
+  },
+  "money_gate": [
+    "actual risk/cost/cash/mode packet",
+    "selected-account protection/exit/finality integration",
+    "2\u20133 clean prospective filled terminals with terminal net-R",
+    "fresh OLD absolute-risk comparison and exclusive dossier",
+    "separate owner money GO"
+  ]
+}
