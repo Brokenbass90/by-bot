@@ -1,5 +1,44 @@
 # Codex session checkpoint — 2026-09-06
 
+Latest ATT1 feasibility cycle **October4 09:29–09:35UTC** — read
+`ATT1_FEASIBILITY_VERDICT_2026_10_04.md` and JSON first. Continuee33e253;
+Tasks1–4/50 known OLD cash identities stay closed;0historical windows this cycle.
+Terminal **BLOCKED_DATA; NEW orders OFF**. **All8 admitted symbols reject frozen
+sizing under draftR0.40/D0.80/N100 at captured bids/current14day limits**.
+Closest-tick/minimum-lot scenarios are explicitlyNOT_A_SIGNAL. DOT minimum total
+0.71716 can fit, but all frozen sizing branches have bound>=0.91663592>D0.80.
+ETH/SUI archived exact frozen quantities0. No risk/hold/cost/quantity retune.
+Dated actual equity1021.3349235; OLD sizing reference ceiling0.44938736634,
+entry authorityRETIRED; draftunapproved/uninstalled, not a money-ready package.
+
+Fresh signedflatpositions0/orders0 before+after; mainPID1648585 retired,
+publicPID1584802/core/guard/source hashes unchanged. Six retainedidx0 compatibility
+PASS/SUIstrictPASS; **LINK1/2/0 terminalBLOCKED_DATA**, no mode write or row removal.
+Honestcash/handoff declarationBLOCKED:0execution/cash only through09:28:15.085UTC,
+74041ms behind finalbrokerclock; no complete=true/currentfrontier/drain fabricated.
+Observer **78/96**, current=true at09:35UTC;first96null. Existing observer pins
+first validcompletion/capture automatically; earliest11UTC/14Cyprus conditional.
+
+Public **9sessions/63records/4filled simulations/4gaps/0clean/0held**.
+**ETH and ETC nowRECOVERY_GAP**09:01UTC; genericpolling-continuity reason preserved,
+exact causal latencyunproven. No cleanterminal credited/reset/collector change.
+Next bounded operational work: diagnose these exact gaps; cash-frontier design,
+LINK/account decision and current draft economic decision remain explicitblockers.
+2–3clean prospective filledterminals/net-R+freshexclusivedossier+separateownerGO.
+
+Local234/VPS234targetedPASS, byte-identical8rowpurematrix; one verified6-astra/high
+reviewno must-fix/217additional Fractioncases. Full3501PASS/57exactoldFAIL,
+no new/removedfailures; foreignallowlistSHAintact/unstaged. No productioncode,
+routeDB, restart, brokerwrites orpaidAI calls; isolateddiagnosticcandidate only.
+ActualoriginClaude0505f9d/KARTApreregKITY/data pending; no acceptedLONG/RANGE.
+AfterKITYterminal/boundedrescue: **one independent cryptoLONG**, then **oneRANGE**
+underClaude'sone Factoryslot. FreezePIT/cost/minimumfeasibility/control/holdoutjudge
+before outcomes; no negativefamily revival or signal-frequency promotion.
+Queueupdated, experimentsnotclaimedrunning; no Claudecheckout/holdout/message.
+Alpaca/AI untouched and not freshly rechecked; Oct5re-armP0 remains.
+
+Earlier dated snapshots below are historical, superseded by this delivery.
+
 Latest ATT1 terminal cycle **October4 08:47–08:56UTC** — read
 `ATT1_TERMINAL_READINESS_2026_10_04.md` and its JSON receipt first.
 Result **BLOCKED_DATA; NEW orders OFF**. Exact source costs now reach the

@@ -1,0 +1,703 @@
+{
+  "schema_id": "att1_actual_feasibility_receipt_v1",
+  "base_commit": "e33e253c219a6b46d8be53cba999fd1091e7d5a7",
+  "actual_packet_status": "BLOCKED_DATA",
+  "observed_broker_utc": "2026-10-04T09:29:30Z",
+  "orders_allowed": false,
+  "owner_money_go": false,
+  "production_money_binding_installed": false,
+  "broker_writes": 0,
+  "historical_queries": 0,
+  "selected_account_source_sha256": "4b6a55c575e19bf3a6f3476421eee60b0b14afcdc6a486365198d98ce56f6042",
+  "runtime": {
+    "main_pid": 1648585,
+    "public_pid": 1584802,
+    "retired_entry_flag": "1",
+    "flat_before_after": true,
+    "core_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+    "guard_sha256": "5aa4814aa48dbec1cc7659d8bb4356622bb2cac1302ffdd0d4c8a3c856e7dd01"
+  },
+  "old_risk_reference": {
+    "equity_usdt": "1021.3349235",
+    "absolute_risk_ceiling_usdt": "0.44938736634",
+    "authority": "RETIRED",
+    "source_wallet_sha256": "f6367903782152d3a8ae143a352912c2309e6efe9742d81b4b851da45ce4b206",
+    "source_heartbeat_sha256": "273db0b6ff0d18a40125ca68ea25e1234587021babdb29c771790998c9e97cb6"
+  },
+  "draft_budget": {
+    "risk_usdt": "0.4",
+    "daily_usdt": "0.8",
+    "max_notional_usdt": "100",
+    "within_old_reference_ceiling": true,
+    "approved": false,
+    "installed": false
+  },
+  "matrix": [
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "ADAUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "fb54f2275be7e58d9879cb808e51318f07c8b6c966a19f0558d04307b6d48d3c",
+      "captured_bid": "0.2448",
+      "nearest_tick_stop": "0.2449",
+      "minimum_venue_quantity": "21",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "ADAUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "21",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "71dc0868a3c3819bc4e3388455c9e4ab51b5cc08c5e040ac67ddb59409a8a4c8",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.00231",
+        "required_cost_reserve_usdt": "1.28829645",
+        "risk_and_cost_usdt": "1.29060645",
+        "status": "BLOCKED_COST_INFEASIBLE"
+      },
+      "cost_reserve_rate": "0.2505",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "1.4877704",
+        "notional_limited": "12.525",
+        "market_max_limited": "36180.216"
+      },
+      "all_branches_lower_bound_usdt": "1.4877704",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "COMPLETE_ONEWAY_INPUTS"
+    },
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "BTCUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "692cc3457248b7f166c52dbc3efecac0815e0b31847cc7af432249838b7b7f0a",
+      "captured_bid": "85241.6",
+      "nearest_tick_stop": "85241.7",
+      "minimum_venue_quantity": "0.001",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "BTCUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "0.001",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "06f3ffc25cc2f169fa69b1e98649655fc64810c22b289764586050dd0ee0e040",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.00011",
+        "required_cost_reserve_usdt": "12.299524893",
+        "risk_and_cost_usdt": "12.299634893",
+        "status": "BLOCKED_COST_INFEASIBLE"
+      },
+      "cost_reserve_rate": "0.14429",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "12.499510464",
+        "notional_limited": "7.2145",
+        "market_max_limited": "1844926.5696"
+      },
+      "all_branches_lower_bound_usdt": "7.2145",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "COMPLETE_ONEWAY_INPUTS"
+    },
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "DOTUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "8b08b9310e125af7d6d840821f524ecd5527b95580ee43444256e8cca8bf15b5",
+      "captured_bid": "1.1932",
+      "nearest_tick_stop": "1.1933",
+      "minimum_venue_quantity": "4.2",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "DOTUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "4.2",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "db1dd6e522177b95db692451c393e5d70e7c135326cd4932b2b6fe2e68fe507e",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.000462",
+        "required_cost_reserve_usdt": "0.71669598",
+        "risk_and_cost_usdt": "0.71715798",
+        "status": "CONDITIONAL_SCENARIO_ONLY"
+      },
+      "cost_reserve_rate": "0.143",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "0.91663592",
+        "notional_limited": "7.15",
+        "market_max_limited": "5483.971064"
+      },
+      "all_branches_lower_bound_usdt": "0.91663592",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "COMPLETE_ONEWAY_INPUTS"
+    },
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "ETHUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "0c81c1cbef820f9eece953c0566c1b3875ed0102bcc4295eb36e031d6453bae1",
+      "captured_bid": "2702.2",
+      "nearest_tick_stop": "2702.21",
+      "minimum_venue_quantity": "0.01",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "ETHUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "0.01",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "1af088f70b21482847542205028253c0c4a0bd9200f7ec6b6a48f99ba86d6daa",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.00011",
+        "required_cost_reserve_usdt": "3.899018809",
+        "risk_and_cost_usdt": "3.899128809",
+        "status": "BLOCKED_COST_INFEASIBLE"
+      },
+      "cost_reserve_rate": "0.14429",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "4.09900438",
+        "notional_limited": "7.2145",
+        "market_max_limited": "779800.876"
+      },
+      "all_branches_lower_bound_usdt": "4.09900438",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "COMPLETE_ONEWAY_INPUTS"
+    },
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "LINKUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "1424be7ab1bab467518bf9c908983b13641433160aff29e249c1c23d43592b34",
+      "captured_bid": "14.097",
+      "nearest_tick_stop": "14.098",
+      "minimum_venue_quantity": "0.4",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "LINKUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "0.4",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "a4b060a8d45b4a367c784202d7e9e295c81cd365aa82a6ef4a22237665f28cd8",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.00044",
+        "required_cost_reserve_usdt": "1.60660808",
+        "risk_and_cost_usdt": "1.60704808",
+        "status": "BLOCKED_COST_INFEASIBLE"
+      },
+      "cost_reserve_rate": "0.2849",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "1.80649412",
+        "notional_limited": "14.245",
+        "market_max_limited": "60243.5295"
+      },
+      "all_branches_lower_bound_usdt": "1.80649412",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "BLOCKED_EXPLICIT_RULE"
+    },
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "LTCUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "9734574a0e75c9466ac701b954d3c6ead7f4bd4fe341b3a4ce2a8142e88a1ef9",
+      "captured_bid": "70.36",
+      "nearest_tick_stop": "70.37",
+      "minimum_venue_quantity": "0.1",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "LTCUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "0.1",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "cfcc5c23369ba4332defaf725935cc4cea6b17c1d51ff1000373d025ef40f2f7",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.0011",
+        "required_cost_reserve_usdt": "2.0048413",
+        "risk_and_cost_usdt": "2.0059413",
+        "status": "BLOCKED_COST_INFEASIBLE"
+      },
+      "cost_reserve_rate": "0.2849",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "2.2045564",
+        "notional_limited": "14.245",
+        "market_max_limited": "60136.692"
+      },
+      "all_branches_lower_bound_usdt": "2.2045564",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "COMPLETE_ONEWAY_INPUTS"
+    },
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "SOLUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "358bd9516983a6a460bf2ec477e3f41dcd4665281d5331744542b63cff9fc382",
+      "captured_bid": "121.24",
+      "nearest_tick_stop": "121.25",
+      "minimum_venue_quantity": "0.1",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "SOLUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "0.1",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "34dc3d31b97e2ca22f7d66fde995909e077e64bb6278a90c9e7fa34230ae31c7",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.0011",
+        "required_cost_reserve_usdt": "2.6202125",
+        "risk_and_cost_usdt": "2.6213125",
+        "status": "BLOCKED_COST_INFEASIBLE"
+      },
+      "cost_reserve_rate": "0.2161",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "2.8199964",
+        "notional_limited": "10.805",
+        "market_max_limited": "314399.568"
+      },
+      "all_branches_lower_bound_usdt": "2.8199964",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "COMPLETE_ONEWAY_INPUTS"
+    },
+    {
+      "schema_id": "att1_symbol_feasibility_v1",
+      "symbol": "SUIUSDT",
+      "scenario_kind": "CAPTURED_BID_MINIMUM_LOT_NEAREST_TICK_NOT_A_SIGNAL",
+      "actual_signal_available": false,
+      "money_ready": false,
+      "orders_allowed": false,
+      "future_ceiling_proven": false,
+      "quantity_changed": false,
+      "source_sha256": "e229ebde255338d84acec5ea80be1c0eb6284a261c595e01e9848f6d3a98ecae",
+      "captured_bid": "1.176",
+      "nearest_tick_stop": "1.1761",
+      "minimum_venue_quantity": "10",
+      "minimum_scenario": {
+        "schema_id": "att1_14day_quantity_assessment_v1",
+        "policy_id": "OBSERVED_LIMITS_STOP_PRICE_14D_V1",
+        "symbol": "SUIUSDT",
+        "hold_minutes": 20160,
+        "requested_qty": "10",
+        "quantity_changed": false,
+        "future_ceiling_proven": false,
+        "money_ready": false,
+        "orders_allowed": false,
+        "assumptions": [
+          "captured funding interval and rate limits persist",
+          "captured taker fee persists",
+          "funding and exit price do not exceed original stop"
+        ],
+        "source_sha256": "38aa0f9429603d13ecbb0cb042ce65782b8bf61c10857750479f1722fe5655ca",
+        "funding_settlements": 43,
+        "funding_interval_minutes": 480,
+        "required_risk_usdt": "0.0011",
+        "required_cost_reserve_usdt": "5.0701671",
+        "risk_and_cost_usdt": "5.0712671",
+        "status": "BLOCKED_COST_INFEASIBLE"
+      },
+      "cost_reserve_rate": "0.4311",
+      "sizing_lower_bounds_usdt": {
+        "risk_limited": "5.269736",
+        "notional_limited": "21.555",
+        "market_max_limited": "33460.2576"
+      },
+      "all_branches_lower_bound_usdt": "5.269736",
+      "status": "REJECT_FROZEN_SIZING_BUDGET",
+      "bound_scope": "same captured entry price, instrument/fee limits and frozen R/N/hold; no signal or future ceiling",
+      "mode_status": "COMPLETE_ONEWAY_INPUTS"
+    }
+  ],
+  "matrix_pure_vps_and_local_sha256": "59ece0b405617883d895364fb95ad44f552ebc1bcfd1ed564e5c4cf5b9063ac0",
+  "archived_exact_quantity_diagnostics": [
+    {
+      "symbol": "SUIUSDT",
+      "intent_sha256": "d74b51f3cba1c2e7e24fb958483c7d54a811354379e23f4631dddc8c986fe307",
+      "signal_bar_ms": 1791064800000,
+      "entry": "1.1746",
+      "rounded_stop": "1.2685",
+      "exact_frozen_quantity": "0",
+      "assessment": {
+        "status": "BELOW_MIN_QTY",
+        "orders_allowed": false
+      },
+      "source_kind": "archived unchanged public START with current dated instrument/fee scenario; not fresh admission",
+      "historical_authenticated_broker_truth": false
+    },
+    {
+      "symbol": "ETHUSDT",
+      "intent_sha256": "2f1c3ec1e7be1f9d1ac4dbc6e68bcc58756144d6a6af5d924dbcc6489325e94f",
+      "signal_bar_ms": 1791090000000,
+      "entry": "2690.93",
+      "rounded_stop": "2728.78",
+      "exact_frozen_quantity": "0",
+      "assessment": {
+        "status": "BELOW_MIN_QTY",
+        "orders_allowed": false
+      },
+      "source_kind": "archived unchanged public START with current dated instrument/fee scenario; not fresh admission",
+      "historical_authenticated_broker_truth": false
+    }
+  ],
+  "cash_handoff_declaration": {
+    "schema_id": "att1_actual_cash_handoff_declaration_v1",
+    "status": "BLOCKED_DATA",
+    "observed_ms": 1791106169126,
+    "broker_before_after_flat": true,
+    "old_entry_process_retired": true,
+    "new_orders_allowed": false,
+    "known_identity_inventory_count": 50,
+    "known_inventory_sha256": "25c8cedc0487b038ef5be40cb4baae88cca814ae06899fa38c540d74219ea9a8",
+    "all_history_complete": false,
+    "cash_frontier": {
+      "coverage_start_ms": 1791072000000,
+      "coverage_end_ms": 1791106095085,
+      "observed_ms": 1791106169126,
+      "publication_lag_policy_ms": 60000,
+      "execution_rows": 0,
+      "cash_rows": 0,
+      "source_sha256": "d126f89486d31d09810955e3882077091ff987f01c48f169e4136044d0a9eb82",
+      "coverage_to_observed_clock_complete": false
+    },
+    "handoff_validated": false,
+    "drained_at_ms": null,
+    "reason": "Finite lagged GET pages do not certify coverage_end==observed_ms or current cash finality. No completeness/frontier/drain clock manufactured."
+  },
+  "blockers": [
+    {
+      "id": "LINK_MODE_CONFLICT",
+      "source": "complete signed pages contain idx1/2 and idx0; all retained",
+      "resolution": "BLOCKED_DATA; no authoritative one-way source or approved mode write"
+    },
+    {
+      "id": "CASH_CURRENT_FRONTIER",
+      "source": {
+        "coverage_start_ms": 1791072000000,
+        "coverage_end_ms": 1791106095085,
+        "observed_ms": 1791106169126,
+        "publication_lag_policy_ms": 60000,
+        "execution_rows": 0,
+        "cash_rows": 0,
+        "source_sha256": "d126f89486d31d09810955e3882077091ff987f01c48f169e4136044d0a9eb82",
+        "coverage_to_observed_clock_complete": false
+      },
+      "resolution": "BLOCKED_DATA; no fabricated current completeness"
+    },
+    {
+      "id": "QUARANTINE_PENDING",
+      "count_at_broker_capture": 77,
+      "first_completion_ms": null,
+      "resolution": "Existing observer retains first96 automatically; pending in this bounded cycle",
+      "latest_count": 78,
+      "latest_utc": "2026-10-04T09:35:45Z"
+    },
+    {
+      "id": "DRAFT_BUDGET_ALL_8_INFEASIBLE",
+      "resolution": "All8 frozen sizing branch lower bounds exceed D0.8 at captured bid/current limits. No cap/hold/cost retune."
+    }
+  ],
+  "verification": {
+    "targeted_local_pass": 234,
+    "targeted_vps_pass": 234,
+    "full_suite": {
+      "exit_code": 1,
+      "failed_count": 57,
+      "baseline_failed_count": 57,
+      "new_failures": [],
+      "removed_failures": [],
+      "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+      "foreign_restored": true,
+      "log_sha256": "39b7f04a3329ded85e671b2f841eb34259537513555244997b1f1b2580ec1b0e",
+      "tail": "57 failed, 3501 passed, 1 warning in 167.35s (0:02:47)"
+    },
+    "full_suite_failed_nodeids": [
+      "tests/test_alpaca_bakeoff_v2_preflight.py::test_preflight_freezes_future_window_but_stays_blocked_on_inputs",
+      "tests/test_alpaca_exact_parity_materialization.py::test_materializer_records_real_blockers_without_performance_or_live_authority",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_repository_contract_is_default_off_and_binds_att1_ets2s_fixed51",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_runtime_paths_are_beneath_caller_root_and_reject_escape_and_symlink",
+      "tests/test_att1_ets2s_signal_shadow_contract.py::test_manifest_source_closure_is_hash_bound_to_config_and_required_paths",
+      "tests/test_att1_fixed51_shadow.py::test_repository_config_pins_exact_fixed51_manifest_and_major8_money_universe",
+      "tests/test_att1_fixed51_shadow.py::test_preflight_is_no_network_and_reports_evidence_money_separation",
+      "tests/test_att1_fixed51_shadow.py::test_all_att1_environment_inputs_are_restored_after_cycle",
+      "tests/test_att1_fixed51_shadow.py::test_observation_and_open_bar_changes_are_idempotent_but_closed_mutation_conflicts",
+      "tests/test_att1_fixed51_shadow.py::test_next_closed_h1_creates_new_raw_event_per_symbol",
+      "tests/test_att1_fixed51_shadow.py::test_events_are_raw_only_include_runtime_reason_hashes_and_diagnostic_regime",
+      "tests/test_att1_fixed51_shadow.py::test_expected_hft_unavailable_is_explicit_but_unknown_gap_fails_partial",
+      "tests/test_att1_fixed51_shadow.py::test_zero_success_is_raw_fail_closed",
+      "tests/test_audit_alpaca_protection_challenger_v2.py::test_committed_alpaca_v2_receipt_passes_independent_audit",
+      "tests/test_audit_att1_pivot_sequence_v1.py::test_committed_att1_pivot_sequence_receipt_passes",
+      "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_is_metadata_only_and_ready",
+      "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_does_not_import_runner",
+      "tests/test_audit_frequent_crypto_rehab_v2.py::test_receipt_is_research_only_and_evidence_backed",
+      "tests/test_audit_inplay_causal_receipt.py::test_current_inplay_receipt_is_shadow_only_not_capital",
+      "tests/test_build_recovery_session_report.py::test_report_separates_scenarios_from_money_authority",
+      "tests/test_collect_inplay_prospective_shadow.py::test_replay_records_signal_parity_diagnostics",
+      "tests/test_horizontal_breakout_long_72h_sealed_v1_runner.py::test_default_preflight_fails_before_any_market_row_is_opened",
+      "tests/test_mac_att1_research_job.py::test_completed_immutable_job_is_a_noop_on_later_launchd_wakeup",
+      "tests/test_mac_att1_research_job.py::test_changed_hashed_input_refuses_to_reuse_completed_receipt",
+      "tests/test_mac_att1_research_job.py::test_crash_after_committed_stage_resumes_only_unfinished_stage",
+      "tests/test_mac_att1_research_job.py::test_inherited_lock_survives_parent_crash_until_active_child_exits",
+      "tests/test_mac_att1_research_job.py::test_failed_stage_persists_backoff_then_retries_within_attempt_limit",
+      "tests/test_mac_att1_research_job.py::test_runner_strips_secrets_and_cli_rejects_arbitrary_command_input",
+      "tests/test_mac_att1_research_job.py::test_caffeinate_process_is_released_when_stage_finishes",
+      "tests/test_mac_att1_research_job.py::test_stage_heartbeat_updates_while_child_runs",
+      "tests/test_mac_att1_research_job.py::test_os_sandbox_denies_network_and_local_credentials",
+      "tests/test_preflight_event_expansion_retest_long_v1_phase1.py::test_current_phase1_identity_is_clean_but_performance_and_live_are_blocked",
+      "tests/test_public_cashcarry_station_v1.py::test_one_cycle_is_per_symbol_durable_and_resume_reconciles_without_overwrite",
+      "tests/test_public_cashcarry_station_v1.py::test_corrupt_state_and_adapter_identity_fail_closed",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_missing_authorization_never_opens_market_or_creates_claim",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[malformed]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[drifted]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_claim_is_durable_before_scorer_callback",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_existing_claim_refuses_before_scorer_callback",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[hash]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[schema]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[window]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[gap]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[records_sha]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[infinite_ohlc]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_stale_output_refuses_before_claim",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_symlinked_output_refuses_before_claim",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_interrupt_after_claim_writes_terminal_receipt",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_success_receipt_has_exact_forensic_identity_and_inventory",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_semantic_reserved_failure_preserves_observed_rows_and_staged_accounting",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_bootstrap_parse_failure_keeps_consumed_claim_and_partial_forensics",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[extra]",
+      "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[symlink]",
+      "tests/test_sbr1_fixed51_universe.py::test_preflight_rejects_fixed51_identity_or_provenance_drift",
+      "tests/test_sbr1_zero_risk_shadow.py::test_repository_config_pins_verified_manifest_and_full_source_closure",
+      "tests/test_strategy_env_prefix_isolation.py::test_legacy_asb1_prefix_remains_a_fallback",
+      "tests/test_strategy_promotion_queue.py::test_queue_fails_when_active_wip_exceeds_limit"
+    ],
+    "review": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "must_fix": 0,
+      "additional_exact_fraction_cases": 217
+    },
+    "worker_runtime_proof": [
+      {
+        "file": "rollout-2026-10-04T12-22-47-01a10639-16a4-70e1-b55f-cc863d15d0fa.jsonl",
+        "model": "gpt-5.6-luna",
+        "effort": "medium"
+      },
+      {
+        "file": "rollout-2026-10-04T12-28-44-01a1063e-8b2b-7102-8da2-98a2d0f261e1.jsonl",
+        "model": "gpt-6-astra",
+        "effort": "high"
+      }
+    ]
+  },
+  "research_registry": {
+    "origin_sha": "0505f9d564cf042f2a160a33a458aa7d28c76d1a",
+    "checked_origin_this_cycle": true,
+    "KITY": "PREREG/data pending; no terminal result at this ref",
+    "accepted_long_or_range_found": false,
+    "next_slot": "KITY terminal, one independent LONG, then one RANGE",
+    "claude_checkout_modified": false,
+    "claude_messaged": false
+  },
+  "public": {
+    "utc": "2026-10-04T09:35:45Z",
+    "sessions": 9,
+    "simulated_filled_sessions_at_broker_capture": 4,
+    "clean_filled_terminals": 0,
+    "gaps": 4,
+    "open_simulated_positions": 0,
+    "eth": {
+      "authority": {
+        "money_authority": false,
+        "orders_allowed": false,
+        "private_api_allowed": false,
+        "promotion_authority": false
+      },
+      "costs_complete": true,
+      "decision_id": "25b3835f4f4cd51774f0d50e7744ff8923872ed9507bfc13f61eaea50b002fad",
+      "final_net_r": null,
+      "full_receipt_sha256": "9d43fd168af40b87ff941911f74fb4a7f08f3c99d501c292e9b3bf5f3dad7989",
+      "held_qty": "0",
+      "incidents": [
+        "RECOVERY_GAP"
+      ],
+      "known_fee_total": "269501/2500000",
+      "lifecycle_terminal": false,
+      "pending_entry_qty": "0",
+      "pending_exit": null,
+      "protected_qty": "0",
+      "receipt_sha256": "55f30d603f94d16dba1c07d47c9e480cf98d3de841cba75d64e567db32d7bb1f",
+      "settled_funding": "16259229/6250000000",
+      "symbol": "ETHUSDT"
+    },
+    "journal_records": 63,
+    "driver_coordinator_strategy_sha256": {
+      "scripts/run_att1_lifecycle_zero_risk.py": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+      "research_lab/att1_lifecycle_coordinator.py": "26b14571406b08eb033c302b3dc75cd27df673432384234873b024082f352fb4",
+      "strategies/alt_trendline_touch_v1.py": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"
+    },
+    "broker_calls": 0,
+    "order_calls": 0,
+    "gap_sources": [
+      {
+        "symbol": "SEIUSDT",
+        "event_id": "recovery_gap:74546ac316831d9a185cf253f08d964142831ec7ed895c3cb0cb300a7db638c7",
+        "exchange_ms": 1791003690743,
+        "kind": "RECOVERY_GAP",
+        "reason": "rejected future/stale public book",
+        "received_ms": 1791003709327,
+        "schema_id": "att1_lifecycle_event_v1",
+        "source_sha256": "2240c2e0c3fe56518260793b12038709dbf8bbf2c3c765985e23b5a0c2bb237b",
+        "journal_sha256": "6a963ceffd57eefdf5db2d71eeec91fd46fd7b4545485b47483d7d4e027b6086"
+      },
+      {
+        "symbol": "ETCUSDT",
+        "event_id": "recovery_gap:a31f9b30f591473f4b79a059f5c0e2ab9d296997cb5c112411f008a206a5ae83",
+        "exchange_ms": 1791104492152,
+        "kind": "RECOVERY_GAP",
+        "reason": "public polling continuity gap",
+        "received_ms": 1791104492152,
+        "schema_id": "att1_lifecycle_event_v1",
+        "source_sha256": "42543c8e60cdceef71bef208b67144ed413883aeb9f04087facfab898b0b6e65",
+        "journal_sha256": "bd06c0409e81a35d8e68ade35a7e1a3607de8077ad6a80aea0a55812583a71f5"
+      },
+      {
+        "symbol": "SUIUSDT",
+        "event_id": "recovery_gap:c307d800992449a993b68485eee810cf11fe3a5b4743162c14779f34d5158c56",
+        "exchange_ms": 1791064906123,
+        "kind": "RECOVERY_GAP",
+        "reason": "rejected future/stale public book",
+        "received_ms": 1791066359130,
+        "schema_id": "att1_lifecycle_event_v1",
+        "source_sha256": "35e9340d3a646381f031c1917c6c56eab6f3a8c5170331b4599ada70f6526f0c",
+        "journal_sha256": "a2f807d6b465d75e1d1db80292def72cfb3483d873faba79b4f38b041d92f305"
+      },
+      {
+        "symbol": "ETHUSDT",
+        "event_id": "recovery_gap:bc6558ed696d7a55ccbd3cc575a5f337a741cc9cd3978a42b65ae53c4269e4ee",
+        "exchange_ms": 1791104491526,
+        "kind": "RECOVERY_GAP",
+        "reason": "public polling continuity gap",
+        "received_ms": 1791104491526,
+        "schema_id": "att1_lifecycle_event_v1",
+        "source_sha256": "4daecf9cac8ceea4706ae0b82313952d75a2eab1c9f24533b47ea120bede2d81",
+        "journal_sha256": "8f4b89abc0ab69bc5c55c09c4f874809274c582b7e61d2198e8119c21c3feccc"
+      }
+    ]
+  },
+  "quarantine": {
+    "observed_ms": 1791106479614,
+    "consecutive_closed_m5": 78,
+    "current": true,
+    "first_quarantine_complete_ms": null,
+    "capture_path": "/var/lib/att1-fresh-epoch-observer/capture_1791106479614.json",
+    "capture_sha256": "15bd56a038a3e0d4743bc160a6b8cff13c6d7961862620befe20732c6556ce8a",
+    "retirement_receipt_sha256": "42150a9e0b0c5d645a110b59c878ba5fa6eb4d6af92f0f834f413c63b88ab3b0",
+    "status": "QUARANTINE_IN_PROGRESS"
+  },
+  "money_gate": {
+    "clean_filled_terminals_required": "2\u20133 with terminal net-R, current continuity",
+    "owner_go": false,
+    "status": "CLOSED"
+  }
+}

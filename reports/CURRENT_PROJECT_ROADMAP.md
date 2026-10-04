@@ -1,5 +1,44 @@
 # Current roadmap — owner scope October 4, 2026
 
+Latest ATT1 feasibility cycle **October4 09:29–09:35UTC** — read
+`ATT1_FEASIBILITY_VERDICT_2026_10_04.md` and JSON first. Continuee33e253;
+Tasks1–4/50 known OLD cash identities stay closed;0historical windows this cycle.
+Terminal **BLOCKED_DATA; NEW orders OFF**. **All8 admitted symbols reject frozen
+sizing under draftR0.40/D0.80/N100 at captured bids/current14day limits**.
+Closest-tick/minimum-lot scenarios are explicitlyNOT_A_SIGNAL. DOT minimum total
+0.71716 can fit, but all frozen sizing branches have bound>=0.91663592>D0.80.
+ETH/SUI archived exact frozen quantities0. No risk/hold/cost/quantity retune.
+Dated actual equity1021.3349235; OLD sizing reference ceiling0.44938736634,
+entry authorityRETIRED; draftunapproved/uninstalled, not a money-ready package.
+
+Fresh signedflatpositions0/orders0 before+after; mainPID1648585 retired,
+publicPID1584802/core/guard/source hashes unchanged. Six retainedidx0 compatibility
+PASS/SUIstrictPASS; **LINK1/2/0 terminalBLOCKED_DATA**, no mode write or row removal.
+Honestcash/handoff declarationBLOCKED:0execution/cash only through09:28:15.085UTC,
+74041ms behind finalbrokerclock; no complete=true/currentfrontier/drain fabricated.
+Observer **78/96**, current=true at09:35UTC;first96null. Existing observer pins
+first validcompletion/capture automatically; earliest11UTC/14Cyprus conditional.
+
+Public **9sessions/63records/4filled simulations/4gaps/0clean/0held**.
+**ETH and ETC nowRECOVERY_GAP**09:01UTC; genericpolling-continuity reason preserved,
+exact causal latencyunproven. No cleanterminal credited/reset/collector change.
+Next bounded operational work: diagnose these exact gaps; cash-frontier design,
+LINK/account decision and current draft economic decision remain explicitblockers.
+2–3clean prospective filledterminals/net-R+freshexclusivedossier+separateownerGO.
+
+Local234/VPS234targetedPASS, byte-identical8rowpurematrix; one verified6-astra/high
+reviewno must-fix/217additional Fractioncases. Full3501PASS/57exactoldFAIL,
+no new/removedfailures; foreignallowlistSHAintact/unstaged. No productioncode,
+routeDB, restart, brokerwrites orpaidAI calls; isolateddiagnosticcandidate only.
+ActualoriginClaude0505f9d/KARTApreregKITY/data pending; no acceptedLONG/RANGE.
+AfterKITYterminal/boundedrescue: **one independent cryptoLONG**, then **oneRANGE**
+underClaude'sone Factoryslot. FreezePIT/cost/minimumfeasibility/control/holdoutjudge
+before outcomes; no negativefamily revival or signal-frequency promotion.
+Queueupdated, experimentsnotclaimedrunning; no Claudecheckout/holdout/message.
+Alpaca/AI untouched and not freshly rechecked; Oct5re-armP0 remains.
+
+Earlier dated snapshots below are historical, superseded by this delivery.
+
 Latest ATT1 terminal cycle **October4 08:47–08:56UTC** — read
 `ATT1_TERMINAL_READINESS_2026_10_04.md` and its JSON receipt first.
 Result **BLOCKED_DATA; NEW orders OFF**. Exact source costs now reach the
@@ -122,12 +161,28 @@ acceptance; no weekendLIVE protection change. This supersedes dated snapshots.
 After KITY terminal: one independent crypto long, then one range/mean-reversion
 cycle underClaude's one Factory slot. No READY sleeve is invented from frequency.
 
+## Next research slot: directional coverage with one experiment at a time
+
+Actual origin checked October4: research/fabrika-v1@0505f9d; KITY prereg/data
+pending, no published terminal verdict or accepted long/range sleeve. Finish
+KITY and its bounded rescue first. Then Claude's one Factory slot receives one
+independent crypto LONG mechanism; after its terminal PASS/KILL, one RANGE/
+mean-reversion mechanism. Treat this as an accepted queue, not a running experiment.
+
+Before outcome inspection, freeze causal/PIT universe/data, entry/exit/holding,
+actual fee/slippage/funding and minimum quantity economics, control/baseline,
+walk-forward/sealed holdout, verdict and bounded rescue. Use available history
+first; prospective only for independent/current execution questions. Negative
+Bull/SBR1 variants remain closed; regime/Elder is a separate auxiliary gate study.
+Codex consumes only source-bound READY_FOR_BUILD delivery and execution evidence.
+No directional diversification or greater signal count establishes net edge.
+
 ## Immediate queue: finish current evidence and actual inputs
 
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
 | Alpaca LIVE | Observe exact-quantity accepted DAY re-arm Oct5 13:30UTC/16:30Cyprus. Separately validate queued next-session fractionalDAY stop in PAPER | Codex operations; currentGTC unsupported, queue acceptanceNOT_PROVEN, no weekendLIVE change/capital increase |
-| NEW ATT1 | Running OLD retirement delivered; observer collects96realM5 (1/96 at03:06UTC). All8fees captured; bound six duplicatedidx0 sources/LINKconflict, ADA86cash/finality, viable14day funding/qty and selected-account ordersOFF lifecycle integration | Codex; no broker mode write, universe change or money install. PublicOct4 02:55UTC6sessions/2filled/2gaps/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
+| NEW ATT1 | Oct4 actual packetBLOCKED_DATA: first96 pending78/96; LINK1/2/0; lagged cash frontier; all8draftR0.4/D0.8 reserve/sizing infeasible at captured bids. Diagnose newly preserved ETH/ETC public gaps before another timing change | Codex;50knownOLDcash complete/do not reopen; no mode write, universe/risk/hold/cost change or money install. Public9sessions/4filled/4gaps/0clean;2–3clean/net-R+freshdossier+ownerGO remain |
 | Operations analyst | Existing Telegram/web deployed with shared $1 cash envelope; retain dated citations, confirm OLD/NEW distinction, label at least30 proposals before claiming precision | Codex; on-demand diagnostics, no auto-tuning/executor/paid cron/money authority; invoice and unrelated API callers outside ledger guarantee |
 | PM2 | **KILLED / NOT_EXECUTABLE** in published Oct3 KARTA:3 dates/792 rounds/0 qualifying violations | Claude terminal registry verdict; removed from LIVE queue, slot freed; no judge rerun |
 | TOLPA_1D / weekly | Published Binance2021–2022 cross-venue replication loading; frozen judge after download; restore PIT forward inputs in parallel | Claude; replication is not untouched Bybitholdout, same-family evidence not additive; no cheap-screen→LIVE |
