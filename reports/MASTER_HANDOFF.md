@@ -1,5 +1,23 @@
 # MASTER HANDOFF — 2026-10-04
 
+Latest bounded heartbeat **October4 20:20:03UTC /23:20Cyprus** — read
+`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_04_2020.md` and JSON first.
+Both48h probesRUNNING; originalPID/hash/deadline intact, no restarts or changes.
+Public heartbeat now11sessions/5gaps/**1reported clean terminal**/0held; full
+terminal journal/net-R NOT_REPLAYED_THIS_HEARTBEAT, no fresh sealed gate credit.
+Next single bounded query must verify that terminal using exact deployed closure.
+Transport partial35s batch14:12–16:38UTC: five SEI REST books stale already at
+server/receipt while an earlier-received WS book wasfresh and cross-sequencehigher;
+two additional receive-fresh/use-stale cases. Cache/quiet cause NOT_PROVEN; no
+transport switch/2s relaxation. Counts/quantiles cover processed495243members only.
+Fundingone newXMR START outsidefrozen8;0admitted policy comparisons, notPASS.
+Privateanalysis_cursor.json +inspect_next_heartbeat.py ready to resume offsets;
+next scriptsyntax-checked only. OneSSHquery/read-only; driver97239996… unchanged.
+ActualpacketBLOCKED_DATA,NEWordersOFF; keep2–3verifiedclean/netR+freshdossier+GO.
+DeadlineOct6 14:12:25UTC unchanged; appheartbeatACTIVE. AlpacaOct5 re-armP0.
+
+Previous execution/startup snapshots below are history, including prior0clean.
+
 Latest execution cycle **October4; signed runtime14:18:14UTC** — read
 `ATT1_EXECUTION_SHADOWS_2026_10_04.md` and JSON first. Continue current branch HEAD; cycle baseline4cb51e1.
 **Two48h public-only probes RUNNING; local timing candidate tested; actual packet

@@ -1,5 +1,10 @@
 # ATT1 execution research — October 4
 
+Progress updateOctober4 20:20UTC: bothprobesRUNNING; publicheartbeat1reportedclean
+(fulljournalnotreplayed),5gaps/0held. Five source-staleSEI REST/freshcausalWS cases
+found inpartialbatch. Read `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_04_2020.md` first;
+startupnumbers below remain dated. MoneyOFF, exactdeadlines unchanged.
+
 **Delivered:** local timing candidate tested; two public-only research services
 running for at most48 hours. **Actual money packet remains BLOCKED_DATA.**
 Base4cb51e1; existing Tasks1–4, OLD50 cash inventory and first96 receipt stay closed.
