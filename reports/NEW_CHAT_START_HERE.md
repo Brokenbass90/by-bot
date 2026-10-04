@@ -1,5 +1,36 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+Latest continuation **October4 07:09–07:12UTC** — read
+`ATT1_ACTUAL_INPUT_CONTINUATION_2026_10_04.md` and JSON first.
+Terminal **BLOCKED_ACTUAL_PACKET; NEW orders OFF**. MainPID1648585 still
+process-pinned retired; selected-account signed positions0/orders0 before+after,
+effective money sleeves[], core/guard preserved. Real quarantine **50/96**;
+earliest96 close11:00UTC/14:00Cyprus conditional on continuity, not a money GO.
+
+ADA86 exact mixed closed island verified:180+90 entries,99+171 exits, all4 orders
+fresh Filled, cash chain0/net+0.73928972. ML remainsOPEN; no label/DB rewrite or
+clean attribution/all-history finality. Current UTC-day executions/cash0 through
+07:08:08UTC with60s publication lag; wallet source captured privately.
+Six duplicateidx0 sources explicitly retained/classified, strict validation
+unchanged; LINK1/2/0 remainsCONFLICT, SUI only passing one-way subset. No silent
+dedup/mode writes/universe changes. Inert14-day quantity/cost assessment rejects
+infeasible sizes; observed interval/limit/stop-price assumptions remain conditional
+and unbound to an actual admitted command. Full draftR0.4+5USDT scenario costs
+exceed draftD0.8 for all8; no installed or approved risk cap changed.
+
+Public NEW now **7sessions/39records/3filled simulations/4nonfills/2gaps/0clean**;
+ETH simulated0.02 held without incident at capture. SamePID1584802/epoch/source
+hashes/2s/journal, broker/ordercalls0. Actual NEW money lifecycle NOT_PROVEN.
+Local135/VPS135 targetedPASS; bounded criticalreview78PASS after2P2 fixes,
+actualmodel6-astra/high verified. Full3464PASS/57 oldFAIL, no new failures;
+foreignSHA preserved/unstaged. No money-service install/restart/route migration.
+Next: first96 receipt + authoritative mode handling + exact quantity/cost/fresh
+OLD risk binding + finite inventory/prior-cost finality; then actual dossier.
+2–3clean filled prospective terminals/net-R +fresh dossier+separate ownerGO remain.
+Alpaca/AI/Claude/Factory untouched and not freshly rechecked this ATT1-only cycle.
+
+Earlier snapshots below retain their original timestamps and are superseded here.
+
 Latest delivery **October4 03:06UTC** — read
 `ATT1_RETIREMENT_AND_COLD_OBSERVATION_2026_10_04.md` and its JSON receipt first.
 OLD entry authority is now process-pinned retired: bybotPID1648585, initial

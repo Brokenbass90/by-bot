@@ -47,6 +47,80 @@ def _day(now):
         raise AdapterViolation('invalid UTC clock') from exc
 
 
+def assess_att1_14day_quantity(*, symbol, instrument_page, fee_page, now_ms,
+        requested_qty, entry_price, original_stop, absolute_risk_usdt,
+        daily_remaining_usdt, max_notional_usdt):
+    """Conditional cost stress for the exact frozen quantity; no money binding.
+
+    Assumes captured funding limits/interval persist, fee tier persists, and
+    funding/exit notional stays within the original stop price. Gaps, changing
+    venue limits or delayed protection can exceed this scenario. The frozen
+    policy deliberately cannot certify a future ceiling or authorize orders.
+    """
+    source = {'instrument_page':instrument_page,'fee_page':fee_page}
+    out = {'schema_id':'att1_14day_quantity_assessment_v1',
+           'policy_id':'OBSERVED_LIMITS_STOP_PRICE_14D_V1','symbol':symbol,
+           'hold_minutes':20160,'requested_qty':requested_qty,'quantity_changed':False,
+           'future_ceiling_proven':False,'money_ready':False,'orders_allowed':False,
+           'assumptions':['captured funding interval and rate limits persist',
+                          'captured taker fee persists',
+                          'funding and exit price do not exceed original stop'],
+           'source_sha256':digest(source)}
+    try:
+        if type(now_ms) is not int or now_ms<=0 or not isinstance(symbol,str) or not symbol.endswith('USDT'):
+            raise AdapterViolation('invalid scenario identity/clock')
+        def single(page, fee=False):
+            if (not isinstance(page,Mapping) or type(page.get('retCode')) is not int or page['retCode']!=0
+                    or type(page.get('time')) is not int):
+                raise AdapterViolation('invalid scenario envelope')
+            _clock(page['time'],now_ms,'scenario source')
+            r=page.get('result')
+            if (not isinstance(r,Mapping) or not isinstance(r.get('list'),list) or len(r['list'])!=1
+                    or not isinstance(r['list'][0],Mapping) or r['list'][0].get('symbol')!=symbol
+                    or (fee and 'category' in r) or (not fee and r.get('category')!='linear')
+                    or r.get('nextPageCursor','')!=''):
+                raise AdapterViolation('ambiguous scenario source')
+            return r['list'][0]
+        instrument=single(instrument_page);fee=single(fee_page,True)
+        if any(instrument.get(k)!=v for k,v in {'status':'Trading','contractType':'LinearPerpetual',
+                                               'settleCoin':'USDT','quoteCoin':'USDT'}.items()):
+            raise AdapterViolation('ineligible scenario instrument')
+        interval=instrument.get('fundingInterval')
+        if type(interval) is not int or interval<=0:
+            raise AdapterViolation('unknown funding interval')
+        lower=_number(instrument.get('lowerFundingRate'),'funding lower bound')
+        upper=_number(instrument.get('upperFundingRate'),'funding upper bound')
+        if not -1<lower<=upper<1:raise AdapterViolation('invalid funding limits')
+        rate=_number(fee.get('takerFeeRate'),'taker fee',nonnegative=True)
+        if rate>=1:raise AdapterViolation('invalid taker fee')
+        qty=_number(requested_qty,'quantity',positive=True)
+        entry=_number(entry_price,'entry',positive=True);stop=_number(original_stop,'stop',positive=True)
+        cap=_number(absolute_risk_usdt,'risk cap',positive=True)
+        remaining=_number(daily_remaining_usdt,'remaining budget',nonnegative=True)
+        notional_cap=_number(max_notional_usdt,'notional cap',positive=True)
+        lots=instrument['lotSizeFilter']
+        step=_number(lots['qtyStep'],'quantity step',positive=True)
+        minimum=_number(lots['minOrderQty'],'minimum qty',positive=True)
+        min_n=_number(lots['minNotionalValue'],'minimum notional',positive=True)
+        market_max=_number(lots['maxMktOrderQty'],'maximum market quantity',positive=True)
+        tick=_number(instrument['priceFilter']['tickSize'],'tick',positive=True)
+        if stop<=entry or notional_cap>100 or (stop/tick).denominator!=1:
+            raise AdapterViolation('invalid frozen price/notional')
+        if qty<minimum or qty>market_max or (qty/step).denominator!=1 or qty*entry<min_n:
+            out.update(status='BLOCKED_VENUE_MINIMUM_OR_STEP');return out
+        events=(20160+interval-1)//interval+1
+        risk=qty*(stop-entry)*Fraction('1.1')
+        reserve=qty*stop*(2*rate+events*max(-lower,Fraction(0)))
+        out.update(funding_settlements=events,funding_interval_minutes=interval,
+                   required_risk_usdt=_decimal_text(risk),required_cost_reserve_usdt=_decimal_text(reserve),
+                   risk_and_cost_usdt=_decimal_text(risk+reserve),
+                   status=('BLOCKED_RISK_OR_NOTIONAL_CAP' if risk>cap or qty*stop>notional_cap else
+                           'BLOCKED_COST_INFEASIBLE' if risk+reserve>remaining else 'CONDITIONAL_SCENARIO_ONLY'))
+    except (AdapterViolation,KeyError,TypeError,ValueError) as exc:
+        out.update(status='BLOCKED_SOURCE_INPUTS',reason=str(exc))
+    return out
+
+
 def validate_canary_budget_inputs(binding: Mapping, old_budget_evidence: Mapping,
                                  cash_evidence: Mapping, *, now_ms: int) -> dict:
     """Validate declared source-bound inputs; no claim of authentication."""

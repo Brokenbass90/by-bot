@@ -1375,6 +1375,58 @@ def validate_att1_symbol_input_evidence(account_config, broker_identity, *, symb
         'source_sha256':digest({'position_pages':position_pages,'instrument_page':instrument_page,'fee_page':fee_page})}
 
 
+def diagnose_att1_symbol_position_sources(position_pages, *, symbol, observed_ms):
+    """Retain ambiguous complete sources without weakening the mode validator.
+
+    A terminal zero template is not documented as disposable mode evidence.
+    This diagnostic never selects a preferred row or establishes one-way mode.
+    """
+    symbol = _text(symbol, 'symbol')
+    if (type(observed_ms) is not int or observed_ms <= 0 or not symbol.endswith('USDT')
+            or not symbol.isascii() or not symbol.isalnum() or symbol != symbol.upper()
+            or not isinstance(position_pages, list) or not 1 <= len(position_pages) <= 16):
+        raise AdapterViolation('invalid position diagnostic inputs')
+    indices, sources, templates, cursors = [], [], [], set()
+    for page_index, page in enumerate(position_pages):
+        if (not isinstance(page, Mapping) or type(page.get('retCode')) is not int
+                or page['retCode'] != 0 or type(page.get('time')) is not int
+                or not 0 < page['time'] <= observed_ms
+                or observed_ms-page['time'] > ATT1_BROKER_IDENTITY_MAX_AGE_MS):
+            raise AdapterViolation('invalid/stale position diagnostic envelope')
+        result = page.get('result')
+        if (not isinstance(result, Mapping) or result.get('category') != 'linear'
+                or not isinstance(result.get('list'), list) or len(result['list']) > 2):
+            raise AdapterViolation('invalid position diagnostic rows')
+        cursor = result.get('nextPageCursor')
+        if (not isinstance(cursor, str) or (page_index==len(position_pages)-1)!=(cursor=='')
+                or (cursor and cursor in cursors)):
+            raise AdapterViolation('incomplete/cyclic position diagnostic pages')
+        cursors.add(cursor)
+        for row_index, row in enumerate(result['list']):
+            if not isinstance(row, Mapping) or row.get('symbol') != symbol:
+                raise AdapterViolation('foreign position diagnostic symbol')
+            idx = row.get('positionIdx');size = _number(row.get('size'),'position size',nonnegative=True)
+            side = row.get('side')
+            if (type(idx) is not int or idx not in (0,1,2) or side not in ('','Buy','Sell')
+                    or (size>0 and not side) or (idx==1 and side=='Sell') or (idx==2 and side=='Buy')):
+                raise AdapterViolation('invalid position diagnostic mode')
+            if (idx==0 and size==0 and side=='' and type(row.get('seq')) is int and row['seq']==-1
+                    and all(row.get(k)=='' for k in ('createdTime','updatedTime','positionStatus',
+                                                     'stopLoss','takeProfit','trailingStop'))):
+                templates.append(len(indices))
+            indices.append(idx)
+            sources.append({'page':page_index,'row':row_index,'row_sha256':digest(row)})
+    unique = set(indices)
+    status = ('BLOCKED_MODE_CONFLICT' if 0 in unique and len(unique)>1 else
+              'BLOCKED_DUPLICATE_POSITION_INDEX' if len(unique)!=len(indices) else
+              'NO_SOURCE_AMBIGUITY_DETECTED')
+    return {'schema_id':'att1_position_source_diagnostic_v1','symbol':symbol,
+            'status':status,'raw_row_count':len(indices),'position_indices':indices,
+            'uninitialized_zero_template_rows':templates,'row_sources':sources,
+            'rows_discarded':0,'source_sha256':digest(position_pages),
+            'orders_allowed':False,'money_ready':False}
+
+
 def collect_att1_symbol_input_evidence(client, symbol):
     """Explicit selected-account GET pass; no DB, mode writes, filtering or money runner."""
     identity = client.identity()

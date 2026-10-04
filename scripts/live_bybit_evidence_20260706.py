@@ -211,6 +211,7 @@ class StrictAtt1ReadClient:
         "/v5/market/funding/history": frozenset({"category", "symbol", "startTime", "endTime", "limit"}),
         "/v5/market/instruments-info": frozenset({"category", "symbol"}),
         "/v5/account/fee-rate": frozenset({"category", "symbol"}),
+        "/v5/account/wallet-balance": frozenset({"accountType", "coin"}),
     }
     _PAGE_ENDPOINTS = frozenset({
         "/v5/position/list", "/v5/order/realtime", "/v5/order/history",
@@ -283,7 +284,10 @@ class StrictAtt1ReadClient:
             else:
                 text = self._text(value, "GET parameter value")
             normalized[key] = text
-        if path != "/v5/user/query-api" and normalized.get("category") != "linear":
+        if path == "/v5/account/wallet-balance":
+            if normalized != {"accountType":"UNIFIED", "coin":"USDT"}:
+                raise ValueError("exact selected UNIFIED USDT wallet required")
+        elif path != "/v5/user/query-api" and normalized.get("category") != "linear":
             raise ValueError("ATT1 category must be linear")
         if "limit" in normalized:
             try:
@@ -344,6 +348,14 @@ class StrictAtt1ReadClient:
 
     def _validate_result_category(self, path: str, result: dict[str, Any]) -> None:
         if path == "/v5/user/query-api":
+            return
+        if path == "/v5/account/wallet-balance":
+            rows = result.get('list')
+            if (not isinstance(rows, list) or len(rows)!=1 or not isinstance(rows[0], dict)
+                    or rows[0].get('accountType')!='UNIFIED'
+                    or not isinstance(rows[0].get('coin'), list) or len(rows[0]['coin'])!=1
+                    or not isinstance(rows[0]['coin'][0], dict) or rows[0]['coin'][0].get('coin')!='USDT'):
+                raise ValueError('selected UNIFIED USDT wallet response rejected')
             return
         if path == "/v5/account/fee-rate":
             # Official derivatives response omits category; request is pinned

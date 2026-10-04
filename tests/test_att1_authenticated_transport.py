@@ -75,6 +75,30 @@ def test_get_is_signed_get_only_redacted_and_pins_the_production_endpoint():
     assert client.last_received_ms == NOW_MS
 
 
+def test_selected_unified_usdt_wallet_is_get_only_and_retains_raw_balance():
+    url = 'https://api.bybit.com/v5/account/wallet-balance?accountType=UNIFIED&coin=USDT'
+    result = {'list':[{'accountType':'UNIFIED','coin':[{'coin':'USDT','walletBalance':'12.34'}]}]}
+    client, opener = _client((_envelope(result), url))
+    out = client.get('/v5/account/wallet-balance', {'accountType':'UNIFIED','coin':'USDT'})
+    assert out['result']==result and opener.requests[0][0].get_method()=='GET'
+
+
+@pytest.mark.parametrize('params', [{'accountType':'CONTRACT','coin':'USDT'},
+                                  {'accountType':'UNIFIED','coin':'BTC'},
+                                  {'accountType':'UNIFIED','coin':'USDT','category':'linear'}])
+def test_wallet_collection_rejects_other_accounts_coins_and_extra_params(params):
+    client, opener = _client()
+    with pytest.raises(ValueError):client.get('/v5/account/wallet-balance',params)
+    assert opener.requests==[]
+
+
+def test_wallet_collection_rejects_foreign_response_before_consumption():
+    url = 'https://api.bybit.com/v5/account/wallet-balance?accountType=UNIFIED&coin=USDT'
+    result = {'list':[{'accountType':'CONTRACT','coin':[{'coin':'USDT'}]}]}
+    client, _ = _client((_envelope(result),url))
+    with pytest.raises(ValueError):client.get('/v5/account/wallet-balance',{'accountType':'UNIFIED','coin':'USDT'})
+
+
 @pytest.mark.parametrize(
     "config",
     [
