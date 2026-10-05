@@ -1,0 +1,43 @@
+{
+ "rezultat_sha256": "7630c8188193957c20559742e1bf7b9eeb78ad4bc5e00d8cfa336780c8d2138f",
+ "manifest_kity_sha256": "3d78370f67f7cef08bd2ddd27116a8d2e58e4f4c08de513854defdbdf447bf98",
+ "rezultat": {
+  "prereg": "PREREG_LONG_TREND_BTC_ETH_2026_10_05.md",
+  "kogda": "2026-10-05T06:16:20+00:00",
+  "PRIMARY": {
+   "n": 161,
+   "dney": 161,
+   "edge_bps": 31.5,
+   "t": 0.76,
+   "polovinki_bps": [
+    -12.4,
+    74.8
+   ],
+   "syroy_bps": 31.5,
+   "verdikt": "KILLED",
+   "prichina": "t=0.76 < 2",
+   "nedel": 161,
+   "sharp_strat": 0.45,
+   "sharp_kupi_derzhi": 0.26,
+   "dolya_v_rynke": 0.7
+  },
+  "HOLDOUT": {
+   "n": 90,
+   "dney": 90,
+   "edge_bps": 52.3,
+   "t": 1.11,
+   "polovinki_bps": [
+    76.8,
+    27.8
+   ],
+   "syroy_bps": 52.3,
+   "verdikt": "KILLED",
+   "prichina": "t=1.11 < 2",
+   "nedel": 90,
+   "sharp_strat": 0.94,
+   "sharp_kupi_derzhi": 0.02,
+   "dolya_v_rynke": 0.72
+  },
+  "verdikt": "KILL"
+ }
+}
