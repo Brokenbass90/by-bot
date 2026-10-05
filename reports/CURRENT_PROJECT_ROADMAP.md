@@ -1,20 +1,23 @@
 # Current roadmap — owner scope October 4, 2026
 
-Latest bounded heartbeat **October4 20:20:03UTC /23:20Cyprus** — read
-`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_04_2020.md` and JSON first.
-Both48h probesRUNNING; originalPID/hash/deadline intact, no restarts or changes.
-Public heartbeat now11sessions/5gaps/**1reported clean terminal**/0held; full
-terminal journal/net-R NOT_REPLAYED_THIS_HEARTBEAT, no fresh sealed gate credit.
-Next single bounded query must verify that terminal using exact deployed closure.
-Transport partial35s batch14:12–16:38UTC: five SEI REST books stale already at
-server/receipt while an earlier-received WS book wasfresh and cross-sequencehigher;
-two additional receive-fresh/use-stale cases. Cache/quiet cause NOT_PROVEN; no
-transport switch/2s relaxation. Counts/quantiles cover processed495243members only.
-Fundingone newXMR START outsidefrozen8;0admitted policy comparisons, notPASS.
-Privateanalysis_cursor.json +inspect_next_heartbeat.py ready to resume offsets;
-next scriptsyntax-checked only. OneSSHquery/read-only; driver97239996… unchanged.
-ActualpacketBLOCKED_DATA,NEWordersOFF; keep2–3verifiedclean/netR+freshdossier+GO.
-DeadlineOct6 14:12:25UTC unchanged; appheartbeatACTIVE. AlpacaOct5 re-armP0.
+Latest bounded heartbeat **October 5 02:19:51 UTC /05:19 Cyprus** — read
+`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_0219.md` and JSON first.
+Both48h probes RUNNING; original PID/hash/deadline intact, NRestarts0.
+Public remains11sessions/5gaps/1reported clean/0held. Clean verification
+**BLOCKED_REPLAY: runuser not resolved under restricted PATH**; journal/net-R
+not read, zero fresh verified gate credit. Local launcher lookup fixture PASS;
+prepared inspector searches trusted system directories; VPS replay still pending.
+One bounded read-only SSH query only; no source/runtime/broker/policy change.
+New35s batch557205members, October4 16:38–20:16UTC: seven more SEI source-stale
+REST/fresh earlier WS cases. Two CTS-stale books would look fresh using ts;
+CTS/2s gate unchanged. Total12source-stale cases across disjoint processed batches.
+Heartbeat records1WSdisconnect/1quiet timeout/2connections; raw event analysis
+pending beyond cursor. Quiet/cache cause NOT_PROVEN; no transport promotion.
+Funding same exact-prefix XMR outside8;0newSTARTs/0admitted comparisons, notPASS.
+Private cursor nowcapture-497540 offset19723884; complete later population pending.
+Production PIDs/NRestarts and public driver97239996… unchanged; disk bounds PASS.
+ActualpacketBLOCKED_DATA, NEW ordersOFF;2–3verifiedclean/netR+freshdossier+ownerGO.
+DeadlineOct6 14:12:25UTC unchanged; heartbeatACTIVE. AlpacaOct5 re-arm remainsP0.
 
 Previous execution/startup snapshots below are history, including prior0clean.
 

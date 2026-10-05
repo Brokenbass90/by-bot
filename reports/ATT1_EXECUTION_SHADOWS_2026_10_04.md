@@ -1,9 +1,14 @@
 # ATT1 execution research — October 4
 
-Progress updateOctober4 20:20UTC: bothprobesRUNNING; publicheartbeat1reportedclean
-(fulljournalnotreplayed),5gaps/0held. Five source-staleSEI REST/freshcausalWS cases
-found inpartialbatch. Read `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_04_2020.md` first;
-startupnumbers below remain dated. MoneyOFF, exactdeadlines unchanged.
+Progress update **October 5 02:19:51 UTC**: both probes RUNNING, integrity/deadlines/
+PIDs/disk bounds PASS. Read `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_0219.md`
+and JSON first. Public remains1reported clean/5gaps/0held; clean-journal replay
+BLOCKED by inspector launcher lookup, no fresh verified gate credit. Next local
+inspector lookup corrected and fixture verified; actual VPS replay pending.
+Seven additional SEI REST-stale/fresh-WS cases, including2CTS-stale/ts-fresh;
+1WSdisconnect/quiet timeout now recorded by heartbeat, raw-event analysis pending.
+Funding same XMR prefix outside8;0new STARTs/0admitted policy comparisons.
+MoneyOFF; exact deadlines unchanged. Startup numbers below remain dated.
 
 **Delivered:** local timing candidate tested; two public-only research services
 running for at most48 hours. **Actual money packet remains BLOCKED_DATA.**
