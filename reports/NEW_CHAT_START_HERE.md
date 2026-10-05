@@ -1,5 +1,35 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+Latest owner cycle **October5, broker postcheck13:40:53UTC /16:40 Cyprus** — read
+`ALPACA_DAY_REARM_2026_10_05.md`/JSON and `KITY_M3_PRODUCTION_INTAKE_2026_10_05.md`/JSON first.
+**Alpaca re-arm+first actual exit PASS**: AMD full0.186377282 stopped at622.312,
+gross+$2.374819327244; final net NET_FINALITY_PENDING (publishedCAT fee pooled3entries).
+CRWD/META remaining full quantities protected by accepted DAY stops242.13/668.76.
+HWM/floor and58source pins preserved; one scheduled NEW writer, OLD absent; no manual
+activation/order/restart. AMD reentry blocked untilOct26 13:30:31UTC. NextP0Oct6
+13:30UTC/16:30Cyprus re-arm+AMD delayed fee followup. Queued DAY/GTC not changed.
+
+**KITY_M3 is next production track, research READY_FOR_BUILD; production BLOCKED_DATA,
+ordersOFF, candidate NOT_IMPLEMENTED.** Actualorigin researchd6ed812 verified;7source pins,
+declaredresult/manifest hashesPASS, nojudge/rawdiscovery rerun or Claude checkout writes.
+Syntheticforward: n30/40/50→3/4/5perleg;6legreceipt falsePASS under requested10legcontract,
+23:50OI fallback,wrong-date cachedsignal,duplicate60bars reproduced; no source retune.
+Publicvenuefilters525Binance/782Bybit/462exactoverlap;notionalfilters50BTC,20five,5rest.
+BTC minqty requires~$86atcapturedprices on both, no$1000basket/cash claim. Actualbasket,
+selectedaccountfees/caps/portability/protection/finality missing. FirstunseenOct8
+00:05UTC;paperentryOct9/exitOct16 00:05UTC, close references only. Reviewed written
+spec `docs/superpowers/specs/2026-10-05-kity-m3-orders-off-design.md` awaits owner review;
+3critical findings incorporated, no implementation/final-money signoff. Nextspecreview
+→writtenplan→isolatedordersOFFcandidate; nevermerge researchbranch blindly.
+Claude can supplyrawsource/atomicforward/runtime+registry/testvectors, thenLONG→RANGE WIP1.
+
+ATT1 probes RUNNING at13:40UTC, originalPIDs/NRestarts0/deadlines preserved. Lastreplayed
+public cohort remains08:19ADA1clean/net-R−1.048963, no new clean credit this cycle.
+DeadlineOct6 14:12:25UTC unchanged;NEWATT1ordersOFF,2–3clean+actualdossier+separateGO.
+ForeignallowlistSHAadd587f1…f19a1 untouched/unstaged; onlyevidence/spec/handoff changes.
+
+Previous snapshots below are history; the latest operational facts are above.
+
 Latest bounded heartbeat **October 5 08:19:42 UTC /11:19 Cyprus** — read
 `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_0819.md` and JSON first.
 **First verified clean filled terminal: ADA, simulated net-R −1.048963.**

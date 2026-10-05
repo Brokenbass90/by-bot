@@ -1,0 +1,99 @@
+{
+  "schema_id": "kity_m3_production_intake_v1",
+  "cycle_date": "2026-10-05",
+  "cycle_baseline_commit": "bc889823ea34b680c5dea2f60a4571f07e3b3178",
+  "orders_allowed": false,
+  "product_code_implemented": false,
+  "historical_judge_runs": 0,
+  "source_commit": "d6ed8126c041969de0bc6191e39fefe4a1272d5b",
+  "origin_verified": true,
+  "source_manifest": {
+    "source_repo": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28",
+    "source_commit": "d6ed8126c041969de0bc6191e39fefe4a1272d5b",
+    "source_ref_note": "requested refd6ed... resolves to commit d6ed...",
+    "files": [
+      {
+        "path": "research_lab/kity_m3_ten.py",
+        "git_blob": "1b7c20085e9ecabfd2c08bd5b5c840f7f8ab0315",
+        "sha256": "c48ef6ea732f36d1ac296a9b6873b5f0db455765dd2e950c3c0f113fa34a02c4"
+      },
+      {
+        "path": "research_lab/kity_m3_sudya.py",
+        "git_blob": "62c06c51283f1cf33222de959ee26377fa79fa59",
+        "sha256": "9314a37ddb02449e83bdfbf826a6791c5b968b2a81e0b58489892d2a893db070"
+      },
+      {
+        "path": "research_lab/prereg/KITY_M3_POTOK.json",
+        "git_blob": "7600f4f7971412958dcafbccccb4433e6e2ab1cf",
+        "sha256": "42d872eada11ed1d91bad928ed0b8357eac24ee5b87243bc741a7f15aa7a9a66"
+      },
+      {
+        "path": "research_lab/PREREG_KITY_M3_POTOK_2026_10_04.md",
+        "git_blob": "e636180df454be183554a88cdca3dda4f8ae0605",
+        "sha256": "39b29f3eafe5a293d102d7721a365a6d8b42f641809dcbb979133b553c0b7a63"
+      },
+      {
+        "path": "research_lab/PAKET_KITY_M3_DLYA_CODEX_2026_10_05.md",
+        "git_blob": "4e73198f6e9bddfed7c05bb521d69290a92ff025",
+        "sha256": "4c9e3f5619f635e746e83b9a2ec42d156db6356e4991ac4ce1cf6829e69ba04c"
+      },
+      {
+        "path": "research_lab/PAPER_TEN_KITY_M3.md",
+        "git_blob": "eac33b23b778dc3a3d8fcb2394e4c54c226fd6dd",
+        "sha256": "04d83e60e631adcfe0ee95662e2126ba86fbdb5ecc5850b497854f0c6e9f2ee4"
+      },
+      {
+        "path": "research_lab/data/binance_kity/M3_KVITANCIYA.json",
+        "git_blob": "07d07c7a8c41feb97ef3807db6d3204d6e6e084c",
+        "sha256": "77533dfc8726dd669df0d8b7a4123bddd40d10df16cbbbbbcacec003ff0f1d34"
+      }
+    ]
+  },
+  "declared_data_sha256_not_recomputed": "9a8e5f518cff769317516a81b2491c58ca397a63688c5b1040ef1248c830cd52",
+  "git_result_and_manifest_declared_sha256_verified": true,
+  "research_status": "READY_FOR_BUILD",
+  "production_verdict": "BLOCKED_DATA",
+  "blockers": [
+    "First unseen October8 signal not due; actual10symbol basket unavailable.",
+    "Frozen n//10 is variable3/4/5perleg; requested10leg contract must block smaller baskets explicitly.",
+    "Forward source/date/duplicate/universe completeness and atomic sealing acceptance not established.",
+    "Selected venue/account fees/mode/cash/absolutecaps/portability/protection/finality unresolved.",
+    "Orders-OFF product candidate not yet implemented; written specification awaits owner review."
+  ],
+  "first_signal_utc": "2026-10-08T00:05:00Z",
+  "first_paper_entry_utc": "2026-10-09T00:05:00Z",
+  "first_paper_exit_utc": "2026-10-16T00:05:00Z",
+  "specification_path": "docs/superpowers/specs/2026-10-05-kity-m3-orders-off-design.md",
+  "specification_sha256": "7c678e7bd89b4c6f512c58a6f70fec96b6a0786feed844f717abeabf4a2c47ab",
+  "synthetic_probe_report_sha256": "f4dd66f650b4efde6574741c3d74877d3931ea4266628f19b30c05d6188418b9",
+  "venue_inventory_sha256": "2121b4415baa91e64ff5560129cc5778746eb79e1b6431fdc92934c0d784b747",
+  "bounded_review": {
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "turn_context_verified": true,
+    "must_fix_findings": 3,
+    "incorporated_by_primary": 3,
+    "scope": "specification_only",
+    "second_review_claimed": false
+  },
+  "mechanical_workers": {
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "turn_context_verified": true,
+    "tasks": [
+      "kity_packet_inventory_oct5",
+      "alpaca_rearm_receipt_oct5",
+      "kity_synthetic_contract_oct5"
+    ]
+  },
+  "preserved": {
+    "alpaca_live_changed": false,
+    "claude_checkout_changed": false,
+    "production_restarted": false,
+    "att1_probe_deadline_utc": "2026-10-06T14:12:25Z",
+    "new_att1_money_gate": "2–3 clean prospective filled terminals/net-R + actual dossier + separate GO",
+    "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+  },
+  "worker_runtime_metadata_private_path": ".private/kity_m3_20261005/agent_runtime_metadata.json",
+  "worker_runtime_metadata_sha256": "f10a03960170eb8822cd69d7573c3871d9ab7ccb4c0655023268ab6e4bb06f6b"
+}

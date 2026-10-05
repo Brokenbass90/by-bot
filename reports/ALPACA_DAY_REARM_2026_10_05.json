@@ -1,0 +1,120 @@
+{
+  "schema_id": "alpaca_day_rearm_evidence_v1",
+  "observed_utc": "2026-10-05T13:40:53.510Z",
+  "verdict": "REARM_AND_EXIT_LIFECYCLE_PASS",
+  "scope": "Mechanical evidence from supplied local receipts only; no network, broker writes, cron changes, production code changes, or continuous PID claim.",
+  "sources": {
+    "snapshot": ".private/alpaca_rearm_20261005/snapshot.json",
+    "postcheck": ".private/alpaca_rearm_20261005/postcheck.json",
+    "prior_broker_state": ".private/fresh_handoff_20261003/live_snapshot.json",
+    "source_manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+    "source_manifest_file_count": 58,
+    "hashes_match": true,
+    "private_receipt_sha256": {
+      "snapshot": "cfa278bc62bb895eab882e97375b5a8cb89850591b5e1a7a97b0203e2000ec23",
+      "postcheck": "f70c2f7e244985bf62b97cf6aadc649f55cc1d4a29a60087d76f14554771b17d",
+      "prior_broker_state": "22f4ac88a25bfb8e1b1e7b37cc35cef7c5190b35e3af7d007842d3a52ab1f5d6"
+    }
+  },
+  "binding": {
+    "capital_usd": 487.42,
+    "gross_exposure": 0.7,
+    "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+    "account_binding": "same_account_confirmed_privately",
+    "account_id": "REDACTED"
+  },
+  "manager_ownership": {
+    "new_manager_cron_count": 1,
+    "old_manager_cron_count": 0,
+    "old_process_receipt_count": 0,
+    "manager_process_receipt_count": 0,
+    "interpretation": "One NEW manager cron is recorded; OLD manager cron/process entries are absent. This does not claim a continuous cron PID."
+  },
+  "active_protection": {
+    "CRWD": {
+      "qty": "0.469970151",
+      "stop_price": "242.13",
+      "order_id": "fde30ddb-c1b6-4e76-8b5d-42cb6cd5eeb5",
+      "status": "new",
+      "time_in_force": "day",
+      "full_qty": true
+    },
+    "META": {
+      "qty": "0.141939508",
+      "stop_price": "668.76",
+      "order_id": "8a7e85f7-c361-4c42-90a9-96c8e2ed5480",
+      "status": "new",
+      "time_in_force": "day",
+      "full_qty": true
+    }
+  },
+  "prior_day_expiry": {
+    "observed": true,
+    "AMD_prior_stop": {
+      "stop_price": "622.24",
+      "expired_at": "2026-10-02T20:05:03.269804Z"
+    },
+    "CRWD_and_META_prior_day_stops": "expired_in_prior_receipt"
+  },
+  "monotonic_state": {
+    "active_symbols": [
+      "CRWD",
+      "META"
+    ],
+    "floor_hwm_asserted_monotonic": true,
+    "AMD_prior_floor": "622.24",
+    "AMD_prior_hwm": "644.811"
+  },
+  "amd_exit": {
+    "exit_order_id": "8f913cab-9ace-45da-b8f6-7e8a7d561dc4",
+    "qty": "0.186377282",
+    "avg_exit_price": "622.312",
+    "entry_price": "609.57",
+    "gross_decimal_profit": "2.374819327244",
+    "status": "filled",
+    "cooldown_until": "2026-10-26T13:30:31Z"
+  },
+  "activity_accounting": {
+    "fixed_cutoff_utc": "2026-10-05T13:35:53Z",
+    "published_activity_count": 5,
+    "cat_fee": "-0.01",
+    "cat_fee_description": "CAT fee is aggregated for 3 entry trades; it cannot be allocated to AMD.",
+    "final_net": "NET_FINALITY_PENDING",
+    "published_rows_only": true,
+    "future_publication_finality_confirmed": false
+  },
+  "limits_and_next_gate": {
+    "next_rearm": "2026-10-06 13:30 UTC / 16:30 Cyprus",
+    "followup": "fee followup and existing software trailing",
+    "gtc_changes": "none",
+    "paper_queue_changes": "none",
+    "risk_statement": "Stops are broker DAY protection evidence and do not establish a guaranteed net result or slippage/loss bound.",
+    "queued_next_session_day_stop_paper_acceptance": "NOT_PROVEN; separate future PAPER acceptance, no LIVE change"
+  },
+  "reproduction": {
+    "command": "python3 .private/alpaca_rearm_20261005/accept.py",
+    "expected_output": "ACCEPT PASS checks=83 verdict=REARM_AND_EXIT_LIFECYCLE_PASS",
+    "assertions": 83,
+    "acceptance_script_sha256": "dbeea8763c462550ac2b253c714b5ea0d26a56ec1ff70e3cf6ca05771d68ce2f"
+  },
+  "day_rearm_timing": {
+    "AMD": {
+      "created_at": "2026-10-05T13:30:10.949724Z",
+      "submitted_at": "2026-10-05T13:30:31.694124Z",
+      "creation_after_open_seconds": "10.949724",
+      "continuous_protection_from_open": "NOT_PROVEN"
+    },
+    "META": {
+      "created_at": "2026-10-05T13:30:12.139317Z",
+      "submitted_at": "2026-10-05T13:30:12.139317Z",
+      "creation_after_open_seconds": "12.139317",
+      "continuous_protection_from_open": "NOT_PROVEN"
+    },
+    "CRWD": {
+      "created_at": "2026-10-05T13:30:11.565424Z",
+      "submitted_at": "2026-10-05T13:30:11.565424Z",
+      "creation_after_open_seconds": "11.565424",
+      "continuous_protection_from_open": "NOT_PROVEN"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "title": "KITY M3 frozen source contract probe",
+  "date": "2026-10-05",
+  "status": "SYNTHETIC_CONTRACT_FINDINGS_ONLY",
+  "source_commit": "d6ed8126c041969de0bc6191e39fefe4a1272d5b",
+  "probe": ".private/kity_m3_20261005/probe_contract.py",
+  "network_calls": 0,
+  "cases": {
+    "decile_sizes": {"30": {"long": 3, "short": 3}, "40": {"long": 4, "short": 4}, "50": {"long": 5, "short": 5}},
+    "six_leg_receipt": {"status": "PAPER_WEEK_OPERATIONAL_PASS", "leg_count": 6, "all_lot_ok": true, "prices_known": true, "sverka_ok": true, "manager_requirement_legs": 10},
+    "oi_2355_missing_exact_point": {"returned_sumOpenInterestValue": 23.0, "mock_last_timestamp": "23:50", "mock_23_55_present": false},
+    "stale_tampered_signal": {"returned_verbatim": true, "validation_bypassed": true},
+    "duplicate_bars": {"input_rows": 60, "accepted_rows": 60, "only_length_and_last_date_checks": true}
+  },
+  "interpretation": [
+    "Synthetic decile behavior is n//10: 30 gives 3/3 and 40 gives 4/4; frozen prose says 5/5 for the intended 50-name case.",
+    "The receipt function can emit PAPER_WEEK_OPERATIONAL_PASS for a synthetic six-leg filled list; this does not satisfy the prose 10-leg manager requirement and is not a live or canary result."
+  ],
+  "limitations": [
+    "No raw HTTP OI or kline responses were obtained or saved; all responses were synthetic.",
+    "Static source review shows float conversion for lot and min-notional fields, zero defaults when filters are missing, and no explicit response provenance binding beyond saved-file hashes.",
+    "The existing signal cache is trusted verbatim, so stale or tampered JSON bypasses recomputation and validation.",
+    "No judge was run, no discovery archives were read, and no product files were edited."
+  ],
+  "manifest": ".private/kity_m3_20261005/SOURCE_MANIFEST.json"
+}

@@ -70,3 +70,21 @@ read them in place and preserve source lineage. Existing Alpaca compatibility
 worktree is `../bybit-alpaca-safe-hold-20260907`; inspect before integration.
 PAPER acceptance is authorized by scope, but no orphan ownership, live capital,
 strategy deviation or live emergency authority may be invented.
+
+## October 5 owner scope update
+
+The human owner's October 5 instruction supersedes the older research queue
+above: after Alpaca re-arm, KITY_M3 is the next production intake, strictly
+orders-OFF. Consume the frozen research/fabrika-v1 packet from the verified ref,
+not the sibling checkout HEAD; never blindly merge, rerun its judge, consume new
+sealed discovery/holdout outcomes or retune signal/deciles/universe/hold/costs.
+Claude owns Factory research and forward evidence; Codex owns production
+acceptance. See the latest checkpoint and KITY_M3_PRODUCTION_INTAKE_2026_10_05.md
+for measured source-contract issues and the written specification review gate.
+No money without the separate owner GO and complete actual-account dossier.
+
+Existing ATT1 probes must keep their original October 6 14:12:25 UTC deadline,
+PIDs/state/source pins and public-only authority; no restart/extension for KITY.
+ATT1 admission/risk/hold/fees/2s/live transport and 2–3 clean terminal gate stay
+frozen. Alpaca remains the existing LIVE sleeve: do not re-activate or add another
+manager. DAY re-arm and delayed terminal fees remain operational followups.
