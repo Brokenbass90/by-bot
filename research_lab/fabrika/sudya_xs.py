@@ -24,7 +24,7 @@ sys.path.insert(0, str(LAB))
 import discovery_paket1 as P  # noqa: E402
 
 DEN = 86_400_000
-PRIZNAKI = {"metrics", "taker_share", "ret_1d", "ret_7d", "taker_7d", "ost_ret7_taker7"}
+PRIZNAKI = {"metrics", "taker_share", "ret_1d", "ret_7d", "taker_7d", "ost_ret7_taker7", "oi_7d", "ret7_pri_roste_oi"}
 OBYAZ = ("id", "dannye", "okna", "setka", "vselennaya", "priznak", "znak", "hold", "izderzhki_bps", "porogi")
 
 
@@ -131,6 +131,14 @@ def znachenie(pr, x, i, vch):
     if pr["tip"] == "taker_7d":
         d0 = den(x["ts"][i]); v = [x["taker"].get((d0 - dt.timedelta(days=k)).isoformat()) for k in range(1, 8)]
         return float(np.mean(v)) if all(z is not None for z in v) else None
+    if pr["tip"] == "oi_7d":                      # лог-изменение OI в КОНТРАКТАХ (OI $ / закрытие того же дня), d−8 → d−1
+        v1 = x["met"].get(vch); v0 = x["met"].get((dt.date.fromisoformat(vch) - dt.timedelta(days=7)).isoformat())
+        if not (v1 and v0 and v1[4] and v0[4]) or x["ts"][i - 1] - x["ts"][i - 8] != 7 * DEN:
+            return None
+        return float(np.log(v1[4] / x["c"][i - 1]) - np.log(v0[4] / x["c"][i - 8]))
+    if pr["tip"] == "ret7_pri_roste_oi":          # ret_7d, если OI вырос; иначе 0 (ход без новых денег — нейтрален), 05.10
+        r, o = znachenie({"tip": "ret_7d"}, x, i, vch), znachenie({"tip": "oi_7d"}, x, i, vch)
+        return None if r is None or o is None else (r if o > 0 else 0.0)
     if pr["tip"] == "ost_ret7_taker7":            # пара (ret_7d, taker_7d); остаток считается поперечно в nedelya
         a, b = znachenie({"tip": "ret_7d"}, x, i, vch), znachenie({"tip": "taker_7d"}, x, i, vch)
         return None if a is None or b is None else (a, b)

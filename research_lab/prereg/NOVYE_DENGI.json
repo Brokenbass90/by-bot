@@ -1,0 +1,60 @@
+{
+ "id": "NOVYE_DENGI",
+ "semya": "NOVYE_DENGI",
+ "dannye": "binance_kity",
+ "setka": {
+  "ot": "2021-07-01",
+  "shag": 7
+ },
+ "vselennaya": {
+  "top": 50,
+  "oi_indeks": 4,
+  "min_monet": 30,
+  "min_istoriya": 60
+ },
+ "hold": 7,
+ "izderzhki_bps": 12,
+ "porogi": {
+  "t_nw": 2.0,
+  "min_nedel": 52
+ },
+ "data_do": "2026-09-30",
+ "okna": {
+  "PRIMARY": [
+   "2023-01-01",
+   "2026-09-23"
+  ],
+  "REPLICATION": [
+   "2021-07-01",
+   "2022-12-31"
+  ]
+ },
+ "priznak": {
+  "tip": "ret7_pri_roste_oi"
+ },
+ "znak": 1,
+ "kontroli": [
+  {
+   "imya": "KITY_M3",
+   "priznak": {
+    "tip": "taker_share"
+   },
+   "znak": 1,
+   "porog_abs_korr": 0.5
+  },
+  {
+   "imya": "SYROY_IMPULS_7D",
+   "priznak": {
+    "tip": "ret_7d"
+   },
+   "znak": 1,
+   "porog_abs_korr": 0.8
+  }
+ ],
+ "istochnik": "PREREG_NOVYE_DENGI_2026_10_05.md",
+ "odobreno": {
+  "kem": "Claude",
+  "kogda": "2026-10-05",
+  "proverka_semi": "не OI_CROWDING (D6: шорт роста OI в $ без учёта направления цены); не TOLPA/KITY (корр. сигнала с KITY M3 0.23); не LONG_TREND (поперечный, а не временной); причинность: только данные d−1 и раньше"
+ }
+}

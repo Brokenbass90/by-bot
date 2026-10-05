@@ -90,7 +90,7 @@ class Kontroller:
 
 def main():
     k = Kontroller(); zamok = k.fx / "kontroller.pid"
-    if zamok.exists():
+    if zamok.exists() and zamok.read_text().strip():
         try:
             os.kill(int(zamok.read_text()), 0); sys.exit("контроллер уже работает")
         except (OSError, ValueError):
@@ -105,7 +105,7 @@ def main():
         else:
             print(k.shag())
     finally:
-        zamok.unlink(missing_ok=True)
+        zamok.write_text("")          # очистка вместо удаления (удаление в подключённых папках может быть запрещено)
 
 
 if __name__ == "__main__":
