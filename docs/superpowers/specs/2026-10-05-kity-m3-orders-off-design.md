@@ -1,6 +1,6 @@
 # KITY M3: frozen signal → execution evidence, orders OFF
 
-Status: written specification for owner review; no implementation approval or money authority inferred.
+Status: owner approved for implementation October5; isolated local orders-OFF candidate delivered. Separate money authority is absent.
 Owner intent (October 5): after Alpaca re-arm, build the smallest useful KITY execution candidate before the first unseen October 8 signal. Use Claude's frozen research, preserve ATT1 probes, avoid broad merges or Factory rewrites. Success is reproducible execution readiness or a precise blocker, not a promised LIVE date.
 
 ## Scope and choice
@@ -90,3 +90,25 @@ Supply a current read-only forward runtime path/process/heartbeat receipt and fi
 ## Specification review record
 
 One bounded `gpt-6-astra/high` financial/security review identified three must-fix gaps: missing-OI universe completeness, late reconstruction credited as prospective, and lack of a common ten-book freshness timestamp. The primary incorporated all three requirements and aligned basket-contract reason with the three terminal status values. This is a specification review, not implementation signoff or money approval; no second review is claimed.
+
+## Implementation acceptance record — October5
+
+The owner directly approved this specification for implementation, orders-OFF.
+Native execution retained the current recovery checkout; no additional scope
+approval was requested. One bounded implementation review (gpt-6-astra/high,
+actual runtime metadata verified) found seven evidence/lifecycle issues and one
+historical-volume shape issue, without a sender or money-boundary defect.
+Primary fixed them in one bounded pass with regression RED/GREEN checks:
+week-derived atomic seal/time, complete raw-source decision revalidation,
+closed-data availability, prepared lifecycle identity/quantity, known-prefix
+failure state, signed exposure/funding/net cash and malformed nested schemas.
+A real standalone CLI check also caught package-path assumptions; pure file
+loading and its subprocess regression now pass without PYTHONPATH.
+
+Acceptance is implemented local orders-OFF code, 95 targeted PASS and public
+minimum/depth/common-clock diagnostic feasibility. Full suite 3618 PASS/57
+unchanged known failures; final standalone CLI test was added after full-suite
+collection and is included in the95 targeted result. The primary fix checks are
+not a second independent review/signoff. See KITY_M3_ORDERS_OFF_DELIVERY_2026_10_05
+and its runbook. Actual prospective signal, account costs/risk/lifecycle and
+venue selection remain BLOCKED_DATA; READY_FOR_CANARY is not established.

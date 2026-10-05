@@ -81,6 +81,11 @@ sealed discovery/holdout outcomes or retune signal/deciles/universe/hold/costs.
 Claude owns Factory research and forward evidence; Codex owns production
 acceptance. See the latest checkpoint and KITY_M3_PRODUCTION_INTAKE_2026_10_05.md
 for measured source-contract issues and the written specification review gate.
+Owner explicitly approved the written KITY specification for implementation
+orders-OFF later October5. The isolated local candidate is delivered; read
+KITY_M3_ORDERS_OFF_DELIVERY_2026_10_05.md/JSON and its runbook. Do not restart the
+completed implementation or re-request its approval. Actual unseen source/account
+readiness remains BLOCKED_DATA, no service or money runner is installed.
 No money without the separate owner GO and complete actual-account dossier.
 
 Existing ATT1 probes must keep their original October 6 14:12:25 UTC deadline,

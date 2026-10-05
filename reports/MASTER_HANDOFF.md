@@ -1,5 +1,40 @@
 # MASTER HANDOFF — 2026-10-05
 
+Latest owner-approved implementation cycle **October5, local delivery 15:06:42UTC** — read
+`KITY_M3_ORDERS_OFF_DELIVERY_2026_10_05.md`/JSON and its RUNBOOK first.
+**KITY_M3 IMPLEMENTED_LOCAL_ORDERS_OFF; production BLOCKED_DATA, no money/sender/credentials.**
+Spec explicitly approved by owner; tasks1–4 delivered in current recovery checkout.
+Frozen d6ed812 research, exact23:55OI, n//10, seven-day hold/costs preserved; nojudge
+rerun/Claude writes. Raw-source independent reconstruction, common2000ms tenbooks,
+per-leg floor/minimum/full-depth/cost checks, single weekly actual-time seal,
+prepared source/quantity-bound synthetic lifecycle with signed funding/net cash,
+known-prefix failure exposure. No scheduler/deployment or future signal credited.
+**95 targeted PASS**; full3618PASS/57exact baselineFAIL, no new/removed failures.
+Final standalone CLI fix+test verified in targeted run after full-suite collection.
+One6-astra/high critical review7important+1minor fixed by primary RED/GREEN;
+no second independent signoff. Mechanical CLI worker verified5.6terra/high.
+25 publicGET diagnostic14:36:47.616UTC/516ms: both Binance/Bybit minima/depth/2sPASS
+on explicitly synthetic10names at diagnostic$100/leg. Gross981.82616/954.27264,
+common reference floor85.5288/85.5487; NOTactualbasket/cash/cap/filled evidence.
+UnseenOct8 00:05UTC stillpending; paperentryOct9/exitOct16 00:05close references.
+Next: causal raw PIT producer+actualseal/basket; selectedvenue/accountfees/cash/mode,
+fixedcaps/roundingtolerance/funding/ownership/protection/exit/finality/rollback.
+Production BLOCKED_DATA; noREADY_FOR_CANARY ormoneyGO. Claude externalraw/registry/
+testvectors accelerate; then independentLONG→RANGE WIP1, TOLPAbackground.
+
+**Alpaca remains last-verified13:40:53UTC re-arm+AMD native exit PASS**, gross+$2.374819327244,
+NET_FINALITY_PENDING. CRWD/META acceptedDAY stops242.13/668.76; oneNEWmanager,
+cap487.42/gross0.70/floorHWM unchanged. No LIVE writes/restarts this cycle; current
+post13:40 broker state not re-polled. NextP0Oct6 13:30UTC re-arm+AMD delayedfees;
+queued fractionalDAY protection remains PAPER NOT_PROVEN. No GTC/trailing strategy change.
+ATT1 last08:19ADA1verifiedclean/net-R−1.048963; no new clean/runtimestate credit.
+Probes originaldeadlineOct6 14:12:25UTC retained; no resets/extensions/transportchange.
+NEWATT1 ordersOFF;2–3clean+actualdossier+fresh separateownerGO gates unchanged.
+Foreignallowlist SHAadd587f1…f19a1 restored afterknownsuiteappend and unstaged.
+Scoped Git publication evidence: `.private/kity_m3_impl_20261005/git_publication.json`.
+
+Previous snapshots below are history; use the latest block above.
+
 Latest owner cycle **October5, broker postcheck13:40:53UTC /16:40 Cyprus** — read
 `ALPACA_DAY_REARM_2026_10_05.md`/JSON and `KITY_M3_PRODUCTION_INTAKE_2026_10_05.md`/JSON first.
 **Alpaca re-arm+first actual exit PASS**: AMD full0.186377282 stopped at622.312,
