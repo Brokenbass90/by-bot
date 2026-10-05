@@ -1,0 +1,2033 @@
+{
+ "prereg": "PREREG_REZHIMNYY_CARRY_2026_10_05.md",
+ "kogda": "2026-10-05T05:28:00+00:00",
+ "nedel": 251,
+ "dolya_ON": 0.088,
+ "ON_po_godam": {
+  "2021": "1/5",
+  "2022": "0/52",
+  "2023": "5/52",
+  "2024": "16/52",
+  "2025": "0/52",
+  "2026": "0/38"
+ },
+ "pri_51bps": {
+  "godovyh_na_kapital": 1.29,
+  "godovyh_na_kapital_tolko_ON": 16.56
+ },
+ "spravka_31bps": {
+  "godovyh_na_kapital": 1.55,
+  "godovyh_na_kapital_tolko_ON": 18.83
+ },
+ "verdikt": "KILL",
+ "nedeli": [
+  {
+   "d": "2021-12-02",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.1574,
+   "dohod": 0.0016937969999999997,
+   "oborot": 0.5
+  },
+  {
+   "d": "2021-12-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0639,
+   "dohod": 0.0,
+   "oborot": 0.5
+  },
+  {
+   "d": "2021-12-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0833,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2021-12-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1002,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2021-12-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1079,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-01-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-01-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0747,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-01-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0923,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-01-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0128,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-02-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0327,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-02-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0028,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-02-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0043,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-02-24",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0338,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-03-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0332,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-03-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.01,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-03-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-03-24",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0979,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-03-31",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1058,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-04-07",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-04-14",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0619,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-04-21",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0756,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-04-28",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0686,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-05-05",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0251,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-05-12",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0527,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-05-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.1888,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-05-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.077,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-06-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0868,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-06-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0128,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-06-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.1467,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-06-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.028,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-06-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0099,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-07-07",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0503,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-07-14",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0455,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-07-21",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0463,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-07-28",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.005,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-08-04",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0775,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-08-11",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0597,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-08-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0585,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-08-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.1027,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-09-01",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.1003,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-09-08",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0183,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-09-15",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0228,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-09-22",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.045,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-09-29",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0262,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-10-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0679,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-10-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0491,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-10-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0069,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-10-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0339,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-11-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0583,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-11-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0183,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-11-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0466,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-11-24",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0211,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-12-01",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0513,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-12-08",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0241,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-12-15",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0109,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-12-22",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0512,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2022-12-29",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0152,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-01-05",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0183,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-01-12",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0744,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-01-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1248,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-01-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1093,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-02-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-02-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1198,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-02-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.073,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-02-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-03-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0961,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-03-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.045,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-03-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0025,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-03-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.073,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-03-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0432,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-04-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0825,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-04-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0815,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-04-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1215,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-04-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0646,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-05-04",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0606,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-05-11",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0343,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-05-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0515,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-05-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.075,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-06-01",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0927,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-06-08",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0892,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-06-15",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0544,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-06-22",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0004,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-06-29",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0675,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-07-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0723,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-07-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0435,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-07-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0886,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-07-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0686,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-08-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0687,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-08-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.078,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-08-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0843,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-08-24",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0342,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-08-31",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0594,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-09-07",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0057,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-09-14",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0109,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-09-21",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0285,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-09-28",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0588,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-10-05",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0655,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-10-12",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0321,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-10-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0228,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-10-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0684,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-11-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1118,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-11-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1394,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-11-16",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.2041,
+   "dohod": 0.003234976999999999,
+   "oborot": 0.5
+  },
+  {
+   "d": "2023-11-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1252,
+   "dohod": 0.0,
+   "oborot": 0.5
+  },
+  {
+   "d": "2023-11-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2023-12-07",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.1863,
+   "dohod": 0.008379474,
+   "oborot": 0.5
+  },
+  {
+   "d": "2023-12-14",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.2504,
+   "dohod": 0.008167862000000001,
+   "oborot": 0.4
+  },
+  {
+   "d": "2023-12-21",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.1861,
+   "dohod": 0.009676544,
+   "oborot": 0.5
+  },
+  {
+   "d": "2023-12-28",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.3923,
+   "dohod": 0.011884633,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-01-04",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.4585,
+   "dohod": -0.0009231119999999999,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-01-11",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-01-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1043,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-01-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1147,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-02-01",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-02-08",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1095,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-02-15",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.1549,
+   "dohod": 0.010249812,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-02-22",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.3003,
+   "dohod": 0.012733798,
+   "oborot": 0.4
+  },
+  {
+   "d": "2024-02-29",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.4418,
+   "dohod": 0.025802472,
+   "oborot": 0.4
+  },
+  {
+   "d": "2024-03-07",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.78,
+   "dohod": 0.019323384000000002,
+   "oborot": 0.2
+  },
+  {
+   "d": "2024-03-14",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.6774,
+   "dohod": 0.009788663,
+   "oborot": 0.2
+  },
+  {
+   "d": "2024-03-21",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.3278,
+   "dohod": 0.007388359999999999,
+   "oborot": 0.7
+  },
+  {
+   "d": "2024-03-28",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.2672,
+   "dohod": 0.012463891999999999,
+   "oborot": 0.4
+  },
+  {
+   "d": "2024-04-04",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.4297,
+   "dohod": 0.00488893,
+   "oborot": 0.3
+  },
+  {
+   "d": "2024-04-11",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.1642,
+   "dohod": 0.002510627,
+   "oborot": 0.4
+  },
+  {
+   "d": "2024-04-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0934,
+   "dohod": 0.0,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-04-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0524,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-05-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0508,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-05-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0785,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-05-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0687,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-05-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1033,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-05-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1311,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-06-06",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.1504,
+   "dohod": 0.0026243309999999997,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-06-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1241,
+   "dohod": 0.0,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-06-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0722,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-06-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0761,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-07-04",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0893,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-07-11",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0387,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-07-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0824,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-07-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0774,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-08-01",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0729,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-08-08",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0057,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-08-15",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.019,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-08-22",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0288,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-08-29",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0383,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-09-05",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0153,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-09-12",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.029,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-09-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0199,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-09-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0906,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-10-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0963,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-10-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0685,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-10-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0928,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-10-24",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1071,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-10-31",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0934,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-11-07",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1014,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2024-11-14",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.2081,
+   "dohod": 0.009473869000000001,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-11-21",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.1798,
+   "dohod": 0.007979320000000002,
+   "oborot": 0.3
+  },
+  {
+   "d": "2024-11-28",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.2313,
+   "dohod": 0.009658664,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-12-05",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.2914,
+   "dohod": 0.009389912,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-12-12",
+   "on": true,
+   "n": 10,
+   "med_godovyh": 0.3116,
+   "dohod": 0.00272914,
+   "oborot": 0.4
+  },
+  {
+   "d": "2024-12-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1103,
+   "dohod": 0.0,
+   "oborot": 0.5
+  },
+  {
+   "d": "2024-12-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0806,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-01-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0985,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-01-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.099,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-01-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.071,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-01-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1005,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-01-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0874,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-02-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0215,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-02-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0152,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-02-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0137,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-02-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0094,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-03-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0171,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-03-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0189,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-03-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0147,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-03-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0214,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-04-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0145,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-04-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0114,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-04-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0003,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-04-24",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0467,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-05-01",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0316,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-05-08",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0093,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-05-15",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0955,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-05-22",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0298,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-05-29",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0595,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-06-05",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0193,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-06-12",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0521,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-06-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0134,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-06-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.021,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-07-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0221,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-07-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0406,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-07-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.106,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-07-24",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.1147,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-07-31",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0923,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-08-07",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0491,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-08-14",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0912,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-08-21",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0506,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-08-28",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0693,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-09-04",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0728,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-09-11",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0926,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-09-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0734,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-09-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0526,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-10-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0661,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-10-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0779,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-10-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0122,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-10-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0027,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-10-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0443,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-11-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0046,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-11-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.021,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-11-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0323,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-11-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0039,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-12-04",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0088,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-12-11",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0123,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-12-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0081,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2025-12-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.027,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-01-01",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0498,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-01-08",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0596,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-01-15",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0499,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-01-22",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0138,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-01-29",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0241,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-02-05",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0256,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-02-12",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0402,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-02-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.003,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-02-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0159,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-03-05",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0203,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-03-12",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0615,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-03-19",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0088,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-03-26",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0087,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-04-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": -0.0159,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-04-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0104,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-04-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0074,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-04-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0331,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-04-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0279,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-05-07",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0428,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-05-14",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0446,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-05-21",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0161,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-05-28",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0403,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-06-04",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0386,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-06-11",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0175,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-06-18",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0386,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-06-25",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0278,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-07-02",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0724,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-07-09",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0778,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-07-16",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0503,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-07-23",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0533,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-07-30",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0285,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-08-06",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0506,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-08-13",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0495,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-08-20",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0149,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-08-27",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0979,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-09-03",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0437,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-09-10",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0586,
+   "dohod": 0.0,
+   "oborot": 0.0
+  },
+  {
+   "d": "2026-09-17",
+   "on": false,
+   "n": 0,
+   "med_godovyh": 0.0243,
+   "dohod": 0.0,
+   "oborot": 0.0
+  }
+ ]
+}

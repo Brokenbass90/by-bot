@@ -1,0 +1,27 @@
+{
+ "rezultat_sha256": "f644728f8399ba0cac7f37fae37f80098ec1112e07c641f3b717757e894436f0",
+ "manifest_kity_sha256": "3d78370f67f7cef08bd2ddd27116a8d2e58e4f4c08de513854defdbdf447bf98",
+ "rezultat": {
+  "prereg": "PREREG_REZHIMNYY_CARRY_2026_10_05.md",
+  "kogda": "2026-10-05T05:28:00+00:00",
+  "nedel": 251,
+  "dolya_ON": 0.088,
+  "ON_po_godam": {
+   "2021": "1/5",
+   "2022": "0/52",
+   "2023": "5/52",
+   "2024": "16/52",
+   "2025": "0/52",
+   "2026": "0/38"
+  },
+  "pri_51bps": {
+   "godovyh_na_kapital": 1.29,
+   "godovyh_na_kapital_tolko_ON": 16.56
+  },
+  "spravka_31bps": {
+   "godovyh_na_kapital": 1.55,
+   "godovyh_na_kapital_tolko_ON": 18.83
+  },
+  "verdikt": "KILL"
+ }
+}
