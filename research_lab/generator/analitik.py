@@ -78,7 +78,7 @@ def proverit(otvet, kl):
             prich = "не по схеме"
         elif k["storona"] not in STORONY or not (2 <= len(k["izmereniya"]) <= 3):
             prich = "сторона/измерения вне схемы"
-        elif norm(k["semya"]) in mertvye or any(z in norm(k["semya"]) for z in zanyato):
+        elif norm(k["semya"]) in mertvye or any(z in norm(k["semya"]) + norm(k["imya"]) for z in zanyato):
             prich = "семья на кладбище или занята"
         (otkaz if prich else prinyato).append(dict(k, prichina_otkaza=prich) if prich else dict(k, status="DRAFT"))
     return prinyato, otkaz
