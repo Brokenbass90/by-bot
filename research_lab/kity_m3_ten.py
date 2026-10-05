@@ -209,6 +209,7 @@ def sverka(d: dt.date):
 def shag():
     D.mkdir(parents=True, exist_ok=True)
     seg = utc().date(); dd = [chetverg_dlya(seg) - dt.timedelta(days=7 * k) for k in range(3)]
+    print(f"{utc().isoformat(timespec='seconds')} пульс: жив, первый сигнал 2026-10-08 00:05 UTC", flush=True)
     for d in sorted(dd):
         if d < dt.date(2026, 10, 8):                  # тень начинается с первого невиданного четверга
             continue
