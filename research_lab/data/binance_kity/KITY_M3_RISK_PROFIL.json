@@ -1,0 +1,26 @@
+{
+ "nedel": 194,
+ "srednee_bps": 103.2,
+ "mediana_bps": 27.4,
+ "dolya_plyusovyh_nedel": 0.52,
+ "hudshaya_nedelya_pct": -13.0,
+ "luchshaya_nedelya_pct": 27.9,
+ "maks_prosadka_pct": -24.0,
+ "godovaya_vol_pct": 41.1,
+ "sharp": 1.3,
+ "po_godam_bps": {
+  "2023": 30.1,
+  "2024": 37.1,
+  "2025": 183.2,
+  "2026": 184.5
+ },
+ "noga_hudshaya_pct": -134.2,
+ "nog_huzhe_minus30pct": 33,
+ "nog_huzhe_minus50pct": 10,
+ "long_srednee_bps": 203.0,
+ "short_srednee_bps": 5.0,
+ "short_hudshaya_pct": -134.2,
+ "dolya_pnl_ot_TradFi": -0.026,
+ "nog_TradFi": 41,
+ "nog_vsego": 1588
+}
