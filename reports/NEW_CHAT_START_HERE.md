@@ -1,22 +1,23 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
-Latest bounded heartbeat **October 5 02:19:51 UTC /05:19 Cyprus** — read
-`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_0219.md` and JSON first.
-Both48h probes RUNNING; original PID/hash/deadline intact, NRestarts0.
-Public remains11sessions/5gaps/1reported clean/0held. Clean verification
-**BLOCKED_REPLAY: runuser not resolved under restricted PATH**; journal/net-R
-not read, zero fresh verified gate credit. Local launcher lookup fixture PASS;
-prepared inspector searches trusted system directories; VPS replay still pending.
-One bounded read-only SSH query only; no source/runtime/broker/policy change.
-New35s batch557205members, October4 16:38–20:16UTC: seven more SEI source-stale
-REST/fresh earlier WS cases. Two CTS-stale books would look fresh using ts;
-CTS/2s gate unchanged. Total12source-stale cases across disjoint processed batches.
-Heartbeat records1WSdisconnect/1quiet timeout/2connections; raw event analysis
-pending beyond cursor. Quiet/cache cause NOT_PROVEN; no transport promotion.
-Funding same exact-prefix XMR outside8;0newSTARTs/0admitted comparisons, notPASS.
-Private cursor nowcapture-497540 offset19723884; complete later population pending.
-Production PIDs/NRestarts and public driver97239996… unchanged; disk bounds PASS.
-ActualpacketBLOCKED_DATA, NEW ordersOFF;2–3verifiedclean/netR+freshdossier+ownerGO.
+Latest bounded heartbeat **October 5 08:19:42 UTC /11:19 Cyprus** — read
+`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_0819.md` and JSON first.
+**First verified clean filled terminal: ADA, simulated net-R −1.048963.**
+Exact deployed journal replay matched heartbeat;11records/source hash unchanged,
+profile79d23e38… pinned. Private raw journal/replay receipt sealed. Prior launcher
+BLOCKED_REPLAY superseded by actual PASS; credit this decision once, not each poll.
+Public12sessions/5gaps/1verified clean/1held UNI1.7 protected1.7, no incident.
+This is public simulation; broker execution/actual costs/promotion flags remainfalse.
+Both48h probes RUNNING, original PIDs/NRestarts0; study/context pins/disk bounds PASS.
+App files match stored manifest; original mapping comparison prepared for next query.
+WS capture: quiet23:18:04UTC, ping-timeout disconnect23:18:22, reconnect23:18:25;
+fresh reset snapshots SEI/SUI, no proof of continuity during silence. No switch.
+New35s batch454393members, October4 20:16–23:23UTC:13REST receipt-stale,
+10server-stale/9causal fresh-WS pairs. Four retained CTS-stale/ts-fresh examples;
+CTS/2s gates unchanged. Cursorcapture-497543 offset27409968; later analysispending.
+Funding newUNI outside8; XMR prefix not recounted;2futureSTARTs,0admitted comparisons.
+Production PIDs/public driver97239996… unchanged. One read-only SSH; no deploy/write.
+ActualpacketBLOCKED_DATA, NEW ordersOFF;2–3clean/netR+actualinputs+freshdossier+ownerGO.
 DeadlineOct6 14:12:25UTC unchanged; heartbeatACTIVE. AlpacaOct5 re-arm remainsP0.
 
 Previous execution/startup snapshots below are history, including prior0clean.

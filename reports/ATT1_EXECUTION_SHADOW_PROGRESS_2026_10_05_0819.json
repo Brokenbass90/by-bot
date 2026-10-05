@@ -1,0 +1,798 @@
+{
+  "schema_id": "att1_execution_probe_progress_v1",
+  "observed_utc": "2026-10-05T08:19:42.096000+00:00",
+  "source_receipt_sha256": "cea3c7e8dfe66f365dd228ce91860fdeebbc1acd1bed269f0ed5f6c60653d243",
+  "executed_inspector_sha256": "449aab7c2c7d4cd284f47be6ed2a8dc459694b9e61937be6b77fbea72d1e14db",
+  "read_only_ssh_queries": 1,
+  "orders_allowed": false,
+  "integrity": {
+    "manifest_matches": true,
+    "context_matches": true
+  },
+  "deadlines_unchanged": true,
+  "production": {
+    "bybot": {
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "original_pid_matches": true
+    },
+    "trading-journal-web": {
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "original_pid_matches": true
+    },
+    "att1-lifecycle-zero-risk-v2": {
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "original_pid_matches": true
+    }
+  },
+  "production_public_driver_sha256": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+  "disk_free_bytes": 40493424640,
+  "probes": {
+    "transport": {
+      "status": "RUNNING",
+      "capture_bytes_at_file_snapshot": 1425155874,
+      "counts": {
+        "process_start": 1,
+        "rest_book": 65165,
+        "ws_book": 2684393,
+        "ws_connect": 2,
+        "ws_control": 2,
+        "ws_disconnect": 1,
+        "ws_quiet_timeout": 1,
+        "ws_trade": 134363
+      },
+      "deadline_ms": 1791295945311,
+      "restarts": "0",
+      "heartbeat_age_ms": 3454,
+      "study_hash_matches": true
+    },
+    "funding": {
+      "status": "RUNNING",
+      "capture_bytes_at_file_snapshot": 2350,
+      "counts": {
+        "funding_start": 2,
+        "process_start": 1
+      },
+      "deadline_ms": 1791295945515,
+      "restarts": "0",
+      "heartbeat_age_ms": 3753,
+      "study_hash_matches": true
+    }
+  },
+  "public_lifecycle": {
+    "as_of_ms": 1791188381444,
+    "sessions": 12,
+    "gaps": 5,
+    "clean_filled_terminals": 1,
+    "held": [
+      {
+        "symbol": "UNIUSDT",
+        "held_qty": "17/10",
+        "protected_qty": "17/10",
+        "incidents": []
+      }
+    ]
+  },
+  "clean_journal_verification": {
+    "status": "PASS",
+    "profile_sha256": "79d23e38a6bb851fb7e300c2e0d0c22b48b671585d4c060eb5384c192b128050",
+    "state": {
+      "schema_id": "att1_lifecycle_public_state_v1",
+      "authority": {
+        "money_authority": false,
+        "orders_allowed": false,
+        "private_api_allowed": false,
+        "promotion_authority": false
+      },
+      "continuous_market_path_verified": false,
+      "execution_parity": false,
+      "actual_account_costs_verified": false,
+      "promotion_pass": false,
+      "sessions": [
+        {
+          "decision_id": "0f495bfefe236160aa3d561eb65dcb5aba1bafffbe492c21c172d698672f8477",
+          "symbol": "ADAUSDT",
+          "held_qty": "0",
+          "pending_entry_qty": "0",
+          "protected_qty": "0",
+          "pending_exit": null,
+          "incidents": [],
+          "final_net_r": "-1284979741/1225000000",
+          "costs_complete": true,
+          "known_fee_total": "25449/500000",
+          "settled_funding": "122158209/62500000000",
+          "lifecycle_terminal": true,
+          "authority": {
+            "money_authority": false,
+            "orders_allowed": false,
+            "private_api_allowed": false,
+            "promotion_authority": false
+          },
+          "full_receipt_sha256": "4bd068cb1e0ef62dcd021500664421b98f420d5dc0590f9e49d0bbe512362a7f",
+          "receipt_sha256": "d617ad56aab20592e3e1925f805428104bb9d5f9cf95d4f94c5f4562d28e34e8"
+        }
+      ],
+      "state_sha256": "876b3edd68ee8ee0d6a2d8e97e694da29a4a2169729b621c662fe27af5c47b65"
+    },
+    "journal_sha256": {
+      "0f495bfefe236160aa3d561eb65dcb5aba1bafffbe492c21c172d698672f8477.jsonl": "20e24c9fa82593b7cbdebf3c67059aead48f4ea6ca5148b0c99fbd8c3614af3f"
+    },
+    "source_unchanged": true
+  },
+  "clean_terminal_sources": [
+    {
+      "decision_id": "0f495bfefe236160aa3d561eb65dcb5aba1bafffbe492c21c172d698672f8477",
+      "symbol": "ADAUSDT",
+      "epoch_book": "att1-public-lifecycle-20261002-paired-observation:ADAUSDT",
+      "records": 11,
+      "events": [
+        "START",
+        "ENTRY_ACK",
+        "ENTRY_FILL",
+        "PROTECTION_ACK",
+        "ENTRY_FINAL",
+        "PRICE",
+        "EXIT_ACK",
+        "EXIT_FILL",
+        "EXIT_FINAL",
+        "FUNDING",
+        "FUNDING_COVERAGE"
+      ],
+      "entry_received_ms": 1791118835123,
+      "exit_received_ms": 1791141388922,
+      "terminal_received_ms": 1791141454329,
+      "final_net_r_exact": "-1284979741/1225000000",
+      "final_net_r_display": -1.048963053877551,
+      "known_simulated_fee_total": "25449/500000",
+      "settled_simulated_funding": "122158209/62500000000",
+      "journal_sha256": "20e24c9fa82593b7cbdebf3c67059aead48f4ea6ca5148b0c99fbd8c3614af3f",
+      "full_receipt_sha256": "4bd068cb1e0ef62dcd021500664421b98f420d5dc0590f9e49d0bbe512362a7f",
+      "normalized_receipt_sha256": "d617ad56aab20592e3e1925f805428104bb9d5f9cf95d4f94c5f4562d28e34e8",
+      "actual_account_truth": false
+    }
+  ],
+  "fresh_verified_clean_gate_credit": 1,
+  "verified_clean_gate_count_total": 1,
+  "gate_definition": "terminal/costs_complete/non-null net-R/no incidents, exact deployed journal replay; public simulation only",
+  "transport_analysis": {
+    "counts": {
+      "ws_book": 426761,
+      "ws:FRESH": 426761,
+      "raw_hash_verified": 437956,
+      "rest_book": 11195,
+      "rest:FRESH": 11182,
+      "ws_trade": 16433,
+      "rest:STALE": 13,
+      "rest:STALE_AT_SERVER_TIMESTAMP": 10,
+      "rest:STALE_WITH_CAUSAL_WS_FRESH": 9,
+      "rest:REPEATED_CTS_SEQ": 9,
+      "ws_quiet_timeout": 1,
+      "ws_disconnect": 1,
+      "ws_connect": 1,
+      "ws_control": 1
+    },
+    "first_received_ms": 1791144987247,
+    "last_received_ms": 1791156192205,
+    "metrics": {
+      "rest": {
+        "receipt_cts_age_ms": {
+          "p50": 257,
+          "p99": 1192,
+          "max": 3406
+        },
+        "use_delay_ms": {
+          "p50": 1,
+          "p99": 5,
+          "max": 505
+        },
+        "use_cts_age_ms": {
+          "p50": 257,
+          "p99": 1192,
+          "max": 3406
+        }
+      },
+      "ws": {
+        "receipt_cts_age_ms": {
+          "p50": 94,
+          "p99": 136,
+          "max": 667
+        },
+        "use_delay_ms": {
+          "p50": 0,
+          "p99": 1,
+          "max": 100
+        },
+        "use_cts_age_ms": {
+          "p50": 94,
+          "p99": 136,
+          "max": 667
+        }
+      }
+    },
+    "samples": [
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791145477320,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2109,
+          "received_ms": 1791145479429,
+          "seq": 298002070066,
+          "server_time": 1791145479345,
+          "symbol": "SEIUSDT",
+          "ts": 1791145477516,
+          "u": 20623763,
+          "use_cts_age_ms": 2110,
+          "use_delay_ms": 1,
+          "used_ms": 1791145479430
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791145478484,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 102,
+          "received_ms": 1791145478586,
+          "seq": 298002071217,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791145478502,
+          "u": 57607884,
+          "use_cts_age_ms": 102,
+          "use_delay_ms": 0,
+          "used_ms": 1791145478586
+        },
+        "source_pin": {
+          "file": "capture-497540.jsonl.gz",
+          "compressed_offset": 27829257,
+          "member_end": 27830513,
+          "record_sha256": "99ad2bb0b48348bf6b177e09e8604a0b993d8986bcf18c6f0a468a02182fb8d6"
+        },
+        "raw_sha256": "3292b81277ff14ec8d75b3a5f79ffc47c73b5ac3277e8a388531b87f4c0a090b",
+        "cache_root_cause_proven": false
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791145568906,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2599,
+          "received_ms": 1791145571505,
+          "seq": 298002181333,
+          "server_time": 1791145571421,
+          "symbol": "SEIUSDT",
+          "ts": 1791145568916,
+          "u": 20624021,
+          "use_cts_age_ms": 2600,
+          "use_delay_ms": 1,
+          "used_ms": 1791145571506
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791145571370,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 97,
+          "received_ms": 1791145571467,
+          "seq": 298002183961,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791145571383,
+          "u": 57608637,
+          "use_cts_age_ms": 97,
+          "use_delay_ms": 0,
+          "used_ms": 1791145571467
+        },
+        "source_pin": {
+          "file": "capture-497540.jsonl.gz",
+          "compressed_offset": 29338893,
+          "member_end": 29340155,
+          "record_sha256": "9f154b09046b4676985e24220de31552ed2d31fcfac940ab32c293556c77cdb4"
+        },
+        "raw_sha256": "e6bc88ee24d3d827ed3db1952fdd7acb4035a8742bc043d3a71b56572df23f9b",
+        "cache_root_cause_proven": false
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791145835405,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2299,
+          "received_ms": 1791145837704,
+          "seq": 298002445594,
+          "server_time": 1791145837609,
+          "symbol": "SEIUSDT",
+          "ts": 1791145835716,
+          "u": 20624707,
+          "use_cts_age_ms": 2299,
+          "use_delay_ms": 0,
+          "used_ms": 1791145837704
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791145837070,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 97,
+          "received_ms": 1791145837167,
+          "seq": 298002448456,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791145837082,
+          "u": 57611503,
+          "use_cts_age_ms": 97,
+          "use_delay_ms": 0,
+          "used_ms": 1791145837167
+        },
+        "source_pin": {
+          "file": "capture-497540.jsonl.gz",
+          "compressed_offset": 35118787,
+          "member_end": 35120045,
+          "record_sha256": "a7e7714927d353ca1cb434bfbb6629984e65ad9951eedc140db76e1d8611af09"
+        },
+        "raw_sha256": "dcbb0ea9ff95586726d135972c0159f882f73c4d41cb4d38d84bc2f111ea1a9b",
+        "cache_root_cause_proven": false
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791146615406,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2728,
+          "received_ms": 1791146618134,
+          "seq": 298003422998,
+          "server_time": 1791146618050,
+          "symbol": "SEIUSDT",
+          "ts": 1791146615716,
+          "u": 20627110,
+          "use_cts_age_ms": 2728,
+          "use_delay_ms": 0,
+          "used_ms": 1791146618134
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791146617514,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 91,
+          "received_ms": 1791146617605,
+          "seq": 298003424388,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791146617522,
+          "u": 57620153,
+          "use_cts_age_ms": 91,
+          "use_delay_ms": 0,
+          "used_ms": 1791146617605
+        },
+        "source_pin": {
+          "file": "capture-497540.jsonl.gz",
+          "compressed_offset": 49781274,
+          "member_end": 49782524,
+          "record_sha256": "df245a8e7264dda9fea18adb2b232b3c0efb6de9434a20b840df11b49b5dddd0"
+        },
+        "raw_sha256": "1fe54bfdcf097aea93c18f3ab81499f652d4715a7be937163a6828a906736802",
+        "cache_root_cause_proven": false
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791150013523,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2045,
+          "received_ms": 1791150015568,
+          "seq": 298008308801,
+          "server_time": 1791150015481,
+          "symbol": "SEIUSDT",
+          "ts": 1791150013716,
+          "u": 20638341,
+          "use_cts_age_ms": 2045,
+          "use_delay_ms": 0,
+          "used_ms": 1791150015568
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791150015444,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 105,
+          "received_ms": 1791150015549,
+          "seq": 298008310310,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791150015463,
+          "u": 57664877,
+          "use_cts_age_ms": 105,
+          "use_delay_ms": 0,
+          "used_ms": 1791150015549
+        },
+        "source_pin": {
+          "file": "capture-497541.jsonl.gz",
+          "compressed_offset": 43805344,
+          "member_end": 43806576,
+          "record_sha256": "694ada987dc455bbe13b1964a107307a514b8e7d0c196ad05602594ae266983a"
+        },
+        "raw_sha256": "1e398ff2b2810857f0dc872b6d6334fed78ffce6468840cc21365ac317d3f9a3",
+        "cache_root_cause_proven": false
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791150101565,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2061,
+          "received_ms": 1791150103626,
+          "seq": 298008408096,
+          "server_time": 1791150103540,
+          "symbol": "SEIUSDT",
+          "ts": 1791150101716,
+          "u": 20638558,
+          "use_cts_age_ms": 2062,
+          "use_delay_ms": 1,
+          "used_ms": 1791150103627
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791150102456,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 93,
+          "received_ms": 1791150102549,
+          "seq": 298008409231,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791150102462,
+          "u": 57665390,
+          "use_cts_age_ms": 93,
+          "use_delay_ms": 0,
+          "used_ms": 1791150102549
+        },
+        "source_pin": {
+          "file": "capture-497541.jsonl.gz",
+          "compressed_offset": 44816411,
+          "member_end": 44817643,
+          "record_sha256": "6cd56e8146ba81d6468720e840a6047c4703169b0a924290d1b1359dd6ff44ce"
+        },
+        "raw_sha256": "93b8f363f5963b6370b4b8dd8184250bc6fff768cc5f4827a71fbf82db77a96d",
+        "cache_root_cause_proven": false
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791150643103,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 3130,
+          "received_ms": 1791150646233,
+          "seq": 298009054281,
+          "server_time": 1791150646148,
+          "symbol": "SEIUSDT",
+          "ts": 1791150643717,
+          "u": 20640026,
+          "use_cts_age_ms": 3130,
+          "use_delay_ms": 0,
+          "used_ms": 1791150646233
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791150645454,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 93,
+          "received_ms": 1791150645547,
+          "seq": 298009057426,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791150645462,
+          "u": 57671237,
+          "use_cts_age_ms": 93,
+          "use_delay_ms": 0,
+          "used_ms": 1791150645547
+        },
+        "source_pin": {
+          "file": "capture-497541.jsonl.gz",
+          "compressed_offset": 52748568,
+          "member_end": 52749804,
+          "record_sha256": "5b19e7556199394ed74411fc6480cc0997f386d79dd683f9c7157db4ebdd7009"
+        },
+        "raw_sha256": "b465e810fa74313c78274df025dd05704987d4e0543c45eb2502162795aef17f",
+        "cache_root_cause_proven": false
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791150991764,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2517,
+          "received_ms": 1791150994281,
+          "seq": 298009655678,
+          "server_time": 1791150994198,
+          "symbol": "SEIUSDT",
+          "ts": 1791150991916,
+          "u": 20640903,
+          "use_cts_age_ms": 2517,
+          "use_delay_ms": 0,
+          "used_ms": 1791150994281
+        },
+        "ws": {
+          "connection": 1,
+          "cts": 1791150993237,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 88,
+          "received_ms": 1791150993325,
+          "seq": 298009659819,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791150993242,
+          "u": 57673719,
+          "use_cts_age_ms": 88,
+          "use_delay_ms": 0,
+          "used_ms": 1791150993325
+        },
+        "source_pin": {
+          "file": "capture-497541.jsonl.gz",
+          "compressed_offset": 57912586,
+          "member_end": 57913819,
+          "record_sha256": "f1028bc3ca13ce375694e173b1ae7846fe87aafb1e4c449923e9986856ed1b72"
+        },
+        "raw_sha256": "e846a4cc4d2f32fff7257fbe09a90942ed37b3bb4f0ec0a2fd1584c5ff681755",
+        "cache_root_cause_proven": false
+      }
+    ],
+    "diagnostic_events": [
+      {
+        "as_of_ms": 1791155884576,
+        "connection": 1,
+        "kind": "ws_quiet_timeout",
+        "source_pin": {
+          "file": "capture-497543.jsonl.gz",
+          "compressed_offset": 20775049,
+          "member_end": 20775136,
+          "record_sha256": "1d05eef40bc66406a02a35b45129c86396208111d913083e3a354cce3684cc70"
+        }
+      },
+      {
+        "as_of_ms": 1791155902770,
+        "connection": 1,
+        "error": "ConnectionClosedError:sent 1011 (internal error) keepalive ping timeout; no close frame received",
+        "kind": "ws_disconnect",
+        "source_pin": {
+          "file": "capture-497543.jsonl.gz",
+          "compressed_offset": 20796704,
+          "member_end": 20796859,
+          "record_sha256": "e28ed3dc6836c3ae792714c91751f0b2e40c6d18947d50c0d607807417898f31"
+        }
+      },
+      {
+        "as_of_ms": 1791155905104,
+        "connection": 2,
+        "kind": "ws_connect",
+        "source_pin": {
+          "file": "capture-497543.jsonl.gz",
+          "compressed_offset": 20799252,
+          "member_end": 20799329,
+          "record_sha256": "c955d79a76c528336e551a443195e795d97f7581a9dadaa24b90c69a59bfb152"
+        }
+      },
+      {
+        "kind": "ws_snapshot_reset",
+        "connection": 2,
+        "projection": {
+          "cts": 1791155904703,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 560,
+          "received_ms": 1791155905263,
+          "seq": 298021107817,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791155904983,
+          "u": 57743361,
+          "use_cts_age_ms": 561,
+          "use_delay_ms": 1,
+          "used_ms": 1791155905264
+        },
+        "source_pin": {
+          "file": "capture-497543.jsonl.gz",
+          "compressed_offset": 20799329,
+          "member_end": 20800515,
+          "record_sha256": "7af1cb51953faeb4ea8e47e0d6d4c11905448bc8de5d5d41ed06ccb28c20c408"
+        },
+        "raw_sha256": "897e7c860aff45919391e2b53054f245128f47bd5e3ca7c98c699f6e71343632"
+      },
+      {
+        "kind": "ws_snapshot_reset",
+        "connection": 2,
+        "projection": {
+          "cts": 1791155905059,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 207,
+          "received_ms": 1791155905266,
+          "seq": 397826195338,
+          "server_time": null,
+          "symbol": "SUIUSDT",
+          "ts": 1791155905065,
+          "u": 114540674,
+          "use_cts_age_ms": 207,
+          "use_delay_ms": 0,
+          "used_ms": 1791155905266
+        },
+        "source_pin": {
+          "file": "capture-497543.jsonl.gz",
+          "compressed_offset": 20803296,
+          "member_end": 20804357,
+          "record_sha256": "10cecffe684df1f2ce16c2395b04826db495cbc51f492f5e789812009acb46b2"
+        },
+        "raw_sha256": "f310ba3d33e2d26a52687fe2677beab37e77b7bfb811934d6f32d5ab1db71482"
+      }
+    ],
+    "capture_population_complete": false,
+    "root_cause_cache_or_quiet_proven": false
+  },
+  "cts_stale_ts_fresh_retained_samples_this_batch": [
+    {
+      "source_pin": {
+        "file": "capture-497540.jsonl.gz",
+        "compressed_offset": 27829257,
+        "member_end": 27830513,
+        "record_sha256": "99ad2bb0b48348bf6b177e09e8604a0b993d8986bcf18c6f0a468a02182fb8d6"
+      },
+      "symbol": "SEIUSDT",
+      "receipt_cts_age_ms": 2109,
+      "receipt_ts_age_ms": 1913
+    },
+    {
+      "source_pin": {
+        "file": "capture-497540.jsonl.gz",
+        "compressed_offset": 35118787,
+        "member_end": 35120045,
+        "record_sha256": "a7e7714927d353ca1cb434bfbb6629984e65ad9951eedc140db76e1d8611af09"
+      },
+      "symbol": "SEIUSDT",
+      "receipt_cts_age_ms": 2299,
+      "receipt_ts_age_ms": 1988
+    },
+    {
+      "source_pin": {
+        "file": "capture-497541.jsonl.gz",
+        "compressed_offset": 43805344,
+        "member_end": 43806576,
+        "record_sha256": "694ada987dc455bbe13b1964a107307a514b8e7d0c196ad05602594ae266983a"
+      },
+      "symbol": "SEIUSDT",
+      "receipt_cts_age_ms": 2045,
+      "receipt_ts_age_ms": 1852
+    },
+    {
+      "source_pin": {
+        "file": "capture-497541.jsonl.gz",
+        "compressed_offset": 44816411,
+        "member_end": 44817643,
+        "record_sha256": "6cd56e8146ba81d6468720e840a6047c4703169b0a924290d1b1359dd6ff44ce"
+      },
+      "symbol": "SEIUSDT",
+      "receipt_cts_age_ms": 2061,
+      "receipt_ts_age_ms": 1910
+    }
+  ],
+  "analysis_bounds": {
+    "transport": {
+      "reason": "BOUNDED_BATCH",
+      "file": "capture-497543.jsonl.gz",
+      "next_compressed_offset": 27409968,
+      "snapshot_bytes": 66037872,
+      "processed_rows": 454393
+    },
+    "funding": {
+      "reason": "ALL_SNAPSHOT_MEMBERS",
+      "processed_rows": 3
+    }
+  },
+  "transport_cumulative_processed_counts": {
+    "process_start": 1,
+    "rest_book": 33009,
+    "rest:FRESH": 32982,
+    "raw_hash_verified": 1425534,
+    "ws_connect": 2,
+    "ws_book": 1392525,
+    "ws:FRESH": 1392525,
+    "ws_control": 2,
+    "ws_trade": 81300,
+    "rest:STALE": 27,
+    "rest:REPEATED_CTS_SEQ": 20,
+    "rest:STALE_AT_SERVER_TIMESTAMP": 22,
+    "rest:STALE_WITH_CAUSAL_WS_FRESH": 21,
+    "rest:FRESH_RECEIVE_STALE_USE": 2,
+    "ws_quiet_timeout": 1,
+    "ws_disconnect": 1
+  },
+  "transport_cumulative_processed_members": 1506841,
+  "funding_analysis": {
+    "unique_starts": 2,
+    "duplicates_excluded": 0,
+    "statuses": {
+      "OUTSIDE_EXECUTION_ADMISSION": 2
+    },
+    "rows": [
+      {
+        "file": "c231e3c1ca5187fb4292ba3ceac7b2a08910a3a6204734165aadbdfa61a6544e.jsonl",
+        "status": "OUTSIDE_EXECUTION_ADMISSION",
+        "source_pin": {
+          "device": 64769,
+          "inode": 3146324,
+          "prefix_bytes": 1727,
+          "prefix_sha256": "07b61dd626c8c402df028aeda847c46adfbd02846eeb8305f7b65217582434e8"
+        },
+        "capture_pin": {
+          "file": "capture-497536.jsonl.gz",
+          "compressed_offset": 0,
+          "member_end": 1131,
+          "record_sha256": "b0b56679e2841a75706f416a2a6916c2c2a5cd8bf58516a23f39d3d5d4855e39"
+        },
+        "symbol": "XMRUSDT",
+        "submit_ms": 1791129768031,
+        "orders_allowed": false
+      },
+      {
+        "file": "0080a239eba3f050b1fdb7ae20ed7d965994957d33d4a28b29e23a04e5abd554.jsonl",
+        "status": "OUTSIDE_EXECUTION_ADMISSION",
+        "source_pin": {
+          "device": 64769,
+          "inode": 3146472,
+          "prefix_bytes": 1727,
+          "prefix_sha256": "52d8bc2f0b7640bebf68fea10f12963de2d009f8cf6a06f53fb342dcc291a0f9"
+        },
+        "capture_pin": {
+          "file": "capture-497549.jsonl.gz",
+          "compressed_offset": 0,
+          "member_end": 1136,
+          "record_sha256": "f69b58c19654f1add9e4453f44ff69d4a7c973e46073bb76c9d5206d9784dc7a"
+        },
+        "symbol": "UNIUSDT",
+        "submit_ms": 1791176515920,
+        "orders_allowed": false
+      }
+    ],
+    "candidate_money_ready": false,
+    "new_unique_starts_this_heartbeat": 1,
+    "previously_seen_exact_prefixes_not_recounted_as_new": 1,
+    "admitted_symbol_policy_comparisons_total": 0
+  },
+  "actual_packet_verdict": "BLOCKED_DATA_UNCHANGED",
+  "heartbeat_status": "ACTIVE_STUDIES_RUNNING",
+  "local_inspector_changes": "separate bounded disconnect/reset sample collection; restricted-PATH launcher fix executed PASS",
+  "integrity_scope": "current app files match stored manifest; original mapping comparison prepared for next single query",
+  "original_local_manifest_sha256": "c6c9820f7702cc390e343e945aa937adee0df62089ddd4729ca993bfc55c5592"
+}
