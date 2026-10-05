@@ -250,5 +250,13 @@
  {
   "semya": "POLY_MONOTONNOST",
   "prichina": "PM2 NOT_EXECUTABLE 03.10"
+ },
+ {
+  "semya": "PUSTOY_HOD",
+  "prichina": "разворот хода без потока: −55 bps/нед, корр. с сырым разворотом 0.88, KILL 05.10"
+ },
+ {
+  "semya": "LONG_TREND_MAJORS",
+  "prichina": "моментум BTC/ETH 28 дн.: t 0.76/1.11, KILL 05.10"
  }
 ]

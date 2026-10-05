@@ -1,0 +1,46 @@
+{
+ "id": "PUSTOY_HOD",
+ "prereg_sha256": "538c6c2d0ed30429fc013168931dbe4e3fd1f0e91eeb267862c364f43b5c8705",
+ "rezultat": {
+  "PRIMARY": {
+   "n": 194,
+   "dney": 194,
+   "edge_bps": -55.1,
+   "t": -1.06,
+   "polovinki_bps": [
+    -103.6,
+    -6.6
+   ],
+   "syroy_bps": -55.1,
+   "verdikt": "KILLED",
+   "prichina": "эдж ≤ 0"
+  },
+  "REPLICATION": {
+   "n": 55,
+   "dney": 55,
+   "edge_bps": 58.4,
+   "t": 0.88,
+   "polovinki_bps": [
+    129.0,
+    -9.8
+   ],
+   "syroy_bps": 58.4,
+   "verdikt": "KILLED",
+   "prichina": "t=0.88 < 2",
+   "status": "SAME_SIGN"
+  },
+  "nezavisimost": {
+   "KITY_M3": {
+    "korr": -0.28,
+    "nedel": 249,
+    "ok": true
+   },
+   "SYROY_RAZVOROT_7D": {
+    "korr": 0.88,
+    "nedel": 249,
+    "ok": false
+   }
+  },
+  "status": "KILL"
+ }
+}
