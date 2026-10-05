@@ -91,10 +91,11 @@ class Kontroller:
 def main():
     k = Kontroller(); zamok = k.fx / "kontroller.pid"
     if zamok.exists() and zamok.read_text().strip():
-        try:
-            os.kill(int(zamok.read_text()), 0); sys.exit("контроллер уже работает")
-        except (OSError, ValueError):
-            pass
+        import subprocess
+        pid = zamok.read_text().strip()
+        kmd = subprocess.run(["ps", "-p", pid, "-o", "command="], capture_output=True, text=True).stdout
+        if "kontroller.py" in kmd:                    # живой процесс именно контроллера (pid мог переиспользоваться)
+            sys.exit("контроллер уже работает")
     k.fx.mkdir(parents=True, exist_ok=True); zamok.write_text(str(os.getpid()))
     try:
         if "--cikl" in sys.argv:

@@ -1,0 +1,46 @@
+{
+ "id": "NOVYE_DENGI",
+ "prereg_sha256": "b49dcfc38522f022a7f6addc5bdac37228d32f0728f48f98d25e0015cb534ad6",
+ "rezultat": {
+  "PRIMARY": {
+   "n": 194,
+   "dney": 194,
+   "edge_bps": 43.0,
+   "t": 0.95,
+   "polovinki_bps": [
+    33.6,
+    52.5
+   ],
+   "syroy_bps": 43.0,
+   "verdikt": "KILLED",
+   "prichina": "t=0.95 < 2"
+  },
+  "REPLICATION": {
+   "n": 54,
+   "dney": 54,
+   "edge_bps": 2.0,
+   "t": 0.03,
+   "polovinki_bps": [
+    -23.6,
+    27.5
+   ],
+   "syroy_bps": 2.0,
+   "verdikt": "KILLED",
+   "prichina": "t=0.03 < 2",
+   "status": "SAME_SIGN"
+  },
+  "nezavisimost": {
+   "KITY_M3": {
+    "korr": 0.39,
+    "nedel": 248,
+    "ok": true
+   },
+   "SYROY_IMPULS_7D": {
+    "korr": 0.68,
+    "nedel": 248,
+    "ok": true
+   }
+  },
+  "status": "KILL"
+ }
+}
