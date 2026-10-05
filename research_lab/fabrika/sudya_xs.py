@@ -7,7 +7,9 @@
 Гарантии (проверяются ДО загрузки данных):
   * прогон только при замке и совпадении sha256 (правка JSON после заморозки → отказ);
   * повторный прогон запрещён: есть результат/квитанция в выходной папке или квитанция наследия (legacy_kvitanciya) → отказ;
-  * признаки — только из белого списка (никакого кода из JSON): metrics[i] (d−1), taker_share (d−1), ret_1d (d−1);
+  * признаки — только из белого списка (никакого кода из JSON): metrics[i] (d−1), taker_share (d−1), ret_1d (d−1),
+    ret_7d (закрытие d−1 к d−8), taker_7d (средняя доля тейкеров d−7…d−1), ost_ret7_taker7 (поперечный остаток ret_7d
+    после регрессии на taker_7d по монетам даты — «ход без потока», 05.10);
   * результат и квитанция пишутся один раз (sha256 prereg, данных и результата).
 Логика сделки = kity_sudya / kity_m3_sudya: PIT топ-N по OI d−1, ≥ min_istoriya баров, децили, удержание, фандинг,
 издержки, выход по последнему закрытию при исчезновении монеты, itog с t Ньюи–Уэста (лаг 1).
@@ -22,7 +24,7 @@ sys.path.insert(0, str(LAB))
 import discovery_paket1 as P  # noqa: E402
 
 DEN = 86_400_000
-PRIZNAKI = {"metrics", "taker_share", "ret_1d"}
+PRIZNAKI = {"metrics", "taker_share", "ret_1d", "ret_7d", "taker_7d", "ost_ret7_taker7"}
 OBYAZ = ("id", "dannye", "okna", "setka", "vselennaya", "priznak", "znak", "hold", "izderzhki_bps", "porogi")
 
 
@@ -124,6 +126,14 @@ def znachenie(pr, x, i, vch):
         return x["taker"].get(vch)
     if pr["tip"] == "ret_1d":
         return (x["c"][i - 1] / x["c"][i - 2] - 1) if x["ts"][i] - x["ts"][i - 1] == DEN else None
+    if pr["tip"] == "ret_7d":
+        return (x["c"][i - 1] / x["c"][i - 8] - 1) if x["ts"][i - 1] - x["ts"][i - 8] == 7 * DEN else None
+    if pr["tip"] == "taker_7d":
+        d0 = den(x["ts"][i]); v = [x["taker"].get((d0 - dt.timedelta(days=k)).isoformat()) for k in range(1, 8)]
+        return float(np.mean(v)) if all(z is not None for z in v) else None
+    if pr["tip"] == "ost_ret7_taker7":            # пара (ret_7d, taker_7d); остаток считается поперечно в nedelya
+        a, b = znachenie({"tip": "ret_7d"}, x, i, vch), znachenie({"tip": "taker_7d"}, x, i, vch)
+        return None if a is None or b is None else (a, b)
     raise Otkaz("признак вне белого списка")
 
 
@@ -143,10 +153,14 @@ def schitat(sp: dict, M: dict) -> dict:
             if i >= len(x["ts"]) or x["ts"][i] != ms(d) or i < min_ist:
                 continue
             z = znachenie(pr, x, i, vch)
-            if z is not None and np.isfinite(z):
+            if z is not None and (isinstance(z, tuple) or np.isfinite(z)):
                 rows.append((z, s, i))
         if len(rows) < min_m:
             return None
+        if pr["tip"] == "ost_ret7_taker7":
+            y = np.array([z[0] for z, _, _ in rows]); xx = np.array([z[1] for z, _, _ in rows])
+            A = np.vstack([np.ones(len(xx)), xx]).T; beta = np.linalg.lstsq(A, y, rcond=None)[0]
+            rows = [(float(y[k] - A[k] @ beta), s, i) for k, (_, s, i) in enumerate(rows)]
         rows.sort(); k = len(rows) // 10
         leg = [sdelka(M[s], i, hold, -znak, kom, data_do) for _, s, i in rows[:k]] + \
               [sdelka(M[s], i, hold, +znak, kom, data_do) for _, s, i in rows[-k:]]
