@@ -1,5 +1,19 @@
 # ATT1 execution research — October 4
 
+Latest ATT1 bounded heartbeat **October 5 21:10:24 UTC /October 6 00:10 Cyprus** —
+read `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_2110.md`/JSON first for ATT1.
+**14 sessions /7 gaps /1 verified clean ADA /0 held.** WLD is the new seventh gap;
+UNI is the previously unidentified sixth. Both journals record public polling
+continuity gaps; underlying cause NOT_CAPTURED, no clean exit credit. Same ADA
+exact deployed replay PASS/net-R−1.048963, not credited again. Probes RUNNING,
+original PIDs/NRestarts0, study/context/original source mapping/disk checks PASS.
+Deadline **Oct6 14:12:25 UTC /17:12 Cyprus** unchanged. Incremental transport
+frontier only04:30UTC Oct5, full48h analysis pending. Four future funding STARTs
+XMR/UNI/WLD/TRX alloutside8;0admitted policy comparisons. Actual packet BLOCKED_DATA,
+NEW orders OFF;2–3clean+actual inputs+fresh dossier+separate ownerGO unchanged.
+One new-trigger SSH query; no restart/deploy/broker/transport/policy write.
+Other tracks below retain their dated owner-closure facts, not reverified here.
+
 Latest bounded observation: **October5 15:14:03 UTC**. Read
 `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_1514.md`/JSON first:13sessions,
 6gaps,1verified clean; new gap identity/cause not captured, WLD held/protected14.8.
