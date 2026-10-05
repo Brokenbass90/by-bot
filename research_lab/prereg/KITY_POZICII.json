@@ -1,0 +1,49 @@
+{
+ "dannye": "binance_kity",
+ "setka": {
+  "ot": "2021-07-01",
+  "shag": 7
+ },
+ "vselennaya": {
+  "top": 50,
+  "oi_indeks": 4,
+  "min_monet": 30,
+  "min_istoriya": 60
+ },
+ "hold": 7,
+ "izderzhki_bps": 12,
+ "porogi": {
+  "t_nw": 2.0,
+  "min_nedel": 52
+ },
+ "data_do": "2026-09-30",
+ "okna": {
+  "PRIMARY": [
+   "2023-01-01",
+   "2026-09-23"
+  ],
+  "REPLICATION": [
+   "2021-07-01",
+   "2022-12-31"
+  ]
+ },
+ "id": "KITY_POZICII",
+ "priznak": {
+  "tip": "metrics",
+  "indeks": 1
+ },
+ "znak": 1,
+ "kontroli": [
+  {
+   "imya": "TOLPA",
+   "priznak": {
+    "tip": "metrics",
+    "indeks": 0
+   },
+   "znak": -1,
+   "porog_abs_korr": 0.5
+  }
+ ],
+ "legacy_kvitanciya": "data/binance_kity/KVITANCIYA.json",
+ "istochnik": "PREREG_KITY_POZICII_2026_10_03.md"
+}
