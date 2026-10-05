@@ -15,7 +15,8 @@ DAY_MS = 86_400_000
 FRESH_MS = 2000
 FIRST_UNSEEN = date(2026, 10, 8)
 _SHA = re.compile(r'[0-9a-f]{64}\Z')
-_SYMBOL = re.compile(r'[A-Z0-9_]{1,40}USDT\Z')
+# Preserve exact CJK venue identifiers in the frozen universe; no normalization.
+_SYMBOL = re.compile(r'[A-Z0-9_\u3400-\u4dbf\u4e00-\u9fff]{1,40}USDT\Z')
 _CAPTURE_FIELDS = {'venue','endpoint','params','request_ms','receive_ms','raw','sha256'}
 
 
@@ -194,11 +195,10 @@ def reconstruct_signal(bundle, now_ms):
         prospective=not late and d>=FIRST_UNSEEN
         reasons=[]
         if n<30:reasons.append('INSUFFICIENT_FEATURES')
-        elif k!=5:reasons.append('BLOCKED_BASKET_CONTRACT')
         if late:reasons.append('MISSED_PROSPECTIVE_ENTRY_BOUNDARY')
         if d<FIRST_UNSEEN:reasons.append('PRIOR_PERIOD_DIAGNOSTIC_ONLY')
         reasons.append('EXECUTION_EVIDENCE_REQUIRED')
-        return _result('BLOCKED_EXECUTION' if n<30 or k!=5 else 'BLOCKED_DATA',reasons,
+        return _result('BLOCKED_EXECUTION' if n<30 else 'BLOCKED_DATA',reasons,
             signal_valid=n>=30,prospective_eligible=prospective,evaluated_ms=now_ms,source_available_ms=max(received),
             prospective_eligibility_basis='INPUT_AVAILABILITY_ONLY_NOT_SEALED',
             frozen_signal=frozen,signal_hash=digest(frozen),source_bundle=bundle,census_basis='DECLARED_PUBLIC_POINT_SNAPSHOT_BEFORE_CUTOFF',
@@ -220,9 +220,10 @@ def _signal(signal):
         _fail('SOURCE_DECISION_MISMATCH')
     if s.get('research_ref')!=RESEARCH_REF or s.get('hold_days')!=7 or s.get('research_roundtrip_cost_bps')!=12:_fail('RESEARCH_REF_MISMATCH')
     longs=s.get('long');shorts=s.get('short')
-    if not isinstance(longs,list) or not isinstance(shorts,list) or len(longs)!=5 or len(shorts)!=5:_fail('BLOCKED_BASKET_CONTRACT')
     ratios=s.get('feature_ratios');values=s.get('feature_source_values');n=s.get('feature_count')
     if type(n) is not int or not 30<=n<=50 or s.get('decile_count')!=n//10 or not isinstance(ratios,dict) or len(ratios)!=n or not isinstance(values,dict) or set(values)!=set(ratios):_fail('FROZEN_BASKET_MISMATCH')
+    k=n//10
+    if not isinstance(longs,list) or not isinstance(shorts,list) or len(longs)!=k or len(shorts)!=k:_fail('BLOCKED_BASKET_CONTRACT')
     ordered=[]
     for symbol,value in ratios.items():
         if not isinstance(symbol,str) or not _SYMBOL.fullmatch(symbol) or isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not 0<=value<=1:_fail('FROZEN_BASKET_MISMATCH')
@@ -234,7 +235,7 @@ def _signal(signal):
     ordered.sort();k=n//10
     if longs!=[{'symbol':x,'taker':round(v,6)} for v,x in ordered[-k:]] or shorts!=[{'symbol':x,'taker':round(v,6)} for v,x in ordered[:k]]:_fail('FROZEN_BASKET_MISMATCH')
     legs=[(x['symbol'],1) for x in longs]+[(x['symbol'],-1) for x in shorts]
-    if len({s for s,_ in legs})!=10:_fail('AMBIGUOUS_BASKET')
+    if len({s for s,_ in legs})!=2*k:_fail('AMBIGUOUS_BASKET')
     return s,legs
 
 
@@ -367,7 +368,7 @@ def assess_execution(signal, execution, now_ms):
         return _result(reasons=reasons,public_checks_pass=True,venue=venue,signal_hash=signal['signal_hash'],intent_id=digest({'research_ref':RESEARCH_REF,'day':s['day'],'signal_hash':signal['signal_hash'],'venue':venue}),legs=legs,common_assessment_ms=now_ms,
             execution_bundle=execution,immutable_signal_seal_required=True,
             clock_uncertainty_ms=uncertainty,gross_notional_usdt=_text(gross),per_leg_reference_target_usdt=_text(target),
-            equal_notional_reference_floor_usdt=_text(max(minimum_targets)),basket_reference_floor_usdt=_text(max(minimum_targets)*10),
+            equal_notional_reference_floor_usdt=_text(max(minimum_targets)),basket_reference_floor_usdt=_text(max(minimum_targets)*len(legs)),
             weight_rounding_tolerance_approved=False,research_roundtrip_cost_bps=12,scenario_costs=cost_result,
             reference_exit_is_fill=False,source_authentication='HASH_CONSISTENCY_ONLY_NOT_BROKER_TRUTH')
     except EvidenceError as e:
@@ -471,7 +472,7 @@ def reconcile_paper_events(signal, events, prepared=None):
             elif kind in ('ENTRY_REJECT', 'PROTECTION_UNKNOWN'):
                 final.discard(symbol)
             elif kind == 'ROTATION':
-                if any(positions.values()) or len(final) != 10: _fail('PAPER_ROTATION_BEFORE_FINALITY')
+                if any(positions.values()) or len(final) != len(sides): _fail('PAPER_ROTATION_BEFORE_FINALITY')
             else: _fail('UNKNOWN_PAPER_EVENT')
             seen[eid] = pin
         current_event = None
@@ -479,7 +480,7 @@ def reconcile_paper_events(signal, events, prepared=None):
         error = str(exc)
     except (KeyError, TypeError, ValueError, InvalidOperation, AttributeError, OverflowError):
         error = 'MALFORMED_PAPER_EVIDENCE'
-    exposure_reconciled = not error and len(final) == 10 and all(value == 0 for value in positions.values())
+    exposure_reconciled = not error and bool(sides) and len(final) == len(sides) and all(value == 0 for value in positions.values())
     intended_complete = bool(expected) and all(entries[symbol] == expected[symbol] for symbol in expected)
     complete = exposure_reconciled and intended_complete
     reasons = ['SYNTHETIC_ONLY_NOT_PROSPECTIVE_OR_BROKER_TRUTH']

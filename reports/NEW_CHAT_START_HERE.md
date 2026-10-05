@@ -1,5 +1,45 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+Latest owner closure **October5** — read `CODEX_AVAILABILITY_HANDOFF_2026_10_05.md`,
+`KITY_M3_CARDINALITY_CLOSURE_2026_10_05.md`/JSON and updated KITY RUNBOOK first.
+**KITY local orders-OFF corrected to frozen k=n//10, k3..5 /6–10 legs, no padding.**
+251 vectors PASS (216*k4/35*k5), same blob97493bb/28e4b48;8dp feature parity via
+synthetic wires, NOT raw historic OI/candle replay/net edge. Exact CJK names retained.
+Originald6ed812 research/hold/costs unchanged; latest researchorigin8c83196 verified.
+380targetedPASS (KITY369+ETS11); full3893PASS/57exact baselineFAIL, no new failures,
+full collected beforeETS11. One bounded KITY review approved; distinct ETS reviewer
+found source terminal-duplicate issue, fixed RED/GREEN by primary. Routing verified.
+No KITY credential/sender/deployment or Oct8 slot seal. Production BLOCKED_DATA;
+actual unseen raw basket/accountfees/cash/mode/caps/funding/unwind/finality/ownerGO
+still required. $100/$1000 are examples, not approvedcaps. Oct15 earliest candidate,
+Oct22 alternative only if gates pass; no early directional short-stop retune.
+
+**Alpaca last broker verification Oct5 13:40:53UTC**: CRWD/META fully protected
+DAY, AMDgross+$2.374819327244 NET_FINALITY_PENDING, one NEW manager, caps unchanged.
+Monthly automatic selection/BUY exists; no immediate AMD replacement. NextP0Oct6
+13:30UTC/16:30Cyprus re-arm+fee check; PAPER queued fractionalDAY NOT_PROVEN.
+No LIVE writes/restarts or new broker verification in this closure.
+
+**ATT1 latest bounded query Oct5 15:14UTC**:13sessions/6gaps/1verifiedcleanADA
+(net-R−1.048963)/WLDheld-protected14.8. Newgapidentity/causeNOT_CAPTURED; no2ndSSH.
+Originalprobe/PID/NRestarts/source mapping/disk checksPASS; absoluteOct6 14:12:25UTC
+termination unchanged. Incremental capture analysis stillpending;3futureSTARTs
+alloutside8,0admitted fundingcomparisons. Read ATT1 progress1514 MD/JSON; never reset
+probes or relax2s/risk/hold/moneygate2–3clean+actualdossier+freshseparateownerGO.
+
+**ETS2M ARMED_LOCAL_ONE_SHOT PID46460**, noCodexAPI/cron/launchd, dueOct10 19UTC/22Cyprus.
+Original ignored evaluator/config/strategy match saved epoch; frozenfirst900/fullSHA
+manifest bound. No outcomes opened or real evaluator run early. Sourceparity and
+all-terminal gates precede unchanged isolatedjudge; drift/conflicts/missingdataBLOCKED.
+Mac must remainpowered/awake; noautomatic restart. Completion is research-only,
+notPASS/READY: firstwindowPASS only admits disjoint second900. Read ETS2M handoff,
+manifest and armreceipt; terminal lives in private runtime. Claude checkout untouched.
+
+Future design/backlog only: `FUTURE_TRADING_OS_ROADMAP_2026_10_05.md` (Alpacaanalytics/
+gatedscaling, independent sleeves/Governor, Factory, personalAI/contentfactory).
+ForeignallowlistSHAadd587f1…f19a1 preservedunstaged. Continue currentHEAD, do not
+restart completedTasks1–4. Previous blocks below are historical snapshots.
+
 Latest owner-approved implementation cycle **October5, local delivery 15:06:42UTC** — read
 `KITY_M3_ORDERS_OFF_DELIVERY_2026_10_05.md`/JSON and its RUNBOOK first.
 **KITY_M3 IMPLEMENTED_LOCAL_ORDERS_OFF; production BLOCKED_DATA, no money/sender/credentials.**

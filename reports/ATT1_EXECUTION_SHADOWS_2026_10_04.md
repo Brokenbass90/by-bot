@@ -1,5 +1,12 @@
 # ATT1 execution research — October 4
 
+Latest bounded observation: **October5 15:14:03 UTC**. Read
+`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_1514.md`/JSON first:13sessions,
+6gaps,1verified clean; new gap identity/cause not captured, WLD held/protected14.8.
+Both probes/source mapping/production PIDs unchanged; originalOct6 deadline.
+Three future funding STARTs,0admitted comparisons. No second query or LIVE change.
+The following progress/startup blocks are historical snapshots.
+
 Progress update **October 5 08:19:42 UTC**: read
 `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_0819.md` and JSON first.
 **ADA is the first verified clean filled public terminal, simulated net-R −1.048963.**

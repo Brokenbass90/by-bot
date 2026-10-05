@@ -93,3 +93,12 @@ PIDs/state/source pins and public-only authority; no restart/extension for KITY.
 ATT1 admission/risk/hold/fees/2s/live transport and 2–3 clean terminal gate stay
 frozen. Alpaca remains the existing LIVE sleeve: do not re-activate or add another
 manager. DAY re-arm and delayed terminal fees remain operational followups.
+
+October5 closure amendment: owner approved the exact frozen KITY2k execution
+contract (k=n//10,3..5) and251 signal-only vectors. Read the latest availability
+handoff/cardinality closure; no ten-leg padding and no repeatedTasks1–4.
+ETS2M one-shot evaluator is armed locally forOctober10 19UTC with source/cohort
+pins, isolated unchanged judge and source parity; do not start a second job,
+read outcomes early, alter its manifest or infer strategyPASS from exit0.
+Preserve the original ATT1 deadline and Alpaca state. Future roadmap is backlog
+only; examples$100/$1000 remain unapproved caps and NEW ordersOFF.

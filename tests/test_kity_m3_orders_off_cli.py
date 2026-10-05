@@ -201,13 +201,14 @@ def test_compare_forward_accepts_declared_date_and_core_frozen_signal_shape(tmp_
     assert "FORWARD_DAY_MISMATCH" not in result["reasons"]
 
 
-def test_compare_forward_consumes_current_claude_syroe_schema_but_blocks_unprovenance(tmp_path, monkeypatch):
+@pytest.mark.parametrize('n',[30,40,50])
+def test_compare_forward_consumes_current_claude_syroe_schema_but_blocks_unprovenance(tmp_path, monkeypatch,n):
     module = api()
     core_spec = importlib.util.spec_from_file_location("kity_m3_core_fixture_forward", ROOT / "tests" / "test_kity_m3_orders_off.py")
     assert core_spec is not None and core_spec.loader is not None
     core_fixture = importlib.util.module_from_spec(core_spec)
     core_spec.loader.exec_module(core_fixture)
-    local = core_fixture.api("reconstruct_signal")(core_fixture.bundle(), core_fixture.NOW)
+    local = core_fixture.api("reconstruct_signal")(core_fixture.bundle(n), core_fixture.NOW)
     monkeypatch.setattr(module, "_reconstruct_signal", lambda *_: local)
     frozen = local["frozen_signal"]
     syroe = tmp_path / "syroe"
@@ -232,6 +233,7 @@ def test_compare_forward_consumes_current_claude_syroe_schema_but_blocks_unprove
     assert result["basket_comparison"]["matches"] is True
     assert "FORWARD_RESEARCH_REF_MISSING" in result["reasons"]
     assert "RAW_WIRE_PROVENANCE_MISSING" in result["reasons"]
+    assert "FORWARD_BASKET_INCOMPLETE" not in result["reasons"]
 
 
 @pytest.mark.parametrize("bad_path", ["../outside.json", "nested/file.json", "/absolute.json"])
@@ -482,3 +484,22 @@ def test_review_cli_standalone_uses_pure_core_without_project_pythonpath(tmp_pat
     assert result.returncode==0,result.stderr
     output=json.loads(result.stdout)
     assert output['orders_allowed'] is False and output['status']=='BLOCKED_DATA'
+
+
+@pytest.mark.parametrize('symbol',['币安人生USDT','龙虾USDT'])
+def test_public_capture_preserves_unicode_venue_symbols_exactly(monkeypatch,symbol):
+    module=api();requests=[]
+    def fake_open(request,*,timeout):
+        requests.append(request.full_url)
+        return _Response(b'[]',request.full_url)
+    monkeypatch.setattr(module,'_open_public',fake_open)
+    result=module.get_public('binance','/futures/data/openInterestHist',{'symbol':symbol,'period':'5m','endTime':1000,'limit':10})
+    from urllib.parse import parse_qs,urlparse
+    assert result['params']['symbol']==symbol
+    assert parse_qs(urlparse(requests[0]).query)['symbol']==[symbol]
+
+
+@pytest.mark.parametrize('symbol',['币安人生USDT/../','龙虾USDT\n','btcusdt','币安 人生USDT'])
+def test_public_capture_rejects_symbol_path_controls_and_whitespace(symbol):
+    with pytest.raises(ValueError):
+        api().get_public('binance','/futures/data/openInterestHist',{'symbol':symbol,'period':'5m','endTime':1000,'limit':10})

@@ -1,0 +1,305 @@
+{
+  "schema_id": "att1_execution_probe_progress_20261005_v1",
+  "observed_utc": "2026-10-05 15:14:03 UTC",
+  "observed_ms": 1791213243940,
+  "query_receipt": ".private/att1_execution_shadows_20261004/heartbeat_20261005T151116.json",
+  "query_sha256": "86d09ba6a20c98f9bd58ee3bdca97236b8da2a3056b2222b3700b2f8a6b347aa",
+  "ssh_queries": 1,
+  "read_only": true,
+  "orders_allowed": false,
+  "money_ready": false,
+  "integrity": {
+    "manifest_matches": true,
+    "original_manifest_mapping_matches": true,
+    "context_matches": true
+  },
+  "production": {
+    "bybot": {
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "original_pid_matches": true
+    },
+    "trading-journal-web": {
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "original_pid_matches": true
+    },
+    "att1-lifecycle-zero-risk-v2": {
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "original_pid_matches": true
+    }
+  },
+  "public_driver_sha256": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+  "disk_free_bytes": 39979175936,
+  "probes": {
+    "transport": {
+      "status": "RUNNING",
+      "pid": "1676226",
+      "nrestarts": "0",
+      "deadline_ms": 1791295945311,
+      "study_sha256_matches": true,
+      "heartbeat_age_ms": 1763,
+      "capture_total_bytes": 1919469678,
+      "within_disk_cap": true
+    },
+    "funding": {
+      "status": "RUNNING",
+      "pid": "1676227",
+      "nrestarts": "0",
+      "deadline_ms": 1791295945515,
+      "study_sha256_matches": true,
+      "heartbeat_age_ms": 7482,
+      "capture_total_bytes": 3482,
+      "within_disk_cap": true
+    }
+  },
+  "public_lifecycle": {
+    "as_of_ms": 1791213243862,
+    "sessions": 13,
+    "gaps": 6,
+    "clean_filled_terminals": 1,
+    "held": [
+      {
+        "symbol": "WLDUSDT",
+        "held_qty": "74/5",
+        "protected_qty": "74/5",
+        "incidents": []
+      }
+    ]
+  },
+  "previous_gap_count": 5,
+  "new_gap_count": 1,
+  "new_gap_identity_cause": "NOT_CAPTURED_IN_THIS_BOUNDED_QUERY; no second SSH; next recipe retains gap session IDs",
+  "verified_clean_count": 1,
+  "verified_clean_decisions": [
+    {
+      "decision_id": "0f495bfefe236160aa3d561eb65dcb5aba1bafffbe492c21c172d698672f8477",
+      "symbol": "ADAUSDT",
+      "final_net_r": "-1284979741/1225000000"
+    }
+  ],
+  "new_clean_decisions": [],
+  "clean_oracle_status": "PASS",
+  "existing_clean_not_recredited": true,
+  "transport_batch": {
+    "counts": {
+      "ws_book": 361328,
+      "ws:FRESH": 361328,
+      "raw_hash_verified": 371086,
+      "raw_projection_verified": 371086,
+      "rest_book": 9758,
+      "rest:FRESH": 9750,
+      "ws_trade": 14077,
+      "rest:STALE": 8,
+      "rest:REPEATED_CTS_SEQ": 7,
+      "rest:STALE_AT_SERVER_TIMESTAMP": 7,
+      "rest:STALE_WITH_CAUSAL_WS_FRESH": 2,
+      "rest:CTS_STALE_TS_FRESH": 1
+    },
+    "first_received_ms": 1791156192226,
+    "last_received_ms": 1791165958286,
+    "metrics": {
+      "rest": {
+        "receipt_cts_age_ms": {
+          "p50": 251,
+          "p99": 1122,
+          "max": 3038
+        },
+        "use_delay_ms": {
+          "p50": 1,
+          "p99": 6,
+          "max": 188
+        },
+        "use_cts_age_ms": {
+          "p50": 252,
+          "p99": 1123,
+          "max": 3039
+        }
+      },
+      "ws": {
+        "receipt_cts_age_ms": {
+          "p50": 91,
+          "p99": 130,
+          "max": 729
+        },
+        "use_delay_ms": {
+          "p50": 0,
+          "p99": 1,
+          "max": 101
+        },
+        "use_cts_age_ms": {
+          "p50": 91,
+          "p99": 131,
+          "max": 730
+        }
+      }
+    },
+    "samples": [
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791165163271,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 3038,
+          "received_ms": 1791165166309,
+          "seq": 298049106191,
+          "server_time": 1791165166227,
+          "symbol": "SEIUSDT",
+          "ts": 1791165163716,
+          "u": 20691346,
+          "use_cts_age_ms": 3039,
+          "use_delay_ms": 1,
+          "used_ms": 1791165166310
+        },
+        "ws": {
+          "connection": 2,
+          "cts": 1791165165511,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 93,
+          "received_ms": 1791165165604,
+          "seq": 298049111140,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791165165522,
+          "u": 57857113,
+          "use_cts_age_ms": 94,
+          "use_delay_ms": 1,
+          "used_ms": 1791165165605
+        },
+        "source_pin": {
+          "file": "capture-497545.jsonl.gz",
+          "compressed_offset": 68357106,
+          "member_end": 68358349,
+          "record_sha256": "d1a4349990c03d5593516478093444e95dcf78107046fb62eb04811e8b9b8dc5"
+        },
+        "raw_sha256": "54bfc65c28b66364ac37bab0ceb086e7dc84943a9f11dfcd1af56d6c6a75c302",
+        "cache_root_cause_proven": false,
+        "rest_minus_ws_seq": -4949
+      },
+      {
+        "classification": "REST_CTS_STALE_WITH_EARLIER_RECEIVED_WS_CTS_FRESH",
+        "projection": {
+          "cts": 1791165528328,
+          "freshness": "STALE",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 2384,
+          "received_ms": 1791165530712,
+          "seq": 298049976914,
+          "server_time": 1791165530628,
+          "symbol": "SEIUSDT",
+          "ts": 1791165528516,
+          "u": 20692298,
+          "use_cts_age_ms": 2385,
+          "use_delay_ms": 1,
+          "used_ms": 1791165530713
+        },
+        "ws": {
+          "connection": 2,
+          "cts": 1791165530587,
+          "freshness": "FRESH",
+          "orders_allowed": false,
+          "quiet_book_proven": false,
+          "receipt_cts_age_ms": 97,
+          "received_ms": 1791165530684,
+          "seq": 298049981510,
+          "server_time": null,
+          "symbol": "SEIUSDT",
+          "ts": 1791165530602,
+          "u": 57859609,
+          "use_cts_age_ms": 97,
+          "use_delay_ms": 0,
+          "used_ms": 1791165530684
+        },
+        "source_pin": {
+          "file": "capture-497545.jsonl.gz",
+          "compressed_offset": 74049590,
+          "member_end": 74050835,
+          "record_sha256": "6d5f580be089e44f2c3ea10ebfba69bbeacf5ed003d6a217266e83f232351d39"
+        },
+        "raw_sha256": "bceead4db954541240f0fb825510d420ea85617a1b9bca9a709dddd7f4657e85",
+        "cache_root_cause_proven": false,
+        "rest_minus_ws_seq": -4596
+      }
+    ],
+    "diagnostic_events": [],
+    "capture_population_complete": false,
+    "root_cause_cache_or_quiet_proven": false
+  },
+  "analysis_bounds": {
+    "transport": {
+      "reason": "BOUNDED_BATCH",
+      "file": "capture-497546.jsonl.gz",
+      "next_compressed_offset": 6037504,
+      "snapshot_bytes": 79897513,
+      "processed_rows": 385163
+    },
+    "funding": {
+      "reason": "ALL_SNAPSHOT_MEMBERS",
+      "processed_rows": 4
+    }
+  },
+  "cumulative_transport_counts": {
+    "process_start": 1,
+    "rest_book": 42767,
+    "rest:FRESH": 42732,
+    "raw_hash_verified": 1796620,
+    "ws_connect": 2,
+    "ws_book": 1753853,
+    "ws:FRESH": 1753853,
+    "ws_control": 2,
+    "ws_trade": 95377,
+    "rest:STALE": 35,
+    "rest:REPEATED_CTS_SEQ": 27,
+    "rest:STALE_AT_SERVER_TIMESTAMP": 29,
+    "rest:STALE_WITH_CAUSAL_WS_FRESH": 23,
+    "rest:FRESH_RECEIVE_STALE_USE": 2,
+    "ws_quiet_timeout": 1,
+    "ws_disconnect": 1,
+    "raw_projection_verified": 371086,
+    "rest:CTS_STALE_TS_FRESH": 1
+  },
+  "analysis_cursor_file": "capture-497546.jsonl.gz",
+  "analysis_cursor_offset": 6037504,
+  "funding": {
+    "unique_future_start_count": 3,
+    "new_source_pins": [
+      {
+        "file": "8ee1e6307afda5591163c7c4641feaf6f0338df29e0d99c5e343121d1dfa816b.jsonl",
+        "status": "OUTSIDE_EXECUTION_ADMISSION",
+        "source_pin": {
+          "device": 64769,
+          "inode": 3146496,
+          "prefix_bytes": 1732,
+          "prefix_sha256": "21768ad49c65d3230c59d8b8c3420f13b8c87aca419710285eca36e19c8bb820"
+        },
+        "capture_pin": {
+          "file": "capture-497554.jsonl.gz",
+          "compressed_offset": 0,
+          "member_end": 1132,
+          "record_sha256": "a6340d518ce7945f01d85af8dfd78c11328bad04e462519ca47bef15096504da"
+        },
+        "symbol": "WLDUSDT",
+        "submit_ms": 1791194529070,
+        "orders_allowed": false
+      }
+    ],
+    "admitted_comparisons": 0,
+    "status": "INSUFFICIENT_EVENTS",
+    "candidate_money_ready": false,
+    "raw_sizing_and_date_fees_are_not_actual_account_truth": true
+  },
+  "study_complete": false,
+  "heartbeat_should_remain_active": true,
+  "money_gate": "2\u20133 clean filled prospective terminals/net-R + actual-account inputs + fresh exclusive dossier + separate owner GO",
+  "claude_kity_ai_alpaca_changed": false,
+  "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}

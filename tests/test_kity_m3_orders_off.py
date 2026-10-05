@@ -51,8 +51,8 @@ def rewrap(c,data):return cap(c['venue'],c['endpoint'],data,c['params'],c['recei
 def sig(n=50):return api('reconstruct_signal')(bundle(n),NOW)
 
 
-def execution(venue='BINANCE',now=NOW):
-    s= sig()['frozen_signal'];symbols=[x['symbol'] for x in s['long']+s['short']]
+def execution(venue='BINANCE',now=NOW,n=50):
+    s= sig(n)['frozen_signal'];symbols=[x['symbol'] for x in s['long']+s['short']]
     e={'venue':venue,'clock_uncertainty_ms':0,'per_leg_notional_usdt':'100','max_gross_notional_usdt':'1000','books':{}}
     instruments=[]
     for symbol in symbols:
@@ -77,10 +77,10 @@ def test_valid_fifty_reconstructs_exact_frozen_basket_without_money():
 
 
 @pytest.mark.parametrize('n,k',[(30,3),(40,4)])
-def test_smaller_frozen_deciles_are_emitted_and_block_ten_leg_contract(n,k):
+def test_smaller_frozen_deciles_are_accepted_without_padding(n,k):
     r=sig(n);assert r['signal_valid'] is True
     assert len(r['frozen_signal']['long'])==len(r['frozen_signal']['short'])==k
-    assert r['status']=='BLOCKED_EXECUTION' and 'BLOCKED_BASKET_CONTRACT' in r['reasons']
+    assert r['status']=='BLOCKED_DATA' and 'BLOCKED_BASKET_CONTRACT' not in r['reasons']
 
 
 @pytest.mark.parametrize('change,reason',[
@@ -275,13 +275,13 @@ def test_review_nonfinite_volume_anywhere_in_required_history_blocks():
     b=bundle();s=next(iter(b['klines']));c=b['klines'][s];rows=json.loads(c['raw']);rows[0][7]='NaN';b['klines'][s]=rewrap(c,rows)
     assert not api('reconstruct_signal')(b,NOW)['signal_valid']
 
-def paper_context():
-    s=sig();p=api('assess_execution')(s,execution(),NOW)
+def paper_context(n=50):
+    s=sig(n);p=api('assess_execution')(s,execution(n=n),NOW)
     identity={'day':s['frozen_signal']['day'],'signal_hash':s['signal_hash'],'venue':p['venue'],'intent_id':p['intent_id'],'prepared_digest':api('digest')(p)}
     return s,p,identity
 
-def paper_events():
-    s,p,identity=paper_context();events=[]
+def paper_events(n=50):
+    s,p,identity=paper_context(n);events=[]
     for i,l in enumerate(p['legs']):
         for kind in ('ENTRY_FILL','EXIT_FILL'):
             events.append({**identity,'event_id':f'{kind}{i}','kind':kind,'symbol':l['symbol'],'execution_id':f'{kind}{i}','qty':l['quantity'],'price':'100' if kind=='ENTRY_FILL' else '102','fee_usdt':'0.01'})
@@ -346,3 +346,35 @@ def test_review_malformed_preparation_keeps_explicit_blocked_outcome():
     s,p,_=paper_events();p['legs'][0]['quantity']=float('nan')
     r=api('reconcile_paper_events')(s,[],p)
     assert r['status']=='BLOCKED_DATA' and not r['terminal_complete']
+
+
+@pytest.mark.parametrize('n,k',[(30,3),(39,3),(40,4),(49,4),(50,5)])
+@pytest.mark.parametrize('venue',['BINANCE','BYBIT'])
+def test_variable_basket_execution_floor_and_no_padding(n,k,venue):
+    r=api('assess_execution')(sig(n),execution(venue,n=n),NOW)
+    assert r['public_checks_pass'] is True
+    assert len(r['legs'])==2*k
+    assert Decimal(r['basket_reference_floor_usdt'])==Decimal(r['equal_notional_reference_floor_usdt'])*(2*k)
+    assert r['money_ready'] is False and r['orders_allowed'] is False
+
+
+@pytest.mark.parametrize('n', [30,40,50])
+def test_variable_basket_exact_finality_and_rotation(n):
+    s,p,events=paper_events(n)
+    assert len(events)==3*(2*(n//10))
+    rotation={**events[-1], 'event_id':'rotate','kind':'ROTATION'}
+    r=api('reconcile_paper_events')(s,events+[rotation],p)
+    assert r['terminal_complete'] is True and r['synthetic_only'] is True
+    incomplete=api('reconcile_paper_events')(s,events[:-1]+[rotation],p)
+    assert incomplete['terminal_complete'] is False
+    assert 'PAPER_ROTATION_BEFORE_FINALITY' in incomplete['reasons']
+
+
+@pytest.mark.parametrize('n',[30,40])
+def test_variable_basket_missing_or_stale_leg_blocks_whole_basket(n):
+    s=sig(n);e=execution(n=n);symbol=s['frozen_signal']['long'][-1]['symbol']
+    missing=deepcopy(e);del missing['books'][symbol]
+    assert 'BOOK_CENSUS_INCOMPLETE' in api('assess_execution')(s,missing,NOW)['reasons']
+    raw=json.loads(e['books'][symbol]['raw']);raw['T']=NOW-2001
+    e['books'][symbol]=rewrap(e['books'][symbol],raw)
+    assert 'COMMON_BASKET_FRESHNESS' in api('assess_execution')(s,e,NOW)['reasons']

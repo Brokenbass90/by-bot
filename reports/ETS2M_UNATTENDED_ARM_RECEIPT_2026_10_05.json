@@ -1,0 +1,26 @@
+{
+  "status": "ARMED_LOCAL_ONE_SHOT",
+  "pid": 46460,
+  "due_utc": "2026-10-10T19:00:00Z",
+  "due_cyprus": "2026-10-10 22:00",
+  "schedule": {
+    "armed_ms": 1791228912638,
+    "due_ms": 1791658800000,
+    "manifest_sha256": "f2edf705fabaa3720b13a000621366baf4ba6823e13e51749c707bbeec91f603",
+    "pid": 46460
+  },
+  "writer_lock_held": true,
+  "codex_api_required": false,
+  "cron_or_launchd_installed": false,
+  "outcomes_read_before_due": false,
+  "terminal_evaluator_not_yet_run": true,
+  "source_writes": false,
+  "money_ready": false,
+  "orders_allowed": false,
+  "script_sha256": "1833de217dfc71d0cb36b31fbd1c5f8dfc0ef5f4e567aa64fbf2087ac4c2d8ab",
+  "limitations": [
+    "Mac must remain powered and awake; process restart/logout may terminate the job",
+    "source/cohort drift or missing/conflicting data produces BLOCKED_DATA",
+    "evaluator completion is not strategy PASS; frozen second900 window still required"
+  ]
+}

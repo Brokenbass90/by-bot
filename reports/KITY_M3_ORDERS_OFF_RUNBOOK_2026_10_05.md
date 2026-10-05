@@ -44,9 +44,9 @@ not proof reconstructed from today's active list. Ambiguous relevant listing
 status, incomplete OI, a missing exact point or malformed candles block the
 decision. Do not substitute 23:50, rank only successful replies, pad smaller
 deciles or change the source to obtain ten names. Frozen n//10 gives 3/4/5 names
-per side for n=30/40/50; the requested ten-leg execution path rejects 3+3 or 4+4.
+per side for n=30/40/50. Owner-approved October5 correction accepts exact6/8/10 legs; no padding. See KITY_M3_CARDINALITY_CLOSURE_2026_10_05.md/JSON.
 
-The execution bundle contains `venue`, `instruments`, exactly ten `books`,
+The execution bundle contains `venue`, `instruments`, exactly2k `books`,
 `clock_uncertainty_ms`, `per_leg_notional_usdt`, `max_gross_notional_usdt`, optional
 Binance `funding_info`, and optional `scenario_costs`. Sizing numbers are explicit
 diagnostic proposals, not authenticated account caps. Quantity floors to the
@@ -55,7 +55,7 @@ minimum ceilings are labelled NOT_ADMITTED_QUANTITY. The reference target is
 not a hard per-leg cash or loss cap; measured VWAP and rounding residuals are
 reported and real policy/tolerance remain unknown.
 
-Assess all ten books at one retained clock. Binance matching timestamp T and
+Assess all2k books at one retained clock. Binance matching timestamp T and
 Bybit CTS are required; publication ts or quiet-market claims cannot replace
 them. Source age plus supported declared clock uncertainty and receive-to-use
 age must fit the unchanged 2000ms gate. Current instruments/funding metadata

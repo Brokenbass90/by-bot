@@ -27,7 +27,7 @@ BODY_MAX_BYTES = 2 * 1024 * 1024
 TIMEOUT_SECONDS = 10
 _HEX64 = re.compile(r"[0-9a-f]{64}")
 _IDENTITY = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}")
-_SYMBOL = re.compile(r"[A-Z0-9]{2,40}")
+_SYMBOL = re.compile(r"[A-Z0-9_\u3400-\u4dbf\u4e00-\u9fff]{2,44}")
 _DAY = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 PINNED_RESEARCH_REF = "d6ed8126c041969de0bc6191e39fefe4a1272d5b"
 PURE_CORE_PATH = REPO_ROOT / "bot" / "kity_m3_orders_off.py"
@@ -370,7 +370,7 @@ def compare_forward(bundle: dict[str, Any], forward_dir: Path | str, now_ms: int
             "external": external_basket,
             "local": local_basket,
         }
-        if len(external_basket) != 10:
+        if not local.get("signal_valid") or len(external_basket) != len(local_basket):
             reasons.append("FORWARD_BASKET_INCOMPLETE")
         if not comparison["matches"]:
             reasons.append("FORWARD_BASKET_MISMATCH")

@@ -1,0 +1,19 @@
+{
+  "schema_id": "ets2m_unattended_v1",
+  "source_root": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28",
+  "due_utc": "2026-10-10T19:00:00Z",
+  "pins": {
+    "research_lab/yadro.py": "b413a48f67158ccb4a69c769bb1114065468a9610eace7d367400555d4821b66",
+    "research_lab/vnutri.py": "6fa0e19fff3d24abf2c4e30351494890e7f9d0ba17217d67a83747f49a989b68",
+    "strategies/elder_triple_screen_v2.py": "6439db1f9df4f7285c3211802cb15abc5d0bb8450a60d3b78a3a7be2093e982a",
+    "research_lab/PREREG_TRI_TENI_2026_09_15.md": "51e2a1721ad2af303e676dcd03444476683018f2dcea60abb20e04b5f75ac352",
+    "research_lab/data/yadro/ETS2M/epoha.json": "e72e675e747b54e8432147d490733685d0ff385e55a1ee2f4e36b156c6e48422"
+  },
+  "config_sha256": "4b461ab97e44daf52e09a191992a1a7addff0ad36ada83e83e77d12aca566973",
+  "cohort_sha256": "0bcea9a398bac4af4509406a1e3ea5d67cafddd5d757935460422eb7c448a718",
+  "cohort_count": 900,
+  "cohort_last_signal_ms": 1790290800000,
+  "origin_ref_verified": "8c83196fbde55a96c7ebbef986f0b34aa566465f",
+  "source_status": "local untracked code bound to original epoch hashes; not a committed evaluator",
+  "orders_allowed": false
+}

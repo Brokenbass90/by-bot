@@ -1,5 +1,12 @@
 # KITY M3: frozen signal → execution evidence, orders OFF
 
+October5 owner-approved compatibility amendment: execution accepts the exact
+frozen2k basket, k=n//10 in3..5, with no padding. This supersedes the historical
+ten-leg restriction below. Common2s freshness, per-leg minimum/depth/cost,
+idempotency and finality apply to all actual6–10 legs. Research remains immutable.
+See reports/KITY_M3_CARDINALITY_CLOSURE_2026_10_05.md and the251-vector receipt.
+
+
 Status: owner approved for implementation October5; isolated local orders-OFF candidate delivered. Separate money authority is absent.
 Owner intent (October 5): after Alpaca re-arm, build the smallest useful KITY execution candidate before the first unseen October 8 signal. Use Claude's frozen research, preserve ATT1 probes, avoid broad merges or Factory rewrites. Success is reproducible execution readiness or a precise blocker, not a promised LIVE date.
 
