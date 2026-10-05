@@ -226,5 +226,29 @@
  {
   "semya": "PM2_POLY_MONOTONNOST",
   "prichina": "03.10: 0 нарушений за 3 дня / 792 круга лестниц v5"
+ },
+ {
+  "semya": "TOLPA_XS",
+  "prichina": "Binance 2021-22 репликация FAIL 04.10 (L1 и 1D)"
+ },
+ {
+  "semya": "KITY_POZICII",
+  "prichina": "позиции топ-трейдеров: PnL FAIL 04.10"
+ },
+ {
+  "semya": "REZHIMNYY_CARRY",
+  "prichina": "carry по режиму фандинга: ON 8.8%, 1.29% на капитал, KILL 05.10"
+ },
+ {
+  "semya": "TERM_STRUCTURE",
+  "prichina": "пачка 3 T1–T3"
+ },
+ {
+  "semya": "BASIS_SPOT_PERP",
+  "prichina": "пачка 2 D4/D5"
+ },
+ {
+  "semya": "POLY_MONOTONNOST",
+  "prichina": "PM2 NOT_EXECUTABLE 03.10"
  }
 ]

@@ -1,0 +1,7 @@
+{
+ "_opisanie": "Реестр для digest.py. teni — живые процессы, их тишина = тревога. arhivy — замороженные исторические наборы (отставание не тревожит). Прочие логи: в digest, только если менялись за 48 ч.",
+ "teni": {"ten_ETS2S.log": 180, "ten_ATT1.log": 180, "ten_SILA.log": 240, "yadro_ETS2M.log": 180, "poly/snimki.log": 120,
+          "../../runtime/funding_positioning_dynamic_shadow_state.json": 180,
+          "../../runtime/funding_positioning_post_n42_frozen_state.json": 180},
+ "arhivy": ["binance", "binance_kity"]
+}
