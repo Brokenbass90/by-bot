@@ -1,0 +1,44 @@
+{
+ "taker_sha256": "9a8e5f518cff769317516a81b2491c58ca397a63688c5b1040ef1248c830cd52",
+ "manifest_kity_sha256": "3d78370f67f7cef08bd2ddd27116a8d2e58e4f4c08de513854defdbdf447bf98",
+ "rezultat_sha256": "e9fb53efe3eee2f4447d85371ade0f6dca7aac2a12858321e419961ffcc8ba07",
+ "rezultat": {
+  "prereg": "PREREG_KITY_M3_POTOK_2026_10_04.md",
+  "kogda": "2026-10-05T04:27:01+00:00",
+  "PRIMARY": {
+   "n": 194,
+   "dney": 194,
+   "edge_bps": 103.2,
+   "t": 2.59,
+   "polovinki_bps": [
+    23.4,
+    183.1
+   ],
+   "syroy_bps": 103.2,
+   "verdikt": "SURVIVED",
+   "prichina": "t≥2, обе половины > 0, сырой доход > 0"
+  },
+  "REPLICATION": {
+   "n": 57,
+   "dney": 57,
+   "edge_bps": 74.4,
+   "t": 1.18,
+   "polovinki_bps": [
+    111.8,
+    38.3
+   ],
+   "syroy_bps": 74.4,
+   "verdikt": "KILLED",
+   "prichina": "t=1.18 < 2",
+   "status": "SAME_SIGN"
+  },
+  "nezavisimost": {
+   "korr_s_TOLPA": 0.33,
+   "nedel_t": 248,
+   "korr_s_impulsom_1d": 0.34,
+   "nedel_i": 251,
+   "ok": true
+  },
+  "status": "HISTORICAL_REPLICATION_PASS → READY_FOR_BUILD (пакет Codex)"
+ }
+}
