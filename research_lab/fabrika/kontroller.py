@@ -38,6 +38,27 @@ class Kontroller:
         self.slot_f = self.fx / "SLOT.json"; self.zh = self.fx / "zhurnal.jsonl"; self.och = self.fx / "ochered"
         self.kl_f = lab / "generator" / "kladbische.json"; self.reestr = self.fx / "REESTR_STRATEGIY.json"
         self.vladelec = self.fx / "SOOBSHCHENIYA_VLADELCU.md"
+        self.cep = self.fx / "ZAMKI_CEPOCHKA.jsonl"       # только дописывание; каждая запись хэширует предыдущую
+
+    # ---------- цепочка замков (заменяет ручной git-коммит между замком и прогоном) ----------
+    def cepochka(self):
+        if not self.cep.exists():
+            return []
+        z = [json.loads(l) for l in self.cep.read_text().splitlines() if l.strip()]
+        prev = "0" * 64
+        for e in z:
+            telo = {k: v for k, v in e.items() if k != "hash"}
+            if e["prev"] != prev or sha(json.dumps(telo, sort_keys=True).encode()) != e["hash"]:
+                raise X.Otkaz("цепочка замков повреждена")
+            prev = e["hash"]
+        return z
+
+    def v_cepochku(self, i, h):
+        z = self.cepochka(); telo = dict(kogda=seychas(), id=i, prereg_sha256=h, prev=z[-1]["hash"] if z else "0" * 64)
+        telo["hash"] = sha(json.dumps(telo, sort_keys=True).encode())
+        with open(self.cep, "a") as f:
+            f.write(json.dumps(telo, ensure_ascii=False) + "\n")
+        return telo["hash"]
 
     # ---------- журналы ----------
     def zapis(self, sobytie, **kw):
@@ -93,10 +114,10 @@ class Kontroller:
                 sp["skript_sha256"] = sha(sk.read_bytes())
             pr = self.lab / "prereg" / f"{sp['id']}.json"; pr.parent.mkdir(exist_ok=True)
             pr.write_text(json.dumps(sp, ensure_ascii=False, indent=1))
-            h = self._zamok(pr, sp)
+            h = self._zamok(pr, sp); hc = self.v_cepochku(sp["id"], h)
             f.rename(f.with_suffix(".vzyato"))
             self.slot_f.write_text(json.dumps({"aktivnye": [sp["id"]]}, ensure_ascii=False))
-            self.zapis("ZAMOK", id=sp["id"], sha256=h, okno=okno, nomer=sp["proverka_nomer_na_okne"]); return f"ZAMOK {sp['id']}"
+            self.zapis("ZAMOK", id=sp["id"], sha256=h, cepochka=hc, okno=okno, nomer=sp["proverka_nomer_na_okne"]); return f"ZAMOK {sp['id']}"
         return "PUSTO"
 
     def _zamok(self, pr, sp):
@@ -112,6 +133,9 @@ class Kontroller:
         if self._blok_dannyh(sp, dg):
             self.zapis("BLOCKED_DATA", id=i, trevogi=dg["trevogi"]); return "BLOCKED_DATA"
         try:
+            z = [e for e in self.cepochka() if e["id"] == i]
+            if not z or z[-1]["prereg_sha256"] != sha(pr.read_bytes()):
+                raise X.Otkaz("замка нет в цепочке или prereg изменён после записи в цепочку")
             rez = self._sudit(pr, sp)
         except X.Otkaz as e:
             self.zapis("OTKAZ_SUDI", id=i, prichina=str(e)); self.slot_f.write_text(json.dumps({"aktivnye": []}))
@@ -127,7 +151,7 @@ class Kontroller:
                         vpered="нужна тень" if st == "READY_FOR_BUILD" else None), self.reestr)
         if st == "READY_FOR_BUILD":
             self._paket_codex(i, sp, rez)
-        self.zapis("TERMINAL", id=i, status=st, trebuetsya_claude=st != "KILL")
+        self.zapis("TERMINAL", id=i, status=st, trebuetsya_claude=st != "KILL", cepochka=z[-1]["hash"])
         self.vladelcu(f"{i} → {st}" + (f" (пакет Codex: data/fabrika_xs/{i}/PAKET_CODEX.md)" if st == "READY_FOR_BUILD" else ""))
         self.slot_f.write_text(json.dumps({"aktivnye": []}))
         return f"TERMINAL {i} {st}"

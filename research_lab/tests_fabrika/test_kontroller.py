@@ -57,6 +57,12 @@ def main():
     proverka("скрипт: замок", k.shag() == "ZAMOK SKRIPT")
     (lab / "sudya_test.py").write_text("print('изменён')\n")
     proverka("скрипт изменён после замка → отказ", k.shag().startswith("OTKAZ"))
+    zz = k.cep.read_text().splitlines(); proverka("цепочка замков ведётся", len(zz) >= 2)
+    k.cep.write_text("\n".join(zz[:-1] + [zz[-1].replace('"SKRIPT"', '"PODMENA"')]) + "\n")
+    try:
+        k.cepochka(); proverka("подмена в цепочке обнаружена", False)
+    except Exception:
+        proverka("подмена в цепочке обнаружена", True)
     print(f"ВСЕ ТЕСТЫ: {ok} PASS")
 
 if __name__ == "__main__":
