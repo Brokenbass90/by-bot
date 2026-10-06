@@ -69,16 +69,22 @@ def potok(den):
         (D / den.isoformat()).mkdir(parents=True, exist_ok=True)
         (D / den.isoformat() / "propusk").write_text("нет снимка 23:50–23:59 — вселенная дня не зафиксирована\n")
         gotovo.write_text("propusk\n"); print(f"{utc().isoformat(timespec='seconds')} {den}: ПРОПУСК снимка", flush=True); return
-    ok = 0
+    ok = 0; est_den = 0
     for s in syms:
-        for put, extra, imya in (("/api/v2/mix/market/taker-buy-sell", {"period": "1D", "limit": 5}, "taker"),
+        for put, extra, imya in (("/api/v2/mix/market/taker-buy-sell", {"period": "1h"}, "taker_1h"),
+                                 ("/api/v2/mix/market/taker-buy-sell", {"period": "1D"}, "taker"),
+                                 ("/api/v2/mix/market/candles", {"granularity": "1Dutc", "limit": 5}, "svechi_utc"),
                                  ("/api/v2/mix/market/candles", {"granularity": "1D", "limit": 5}, "svechi"),
                                  ("/api/v2/mix/market/history-fund-rate", {"pageSize": 10}, "fanding")):
             j, b, url = get(put, symbol=s, productType=PT, **extra)
             zapis(D / den.isoformat() / f"{imya}.jsonl", url, b)
             ok += j is not None
-    gotovo.write_text(json.dumps({"monet": len(syms), "otvetov_ok": ok, "vremya": utc().isoformat()}) + "\n")
-    print(f"{utc().isoformat(timespec='seconds')} поток {den}: монет {len(syms)}, ответов ок {ok}/{3 * len(syms)}", flush=True)
+            if imya == "taker_1h" and j:   # 1D у Bitget = пекинские сутки (16:00 UTC); UTC-день собираем из 24 часов
+                nach = int(dt.datetime(den.year, den.month, den.day, tzinfo=dt.timezone.utc).timestamp() * 1000)
+                chasy = {int(x.get("ts", 0)) for x in (j.get("data") or [])}
+                est_den += all(nach + 3600000 * h in chasy for h in range(24))
+    gotovo.write_text(json.dumps({"monet": len(syms), "otvetov_ok": ok, "taker_s_dnem": est_den, "vremya": utc().isoformat()}) + "\n")
+    print(f"{utc().isoformat(timespec='seconds')} поток {den}: монет {len(syms)}, ответов ок {ok}/{5 * len(syms)}, полный UTC-день потока у {est_den}", flush=True)
 
 def shag(seychas):
     if seychas.hour == 23 and seychas.minute >= 50:
@@ -95,11 +101,18 @@ def proverka():
     top = sorted(t, key=oi_usd, reverse=True)[:5]
     print("тикеров USDT-M:", len(t), "| топ-5 по OI$:", [(x["symbol"], round(oi_usd(x) / 1e6)) for x in top])
     print("поля тикера:", sorted(t[0].keys()) if t else None)
-    for put, extra in (("/api/v2/mix/market/taker-buy-sell", {"period": "1D", "limit": 3}),
+    for put, extra in (("/api/v2/mix/market/taker-buy-sell", {"period": "1h"}),
+                       ("/api/v2/mix/market/taker-buy-sell", {"period": "1D"}),
+                       ("/api/v2/mix/market/candles", {"granularity": "1Dutc", "limit": 2}),
                        ("/api/v2/mix/market/candles", {"granularity": "1D", "limit": 2}),
                        ("/api/v2/mix/market/history-fund-rate", {"pageSize": 2})):
         j, b, _ = get(put, symbol="BTCUSDT", productType=PT, **extra)
         print(put, "→", b[:300].decode("utf-8", "replace"))
+        if "taker" in put and j and j.get("data"):
+            ts = sorted(int(x["ts"]) for x in j["data"])
+            f = lambda m: dt.datetime.fromtimestamp(m / 1000, dt.timezone.utc).date()
+            g = lambda m: dt.datetime.fromtimestamp(m / 1000, dt.timezone.utc).isoformat(timespec="minutes")
+            print("   поток", extra["period"], ": баров", len(ts), "с", g(ts[0]), "по", g(ts[-1]))
         if not j or str(j.get("code")) not in ("00000", "0"): sys.exit("ПРОВЕРКА: FAIL " + put)
     if len(t) < 100 or oi_usd(top[0]) <= 0: sys.exit("ПРОВЕРКА: FAIL tickers")
     print("ПРОВЕРКА: OK")
