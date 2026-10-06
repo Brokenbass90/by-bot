@@ -86,7 +86,25 @@ def potok(den):
     gotovo.write_text(json.dumps({"monet": len(syms), "otvetov_ok": ok, "taker_s_dnem": est_den, "vremya": utc().isoformat()}) + "\n")
     print(f"{utc().isoformat(timespec='seconds')} поток {den}: монет {len(syms)}, ответов ок {ok}/{5 * len(syms)}, полный UTC-день потока у {est_den}", flush=True)
 
+def chasovoy(seychas):
+    """Каждые 6 ч: часовой поток (API отдаёт последние 30 ч) по монетам последнего снимка.
+    Окна перекрываются, поэтому сон Mac до ~24 ч не рвёт UTC-сутки. Судья склеивает часы по ts."""
+    metka = seychas.strftime("%Y-%m-%dT%H")
+    gotovo = D / "chasovoy" / f"{metka}.gotovo"
+    if gotovo.exists(): return
+    for k in range(3):
+        syms = verh_iz_snimka(seychas.date() - dt.timedelta(days=k))
+        if syms: break
+    if not syms: return
+    for s in syms:
+        j, b, url = get("/api/v2/mix/market/taker-buy-sell", symbol=s, productType=PT, period="1h")
+        zapis(D / "chasovoy" / f"{seychas.date().isoformat()}.jsonl", url, b)
+    gotovo.write_text(utc().isoformat() + "\n")
+    print(f"{utc().isoformat(timespec='seconds')} часовой поток {metka}: монет {len(syms)}", flush=True)
+
 def shag(seychas):
+    if seychas.hour % 6 == 0 and seychas.minute >= 20 or seychas.hour % 6 in (1, 2):
+        chasovoy(seychas.replace(hour=seychas.hour - seychas.hour % 6))
     if seychas.hour == 23 and seychas.minute >= 50:
         snimok(seychas.date())
     if seychas.hour >= 0 and (seychas.hour, seychas.minute) >= (0, 15):
