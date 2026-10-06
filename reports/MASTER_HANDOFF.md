@@ -1,5 +1,14 @@
 # MASTER HANDOFF — 2026-10-05
 
+Latest **October6 PAPER/source continuation**: canonical checkpoint TOP and
+`ALPACA_DYNAMIC_PAPER_INTAKE_2026_10_06.md`/JSON are authoritative.
+PAPER adapter ready for actual intake; source-only first-window job armed,
+no broker PAPER or new LIVE orders. Actual first selectionOct7 16:30Cyprus,
+then PAPER/account/handoff gates and separate LIVEGO. KITY08–09Oct preempts.
+Alpaca18:18UTC fullDAY CRWD275.45/META668.76, oneNEW/58pins/caps unchanged.
+ETS original900 remains BLOCKED_DATA; Claude abd906e alreadypushed in lineage,
+continuousFactory runtime notverified. Older blocks below are dated history.
+
 Latest owner prospective amendment **October6**, superseding the monthly-reserve
 workorder below: **ALPACA_DYNAMIC_V1 IMPLEMENTED_LOCAL_ORDERS_OFF**. Read
 `ALPACA_DYNAMIC_V1_DELIVERY_2026_10_06.md`/JSON, POLICY and RUNBOOK first.

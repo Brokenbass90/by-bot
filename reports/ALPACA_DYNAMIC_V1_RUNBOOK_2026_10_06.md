@@ -1,5 +1,12 @@
 # ALPACA_DYNAMIC_V1 — local orders-OFF runbook
 
+October6 continuation: read `ALPACA_DYNAMIC_PAPER_INTAKE_2026_10_06.md`/JSON first.
+Real PAPER adapter now exists but no broker PAPER order has run. The separate
+source-only native job is armed throughOct7 13:35UTC; it captures closed data
+and seals first ranking, no reservation/sizing/automatic send. Earlier local
+command/input definitions below remain valid; their previous missing-adapter
+statement is superseded. Actual manager/finality/unwind and LIVEGO gates remain.
+
 Owner October6 prospective amendment supersedes the old monthly-reserve work
 order. No November wait or invented Sep30 reserve. This entry point is offline;
 it does not load broker credentials, submit orders or modify the LIVE manager.

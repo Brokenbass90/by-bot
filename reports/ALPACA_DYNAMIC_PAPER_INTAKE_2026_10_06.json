@@ -1,0 +1,293 @@
+{
+  "schema": "ALPACA_DYNAMIC_PAPER_INTAKE_V1",
+  "generated_utc": "2026-10-06T18:26:35.064039+00:00",
+  "base_commit": "a9cf3b68806279822ac12455924d4a12e1000477",
+  "status": "IMPLEMENTED_PAPER_ADAPTER_SOURCE_JOB_ARMED_ORDERS_OFF",
+  "promotion_status": "BLOCKED_DATA",
+  "actual_first_selection": "NOT_DUE",
+  "policy_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+  "new_live_orders": 0,
+  "actual_paper_orders": 0,
+  "live_config_changed": false,
+  "cron_changed": false,
+  "net_edge_demonstrated": false,
+  "paper_account_id": "4cdbfb77-d1e0-4789-86b2-341bc886efaf",
+  "paper_legacy_positions_preserved": [
+    "ABNB",
+    "ABT",
+    "AMZN",
+    "MA",
+    "SCHW"
+  ],
+  "source_job": {
+    "status": "ARMED_ORDERS_OFF_FIRST_WINDOW",
+    "observed_ms": 1791311135106,
+    "pid": 1764534,
+    "base": "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2",
+    "archive_sha256": "fa0abb0e6146530e830d2f49195e1b0f9c29ff6024dc6eb823a3add361cafdc3",
+    "source_manifest_sha256": "3e936db867ea0df3da6ccd7f80c1d17c2d4a6e9403a203f603841ce05ef08ca3",
+    "source_files": 21,
+    "vps_targeted": "68 passed",
+    "schedule": {
+      "automatic_retry": false,
+      "broker_writes_allowed": false,
+      "capture_after_ms": 1791317700000,
+      "deadline_ms": 1791380100000,
+      "policy_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+      "window_ms": 1791379800000
+    },
+    "production_before": {
+      "bybot": {
+        "MainPID": "1648585",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      },
+      "trading-journal-web": {
+        "MainPID": "1623208",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      },
+      "att1-lifecycle-zero-risk-v2": {
+        "MainPID": "1584802",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      }
+    },
+    "production_after": {
+      "bybot": {
+        "MainPID": "1648585",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      },
+      "trading-journal-web": {
+        "MainPID": "1623208",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      },
+      "att1-lifecycle-zero-risk-v2": {
+        "MainPID": "1584802",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      }
+    },
+    "broker_writes": 0,
+    "live_config_changed": false,
+    "cron_changed": false,
+    "paper_auto_send": false,
+    "rollback": "Do not restart. For cancellation, verify /proc/PID/cmdline exact script/runtime before SIGTERM; preserve runtime evidence. No broker rollback required.",
+    "final_validation": {
+      "observed_ms": 1791311200263,
+      "pid": 1764534,
+      "source21_match": true,
+      "stage": "WAITING_CLOSED_CAPTURE_NOT_COMPLETE",
+      "schedule": {
+        "automatic_retry": false,
+        "broker_writes_allowed": false,
+        "capture_after_ms": 1791317700000,
+        "deadline_ms": 1791380100000,
+        "policy_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+        "window_ms": 1791379800000
+      },
+      "previous_attempt": {
+        "status": "ABORTED_BEFORE_CAPTURE_TIMEOUT_GUARD_REPAIR",
+        "observed_ms": 1791311127250,
+        "broker_writes": 0,
+        "source_capture_started": false,
+        "deadline_not_extended": true
+      },
+      "broker_writes": 0
+    }
+  },
+  "live_postcheck": {
+    "observed_ms": 1791310680774,
+    "broker_writes": 0,
+    "clock": {
+      "is_open": true,
+      "next_close": "2026-10-06T16:00:00-04:00",
+      "next_open": "2026-10-07T09:30:00-04:00",
+      "timestamp": "2026-10-06T14:18:00.106961135-04:00"
+    },
+    "positions": [
+      {
+        "symbol": "CRWD",
+        "qty": "0.469970151",
+        "avg_entry_price": "265.336",
+        "current_price": "279.7"
+      },
+      {
+        "symbol": "META",
+        "qty": "0.141939508",
+        "avg_entry_price": "724.534",
+        "current_price": "743.7106"
+      }
+    ],
+    "open_orders": [
+      {
+        "id": "43d0807d-b95d-4c54-8fa0-34112d902f4a",
+        "symbol": "CRWD",
+        "type": "stop",
+        "side": "sell",
+        "qty": "0.469970151",
+        "stop_price": "275.45",
+        "status": "new",
+        "time_in_force": "day",
+        "submitted_at": "2026-10-06T13:50:12.703253958Z"
+      },
+      {
+        "id": "c7df017d-4448-4673-b90a-fa8c5a4b44c4",
+        "symbol": "META",
+        "type": "stop",
+        "side": "sell",
+        "qty": "0.141939508",
+        "stop_price": "668.76",
+        "status": "new",
+        "time_in_force": "day",
+        "submitted_at": "2026-10-06T13:30:10.706905Z"
+      }
+    ],
+    "single_new_schedule": true,
+    "old_schedules_absent": true,
+    "old_processes_absent": true,
+    "source_manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+    "source_58_match": true,
+    "cap": 487.42,
+    "gross": 0.7,
+    "hwm": {
+      "CRWD": {
+        "accepted_observed_at_utc": "2026-10-06T18:15:17.188587+00:00",
+        "accepted_order_id": "43d0807d-b95d-4c54-8fa0-34112d902f4a",
+        "accepted_order_tif": "day",
+        "accepted_stop_floor": 275.45,
+        "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "entry_fill_qty": 0.469970151,
+        "entry_order_id": "2b559bee-1818-450d-b5c0-1d1b015c2422",
+        "entry_price": 265.336,
+        "hwm": 285.455,
+        "lifecycle_first_seen_at_utc": "2026-10-01T14:10:15.162456554Z",
+        "qty": 0.469970151,
+        "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+        "updated_at_utc": "2026-10-06T18:15:17.188587+00:00"
+      },
+      "META": {
+        "accepted_observed_at_utc": "2026-10-06T18:15:17.188587+00:00",
+        "accepted_order_id": "c7df017d-4448-4673-b90a-fa8c5a4b44c4",
+        "accepted_order_tif": "day",
+        "accepted_stop_floor": 668.76,
+        "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "entry_fill_qty": 0.141939508,
+        "entry_order_id": "62513c25-0929-45ef-9a29-e219c9899a06",
+        "entry_price": 724.534,
+        "hwm": 746.49,
+        "lifecycle_first_seen_at_utc": "2026-10-01T14:10:22.375042044Z",
+        "qty": 0.141939508,
+        "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+        "updated_at_utc": "2026-10-06T18:15:17.188587+00:00"
+      }
+    }
+  },
+  "source_file_sha256": {
+    "research_lab/alpaca_dynamic_paper.py": "f6dd44de9841b8b4fe5a1fff5f98ece4ce62f47220c3a053059b1772f1056edd",
+    "scripts/run_alpaca_dynamic_paper.py": "f9f4f430704ad4d058ce0f4ac1be91b4fa1de2af899253006f521892ca417b94",
+    "scripts/run_alpaca_dynamic_capture.py": "581986e85ecd12b3ec25c26bbe499e66752e1fefe5e8414a5484d1ce82d3fba2",
+    "tests/test_alpaca_dynamic_paper.py": "42dbeba76e2e7335117b7db8f00d54796b4d0aeb5ec31a12ce5e06604ad593db",
+    "tests/test_alpaca_dynamic_capture.py": "47185c5304a0fd6100424d395f72df8ae42514d1d7d287fc34a67d30412a372e"
+  },
+  "local_targeted": {
+    "passed": 118,
+    "failed": 0,
+    "log_sha256": "ca14b42bc1c5e6db14923bcda67a130bce11b495fe0bdd01e09711f58981fa42"
+  },
+  "final_adapter_source_targeted": {
+    "passed": 68,
+    "failed": 0,
+    "log_sha256": "fa6650b0e6b4c53ef060bb3f8a90df0f167afa91e7c31103a96c43e3b1c06659"
+  },
+  "full_suite": {
+    "exit_code": 1,
+    "failed_count": 57,
+    "baseline_failed_count": 57,
+    "new_failures": [],
+    "removed_failures": [],
+    "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "foreign_restored": true,
+    "log_sha256": "ced0757f954a957c54ad22f022ee507dae41b987d47f5c54d236bf929428ee7d",
+    "tail": "57 failed, 3970 passed, 1 warning in 175.40s (0:02:55)",
+    "note": "Full suite captured before final CLI shared-lock-path and capture-timeout regressions were added; final CLI and unchanged source tested locally and on VPS (68 PASS)."
+  },
+  "critical_review": {
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "high",
+    "routing_verified": false,
+    "limitation": "Child/runtime metadata unavailable; current local rollout search did not expose the new review turn_context. Requested routing is not reported as proven actual routing.",
+    "findings": 4,
+    "counterexamples_red": "4 failed,18 passed",
+    "fix_verification": "118 targeted PASS; final CLI/source68 PASS locally and VPS",
+    "resolved": [
+      "Per-symbol open-order query with truncation rejection",
+      "Effective monotonic time plus fresh clock before persisted dispatch/POST",
+      "Missing/nonfinite survivor correlation blocks operational gate without retuning selector",
+      "Broker clock/earnings receive timestamps and final sealing deadline checked"
+    ],
+    "extra_safety": [
+      "Pre-cancel client-ID/quantity/limit ownership check",
+      "Uncertain entry/stop dispatch never resent",
+      "Original broker checkout account-lock path, not isolated package ROOT",
+      "No account-wide flatten route or legacy PAPER adoption",
+      "Capture TimeoutError cannot be swallowed as unknown earnings; old waiting job aborted before capture, same deadline rearmed"
+    ]
+  },
+  "ets2m_source_inventory": {
+    "schema_id": "ets2m_source_inventory_v1",
+    "observed_date": "2026-10-06",
+    "manifest_cohort_sha256": "0bcea9a398bac4af4509406a1e3ea5d67cafddd5d757935460422eb7c448a718",
+    "manifest_cohort_count": 900,
+    "due_utc": "2026-10-10T19:00:00Z",
+    "result": "BLOCKED_DATA",
+    "exact_original900_found": false,
+    "reason": "No exact source-bound pre-arm archive or Git blob containing original entry identities/bytes was found in the single bounded inventory. Per scope, no alternative reconstruction from current rows was attempted.",
+    "checked": [
+      {
+        "location": ".private/ets2m_verdict_20261010/",
+        "finding": "Only writer.lock, schedule.json, and launcher.log; no pre-arm cohort archive."
+      },
+      {
+        "location": "sibling bybit-bot-clean-v28/research_lab/data/yadro/ETS2M/",
+        "finding": "Only epoha.json, ishody.jsonl, ispolnenie.jsonl, skan.json, and current vhody.jsonl; no named source archive. Current vhody.jsonl metadata: 496329 bytes, mtime 2026-10-06 20:09:19. No row-based reconstruction attempted."
+      },
+      {
+        "location": "sibling bybit-bot-clean-v28 Git refs/object inventory",
+        "finding": "No matching tracked vhody.jsonl history or ETS2M archive/cohort blob path found across refs."
+      },
+      {
+        "location": "recovery checkout .private",
+        "finding": "ETS2M-specific files are only the waiting runtime metadata and prior pre-due receipt; no source archive."
+      }
+    ],
+    "cohort_hashing": "Not performed: no qualifying frozen original900 source archive/identities found. The unchanged frozen sort/canonicalization was read from scripts/ets2m_unattended_verdict.py; no evaluator or outcomes were run/read.",
+    "not_repeated": "The already-tested 1461-entry prefix was not repeated.",
+    "mutations": "Only this evidence JSON was written. No tracked files, source files, manifest, waiting job, cohort, or sibling checkout files were changed.",
+    "execution_model": {
+      "requested": "gpt-5.6-luna (targeted inventory tier)",
+      "fallback": "gpt-6-luna (explicit bounded mechanical fallback per task assignment)",
+      "runtime_metadata_limit": "Exact runtime model and reasoning-effort metadata are not exposed to this agent for independent verification."
+    }
+  },
+  "research_source": {
+    "observed_remote": "ecb9749bf536ed26f1d334e225051053cc0461be",
+    "local_sibling_ref_observed": "391676c59ff567a401cb5d87ba9941f3c4851678",
+    "abd906e_is_remote_ancestor": true,
+    "push_or_merge_by_codex": false,
+    "bitget_prospective_files_present": true,
+    "continuous_factory_runtime": "NOT_CONFIRMED",
+    "sealed_outcomes_consumed": false
+  },
+  "remaining_gates": [
+    "Actual Oct6 closed-source capture/Oct7 13:30\u201313:35UTC immutable first ranking; absence/failure stays BLOCKED_DATA",
+    "Actual current quote/asset/minimum/earnings/concentration, exact sizing, fees/unresolved liability/cash-finality inputs",
+    "One receipt-bound broker PAPER lifecycle: native protection, partial/late-fill recovery, DAY expiry/re-arm, terminal cash/finality, scoped unwind and restart",
+    "Exact LIVE exclusive owner/global lock/monthly-entry overlap/management handoff and kill/rollback dossier",
+    "Separate owner LIVE GO for exact actual ticker/quantity/caps; no automatic promotion"
+  ],
+  "next_money_priority": "KITY actual raw Oct7 23:55UTC \u2192 Oct8 unseen basket/Oct9 parity; frozen research and 2k251 vectors unchanged; Bybit account execution dossier then separate owner GO",
+  "att1": "Completed48h probes unchanged; NEW ordersOFF, 2\u20133 clean terminals + actual dossier + separate GO preserved"
+}

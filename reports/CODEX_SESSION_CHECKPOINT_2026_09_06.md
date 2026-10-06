@@ -1,5 +1,40 @@
 # Codex session checkpoint — 2026-09-06
 
+Latest bounded continuation **October6 18:18UTC /21:18Cyprus**: read
+`ALPACA_DYNAMIC_PAPER_INTAKE_2026_10_06.md`/JSON and updated V1RUNBOOK.
+**PAPER adapter implemented; actual PAPER orders0; source job ARMED_ORDERS_OFF**.
+Continue sealedV1/a9cf3b6, no restart of book/selector/monthly-reserve design.
+Exact capped-quantity PAPER limit, native full-stop readback, partial recovery,
+durable uncertain-dispatch lookup/no resend, original broker account lock;
+no LIVE endpoint/account-wide flatten or legacy PAPER adoption. PAPER account
+4cdbfb77-d1e0-4789-86b2-341bc886efaf holds5legacy names, preserved.
+Local118targetedPASS; final68PASS local+VPS. Full3970PASS/57samebaselineFAIL;
+finalCLI shared-lock-path regression added afterward, covered by final68.
+One bounded review:4counterexamples fixed; requested6-astra/high routing NOT_VERIFIED.
+Foreignallowlist hash preserved. No edge/actual PAPER lifecycle claim.
+Native source-only job PID1764534, base
+/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2:
+Oct6 20:15UTC/23:15Cyprus closed59-name hourly+earnings capture;
+Oct7 13:30–13:35UTC/16:30Cyprus source/account GETs and immutable first ranking.
+DeadlineOct7 13:35UTC fixed, no retry/reset/extension, no automatic PAPER/LIVE send.
+Read runtime terminal/source/first_window_receipt and preserve original hashes.
+Source job does NOT reserve a slot/quantity or certify cash/finality. Early failure
+is BLOCKED_DATA. Next: actual quotes/asset/minimum/sizing/cash-fee-liability inputs,
+isolated PAPER protection/DAY/recovery/finality/unwind and exact owner handoff,
+then concrete separate LIVEGO. Current LIVE remains monthly/protection-only.
+Fresh broker GET: CRWD0.469970151/META0.141939508, full acceptedDAY275.45/668.76,
+IDs=floors, oneNEW/OLDabsent/58pins/cap487.42/gross0.70 unchanged.
+Production bybot1648585/web1623208/ATT1public1584802 unchanged/NRestarts0.
+KITY08–09Oct preempts Alpaca research: rawOct7 23:55OI→actual basket parity/Bybit
+account feasibility/caps/funding/unwind/finality; research frozen, money separateGO.
+ETS source-only inventory terminal BLOCKED_DATA: no original900 archive/blob;
+Oct10 19UTC manifest/job unchanged, no repin/judge/outcome consumption.
+ATT1completed48h/2–3clean+actualdossier+GO gates unchanged, no new lifecycle query.
+Claude abd906e alreadyancestor of observedremoteecb9749b; Bitget prospective
+files present, no duplicatepush/merge/message/Factory launch byCodex.
+Factory continuous runtime NOT_CONFIRMED; research WIP1/Claude, PX1Oct14 later.
+Prior blocks below retain their original timestamps and superseded scope.
+
 Latest owner prospective amendment **October6**, superseding the monthly-reserve
 workorder below: **ALPACA_DYNAMIC_V1 IMPLEMENTED_LOCAL_ORDERS_OFF**. Read
 `ALPACA_DYNAMIC_V1_DELIVERY_2026_10_06.md`/JSON, POLICY and RUNBOOK first.

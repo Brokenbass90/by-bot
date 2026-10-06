@@ -1,5 +1,27 @@
 # Trading OS — future roadmap, design/backlog only
 
+## October6 owner priority update
+
+Parallel lanes have independent gates, not automatic capital promotion.
+Alpaca DynamicV1: isolated first-source job armedOct7, exact actual inputs→PAPER
+acceptance→exclusive handoff→separateLIVEGO; current holdings/stops/caps unchanged.
+KITY08–09October is the highest crypto-money priority and preempts further Alpaca
+research. Exact unseen basket/account execution dossier→READY_FOR_CANARY or exact
+BLOCKED, then separateGO; no calendar-driven Oct15/22 activation.
+ETS2M original900 source remains BLOCKED_DATA; unchangedOct10 judge may not run
+on replacement rows, firstPASS only advances to disjoint second900.
+
+Claude owns KITY rawOI/forward parity first, Bitget prospective collection and
+Factory WIP=1 outcome consumption. Collectors may run in parallel, accepted causal
+mechanisms are tested sequentially. Proposed next queue: crypto basis/funding,
+range or event/volatility, then one distinct Gold mechanism; avoid clones and
+new infrastructure unless a real cycle exposes a defect. PX1Oct14 remains the
+next scheduled new-dataset test. REBALANCING existing forward stays frozen;
+Gold/newFX/oil/additional indices remain source/prereg backlogs, not READY sleeves.
+Factory controller files/V2plan exist in Claude lineage; continuous runtime was
+NOT_CONFIRMED in this Codex cycle. abd906e is alreadypushed; no duplicatepush/merge.
+AI remains read-only/proposal-only. Measure net/lifecycle/capacity before scaling.
+
 The near-term objective is another sleeve with demonstrated net edge and honest
 execution. Existing LIVE stability comes first. This document installs nothing
 and grants no risk/capital/order authority. Claude owns research/Factory; Codex
