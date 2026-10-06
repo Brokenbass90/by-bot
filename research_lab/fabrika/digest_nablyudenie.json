@@ -10,7 +10,8 @@
   "../../runtime/funding_positioning_post_n42_frozen_state.json": 180,
   "kity_m3_ten.log": 90,
   "rebal_ten.log": 150,
-  "kontroller.log": 400
+  "kontroller.log": 400,
+  "bitget_vpered.log": 90
  },
  "arhivy": [
   "binance",
