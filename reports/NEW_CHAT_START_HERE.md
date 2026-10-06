@@ -1,5 +1,18 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+Latest ATT1 bounded heartbeat **October6 03:12:33UTC /06:12 Cyprus** — read
+`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_06_0312.md`/JSON for ATT1.
+**15 sessions /7 gaps /1 verified clean ADA /SOL held-protected0.2 simulated.**
+First future funding START inside frozen8 is SOL: synthetic R$0.40/N$100 sizing
+BELOW_MIN_QTY, no plan/comparison. Five unique future STARTs;4outside8+1quantity
+reject,0comparable admitted funding events. Not actual account evidence or kill.
+Same ADA exact replay PASS/net-R−1.048963, no new credit; dirty journal hashes match.
+Probes RUNNING, original PIDs/NRestarts0/source/study/context/disk checks PASS;
+originalOct6 14:12:25UTC deadline unchanged. Analysis frontier onlyOct5 07:01UTC,
+full48h processing pending. NEW ordersOFF, actual packet BLOCKED_DATA;2–3clean+
+actual inputs+fresh dossier+separate ownerGO unchanged. One read-only SSH query;
+no live writes/restarts or Claude/KITY/Alpaca/ETS changes. Older blocks are dated.
+
 Latest ATT1 bounded heartbeat **October 5 21:10:24 UTC /October 6 00:10 Cyprus** —
 read `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_05_2110.md`/JSON first for ATT1.
 **14 sessions /7 gaps /1 verified clean ADA /0 held.** WLD is the new seventh gap;
