@@ -1,5 +1,15 @@
 # Codex availability handoff — October5 closure
 
+October6 terminal update: read `ATT1_EXECUTION_SHADOWS_TERMINAL_2026_10_06.md`/JSON.
+Both48hprobes completed on original deadlines; full archived population processed,
+funding0comparable events; public17sessions/10gaps/1clean/0held, moneyBLOCKED_DATA.
+The completed heartbeat was deleted, probes stay inactive and public manager stays
+unchanged. Earlier RUNNING/cursor instructions below are dated history.
+Alpaca postopen re-arm/trailing PASS at15:10UTC: CRWD275.45/META668.76, one manager.
+ETS2M original waiting process alive but inputcheckCOHORT_PIN_MISMATCH; see
+`ETS2M_PRE_DUE_DATA_BLOCKER_2026_10_06.md`. Do not claim valid cohort readiness or
+edit pins/judge/due to make it pass. KITY unseen-source gate remains next.
+
 Canonical checkout `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`,
 branch `codex/recovery-20260824`; continue current HEAD. No restart of completed
 KITY/ATT1 Tasks1–4, no broad audit, no merge/clean of Claude checkout.

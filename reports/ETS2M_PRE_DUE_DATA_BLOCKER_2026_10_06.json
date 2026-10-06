@@ -1,0 +1,28 @@
+{
+  "status": "PRE_DUE_BLOCKED_COHORT_PIN_MISMATCH",
+  "pid": 46460,
+  "due_utc": "2026-10-10T19:00:00Z",
+  "source_code_pins_match": true,
+  "expected_cohort_sha256": "0bcea9a398bac4af4509406a1e3ea5d67cafddd5d757935460422eb7c448a718",
+  "actual_current_cohort_sha256": "35f7b2a87679656dd3a7cef487e1a6b9a92a8286cef475ffd5cced2587f97c7b",
+  "current_entries_count": 1570,
+  "current_cohort_count": 900,
+  "expected_last_signal_ms": 1790290800000,
+  "current_last_signal_ms": 1790290800000,
+  "outcomes_read": false,
+  "judge_run": false,
+  "manifest_changed": false,
+  "job_restarted": false,
+  "raw_receipt_sha256": "85bccefd2d98d2bcb843aae254a2dc9a08a6b4f6f5ab6e030a52700e1418012b",
+  "read_only": true,
+  "orders_allowed": false,
+  "bounded_recovery": {
+    "method": "first1461 raw/unique entry prefix, source-only, same frozen sort and canonical hash",
+    "raw_entry_count": 1570,
+    "unique_entry_count": 1570,
+    "original_1461_prefix_cohort_sha256": "5ed1804a0653f390f785320987f8460dc7c704d19aed3b6df882c0b038fc8828",
+    "original_hash_recovered": false,
+    "outcomes_read": false,
+    "judge_run": false
+  }
+}

@@ -1,5 +1,15 @@
 # ATT1 execution research — October 4
 
+October6 terminal update: read `ATT1_EXECUTION_SHADOWS_TERMINAL_2026_10_06.md`/JSON.
+Both48hprobes completed on original deadlines; full archived population processed,
+funding0comparable events; public17sessions/10gaps/1clean/0held, moneyBLOCKED_DATA.
+The completed heartbeat was deleted, probes stay inactive and public manager stays
+unchanged. Earlier RUNNING/cursor instructions below are dated history.
+Alpaca postopen re-arm/trailing PASS at15:10UTC: CRWD275.45/META668.76, one manager.
+ETS2M original waiting process alive but inputcheckCOHORT_PIN_MISMATCH; see
+`ETS2M_PRE_DUE_DATA_BLOCKER_2026_10_06.md`. Do not claim valid cohort readiness or
+edit pins/judge/due to make it pass. KITY unseen-source gate remains next.
+
 Latest ATT1 bounded heartbeat **October6 09:14:55UTC /12:14 Cyprus** — read
 `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_06_0914.md`/JSON for ATT1.
 **16 sessions /9 gaps /1 verified clean ADA /0 held.** New SOL polling-continuity

@@ -1,5 +1,37 @@
 # Codex session checkpoint — 2026-09-06
 
+Latest owner P0 closure **October6; broker15:10:58UTC /18:10Cyprus** — read
+`ALPACA_DAY_REARM_2026_10_06.md`/JSON,
+`ATT1_EXECUTION_SHADOWS_TERMINAL_2026_10_06.md`/JSON and
+`ETS2M_PRE_DUE_DATA_BLOCKER_2026_10_06.md`/JSON first.
+**Alpaca re-arm/trailing PASS:** full CRWD0.469970151 DAY stop275.45,
+META0.141939508 DAY stop668.76; accepted IDs agree with persisted floors/owner.
+CRWD broker replacement242.13→267.82→272.13→273.11→274.37→275.45, HWM285.455;
+META HWM746.49/peak3.030362% below frozen3.5% activation. One NEW schedule,
+OLD absent,58source pins/cap487.42/gross0.70 unchanged. Exact-open continuous
+protection NOT_PROVEN (~10s re-arm); next daily checkOct7 16:30Cyprus.
+AMD gross+$2.374819327244, published exitfees$.02 →+$2.354819327244;
+exact pooled entryCAT allocation remains ALLOCATION_PENDING, no invented net.
+**ATT1 probes COMPLETE_DEADLINE**, originalOct6 14:12:25.311/.515UTC preserved;
+bothinactive/success/NRestarts0, production PIDs/source/context/studies unchanged.
+Full6,459,441 member accounting,172636REST/6019469WS books,631REST CTS violations;
+6192105wire hashes verified,4766571independent projections (partial coverage).
+CTS-vs-ts stale≥335; receivedfreshWS/quiet never proves continuous coverage.
+Funding7futureunique STARTs (6outside8, SOLsyntheticqtyreject),0comparable events:
+INSUFFICIENT_COMPARABLE_EVENTS, no new reserve policy. Public17sessions/10gaps/
+1sameverifiedcleanADA(net-R−1.048963)/0held; newLDOgap underlyingcauseNOT_CAPTURED.
+ActualpacketBLOCKED_DATA/NEWordersOFF;2–3clean+actualdossier+separateownerGO stay.
+Terminal cursor/captures preserved; completed ATT1 heartbeat deleted via tool.
+**ETS2M PID46460 alive but pre-due BLOCKED_COHORT_PIN_MISMATCH**: code/epoch pins
+match, first900hash differs despite same cutoff. No outcomes/judge/source edits;
+originalOct10 19UTC job stays unchanged. Recover exact originalcohort source-only
+or accept honest BLOCKED; do not repin/replace cohort to force a verdict.
+Next intake KITY rawOct7 23:55UTC→Oct8unseen independently reconstructed basket;
+completedk=n//10/251vectors implementation stays ordersOFF, no repeatedTasks1–4.
+Alpaca dynamicreplacement remainsSCOPED/NOT_IMPLEMENTED/NOT_TESTED/NOT_PREREG_FROZEN,
+historical/holdout→PAPER required; no currentLIVE rotation/replacement change.
+AI proposals only. The dated blocks below are history, superseded where noted.
+
 Latest owner short cycle **October6 09:50UTC /12:50 Cyprus** — read
 `OWNER_SYNC_ALPACA_ATT1_2026_10_06.md`/JSON. Alpaca preopen: CRWD/META unchanged
 quantities,0activeDAYstops; floors242.13/668.76 retained, HWM273.93/746.49 grew.

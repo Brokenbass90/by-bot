@@ -1,0 +1,111 @@
+{
+  "schema_id": "alpaca_day_rearm_receipt_20261006_v1",
+  "status": "REARM_AND_MONOTONIC_TRAILING_PASS",
+  "observed_utc": "2026-10-06T15:10:58.550000+00:00",
+  "broker_writes": 0,
+  "account_suffix": "f295c6",
+  "capital_cap_usd": "487.42",
+  "gross_exposure": "0.70",
+  "one_new_schedule": true,
+  "old_managers_absent": true,
+  "source_manifest_58_unchanged": true,
+  "source_manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+  "positions": [
+    {
+      "symbol": "CRWD",
+      "qty": "0.469970151",
+      "entry_price": "265.336",
+      "mark": "282.54",
+      "unrealized_pl_usd": "8.085366",
+      "stop_price": "275.45",
+      "order_id": "43d0807d-b95d-4c54-8fa0-34112d902f4a",
+      "accepted_status": "new",
+      "tif": "day",
+      "submitted_at": "2026-10-06T13:50:12.703253958Z",
+      "hwm": "285.455"
+    },
+    {
+      "symbol": "META",
+      "qty": "0.141939508",
+      "entry_price": "724.534",
+      "mark": "740.68",
+      "unrealized_pl_usd": "2.291756",
+      "stop_price": "668.76",
+      "order_id": "c7df017d-4448-4673-b90a-fa8c5a4b44c4",
+      "accepted_status": "new",
+      "tif": "day",
+      "submitted_at": "2026-10-06T13:30:10.706905Z",
+      "hwm": "746.49"
+    }
+  ],
+  "crwd_stop_chain": [
+    "242.13",
+    "267.82",
+    "272.13",
+    "273.11",
+    "274.37",
+    "275.45"
+  ],
+  "frozen_trail": {
+    "activation_pct": "3.5",
+    "trail_pct": "3.5",
+    "min_lock_pct": "0.5"
+  },
+  "latest_manager": {
+    "account_blocked": false,
+    "authority": "protective_exits_only_no_buys_no_rotation_no_market_close",
+    "generated_at_utc": "2026-10-06T15:10:14.595539+00:00",
+    "market_open": true,
+    "mode": "apply",
+    "open_orders": 2,
+    "plan": [
+      {
+        "accepted_stop_floor": 275.45,
+        "action": "hold",
+        "current_price": 282.26,
+        "current_stop": 275.45,
+        "entry_price": 265.336,
+        "hwm": 285.455,
+        "peak_gain_pct": 7.582461,
+        "qty": 0.469970151,
+        "reason": "no_material_stop_raise",
+        "symbol": "CRWD"
+      },
+      {
+        "accepted_stop_floor": 668.76,
+        "action": "hold",
+        "current_price": 740.03,
+        "entry_price": 724.534,
+        "hwm": 746.49,
+        "peak_gain_pct": 3.030362,
+        "qty": 0.141939508,
+        "reason": "trail_not_armed",
+        "symbol": "META"
+      }
+    ],
+    "positions": 2,
+    "results": []
+  },
+  "continuous_protection_from_open": "NOT_PROVEN; DAY rearm first submitted about10 seconds after open",
+  "amd": {
+    "gross_usd": "2.374819327244",
+    "published_exit_fees_usd": "0.02",
+    "after_published_exit_fees_usd": "2.354819327244",
+    "entry_cat_pool_usd": "0.01",
+    "entry_cat_exact_allocation": "NOT_PROVEN",
+    "full_lifecycle_exact_net_status": "ALLOCATION_PENDING",
+    "published_fees_only_allocation_range_usd": [
+      "2.344819327244",
+      "2.354819327244"
+    ],
+    "broker_pending_reg_taf_fees": "0",
+    "future_additional_liability_bound_proven": false
+  },
+  "raw_receipts": {
+    ".private/owner_close_20261006/snapshot.json": "389e87cc61b562faef39e34380b7ef80a5ce9fd008a05106140ec0b3cf0f62c2",
+    ".private/owner_close_20261006/postcheck.json": "93aa932b6f0d1cf2a06bf13efd6e647613dbb670b8acefd9d7851657cbfe6f1c",
+    ".private/owner_close_20261006/alpaca_acceptance.json": "1fc40226b39ca66589353a33bbf32d4cd468bfb2a8cb911eef9e0c855ff52f25"
+  },
+  "configuration_changed": false,
+  "dynamic_challenger_status": "SCOPED_NOT_IMPLEMENTED_NOT_TESTED_NOT_PREREG_FROZEN"
+}

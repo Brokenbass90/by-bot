@@ -1,5 +1,11 @@
 # ETS2M — guarded one-shot October10 evaluator
 
+October6 pre-due update: **process alive, COHORT_PIN_MISMATCH**; source-code and
+epoch pins match. Read `ETS2M_PRE_DUE_DATA_BLOCKER_2026_10_06.md`/JSON. The original
+job/deadline/manifest remain unchanged. Its liveness does not prove inputs valid;
+if unresolved it will return honest BLOCKED_DATA at due. No early outcomes/judge.
+The launch-time ARMED/PASS facts below are historical.
+
 **ARMED_LOCAL_ONE_SHOT**, due **October10 19:00UTC /22:00 Cyprus**, PID46460
 with held writer lock at launch. This process needs no Codex API or quota.
 No cron/launchd/login item was installed. Mac must stay powered and awake;

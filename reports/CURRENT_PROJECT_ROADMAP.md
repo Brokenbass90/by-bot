@@ -1,5 +1,37 @@
 # Current roadmap — owner scope October 5, 2026
 
+Latest owner P0 closure **October6; broker15:10:58UTC /18:10Cyprus** — read
+`ALPACA_DAY_REARM_2026_10_06.md`/JSON,
+`ATT1_EXECUTION_SHADOWS_TERMINAL_2026_10_06.md`/JSON and
+`ETS2M_PRE_DUE_DATA_BLOCKER_2026_10_06.md`/JSON first.
+**Alpaca re-arm/trailing PASS:** full CRWD0.469970151 DAY stop275.45,
+META0.141939508 DAY stop668.76; accepted IDs agree with persisted floors/owner.
+CRWD broker replacement242.13→267.82→272.13→273.11→274.37→275.45, HWM285.455;
+META HWM746.49/peak3.030362% below frozen3.5% activation. One NEW schedule,
+OLD absent,58source pins/cap487.42/gross0.70 unchanged. Exact-open continuous
+protection NOT_PROVEN (~10s re-arm); next daily checkOct7 16:30Cyprus.
+AMD gross+$2.374819327244, published exitfees$.02 →+$2.354819327244;
+exact pooled entryCAT allocation remains ALLOCATION_PENDING, no invented net.
+**ATT1 probes COMPLETE_DEADLINE**, originalOct6 14:12:25.311/.515UTC preserved;
+bothinactive/success/NRestarts0, production PIDs/source/context/studies unchanged.
+Full6,459,441 member accounting,172636REST/6019469WS books,631REST CTS violations;
+6192105wire hashes verified,4766571independent projections (partial coverage).
+CTS-vs-ts stale≥335; receivedfreshWS/quiet never proves continuous coverage.
+Funding7futureunique STARTs (6outside8, SOLsyntheticqtyreject),0comparable events:
+INSUFFICIENT_COMPARABLE_EVENTS, no new reserve policy. Public17sessions/10gaps/
+1sameverifiedcleanADA(net-R−1.048963)/0held; newLDOgap underlyingcauseNOT_CAPTURED.
+ActualpacketBLOCKED_DATA/NEWordersOFF;2–3clean+actualdossier+separateownerGO stay.
+Terminal cursor/captures preserved; completed ATT1 heartbeat deleted via tool.
+**ETS2M PID46460 alive but pre-due BLOCKED_COHORT_PIN_MISMATCH**: code/epoch pins
+match, first900hash differs despite same cutoff. No outcomes/judge/source edits;
+originalOct10 19UTC job stays unchanged. Recover exact originalcohort source-only
+or accept honest BLOCKED; do not repin/replace cohort to force a verdict.
+Next intake KITY rawOct7 23:55UTC→Oct8unseen independently reconstructed basket;
+completedk=n//10/251vectors implementation stays ordersOFF, no repeatedTasks1–4.
+Alpaca dynamicreplacement remainsSCOPED/NOT_IMPLEMENTED/NOT_TESTED/NOT_PREREG_FROZEN,
+historical/holdout→PAPER required; no currentLIVE rotation/replacement change.
+AI proposals only. The dated blocks below are history, superseded where noted.
+
 Latest owner short cycle **October6 09:50UTC /12:50 Cyprus** — read
 `OWNER_SYNC_ALPACA_ATT1_2026_10_06.md`/JSON. Alpaca preopen: CRWD/META unchanged
 quantities,0activeDAYstops; floors242.13/668.76 retained, HWM273.93/746.49 grew.
@@ -419,13 +451,13 @@ No directional diversification or greater signal count establishes net edge.
 
 | Work | Next measurable result | Boundary / owner |
 |---|---|---|
-| Alpaca LIVE | Observe exact-quantity accepted DAY re-arm Oct5 13:30UTC/16:30Cyprus. Separately validate queued next-session fractionalDAY stop in PAPER | Codex operations; currentGTC unsupported, queue acceptanceNOT_PROVEN, no weekendLIVE change/capital increase |
-| NEW ATT1 | First96/96 preserved/replayed. Close local observation candidate: ETH aggregate budget, ETC receive/consume distinction, bounded SEI/SUI stale-source transport diagnostic. Historical funding5× criterion passes all8; prepare separately reviewed reserve/cash contracts. Current draft still8/8 REJECT; LINK conflict and actual packetBLOCKED | Codex;2s/frozen strategy/risk/hold/quantity unchanged; no money install or policy reduction. Public13:06UTC:10sessions/5fills/4gaps/0clean/1simulatedheldADA.50knownOLD cash stays closed;2–3clean/net-R+fresh dossier+ownerGO remain |
+| Alpaca LIVE | Oct6 full-quantity DAY re-arm/trailing PASS; next Oct7 open check. Dynamic replacement A/reserve and B/weekly historical/holdout prereg then PAPER; queued fractional DAY separate PAPER gate | Codex operations; cap487.42/gross0.70 frozen, one manager. No current replacement/rotation or risk increase |
+| NEW ATT1 | Original48h probes complete, all archived members processed;631 REST CTS violations and0comparable funding events. Public Oct6 15:03UTC17sessions/10gaps/1clean/0held. Separately reviewed transport/observation and reserve/cash contracts remain next; actual packetBLOCKED | Codex;2s/frozen strategy/risk/hold/quantity unchanged. No automatic policy reduction or transport switch;2–3clean/net-R+actual dossier+separate ownerGO remain |
 | Operations analyst | Existing Telegram/web deployed with shared $1 cash envelope; retain dated citations, confirm OLD/NEW distinction, label at least30 proposals before claiming precision | Codex; on-demand diagnostics, no auto-tuning/executor/paid cron/money authority; invoice and unrelated API callers outside ledger guarantee |
 | PM2 | **KILLED / NOT_EXECUTABLE** in published Oct3 KARTA:3 dates/792 rounds/0 qualifying violations | Claude terminal registry verdict; removed from LIVE queue, slot freed; no judge rerun |
 | TOLPA_1D / weekly | Published Binance2021–2022 cross-venue replication loading; frozen judge after download; restore PIT forward inputs in parallel | Claude; replication is not untouched Bybitholdout, same-family evidence not additive; no cheap-screen→LIVE |
-| KITY_POZICII | Prereg/loader/judge published before data; download after TOLPA, then frozen primary/replication/independence gates | Claude; one Factory slot, not READY_FOR_BUILD; no extra families until terminal/rescue budget |
-| ETS2M | Frozen verdict no earlier Oct10 19:00UTC | Claude; no retuning or early evidence consumption |
+| KITY M3 | Frozen research intake accepted; local orders-OFF k=n//10/251vectors delivered. Oct7 23:55UTC raw OI/census → Oct8 unseen independent basket; actual venue/min/depth/cost/account/risk/unwind dossier remains required | Claude immutable forward evidence; Codex execution. No credentials/order path; no money without separate owner GO |
+| ETS2M | Oct6 pre-due COHORT_PIN_MISMATCH despite original code/epoch pins; recover original first900 source bytes or terminal BLOCKED. Waiting PID46460 still alive; dueOct10 19UTC unchanged | No outcomes early, silent repinning, rule/cohort replacement or job restart |
 | PEREGREV | Required prospective events/days and frozen verdict | Claude; execution baseline alone is not net edge |
 | NOCHNOY FX | **KILLED / NOT_EXECUTABLE** on BullWaves and preregistered FxPro Raw+ retry | Removed from LIVE queue; no third broker shopping or resurrection |
 | SBR1 / XSEC / Bull / old Gold H1 | Respect parked/negative verdicts; new mechanism/data required to reopen a family | No current accepted long/range candidate asserted |
