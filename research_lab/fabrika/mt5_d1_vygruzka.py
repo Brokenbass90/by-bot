@@ -30,9 +30,12 @@ def d1(m, imya):
                 break
             bary = F._spisok(r, ("history", "candles", "rates", "bars", "data", "items"))
             if bary:
+                if not vse:
+                    print(f"  {imya}: ключи бара {sorted(bary[0].keys())}", flush=True)
                 for x in bary:
-                    t = str(x.get("time") or x.get("datetime"))[:10].replace(".", "-")
-                    vse[t] = [t, float(x["open"]), float(x["high"]), float(x["low"]), float(x["close"])]
+                    t = dt.datetime.utcfromtimestamp(F._vremya(x.get("time") or x.get("datetime")) / 1000).date().isoformat()
+                    g = lambda *kk: next(float(x[k]) for k in kk if x.get(k) is not None)
+                    vse[t] = [t, g("open", "o", "Open"), g("high", "h", "High"), g("low", "l", "Low"), g("close", "c", "Close")]
                 break
             __import__("time").sleep(2)
     return [vse[k] for k in sorted(vse)]
@@ -48,8 +51,8 @@ def main():
         for k in kk:
             try:
                 bary = d1(m, k)
-            except Exception:
-                bary = []
+            except Exception as e:
+                print(f"  {s}/{k}: ошибка {type(e).__name__}: {str(e)[:200]}"); bary = []
             if bary:
                 (OUT / f"{s}.json").write_text(json.dumps(dict(simvol=k, server=server, bary=bary)))
                 po = {}
