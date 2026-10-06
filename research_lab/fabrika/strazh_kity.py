@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""strazh_kity.py — страж деградации KITY M3. ТОЛЬКО ДИАГНОСТИКА, только чтение.
-Ничего не меняет в стратегии и не трогает счёт: выдаёт статус OK / WATCH / REDUCE_HALF / PAUSE, который
-исполняет Codex/владелец. Поднять риск страж не может в принципе — у него нет такого выхода.
+"""strazh_kity.py — страж деградации KITY M3. СОВЕТНИК, только чтение (см. CEL_SISTEMY.md).
+Статистические сигналы (R1–R4) → только РЕКОМЕНДАЦИЯ владельцу: KEEP / WATCH / REDUCE 0.5x / PAUSE, с причиной.
+Размер в LIVE по статистике сам не меняется — решает владелец (GO).
+Операционный отказ (R5) → AVARIYA: относится к заранее одобренным жёстким предохранителям (стоп новых входов
+исполняет прод Codex автоматически). Поднять риск страж не может в принципе — у него нет такого выхода.
 
 --zamorozit : один раз считает пороги из ИСТОРИИ (окно PRIMARY, та же сделка, что kity_m3_risk.py) и пишет
               data/kity_m3_ten/STRAZH_POROGI.json с sha256. Повторно не перезаписывает.
@@ -23,6 +25,7 @@ LAB = Path(__file__).resolve().parents[1]
 TEN = LAB / "data" / "kity_m3_ten"
 POR = TEN / "STRAZH_POROGI.json"
 STATUSY = ["OK", "WATCH", "REDUCE_HALF", "PAUSE"]
+REKOM = {"OK": "KEEP", "WATCH": "KEEP (наблюдать)", "REDUCE_HALF": "рекомендую REDUCE 0.5x — нужен GO владельца", "PAUSE": "рекомендую PAUSE — нужен GO владельца"}
 
 def istoriya():
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -100,8 +103,12 @@ def status():
                 flagi.append(("WATCH", f"R4 нога {n.get('s') or n.get('sym')} {n['dohod']:.0%} ({f.parent.name})"))
     st = [w["status"] for w in nedeli]
     if len(st) >= 2 and all(s == "PAPER_WEEK_OPERATIONAL_FAIL" for s in st[-2:]): flagi.append(("PAUSE", "R5 две операционные FAIL подряд"))
-    itog = max([f[0] for f in flagi], key=STATUSY.index, default="OK")
-    print(json.dumps(dict(status=itog, nedel_vpered=len(r), flagi=flagi,
+    avariya = [f for f in flagi if f[1].startswith("R5")]
+    stat = [f for f in flagi if not f[1].startswith("R5")]
+    itog = max([f[0] for f in stat], key=STATUSY.index, default="OK")
+    print(json.dumps(dict(status=itog, rekomendaciya=REKOM[itog], avtomatom_v_live="ничего (статистика — только совет)",
+                          avariya_stop_novyh_vhodov=bool(avariya), avariya_prichiny=[a[1] for a in avariya],
+                          nedel_vpered=len(r), flagi=stat,
                           porogi_sha256=hashlib.sha256(POR.read_bytes()).hexdigest()), ensure_ascii=False, indent=1))
 
 if __name__ == "__main__":
