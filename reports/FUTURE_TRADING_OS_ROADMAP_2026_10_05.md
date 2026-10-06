@@ -7,8 +7,9 @@ owns execution acceptance. WIP stays bounded; money promotion stays owner-contro
 
 ## Immediate sequence
 
-Alpaca daily broker protection/finality → KITY actual unseen/account execution
-packet → ATT1 fixed48h experiment terminal → ETS2M frozen first-window report.
+Alpaca daily broker protection/finality + new prospective V1 actual PAPER gate →
+KITY actual unseen/account execution packet → ETS2M source blocker/frozen report.
+ATT1 fixed48h experiment is complete; retain its terminal evidence/money gates.
 Claude priorities through October9: exact KITY23:55 OI/census, closed candles,
 raw hashes/timestamps, first October8 unseen basket and October9 archive parity;
 synchronize machine registry/test vectors. External evidence never places orders.
@@ -23,8 +24,9 @@ monotonic floor; fractional DAY re-arm has a measured opening gap. First
 improvement is PAPER verification of queued next-session DAY protection,
 restart/quantity reconciliation and broker acceptance; no unsupported GTC promise.
 AMD first exit is gross positive, final net pending; that is not long-run net edge.
-Monthly selection/rotation exists; an exited name is not automatically replaced
-intramonth. Preserve selection/binding/protection/cooldown gates.
+Current LIVE remains monthly/protection-only. New prospective ALPACA_DYNAMIC_V1
+is implemented locally orders-OFF; its actual PAPER/account/handoff gates precede
+owner LIVE promotion. Preserve binding/protection/cooldown gates.
 
 Design `ALPACA_LIVE_ANALYTICS_V1`: append-only signal→selection→intended quantity→
 fill→spread/slippage→HWM/floor/stop changes→exit, with gross/net/fees, MFE/MAE,
@@ -42,15 +44,19 @@ paper shadow. Elder/regime is one causal preregistered baseline-vs-filter
 experiment, not a discretionary LIVE patch or ATT1 prerequisite.
 
 
-## Near-term authorized challenger — ALPACA_DYNAMIC_REPLACEMENT_V1
+## Near-term prospective version — ALPACA_DYNAMIC_V1
 
-Owner October6 request: monthly baseline vs A (replace a confirmed vacant slot
-from the frozen monthly reserve) vs B (causal weekly refresh/rotation). Read
-`ALPACA_DYNAMIC_REPLACEMENT_V1_PLAN_2026_10_06.md`. Status SCOPED/NOT_IMPLEMENTED/
-NOT_TESTED/NOT_PREREG_FROZEN. Same capital/risk/costs, PIT historical/preregistered
-holdout comparison, then PAPER; current LIVE entries/rotation/stop policy frozen.
-Existing bridge replacement/rotation helpers are reuse candidates after gates,
-not an instruction to enable them. More frequent selection remains later scope.
+Owner October6 supersedes the old frozen-monthly-reserve challenger for immediate
+work. Local orders-OFF implementation delivered; POLICY/RUNBOOK/DELIVERY authoritative.
+Next actual windowOct7 16:30Cyprus on closedOct6data, weekly first-session refresh,
+one confirmed exit→one replacement lineage, no extra fourth-slot purchase/forced
+rotation. Existing59-symbol universe and selector pinned; risk/capital unchanged.
+41targetedPASS, full3945PASS/57existingFAIL, no new regression. Actual isolated PAPER
+broker/account/handoff/rollback gates pending, then separate ownerLIVEGO. No November
+waiting requirement or retrospective reserve; no net-edge improvement claim.
+Daily refresh/stop challenger and historical baseline comparison remain separate
+studies. Stop this bounded engineering cycle; KITY actual unseen/account gates on
+08–09October are next money priority. ATT148h probes already complete, not restarted.
 
 ## Multiple sleeves and Governor
 

@@ -1,0 +1,266 @@
+{
+  "schema": "ALPACA_DYNAMIC_V1",
+  "mode": "ORDERS_OFF",
+  "money_authority": false,
+  "sealed_ms": 1791305656112,
+  "first_window_ms": 1791379800000,
+  "ranking_schedule": "first_window_then_first_XNYS_session_of_each_ISO_week",
+  "entry_schedule": "regular_session_open_first_five_minutes",
+  "forced_rotation": false,
+  "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+  "capital_usd": "487.42",
+  "gross": "0.70",
+  "max_positions": 4,
+  "max_new_entries_per_session": 1,
+  "max_snapshot_age_ms": 300000,
+  "inherited_slots": [
+    {
+      "entry_order_id": "2b559bee-1818-450d-b5c0-1d1b015c2422",
+      "symbol": "CRWD",
+      "qty": "0.469970151",
+      "entry_price": "265.336",
+      "notional_cap": "124.699999985736",
+      "risk_cap": "10.906127324106",
+      "entry_ms": 1790863815162
+    },
+    {
+      "entry_order_id": "6028b4d0-f89c-465c-aa2f-e8f120d10fe6",
+      "symbol": "AMD",
+      "qty": "0.186377282",
+      "entry_price": "609.57",
+      "notional_cap": "113.60999978874",
+      "risk_cap": "9.07098231494",
+      "entry_ms": 1790863818797
+    },
+    {
+      "entry_order_id": "62513c25-0929-45ef-9a29-e219c9899a06",
+      "symbol": "META",
+      "qty": "0.141939508",
+      "entry_price": "724.534",
+      "notional_cap": "102.839999489272",
+      "risk_cap": "7.916534119192",
+      "entry_ms": 1790863822375
+    }
+  ],
+  "source_snapshot_sha256": "389e87cc61b562faef39e34380b7ef80a5ce9fd008a05106140ec0b3cf0f62c2",
+  "existing_selector": "select_v38_successor_spy200_gated; eligible names filtered before selector",
+  "bootstrap_amd_exit_allowed": true,
+  "daily_refresh_enabled": false,
+  "calendar_sessions": [
+    {
+      "session": "2026-10-02",
+      "open_ms": 1790947800000,
+      "close_ms": 1790971200000
+    },
+    {
+      "session": "2026-10-05",
+      "open_ms": 1791207000000,
+      "close_ms": 1791230400000
+    },
+    {
+      "session": "2026-10-06",
+      "open_ms": 1791293400000,
+      "close_ms": 1791316800000
+    },
+    {
+      "session": "2026-10-07",
+      "open_ms": 1791379800000,
+      "close_ms": 1791403200000
+    },
+    {
+      "session": "2026-10-08",
+      "open_ms": 1791466200000,
+      "close_ms": 1791489600000
+    },
+    {
+      "session": "2026-10-09",
+      "open_ms": 1791552600000,
+      "close_ms": 1791576000000
+    },
+    {
+      "session": "2026-10-12",
+      "open_ms": 1791811800000,
+      "close_ms": 1791835200000
+    },
+    {
+      "session": "2026-10-13",
+      "open_ms": 1791898200000,
+      "close_ms": 1791921600000
+    },
+    {
+      "session": "2026-10-14",
+      "open_ms": 1791984600000,
+      "close_ms": 1792008000000
+    },
+    {
+      "session": "2026-10-15",
+      "open_ms": 1792071000000,
+      "close_ms": 1792094400000
+    },
+    {
+      "session": "2026-10-16",
+      "open_ms": 1792157400000,
+      "close_ms": 1792180800000
+    },
+    {
+      "session": "2026-10-19",
+      "open_ms": 1792416600000,
+      "close_ms": 1792440000000
+    },
+    {
+      "session": "2026-10-20",
+      "open_ms": 1792503000000,
+      "close_ms": 1792526400000
+    },
+    {
+      "session": "2026-10-21",
+      "open_ms": 1792589400000,
+      "close_ms": 1792612800000
+    },
+    {
+      "session": "2026-10-22",
+      "open_ms": 1792675800000,
+      "close_ms": 1792699200000
+    },
+    {
+      "session": "2026-10-23",
+      "open_ms": 1792762200000,
+      "close_ms": 1792785600000
+    },
+    {
+      "session": "2026-10-26",
+      "open_ms": 1793021400000,
+      "close_ms": 1793044800000
+    },
+    {
+      "session": "2026-10-27",
+      "open_ms": 1793107800000,
+      "close_ms": 1793131200000
+    },
+    {
+      "session": "2026-10-28",
+      "open_ms": 1793194200000,
+      "close_ms": 1793217600000
+    },
+    {
+      "session": "2026-10-29",
+      "open_ms": 1793280600000,
+      "close_ms": 1793304000000
+    },
+    {
+      "session": "2026-10-30",
+      "open_ms": 1793367000000,
+      "close_ms": 1793390400000
+    },
+    {
+      "session": "2026-11-02",
+      "open_ms": 1793629800000,
+      "close_ms": 1793653200000
+    },
+    {
+      "session": "2026-11-03",
+      "open_ms": 1793716200000,
+      "close_ms": 1793739600000
+    },
+    {
+      "session": "2026-11-04",
+      "open_ms": 1793802600000,
+      "close_ms": 1793826000000
+    },
+    {
+      "session": "2026-11-05",
+      "open_ms": 1793889000000,
+      "close_ms": 1793912400000
+    },
+    {
+      "session": "2026-11-06",
+      "open_ms": 1793975400000,
+      "close_ms": 1793998800000
+    }
+  ],
+  "calendar_sha256": "1c67698db02229d98c162f8900586a57134bd16997285e265af312bada0e6356",
+  "calendar_raw_sha256": "7621b62980d1063c83fb5940bc821b403ff6398f3e0cf22693b1a5e77ae8ba35",
+  "calendar_source_available_ms": 1791305598212,
+  "universe": [
+    "AAPL",
+    "ABBV",
+    "ABNB",
+    "ADBE",
+    "ADSK",
+    "AMD",
+    "AMZN",
+    "AVGO",
+    "BAC",
+    "CAT",
+    "COIN",
+    "COST",
+    "CRM",
+    "CRWD",
+    "CVX",
+    "DDOG",
+    "GE",
+    "GOOGL",
+    "GS",
+    "HD",
+    "INTU",
+    "ISRG",
+    "JNJ",
+    "JPM",
+    "KO",
+    "LLY",
+    "LMT",
+    "MA",
+    "MDB",
+    "META",
+    "MRK",
+    "MSFT",
+    "NET",
+    "NFLX",
+    "NKE",
+    "NOW",
+    "NVDA",
+    "ORCL",
+    "PANW",
+    "PG",
+    "PLTR",
+    "QCOM",
+    "QQQ",
+    "REGN",
+    "SBUX",
+    "SCHW",
+    "SHOP",
+    "SNOW",
+    "SPY",
+    "TSLA",
+    "TSM",
+    "TXN",
+    "UBER",
+    "UNH",
+    "V",
+    "WFC",
+    "WMT",
+    "XOM",
+    "XYZ"
+  ],
+  "universe_source_sha256": "67d35a04350320a6ea5cefc5ab936d40f6b23f92913144361c334e742118fb8f",
+  "selector_source_hashes": {
+    "config_sha256": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245",
+    "portfolio_engine": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+    "bakeoff_contract": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+    "sector_map": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a",
+    "hourly_aggregator": "36fa73e2f6868f87a512f9c9f7196df9365657ecb60d1304d6986288942d51c2",
+    "declared_source_pins": {
+      "portfolio_engine": "d00ee3bf1789e91822c67953e262b0b2d47dc8751df3b4a095501cf66cf5945f",
+      "runner": "1d14dd1dd1dda5e258a0a510c83215d91a9a393267730ea6eb16c060bd1bdca8",
+      "bakeoff_contract": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+      "exact_exit_primitives": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "adaptive_selector": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b",
+      "live_bridge_reference": "13671f7e6fe6158245e831de59493a00b2649c19af815b3a8097b10c6aa38100"
+    }
+  },
+  "selector_file_sha256": {
+    "scripts/alpaca_adaptive_paper.py": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+    "backtest/alpaca_exact_parity_contract.py": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50"
+  },
+  "reentry_calendar_days": 21
+}

@@ -102,3 +102,15 @@ pins, isolated unchanged judge and source parity; do not start a second job,
 read outcomes early, alter its manifest or infer strategyPASS from exit0.
 Preserve the original ATT1 deadline and Alpaca state. Future roadmap is backlog
 only; examples$100/$1000 remain unapproved caps and NEW ordersOFF.
+
+## October6 prospective Alpaca amendment
+
+Latest owner explicitly approves ALPACA_DYNAMIC_V1 prospectively from today,
+superseding the old monthly-reserve/November prerequisite. Local orders-OFF
+candidate is delivered; read current checkpoint, DELIVERY/POLICY/RUNBOOK. Do not
+restart it or invent a Sep30 reserve. Weekly first-XNYS-session refresh, one
+confirmed terminal owned exit→one replacement slot, no unused fourth-slot token
+or forced rotation. Existing LIVE CRWD/META, manager, caps and protection frozen.
+Actual first-window closed-data/account/isolated PAPER/handoff/rollback gates
+remain, then separate owner LIVE GO. Local simulations are not broker truth/edge.
+KITY08–09October remains next money priority; no broad architecture or new families.

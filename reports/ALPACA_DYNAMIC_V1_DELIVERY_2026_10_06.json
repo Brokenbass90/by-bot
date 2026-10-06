@@ -1,0 +1,173 @@
+{
+  "schema": "ALPACA_DYNAMIC_V1_DELIVERY_V1",
+  "status": "IMPLEMENTED_LOCAL_ORDERS_OFF",
+  "promotion_status": "BLOCKED_DATA",
+  "actual_selection_status": "FIRST_WINDOW_NOT_DUE",
+  "generated_utc": "2026-10-06T17:04:52.858958+00:00",
+  "sealed_epoch_utc": "2026-10-06T16:54:16.112000+00:00",
+  "policy_canonical_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+  "first_window_utc": "2026-10-07T13:30:00Z",
+  "first_window_cyprus": "2026-10-07T16:30:00+03:00",
+  "ranking_schedule": "first_window_then_first_XNYS_session_of_each_ISO_week",
+  "calendar_rows": 26,
+  "universe_count": 59,
+  "owned_slot_symbols": [
+    "CRWD",
+    "AMD",
+    "META"
+  ],
+  "initial_confirmed_vacancy": "AMD",
+  "capital_usd": "487.42",
+  "gross": "0.70",
+  "max_positions": 4,
+  "max_new_entries_per_session": 1,
+  "new_live_orders": 0,
+  "live_config_changed": false,
+  "live_deployment_changed": false,
+  "paper_broker_calls": 0,
+  "broker_truth_authenticated_by_candidate": false,
+  "net_edge_demonstrated": false,
+  "targeted": {
+    "command": ".venv/bin/python -m pytest -q tests/test_alpaca_dynamic_v1.py",
+    "passed": 41,
+    "failed": 0,
+    "log_sha256": "8a7db7be8db579a636b708eec434b726d9bd54b3d3c2a3e515b32b4ed3b99de7"
+  },
+  "full_suite": {
+    "exit_code": 1,
+    "failed_count": 57,
+    "baseline_failed_count": 57,
+    "new_failures": [],
+    "removed_failures": [],
+    "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "foreign_restored": true,
+    "log_sha256": "f76117bcbaeab3b31b00a02e5f68deab1d977ebfeb0634f7e3e060e62614cfea",
+    "tail": "57 failed, 3945 passed, 1 warning in 195.37s (0:03:15)"
+  },
+  "critical_review": {
+    "agent": "/root/dynamic_v1_financial_review_oct6",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "routing_verified": true,
+    "runtime_thread_id": "01a1121b-86ad-7531-9a96-fff44b88064b",
+    "turn_context_model_effort_verified": true,
+    "findings": 4,
+    "new_counterexamples_red": "4 failed,31 passed",
+    "primary_fix_retests": "41 passed",
+    "resolutions": [
+      "PAPER fill honors exact plan funding/notional/fee limits",
+      "Unresolved reservation or unreconciled PAPER child blocks another allocation",
+      "Sealed selector dependency pins enforced at every build/seal/use",
+      "Complete authoritative broker calendar pinned, incomplete supplied rows rejected"
+    ]
+  },
+  "source_file_sha256": {
+    "research_lab/alpaca_dynamic_v1.py": "6aeb64a6e4df58a1b88df8726b084f6fba45bbe78b464716ff68ec5cdfbdc0c2",
+    "scripts/run_alpaca_dynamic_v1_orders_off.py": "64a9137207f251270383428f11e4dae358f920b5d33ebcc93c6c0da740614a1a",
+    "tests/test_alpaca_dynamic_v1.py": "e6735900552404540e37da14870f5de375d62613da2a4aee826155506deebaf1",
+    "reports/ALPACA_DYNAMIC_V1_POLICY_2026_10_06.json": "e1624ed74f4e14e06147db28a52069fff6d75bd377fb909f542006f8a09e4ffc"
+  },
+  "capture_sha256": {
+    "calendar_source.json": "67d35a04350320a6ea5cefc5ab936d40f6b23f92913144361c334e742118fb8f",
+    "current_clock_receipt.json": "aeecd21c72eb0070bcc0c5dc866e9af4225235081d73f30b8aa3f382228aa1c8",
+    "review_red.log": "1eabf83127129f9f240788e803c7770249e52b521ffd96e60b2348c68a4046d5"
+  },
+  "exact_remaining_gates": [
+    "Actual Oct6 closed-bar capture and fixed-window Oct7 selector/sizing receipt",
+    "Source-bound current earnings/reentry/concentration/tradability/quote/cash/fee/liability checks",
+    "Existing isolated PAPER broker integration: full accepted protection, partial/recovery, terminal cash and restart/duplicate reconciliation",
+    "Exact exclusive owner handoff, monthly-entry overlap exclusion, rollback/kill dossier",
+    "Separate owner LIVE GO after actual plan and PAPER evidence"
+  ],
+  "next_money_track": "KITY_M3 raw Oct7 23:55UTC and unseen Oct8 basket, immutable research; actual Bybit execution/account dossier",
+  "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "live_postcheck": {
+    "observed_ms": 1791306195289,
+    "broker_writes": 0,
+    "clock": {
+      "is_open": true,
+      "next_close": "2026-10-06T16:00:00-04:00",
+      "next_open": "2026-10-07T09:30:00-04:00",
+      "timestamp": "2026-10-06T13:03:14.639580876-04:00"
+    },
+    "positions": [
+      {
+        "symbol": "CRWD",
+        "qty": "0.469970151",
+        "avg_entry_price": "265.336",
+        "current_price": "279.0016"
+      },
+      {
+        "symbol": "META",
+        "qty": "0.141939508",
+        "avg_entry_price": "724.534",
+        "current_price": "741.42"
+      }
+    ],
+    "open_orders": [
+      {
+        "id": "43d0807d-b95d-4c54-8fa0-34112d902f4a",
+        "symbol": "CRWD",
+        "type": "stop",
+        "side": "sell",
+        "qty": "0.469970151",
+        "stop_price": "275.45",
+        "status": "new",
+        "time_in_force": "day",
+        "submitted_at": "2026-10-06T13:50:12.703253958Z"
+      },
+      {
+        "id": "c7df017d-4448-4673-b90a-fa8c5a4b44c4",
+        "symbol": "META",
+        "type": "stop",
+        "side": "sell",
+        "qty": "0.141939508",
+        "stop_price": "668.76",
+        "status": "new",
+        "time_in_force": "day",
+        "submitted_at": "2026-10-06T13:30:10.706905Z"
+      }
+    ],
+    "single_new_schedule": true,
+    "old_schedules_absent": true,
+    "old_processes_absent": true,
+    "source_manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+    "source_58_match": true,
+    "cap": 487.42,
+    "gross": 0.7,
+    "hwm": {
+      "CRWD": {
+        "accepted_observed_at_utc": "2026-10-06T17:00:16.479414+00:00",
+        "accepted_order_id": "43d0807d-b95d-4c54-8fa0-34112d902f4a",
+        "accepted_order_tif": "day",
+        "accepted_stop_floor": 275.45,
+        "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "entry_fill_qty": 0.469970151,
+        "entry_order_id": "2b559bee-1818-450d-b5c0-1d1b015c2422",
+        "entry_price": 265.336,
+        "hwm": 285.455,
+        "lifecycle_first_seen_at_utc": "2026-10-01T14:10:15.162456554Z",
+        "qty": 0.469970151,
+        "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+        "updated_at_utc": "2026-10-06T17:00:16.479414+00:00"
+      },
+      "META": {
+        "accepted_observed_at_utc": "2026-10-06T17:00:16.479414+00:00",
+        "accepted_order_id": "c7df017d-4448-4673-b90a-fa8c5a4b44c4",
+        "accepted_order_tif": "day",
+        "accepted_stop_floor": 668.76,
+        "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "entry_fill_qty": 0.141939508,
+        "entry_order_id": "62513c25-0929-45ef-9a29-e219c9899a06",
+        "entry_price": 724.534,
+        "hwm": 746.49,
+        "lifecycle_first_seen_at_utc": "2026-10-01T14:10:22.375042044Z",
+        "qty": 0.141939508,
+        "strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+        "updated_at_utc": "2026-10-06T17:00:16.479414+00:00"
+      }
+    },
+    "capture_sha256": "4e88265fab75cb2887cef9340fa732db7bca2ca9e44194e21a80256623cf500a"
+  },
+  "live_preservation_status": "PASS"
+}

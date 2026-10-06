@@ -1,5 +1,11 @@
 # ALPACA_DYNAMIC_REPLACEMENT_V1 — authorized near-term challenger
 
+**SUPERSEDED for immediate delivery by owner October6 prospective amendment.**
+Read `ALPACA_DYNAMIC_V1_DELIVERY_2026_10_06.md`, POLICY and RUNBOOK. The earlier
+frozen-monthly-reserve study below remains historical/separate research, not a
+November waiting gate for the new prospective version. Weekly refresh is now
+in V1; forced rotation and daily refresh remain outside it.
+
 October6 owner priority amendment: replacement V1 is the next bounded Alpaca
 challenger; KITY stays highest new money priority October8–9. Read
 `ALPACA_DYNAMIC_REPLACEMENT_V1_INPUT_AUDIT_2026_10_06.md`/JSON before implementation:

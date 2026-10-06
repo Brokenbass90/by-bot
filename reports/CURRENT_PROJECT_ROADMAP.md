@@ -1,5 +1,31 @@
 # Current roadmap — owner scope October 5, 2026
 
+Latest owner prospective amendment **October6**, superseding the monthly-reserve
+workorder below: **ALPACA_DYNAMIC_V1 IMPLEMENTED_LOCAL_ORDERS_OFF**. Read
+`ALPACA_DYNAMIC_V1_DELIVERY_2026_10_06.md`/JSON, POLICY and RUNBOOK first.
+New prospective epoch sealed2026-10-06T16:54:16.112UTC; no invented Sep30 reserve
+and no mandatory November wait. First windowOct7 13:30UTC/16:30Cyprus, Oct6closed
+bars; weekly first-XNYS-session ranking, replacement at regular opens, no forced
+rotation. Existing selector/dependencies, broker26-row calendar and59-symbol
+cache universe pinned. Three owned slot lineages; AMD supplies one confirmed
+vacancy, unused fourth capacity supplies none. Cap487.42/gross0.70/max4 unchanged,
+one plan/session, linked exact terminal-exit/21day cooldown, cash/gross/fee/risk/
+minimum/eligibility/protection checks. Pending reservation blocks another plan;
+restart preserves intent. 41targetedPASS; full3945PASS/57exact baselineFAIL,
+no new failure, foreign diff preserved. Four critical-review findings reproduced
+and fixed; reviewer model/effort verified. Actual CLI NOT_DUE; synthetic PAPER
+is not broker PAPER acceptance or net-edge proof. Promotion BLOCKED_DATA until
+actual closed-bar/window/account/gate packet, isolated PAPER protection/finality/
+recovery and exact exclusive-owner/monthly-overlap/rollback dossier, then separate
+ownerLIVEGO. Candidate not deployed, no credentials/sender/LIVE changes.
+Fresh preservation GET Oct6 17:03:15UTC /20:03:15Cyprus: full acceptedDAY
+CRWD275.45/META668.76, broker qty/IDs=floors, oneNEW/OLDabsent,58pins/caps unchanged.
+Old frozen-monthly-reserve input blocker below belongs to the superseded contract,
+not the new version. Stop challenger remains separate. KITY highest money priority
+08–09October; preserve its frozen research, first unseen raw23:55OI/basket and
+actual Bybit account feasibility; no crypto money without separateGO. ATT1 completed
+probe/ETS source-blocker facts keep their prior observation times.
+
 Latest owner priority amendment **October6 evening**: implement a bounded
 Alpaca reserve-replacement challenger first; KITY highest money priority08–09October.
 Read `ALPACA_DYNAMIC_REPLACEMENT_V1_INPUT_AUDIT_2026_10_06.md`/JSON and amendedPLAN.
