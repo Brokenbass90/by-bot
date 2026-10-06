@@ -1,0 +1,4210 @@
+{
+ "sozdano": "2026-10-06T19:16:23+00:00",
+ "nogi": {
+  "KITY_M3_POTOK": {
+   "rynok": "крипта Binance USDT-M",
+   "modul": "research_lab/kity_m3_ten.py",
+   "chto_lovit": "продолжение за агрессивным потоком тейкеров d−1, недельно, PIT топ-50",
+   "storona": "long+short (дециль k=n//10)",
+   "rezhim": "UNKNOWN (по годам 2023 +30, 2024 +37, 2025 +183, 2026 +185 bps — режимный разбор B3)",
+   "edge": "PRIMARY +103 bps/нед t2.59; репл. SAME_SIGN +74",
+   "ispolnenie": "orders-off у Codex, паритет 251 вектора PASS; тень с 08.10",
+   "izderzhki": "12 bps круг + фандинг заложены",
+   "status": "READY_FOR_BUILD → canary-ворота 09.10",
+   "dokazatelstva": [
+    "research_lab/data/binance_kity/M3_KVITANCIYA.json",
+    "research_lab/data/binance_kity/KITY_M3_RISK_PROFIL.json"
+   ],
+   "istochnik": "ручная (проверено)"
+  },
+  "REBALANCING_PRESSURE": {
+   "rynok": "индексы US30 (FxPro CFD)",
+   "modul": "research_lab/rebalancing_pressure.py",
+   "chto_lovit": "конец месяца против перекоса акции−облигации",
+   "storona": "long/short индекса",
+   "rezhim": "не крипто-режим; календарный",
+   "edge": "PRIMARY +42.7 bps/соб t2.06; HOLDOUT +12.5 SAME_SIGN",
+   "ispolnenie": "тень rebal_ten; пакет Codex после 30.10",
+   "izderzhki": "US30 круг 0.36 bps",
+   "status": "READY_FOR_BUILD (на грани), вперёд 26–30.10",
+   "dokazatelstva": [
+    "research_lab/data/REBALANCING_KVITANCIYA.json"
+   ],
+   "istochnik": "ручная (проверено)"
+  },
+  "ALPACA": {
+   "rynok": "акции США",
+   "modul": "scripts/alpaca_adaptive_paper.py (Codex)",
+   "chto_lovit": "v38/SPY200 селектор, месячный → динамическая замена",
+   "storona": "long",
+   "rezhim": "фильтр SPY200 внутри",
+   "edge": "история 14.48%/г DD 7.57% PF 1.81",
+   "ispolnenie": "LIVE (CRWD, META) с защитой",
+   "izderzhki": "учтены Codex",
+   "status": "LIVE; Dynamic V1 → PAPER/LIVE GO",
+   "dokazatelstva": [
+    "bybit-bot-recovery-20260824/reports/ALPACA_DYNAMIC_V1_DELIVERY_2026_10_06.md"
+   ],
+   "istochnik": "ручная (проверено)"
+  },
+  "ETS2M": {
+   "rynok": "крипта Bybit",
+   "modul": "strategies/elder_triple_screen_v2.py + research_lab/yadro.py",
+   "chto_lovit": "Elder triple screen, исполнимая версия ETS2S",
+   "storona": "long+short",
+   "rezhim": "UNKNOWN",
+   "edge": "ETS2S информация +0.0668R 4.22σ; деньги — вердикт ETS2M",
+   "ispolnenie": "тень ядра",
+   "izderzhki": "в ядре",
+   "status": "вердикт 10.10 19:00 UTC",
+   "dokazatelstva": [
+    "research_lab/data/yadro/ETS2M/",
+    "research_lab/PREREG_TRI_TENI_2026_09_15.md"
+   ],
+   "istochnik": "ручная (проверено)"
+  },
+  "ATT1": {
+   "rynok": "крипта Bybit",
+   "modul": "strategies/alt_trendline_touch_v1.py / att1_live.py",
+   "chto_lovit": "касание наклонной линии тренда, шорт",
+   "storona": "short",
+   "rezhim": "аудит 14.08: bull +1.26R/91 PF1.03, neutral +5.57R/252 PF1.04, bear −11.36R/35 PF0.51; оркестратор 08: флет-",
+   "edge": "слабый: PF ≈1.03–1.04 в хороших режимах; reserved OOS 29.08 FAIL_CLOSED",
+   "ispolnenie": "BLOCKED_DATA (транспорт CTS; 48ч-терминал 06.10)",
+   "izderzhki": "чувствителен",
+   "status": "CONDITIONAL_CANDIDATE: edge по режиму и исполнение — раздельно",
+   "dokazatelstva": [
+    "reports/evidence/ATT1_BULL_REGIME_AND_LOSS_AUDIT_20260814.json",
+    "research_lab/orch.log"
+   ],
+   "istochnik": "ручная (проверено)"
+  },
+  "SBR1": {
+   "rynok": "крипта Bybit major8",
+   "modul": "strategies/sloped_break_retest_v1.py",
+   "chto_lovit": "пробой наклонного уровня с ретестом, лонг",
+   "storona": "long",
+   "rezhim": "флет+ (оркестратор 08)",
+   "edge": "история 2023–25 64 сделки +24.26R PF2.06; reserved OOS 16 сделок −3.31R (LOW_N)",
+   "ispolnenie": "тень на VPS с 24.08, журнал 40 768 событий, сделок 0",
+   "izderzhki": "?",
+   "status": "INCONCLUSIVE_LOW_N",
+   "dokazatelstva": [
+    "research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json"
+   ],
+   "istochnik": "ручная (проверено)"
+  },
+  "BOUNCE1": {
+   "rynok": "крипта BTC/ETH",
+   "modul": "strategies/bounce1_live.py",
+   "chto_lovit": "отскок от уровня",
+   "storona": "long?",
+   "rezhim": "UNKNOWN",
+   "edge": "3 окна по 120 дн. все +, 41 сделка, PF 1.86/3.35/2.39",
+   "ispolnenie": "тень не развёрнута (02.08)",
+   "izderzhki": "?",
+   "status": "PASS_TO_PROSPECTIVE_RISK_ZERO",
+   "dokazatelstva": [
+    "reports/releases/BOUNCE1_MAJORS_EXACT_REPLAY_PASS_2026_08_02.json"
+   ],
+   "istochnik": "ручная (проверено)"
+  },
+  "alpaca_adaptive_v1": {
+   "rynok": "?",
+   "modul": "strategies/alpaca_adaptive_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 25,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/ROADMAP_ARHIV_2026_09_23.md",
+    "research_lab/ALPACA_MONEY_GATE_2026_09_14.md",
+    "research_lab/results/alpaca_monthly_paper_parity_20260822/blocked_receipt.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alpaca_dynamic_v3_event": {
+   "rynok": "?",
+   "modul": "strategies/alpaca_dynamic_v3_event.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 15,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alpaca_dynamic_v4_event": {
+   "rynok": "?",
+   "modul": "strategies/alpaca_dynamic_v4_event.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 14,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_bear_regime_continuation_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_bear_regime_continuation_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 26,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_brc1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_channel_bounce_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_channel_bounce_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 20,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/passport_acb1.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_elder_revived_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_elder_revived_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 28,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_elderrev.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_horizontal_break_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_horizontal_break_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 27,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_hzbo1.json",
+    "research_lab/passport_hzbo1_h.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_inplay_breakdown_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_inplay_breakdown_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 72,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_edge.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_inplay_breakdown_v2": {
+   "rynok": "?",
+   "modul": "strategies/alt_inplay_breakdown_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 20,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_edge.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_liquidity_sweep_reversal_v2": {
+   "rynok": "?",
+   "modul": "strategies/alt_liquidity_sweep_reversal_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 19,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_momentum_breakout_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_momentum_breakout_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 21,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/major_hunt.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_pullback_continuation_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_pullback_continuation_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 18,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_range_reclaim_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_range_reclaim_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 18,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_arr1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_range_scalp_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_range_scalp_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 52,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_ars1.json",
+    "research_lab/_to_delete/passport__smoke.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_resistance_fade_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_resistance_fade_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 63,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_arf1.json",
+    "research_lab/passport_arf1_h.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_resistance_fade_v2": {
+   "rynok": "?",
+   "modul": "strategies/alt_resistance_fade_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 19,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/passport_arf2.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_slope_break_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_slope_break_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 27,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_edge.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_sloped_channel_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_sloped_channel_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 44,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/passport_asc1.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_sloped_momentum_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_sloped_momentum_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 26,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_asm1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_squeeze_breakout_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_squeeze_breakout_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 24,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "reports/research/negative_trade_lab_20260811/squeeze_long_discovery_base/analysis.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_support_bounce_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_support_bounce_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 50,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_edge.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_support_bounce_v2": {
+   "rynok": "?",
+   "modul": "strategies/alt_support_bounce_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 25,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/passport_asb2.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_support_reclaim_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_support_reclaim_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 19,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_asr1.json",
+    "research_lab/passport_asr1_h.json",
+    "research_lab/passport_asr1_flat.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_trendline_touch_v2": {
+   "rynok": "?",
+   "modul": "strategies/alt_trendline_touch_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 17,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_att2.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "alt_volume_spike_momentum_v1": {
+   "rynok": "?",
+   "modul": "strategies/alt_volume_spike_momentum_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 20,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_vsm1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "asb1_live": {
+   "rynok": "?",
+   "modul": "strategies/asb1_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 15,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "asm1_live": {
+   "rynok": "?",
+   "modul": "strategies/asm1_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 11,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "att1_v2_live": {
+   "rynok": "?",
+   "modul": "strategies/att1_v2_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 12,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "basis_arb_v1": {
+   "rynok": "?",
+   "modul": "strategies/basis_arb_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 13,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "breakdown_live": {
+   "rynok": "?",
+   "modul": "strategies/breakdown_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 15,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "breakdown_retest_v3": {
+   "rynok": "?",
+   "modul": "strategies/breakdown_retest_v3.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 19,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_cycle_continuation_v1": {
+   "rynok": "?",
+   "modul": "strategies/btc_cycle_continuation_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 13,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_btcc2.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_cycle_level_target_v2": {
+   "rynok": "?",
+   "modul": "strategies/btc_cycle_level_target_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 13,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_btcl2.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_cycle_pullback_v1": {
+   "rynok": "?",
+   "modul": "strategies/btc_cycle_pullback_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 14,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_btcc1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_eth_midterm_pullback": {
+   "rynok": "?",
+   "modul": "strategies/btc_eth_midterm_pullback.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 57,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_mtpb2.json",
+    "research_lab/passport_mtpb.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_eth_midterm_short_v1": {
+   "rynok": "?",
+   "modul": "strategies/btc_eth_midterm_short_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 16,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_mtsv1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_eth_midterm_short_v2": {
+   "rynok": "?",
+   "modul": "strategies/btc_eth_midterm_short_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 13,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_mtsv2.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_eth_midterm_v3": {
+   "rynok": "?",
+   "modul": "strategies/btc_eth_midterm_v3.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 22,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_mtpb3.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_regime_flip_continuation_v1": {
+   "rynok": "?",
+   "modul": "strategies/btc_regime_flip_continuation_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 15,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_btcrf1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_regime_retest_v1": {
+   "rynok": "?",
+   "modul": "strategies/btc_regime_retest_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 18,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_btcr1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "btc_sloped_reclaim_v1": {
+   "rynok": "?",
+   "modul": "strategies/btc_sloped_reclaim_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 14,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_btcs1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "elder_crypto_v1": {
+   "rynok": "?",
+   "modul": "strategies/elder_crypto_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 18,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_ecv1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "elder_triple_screen_v3": {
+   "rynok": "?",
+   "modul": "strategies/elder_triple_screen_v3.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 32,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_ets3.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "equities_swing_active_v1": {
+   "rynok": "?",
+   "modul": "strategies/equities_swing_active_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 16,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "event_expansion_retest_long_mtf_v1": {
+   "rynok": "?",
+   "modul": "strategies/event_expansion_retest_long_mtf_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 9,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "event_expansion_retest_long_v1": {
+   "rynok": "?",
+   "modul": "strategies/event_expansion_retest_long_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 27,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "flat_resistance_fade_live": {
+   "rynok": "?",
+   "modul": "strategies/flat_resistance_fade_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 18,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "funding_hold_v1": {
+   "rynok": "?",
+   "modul": "strategies/funding_hold_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 17,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "funding_rate_reversion_v1": {
+   "rynok": "?",
+   "modul": "strategies/funding_rate_reversion_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 20,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_fr.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "grid_smart_v1": {
+   "rynok": "?",
+   "modul": "strategies/grid_smart_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 14,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/prereg/PREREG_ORDER_FLOW_V1_2026_09_04.md",
+    "research_lab/passport_gs1.json",
+    "reports/research/BACKTEST_HARVEST.json"
+   ],
+   "istochnik": "авто"
+  },
+  "gs1_live": {
+   "rynok": "?",
+   "modul": "strategies/gs1_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 11,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "hzbo1_live": {
+   "rynok": "?",
+   "modul": "strategies/hzbo1_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 14,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "impulse_volume_breakout_v1": {
+   "rynok": "?",
+   "modul": "strategies/impulse_volume_breakout_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 51,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_ivb1.json",
+    "reports/research/BACKTEST_HARVEST.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "inplay_breakout": {
+   "rynok": "?",
+   "modul": "strategies/inplay_breakout.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 111,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "reports/CURRENT_PROJECT_ROADMAP.md",
+    "reports/research/BACKTEST_HARVEST.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "inplay_retest_v3": {
+   "rynok": "?",
+   "modul": "strategies/inplay_retest_v3.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 45,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/prereg/PREREG_PUMP4_PLATO_2026_08_31.md",
+    "reports/CURRENT_PROJECT_ROADMAP.md"
+   ],
+   "istochnik": "авто"
+  },
+  "inplay_retest_v4": {
+   "rynok": "?",
+   "modul": "strategies/inplay_retest_v4.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 27,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/passport_irv4.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "inplay_wrapper": {
+   "rynok": "?",
+   "modul": "strategies/inplay_wrapper.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 15,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "liquidation_cascade_entry_v1": {
+   "rynok": "?",
+   "modul": "strategies/liquidation_cascade_entry_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 24,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_lc.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "live_kline_utils": {
+   "rynok": "?",
+   "modul": "strategies/live_kline_utils.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 11,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/prereg/PREREG_ATT1_SBR1_ADAPTER_PARITY_2026_08_20.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "micro_scalper_breakout_v1": {
+   "rynok": "?",
+   "modul": "strategies/micro_scalper_breakout_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 21,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/prereg/PREREG_PUMP4_PLATO_2026_08_31.md",
+    "research_lab/passport_msbrk.json"
+   ],
+   "istochnik": "авто"
+  },
+  "micro_scalper_live": {
+   "rynok": "?",
+   "modul": "strategies/micro_scalper_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 11,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "micro_scalper_v1": {
+   "rynok": "?",
+   "modul": "strategies/micro_scalper_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 26,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/passport_mscalp.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "pair_arb_executor_v1": {
+   "rynok": "?",
+   "modul": "strategies/pair_arb_executor_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 17,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "pair_stat_arb_v1": {
+   "rynok": "?",
+   "modul": "strategies/pair_stat_arb_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 21,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "pfs1_live": {
+   "rynok": "?",
+   "modul": "strategies/pfs1_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 10,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "pump_exhaustion_unwind_short_v1": {
+   "rynok": "?",
+   "modul": "strategies/pump_exhaustion_unwind_short_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 26,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "pump_fade_simple": {
+   "rynok": "?",
+   "modul": "strategies/pump_fade_simple.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 27,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "pump_fade_smart_v1": {
+   "rynok": "?",
+   "modul": "strategies/pump_fade_smart_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 20,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_pfs1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "pump_fade_v2": {
+   "rynok": "?",
+   "modul": "strategies/pump_fade_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 21,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_pf2.json",
+    "reports/research/BACKTEST_HARVEST.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "pump_fade_v4r": {
+   "rynok": "?",
+   "modul": "strategies/pump_fade_v4r.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 32,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/prereg/PREREG_PUMP4_PLATO_2026_08_31.md",
+    "research_lab/passport_pf.json",
+    "reports/research/BACKTEST_HARVEST.json"
+   ],
+   "istochnik": "авто"
+  },
+  "pump_momentum_v1": {
+   "rynok": "?",
+   "modul": "strategies/pump_momentum_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 21,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/prereg/PREREG_PUMP4_PLATO_2026_08_31.md",
+    "research_lab/passport_pm.json",
+    "reports/research/BACKTEST_HARVEST.json"
+   ],
+   "istochnik": "авто"
+  },
+  "range_mean_reversion_v1": {
+   "rynok": "?",
+   "modul": "strategies/range_mean_reversion_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 21,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/results/m5_fixed51_rmr1_cost_gate_20260822/preregistration.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "sbr1_live": {
+   "rynok": "?",
+   "modul": "strategies/sbr1_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 7,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/SOSTOYANIE.md",
+    "research_lab/results/att1_sbr1_actual_adapter_parity_presealed_v1_20260823/receipt.json",
+    "reports/CODEX_SESSION_CHECKPOINT_2026_08_22.md"
+   ],
+   "istochnik": "авто"
+  },
+  "sc1_live": {
+   "rynok": "?",
+   "modul": "strategies/sc1_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 15,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/DIRTY_RESEARCH_WORKBENCH_AUDIT_20260814.md",
+    "reports/evidence/DIRTY_RESEARCH_WORKBENCH_AUDIT_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "scalper_bounce_v2": {
+   "rynok": "?",
+   "modul": "strategies/scalper_bounce_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 14,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_sb2.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "scalper_breakout_v2": {
+   "rynok": "?",
+   "modul": "strategies/scalper_breakout_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 14,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_sbr2.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "scalper_classic_v1": {
+   "rynok": "?",
+   "modul": "strategies/scalper_classic_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 13,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_sc1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "scalper_sweep_v2": {
+   "rynok": "?",
+   "modul": "strategies/scalper_sweep_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 12,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_ss2.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "session_open_breakout_v1": {
+   "rynok": "?",
+   "modul": "strategies/session_open_breakout_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 10,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "signals": {
+   "rynok": "?",
+   "modul": "strategies/signals.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 127,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json",
+    "research_lab/results/att1_sbr1_actual_adapter_parity_presealed_v1_20260823/receipt.json",
+    "research_lab/prereg/PREREG_ATT1_SBR1_ADAPTER_PARITY_2026_08_20.md"
+   ],
+   "istochnik": "авто"
+  },
+  "sloped_break_retest_v2": {
+   "rynok": "?",
+   "modul": "strategies/sloped_break_retest_v2.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 15,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "reports/ATT1_SBR1_PARITY_AUDIT_2026_08_20.md",
+    "research_lab/passport_slbr2.json",
+    "reports/research/BACKTEST_HARVEST.json"
+   ],
+   "istochnik": "авто"
+  },
+  "sloped_break_retest_v3": {
+   "rynok": "?",
+   "modul": "strategies/sloped_break_retest_v3.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 10,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "reports/ATT1_SBR1_PARITY_AUDIT_2026_08_20.md",
+    "reports/research/BACKTEST_HARVEST.json",
+    "docs/REESTR_STRATEGIY.md"
+   ],
+   "istochnik": "авто"
+  },
+  "sloped_channel_live": {
+   "rynok": "?",
+   "modul": "strategies/sloped_channel_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 17,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census.json"
+   ],
+   "istochnik": "авто"
+  },
+  "sloped_resistance_choch_v1": {
+   "rynok": "?",
+   "modul": "strategies/sloped_resistance_choch_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 19,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/passport_src1.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/DIRTY_RESEARCH_WORKBENCH_AUDIT_20260814.json"
+   ],
+   "istochnik": "авто"
+  },
+  "smart_grid": {
+   "rynok": "?",
+   "modul": "strategies/smart_grid.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 44,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/_arhiv/ЧТО_ЗДЕСЬ.md",
+    "research_lab/passport_sg.json"
+   ],
+   "istochnik": "авто"
+  },
+  "smart_grid_v1": {
+   "rynok": "?",
+   "modul": "strategies/smart_grid_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 18,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "research_lab/_arhiv/ЧТО_ЗДЕСЬ.md",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/DIRTY_RESEARCH_WORKBENCH_AUDIT_20260814.md"
+   ],
+   "istochnik": "авто"
+  },
+  "spike_fade_v3": {
+   "rynok": "?",
+   "modul": "strategies/spike_fade_v3.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 28,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/KARTA_VOZMOZHNOSTEY.md",
+    "research_lab/passport_sf3.json",
+    "reports/research/BACKTEST_HARVEST.json"
+   ],
+   "istochnik": "авто"
+  },
+  "support_reclaim_live": {
+   "rynok": "?",
+   "modul": "strategies/support_reclaim_live.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 10,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/strategy_census_v1.json"
+   ],
+   "istochnik": "авто"
+  },
+  "trend_pullback_v1": {
+   "rynok": "?",
+   "modul": "strategies/trend_pullback_v1.py",
+   "chto_lovit": "?",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NE_PROVERENO (B1)",
+   "upominaniy": 13,
+   "dokazatelstva": [
+    "research_lab/os2/INVENTAR_NOG.md",
+    "research_lab/os2/INVENTAR_NOG.json",
+    "docs/REESTR_STRATEGIY.md",
+    "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+    "research_lab/results/dirty_top2_eth_prefilter_20260812/run_passport.json"
+   ],
+   "istochnik": "авто"
+  },
+  "ETS2S": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Элдер, три экрана, шорт по лимиту",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "информация PASS: +0.0668R к контролю режима, 4.22σ на 2803; деньги −329.9R; избыток по половинам +0.1207/+0.0153",
+   "ispolnenie": "?",
+   "izderzhki": "учтены, лимит honest fill",
+   "status": "SHADOW",
+   "dokazatelstva": [
+    "research_lab/data/ten_ETS2S.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ARB_EGLD": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Кросс-биржевой арбитраж как повторяемая нога",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "повторяемого нет: из 2882 пар за 7 суток выжила одна, 4 $ за круг",
+   "ispolnenie": "?",
+   "izderzhki": "комиссии по биржам, ставки ПУБЛИЧНЫЕ, не аккаунта",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/data/arb_ten.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ALPACA_INTENDED": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Намеренный контракт Alpaca, v38 successor",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "14.48% годовых, DD 7.57%, PF 1.81 — история",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на сторону",
+   "status": "READY_FOR_BUILD",
+   "dokazatelstva": [
+    "research_lab/data/alpaca_namerennyy_ten.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ATT1_KASANIE": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Номер касания линии у ATT1",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "(3+)−(1) = −0.0456R, −2.55σ на 232 решениях: лестница перевернулась",
+   "ispolnenie": "?",
+   "izderzhki": "не применимо, это признак",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "вердикт 21.09.2026 по research_lab/data/ten_ATT1.jsonl; research/fabrika-v1 ba842e4 (STRATEGY_MASTER v3)"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GOLD": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Золото, H1 через мост MT5",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "Элдер на золоте 2019–22: +4.79R, 0.93σ (ЧАСТИЧНО); фабрика 21.09: 13 из 14 LOW_N на 2 годах H1",
+   "ispolnenie": "?",
+   "izderzhki": "не измерены",
+   "status": "POSITIVE_LEAD",
+   "dokazatelstva": [
+    "ветка claude/alpaca-2026-09-07, коммиты 8 сентября"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ATT1_AGG": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ATT1 целиком, агрегат тени",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "+0.055R к контролю режима при sigma 0.27; по деньгам -10.2R",
+   "ispolnenie": "?",
+   "izderzhki": "учтены",
+   "status": "SHADOW",
+   "dokazatelstva": [
+    "research_lab/data/ten_ATT1.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "UROVNI_OTBOY": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Отбой от уровня как самостоятельный вход",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "-2.6% к плацебо на геометрии ATT1, отрицательно во всех трёх эпохах",
+   "ispolnenie": "?",
+   "izderzhki": "—",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "ITOG.md часть 62"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ATT1_FILTER": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Фильтр ATT1 по одному признаку",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "все признаки провалили проверку по трём эпохам",
+   "ispolnenie": "?",
+   "izderzhki": "—",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "ITOG.md часть 63"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ALPACA_A_G2": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Челленджер A+G2 у Alpaca",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "30.26% годовых на замере, но провалил все четыре кризисных среза",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "ветка claude/alpaca-2026-09-07, коммит 703174c"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ARB_EVENT_CLASS": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Премия монеты с закрытым вводом на одной бирже",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "EGLD: 39.6-58.4 бп чистыми, жив в 100% срезов 11 суток",
+   "ispolnenie": "?",
+   "izderzhki": "комиссии по биржам учтены, ставки публичные",
+   "status": "POSITIVE_LEAD",
+   "dokazatelstva": [
+    "research_lab/data/arb_ten.jsonl, ITOG.md часть 67"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OI_RASHOZHDENIE": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Расхождение открытого интереса и цены",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "все 12 клеток не прошли; четыре значимо ОТРИЦАТЕЛЬНЫ до -3.3 сигмы",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "prereg PREREG_OI_RASHOZHDENIE_2026_09_14.md"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "CS_OBOROT": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Кросс-секция по обороту: пришёл ли объём вместе с ценой",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "лестницы нет: середина минус, края около нуля, порог не пройден",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/data/h1 — объём уже лежит в барах"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZRAST_MONETY": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Возраст монеты от листинга",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "знак не монотонен, Q4 хуже Q5; порог не пройден",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "первый бар в h1 даёт дату листинга"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "RAZBROS_RYNKA": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Разброс доходностей как режим рынка",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "не измерен",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/data/h1"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "RAZMAH_SVECHI": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Размах дневной свечи как плата за ликвидность",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "КАРМАН: лестница ровная во всех трёх горизонтах, 7 дн: -53.5 / -48.0 / -47.2 / +1.0 / +93.9 бп, Q5 +2.1 сигмы. Порог Бонферрони 3.02 НЕ пройден — по объявленному правилу это NEGATIVE. ПОДТВЕРЖДАЮЩИЙ ТЕСТ ПРОВАЛЕН: после нормировки на волатильность карман исчез.",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/kross.py --priznak razmah"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "RAZMAH_NORM": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Размах свечи, нормированный на волатильность",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "карман исчез: сырой Q5 на 7 дн был +93.9 бп при 2.1 сигмы, после нормировки на волатильность +33.9 при 1.1",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "карман у RAZMAH_SVECHI"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OTKAT_KRIPTA": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Откат от максимума 30 дней на крипте",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "середина значимо отрицательна, края не проходят порог",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "kross.py --priznak otkat"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "RAZVOROT_1D": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Короткий разворот: вчерашняя доходность",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "лестницы нет, края не проходят порог",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/data/nochnoy_poisk.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "IMPULS_7D": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Продолжение движения за 7 дней",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "лестницы нет, Q5 +1.3 сигмы при пороге 3.02",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/data/nochnoy_poisk.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "BETA_BTC": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Бета к биткоину за 30 дней",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "края симметрично около нуля, середина в минусе",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/data/nochnoy_poisk.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OI_KVINTIL": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Изменение открытого интереса, квинтили",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "все квинтили отрицательны или у нуля",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/data/nochnoy_poisk.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "TELO_SVECHI": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Тело свечи к размаху",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "лестницы нет",
+   "ispolnenie": "?",
+   "izderzhki": "10 бп на круг",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/data/nochnoy_poisk.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_RAZRYV": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Ночной разрыв на стыке суток",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "НЕ ИЗМЕРЕН",
+   "ispolnenie": "?",
+   "izderzhki": "-",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/data/nochnoy_poisk.jsonl"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SBR1_MAJOR8": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "SBR1 родной sloped_break_retest_v1, 8 мажоров",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "история 2023–25: 64 сделки +24.26R PF 2.06; reserved OOS 2025-10…07: 16 сделок −3.31R PF 0.64 (INCONCLUSIVE_LOW_N)",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "SHADOW",
+   "dokazatelstva": [
+    "research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json; bybit-bot-recovery-20260824/reports/ATT1_SBR1_RESERVED_OOS_RESULT_2026_08_29.md"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SBR1_ISSLED": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "SBR1 исследовательский: лонг ×4, флет+, 137 монет",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "печать 3.09: 415 сделок −23.3R, эдж −0.0145R, −0.33σ",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/prereg/SEAL_SPENT.json"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "XSEC_V3_TEN": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "XSEC v3: ранг моментума + волатильности, рыночно-нейтральный",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "тень 57 дн: +$88.9 валовых на $1000, половины +45.6/+43.3, t≈0.35; PIT-упрощённый в фабрике t=1.65",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "SHADOW",
+   "dokazatelstva": [
+    "runtime/xsec_v3_shadow/ledger.jsonl; research_lab/fabrika/verdikty.jsonl#P_KR_XSEC_V3"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ATT1_LONG_TREND": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trendline_touch · crypto137 · {'mod': 'alt_trendline_touch_v1', 'cls': 'AltTrendlineTouchV1Strategy', 'pfx': 'ATT1', 'side': 'long', 'mult': 6, 'hold': 336, 'regime': 'тренд+', 'cd': '8'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#ATT1_LONG_TREND@2026-09-21T06:36:58+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "ATT1_SHORT_TREND": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trendline_touch · crypto137 · {'mod': 'alt_trendline_touch_v1', 'cls': 'AltTrendlineTouchV1Strategy', 'pfx': 'ATT1', 'side': 'short', 'mult': 6, 'hold': 336, 'regime': 'тренд-', 'cd': '8'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#ATT1_SHORT_TREND@2026-09-21T06:48:19+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SBR1_LONG_TREND": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sloped_retest · crypto137 · {'mod': 'sloped_break_retest_v1', 'cls': 'SlopedBreakRetestV1Strategy', 'pfx': 'SBR1', 'side': 'long', 'mult': 4, 'hold': 168, 'regime': 'тренд+', 'cd': '0'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SBR1_LONG_TREND@2026-09-21T06:57:13+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "PROBOY_55__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "breakout · gold · {'meh': 'PROBOY_55', 'rynok': 'gold', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#PROBOY_55__gold__long@2026-09-21T07:23:59+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "PROBOY_55__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "breakout · gold · {'meh': 'PROBOY_55', 'rynok': 'gold', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#PROBOY_55__gold__short@2026-09-21T07:24:01+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · gold · {'meh': 'SZHATIE_BB', 'rynok': 'gold', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__gold__long@2026-09-21T07:24:00+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · gold · {'meh': 'SZHATIE_BB', 'rynok': 'gold', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__gold__short@2026-09-21T07:24:48+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OTKAT_V_TRENDE__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trend_pullback · gold · {'meh': 'OTKAT_V_TRENDE', 'rynok': 'gold', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OTKAT_V_TRENDE__gold__long@2026-09-21T07:24:01+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OTKAT_V_TRENDE__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trend_pullback · gold · {'meh': 'OTKAT_V_TRENDE', 'rynok': 'gold', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OTKAT_V_TRENDE__gold__short@2026-09-21T07:24:49+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "PROBOY_55__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "breakout · crypto137 · {'meh': 'PROBOY_55', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#PROBOY_55__crypto137__long@2026-09-21T07:24:04+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "PROBOY_55__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "breakout · crypto137 · {'meh': 'PROBOY_55', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#PROBOY_55__crypto137__short@2026-09-21T07:24:57+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · crypto137 · {'meh': 'SZHATIE_BB', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__crypto137__long@2026-09-21T07:24:47+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · crypto137 · {'meh': 'SZHATIE_BB', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__crypto137__short@2026-09-21T07:25:39+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OTKAT_V_TRENDE__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trend_pullback · crypto137 · {'meh': 'OTKAT_V_TRENDE', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OTKAT_V_TRENDE__crypto137__long@2026-09-21T07:24:52+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OTKAT_V_TRENDE__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trend_pullback · crypto137 · {'meh': 'OTKAT_V_TRENDE', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OTKAT_V_TRENDE__crypto137__short@2026-09-21T07:25:44+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · crypto137 · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__crypto137__long@2026-09-21T07:24:54+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · crypto137 · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__crypto137__short@2026-09-21T07:25:47+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · gold · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'gold', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__gold__long@2026-09-21T07:25:39+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · gold · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'gold', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__gold__short@2026-09-21T07:25:40+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "KAPITULYACIYA__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "liquidation_reversal · gold · {'meh': 'KAPITULYACIYA', 'rynok': 'gold', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#KAPITULYACIYA__gold__long@2026-09-21T07:25:40+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "KAPITULYACIYA__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "liquidation_reversal · gold · {'meh': 'KAPITULYACIYA', 'rynok': 'gold', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#KAPITULYACIYA__gold__short@2026-09-21T07:25:48+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OBEM_IMPULS__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "flow_continuation · gold · {'meh': 'OBEM_IMPULS', 'rynok': 'gold', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OBEM_IMPULS__gold__long@2026-09-21T07:25:44+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OBEM_IMPULS__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "flow_continuation · gold · {'meh': 'OBEM_IMPULS', 'rynok': 'gold', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OBEM_IMPULS__gold__short@2026-09-21T07:25:53+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "MOMENTUM_30D__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ts_momentum · gold · {'meh': 'MOMENTUM_30D', 'rynok': 'gold', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#MOMENTUM_30D__gold__long@2026-09-21T07:25:45+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "MOMENTUM_30D__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ts_momentum · gold · {'meh': 'MOMENTUM_30D', 'rynok': 'gold', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#MOMENTUM_30D__gold__short@2026-09-21T07:25:53+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "KAPITULYACIYA__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "liquidation_reversal · crypto137 · {'meh': 'KAPITULYACIYA', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#KAPITULYACIYA__crypto137__long@2026-09-21T07:25:49+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "KAPITULYACIYA__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "liquidation_reversal · crypto137 · {'meh': 'KAPITULYACIYA', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#KAPITULYACIYA__crypto137__short@2026-09-21T07:25:56+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OBEM_IMPULS__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "flow_continuation · crypto137 · {'meh': 'OBEM_IMPULS', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OBEM_IMPULS__crypto137__long@2026-09-21T07:25:52+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OBEM_IMPULS__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "flow_continuation · crypto137 · {'meh': 'OBEM_IMPULS', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OBEM_IMPULS__crypto137__short@2026-09-21T07:25:59+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "MOMENTUM_30D__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ts_momentum · crypto137 · {'meh': 'MOMENTUM_30D', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#MOMENTUM_30D__crypto137__long@2026-09-21T07:25:55+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "MOMENTUM_30D__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ts_momentum · crypto137 · {'meh': 'MOMENTUM_30D', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#MOMENTUM_30D__crypto137__short@2026-09-21T07:26:01+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "PROBOY_55__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "breakout · fx7 · {'meh': 'PROBOY_55', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#PROBOY_55__fx7__long@2026-09-21T08:37:46+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "PROBOY_55__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "breakout · fx7 · {'meh': 'PROBOY_55', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#PROBOY_55__fx7__short@2026-09-21T08:37:50+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · fx7 · {'meh': 'SZHATIE_BB', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__fx7__long@2026-09-21T08:37:49+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · fx7 · {'meh': 'SZHATIE_BB', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__fx7__short@2026-09-21T08:37:53+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_AKC_MOM_6_1": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "xs_momentum · akcii_pit · {'signal': 'AKC_MOM_6_1', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_AKC_MOM_6_1@2026-09-21T10:10:13+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_AKC_MOM_6_1_LONG": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "xs_momentum_long · akcii_pit · {'signal': 'AKC_MOM_6_1_LONG', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_AKC_MOM_6_1_LONG@2026-09-21T10:10:14+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_AKC_REVERSAL_5D": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "xs_reversal · akcii_pit · {'signal': 'AKC_REVERSAL_5D', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_AKC_REVERSAL_5D@2026-09-21T08:37:57+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_AKC_LOW_VOL_60": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "low_volatility · akcii_pit · {'signal': 'AKC_LOW_VOL_60', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_AKC_LOW_VOL_60@2026-09-21T10:10:15+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_KR_XSEC_V3": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "xs_momentum_vol · kripto_pit · {'signal': 'KR_XSEC_V3', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_KR_XSEC_V3@2026-09-21T10:10:11+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_KR_FANDING_KERRI": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "funding_carry · kripto_pit · {'signal': 'KR_FANDING_KERRI', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_KR_FANDING_KERRI@2026-09-21T10:10:11+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OTKAT_V_TRENDE__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trend_pullback · fx7 · {'meh': 'OTKAT_V_TRENDE', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OTKAT_V_TRENDE__fx7__long@2026-09-21T08:38:00+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OTKAT_V_TRENDE__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "trend_pullback · fx7 · {'meh': 'OTKAT_V_TRENDE', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OTKAT_V_TRENDE__fx7__short@2026-09-21T08:38:00+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_AKC_BLIZ_MAX_126": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "high_proximity · akcii_pit · {'signal': 'AKC_BLIZ_MAX_126', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_AKC_BLIZ_MAX_126@2026-09-21T10:10:17+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · fx7 · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__fx7__long@2026-09-21T08:38:02+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · fx7 · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__fx7__short@2026-09-21T08:38:03+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "KAPITULYACIYA__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "liquidation_reversal · fx7 · {'meh': 'KAPITULYACIYA', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#KAPITULYACIYA__fx7__long@2026-09-21T08:38:03+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OBEM_IMPULS__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "flow_continuation · fx7 · {'meh': 'OBEM_IMPULS', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OBEM_IMPULS__fx7__long@2026-09-21T08:38:04+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "OBEM_IMPULS__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "flow_continuation · fx7 · {'meh': 'OBEM_IMPULS', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#OBEM_IMPULS__fx7__short@2026-09-21T08:38:05+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "MOMENTUM_30D__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ts_momentum · fx7 · {'meh': 'MOMENTUM_30D', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#MOMENTUM_30D__fx7__long@2026-09-21T08:38:04+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "MOMENTUM_30D__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ts_momentum · fx7 · {'meh': 'MOMENTUM_30D', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#MOMENTUM_30D__fx7__short@2026-09-21T08:38:05+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "KAPITULYACIYA__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "liquidation_reversal · fx7 · {'meh': 'KAPITULYACIYA', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#KAPITULYACIYA__fx7__short@2026-09-21T08:38:06+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "crypto_bull_continuation_v1": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "event_continuation · crypto137_m5 · {'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#crypto_bull_continuation_v1@2026-09-21T12:48:11+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "XSEC_EXACT_TARGET_WEIGHTS_PIT": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "xs_momentum_vol_exact · kripto_pit50 · {'vselennaya': 'pit50', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#XSEC_EXACT_TARGET_WEIGHTS_PIT@2026-09-21T13:13:02+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_XSEC_3D_REVERSAL": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "xs_reversal · kripto_pit50 · {'signal': 'XSEC_3D_REVERSAL', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_XSEC_3D_REVERSAL@2026-09-21T13:13:06+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_LEADER_PULLBACK_BASE": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_leader_pullback · kripto_pit50 · {'signal': 'BULL_LEADER_PULLBACK_BASE', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_LEADER_PULLBACK_BASE@2026-09-21T13:13:10+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_LEADER_PULLBACK_FILTERED": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_leader_pullback_f · kripto_pit50 · {'signal': 'BULL_LEADER_PULLBACK_FILTERED', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_LEADER_PULLBACK_FILTERED@2026-09-21T13:13:13+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_VOL_EXPANSION_BASE": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_vol_expansion · kripto_pit50 · {'signal': 'BULL_VOL_EXPANSION_BASE', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_VOL_EXPANSION_BASE@2026-09-21T13:13:25+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_VOL_EXPANSION_FILTERED": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_vol_expansion_f · kripto_pit50 · {'signal': 'BULL_VOL_EXPANSION_FILTERED', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_VOL_EXPANSION_FILTERED@2026-09-21T13:13:37+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "POLY_SBOR": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Polymarket: сборщик только на чтение + сенсор POLY_SENTIMENT_V1",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "данных ещё нет",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/PREREG_POLY_V1_2026_09_21.md"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_VOL_EXPANSION_POLY": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_vol_expansion_poly · kripto_pit50_poly · {'signal': 'BULL_VOL_EXPANSION_POLY', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_VOL_EXPANSION_POLY@2026-09-22T07:17:26+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "POLY_SENSOR_INFO_3D": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "poly_sensor · kripto_pit50_poly · {'gorizont': 3, 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#POLY_SENSOR_INFO_3D@2026-09-23T10:26:54+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_NOVYY_MAKSIMUM": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_new_high · kripto_pit50 · {'signal': 'BULL_NOVYY_MAKSIMUM', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_NOVYY_MAKSIMUM@2026-09-23T10:36:07+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_OTSTAYUSHCHIY": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_laggard · kripto_pit50 · {'signal': 'BULL_OTSTAYUSHCHIY', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_OTSTAYUSHCHIY@2026-09-23T10:36:11+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_BULL_SILA_K_BTC": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "bull_rs_btc · kripto_pit50 · {'signal': 'BULL_SILA_K_BTC', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_BULL_SILA_K_BTC@2026-09-23T10:36:14+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "S_MAKS_MINUS_MIN": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "novye_maksimumy · kripto_pit50 · {'rynok': 'kripto_pit50', 'priznak': 'MAKS_MINUS_MIN', 'gorizont': 5, 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#S_MAKS_MINUS_MIN@2026-09-23T10:36:16+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "S_OBOROT_TOLCHOK": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "oborot_tolchok · kripto_pit50 · {'rynok': 'kripto_pit50', 'priznak': 'OBOROT_TOLCHOK', 'gorizont': 5, 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "POSITIVE_LEAD",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#S_OBOROT_TOLCHOK@2026-09-23T10:36:18+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "S_SHIRINA_TOLCHOK": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "shirina_tolchok · kripto_pit50 · {'rynok': 'kripto_pit50', 'priznak': 'SHIRINA_TOLCHOK', 'gorizont': 5, 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#S_SHIRINA_TOLCHOK@2026-09-23T10:36:19+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "S_OBOROT_TOLCHOK__PODTV": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "oborot_tolchok · kripto_pit50 · {'rynok': 'kripto_pit50', 'priznak': 'OBOROT_TOLCHOK', 'gorizont': 5, 'etap': 'confirmation'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#S_OBOROT_TOLCHOK__PODTV@2026-09-23T10:36:21+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_AKC_NOVYY_MAKSIMUM": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "new_high · akcii_pit · {'signal': 'AKC_NOVYY_MAKSIMUM', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_AKC_NOVYY_MAKSIMUM@2026-09-23T22:11:03+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_AKC_SILA_K_INDEKSU": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "rs_vs_etalon · akcii_pit · {'signal': 'AKC_SILA_K_INDEKSU', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_AKC_SILA_K_INDEKSU@2026-09-23T22:11:04+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_KR_BETA_LS": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "beta_k_btc · kripto_pit50 · {'signal': 'KR_BETA_LS', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_KR_BETA_LS@2026-09-23T22:11:08+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_KR_SILA_K_BTC_LS": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "rs_vs_etalon_ls · kripto_pit50 · {'signal': 'KR_SILA_K_BTC_LS', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_KR_SILA_K_BTC_LS@2026-09-23T22:11:12+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "TEN_SILA": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "Тень: сечение по 20-дневной инерции, лонг-шорт (бывш. «обгон BTC»)",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "на истории t 1.61 при n_eff 190; порог 2.5 не взят. Калибровка 24.09: линейка честная (на нуле |t|≥2.5 в 1.1% из 89 прогонов), но эдж воспроизводится на данных с порванной связью между монетами (+0.01256 против +0.01181) — значит, берётся инерция каждой монеты, а не отношение монет друг к другу",
+   "ispolnenie": "?",
+   "izderzhki": "28 б.п. на решение плюс фандинг обеих ног",
+   "status": "SHADOW",
+   "dokazatelstva": [
+    "research_lab/PREREG_TEN_SILA_2026_09_23.md; research_lab/ten_sila.py; вердикт research_lab/fabrika/verdikty.jsonl#P_KR_SILA_K_BTC_LS@2026-09-23T22:11; поправка 1 в предрегистрации; fabrika/rezultaty/KALIBROVKA_KR_SILA_K_BTC_LS_*"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_KR_ASIMMETRIYA_VOL": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "asimmetriya_vol · kripto_pit50 · {'signal': 'KR_ASIMMETRIYA_VOL', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_KR_ASIMMETRIYA_VOL@2026-09-24T08:11:18+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_KR_OI_NAKOPLENIE": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "oi_nakoplenie · kripto_pit50 · {'signal': 'KR_OI_NAKOPLENIE', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_KR_OI_NAKOPLENIE@2026-09-24T08:11:23+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "P_KR_OSTATOCHNYY_MOMENT": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "ostatochnyy_moment · kripto_pit50 · {'signal': 'KR_OSTATOCHNYY_MOMENT', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#P_KR_OSTATOCHNYY_MOMENT@2026-09-24T08:11:27+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "S_ROTACIYA_IZ_BTC": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "rotaciya_iz_btc · kripto_pit50 · {'rynok': 'kripto_pit50', 'priznak': 'ROTACIYA_IZ_BTC', 'gorizont': 5, 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#S_ROTACIYA_IZ_BTC@2026-09-24T08:11:28+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · fx7 · {'meh': 'LONDON_PROBOY', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__fx7__long@2026-09-24T15:41:32+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · fx7 · {'meh': 'SVIP_UROVNYA', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__fx7__long@2026-09-24T15:41:32+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GEP_VYHODNYH__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "gep_pereocenka · fx7 · {'meh': 'GEP_VYHODNYH', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#GEP_VYHODNYH__fx7__long@2026-09-24T15:41:33+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · fx7 · {'meh': 'LONDON_PROBOY', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__fx7__short@2026-09-24T15:41:34+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · crypto137 · {'meh': 'LONDON_PROBOY', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__crypto137__long@2026-09-24T15:41:39+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · crypto137 · {'meh': 'SVIP_UROVNYA', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__crypto137__long@2026-09-24T15:41:46+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · fx7 · {'meh': 'SVIP_UROVNYA', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__fx7__short@2026-09-24T15:41:46+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GEP_VYHODNYH__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "gep_pereocenka · fx7 · {'meh': 'GEP_VYHODNYH', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#GEP_VYHODNYH__fx7__short@2026-09-24T15:41:47+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GEP_VYHODNYH__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "gep_pereocenka · crypto137 · {'meh': 'GEP_VYHODNYH', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#GEP_VYHODNYH__crypto137__long@2026-09-24T15:41:48+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__crypto137__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · crypto137 · {'meh': 'NOCHNOY_DREYF', 'rynok': 'crypto137', 'side': 'long'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__crypto137__long@2026-09-24T15:41:58+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · crypto137 · {'meh': 'LONDON_PROBOY', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__crypto137__short@2026-09-24T15:42:03+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · crypto137 · {'meh': 'SVIP_UROVNYA', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__crypto137__short@2026-09-24T15:42:10+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__fx7__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · fx7 · {'meh': 'NOCHNOY_DREYF', 'rynok': 'fx7', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__fx7__long@2026-09-24T15:42:11+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__fx7__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · fx7 · {'meh': 'NOCHNOY_DREYF', 'rynok': 'fx7', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__fx7__short@2026-09-24T15:42:12+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GEP_VYHODNYH__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "gep_pereocenka · crypto137 · {'meh': 'GEP_VYHODNYH', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#GEP_VYHODNYH__crypto137__short@2026-09-24T15:42:13+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__crypto137__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · crypto137 · {'meh': 'NOCHNOY_DREYF', 'rynok': 'crypto137', 'side': 'short'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__crypto137__short@2026-09-24T15:42:23+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · gold · {'meh': 'LONDON_PROBOY', 'rynok': 'gold', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__gold__long@2026-09-30T07:09:56+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · gold · {'meh': 'SVIP_UROVNYA', 'rynok': 'gold', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__gold__long@2026-09-30T07:09:57+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GEP_VYHODNYH__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "gep_pereocenka · gold · {'meh': 'GEP_VYHODNYH', 'rynok': 'gold', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#GEP_VYHODNYH__gold__long@2026-09-30T07:09:57+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__gold__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · gold · {'meh': 'NOCHNOY_DREYF', 'rynok': 'gold', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__gold__long@2026-09-30T07:09:58+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · gold · {'meh': 'LONDON_PROBOY', 'rynok': 'gold', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__gold__short@2026-09-30T07:09:58+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · gold · {'meh': 'SVIP_UROVNYA', 'rynok': 'gold', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__gold__short@2026-09-30T07:09:59+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GEP_VYHODNYH__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "gep_pereocenka · gold · {'meh': 'GEP_VYHODNYH', 'rynok': 'gold', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#GEP_VYHODNYH__gold__short@2026-09-30T07:09:59+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__gold__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · gold · {'meh': 'NOCHNOY_DREYF', 'rynok': 'gold', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__gold__short@2026-09-30T07:10:00+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "GEP_VYHODNYH__fx7_glub__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "gep_pereocenka · fx7_glub · {'meh': 'GEP_VYHODNYH', 'rynok': 'fx7_glub', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#GEP_VYHODNYH__fx7_glub__short@2026-09-30T08:34:26+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "PROBOY_55__gold_glub__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "breakout · gold_glub · {'meh': 'PROBOY_55', 'rynok': 'gold_glub', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#PROBOY_55__gold_glub__short@2026-09-30T08:34:26+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__gold_glub__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · gold_glub · {'meh': 'SZHATIE_BB', 'rynok': 'gold_glub', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__gold_glub__long@2026-09-30T08:34:27+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__gold_glub__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · gold_glub · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'gold_glub', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__gold_glub__long@2026-09-30T08:34:27+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SZHATIE_BB__gold_glub__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "volatility_expansion · gold_glub · {'meh': 'SZHATIE_BB', 'rynok': 'gold_glub', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SZHATIE_BB__gold_glub__short@2026-09-30T08:34:28+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "VOZVRAT_K_SREDNEY__gold_glub__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "mean_reversion · gold_glub · {'meh': 'VOZVRAT_K_SREDNEY', 'rynok': 'gold_glub', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#VOZVRAT_K_SREDNEY__gold_glub__short@2026-09-30T08:34:28+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__gold_glub_utc__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · gold_glub_utc · {'meh': 'LONDON_PROBOY', 'rynok': 'gold_glub_utc', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__gold_glub_utc__long@2026-10-01T09:23:32+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__fx7_glub_utc__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · fx7_glub_utc · {'meh': 'LONDON_PROBOY', 'rynok': 'fx7_glub_utc', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__fx7_glub_utc__long@2026-10-01T09:23:33+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__gold_glub_utc__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · gold_glub_utc · {'meh': 'NOCHNOY_DREYF', 'rynok': 'gold_glub_utc', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__gold_glub_utc__long@2026-10-01T09:23:33+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__fx7_glub_utc__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · fx7_glub_utc · {'meh': 'NOCHNOY_DREYF', 'rynok': 'fx7_glub_utc', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "POSITIVE_LEAD",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__fx7_glub_utc__long@2026-10-01T09:23:34+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__gold_glub_utc__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · gold_glub_utc · {'meh': 'SVIP_UROVNYA', 'rynok': 'gold_glub_utc', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__gold_glub_utc__long@2026-10-01T09:23:34+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__fx7_glub_utc__long": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · fx7_glub_utc · {'meh': 'SVIP_UROVNYA', 'rynok': 'fx7_glub_utc', 'side': 'long', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__fx7_glub_utc__long@2026-10-01T09:23:35+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__gold_glub_utc__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · gold_glub_utc · {'meh': 'LONDON_PROBOY', 'rynok': 'gold_glub_utc', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__gold_glub_utc__short@2026-10-01T09:23:35+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "LONDON_PROBOY__fx7_glub_utc__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "sessiya_proboy · fx7_glub_utc · {'meh': 'LONDON_PROBOY', 'rynok': 'fx7_glub_utc', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#LONDON_PROBOY__fx7_glub_utc__short@2026-10-01T09:23:36+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__gold_glub_utc__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · gold_glub_utc · {'meh': 'NOCHNOY_DREYF', 'rynok': 'gold_glub_utc', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__gold_glub_utc__short@2026-10-01T09:23:36+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__fx7_glub_utc__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · fx7_glub_utc · {'meh': 'NOCHNOY_DREYF', 'rynok': 'fx7_glub_utc', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__fx7_glub_utc__short@2026-10-01T09:23:38+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__gold_glub_utc__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · gold_glub_utc · {'meh': 'SVIP_UROVNYA', 'rynok': 'gold_glub_utc', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "NEGATIVE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__gold_glub_utc__short@2026-10-01T09:23:38+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "SVIP_UROVNYA__fx7_glub_utc__short": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "lozhnyy_proboy · fx7_glub_utc · {'meh': 'SVIP_UROVNYA', 'rynok': 'fx7_glub_utc', 'side': 'short', 'etap': 'discovery'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "HYPOTHESIS",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#SVIP_UROVNYA__fx7_glub_utc__short@2026-10-01T09:23:39+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "NOCHNOY_DREYF__fx7_glub_utc__long__PODTV": {
+   "rynok": "?",
+   "modul": "реестр фабрики",
+   "chto_lovit": "premiya_za_chas · fx7_glub_utc · {'meh': 'NOCHNOY_DREYF', 'rynok': 'fx7_glub_utc', 'side': 'long', 'etap': 'confirmation'}",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "?",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "CANDIDATE",
+   "dokazatelstva": [
+    "research_lab/fabrika/verdikty.jsonl#NOCHNOY_DREYF__fx7_glub_utc__long__PODTV@2026-10-01T09:23:39+00:00"
+   ],
+   "istochnik": "data/reestr.json"
+  },
+  "TOLPA_XS": {
+   "rynok": "bybit+binance",
+   "modul": "реестр контроллера",
+   "chto_lovit": "толпа ошибается на краях (доля лонг-аккаунтов)",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "Binance L1 +20 bps/нед t0.27",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "KILL",
+   "dokazatelstva": [
+    "data/binance/KVITANCIYA.json",
+    "PREREG_TOLPA_BINANCE_REPLICATION_2021_2022.md"
+   ],
+   "istochnik": "REESTR_STRATEGIY.json"
+  },
+  "KITY_POZICII": {
+   "rynok": "binance metrics",
+   "modul": "реестр контроллера",
+   "chto_lovit": "позиции топ-трейдеров",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "−53.6 bps/нед t−1.41",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "PNL_FAIL",
+   "dokazatelstva": [
+    "data/binance_kity/KVITANCIYA.json",
+    "PREREG_KITY_POZICII_2026_10_03.md"
+   ],
+   "istochnik": "REESTR_STRATEGIY.json"
+  },
+  "REZHIMNYY_CARRY": {
+   "rynok": "binance funding",
+   "modul": "реестр контроллера",
+   "chto_lovit": "carry при высоком рыночном фандинге",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "ON 8.8%, 1.29%/год",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "KILL",
+   "dokazatelstva": [
+    "data/binance_kity/CARRY_KVITANCIYA.json",
+    "PREREG_REZHIMNYY_CARRY_2026_10_05.md"
+   ],
+   "istochnik": "REESTR_STRATEGIY.json"
+  },
+  "LONG_TREND_MAJORS": {
+   "rynok": "binance klines",
+   "modul": "реестр контроллера",
+   "chto_lovit": "моментум BTC/ETH 28 дн.",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "t0.76/1.11",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "KILL",
+   "dokazatelstva": [
+    "data/binance_kity/LONG_TREND_KVITANCIYA.json",
+    "PREREG_LONG_TREND_BTC_ETH_2026_10_05.md"
+   ],
+   "istochnik": "REESTR_STRATEGIY.json"
+  },
+  "PUSTOY_HOD": {
+   "rynok": "binance klines taker",
+   "modul": "реестр контроллера",
+   "chto_lovit": "разворот хода без потока",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "−55 bps/нед; корр. с сырым разворотом 0.88",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "KILL",
+   "dokazatelstva": [
+    "data/fabrika_xs/PUSTOY_HOD/KVITANCIYA.json",
+    "prereg/PUSTOY_HOD.json"
+   ],
+   "istochnik": "REESTR_STRATEGIY.json"
+  },
+  "NOVYE_DENGI": {
+   "rynok": "binance metrics",
+   "modul": "реестр контроллера",
+   "chto_lovit": "ход при росте OI в контрактах",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "+43 bps/нед t0.95",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "KILL",
+   "dokazatelstva": [
+    "data/fabrika_xs/NOVYE_DENGI/KVITANCIYA.json",
+    "prereg/NOVYE_DENGI.json"
+   ],
+   "istochnik": "REESTR_STRATEGIY.json"
+  },
+  "FX_MESYAC_HEDZH": {
+   "rynok": "MT5 FxPro D1: EURUSD, US30 (#US30), GER40 (#Germany40)",
+   "modul": "реестр контроллера",
+   "chto_lovit": "иностранные держатели акций США хеджируют валютный риск в конце месяца: если акции США обогнали европейские, продают USD (EURUSD вверх)",
+   "storona": "?",
+   "rezhim": "?",
+   "edge": "{\"PRIMARY\": {\"mesyacev\": 107, \"srednee_bps\": -5.39, \"t\": -0.65, \"polovinki_bps\": [-6.62, -4.18], \"dolya_plyus\": 0.5}, \"HOLDOUT\": {\"mesyacev\": 97, \"srednee_bps\": -5.88, \"t\": -1.02, \"polovinki_bps\": [-14.74, 2.8], \"dolya_plyus\": 0.51, \"status\": \"OPPOSITE\"}}",
+   "ispolnenie": "?",
+   "izderzhki": "?",
+   "status": "KILL",
+   "dokazatelstva": [
+    "data/fabrika_xs/FX_MESYAC_HEDZH/KVITANCIYA.json",
+    "prereg/FX_MESYAC_HEDZH.json"
+   ],
+   "istochnik": "REESTR_STRATEGIY.json"
+  }
+ }
+}
