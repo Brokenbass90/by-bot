@@ -1,0 +1,34 @@
+{
+ "dannye_sha256": "f52892323676aba388c24ce158ceabceae0a40984d6de5dad5692fa2866298ad",
+ "rezultat_sha256": "bcee5c9abc007464cda4f035a9e10be4508e8b0a6e86137004d3e22882fddc5e",
+ "rezultat": {
+  "prereg": "PREREG_REBALANCING_PRESSURE_2026_10_06.md",
+  "kogda": "2026-10-06T07:03:25+00:00",
+  "PRIMARY": {
+   "mesyacev": 90,
+   "srednee_bps": 42.7,
+   "t": 2.06,
+   "polovinki_bps": [
+    65.4,
+    20.0
+   ],
+   "dolya_plyus": 0.58,
+   "korr_s_vsegda_long": 0.29,
+   "vsegda_long_srednee_bps": 20.1
+  },
+  "HOLDOUT": {
+   "mesyacev": 30,
+   "srednee_bps": 12.5,
+   "t": 0.61,
+   "polovinki_bps": [
+    9.7,
+    15.2
+   ],
+   "dolya_plyus": 0.57,
+   "korr_s_vsegda_long": -0.27,
+   "vsegda_long_srednee_bps": 8.3,
+   "status": "SAME_SIGN"
+  },
+  "status": "READY_FOR_BUILD"
+ }
+}
