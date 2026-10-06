@@ -1,0 +1,122 @@
+{
+ "zapisi": {
+  "TOLPA_XS": {
+   "id": "TOLPA_XS",
+   "semya": "TOLPA",
+   "mehanizm": "толпа ошибается на краях (доля лонг-аккаунтов)",
+   "dannye": "bybit+binance",
+   "okno_dannyh": "bybit_2023-2026 + binance_um_2021-12..2022-12",
+   "prereg": "PREREG_TOLPA_BINANCE_REPLICATION_2021_2022.md",
+   "verdikt": "KILL",
+   "metriki": "Binance L1 +20 bps/нед t0.27",
+   "kvitanciya": "data/binance/KVITANCIYA.json",
+   "prereg_sha256": "9643d628869794138cdc7fa8c2e714993b306045750b2236de3887081a7742e3",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  },
+  "KITY_POZICII": {
+   "id": "KITY_POZICII",
+   "semya": "KITY",
+   "mehanizm": "позиции топ-трейдеров",
+   "dannye": "binance metrics",
+   "okno_dannyh": "binance_um_2023-01..2026-09",
+   "prereg": "PREREG_KITY_POZICII_2026_10_03.md",
+   "verdikt": "PNL_FAIL",
+   "metriki": "−53.6 bps/нед t−1.41",
+   "kvitanciya": "data/binance_kity/KVITANCIYA.json",
+   "prereg_sha256": "66cd31cfa314a69bc2d697d0fb86aecc9f8b4150e45331ebd7ffee082b29bcd1",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  },
+  "KITY_M3_POTOK": {
+   "id": "KITY_M3_POTOK",
+   "semya": "KITY",
+   "mehanizm": "за агрессивным потоком тейкеров d−1",
+   "dannye": "binance klines taker",
+   "okno_dannyh": "binance_um_2023-01..2026-09",
+   "prereg": "PREREG_KITY_M3_POTOK_2026_10_04.md",
+   "verdikt": "READY_FOR_BUILD",
+   "metriki": "+103.2 bps/нед t2.59; репл. +74 SAME_SIGN",
+   "nezavisimost": [
+    "TOLPA 0.33",
+    "импульс 0.34"
+   ],
+   "vpered": "ТЕНЬ с 08.10",
+   "ispolnenie": "Codex orders-off, BLOCKED_DATA (лимиты/комиссии/площадка)",
+   "dengi": "нет решения",
+   "kvitanciya": "data/binance_kity/M3_KVITANCIYA.json",
+   "prereg_sha256": "39b29f3eafe5a293d102d7721a365a6d8b42f641809dcbb979133b553c0b7a63",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  },
+  "REZHIMNYY_CARRY": {
+   "id": "REZHIMNYY_CARRY",
+   "semya": "CARRY",
+   "mehanizm": "carry при высоком рыночном фандинге",
+   "dannye": "binance funding",
+   "okno_dannyh": "binance_um_2021-12..2026-09",
+   "prereg": "PREREG_REZHIMNYY_CARRY_2026_10_05.md",
+   "verdikt": "KILL",
+   "metriki": "ON 8.8%, 1.29%/год",
+   "kvitanciya": "data/binance_kity/CARRY_KVITANCIYA.json",
+   "prereg_sha256": "25ef5c62b26a8bf395bca8214df817fba83b9067144681d1a5d9cfc6561c1e42",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  },
+  "LONG_TREND_MAJORS": {
+   "id": "LONG_TREND_MAJORS",
+   "semya": "TREND",
+   "mehanizm": "моментум BTC/ETH 28 дн.",
+   "dannye": "binance klines",
+   "okno_dannyh": "binance_um_2021-12..2026-09",
+   "prereg": "PREREG_LONG_TREND_BTC_ETH_2026_10_05.md",
+   "verdikt": "KILL",
+   "metriki": "t0.76/1.11",
+   "kvitanciya": "data/binance_kity/LONG_TREND_KVITANCIYA.json",
+   "prereg_sha256": "8c85276f2abe6bc5cc1a93591dd1e66e3ab2bf6f6a41e5319b58cac8c273f015",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  },
+  "PUSTOY_HOD": {
+   "id": "PUSTOY_HOD",
+   "semya": "LIQ_PROVISION",
+   "mehanizm": "разворот хода без потока",
+   "dannye": "binance klines taker",
+   "okno_dannyh": "binance_um_2023-01..2026-09",
+   "prereg": "prereg/PUSTOY_HOD.json",
+   "verdikt": "KILL",
+   "metriki": "−55 bps/нед; корр. с сырым разворотом 0.88",
+   "kvitanciya": "data/fabrika_xs/PUSTOY_HOD/KVITANCIYA.json",
+   "prereg_sha256": "538c6c2d0ed30429fc013168931dbe4e3fd1f0e91eeb267862c364f43b5c8705",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  },
+  "NOVYE_DENGI": {
+   "id": "NOVYE_DENGI",
+   "semya": "NOVYE_DENGI",
+   "mehanizm": "ход при росте OI в контрактах",
+   "dannye": "binance metrics",
+   "okno_dannyh": "binance_um_2023-01..2026-09",
+   "prereg": "prereg/NOVYE_DENGI.json",
+   "verdikt": "KILL",
+   "metriki": "+43 bps/нед t0.95",
+   "kvitanciya": "data/fabrika_xs/NOVYE_DENGI/KVITANCIYA.json",
+   "prereg_sha256": "b49dcfc38522f022a7f6addc5bdac37228d32f0728f48f98d25e0015cb534ad6",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  },
+  "REBALANCING_PRESSURE": {
+   "id": "REBALANCING_PRESSURE",
+   "semya": "REBALANCING",
+   "mehanizm": "конец месяца против перекоса акции−облигации (US30)",
+   "dannye": "MT5 US30 D1 + Alpaca TLT",
+   "okno_dannyh": "us30_tlt_2016-02..2026-09",
+   "prereg": "PREREG_REBALANCING_PRESSURE_2026_10_06.md",
+   "verdikt": "READY_FOR_BUILD",
+   "metriki": "+42.7 bps/событие t2.06; holdout +12.5 SAME_SIGN",
+   "nezavisimost": [
+    "крипта: нет связи",
+    "всегда-лонг 0.29/−0.27"
+   ],
+   "vpered": "ТЕНЬ с 26.10 (готовится)",
+   "ispolnenie": "пакет Codex после Oct-сигнала",
+   "dengi": "нет решения",
+   "kvitanciya": "data/REBALANCING_KVITANCIYA.json",
+   "prereg_sha256": "63e5f8ae6dcde665722510052b94b32e5ae08368472f37f69355a0da182e6075",
+   "kogda": "2026-10-06T07:24:39+00:00"
+  }
+ }
+}

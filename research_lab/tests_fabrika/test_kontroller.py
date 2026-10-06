@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Тесты среза 4 на синтетике.   python3 research_lab/tests_fabrika/test_kontroller.py"""
+"""Тесты FACTORY AUTONOMY V1 (контроллер) на синтетике.   python3 research_lab/tests_fabrika/test_kontroller.py"""
 import json, sys, tempfile
 from pathlib import Path
 LAB = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(LAB / "fabrika")); sys.path.insert(0, str(LAB / "tests_fabrika"))
 import kontroller as KO  # noqa: E402
+import reestr_strategiy as RS  # noqa: E402
 import test_sudya_xs as T  # noqa: E402
 ok = 0
 def proverka(i, u):
@@ -15,26 +16,47 @@ def main():
     lab = Path(tempfile.mkdtemp()) / "lab"; T.sintetika(lab / "data" / "sint")
     (lab / "generator").mkdir(parents=True); (lab / "generator" / "kladbische.json").write_text(json.dumps([{"semya": "MERTVAYA"}]))
     (lab / "fabrika").mkdir(); (lab / "fabrika" / "digest_nablyudenie.json").write_text(json.dumps({"teni": {}, "arhivy": ["sint"]}))
+    (lab / "diag.json").write_text("{}")
     sp = json.loads((LAB / "prereg" / "KITY_M3_POTOK.json").read_text()); sp.pop("legacy_kvitanciya")
+    sp.update(dannye="sint", okno_dannyh="sint_okno", diagnostika={"fayl": "diag.json", "izmerenie_vybrano": "M2"})
     och = lab / "data" / "fabrika_xs" / "ochered"; och.mkdir(parents=True)
-    (och / "A_NEODOBREN.json").write_text(json.dumps(dict(sp, id="NEODOBREN", dannye="sint")))
-    (och / "B_MERTV.json").write_text(json.dumps(dict(sp, id="MERTV", semya="mertvaya", dannye="sint", odobreno={"kem": "Claude"})))
-    (och / "C_ZHIV.json").write_text(json.dumps(dict(sp, id="ZHIV", semya="ZHIVAYA", dannye="sint", odobreno={"kem": "Claude"})))
+    def q(name, **kw): (och / f"{name}.json").write_text(json.dumps(dict(sp, **kw)))
+    q("A", id="NEODOBREN")
+    q("B", id="MERTV", semya="mertvaya", odobreno={"kem": "Claude"})
+    q("C", id="BEZ_DIAG", semya="X1", odobreno={"kem": "Claude"}, diagnostika={})
+    q("D", id="ZHIV", semya="ZHIVAYA", odobreno={"kem": "Claude"})
     k = KO.Kontroller(lab)
-    r1 = k.shag(); proverka("шаг 1: замок на одобренном живом", r1 == "ZAMOK ZHIV")
-    proverka("неодобренный не взят", (och / "A_NEODOBREN.json").exists())
-    proverka("семья с кладбища отклонена", (och / "B_MERTV.otkaz").exists())
-    proverka("замок записан", (lab / "prereg" / "ZHIV.lock").exists())
+    proverka("шаг 1: замок на живом", k.shag() == "ZAMOK ZHIV")
+    proverka("неодобренный не взят", (och / "A.json").exists())
+    proverka("кладбище отклонено", (och / "B.otkaz").exists())
+    proverka("без диагностики признаков отклонено", (och / "C.otkaz").exists())
+    proverka("WIP=1: второй не берётся, пока слот занят", k.slot() == {"aktivnye": ["ZHIV"]})
     r2 = k.shag(); proverka("шаг 2: один прогон до терминала", r2.startswith("TERMINAL ZHIV"))
-    proverka("слот освобождён", k.slot() == {"aktivnye": []})
-    proverka("квитанция есть", (lab / "data" / "fabrika_xs" / "ZHIV" / "KVITANCIYA.json").exists())
-    zh = [json.loads(l) for l in (lab / "data" / "fabrika_xs" / "zhurnal.jsonl").read_text().splitlines()]
-    proverka("журнал: отказ, замок, терминал", [z["sobytie"] for z in zh] == ["OTKAZ_KLADBISCHE", "ZAMOK", "TERMINAL"])
-    r3 = k.shag(); proverka("шаг 3: очередь пуста (неодобренный не исполняется)", r3 == "PUSTO")
-    (och / "D_ZHIV2.json").write_text(json.dumps(dict(sp, id="ZHIV", semya="DRUGAYA", dannye="sint", odobreno={"kem": "Claude"})))
-    proverka("повтор id с квитанцией отклонён", k.shag() == "PUSTO" and (och / "D_ZHIV2.otkaz").exists())
-    (och / "E_NET_DANNYH.json").write_text(json.dumps(dict(sp, id="NET", semya="NET", dannye="netu", odobreno={"kem": "Claude"})))
-    proverka("нет набора → BLOCKED_DATA", k.shag() == "BLOCKED_DATA")
+    st = r2.split()[-1]
+    rr = RS.zagruzit(k.reestr)["zapisi"]["ZHIV"]
+    proverka("реестр записан с вердиктом и окном", rr["verdikt"] == st and rr["okno_dannyh"] == "sint_okno")
+    proverka("сообщение владельцу на терминал", "ZHIV → " in k.vladelec.read_text())
+    if st == "READY_FOR_BUILD":
+        proverka("пакет Codex создан", (k.fx / "ZHIV" / "PAKET_CODEX.md").exists())
+    else:
+        proverka("KILL → кладбище", any(x["semya"] == "ZHIVAYA" for x in json.loads(k.kl_f.read_text())))
+    try:
+        RS.zapisat(dict(id="ZHIV", verdikt="OTHER"), k.reestr); proverka("вердикт в реестре неизменяем", False)
+    except ValueError:
+        proverka("вердикт в реестре неизменяем", True)
+    q("E", id="ZHIV", semya="DRUGAYA", odobreno={"kem": "Claude"})
+    proverka("повтор id отклонён", k.shag() == "PUSTO" and (och / "E.otkaz").exists())
+    for n in range(KO.LIMIT_PROVEROK):                       # забиваем окно до лимита
+        RS.zapisat(dict(id=f"F{n}", okno_dannyh="perepolnennoe", verdikt="KILL"), k.reestr)
+    q("G", id="NA_PEREPOLNENNOM", semya="G1", odobreno={"kem": "Claude"}, okno_dannyh="perepolnennoe")
+    proverka("множественность: окно исчерпано → BLOCKED", k.shag() == "PUSTO" and (och / "G.otkaz").exists()
+             and "нужны новые данные" in k.vladelec.read_text())
+    # скрипт-судья
+    (lab / "sudya_test.py").write_text("import json\nfrom pathlib import Path\nPath('rez_t.json').write_text(json.dumps({'status':'KILL','PRIMARY':{'t':0.1}}))\n")
+    q("H", id="SKRIPT", semya="S1", odobreno={"kem": "Claude"}, tip_sudi="skript", skript="sudya_test.py", rezultat="rez_t.json", vhodnye_fayly=["diag.json"])
+    proverka("скрипт: замок", k.shag() == "ZAMOK SKRIPT")
+    (lab / "sudya_test.py").write_text("print('изменён')\n")
+    proverka("скрипт изменён после замка → отказ", k.shag().startswith("OTKAZ"))
     print(f"ВСЕ ТЕСТЫ: {ok} PASS")
 
 if __name__ == "__main__":
