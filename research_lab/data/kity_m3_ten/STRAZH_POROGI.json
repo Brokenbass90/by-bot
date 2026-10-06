@@ -1,0 +1,17 @@
+{
+ "R1_pause": -0.3594446395661679,
+ "R1_reduce": -0.2396297597107786,
+ "R2_reduce": -0.1945854937035913,
+ "R3_ARL_pri_istinnom_edge_nedel": 100.0,
+ "R3_ARL_pri_nulevom_edge_nedel": 34.0,
+ "R3_cusum_maks_v_istorii": 7.298465162824099,
+ "R3_h": 7.0,
+ "R4_noga": -0.5,
+ "R5_operac_fail_podryad": 2,
+ "hudshaya_nedelya": -0.12972366246906086,
+ "maks_prosadka": -0.2396297597107786,
+ "mu": 0.010324756683935035,
+ "nedel": 194,
+ "sd": 0.05706074881389247,
+ "sozdano": "2026-10-06T17:48:58+00:00"
+}
