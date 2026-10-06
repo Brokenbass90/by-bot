@@ -1,0 +1,45 @@
+{
+  "schema_id": "alpaca_dynamic_replacement_input_audit_v1",
+  "observed_utc": "2026-10-06T15:54:29.691682+00:00",
+  "status": "BLOCKED_DATA_INPUT_CONTRACT",
+  "scope": "source-only intake; no historical/holdout outcome run",
+  "owner_scope": "replacement V1 first; stop challenger separately; KITY priority08\u201309October",
+  "primary_picks": [
+    "CRWD",
+    "AMD",
+    "META"
+  ],
+  "signal_session": "2026-09-30",
+  "entry_session": "2026-10-01",
+  "generated_at_utc": "2026-09-30T20:12:25.199848+00:00",
+  "max_positions": 4,
+  "distinct_frozen_reserve_artifact_verified": false,
+  "reserve_field_present": false,
+  "legacy_replacement_is_confirmed_terminal_slot_contract": false,
+  "initial_stop_actual_fill_minus_2atr_verified": {
+    "CRWD": "242.13",
+    "META": "668.76"
+  },
+  "initial_entry_relative_challenger_would_duplicate_baseline": true,
+  "untouched_holdout_proven": false,
+  "deep_history_acceptance_note": "September28 source handoff explicitly blocked PIT/identity acceptance; not revalidated as a new accepted holdout",
+  "holdout_outcomes_read": false,
+  "challenger_implemented": false,
+  "challenger_tests_run": false,
+  "new_live_orders": 0,
+  "live_config_changed": false,
+  "snapshot_pin": {
+    "path": ".private/owner_close_20261006/postcheck.json",
+    "sha256": "93aa932b6f0d1cf2a06bf13efd6e647613dbb670b8acefd9d7851657cbfe6f1c"
+  },
+  "source_pins": {
+    "scripts/alpaca_adaptive_paper.py": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+    "scripts/equities_alpaca_paper_bridge.py": "ccf2c01b3e4c314c0636eacb5eb7cabf3ce53543a924137fc3c95325e9acd943",
+    "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+    "reports/EQUITY_DEEP_HANDOFF_2026_09_28.md": "cfeb14179e66a6995452d200cb735da6e7ae499a70d2a79458cdf6fb7feba440",
+    "reports/EQUITY_DEEP_HANDOFF_RECEIPT_2026_09_28.json": "d2d781d423009ebb7680263a0c3f73bfb103390ac162a1e30c211cd5d83f94ea",
+    "research_lab/prereg/PREREG_ALPACA_PROTECTION_CHALLENGER_V2_2026_08_13.md": "bd721af8798e0e01aaf57fb33752f0348f098c976833466d0231002c3f1160f4"
+  },
+  "next_deliverable": "freeze reserve construction/slot sizing with unchanged primary picks, causal ranking/gates and exact terminal-slot ownership, then local orders-OFF implementation; no retrospective October live reserve",
+  "money_authority": false
+}

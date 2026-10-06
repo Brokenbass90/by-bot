@@ -1,5 +1,20 @@
 # Codex session checkpoint — 2026-09-06
 
+Latest owner priority amendment **October6 evening**: implement a bounded
+Alpaca reserve-replacement challenger first; KITY highest money priority08–09October.
+Read `ALPACA_DYNAMIC_REPLACEMENT_V1_INPUT_AUDIT_2026_10_06.md`/JSON and amendedPLAN.
+Source intake BLOCKED_DATA_INPUT_CONTRACT: October packet has onlyCRWD/AMD/META,
+no verified distinct frozen reserve; legacy closed_out is not terminal-slot proof.
+Freeze causal reserve/slot sizing and one-token-per-confirmed-exit before local
+orders-OFF candidate. No retrospective October reserve, extra fourth-slot buy,
+held-name rebuy or redistribution. Initial stop alreadyactual-fill−2ATR;
+separate STOP_CHALLENGER_V1 must test a distinct rule, not duplicate baseline.
+Untouched holdout unproven; no historical/holdout outcomes or new tests run here.
+One bounded input/result cycle, no indefinite Alpaca data loop delaying KITY.
+Current LIVE/protection frozen; PAPER then separate ownerGO for any promotion.
+KITY actual Bybit feasibility/account inputs required, research immutable/NEWordersOFF.
+Operational facts below retain their original observation times.
+
 Latest owner P0 closure **October6; broker15:10:58UTC /18:10Cyprus** — read
 `ALPACA_DAY_REARM_2026_10_06.md`/JSON,
 `ATT1_EXECUTION_SHADOWS_TERMINAL_2026_10_06.md`/JSON and

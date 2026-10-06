@@ -1,5 +1,14 @@
 # ALPACA_DYNAMIC_REPLACEMENT_V1 — authorized near-term challenger
 
+October6 owner priority amendment: replacement V1 is the next bounded Alpaca
+challenger; KITY stays highest new money priority October8–9. Read
+`ALPACA_DYNAMIC_REPLACEMENT_V1_INPUT_AUDIT_2026_10_06.md`/JSON before implementation:
+no verified frozen reserve in October packet; exact slot sizing/terminal authority
+must be frozen. Initial stop is already entry-relative2ATR, so the separate stop
+challenger must differ from baseline. No untouched holdout is yet proven.
+Current intake BLOCKED_DATA_INPUT_CONTRACT; implementation/tests/holdout/PAPER
+NOT_RUN. Weekly refresh stays separate and later. LIVE unchanged.
+
 Status: **SCOPED / NOT_IMPLEMENTED / NOT_TESTED / NOT_PREREG_FROZEN**.
 Owner authorized research and a roadmap task October6; current LIVE remains
 frozen. This document is a concrete research work order, not a PASS verdict,
