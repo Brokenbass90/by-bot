@@ -1,0 +1,25 @@
+{
+ "id": "FX_MESYAC_HEDZH",
+ "semya": "FX_MESYAC_HEDZH",
+ "mehanizm": "иностранные держатели акций США хеджируют валютный риск в конце месяца: если акции США обогнали европейские, продают USD (EURUSD вверх)",
+ "dannye": "MT5 FxPro D1: EURUSD, US30 (#US30), GER40 (#Germany40)",
+ "okno_dannyh": "eurusd_us30_ger40_2008-02..2026-09",
+ "tip_sudi": "skript",
+ "skript": "fx_mesyac_hedzh.py",
+ "rezultat": "data/fabrika_xs/FX_MESYAC_HEDZH_rezultat.json",
+ "vhodnye_fayly": [
+  "data/mt5_d1/EURUSD.json",
+  "data/mt5_d1/US30.json",
+  "data/mt5_d1/GER40.json"
+ ],
+ "diagnostika": {
+  "fayl": "data/fabrika_xs/diagnostika/FX_MESYAC_HEDZH.json",
+  "izmerenie_vybrano": "M2 (US30−GER40 с начала месяца), правило покрытия ≥90% записано до расчёта"
+ },
+ "pravilo": "см. docstring fx_mesyac_hedzh.py: T−3 → последний торг. день, +знак(S) в EURUSD, 1.5 bps; PRIMARY 2008-02…2017-12, HOLDOUT 2018-01…2026-09; PASS t≥2, половины>0, ≥60 мес., HOLDOUT SAME_SIGN",
+ "odobreno": {
+  "kem": "Claude",
+  "kogda": "2026-10-06",
+  "proverka_semi": "не REBALANCING (другой рынок — валюта, другие участники — иностранные хеджеры, другое окно); не кладбище; новые данные (EURUSD/GER40 ранее не использовались)"
+ }
+}
