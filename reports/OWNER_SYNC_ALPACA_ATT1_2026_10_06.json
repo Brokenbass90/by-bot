@@ -1,0 +1,90 @@
+{
+  "observed_utc": "2026-10-06T09:50:03.799+00:00",
+  "raw_snapshot_sha256": "f659c17385525fd019cdec28c8939ae5202a8d7c7b680ff38057fbe66f29f897",
+  "broker_writes": 0,
+  "capital_cap": 487.42,
+  "gross_exposure": 0.7,
+  "market_clock": {
+    "is_open": false,
+    "next_close": "2026-10-06T16:00:00-04:00",
+    "next_open": "2026-10-06T09:30:00-04:00",
+    "timestamp": "2026-10-06T05:50:04.034370992-04:00"
+  },
+  "positions": [
+    {
+      "symbol": "CRWD",
+      "qty": "0.469970151",
+      "avg_entry_price": "265.336",
+      "current_price": "277",
+      "unrealized_pl": "5.481732"
+    },
+    {
+      "symbol": "META",
+      "qty": "0.141939508",
+      "avg_entry_price": "724.534",
+      "current_price": "746.99",
+      "unrealized_pl": "3.187394"
+    }
+  ],
+  "open_stop_orders": 0,
+  "current_broker_stop_coverage": false,
+  "protection_status": "DAY_EXPIRED_PREOPEN_REARM_NOT_DUE",
+  "floor_hwm_monotonic": true,
+  "hwm_floor": {
+    "CRWD": {
+      "hwm": 273.93,
+      "accepted_stop_floor": 242.13,
+      "updated_at_utc": "2026-10-05T19:55:11.323865+00:00"
+    },
+    "META": {
+      "hwm": 746.49,
+      "accepted_stop_floor": 668.76,
+      "updated_at_utc": "2026-10-05T19:55:11.323865+00:00"
+    }
+  },
+  "last_ratchet_plan": [
+    {
+      "accepted_stop_floor": 242.13,
+      "action": "hold",
+      "current_price": 272.18,
+      "entry_price": 265.336,
+      "hwm": 273.93,
+      "peak_gain_pct": 3.238912,
+      "qty": 0.469970151,
+      "reason": "trail_not_armed",
+      "symbol": "CRWD"
+    },
+    {
+      "accepted_stop_floor": 668.76,
+      "action": "hold",
+      "current_price": 741.675,
+      "entry_price": 724.534,
+      "hwm": 746.49,
+      "peak_gain_pct": 3.030362,
+      "qty": 0.141939508,
+      "reason": "trail_not_armed",
+      "symbol": "META"
+    }
+  ],
+  "one_new_manager_schedule": true,
+  "old_manager_present": false,
+  "source_manifest_58_unchanged": true,
+  "att1": {
+    "as_of_ms": 1791280204862,
+    "sessions": 16,
+    "gaps": 9,
+    "clean_filled_terminals": 1,
+    "held": []
+  },
+  "att1_clean_replay": "PASS_SAME_ADA_NO_NEW_CREDIT",
+  "att1_probe_deadlines_unchanged": true,
+  "att1_probe_statuses": {
+    "transport": "RUNNING",
+    "funding": "RUNNING"
+  },
+  "att1_analysis_cursor_advanced": false,
+  "att1_study_complete": false,
+  "att1_money_ready": false,
+  "dynamic_challenger_status": "SCOPED_NOT_IMPLEMENTED_NOT_TESTED_NOT_PREREG_FROZEN",
+  "live_changed": false
+}

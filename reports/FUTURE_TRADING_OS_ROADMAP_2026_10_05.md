@@ -41,6 +41,17 @@ correlation caps each need baseline comparison, history, untouched holdout and
 paper shadow. Elder/regime is one causal preregistered baseline-vs-filter
 experiment, not a discretionary LIVE patch or ATT1 prerequisite.
 
+
+## Near-term authorized challenger — ALPACA_DYNAMIC_REPLACEMENT_V1
+
+Owner October6 request: monthly baseline vs A (replace a confirmed vacant slot
+from the frozen monthly reserve) vs B (causal weekly refresh/rotation). Read
+`ALPACA_DYNAMIC_REPLACEMENT_V1_PLAN_2026_10_06.md`. Status SCOPED/NOT_IMPLEMENTED/
+NOT_TESTED/NOT_PREREG_FROZEN. Same capital/risk/costs, PIT historical/preregistered
+holdout comparison, then PAPER; current LIVE entries/rotation/stop policy frozen.
+Existing bridge replacement/rotation helpers are reuse candidates after gates,
+not an instruction to enable them. More frequent selection remains later scope.
+
 ## Multiple sleeves and Governor
 
 Add independent mechanisms sequentially: US equities; crypto trend/long/range,

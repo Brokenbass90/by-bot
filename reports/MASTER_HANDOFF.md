@@ -1,5 +1,19 @@
 # MASTER HANDOFF — 2026-10-05
 
+Latest owner short cycle **October6 09:50UTC /12:50 Cyprus** — read
+`OWNER_SYNC_ALPACA_ATT1_2026_10_06.md`/JSON. Alpaca preopen: CRWD/META unchanged
+quantities,0activeDAYstops; floors242.13/668.76 retained, HWM273.93/746.49 grew.
+Last regular ratchet19:55Oct5 `trail_not_armed`; no claim of current protection or
+stop raise from premarket marks. NextP0today16:30Cyprus re-arm/trail/fee followup;
+58source pins+singleNEWschedule PASS, cap487.42/gross0.70 unchanged.
+ATT1 still16sessions/9gaps/1clean/0held, same deployedADAreplay; probesRUNNING,
+original17:12Cyprus deadlines unchanged. No cursor advance or continuity fix.
+NEW ordersOFF, actual packetBLOCKED_DATA;2–3clean+actualdossier+separateGO unchanged.
+DynamicreplacementV1 added to near-term research: monthlybaseline/Areserve/Bweekly,
+PIT/preregistered holdout→PAPER→review+ownerGO. Read its PLAN; SCOPED/NOT_IMPLEMENTED/
+NOT_TESTED, no currentLIVE change. AI onlydiagnostics/proposals, no retuning/money.
+Other dates/results below are their prior snapshots.
+
 Latest ATT1 bounded heartbeat **October6 09:14:55UTC /12:14 Cyprus** — read
 `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_06_0914.md`/JSON for ATT1.
 **16 sessions /9 gaps /1 verified clean ADA /0 held.** New SOL polling-continuity
