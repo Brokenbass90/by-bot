@@ -1,5 +1,19 @@
 # Current roadmap — owner scope October 5, 2026
 
+Latest ATT1 bounded heartbeat **October6 09:14:55UTC /12:14 Cyprus** — read
+`ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_06_0914.md`/JSON for ATT1.
+**16 sessions /9 gaps /1 verified clean ADA /0 held.** New SOL polling-continuity
+and PEOPLE rejected-future/stale-book gaps; both filled/closed in public simulation,
+no clean credit. Recorded reasons are not underlying root-cause proof. Same ADA
+exact deployed replay PASS/net-R−1.048963, no duplicate credit. Probes RUNNING,
+original PIDs/NRestarts0/source/context/study/disk PASS. PersistedOct6 14:12:25UTC
+termination unchanged. Six future funding STARTs:5outside8+SOLsyntheticquantity
+reject;0comparable funding events, no actual account evidence. Incremental analysis
+frontier onlyOct5 09:20UTC, full48h processing pending. Actual packet BLOCKED_DATA,
+NEW ordersOFF;2–3clean+actual inputs+fresh dossier+separate ownerGO unchanged.
+One read-only SSH query; no restarts/deploys/live-policy or other-track changes.
+Previous observations below retain their dates.
+
 Latest ATT1 bounded heartbeat **October6 03:12:33UTC /06:12 Cyprus** — read
 `ATT1_EXECUTION_SHADOW_PROGRESS_2026_10_06_0312.md`/JSON for ATT1.
 **15 sessions /7 gaps /1 verified clean ADA /SOL held-protected0.2 simulated.**
