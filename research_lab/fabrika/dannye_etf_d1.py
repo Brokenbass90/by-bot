@@ -4,7 +4,7 @@
 Кладёт data/etf_d1/<SYM>.json = [[YYYY-MM-DD, close_adj], ...]. До заморозки prereg доходности не считаются.
     python3 research_lab/fabrika/dannye_etf_d1.py
 """
-import json, sys, urllib.parse
+import datetime as dt, json, sys, urllib.parse
 from pathlib import Path
 LAB = Path(__file__).resolve().parents[1]; ROOT = LAB.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -24,7 +24,7 @@ def main():
         rez, token, ok = {}, "", True
         try:
             while True:
-                p = {"symbols": ",".join(SIM), "timeframe": "1Day", "start": "2015-12-01", "end": "2026-10-06",
+                p = {"symbols": ",".join(SIM), "timeframe": "1Day", "start": "2015-12-01", "end": (dt.date.today() - dt.timedelta(days=2)).isoformat(),   # SIP: свежие 15 мин запрещены тарифом — конец позавчера
                      "limit": 10000, "adjustment": "all", "feed": feed, "sort": "asc"}
                 if token:
                     p["page_token"] = token
