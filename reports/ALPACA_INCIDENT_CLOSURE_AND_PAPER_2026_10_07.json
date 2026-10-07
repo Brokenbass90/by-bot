@@ -300,5 +300,22 @@
   "kity_cutoff_utc": "2026-10-07T23:55:00Z",
   "att1_restarted": false,
   "claude_research_or_judge_run": false,
-  "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+  "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "owner_bounded_paper_clarification": {
+    "single_actual_lifecycle": true,
+    "extra_paper_days_for_statistics": false,
+    "same_day_dossier_preparation": "2026-10-08",
+    "first_natural_next_session_day_rearm": "2026-10-09T13:30:00Z",
+    "must_not_claim_day_rearm_early": true,
+    "native_heartbeat_id": "alpaca-paper-lifecycle",
+    "native_heartbeat_status": "ACTIVE",
+    "two_opening_checks_cyprus": [
+      "2026-10-08T16:25:00+03:00",
+      "2026-10-09T16:25:00+03:00"
+    ],
+    "same_thread_verified": true,
+    "notify_only_material_change": true,
+    "delete_at_terminal_or_after_second_check": true,
+    "broker_query_in_scheduling_update": false
+  }
 }

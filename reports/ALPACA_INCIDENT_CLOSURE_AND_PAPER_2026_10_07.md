@@ -127,3 +127,17 @@ finality. A future actual `PAPER_EXECUTION_PASS` precedes an exact LIVE handoff,
 kill/rollback dossier and **separate owner GO**. HALT does not clear itself.
 KITY source/parity and account economics remain the next crypto money priority;
 no research rerun, Claude messages, OS2 production integration or ATT1 changes.
+
+## Owner's bounded gate clarification
+
+One real PAPER lifecycle is the technical gate, not a new statistical strategy
+trial. Prepare all same-day checks and the concrete orders-OFF LIVE dossier on
+Oct8. A new DAY stop naturally expires after that session; next-session re-arm
+can first be proven Oct9 at16:30 Cyprus if the position remains owned. Do not
+report complete PASS the previous evening or impose further PAPER days/trades
+once the required actual observations and finality are complete.
+Native same-thread heartbeat `alpaca-paper-lifecycle` is ACTIVE for two16:25Cyprus
+opening checks Oct8/9, then deletes itself at terminal/second check. Notify only
+material evidence, concrete blocker or owner action. LIVE entry remains subject
+to separate owner GO; CRWD/META are closed and are not automatically repurchased.
+This scheduling clarification did not query the broker or change runtime/strategy.

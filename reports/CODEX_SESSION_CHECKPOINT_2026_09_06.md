@@ -1,5 +1,18 @@
 # Codex session checkpoint — 2026-09-06
 
+October7 owner clarification: **one actual PAPER lifecycle, no extra waiting for
+statistical trade count**. Oct8 13:30UTC/16:30Cyprus sealedXOM/currentinputs→one
+exact PAPER entry/protection/readback/restart and concrete orders-OFF GO dossier.
+Actual next-session DAYexpiry/re-arm of a new Oct8 position is first observable
+Oct9 13:30UTC/16:30Cyprus if still held; do not claim that gate on Oct8 evening.
+After sourced lifecycle/finality and exclusive-handoff PASS, return exact
+READY_FOR_LIVE_GO; otherwise concrete BLOCKED_DATA/BLOCKED_EXECUTION. No CRWD/META
+rebuy, extra PAPER entries, retune or LIVE HALTclear without separate owner GO.
+Native heartbeat `alpaca-paper-lifecycle` armed for two16:25Cyprus opening checks
+Oct8/9, quiet while pending; preserve receipt then delete at terminal/secondcheck.
+KITY raw-source/parity/account intake stillpreempts. Existing incident facts below
+keep their observation times; this scheduling update includes no broker query.
+
 October7 incident closure and PAPER continuation: **ISOLATION_DEPLOYED_RECONCILED_ENTRY_HALTED**.
 Read `ALPACA_INCIDENT_CLOSURE_AND_PAPER_2026_10_07.md`/JSON first; this supersedes
 the not-deployed/stale-lifecycle claims in the earlier opening snapshot below.
