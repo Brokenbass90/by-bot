@@ -1,0 +1,297 @@
+{
+  "b3_intake_assessment": "BLOCKED_IMPLEMENTATION",
+  "b3_original_verdict_not_run_or_changed": true,
+  "closed_synthetic_regime_parity": {
+    "actual_runtime_same_bar_parity": "BLOCKED_DATA_DIFFERENT_PRODUCER_MISSING_4H_SOURCE",
+    "comparisons": 6724,
+    "deployed_override_contract": "DIFFERENT_ASB1_ASLB1_BOUNCE1_PREFIXES",
+    "research_local_and_deployed_label_match": true
+  },
+  "generated_utc": "2026-10-07T10:34:07.209974+00:00",
+  "local_runtime": {
+    "chat_requests": 0,
+    "known_legacy_worker_pids": {
+      "research_lab/ai_auditor.py": [],
+      "scripts/chat_with_local_ai.py": [],
+      "scripts/local_research_station.py": [],
+      "scripts/run_project_audit_supervisor.sh": []
+    },
+    "observed_utc": "2026-10-07T10:25:58Z",
+    "ollama": {
+      "models": [
+        {
+          "name": "llava:latest",
+          "size": 4733363377
+        },
+        {
+          "name": "qwen2.5vl:7b",
+          "size": 5969245856
+        },
+        {
+          "name": "qwen3:8b",
+          "size": 5225388164
+        }
+      ],
+      "status": "AVAILABLE",
+      "verified_utc": "2026-10-07T10:27:36Z"
+    },
+    "process_snapshot_utc": "2026-10-07T10:30:59Z",
+    "relevant_launch_labels": []
+  },
+  "preservation": {
+    "alpaca_checked": false,
+    "broker_calls": 0,
+    "claude_checkout_mutated": false,
+    "claude_messaged": false,
+    "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "orders": 0,
+    "production_writes": 0
+  },
+  "private_evidence": {
+    "deployed_regime_comparison.json": "23ed4d53e455725bb8a9233b3586d5831a2c6c7e1ef7ee764cbba6fb9ef6aea6",
+    "deployed_regime_orchestrator.py": "665371bb77e5f8ce705183387c7ed37af561a7dd161af4ce7778182ac7ef69ef",
+    "local_runtime.json": "9d94a2e2b3e2a605ee56ef04c22f87c743556799f58ecac795aa5b8fb9ff9c75",
+    "source_probe.json": "3248d42914b2e85be1ae2a67cff63fd6b4f03c95d97fd52fc361efd4b3fb1545",
+    "source_probe.py": "51d2c4e4ec047e6ddbc2ce95bd071e6c334383c538f8a2bd5dfcbfbb807e5b4c",
+    "vps_readonly.json": "20be0c376aedf028b132b4a2c06e8cb66c3bbaf84e8f72af571194a28367450d",
+    "vps_readonly.py": "059fae017ee9eb9a716b64b702504918cba1a30e5f73fa9f4b4798c3cb45f3f0"
+  },
+  "recovery_base": "abf1187ffae86f399817477f3322361d0bc6e6d3",
+  "research_pin": "001f8226804f65961fca0449e04b06069686db09",
+  "review": {
+    "financial": {
+      "confirmed_findings": 4,
+      "effort": "high",
+      "model": "gpt-6-astra",
+      "routing_source": "rollout-2026-10-07T13-28-55-01a115e8-b977-75c3-92d8-4e40d348242e.jsonl",
+      "routing_verified": true
+    },
+    "mechanical": {
+      "effort": "medium",
+      "fallback": "AGENTS mechanical 5.6-luna absent from supported spawn overrides; explicit supported 6-luna",
+      "model": "gpt-6-luna",
+      "routing_source": "rollout-2026-10-07T13-21-36-01a115e2-04fb-7eb0-8348-ba8fcd370132.jsonl",
+      "routing_verified": true
+    }
+  },
+  "schema": "os2_foundation_audit_v1",
+  "source_probe": {
+    "counterexamples": {
+      "cross_fold_drawdown": {
+        "continuous_drawdown_with_initial_zero": 3,
+        "fold1": [
+          2,
+          -1
+        ],
+        "fold2": [
+          -1,
+          -1,
+          2
+        ],
+        "max_individual_fold_drawdown_with_initial_zero": 2,
+        "source": "wf.py:52-55"
+      },
+      "missing_h1_accepted_as_4h": [
+        {
+          "bar_open_ms": 1676131200000,
+          "h1_members": 3
+        }
+      ],
+      "single_initial_loss": {
+        "expected_min_realized_drawdown_R": 2,
+        "reported_drawdown_R": 0.0,
+        "terminal_R": -2
+      },
+      "training_unclosed_trades": {
+        "current_affinity": {
+          "L": [
+            "BULL_TREND"
+          ]
+        },
+        "input_trades": 30,
+        "none_terminal_at_train_cutoff": true
+      }
+    },
+    "frozen_core_sha256": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
+    "judge_runs": 0,
+    "no_historical_outcomes_read": true,
+    "recovery_core_sha256": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
+    "research_ref": "001f8226804f65961fca0449e04b06069686db09",
+    "source_sha256": {
+      "B3_KONFIG.json": "9b65e28c2d283f2cdf1e4ab17d95cc46a7afe672fdf9d72085685a90d4f2256f",
+      "REZHIM_V1_ZAMOK.json": "907592d855322de687ba473183b5c2f2766ec1dcc06a0901f0a45a354038d860",
+      "replay.py": "1fbbb78aa391ad9b20f1257eab1f605bd6772523bda4b5a17164af2fddd7358c",
+      "rezhim_v1.py": "33efe4684bb0b749bf397d2db0ea2f34eb4521f3d8b9fab42cc41e27c49c1639",
+      "test_replay.py": "c05deefdeac83e8a340aaa2d9bcf603ed07601b9578c3cb76fd89faedc29b9cc",
+      "test_rezhim_v1.py": "937d6e13beaa697ffc9f989dc6b7db6d1c6339824f21e9a39a3565e7c96865f8",
+      "test_wf.py": "9d71470ab26b874821e811f0b5141cc8bbdb3768b424920e1190906a992615bb",
+      "wf.py": "9fd65641dc70686f17b1bedd7f66cf26c16e4702ba96e71b6b5ed94bb46b49ad"
+    },
+    "synthetic_parity": {
+      "bear": {
+        "deployed_label_matched": 1681,
+        "eligible": 1681,
+        "matched": 1681,
+        "override_differences": 0,
+        "states": [
+          "NEUTRAL"
+        ]
+      },
+      "bull": {
+        "deployed_label_matched": 1681,
+        "eligible": 1681,
+        "matched": 1681,
+        "override_differences": 1681,
+        "states": [
+          "BULL_TREND"
+        ]
+      },
+      "flat": {
+        "deployed_label_matched": 1681,
+        "eligible": 1681,
+        "matched": 1681,
+        "override_differences": 0,
+        "states": [
+          "NEUTRAL"
+        ]
+      },
+      "mixed": {
+        "deployed_label_matched": 1681,
+        "eligible": 1681,
+        "matched": 1681,
+        "override_differences": 641,
+        "states": [
+          "BEAR_TREND",
+          "BULL_TREND",
+          "NEUTRAL"
+        ]
+      }
+    }
+  },
+  "status": "AUDIT_COMPLETE_ORDERS_OFF",
+  "verification": {
+    "ai_authority_research_tests": 23,
+    "commands": [
+      ".venv/bin/python -m pytest -q -p no:cacheprovider -c /dev/null tests/test_sleeve_breaker_generic.py tests/test_strategy_regime_gate.py tests/test_regime_side_gate.py tests/test_strategy_priority_router.py tests/test_exposure_gate.py tests/test_decision_bus.py tests/test_edge_monitor.py tests/test_champion_challenger.py tests/test_deepseek_truth_gate.py tests/test_deepseek_file_read_safety.py tests/test_deepseek_cash_budget.py",
+      ".venv/bin/python -m pytest -q -p no:cacheprovider -c /dev/null tests/test_ai_executor_quarantine.py tests/test_deepseek_v4_compat.py tests/test_local_research_station.py tests/test_research_orchestrator.py tests/test_operator_console_truth.py",
+      ".venv/bin/python -m pytest -q -p no:cacheprovider -c /dev/null .private/os2_foundation_audit_20261007/research_lab/os2/test_replay.py .private/os2_foundation_audit_20261007/research_lab/os2/test_wf.py .private/os2_foundation_audit_20261007/research_lab/os2/test_rezhim_v1.py -k 'not zamok_istorii'"
+    ],
+    "excluded_history_lock_tests": 1,
+    "failures": 0,
+    "full_suite_run": false,
+    "historical_judge_runs": 0,
+    "historical_or_sealed_outcomes_read": false,
+    "production_dependency_tests": 77,
+    "synthetic_research_tests": 11
+  },
+  "vps": {
+    "alpaca_inspected": false,
+    "broker_calls": 0,
+    "btc_4h_cache": [],
+    "flag_sources": {
+      ".env": {
+        "DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE": "0",
+        "DEEPSEEK_OPERATOR_USE_API": "0",
+        "REGIME_OVERLAY_ENABLE": "1"
+      },
+      "configs/server_clean.env": {}
+    },
+    "observed_utc": "2026-10-07T10:25:05Z",
+    "read_only": true,
+    "regime_files": {
+      "runtime/regime.json": {
+        "status": "MISSING"
+      },
+      "runtime/regime/orchestrator_state.json": {
+        "fields": {
+          "confidence": 0.248,
+          "global_risk_mult": 0.82,
+          "regime": "bear_chop",
+          "timestamp_utc": "2026-10-07T10:00:03.964905+00:00"
+        },
+        "mtime_utc": "2026-10-07T10:00:06Z",
+        "sha256": "9e2d1d7da05527d5258463b26b3dddcdfa3ebe15d2f900a66e77fc8d505a9e15"
+      }
+    },
+    "services": {
+      "att1-lifecycle-zero-risk-v2.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestamp": "Fri 2026-10-02 13:57:41 UTC",
+        "MainPID": "1584802",
+        "NRestarts": "0",
+        "SubState": "running"
+      },
+      "bybot.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestamp": "Sun 2026-10-04 02:35:47 UTC",
+        "MainPID": "1648585",
+        "NRestarts": "0",
+        "SubState": "running"
+      },
+      "trading-journal-web.service": {
+        "ActiveState": "active",
+        "ExecMainStartTimestamp": "Sat 2026-10-03 10:54:24 UTC",
+        "MainPID": "1623208",
+        "NRestarts": "0",
+        "SubState": "running"
+      }
+    },
+    "sources": {
+      "bot/ai_tools.py": {
+        "bytes": 4695,
+        "sha256": "5be4addd96e4168b9ea235997bd298e0d7e487043a568c75301ceef3844645ea"
+      },
+      "bot/att1_live_wiring.py": {
+        "bytes": 9578,
+        "sha256": "5012ea6d726d725d362c92a0f0ee50d1f0a4e9e5cf308a48ea9303a4cb3a6034"
+      },
+      "bot/deepseek_action_executor.py": {
+        "bytes": 12658,
+        "guarded_functions": {
+          "deploy_env_to_server": true,
+          "execute_proposal": true,
+          "patch_env_file": true,
+          "rollback_env": true
+        },
+        "mutation_quarantine": true,
+        "sha256": "746a88c4abbf678a087bbc404970066a0d1a429ac2c779215dec507ce0a83c5a"
+      },
+      "bot/deepseek_autoresearch_agent.py": {
+        "bytes": 50704,
+        "sha256": "b9d6533ea5bac6a910dd5263c8c56731071653d121be476814e893b303913230"
+      },
+      "bot/deepseek_overlay.py": {
+        "bytes": 59927,
+        "sha256": "b28af2d16171481d604959d4e7f486ccd98d60a10fc5ef3f0fc4e4667b7eb0b3"
+      },
+      "bot/exposure_gate.py": {
+        "bytes": 4902,
+        "sha256": "31419a443d3cf31bfff904f2a2b95e8e76d717b3d1122d96a229d71a5e694d87"
+      },
+      "bot/regime_orchestrator.py": {
+        "bytes": 17308,
+        "sha256": "665371bb77e5f8ce705183387c7ed37af561a7dd161af4ce7778182ac7ef69ef"
+      },
+      "bot/regime_side_gate.py": {
+        "bytes": 872,
+        "sha256": "bc5444d57b44453578658b39f1ab652284de406eed49546e4f60eefba8699236"
+      },
+      "bot/strategy_priority_router.py": {
+        "status": "MISSING"
+      },
+      "bot/strategy_regime_gate.py": {
+        "bytes": 1655,
+        "sha256": "5dd6997c9b7efab328588d945258c540549d2df8ff5f4c562566f7e7c0108714"
+      },
+      "smart_pump_reversal_bot.py": {
+        "bytes": 708976,
+        "sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+        "telegram_ai_deploy_disabled_literal": true
+      },
+      "web/routes/ai_routes.py": {
+        "bytes": 95566,
+        "sha256": "ce2b90bbda772bb89e08fe05c26d22a9f25d372fb737e3df80dc5bf81a7aaaf0"
+      }
+    }
+  }
+}

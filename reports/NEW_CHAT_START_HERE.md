@@ -1,5 +1,16 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+Latest **October7 foundation intake**: canonical checkpoint TOP and
+`OS2_FOUNDATION_AUDIT_2026_10_07.md`/JSON. Trading OS direction restored;
+111targeted/syntheticPASS, four B3 causal/risk defects confirmed, no judge/outcomes
+consumed. B3 intake BLOCKED_IMPLEMENTATION, not strategyFAIL. Existing router/
+exposure/bus/edge wiring gaps measured; AI mutations remain quarantined.
+Ollama available, continuousaudit notconfirmed. Isolated shadow bridge written
+design underdocs/superpowers/specs awaiting review, not implemented/deployed.
+Research001f822 verified; no merge/Claude mutation/message. KITY08–09 moneypriority;
+Alpaca inspection deferred byowner to nextcycle, no fresh Alpaca truth here.
+No LIVE/risk/order/worker changes. Older blocks retain their original timestamps.
+
 Latest **October6 PAPER/source continuation**: canonical checkpoint TOP and
 `ALPACA_DYNAMIC_PAPER_INTAKE_2026_10_06.md`/JSON are authoritative.
 PAPER adapter ready for actual intake; source-only first-window job armed,

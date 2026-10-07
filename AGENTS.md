@@ -114,3 +114,18 @@ or forced rotation. Existing LIVE CRWD/META, manager, caps and protection frozen
 Actual first-window closed-data/account/isolated PAPER/handoff/rollback gates
 remain, then separate owner LIVE GO. Local simulations are not broker truth/edge.
 KITY08–09October remains next money priority; no broad architecture or new families.
+
+## October7 foundation intake amendment
+
+Latest owner explicitly restores the existing Trading OS foundation direction:
+regime/portfolio routing, decision evidence, degradation diagnostics, Factory and
+proposal-only local Ollama. Read checkpoint TOP and OS2_FOUNDATION_AUDIT_2026_10_07.
+Read-only audit is delivered; first isolated shadow-bridge written design awaits
+review, no integration/worker was installed. Do not blindly merge Claude's branch,
+consume sealed outcomes, run B3 judge or change LIVE policy. Codex found four B3
+causal/risk implementation defects; Claude owns versioned research repair before
+trusting a verdict. Strict SEALED_V2 independence remains unproven. Reuse existing
+modules, no new framework. No automatic AI writes, risk increase or promotion.
+KITYOct8–9 money intake preempts this track; current research/ATT1 gates remain.
+Owner deferred Alpaca inspection to the next cycle; this audit is not new broker
+truth. Cleanup is inventory/hash/archive/dependency work before any removal.

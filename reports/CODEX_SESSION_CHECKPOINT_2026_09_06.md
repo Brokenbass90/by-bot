@@ -1,5 +1,34 @@
 # Codex session checkpoint — 2026-09-06
 
+Latest owner direction **October7: restore the existing Trading OS foundation**.
+Read `OS2_FOUNDATION_AUDIT_2026_10_07.md`/JSON and
+`docs/superpowers/specs/2026-10-07-os2-shadow-bridge-design.md` first.
+Source audit COMPLETE/ordersOFF; first-stage written design awaiting owner review,
+no product integration/worker/deployment yet. Actual origin recoveryabf1187,
+research001f822 verified/fetched into recovery only; handoff underresearch_lab/os2.
+No blind merge/Claude checkout mutation or messages. Existing router absent from
+VPS/production callers; exposure gate unwired, bus/edge ATT1-only/defaultOFF.
+Codex B3 intake BLOCKED_IMPLEMENTATION: initialDDzero, unclosedtrainoutcomes,
+incomplete4h aggregation and cross-foldDD reset. Synthetic/source counterexamples,
+one verified6-astra/high review; no historical/SEALED outcomes or judge consumed,
+no strategyFAIL/retune. Claude repairs through transparent versioned amendment;
+SEALED_V2 knownlegaggregates mean strict independence unproven.
+111PASS targeted/synthetic, historicallocktest deselected; fullsuite notrun.
+6724synthetic labelparityPASS; deployed overrideprefixes differ and actual runtime
+four-stateproducer != REZHIM_V1 receipt; actual same-barparity BLOCKED_DATA.
+VPS10:25:05UTC bybot1648585/web1623208/ATT1public1584802 active/NRestarts0 unchanged.
+AIenvpatch/deploy/rollback physically quarantined; no extra flag needed.
+Ollamaqwen3:8b available10:27:36UTC, continuousaudit NOT_CONFIRMED; oldchat context
+outdated/canonicalaudit MANUAL_HOLD. Next is isolated ordersOFF candidate→router/
+validatedregime/exposure→separatejournal→alert/proposal, reuse existing modules.
+No blanket ATT1 bullban; causal sleeve affinity requires repaired evidence.
+Alpaca inspection explicitly deferred to nextcycle byowner; no broker/Alpaca query,
+no live writes/restarts. Existing first-window/deadline intact, no new resultclaimed.
+KITY rawOct7 23:55UTC/Oct8–9 intake retains moneypriority; research frozen/NEWordersOFF.
+ATT1 completedprobe/2–3clean+actualdossier+GO and ETS originalcohort blockers intact.
+Cleanup inventory/archive/hash/dependencies only; no deletion. Foreignallowlist
+SHAadd587f1…f19a1 preservedunstaged. Older operational facts keep original timestamps.
+
 Latest bounded continuation **October6 18:18UTC /21:18Cyprus**: read
 `ALPACA_DYNAMIC_PAPER_INTAKE_2026_10_06.md`/JSON and updated V1RUNBOOK.
 **PAPER adapter implemented; actual PAPER orders0; source job ARMED_ORDERS_OFF**.

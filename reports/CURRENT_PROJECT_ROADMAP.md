@@ -1,4 +1,40 @@
-# Current roadmap — owner scope October 5, 2026
+# Current roadmap — owner scope October 7, 2026
+
+## Restored foundation, bounded delivery order
+
+OwnerOctober7 restores the existing Trading OS direction. Foundation intake is
+complete; read `OS2_FOUNDATION_AUDIT_2026_10_07.md`/JSON and the written
+`docs/superpowers/specs/2026-10-07-os2-shadow-bridge-design.md`.
+Audit/tested code is not an installed portfolio or profitable PASS.
+
+1. **Alpaca operations:** next-cycle broker/protection/source-window inspection,
+   explicitly deferred this turn; current LIVE manager/caps remain. Dynamic
+   source/PAPER gates and fixed first-window deadline remain, no automatic GO.
+2. **KITY money intake:** rawOct7 23:55UTC→Oct8 unseen reconstruction→Oct9 parity/
+   actual execution/account economics/caps/funding/unwind/finality. This preempts
+   foundation research; no rerun/retune and no orders before separateGO.
+3. **OS2 common admission/journal spine:** reuse existing ranker, validated
+   regime gate, exposure, decisionbus and alert/proposal modules in isolated
+   ordersOFF. Written first-stage design awaits review; no production patch.
+   Claude owns research B3 repair: four reproduced/source-proven P1 causal/DD
+   issues block trust. Versioned repair/source locks before any valid judge;
+   no spent-window replay/retune or implicit independentSEALED_V2 claim.
+4. **Continuous audit/Ollama:** installedqwen3:8b available, worker notconfirmed.
+   Bounded current snapshot/diff adapter first; proposal-only review with source
+   hashes/dates, dedup and confirmed/rejected findings. Existing July/August
+   context and canonicalMANUAL_HOLD must not be restarted as a broad sweep.
+5. **Factory throughput:** Claude WIP1 and source-bound packets; terminal
+   READY_FOR_BUILD/KILL→Codex execution acceptance. More entry frequency is not
+   the target; independent after-cost edge, capital use and portfolio tails are.
+6. **Later cleanup:** USE/TEST/ARCHIVE→dependency closure→hash/reference archive→
+   restore verification→separate removal scope. No delete-first or new framework.
+
+Regime switching may become autonomous inside a validated owner-approved policy;
+new sleeves, higher caps or a changed policy remain explicit decisions. UNKNOWN
+data is not NEUTRAL market. Entry OFF must never disable exits/protection. No
+categorical ATT1-short bull prohibition without independent causal evidence.
+Historical/engineering checks run now where valid; unseen outcome gates stay sealed.
+All dated operating details below remain snapshots, not current guarantees.
 
 Latest owner prospective amendment **October6**, superseding the monthly-reserve
 workorder below: **ALPACA_DYNAMIC_V1 IMPLEMENTED_LOCAL_ORDERS_OFF**. Read
