@@ -1,0 +1,102 @@
+{
+ "dannye": {
+  "chasov": 24095,
+  "s": 1672534800000,
+  "po": 1759273200000,
+  "progrev_ch": 1440
+ },
+ "kandidaty": {
+  "D1_EMA200_H1": {
+   "pokrytie": 1.0,
+   "doli": {
+    "тренд+": 0.29,
+    "тренд-": 0.184,
+    "флет+": 0.268,
+    "флет-": 0.258
+   },
+   "pereklyucheniy_na_30d": 74.0,
+   "mediana_dlitelnosti_ch": 3.0,
+   "dolya_pil": 0.78,
+   "zaderzhka_ch": 84,
+   "korr_s_etalonom": 0.674,
+   "vorota": {
+    "K1": true,
+    "K2": false,
+    "K3": false,
+    "K4": true,
+    "K5": true,
+    "PASS": false
+   },
+   "metki_sha256": "bd0678357b75309b3b527dd53784de8a54a3d0b7fe89d533d2646c00eaf1afc9"
+  },
+  "D2_REGIME_ORCH_4H": {
+   "pokrytie": 1.0,
+   "doli": {
+    "BEAR_TREND": 0.171,
+    "BULL_TREND": 0.22,
+    "NEUTRAL": 0.609
+   },
+   "pereklyucheniy_na_30d": 15.0,
+   "mediana_dlitelnosti_ch": 40.0,
+   "dolya_pil": 0.262,
+   "zaderzhka_ch": 88,
+   "korr_s_etalonom": 0.478,
+   "vorota": {
+    "K1": true,
+    "K2": true,
+    "K3": true,
+    "K4": true,
+    "K5": true,
+    "PASS": true
+   },
+   "metki_sha256": "87b23fa44a0bdc4eedbd7701f9eaa2f2c3fd15cdc9a89ae6ef1cd925af7d0238"
+  },
+  "D3_BUILD_REGIME_STATE_4H": {
+   "pokrytie": 1.0,
+   "doli": {
+    "bear_chop": 0.332,
+    "bear_trend": 0.102,
+    "bull_chop": 0.388,
+    "bull_trend": 0.178
+   },
+   "pereklyucheniy_na_30d": 26.4,
+   "mediana_dlitelnosti_ch": 12.0,
+   "dolya_pil": 0.583,
+   "zaderzhka_ch": 86,
+   "korr_s_etalonom": 0.7,
+   "vorota": {
+    "K1": true,
+    "K2": true,
+    "K3": false,
+    "K4": true,
+    "K5": true,
+    "PASS": false
+   },
+   "metki_sha256": "e50d7bcd25e681ef8b4b01cb5218bb891c149f3f58fb341d55575bb44c564c92"
+  },
+  "D4_REGIME_HMM_4H": {
+   "pokrytie": 1.0,
+   "doli": {
+    "bear": 0.209,
+    "bull": 0.31,
+    "high_vol": 0.186,
+    "range": 0.294
+   },
+   "pereklyucheniy_na_30d": 10.8,
+   "mediana_dlitelnosti_ch": 48.0,
+   "dolya_pil": 0.147,
+   "zaderzhka_ch": 104,
+   "korr_s_etalonom": 0.645,
+   "vorota": {
+    "K1": true,
+    "K2": true,
+    "K3": true,
+    "K4": true,
+    "K5": true,
+    "PASS": true
+   },
+   "metki_sha256": "388effe07bebd5906f64e6efbadd4f2c802269e94018f2fd226e89bf0f2b5fde"
+  }
+ },
+ "vybor": "D2_REGIME_ORCH_4H"
+}

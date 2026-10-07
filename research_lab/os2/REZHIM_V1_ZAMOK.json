@@ -1,0 +1,23 @@
+{
+ "imya": "REZHIM_V1",
+ "vybran": "D2_REGIME_ORCH_4H по os2/B2_KRITERII_REZHIMA.md",
+ "params": {
+  "macd_fast": 12,
+  "macd_slow": 26,
+  "macd_signal": 9,
+  "ema_fast_period": 20,
+  "ema_slow_period": 50,
+  "bear_consec": 3,
+  "bull_consec": 3,
+  "atr_chop_pct": 0.02,
+  "okno_4h": 200,
+  "min_barov_4h": 60,
+  "simvol": "BTCUSDT"
+ },
+ "kod_sha256": {
+  "bot/regime_orchestrator.py": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
+  "research_lab/os2/rezhim_v1.py": "33efe4684bb0b749bf397d2db0ea2f34eb4521f3d8b9fab42cc41e27c49c1639"
+ },
+ "metki_do_2025_10_01_sha256": "1f0398da3ded26e691f73e09a51ccf97238552c42a02b63a6dd3006a05714e3a",
+ "chasov": 24095
+}

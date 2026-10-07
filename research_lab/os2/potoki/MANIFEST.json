@@ -1,0 +1,44 @@
+{
+ "ETS2": {
+  "sdelok": 0,
+  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "noga": [
+   "elder_triple_screen_v2",
+   "ElderTripleScreenV2Strategy",
+   "ETS2",
+   "short",
+   4.0,
+   168,
+   [],
+   3
+  ]
+ },
+ "ASR1": {
+  "sdelok": 1035,
+  "sha256": "18d51ae9f2e0175f916e1100d62717d14feb6d980bbccb5b0e4904d04e88bd17",
+  "noga": [
+   "alt_support_reclaim_v1",
+   "AltSupportReclaimV1Strategy",
+   "ASR1",
+   "long",
+   4.0,
+   168,
+   [],
+   6
+  ]
+ },
+ "SF3": {
+  "sdelok": 0,
+  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "noga": [
+   "spike_fade_v3",
+   "SpikeFadeV3Strategy",
+   "SF3",
+   "short",
+   4.0,
+   336,
+   [],
+   0
+  ]
+ }
+}

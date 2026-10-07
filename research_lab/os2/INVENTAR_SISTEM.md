@@ -52,3 +52,20 @@ cascade_reversal, elder_filter, level_memory, unified_levels, liquidity_map, cha
 
 ## Прочее
 FX (fx_*), Alpaca (alpaca_*), cash-carry (bybit/bitget/public_cashcarry_*), event_* — по своим дорожкам; в OS v2 V1 не входят.
+
+## Проверка 07.10 (что реально работает)
+Тесты 20 модулей управления: **133 PASS** (`python3 -m pytest -q -p no:cacheprovider tests/test_{champion_challenger,confidence_risk,dd_throttle,decision_bus,edge_monitor,exposure_gate,live_native_regime_gate,oos_selector,portfolio_equity_guard,portfolio_health,position_sizing,regime_hmm,regime_side_gate,risk_manager,sleeve_registry,strategy_breaker,strategy_priority_router,strategy_regime_gate,wf_folds,health_gate_freshness}.py`).
+test_sleeve_breaker_generic не собирается в исследовательской VM (импортирует живой бот, нужен websockets) — проверяет Codex.
+bot/regime_orchestrator.py своих тестов не имел → покрыт os2/test_rezhim_v1.py (детерминизм, причинность, прогрев, замок истории).
+scripts/build_regime_state.py (V2 4-режимный, гистерезис 3) — существующий исполнимый код; в B2 не прошёл K3 (доля пил 58%).
+
+## Карта соединений (что есть → чего не хватает)
+| связь | есть | не хватает |
+|---|---|---|
+| режим → оркестратор | REZHIM_V1 (замок), regime_orchestrator пишет runtime/regime.json | исследовательская метка = живая метка: Codex сверяет compute_regime на одних барах |
+| ноги → кандидаты роутера | StrategyCandidate/rank_candidates; os2/replay.py уже кормит роутер потоками | живые ноги не публикуют кандидатов в роутер (сейчас каждая решает сама) |
+| роутер → исполнение | strategy_regime_gate/regime_side_gate в LIVE (fail-closed) | один вход «разрешение оркестратора» для всех рукавов, а не флаги по стратегиям |
+| исполнение → журнал | decision_bus (LIVE, флаг OFF) | включить в тени/PAPER; поля: режим, решение роутера, причина |
+| журнал → монитор edge | edge_monitor (ATT1), strategy_health_timeline, страж KITY | общий монитор по всем рукавам на decision_bus |
+| монитор → улучшение | champion_challenger, research_orchestrator (тесты есть) | не подключены; решение — только GO владельца |
+| ИИ-оператор | deepseek_operator ON по умолчанию (API OFF), action_executor импортирован | **проверка Codex: не может ли менять .env/риск/стратегии без GO** |
