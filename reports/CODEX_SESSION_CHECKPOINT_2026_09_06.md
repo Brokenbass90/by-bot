@@ -1,5 +1,12 @@
 # Codex session checkpoint — 2026-09-06
 
+October7 validation/Factory clarification: OS2_VALIDATION_AND_FACTORY_HANDOFF_2026_10_07.md.
+Remote5791b85/research001f822 verified this cycle before documentation update.
+No new product tests, broker query, judge/outcome consumption or Claude message.
+Existing tests/results below retain delivery timestamps. Do not restart strategy
+research; preserve baseline, validate marginal policy effect with frozen A/B/C,
+then actual source/execution acceptance. Claude handoff text is ready in that report.
+
 Latest October7 owner-approved implementation: **OS2_SHADOW_BRIDGE_V1 LOCAL / SHADOW_WIRING_PASS**.
 Read OS2_SHADOW_BRIDGE_DELIVERY_2026_10_07.md/JSON and RUNBOOK first.
 Existing closed-data regime/gate/router/exposure/bus/side-specific registry/edge/

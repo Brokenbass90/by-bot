@@ -1,5 +1,11 @@
 # Current roadmap — owner scope October 7, 2026
 
+Validation clarification October7: read OS2_VALIDATION_AND_FACTORY_HANDOFF_2026_10_07.md.
+No global strategy/judge restart. Frozen baselines remain; A/B/C tests isolate
+portfolio routing benefit. Real-source adapter and Factory diagnostics integration
+are later bounded tasks, not installed facts. KITY basket is atomic, BTC regime
+is not a universal market policy; money priorities retain precedence.
+
 Latest October7 owner-approved implementation: **OS2_SHADOW_BRIDGE_V1 LOCAL / SHADOW_WIRING_PASS**.
 Read OS2_SHADOW_BRIDGE_DELIVERY_2026_10_07.md/JSON and RUNBOOK first.
 Existing closed-data regime/gate/router/exposure/bus/side-specific registry/edge/
