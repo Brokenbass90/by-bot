@@ -1,8 +1,14 @@
 # OS2_SHADOW_BRIDGE_V1: reconnect the existing portfolio foundation
 
-Date: October7, 2026. **DRAFT / written-spec review pending**.
+Date: October7, 2026. **OWNER APPROVED for isolated orders-OFF implementation**.
 Source intake: `reports/OS2_FOUNDATION_AUDIT_2026_10_07.md`/JSON,
 research/fabrika-v1@001f822. No implementation, scheduler or new money authority.
+
+Owner approval October7 adds: Alpaca Dynamic and KITYOct8–9 preempt implementation;
+no real regime→sleeve authority before the repaired frozen B3 verdict; one canonical
+closed-data envelope/source; Ollama/DeepSeek is advisory only. The owner explicitly
+said proceed under this written scope. Native execution in the existing recovery
+checkout continues the established workflow; no repeat permission request.
 
 ## Intended result
 
