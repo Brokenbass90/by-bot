@@ -2868,13 +2868,22 @@ def _main_unlocked() -> int:
             # DAY orders on retained names may have expired overnight. Restore
             # their durable floors before waiting on any stale-name market exit.
             selected_monthly = {p.ticker for p in picks}
+            rearm_failures: list[dict[str, str]] = []
             for position in positions:
                 symbol = position.get("symbol")
                 if symbol not in monthly_state or symbol not in selected_monthly or monthly_state[symbol].get("rotation_intent"):
                     continue
-                _rearm_intended_position(client=client, symbol=symbol, position=position,
-                    existing_stops=[o for o in open_orders if o.get("symbol") == symbol and o.get("type") == "stop" and o.get("side") == "sell"],
-                    state=monthly_state, state_path=monthly_state_path, account_id=str(account.get("id") or ""))
+                try:
+                    _rearm_intended_position(client=client, symbol=symbol, position=position,
+                        existing_stops=[o for o in open_orders if o.get("symbol") == symbol and o.get("type") == "stop" and o.get("side") == "sell"],
+                        state=monthly_state, state_path=monthly_state_path, account_id=str(account.get("id") or ""))
+                except RuntimeError as exc:
+                    # One rejected protection attempt must not strand other
+                    # owned names. No retries or floor concessions; unexpected
+                    # storage/serialization failures still abort immediately.
+                    rearm_failures.append({"symbol": str(symbol), "error": type(exc).__name__, "detail": str(exc)})
+            if rearm_failures:
+                raise IntendedPaperProtectionError("monthly_rearm_not_confirmed:" + json.dumps(rearm_failures, sort_keys=True))
             rotation = _rotate_intended_monthly(client=client, base_url=base_url,
                 account_id=str(account.get("id") or ""), capital=capital_override_usd,
                 state_path=monthly_state_path, reentry_path=reentry_block_path,

@@ -1,5 +1,35 @@
 # Current roadmap — owner scope October 7, 2026
 
+October7 opening-money continuation: **Alpaca manager HALTED / broker FLAT;
+Dynamic terminal BLOCKED_EXECUTION**. Read
+`ALPACA_DYNAMIC_FIRST_WINDOW_AND_REARM_2026_10_07.md`/JSON first.
+At13:30 CRWD DAYrearm was rejectedHTTP422 (floor275.45/market275.20), aborting
+before META rearm. Existing scoped emergency sold both fully; postcheck13:51UTC
+positions0/orders0/entryHALTtrue/oneNEW/OLDabsent/58LIVEpins unchanged.
+Two exits gross+$6.380157 beforefees; cash496.12 with pendingfees.02 at13:39,
+not fee-final net. Current failed reconciliation points to expiredstopCRWD;
+no synthetic retirement/HALTclear/reactivation. Nativefirstwindow completed
+13:30:17,21pins/source59/one immutableXOMranking, exact independent replayPASS,
+zero quantityintents/exits/PAPERorders. First deadline notreset/extended.
+Local runtime-error isolation protects other eligible retained names before
+aggregateHALT/emergency; floor/risk/qty/buys unchanged. Notdeployed.
+113targetedPASS/full4054PASS+57exactbaselineFAIL, zero newfailures; verified
+6-astra/high boundedreview. Foreignallowlist add587f1…f19a1 preservedunstaged.
+Originresearchcf90408 verified/fetched read-only: Claude B3A1 declaredsource/
+config/lock pins match; inputs/determinism/consumption still unchecked, nojudge.
+Ownerlatest: ClaudeunavailableuntilSunday; no replacementresearch/retuning.
+KITYOct8–9preempts: unseen basket→actualBybit/accountcaps/unwind/finality→dossier,
+no moneywithoutseparateGO. One independent source-only census operationPID1804770
+under/opt/bybot-research/kity-cutoff-census-20261007 is armed forOct7
+23:54:58.200UTC request; immutablecutoff/deadline23:55UTC, no retry/extension.
+OnlyexchangeInfo/noOI/no candles/no signal/no brokerkeys or orderauthority;
+read schedule/terminal/census afterward, exact receive-window failure=BLOCKED.
+AfterKITYonly: all repairedfrozenB3 source/config/inputs+determinism+unconsumed
+checks→one conditionalowner-authorizedjudge; any mismatchBLOCKED, norepair/tune.
+Then OS2actualsource/parityordersOFF. ExistingATT1/ETS gates unchanged.
+ActualPAPER/emergencyfinality/handoff+rollback and separateAlpacaLIVEGO remain.
+Older operational blocks below are dated history, not current holding guarantees.
+
 Validation clarification October7: read OS2_VALIDATION_AND_FACTORY_HANDOFF_2026_10_07.md.
 No global strategy/judge restart. Frozen baselines remain; A/B/C tests isolate
 portfolio routing benefit. Real-source adapter and Factory diagnostics integration

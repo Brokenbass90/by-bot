@@ -138,3 +138,30 @@ is POLICY_UNAPPROVED until repaired research and later separate
 ORCHESTRATOR_POLICY_V1 GO; one canonical closed-data envelope/source only.
 Alpaca Dynamic today and KITYOct8–9 preempt further OS2 work. Ollama/DeepSeek
 remain separate advisory workers, no gate/risk/config/money authority.
+
+## October7 opening-money continuation amendment
+
+Latest owner: Claude unavailable until Sunday evening; Codex continues existing
+money/engineering, not new research or tuning. Read
+`reports/ALPACA_DYNAMIC_FIRST_WINDOW_AND_REARM_2026_10_07.md`/JSON first.
+Alpaca opening protection failure caused existing scoped emergency exits; broker
+flat, manager HALTED, not an active protected sleeve. Local re-arm isolation fix
+reviewed/tested but not deployed. Preserve expired-stop/emergency-exit evidence,
+entry HALT and exact money boundaries; no synthetic retirement or reactivation.
+First Dynamic window completed with immutable XOM ranking, zero quantity intents
+and no PAPER orders. Do not rerun/extend that window or backdate an allocation.
+
+KITY Oct8–9 is next priority: frozen unseen reconstruction/external parity and
+actual Bybit/account execution dossier; separate owner money GO remains. The
+independent source-only census operation at
+`/opt/bybot-research/kity-cutoff-census-20261007` keeps its Oct7 23:55UTC cutoff;
+no restart/reset/extension, OI/candle collection or strategy run is implied.
+Its pinned operation source is retained under reports/evidence. Not a money runner.
+
+After KITY, the latest owner's conditional permission supersedes the earlier
+blanket B3 no-run instruction ONLY if all repaired frozen source/config/judge/
+inputs match the sealed checkpoint, execution is deterministic and no prior
+judge consumption exists. Run once, preserve raw report/receipt; any difference
+BLOCKED, no Codex research repair/retuning. Claude A1 source-intake hash matches
+are not all-input acceptance. Then OS2 actual-source/parity orders-OFF. No new
+families, regime optimization, strategy recovery or Claude messaging.

@@ -1,5 +1,15 @@
 # ALPACA_DYNAMIC_V1 — local orders-OFF runbook
 
+October7 terminal update: read
+`ALPACA_DYNAMIC_FIRST_WINDOW_AND_REARM_2026_10_07.md`/JSON first.
+First window completed with one immutable XOM ranking, no executable reservation
+or PAPER fill; current LIVE is flat/HALTED after confirmed emergency exits caused
+by opening re-arm failure. Local isolation correction is tested, not deployed.
+Do not restart the source job, extend its deadline, clear HALT, retire an expired
+stop lifecycle as a stop fill, or backdate sizing. Exact emergency-exit/finality,
+next permitted window, isolated PAPER lifecycle and separate LIVE GO remain.
+The October6 armed/current-holdings statements below are historical snapshots.
+
 October6 continuation: read `ALPACA_DYNAMIC_PAPER_INTAKE_2026_10_06.md`/JSON first.
 Real PAPER adapter now exists but no broker PAPER order has run. The separate
 source-only native job is armed throughOct7 13:35UTC; it captures closed data
