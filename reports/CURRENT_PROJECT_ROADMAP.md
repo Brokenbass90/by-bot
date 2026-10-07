@@ -1,5 +1,29 @@
 # Current roadmap — owner scope October 7, 2026
 
+Latest October7 owner-approved implementation: **OS2_SHADOW_BRIDGE_V1 LOCAL / SHADOW_WIRING_PASS**.
+Read OS2_SHADOW_BRIDGE_DELIVERY_2026_10_07.md/JSON and RUNBOOK first.
+Existing closed-data regime/gate/router/exposure/bus/side-specific registry/edge/
+proposal modules are wired in an isolated one-shot candidate. No worker/VPS/LIVE
+integration; EXTERNAL_PUBLIC always POLICY_UNAPPROVED and cannot reserve slots.
+One canonical BTCUSDT closed-data envelope; UNKNOWN != validNEUTRAL. All intent/
+source/dependency IDs, durable admissions and owned terminals are causal/pinned.
+Same request exact hash replays identically; corrupt/uncertain prefix/resources
+suspend only observer. Fixture outcomes/normalization are not measured net edge.
+118targetedPASS; full4046PASS/57exact baselineFAIL, zero new/removed failures.
+One verified6-astra/high review found4 bridge counterexamples; reproducedRED/fixed
+in one bounded review cycle, plus documented final source/denominator guards.
+Actual B3 four research defects remain Claude-owned, no judge/sealed consumption;
+shared source-backed findings in OS2_FOUNDATION_AUDIT_2026_10_07.md/JSON. No direct
+Claude message/edit/merge; no broker or model calls, no live writes/restarts.
+Foreignallowlist add587f1…f19a1 preservedunstaged. Actual regime source/B3 policy
+acceptance and later ORCHESTRATOR_POLICY_V1 GO remain; advisory AI has no authority.
+Today Alpaca original13:30–13:35UTC first-window/source/PAPER gate preempts; not due
+at this delivery. No fresh broker/Alpaca truth in this cycle. KITY raw23:55UTC and
+Oct8–9 frozen unseen/account intake is highest crypto money priority. ATT1 completed
+probe/2–3clean+dossier+GO and ETS original900 blockers/deadline unchanged.
+Do not restart completed Tasks1–3 or broadly expand architecture. Older blocks
+below are dated snapshots and superseded scope, not current broker guarantees.
+
 ## Restored foundation, bounded delivery order
 
 OwnerOctober7 restores the existing Trading OS direction. Foundation intake is
@@ -8,14 +32,15 @@ complete; read `OS2_FOUNDATION_AUDIT_2026_10_07.md`/JSON and the written
 Audit/tested code is not an installed portfolio or profitable PASS.
 
 1. **Alpaca operations:** next-cycle broker/protection/source-window inspection,
-   explicitly deferred this turn; current LIVE manager/caps remain. Dynamic
+   due at original13:30–13:35UTC window; current LIVE manager/caps remain. Dynamic
    source/PAPER gates and fixed first-window deadline remain, no automatic GO.
 2. **KITY money intake:** rawOct7 23:55UTC→Oct8 unseen reconstruction→Oct9 parity/
    actual execution/account economics/caps/funding/unwind/finality. This preempts
    foundation research; no rerun/retune and no orders before separateGO.
 3. **OS2 common admission/journal spine:** reuse existing ranker, validated
    regime gate, exposure, decisionbus and alert/proposal modules in isolated
-   ordersOFF. Written first-stage design awaits review; no production patch.
+   ordersOFF. Owner-approved first-stage local candidate delivered: SHADOW_WIRING_PASS;
+   read OS2_SHADOW_BRIDGE_DELIVERY_2026_10_07.md/JSON and RUNBOOK. No production patch.
    Claude owns research B3 repair: four reproduced/source-proven P1 causal/DD
    issues block trust. Versioned repair/source locks before any valid judge;
    no spent-window replay/retune or implicit independentSEALED_V2 claim.

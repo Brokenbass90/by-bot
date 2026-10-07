@@ -120,8 +120,9 @@ KITY08–09October remains next money priority; no broad architecture or new fam
 Latest owner explicitly restores the existing Trading OS foundation direction:
 regime/portfolio routing, decision evidence, degradation diagnostics, Factory and
 proposal-only local Ollama. Read checkpoint TOP and OS2_FOUNDATION_AUDIT_2026_10_07.
-Read-only audit is delivered; first isolated shadow-bridge written design awaits
-review, no integration/worker was installed. Do not blindly merge Claude's branch,
+Read-only audit and owner-approved isolated shadow bridge are delivered locally
+orders-OFF; read OS2_SHADOW_BRIDGE_DELIVERY_2026_10_07.md/JSON and RUNBOOK.
+No production integration or worker was installed. Do not blindly merge Claude's branch,
 consume sealed outcomes, run B3 judge or change LIVE policy. Codex found four B3
 causal/risk implementation defects; Claude owns versioned research repair before
 trusting a verdict. Strict SEALED_V2 independence remains unproven. Reuse existing
@@ -129,3 +130,11 @@ modules, no new framework. No automatic AI writes, risk increase or promotion.
 KITYOct8–9 money intake preempts this track; current research/ATT1 gates remain.
 Owner deferred Alpaca inspection to the next cycle; this audit is not new broker
 truth. Cleanup is inventory/hash/archive/dependency work before any removal.
+
+October7 implementation GO amendment: OS2_SHADOW_BRIDGE_V1 local candidate
+delivered. Continue from its delivery/plan rather than restart Tasks1–3. Fixture
+wiring is an engineering result, not B3 PASS or profitability. Real-source policy
+is POLICY_UNAPPROVED until repaired research and later separate
+ORCHESTRATOR_POLICY_V1 GO; one canonical closed-data envelope/source only.
+Alpaca Dynamic today and KITYOct8–9 preempt further OS2 work. Ollama/DeepSeek
+remain separate advisory workers, no gate/risk/config/money authority.

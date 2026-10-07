@@ -61,11 +61,11 @@
 **Files:** Create `scripts/run_os2_shadow_bridge.py`, `tests/test_os2_shadow_cli.py`, `reports/OS2_SHADOW_BRIDGE_RUNBOOK_2026_10_07.md`, delivery MD/JSON; update canonical checkpoint/handoff/roadmap/AGENTS.
 **Interfaces:** CLI `--input <dedicated-inbox.json> [--runtime-dir <dedicated namespace>]`; status JSON stdout and exit0 SHADOW_WIRING_PASS, exit2 BLOCKED_DATA, exit3 BLOCKED_IMPLEMENTATION. No polling, secret read, alternate runtime or transport option.
 
-- [ ] Write/observe failing CLI tests: input/runtime path refusal, NaN/duplicate JSON key/oversize, EXTERNAL_PUBLIC rejection, no broker/model/env access.
-- [ ] Implement bounded source read, monotonic30s guard and journal invocation. Preserve one canonical envelope inside receipt; no second env/file authority.
-- [ ] Run targeted suite and guarded full suite; compare failures by exact name against recorded baseline, preserve foreign diff and list all existing failures in delivery JSON.
-- [ ] One fresh6-astra/high review of whole scoped diff; reproduce any important finding RED, fix one bounded pass and verify affected+regression tests.
-- [ ] Produce terminal SHADOW_WIRING_PASS / BLOCKED_DATA / BLOCKED_IMPLEMENTATION for the candidate, with source/verification limits; no actual-account/canary/profitability claim. Commit/push explicit files and verify remote.
+- [x] Write/observe failing CLI tests: input/runtime path refusal, NaN/duplicate JSON key/oversize, EXTERNAL_PUBLIC rejection, no broker/model/env access.
+- [x] Implement bounded source read, monotonic30s guard and journal invocation. Preserve one canonical envelope inside receipt; no second env/file authority.
+- [x] Run targeted suite and guarded full suite; compare failures by exact name against recorded baseline, preserve foreign diff and list all existing failures in delivery JSON.
+- [x] One fresh6-astra/high review of whole scoped diff; reproduce any important finding RED, fix one bounded pass and verify affected+regression tests.
+- [x] Produce terminal SHADOW_WIRING_PASS / BLOCKED_DATA / BLOCKED_IMPLEMENTATION for the candidate, with source/verification limits; no actual-account/canary/profitability claim. Commit/push explicit files and verify remote.
 
 ## Execution Ledger
 
@@ -82,3 +82,5 @@ Task2: RED missing journal confirmed; GREEN14 durable restart/corruption/securit
 Final bounded review: verified6-astra/high at29b4156 found4 reproducible causal/state issues. All reproduced RED and fixed once: intent→source timing/reference, terminal after stored admission/trusted side, all observed ID hashes,800-hour revision retention. Added side-specific registry/advisory diagnostics, unique denominators and same-size journal edit guard. GREEN114 candidate+dependency tests; final guarded full suite pending. No second review/strategy research or money authority.
 
 Final schema guards: BTCUSDT/1h must be explicit,4h aggregate must remain finite, conflicting bundles cannot credit uncommitted IDs. Four synthetic counterexamples reproduced RED; GREEN118 targeted (74 new+44 dependencies). Source/receipts regenerated in new fixture-only stores; original private verification receipts preserved. Full-suite rerun required by these final changes, no strategy/transport authority added.
+
+Terminal verification:118targetedPASS; finalfull4046PASS/57same baselineFAIL, zero new/removed. Source manifest unchanged; foreign hash restored. Delivery/runbook/canonical documentation complete. Commit/push/remote verification follows as publication step.

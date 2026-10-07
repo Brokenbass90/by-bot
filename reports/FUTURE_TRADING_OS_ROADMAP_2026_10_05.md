@@ -1,5 +1,17 @@
 # Trading OS — future roadmap, design/backlog only
 
+## October7 approved foundation delivery
+
+Local OS2_SHADOW_BRIDGE_V1 is SHADOW_WIRING_PASS on fixtures; real policy
+remains POLICY_UNAPPROVED. See DELIVERY/RUNBOOK. One canonical closed-data
+envelope and the existing routing/exposure/journal/diagnostic components, no new
+framework or LIVE patch. Alpaca Dynamic today and KITYOct8–9 preempt this lane.
+Claude repairs four B3 source findings before trusting the frozen judge; Codex
+accepts actual data/policy execution after that, followed by separate
+ORCHESTRATOR_POLICY_V1 GO. Ollama/DeepSeek stays advisory-only. No automatic AI
+risk/config/order/kill authority. Next bounded worker: current redacted snapshot
+and changed-source diagnostic proposals, without restarting stale broad sweeps.
+
 ## October6 owner priority update
 
 Parallel lanes have independent gates, not automatic capital promotion.

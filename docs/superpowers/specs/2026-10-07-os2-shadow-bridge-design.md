@@ -2,7 +2,8 @@
 
 Date: October7, 2026. **OWNER APPROVED for isolated orders-OFF implementation**.
 Source intake: `reports/OS2_FOUNDATION_AUDIT_2026_10_07.md`/JSON,
-research/fabrika-v1@001f822. No implementation, scheduler or new money authority.
+research/fabrika-v1@001f822. Local candidate delivered under this approved design;
+see OS2_SHADOW_BRIDGE_DELIVERY_2026_10_07.md/JSON. No installed scheduler or money authority.
 
 Owner approval October7 adds: Alpaca Dynamic and KITYOct8–9 preempt implementation;
 no real regime→sleeve authority before the repaired frozen B3 verdict; one canonical
