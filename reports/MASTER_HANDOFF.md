@@ -1,5 +1,35 @@
 # MASTER HANDOFF — 2026-10-05
 
+October7 incident closure and PAPER continuation: **ISOLATION_DEPLOYED_RECONCILED_ENTRY_HALTED**.
+Read `ALPACA_INCIDENT_CLOSURE_AND_PAPER_2026_10_07.md`/JSON first; this supersedes
+the not-deployed/stale-lifecycle claims in the earlier opening snapshot below.
+CRWD/META exact emergency MARKET exits and FILL activities reconciled; original
+floor/HWM/proof retained in immutable archive, native active ledger now empty.
+Gross+$6.380157 beforefees, cash/equity496.12/pendingfees.02 at16:40UTC; net pending.
+Reviewed isolation-only bridge installed via existing wrapper into r2 app,
+61pins match/57prior sources unchanged, oneNEW/OLDabsent/HALTtrue/brokerflat.
+Existing read-only wrapper restartPASS; no broker writes/service restarts/HALTclear.
+Capital487.42/gross.70/max4/profile/binding unchanged. Production PIDs1648585,
+1623208,1584802/NRestarts0; KITY census1804770/source/deadline unchanged.
+PAPER maintenance staged separately:23pins,19prior unchanged, old21sealedpins/
+XOMranking/first-window book untouched. Separate continuation copy1ranking/3slots/
+0intents/0exits; no backdated sizing. Exact PAPER legacy XOM exclusion prepared
+under accountlock16:42UTC with originalarchive; fivelegacy positions preserved.
+Fresh all-writer/symbol/account recheck still required before any PAPER dispatch.
+151targetedPASS local;64incident+87PAPERPASS VPS. Full4089PASS/57exact baselineFAIL,
+no newregressions; runtimeverified6-astra/high boundedreview all findings closed.
+Foreignallowlist add587f1…f19a1 preservedunstaged. Actual PAPER BLOCKED_DATA:
+Oct8 13:30–13:35UTC/16:30Cyprus quote/asset/fee/cash/gates→exact frozen slotplan→
+entry/fullprotection/recovery/DAYrearm/terminalcost/finality/scopedunwind.
+Use real exited slots and deterministic ordering; do not force AMD sizing/rescan/
+create fourth vacancy/reprice intent. Oct9 DAYrearm needed if held overnight.
+No PAPER_EXECUTION_PASS/LIVEGO claimed; exclusive LIVEhandoff/kill/rollback and
+separate ownerGO remain. Scheduled LIVE_CYCLE_COMPLETE/money_authority:true is
+not entry permission; durableHALT and brokertruth govern. KITYOct7 23:55cutoff/
+Oct8–9 money intake preempts, no research tuning/B3judge/Claude messages thiscycle.
+
+Earlier blocks are dated history; current incident/PAPER report above governs.
+
 October7 opening-money continuation: **Alpaca manager HALTED / broker FLAT;
 Dynamic terminal BLOCKED_EXECUTION**. Read
 `ALPACA_DYNAMIC_FIRST_WINDOW_AND_REARM_2026_10_07.md`/JSON first.

@@ -1,5 +1,113 @@
 # ALPACA_DYNAMIC_V1 — local orders-OFF runbook
 
+October7 closure: read `ALPACA_INCIDENT_CLOSURE_AND_PAPER_2026_10_07.md`/JSON first.
+Isolation fix is installed, exact emergency exits reconciled, broker flat and
+entry HALT retained. PAPER upkeep is staged; actual PAPER remains BLOCKED_DATA.
+The earlier not-deployed/first-window statements below retain their timestamps.
+
+## October8 actual PAPER continuation
+
+Next selection window is **13:30–13:35 UTC /16:30–16:35 Cyprus**. Do not rerun the
+Oct7 source-only collector, extend its deadline or modify its sealed SQLite.
+The new app is `/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app`;
+source-bound copied book is its sibling `runtime/rehearsal/replacement.sqlite`.
+Manifest23 SHA is `4f6e5288790174b9a9fdfb031d4e7a229c8b852ed2eef96785003d30961f76d3`.
+The copy starts from the exact Oct7 source SHA `f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7`.
+Verify these pins/lineage and the copied existing ranking, do not initialize a
+fresh book or regenerate a winning list.
+
+Prepare a real `ALPACA_DYNAMIC_INPUT_BUNDLE_V1` in that window: prior sealed
+closed history, fresh authenticated selected-LIVE account/quote/asset/minimum,
+linked actual terminal exits, fees/unresolved-liability reserve, earnings and
+concentration, scoped protection and exclusive owner evidence. Preserve raw
+sources with receive times/hashes before asserting any gate. No guessed
+`cash_finality_verified`, `single_owner_verified` or fee rate. PAPER's large
+cash balance does not enlarge the intended LIVE slot/capital/risk budget.
+Use the real inherited slots and frozen deterministic ordering; with all three
+now flat, the allocator may select CRWD lineage before AMD. Never force a slot.
+If any source/gate is unknown, preserve BLOCKED_DATA without a reservation.
+
+Commands below are on VPS; `actual_input_oct8.json` and `plan_oct8.json` are
+required **future real artifacts**, not existing fabricated plans:
+
+```bash
+cd /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app
+/root/by-bot/.venv/bin/python scripts/run_alpaca_dynamic_v1_orders_off.py \
+  --runtime /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/rehearsal \
+  --input-bundle /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/actual_input_oct8.json \
+  --output /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/plan_oct8.json
+```
+
+Before broker PAPER dispatch, freshly verify exact PAPER account
+`4cdbfb77-d1e0-4789-86b2-341bc886efaf`, XOM flat/no orders/no competing owner,
+all active writer sources/cron, shared original account lock and legacy XOM
+exclusion. The exclusion was prepared under lock with no position/order change;
+its exact SHA is `8171cd5ef14f8374e75f6406476d254c816465ef96cab8a52ac335d2f2122e3f`.
+Do not remove it while any owned position/order/finality is unresolved. All five
+legacy positions and old exclusion keys are outside this candidate's write scope.
+Any conflicting writer or source drift blocks dispatch. No second owner or cron
+is installed by this delivery; maintenance is an explicit bounded operator call.
+
+After the plan is durably `RESERVED_ORDERS_OFF`, default rehearsal is GET-only:
+
+```bash
+/root/by-bot/.venv/bin/python scripts/run_alpaca_dynamic_paper.py \
+  --plan /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/plan_oct8.json \
+  --plan-store /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/rehearsal/replacement.sqlite \
+  --paper-env /root/by-bot/configs/alpaca_paper_local.env \
+  --paper-account 4cdbfb77-d1e0-4789-86b2-341bc886efaf \
+  --runtime /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/broker_paper \
+  --output /opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/paper_read_only_oct8.json
+```
+
+Only within the actual permitted window and after all gates pass, repeat this
+exact command with `--paper-submit` and a **new unique output path**. This is
+PAPER authority already approved by the owner, never a LIVE activation command.
+Keep exact plan/reference price/quantity; an unfilled limit is not repriced.
+Persisted uncertain dispatch is GET-recovered by CID, never resent or cleared.
+
+Once initial receipt is `PAPER_PROTECTED`, use the same plan/store/profile/
+account/runtime arguments with `--paper-maintain`. Default reads only; adding
+`--paper-submit` permits upkeep of that exact owned PAPER lifecycle. It cannot
+open another entry. For proof-scoped operator emergency only, also add
+`--paper-unwind`; never DELETE account positions or invoke an unrelated legacy
+kill wrapper. Every output path is exclusive-create and must be unique.
+
+At initial fill, archive full STOP acceptance/readback and exact position size.
+Restart by invoking maintenance with those same sources/state, proving no second
+entry or stop. If held overnight, verify expired DAY and next regular-session
+re-arm **October9 13:30 UTC**, unchanged floor/full remaining owned quantity.
+If stop fills first, reconcile its actual terminal instead; that does not prove
+DAY re-arm. Partial fills, 422, lost responses and duplicates are covered locally
+but actual observations must retain their real type, not a manufactured fault.
+
+A scoped unwind may partially fill or remain pending: retain state/uncertain
+CID and continue GET reconciliation; do not resend missing/unproven commands.
+Stop fill during cancellation is a STOP exit; mixed native/market fills retain
+both. Gross before fees is not net. Read authenticated fills/account activities,
+resolve costs/liabilities/coverage and preserve a terminal receipt; the upkeep
+module deliberately returns `*_PENDING_FINALITY` until external finality is proven.
+
+Return one actual `PAPER_EXECUTION_PASS / BLOCKED_EXECUTION / BLOCKED_DATA` only
+from those sourced results. Initial `PAPER_PROTECTED`, synthetic tests, staged
+source or an empty broker account alone do not meet the end-to-end gate.
+Then prepare exact LIVE ticker/qty/caps/stop, sole ownership/monthly-overlap,
+emergency and rollback dossier. **No HALT clear/new LIVE entry without owner GO.**
+
+## Installed incident rollback boundary
+
+The old LIVE wrapper is retained at
+`/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/original_run.sh`, SHA
+`fdd74d2834e2a3010f45d33cf984f21e0239493a361c689d712071f34396e24a`.
+Installed wrapper SHA is
+`dc5a9c0f7b8e934ecbc783c85284cea56f0a4c8c4dbc8b5093ed912590726391`.
+A code-only rollback is permitted only while freshly globally flat/no orders and
+HALT true, under existing runner/account locks: archive current wrapper, verify
+old wrapper/package pins, atomically restore wrapper bytes, fsync and run its
+GET-only readback. Do not roll back the reconciled ledger or delete the incident
+archive; that would resurrect closed ownership. Never treat rollback as LIVE GO.
+The earlier draft staging app was never selected; do not overwrite sealed apps.
+
 October7 terminal update: read
 `ALPACA_DYNAMIC_FIRST_WINDOW_AND_REARM_2026_10_07.md`/JSON first.
 First window completed with one immutable XOM ranking, no executable reservation

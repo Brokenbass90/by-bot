@@ -1,0 +1,304 @@
+{
+  "schema": "ALPACA_INCIDENT_CLOSURE_AND_PAPER_V1",
+  "prepared_at_utc": "2026-10-07T16:45:04.301323+00:00",
+  "incident_verdict": "ISOLATION_DEPLOYED_RECONCILED_ENTRY_HALTED",
+  "actual_paper_verdict": "BLOCKED_DATA",
+  "paper_execution_pass": false,
+  "live_go_ready": false,
+  "cycle_broker_writes": 0,
+  "live_orders_submitted": 0,
+  "paper_orders_submitted": 0,
+  "deployment": {
+    "status": "ISOLATION_DEPLOYED_RECONCILED_ENTRY_HALTED",
+    "observed_ms": 1791389254681,
+    "broker_writes": 0,
+    "reconciliation": {
+      "status": "EMERGENCY_EXITS_RECONCILED_HALTED",
+      "broker_writes": 0,
+      "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+      "source_sha256": "da0271033bf32696ce188c62a0841f36b63e0b92a27a1b3d09e875ad4d1bbc96",
+      "symbols": [
+        "CRWD",
+        "META"
+      ],
+      "exit_order_ids": [
+        "ac20286f-6184-412e-b19e-fc807d97e51a",
+        "cefd3e9f-d0a0-48f4-825a-4c21a8cfbae9"
+      ],
+      "gross_before_fees": "6.380157352418",
+      "fee_finality": "PENDING",
+      "reentry_policy_changed": false,
+      "entry_halt_preserved": true,
+      "state_after_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "reentry_after_sha256": "052175afd86f697d24696affac5a35429db1c5622c9718572b2fc44ba1b68f64"
+    },
+    "halt_sha256": "e1a137bc8fd2f918c38b3d4cc5c5e844b6dd6bf3ae6fc694e4d2d376997f53ad",
+    "wrapper_sha256": "dc5a9c0f7b8e934ecbc783c85284cea56f0a4c8c4dbc8b5093ed912590726391",
+    "old_wrapper_sha256": "fdd74d2834e2a3010f45d33cf984f21e0239493a361c689d712071f34396e24a",
+    "new_manifest_sha256": "ca9559400a62a7ebb4d2b8a823d08630e73b65e8fff7ed05232c4100c677a5f6",
+    "old_manifest_sha256": "73345c03fa823d82a2c330902624206d14123ed6269667774569ec5db1f0fbb2",
+    "unchanged_profile_binding": {
+      "/root/by-bot/runtime/alpaca_intended_live/binding.json": "12a1a490ff98b47254cfbf2ac0d03650b6d3040bb7ffa86e7c5d2d91b40cd7ea",
+      "/root/by-bot/runtime/alpaca_intended_live/profile.env": "71c96f4d785b5bf1f4e7a2fb96b26609055a0bfbe4b7d0acb60b82febe4d8c11"
+    },
+    "cron_unchanged": true,
+    "services_unchanged": true,
+    "production_pid_pins": {
+      "1648585": "5c840cd7cb031088936c13de04f37db1dfc1bbbca7496771e4b5c76934135353",
+      "1623208": "640df0c8fe38ffdc8b47010b97a6949103e59e82c3fc733fba94ac57e5b68273",
+      "1584802": "bed13f9e9c6365e16c60f638675604fafec5d00bb7f10561bf98f435b2e6d558"
+    },
+    "kity_unchanged": true,
+    "actual_account": {
+      "id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+      "cash": "496.12",
+      "accrued_fees": "0",
+      "pending_reg_taf_fees": "0.02"
+    },
+    "rollback_wrapper": "/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/original_run.sh"
+  },
+  "broker_preservation": [
+    {
+      "observed_ms": 1791391230449,
+      "broker_writes": 0,
+      "clock": {
+        "is_open": true,
+        "next_close": "2026-10-07T16:00:00-04:00",
+        "next_open": "2026-10-08T09:30:00-04:00",
+        "timestamp": "2026-10-07T12:40:29.798248061-04:00"
+      },
+      "positions": [],
+      "open_orders": [],
+      "single_new_schedule": true,
+      "old_schedules_absent": true,
+      "old_processes_absent": true,
+      "source_manifest_sha256": "ca9559400a62a7ebb4d2b8a823d08630e73b65e8fff7ed05232c4100c677a5f6",
+      "source_61_match": true,
+      "cap": 487.42,
+      "gross": 0.7,
+      "hwm": {}
+    },
+    {
+      "halt_sha256": "e1a137bc8fd2f918c38b3d4cc5c5e844b6dd6bf3ae6fc694e4d2d376997f53ad",
+      "entry_halt": {
+        "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "halted": true,
+        "reason": "intended_stage_failed:0:9",
+        "updated_at_utc": "2026-10-07T16:05:11.576362+00:00"
+      },
+      "latest_intended_run": {
+        "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "generated_at_utc": "2026-10-07T16:40:03.119815+00:00",
+        "money_authority": true,
+        "status": "LIVE_CYCLE_COMPLETE"
+      },
+      "observed_ms": 1791391230459,
+      "broker_writes": 0
+    },
+    {
+      "account": {
+        "id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "cash": "496.12",
+        "equity": "496.12",
+        "accrued_fees": "0",
+        "pending_reg_taf_fees": "0.02"
+      },
+      "services": {
+        "bybot.service": [
+          "MainPID=1648585",
+          "NRestarts=0"
+        ],
+        "trading-journal-web.service": [
+          "MainPID=1623208",
+          "NRestarts=0"
+        ],
+        "att1-lifecycle-zero-risk-v2.service": [
+          "MainPID=1584802",
+          "NRestarts=0"
+        ]
+      },
+      "kity_pid": 1804770,
+      "kity_pid_cmdline_sha256": "ce34731a888526bb2744df36001533f2457e019ce0f82f3657b8737948878e26",
+      "kity_source_pins": {
+        "capture_once.py": "1b79abf10cea75018383f91d808e3de467a081cd0d87df809561111cb931e4a5",
+        "app/scripts/kity_m3_orders_off.py": "522c7e6b4accd5375c472b16cca21da941c4b292735efc8b22e873c847495834",
+        "app/.private/kity_m3_orders_off/schedule.json": "adff8d45743704bd46741b4ecdb6e80d1096ef33ebb1a8b67341ecaa3b1b6ba0"
+      },
+      "paper_source_21_match": true,
+      "paper_candidate_23_match": true,
+      "paper_legacy_exclusions": {
+        "sha256": "54bbdd23671e51d190571e31a274e2b19ca99e08ee611e25344f34dbc42e8ca9",
+        "XOM_excluded": false
+      },
+      "broker_writes": 0,
+      "observed_ms": 1791391230859
+    }
+  ],
+  "paper_staging": {
+    "schema": "ALPACA_DYNAMIC_PAPER_MAINTENANCE_STAGING_V1",
+    "observed_ms": 1791391032612,
+    "status": "STAGED_ORDERS_OFF",
+    "app": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app",
+    "manifest_sha256": "4f6e5288790174b9a9fdfb031d4e7a229c8b852ed2eef96785003d30961f76d3",
+    "file_count": 23,
+    "changed_prior_sources": [
+      "scripts/run_alpaca_dynamic_paper.py",
+      "scripts/equities_alpaca_paper_bridge.py"
+    ],
+    "unchanged_prior_sources": 19,
+    "tests_exit": 0,
+    "tests_tail": [
+      "........................................................................ [ 82%]",
+      "...............                                                          [100%]",
+      "87 passed in 8.03s"
+    ],
+    "tests_log_sha256": "c6c019df51a7a3f1fe148466dab9bda62526847b12330e26907c3f47f51dce39",
+    "source_lineage": {
+      "source": "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/runtime/selection/replacement.sqlite",
+      "source_sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+      "continuation": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/rehearsal/replacement.sqlite",
+      "initial_continuation_sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+      "counts": {
+        "rankings": 1,
+        "slots": 3,
+        "intents": 0,
+        "exits": 0
+      },
+      "authority": "ORDERS_OFF_SOURCE_BOOK_COPY",
+      "sealed_source_unmodified": true
+    },
+    "production_pid_pins_unchanged": {
+      "1648585": "5c840cd7cb031088936c13de04f37db1dfc1bbbca7496771e4b5c76934135353",
+      "1623208": "640df0c8fe38ffdc8b47010b97a6949103e59e82c3fc733fba94ac57e5b68273",
+      "1584802": "bed13f9e9c6365e16c60f638675604fafec5d00bb7f10561bf98f435b2e6d558",
+      "1804770": "ce34731a888526bb2744df36001533f2457e019ce0f82f3657b8737948878e26"
+    },
+    "broker_writes": 0,
+    "live_entry_authority_changed": false,
+    "daemon_installed": false
+  },
+  "paper_exclusion_preparation": {
+    "schema": "ALPACA_DYNAMIC_PAPER_EXCLUSION_PREPARATION_V1",
+    "observed_ms": 1791391340328,
+    "status": "XOM_PAPER_EXCLUSION_PREPARED_NOT_ACTIVATED",
+    "account_id": "4cdbfb77-d1e0-4789-86b2-341bc886efaf",
+    "account_lock_path": "/root/by-bot/runtime/locks/alpaca_bridge_5cec021eb9d04382.lock",
+    "legacy_wrapper_sha256": "f61591405dd9533d750568e099aeb6b9fd642638f42fa4198e37cf1008ee6d61",
+    "before_sha256": "54bbdd23671e51d190571e31a274e2b19ca99e08ee611e25344f34dbc42e8ca9",
+    "after_sha256": "8171cd5ef14f8374e75f6406476d254c816465ef96cab8a52ac335d2f2122e3f",
+    "backup_path": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/legacy_exclusions_before.json",
+    "exact_added_exclusion": {
+      "XOM": "ALPACA_DYNAMIC_V1_PAPER_PENDING"
+    },
+    "existing_exclusions_preserved": true,
+    "XOM_flat_no_orders": true,
+    "installed_exemption_checks_passed": true,
+    "broker_writes": 0,
+    "cron_changed": false,
+    "live_state_changed": false,
+    "paper_execution_pass": false,
+    "next_gate": "Fresh all-writer/account/symbol check before actual plan and PAPER dispatch; retain exclusion through terminal finality"
+  },
+  "tests": {
+    "local_targeted": {
+      "passed": 151,
+      "failed": 0
+    },
+    "vps_incident_targeted": {
+      "passed": 64,
+      "failed": 0
+    },
+    "vps_paper_targeted": {
+      "passed": 87,
+      "failed": 0
+    },
+    "full_suite": {
+      "exit_code": 1,
+      "failed_count": 57,
+      "baseline_failed_count": 57,
+      "new_failures": [],
+      "removed_failures": [],
+      "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+      "foreign_restored": true,
+      "log_sha256": "9ab74002d7dfe3a682569f5f523f83851e15fe12959497e41d3e1513e9c32b82",
+      "tail": "57 failed, 4089 passed, 1 warning in 190.06s (0:03:10)"
+    }
+  },
+  "bounded_review": {
+    "all_reported_findings_closed": true,
+    "incident_archive_directory_durability_fixed": true,
+    "paper_findings": [
+      "accepted rearm before native ledger write",
+      "pending/partial/lost market exit recovery",
+      "stop fill during cancel classification",
+      "native retirement before terminal SQLite commit",
+      "filled new rearm before restart"
+    ],
+    "requested_and_verified_model": "gpt-6-astra",
+    "effort": "high",
+    "final_targeted_review_passed": 1,
+    "actual_paper_and_fee_finality_proven": false
+  },
+  "delegation": [
+    {
+      "agent_path": "/root/alpaca_incident_financial_review",
+      "rollout_id": "01a116dc-0009-7331-b9f1-c94a7d5a10f2",
+      "runtime_settings": [
+        {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        }
+      ]
+    },
+    {
+      "agent_path": "/root/alpaca_deploy_paper_inventory",
+      "rollout_id": "01a116d7-b223-75d2-91af-b268d74fbc66",
+      "runtime_settings": [
+        {
+          "model": "gpt-5.6-luna",
+          "effort": "medium"
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "scripts/alpaca_emergency_reconcile.py": "c7de992bd876bde2f4aea110759410574d41258ac1383e1bf0b5c6d46b1a8ab1",
+    "research_lab/alpaca_dynamic_paper_maintenance.py": "3c153ac88e8826a01338e964b6d61c45833cdc47ca1b04c9abd6ea32908218cd",
+    "scripts/run_alpaca_dynamic_paper.py": "96998e245af71589a7516fa7efb98b225932ee5b8faa73e20694e9c248b21c98",
+    "tests/test_alpaca_emergency_reconcile.py": "ad762591e774a911f602be61f47dbed424c66d44a0338ecd99e76cf6ead1837d",
+    "tests/test_alpaca_dynamic_paper_maintenance.py": "725deee18c560233f139cbf97f1dd4ede53e1bbad3781a261bbdb4c12d65d0eb"
+  },
+  "next_window": {
+    "session": "2026-10-08",
+    "opens_utc": "2026-10-08T13:30:00Z",
+    "ends_utc": "2026-10-08T13:35:00Z",
+    "opens_cyprus": "2026-10-08T16:30:00+03:00"
+  },
+  "blockers": [
+    "contemporaneous authenticated quote/asset/minimum/earnings/concentration and cash/liability/fee inputs for the permitted next window",
+    "fresh PAPER all-writer/exclusion/account/symbol ownership check; initial XOM exclusion now prepared",
+    "actual PAPER entry/full protection/readback/partials/restart/DAY rearm/scoped unwind/terminal cost and finality evidence",
+    "exclusive LIVE handoff/rollback and separate owner GO after actual PAPER PASS"
+  ],
+  "sealed_research_changed": false,
+  "kity_cutoff_utc": "2026-10-07T23:55:00Z",
+  "att1_restarted": false,
+  "claude_research_or_judge_run": false,
+  "foreign_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}

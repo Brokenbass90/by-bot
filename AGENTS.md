@@ -165,3 +165,23 @@ judge consumption exists. Run once, preserve raw report/receipt; any difference
 BLOCKED, no Codex research repair/retuning. Claude A1 source-intake hash matches
 are not all-input acceptance. Then OS2 actual-source/parity orders-OFF. No new
 families, regime optimization, strategy recovery or Claude messaging.
+
+## October7 incident closure amendment
+
+The latest owner-authorized incident closure is delivered and installed while
+LIVE entry remains HALTED and broker flat. Read checkpoint TOP and
+ALPACA_INCIDENT_CLOSURE_AND_PAPER_2026_10_07.md/JSON. Continue from this receipt;
+do not redo incident history, retire synthetic stops or re-activate LIVE.
+Isolation-only bridge is selected from the r2 app through the existing wrapper;
+61 source pins, original profile/binding/caps/one-owner preserved. Exact MARKET
+emergency provenance is archived; fees remain pending, gross is not net.
+
+PAPER maintenance is staged separately orders-OFF with a source-bound copy of
+the sealed first-window book. XOM exclusion from legacy PAPER management is
+prepared, but fresh all-writer/account/symbol/fee/quote checks remain in the next
+permitted October8 13:30–13:35UTC window. No automatic job or PAPER order exists.
+Use existing frozen ranking/slot ordering, no rescan/backdating/new fourth slot.
+Actual PAPER lifecycle/DAY re-arm/terminal cost and finality precede LIVE dossier
+and separate owner GO. Maintain durable HALT until that approval; a runner's
+LIVE_CYCLE_COMPLETE/money_authority field is not entry activation proof.
+KITY original cutoff and Oct8–9 intake remain P0. No new research or Claude work.
