@@ -1,0 +1,118 @@
+REZHIM_V1 замок: PASS
+{
+ "status": "READY",
+ "prichiny": [],
+ "konfig_sha256": "9b65e28c2d283f2cdf1e4ab17d95cc46a7afe672fdf9d72085685a90d4f2256f",
+ "sdelok": 70561,
+ "sdelok_bez_metki_rezhima": 27,
+ "po_nogam_i_sgibam": {
+  "ATT1": [
+   {
+    "train_zakrytyh": 514,
+    "test": 744
+   },
+   {
+    "train_zakrytyh": 1254,
+    "test": 603
+   },
+   {
+    "train_zakrytyh": 1843,
+    "test": 911
+   },
+   {
+    "train_zakrytyh": 2742,
+    "test": 1836
+   }
+  ],
+  "SBR1": [
+   {
+    "train_zakrytyh": 185,
+    "test": 281
+   },
+   {
+    "train_zakrytyh": 464,
+    "test": 278
+   },
+   {
+    "train_zakrytyh": 742,
+    "test": 490
+   },
+   {
+    "train_zakrytyh": 1224,
+    "test": 939
+   }
+  ],
+  "ASR1": [
+   {
+    "train_zakrytyh": 95,
+    "test": 107
+   },
+   {
+    "train_zakrytyh": 201,
+    "test": 132
+   },
+   {
+    "train_zakrytyh": 321,
+    "test": 213
+   },
+   {
+    "train_zakrytyh": 537,
+    "test": 487
+   }
+  ],
+  "ETS2": [
+   {
+    "train_zakrytyh": 0,
+    "test": 0
+   },
+   {
+    "train_zakrytyh": 0,
+    "test": 7222
+   },
+   {
+    "train_zakrytyh": 7072,
+    "test": 12688
+   },
+   {
+    "train_zakrytyh": 19673,
+    "test": 26224
+   }
+  ],
+  "SF3": [
+   {
+    "train_zakrytyh": 0,
+    "test": 0
+   },
+   {
+    "train_zakrytyh": 0,
+    "test": 2812
+   },
+   {
+    "train_zakrytyh": 2804,
+    "test": 4590
+   },
+   {
+    "train_zakrytyh": 7365,
+    "test": 9051
+   }
+  ],
+  "BOUNCE1": [
+   {
+    "train_zakrytyh": 18,
+    "test": 8
+   },
+   {
+    "train_zakrytyh": 26,
+    "test": 29
+   },
+   {
+    "train_zakrytyh": 55,
+    "test": 44
+   },
+   {
+    "train_zakrytyh": 99,
+    "test": 52
+   }
+  ]
+ }
+}
