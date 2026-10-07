@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import fcntl
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -32,7 +33,11 @@ def strict_json(raw):
         return value
     def nonfinite(_):
         raise ValueError("nonfinite JSON number")
-    return json.loads(raw, object_pairs_hook=pairs, parse_constant=nonfinite)
+    def parse_float(raw):
+        value = float(raw)
+        if not math.isfinite(value): raise ValueError("overflow JSON number")
+        return value
+    return json.loads(raw, object_pairs_hook=pairs, parse_constant=nonfinite, parse_float=parse_float)
 
 
 def blocked(reason):
@@ -72,6 +77,7 @@ class ShadowJournal:
             # A prior uncertain complete append is not returned as durable until
             # the verified prefix has been synced successfully on reopen.
             os.fsync(self.fd)
+            self.modification = self._modification()
         except Exception as error:
             self.close()
             if isinstance(error, BridgeBlocked): raise
@@ -97,7 +103,8 @@ class ShadowJournal:
         self.size = os.fstat(self.fd).st_size
         if self.size > MAX_JOURNAL_BYTES: blocked("journal_byte_bound")
         raw = os.pread(self.fd, self.size + 1, 0)
-        if len(raw) != self.size or (raw and not raw.endswith(b"\n")): blocked("journal_corrupt_prefix")
+        if len(raw) != self.size or (raw and not raw.endswith(b"\n")):
+            raise BridgeBlocked("BLOCKED_DATA", "journal_corrupt_prefix")
         for line in raw.splitlines():
             if len(line) > MAX_BYTES or len(self.receipts) >= MAX_RECEIPTS: blocked("receipt_bound")
             try:
@@ -110,7 +117,7 @@ class ShadowJournal:
                          and identity(receipt["request_id"])
                          and receipt["request_id"] not in self.receipts
                          and receipt["state_after"]["schema"] == "OS2_SHADOW_STATE_V1")
-                if not valid: blocked("journal_corrupt_prefix")
+                if not valid: raise BridgeBlocked("BLOCKED_DATA", "journal_corrupt_prefix")
             except (ValueError, KeyError, TypeError) as error:
                 raise BridgeBlocked("BLOCKED_DATA", "journal_corrupt_prefix") from error
             self.receipts[receipt["request_id"]] = receipt
@@ -125,7 +132,12 @@ class ShadowJournal:
             if self._identity(fd) != expected or (path_info.st_dev, path_info.st_ino) != expected:
                 blocked("journal_changed")
         if set(os.listdir(self.root_fd)) != {"writer.lock", "journal.jsonl"}: blocked("runtime_inode_bound")
-        if os.fstat(self.fd).st_size != self.size: blocked("journal_changed")
+        if os.fstat(self.fd).st_size != self.size or self._modification() != self.modification:
+            blocked("journal_changed")
+
+    def _modification(self):
+        info = os.fstat(self.fd)
+        return info.st_mtime_ns, info.st_ctime_ns
 
     def process(self, bundle):
         if self.poisoned: blocked("instance_poisoned")
@@ -160,10 +172,12 @@ class ShadowJournal:
                 if count <= 0: raise OSError("zero append")
                 written += count
             os.fsync(self.fd)
-        except OSError as error:
+        except BaseException as error:
             self.poisoned = True
+            if not isinstance(error, OSError): raise
             raise BridgeBlocked("BLOCKED_IMPLEMENTATION", "append_uncertain") from error
         self.size += len(data)
+        self.modification = self._modification()
         self.receipts[key] = receipt
         self.last_hash = receipt["sha256"]
         self.state = receipt["state_after"]

@@ -102,13 +102,14 @@ def test_clean_terminal_is_once_only_and_diagnostics_are_fixture_proposals():
     r = assess_bundle(b, state)
     assert not r["state_after"]["reservations"]
     assert len(r["state_after"]["terminals"]) == 1
-    assert r["diagnostics"]["health"]["fixture"]["drawdown_R"] == 2.0
+    assert r["diagnostics"]["health"]["fixture:long"]["drawdown_R"] == 2.0
     assert r["diagnostics"]["evidence_kind"] == "FIXTURE"
     assert r["diagnostics"]["money_authorized"] is False
-    assert "insufficient" in r["diagnostics"]["health"]["fixture"]["reason"]
+    assert "insufficient" in r["diagnostics"]["health"]["fixture:long"]["reason"]
     again = assess_bundle(b, r["state_after"])
     assert len(again["state_after"]["terminals"]) == 1
-    replacement = assess_bundle(bundle([signal("s2")]), r["state_after"])
+    b = bundle([signal("s2")]); b["decision_ms"] = END + 4000
+    replacement = assess_bundle(b, r["state_after"])
     assert replacement["decisions"][0]["reason"] == "cooldown"
 
 
@@ -136,3 +137,26 @@ def test_assessor_does_not_mutate_input_or_state():
     b = bundle(); s = empty_state(); old = copy.deepcopy((b, s))
     assess_bundle(b, s)
     assert (b, s) == old
+
+
+@pytest.mark.parametrize("scenario,reason", [("cluster", "beta_cluster_cap"), ("side", "same_side_cap"), ("slots", "portfolio_slots_full")])
+def test_existing_ranker_caps_are_applied_to_evolving_state(scenario, reason):
+    events = [signal("a", "ETHUSDT", "long", "eth", 1), signal("b", "SOLUSDT", "long", "sol", 0.9)]
+    if scenario == "cluster": events[1]["beta_cluster"] = "eth"
+    elif scenario == "side": events.append(signal("c", "ADAUSDT", "long", "ada", 0.8))
+    else:
+        events += [signal("c", "ADAUSDT", "short", "ada", 0.8), signal("d", "XRPUSDT", "short", "xrp", 0.7)]
+    b = bundle(events)
+    b["correlations"]["rows"] = [[a["symbol"], z["symbol"], 0.1] for i, a in enumerate(events) for z in events[i + 1:]]
+    r = assess_bundle(repin(b), empty_state())
+    assert r["decisions"][-1]["reason"] == reason
+    b["events"].reverse()
+    reordered = assess_bundle(b, empty_state())
+    assert reordered["decisions"] == r["decisions"]
+
+
+def test_unknown_data_does_not_lose_observed_signal_denominator():
+    b = bundle(); b["source"]["rows"].pop(); repin(b)
+    r = assess_bundle(b, empty_state())
+    assert r["diagnostics"]["denominators"]["signals"] == 1
+    assert r["diagnostics"]["denominators"]["rejected"] == 1

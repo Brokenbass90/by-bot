@@ -78,3 +78,5 @@
 Task1: RED missing module confirmed; GREEN31 new behavior cases,69 including reused dependencies. No market archive/judge/account consumption.
 
 Task2: RED missing journal confirmed; GREEN14 durable restart/corruption/security/resource cases. Task3 CLI RED absent script; GREEN7 cases. All90 candidate+dependency tests PASS before review.
+
+Final bounded review: verified6-astra/high at29b4156 found4 reproducible causal/state issues. All reproduced RED and fixed once: intent→source timing/reference, terminal after stored admission/trusted side, all observed ID hashes,800-hour revision retention. Added side-specific registry/advisory diagnostics, unique denominators and same-size journal edit guard. GREEN114 candidate+dependency tests; final guarded full suite pending. No second review/strategy research or money authority.

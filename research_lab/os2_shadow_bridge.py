@@ -15,7 +15,8 @@ from pathlib import Path
 import re
 
 from bot import regime_orchestrator, strategy_priority_router, exposure_gate
-from bot import strategy_regime_gate, decision_bus, edge_monitor, research_orchestrator
+from bot import strategy_regime_gate, decision_bus, edge_monitor, research_orchestrator, sleeve_registry
+from bot import champion_challenger, oos_selector
 
 HOUR = 3_600_000
 MAX_BYTES = 2 * 1024 * 1024
@@ -25,6 +26,9 @@ FRESH_MS = 300_000
 COOLDOWN_MS = 600_000  # Synthetic fixture policy only; never a LIVE setting.
 REGIME_CODE_PIN = "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370"
 LABELS = {"NEUTRAL", "BULL_TREND", "BEAR_TREND"}
+SIGNAL_FIELDS = {"type", "id", "source_id", "source_pin", "strategy", "version", "dependencies",
+                 "symbol", "side", "beta_cluster", "risk_pct", "rank", "signal_ms", "available_ms",
+                 "regime_source_pin", "regime_closed_cutoff_ms", "regime_observed_ms", "money_authorized"}
 
 
 class BridgeBlocked(Exception):
@@ -64,13 +68,16 @@ def sha(value):
 
 def wiring_pins():
     modules = (regime_orchestrator, strategy_priority_router, exposure_gate,
-               strategy_regime_gate, decision_bus, edge_monitor, research_orchestrator)
+               strategy_regime_gate, decision_bus, edge_monitor, research_orchestrator,
+               sleeve_registry, champion_challenger, oos_selector)
     return {m.__name__: hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest() for m in modules}
 
 
 def empty_state():
     return {"schema": "OS2_SHADOW_STATE_V1", "domain_pin": None, "last_decision_ms": 0,
-            "source_rows": {}, "reservations": {}, "event_hashes": {}, "cooldowns": {}, "terminals": []}
+            "source_rows": {}, "reservations": {}, "event_hashes": {}, "cooldowns": {}, "terminals": [],
+            "strategy_bindings": {}, "counts": {"signals": 0, "selected": 0, "rejected": 0,
+                                                "no_signal": 0, "terminal_unproven": 0, "clean_filled_terminals": 0}}
 
 
 def _envelope(bundle, pins):
@@ -131,34 +138,60 @@ def _position(p):
 
 
 def _decision(event, envelope, decision_ms, reason, selected=False, exposure=None):
+    def safe_id(key, fallback):
+        return event[key] if identity(event.get(key)) else fallback
     value = decision_bus.build_decision(
-        ts=decision_ms // 1000, symbol=str(event.get("symbol", "UNKNOWN")),
-        strategy=str(event.get("strategy", "UNKNOWN")), side=str(event.get("side", "UNKNOWN")),
+        ts=decision_ms // 1000, symbol=safe_id("symbol", "UNKNOWN"),
+        strategy=safe_id("strategy", "UNKNOWN"), side=event.get("side") if event.get("side") in ("long", "short") else "UNKNOWN",
         decision="enter" if selected else "skip", reason=reason, signal_strength=0.0,
-        exposure=exposure, extra={"observer": "OS2_SHADOW_BRIDGE_V1", "event_id": event.get("id"),
+        exposure=exposure, extra={"observer": "OS2_SHADOW_BRIDGE_V1", "event_id": safe_id("id", None),
                                  "regime_envelope_sha256": envelope.get("sha256"),
-                                 "source_id": event.get("source_id"), "source_pin": event.get("source_pin"),
+                                 "source_id": safe_id("source_id", None), "source_pin": event.get("source_pin") if sha(event.get("source_pin")) else None,
                                  "money_authorized": False, "ranking_basis": "FIXTURE_NORMALIZATION_1_NOT_EXPECTANCY"}).to_dict()
     return value
 
 
 def _diagnostics(state, mode):
-    by_sleeve = {}
+    terminal_records = []
+    registry = sleeve_registry.SleeveRegistry()
     if mode == "FIXTURE":
         for terminal in sorted(state["terminals"], key=lambda t: (t["terminal_ms"], t["id"])):
-            by_sleeve.setdefault(terminal["strategy"], []).append(terminal["net_r"])
-    health = {s: asdict(edge_monitor.assess_sleeve(rs, sleeve=s)) for s, rs in by_sleeve.items()}
+            terminal_records.append({"strategy": terminal["strategy"], "side": terminal["side"],
+                                     "decision": "enter", "outcome": {"filled": True, "r_multiple": terminal["net_r"]}})
+            registry.register(terminal["strategy"], terminal["side"], stage="shadow", risk_mult=0.0)
+    by_sleeve = sleeve_registry.group_by_sleeve(terminal_records)
+    health = {s: asdict(value) for s, value in sleeve_registry.sleeve_health(terminal_records).items()}
     proposal = asdict(research_orchestrator.weekly_review(
         [{"name": s, "stage": "shadow", "paper_r": rs} for s, rs in sorted(by_sleeve.items())],
         [], period_label="OS2_FIXTURE_REPLAY"))
+    for action in proposal["actions"]:
+        action.update({"actionable": False, "evidence_kind": mode})
     # Existing diagnostics use NaN for unknown expectancy. Preserve UNKNOWN as null.
     def finite(value):
         if isinstance(value, dict): return {k: finite(v) for k, v in value.items()}
         if isinstance(value, list): return [finite(v) for v in value]
         if isinstance(value, float) and not math.isfinite(value): return None
         return value
-    return finite({"health": health, "proposal": proposal, "evidence_kind": mode,
+    return finite({"health": health, "registry": registry.snapshot(), "proposal": proposal, "evidence_kind": mode,
+                   "denominators": state["counts"],
                    "money_authorized": False, "policy_authority": False})
+
+
+def _count_observations(state, decisions, events, prior_ids):
+    by_id = {e["id"]: e for e in events if isinstance(e, dict) and identity(e.get("id"))}
+    counted = set(prior_ids)
+    for d in decisions:
+        event_id = d["context"]["event_id"]
+        if not identity(event_id): continue
+        if event_id in counted: continue
+        counted.add(event_id)
+        kind = by_id.get(event_id, {}).get("type")
+        if kind == "SIGNAL":
+            state["counts"]["signals"] += 1
+            state["counts"]["selected" if d["decision"] == "enter" else "rejected"] += 1
+        elif kind == "NO_SIGNAL": state["counts"]["no_signal"] += 1
+        elif kind == "TERMINAL":
+            state["counts"]["clean_filled_terminals" if d["reason"] == "terminal_accepted" else "terminal_unproven"] += 1
 
 
 def assess_bundle(bundle, state):
@@ -168,12 +201,19 @@ def assess_bundle(bundle, state):
     events = bundle.get("events", []) if isinstance(bundle, dict) else []
     decision_ms = bundle.get("decision_ms", 0) if isinstance(bundle, dict) else 0
     decisions = []
+    observed = dict(state.get("event_hashes", {}))
     try:
         require(isinstance(bundle, dict) and len(canonical(bundle)) <= MAX_BYTES, "invalid_or_oversize_bundle")
         require(bundle["schema"] == "OS2_SHADOW_BUNDLE_V1" and identity(bundle["request_id"]), "invalid_bundle_identity")
         require(bundle["mode"] in ("FIXTURE", "EXTERNAL_PUBLIC"), "invalid_mode")
         require(state["schema"] == "OS2_SHADOW_STATE_V1", "invalid_state")
         require(isinstance(events, list) and len(events) <= MAX_EVENTS and all(isinstance(e, dict) for e in events), "invalid_events")
+        require(len(observed) + len(events) <= MAX_IDENTITIES, "identity_bound")
+        for e in events:
+            require(identity(e.get("id")), "missing_event_identity")
+            body = digest(e)
+            require(e["id"] not in observed or observed[e["id"]] == body, "event_identity_conflict")
+            observed[e["id"]] = body
         pins = wiring_pins()
         envelope = _envelope(bundle, pins)
         cutoff = decision_ms - bundle["clock_uncertainty_ms"]
@@ -200,19 +240,17 @@ def assess_bundle(bundle, state):
             require(old is None or old == digest(row), "regime_source_revision")
         next_state = deepcopy(state)
         next_state["domain_pin"] = domain
-        next_state["source_rows"] = {str(row[0]): digest(row) for row in bundle["source"]["rows"]}
+        next_state["source_rows"].update({str(row[0]): digest(row) for row in bundle["source"]["rows"]})
+        minimum_open = envelope["closed_cutoff_ms"] - 800 * HOUR
+        next_state["source_rows"] = {ts: pin for ts, pin in next_state["source_rows"].items() if int(ts) >= minimum_open}
         next_state["last_decision_ms"] = decision_ms
-        require(len(next_state["event_hashes"]) + len(events) <= MAX_IDENTITIES, "identity_bound")
-        seen = dict(state["event_hashes"])
-        for e in events:
-            require(identity(e.get("id")), "missing_event_identity")
-            body = digest(e)
-            require(e["id"] not in seen or seen[e["id"]] == body, "event_identity_conflict")
-            seen[e["id"]] = body
         if bundle["mode"] == "EXTERNAL_PUBLIC":
+            next_state["event_hashes"] = observed
+            external_decisions = [_decision(e, envelope, decision_ms, "POLICY_UNAPPROVED") for e in events]
+            _count_observations(next_state, external_decisions, events, state["event_hashes"])
             return {"status": "BLOCKED_DATA", "reason": "POLICY_UNAPPROVED", "regime_envelope": envelope,
-                    "decisions": [_decision(e, envelope, decision_ms, "POLICY_UNAPPROVED") for e in events],
-                    "state_after": original, "diagnostics": _diagnostics(original, "EXTERNAL_PUBLIC")}
+                    "decisions": external_decisions,
+                    "state_after": next_state, "diagnostics": _diagnostics(next_state, "EXTERNAL_PUBLIC")}
 
         candidates = []
         for e in events:
@@ -225,26 +263,37 @@ def assess_bundle(bundle, state):
                 held = next_state["reservations"].get(e.get("origin_id"))
                 valid = (held is not None and e.get("source_id") == held["source_id"]
                          and e.get("source_pin") == held["source_pin"]
+                         and e.get("owner") == "OS2_SHADOW_BRIDGE_V1"
+                         and all(e.get(k, held[k]) == held[k] for k in ("strategy", "version", "side", "symbol"))
                          and e.get("filled") is True and e.get("continuity") == "CLEAN"
                          and e.get("costs_complete") is True and e.get("finality") is True
                          and number(e.get("net_r")) and integer(e.get("terminal_ms"))
                          and integer(e.get("available_ms"))
-                         and held["signal_ms"] <= e["terminal_ms"] <= e["available_ms"] <= cutoff)
+                         and held["admitted_ms"] <= e["terminal_ms"] <= e["available_ms"] <= cutoff)
                 decisions.append(_decision(e, envelope, decision_ms, "terminal_accepted" if valid else "terminal_unproven"))
                 if valid:
-                    next_state["terminals"].append({**e, "strategy": held["strategy"]})
+                    next_state["terminals"].append({**e, **{k: held[k] for k in ("strategy", "version", "side", "symbol")}})
                     next_state["cooldowns"][held["symbol"]] = e["terminal_ms"] + COOLDOWN_MS
                     del next_state["reservations"][e["origin_id"]]
                     next_state["event_hashes"][e["id"]] = digest(e)
                 continue
             try:
-                require(e.get("type") == "SIGNAL" and e.get("money_authorized", False) is False, "invalid_candidate")
+                require(e.get("type") == "SIGNAL" and e.get("money_authorized", False) is False
+                        and set(e) <= SIGNAL_FIELDS, "invalid_candidate")
                 p = _position(e)
                 require(identity(e["source_id"]) and sha(e["source_pin"]) and identity(e["strategy"])
                         and identity(e["version"]) and isinstance(e["dependencies"], dict)
                         and bool(e["dependencies"]) and all(identity(k) and sha(v) for k, v in e["dependencies"].items()), "invalid_candidate")
+                binding = {k: e[k] for k in ("version", "dependencies", "source_id")}
+                if e["strategy"] in next_state["strategy_bindings"] and next_state["strategy_bindings"][e["strategy"]] != binding:
+                    decisions.append(_decision(e, envelope, decision_ms, "strategy_identity_conflict")); continue
+                next_state["strategy_bindings"][e["strategy"]] = deepcopy(binding)
                 require(integer(e["signal_ms"]) and integer(e["available_ms"])
                         and 0 <= cutoff - e["signal_ms"] <= FRESH_MS
+                        and envelope["observed_ms"] <= e["signal_ms"]
+                        and e["regime_source_pin"] == envelope["source_pin"]
+                        and e["regime_closed_cutoff_ms"] == envelope["closed_cutoff_ms"]
+                        and e["regime_observed_ms"] == envelope["observed_ms"]
                         and e["signal_ms"] <= e["available_ms"] <= cutoff
                         and number(e["rank"]) and 0 <= e["rank"] <= 1, "invalid_candidate")
                 gate = strategy_regime_gate.strategy_regime_gate_decision(
@@ -284,14 +333,24 @@ def assess_bundle(bundle, state):
             decisions.append(_decision(e, envelope, decision_ms, reason, selected, exposure))
             next_state["event_hashes"][e["id"]] = digest(e)
             if selected:
-                next_state["reservations"][e["id"]] = deepcopy(e)
+                next_state["reservations"][e["id"]] = {**deepcopy(e), "admitted_ms": decision_ms,
+                                                       "owner": "OS2_SHADOW_BRIDGE_V1",
+                                                       "regime_envelope_sha256": envelope["sha256"]}
+        next_state["event_hashes"] = observed
+        _count_observations(next_state, decisions, events, state["event_hashes"])
         return {"status": "SHADOW_WIRING_PASS", "reason": "FIXTURE_ONLY_NO_POLICY_AUTHORITY",
                 "regime_envelope": envelope, "decisions": decisions, "state_after": next_state,
                 "diagnostics": _diagnostics(next_state, "FIXTURE")}
-    except (BridgeBlocked, KeyError, TypeError, ValueError, OverflowError) as error:
+    except (BridgeBlocked, KeyError, TypeError, ValueError, OverflowError, RecursionError) as error:
         reason = error.reason if isinstance(error, BridgeBlocked) else "malformed_bundle"
         safe_events = [e for e in events[:MAX_EVENTS] if isinstance(e, dict)] if isinstance(events, list) else []
         safe_ms = decision_ms if integer(decision_ms) else 0
+        # A valid observed identity stays frozen even when its source/gate fails.
+        # A conflicting/oversized prefix never overwrites prior identity bindings.
+        if reason not in ("event_identity_conflict", "identity_bound", "source_or_policy_conflict"):
+            original["event_hashes"] = observed
+        rejected_decisions = [_decision(e, envelope, safe_ms, reason) for e in safe_events]
+        _count_observations(original, rejected_decisions, safe_events, state["event_hashes"])
         return {"status": "BLOCKED_DATA", "reason": reason, "regime_envelope": envelope,
-                "decisions": [_decision(e, envelope, safe_ms, reason) for e in safe_events],
+                "decisions": rejected_decisions,
                 "state_after": original, "diagnostics": _diagnostics(original, "EXTERNAL_PUBLIC")}

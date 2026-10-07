@@ -49,7 +49,7 @@ def test_refuses_arbitrary_source_or_runtime_path(area, tmp_path):
     assert not (tmp_path / "live-runtime").exists()
 
 
-@pytest.mark.parametrize("raw", ['{"request_id":"one","request_id":"two"}', '{"x":NaN}', "x" * (2 * 1024 * 1024 + 1)], ids=["duplicate-key", "nan", "oversize"])
+@pytest.mark.parametrize("raw", ['{"request_id":"one","request_id":"two"}', '{"x":NaN}', "x" * (2 * 1024 * 1024 + 1), '{"request_id":"one","x":1e309}'], ids=["duplicate-key", "nan", "oversize", "overflow"])
 def test_invalid_json_or_size_fails_before_journal(area, raw):
     path = area / "source.json"; path.write_text(raw)
     r = run(path, area / "store")

@@ -109,3 +109,12 @@ def test_resource_limits_and_oversize_startup(tmp_path, monkeypatch):
         with pytest.raises(BridgeBlocked, match="receipt_bound"): journal.process(b)
     monkeypatch.setattr(module, "MAX_JOURNAL_BYTES", 10)
     with pytest.raises(BridgeBlocked, match="journal_byte_bound"): ShadowJournal(root)
+
+
+def test_same_size_foreign_edit_is_detected_before_cached_replay(tmp_path):
+    root = tmp_path / "store"
+    with ShadowJournal(root) as journal:
+        journal.process(bundle())
+        path = root / "journal.jsonl"; raw = path.read_bytes()
+        path.write_bytes(raw.replace(b"FIXTURE_ONLY", b"ALTERED_ONLY"))
+        with pytest.raises(BridgeBlocked, match="journal_changed"): journal.process(bundle())
