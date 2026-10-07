@@ -1,0 +1,17 @@
+{
+ "imya": "B3_ORCHESTRATOR_V1_WF",
+ "zamorozheno": "2026-10-07, до любого прогона портфеля",
+ "rezhim": "REZHIM_V1 (os2/rezhim_v1.py, замок os2/REZHIM_V1_ZAMOK.json)",
+ "nogi": {"ATT1": "orch_signals.json leg=ATT1", "SBR1": "orch_signals.json leg=SBR1", "ASR1": "os2/potoki/ASR1.json",
+          "ETS2": "os2/potoki/ETS2.json", "SF3": "os2/potoki/SF3.json", "BOUNCE1": "os2/potoki/BOUNCE1.json"},
+ "kapital": "1R риска на сделку, одинаково во всех руках; R уже после издержек (6 bps/сторона × плечо стопа, orchestrator.simulate)",
+ "slotov": 12, "odin_simvol_odna_poziciya": true, "router": "bot/strategy_priority_router.rank_candidates (expected_net_r=1, max_same_side=slotov)",
+ "sgiby": [["2023-01-01", "2023-07-01", "2024-01-01"], ["2023-01-01", "2024-01-01", "2024-07-01"],
+           ["2023-01-01", "2024-07-01", "2025-01-01"], ["2023-01-01", "2025-01-01", "2025-10-01"]],
+ "sgib_format": "[начало train, начало test (=конец train), конец test)",
+ "srodstvo": "нога разрешена в состоянии S ⇔ на train в S ≥ 30 сделок и среднее R > 0; нет S → нога выключена в test",
+ "ruki": {"A_always_on": "все ноги во всех состояниях", "B_leg_filter": "нога целиком ⇔ среднее R на train > 0 (≥ 30 сделок)", "C_routed": "сродство по REZHIM_V1"},
+ "pass": "C > A и C > B по сумме R на склеенных test; C ≥ B в ≥ 3 из 4 сгибов; макс. просадка C ≤ 1.2 × просадки A",
+ "posle_pass": "политика = сродство на 2023-01…2025-09 → хэш → ORCHESTRATOR_POLICY_V1 → вторичный отчёт 2025-10…2026-08 (не решает) → SEALED_V2 с 2026-08-12 один раз + тень",
+ "zapreshcheno": "менять ноги, параметры, режим, сгибы, правило сродства, критерий после первого прогона; повторный прогон после квитанции"
+}

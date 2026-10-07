@@ -26,3 +26,9 @@
 3. Прогнать test_sleeve_breaker_generic и тесты живых гейтов в своей среде.
 4. Минимальный план интеграции (не новый фреймворк): ноги → StrategyCandidate → rank_candidates → strategy_regime_gate; decision_bus в тени.
    Включать только после B3 PASS, сначала orders-OFF/PAPER, LIVE — GO владельца.
+
+## 07.10 днём: подготовка B3 (к OS2_B3_READY)
+- ETS2/SF3: 15m-данные из m5 (137 монет, os2/dannye_15m + MANIFEST sha), signaly переписан (база/удержание в часах/пауза ×5/база); проба SOL: ETS2 695, SF3 100 сделок.
+- BOUNCE1: адаптер = AltSupportBounceV1Strategy через тот же интерфейс maybe_signal (логика не тронута), BTC/ETH как в PASS 02.08, стоп стратегии (×1.0), удержание 48 ч = time_stop 576×5m.
+- wf.py + B3_KONFIG.json (sha 9b65e28c…) заморожены; тесты os2/: 12 PASS.
+- Реестр загрязнения SEALED_V2: os2/ZAGRYAZNENIE_SEALED_V2.md — окно годно для вопроса маршрутизации.

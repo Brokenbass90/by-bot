@@ -1,0 +1,550 @@
+{
+"1000BONKUSDT.npz": {
+"rows": 55584,
+"sha256": "117616c0ebcab98fc772ef41e4878767dab8781ddbed8797b53c3118dc7a9fb3"
+},
+"1000PEPEUSDT.npz": {
+"rows": 55584,
+"sha256": "2cad7c6e76770b06f1f85ef3d01c30d15dc11253f3a0be39e1387c5259c30e0c"
+},
+"1000RATSUSDT.npz": {
+"rows": 55584,
+"sha256": "3c8b8dbb91b9f88af5c0b69a6b5c8219513971d4fe8a29823a5d39dafc432086"
+},
+"AAVEUSDT.npz": {
+"rows": 55584,
+"sha256": "8f591828485a5d48accab0a5ec0374f552a9aff4a233d354197d8f8b5341de01"
+},
+"ACEUSDT.npz": {
+"rows": 55584,
+"sha256": "0550ebe856b62f5a7a7fe5c563924b919b37b7f050943fcad0c9c3ef87c5ccb5"
+},
+"ACTUSDT.npz": {
+"rows": 31068,
+"sha256": "b2b0ef9ed2135f3559d0148e59c09f6fda48a0d71758cda061d3760c7ae5cee6"
+},
+"ADAUSDT.npz": {
+"rows": 55584,
+"sha256": "84a8c9d95462dfb7b18b8432ac7365b4233f6a77bdad58e2588dc617d9b97ee6"
+},
+"AEROUSDT.npz": {
+"rows": 42489,
+"sha256": "1a7c8e97182caab7a42d0c350e581487e8d115961e0a6478470a1e59a93d57ac"
+},
+"AKEUSDT.npz": {
+"rows": 425,
+"sha256": "7683db4f4b64ad1530099156d877d352ebc9c07befd05dfc9747a9ab26bd832f"
+},
+"ALGOUSDT.npz": {
+"rows": 55584,
+"sha256": "fd887d67abf24c32a6963f8013ab39ce23f62dbb3abde268c7518db1bff88d66"
+},
+"ALLOUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"APTUSDT.npz": {
+"rows": 55584,
+"sha256": "dc94e83c701759a1cc7c0654ee296532ccedb8ee8fc7e44427e9e186a0ac136b"
+},
+"ARBUSDT.npz": {
+"rows": 55584,
+"sha256": "cf9676223adbf3d8ce13ee8760f9c0a0d7cd358a34c668e92508e8d67a0234ac"
+},
+"ASTERUSDT.npz": {
+"rows": 1114,
+"sha256": "3106d101f0221c88f607247c70d3e344b66429bfd05fcb013169244b1b3f2596"
+},
+"ATOMUSDT.npz": {
+"rows": 55584,
+"sha256": "db40418aa7d6f70b759b334dec40f3024dcfb5421f7fd342ed62162bf4212379"
+},
+"AVAXUSDT.npz": {
+"rows": 55584,
+"sha256": "4616a5ab50409e9f10711afecacac5c227a6976c095b801d2f89f3d7d0db78fa"
+},
+"BANANAS31USDT.npz": {
+"rows": 17912,
+"sha256": "fadbba868b6a3f20105fe9b62407854c11495ed6d16b202c6272287437216ad2"
+},
+"BANKUSDT.npz": {
+"rows": 13979,
+"sha256": "79d5779f8ac0cf93acd74793b8190e772a76dc177960b1586308a7d5aeb35e8d"
+},
+"BCHUSDT.npz": {
+"rows": 55584,
+"sha256": "fbdaf0b80c429d877640a706aef7642125c83b5c8b73859a06b07a8a24b0090b"
+},
+"BEATUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"BICOUSDT.npz": {
+"rows": 55584,
+"sha256": "50e7d64ebb149a5db6199cde9ebdf6f7fdd88df83daff989f0d5c85477602191"
+},
+"BIOUSDT.npz": {
+"rows": 26844,
+"sha256": "9af9fbf1911aa4ba808f7bd033b3666f4b99c86fe61df84296e9fcd9a66802f4"
+},
+"BLESSUSDT.npz": {
+"rows": 631,
+"sha256": "fb999d66b7a300ed63c3d51dc32b53f393579b5aec62aa52a4bc57b273339508"
+},
+"BLUAIUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"BMTUSDT.npz": {
+"rows": 19356,
+"sha256": "aeb8b181aaa0836a13e583baeba03cc7ee96deedf459d72f6df01add5eca55f9"
+},
+"BNBUSDT.npz": {
+"rows": 55584,
+"sha256": "4f9b6b1dd46b197d0d840f82db656555c4f0f5f76e40783ae7a177a367030eb4"
+},
+"BOMEUSDT.npz": {
+"rows": 54198,
+"sha256": "ee5dcd492373bb96e86af0b0f305c17091fedf879abe3028da15c93e841f6fee"
+},
+"BROCCOLIUSDT.npz": {
+"rows": 21933,
+"sha256": "0aeba145627b75567f6fca706416ee5cdf34530a3075df8fbe7039568140d4c3"
+},
+"BTCUSDT.npz": {
+"rows": 55584,
+"sha256": "2de3ed1d7ddfcefef0bb5394519a8d6884de9c3148515b48fb0692ea10be6834"
+},
+"BTRUSDT.npz": {
+"rows": 3314,
+"sha256": "6ebd8b08ec9dfd45da0eee823f5d94eadad74657b7ada9f4a62309c7f265b09e"
+},
+"BZUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"C98USDT.npz": {
+"rows": 55584,
+"sha256": "f955c2885f89ef359ed63461f0fc9f895c7d03e1a18df13b871e859feeb959a2"
+},
+"CBRSUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"CCUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"CLUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"COAIUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"COOKIEUSDT.npz": {
+"rows": 25600,
+"sha256": "91617246a61f3c2c0bc978a435c3ff98b81130562bba9af60a357889366f5688"
+},
+"COTIUSDT.npz": {
+"rows": 55584,
+"sha256": "8774e3349c0ed2fa077cc3c25d02b8da7d9fdc9795340c714b3b76f1c28a8540"
+},
+"CRCLUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"CRVUSDT.npz": {
+"rows": 55584,
+"sha256": "044ddd558906e1e334b8a28650e1a075503cbd6cf0403106a4f20292510d3446"
+},
+"CYSUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"DEXEUSDT.npz": {
+"rows": 41525,
+"sha256": "153d450997f75bd84c240340a27601e7d98db35655c6b84735124b157d9f20f9"
+},
+"DOGEUSDT.npz": {
+"rows": 55584,
+"sha256": "d748ca15be8caa855d53755ee85b58a5652eec1325d113ae5f3c5817cd53fd63"
+},
+"DRAMUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"ENAUSDT.npz": {
+"rows": 52465,
+"sha256": "6d6b2b491222bfd2f17df53df74af5d73c99cd085af0bd4ee4612895e3fe8405"
+},
+"EPICUSDT.npz": {
+"rows": 19262,
+"sha256": "4e3dea81b0f7a6bb3e50f3919eb8af1b347d63cac9003be18135693f7f2a1132"
+},
+"ESPORTSUSDT.npz": {
+"rows": 6102,
+"sha256": "8ff5bd5c16c5222436c441782b5b0ee879ce4f2342df4a36e956d38d99d2fa49"
+},
+"ESPUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"ETCUSDT.npz": {
+"rows": 55584,
+"sha256": "3163e6ca8ff9fb8049269be52d694de8cd3177eee97baf55beb5df81f7532310"
+},
+"ETHFIUSDT.npz": {
+"rows": 53892,
+"sha256": "d2f614d3de14a17aea85accf6102eafeb3d553943d2b0879f39113a934e69dac"
+},
+"ETHUSDT.npz": {
+"rows": 55584,
+"sha256": "f51a3a4d3cf06d4da2dd5f906f346e16029b6e73e16106c07c9215ad95429809"
+},
+"EWYUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"FARTCOINUSDT.npz": {
+"rows": 27322,
+"sha256": "30eab70237e102390c5e1397b0b60119a3c32dbf126847f1d9de893c71f503b2"
+},
+"FILUSDT.npz": {
+"rows": 55584,
+"sha256": "da2ee9cc7afbb7d54b0227005f88dfa4197fba12e0e7086e29fbbeb7cf780549"
+},
+"GALAUSDT.npz": {
+"rows": 55584,
+"sha256": "8122306a997b27fc28a8d1992ce599b61a1d10c74c4f3a1673c748654707554d"
+},
+"GRASSUSDT.npz": {
+"rows": 33464,
+"sha256": "f751cdc2f0072ff6c121e3eec9dfaae838bc89e1dc4f9150dbce9cd94123b8ac"
+},
+"GUNUSDT.npz": {
+"rows": 17610,
+"sha256": "eb332e25553df922670cee7aea5cc715acc4fcf373f87af557022ad8bbc75491"
+},
+"GWEIUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"HBARUSDT.npz": {
+"rows": 55584,
+"sha256": "47702db8267484992c7fe72341d6a88299e425fee44e6de2f23cfddd0151f575"
+},
+"HEIUSDT.npz": {
+"rows": 21944,
+"sha256": "df03c105c150c02960061047ea2aff3bcb6da0943494e1ddfdec652bcde34da6"
+},
+"HFTUSDT.npz": {
+"rows": 55584,
+"sha256": "962b754b7c8fdc64fde8881bdc8709ea41c58044b5de80099f61829b1e27755a"
+},
+"HOMEUSDT.npz": {
+"rows": 10802,
+"sha256": "5adb1f41b5b8bb4571d295873e85502689336588ee8cb94e34c09a8adf074014"
+},
+"HYPEUSDT.npz": {
+"rows": 28748,
+"sha256": "a8415e8b797765a2d4d32ce7e70f468a83a8ecf391253683301e1caffe4b112a"
+},
+"ICPUSDT.npz": {
+"rows": 55584,
+"sha256": "c2a5e09dd0573004837d968ae4aa78e1e36d85c4c0f2f1afda5ede625115666c"
+},
+"INJUSDT.npz": {
+"rows": 55584,
+"sha256": "66ebfe326323afa963f5b22e3db3188a73aec66ce2366cf80c4436180fd58ea1"
+},
+"INTCUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"JTOUSDT.npz": {
+"rows": 55584,
+"sha256": "db0a998d8881664b1ee98756412fbc52379d33f1d895376696bcc0486f730cdf"
+},
+"KAITOUSDT.npz": {
+"rows": 21353,
+"sha256": "d3d573a120585525722b6d1fdead476eee651c836a8910a9f6753d8ba48c2bbb"
+},
+"LAUSDT.npz": {
+"rows": 11304,
+"sha256": "39144572fd7fdb42661fb2389e79c2d27cf50cf1ea87f33b5aebfc1764889641"
+},
+"LDOUSDT.npz": {
+"rows": 55584,
+"sha256": "f1feb627146597ef38c38c0564706ba556cac82309515cd17be00f8beeddf0d9"
+},
+"LITEUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"LITUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"METAUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"MEUSDT.npz": {
+"rows": 29624,
+"sha256": "ad5d0fd9045c9d2d155b9278f2bc1bbf983d25ea0d927012af510eb41930b66c"
+},
+"MMTUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"MNTUSDT.npz": {
+"rows": 55584,
+"sha256": "f66c77b2e46e602bbbc0a1ff0a135fb8c39876b65ba82f6fe5a7304cf37f8df5"
+},
+"MONUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"MRVLUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"MSFTUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"MSTRUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"MUBARAKUSDT.npz": {
+"rows": 18975,
+"sha256": "5dbd9fd9b26e72de24b7ce63e776553d32390f0804ab4c3d4dd4ebf43fcc0ed0"
+},
+"MUUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"NBISUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"NILUSDT.npz": {
+"rows": 18666,
+"sha256": "e3631515971335b48466c9715f5c4307b46e0b9e0f555337cb3b5470c279e23d"
+},
+"NVDAUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"ONDOUSDT.npz": {
+"rows": 55584,
+"sha256": "d298fa14b748774a556dcbd38cd1dd98d152f1c2a7a28ffae2061cbc463de442"
+},
+"OPUSDT.npz": {
+"rows": 55584,
+"sha256": "5a81b0b88ec5e055ace0011f4b8dd5aac7dc0aef242de9cd5a4e32eb21c33dc3"
+},
+"ORDIUSDT.npz": {
+"rows": 55584,
+"sha256": "c51e9ae117f2590281e147eecb2b4594a3cdb70701447eef063b3f4b15daa64e"
+},
+"PAXGUSDT.npz": {
+"rows": 55584,
+"sha256": "85aa386271860e2bca34d6f3e23fb9bdf85831db706b6c11254e3845871e3e9c"
+},
+"PENGUUSDT.npz": {
+"rows": 27589,
+"sha256": "36b71bfc04661c8f0682491b3e0ec27717bf4c7b303e5d7a0660d57796642825"
+},
+"PEOPLEUSDT.npz": {
+"rows": 55584,
+"sha256": "85a6dcbbeaae5df25f3c0db33c374ca80ca147e030796ac6cd2e9212dee47384"
+},
+"PLTRUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"POLUSDT.npz": {
+"rows": 37500,
+"sha256": "c399790249e690f21786ff1827a145e2faf640ee80eb62ba9b7ab56f520594ad"
+},
+"PUMPFUNUSDT.npz": {
+"rows": 7944,
+"sha256": "17488a5846d898e6ea4ae371b29a1f183c7c5608d0f34a7444e9216e93685722"
+},
+"QQQUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"RENDERUSDT.npz": {
+"rows": 41436,
+"sha256": "e6d9269459c62a86aa8c7100ce905a34db9e5c9c6c2690ac483a48f9508184a9"
+},
+"RKLBUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"ROBOUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"SEIUSDT.npz": {
+"rows": 55584,
+"sha256": "f304f03a444f1d218530d8f55bbcfb838a9faeb1e8a11f6e27fed6038ff16719"
+},
+"SHIB1000USDT.npz": {
+"rows": 55584,
+"sha256": "dad83c6211df175b0d80f6287c545f1078e2491bc8d162d98804632e3870c5cb"
+},
+"SIRENUSDT.npz": {
+"rows": 18514,
+"sha256": "f2306dd848ed80457f132c7017e7c25a8c4cfdb89e2cd469f0e794f290cc6943"
+},
+"SKYAI1USDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"SNDKUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"SOLUSDT.npz": {
+"rows": 55584,
+"sha256": "c7cb27bbf475a1cd15a0442a0f28fc9b88bb7ab6d311f4d3e6c077a7833e8d83"
+},
+"SOXLUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"SQDUSDT.npz": {
+"rows": 10706,
+"sha256": "2f8a3fb937be42487fdd445c529b6ded50b541aa3695fc2921e89e6f0f994e77"
+},
+"STRKUSDT.npz": {
+"rows": 55584,
+"sha256": "7b2a037473caa9b4a8e96e9a1d91bdf19dbab67f20e3fb5bd2fe58c3fd9b37d8"
+},
+"SUIUSDT.npz": {
+"rows": 55584,
+"sha256": "c2d5486f079031ca0fd037a59fb15907ec9f930cb15238679b272c5b94577fea"
+},
+"TAOUSDT.npz": {
+"rows": 55584,
+"sha256": "b3fb68121ba557ae16c0aecc8fc1c206d6f0a4e0fac3ca71eb5f2f4878f84a07"
+},
+"THEUSDT.npz": {
+"rows": 29530,
+"sha256": "94aa09e4f95802e649442a3af21ea2787a2fa13ee2d8dbf04b8aabc07cebc634"
+},
+"TIAUSDT.npz": {
+"rows": 55584,
+"sha256": "947ad3eb1bbf35a14b4ee64fcd673f4ab45fefcf6ac6fb5a56e67b2e7abdf0c5"
+},
+"TRUMPUSDT.npz": {
+"rows": 24534,
+"sha256": "4590e0c25de89b5481b5687ce0bda5929002436bfe6dafce05bcb56e31d701f5"
+},
+"TRXUSDT.npz": {
+"rows": 55584,
+"sha256": "efd07969f7f4523611019f57a974b0be8dc5a1bdc8a7222e72e962306dd7f42f"
+},
+"TSLAUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"TUTUSDT.npz": {
+"rows": 18775,
+"sha256": "8d664a672613dabcc683a92175385d216af73a574206592dd53fb24fe0596c8c"
+},
+"UBUSDT.npz": {
+"rows": 1786,
+"sha256": "bcb4a829786adbe9dd2a721aad00a8fe99832e5c347edaed9790d70a39855ae8"
+},
+"UNIUSDT.npz": {
+"rows": 55584,
+"sha256": "27032a26ba932606c006784ff8bc9142e34443eb92e870dcf592a63c295d268b"
+},
+"USDCUSDT.npz": {
+"rows": 55584,
+"sha256": "6df86cc2cbb553186ce28df6593734ee245411893be2b15f011129cf995012d8"
+},
+"USELESSUSDT.npz": {
+"rows": 7922,
+"sha256": "7e60768a03b891f5124788cc28c11b8b047275e7473a4381a0075d052c5b19e8"
+},
+"USUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"VELODROMEUSDT.npz": {
+"rows": 27992,
+"sha256": "01af0f911954c6ed5b13a7c6f40b185c72ffb244d640283fe86e0133b2325c04"
+},
+"VIRTUALUSDT.npz": {
+"rows": 32025,
+"sha256": "7b8d807247639d32b8dab5ed205f01f58b8928d27a371d9d0480aa42ca7bc136"
+},
+"VVVUSDT.npz": {
+"rows": 23597,
+"sha256": "995c1c3c67f1e755a9df182fc3645e6ad289df225e63934b017c83be52563511"
+},
+"WIFUSDT.npz": {
+"rows": 55584,
+"sha256": "dbcb9bf4553e22df8d415b23d780b6ac3e59d129c82e54e7faa1bb8eec1936f3"
+},
+"WLDUSDT.npz": {
+"rows": 55584,
+"sha256": "47a7ea86a2dd3d491708572f5ebb2607e145681b70799edffac2412d53e4f9e6"
+},
+"WLFIUSDT.npz": {
+"rows": 3701,
+"sha256": "764415d33d7a667e4f47dcff8d03862fd83bdd209758926b797b8c4fac2b9bbf"
+},
+"XAGUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"XANUSDT.npz": {
+"rows": 148,
+"sha256": "6d4cbe355a6d2bfa351dcf5f9e9d5dd8789a1a53273d778a9bc717643eeed97e"
+},
+"XAUTUSDT.npz": {
+"rows": 17329,
+"sha256": "da1eb1addf1106de9a9a353ff3ec72c05e054244bca67836e730733fc1b7ca7e"
+},
+"XAUUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"XLMUSDT.npz": {
+"rows": 55584,
+"sha256": "3f6e53e7b7209817cdceafd1678c9faeae5136f69588cc62b2891cd5f6212a85"
+},
+"XMRUSDT.npz": {
+"rows": 55584,
+"sha256": "036162f304e8a39de2b6e8129e265c5457cc83855d41d05a64633c36ac6bb192"
+},
+"XPLUSDT.npz": {
+"rows": 3795,
+"sha256": "1af6e742f746ec534a9a37fbee3898035a33ddaab706f3cd01639a52d2acfb25"
+},
+"XRPUSDT.npz": {
+"rows": 55584,
+"sha256": "079f09c6c5c6ff3c59004ed674a1891933a35bd7cfdb3e6b69efd12159d70b44"
+},
+"ZBTUSDT.npz": {
+"rows": 0,
+"sha256": "c106e76e82d658a234047728ca4f2c23dfa42b807bf5eea85aa14f782e05f62f"
+},
+"ZECUSDT.npz": {
+"rows": 55584,
+"sha256": "82129445f3b3f0312b3c23d3d867bb83c1438c58c4e20b7c18c07adf3cbaadaf"
+},
+"ZROUSDT.npz": {
+"rows": 44867,
+"sha256": "45c3e1ea28721e7d334b56a57a593149df10291f6713b170a9a5a58330959c94"
+}
+}
