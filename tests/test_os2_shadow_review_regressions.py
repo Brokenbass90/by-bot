@@ -92,3 +92,27 @@ def test_malformed_identity_is_a_blocked_receipt_not_an_exception(bad_id):
     assert r["status"] == "BLOCKED_DATA"
     assert r["reason"] == "missing_event_identity"
     assert not r["state_after"]["reservations"]
+
+
+@pytest.mark.parametrize("field,value", [("symbol", "ETHUSDT"), ("timeframe", "4h")])
+def test_regime_source_must_explicitly_identify_btc_h1(field, value):
+    b = bundle(); b["source"][field] = value
+    r = assess_bundle(b, empty_state())
+    assert r["status"] == "BLOCKED_DATA"
+    assert r["regime_envelope"]["validity"] == "UNKNOWN"
+
+
+def test_four_hour_aggregation_cannot_overflow_finite_inputs():
+    b = bundle()
+    for row in b["source"]["rows"]: row[5] = 1e308
+    repin(b)
+    assert assess_bundle(b, empty_state())["status"] == "BLOCKED_DATA"
+
+
+def test_conflicting_bundle_does_not_credit_uncommitted_observation_id():
+    state = assess_bundle(bundle(), empty_state())["state_after"]
+    b = bundle([signal("new", "SOLUSDT", "short", "sol"), signal()])
+    b["events"][1]["risk_pct"] = 1
+    r = assess_bundle(b, state)
+    assert r["reason"] == "event_identity_conflict"
+    assert r["state_after"]["counts"] == state["counts"]

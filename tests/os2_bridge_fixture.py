@@ -31,7 +31,7 @@ def bundle(events=None):
         rows.append([t, 100.0, 101.0, 99.0, 100.0, 10.0, t + HOUR + 1000])
     value = repin({"schema": "OS2_SHADOW_BUNDLE_V1", "request_id": "r1", "mode": "FIXTURE",
                   "decision_ms": END + (4000 if events and any(e.get("type") == "TERMINAL" for e in events) else 2000), "clock_uncertainty_ms": 0,
-                  "source": {"id": "synthetic-btc-h1", "observed_ms": END + 1500, "rows": rows},
+                  "source": {"id": "synthetic-btc-h1", "symbol": "BTCUSDT", "timeframe": "1h", "observed_ms": END + 1500, "rows": rows},
                   "positions": {"id": "synthetic-positions", "observed_ms": END + 1500,
                                 "coverage_ms": END + 1500, "complete": True, "rows": []},
                   "correlations": {"id": "synthetic-correlations", "observed_ms": END + 1500,

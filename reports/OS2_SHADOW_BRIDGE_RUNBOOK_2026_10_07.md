@@ -32,10 +32,11 @@ clock_uncertainty_ms, source, positions, correlations, policy and events.
 IDs use bounded `[A-Za-z0-9_.:/-]`; hashes are lowercase SHA256. All numeric inputs
 must be finite and booleans cannot supply numeric timestamps/risk.
 
-- `source`: id, observed_ms, rows, sha256. Each H1 row is
+- `source`: id, symbol=BTCUSDT, timeframe=1h, observed_ms, rows, sha256. Each H1 row is
   `[open_ms, open, high, low, close, volume, first_available_ms]`.
   SHA binds the canonical JSON rows. Require240..800 rows, a multiple of4,
-  consecutive UTC hours, coherent positive OHLC and nonnegative volume.
+  consecutive UTC hours, coherent positive OHLC and nonnegative volume;
+  finite4h aggregation is mandatory.
   Every group contains four closed H1 members. Latest cutoff is
   `floor((decision_ms−uncertainty)/14400000)*14400000`; never aggregate partial4h.
   All availability times precede observation and the conservative decision cutoff.

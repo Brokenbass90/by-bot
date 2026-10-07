@@ -88,6 +88,7 @@ def _envelope(bundle, pins):
     cutoff = decision - uncertainty
     require(pins["bot.regime_orchestrator"] == REGIME_CODE_PIN, "regime_code_pin_mismatch")
     require(isinstance(source, dict) and identity(source["id"]), "invalid_regime_source")
+    require(source["symbol"] == "BTCUSDT" and source["timeframe"] == "1h", "regime_market_or_timeframe_mismatch")
     observed = source["observed_ms"]
     require(integer(observed) and 0 <= cutoff - observed <= FRESH_MS, "stale_or_future_source")
     rows = source["rows"]
@@ -109,10 +110,12 @@ def _envelope(bundle, pins):
         group = rows[offset:offset + 4]
         four_h.append([group[0][0], group[0][1], max(r[2] for r in group),
                        min(r[3] for r in group), group[-1][4], sum(r[5] for r in group)])
+        require(all(number(x) for x in four_h[-1]), "aggregation_overflow")
     label = regime_orchestrator.compute_regime(four_h)["regime"]
     require(label in LABELS, "unknown_classifier_label")
     envelope = {"schema": "OS2_REGIME_ENVELOPE_V1", "validity": "VALID", "label": label,
-                "source_id": source["id"], "source_pin": source["sha256"], "code_pin": REGIME_CODE_PIN,
+                "source_id": source["id"], "symbol": "BTCUSDT", "timeframe": "4h",
+                "source_pin": source["sha256"], "code_pin": REGIME_CODE_PIN,
                 "closed_cutoff_ms": closed, "observed_ms": observed, "decision_ms": decision,
                 "clock_uncertainty_ms": uncertainty, "four_h_count": len(four_h)}
     envelope["sha256"] = digest(envelope)
@@ -182,7 +185,7 @@ def _count_observations(state, decisions, events, prior_ids):
     counted = set(prior_ids)
     for d in decisions:
         event_id = d["context"]["event_id"]
-        if not identity(event_id): continue
+        if not identity(event_id) or event_id not in state["event_hashes"]: continue
         if event_id in counted: continue
         counted.add(event_id)
         kind = by_id.get(event_id, {}).get("type")
