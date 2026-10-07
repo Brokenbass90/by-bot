@@ -50,11 +50,11 @@
 **Files:** Create `research_lab/os2_shadow_journal.py`; test `tests/test_os2_shadow_journal.py`.
 **Interfaces:** `ShadowJournal(root: Path).process(bundle: dict) -> dict` locks, validates chain/state and commits one complete receipt+state; repeat request_id/same hash returns exact saved receipt. Changed payload same ID raises `BridgeBlocked`. `BridgeBlocked(status: str, reason: str)` also covers malformed sources and resource suspension.
 
-- [ ] Write failing tests for restart/reservations, duplicate/conflict, partial/hash-invalid tail, lock contention, byte/inode/disk bounds, symlink/hardlink and terminal duplicate/finality rejection.
-- [ ] Observe RED before implementation. Reuse decision_bus.build_decision serialization with finite fields; do not use its unguarded append/read as a durability primitive.
-- [ ] Implement O_NOFOLLOW regular-owned files, flock, canonical JSON hash chain, append+fsync before success, bounded startup replay and full state transaction. Uncertain append poisons this instance; reopen/read exact prefix instead of reapplying an intent. Never truncate/repair corruption or write baseline state.
-- [ ] Feed only accepted source-bound fixture terminal netR into existing edge_monitor and research_orchestrator; outputs strictly proposals with evidence_kind=FIXTURE/no money authority. Exclude unresolved/gap/duplicate outcomes and label insufficient sample.
-- [ ] Run new+dependency targeted tests; record RED/GREEN and commit.
+- [x] Write failing tests for restart/reservations, duplicate/conflict, partial/hash-invalid tail, lock contention, byte/inode/disk bounds, symlink/hardlink and terminal duplicate/finality rejection.
+- [x] Observe RED before implementation. Reuse decision_bus.build_decision serialization with finite fields; do not use its unguarded append/read as a durability primitive.
+- [x] Implement O_NOFOLLOW regular-owned files, flock, canonical JSON hash chain, append+fsync before success, bounded startup replay and full state transaction. Uncertain append poisons this instance; reopen/read exact prefix instead of reapplying an intent. Never truncate/repair corruption or write baseline state.
+- [x] Feed only accepted source-bound fixture terminal netR into existing edge_monitor and research_orchestrator; outputs strictly proposals with evidence_kind=FIXTURE/no money authority. Exclude unresolved/gap/duplicate outcomes and label insufficient sample.
+- [x] Run new+dependency targeted tests; record RED/GREEN and commit.
 
 ### Task3: One-shot CLI, review and terminal delivery
 
@@ -76,3 +76,5 @@
 - Plan self-review: contracts, quotas, five failure classes and explicit money boundary covered by Tasks1–3. Ollama worker/deployment/B3 repair remain separate scopes.
 
 Task1: RED missing module confirmed; GREEN31 new behavior cases,69 including reused dependencies. No market archive/judge/account consumption.
+
+Task2: RED missing journal confirmed; GREEN14 durable restart/corruption/security/resource cases. Task3 CLI RED absent script; GREEN7 cases. All90 candidate+dependency tests PASS before review.
