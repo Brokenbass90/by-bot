@@ -38,13 +38,14 @@ def prognat(sdelki, metki, politika=None, okno=(0, SEALED), slotov=12, final=Fal
                 t = d.candidate.extra["t"]; vzyato.append(t)
                 otkr.append((t["ts"] + int(t.get("hours", 1)) * H, t["sym"].upper(), t["side"]))
     R = np.array([t["R"] for t in vzyato]) if vzyato else np.zeros(0)
-    eq = np.cumsum(R) if len(R) else np.zeros(1)
+    eq = np.concatenate([[0.0], np.cumsum(R)])   # A1: начальный ноль — первая потеря входит в просадку
     po_nogam = {}
     for t in vzyato:
         g = po_nogam.setdefault(t["leg"], [0, 0.0]); g[0] += 1; g[1] += t["R"]
     return dict(sdelok=int(len(R)), itogo_R=round(float(R.sum()), 3), na_sdelku_R=round(float(R.mean()), 4) if len(R) else None,
                 prosadka_R=round(float((np.maximum.accumulate(eq) - eq).max()), 3), prichiny=prichiny,
-                po_nogam={k: dict(sdelok=v[0], R=round(v[1], 3)) for k, v in po_nogam.items()})
+                po_nogam={k: dict(sdelok=v[0], R=round(v[1], 3)) for k, v in po_nogam.items()},
+                R_posledovatelno=[round(float(x), 6) for x in R])
 
 def zagruzit_metki(put):
     d = json.loads(Path(put).read_text()); return {int(t): s for t, s in zip(d["ts"], d["s"])}

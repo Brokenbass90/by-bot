@@ -1,6 +1,5 @@
 {
  "imya": "REZHIM_V1",
- "popravka": "A1 07.10: только полные закрытые 4h, UNKNOWN при дыре (OS2_FOUNDATION_AUDIT находка 3)",
  "vybran": "D2_REGIME_ORCH_4H по os2/B2_KRITERII_REZHIMA.md",
  "params": {
   "macd_fast": 12,
@@ -17,8 +16,8 @@
  },
  "kod_sha256": {
   "bot/regime_orchestrator.py": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
-  "research_lab/os2/rezhim_v1.py": "947af3c84e0c1849ed875e10bdcdc2afd1f0a656cac3a2631a1196a195abdde3"
+  "research_lab/os2/rezhim_v1.py": "33efe4684bb0b749bf397d2db0ea2f34eb4521f3d8b9fab42cc41e27c49c1639"
  },
- "metki_do_2025_10_01_sha256": "3617f7731a206d036197e638eadf49b66b84b054d7b9ee866b6c9273879560b3",
+ "metki_do_2025_10_01_sha256": "1f0398da3ded26e691f73e09a51ccf97238552c42a02b63a6dd3006a05714e3a",
  "chasov": 24095
 }
