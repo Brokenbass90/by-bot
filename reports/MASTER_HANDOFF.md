@@ -1,5 +1,14 @@
 # MASTER HANDOFF — 2026-10-05
 
+Latest October8 execution intake:
+`KITY_SOURCE_CONTRACT_AND_BINANCE_DOSSIER_2026_10_08.md/JSON`, checkpoint TOP.
+24GETs: currentkeyFuturesdisabled; all8CROSSED/2x, Hedge+MultiAssets,
+maker.0002/taker.0005, observedflat/noorders. Correctearliercashlabel:
+11.70137565BNFCR credit, USDTwallet/available0. Sourcecontractreviewed/notinstalled;
+fullinline receipt lowerbound2134621>2MiB; noacceptedseal/money. Caps/credit/
+funding/unwind/finality remainopen. Alpaca16:25nativeheartbeat unchanged/PAPER
+conditional16:30. No judge, strategy retune, account mutation or LIVE change.
+
 Latest October8 account-path delta:
 `KITY_EXISTING_ACCOUNT_PATHS_2026_10_08.md/JSON` and checkpoint TOP.
 Binance existing authenticated reader works, available11.70137565USDT at08:03UTC;

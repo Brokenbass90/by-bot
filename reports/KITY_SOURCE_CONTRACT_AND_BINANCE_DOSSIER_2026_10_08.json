@@ -1,0 +1,804 @@
+{
+  "account_fields": {
+    "account_config": {
+      "canDeposit": true,
+      "canTrade": true,
+      "canWithdraw": true,
+      "dualSidePosition": true,
+      "feeTier": 0,
+      "multiAssetsMargin": true,
+      "tradeGroupId": -1,
+      "updateTime": 1790579064010
+    },
+    "aggregate_available": "11.70137565",
+    "aggregate_available_unit": "MULTI_ASSETS_USD_REPRESENTATION",
+    "exclusive_ownership_proven": false,
+    "finality_proven": false,
+    "key_permissions": {
+      "createTime": 1780393984000,
+      "enableFixApiTrade": false,
+      "enableFixReadOnly": false,
+      "enableFutures": false,
+      "enableInternalTransfer": false,
+      "enableMargin": false,
+      "enablePortfolioMarginTrading": false,
+      "enableReading": true,
+      "enableSpotAndMarginTrading": false,
+      "enableVanillaOptions": false,
+      "enableWithdrawals": false,
+      "ipRestrict": false,
+      "permitsUniversalTransfer": false
+    },
+    "observed_algo_open_orders": 0,
+    "observed_normal_open_orders": 0,
+    "observed_positions": 0,
+    "usdt_asset": {
+      "asset": "USDT",
+      "availableBalance": "0.00000000",
+      "initialMargin": "0.00000000",
+      "maintMargin": "0.00000000",
+      "marginBalance": "0.00000000",
+      "updateTime": 0,
+      "walletBalance": "0.00000000"
+    },
+    "wallet_credit": {
+      "asset": "BNFCR",
+      "availableBalance": "11.70137565",
+      "initialMargin": "0.00000000",
+      "maintMargin": "0.00000000",
+      "marginBalance": "11.70137565",
+      "updateTime": 1749555309269,
+      "walletBalance": "11.70137565"
+    }
+  },
+  "account_get_count": 24,
+  "authority": {
+    "accepted_signal_published": false,
+    "alpaca_queries": 0,
+    "claude_messages": 0,
+    "live_or_probe_restarts": 0,
+    "native_heartbeat_changes": 0,
+    "orders": 0,
+    "product_code_changes": 0,
+    "remote_writes": 0,
+    "research_judge_runs": 0
+  },
+  "base_commit": "8e05160b70da596a3cde1f0efdfb445a3a3c4ced",
+  "binance_current_key_status": "BLOCKED_EXECUTION",
+  "bounded_review": {
+    "financial_review_route": "VERIFIED_6_ASTRA_HIGH",
+    "missing_funding_artifact_completion_same_cycle": true,
+    "review_cycles": 1,
+    "runtime_metadata": [
+      {
+        "id": "01a11ab6-aa3c-7722-a96e-c060542bfe0e",
+        "path": "/Users/nikolay.bulgakov/.codex/sessions/2026/10/08/rollout-2026-10-08T11-52-21-01a11ab6-aa3c-7722-a96e-c060542bfe0e.jsonl",
+        "source": {
+          "subagent": {
+            "thread_spawn": {
+              "agent_nickname": "Avicenna",
+              "agent_path": "/root/kity_intake_financial_review_oct8",
+              "agent_role": null,
+              "depth": 1,
+              "parent_thread_id": "01a0f86b-2ee7-7d23-9bda-00a144085086"
+            }
+          }
+        },
+        "turn_context": [
+          {
+            "effort": "high",
+            "model": "gpt-6-astra"
+          },
+          {
+            "effort": "high",
+            "model": "gpt-6-astra"
+          }
+        ]
+      },
+      {
+        "id": "01a11aaa-f443-76e3-844a-5e172f452009",
+        "path": "/Users/nikolay.bulgakov/.codex/sessions/2026/10/08/rollout-2026-10-08T11-39-33-01a11aaa-f443-76e3-844a-5e172f452009.jsonl",
+        "source": {
+          "subagent": {
+            "thread_spawn": {
+              "agent_nickname": "Ampere",
+              "agent_path": "/root/kity_source_contract_oct8",
+              "agent_role": null,
+              "depth": 1,
+              "parent_thread_id": "01a0f86b-2ee7-7d23-9bda-00a144085086"
+            }
+          }
+        },
+        "turn_context": [
+          {
+            "effort": "medium",
+            "model": "gpt-5.6-luna"
+          }
+        ]
+      }
+    ],
+    "scope": "source_contract_proposal_and_offline_account_funding_diagnostics_only_no_implementation_or_money_GO",
+    "source_inventory_route": "VERIFIED_5_6_LUNA_MEDIUM"
+  },
+  "bybit_exact_basket_status": "BLOCKED_EXECUTION",
+  "capture_summary": [
+    {
+      "base": "https://api.binance.com",
+      "endpoint": "/sapi/v1/account/apiRestrictions",
+      "http_status": 200,
+      "method": "GET",
+      "params": {},
+      "raw_sha256": "2a1686c5b5be007ddf6958bcac060abbde5df2f87d7bdaa4174500b0f596ac91",
+      "receive_ms": 1791449030373,
+      "request_ms": 1791449029911
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v3/account",
+      "http_status": 200,
+      "method": "GET",
+      "params": {},
+      "raw_sha256": "7b5de28ca3cb4eedecc1eff8f12f4b064112b635d99962301e7af383a4bef4ca",
+      "receive_ms": 1791449030330,
+      "request_ms": 1791449029918
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/accountConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {},
+      "raw_sha256": "c9c1f9bd70bb46c4adaae47ef9970c5d432f7f146383232ae1e3ca81a3848e1d",
+      "receive_ms": 1791449030327,
+      "request_ms": 1791449029920
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v3/positionRisk",
+      "http_status": 200,
+      "method": "GET",
+      "params": {},
+      "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "receive_ms": 1791449030355,
+      "request_ms": 1791449029923
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/openOrders",
+      "http_status": 200,
+      "method": "GET",
+      "params": {},
+      "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "receive_ms": 1791449030732,
+      "request_ms": 1791449030327
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/openAlgoOrders",
+      "http_status": 200,
+      "method": "GET",
+      "params": {},
+      "raw_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "receive_ms": 1791449030773,
+      "request_ms": 1791449030330
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "SANDUSDT"
+      },
+      "raw_sha256": "377181a08970bb40e93d6b24f28f1bff88da10f13472ffd703c8ba54f5c4b4a1",
+      "receive_ms": 1791449030767,
+      "request_ms": 1791449030355
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "BTWUSDT"
+      },
+      "raw_sha256": "c1375a6e355fe181d911b10b506fec831f6d98602c20e5619ce384f675253b8b",
+      "receive_ms": 1791449030760,
+      "request_ms": 1791449030374
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "TRXUSDT"
+      },
+      "raw_sha256": "bc0a535cc9d7f6384fca3be2d5acb6b549b72561e55e643157b89f151ffc2f0a",
+      "receive_ms": 1791449031131,
+      "request_ms": 1791449030732
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "AEROUSDT"
+      },
+      "raw_sha256": "0a71416c2e242a1b6d389a5198da78e9b0c6936eec4bae8e46d65fc6e40f6b9f",
+      "receive_ms": 1791449031107,
+      "request_ms": 1791449030760
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "DOGEUSDT"
+      },
+      "raw_sha256": "3725321bbd81be9fb063c688468ef8a13095591fd0d52c751ae8a90ec5991a45",
+      "receive_ms": 1791449031171,
+      "request_ms": 1791449030767
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "TRUMPUSDT"
+      },
+      "raw_sha256": "76a471cd6ed2b91328773e32c9ad8061affcd048788075d1c92c0d7cba5563b5",
+      "receive_ms": 1791449031178,
+      "request_ms": 1791449030773
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "币安人生USDT"
+      },
+      "raw_sha256": "12e7a0dc9e09508505e2cddd22fad80cb31f2ae48f7dbd1252a6425d564b5bfb",
+      "receive_ms": 1791449031445,
+      "request_ms": 1791449031108
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/symbolConfig",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "FILUSDT"
+      },
+      "raw_sha256": "1acbe36581dce4547e145e0d3ab7e9e96c29cf8489fbbe99fea72480338fea5c",
+      "receive_ms": 1791449031578,
+      "request_ms": 1791449031131
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "SANDUSDT"
+      },
+      "raw_sha256": "15ad5ad2beb8f3723d55183eeaef39358743a06a964d390f71880b1e0abd419b",
+      "receive_ms": 1791449031551,
+      "request_ms": 1791449031171
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "BTWUSDT"
+      },
+      "raw_sha256": "a978ef6fe4db816b087a7c2c67aab8f39a19f4b6918f6709140b9535050b4a1a",
+      "receive_ms": 1791449031572,
+      "request_ms": 1791449031184
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "TRXUSDT"
+      },
+      "raw_sha256": "5da658c4631b1e28820ff94f090220f2e85511c5dfca252dbc6eb35d58e87b7c",
+      "receive_ms": 1791449031749,
+      "request_ms": 1791449031445
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "AEROUSDT"
+      },
+      "raw_sha256": "ed1e8b97c6a3c88ad5e307bc75d2d5a32aea0514b41f7c5380fe12878f3d84b3",
+      "receive_ms": 1791449031921,
+      "request_ms": 1791449031551
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "DOGEUSDT"
+      },
+      "raw_sha256": "352cdcffb22ed1334c24af7581a1419cad20b6862a40a046d2c7e94ec4e329f3",
+      "receive_ms": 1791449031892,
+      "request_ms": 1791449031572
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "TRUMPUSDT"
+      },
+      "raw_sha256": "f7a84cb09f6c91cb9500cf4cc1c76d7aa6d6a2194cb523ed62959f33ab994fa9",
+      "receive_ms": 1791449031944,
+      "request_ms": 1791449031578
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "币安人生USDT"
+      },
+      "raw_sha256": "5fe4c9df406d80b16fb4c4325c51826a269028fa946b59a52edc3b24180c8c82",
+      "receive_ms": 1791449032051,
+      "request_ms": 1791449031749
+    },
+    {
+      "base": "https://fapi.binance.com",
+      "endpoint": "/fapi/v1/commissionRate",
+      "http_status": 200,
+      "method": "GET",
+      "params": {
+        "symbol": "FILUSDT"
+      },
+      "raw_sha256": "2bc240ca41ded56c76dc262cd0a8d29bacebd5549958789da026b10ae6e9e8ae",
+      "receive_ms": 1791449032192,
+      "request_ms": 1791449031892
+    }
+  ],
+  "captured_account_completed_ms": 1791449032498,
+  "captured_account_started_ms": 1791449029597,
+  "diagnostic_sizing": {
+    "actual_margin_credit_contract_verified": false,
+    "current_cap_scenario_is_approved_policy": false,
+    "equal_reference_quote": "5.5412000",
+    "future_notional_interval_bound": false,
+    "gross_quote": "43.73889000",
+    "historical_12bps_research_benchmark_changed": false,
+    "illustrative_initial_margin_at_captured_2x": "21.86944500",
+    "max_target_residual_fraction": "0.03800620804157944127625785029",
+    "public_book_is_current_for_dispatch": false,
+    "sum_current_cap_7d_constant_notional_scenarios_quote": "24.1168601100000000",
+    "taker_roundtrip_constant_notional_fee_bps": "10",
+    "taker_roundtrip_constant_notional_fee_quote": "0.04373889000000"
+  },
+  "legs": [
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "7500000",
+        "symbol": "SANDUSDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0",
+        "symbol": "SANDUSDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "2.3139900000000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.02000000",
+        "adjustedFundingRateFloor": "-0.02000000",
+        "disclaimer": false,
+        "fundingIntervalHours": 8,
+        "symbol": "SANDUSDT",
+        "updateTime": 1760547283535
+      },
+      "diagnostic_quantity": "75",
+      "entry_target_residual_fraction": "0.005720782501985129574821338338",
+      "first_funding_ms": 1788566400000,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "7b5f43319e1c16bdbff5a8dee512631c7bf409d7a1dbd70152259de34995e134",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791417600000,
+      "max_gross_window_end_ms": 1790870400003,
+      "max_net_window_end_ms": 1790870400003,
+      "morning_entry_notional": "5.50950",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0.0052890710718300",
+      "observed_max_7d_net_debit_quote": "0.0050074558443300",
+      "observed_max_timestamp_gap_ms": 28800007,
+      "observed_series_7d_windows": 79,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 21,
+      "side": "LONG",
+      "symbol": "SANDUSDT"
+    },
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "2500000",
+        "symbol": "BTWUSDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0.000050",
+        "symbol": "BTWUSDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "4.654608000000000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.02000000",
+        "adjustedFundingRateFloor": "-0.02000000",
+        "disclaimer": false,
+        "fundingIntervalHours": 4,
+        "symbol": "BTWUSDT",
+        "updateTime": 1780578543550
+      },
+      "diagnostic_quantity": "4",
+      "entry_target_residual_fraction": "0",
+      "first_funding_ms": 1790006400002,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "e4d1eb25c6364ea092231823f78bc5c748b531a89360f1a2cda6063addc4d7fe",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791432000001,
+      "max_gross_window_end_ms": 1790625600000,
+      "max_net_window_end_ms": 1790625600000,
+      "morning_entry_notional": "5.5412000",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0.0799438945262240",
+      "observed_max_7d_net_debit_quote": "0.0799438945262240",
+      "observed_max_timestamp_gap_ms": 14400007,
+      "observed_series_7d_windows": 57,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 42,
+      "side": "LONG",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "20000000",
+        "symbol": "TRXUSDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0.000050",
+        "symbol": "TRXUSDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "0.54836964000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.004875",
+        "adjustedFundingRateFloor": "-0.004875",
+        "disclaimer": true,
+        "fundingIntervalHours": 8,
+        "symbol": "TRXUSDT",
+        "updateTime": null
+      },
+      "diagnostic_quantity": "16",
+      "entry_target_residual_fraction": "0.03333573955099978344041001949",
+      "first_funding_ms": 1788566400000,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "16b49dc52b0b102efec1090d0b77a9b2d57bce05e2b2997e6e2f2cd74aca78e1",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791417600000,
+      "max_gross_window_end_ms": 1790236800000,
+      "max_net_window_end_ms": 1789171200001,
+      "morning_entry_notional": "5.35648",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0.0047847190132896",
+      "observed_max_7d_net_debit_quote": "0",
+      "observed_max_timestamp_gap_ms": 28800007,
+      "observed_series_7d_windows": 79,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 21,
+      "side": "LONG",
+      "symbol": "TRXUSDT"
+    },
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "7500000",
+        "symbol": "AEROUSDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0",
+        "symbol": "AEROUSDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "4.6095756000000000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.02000000",
+        "adjustedFundingRateFloor": "-0.02000000",
+        "disclaimer": false,
+        "fundingIntervalHours": 4,
+        "symbol": "AEROUSDT",
+        "updateTime": 1733321774030
+      },
+      "diagnostic_quantity": "7.1",
+      "entry_target_residual_fraction": "0.009674799682379268028585865877",
+      "first_funding_ms": 1790006400002,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "f08bbe267ba790aa76e316167df8506e99e529ee21e8712caeebf0f253dbd446",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791432000001,
+      "max_gross_window_end_ms": 1790956800000,
+      "max_net_window_end_ms": 1790956800000,
+      "morning_entry_notional": "5.48759000",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0.01587129969862429",
+      "observed_max_7d_net_debit_quote": "0.01587129969862429",
+      "observed_max_timestamp_gap_ms": 14400007,
+      "observed_series_7d_windows": 57,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 42,
+      "side": "LONG",
+      "symbol": "AEROUSDT"
+    },
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "100000000",
+        "symbol": "DOGEUSDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0.000050",
+        "symbol": "DOGEUSDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "0.562923270000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.004875",
+        "adjustedFundingRateFloor": "-0.004875",
+        "disclaimer": true,
+        "fundingIntervalHours": 8,
+        "symbol": "DOGEUSDT",
+        "updateTime": null
+      },
+      "diagnostic_quantity": "63",
+      "entry_target_residual_fraction": "0.007680646791308741788782213239",
+      "first_funding_ms": 1788566400000,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "84a4bd383918291c772efd121c4bfee0d68e31770c2ccf72db13b89a8c8ff899",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791417600000,
+      "max_gross_window_end_ms": 1791388800000,
+      "max_net_window_end_ms": 1789171200001,
+      "morning_entry_notional": "5.498640",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0.0011442949927731",
+      "observed_max_7d_net_debit_quote": "0",
+      "observed_max_timestamp_gap_ms": 28800007,
+      "observed_series_7d_windows": 79,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 21,
+      "side": "SHORT",
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "5000000",
+        "symbol": "TRUMPUSDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0",
+        "symbol": "TRUMPUSDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "4.6468800000000000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.02000000",
+        "adjustedFundingRateFloor": "-0.02000000",
+        "disclaimer": false,
+        "fundingIntervalHours": 4,
+        "symbol": "TRUMPUSDT",
+        "updateTime": 1737205288568
+      },
+      "diagnostic_quantity": "3.00",
+      "entry_target_residual_fraction": "0.001660290189850573882913448351",
+      "first_funding_ms": 1790006400002,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "3ad6feefe77d4e425bc7ad790ae1b23f92643cda6597c51a64e0f41c117f2405",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791432000001,
+      "max_gross_window_end_ms": 1790668800000,
+      "max_net_window_end_ms": 1790668800000,
+      "morning_entry_notional": "5.53200000",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0.024284484640143600",
+      "observed_max_7d_net_debit_quote": "0.015574801116510600",
+      "observed_max_timestamp_gap_ms": 14400007,
+      "observed_series_7d_windows": 57,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 42,
+      "side": "SHORT",
+      "symbol": "TRUMPUSDT"
+    },
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "1000000",
+        "symbol": "币安人生USDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0.000050",
+        "symbol": "币安人生USDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "4.477704000000000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.02000000",
+        "adjustedFundingRateFloor": "-0.02000000",
+        "disclaimer": false,
+        "fundingIntervalHours": 4,
+        "symbol": "币安人生USDT",
+        "updateTime": 1760955417544
+      },
+      "diagnostic_quantity": "11",
+      "entry_target_residual_fraction": "0.03800620804157944127625785029",
+      "first_funding_ms": 1790006400002,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "9e5b0e6dbdb1507683c470afe9c62611a64aa52b5788cf4d11076694dfdb80e3",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791432000001,
+      "max_gross_window_end_ms": 1790625600000,
+      "max_net_window_end_ms": 1790625600000,
+      "morning_entry_notional": "5.3306000",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0",
+      "observed_max_7d_net_debit_quote": "0",
+      "observed_max_timestamp_gap_ms": 14400007,
+      "observed_series_7d_windows": 57,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 42,
+      "side": "SHORT",
+      "symbol": "币安人生USDT"
+    },
+    {
+      "account_symbol_config": {
+        "isAutoAddMargin": false,
+        "leverage": 2,
+        "marginType": "CROSSED",
+        "maxNotionalValue": "12500000",
+        "symbol": "FILUSDT"
+      },
+      "actual_commission_rates": {
+        "makerCommissionRate": "0.000200",
+        "rpiCommissionRate": "0",
+        "symbol": "FILUSDT",
+        "takerCommissionRate": "0.000500"
+      },
+      "current_cap_7d_constant_notional_scenario_quote": "2.302809600000000",
+      "current_funding_info": {
+        "adjustedFundingRateCap": "0.02000000",
+        "adjustedFundingRateFloor": "-0.02000000",
+        "disclaimer": false,
+        "fundingIntervalHours": 8,
+        "symbol": "FILUSDT",
+        "updateTime": 1760927722257
+      },
+      "diagnostic_quantity": "5.2",
+      "entry_target_residual_fraction": "0.01052479607305276835342525085",
+      "first_funding_ms": 1788566400000,
+      "funding_history_points": 100,
+      "funding_history_raw_sha256": "38840cd04bb77d3e7c9d2a68c12c21059dd42de770562fe6035781de7e0b6e35",
+      "funding_info_raw_sha256": "6b04b9a70c97e8fd8da9ada44d4149def84c8095ee787d47e3bdb50760f6b96a",
+      "future_reserve_bound": false,
+      "last_funding_ms": 1791417600000,
+      "max_gross_window_end_ms": 1790784000002,
+      "max_net_window_end_ms": 1789171200001,
+      "morning_entry_notional": "5.4828800",
+      "not_admitted_quantity": true,
+      "observed_max_7d_gross_debit_quote": "0.00101415718441440",
+      "observed_max_7d_net_debit_quote": "0",
+      "observed_max_timestamp_gap_ms": 28800007,
+      "observed_series_7d_windows": 79,
+      "observed_series_completeness_certified": false,
+      "settlements_current_interval_scenario": 21,
+      "side": "SHORT",
+      "symbol": "FILUSDT"
+    }
+  ],
+  "limitations": [
+    "historical funding diagnostics are conditional on retained series, not completeness-certified or a future bound",
+    "constant proposed quantity/settlement mark quote cash is not actual BNFCR account cashflow",
+    "current cap*count scenario assumes fixed future notional and intervals; not an adopted money policy",
+    "sum per-leg worst windows is not asserted to be one coincident basket window",
+    "captured account canTrade is not key Futures scope; key scope is explicitly false"
+  ],
+  "money_ready": false,
+  "operator_source_copies": {
+    "reports/evidence/kity_execution_intake_20261008/binance_account_get_only.py": "176293d559ec877ab74bb1f6e11f288f14e2dc0ce5dbb0055888ec40d4edcfb7",
+    "reports/evidence/kity_execution_intake_20261008/build_dossier.py": "502aa2634cdbef8bc0e59f33239d33c328e5ef52ddfc10ce3ab67ee3d816a4e4",
+    "reports/evidence/kity_execution_intake_20261008/publication_lower_bound.py": "c7e2864b955a5d6ff1cffcdf94080d5d48375709379108a60a3fac013110cc4c"
+  },
+  "orders_allowed": false,
+  "publication_size_lower_bound": {
+    "accepted_signal_created": false,
+    "at_least_over_bound_bytes": 37469,
+    "bound_bytes": 2097152,
+    "input_bundle_bytes": 2087545,
+    "lower_bound_is_valid_receipt": false,
+    "mandatory_fields_lower_bound_bytes": 2134621,
+    "original_bundle_sha256": "b24b06875a09ffe5b647b6b19de3962e3b077fb89c12173ac7dd8cd9bd3bd06d",
+    "proof": "canonical subset retaining mandated full source_bundle and frozen source_pins already exceeds current complete-envelope bound; other receipt/frozen/seal fields only add bytes",
+    "schema": "KITY_FULL_PUBLICATION_SIZE_LOWER_BOUND_V1",
+    "source_pin_count": 577
+  },
+  "remaining_gates": [
+    "REVIEWED_SOURCE_COMPATIBILITY_IMPLEMENTATION",
+    "STRICT_EXTERNAL_RAW_REF_PROVENANCE_AND_FULL_PUBLICATION_SIZE",
+    "CURRENT_INLINE_RECEIPT_EXCEEDS_2MIB_BY_MANDATORY_FIELD_LOWER_BOUND",
+    "TIMELY_ACCEPTED_PROSPECTIVE_SIGNAL_SEAL",
+    "BINANCE_CURRENT_KEY_FUTURES_TRADING_DISABLED",
+    "SELECTED_ACCOUNT_BNFCR_COLLATERAL_MARGIN_FEES_LIABILITY_CONTRACT",
+    "OWNER_ABSOLUTE_PER_LEG_PORTFOLIO_DAILY_CAPS_UNSET",
+    "OWNER_EQUAL_WEIGHT_ROUNDING_TOLERANCE_UNSET",
+    "FUNDING_NOTIONAL_INTERVAL_RESERVE_POLICY_UNSET",
+    "EXCLUSIVE_OWNERSHIP_HEDGE_UNWIND_RESTART_FINALITY_ROLLBACK_NOT_VALIDATED",
+    "SEPARATE_OWNER_MONEY_GO_ABSENT"
+  ],
+  "research_immutable": true,
+  "schema": "KITY_SOURCE_AND_BINANCE_DOSSIER_V1",
+  "source_contract_status": "DEFINED_REVIEWED_NOT_IMPLEMENTED_NO_ACCEPTED_SEAL",
+  "source_manifest": {
+    ".private/kity_oct8_source_inventory/actual_analysis.json": "bf35cdbb1986da505eb963cacaf7586aac6bdef67a44bfba5478f68daf19f2db",
+    ".private/kity_oct8_source_inventory/actual_complete_capture_bundle.json": "b24b06875a09ffe5b647b6b19de3962e3b077fb89c12173ac7dd8cd9bd3bd06d",
+    ".private/kity_oct8_source_inventory/closed_and_venue_archive.json": "7ff55ae545dcfecd6bbd7102dc1c46ad4621bc79f1eee70a5ea3bddeb2cdc26f",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_intake_20261008/binance_account_get_only.py": "176293d559ec877ab74bb1f6e11f288f14e2dc0ce5dbb0055888ec40d4edcfb7",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_intake_20261008/binance_account_raw_archive.json": "fdc2f6e4f148d0dd4c03daa21f2e2a0c448f510e690e0a3419756f140ae8a2b4",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_intake_20261008/build_dossier.py": "502aa2634cdbef8bc0e59f33239d33c328e5ef52ddfc10ce3ab67ee3d816a4e4",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_intake_20261008/publication_lower_bound.py": "c7e2864b955a5d6ff1cffcdf94080d5d48375709379108a60a3fac013110cc4c",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_intake_20261008/publication_size_lower_bound.json": "5c2a62d3cf0064dcc36d8a5ee9391d28494131485757d033ea260484c969f37b",
+    "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+    "reports/KITY_SOURCE_CONTRACT_AND_BINANCE_DOSSIER_2026_10_08.md": "7f486051b4387aaffb8dc72d8f5fed36c3d04f5578ad693f74251d5cbbf103a4",
+    "scripts/kity_m3_orders_off.py": "522c7e6b4accd5375c472b16cca21da941c4b292735efc8b22e873c847495834"
+  },
+  "terminal": "BLOCKED_DATA"
+}

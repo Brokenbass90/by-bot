@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+October8 08:43:49–08:43:52UTC execution intake: read
+**KITY_SOURCE_CONTRACT_AND_BINANCE_DOSSIER_2026_10_08.md/JSON**.
+TerminalBLOCKED_DATA; currentBinancekey/BybitexactlegBLOCKED_EXECUTION.
+24signed/publicGETs/rawpins: keyenableFutures=false; Hedge+MultiAssets;
+all8CROSSED/2x; actualmaker.0002/taker.0005; positions/normal/algoorders0.
+Correction to08:03label: nonzero wallet11.70137565BNFCR, USDTwallet/available0;
+aggregate11.70137565 is multi-assets USDrepresentation, not11.70USDTcash.
+No key/mode/leverage/creditconversion/topup or sender added. Morning43.73889gross
+→21.869445gross/2 illustrative margin, not authenticated required credit;
+constant-notional takerroundtrip.04373889.544observed7d fundingwindows checked,
+current-capscenario24.11686011 separate/unapproved/notfuturebound. Caps/rounding/
+credit/funding/ownership/Hedgeunwind/finality/kill notapprovedorvalidated.
+ExplicitPENDING_TRADING source-exclusion/provenance contract defined/reviewed,
+notinstalled; unknownstatus/excludedduplicate/badOI stillblock. Strictcorestill
+GAIBblocked/no acceptedseal. Completeinline mandatory-field publication lower
+bound2134621bytes>2097152 by37469, evenbeforeotherfields; detached-source schema
+needsreviewedamendment, no size-relaxation/truncation/fakeacceptance.
+Verified5.6-luna/medium inventory + one6-astra/high financialreview, including
+fundingartifact completion; no judges/Claude messages/sealed source changes.
+Alpaca notqueried/changed; existingACTIVE16:25Cyprus heartbeat preempts for
+conditionalXOMPAPER16:30–16:35, Oct9actualDAYrearmifheld. LiveHALT/ATT1/ETS/OS2
+unchangedbythiscycle; priorbroker/service snapshots keepobservationtimes.
+
 October8 08:03UTC account-path delta: read
 **KITY_EXISTING_ACCOUNT_PATHS_2026_10_08.md/JSON**. Two existing signed GETs,
 no orders/remote writes: Binance account available11.70137565USDT/feeTier0/
