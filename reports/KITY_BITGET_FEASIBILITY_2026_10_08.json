@@ -1,0 +1,1254 @@
+{
+  "schema": "KITY_BITGET_FEASIBILITY_ORDERS_OFF_V1",
+  "terminal": "BLOCKED_EXECUTION",
+  "source_intake_terminal": "BLOCKED_DATA_UNCHANGED",
+  "observed_start_utc": "2026-10-08T09:38:08.013000+00:00",
+  "observed_end_utc": "2026-10-08T09:38:13.888000+00:00",
+  "raw_archive_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_bitget_intake_20261008/bitget_raw_archive.json",
+  "raw_archive_sha256": "c78bca6dc958160d7a27c2f9060faece7ebe0a994d631afd929531d9b8d1257b",
+  "api_requests": 39,
+  "order_calls": 0,
+  "remote_writes": 0,
+  "orders_allowed": false,
+  "census": {
+    "rows": 816,
+    "duplicates": [],
+    "sha256": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+    "exact_symbol_counts": {
+      "SANDUSDT": 1,
+      "BTWUSDT": 1,
+      "TRXUSDT": 1,
+      "AEROUSDT": 1,
+      "DOGEUSDT": 1,
+      "TRUMPUSDT": 1,
+      "币安人生USDT": 0,
+      "FILUSDT": 1
+    },
+    "missing_symbols": [
+      "币安人生USDT"
+    ],
+    "underlying_alias_search_terms": [
+      "币安",
+      "binancelife",
+      "bianrensheng"
+    ],
+    "underlying_alias_search_hits": [],
+    "authoritative_alias_mapping": "NONE_ESTABLISHED",
+    "scope": "complete response to documented Classic USDT-FUTURES contracts endpoint; not spot/other products"
+  },
+  "account": {
+    "futures": [
+      {
+        "marginCoin": "USDT",
+        "available": "0",
+        "accountEquity": "0",
+        "usdtEquity": "0",
+        "assetMode": "single",
+        "isolatedMargin": "0",
+        "crossedMargin": "0"
+      }
+    ],
+    "spot_usdt": [
+      {
+        "coin": "USDT",
+        "available": "0.0506735500000000",
+        "frozen": "0.0000000000000000",
+        "locked": "0.0000000000000000"
+      }
+    ],
+    "key_reported_authority_codes": [
+      "coor",
+      "taxr",
+      "stor",
+      "ttor",
+      "pllr",
+      "chor",
+      "p2pr",
+      "wtor",
+      "smor",
+      "cpor"
+    ],
+    "derivatives_trade_permission": "UNKNOWN_NO_AUTHORITATIVE_CODE_MAPPING_VERIFIED",
+    "credentials_remained_on_vps": true,
+    "positions_rows": 0,
+    "pending_orders": [
+      {
+        "endpoint": "/api/v2/mix/order/orders-pending",
+        "plan_type": null,
+        "http": 200,
+        "api_code": "00000",
+        "returned_rows": null,
+        "cursor": null,
+        "observation": "successful null-list/null-cursor response; no rows reported; not ownership/finality proof",
+        "sha256": "ea15e9fb5fd077fdbdc7752ea5b1a4efd2c3c9576ff8030e2b622613993d99c3"
+      },
+      {
+        "endpoint": "/api/v2/mix/order/orders-plan-pending",
+        "plan_type": "normal_plan",
+        "http": 200,
+        "api_code": "00000",
+        "returned_rows": null,
+        "cursor": null,
+        "observation": "successful null-list/null-cursor response; no rows reported; not ownership/finality proof",
+        "sha256": "b63bcab50ab01a67b515c5be1613f773febbdbd5f286f7e9430831150cf7538d"
+      },
+      {
+        "endpoint": "/api/v2/mix/order/orders-plan-pending",
+        "plan_type": "track_plan",
+        "http": 200,
+        "api_code": "00000",
+        "returned_rows": null,
+        "cursor": null,
+        "observation": "successful null-list/null-cursor response; no rows reported; not ownership/finality proof",
+        "sha256": "89bc2cc8197af1f4e47bdd2a2c14d492f242ca83fc76a32f526572f48252c5ee"
+      },
+      {
+        "endpoint": "/api/v2/mix/order/orders-plan-pending",
+        "plan_type": "profit_loss",
+        "http": 200,
+        "api_code": "00000",
+        "returned_rows": null,
+        "cursor": null,
+        "observation": "successful null-list/null-cursor response; no rows reported; not ownership/finality proof",
+        "sha256": "e49040d9e8fe97fd2213a3fe426f1065d364b0ab8e80d5582f394ab70ad862ea"
+      }
+    ],
+    "account_identifier_redacted": true,
+    "source_pins": {
+      "futures": "922afc10458757afbe28743c017bd3b40e41fb2119738422e43729bee3206289",
+      "spot": "a106ce876a8b8543c24690e9f9db3bea89d622ae9ef8869f3e3726ac2d95de95",
+      "key_info": "af93b4e693bb3d93943be3b9cb7b3beafa8399bac1e1a5a0e0d4eaed9665312f",
+      "positions": "effeb9381ff88635f4c3024a851b79862be5c93b1ac5c685480c9ac5fab87177"
+    }
+  },
+  "clock": {
+    "offset_intervals_ms": [
+      [
+        -124,
+        200
+      ],
+      [
+        -131,
+        224
+      ]
+    ],
+    "intersection_ms": [
+      -124,
+      200
+    ],
+    "assumption": "server time lies within request/receive interval; VPS clock offset stable over this six-second capture",
+    "present_seven_books_common_use_ms": 1791452293532,
+    "full_eight_leg_common_freshness": "BLOCKED_EXECUTION_MISSING_LEG"
+  },
+  "legs": [
+    {
+      "symbol": "SANDUSDT",
+      "side": "LONG",
+      "status": "PRESENT_DIAGNOSTIC_ONLY",
+      "instrument": {
+        "symbol": "SANDUSDT",
+        "baseCoin": "SAND",
+        "quoteCoin": "USDT",
+        "symbolType": "perpetual",
+        "symbolStatus": "normal",
+        "minTradeNum": "1",
+        "sizeMultiplier": "1",
+        "minTradeUSDT": "5",
+        "volumePlace": "0",
+        "maxMarketOrderQty": "360000",
+        "fundInterval": "8"
+      },
+      "minimum_quantity": "69",
+      "minimum_notional": "5.0301",
+      "minimums_basis": "unapproved individual top-of-book diagnostic; strict minTradeNum; not equal-notional basket",
+      "account_profile": {
+        "available": "0",
+        "accountEquity": "0",
+        "marginMode": "crossed",
+        "posMode": "hedge_mode",
+        "assetMode": "single",
+        "crossedMarginLeverage": 10,
+        "isolatedLongLever": 10,
+        "isolatedShortLever": 10
+      },
+      "fees": {
+        "makerFeeRate": "0.0002",
+        "takerFeeRate": "0.0006"
+      },
+      "book": {
+        "source_sha256": "b14df34b60c3da3a4c1b0e2d63b1314e957c2eed41f4d79b900982bba1791903",
+        "raw_ts": 1791452292941,
+        "clock_semantics": "matching-engine timestamp per official Bitget merge-depth documentation",
+        "request_ms": 1791452292576,
+        "receive_ms": 1791452293103,
+        "common_use_ms": 1791452293532,
+        "clock_bounded_age_ms": [
+          467,
+          791
+        ],
+        "present_seven_books_2s_check": "PASS",
+        "bid": "0.07288",
+        "ask": "0.0729",
+        "spread_bps": "2.743860611880916449444368226",
+        "individual_minimum_vwap": "0.0729",
+        "individual_minimum_visible_slippage_bps": "0",
+        "received_depth_levels": {
+          "bids": 50,
+          "asks": 50
+        },
+        "continuous_freshness": "NOT_PROVEN"
+      },
+      "funding": {
+        "symbol": "SANDUSDT",
+        "fundingRate": "-0.000205",
+        "fundingRateInterval": "8",
+        "nextUpdate": "1791475200000",
+        "minFundingRate": "-0.02",
+        "maxFundingRate": "0.02"
+      },
+      "funding_reserve": "UNAPPROVED_NOT_CALCULATED",
+      "source_pins": {
+        "contract_census": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+        "account": "a8261fbb35ffd3d600e6d63597a9236ce7045b86f7c6b333d167511ec41fa34d",
+        "actual_fees": "63d0997c32f25febd95a13f09b55bc6988a4a0803e55667d9258c37852e9bb03",
+        "current_funding": "02d335b00a3de38796a08015dd9fef1d8e8d794a1295e09fd22472ed81f0b19e"
+      }
+    },
+    {
+      "symbol": "BTWUSDT",
+      "side": "LONG",
+      "status": "PRESENT_DIAGNOSTIC_ONLY",
+      "instrument": {
+        "symbol": "BTWUSDT",
+        "baseCoin": "BTW",
+        "quoteCoin": "USDT",
+        "symbolType": "perpetual",
+        "symbolStatus": "normal",
+        "minTradeNum": "1",
+        "sizeMultiplier": "1",
+        "minTradeUSDT": "5",
+        "volumePlace": "0",
+        "maxMarketOrderQty": "42000",
+        "fundInterval": "4"
+      },
+      "minimum_quantity": "4",
+      "minimum_notional": "5.48816",
+      "minimums_basis": "unapproved individual top-of-book diagnostic; strict minTradeNum; not equal-notional basket",
+      "account_profile": {
+        "available": "0",
+        "accountEquity": "0",
+        "marginMode": "crossed",
+        "posMode": "hedge_mode",
+        "assetMode": "single",
+        "crossedMarginLeverage": 5,
+        "isolatedLongLever": 5,
+        "isolatedShortLever": 5
+      },
+      "fees": {
+        "makerFeeRate": "0.0002",
+        "takerFeeRate": "0.0006"
+      },
+      "book": {
+        "source_sha256": "2796728e2d49a924fbc0aceab61a7656ab2bb3fba16932766d9bc9b52ccab015",
+        "raw_ts": 1791452292909,
+        "clock_semantics": "matching-engine timestamp per official Bitget merge-depth documentation",
+        "request_ms": 1791452292577,
+        "receive_ms": 1791452293066,
+        "common_use_ms": 1791452293532,
+        "clock_bounded_age_ms": [
+          499,
+          823
+        ],
+        "present_seven_books_2s_check": "PASS",
+        "bid": "1.37143",
+        "ask": "1.37204",
+        "spread_bps": "4.446923057296052080030034956",
+        "individual_minimum_vwap": "1.37204",
+        "individual_minimum_visible_slippage_bps": "0",
+        "received_depth_levels": {
+          "bids": 50,
+          "asks": 50
+        },
+        "continuous_freshness": "NOT_PROVEN"
+      },
+      "funding": {
+        "symbol": "BTWUSDT",
+        "fundingRate": "0.00005",
+        "fundingRateInterval": "4",
+        "nextUpdate": "1791460800000",
+        "minFundingRate": "-0.02",
+        "maxFundingRate": "0.02"
+      },
+      "funding_reserve": "UNAPPROVED_NOT_CALCULATED",
+      "source_pins": {
+        "contract_census": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+        "account": "d5c15dea5e33ba32177d93d8d8fa2b29e564755200a454daa12a2fc3637551ed",
+        "actual_fees": "c6c09776cdd7fcb2228ec95c47fc3085b3cd9fa6363ed0cb17a40c4a2cdcb6e9",
+        "current_funding": "771c64ef0c5776324ac57f92335abcbb24e898469efa2f24e5d40d1a1bc80445"
+      }
+    },
+    {
+      "symbol": "TRXUSDT",
+      "side": "LONG",
+      "status": "PRESENT_DIAGNOSTIC_ONLY",
+      "instrument": {
+        "symbol": "TRXUSDT",
+        "baseCoin": "TRX",
+        "quoteCoin": "USDT",
+        "symbolType": "perpetual",
+        "symbolStatus": "normal",
+        "minTradeNum": "1",
+        "sizeMultiplier": "1",
+        "minTradeUSDT": "5",
+        "volumePlace": "0",
+        "maxMarketOrderQty": "1400000",
+        "fundInterval": "8"
+      },
+      "minimum_quantity": "15",
+      "minimum_notional": "5.04045",
+      "minimums_basis": "unapproved individual top-of-book diagnostic; strict minTradeNum; not equal-notional basket",
+      "account_profile": {
+        "available": "0",
+        "accountEquity": "0",
+        "marginMode": "crossed",
+        "posMode": "hedge_mode",
+        "assetMode": "single",
+        "crossedMarginLeverage": 10,
+        "isolatedLongLever": 10,
+        "isolatedShortLever": 10
+      },
+      "fees": {
+        "makerFeeRate": "0.0002",
+        "takerFeeRate": "0.0006"
+      },
+      "book": {
+        "source_sha256": "145833fc3177a849b2b0e5ec18e7b7428a3436f89acf4a64209fd53badc05e52",
+        "raw_ts": 1791452292910,
+        "clock_semantics": "matching-engine timestamp per official Bitget merge-depth documentation",
+        "request_ms": 1791452292580,
+        "receive_ms": 1791452293073,
+        "common_use_ms": 1791452293532,
+        "clock_bounded_age_ms": [
+          498,
+          822
+        ],
+        "present_seven_books_2s_check": "PASS",
+        "bid": "0.33602",
+        "ask": "0.33603",
+        "spread_bps": "0.2975969049921880812439550629",
+        "individual_minimum_vwap": "0.33603",
+        "individual_minimum_visible_slippage_bps": "0",
+        "received_depth_levels": {
+          "bids": 50,
+          "asks": 50
+        },
+        "continuous_freshness": "NOT_PROVEN"
+      },
+      "funding": {
+        "symbol": "TRXUSDT",
+        "fundingRate": "-0.000044",
+        "fundingRateInterval": "8",
+        "nextUpdate": "1791475200000",
+        "minFundingRate": "-0.00495",
+        "maxFundingRate": "0.00495"
+      },
+      "funding_reserve": "UNAPPROVED_NOT_CALCULATED",
+      "source_pins": {
+        "contract_census": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+        "account": "6660bbe159c9c4b04fd338f4363a915330cffe1caba03abee62a3e6843b5736d",
+        "actual_fees": "a30060b2146101ddb9019071c8073e6962176af1bd58a028d99611f386531a1d",
+        "current_funding": "e2915747f4a649aacbdd89dbb04e617b139d103f280d5598271cc34be685f55e"
+      }
+    },
+    {
+      "symbol": "AEROUSDT",
+      "side": "LONG",
+      "status": "PRESENT_DIAGNOSTIC_ONLY",
+      "instrument": {
+        "symbol": "AEROUSDT",
+        "baseCoin": "AERO",
+        "quoteCoin": "USDT",
+        "symbolType": "perpetual",
+        "symbolStatus": "normal",
+        "minTradeNum": "1",
+        "sizeMultiplier": "1",
+        "minTradeUSDT": "5",
+        "volumePlace": "0",
+        "maxMarketOrderQty": "50000",
+        "fundInterval": "4"
+      },
+      "minimum_quantity": "7",
+      "minimum_notional": "5.4733",
+      "minimums_basis": "unapproved individual top-of-book diagnostic; strict minTradeNum; not equal-notional basket",
+      "account_profile": {
+        "available": "0",
+        "accountEquity": "0",
+        "marginMode": "crossed",
+        "posMode": "hedge_mode",
+        "assetMode": "single",
+        "crossedMarginLeverage": 10,
+        "isolatedLongLever": 10,
+        "isolatedShortLever": 10
+      },
+      "fees": {
+        "makerFeeRate": "0.0002",
+        "takerFeeRate": "0.0006"
+      },
+      "book": {
+        "source_sha256": "04793ab5e908f3dc93a1807d65aee29c1c0c0d1c2aa7265036f5ceb5a8a519ca",
+        "raw_ts": 1791452292915,
+        "clock_semantics": "matching-engine timestamp per official Bitget merge-depth documentation",
+        "request_ms": 1791452292585,
+        "receive_ms": 1791452293057,
+        "common_use_ms": 1791452293532,
+        "clock_bounded_age_ms": [
+          493,
+          817
+        ],
+        "present_seven_books_2s_check": "PASS",
+        "bid": "0.7815",
+        "ask": "0.7819",
+        "spread_bps": "5.117052577715236024050147115",
+        "individual_minimum_vwap": "0.7819",
+        "individual_minimum_visible_slippage_bps": "0",
+        "received_depth_levels": {
+          "bids": 50,
+          "asks": 50
+        },
+        "continuous_freshness": "NOT_PROVEN"
+      },
+      "funding": {
+        "symbol": "AEROUSDT",
+        "fundingRate": "0.00005",
+        "fundingRateInterval": "4",
+        "nextUpdate": "1791460800000",
+        "minFundingRate": "-0.015",
+        "maxFundingRate": "0.015"
+      },
+      "funding_reserve": "UNAPPROVED_NOT_CALCULATED",
+      "source_pins": {
+        "contract_census": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+        "account": "587d2abb2e2bb4d9e0a136415877fb9a4571176266d666fb1b71b9933320ba20",
+        "actual_fees": "615832410c748e2bd23191234483c2c46f6bdb58a826f87bb0ee21db8381ca5e",
+        "current_funding": "28bc85015cc5704f7ab03724132be6163476cc5335e7e4b05b890c5d2b203a4b"
+      }
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "side": "SHORT",
+      "status": "PRESENT_DIAGNOSTIC_ONLY",
+      "instrument": {
+        "symbol": "DOGEUSDT",
+        "baseCoin": "DOGE",
+        "quoteCoin": "USDT",
+        "symbolType": "perpetual",
+        "symbolStatus": "normal",
+        "minTradeNum": "1",
+        "sizeMultiplier": "1",
+        "minTradeUSDT": "5",
+        "volumePlace": "0",
+        "maxMarketOrderQty": "6300000",
+        "fundInterval": "8"
+      },
+      "minimum_quantity": "57",
+      "minimum_notional": "5.03538",
+      "minimums_basis": "unapproved individual top-of-book diagnostic; strict minTradeNum; not equal-notional basket",
+      "account_profile": {
+        "available": "0",
+        "accountEquity": "0",
+        "marginMode": "crossed",
+        "posMode": "hedge_mode",
+        "assetMode": "single",
+        "crossedMarginLeverage": 10,
+        "isolatedLongLever": 10,
+        "isolatedShortLever": 10
+      },
+      "fees": {
+        "makerFeeRate": "0.0002",
+        "takerFeeRate": "0.0006"
+      },
+      "book": {
+        "source_sha256": "3681bc352b25e1445ef7b75eb9df26b9e594aebed383811749df2d04e475e102",
+        "raw_ts": 1791452293366,
+        "clock_semantics": "matching-engine timestamp per official Bitget merge-depth documentation",
+        "request_ms": 1791452293058,
+        "receive_ms": 1791452293500,
+        "common_use_ms": 1791452293532,
+        "clock_bounded_age_ms": [
+          42,
+          366
+        ],
+        "present_seven_books_2s_check": "PASS",
+        "bid": "0.08834",
+        "ask": "0.08835",
+        "spread_bps": "1.131925972041428490576716283",
+        "individual_minimum_vwap": "0.08834",
+        "individual_minimum_visible_slippage_bps": "0",
+        "received_depth_levels": {
+          "bids": 50,
+          "asks": 50
+        },
+        "continuous_freshness": "NOT_PROVEN"
+      },
+      "funding": {
+        "symbol": "DOGEUSDT",
+        "fundingRate": "0.0001",
+        "fundingRateInterval": "8",
+        "nextUpdate": "1791475200000",
+        "minFundingRate": "-0.00495",
+        "maxFundingRate": "0.00495"
+      },
+      "funding_reserve": "UNAPPROVED_NOT_CALCULATED",
+      "source_pins": {
+        "contract_census": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+        "account": "a85b792260822b6f26fd603dd2382aa9932f3c0b82030acf2260160893a04efa",
+        "actual_fees": "128ca510e5ccfd369d88031e0edc685adaa30d613ff157fef44873524e00fcf6",
+        "current_funding": "2ee6efd50341068f7cd037d4987f4e2619f855b8241fbad3963522cb0b7fc5e0"
+      }
+    },
+    {
+      "symbol": "TRUMPUSDT",
+      "side": "SHORT",
+      "status": "PRESENT_DIAGNOSTIC_ONLY",
+      "instrument": {
+        "symbol": "TRUMPUSDT",
+        "baseCoin": "TRUMP",
+        "quoteCoin": "USDT",
+        "symbolType": "perpetual",
+        "symbolStatus": "normal",
+        "minTradeNum": "0.1",
+        "sizeMultiplier": "0.1",
+        "minTradeUSDT": "5",
+        "volumePlace": "1",
+        "maxMarketOrderQty": "270000",
+        "fundInterval": "4"
+      },
+      "minimum_quantity": "2.7",
+      "minimum_notional": "5.0652",
+      "minimums_basis": "unapproved individual top-of-book diagnostic; strict minTradeNum; not equal-notional basket",
+      "account_profile": {
+        "available": "0",
+        "accountEquity": "0",
+        "marginMode": "crossed",
+        "posMode": "hedge_mode",
+        "assetMode": "single",
+        "crossedMarginLeverage": 10,
+        "isolatedLongLever": 10,
+        "isolatedShortLever": 10
+      },
+      "fees": {
+        "makerFeeRate": "0.0002",
+        "takerFeeRate": "0.0006"
+      },
+      "book": {
+        "source_sha256": "0f494a67086d8809f258e3d4331f1c2f62d50d54bbd18b29e9a9bfa408c259c3",
+        "raw_ts": 1791452293375,
+        "clock_semantics": "matching-engine timestamp per official Bitget merge-depth documentation",
+        "request_ms": 1791452293067,
+        "receive_ms": 1791452293505,
+        "common_use_ms": 1791452293532,
+        "clock_bounded_age_ms": [
+          33,
+          357
+        ],
+        "present_seven_books_2s_check": "PASS",
+        "bid": "1.876",
+        "ask": "1.877",
+        "spread_bps": "5.329070077271516120436983746",
+        "individual_minimum_vwap": "1.876",
+        "individual_minimum_visible_slippage_bps": "0",
+        "received_depth_levels": {
+          "bids": 50,
+          "asks": 50
+        },
+        "continuous_freshness": "NOT_PROVEN"
+      },
+      "funding": {
+        "symbol": "TRUMPUSDT",
+        "fundingRate": "-0.000015",
+        "fundingRateInterval": "4",
+        "nextUpdate": "1791460800000",
+        "minFundingRate": "-0.015",
+        "maxFundingRate": "0.015"
+      },
+      "funding_reserve": "UNAPPROVED_NOT_CALCULATED",
+      "source_pins": {
+        "contract_census": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+        "account": "438626618ad76732eea4ec790ba598ef7cd6faf129a52b9c6d212cf9f37e8791",
+        "actual_fees": "aedc2936a6b9b02f19d77c5ede0eff20e23e0243eb6493308f3c8bc7bd199c1a",
+        "current_funding": "d76e2ef56eac12ffce3ceec1170772d7f37a0ec814d773727c19991ae6aa1e0b"
+      }
+    },
+    {
+      "symbol": "币安人生USDT",
+      "side": "SHORT",
+      "status": "BLOCKED_EXECUTION",
+      "reason": "EXACT_SYMBOL_MISSING",
+      "minimum_quantity": null,
+      "minimum_notional": null,
+      "account_profile": null,
+      "fees": null,
+      "book": null,
+      "funding": null
+    },
+    {
+      "symbol": "FILUSDT",
+      "side": "SHORT",
+      "status": "PRESENT_DIAGNOSTIC_ONLY",
+      "instrument": {
+        "symbol": "FILUSDT",
+        "baseCoin": "FIL",
+        "quoteCoin": "USDT",
+        "symbolType": "perpetual",
+        "symbolStatus": "normal",
+        "minTradeNum": "0.1",
+        "sizeMultiplier": "0.1",
+        "minTradeUSDT": "5",
+        "volumePlace": "1",
+        "maxMarketOrderQty": "58000",
+        "fundInterval": "8"
+      },
+      "minimum_quantity": "4.7",
+      "minimum_notional": "5.02712",
+      "minimums_basis": "unapproved individual top-of-book diagnostic; strict minTradeNum; not equal-notional basket",
+      "account_profile": {
+        "available": "0",
+        "accountEquity": "0",
+        "marginMode": "crossed",
+        "posMode": "hedge_mode",
+        "assetMode": "single",
+        "crossedMarginLeverage": 10,
+        "isolatedLongLever": 10,
+        "isolatedShortLever": 10
+      },
+      "fees": {
+        "makerFeeRate": "0.0002",
+        "takerFeeRate": "0.0006"
+      },
+      "book": {
+        "source_sha256": "a8b52518f8e842d0bb5adea0bd0963eeb3d1720ed1538b02f3e63c8cdb04d3d0",
+        "raw_ts": 1791452293397,
+        "clock_semantics": "matching-engine timestamp per official Bitget merge-depth documentation",
+        "request_ms": 1791452293073,
+        "receive_ms": 1791452293532,
+        "common_use_ms": 1791452293532,
+        "clock_bounded_age_ms": [
+          11,
+          335
+        ],
+        "present_seven_books_2s_check": "PASS",
+        "bid": "1.0696",
+        "ask": "1.0697",
+        "spread_bps": "0.9348852428364418267657645024",
+        "individual_minimum_vwap": "1.0696",
+        "individual_minimum_visible_slippage_bps": "0",
+        "received_depth_levels": {
+          "bids": 50,
+          "asks": 50
+        },
+        "continuous_freshness": "NOT_PROVEN"
+      },
+      "funding": {
+        "symbol": "FILUSDT",
+        "fundingRate": "0.0001",
+        "fundingRateInterval": "8",
+        "nextUpdate": "1791475200000",
+        "minFundingRate": "-0.0132",
+        "maxFundingRate": "0.0132"
+      },
+      "funding_reserve": "UNAPPROVED_NOT_CALCULATED",
+      "source_pins": {
+        "contract_census": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b",
+        "account": "fb16fd3db8c0d9c4c921bb7d4bc50239950fb143f217e1c15b08f29d57fdf1bf",
+        "actual_fees": "941511c8524dd730a1204f11dc1b8116babd8dddd8026cd366a8618df846dc3f",
+        "current_funding": "8540735e169efac594bad25069b74644297ebeffe21e7f99ed88136a52d09d4f"
+      }
+    }
+  ],
+  "sizing": {
+    "full_basket_equal_notional": null,
+    "full_basket_gross": null,
+    "full_basket_required_margin_and_reserve": null,
+    "owner_50_usdt_budget": "HYPOTHETICAL_NOT_ACTUAL_AVAILABLE_CASH",
+    "fits_50_usdt": "NOT_ESTABLISHED",
+    "seven_individual_minima_sum_diagnostic_not_basket": "36.15971",
+    "present_seven_taker_round_trip_constant_notional_bps": "12",
+    "fees_note": "all seven signed maker=0.0002/taker=0.0006; future exit notional/funding differ"
+  },
+  "blockers": [
+    "EXACT_FROZEN_SHORT_LEG_MISSING",
+    "FUTURES_USDT_AVAILABLE_ZERO",
+    "KEY_DERIVATIVES_TRADE_SCOPE_NOT_VERIFIED",
+    "NATIVE_BITGET_KITY_EXECUTION_CONTRACT_ABSENT",
+    "FULL_EQUAL_NOTIONAL_ROUNDING_CAPS_AND_FUNDING_POLICY_UNAPPROVED",
+    "OWNERSHIP_PARTIAL_BASKET_UNWIND_FINALITY_KILL_NOT_VALIDATED",
+    "STRICT_GAIB_EXTERNAL_PROVENANCE_ACCEPTED_SEAL_AND_PACKET_SIZE_CONTRACT_UNCHANGED"
+  ],
+  "preservation": {
+    "strategy_universe_hold_costs_unchanged": true,
+    "missing_leg_not_substituted_or_dropped": true,
+    "no_money_runner_or_credentials_added": true,
+    "alpaca_att1_ets2m_claude_runtime_not_touched": true,
+    "production_pids_not_freshly_queried": true
+  },
+  "source_pins": [
+    {
+      "endpoint": "/api/v2/public/time",
+      "params": {},
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452288014,
+      "receive_ms": 1791452288338,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "a3c27a07e61b4136fc2b3c8add80bb29b6040ed4da265bb7a074993e921b6151"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/contracts",
+      "params": {
+        "productType": "USDT-FUTURES"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452288338,
+      "receive_ms": 1791452288667,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "40719cb92e3f196d4611d9d7e4ef91ade3081ba88a8232854f2cb3e3d425097b"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/accounts",
+      "params": {
+        "productType": "USDT-FUTURES"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452288718,
+      "receive_ms": 1791452289172,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "922afc10458757afbe28743c017bd3b40e41fb2119738422e43729bee3206289"
+    },
+    {
+      "endpoint": "/api/v2/spot/account/info",
+      "params": {},
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452288721,
+      "receive_ms": 1791452289188,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "af93b4e693bb3d93943be3b9cb7b3beafa8399bac1e1a5a0e0d4eaed9665312f"
+    },
+    {
+      "endpoint": "/api/v2/spot/account/assets",
+      "params": {
+        "coin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452288726,
+      "receive_ms": 1791452289169,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "a106ce876a8b8543c24690e9f9db3bea89d622ae9ef8869f3e3726ac2d95de95"
+    },
+    {
+      "endpoint": "/api/v2/mix/position/all-position",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452289169,
+      "receive_ms": 1791452289552,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "effeb9381ff88635f4c3024a851b79862be5c93b1ac5c685480c9ac5fab87177"
+    },
+    {
+      "endpoint": "/api/v2/mix/order/orders-pending",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "limit": "100"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452289172,
+      "receive_ms": 1791452289576,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "ea15e9fb5fd077fdbdc7752ea5b1a4efd2c3c9576ff8030e2b622613993d99c3"
+    },
+    {
+      "endpoint": "/api/v2/mix/order/orders-plan-pending",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "planType": "normal_plan",
+        "limit": "100"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452289190,
+      "receive_ms": 1791452289614,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "b63bcab50ab01a67b515c5be1613f773febbdbd5f286f7e9430831150cf7538d"
+    },
+    {
+      "endpoint": "/api/v2/mix/order/orders-plan-pending",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "planType": "track_plan",
+        "limit": "100"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452289552,
+      "receive_ms": 1791452289943,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "89bc2cc8197af1f4e47bdd2a2c14d492f242ca83fc76a32f526572f48252c5ee"
+    },
+    {
+      "endpoint": "/api/v2/mix/order/orders-plan-pending",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "planType": "profit_loss",
+        "limit": "100"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452289576,
+      "receive_ms": 1791452289939,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "e49040d9e8fe97fd2213a3fe426f1065d364b0ab8e80d5582f394ab70ad862ea"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/account",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "SANDUSDT",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452289614,
+      "receive_ms": 1791452290010,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "a8261fbb35ffd3d600e6d63597a9236ce7045b86f7c6b333d167511ec41fa34d"
+    },
+    {
+      "endpoint": "/api/v2/common/trade-rate",
+      "params": {
+        "symbol": "SANDUSDT",
+        "businessType": "mix"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452289939,
+      "receive_ms": 1791452290351,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "63d0997c32f25febd95a13f09b55bc6988a4a0803e55667d9258c37852e9bb03"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/current-fund-rate",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "SANDUSDT"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452289943,
+      "receive_ms": 1791452290316,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "02d335b00a3de38796a08015dd9fef1d8e8d794a1295e09fd22472ed81f0b19e"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/account",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "BTWUSDT",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452290012,
+      "receive_ms": 1791452290385,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "d5c15dea5e33ba32177d93d8d8fa2b29e564755200a454daa12a2fc3637551ed"
+    },
+    {
+      "endpoint": "/api/v2/common/trade-rate",
+      "params": {
+        "symbol": "BTWUSDT",
+        "businessType": "mix"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452290317,
+      "receive_ms": 1791452290723,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "c6c09776cdd7fcb2228ec95c47fc3085b3cd9fa6363ed0cb17a40c4a2cdcb6e9"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/current-fund-rate",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "BTWUSDT"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452290351,
+      "receive_ms": 1791452290734,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "771c64ef0c5776324ac57f92335abcbb24e898469efa2f24e5d40d1a1bc80445"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/account",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "TRXUSDT",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452290385,
+      "receive_ms": 1791452290781,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "6660bbe159c9c4b04fd338f4363a915330cffe1caba03abee62a3e6843b5736d"
+    },
+    {
+      "endpoint": "/api/v2/common/trade-rate",
+      "params": {
+        "symbol": "TRXUSDT",
+        "businessType": "mix"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452290723,
+      "receive_ms": 1791452291052,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "a30060b2146101ddb9019071c8073e6962176af1bd58a028d99611f386531a1d"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/current-fund-rate",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "TRXUSDT"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452290734,
+      "receive_ms": 1791452291071,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "e2915747f4a649aacbdd89dbb04e617b139d103f280d5598271cc34be685f55e"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/account",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "AEROUSDT",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452290781,
+      "receive_ms": 1791452291130,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "587d2abb2e2bb4d9e0a136415877fb9a4571176266d666fb1b71b9933320ba20"
+    },
+    {
+      "endpoint": "/api/v2/common/trade-rate",
+      "params": {
+        "symbol": "AEROUSDT",
+        "businessType": "mix"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452291052,
+      "receive_ms": 1791452291403,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "615832410c748e2bd23191234483c2c46f6bdb58a826f87bb0ee21db8381ca5e"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/current-fund-rate",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "AEROUSDT"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452291071,
+      "receive_ms": 1791452291448,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "28bc85015cc5704f7ab03724132be6163476cc5335e7e4b05b890c5d2b203a4b"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/account",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "DOGEUSDT",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452291130,
+      "receive_ms": 1791452291504,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "a85b792260822b6f26fd603dd2382aa9932f3c0b82030acf2260160893a04efa"
+    },
+    {
+      "endpoint": "/api/v2/common/trade-rate",
+      "params": {
+        "symbol": "DOGEUSDT",
+        "businessType": "mix"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452291404,
+      "receive_ms": 1791452291822,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "128ca510e5ccfd369d88031e0edc685adaa30d613ff157fef44873524e00fcf6"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/current-fund-rate",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "DOGEUSDT"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452291448,
+      "receive_ms": 1791452291824,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "2ee6efd50341068f7cd037d4987f4e2619f855b8241fbad3963522cb0b7fc5e0"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/account",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "TRUMPUSDT",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452291504,
+      "receive_ms": 1791452291880,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "438626618ad76732eea4ec790ba598ef7cd6faf129a52b9c6d212cf9f37e8791"
+    },
+    {
+      "endpoint": "/api/v2/common/trade-rate",
+      "params": {
+        "symbol": "TRUMPUSDT",
+        "businessType": "mix"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452291822,
+      "receive_ms": 1791452292187,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "aedc2936a6b9b02f19d77c5ede0eff20e23e0243eb6493308f3c8bc7bd199c1a"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/current-fund-rate",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "TRUMPUSDT"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452291824,
+      "receive_ms": 1791452292229,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "d76e2ef56eac12ffce3ceec1170772d7f37a0ec814d773727c19991ae6aa1e0b"
+    },
+    {
+      "endpoint": "/api/v2/mix/account/account",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "FILUSDT",
+        "marginCoin": "USDT"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452291880,
+      "receive_ms": 1791452292268,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "fb16fd3db8c0d9c4c921bb7d4bc50239950fb143f217e1c15b08f29d57fdf1bf"
+    },
+    {
+      "endpoint": "/api/v2/common/trade-rate",
+      "params": {
+        "symbol": "FILUSDT",
+        "businessType": "mix"
+      },
+      "method": "GET",
+      "signed": true,
+      "request_ms": 1791452292187,
+      "receive_ms": 1791452292551,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "941511c8524dd730a1204f11dc1b8116babd8dddd8026cd366a8618df846dc3f"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/current-fund-rate",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "FILUSDT"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452292229,
+      "receive_ms": 1791452292575,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "8540735e169efac594bad25069b74644297ebeffe21e7f99ed88136a52d09d4f"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/merge-depth",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "SANDUSDT",
+        "precision": "scale0",
+        "limit": "50"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452292576,
+      "receive_ms": 1791452293103,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "b14df34b60c3da3a4c1b0e2d63b1314e957c2eed41f4d79b900982bba1791903"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/merge-depth",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "BTWUSDT",
+        "precision": "scale0",
+        "limit": "50"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452292577,
+      "receive_ms": 1791452293066,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "2796728e2d49a924fbc0aceab61a7656ab2bb3fba16932766d9bc9b52ccab015"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/merge-depth",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "TRXUSDT",
+        "precision": "scale0",
+        "limit": "50"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452292580,
+      "receive_ms": 1791452293073,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "145833fc3177a849b2b0e5ec18e7b7428a3436f89acf4a64209fd53badc05e52"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/merge-depth",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "AEROUSDT",
+        "precision": "scale0",
+        "limit": "50"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452292585,
+      "receive_ms": 1791452293057,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "04793ab5e908f3dc93a1807d65aee29c1c0c0d1c2aa7265036f5ceb5a8a519ca"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/merge-depth",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "DOGEUSDT",
+        "precision": "scale0",
+        "limit": "50"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452293058,
+      "receive_ms": 1791452293500,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "3681bc352b25e1445ef7b75eb9df26b9e594aebed383811749df2d04e475e102"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/merge-depth",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "TRUMPUSDT",
+        "precision": "scale0",
+        "limit": "50"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452293067,
+      "receive_ms": 1791452293505,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "0f494a67086d8809f258e3d4331f1c2f62d50d54bbd18b29e9a9bfa408c259c3"
+    },
+    {
+      "endpoint": "/api/v2/mix/market/merge-depth",
+      "params": {
+        "productType": "USDT-FUTURES",
+        "symbol": "FILUSDT",
+        "precision": "scale0",
+        "limit": "50"
+      },
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452293073,
+      "receive_ms": 1791452293532,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "a8b52518f8e842d0bb5adea0bd0963eeb3d1720ed1538b02f3e63c8cdb04d3d0"
+    },
+    {
+      "endpoint": "/api/v2/public/time",
+      "params": {},
+      "method": "GET",
+      "signed": false,
+      "request_ms": 1791452293533,
+      "receive_ms": 1791452293888,
+      "http_status": 200,
+      "api_code": "00000",
+      "sha256": "ccdcaf99289bca39dae9e5bf10367463b750d0c445132ed6ff8f94383c7d691e"
+    }
+  ]
+}

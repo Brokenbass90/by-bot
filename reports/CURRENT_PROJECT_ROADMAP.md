@@ -1,5 +1,18 @@
 # Current roadmap — owner scope October 7, 2026
 
+October8 venue preference: Bybit primary, Bitget fallback, Binance deprioritized;
+MEXC remains later backlog. Read `KITY_BITGET_FEASIBILITY_2026_10_08.md/JSON`:
+39GET audit at09:38UTC, Bitget exact current eight-leg basket BLOCKED_EXECUTION
+(币安人生USDT absent), futurescash0USDT, hypothetical$50notactualfunds. No
+substitute/drop/multivenue execution or venue-filtered ranking adoption. Keep
+current KITY universe/rule/hold/cost frozen; evaluate future exact baskets on the
+preferred venue. Separately preregistered venue-eligibility challenger belongs
+to Claude research, not this money path. Source GAIB/provenance/accepted seal/
+packet bound stillBLOCKED_DATA. Current queue: KITYonlynewcryptoREADY_FOR_BUILD;
+ETS2MOct10originalcohortgate, ATT1continuity/reserve+2–3clean+dossier+GO,
+PEREGREVforward. No additional acceptedlong/range sleeve. Next actual money
+window remains conditionaloneXOM PAPER16:30–16:35Cyprus, no LIVEHALTclear.
+
 October7 owner clarification: **one actual PAPER lifecycle, no extra waiting for
 statistical trade count**. Oct8 13:30UTC/16:30Cyprus sealedXOM/currentinputs→one
 exact PAPER entry/protection/readback/restart and concrete orders-OFF GO dossier.

@@ -1,5 +1,16 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+Latest October8 09:38UTC Bitget continuation:
+`KITY_BITGET_FEASIBILITY_2026_10_08.md/JSON`, checkpoint TOP.39GET/rawpinsPASS;
+816unique USDTperpetuals missingexact币安人生USDT→currentbasketBLOCKED_EXECUTION.
+Futures0USDT/spot.05067355, hypothetical$50notfundedcash; sevenfees/mode/books
+retained, fullbasketcapital/funding/ownershipnotestablished. StrictsourceBLOCKED
+unchanged. Bybitpreferred/Bitgetfallback/Binancedeprioritized/MEXClater. Venue
+filterbefore ranking requiresseparateresearch, no substitutions/neworderpath.
+Alpaca16:25nativeheartbeat/PAPER16:30conditional/HALT andothercontours preserved;
+no freshproduction/brokercheck exceptBitget. One boundedfinancialreviewPASS
+WITH_LIMITATIONS; no productcode/test/strategyreadinessclaim.
+
 Latest October8 execution intake:
 `KITY_SOURCE_CONTRACT_AND_BINANCE_DOSSIER_2026_10_08.md/JSON`, checkpoint TOP.
 24GETs: currentkeyFuturesdisabled; all8CROSSED/2x, Hedge+MultiAssets,

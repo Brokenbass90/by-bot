@@ -1,5 +1,34 @@
 # Codex session checkpoint — 2026-09-06
 
+October 8, 09:38:08–09:38:14 UTC venue continuation: read
+**KITY_BITGET_FEASIBILITY_2026_10_08.md/JSON**. Owner prefersBybit/Bitget;
+Binance is deprioritized, MEXC later only. One bounded audit: 39 GETs/raw hashes
+PASS. Bitget 816 unique USDT perpetuals; exact 币安人生USDT missing, no verified
+alias. Current frozen basket BLOCKED_EXECUTION, same missing leg as Bybit; no
+drop/substitution/split venue. Futures available/equity 0 USDT, spot 0.05067355
+USDT; ~$50 is hypothetical. Seven actual maker .0002/taker .0006, crossed/Hedge/
+single asset. Existing leverage 10x except BTW 5x is not approved canary risk.
+Key authority codes retained/unmapped: trade scope UNKNOWN. Position response
+[]; normal/three-plan null-list/null-cursor responses report no rows, not
+ownership/finality proof. Seven matching-engine books pass the 2s snapshot
+under stated clock bounds; full basket blocked. Individual minima sum 36.15971
+is NOT equal-notional basket or required margin; full sizing/$50 feasibility
+NOT_ESTABLISHED. No Bitget KITY money contract added. Strict GAIB/provenance/
+accepted seal/packet bound remain BLOCKED_DATA; prior Binance facts stay dated.
+Research cf90408 verified. KITY only new crypto READY_FOR_BUILD; ETS October10
+still cohort-blocked. ATT1 October6 terminal 17 sessions/10 gaps/1 clean ADA/
+0 held remains dated; OLD entry retirement preserved. Weekly TOLPA KILL/daily
+forward not READY; no additional confirmed long/range sleeve. Venue eligibility
+before ranking needs a separate research challenger, not current GO.
+Runtime-verified 5.6-luna/medium queue worker and one 6-astra/high review:
+PASS_WITH_LIMITATIONS. Raw archive mode0400/SHA c78bca6d…1257b; reproducible GET
+source/offline projection retained. No product code/test claim, broker write,
+service query/restart, judge, Claude message or sealed source change. Alpaca/
+ATT1/ETS/OS2 untouched by this cycle; prior broker/PID facts not freshly confirmed.
+Existing Alpaca 16:25 Cyprus heartbeat/conditional one-XOM PAPER 16:30–16:35
+preempts; LIVE HALT retained, actual DAY re-arm if held October9 opening.
+Foreign allowlist add587f1…f19a1 untouched/unstaged.
+
 October8 08:43:49–08:43:52UTC execution intake: read
 **KITY_SOURCE_CONTRACT_AND_BINANCE_DOSSIER_2026_10_08.md/JSON**.
 TerminalBLOCKED_DATA; currentBinancekey/BybitexactlegBLOCKED_EXECUTION.
