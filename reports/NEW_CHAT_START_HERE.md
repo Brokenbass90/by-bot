@@ -1,5 +1,13 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+Latest October8 account-path delta:
+`KITY_EXISTING_ACCOUNT_PATHS_2026_10_08.md/JSON` and checkpoint TOP.
+Binance existing authenticated reader works, available11.70137565USDT at08:03UTC;
+exact diagnostic basket available publicly, no complete approved money path.
+Strict GAIB/provenance/seal BLOCKED_DATA and Bybit exact-leg BLOCKED_EXECUTION
+remain. Alpaca16:30PAPER conditional on fresh actual gates, HALT preserved.
+This cycle did not recheck Alpaca, alter runtime or consume a research judge.
+
 October8 morning continuation: read **MONEY_MORNING_KITY_ALPACA_2026_10_08.md/JSON**.
 **KITY strict BLOCKED_DATA / Bybit exact basket BLOCKED_EXECUTION; no money.**
 Original cutoff census receivedOct7 23:54:59.196UTC, sourcepins intact. Actual

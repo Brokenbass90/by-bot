@@ -1,0 +1,123 @@
+{
+  "approved_complete_money_path_found": false,
+  "base_commit": "5e077a1fac7e021255be056eb0a535b6635c0638",
+  "bybit_exact_basket_status": "BLOCKED_EXECUTION",
+  "complete_raw_account_response_preserved": false,
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "interpretation": {
+    "alpaca_queried_this_cycle": false,
+    "binance_requires_account_specific_money_dossier": true,
+    "can_trade_account_flag_is_api_key_trade_scope": false,
+    "cash_finality_cleared_this_cycle": false,
+    "cash_finality_verified_morning": false,
+    "claude_messaged": false,
+    "heartbeat_changed": false,
+    "missing_env_keys_prove_global_account_absence": false,
+    "positions_count_is_active_held_positions": false,
+    "product_code_changed": false,
+    "public_gross_is_capital_required": false,
+    "research_judge_run": false,
+    "venue_substitution_or_leg_drop_allowed": false
+  },
+  "operator_capture": {
+    "account_reads": {
+      "BINANCE": {
+        "account_fields": {
+          "availableBalance": "11.70137565",
+          "canTrade": true,
+          "feeTier": 0,
+          "totalMarginBalance": "11.70137565",
+          "totalWalletBalance": "11.70137565",
+          "updateTime": 0
+        },
+        "api_key_trade_scope_verified": false,
+        "endpoint": "GET /fapi/v2/account",
+        "http_status": 200,
+        "ok": true,
+        "positions_count": 1848,
+        "received_at_utc": "2026-10-08T08:03:18.637858+00:00"
+      },
+      "BITGET": {
+        "account_fields": {
+          "accountEquity": "0",
+          "available": "0",
+          "equity": null,
+          "marginMode": null,
+          "posMode": null
+        },
+        "accounts_count": 1,
+        "api_code": "00000",
+        "api_key_trade_scope_verified": false,
+        "endpoint": "GET /api/v2/mix/account/accounts?productType=USDT-FUTURES",
+        "http_status": 200,
+        "ok": true,
+        "received_at_utc": "2026-10-08T08:03:18.953463+00:00"
+      }
+    },
+    "authority": "operator_GET_only_no_KITY_credentials_or_order_path",
+    "cached_status": {
+      "runtime/arb/exchange_account_readonly_status.json": {
+        "binance": {
+          "configured": true,
+          "ok": true,
+          "scope": "binance_usdt_m_futures_balance_read"
+        },
+        "bitget": {
+          "configured": true,
+          "ok": true,
+          "scope": "bitget_usdt_futures_account_read"
+        },
+        "exists": true,
+        "file_mtime_utc": "2026-10-08T07:17:03.119870+00:00",
+        "file_sha256": "45f7c1a04c26f35fac930e7587d07dfd7611eb804fbd67ffc6ad6718956bbc32",
+        "generated_at_utc": "2026-10-08T07:17:02.332709+00:00"
+      },
+      "runtime/arb/exchange_account_status.json": {
+        "exists": true,
+        "file_mtime_utc": "2026-10-08T08:00:07.660948+00:00",
+        "file_sha256": "3d53ec75fb6beca7167fc954a8ed1dfba093fb0951f1568aa7e2551f74d2cdde",
+        "generated_at_utc": "2026-10-08T08:00:07.652704+00:00"
+      }
+    },
+    "completed_at_utc": "2026-10-08T08:03:18.957178+00:00",
+    "env_exists": true,
+    "env_path": "/root/by-bot/.env",
+    "key_presence": {
+      "BINANCE": {
+        "BINANCE_API_KEY": true,
+        "BINANCE_API_SECRET": true
+      },
+      "BITGET": {
+        "BITGET_API_KEY": true,
+        "BITGET_API_PASSPHRASE": true,
+        "BITGET_API_SECRET": true
+      },
+      "BYBIT": {
+        "BYBIT_API_KEY": false,
+        "BYBIT_API_SECRET": false
+      },
+      "MEXC": {
+        "MEXC_API_KEY": false,
+        "MEXC_API_SECRET": false
+      }
+    },
+    "order_calls": 0,
+    "remote_writes": 0,
+    "schema": "KITY_EXISTING_ACCOUNT_PATH_READONLY_INVENTORY_V1",
+    "started_at_utc": "2026-10-08T08:03:17.163583+00:00"
+  },
+  "orders_allowed": false,
+  "redacted_operator_capture_sha256": "0d057feed681bfacf6c0b705982d96d703ada81f9d94991aa8b56b2235294784",
+  "schema": "KITY_EXISTING_ACCOUNT_PATHS_RECEIPT_V1",
+  "source_manifest": {
+    "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+    "reports/BITGET_CASHCARRY_PUBLIC_ADAPTER_V1_2026_07_16.md": "2c4c20ed8babeefd979622dbd618a770567aa2d5b52161af290d84148a5e2edf",
+    "reports/MONEY_MORNING_KITY_ALPACA_2026_10_08.json": "9a0b685f799876c242090bfca91d51edaa7954c830d85c3f0d389b90432de9ff",
+    "reports/OS2_SHADOW_BRIDGE_DELIVERY_2026_10_07.md": "160c691a8c53c7aaa9790857cb75a5015bc20e7fea97f9680ad05c53068b988d",
+    "scripts/check_exchange_readonly_keys.py": "2da13d959bf4465b01e34c6f44f49fbd3296b650cc5f17fa957f65d32403daac",
+    "scripts/exchange_account_status.py": "b187c2ea5abeb28abb23596aeb4cf8dde23e0d948f6d2e58b48ceb36c7669ce3",
+    "scripts/kity_m3_orders_off.py": "522c7e6b4accd5375c472b16cca21da941c4b292735efc8b22e873c847495834"
+  },
+  "terminal": "BLOCKED_DATA",
+  "verification": "redacted GET receipts/schema/status/balance/authority assertions and foreign SHA match; no product tests rerun"
+}

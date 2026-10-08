@@ -1,5 +1,20 @@
 # Codex session checkpoint — 2026-09-06
 
+October8 08:03UTC account-path delta: read
+**KITY_EXISTING_ACCOUNT_PATHS_2026_10_08.md/JSON**. Two existing signed GETs,
+no orders/remote writes: Binance account available11.70137565USDT/feeTier0/
+canTrade=true; this is not key trade scope, fees/mode/caps or a KITY money path.
+Bitget available/equity0; public-only adapter has no KITY execution contract.
+Exact Binance diagnostic basket is available; selected-account dossier remains
+unknown. Prior43.73889gross is not cash/margin required or leverage permission.
+Strict GAIB/provenance/seal BLOCKED_DATA and Bybit missing exact CJK leg
+BLOCKED_EXECUTION remain. No drop/substitute/money GO. Small Bybit eligibility
+challenger question prepared for Claude, not sent/run. Alpaca not rechecked:
+morning cash-finalityfalse still governs conditional16:30PAPER; actual overnight
+DAYrearm firstOct9. OS2 bus/edge already fixture-wired, no actual/LIVE policy.
+All earlier broker/service facts retain their observation times; no deployment,
+judge, heartbeat change or code/test claim in this account-inventory cycle.
+
 October8 morning continuation: read **MONEY_MORNING_KITY_ALPACA_2026_10_08.md/JSON**.
 **KITY strict BLOCKED_DATA / Bybit exact basket BLOCKED_EXECUTION; no money.**
 Original cutoff census receivedOct7 23:54:59.196UTC, sourcepins intact. Actual
