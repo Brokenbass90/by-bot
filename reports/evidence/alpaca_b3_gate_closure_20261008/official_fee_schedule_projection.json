@@ -1,0 +1,12 @@
+{
+  "source_pdf_sha256": "0700d871c54af72e1355d97376fffbe3f55848dda00649676e3c60eb0949cb7f",
+  "private_text_extraction_path": "/private/tmp/alpaca_fee_schedule_oct1.txt",
+  "text_extraction_sha256": "173ba1ec2c6dac28ba00f56a54da2b7f86be6da9f929b807af828b0fa6486f7d",
+  "extractor": "pdftotext -layout",
+  "revision": "2026-10-01",
+  "sec_sell_value_rate": "0.0000206",
+  "taf_per_share": "0",
+  "cat_nms_share_rate": "0.000003",
+  "rounding": "daily account totals per fee type rounded upwards to cents",
+  "quantity": "exact fractional executed quantity"
+}

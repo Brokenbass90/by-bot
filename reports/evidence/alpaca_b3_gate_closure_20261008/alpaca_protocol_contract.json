@@ -1,0 +1,83 @@
+{
+  "schema": "ALPACA_PROTOCOL_SOURCE_CONTRACT_V1",
+  "status": "APPROVE_WITH_LIMITATIONS",
+  "captured_utc": "2026-10-08T13:53:56Z",
+  "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+  "owner_attestation": {
+    "source": "direct owner answer in current chat October8",
+    "exact_answer": "Обычный личный Alpaca, без комиссии за акции",
+    "scope": "standard self-directed individual commission-free US equities; not Elite/partner",
+    "api_commission_null_is_not_proof": true
+  },
+  "commission_rate": "0",
+  "fractional_protocol": {
+    "buy_minimum_notional_usd": "1",
+    "max_qty_decimal_places": 9,
+    "representable_quantity_unit": "0.000000001",
+    "actual_asset_qty_minimum_field": null,
+    "field_semantics": "qty_step/min_qty in the offline numerical adapter may represent the documented smallest positive API quantity; USD1 buy minimum remains binding. This is not an invented per-asset venue minimum.",
+    "requires_fresh_asset": {
+      "symbol": "XOM",
+      "status": "active",
+      "tradable": true,
+      "fractionable": true
+    },
+    "supported_execution": "DAY fractional LIMIT buy / DAY STOP sell per official Trading API docs; actual acceptance still requires broker PAPER"
+  },
+  "regulatory_model": {
+    "fee_schedule_revision": "2026-10-01",
+    "sec_sell_value_rate": "0.0000206",
+    "taf_per_share_rate": "0",
+    "cat_nms_executed_share_rate": "0.000003",
+    "rounding": "each fee type aggregated daily per account then ceiling to USD0.01; exact fractional executed quantities",
+    "future_entry_fee": "ceil_cent(qty * CAT), conditional on unchanged retail schedule",
+    "future_exit_fees": "ceil_cent(exit_qty * exit_price * SEC) + ceil_cent(exit_qty * CAT); actual exit price/number of distinct settlement days unknown",
+    "unresolved_liability_must_be_separate": true,
+    "entry_rounding_reserve_cannot_be_hidden_in_commission_rate": true,
+    "historical_pending_fees_are_not_extra_published_charges": true,
+    "hard_future_loss_bound": false
+  },
+  "sources": {
+    "BrokFeeSched.pdf": {
+      "url": "https://files.alpaca.markets/disclosures/library/BrokFeeSched.pdf",
+      "resolved_url": "https://files.alpaca.markets/disclosures/library/BrokFeeSched.pdf",
+      "sha256": "0700d871c54af72e1355d97376fffbe3f55848dda00649676e3c60eb0949cb7f",
+      "bytes": 146483,
+      "received_utc": "2026-10-08T13:53:55.445839+00:00"
+    },
+    "fractional.html": {
+      "url": "https://docs.alpaca.markets/us/docs/fractional-trading",
+      "resolved_url": "https://docs.alpaca.markets/us/docs/fractional-trading",
+      "sha256": "b955a1ef86c0692ea62160f792e422c2f3198b6310e3867e1bb8482f16e0eef0",
+      "bytes": 464308,
+      "received_utc": "2026-10-08T13:53:55.835200+00:00"
+    },
+    "buy_minimum.html": {
+      "url": "https://alpaca.markets/support/can-we-submit-orders-smaller-than-1-usd-in-notional-value",
+      "resolved_url": "https://alpaca.markets/support/can-we-submit-orders-smaller-than-1-usd-in-notional-value",
+      "sha256": "4afeddd396fd26070d45f1803c4cb4fd973edfc03f9913523987b2c2e4c91c88",
+      "bytes": 312011,
+      "received_utc": "2026-10-08T13:53:56.541025+00:00"
+    },
+    "commission.html": {
+      "url": "https://alpaca.markets/support/commission-clearing-fees",
+      "resolved_url": "https://alpaca.markets/support/commission-clearing-fees",
+      "sha256": "6947be9135dc832fba0cc0c41b3cbda0ffdba55626530ff9de19e56cf2555d27",
+      "bytes": 313174,
+      "received_utc": "2026-10-08T13:53:56.754614+00:00"
+    }
+  },
+  "frozen_money_policy_changed": false,
+  "money_authority": false,
+  "orders_allowed": false,
+  "current_window": "expired without order; source closure is not an Oct8 plan or PAPER receipt",
+  "next_gate": "fresh permitted opening account/asset/raw quote/earnings/owner/lock data, source-bound cost input, at most one PAPER entry under unchanged caps",
+  "review": "One independent gpt-6-astra/high source/financial review; actual PAPER lifecycle NOT_EXECUTED. Separate entry regulatory reserve must reduce spendable cash, not just be mentioned.",
+  "planning_mapping": {
+    "fee_rate": "commission_rate 0; not total fee-free trading",
+    "liability_reserve_usd": "actual unresolved source liability + ceil_cent(fresh capped entry quantity ceiling * CAT)",
+    "exact_quantity_binding": "planned/filled qty must not exceed fresh source-bound quantity_ceiling; otherwise BLOCKED, no risk/cap increase",
+    "multiple_execution_days": "requires corresponding source-bound daily aggregation; one-day illustration is not universal",
+    "future_exit_fees": "actual prices/fills/day aggregation at terminal; net cannot be final until posted fees and pending liability reconcile"
+  }
+}

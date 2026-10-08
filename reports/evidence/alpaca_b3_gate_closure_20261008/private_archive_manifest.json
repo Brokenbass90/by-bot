@@ -1,0 +1,35 @@
+{
+  "archive_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_opening_20261008_1333",
+  "files": {
+    "BrokFeeSched.pdf": {
+      "sha256": "0700d871c54af72e1355d97376fffbe3f55848dda00649676e3c60eb0949cb7f",
+      "bytes": 146483
+    },
+    "broker_truth.json": {
+      "sha256": "255ad0ff851ed9ba1a1899dccd8c9b88453c53d56b68f3ae78b61d641f80a196",
+      "bytes": 49118
+    },
+    "buy_minimum.html": {
+      "sha256": "4afeddd396fd26070d45f1803c4cb4fd973edfc03f9913523987b2c2e4c91c88",
+      "bytes": 312011
+    },
+    "commission.html": {
+      "sha256": "6947be9135dc832fba0cc0c41b3cbda0ffdba55626530ff9de19e56cf2555d27",
+      "bytes": 313174
+    },
+    "fractional.html": {
+      "sha256": "b955a1ef86c0692ea62160f792e422c2f3198b6310e3867e1bb8482f16e0eef0",
+      "bytes": 464308
+    },
+    "official_source_manifest.json": {
+      "sha256": "fafddc80eb89a3452c3852859db6e57c7c4e4c1093601c25a6b83030dda3bf11",
+      "bytes": 1428
+    },
+    "quote_lineage.json": {
+      "sha256": "d8af2a5d90724573c794c1cd32747743e14f13aea5a10b55a10e0cea0d66ed11",
+      "bytes": 4188
+    }
+  },
+  "no_credentials_in_archive": true,
+  "raw_personal_account_fields_private_only": true
+}

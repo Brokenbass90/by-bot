@@ -180,3 +180,43 @@ def test_packaged_cli_uses_original_broker_lock_not_its_own_root():
     expected=_alpaca_account_lock_path(PAPER,'test-key').name
     p=shared_lock_path(Path('/root/by-bot/configs/alpaca_paper_local.env'),{},'test-key')
     assert p==Path('/root/by-bot/runtime/locks')/expected
+
+
+def test_oct8_wide_quote_price_improvement_keeps_actual_fill_relative_full_stop(api,policy,plan,tmp_path):
+    """Captured IEX ask169/bid158.36; broker fills below ask, not a real PAPER fill."""
+    from research_lab.alpaca_dynamic_v1 import digest
+    core={k:v for k,v in plan.items() if k not in {'receipt_id','client_order_id','status','money_authority','orders_allowed','evidence_kind'}}
+    core.update(symbol='XOM',qty='.6',reference_ask='169',stop_price='161.69',
+                risk_distance='7.31',notional_usd='101.4',modeled_stop_risk_usd='4.386',
+                notional_limit_usd='101.4',funding_limit_usd='101.5014',protection_qty='.6',protection_tif='day')
+    plan.update(core,receipt_id=digest(core),client_order_id='dyn1-'+digest(core)[:32])
+    broker=Broker();submit=broker._request
+    def improved(method,path,payload):
+        order=submit(method,path,payload)
+        order['filled_avg_price']='158.36'
+        broker.orders[payload['client_order_id']]['filled_avg_price']='158.36'
+        broker.positions[-1]['avg_entry_price']='158.36'
+        return order
+    broker._request=improved;broker.fill_qty='.6'
+    receipt=api.execute_paper(plan,policy,broker,broker.account_id,tmp_path,NOW,send=True)
+    assert receipt['status']=='PAPER_PROTECTED'
+    assert receipt['stop_price']=='151.05' and Decimal(receipt['stop_price'])<Decimal('158.36')
+    assert broker.writes[-1]['qty']=='0.6' and broker.writes[-1]['time_in_force']=='day'
+    assert api.execute_paper(plan,policy,broker,broker.account_id,tmp_path,NOW+1000,send=True)==receipt
+    assert len(broker.writes)==2 and broker.positions[0]['symbol']=='OLD'
+
+
+def test_accepted_entry_with_lost_response_recovers_same_fill_without_second_buy(api,policy,plan,tmp_path):
+    broker=Broker();submit=broker._request
+    def accepted_but_lost(method,path,payload):
+        submit(method,path,payload)
+        raise TimeoutError('entry accepted, response lost')
+    broker._request=accepted_but_lost
+    first=api.execute_paper(plan,policy,broker,broker.account_id,tmp_path,NOW,send=True)
+    assert first['status']=='BLOCKED_EXECUTION' and len(broker.writes)==1
+    broker._request=submit
+    recovered=api.execute_paper(plan,policy,broker,broker.account_id,tmp_path,NOW+1000,send=True)
+    assert recovered['status']=='PAPER_PROTECTED' and len(broker.writes)==2
+    assert [o['side'] for o in broker.writes]==['buy','sell']
+    assert api.execute_paper(plan,policy,broker,broker.account_id,tmp_path,NOW+2000,send=True)==recovered
+    assert len(broker.writes)==2

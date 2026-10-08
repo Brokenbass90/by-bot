@@ -1,5 +1,42 @@
 # MASTER HANDOFF — 2026-10-05
 
+October8 opening/terminal cycle: read **ALPACA_B3_TERMINAL_GATES_2026_10_08.md/JSON**.
+**Alpaca BLOCKED_DATA_CURRENT_OPENING / no PAPER order; KITY October8
+BLOCKED_EXECUTION_CURRENT_SIGNAL; frozen B3 B3_FAIL.** Fresh13:33UTC LIVE flat/
+HALT, cash/nonmarginable496.12,pendingfees0. Six known fills/five posted fees.05
+reconcile exactnet8.704976679662 to broker+8.70 cents; previouspending.02 is not
+another deduction. Old known cash-finality closed, no universal future fee SLA.
+61/23/21sourcepins and copied/sealedbooks unchanged:1ranking/3slots/0intents/0exits;
+PIDs1648585/1623208/1584802/NRestarts0. Five legacy PAPER positions/XOMexclusion
+preserved. SIP403,IEX rawquote fresh then bid158.36/ask169,notNBBO/currentplan.
+Original13:30–13:35window elapsed before fee/protocol source closure; no late or
+backdated PAPER. Owner confirms normal personal commissionfree Alpaca. Oct1
+publicfee schedule/rawhash+pdftotext projection reviewed:SEC.0000206sell,TAF0,
+CAT.000003/share; eachfee/day/account ceilcent. BUY$1/global9dp protocol sourced;
+1e-9 representability is not a fabricated asset-min API field. Source-only fee
+calculator maps commission0 + separate CAT/pending reserve into existing cash
+sizing; regression100cash→99.99funding+.01reserve. Fresh qtyceiling/sourcehash/
+liability/writer/lock/earnings/quote binding still needed before PAPER. No sender
+change/orderpath. 114targetedAlpacaPASS,3newregressions, not broker lifecyclePASS.
+Next original heartbeat check Oct9: one permitted16:30–16:35Cyprus XOM PAPER only
+if every existing gate closes; if firstentryheld, actual DAYrearm nextOct12,
+notOct9. Originaltwo-check schedule/count unchanged; deleteaftersecond/terminal,
+no extension/repeatedentry. HALT/cap487.42/.70/policy preserved; separateLIVEGO.
+KITY currentOct8 signal terminal: preferredBybit/Bitget missingexactCJKleg,
+Binanceaccount/keynotready/deprioritized. Stop venue shopping/drop/substitution;
+strictsourceGAIB/provenance blockers independent; futurevenuefilter separate
+Claudechallenger. Afterthisterminalintake ownerauthorizedB3once:22frozenfilepins+
+137upstreamdatapins match881dde0/cf90408/sibling;17fixturesPASS; exclusive spent
+claim; isolatedunchangedjudge once13:53UTC. B3_FAIL: A+224.925R,B−68.562R,
+C−67.327R,C>=B2/4(required3); DD98.951/79.326/91.561R. Receipt4f36a1c0…8a87e;
+exit0 is not PASS. No rerun/rescue/SEALED_V2/Claudeedit/message orpolicyauthority.
+OS2wiringPASS remains engineering; actualsource/parity ordersOFF only; whole-
+system policy promotion blocked by B3FAIL. No research replacements thiscycle.
+Runtime-verified5.6-luna/medium inventory + one6-astra/high financialreview and
+same-review fee-resolution followup: APPROVE_WITH_LIMITATIONS sourceonly.
+ATT1/ETS/production/sealed evidence untouched. Foreignallowlistadd587f1…f19a1
+untouched/unstaged. Earlier dated blocks below are history; this update governs.
+
 Latest October8 09:38UTC Bitget continuation:
 `KITY_BITGET_FEASIBILITY_2026_10_08.md/JSON`, checkpoint TOP.39GET/rawpinsPASS;
 816unique USDTperpetuals missingexact币安人生USDT→currentbasketBLOCKED_EXECUTION.

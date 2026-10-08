@@ -1,0 +1,148 @@
+{
+  "status": "KNOWN_OLD_CASH_FINALITY_RECONCILED",
+  "scope": "six known fills, three owned entries and their terminal exits, all five published pooled fee activities; not an arbitrary future broker liability SLA",
+  "observed_ms": 1791466420957,
+  "raw_archive_sha256": "255ad0ff851ed9ba1a1899dccd8c9b88453c53d56b68f3ae78b61d641f80a196",
+  "legs": [
+    {
+      "symbol": "AMD",
+      "qty": "0.186377282",
+      "entry_order_id": "6028b4d0-f89c-465c-aa2f-e8f120d10fe6",
+      "exit_order_id": "8f913cab-9ace-45da-b8f6-7e8a7d561dc4",
+      "exit_type": "stop",
+      "gross_usd": "2.374819327244"
+    },
+    {
+      "symbol": "CRWD",
+      "qty": "0.469970151",
+      "entry_order_id": "2b559bee-1818-450d-b5c0-1d1b015c2422",
+      "exit_order_id": "cefd3e9f-d0a0-48f4-825a-4c21a8cfbae9",
+      "exit_type": "market",
+      "gross_usd": "4.743878704194"
+    },
+    {
+      "symbol": "META",
+      "qty": "0.141939508",
+      "entry_order_id": "62513c25-0929-45ef-9a29-e219c9899a06",
+      "exit_order_id": "ac20286f-6184-412e-b19e-fc807d97e51a",
+      "exit_type": "market",
+      "gross_usd": "1.636278648224"
+    }
+  ],
+  "gross_usd": "8.754976679662",
+  "published_pooled_fee_usd": "-0.05",
+  "fee_activity_ids": [
+    "20261001000000000::829a5250-9ed4-42de-843b-97552a52012d",
+    "20261005000000000::50548e40-1f8a-4733-a534-076215a917d2",
+    "20261005000000000::fd40b6e2-b3cb-4870-8384-f17b94941c8f",
+    "20261007000000000::b9b97448-a688-445a-be01-afd1eaa0da13",
+    "20261007000000000::bf12c3a4-5466-4123-9a51-c3cf706d862f"
+  ],
+  "net_at_exact_fill_precision_usd": "8.704976679662",
+  "broker_cash_delta_usd": "8.70",
+  "cent_rounded_net_matches": true,
+  "rounding_difference_usd": "0.004976679662",
+  "pending_reg_taf_fees": "0",
+  "non_marginable_buying_power": "496.12",
+  "flat": true,
+  "entry_halt": {
+    "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+    "halted": true,
+    "reason": "intended_stage_failed:0:9",
+    "updated_at_utc": "2026-10-07T16:05:11.576362+00:00"
+  },
+  "current_cap_usd": "487.42",
+  "capital_cap_increased": false,
+  "money_authority": false,
+  "orders_allowed": false,
+  "paper_actual_lifecycle": "NOT_EXECUTED",
+  "paper_broker_protected": false,
+  "all_writer_ownership": "PENDING_EXHAUSTIVE_FRESH_OPENING_CHECK; cron snapshot is not exhaustive",
+  "quote": {
+    "feed": "IEX",
+    "nbbo": false,
+    "raw": {
+      "quote": {
+        "ap": 169,
+        "as": 100,
+        "ax": "V",
+        "bp": 158.36,
+        "bs": 100,
+        "bx": "V",
+        "c": [
+          "R"
+        ],
+        "t": "2026-10-08T13:33:31.216707017Z",
+        "z": "A"
+      },
+      "symbol": "XOM"
+    },
+    "receive_ms": 1791466417746,
+    "raw_sha256": "d1eec6544cd7fc229c5332fd0a8e159af49fcf7e8781ff571f6361a53f4aeae0",
+    "usable_now": false,
+    "width_is_not_a_new_admission_gate": true
+  },
+  "services": {
+    "bybot.service": [
+      "MainPID=1648585",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "trading-journal-web.service": [
+      "MainPID=1623208",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "att1-lifecycle-zero-risk-v2.service": [
+      "MainPID=1584802",
+      "NRestarts=0",
+      "ActiveState=active"
+    ]
+  },
+  "books": {
+    "sealed": {
+      "path": "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/runtime/selection/replacement.sqlite",
+      "sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+      "counts": {
+        "rankings": 1,
+        "slots": 3,
+        "intents": 0,
+        "exits": 0
+      }
+    },
+    "continuation": {
+      "path": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/rehearsal/replacement.sqlite",
+      "sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+      "counts": {
+        "rankings": 1,
+        "slots": 3,
+        "intents": 0,
+        "exits": 0
+      }
+    }
+  },
+  "source_manifests": {
+    "/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/app": {
+      "manifest_sha256": "ca9559400a62a7ebb4d2b8a823d08630e73b65e8fff7ed05232c4100c677a5f6",
+      "files": 61,
+      "mismatches": []
+    },
+    "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app": {
+      "manifest_sha256": "4f6e5288790174b9a9fdfb031d4e7a229c8b852ed2eef96785003d30961f76d3",
+      "files": 23,
+      "mismatches": []
+    },
+    "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/app": {
+      "manifest_sha256": "3e936db867ea0df3da6ccd7f80c1d17c2d4a6e9403a203f603841ce05ef08ca3",
+      "files": 21,
+      "mismatches": []
+    }
+  },
+  "live_binding_pins": {
+    "binding_sha256": "12a1a490ff98b47254cfbf2ac0d03650b6d3040bb7ffa86e7c5d2d91b40cd7ea",
+    "profile_sha256": "71c96f4d785b5bf1f4e7a2fb96b26609055a0bfbe4b7d0acb60b82febe4d8c11",
+    "wrapper_sha256": "dc5a9c0f7b8e934ecbc783c85284cea56f0a4c8c4dbc8b5093ed912590726391",
+    "halt_sha256": "e1a137bc8fd2f918c38b3d4cc5c5e844b6dd6bf3ae6fc694e4d2d376997f53ad"
+  },
+  "raw_archive_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_opening_20261008_1333"
+}

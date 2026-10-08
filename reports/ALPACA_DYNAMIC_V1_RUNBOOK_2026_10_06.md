@@ -1,5 +1,36 @@
 # ALPACA_DYNAMIC_V1 — local orders-OFF runbook
 
+October8 terminal update: **ALPACA_B3_TERMINAL_GATES_2026_10_08.md/JSON** governs.
+OriginalOct8 opening closed withoutplan/reservation/PAPER. Fresh13:33UTC old LIVE
+cash/nonmarginable496.12/pendingfees0 closes known-oldfinality, no repeatedaudit.
+Owner confirms ordinary commissionfree personalAlpaca; reviewed publicOct1fee
+schedule and BUY$1/9dp protocol close tariff/minimum source intake. Assets have
+no minqtyfield;1e-9 is only representability. No zero-actual-fee assumption.
+
+Before the next permitted Oct9 13:30–13:35UTC opening, bind fresh selectedaccount/
+asset/rawquote/earnings/concentration/ownedterminalslots/allwriter/sharedlock/
+XOMexclusion and costs. Use the source-only calculator at
+`reports/evidence/alpaca_b3_gate_closure_20261008/fee_reserve_input.py` with a
+fresh capped quantity CEILING and actual unresolved liability. Its output
+`fee_rate=0` is commission only; `liability_reserve_usd` includes cent-ceiling CAT
+and must be supplied to the existing snapshot before DynamicBook.propose.
+Enforce plan.qty<=sourcequantityceiling and bind contracthash/sourcepins. Do not
+reuse dated illustration or assume other account/day liabilities zero. Actual
+terminal exitfees/finality remain separate. Unknown gates block withoutintent.
+Reusing the installed candidate is authorized; LIVE HALT/caps remain frozen.
+
+If everygate passes, prepare at most one exact plan during Oct9 opening from
+sealedXOM/currentinputs and use the existing isolated PAPER runner. File names
+in older Oct8 commands below are templates: use new Oct9 paths and actual
+current timestamps; never overwrite older sources/backdate a plan. No source-
+collector rerun, ranking rescan, slotforcing or generic orderpath. Record one
+actual lifecycle or exactBLOCKED. FirstentryOct9heldovernight implies actual
+DAYrearmOct12, never a fictitiousOct9rearm. OriginalheartbeatOct8/9COUNT2 is
+unchanged and endsaftersecondcheck/terminal; this report does not extend it.
+KITY currentOct8 signal terminalBLOCKED_EXECUTION_CURRENT_SIGNAL; stopvenue-
+shopping. B3 consumed onceandFAIL; no regimepolicy promotion/rerun/rescue.
+Older observed cash/finality/rearm statements below retain their dates.
+
 October8 morning: read MONEY_MORNING_KITY_ALPACA_2026_10_08.md/JSON.
 LIVE remains flat/HALTED; pendingfees.02 and settlement availability unresolved,
 cash_finality_verified remains false on that evidence. Do not turn reserve into

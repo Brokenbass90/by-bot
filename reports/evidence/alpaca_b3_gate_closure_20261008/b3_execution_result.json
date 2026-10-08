@@ -1,0 +1,15 @@
+{
+  "status": "B3_FAIL",
+  "owner_scope": "October8 single frozen B3, no repair/retune",
+  "research_ref": "cf904086a2d887a96ac2be3324a3d78433e1a94b",
+  "accepted_manifest_sha256": "e1c9feb9358c8c83a619c8b56cb8853a5633e96e741145e9dea8f633bcdc267b",
+  "started_utc": "2026-10-08T13:53:01.358341+00:00",
+  "command": [
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/b3_frozen_once_20261008/research_lab/os2/wf.py"
+  ],
+  "rerun_forbidden": true,
+  "returncode": 0,
+  "completed_utc": "2026-10-08T13:53:04.326176+00:00",
+  "receipt_sha256": "4f36a1c0d3360967876c58908eef5b603ec501b34c43658c8344b08644d8a87e"
+}

@@ -1,0 +1,470 @@
+{
+ "sgiby": [
+  {
+   "test": [
+    "2023-07-01",
+    "2024-01-01"
+   ],
+   "politika_B": {
+    "ATT1": [
+     "BULL_TREND",
+     "BEAR_TREND",
+     "NEUTRAL"
+    ]
+   },
+   "politika_C": {
+    "ATT1": [
+     "BEAR_TREND",
+     "NEUTRAL"
+    ],
+    "SBR1": [],
+    "ASR1": [],
+    "BOUNCE1": []
+   },
+   "A": {
+    "sdelok": 501,
+    "itogo_R": 13.657,
+    "na_sdelku_R": 0.0273,
+    "prosadka_R": 8.56,
+    "prichiny": {
+     "selected": 501,
+     "symbol_overlap": 167,
+     "portfolio_slots_full": 472
+    },
+    "po_nogam": {
+     "SBR1": {
+      "sdelok": 148,
+      "R": 16.718
+     },
+     "ATT1": {
+      "sdelok": 304,
+      "R": -9.121
+     },
+     "ASR1": {
+      "sdelok": 47,
+      "R": 7.08
+     },
+     "BOUNCE1": {
+      "sdelok": 2,
+      "R": -1.02
+     }
+    }
+   },
+   "B": {
+    "sdelok": 398,
+    "itogo_R": -20.965,
+    "na_sdelku_R": -0.0527,
+    "prosadka_R": 30.777,
+    "prichiny": {
+     "zero_priority_score": 396,
+     "selected": 398,
+     "symbol_overlap": 161,
+     "portfolio_slots_full": 185
+    },
+    "po_nogam": {
+     "ATT1": {
+      "sdelok": 398,
+      "R": -20.965
+     }
+    }
+   },
+   "C": {
+    "sdelok": 354,
+    "itogo_R": -20.995,
+    "na_sdelku_R": -0.0593,
+    "prosadka_R": 32.05,
+    "prichiny": {
+     "zero_priority_score": 533,
+     "selected": 354,
+     "symbol_overlap": 118,
+     "portfolio_slots_full": 135
+    },
+    "po_nogam": {
+     "ATT1": {
+      "sdelok": 354,
+      "R": -20.995
+     }
+    }
+   }
+  },
+  {
+   "test": [
+    "2024-01-01",
+    "2024-07-01"
+   ],
+   "politika_B": {
+    "SBR1": [
+     "BULL_TREND",
+     "BEAR_TREND",
+     "NEUTRAL"
+    ]
+   },
+   "politika_C": {
+    "ATT1": [
+     "BEAR_TREND"
+    ],
+    "SBR1": [
+     "BEAR_TREND",
+     "BULL_TREND"
+    ],
+    "ASR1": [
+     "NEUTRAL"
+    ],
+    "BOUNCE1": []
+   },
+   "A": {
+    "sdelok": 957,
+    "itogo_R": -30.621,
+    "na_sdelku_R": -0.032,
+    "prosadka_R": 63.764,
+    "prichiny": {
+     "selected": 957,
+     "symbol_overlap": 334,
+     "portfolio_slots_full": 9785
+    },
+    "po_nogam": {
+     "ATT1": {
+      "sdelok": 110,
+      "R": -6.388
+     },
+     "SBR1": {
+      "sdelok": 89,
+      "R": 4.832
+     },
+     "ASR1": {
+      "sdelok": 26,
+      "R": 4.475
+     },
+     "BOUNCE1": {
+      "sdelok": 9,
+      "R": -2.189
+     },
+     "SF3": {
+      "sdelok": 319,
+      "R": -48.881
+     },
+     "ETS2": {
+      "sdelok": 404,
+      "R": 17.531
+     }
+    }
+   },
+   "B": {
+    "sdelok": 249,
+    "itogo_R": -4.121,
+    "na_sdelku_R": -0.0165,
+    "prosadka_R": 18.616,
+    "prichiny": {
+     "zero_priority_score": 10798,
+     "selected": 249,
+     "symbol_overlap": 26,
+     "portfolio_slots_full": 3
+    },
+    "po_nogam": {
+     "SBR1": {
+      "sdelok": 249,
+      "R": -4.121
+     }
+    }
+   },
+   "C": {
+    "sdelok": 217,
+    "itogo_R": -0.851,
+    "na_sdelku_R": -0.0039,
+    "prosadka_R": 15.87,
+    "prichiny": {
+     "zero_priority_score": 10747,
+     "selected": 217,
+     "symbol_overlap": 45,
+     "portfolio_slots_full": 67
+    },
+    "po_nogam": {
+     "SBR1": {
+      "sdelok": 88,
+      "R": 1.091
+     },
+     "ASR1": {
+      "sdelok": 59,
+      "R": -6.577
+     },
+     "ATT1": {
+      "sdelok": 70,
+      "R": 4.635
+     }
+    }
+   }
+  },
+  {
+   "test": [
+    "2024-07-01",
+    "2025-01-01"
+   ],
+   "politika_B": {
+    "SBR1": [
+     "BULL_TREND",
+     "BEAR_TREND",
+     "NEUTRAL"
+    ],
+    "ETS2": [
+     "BULL_TREND",
+     "BEAR_TREND",
+     "NEUTRAL"
+    ]
+   },
+   "politika_C": {
+    "ATT1": [
+     "BEAR_TREND"
+    ],
+    "SBR1": [
+     "BEAR_TREND",
+     "BULL_TREND"
+    ],
+    "ASR1": [],
+    "ETS2": [
+     "BEAR_TREND",
+     "NEUTRAL"
+    ],
+    "SF3": [],
+    "BOUNCE1": []
+   },
+   "A": {
+    "sdelok": 1187,
+    "itogo_R": 295.458,
+    "na_sdelku_R": 0.2489,
+    "prosadka_R": 66.623,
+    "prichiny": {
+     "selected": 1187,
+     "symbol_overlap": 344,
+     "portfolio_slots_full": 17405
+    },
+    "po_nogam": {
+     "ETS2": {
+      "sdelok": 609,
+      "R": -23.117
+     },
+     "SF3": {
+      "sdelok": 413,
+      "R": 318.662
+     },
+     "SBR1": {
+      "sdelok": 84,
+      "R": -5.84
+     },
+     "ATT1": {
+      "sdelok": 39,
+      "R": -0.89
+     },
+     "BOUNCE1": {
+      "sdelok": 14,
+      "R": 4.353
+     },
+     "ASR1": {
+      "sdelok": 28,
+      "R": 2.29
+     }
+    }
+   },
+   "B": {
+    "sdelok": 970,
+    "itogo_R": -28.809,
+    "na_sdelku_R": -0.0297,
+    "prosadka_R": 43.011,
+    "prichiny": {
+     "selected": 970,
+     "zero_priority_score": 5758,
+     "symbol_overlap": 264,
+     "portfolio_slots_full": 11944
+    },
+    "po_nogam": {
+     "ETS2": {
+      "sdelok": 846,
+      "R": -37.958
+     },
+     "SBR1": {
+      "sdelok": 124,
+      "R": 9.149
+     }
+    }
+   },
+   "C": {
+    "sdelok": 891,
+    "itogo_R": -14.373,
+    "na_sdelku_R": -0.0161,
+    "prosadka_R": 49.9,
+    "prichiny": {
+     "selected": 891,
+     "zero_priority_score": 8467,
+     "symbol_overlap": 207,
+     "portfolio_slots_full": 9371
+    },
+    "po_nogam": {
+     "ETS2": {
+      "sdelok": 750,
+      "R": -18.454
+     },
+     "ATT1": {
+      "sdelok": 5,
+      "R": -0.747
+     },
+     "SBR1": {
+      "sdelok": 136,
+      "R": 4.828
+     }
+    }
+   }
+  },
+  {
+   "test": [
+    "2025-01-01",
+    "2025-10-01"
+   ],
+   "politika_B": {
+    "SBR1": [
+     "BULL_TREND",
+     "BEAR_TREND",
+     "NEUTRAL"
+    ],
+    "ETS2": [
+     "BULL_TREND",
+     "BEAR_TREND",
+     "NEUTRAL"
+    ]
+   },
+   "politika_C": {
+    "ATT1": [
+     "BULL_TREND",
+     "NEUTRAL"
+    ],
+    "SBR1": [
+     "BULL_TREND",
+     "NEUTRAL"
+    ],
+    "ASR1": [
+     "BULL_TREND"
+    ],
+    "ETS2": [
+     "BULL_TREND",
+     "NEUTRAL"
+    ],
+    "SF3": [
+     "NEUTRAL"
+    ],
+    "BOUNCE1": [
+     "NEUTRAL"
+    ]
+   },
+   "A": {
+    "sdelok": 1851,
+    "itogo_R": -53.569,
+    "na_sdelku_R": -0.0289,
+    "prosadka_R": 77.337,
+    "prichiny": {
+     "selected": 1851,
+     "portfolio_slots_full": 36289,
+     "symbol_overlap": 449
+    },
+    "po_nogam": {
+     "ETS2": {
+      "sdelok": 996,
+      "R": -22.925
+     },
+     "SF3": {
+      "sdelok": 691,
+      "R": -24.308
+     },
+     "ASR1": {
+      "sdelok": 38,
+      "R": -7.36
+     },
+     "SBR1": {
+      "sdelok": 62,
+      "R": -4.673
+     },
+     "ATT1": {
+      "sdelok": 43,
+      "R": -1.607
+     },
+     "BOUNCE1": {
+      "sdelok": 21,
+      "R": 7.303
+     }
+    }
+   },
+   "B": {
+    "sdelok": 1519,
+    "itogo_R": -14.667,
+    "na_sdelku_R": -0.0097,
+    "prosadka_R": 48.165,
+    "prichiny": {
+     "selected": 1519,
+     "portfolio_slots_full": 25297,
+     "zero_priority_score": 11426,
+     "symbol_overlap": 347
+    },
+    "po_nogam": {
+     "ETS2": {
+      "sdelok": 1352,
+      "R": -22.885
+     },
+     "SBR1": {
+      "sdelok": 167,
+      "R": 8.218
+     }
+    }
+   },
+   "C": {
+    "sdelok": 1647,
+    "itogo_R": -31.108,
+    "na_sdelku_R": -0.0189,
+    "prosadka_R": 61.366,
+    "prichiny": {
+     "selected": 1647,
+     "portfolio_slots_full": 26623,
+     "zero_priority_score": 9952,
+     "symbol_overlap": 367
+    },
+    "po_nogam": {
+     "ETS2": {
+      "sdelok": 941,
+      "R": -27.849
+     },
+     "SF3": {
+      "sdelok": 505,
+      "R": -14.103
+     },
+     "SBR1": {
+      "sdelok": 98,
+      "R": 8.588
+     },
+     "ATT1": {
+      "sdelok": 90,
+      "R": 0.362
+     },
+     "ASR1": {
+      "sdelok": 5,
+      "R": -1.075
+     },
+     "BOUNCE1": {
+      "sdelok": 8,
+      "R": 2.97
+     }
+    }
+   }
+  }
+ ],
+ "summa_R": {
+  "A": 224.925,
+  "B": -68.562,
+  "C": -67.327
+ },
+ "maks_prosadka_R": {
+  "A": 98.951,
+  "B": 79.326,
+  "C": 91.561
+ },
+ "C_ge_B_sgibov": 2,
+ "verdikt": "B3_FAIL",
+ "konfig_sha256": "9b65e28c2d283f2cdf1e4ab17d95cc46a7afe672fdf9d72085685a90d4f2256f",
+ "sdelok_vsego": 70561,
+ "kogda": "2026-10-08T13:53:04+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "fee_rate": "0",
+  "liability_reserve_usd": "0.01",
+  "unresolved_liability_usd": "0",
+  "modeled_entry_cat_reserve_usd": "0.01",
+  "entry_qty_ceiling": "0.738",
+  "fee_contract_sha256": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c",
+  "cash_mapping": "existing DynamicBook uses (cash_usd-liability_reserve_usd)/(1+fee_rate); preserve this deduction in fresh snapshot",
+  "fee_assumption": "unchanged retail schedule; one entry execution day; other account fees/liabilities must be separately included, not guessed zero",
+  "exit_costs": "separate actual quantity/price/daily aggregation at terminal reconciliation, not zero or a hard future bound",
+  "money_authority": false,
+  "orders_allowed": false,
+  "executable_plan": false,
+  "not_current_plan": "Illustrative upper quantity from dated ask169 under current CRWD lineage cap; must rebind to fresh October9 data before prepare."
+}

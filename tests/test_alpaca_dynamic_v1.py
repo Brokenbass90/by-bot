@@ -51,6 +51,18 @@ def test_one_confirmed_exit_proposes_one_bounded_entry_with_full_qty_protection(
     assert r['slot_entry_order_id']==next(s['entry_order_id'] for s in policy['inherited_slots'] if s['symbol']=='AMD')
 
 
+def test_zero_commission_still_deducts_source_bound_regulatory_reserve_before_sizing(book,snapshot,calendar):
+    from decimal import Decimal
+    from reports.evidence.alpaca_b3_gate_closure_20261008.fee_reserve_input import prepare_entry_cost_input
+    cost=prepare_entry_cost_input('1','0',ROOT/'reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json')
+    snapshot.update(cash_usd='100',fee_rate=cost['fee_rate'],liability_reserve_usd=cost['liability_reserve_usd'])
+    receipt=book.propose(snapshot,calendar,NOW)
+    assert receipt['status']=='RESERVED_ORDERS_OFF'
+    assert receipt['fee_rate']=='0' and Decimal(receipt['qty'])==Decimal('0.9999')
+    assert Decimal(receipt['funding_limit_usd'])+Decimal(cost['liability_reserve_usd'])==Decimal('100')
+    assert receipt['orders_allowed'] is False  # numerical/source rehearsal is not broker readiness
+
+
 def test_price_change_after_restart_cannot_reprice_or_issue_another_intent(book,snapshot,calendar,api,policy):
     first=book.propose(snapshot,calendar,NOW);snapshot['quotes']['NET']['ask']='120'
     restarted=api.DynamicBook(book.path,policy)

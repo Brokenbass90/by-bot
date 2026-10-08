@@ -1,0 +1,137 @@
+{
+  "schema": "OCT8_TERMINAL_MONEY_ENGINEERING_V1",
+  "observed_utc": "2026-10-08T13:33:40.957Z",
+  "alpaca": {
+    "status": "BLOCKED_DATA_CURRENT_OPENING",
+    "reason": "13:30–13:35UTC window passed before tariff/protocol source closure; no late/backdated entry",
+    "old_cash_finality": "KNOWN_OLD_CASH_FINALITY_RECONCILED",
+    "net_broker_usd": "8.70",
+    "cash_usd": "496.12",
+    "pending_fees_usd": "0",
+    "commission_source": "direct owner standard personal commission-free account attestation + official October1 schedule",
+    "protocol_source_gate": "APPROVE_WITH_LIMITATIONS; global BUY$1 + qty representation9dp, not absent API asset-min field",
+    "entry_cost_mapping": "existing fee_rate0 plus separate source-bound CAT liability reserve reduces spendable cash before sizing; tested100=>99.99+.01",
+    "live_flat": true,
+    "live_entry_halted": true,
+    "paper_orders_emitted": 0,
+    "paper_reservations": 0,
+    "paper_actual_lifecycle": "NOT_EXECUTED",
+    "next_entry_window_utc": "2026-10-09T13:30:00Z/2026-10-09T13:35:00Z",
+    "next_real_rearm_if_first_entry_held": "2026-10-12T13:30:00Z; not Oct9",
+    "remaining_gates": [
+      "fresh clock/raw quote/asset/earnings/concentration/liability data",
+      "exhaustive fresh writer/shared lock/XOM exclusion/selected PAPER identity",
+      "exact source-bound quantity/cost plan within existing inherited slot/capital/risk",
+      "one actual isolated PAPER lifecycle/protection/recovery/finality and actual DAY rearm if held",
+      "exclusive LIVE handoff/rollback dossier + separate owner GO"
+    ]
+  },
+  "kity": {
+    "status": "BLOCKED_EXECUTION_CURRENT_SIGNAL",
+    "signal_date": "2026-10-08",
+    "source_gate": "BLOCKED_DATA remains independently",
+    "preferred_venues": "Bybit/Bitget both lack exact 币安人生USDT; Binance all8 but current account/key not ready and owner deprioritized",
+    "next_action": "no further venue shopping for this signal; separate venue-eligible prereg challenger handoff for Claude; no drop/substitute/current judge rerun",
+    "venue_audits_repeated": false
+  },
+  "b3": {
+    "status": "B3_FAIL",
+    "research_ref": "cf904086a2d887a96ac2be3324a3d78433e1a94b",
+    "repaired_checkpoint": "881dde00b5891e932d93d83bb415e9dcce6a85bd",
+    "pinned_execution_files": 22,
+    "upstream_15m_hashes_verified": 137,
+    "execution_attempts": 1,
+    "historical_window_end_exclusive": "2025-10-01T00:00:00Z",
+    "sum_R": {
+      "A": 224.925,
+      "B": -68.562,
+      "C": -67.327
+    },
+    "drawdown_R": {
+      "A": 98.951,
+      "B": 79.326,
+      "C": 91.561
+    },
+    "C_ge_B_folds": 2,
+    "required_C_ge_B_folds": 3,
+    "input_trades": 70561,
+    "criteria_unchanged": true,
+    "judge_returncode": 0,
+    "returncode_is_strategy_pass": false,
+    "sealed_v2_consumed": false,
+    "repeat_or_rescue_allowed": false,
+    "real_policy_authority": false,
+    "limitation": "R units/entry-ordered closed-trade drawdown, not actual money or mark-to-market portfolio risk; historical finding grants no LIVE authority"
+  },
+  "verification": {
+    "alpaca_targeted_pass": 114,
+    "new_regression_cases": 3,
+    "b3_frozen_fixture_pass": 17,
+    "production_sender_changed": false,
+    "new_live_or_paper_order_path": false,
+    "vps_deployment_this_cycle": false,
+    "production_pids_snapshot": {
+      "bybot.service": [
+        "MainPID=1648585",
+        "NRestarts=0",
+        "ActiveState=active"
+      ],
+      "trading-journal-web.service": [
+        "MainPID=1623208",
+        "NRestarts=0",
+        "ActiveState=active"
+      ],
+      "att1-lifecycle-zero-risk-v2.service": [
+        "MainPID=1584802",
+        "NRestarts=0",
+        "ActiveState=active"
+      ]
+    },
+    "production_sources": {
+      "/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/app": {
+        "manifest_sha256": "ca9559400a62a7ebb4d2b8a823d08630e73b65e8fff7ed05232c4100c677a5f6",
+        "files": 61,
+        "mismatches": []
+      },
+      "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app": {
+        "manifest_sha256": "4f6e5288790174b9a9fdfb031d4e7a229c8b852ed2eef96785003d30961f76d3",
+        "files": 23,
+        "mismatches": []
+      },
+      "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/app": {
+        "manifest_sha256": "3e936db867ea0df3da6ccd7f80c1d17c2d4a6e9403a203f603841ce05ef08ca3",
+        "files": 21,
+        "mismatches": []
+      }
+    },
+    "critical_review": {
+      "verdict": "APPROVE_WITH_LIMITATIONS",
+      "worker": "/root/oct8_terminal_financial_review",
+      "verified_model": "gpt-6-astra",
+      "verified_effort": "high",
+      "rollout_id": "01a11bcd-0671-7281-a3af-74b84b4be9c9",
+      "followup_scope": "same single bounded review; resolved separate entry CAT reserve mapping, not new broader audit",
+      "material_limitation": "actual fresh quantity ceiling/liability/contract hash/snapshot deduction and broker lifecycle still required; source-only calculator cannot authorize orders"
+    },
+    "inventory_worker": {
+      "path": "/root/b3_frozen_intake_oct8",
+      "verified_model": "gpt-5.6-luna",
+      "verified_effort": "medium",
+      "rollout_id": "01a11bba-f6eb-7dd1-9b8c-ebd0298f0954"
+    }
+  },
+  "heartbeat": {
+    "id": "alpaca-paper-lifecycle",
+    "change": "prompt corrected for no Oct8 entry and source/fee contract; original RRULE/two-check/Oct8–9 schedule unchanged",
+    "new_heartbeat_created": false,
+    "deadline_extended": false
+  },
+  "minimal_backlog": [
+    "Alpaca next permitted one PAPER lifecycle -> exact LIVE GO dossier",
+    "OS2 actual-source regime envelope/parity may continue orders-OFF as engineering only; policy forward/whole-system promotion blocked by B3_FAIL",
+    "Claude separate future KITY venue eligibility challenger intake after resumption, no current-signal rescue"
+  ],
+  "money_authority": false,
+  "new_orders_allowed": false,
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}

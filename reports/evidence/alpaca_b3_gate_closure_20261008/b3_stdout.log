@@ -1,0 +1,18 @@
+REZHIM_V1 замок: PASS
+{
+ "summa_R": {
+  "A": 224.925,
+  "B": -68.562,
+  "C": -67.327
+ },
+ "maks_prosadka_R": {
+  "A": 98.951,
+  "B": 79.326,
+  "C": 91.561
+ },
+ "C_ge_B_sgibov": 2,
+ "verdikt": "B3_FAIL",
+ "konfig_sha256": "9b65e28c2d283f2cdf1e4ab17d95cc46a7afe672fdf9d72085685a90d4f2256f",
+ "sdelok_vsego": 70561,
+ "kogda": "2026-10-08T13:53:04+00:00"
+}

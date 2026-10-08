@@ -1,0 +1,9 @@
+{
+  "verdict": "APPROVE_WITH_LIMITATIONS",
+  "worker": "/root/oct8_terminal_financial_review",
+  "verified_model": "gpt-6-astra",
+  "verified_effort": "high",
+  "rollout_id": "01a11bcd-0671-7281-a3af-74b84b4be9c9",
+  "followup_scope": "same single bounded review; resolved separate entry CAT reserve mapping, not new broader audit",
+  "material_limitation": "actual fresh quantity ceiling/liability/contract hash/snapshot deduction and broker lifecycle still required; source-only calculator cannot authorize orders"
+}
