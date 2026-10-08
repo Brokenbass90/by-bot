@@ -1,0 +1,56 @@
+{
+  "status": "BRAIN_V2_DIRECTION_LOCKED",
+  "authority": "DESIGN_ONLY_ORDERS_OFF_NO_IMPLEMENTATION_POLICY_OR_LIVE_PERMISSION",
+  "base_head": "72fe72cf3dd78d06340fe8fd906ae9af87f50037",
+  "source_receipt": {
+    "path": "reports/evidence/alpaca_b3_gate_closure_20261008/B3_KVITANCIYA.json",
+    "sha256": "4f36a1c0d3360967876c58908eef5b603ec501b34c43658c8344b08644d8a87e",
+    "status": "B3_FAIL_SPENT_RETIRED_FOR_PROMOTION"
+  },
+  "artifacts": {
+    "docs/superpowers/specs/2026-10-08-brain-v2-direction-design.md": {
+      "sha256": "76b28dd452b3d56518d9613d809e8d6366ac3a1ce34ff0dbc220f94001371ad1",
+      "bytes": 22534
+    },
+    "reports/evidence/brain_v2_direction_20261008/diagnose_saved_receipt.py": {
+      "sha256": "dd2a073adf9f1edb96fe95aff14828389f0a514637ccd7ce788b1221608654be",
+      "bytes": 4996
+    },
+    "reports/evidence/brain_v2_direction_20261008/receipt_diagnosis.json": {
+      "sha256": "d2bdcdd1d80e93dd3a922303a77fee5ba202a927c59d7ae46962e48310254e54",
+      "bytes": 14195
+    },
+    "reports/evidence/brain_v2_direction_20261008/module_inventory.json": {
+      "sha256": "ddf96ea831dd949d2c06c0d7c451fb4c13dcd833a1414a3df19ba20b0f53ad11",
+      "bytes": 5710
+    },
+    "reports/evidence/brain_v2_direction_20261008/critical_review.json": {
+      "sha256": "93ddd21189a2fc1deed73aa58e23500b7ef18c757bd23716b848d219807b99f7",
+      "bytes": 1573
+    }
+  },
+  "verification": {
+    "receipt_projection": "BYTE_IDENTICAL",
+    "module_pins": "16_OF_16_MATCH",
+    "original_published_and_private_B3_receipts": "UNCHANGED",
+    "foreign_allowlist": "UNCHANGED_UNSTAGED",
+    "local_links": "RESOLVE",
+    "canonical_entrypoints": "UPDATED",
+    "product_tests": "NOT_RUN_NO_PRODUCT_CHANGE",
+    "review": "ONE_BOUNDED_GPT_6_ASTRA_HIGH_WITH_ONE_CORRECTION_CLOSED"
+  },
+  "numeric_research_contract": "BLOCKED_RESEARCH_PREREG",
+  "missing_forensic_metrics": "NOT_IDENTIFIABLE_FROM_RECEIPT",
+  "next_money_gate": "2026-10-09 16:30–16:35 Asia/Nicosia one conditional XOM PAPER; LIVE HALT and separate owner GO preserved",
+  "unchanged": [
+    "deployed code/config/risk",
+    "broker and order authority",
+    "production/services/PIDs not requeried",
+    "ATT1 probes/deadlines",
+    "ETS sealed original cohort/judge",
+    "Claude checkout/branch",
+    "automation schedules",
+    "sealed sources/outcomes"
+  ],
+  "scope_stop": "no B3 rerun/strategy tuning/recovery/brain implementation"
+}

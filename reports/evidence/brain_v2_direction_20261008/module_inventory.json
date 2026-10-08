@@ -1,0 +1,157 @@
+{
+  "head": "72fe72cf3dd78d06340fe8fd906ae9af87f50037",
+  "scope": "LOCAL_SOURCE_INVENTORY_ONLY_NO_NEW_RUNTIME_VERIFICATION",
+  "modules": [
+    {
+      "path": "bot/strategy_priority_router.py",
+      "sha256": "01dcdba01e3f5e684aff2412a11e5a023edab070c03abd352ead81d749c7d469",
+      "bytes": 6653,
+      "anchor": 60,
+      "anchor_text": "def priority_score(candidate: StrategyCandidate) -> float:",
+      "classification": "USE_ROUTER_REPLACE_POLICY",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/strategy_regime_gate.py",
+      "sha256": "5dd6997c9b7efab328588d945258c540549d2df8ff5f4c562566f7e7c0108714",
+      "bytes": 1655,
+      "anchor": 15,
+      "anchor_text": "def strategy_regime_gate_decision(",
+      "classification": "USE_INTERFACE_POLICY_UNAPPROVED",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/exposure_gate.py",
+      "sha256": "31419a443d3cf31bfff904f2a2b95e8e76d717b3d1122d96a229d71a5e694d87",
+      "bytes": 4902,
+      "anchor": 63,
+      "anchor_text": "def check_exposure(",
+      "classification": "USE_WITH_COMPLETE_TYPED_INPUTS",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/decision_bus.py",
+      "sha256": "47f0b932017a23228515b11db121ec79d8af0db6a9eaf1cedae0383062224009",
+      "bytes": 7999,
+      "anchor": 132,
+      "anchor_text": "class DecisionBus:",
+      "classification": "USE_EVIDENCE",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/edge_monitor.py",
+      "sha256": "96ba203c465a7c4e07d0fe31d92444ce92d865350b5ea25d85a6f84c12da1100",
+      "bytes": 4723,
+      "anchor": 65,
+      "anchor_text": "def assess_sleeve(",
+      "classification": "USE_DIAGNOSTICS",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/sleeve_registry.py",
+      "sha256": "75383c1c5342d135631a081b06919ff5671a20b381af6e828ec3d061b99f8a92",
+      "bytes": 4834,
+      "anchor": 63,
+      "anchor_text": "class SleeveRegistry:",
+      "classification": "USE_RESEARCH_REGISTRY_NO_AUTHORITY",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/portfolio_health.py",
+      "sha256": "01083a574e214f2b868815ff802045a4051337b1a5a2cf2ea60845941671764c",
+      "bytes": 4023,
+      "anchor": 60,
+      "anchor_text": "def assess_portfolio(",
+      "classification": "USE_DIAGNOSTICS",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/circuit_breaker.py",
+      "sha256": "b254a45464e9bd4afdca8faf711218f12a5347ddc3698272327a354a2acab9ac",
+      "bytes": 12200,
+      "anchor": 59,
+      "anchor_text": "class PortfolioCircuitBreaker:",
+      "classification": "USE_EXISTING_SAFETY",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/health_gate.py",
+      "sha256": "cf4d89ea6d4515a58417512abaf468ff5e37a36e166896074ed33c4f150c7b97",
+      "bytes": 14133,
+      "anchor": 174,
+      "anchor_text": "    def allow_entry(self, strategy_name: str, symbol: str = \"\") -> bool:",
+      "classification": "REPLACE_FOR_PROMOTION_STALE_ALLOW",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/strategy_breaker.py",
+      "sha256": "770df93c28c505356cc0a71651cde6b16e7d21658a1a1cad440b0d048d694922",
+      "bytes": 6366,
+      "anchor": 115,
+      "anchor_text": "def breaker_state(",
+      "classification": "USE_EXISTING_SAFETY",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/research_orchestrator.py",
+      "sha256": "c90e42e69c1051b080333462d69e10218cfa097db1eacb1ffc7351fd538757b4",
+      "bytes": 4997,
+      "anchor": 56,
+      "anchor_text": "def weekly_review(",
+      "classification": "USE_PROPOSALS_ONLY",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/champion_challenger.py",
+      "sha256": "5e161f4dc99283b4b193104ee85e61e7d207d02a0fd577680e43c3be30df8ab6",
+      "bytes": 4163,
+      "anchor": 35,
+      "anchor_text": "def step_sleeve(",
+      "classification": "USE_PROPOSALS_ONLY",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "research_lab/os2_shadow_bridge.py",
+      "sha256": "6c42b5dbeb4fc4b4e0aeea2fcfd16885f035c645bc8374c2272cc94fc56cd788",
+      "bytes": 21947,
+      "anchor": 200,
+      "anchor_text": "def assess_bundle(bundle, state):",
+      "classification": "USE_ISOLATED_SCAFFOLD_NOT_POLICY",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "research_lab/os2_shadow_journal.py",
+      "sha256": "a17cf9b7f3fe8dd5810b3e837cd80183849e797973e0a0ff4c510cab3e8b88ca",
+      "bytes": 8815,
+      "anchor": 47,
+      "anchor_text": "class ShadowJournal:",
+      "classification": "USE_ISOLATED_JOURNAL",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/regime_side_gate.py",
+      "sha256": "bc5444d57b44453578658b39f1ab652284de406eed49546e4f60eefba8699236",
+      "bytes": 872,
+      "anchor": 5,
+      "anchor_text": "def regime_side_allowed(side: str, regime: str, *, enabled: bool = True) -> bool:",
+      "classification": "RETIRE_FOR_PROMOTION_KEEP_DEPLOYED",
+      "deployment_unchanged": true
+    },
+    {
+      "path": "bot/regime_orchestrator.py",
+      "sha256": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
+      "bytes": 17376,
+      "anchor": 109,
+      "anchor_text": "def compute_regime(",
+      "classification": "USE_MATH_REPLACE_GLOBAL_POLICY",
+      "deployment_unchanged": true
+    }
+  ],
+  "worker": {
+    "thread_id": "01a11bf4-5662-7fd2-b82e-6feec3f833da",
+    "runtime_model": "gpt-5.6-luna",
+    "runtime_effort": "medium",
+    "evidence": "session_meta/turn_context, rollout-2026-10-08T17-39-20-01a11bf4-5662-7fd2-b82e-6feec3f833da.jsonl"
+  },
+  "decision": "policy retirement only; no deployed module disable/delete; primitives require typed causal inputs"
+}

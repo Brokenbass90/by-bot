@@ -1,0 +1,629 @@
+{
+  "status": "SAVED_RECEIPT_DIAGNOSIS_ONLY",
+  "source": "reports/evidence/alpaca_b3_gate_closure_20261008/B3_KVITANCIYA.json",
+  "sha256": "4f36a1c0d3360967876c58908eef5b603ec501b34c43658c8344b08644d8a87e",
+  "source_verdict": "B3_FAIL",
+  "source_observed_at": "2026-10-08T13:53:04+00:00",
+  "all_input_trades_reported": 70561,
+  "test_opportunities": 69741,
+  "arms": {
+    "A": {
+      "selected": 4496,
+      "R": "224.925",
+      "reported_DD_R": "98.951",
+      "reason_counts": {
+        "portfolio_slots_full": 63951,
+        "selected": 4496,
+        "symbol_overlap": 1294
+      }
+    },
+    "B": {
+      "selected": 3136,
+      "R": "-68.562",
+      "reported_DD_R": "79.326",
+      "reason_counts": {
+        "portfolio_slots_full": 37429,
+        "selected": 3136,
+        "symbol_overlap": 798,
+        "zero_priority_score": 28378
+      }
+    },
+    "C": {
+      "selected": 3109,
+      "R": "-67.327",
+      "reported_DD_R": "91.561",
+      "reason_counts": {
+        "portfolio_slots_full": 36196,
+        "selected": 3109,
+        "symbol_overlap": 737,
+        "zero_priority_score": 29699
+      }
+    }
+  },
+  "sleeves": {
+    "ASR1": {
+      "A": {
+        "selected": 139,
+        "R": "6.485"
+      },
+      "B": {
+        "selected": 0,
+        "R": "0"
+      },
+      "C": {
+        "selected": 64,
+        "R": "-7.652"
+      }
+    },
+    "ATT1": {
+      "A": {
+        "selected": 496,
+        "R": "-18.006"
+      },
+      "B": {
+        "selected": 398,
+        "R": "-20.965"
+      },
+      "C": {
+        "selected": 519,
+        "R": "-16.745"
+      }
+    },
+    "BOUNCE1": {
+      "A": {
+        "selected": 46,
+        "R": "8.447"
+      },
+      "B": {
+        "selected": 0,
+        "R": "0"
+      },
+      "C": {
+        "selected": 8,
+        "R": "2.97"
+      }
+    },
+    "ETS2": {
+      "A": {
+        "selected": 2009,
+        "R": "-28.511"
+      },
+      "B": {
+        "selected": 2198,
+        "R": "-60.843"
+      },
+      "C": {
+        "selected": 1691,
+        "R": "-46.303"
+      }
+    },
+    "SBR1": {
+      "A": {
+        "selected": 383,
+        "R": "11.037"
+      },
+      "B": {
+        "selected": 540,
+        "R": "13.246"
+      },
+      "C": {
+        "selected": 322,
+        "R": "14.507"
+      }
+    },
+    "SF3": {
+      "A": {
+        "selected": 1423,
+        "R": "245.473"
+      },
+      "B": {
+        "selected": 0,
+        "R": "0"
+      },
+      "C": {
+        "selected": 505,
+        "R": "-14.103"
+      }
+    }
+  },
+  "folds": [
+    {
+      "window": [
+        "2023-07-01",
+        "2024-01-01"
+      ],
+      "arms": {
+        "A": {
+          "selected": 501,
+          "R": "13.657",
+          "reported_DD_R": "8.56",
+          "reason_counts": {
+            "selected": 501,
+            "symbol_overlap": 167,
+            "portfolio_slots_full": 472
+          },
+          "sleeves": {
+            "SBR1": {
+              "sdelok": 148,
+              "R": "16.718"
+            },
+            "ATT1": {
+              "sdelok": 304,
+              "R": "-9.121"
+            },
+            "ASR1": {
+              "sdelok": 47,
+              "R": "7.08"
+            },
+            "BOUNCE1": {
+              "sdelok": 2,
+              "R": "-1.02"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        },
+        "B": {
+          "selected": 398,
+          "R": "-20.965",
+          "reported_DD_R": "30.777",
+          "reason_counts": {
+            "zero_priority_score": 396,
+            "selected": 398,
+            "symbol_overlap": 161,
+            "portfolio_slots_full": 185
+          },
+          "sleeves": {
+            "ATT1": {
+              "sdelok": 398,
+              "R": "-20.965"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        },
+        "C": {
+          "selected": 354,
+          "R": "-20.995",
+          "reported_DD_R": "32.05",
+          "reason_counts": {
+            "zero_priority_score": 533,
+            "selected": 354,
+            "symbol_overlap": 118,
+            "portfolio_slots_full": 135
+          },
+          "sleeves": {
+            "ATT1": {
+              "sdelok": 354,
+              "R": "-20.995"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        }
+      },
+      "policy_B": {
+        "ATT1": [
+          "BULL_TREND",
+          "BEAR_TREND",
+          "NEUTRAL"
+        ]
+      },
+      "policy_C": {
+        "ATT1": [
+          "BEAR_TREND",
+          "NEUTRAL"
+        ],
+        "SBR1": [],
+        "ASR1": [],
+        "BOUNCE1": []
+      },
+      "opportunities": 1140,
+      "delta_B_minus_A_R": "-34.622",
+      "delta_C_minus_B_R": "-0.030"
+    },
+    {
+      "window": [
+        "2024-01-01",
+        "2024-07-01"
+      ],
+      "arms": {
+        "A": {
+          "selected": 957,
+          "R": "-30.621",
+          "reported_DD_R": "63.764",
+          "reason_counts": {
+            "selected": 957,
+            "symbol_overlap": 334,
+            "portfolio_slots_full": 9785
+          },
+          "sleeves": {
+            "ATT1": {
+              "sdelok": 110,
+              "R": "-6.388"
+            },
+            "SBR1": {
+              "sdelok": 89,
+              "R": "4.832"
+            },
+            "ASR1": {
+              "sdelok": 26,
+              "R": "4.475"
+            },
+            "BOUNCE1": {
+              "sdelok": 9,
+              "R": "-2.189"
+            },
+            "SF3": {
+              "sdelok": 319,
+              "R": "-48.881"
+            },
+            "ETS2": {
+              "sdelok": 404,
+              "R": "17.531"
+            }
+          },
+          "rounding_delta_R": "0.001"
+        },
+        "B": {
+          "selected": 249,
+          "R": "-4.121",
+          "reported_DD_R": "18.616",
+          "reason_counts": {
+            "zero_priority_score": 10798,
+            "selected": 249,
+            "symbol_overlap": 26,
+            "portfolio_slots_full": 3
+          },
+          "sleeves": {
+            "SBR1": {
+              "sdelok": 249,
+              "R": "-4.121"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        },
+        "C": {
+          "selected": 217,
+          "R": "-0.851",
+          "reported_DD_R": "15.87",
+          "reason_counts": {
+            "zero_priority_score": 10747,
+            "selected": 217,
+            "symbol_overlap": 45,
+            "portfolio_slots_full": 67
+          },
+          "sleeves": {
+            "SBR1": {
+              "sdelok": 88,
+              "R": "1.091"
+            },
+            "ASR1": {
+              "sdelok": 59,
+              "R": "-6.577"
+            },
+            "ATT1": {
+              "sdelok": 70,
+              "R": "4.635"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        }
+      },
+      "policy_B": {
+        "SBR1": [
+          "BULL_TREND",
+          "BEAR_TREND",
+          "NEUTRAL"
+        ]
+      },
+      "policy_C": {
+        "ATT1": [
+          "BEAR_TREND"
+        ],
+        "SBR1": [
+          "BEAR_TREND",
+          "BULL_TREND"
+        ],
+        "ASR1": [
+          "NEUTRAL"
+        ],
+        "BOUNCE1": []
+      },
+      "opportunities": 11076,
+      "delta_B_minus_A_R": "26.500",
+      "delta_C_minus_B_R": "3.270"
+    },
+    {
+      "window": [
+        "2024-07-01",
+        "2025-01-01"
+      ],
+      "arms": {
+        "A": {
+          "selected": 1187,
+          "R": "295.458",
+          "reported_DD_R": "66.623",
+          "reason_counts": {
+            "selected": 1187,
+            "symbol_overlap": 344,
+            "portfolio_slots_full": 17405
+          },
+          "sleeves": {
+            "ETS2": {
+              "sdelok": 609,
+              "R": "-23.117"
+            },
+            "SF3": {
+              "sdelok": 413,
+              "R": "318.662"
+            },
+            "SBR1": {
+              "sdelok": 84,
+              "R": "-5.84"
+            },
+            "ATT1": {
+              "sdelok": 39,
+              "R": "-0.89"
+            },
+            "BOUNCE1": {
+              "sdelok": 14,
+              "R": "4.353"
+            },
+            "ASR1": {
+              "sdelok": 28,
+              "R": "2.29"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        },
+        "B": {
+          "selected": 970,
+          "R": "-28.809",
+          "reported_DD_R": "43.011",
+          "reason_counts": {
+            "selected": 970,
+            "zero_priority_score": 5758,
+            "symbol_overlap": 264,
+            "portfolio_slots_full": 11944
+          },
+          "sleeves": {
+            "ETS2": {
+              "sdelok": 846,
+              "R": "-37.958"
+            },
+            "SBR1": {
+              "sdelok": 124,
+              "R": "9.149"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        },
+        "C": {
+          "selected": 891,
+          "R": "-14.373",
+          "reported_DD_R": "49.9",
+          "reason_counts": {
+            "selected": 891,
+            "zero_priority_score": 8467,
+            "symbol_overlap": 207,
+            "portfolio_slots_full": 9371
+          },
+          "sleeves": {
+            "ETS2": {
+              "sdelok": 750,
+              "R": "-18.454"
+            },
+            "ATT1": {
+              "sdelok": 5,
+              "R": "-0.747"
+            },
+            "SBR1": {
+              "sdelok": 136,
+              "R": "4.828"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        }
+      },
+      "policy_B": {
+        "SBR1": [
+          "BULL_TREND",
+          "BEAR_TREND",
+          "NEUTRAL"
+        ],
+        "ETS2": [
+          "BULL_TREND",
+          "BEAR_TREND",
+          "NEUTRAL"
+        ]
+      },
+      "policy_C": {
+        "ATT1": [
+          "BEAR_TREND"
+        ],
+        "SBR1": [
+          "BEAR_TREND",
+          "BULL_TREND"
+        ],
+        "ASR1": [],
+        "ETS2": [
+          "BEAR_TREND",
+          "NEUTRAL"
+        ],
+        "SF3": [],
+        "BOUNCE1": []
+      },
+      "opportunities": 18936,
+      "delta_B_minus_A_R": "-324.267",
+      "delta_C_minus_B_R": "14.436"
+    },
+    {
+      "window": [
+        "2025-01-01",
+        "2025-10-01"
+      ],
+      "arms": {
+        "A": {
+          "selected": 1851,
+          "R": "-53.569",
+          "reported_DD_R": "77.337",
+          "reason_counts": {
+            "selected": 1851,
+            "portfolio_slots_full": 36289,
+            "symbol_overlap": 449
+          },
+          "sleeves": {
+            "ETS2": {
+              "sdelok": 996,
+              "R": "-22.925"
+            },
+            "SF3": {
+              "sdelok": 691,
+              "R": "-24.308"
+            },
+            "ASR1": {
+              "sdelok": 38,
+              "R": "-7.36"
+            },
+            "SBR1": {
+              "sdelok": 62,
+              "R": "-4.673"
+            },
+            "ATT1": {
+              "sdelok": 43,
+              "R": "-1.607"
+            },
+            "BOUNCE1": {
+              "sdelok": 21,
+              "R": "7.303"
+            }
+          },
+          "rounding_delta_R": "-0.001"
+        },
+        "B": {
+          "selected": 1519,
+          "R": "-14.667",
+          "reported_DD_R": "48.165",
+          "reason_counts": {
+            "selected": 1519,
+            "portfolio_slots_full": 25297,
+            "zero_priority_score": 11426,
+            "symbol_overlap": 347
+          },
+          "sleeves": {
+            "ETS2": {
+              "sdelok": 1352,
+              "R": "-22.885"
+            },
+            "SBR1": {
+              "sdelok": 167,
+              "R": "8.218"
+            }
+          },
+          "rounding_delta_R": "0.000"
+        },
+        "C": {
+          "selected": 1647,
+          "R": "-31.108",
+          "reported_DD_R": "61.366",
+          "reason_counts": {
+            "selected": 1647,
+            "portfolio_slots_full": 26623,
+            "zero_priority_score": 9952,
+            "symbol_overlap": 367
+          },
+          "sleeves": {
+            "ETS2": {
+              "sdelok": 941,
+              "R": "-27.849"
+            },
+            "SF3": {
+              "sdelok": 505,
+              "R": "-14.103"
+            },
+            "SBR1": {
+              "sdelok": 98,
+              "R": "8.588"
+            },
+            "ATT1": {
+              "sdelok": 90,
+              "R": "0.362"
+            },
+            "ASR1": {
+              "sdelok": 5,
+              "R": "-1.075"
+            },
+            "BOUNCE1": {
+              "sdelok": 8,
+              "R": "2.97"
+            }
+          },
+          "rounding_delta_R": "0.001"
+        }
+      },
+      "policy_B": {
+        "SBR1": [
+          "BULL_TREND",
+          "BEAR_TREND",
+          "NEUTRAL"
+        ],
+        "ETS2": [
+          "BULL_TREND",
+          "BEAR_TREND",
+          "NEUTRAL"
+        ]
+      },
+      "policy_C": {
+        "ATT1": [
+          "BULL_TREND",
+          "NEUTRAL"
+        ],
+        "SBR1": [
+          "BULL_TREND",
+          "NEUTRAL"
+        ],
+        "ASR1": [
+          "BULL_TREND"
+        ],
+        "ETS2": [
+          "BULL_TREND",
+          "NEUTRAL"
+        ],
+        "SF3": [
+          "NEUTRAL"
+        ],
+        "BOUNCE1": [
+          "NEUTRAL"
+        ]
+      },
+      "opportunities": 38589,
+      "delta_B_minus_A_R": "38.902",
+      "delta_C_minus_B_R": "-16.441"
+    }
+  ],
+  "deltas_R": {
+    "B_minus_A": "-293.487",
+    "C_minus_B": "1.235",
+    "C_minus_A": "-292.252"
+  },
+  "criteria_from_saved_totals": {
+    "C_gt_A": false,
+    "C_gt_B": true,
+    "C_ge_B_folds": 2,
+    "required_folds": 3,
+    "C_DD_le_1_2_A": true
+  },
+  "not_identifiable_from_receipt": [
+    "rejected_winner_events",
+    "accepted_loser_events",
+    "selected_R_by_regime",
+    "slot_hours",
+    "event_counterfactual_opportunity_cost",
+    "diversification_correlation",
+    "USD_margin_MTM_equity"
+  ],
+  "interpretation_guard": "Arm selected sets are not nested; aggregate differences are not rejected-winner PnL.",
+  "checks": [
+    "A: selected/fold-total/reason-population/rounding reconciliation PASS",
+    "B: selected/fold-total/reason-population/rounding reconciliation PASS",
+    "C: selected/fold-total/reason-population/rounding reconciliation PASS"
+  ]
+}

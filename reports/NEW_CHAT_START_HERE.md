@@ -1,5 +1,31 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October8 Brain V2 direction cycle: **BRAIN_V2_DIRECTION_LOCKED / design only**.
+Read `docs/superpowers/specs/2026-10-08-brain-v2-direction-design.md` and
+`reports/evidence/brain_v2_direction_20261008/receipt_diagnosis.json`.
+Receipt-only aggregation: B3V1 terminalFAIL/RETIRED_FOR_PROMOTION, neverLIVE-
+authorized; no deployed gates disabled. A4496/+224.925R, B3136/−68.562R,
+C3109/−67.327R; B−A−293.487R, C−B+1.235R. SF3 A+245.473R concentrated in
+Jul2024–Jan2025(+318.662R); not standalone edge or recoveryGO. Selected sets
+not nested; rejected-winner/regimePnL/slot-hours/correlation absent from receipt,
+NOT_IDENTIFIABLE_FROM_RECEIPT. 69741testopportunities/arm; saved totals/counts/
+rounding reconcile. No B3 rerun/streams/holdout/outcome consumption.16local
+modulepins inventoried: reuse journal/router/safety/diagnostics; replacepolicy
+and stale-allow/missing-as-zero authority for futurepromotion, not livepatch.
+V2 per-sleeve context→allocator→commoncapital/exposure→journal; regimefeature,
+no universaldirectionveto/AIauthority. RAW_SAFE/FOUNDATION/deterministic/optional
+learned structuralcomparison locked; numericpolicy/dataindependence/power/
+judgecriteria BLOCKED_RESEARCH_PREREG, Claude-owned beforeimplementation.
+B3spent; SEALED_V2independence NOT_PROVEN; newvenue notautomaticnewholdout.
+No productcode/VPS/broker/deploy/heartbeat/Claude changes or cleanups thiscycle.
+Moneypriority: Oct9oneXOMPAPER16:30–16:35Cyprus/freshgates; if firstentryheld,
+DAYrearm nextOct12. LIVEHALT/cap/ownerGO unchanged. ETSOct10original19UTC/cohort;
+KITYcurrentOct8executionBLOCKED, futurevenuechallenger separate; ATT1gateskeep.
+Runtime-verified5.6-luna/medium inventory and one6-astra/high designreview;
+one training-chronology wording correction closed by targeted primary check.
+Written design ready for owner/research intake; do not start implementation or
+catalog recovery from diagnostic R. Operational facts below remain dated.
+
 October8 opening/terminal cycle: read **ALPACA_B3_TERMINAL_GATES_2026_10_08.md/JSON**.
 **Alpaca BLOCKED_DATA_CURRENT_OPENING / no PAPER order; KITY October8
 BLOCKED_EXECUTION_CURRENT_SIGNAL; frozen B3 B3_FAIL.** Fresh13:33UTC LIVE flat/

@@ -185,3 +185,19 @@ Actual PAPER lifecycle/DAY re-arm/terminal cost and finality precede LIVE dossie
 and separate owner GO. Maintain durable HALT until that approval; a runner's
 LIVE_CYCLE_COMPLETE/money_authority field is not entry activation proof.
 KITY original cutoff and Oct8–9 intake remain P0. No new research or Claude work.
+
+## October8 spent B3 / Brain V2 direction amendment
+
+Owner requested a bounded diagnosis/design cycle, delivered as
+`docs/superpowers/specs/2026-10-08-brain-v2-direction-design.md` and checkpoint TOP.
+B3 was executed exactly once and terminally FAILED; preserve its spent receipt,
+no rerun/retune/rescue or automatic policy authority. `BRAIN_V2_DIRECTION_LOCKED`
+is design-only, not implementation/PASS/LIVE permission. RAW_SAFE/FOUNDATION/
+deterministic/optional learned comparison structure is locked; numeric research
+policy, independence and judge/power criteria remain BLOCKED_RESEARCH_PREREG.
+Do not invent missing B3 rejected-winner/occupancy/regime traces, disable deployed
+gates or recover old strategies from aggregate R. Reuse sound primitives with
+typed source validation; LLM proposal-only. No Claude messages or edits.
+Next money priority is the original October9 one-XOM PAPER16:30–16:35Cyprus,
+fresh gates and separate LIVE GO; if first entry is held, DAY re-arm nextOct12.
+Current HALT/caps and ATT1/ETS/KITY terminal boundaries remain unchanged.

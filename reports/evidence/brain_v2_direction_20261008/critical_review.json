@@ -1,0 +1,35 @@
+{
+  "scope": "ONE_BOUNDED_FINANCIAL_STATISTICAL_DESIGN_REVIEW",
+  "reviewer": {
+    "thread_id": "01a11bfe-8beb-7f60-a0ae-8793938ca884",
+    "actual_model": "gpt-6-astra",
+    "actual_effort": "high",
+    "verification": "session_meta / turn_context"
+  },
+  "reviewer_outcome": "APPROVE_WITH_LIMITATIONS_CONDITIONAL_ON_ONE_CORRECTION",
+  "findings": [
+    {
+      "priority": "P1",
+      "issue": "Training cutoff inequality was reversed in original design",
+      "status": "CLOSED_PRIMARY_TARGETED_VERIFICATION",
+      "resolution": "Only features already available and labels terminal/final by training cutoff; train-only normalization/imputation/calibration; fit finished before evaluated decision window; nonoverlap/purge retained"
+    }
+  ],
+  "verified_by_reviewer": [
+    "spent receipt SHA",
+    "byte-identical diagnosis",
+    "counts/deltas/69741 test population/frozen criteria",
+    "16 module source hashes/sizes/anchors",
+    "no nested selection/rejected-winner/regime/MTM claims",
+    "common-risk comparison and independence boundaries",
+    "no policy/implementation/money authority"
+  ],
+  "limits": [
+    "Reviewer inspected original wording; correction verified by primary, no second review claimed",
+    "Numerical scorer/validation policy requires research preregistration",
+    "No new live/broker verification",
+    "No B3 execution, imports, trade streams or holdout opened"
+  ],
+  "final_direction_assessment": "APPROVE_WITH_LIMITATIONS_CORRECTION_CLOSED",
+  "design_sha256": "76b28dd452b3d56518d9613d809e8d6366ac3a1ce34ff0dbc220f94001371ad1"
+}
