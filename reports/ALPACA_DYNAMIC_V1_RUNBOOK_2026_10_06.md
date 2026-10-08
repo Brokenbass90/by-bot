@@ -1,5 +1,18 @@
 # ALPACA_DYNAMIC_V1 — local orders-OFF runbook
 
+October8 morning: read MONEY_MORNING_KITY_ALPACA_2026_10_08.md/JSON.
+LIVE remains flat/HALTED; pendingfees.02 and settlement availability unresolved,
+cash_finality_verified remains false on that evidence. Do not turn reserve into
+finality proof. SIP403; IEX GET works but the pre-open quote is yesterday’s stale
+quote. Require a fresh valid raw quote timestamp in today’s13:30–13:35UTC window,
+not merely fresh HTTP receive time. XOM API minimum fields absent; documentation
+precision is not an account-specific minimum. Fresh account fee/routing/rounded
+regulatory charge and exclusive writer sources remain. Source-only repeatable
+GET probes are archived under reports/evidence/money_morning_20261008; use unique
+output paths, never overwrite earlier sources or rerun the sealed first-window
+collector. No plan/PAPER reservation/order was prepared this morning. Existing
+one-lifecycle and actual Oct9 DAYrearm/ownerLIVEGO boundaries below still govern.
+
 October7 owner clarification: **one actual PAPER lifecycle, no extra waiting for
 statistical trade count**. Oct8 13:30UTC/16:30Cyprus sealedXOM/currentinputs→one
 exact PAPER entry/protection/readback/restart and concrete orders-OFF GO dossier.

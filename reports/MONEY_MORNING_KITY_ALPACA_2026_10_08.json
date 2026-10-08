@@ -1,0 +1,758 @@
+{
+  "schema": "MONEY_MORNING_20261008_V1",
+  "prepared_ms": 1791442258257,
+  "cycle_broker_writes": 0,
+  "paper_orders_submitted": 0,
+  "live_orders_submitted": 0,
+  "git_head_verified_at_cycle_start": "439fefd288ae5537e749e2b55de76d312e6651de",
+  "kity": {
+    "account_fees_cash_mode_caps_or_order_path_collected": false,
+    "binance_all_books_common_2s_fresh": true,
+    "binance_diagnostic_equal_notional_target_usdt": "5.5412000",
+    "binance_diagnostic_gross_usdt": "43.73889000",
+    "bybit_reason": "EXACT_BASKET_SYMBOL_UNAVAILABLE: 币安人生USDT",
+    "bybit_terminal": "BLOCKED_EXECUTION",
+    "complete_raw_bundle_bytes": 2087545,
+    "complete_raw_bundle_sha256": "b24b06875a09ffe5b647b6b19de3962e3b077fb89c12173ac7dd8cd9bd3bd06d",
+    "diagnostic_parity": {
+      "all_rounded_features": true,
+      "feature_count": true,
+      "long": true,
+      "short": true,
+      "top50_order": true
+    },
+    "diagnostic_quantities": [
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.50950",
+        "quantity": "75",
+        "side": "LONG",
+        "symbol": "SANDUSDT"
+      },
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.5412000",
+        "quantity": "4",
+        "side": "LONG",
+        "symbol": "BTWUSDT"
+      },
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.35648",
+        "quantity": "16",
+        "side": "LONG",
+        "symbol": "TRXUSDT"
+      },
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.48759000",
+        "quantity": "7.1",
+        "side": "LONG",
+        "symbol": "AEROUSDT"
+      },
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.498640",
+        "quantity": "63",
+        "side": "SHORT",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.53200000",
+        "quantity": "3.00",
+        "side": "SHORT",
+        "symbol": "TRUMPUSDT"
+      },
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.3306000",
+        "quantity": "11",
+        "side": "SHORT",
+        "symbol": "币安人生USDT"
+      },
+      {
+        "not_admitted_quantity": true,
+        "notional_usdt": "5.4828800",
+        "quantity": "5.2",
+        "side": "SHORT",
+        "symbol": "FILUSDT"
+      }
+    ],
+    "money_ready": false,
+    "observed_ms": 1791441920024,
+    "orders_allowed": false,
+    "schema": "KITY_OCT8_ACTUAL_SOURCE_DIAGNOSTIC_V1",
+    "strict_prospective_seal_exists": false,
+    "strict_signal_hash": null,
+    "strict_verdict": {
+      "money_ready": false,
+      "orders_allowed": false,
+      "prospective_eligible": false,
+      "reasons": [
+        "PIT_STATUS_AMBIGUOUS"
+      ],
+      "schema_id": "kity_m3_orders_off_v1",
+      "signal_valid": false,
+      "status": "BLOCKED_DATA"
+    },
+    "venue_feasibility": [
+      {
+        "binance": {
+          "best_ask": "0.07346",
+          "best_bid": "0.07345",
+          "book_raw_sha256": "5c8a80dd91420fedc7c5899499498958fca3709e8fce34929a8e0080efb4a246",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.06874",
+          "minimum_reference_quantity": "69",
+          "minimum_reference_target_usdt": "5.06874",
+          "qty_step": "1",
+          "receive_age_ms": 390,
+          "receive_ms": 1791441642411,
+          "source_age_ms": 527,
+          "source_ms": 1791441642274,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "best_ask": "0.07345",
+          "best_bid": "0.07344",
+          "book_raw_sha256": "e0df81ebbe09aa21985b63f223ccaa2b7df7331f985790b403d8ce758aabc22e",
+          "clock_uncertainty_observed_bound_ms": 150,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441644326,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 50,
+          "instrument_raw_sha256": "ac63c1574d43b454b4669cf046494db0b7f0d80e08d3dccdf405f64cf109efea",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.06805",
+          "minimum_reference_quantity": "69",
+          "minimum_reference_target_usdt": "5.06805",
+          "qty_step": "1",
+          "receive_age_ms": 567,
+          "receive_ms": 1791441643759,
+          "source_age_ms": 874,
+          "source_ms": 1791441643452,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "diagnostic_only": true,
+        "side": "LONG",
+        "symbol": "SANDUSDT"
+      },
+      {
+        "binance": {
+          "best_ask": "1.3853000",
+          "best_bid": "1.3851000",
+          "book_raw_sha256": "e9590f348f412d1dbbd3b12a12e86a3a6a1213cdb731234c3763dddbf3bfeb36",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 240,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.5412000",
+          "minimum_reference_quantity": "4",
+          "minimum_reference_target_usdt": "5.5412000",
+          "qty_step": "1",
+          "receive_age_ms": 377,
+          "receive_ms": 1791441642424,
+          "source_age_ms": 528,
+          "source_ms": 1791441642273,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "best_ask": "1.38536",
+          "best_bid": "1.38517",
+          "book_raw_sha256": "f55365955223ac31643cbe161aba236816b2c1574acd0b248b9eac66cac73f2f",
+          "clock_uncertainty_observed_bound_ms": 150,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441644326,
+          "current_funding_interval_minutes": 240,
+          "funding_points": 50,
+          "instrument_raw_sha256": "189312e075720e272857cddf6f8931bb6c7cbbf2eb93ef298a840899c6177308",
+          "min_notional_usdt": "5",
+          "min_qty": "10",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "13.85360",
+          "minimum_reference_quantity": "10",
+          "minimum_reference_target_usdt": "13.85360",
+          "qty_step": "10",
+          "receive_age_ms": 579,
+          "receive_ms": 1791441643747,
+          "source_age_ms": 854,
+          "source_ms": 1791441643472,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "diagnostic_only": true,
+        "side": "LONG",
+        "symbol": "BTWUSDT"
+      },
+      {
+        "binance": {
+          "best_ask": "0.33478",
+          "best_bid": "0.33477",
+          "book_raw_sha256": "c770fb1af022288b1c05e93ec857f0190208b775f411a9413602a8aa08e7b04b",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.02170",
+          "minimum_reference_quantity": "15",
+          "minimum_reference_target_usdt": "5.02170",
+          "qty_step": "1",
+          "receive_age_ms": 444,
+          "receive_ms": 1791441642357,
+          "source_age_ms": 688,
+          "source_ms": 1791441642113,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "best_ask": "0.33470",
+          "best_bid": "0.33460",
+          "book_raw_sha256": "aa92b555909e27c51e2c79cc427df3637e7da6c68df6dbda266ea060f6b34c7b",
+          "clock_uncertainty_observed_bound_ms": 150,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441644326,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 50,
+          "instrument_raw_sha256": "2214b7bd067b760861fe34d405d1f9a76d1fe7a98fc0f6291cc968b7eff2aeaa",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.02050",
+          "minimum_reference_quantity": "15",
+          "minimum_reference_target_usdt": "5.02050",
+          "qty_step": "1",
+          "receive_age_ms": 596,
+          "receive_ms": 1791441643730,
+          "source_age_ms": 852,
+          "source_ms": 1791441643474,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "diagnostic_only": true,
+        "side": "LONG",
+        "symbol": "TRXUSDT"
+      },
+      {
+        "binance": {
+          "best_ask": "0.7729000",
+          "best_bid": "0.7728000",
+          "book_raw_sha256": "3f3c85a81fc02f8317f69c927c3aac225b8fc5de5564d37a54eeb493efc41831",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 240,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "0.1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.02385000",
+          "minimum_reference_quantity": "6.5",
+          "minimum_reference_target_usdt": "5.02385000",
+          "qty_step": "0.1",
+          "receive_age_ms": 488,
+          "receive_ms": 1791441642313,
+          "source_age_ms": 675,
+          "source_ms": 1791441642126,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "best_ask": "0.7727",
+          "best_bid": "0.7726",
+          "book_raw_sha256": "31986610afd4b29279a7452b4cf1e6af8149df4ad1ddcb6c690623e8d8405970",
+          "clock_uncertainty_observed_bound_ms": 150,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441644326,
+          "current_funding_interval_minutes": 240,
+          "funding_points": 50,
+          "instrument_raw_sha256": "cfedc4900f40684fddcf6a1a5781df09cbdaa33caad14218328ec1bfa1a3b64f",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.4089",
+          "minimum_reference_quantity": "7",
+          "minimum_reference_target_usdt": "5.4089",
+          "qty_step": "1",
+          "receive_age_ms": 568,
+          "receive_ms": 1791441643758,
+          "source_age_ms": 1061,
+          "source_ms": 1791441643265,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "diagnostic_only": true,
+        "side": "LONG",
+        "symbol": "AEROUSDT"
+      },
+      {
+        "binance": {
+          "best_ask": "0.087290",
+          "best_bid": "0.087280",
+          "book_raw_sha256": "c4072f078ec48d05ec81613cf4814fbe7ba91ed88ead002705e7a3b476789047",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.062240",
+          "minimum_reference_quantity": "58",
+          "minimum_reference_target_usdt": "5.062240",
+          "qty_step": "1",
+          "receive_age_ms": 400,
+          "receive_ms": 1791441642401,
+          "source_age_ms": 537,
+          "source_ms": 1791441642264,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "best_ask": "0.08728",
+          "best_bid": "0.08727",
+          "book_raw_sha256": "65871acb2f2e70a0a0317842604434edf21059920e4233c5e7440ca4ace0bfc2",
+          "clock_uncertainty_observed_bound_ms": 150,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441644326,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 50,
+          "instrument_raw_sha256": "98a6056d514d3342ed56425e844752ccf0eed07046c88183070f63fcc5705503",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.06166",
+          "minimum_reference_quantity": "58",
+          "minimum_reference_target_usdt": "5.06166",
+          "qty_step": "1",
+          "receive_age_ms": 580,
+          "receive_ms": 1791441643746,
+          "source_age_ms": 924,
+          "source_ms": 1791441643402,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "diagnostic_only": true,
+        "side": "SHORT",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "binance": {
+          "best_ask": "1.845000",
+          "best_bid": "1.844000",
+          "book_raw_sha256": "56af3541be3c982d0a3d35b21da75f6fca4365d6607f2dfb505e3b19d0f7c9a7",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 240,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "0.01",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.01568000",
+          "minimum_reference_quantity": "2.72",
+          "minimum_reference_target_usdt": "5.01568000",
+          "qty_step": "0.01",
+          "receive_age_ms": 340,
+          "receive_ms": 1791441642461,
+          "source_age_ms": 519,
+          "source_ms": 1791441642282,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "best_ask": "1.845",
+          "best_bid": "1.844",
+          "book_raw_sha256": "cb3d3369c12482321a8945d4e91672810ab8680cf8d2769349c657cf903dd7ed",
+          "clock_uncertainty_observed_bound_ms": 150,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441644326,
+          "current_funding_interval_minutes": 240,
+          "funding_points": 50,
+          "instrument_raw_sha256": "f2912507d724d9a4dd365ed7f99451f77521652b463a62e62e394a6a648cc8c4",
+          "min_notional_usdt": "5",
+          "min_qty": "0.1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.1632",
+          "minimum_reference_quantity": "2.8",
+          "minimum_reference_target_usdt": "5.1632",
+          "qty_step": "0.1",
+          "receive_age_ms": 555,
+          "receive_ms": 1791441643771,
+          "source_age_ms": 659,
+          "source_ms": 1791441643667,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "diagnostic_only": true,
+        "side": "SHORT",
+        "symbol": "TRUMPUSDT"
+      },
+      {
+        "binance": {
+          "best_ask": "0.4847000",
+          "best_bid": "0.4846000",
+          "book_raw_sha256": "baab4c40f70ccc303694cbb28fcadba2dbdb775a09ad51493714701e8ec6faba",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 240,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.3306000",
+          "minimum_reference_quantity": "11",
+          "minimum_reference_target_usdt": "5.3306000",
+          "qty_step": "1",
+          "receive_age_ms": 318,
+          "receive_ms": 1791441642483,
+          "source_age_ms": 728,
+          "source_ms": 1791441642073,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "reason": "EXACT_EXECUTION_SYMBOL_UNAVAILABLE",
+          "retCode": 10001,
+          "status": "BLOCKED_EXECUTION"
+        },
+        "diagnostic_only": true,
+        "side": "SHORT",
+        "symbol": "币安人生USDT"
+      },
+      {
+        "binance": {
+          "best_ask": "1.054500",
+          "best_bid": "1.054400",
+          "book_raw_sha256": "dc54215dc714b7ea55da138207d42b5b0aacc75b5279afeb4a0f7de2479dbe88",
+          "clock_uncertainty_observed_bound_ms": 182,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441642801,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 100,
+          "instrument_raw_sha256": "3a86bb00eb151601a0cda0099f08ccaac55e415da06c8c306021d70a1d3d074b",
+          "min_notional_usdt": "5",
+          "min_qty": "0.1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.0611200",
+          "minimum_reference_quantity": "4.8",
+          "minimum_reference_target_usdt": "5.0611200",
+          "qty_step": "0.1",
+          "receive_age_ms": 325,
+          "receive_ms": 1791441642476,
+          "source_age_ms": 469,
+          "source_ms": 1791441642332,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "bybit": {
+          "best_ask": "1.0547",
+          "best_bid": "1.0545",
+          "book_raw_sha256": "16c80441bf5a16c7b0d30da7487317d8dbb9104a9738bfa07fc2e5c9c3e94b78",
+          "clock_uncertainty_observed_bound_ms": 150,
+          "common_2s_freshness_pass": true,
+          "common_assessment_ms": 1791441644326,
+          "current_funding_interval_minutes": 480,
+          "funding_points": 50,
+          "instrument_raw_sha256": "3f8eabd69f31b7d26e221b66e4e57db43db1768b6f5b08a28fe93a1229b96765",
+          "min_notional_usdt": "5",
+          "min_qty": "0.1",
+          "minimum_depth_covered": true,
+          "minimum_entry_notional_usdt": "5.06160",
+          "minimum_reference_quantity": "4.8",
+          "minimum_reference_target_usdt": "5.06160",
+          "qty_step": "0.1",
+          "receive_age_ms": 252,
+          "receive_ms": 1791441644074,
+          "source_age_ms": 542,
+          "source_ms": 1791441643784,
+          "status": "DIAGNOSTIC_MINIMUM_ONLY"
+        },
+        "diagnostic_only": true,
+        "side": "SHORT",
+        "symbol": "FILUSDT"
+      }
+    ]
+  },
+  "kity_external_acceptance": {
+    "basket_comparison": {
+      "external": [
+        [
+          "SANDUSDT",
+          "LONG"
+        ],
+        [
+          "BTWUSDT",
+          "LONG"
+        ],
+        [
+          "TRXUSDT",
+          "LONG"
+        ],
+        [
+          "AEROUSDT",
+          "LONG"
+        ],
+        [
+          "DOGEUSDT",
+          "SHORT"
+        ],
+        [
+          "TRUMPUSDT",
+          "SHORT"
+        ],
+        [
+          "币安人生USDT",
+          "SHORT"
+        ],
+        [
+          "FILUSDT",
+          "SHORT"
+        ]
+      ],
+      "local": [],
+      "matches": false
+    },
+    "external_signal_sha256": "0dfa4b53400713ac6146ead04b228d119f8712acab49f519348680274b5209af",
+    "local_status": "BLOCKED_DATA",
+    "orders_allowed": false,
+    "reasons": [
+      "FORWARD_DAY_MISMATCH",
+      "FORWARD_RESEARCH_REF_MISSING",
+      "FORWARD_BASKET_INCOMPLETE",
+      "FORWARD_BASKET_MISMATCH",
+      "RAW_WIRE_PROVENANCE_MISSING"
+    ],
+    "status": "BLOCKED_DATA"
+  },
+  "kity_source_archive": {
+    "path": "/opt/bybot-research/kity-oct8-raw-intake-20261008",
+    "file_count": 639,
+    "bytes": 3635299,
+    "manifest_sha256": "8dbfc2b43aecef2b600a593a6a913c670d2051c8a67b85b796f805e0f50ec60a",
+    "sealed_ms": 1791442104292
+  },
+  "alpaca": {
+    "observed_ms": 1791440699571,
+    "live_account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+    "cash": "496.12",
+    "equity": "496.12",
+    "buying_power": "496.12",
+    "non_marginable_buying_power": "262.2",
+    "balance_asof": "2026-10-06",
+    "accrued_fees": "0",
+    "pending_reg_taf_fees": "0.02",
+    "positions": [],
+    "open_orders": [],
+    "entry_halt": true,
+    "runtime": {
+      "binding_sha256": "12a1a490ff98b47254cfbf2ac0d03650b6d3040bb7ffa86e7c5d2d91b40cd7ea",
+      "profile_sha256": "71c96f4d785b5bf1f4e7a2fb96b26609055a0bfbe4b7d0acb60b82febe4d8c11",
+      "wrapper_sha256": "dc5a9c0f7b8e934ecbc783c85284cea56f0a4c8c4dbc8b5093ed912590726391",
+      "entry_halt": {
+        "account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+        "halted": true,
+        "reason": "intended_stage_failed:0:9",
+        "updated_at_utc": "2026-10-07T16:05:11.576362+00:00"
+      },
+      "halt_sha256": "e1a137bc8fd2f918c38b3d4cc5c5e844b6dd6bf3ae6fc694e4d2d376997f53ad",
+      "hwm": {}
+    },
+    "source_manifests": {
+      "/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/app": {
+        "manifest_sha256": "ca9559400a62a7ebb4d2b8a823d08630e73b65e8fff7ed05232c4100c677a5f6",
+        "files": 61,
+        "mismatches": []
+      },
+      "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app": {
+        "manifest_sha256": "4f6e5288790174b9a9fdfb031d4e7a229c8b852ed2eef96785003d30961f76d3",
+        "files": 23,
+        "mismatches": []
+      },
+      "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/app": {
+        "manifest_sha256": "3e936db867ea0df3da6ccd7f80c1d17c2d4a6e9403a203f603841ce05ef08ca3",
+        "files": 21,
+        "mismatches": []
+      }
+    },
+    "books": {
+      "sealed": {
+        "path": "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/runtime/selection/replacement.sqlite",
+        "sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+        "counts": {
+          "rankings": 1,
+          "slots": 3,
+          "intents": 0,
+          "exits": 0
+        }
+      },
+      "continuation": {
+        "path": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/rehearsal/replacement.sqlite",
+        "sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+        "counts": {
+          "rankings": 1,
+          "slots": 3,
+          "intents": 0,
+          "exits": 0
+        }
+      }
+    },
+    "paper_legacy_positions_preserved": [
+      [
+        "ABNB",
+        "0.562409094"
+      ],
+      [
+        "ABT",
+        "1.323333743"
+      ],
+      [
+        "AMZN",
+        "0.591"
+      ],
+      [
+        "MA",
+        "0.355708927"
+      ],
+      [
+        "SCHW",
+        "1.840021093"
+      ]
+    ],
+    "paper_runtime": {
+      "legacy_exclusions": {
+        "AMZN": "intraday",
+        "CRM": "intended",
+        "CRWD": "intended",
+        "CVX": "intended",
+        "MRK": "intended",
+        "XOM": "ALPACA_DYNAMIC_V1_PAPER_PENDING"
+      },
+      "legacy_exclusions_sha256": "8171cd5ef14f8374e75f6406476d254c816465ef96cab8a52ac335d2f2122e3f",
+      "legacy_wrapper_sha256": "f61591405dd9533d750568e099aeb6b9fd642638f42fa4198e37cf1008ee6d61"
+    },
+    "quote_permissions": {
+      "sip_http_status": 403,
+      "iex_available": true,
+      "morning_iex_quote_usable_for_entry": false
+    },
+    "closed_source": {
+      "path": "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/runtime/closed_source.json",
+      "sha256": "5ec00d02f604dbaefeab43ddf1eb2800eeced1d5da76dfa71c4262ccb38bf622",
+      "closed_session": "2026-10-06",
+      "received_ms": 1791317814531,
+      "captured_ms": 1791317765139,
+      "XOM_earnings": {
+        "dates": [
+          "2020-10-30",
+          "2021-02-02",
+          "2021-04-30",
+          "2021-07-30",
+          "2021-10-29",
+          "2022-02-01",
+          "2022-04-29",
+          "2022-07-29",
+          "2022-10-28",
+          "2023-01-31",
+          "2023-04-28",
+          "2023-07-28",
+          "2023-10-27",
+          "2024-02-02",
+          "2024-04-26",
+          "2024-08-02",
+          "2024-11-01",
+          "2025-01-31",
+          "2025-05-02",
+          "2025-08-01",
+          "2025-10-31",
+          "2026-01-30",
+          "2026-05-01",
+          "2026-07-31",
+          "2026-10-30"
+        ],
+        "provider": "Yahoo via existing yfinance",
+        "received_ms": 1791317813873
+      }
+    },
+    "gross_three_closed_positions": "8.754976679662",
+    "posted_fees": "0.05",
+    "after_posted_fees": "8.704976679662",
+    "fee_finality": "NOT_PROVEN",
+    "cash_finality_verified": false,
+    "paper_execution_pass": false,
+    "ready_for_live_go": false,
+    "next_window_utc": "2026-10-08T13:30:00Z",
+    "natural_day_rearm_if_held_utc": "2026-10-09T13:30:00Z"
+  },
+  "production_services": {
+    "bybot.service": [
+      "MainPID=1648585",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "trading-journal-web.service": [
+      "MainPID=1623208",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "att1-lifecycle-zero-risk-v2.service": [
+      "MainPID=1584802",
+      "NRestarts=0",
+      "ActiveState=active"
+    ]
+  },
+  "source_sha256": {
+    ".private/alpaca_morning_20261008/broker_raw.json": "b521e6ca1c266060b8b5c1902669e38803afa590b0871969b38854d375352d6b",
+    ".private/alpaca_morning_20261008/quote_and_lineage_raw.json": "df9ac823c151c1273c560ed854e1979cc8490967a58030562bc7e655fc631017",
+    ".private/kity_oct8_source_inventory/actual_analysis.json": "bf35cdbb1986da505eb963cacaf7586aac6bdef67a44bfba5478f68daf19f2db",
+    ".private/kity_oct8_source_inventory/actual_complete_capture_bundle.json": "b24b06875a09ffe5b647b6b19de3962e3b077fb89c12173ac7dd8cd9bd3bd06d",
+    ".private/kity_oct8_source_inventory/sealed_archive_manifest.json": "55305fdab9d73388f1694676b38410e55be461a358e81e82902a973be7384676",
+    ".private/kity_oct8_source_inventory/strict_cli_receipt.json": "2d820d1e4cfb23535f9af3c900d2a3f21dba22aeabd3a3c7f97b348879437332",
+    ".private/kity_oct8_source_inventory/bybit_census_archive.json": "844ccffe7eb5186a3d2913c9106ad218bbb08e9a17a7d1824aabf3307ebd0df8"
+  },
+  "operator_source_pins": {
+    "reports/evidence/money_morning_20261008/kity_analyze_actual_sources.py": "9a6a36d950ef12c1f2173159162075057ef1aa51ba2e8cba23b6b19634710bc4",
+    "reports/evidence/money_morning_20261008/kity_capture_closed_diagnostic.py": "11639745998f220e48fd87df4bc5f65245404cd68307880fa6af11572a9e1a60",
+    "reports/evidence/money_morning_20261008/kity_capture_exact_oi.py": "f78863a0c6b220010d150e86e594a2a62ed533fecb99ded52f30be92748b172d",
+    "reports/evidence/money_morning_20261008/alpaca_quote_lineage_read_only.py": "1685ec45f4c922b17bde62498424733b463acf734edae9429fd962ee831c5a57",
+    "reports/evidence/money_morning_20261008/kity_capture_venue_diagnostic.py": "f350cd5d62c4ceaf0ec5a6974d11912e3d574799af1b84861aa610348da63977",
+    "reports/evidence/money_morning_20261008/alpaca_broker_read_only.py": "d1466ceba57f499cd5771f46fbeab38d760e82db45a5ad3b5a86eacf29201b93"
+  },
+  "model_routing": {
+    "inventory": {
+      "model": "gpt-5.6-luna",
+      "effort": "medium",
+      "verified_rollout": "01a11a2d-a97b-7c01-bd4b-8f8fce0e31b6"
+    },
+    "financial_review": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "verified_rollout": "01a116dc-0009-7331-b9f1-c94a7d5a10f2",
+      "latest_turn": "01a11a3c-b64b-71f1-a514-eb77f73cc28c"
+    }
+  },
+  "verification": {
+    "strict_cli_actual_replay": "BLOCKED_DATA: PIT_STATUS_AMBIGUOUS",
+    "raw_source_hashes": "PASS",
+    "frozen_rule_diagnostic_parity": "PASS_DIAGNOSTIC_ONLY",
+    "broker_state_source_book_preservation": "PASS",
+    "product_code_changed": false,
+    "unit_or_full_suite_rerun": false
+  },
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}

@@ -1,5 +1,40 @@
 # Codex session checkpoint — 2026-09-06
 
+October8 morning continuation: read **MONEY_MORNING_KITY_ALPACA_2026_10_08.md/JSON**.
+**KITY strict BLOCKED_DATA / Bybit exact basket BLOCKED_EXECUTION; no money.**
+Original cutoff census receivedOct7 23:54:59.196UTC, sourcepins intact. Actual
+526exact-time OI responses:525TRADING exact23:55 points; GAIB PENDING_TRADING
+with past onboardDate and emptyOI→unchanged strict PIT_STATUS_AMBIGUOUS.
+Separate explicit frozen-research TRADING projection +50independent closed
+wire candles:49features/k4/eightlegs; bothordered sides/top50/all49rounded
+features match Claude unseen00:18:43 signal. DIAGNOSTIC_PARITY only, not strict
+accepted signal/seal; external ref/raw-wire provenance still missing. No silent
+GAIB removal, retune, judge or Claude writer change. Complete bundle2087545bytes
+fits2MiB by9607; no accepted prospective seal. New public archive sealed639files/
+3635299bytes, manifest8dbfc2b4…ec60a, originals untouched. Binance eightbooks
+common2sPASS at captured clock: minimum equal-reference5.5412/leg→43.73889gross
+beforefees/funding/buffers, diagnostic NOT_ADMITTED_QUANTITIES/capsnotapproved.
+Bybit complete890linear census lacks exact币安人生USDT/mapping; sevenlegs cannot
+substitute. Next: reviewed nonTRADING source-compatibility/provenance/packet-size
+contract, then selected-venue/accountcaps/unwind/finality+dossier+ownerGO.
+Alpaca06:24:56UTC flat/HALT/cash496.12/pendingfees.02; nonmarginable262.20/
+balance_asofOct6, cash_finality remainsfalse. Fivepostedfees.05→threeoldpositions
+8.704976679662afterpublishedcosts, finalnetNOT_PROVEN. SIP403/IEXavailable but
+morning rawquotetimeOct7 20UTC is stale; never use receive time alone as freshness.
+61/23/21pins, sealed+continuationbooks1ranking/3slots/0intents/0exits, XOMlegacy
+exclusion/fivePAPERlegacypositions retained; noPAPERlifecycle yet. Today13:30–
+13:35UTC/16:30Cyprus one authorized XOM PAPER only after fresh actual gates;
+unknowncash/fees/minimum/quote/ownership blocks withoutreservation. If held,
+actualDAYrearmfirstOct9 13:30UTC; one sourcedlifecycle/finality→LIVEGOdossier→
+separateownerGO, no HALTclear/rebuy/statisticalextraPAPER. Native2opening-check
+heartbeat preserved. ProductionPIDs1648585/1623208/1584802/NRestarts0 unchanged;
+ATT1/ETS/Claude/OS2 untouched. HEAD439fefd successfullypushed/remoteverified
+thismorning afterGitHuboutage. No productcode changes/fullsuite rerun; bounded
+actualsource/replay/preservationPASS. Verified5.6-luna/medium inventory and
+6-astra/high financialreview; foreignallowlistadd587f1…f19a1 untouchedunstaged.
+
+Earlier blocks below are dated history; this morning update governs current truth.
+
 October7 owner clarification: **one actual PAPER lifecycle, no extra waiting for
 statistical trade count**. Oct8 13:30UTC/16:30Cyprus sealedXOM/currentinputs→one
 exact PAPER entry/protection/readback/restart and concrete orders-OFF GO dossier.
