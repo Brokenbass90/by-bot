@@ -1,0 +1,204 @@
+{
+  "schema": "ALPACA_OCT9_OPENING_TERMINAL_V1",
+  "status": "BLOCKED_EXECUTION_CURRENT_OPENING",
+  "paper_lifecycle_pass": false,
+  "ready_for_live_go": false,
+  "live_entry_halted": true,
+  "runner_status": "BLOCKED_DATA",
+  "runner_reason": "PAPER_DISPATCH_WINDOW_OR_CLOCK_EXPIRED",
+  "read_only_ready": true,
+  "broker_entry_dispatches": 0,
+  "broker_orders_created": 0,
+  "native_stop_created": false,
+  "source_book_reserved_intents": 1,
+  "paper_store_intents": 0,
+  "entry_cid_http404": true,
+  "snapshot_postcheck_ms": 1791553071261,
+  "source_files_sha256": {
+    "broker_source.json": "acd5dc558a64bc1604b4b840f6f4c18f050c3fe2447199d75728b6f5cf3f840d",
+    "plan_preparation.json": "6e9e035830f9081693a6d84d17afa3f51d1889da15b84aafc3a7ee7531508174",
+    "postcheck.json": "065a4ad4a1c8ca7fa2aa7927873a3d7035d375e7f7c8c39b9b25560208030ab9",
+    "prepare_opening_plan_executed.py": "247dda3ad3ca8053e231dd5165feff4cc7840d4defc582e91253f85bfc6a46c8",
+    "timing_postcheck.json": "d0a6e63cf61dd269d2c0cde0306a9b180f71cb30838d09a2c932d4cf1987753d",
+    "paper_execution.json": "364e0d0405be335f7d476714d96fdad05d0d168109d020ed54b7a87043406abb"
+  },
+  "executed_helper_sha256": "247dda3ad3ca8053e231dd5165feff4cc7840d4defc582e91253f85bfc6a46c8",
+  "plan": {
+    "status": "RESERVED_ORDERS_OFF",
+    "money_authority": false,
+    "orders_allowed": false,
+    "evidence_kind": "INPUT_PROVIDED_ORDERS_OFF",
+    "epoch_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+    "slot_entry_order_id": "2b559bee-1818-450d-b5c0-1d1b015c2422",
+    "symbol": "XOM",
+    "qty": "0.705636034",
+    "reference_ask": "176.72",
+    "stop_price": "169.41",
+    "risk_distance": "7.31",
+    "notional_usd": "124.69999992848",
+    "modeled_stop_risk_usd": "5.15819940854",
+    "protection_qty": "0.705636034",
+    "notional_limit_usd": "124.699999985736",
+    "funding_limit_usd": "124.699999985736",
+    "fee_rate": "0",
+    "protection_tif": "day",
+    "ranking_sha256": "aed1c2d80e5887b656b1564d5fa837030959c4daa96599fce81436ff0921b283",
+    "snapshot_sha256": "0d042b41c2723483206d7e68aa1bfa3ba366336e56c1bfc2795e1177aabdf8f4",
+    "source_sha256": "acd5dc558a64bc1604b4b840f6f4c18f050c3fe2447199d75728b6f5cf3f840d",
+    "session": "2026-10-09",
+    "prepared_ms": 1791552837216,
+    "receipt_id": "a23c310ccdd9c6706bf6d006d5b778e247f19d63d36de77eb7840bb4d30c560b",
+    "client_order_id": "dyn1-a23c310ccdd9c6706bf6d006d5b778e2",
+    "input_bundle_sha256": "3ff4ad6c21f3cf8f466a482ab89070048149e453e7bffeb900a679953c24cafd",
+    "broker_truth_authenticated": false,
+    "live_deployed": false
+  },
+  "cost": {
+    "fee_rate": "0",
+    "liability_reserve_usd": "0.01",
+    "unresolved_liability_usd": "0",
+    "modeled_entry_cat_reserve_usd": "0.01",
+    "entry_qty_ceiling": "0.705636034",
+    "fee_contract_sha256": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c",
+    "cash_mapping": "existing DynamicBook uses (cash_usd-liability_reserve_usd)/(1+fee_rate); preserve this deduction in fresh snapshot",
+    "fee_assumption": "unchanged retail schedule; one entry execution day; other account fees/liabilities must be separately included, not guessed zero",
+    "exit_costs": "separate actual quantity/price/daily aggregation at terminal reconciliation, not zero or a hard future bound",
+    "money_authority": false,
+    "orders_allowed": false,
+    "executable_plan": false
+  },
+  "fresh_earnings": {
+    "provider": "existing Yahoo/yfinance",
+    "dates": [
+      "2020-10-30",
+      "2021-02-02",
+      "2021-04-30",
+      "2021-07-30",
+      "2021-10-29",
+      "2022-02-01",
+      "2022-04-29",
+      "2022-07-29",
+      "2022-10-28",
+      "2023-01-31",
+      "2023-04-28",
+      "2023-07-28",
+      "2023-10-27",
+      "2024-02-02",
+      "2024-04-26",
+      "2024-08-02",
+      "2024-11-01",
+      "2025-01-31",
+      "2025-05-02",
+      "2025-08-01",
+      "2025-10-31",
+      "2026-01-30",
+      "2026-05-01",
+      "2026-07-31",
+      "2026-10-30"
+    ],
+    "received_ms": 1791552835998
+  },
+  "timing": {
+    "source_binding.json": {
+      "mtime_ns": 1791552836637003333,
+      "bytes": 1686
+    },
+    "paper_read_only.json": {
+      "mtime_ns": 1791552897580559512,
+      "bytes": 288
+    },
+    "actual_input.json": {
+      "mtime_ns": 1791552837204008507,
+      "bytes": 7885297
+    },
+    "paper_submit.json": {
+      "mtime_ns": 1791552900017581752,
+      "bytes": 180
+    },
+    "plan.json": {
+      "mtime_ns": 1791552838151017150,
+      "bytes": 1293
+    }
+  },
+  "clock_cause": "Compound guard; deadline/closed clock/skew/plan age not individually logged. File write17.6ms after window corroborates late orchestration, not unique guard branch.",
+  "source_review_limitations": [
+    "Initial helper owner closure partly manual; archived cron/process/lock/exclusion are not complete automated all-writer proof.",
+    "Initial protection=True meant intended pinned protocol eligibility, lacked dedicated mapping; actual acceptance never observed.",
+    "Fresh earnings and cost companion saved separately; existing reserved plan binds original archive only.",
+    "Snapshot-specific cash/exit extraction; not a general reusable money adapter."
+  ],
+  "local_correction": {
+    "no_review": "BLOCKED before SSH/plan construction",
+    "companion_bound_for_future_plan": true,
+    "validator_authenticates_broker": false,
+    "deployed": false,
+    "existing_plan_modified": false,
+    "tests": "72 targeted PASS; 11 RED then guard GREEN plus CLI rejection regression"
+  },
+  "bounded_review": {
+    "verdict": "TERMINAL_BLOCKED_WITH_SOURCE_LIMITATIONS",
+    "rollout_id": "01a120d8-9139-7162-8465-b02940429d2f",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "runtime_verified": true
+  },
+  "source_manifests_post": {
+    "/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/app": {
+      "files": 61,
+      "mismatches": []
+    },
+    "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app": {
+      "files": 23,
+      "mismatches": []
+    }
+  },
+  "services": {
+    "bybot.service": [
+      "MainPID=1648585",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "trading-journal-web.service": [
+      "MainPID=1623208",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "att1-lifecycle-zero-risk-v2.service": [
+      "MainPID=1584802",
+      "NRestarts=0",
+      "ActiveState=active"
+    ]
+  },
+  "authority": {
+    "live_changed": false,
+    "new_paper_entry_allowed_now": false,
+    "deadline_extended": false,
+    "heartbeat_rescheduled": false,
+    "reserved_plan_repriced_or_deleted": false
+  },
+  "next_gate": "Reviewed source closure and explicit prospective execution/handoff for expired never-dispatched reservation; no replay of Oct9 plan, no next-window assumption.",
+  "automation": {
+    "id": "alpaca-paper-lifecycle",
+    "mode": "delete",
+    "delete_status": "deleted",
+    "original_two_checks_completed_or_terminal": true,
+    "new_automation_created": false
+  },
+  "mechanical_inventory": {
+    "rollout_id": "01a120eb-c98c-7b91-8d9b-51733a517eb4",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "runtime_verified": true,
+    "source_ref": "cf904086a2d887a96ac2be3324a3d78433e1a94b",
+    "evidence_kind": "SOURCE_INVENTORY_ONLY",
+    "research_run": false
+  },
+  "final_local_verification": {
+    "targeted_tests": 72,
+    "test_exit_code": 0,
+    "all_five_evidence_python_files_ast_valid": true,
+    "private_source_pins_match": true,
+    "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "no_full_suite_claim": true
+  }
+}

@@ -1,5 +1,26 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October9 opening terminal: **BLOCKED_EXECUTION_CURRENT_OPENING / no PAPER entry**.
+Read [ALPACA_OPENING_TERMINAL_2026_10_09.md](ALPACA_OPENING_TERMINAL_2026_10_09.md).
+Fresh opening LIVE flat/HALT/cash/nonmarginable496.12/fees0; five legacy PAPER
+positions/XOMflat/orders0. One ordersOFF CRWD-lineage plan XOM.705636034,
+referenceask176.72/distance7.31/notional124.70/CATreserve.01 prepared13:33:57UTC.
+GET rehearsal READY at13:34:57; final compound WINDOW_OR_CLOCK guard blocked,
+receipt written13:35:00.017. Postcheck brokerCID404/XOM0/PAPERstore0intents/
+sourcebook1reservation; no POST/fill/stop/LIVEGO. Exact clock branch not logged.
+Preserve expired reservation, no retry/reprice/deletion/fakechild/windowextension.
+Source61/23 pins/PIDs/NRestarts unchanged. One6-astra/high review identified
+helper owner/protection source mapping and companion-hash limitations; exact
+executed helper archived, local guard now rejects missing reviewed companion
+before SSH/reservation and binds future companion.72targetedPASS; not deployed,
+not complete source publisher or lifecyclePASS. Original Oct8/9 heartbeat ends
+and is deleted; no Oct9 XOM exists to rearmOct12. Next session requires reviewed
+prospective source/handoff; Monday is not automatic authorization. LIVEHALT/caps/
+ownerGO preserved. CRYPTO_CORE_V2_INTAKE_2026_10_09.md is inventory/proposal only:
+two families/parity first, separate per-sleeve context/prereg/independent data,
+no universaltrendveto, B3rescue/newjudge/Claudeedit or money authority.
+Earlier blocks below are historical; do not reuse their pending Oct9 plan claims.
+
 October9 morning: **PREOPEN_SOURCE_VERIFIED / NO PLAN**. Read
 [MONEY_MORNING_2026_10_09.md](MONEY_MORNING_2026_10_09.md) and its pinned receipt.
 One read-only capture04:53UTC/07:53Cyprus: LIVE flat/HALT, cash/equity/

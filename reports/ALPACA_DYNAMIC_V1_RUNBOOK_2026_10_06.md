@@ -1,5 +1,15 @@
 # ALPACA_DYNAMIC_V1 — local orders-OFF runbook
 
+October9 terminal: **ALPACA_OPENING_TERMINAL_2026_10_09.md/JSON** governs.
+One reserved orders-OFF plan and GET rehearsal reached; final WINDOW_OR_CLOCK
+guard blocked before dispatch. Broker XOMflat/CID404, PAPERstore0intents,
+sourcebook1reservation. No actual lifecycle or LIVEGO; preserve reservation,
+no deletion/retry/reprice/automatic next session. Original heartbeat terminated.
+Local operator helper source guard corrected/tests72PASS, not deployed or a
+complete source publisher. Next prospective handoff/source closure requires
+review; Monday is not automatically authorized. Prior commands below are dated
+templates, never commands to resend the October9 plan.
+
 October8 terminal update: **ALPACA_B3_TERMINAL_GATES_2026_10_08.md/JSON** governs.
 OriginalOct8 opening closed withoutplan/reservation/PAPER. Fresh13:33UTC old LIVE
 cash/nonmarginable496.12/pendingfees0 closes known-oldfinality, no repeatedaudit.
