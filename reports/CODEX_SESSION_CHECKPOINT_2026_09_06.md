@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+October9 engineering delivery: **Alpaca LOCAL_CANDIDATE_PASS / operational
+BLOCKED_DATA_NEXT_SESSION_PACKET; CRYPTO_CORE_V2_BASELINES_READY_FOR_PREREG_INPUT.**
+Read [ALPACA_DISPATCH_AND_CRYPTO_BASELINES_2026_10_09.md](ALPACA_DISPATCH_AND_CRYPTO_BASELINES_2026_10_09.md)
+and its delivery/rehearsal receipts.143targetedPASS;30synthetic exact opening
+paths, maximum simulated13.5s; not actual broker latency/lifecycle. Precompute
+unchanged closed-data ranking beforeT−15, READY beforeT−1, bounded fresh/reserve
+with persisted timings, one existing PAPER adapter call/no ambiguous reinvoke.
+One runtime-verified6-astra/high review/fourImportant findings closed via RED/
+GREEN;5.6-luna/medium baseline worker. Full-suite worker4110PASS/58FAIL output
+NOT_PRESERVED; all failures preexisting NOT_PROVEN, suite notgreen.
+No VPS/broker/automation changes or new broker check; LIVEHALT/caps preserved.
+ExistingOct9 reservation is an explicit blocker, not deleted/retried/repriced;
+next session needs reviewed prospective handoff/source/weekly ranking and exact
+PAPER authorization BEFORE opening. No Monday job armed/no automaticLIVEGO.
+Two original crypto source blobs unchanged; event stateful and bounce exact
+validated H1/H4 rows/as-of/config, immutable native receipts; confirmed costs
+require full sourced inputs. Data independence/costs/edge remain UNKNOWN/blocked;
+Claude prereg/outcome lane, no new judge/filter/ATT1/KITY rescue or messaging.
+Priority is now P0 complete pre-open packet→one actual PAPER lifecycle→LIVE
+owner dossier; P1 exactly two baseline/context KEEP/KILL intakes. Earlier dated
+operational blocks below retain their dates and do not imply current readiness.
+
 October9 opening terminal: **BLOCKED_EXECUTION_CURRENT_OPENING / no PAPER entry**.
 Read [ALPACA_OPENING_TERMINAL_2026_10_09.md](ALPACA_OPENING_TERMINAL_2026_10_09.md).
 Fresh opening LIVE flat/HALT/cash/nonmarginable496.12/fees0; five legacy PAPER

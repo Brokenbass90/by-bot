@@ -1,0 +1,70 @@
+{
+  "kind": "metadata_only_validation_inventory",
+  "status": "ENGINEERING_PARITY_ONLY",
+  "research_ref": "cf904086a2d887a96ac2be3324a3d78433e1a94b",
+  "source_pins": {
+    "event_expansion_retest_long_v1": {
+      "path": "strategies/event_expansion_retest_long_v1.py",
+      "git_blob": "e50c4f1a0610c03e6ed79a9bc06023f14a12dcfa",
+      "timeframes": [
+        "M5",
+        "M15",
+        "H1",
+        "H4"
+      ],
+      "consumed_timeframes_in_adapter": [
+        "M5",
+        "H1",
+        "H4"
+      ],
+      "consumed_historical_date_periods": "UNKNOWN",
+      "unknowns": [
+        "funding",
+        "preregistration",
+        "outcome_evidence"
+      ]
+    },
+    "alt_support_bounce_v1": {
+      "path": "strategies/alt_support_bounce_v1.py",
+      "git_blob": "b8fcdca3974161ddc1804384fd1dd5bb28168857",
+      "timeframes": [
+        "1h",
+        "4h",
+        "5m_management"
+      ],
+      "consumed_timeframes_in_adapter": [
+        "1h",
+        "4h"
+      ],
+      "consumed_historical_date_periods": "UNKNOWN",
+      "usable_holdout_period": "UNKNOWN",
+      "unknowns": [
+        "fee_schedule",
+        "slippage_model",
+        "funding",
+        "outcome_evidence",
+        "historical_edge_acceptance"
+      ],
+      "boundary": "BOUNCE1 versus legacy ASB1 is preserved"
+    }
+  },
+  "costs": {
+    "status": "UNKNOWN_BLOCKED",
+    "fee_bps": null,
+    "slippage_bps": null,
+    "funding_bps": null
+  },
+  "prohibited_in_this_intake": [
+    "backtest",
+    "historical_or_oos_outcomes",
+    "judge",
+    "threshold_or_filter_changes",
+    "trend_or_causal_context"
+  ],
+  "evidence_basis": [
+    "reports/CRYPTO_CORE_V2_INTAKE_2026_10_09.md",
+    "source docstrings and call contracts",
+    "local Git blob parity test"
+  ],
+  "engineering_followup": "143 targeted tests with two unchanged originals; event lifecycle and bounce default acceptance/cooldown parity. Not outcome validation."
+}

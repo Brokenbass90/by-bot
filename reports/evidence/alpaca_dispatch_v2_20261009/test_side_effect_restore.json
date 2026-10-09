@@ -1,0 +1,12 @@
+{
+  "status": "EXACT_PRE_CYCLE_CONTENT_RESTORED",
+  "original_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "post_worker_suite_sha256": "5b2612ed1c0b3606cc26fcd60f948de0064174c1013988013f8d54a7a38018d4",
+  "original_entries": 4,
+  "test_generated_appended_entries": 4,
+  "appended_timestamps": [
+    "2026-10-09T14:56:50Z"
+  ],
+  "scope": "Only our full-suite append removed after original prefix byte hash matched; foreign original diff retained, unstaged",
+  "post_suite_backup": "/private/tmp/alpaca-dispatch-v2-allowlist-post-suite-20261009.json"
+}

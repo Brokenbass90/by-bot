@@ -1,0 +1,1135 @@
+{
+  "status": "LOCAL_REHEARSAL_PASS",
+  "evidence_kind": "SYNTHETIC_BROKER_ONLY",
+  "actual_broker_lifecycle_pass": false,
+  "money_authority": false,
+  "network_requests": 0,
+  "iterations": 30,
+  "synthetic_get_delay_profiles_ms": [
+    0,
+    500,
+    2500
+  ],
+  "measured_local_wall_ms": {
+    "median": 16.352854,
+    "max": 77.359
+  },
+  "maximum_simulated_completion_after_open_ms": 13500,
+  "source_sha256": {
+    "scripts/rehearse_alpaca_open_dispatch_v2.py": "db12578f99cb93d37dd9d243b0cfe085ee05e7b4286635b8fc8b0282308ad495",
+    "research_lab/alpaca_open_dispatch_v2.py": "f59cab87e4dd72286a5c71c3f463e2d7b10b388d23e818833b9344ef001a61ea",
+    "scripts/run_alpaca_open_dispatch_v2.py": "ce9156df7c39e515466541f19d1fa411763177133c2743fa1c0c96e084b9e4fc"
+  },
+  "runs": [
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 0,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 67.323875,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 1,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 77.359,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 2,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 17.095416,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 3,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 17.371916,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 4,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 17.576333,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 5,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 20.318125,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 6,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 18.163667,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 7,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 19.534917,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 8,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 19.526292,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 0,
+      "iteration": 9,
+      "simulated_completion_after_open_ms": 1000,
+      "measured_local_wall_ms": 14.5365,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379801000,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "8b3642b76bf014ba90f3b4606f25b63d2e82a7d0392cc47b6a58fe193f7e77e8",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 0,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 19.419292,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 1,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 19.619,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 2,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 16.004417,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 3,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 17.232166,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 4,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 15.285208,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 5,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 16.7955,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 6,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 13.368167,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 7,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 14.088458,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 8,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 16.055125,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 500,
+      "iteration": 9,
+      "simulated_completion_after_open_ms": 3500,
+      "measured_local_wall_ms": 17.141958,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 2500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379803500,
+          "end_ms": 1791379803500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "6a47088f996513cf2a277824d8909abdcb4a2f571e177bd275014a7aff44af86",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 0,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 16.22575,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 1,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 15.945667,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 2,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 14.390458,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 3,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 11.309209,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 4,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 12.6395,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 5,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 16.479958,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 6,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 15.152375,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 7,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 14.431792,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 8,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 14.771416,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    },
+    {
+      "synthetic_get_delay_ms": 2500,
+      "iteration": 9,
+      "simulated_completion_after_open_ms": 13500,
+      "measured_local_wall_ms": 14.093041,
+      "phase_timings": [
+        {
+          "name": "fresh",
+          "start_ms": 1791379801000,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 12500,
+          "budget_ms": 30000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "reserve",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": 5000,
+          "includes_evidence_persistence": true,
+          "completed": true
+        },
+        {
+          "name": "existing_paper_adapter",
+          "start_ms": 1791379813500,
+          "end_ms": 1791379813500,
+          "elapsed_ms": 0,
+          "budget_ms": null,
+          "protection_not_aborted_by_dispatch_deadline": true
+        }
+      ],
+      "receipt_sha256": "945d48b9b9daec09377244a8c4f3741857862f2aee1af8658c3c021de701558f",
+      "adapter_status": "PAPER_PROTECTED",
+      "synthetic_write_count": 2
+    }
+  ]
+}

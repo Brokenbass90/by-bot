@@ -1,0 +1,102 @@
+{
+  "schema": "ALPACA_DISPATCH_AND_CRYPTO_BASELINES_DELIVERY_V2",
+  "written_utc": "2026-10-09T15:35:54.548762+00:00",
+  "base_head": "4d92ca40481a4d05eb7bdbac108a242cc2cbacc8",
+  "alpaca_engineering": "LOCAL_CANDIDATE_PASS",
+  "alpaca_operational": "BLOCKED_DATA_NEXT_SESSION_PACKET",
+  "crypto_engineering": "CRYPTO_CORE_V2_BASELINES_READY_FOR_PREREG_INPUT",
+  "crypto_edge": "NOT_PROVEN",
+  "orders_allowed": false,
+  "live_authority": false,
+  "deployment": "NOT_INSTALLED_OR_ARMED",
+  "broker_recheck_this_cycle": false,
+  "tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_alpaca_open_dispatch_v2.py tests/test_crypto_core_v2_baselines.py tests/test_alpaca_dynamic_v1.py tests/test_alpaca_dynamic_paper.py tests/test_alpaca_dynamic_paper_maintenance.py tests/test_event_expansion_retest_long_v1.py tests/test_strategy_env_prefix_isolation.py tests/test_classic_strategy_geometry_guards.py",
+    "exit_code": 0,
+    "passed": 143,
+    "seconds": 2.88
+  },
+  "red_green": {
+    "critical_review_regressions": {
+      "red_failed": 8,
+      "red_passed": 37,
+      "green_in_targeted_suite": true
+    },
+    "primary_source_preservation_regressions": {
+      "red_failed": 2,
+      "closed_in_green_suite": true
+    }
+  },
+  "rehearsal": {
+    "path": "reports/evidence/alpaca_dispatch_v2_20261009/rehearsal_final.json",
+    "iterations": 30,
+    "maximum_simulated_after_open_ms": 13500,
+    "local_wall_ms": {
+      "median": 16.352854,
+      "max": 77.359
+    },
+    "actual_broker_lifecycle_pass": false
+  },
+  "full_suite_limitation": {
+    "worker_reported_passed": 4110,
+    "worker_reported_failed": 58,
+    "output": "NOT_PRESERVED",
+    "same_head_regression_comparison": "NOT_PERFORMED",
+    "all_failures_preexisting": "NOT_PROVEN",
+    "full_suite_green": false
+  },
+  "review": {
+    "bounded_reviews": 1,
+    "important_findings": 4,
+    "critical_findings": 0,
+    "fix_passes": 1,
+    "closure": "targeted primary RED/GREEN checks, no repeated broad review",
+    "findings_closed": [
+      "exact validated bounce rows/as-of/config",
+      "completion/persistence budgets before reservation",
+      "source-bound fractional DAY STOP eligibility",
+      "complete source-bound confirmed costs"
+    ],
+    "runtime_verified_models": [
+      {
+        "agent": "crypto_two_baselines_v2",
+        "model": "gpt-5.6-luna",
+        "effort": "medium",
+        "rollout": "01a12127-dd97-7481-9f88-e75b32deeeb9"
+      },
+      {
+        "agent": "dispatch_v2_financial_review",
+        "model": "gpt-6-astra",
+        "effort": "high",
+        "rollout": "01a1213d-e4b5-7450-806b-0271db7f6df0"
+      }
+    ]
+  },
+  "operational_blockers": [
+    "Existing Oct9 source reservation has no terminal non-dispatch/handoff transition; preserved, no deletion/retry/new empty book",
+    "No reviewed session-specific ownership/terminal-slot/earnings/concentration/protection/source packet",
+    "Next weekly closed-data ranking must be precomputed with actual timestamp before T-15; old XOM is not a Monday selection",
+    "No next-session PAPER attempt armed; original Oct8/9 authority/schedule is ended"
+  ],
+  "next_action": "Close prospective reservation handoff and assemble complete source packet before T-15; only then install/arm existing isolated PAPER attempt. No helper coding in opening.",
+  "source_sha256": {
+    "research_lab/alpaca_open_dispatch_v2.py": "f59cab87e4dd72286a5c71c3f463e2d7b10b388d23e818833b9344ef001a61ea",
+    "research_lab/crypto_core_v2_baselines.py": "fd5a5c7e11a514b57c56c242254f7c805c8ef411cd88ccd84ecd98f0945dd1cf",
+    "scripts/run_alpaca_open_dispatch_v2.py": "ce9156df7c39e515466541f19d1fa411763177133c2743fa1c0c96e084b9e4fc",
+    "scripts/rehearse_alpaca_open_dispatch_v2.py": "db12578f99cb93d37dd9d243b0cfe085ee05e7b4286635b8fc8b0282308ad495",
+    "tests/test_alpaca_open_dispatch_v2.py": "2cad3af32f597a11eaaaa135fb96303f1ed53c187625eac618f6d458c2e6141b",
+    "tests/test_crypto_core_v2_baselines.py": "56d58d66a034dfb5287464b8a6da738f0e556409dc202d7e08d193f563f6bf16"
+  },
+  "test_side_effect_restore": {
+    "status": "EXACT_PRE_CYCLE_CONTENT_RESTORED",
+    "original_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "post_worker_suite_sha256": "5b2612ed1c0b3606cc26fcd60f948de0064174c1013988013f8d54a7a38018d4",
+    "original_entries": 4,
+    "test_generated_appended_entries": 4,
+    "appended_timestamps": [
+      "2026-10-09T14:56:50Z"
+    ],
+    "scope": "Only our full-suite append removed after original prefix byte hash matched; foreign original diff retained, unstaged",
+    "post_suite_backup": "/private/tmp/alpaca-dispatch-v2-allowlist-post-suite-20261009.json"
+  }
+}
