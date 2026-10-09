@@ -1,5 +1,29 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October9 morning: **PREOPEN_SOURCE_VERIFIED / NO PLAN**. Read
+[MONEY_MORNING_2026_10_09.md](MONEY_MORNING_2026_10_09.md) and its pinned receipt.
+One read-only capture04:53UTC/07:53Cyprus: LIVE flat/HALT, cash/equity/
+nonmarginable496.12, pendingfees0; PAPER five legacy positions, XOMflat/
+orders0/no lifecycle. Source61/23/21 pins, books1ranking/3slots/0intents/0exits,
+production PIDs1648585/1623208/1584802/NRestarts0 unchanged. Morning IEX raw
+quote is prior-session/ask0, unusable; no plan or reservation. Opening authority
+and fresh quote/account/fees/quantity/gates must be rechecked, not pre-approved.
+Public ATT1 now26sessions/18gaps/1oldcleanADA/0held; all26/250records exact replay
+against30 archived deployment pins. Zero new START/journal events since Oct9
+midnightCyprus: the growth since Oct6 is not overnight growth. Rejected-book
+gap exchange_ms is last accepted clock, not rejected raw CTS; no latency/root-
+cause claim from that delta. OLD process entry retirement1; no new Bybit private
+audit. Fresh remote refs Codex0ad3ce1/researchcf90408 unchanged overnight.
+Today one conditional XOM PAPER13:30–13:35UTC/16:30–16:35Cyprus; source-bound CAT
+reserve must reduce spendable funding before planning. Original two-check
+heartbeat unchanged; delete after second/terminal. First entry held overnight
+has actual DAY re-arm Oct12. No LIVE HALTclear/entry without separate owner GO.
+KITY Oct8 terminal executionBLOCKED; B3 spent/FAIL; BrainV2 numeric prereg blocked
+Claude-owned; ETSOct10 original19UTC/cohort gate; no new judge/research/live edits.
+Runtime-verified5.6-luna/medium queue intake and one6-astra/high review;
+30-versus32 provenance wording corrected and exact replay rechecked.
+Earlier operational facts below are dated history.
+
 October8 Brain V2 direction cycle: **BRAIN_V2_DIRECTION_LOCKED / design only**.
 Read `docs/superpowers/specs/2026-10-08-brain-v2-direction-design.md` and
 `reports/evidence/brain_v2_direction_20261008/receipt_diagnosis.json`.

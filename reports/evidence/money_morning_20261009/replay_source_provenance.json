@@ -1,0 +1,11 @@
+{
+  "status": "PRISTINE_ARCHIVED_DEPLOYMENT_CLOSURE_RECONSTRUCTED",
+  "archive": ".private/att1_execution_shadows_20261004/oracle_app",
+  "files": 30,
+  "driver_source": "git88fd734:scripts/run_att1_lifecycle_zero_risk.py",
+  "driver_expected_sha256": "97239996200715765ed7a14c4d2e77faf0afe4443bc0431b9939cfc4345d6885",
+  "original_archive_driver_sha256": "5abe729303db594d133692997f73ed14de5cb5ec4156548b3378c45e46f75db6",
+  "original_archive_preserved": true,
+  "current_local_implementation_not_used": "74d95eb5b004534536c2d141b695b9c3d4e48b6be4c4243ebe88cae26a25cfa7",
+  "no_remote_deploy_or_mutation": true
+}

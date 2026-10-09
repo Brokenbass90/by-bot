@@ -1,0 +1,41 @@
+{
+  "schema": "OCT9_MORNING_BOUNDED_CRITICAL_REVIEW_V1",
+  "reviewer_verdict": "APPROVE_WITH_LIMITATIONS",
+  "reviewer_rollout_id": "01a11f0f-4e61-77d3-b2f5-1dd88a536dfc",
+  "reviewer_runtime_verified": {
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "source": "runtime session_meta/turn_context"
+  },
+  "queue_intake_runtime_verified": {
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "rollout_id": "01a11eff-66ed-78f2-84be-f92e7c6c4051"
+  },
+  "reviewer_checks": [
+    "prior machine receipt byte-identical offline reproduction",
+    "overnight chronology",
+    "economic/authority boundaries",
+    "rejected-book exchange clock interpretation"
+  ],
+  "finding": "Report/literal binding claimed32 pins but retained manifest verifies30.",
+  "correction": "Report now30 pins/29 archived files plus original driver; analyzer computes count from verified manifest.",
+  "primary_targeted_verification": "PASS corrected receipt byte-identical projection,30 source pins,26 sessions/250 records,raw archive and original archive unchanged",
+  "source_pins": {
+    "raw_archive_sha256": "e37e6e04d5c9b5f3cbc2ebb4b7321a8d815726a043ed7266f3ea354447c417f4",
+    "deployed_manifest_sha256": "3ddd40c21582c043c3735a80a04708d64f39b9699aec243ad468ed09ada0461d",
+    "morning_receipt_sha256": "9839bdefd09c9e39ca5841dc4faf2a093c2602e7effc6f2fb2ecc2775202604e",
+    "analyzer_sha256": "b11455df0fb042858643f0dedc5ae838979bf748313028ccd16d27d5016d71f5",
+    "capture_helper_sha256": "4db2307d8a6b14f512803325d287a0238f633ec32b3e74a34edc89bc4060901b"
+  },
+  "scope_limitations": [
+    "Morning source snapshot expires before market open; exhaustive writer/lock/quote/fees/ownership still due.",
+    "Replay verifies existing lifecycle receipts, not strategy net edge or PAPER/LIVE readiness.",
+    "One reviewer source search also returned an old aggregate observation JSON; no outcomes from it were used and no dataset execution occurred."
+  ],
+  "no_additional_review_or_judge": true,
+  "broker_writes": 0,
+  "remote_writes": 0,
+  "no_implementation_or_live_promotion": true,
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}

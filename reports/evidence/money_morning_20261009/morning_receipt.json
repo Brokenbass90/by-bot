@@ -1,0 +1,399 @@
+{
+  "schema": "OCT9_MORNING_READINESS_DELTA_V1",
+  "status": "PREOPEN_SOURCE_VERIFIED_NO_PLAN",
+  "observed_ms": 1791521631202,
+  "completed_ms": 1791521634898,
+  "raw_archive_sha256": "e37e6e04d5c9b5f3cbc2ebb4b7321a8d815726a043ed7266f3ea354447c417f4",
+  "capture_source_pins": {
+    "reports/evidence/money_morning_20261008/alpaca_broker_read_only.py": "d1466ceba57f499cd5771f46fbeab38d760e82db45a5ad3b5a86eacf29201b93",
+    "reports/evidence/money_morning_20261008/alpaca_quote_lineage_read_only.py": "1685ec45f4c922b17bde62498424733b463acf734edae9429fd962ee831c5a57",
+    "extra_public_observation": "4b05ffe9199432c0cd9d6e5c9124b2d3200793f6bcb04f67c92cb2b1e135dfd3"
+  },
+  "replay_source": {
+    "root": ".private/money_morning_20261009/replay_app",
+    "manifest_sha256": "3ddd40c21582c043c3735a80a04708d64f39b9699aec243ad468ed09ada0461d",
+    "files": 30,
+    "implementation_sha256": "fa8c0944dbf23a3508d3cf92504589429ccac2acff512715f54248c5e3d49549",
+    "binding": "all30 archived deployment pins match; header implementation and profile match; no current money-candidate code used"
+  },
+  "overnight_window": {
+    "timezone": "Asia/Nicosia",
+    "start_local": "2026-10-09T00:00:00+03:00",
+    "start_utc_ms": 1791493200000,
+    "end_observed_ms": 1791521635679,
+    "att1_new_start_events": 0,
+    "att1_new_journal_events": 0
+  },
+  "alpaca": {
+    "live_cash": "496.12",
+    "equity": "496.12",
+    "non_marginable_buying_power": "496.12",
+    "pending_reg_taf_fees": "0",
+    "accrued_fees": "0",
+    "live_positions": 0,
+    "live_open_orders": 0,
+    "entry_halt": true,
+    "next_open": "2026-10-09T09:30:00-04:00",
+    "paper_positions": 5,
+    "paper_XOM_positions": 0,
+    "paper_open_orders": 0,
+    "paper_lifecycle_started": false,
+    "books": {
+      "sealed": {
+        "path": "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/runtime/selection/replacement.sqlite",
+        "sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+        "counts": {
+          "rankings": 1,
+          "slots": 3,
+          "intents": 0,
+          "exits": 0
+        }
+      },
+      "continuation": {
+        "path": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/rehearsal/replacement.sqlite",
+        "sha256": "f34d90c8669dc1f1b61710852d47381c23c0f98dbeff8333b540ccb5e76919f7",
+        "counts": {
+          "rankings": 1,
+          "slots": 3,
+          "intents": 0,
+          "exits": 0
+        }
+      }
+    },
+    "source_manifests": {
+      "/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/app": {
+        "manifest_sha256": "ca9559400a62a7ebb4d2b8a823d08630e73b65e8fff7ed05232c4100c677a5f6",
+        "files": 61,
+        "mismatches": []
+      },
+      "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app": {
+        "manifest_sha256": "4f6e5288790174b9a9fdfb031d4e7a229c8b852ed2eef96785003d30961f76d3",
+        "files": 23,
+        "mismatches": []
+      },
+      "/opt/bybot-research/alpaca-dynamic-v1-20261006-paperintake-v2/app": {
+        "manifest_sha256": "3e936db867ea0df3da6ccd7f80c1d17c2d4a6e9403a203f603841ce05ef08ca3",
+        "files": 21,
+        "mismatches": []
+      }
+    },
+    "legacy_exclusions_sha256": "8171cd5ef14f8374e75f6406476d254c816465ef96cab8a52ac335d2f2122e3f",
+    "quote": {
+      "feed": "IEX",
+      "raw_timestamp": "2026-10-08T20:00:02.236158469Z",
+      "bid": 158.36,
+      "ask": 0,
+      "fresh_receive_ms": 1791521635518,
+      "usable_for_entry": false,
+      "reason": "PREOPEN_STALE_RAW_TIMESTAMP_AND_ZERO_ASK",
+      "sip_http_status": 403
+    },
+    "sealed_XOM_earnings": {
+      "dates": [
+        "2020-10-30",
+        "2021-02-02",
+        "2021-04-30",
+        "2021-07-30",
+        "2021-10-29",
+        "2022-02-01",
+        "2022-04-29",
+        "2022-07-29",
+        "2022-10-28",
+        "2023-01-31",
+        "2023-04-28",
+        "2023-07-28",
+        "2023-10-27",
+        "2024-02-02",
+        "2024-04-26",
+        "2024-08-02",
+        "2024-11-01",
+        "2025-01-31",
+        "2025-05-02",
+        "2025-08-01",
+        "2025-10-31",
+        "2026-01-30",
+        "2026-05-01",
+        "2026-07-31",
+        "2026-10-30"
+      ],
+      "provider": "Yahoo via existing yfinance",
+      "received_ms": 1791317813873
+    },
+    "all_writer_opening_ownership": "NOT_YET_VERIFIED_EXHAUSTIVELY_AT_OPEN",
+    "qty_plan": "NOT_PREPARED_NOT_DUE"
+  },
+  "att1": {
+    "snapshot_as_of_ms": 1791521634742,
+    "sessions": 26,
+    "gaps": 18,
+    "clean_terminals": 1,
+    "clean": [
+      {
+        "decision_id": "0f495bfefe236160aa3d561eb65dcb5aba1bafffbe492c21c172d698672f8477",
+        "symbol": "ADAUSDT",
+        "final_net_r": "-1284979741/1225000000"
+      }
+    ],
+    "held": 0,
+    "broker_calls": 0,
+    "order_calls": 0,
+    "poll_errors": {},
+    "gap_reason_counts": {
+      "public polling continuity gap": 8,
+      "rejected future/stale public book": 10
+    },
+    "latest_start_utc": "2026-10-08T11:01:48.440000+00:00",
+    "journal_replay": "26_OF_26_EXACT_HEARTBEAT_RECEIPT_MATCH",
+    "replayed_sessions": [
+      {
+        "decision_id": "0080a239eba3f050b1fdb7ae20ed7d965994957d33d4a28b29e23a04e5abd554",
+        "symbol": "UNIUSDT",
+        "start_ms": 1791176515920,
+        "journal_sha256": "49a8b11cfe9cde8b70059434732739d734a2e0ed17adc3557166309fe1add4b7",
+        "records": 11,
+        "reconstructed_receipt_sha256": "fa7c4da1ff5b79454c11fbe2877299f3fc2cc03e13dcd8bc238ea2bb3f6e281b"
+      },
+      {
+        "decision_id": "0163c5fdb7757d64039fabd6ad9cac6285a35880ed8aa784863181032700eae6",
+        "symbol": "BICOUSDT",
+        "start_ms": 1791075649733,
+        "journal_sha256": "4ee2860a827e31b4098b04bbaedf8b7389beaba40e8a44a59cf63efe667d26d8",
+        "records": 3,
+        "reconstructed_receipt_sha256": "a9b8b0764d9791501e0257e84caeb505916b1749dc9fceb8f40fc872fb18377f"
+      },
+      {
+        "decision_id": "0f495bfefe236160aa3d561eb65dcb5aba1bafffbe492c21c172d698672f8477",
+        "symbol": "ADAUSDT",
+        "start_ms": 1791118834644,
+        "journal_sha256": "20e24c9fa82593b7cbdebf3c67059aead48f4ea6ca5148b0c99fbd8c3614af3f",
+        "records": 11,
+        "reconstructed_receipt_sha256": "d617ad56aab20592e3e1925f805428104bb9d5f9cf95d4f94c5f4562d28e34e8"
+      },
+      {
+        "decision_id": "1162ec0380289397cd4612680726989a48f129facb3f9b9e3bb51bb0a1ee0f46",
+        "symbol": "SUIUSDT",
+        "start_ms": 1791064905907,
+        "journal_sha256": "a2f807d6b465d75e1d1db80292def72cfb3483d873faba79b4f38b041d92f305",
+        "records": 10,
+        "reconstructed_receipt_sha256": "a83976e6573cb53976bb1ef0fe2ab4709be886c989e8624ad86e3e398eae9ccc"
+      },
+      {
+        "decision_id": "145d8b0d56960b408469d66e0c93ce2c69a48c0783d1eb3491d8fe78a404ffa7",
+        "symbol": "BICOUSDT",
+        "start_ms": 1791396054330,
+        "journal_sha256": "d02f5bd139d20f73b79528aa0d488f69637a6e98e75078524d6fbe260f8504a1",
+        "records": 20,
+        "reconstructed_receipt_sha256": "1fa548337a29c5baa1aecd7dd6670b0ab62bd77cd395e6fdb31fbd1fb019f55d"
+      },
+      {
+        "decision_id": "15b654715afed3feb9e72c67801b62f9b65d0c23c1d419be5bc16d2fbc1405db",
+        "symbol": "BNBUSDT",
+        "start_ms": 1791396059117,
+        "journal_sha256": "addf5a25603458365ffcc7d022d9e89dc1281fd3ccb7a05785b2591a03058ee2",
+        "records": 10,
+        "reconstructed_receipt_sha256": "f69c740f5ace415ded49a1161d0b7d4e01afdd19e7ae544e34ca6785f79c17f6"
+      },
+      {
+        "decision_id": "25b3835f4f4cd51774f0d50e7744ff8923872ed9507bfc13f61eaea50b002fad",
+        "symbol": "ETHUSDT",
+        "start_ms": 1791090063500,
+        "journal_sha256": "8f4b89abc0ab69bc5c55c09c4f874809274c582b7e61d2198e8119c21c3feccc",
+        "records": 11,
+        "reconstructed_receipt_sha256": "55f30d603f94d16dba1c07d47c9e480cf98d3de841cba75d64e567db32d7bb1f"
+      },
+      {
+        "decision_id": "25dd0fef6585b6bea45d1bb9a77ac521acbd30b11093d05dadd6def0ec679d36",
+        "symbol": "SEIUSDT",
+        "start_ms": 1791003690638,
+        "journal_sha256": "6a963ceffd57eefdf5db2d71eeec91fd46fd7b4545485b47483d7d4e027b6086",
+        "records": 12,
+        "reconstructed_receipt_sha256": "9e8865643cb604a08426ac9a11260880885793c6ca41023a9b9788f61b8f6e31"
+      },
+      {
+        "decision_id": "263763bbe1f419ee26b9aa9718172cfdb8d2c988d2a8af401a79ab5748491521",
+        "symbol": "JTOUSDT",
+        "start_ms": 1791306087427,
+        "journal_sha256": "aa5d3bf7462a469fa3f7cba2d11621e1768a51a23e2ba4de77c86e41570fe7cd",
+        "records": 11,
+        "reconstructed_receipt_sha256": "5e336715035b1e948721f2ba2e5e4efd89189fdd829a901d6fba0da5cb8fdd1a"
+      },
+      {
+        "decision_id": "523e1262d9fd07fc109fc8047d326cbd79fd49aefa02a925a33f4bce708a5ce5",
+        "symbol": "C98USDT",
+        "start_ms": 1790953253614,
+        "journal_sha256": "322789a238e4324630e4179ac1f5730cb7bc827f3d611fdbd0942f997f300ecd",
+        "records": 3,
+        "reconstructed_receipt_sha256": "d0760e4dd4dae22a9596034bf948944f8d951a829cf9630ab2ee5e5069bc0ea2"
+      },
+      {
+        "decision_id": "59f9e83681374fcf524a0a4835f2e82372e52023c4bbc09f7e6b113ceb552234",
+        "symbol": "1000PEPEUSDT",
+        "start_ms": 1791302426420,
+        "journal_sha256": "b4306d7925e7c407d9cca713ba77f2ff61ea15f490c52f949de470b7ee3d3f87",
+        "records": 10,
+        "reconstructed_receipt_sha256": "9ce54d70065db4b91dbe0f9ccf522f32c882a6d274e6c7b08d1e95d38508ac60"
+      },
+      {
+        "decision_id": "657d43349bc181bf755721c33d17f3e2c12a4541a5512ddf65e60c626287e2cc",
+        "symbol": "LDOUSDT",
+        "start_ms": 1791295288947,
+        "journal_sha256": "56df668fd7f4b793ce5b312f5a2eb4be4233cf1b330af073a69c4d821677d955",
+        "records": 12,
+        "reconstructed_receipt_sha256": "db903877d62c8fd40464104bb8dc8b7dc2574dd48c9779eecf8222aa3b7613bc"
+      },
+      {
+        "decision_id": "65802c25f383e85361532bf9ef9f08600c2c6cf53a70cab78fb6fbe8c96606fd",
+        "symbol": "TRXUSDT",
+        "start_ms": 1791406936347,
+        "journal_sha256": "8f5e39a50cf4019f6abe248a4a48d747940eea1378296ce10734e47939148a2e",
+        "records": 12,
+        "reconstructed_receipt_sha256": "1a47a1e8e0b2ab0475e0fa9132b76f977db5fc3000026b35c2f1330af4aedc8b"
+      },
+      {
+        "decision_id": "80505b4da02de1676ed842d24ce25cba56d48818a48befb85f501d7252872ab8",
+        "symbol": "SOLUSDT",
+        "start_ms": 1791244900432,
+        "journal_sha256": "60b1b3883017f37ff2bbd8fa18317108ee55afdd6d4f38842a16e35cc0654a10",
+        "records": 11,
+        "reconstructed_receipt_sha256": "79c2eaf7e97e3acf108f2e9db79aa769badcbff56caeec4637fb02699cb85c0b"
+      },
+      {
+        "decision_id": "83853dc0811e47fbc041c18746cea2f1b49d5a8a837310f92db91ba7665a51d8",
+        "symbol": "PEOPLEUSDT",
+        "start_ms": 1791277328268,
+        "journal_sha256": "b9478771a99e317c043cbaf7daef858c233359cd612b6a6438790afea97dd0dc",
+        "records": 15,
+        "reconstructed_receipt_sha256": "667fac4d96922b16363f00541896aed075b281620c39bcf2fa8fd07b0aac3c18"
+      },
+      {
+        "decision_id": "8855eebc0740c9b095ec6d536e854fbbb157d242063b9525a367e9940e91e61f",
+        "symbol": "OPUSDT",
+        "start_ms": 1791104514733,
+        "journal_sha256": "719193b9d5415dfacdc1d077feb77f48f75078c47d24163d0e3decf6e12f52a3",
+        "records": 3,
+        "reconstructed_receipt_sha256": "7e03cfa5bc335ccd5e9fba0ab26a25d22ee9edc393e54f9c071076c924cb51cc"
+      },
+      {
+        "decision_id": "8ee1e6307afda5591163c7c4641feaf6f0338df29e0d99c5e343121d1dfa816b",
+        "symbol": "WLDUSDT",
+        "start_ms": 1791194529070,
+        "journal_sha256": "b647cb17cc31caf857a2263c34204f09c9ffc574b91a3832b8443957e3e4c2c1",
+        "records": 11,
+        "reconstructed_receipt_sha256": "6e17b8e89473c3d93250437506531c1ab4e902676849b02e56c36fb90c4b99b1"
+      },
+      {
+        "decision_id": "90ec63230c3f452ef83c542c1d0860c53bb3a61fc40ff3fd3c1a74499b85e906",
+        "symbol": "TRXUSDT",
+        "start_ms": 1791234116134,
+        "journal_sha256": "acd7bfd148273989d5fc47e57c4d62ffc41c8c9a1ae964582e8445c7ae38ce45",
+        "records": 3,
+        "reconstructed_receipt_sha256": "2ae7433181fc9b1d520eede463b540f0da0b5230d5983d00620b23a1d08843f2"
+      },
+      {
+        "decision_id": "911ad24e062daa0d830aaff32261b6b801a21f07ff2b9c17f9c0f38186be9e06",
+        "symbol": "1000RATSUSDT",
+        "start_ms": 1790989227392,
+        "journal_sha256": "3d4197dfd0a93bc3c147326921f4cc92c21a87d0f749dd5b9473b1ba26e93f4b",
+        "records": 3,
+        "reconstructed_receipt_sha256": "6e3fb176ce702d56cd91a0e2d55c630a3d5288957749995cec55a4dce7ef0485"
+      },
+      {
+        "decision_id": "9a51bfef7251b21eb1d07841debcf5dc53b578cc3837367bba8009659aa679c6",
+        "symbol": "ORDIUSDT",
+        "start_ms": 1791457308440,
+        "journal_sha256": "2cec76973d294cd0b1a863b3b9282118b310282cfb8ddd1c28bebc52c9a27de2",
+        "records": 3,
+        "reconstructed_receipt_sha256": "89b405ba7592ddf1903a6bf31ed06c7edd2a04a880749304dc51519c192574d0"
+      },
+      {
+        "decision_id": "c231e3c1ca5187fb4292ba3ceac7b2a08910a3a6204734165aadbdfa61a6544e",
+        "symbol": "XMRUSDT",
+        "start_ms": 1791129768031,
+        "journal_sha256": "8c365ab8971bf291a1909cc2ea0d3f937b4a38a5e7d4f00768f2de3409b7287c",
+        "records": 10,
+        "reconstructed_receipt_sha256": "a08f111464f815e5ed1d580420fd1542214cf07110607d6b6eb23b77c3d7f21d"
+      },
+      {
+        "decision_id": "d11354cb5f26bd9685773f77387714af37e7a957237ac2f0e004d129ec8a0061",
+        "symbol": "ETCUSDT",
+        "start_ms": 1791104482726,
+        "journal_sha256": "bd06c0409e81a35d8e68ade35a7e1a3607de8077ad6a80aea0a55812583a71f5",
+        "records": 15,
+        "reconstructed_receipt_sha256": "b7491f5da912989de5310a541d3d5647a2c9dd95d7fe90beca19238b7adb16a4"
+      },
+      {
+        "decision_id": "d2adeb9b4b26256c0bb4052a4b2e45400d55b8014ea02ef393162a42a9286322",
+        "symbol": "SHIB1000USDT",
+        "start_ms": 1791302526531,
+        "journal_sha256": "8c948416e9cc2bc609d716e9dbcefe95a7198f5648d7d7e0f5d82fbc12be8c4d",
+        "records": 13,
+        "reconstructed_receipt_sha256": "ab0f6d466bc99a009e35af88ca2a906674143658f128442a2f9cc5974ff26d9d"
+      },
+      {
+        "decision_id": "d97b10bab403933a9afdee1c76202aca3bb918e696a5e3df9b5e3d274f2a2cb5",
+        "symbol": "STRKUSDT",
+        "start_ms": 1791010897296,
+        "journal_sha256": "bf514c66df825d467093c3dd8960294071118927631e046f50519cc489ba47b0",
+        "records": 3,
+        "reconstructed_receipt_sha256": "3623c48d352864366665fc8ea0fb6c7b48599c1252d73a2c400966132fe8c48f"
+      },
+      {
+        "decision_id": "ded807093648ec8c7a6e764b1ef603fd41eda6aa277ecf91698c58f64794e3fb",
+        "symbol": "WIFUSDT",
+        "start_ms": 1791302551109,
+        "journal_sha256": "287eee85142d90238b67355371abcbfab4f3ac2f9866f6762c43a032772f2650",
+        "records": 12,
+        "reconstructed_receipt_sha256": "5c2ae028bb4b60d3c86fafe166b6973f86a83ac5ea61af5deec5aa7017fc2167"
+      },
+      {
+        "decision_id": "eb426568ce49e52a44465a761067e55af078c9f5ebf6f81d8c26ccabac512bfc",
+        "symbol": "INJUSDT",
+        "start_ms": 1791446487533,
+        "journal_sha256": "23128573059488498c340c7e256bd6be91a5d2b9e3b81ecd46c38554f231ad8e",
+        "records": 12,
+        "reconstructed_receipt_sha256": "4efca8cc41217cbc26cc7a1faf40ca2fb53a6c8f7d63cc4fd4f3d61c281013b6"
+      }
+    ],
+    "old_entry_retirement": {
+      "pid": 1648585,
+      "ATT1_ENTRY_RETIRED": "1"
+    },
+    "gap_clock_caveat": "rejected-book RECOVERY_GAP exchange_ms defaults to last accepted event, not rejected raw CTS; delta is not wire age or measured REST latency",
+    "new_money_gate": "UNCHANGED_2_TO_3_CLEAN_PLUS_ACTUAL_DOSSIER_AND_SEPARATE_GO"
+  },
+  "services": {
+    "bybot.service": [
+      "MainPID=1648585",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "trading-journal-web.service": [
+      "MainPID=1623208",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "att1-lifecycle-zero-risk-v2.service": [
+      "MainPID=1584802",
+      "NRestarts=0",
+      "ActiveState=active"
+    ]
+  },
+  "completed_probe_services": {
+    "att1-transport-probe-48h": [
+      "MainPID=0",
+      "NRestarts=0",
+      "ActiveState=inactive"
+    ],
+    "att1-funding-probe-48h": [
+      "MainPID=0",
+      "NRestarts=0",
+      "ActiveState=inactive"
+    ]
+  },
+  "read_only": true,
+  "broker_writes": 0,
+  "remote_writes": 0,
+  "plan_reservations": 0,
+  "no_new_strategy_research_or_judge": true,
+  "next_action": "One XOM PAPER13:30–13:35UTC Oct9 only after fresh raw quote/account/fees/qty/gates and exhaustive shared-lock/writer checks; LIVE HALT remains"
+}
