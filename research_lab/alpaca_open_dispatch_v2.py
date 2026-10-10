@@ -256,7 +256,8 @@ class OpeningDispatcher:
         if any(p.is_symlink() for p in [self.plan_store,*self.plan_store.parents]):
             raise ValueError('SOURCE_BOOK_SYMLINK')
         with sqlite3.connect(self.plan_store.as_uri()+'?mode=ro',uri=True) as db:
-            return [json.loads(row[0]) for row in db.execute('SELECT payload FROM intents')]
+            from research_lab.alpaca_dynamic_v1 import DynamicBook
+            return DynamicBook.active_from_db(db)
 
     def _check_declarations(self):
         if set(self.checks) != set(STATIC_CHECKS):raise ValueError('STATIC_SOURCE_REVIEW_INCOMPLETE')

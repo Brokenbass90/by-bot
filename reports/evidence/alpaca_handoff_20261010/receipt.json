@@ -1,0 +1,122 @@
+{
+  "schema": "ALPACA_EXPIRED_NONDISPATCH_HANDOFF_V1",
+  "status": "EXPIRED_NONDISPATCH_APPLIED_ORDERS_OFF",
+  "observed_ms": 1791624919639,
+  "broker_writes": 0,
+  "runtime_metadata_transactions": 1,
+  "orders_allowed": false,
+  "money_authority": false,
+  "live_entry_halted": true,
+  "live_positions": 0,
+  "live_orders": 0,
+  "live_cash": "496.12",
+  "paper_positions": 5,
+  "paper_orders": 0,
+  "paper_dispatch_intents": 0,
+  "original_plan": {
+    "client_order_id": "dyn1-a23c310ccdd9c6706bf6d006d5b778e2",
+    "epoch_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+    "evidence_kind": "INPUT_PROVIDED_ORDERS_OFF",
+    "fee_rate": "0",
+    "funding_limit_usd": "124.699999985736",
+    "modeled_stop_risk_usd": "5.15819940854",
+    "money_authority": false,
+    "notional_limit_usd": "124.699999985736",
+    "notional_usd": "124.69999992848",
+    "orders_allowed": false,
+    "prepared_ms": 1791552837216,
+    "protection_qty": "0.705636034",
+    "protection_tif": "day",
+    "qty": "0.705636034",
+    "ranking_sha256": "aed1c2d80e5887b656b1564d5fa837030959c4daa96599fce81436ff0921b283",
+    "receipt_id": "a23c310ccdd9c6706bf6d006d5b778e247f19d63d36de77eb7840bb4d30c560b",
+    "reference_ask": "176.72",
+    "risk_distance": "7.31",
+    "session": "2026-10-09",
+    "slot_entry_order_id": "2b559bee-1818-450d-b5c0-1d1b015c2422",
+    "snapshot_sha256": "0d042b41c2723483206d7e68aa1bfa3ba366336e56c1bfc2795e1177aabdf8f4",
+    "source_sha256": "acd5dc558a64bc1604b4b840f6f4c18f050c3fe2447199d75728b6f5cf3f840d",
+    "status": "RESERVED_ORDERS_OFF",
+    "stop_price": "169.41",
+    "symbol": "XOM"
+  },
+  "history_intents": 1,
+  "active_intents": 0,
+  "original_rows_unchanged": true,
+  "original_tables_sha256": "b1d4df04248d6f1876a364e8aa8f1f834c669cf2f4b78fe18e92dcdde15c24ec",
+  "before_book_sha256": "0f54c1fc1b06899ffa4205bc35491d56f38d1ff46672f6401613a9d8df5b75f4",
+  "after_book_sha256": "40995301ebc9a651b3769d9c71037a25cc608a42e4550a3c6484070cd9ce81c1",
+  "retirement": {
+    "status": "EXPIRED_NEVER_DISPATCHED",
+    "money_authority": false,
+    "orders_allowed": false,
+    "evidence_kind": "INPUT_PROVIDED_ORDERS_OFF",
+    "receipt_id": "a23c310ccdd9c6706bf6d006d5b778e247f19d63d36de77eb7840bb4d30c560b",
+    "original_plan_sha256": "1978e38dcf7ba405e4f2864545da1b14f6de77ec085d9fdf333197492a00ceec",
+    "proof_sha256": "9ef69728aca49a8fdf24880fb6e9bc9353cb757db10a9f25c9f372abadfae82d",
+    "proof": {
+      "schema": "ALPACA_EXPIRED_NONDISPATCH_PROOF_V1",
+      "policy_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+      "receipt_id": "a23c310ccdd9c6706bf6d006d5b778e247f19d63d36de77eb7840bb4d30c560b",
+      "original_plan_sha256": "1978e38dcf7ba405e4f2864545da1b14f6de77ec085d9fdf333197492a00ceec",
+      "observed_ms": 1791624919639,
+      "paper_account_id": "4cdbfb77-d1e0-4789-86b2-341bc886efaf",
+      "live_account_id": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+      "live_entry_halted": true,
+      "single_owner_reviewed": true,
+      "entry_client_order_id": "dyp-6f5db25236e869c2939c2201ed41e797",
+      "stop_client_order_id": "dys-6f5db25236e869c2939c2201ed41e797",
+      "entry_client_id_http_status": 404,
+      "stop_client_id_http_status": 404,
+      "paper_store_intents": 0,
+      "paper_hwm_present": false,
+      "symbol_position_absent": true,
+      "symbol_orders_absent": true,
+      "source_sha256": "26000f85eeb8bde756a739498ec1b8dcf769eb1f5c5fe4637bd555ea07459b32",
+      "broker_authenticated_by_this_validator": false,
+      "review_permit_sha256": "ce82e8c1c97e827b9850094bc0cd0ccfb30f553558aba8c85ef83e89e624480a"
+    },
+    "broker_truth_authenticated": false
+  },
+  "source_manifests": {
+    "/opt/bybot-research/alpaca-rearm-isolation-20261007-r2/app": {
+      "files": 61,
+      "mismatches": [],
+      "manifest_sha256": "ca9559400a62a7ebb4d2b8a823d08630e73b65e8fff7ed05232c4100c677a5f6"
+    },
+    "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/app": {
+      "files": 23,
+      "mismatches": [],
+      "manifest_sha256": "4f6e5288790174b9a9fdfb031d4e7a229c8b852ed2eef96785003d30961f76d3"
+    },
+    "/opt/bybot-research/alpaca-intended-paper/app": {
+      "files": 46,
+      "mismatches": [],
+      "manifest_sha256": "bd521caa637c7e0d20ba715adca9605e78857a6a7b2ed7253662cdbf125c9395"
+    }
+  },
+  "services": {
+    "bybot.service": [
+      "MainPID=1648585",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "trading-journal-web.service": [
+      "MainPID=1623208",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "att1-lifecycle-zero-risk-v2.service": [
+      "MainPID=1584802",
+      "NRestarts=0",
+      "ActiveState=active"
+    ]
+  },
+  "private_capture_sha256": "346f03964ec04c045c58b3bc25ffbdbe9bca3b7f4c930b0675792703d9c40ffe",
+  "operation_sha256": "2c837f3da2f22c114abf54d1f590e668733211ba19556b9230bcd4d7794fb0e2",
+  "remote_query_sha256": "48c8eb4ea53ad7af7da5bf2588a8bb23b4fa9e969dd9880a945748ec9c5cd2b3",
+  "actual_next_session_readiness": "BLOCKED_DATA_NEXT_SESSION_PACKET",
+  "new_controller_deployed": false,
+  "next_opening_armed": false,
+  "lifecycle_pass": false
+}

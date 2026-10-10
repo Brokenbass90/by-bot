@@ -1,0 +1,16 @@
+{
+  "status": "APPROVED_ORDERS_OFF_RETIREMENT_ONLY",
+  "review_verdict": "APPROVE_ORDERS_OFF_RETIREMENT_ONLY_WITH_LIMITATIONS",
+  "reviewer": "/root/alpaca_non_dispatch_financial_review_oct10",
+  "review_runtime_model": "gpt-6-astra",
+  "review_runtime_effort": "high",
+  "review_rollout_id": "01a12525-5c56-7222-96b3-1304aa54f781",
+  "operation_sha256": "2c837f3da2f22c114abf54d1f590e668733211ba19556b9230bcd4d7794fb0e2",
+  "module_sha256": "50b0956b5d4fa5ed66c295a3c340ea8b71d4902b5a5bf0e5ff569a99f551145a",
+  "capture_script_sha256": "f4d2f86a62c2957f8075bff78ba11d8261ed4d37d9dcbfa5755efa85360674cc",
+  "parent_capture_script_sha256": "70f5cca368f6dccf25b71bccc98a8b4122175f269c1f22906fca0673452a2b66",
+  "baseline_capture_sha256": "aab958123ee2190979705ad433a5af7b4d44c8d25a0e6c58fa85a2c8aa5f60b6",
+  "single_owner_for_non_dispatch_handoff_reviewed": true,
+  "scope": "One atomic Oct9 never-dispatched PAPER reservation retirement; preserve original five tables; no future entry ownership, deployment, scheduler, broker order or LIVE authority.",
+  "receipt_loss_recovery": "GET-only capture; compare original-table hash b1d4df04248d6f1876a364e8aa8f1f834c669cf2f4b78fe18e92dcdde15c24ec, exact one retirement/zero attempts and proof/review-permit hashes. No blind rerun or evidence deletion."
+}

@@ -1,5 +1,26 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October10 continuation: **EXPIRED_NONDISPATCH_APPLIED_ORDERS_OFF**.
+Read [ALPACA_HANDOFF_AND_CRYPTO_INPUTS_2026_10_10.md](ALPACA_HANDOFF_AND_CRYPTO_INPUTS_2026_10_10.md)
+and its actual receipt. Fresh09:35UTC LIVE flat/HALT/cash496.12/fees0; PAPER five
+legacy positions/XOMabsent/orders0/both exactCIDs404/store0/noHWM.
+One reviewed append-only metadata transaction retired the Oct9 never-dispatched
+attempt in the original VPS book: history1/active0, original five tables unchanged.
+126targetedPASS; one runtime-verified6-astra/high review/twoP1source gaps closed.
+61/23/46 exact app manifests, legacy wrapper/cron/XOM exclusion and production
+PIDs/NRestarts unchanged. No broker orders/deploy/scheduler/LIVEchange.
+New controller/library remain local; old deployed code still sees original intent.
+No Monday job armed, no lifecyclePASS; BLOCKED_DATA_NEXT_SESSION_PACKET remains.
+Next opening needs actual weekly closed-data/source/ownership/fees/ranking and
+reviewed PAPER-only session scope beforeT−15/READY beforeT−1. No old-plan resend.
+Crypto two original baselines unchanged; source metadata now pinned, source-complete
+prereg still BLOCKED_SOURCE_INPUT: H4/as-of/costs/funding/independence plus event
+M5/levels. Claude owns research; B3spentFAIL/no universaltrendveto/Gold duplication.
+ETS2M originalOct10 19UTC/22Cyprus job remains; precheck COHORT_PIN_MISMATCH,
+no early outcome/judge/repin. If unchanged atdue, honestBLOCKED_DATA.
+Dated previous reservation-blocked statements below are superseded only for
+this sourced retirement; they grant no next-session or money authority.
+
 October9 engineering delivery: **Alpaca LOCAL_CANDIDATE_PASS / operational
 BLOCKED_DATA_NEXT_SESSION_PACKET; CRYPTO_CORE_V2_BASELINES_READY_FOR_PREREG_INPUT.**
 Read [ALPACA_DISPATCH_AND_CRYPTO_BASELINES_2026_10_09.md](ALPACA_DISPATCH_AND_CRYPTO_BASELINES_2026_10_09.md)

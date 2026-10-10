@@ -1,0 +1,40 @@
+{
+  "verification_source": "fresh tool exec pytest / write_stdin session71551; full output observed",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--tb=short",
+    "tests/test_alpaca_expired_reservation_handoff.py",
+    "tests/test_alpaca_handoff_operation.py",
+    "tests/test_alpaca_dynamic_v1.py",
+    "tests/test_alpaca_open_dispatch_v2.py",
+    "tests/test_alpaca_dynamic_paper.py",
+    "tests/test_alpaca_dynamic_paper_maintenance.py"
+  ],
+  "outcome": "PASS",
+  "passed": 126,
+  "duration_seconds": 2.77,
+  "full_suite_run_this_cycle": false,
+  "full_suite_current_status": "NOT_GREEN_PREVIOUS_LIMITATION",
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "runtime_verified_agents": {
+    "ets2m_metadata": {
+      "rollout_id": "01a12516-1412-71e3-b613-09eb402e9e20",
+      "model": "gpt-5.6-luna",
+      "effort": "medium"
+    },
+    "crypto_metadata": {
+      "rollout_id": "01a12525-8f61-7622-9ff3-3f9a9d8cde75",
+      "model": "gpt-5.6-luna",
+      "effort": "medium"
+    },
+    "financial_review": {
+      "rollout_id": "01a12525-5c56-7222-96b3-1304aa54f781",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "same_review_fix_followup": true
+    }
+  }
+}

@@ -106,6 +106,8 @@ class DynamicBook:
             db.execute('CREATE TABLE IF NOT EXISTS rankings (window INTEGER PRIMARY KEY,payload TEXT NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS slots (entry TEXT PRIMARY KEY,payload TEXT NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS intents (entry TEXT PRIMARY KEY,session TEXT NOT NULL,payload TEXT NOT NULL)')
+            db.execute('CREATE TABLE IF NOT EXISTS intent_attempts (receipt TEXT PRIMARY KEY,entry TEXT NOT NULL,session TEXT NOT NULL,payload TEXT NOT NULL)')
+            db.execute('CREATE TABLE IF NOT EXISTS intent_retirements (receipt TEXT PRIMARY KEY,payload TEXT NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS exits (entry TEXT PRIMARY KEY,payload TEXT NOT NULL)')
             prior=db.execute("SELECT value FROM meta WHERE key='policy'").fetchone()
             if prior and prior[0]!=self.policy_hash:raise ValueError('POLICY_CONFLICT')
@@ -146,7 +148,80 @@ class DynamicBook:
         return digest(r)
 
     def intent_count(self):
-        with self.db() as db:return db.execute('SELECT COUNT(*) FROM intents').fetchone()[0]
+        with self.db() as db:return len(self.history_from_db(db))
+
+    @staticmethod
+    def history_from_db(db):
+        tables={r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        plans=[json.loads(raw) for raw, in db.execute('SELECT payload FROM intents')]
+        if 'intent_attempts' in tables:
+            plans.extend(json.loads(raw) for raw, in db.execute('SELECT payload FROM intent_attempts'))
+        if len({p['receipt_id'] for p in plans})!=len(plans):raise ValueError('DUPLICATE_INTENT_RECEIPT')
+        return plans
+
+    @staticmethod
+    def active_from_db(db):
+        plans=DynamicBook.history_from_db(db)
+        tables={r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        retired={}
+        if 'intent_retirements' in tables:
+            for receipt_id,raw in db.execute('SELECT receipt,payload FROM intent_retirements'):
+                item=json.loads(raw);plan=next((p for p in plans if p['receipt_id']==receipt_id),None)
+                if (not plan or item['status']!='EXPIRED_NEVER_DISPATCHED'
+                    or item['original_plan_sha256']!=digest(plan)
+                    or item['proof_sha256']!=digest(item['proof'])
+                    or item['receipt_id']!=receipt_id):raise ValueError('RETIREMENT_STATE_CONFLICT')
+                retired[receipt_id]=item
+        active=[p for p in plans if p['receipt_id'] not in retired]
+        if len({p['slot_entry_order_id'] for p in active})!=len(active):raise ValueError('DUPLICATE_ACTIVE_LINEAGE')
+        return active
+
+    def active_intents(self):
+        with self.db() as db:return self.active_from_db(db)
+
+    def retire_undispatched(self,receipt_id,proof,now_ms):
+        """Append an input-provided non-dispatch proof; never authenticate a broker.
+
+        A real application requires separately reviewed fresh GETs and custody
+        under the original account lock. Original plan/slot rows never change.
+        """
+        with self.db() as db:
+            plans=self.history_from_db(db);plan=next((p for p in plans if p['receipt_id']==receipt_id),None)
+            if not plan:raise ValueError('UNKNOWN_PARENT_INTENT')
+            old=db.execute('SELECT payload FROM intent_retirements WHERE receipt=?',(receipt_id,)).fetchone()
+            if old:
+                result=json.loads(old[0])
+                if result['proof_sha256']!=digest(proof):raise ValueError('RETIREMENT_PROOF_CONFLICT')
+                self.active_from_db(db)
+                return result
+            if any(json.loads(raw).get('parent_receipt_id')==receipt_id
+                   for raw, in db.execute('SELECT payload FROM slots')):raise ValueError('FILLED_PARENT_CANNOT_RETIRE')
+            session=next((s for s in self.policy['calendar_sessions'] if s['session']==plan['session']),None)
+            now=instant(now_ms);observed=instant(proof['observed_ms'])
+            account=proof['paper_account_id'];identity=digest({'parent':receipt_id,'paper_account':account})
+            if (not session or now<session['open_ms']+300000 or observed<session['open_ms']+300000
+                or not 0<=now-observed<=self.policy['max_snapshot_age_ms']
+                or proof['schema']!='ALPACA_EXPIRED_NONDISPATCH_PROOF_V1'
+                or proof['policy_sha256']!=self.policy_hash or proof['receipt_id']!=receipt_id
+                or proof['original_plan_sha256']!=digest(plan)
+                or proof['live_account_id']!=self.policy['account_id'] or not isinstance(account,str)
+                or not account or account==self.policy['account_id']
+                or proof['entry_client_order_id']!='dyp-'+identity[:32]
+                or proof['stop_client_order_id']!='dys-'+identity[:32]
+                or proof['entry_client_id_http_status']!=404 or proof['stop_client_id_http_status']!=404
+                or type(proof['paper_store_intents']) is not int or proof['paper_store_intents']!=0
+                or proof['paper_hwm_present'] is not False
+                or proof['broker_authenticated_by_this_validator'] is not False
+                or any(proof[k] is not True for k in ['live_entry_halted','single_owner_reviewed',
+                                                      'symbol_position_absent','symbol_orders_absent'])):
+                raise ValueError('EXPIRED_NONDISPATCH_PROOF_UNCONFIRMED')
+            pin(proof['source_sha256'])
+            result=self.result('EXPIRED_NEVER_DISPATCHED',receipt_id=receipt_id,
+                original_plan_sha256=digest(plan),proof_sha256=digest(proof),proof=proof,
+                broker_truth_authenticated=False)
+            db.execute('INSERT INTO intent_retirements VALUES (?,?)',(receipt_id,canonical(result).decode()))
+            self.active_from_db(db)
+            return result
 
     def ranking_at(self,window_ms):
         with self.db() as db:
@@ -193,7 +268,7 @@ class DynamicBook:
                 if old and old[0]!=raw:raise ValueError('EXIT_SOURCE_CONFLICT')
                 db.execute('INSERT OR IGNORE INTO exits VALUES (?,?)',(slot['entry_order_id'],raw))
         if not vacancies:return self.result('NO_CONFIRMED_VACANCY')
-        consumed={entry:json.loads(raw) for entry,raw in db.execute('SELECT entry,payload FROM intents')}
+        consumed={p['slot_entry_order_id']:p for p in self.active_from_db(db)}
         free=sorted((v for v in vacancies if v['entry_order_id'] not in consumed),key=lambda r:r['entry_order_id'])
         if not free:return consumed[vacancies[0]['entry_order_id']]
         for intent in consumed.values():
@@ -201,7 +276,7 @@ class DynamicBook:
             if not children:return self.result('PENDING_RESERVATION',reason='UNRESOLVED_PRIOR_INTENT',receipt_id=intent['receipt_id'])
             child=children[0]
             if child['symbol'] not in held and child not in vacancies:raise ValueError('PAPER_POSITION_UNRECONCILED')
-        if db.execute('SELECT COUNT(*) FROM intents WHERE session=?',(current['session'],)).fetchone()[0]>=1:return self.result('SESSION_ENTRY_BUDGET')
+        if any(p['session']==current['session'] for p in self.history_from_db(db)):return self.result('SESSION_ENTRY_BUDGET')
         if len(held)>=p['max_positions']:return self.result('NO_ELIGIBLE_CANDIDATE',reason='POSITION_CAP')
         gross=sum((positive(r['market_value']) for r in s['positions']),Decimal(0))
         if gross<0:raise ValueError('INVALID_GROSS')
@@ -228,13 +303,17 @@ class DynamicBook:
                 'protection_tif':'gtc' if qty==qty.to_integral_value() else 'day','ranking_sha256':digest(ranking),
                 'snapshot_sha256':digest(s),'source_sha256':s['source_sha256'],'session':current['session'],'prepared_ms':now}
             identity=digest(core);result=self.result('RESERVED_ORDERS_OFF',**core,receipt_id=identity,client_order_id='dyn1-'+identity[:32])
-            db.execute('INSERT INTO intents VALUES (?,?,?)',(slot['entry_order_id'],current['session'],canonical(result).decode()));return result
+            if db.execute('SELECT 1 FROM intents WHERE entry=?',(slot['entry_order_id'],)).fetchone():
+                db.execute('INSERT INTO intent_attempts VALUES (?,?,?,?)',(identity,slot['entry_order_id'],current['session'],canonical(result).decode()))
+            else:db.execute('INSERT INTO intents VALUES (?,?,?)',(slot['entry_order_id'],current['session'],canonical(result).decode()))
+            return result
         return self.result('NO_ELIGIBLE_CANDIDATE')
 
     def register_paper_fill(self,receipt_id,fill):
         """Accept a synthetic PAPER lifecycle only; never authenticate LIVE execution."""
         with self.db() as db:
-            plans=[json.loads(raw) for raw, in db.execute('SELECT payload FROM intents')];plan=next((p for p in plans if p['receipt_id']==receipt_id),None)
+            if db.execute('SELECT 1 FROM intent_retirements WHERE receipt=?',(receipt_id,)).fetchone():raise ValueError('RETIRED_PARENT_INTENT')
+            plans=self.history_from_db(db);plan=next((p for p in plans if p['receipt_id']==receipt_id),None)
             if not plan:raise ValueError('UNKNOWN_PARENT_INTENT')
             if fill['evidence_kind']!='PAPER_SIMULATED' or fill['account_id']!=self.policy['account_id'] or fill['symbol']!=plan['symbol'] or fill['entry_status']!='filled' or fill['stop_status']!='new':raise ValueError('INVALID_PAPER_FILL')
             qty=positive(fill['qty']);price=positive(fill['price']);stop=positive(fill['stop_price'])

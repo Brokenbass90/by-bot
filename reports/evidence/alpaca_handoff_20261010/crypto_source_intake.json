@@ -1,0 +1,100 @@
+{
+  "schema": "CRYPTO_CORE_V2_SOURCE_METADATA_INTAKE_V1",
+  "research_ref": "cf904086a2d887a96ac2be3324a3d78433e1a94b",
+  "scope": "metadata only; no outcome or judge",
+  "status": "BLOCKED_SOURCE_INPUT",
+  "money_authority": false,
+  "orders_allowed": false,
+  "original_source_blobs": {
+    "event_expansion_retest_long_v1": "e50c4f1a0610c03e6ed79a9bc06023f14a12dcfa",
+    "alt_support_bounce_v1": "b8fcdca3974161ddc1804384fd1dd5bb28168857"
+  },
+  "independence": "UNKNOWN",
+  "consumed_periods": "UNKNOWN",
+  "actual_cost_packet": "UNKNOWN_BLOCKED",
+  "h4_derivative": "NOT_PRESENT_AS_PINNED_NATIVE_INPUT",
+  "timestamp_availability_semantics": "NOT_CERTIFIED_BY_THIS_METADATA_INVENTORY",
+  "samples_are_not_approved_universe": true,
+  "samples": {
+    "BTCUSDT": {
+      "path": "research_lab/data/h1/BTCUSDT.npz",
+      "sha256": "811c06ea3a1aadc522da4d67106591efa77905d128fac5f245b714bd33a75e49",
+      "keys": [
+        "ts",
+        "ohlcv",
+        "nsub"
+      ],
+      "rows": 31635,
+      "first_ts": 1672534800000,
+      "last_ts": 1786417200000,
+      "non_hour_steps": 0,
+      "nsub_min": 12,
+      "nsub_max": 12
+    },
+    "ETHUSDT": {
+      "path": "research_lab/data/h1/ETHUSDT.npz",
+      "sha256": "9c669dc6c1de71d561f42cc971c7083515116bf83086f6f556d89ba5f4bcbd8e",
+      "keys": [
+        "ts",
+        "ohlcv",
+        "nsub"
+      ],
+      "rows": 31635,
+      "first_ts": 1672534800000,
+      "last_ts": 1786417200000,
+      "non_hour_steps": 0,
+      "nsub_min": 12,
+      "nsub_max": 12
+    },
+    "SOLUSDT": {
+      "path": "research_lab/data/h1/SOLUSDT.npz",
+      "sha256": "b840fc63bbb6636f7f0e91b78944ca1fcb00f04ba8c44e8f6588016dbbad4074",
+      "keys": [
+        "ts",
+        "ohlcv",
+        "nsub"
+      ],
+      "rows": 31635,
+      "first_ts": 1672534800000,
+      "last_ts": 1786417200000,
+      "non_hour_steps": 0,
+      "nsub_min": 12,
+      "nsub_max": 12
+    },
+    "AVAXUSDT": {
+      "path": "research_lab/data/h1/AVAXUSDT.npz",
+      "sha256": "6840f24e696a678d4ea932c248b9a0f0c2292bf655ba25efcea24ba9580987b8",
+      "keys": [
+        "ts",
+        "ohlcv",
+        "nsub"
+      ],
+      "rows": 17278,
+      "first_ts": 1721005200000,
+      "last_ts": 1783202400000,
+      "non_hour_steps": 0,
+      "nsub_min": 12,
+      "nsub_max": 12
+    }
+  },
+  "coverage_manifest": {
+    "path": "research_lab/data/h1_coverage.csv",
+    "sha256": "67300da31fa820679b20b21e58d02bdeecadd31b5bbc550bea8a0ffbd1df17dc",
+    "rows": 137
+  },
+  "missing_inputs": {
+    "event": [
+      "fixed symbol universe",
+      "contiguous exact M5 and source/preparation/as-of metadata",
+      "closed M15/H1/H4 rows and frozen level snapshots",
+      "historical funding treatment and fee/slippage sources",
+      "consumed spans plus explicit independent validation/holdout"
+    ],
+    "bounce": [
+      "fixed symbol universe",
+      "closed H1/H4 input with source/preparation/as-of metadata",
+      "fee/slippage/funding sources",
+      "consumed spans plus explicit independent validation/holdout"
+    ]
+  }
+}

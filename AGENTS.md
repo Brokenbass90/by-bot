@@ -201,3 +201,22 @@ typed source validation; LLM proposal-only. No Claude messages or edits.
 Next money priority is the original October9 one-XOM PAPER16:30–16:35Cyprus,
 fresh gates and separate LIVE GO; if first entry is held, DAY re-arm nextOct12.
 Current HALT/caps and ATT1/ETS/KITY terminal boundaries remain unchanged.
+
+## October10 sourced non-dispatch handoff amendment
+
+Read checkpoint TOP and ALPACA_HANDOFF_AND_CRYPTO_INPUTS_2026_10_10.md/receipt.
+The October9 never-dispatched reservation was retired by one reviewed, fresh
+GET/CAS/shared-lock/atomic append-only metadata transaction on the original VPS
+book. History1/active0; original five tables and sealed app sources unchanged.
+Do not delete/retry/reprice the original plan, create a fake fill or replace the
+book. New local DynamicBook/controller understand retired history; existing
+deployed code remains unchanged. No runner or next opening is armed.
+Receipt loss after commit requires GET-only reconciliation of original-table,
+retirement proof/review-permit hashes, never a blind application retry.
+This retirement approval does not prove future all-writer ownership or authorize
+a new PAPER window/LIVE entry. Next source/weekly ranking/session scope must be
+closed before T−15/READY T−1; original October8/9 heartbeat remains terminated.
+Crypto two original engineering baselines are delivered; source-complete prereg
+remains blocked on inputs/costs/independence. Claude owns per-sleeve research,
+no universal trend veto, B3 rescue, new judge or Gold duplication. ETS2M original
+19UTC job/cohort pins remain; precheck mismatch is BLOCKED_DATA, never a repin.
