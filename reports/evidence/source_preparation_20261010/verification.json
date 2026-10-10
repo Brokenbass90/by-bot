@@ -1,0 +1,113 @@
+{
+  "schema": "SOURCE_PREPARATION_VERIFICATION_V1",
+  "observed_utc": "2026-10-10T10:17:29.917517+00:00",
+  "baseline_head": "75715d0cef6fe2ce36a1ba504c3420a1450fc9e3",
+  "source_check": "PASS_EXACT_CONSUMED_INPUT_AND_DERIVATIVE_HASHES",
+  "derivative_metadata_verified": [
+    {
+      "symbol": "BTCUSDT",
+      "timeframe": "H1",
+      "filename": "BTCUSDT_H1.jsonl",
+      "sha256": "cf46a4b0e6f0426dc8394f36508c2bfe2bd31265fa08b4ea290a01bcc355993c",
+      "bytes": 2599767,
+      "rows": 31635,
+      "first_open_ms": 1672534800000,
+      "last_open_ms": 1786417200000,
+      "timestamp_semantics": "OPEN_TIME_UTC_MS",
+      "last_closed_at_ms": 1786420800000
+    },
+    {
+      "symbol": "BTCUSDT",
+      "timeframe": "H4",
+      "filename": "BTCUSDT_H4.jsonl",
+      "sha256": "05bc64df187b52cc7d9b15c90a5350eeea6daa32cf2461a3be337bb2eefe48bc",
+      "bytes": 655521,
+      "rows": 7908,
+      "first_open_ms": 1672545600000,
+      "last_open_ms": 1786406400000,
+      "timestamp_semantics": "OPEN_TIME_UTC_MS",
+      "last_closed_at_ms": 1786420800000
+    },
+    {
+      "symbol": "ETHUSDT",
+      "timeframe": "H1",
+      "filename": "ETHUSDT_H1.jsonl",
+      "sha256": "569bc2bbad5820c0aab92ca60a72bfeee52c535741d35b9ecc97adc95d40bb72",
+      "bytes": 3061965,
+      "rows": 31635,
+      "first_open_ms": 1672534800000,
+      "last_open_ms": 1786417200000,
+      "timestamp_semantics": "OPEN_TIME_UTC_MS",
+      "last_closed_at_ms": 1786420800000
+    },
+    {
+      "symbol": "ETHUSDT",
+      "timeframe": "H4",
+      "filename": "ETHUSDT_H4.jsonl",
+      "sha256": "de55f10b04ccbd476782e119e8e7dbcd197f23a1258e7e879875d3f1ed6c9058",
+      "bytes": 774665,
+      "rows": 7908,
+      "first_open_ms": 1672545600000,
+      "last_open_ms": 1786406400000,
+      "timestamp_semantics": "OPEN_TIME_UTC_MS",
+      "last_closed_at_ms": 1786420800000
+    }
+  ],
+  "derived_v2_bytes_equal_retained_v1": true,
+  "test_command": ".venv/bin/python -m pytest -q tests/test_bounce_range_source_packet.py tests/test_crypto_core_v2_baselines.py tests/test_closed_bar_aggregation_v1.py",
+  "targeted_pass": 69,
+  "full_suite_run": false,
+  "full_suite_status": "PREVIOUS_NOT_GREEN_NOT_RETESTED",
+  "review": {
+    "count": 1,
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "runtime_thread": "01a1254b-ea49-70c1-a29f-53e67aec1658",
+    "runtime_metadata_verified": true,
+    "important_findings": 1,
+    "closed_findings": 1,
+    "scope": "source integrity and causality, no broker/outcomes",
+    "fix": "verify and parse same in-memory bytes; reject final source drift before output",
+    "red_green_regressions": 2,
+    "same_review_closure": "P2_CLOSED_NO_REMAINING_IMPORTANT"
+  },
+  "inventory_workers": [
+    {
+      "path": "/root/breakout_sources_and_bounce_provenance_oct10",
+      "thread": "01a1253f-cfc4-71d0-a26b-596427c089b7",
+      "model": "gpt-5.6-luna",
+      "effort": "medium",
+      "runtime_metadata_verified": true
+    },
+    {
+      "path": "/root/alpaca_monday_static_inventory_oct10",
+      "thread": "01a1253f-fa90-7010-a77a-af58c527e054",
+      "model": "gpt-5.6-luna",
+      "effort": "medium",
+      "runtime_metadata_verified": true
+    }
+  ],
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "git_scope_sha256": {
+    ".gitignore": "81be619ae405c13d4b38263626a39d278461bc913fd94fcffb66a3e509f79ce3",
+    "research_lab/bounce_range_source_packet.py": "8c95d462a4387bce01f021718d7855f24670a5dcf98f12682b09b0a4a0e284a7",
+    "scripts/prepare_bounce_range_sources.py": "5adc947e18f983f71287525722732d7a7d2a60d81090b72fbdd262f004d0d3bd",
+    "tests/test_bounce_range_source_packet.py": "6ab210797b49dc80be3782af773618b82f507a9d766dd73eba9bdd15a9f5fd1e",
+    "reports/evidence/source_preparation_20261010/alpaca_monday_static.json": "f244b56c34f6dc6e1dcd8908cc8b05a52e867d06c1ccc17e3c267dd546fe61ca",
+    "reports/evidence/source_preparation_20261010/bounce_manifest.json": "6e022b23ba94b19be11f24a90aabea2a4db63a8e340d293481e0f67b48c456e5",
+    "reports/evidence/source_preparation_20261010/breakout_acquisition.json": "7c050a123e4aaeb8de5d364a7020aa87018b7a4e7b273ba763e9c11c3f62443d"
+  },
+  "broker_calls": 0,
+  "ssh_calls": 0,
+  "strategy_calls": 0,
+  "judge_calls": 0,
+  "signals_evaluated": false,
+  "outcomes_evaluated": false,
+  "orders_allowed": false,
+  "money_authority": false,
+  "states": {
+    "bounce": "BLOCKED_RESEARCH_SOURCE_CONTRACT",
+    "breakout": "SOURCE_PLAN_PINNED_RAW_M5_ABSENT",
+    "alpaca": "STATIC_SOURCES_PINNED_NOT_DISPATCHABLE"
+  }
+}

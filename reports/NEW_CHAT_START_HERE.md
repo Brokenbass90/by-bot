@@ -1,5 +1,26 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October10 source-preparation follow-up: **BLOCKED_RESEARCH_SOURCE_CONTRACT**.
+Read [CRYPTO_SOURCE_PREPARATION_AND_MONDAY_STATIC_2026_10_10.md](CRYPTO_SOURCE_PREPARATION_AND_MONDAY_STATIC_2026_10_10.md)
+and reports/evidence/source_preparation_20261010/verification.json.
+Existing BTC/ETH majors universe/config and6+2bps historical costs pinned; each
+31635H1→7908completeUTC H4, OPEN timestamps/closed-asof/excludededges/float32
+precision/sourcehashes preserved. Canonical v2 local data packet; v1 retained.
+Funding treatment/coverage, rawM5 provider/PIT lineage and independent validation
+remain explicit unknowns; no signals/outcomes/judge/contextfilter. Claude owns
+these declarations before baseline-vs-context prereg; eight-symbol hypothesis
+stays separate.69targetedPASS; one runtime-verified6-astra/high review/oneP2
+verification-read race closed by2RED/GREEN regressions and same-review check.
+EventPhase1 all17component/two manifest pins match, but exact13Dev13 M5 files
+absent at pinned paths in three checkouts. Recover originalhash archive or freeze
+separate new source; no repin, no Phase0 adapter swap or silent parity claim.
+Monday static contract pinned/non-executable/null unknowns; new Oct9closed weekly
+ranking/symbol/eligibility/owner/exclusion/protocol/session review still needed
+BEFORE T−15, READY beforeT−1. No oldXOM carry; if firstMondayentry held, DAYrearm
+TuesdayOct13. No VPS/SSH/broker/deploy/arm/Claude message; LIVEHALT/caps preserved.
+ETS2M originalOct10 19UTC unchanged; no new terminal or earlyoutcome read.
+Foreign allowlist preserved/unstaged; previous full-suite NOT_GREEN not retested.
+
 October10 continuation: **EXPIRED_NONDISPATCH_APPLIED_ORDERS_OFF**.
 Read [ALPACA_HANDOFF_AND_CRYPTO_INPUTS_2026_10_10.md](ALPACA_HANDOFF_AND_CRYPTO_INPUTS_2026_10_10.md)
 and its actual receipt. Fresh09:35UTC LIVE flat/HALT/cash496.12/fees0; PAPER five

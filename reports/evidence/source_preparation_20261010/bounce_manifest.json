@@ -1,0 +1,200 @@
+{
+  "schema": "BOUNCE_RANGE_SOURCE_INTAKE_V1",
+  "status": "BLOCKED_RESEARCH_SOURCE_CONTRACT",
+  "prepared_ms": 1791627289216,
+  "prepared_utc": "2026-10-10T10:14:49.216000+00:00",
+  "as_of_ms": 1791627289216,
+  "orders_allowed": false,
+  "money_authority": false,
+  "outcomes_evaluated": false,
+  "signals_evaluated": false,
+  "research_ref": "cf904086a2d887a96ac2be3324a3d78433e1a94b",
+  "universe": {
+    "symbols": [
+      "BTCUSDT",
+      "ETHUSDT"
+    ],
+    "scope": "EXISTING_MAJORS_ONLY_BASELINE",
+    "broader_eight_symbol_prereg_separate": true,
+    "new_universe_selection": false
+  },
+  "baseline_config": {
+    "regime_tf": "240",
+    "regime_lookback": 60,
+    "regime_ema_fast": 20,
+    "regime_ema_slow": 50,
+    "regime_max_gap_pct": 3.2,
+    "regime_max_slope_pct": 1.8,
+    "regime_min_atr_pct": 0.8,
+    "regime_max_atr_pct": 6.5,
+    "signal_tf": "60",
+    "signal_lookback": 72,
+    "signal_ema_period": 20,
+    "signal_atr_period": 14,
+    "min_range_pct": 5.0,
+    "max_range_pct": 30.0,
+    "support_touch_buffer_atr": 0.35,
+    "reclaim_above_supp_atr": 0.12,
+    "min_body_frac": 0.22,
+    "max_close_vs_ema_pct": 1.4,
+    "rsi_period": 14,
+    "min_rsi": 30.0,
+    "max_rsi": 42.0,
+    "sl_atr_mult": 1.6,
+    "tp1_frac": 0.15,
+    "tp2_buffer_pct": 0.45,
+    "min_rr": 1.15,
+    "min_stop_pct": 0.0015,
+    "max_stop_pct": 0.06,
+    "max_entry_dist_atr": 2.0,
+    "reclaim_require_higher_close": true,
+    "trail_atr_mult": 0.0,
+    "trail_atr_period": 14,
+    "time_stop_bars_5m": 576,
+    "cooldown_bars_5m": 72,
+    "allow_longs": true,
+    "allow_shorts": false
+  },
+  "native_git_blob": "b8fcdca3974161ddc1804384fd1dd5bb28168857",
+  "environment_rule": "No env loaded here. Future parity runner must isolate every BOUNCE1_/ASB1_ override and allowlist; constructor mutates config from environment.",
+  "costs": {
+    "fee_bps_per_side": 6.0,
+    "slippage_bps_per_side": 2.0,
+    "role": "FROZEN_HISTORICAL_ASSUMPTIONS_NOT_MEASURED_CURRENT_ACCOUNT_COSTS",
+    "source": "configs/research/bounce1_majors_three_regime_prereg_20260802.json",
+    "funding_treatment": null,
+    "funding_complete_history": null,
+    "missing_funding_is_not_zero": true,
+    "funding_policy_authority": "CLAUDE_PREREG_REQUIRED"
+  },
+  "declared_historical_windows": [
+    {
+      "name": "recent",
+      "days": 120,
+      "end": "2026-04-30"
+    },
+    {
+      "name": "bull_2024_late",
+      "days": 120,
+      "end": "2024-12-30"
+    },
+    {
+      "name": "bull_2024_early",
+      "days": 120,
+      "end": "2024-01-29"
+    }
+  ],
+  "consumption_ledger": "UNKNOWN; declarations are contaminated candidates, not certified unused data",
+  "untouched_validation_periods": [],
+  "candidate_validation_designs": [
+    {
+      "kind": "historical",
+      "status": "NOT_CERTIFIED",
+      "action": "Claude must supply interval + data hashes + full consumption/discovery ledger before outcome access; absence of files is not proof"
+    },
+    {
+      "kind": "new prospective",
+      "status": "NOT_STARTED",
+      "action": "Freeze full config/cost/funding/availability/context and judge before selecting forward start; no backfill as prospective"
+    }
+  ],
+  "bar_availability": {
+    "timestamp_semantics_source": "research_lab/build_h1_bundle.py:file_to_h1 hkey floor",
+    "derivation": "CLOSED_PREFIX_UTC_FULL_FOUR_H1_CHILDREN_ONLY",
+    "historical_pit_publication": "UNPROVEN",
+    "provider_raw_m5_manifest": null,
+    "point_in_time_claim": false
+  },
+  "blockers": [
+    "FUNDING_TREATMENT_AND_COVERAGE_UNSPECIFIED",
+    "VALIDATION_INDEPENDENCE_AND_CONSUMPTION_LEDGER_UNPROVEN",
+    "RAW_M5_PROVIDER_LINEAGE_AND_PIT_AVAILABILITY_UNPROVEN"
+  ],
+  "artifacts": {
+    "BTCUSDT": {
+      "input_path": "research_lab/data/h1/BTCUSDT.npz",
+      "input_sha256": "811c06ea3a1aadc522da4d67106591efa77905d128fac5f245b714bd33a75e49",
+      "input_precision": "float32 widened to float64; no raw-exchange precision claim",
+      "as_of_ms": 1791627289216,
+      "excluded_open_future_h1_rows": 0,
+      "excluded_h4_leading_open_ms": [
+        1672534800000,
+        1672538400000,
+        1672542000000
+      ],
+      "excluded_h4_trailing_open_ms": [],
+      "m5_completeness": "DECLARED_COUNT_12_ONLY_RAW_LINEAGE_UNPROVEN",
+      "files": {
+        "H1": {
+          "filename": "BTCUSDT_H1.jsonl",
+          "sha256": "cf46a4b0e6f0426dc8394f36508c2bfe2bd31265fa08b4ea290a01bcc355993c",
+          "bytes": 2599767,
+          "rows": 31635,
+          "first_open_ms": 1672534800000,
+          "last_open_ms": 1786417200000,
+          "timestamp_semantics": "OPEN_TIME_UTC_MS",
+          "last_closed_at_ms": 1786420800000
+        },
+        "H4": {
+          "filename": "BTCUSDT_H4.jsonl",
+          "sha256": "05bc64df187b52cc7d9b15c90a5350eeea6daa32cf2461a3be337bb2eefe48bc",
+          "bytes": 655521,
+          "rows": 7908,
+          "first_open_ms": 1672545600000,
+          "last_open_ms": 1786406400000,
+          "timestamp_semantics": "OPEN_TIME_UTC_MS",
+          "last_closed_at_ms": 1786420800000
+        }
+      }
+    },
+    "ETHUSDT": {
+      "input_path": "research_lab/data/h1/ETHUSDT.npz",
+      "input_sha256": "9c669dc6c1de71d561f42cc971c7083515116bf83086f6f556d89ba5f4bcbd8e",
+      "input_precision": "float32 widened to float64; no raw-exchange precision claim",
+      "as_of_ms": 1791627289216,
+      "excluded_open_future_h1_rows": 0,
+      "excluded_h4_leading_open_ms": [
+        1672534800000,
+        1672538400000,
+        1672542000000
+      ],
+      "excluded_h4_trailing_open_ms": [],
+      "m5_completeness": "DECLARED_COUNT_12_ONLY_RAW_LINEAGE_UNPROVEN",
+      "files": {
+        "H1": {
+          "filename": "ETHUSDT_H1.jsonl",
+          "sha256": "569bc2bbad5820c0aab92ca60a72bfeee52c535741d35b9ecc97adc95d40bb72",
+          "bytes": 3061965,
+          "rows": 31635,
+          "first_open_ms": 1672534800000,
+          "last_open_ms": 1786417200000,
+          "timestamp_semantics": "OPEN_TIME_UTC_MS",
+          "last_closed_at_ms": 1786420800000
+        },
+        "H4": {
+          "filename": "ETHUSDT_H4.jsonl",
+          "sha256": "de55f10b04ccbd476782e119e8e7dbcd197f23a1258e7e879875d3f1ed6c9058",
+          "bytes": 774665,
+          "rows": 7908,
+          "first_open_ms": 1672545600000,
+          "last_open_ms": 1786406400000,
+          "timestamp_semantics": "OPEN_TIME_UTC_MS",
+          "last_closed_at_ms": 1786420800000
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "research_lab/build_h1_bundle.py": "f1f6581ac2ac30b6241804878c169d3eba375e59553db884a3d57d65ad5244ae",
+    "bot/closed_bar_aggregation_v1.py": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa",
+    "research_lab/bounce_range_source_packet.py": "8c95d462a4387bce01f021718d7855f24670a5dcf98f12682b09b0a4a0e284a7",
+    "scripts/prepare_bounce_range_sources.py": "5adc947e18f983f71287525722732d7a7d2a60d81090b72fbdd262f004d0d3bd",
+    "strategies/alt_support_bounce_v1.py": "1f073053c27e116e2cee73882ecc1c187154250ddef573004079e3725f14ee89",
+    "research_lab/data/h1/BTCUSDT.npz": "811c06ea3a1aadc522da4d67106591efa77905d128fac5f245b714bd33a75e49",
+    "research_lab/data/h1/ETHUSDT.npz": "9c669dc6c1de71d561f42cc971c7083515116bf83086f6f556d89ba5f4bcbd8e",
+    "configs/research/bounce1_majors_three_regime_prereg_20260802.json": "62f196e58e86a97c94223208164f5ff594bc06634f38ec7eb08c4e9299311a37",
+    "configs/research/bounce1_exact_three_regime_prereg_20260802.json": "997e8b0524f256f636c31d42560a291bf752e67342e28dd50d59f1d147694361",
+    "configs/approved_strategy_params.env": "52de3558c4afd3727211554d1f5365ee00df19479850a1bda84ab9a1b6b93184"
+  },
+  "next_action": "Claude completes these source declarations and freezes baseline-vs-context prereg; no outcome run is authorized by this packet."
+}

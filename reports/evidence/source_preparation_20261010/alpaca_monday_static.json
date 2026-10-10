@@ -1,0 +1,163 @@
+{
+  "schema": "ALPACA_MONDAY_STATIC_INTAKE_ONLY_V1",
+  "status": "STATIC_SOURCES_PINNED_NOT_DISPATCHABLE",
+  "prepared_utc": "2026-10-10T10:10:47.777107+00:00",
+  "session": {
+    "session": "2026-10-12",
+    "open_ms": 1791811800000,
+    "close_ms": 1791835200000
+  },
+  "preceding_closed_session": {
+    "session": "2026-10-09",
+    "open_ms": 1791552600000,
+    "close_ms": 1791576000000
+  },
+  "deadline_ms": {
+    "static_complete": 1791810900000,
+    "ready": 1791811740000,
+    "opening_start": 1791811800000,
+    "opening_end": 1791812100000
+  },
+  "orders_allowed": false,
+  "paper_attempt_authorized": false,
+  "money_authority": false,
+  "runner_armed": false,
+  "live_halt_clear": false,
+  "authority": {
+    "live_source_account": "afd9ffea-e99d-4d2a-b64a-f07fb0f295c6",
+    "live_source_endpoint": "https://api.alpaca.markets",
+    "paper_target_account": "4cdbfb77-d1e0-4789-86b2-341bc886efaf",
+    "paper_target_endpoint": "https://paper-api.alpaca.markets",
+    "shared_original_lock": "/root/by-bot/runtime/locks/alpaca_bridge_5cec021eb9d04382.lock",
+    "source_book": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/rehearsal/replacement.sqlite",
+    "paper_runtime": "/opt/bybot-research/alpaca-dynamic-paper-maintenance-20261007/runtime/broker_paper",
+    "cannot_adopt_or_flatten_legacy_paper_positions": true
+  },
+  "policy_file_sha256": "e1624ed74f4e14e06147db28a52069fff6d75bd377fb909f542006f8a09e4ffc",
+  "policy_canonical_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+  "caps": {
+    "capital_usd": "487.42",
+    "gross": "0.70",
+    "max_positions": 4,
+    "max_new_entries_per_session": 1,
+    "max_snapshot_age_ms": 300000,
+    "inherited_slots": [
+      {
+        "entry_order_id": "2b559bee-1818-450d-b5c0-1d1b015c2422",
+        "symbol": "CRWD",
+        "qty": "0.469970151",
+        "entry_price": "265.336",
+        "notional_cap": "124.699999985736",
+        "risk_cap": "10.906127324106",
+        "entry_ms": 1790863815162
+      },
+      {
+        "entry_order_id": "6028b4d0-f89c-465c-aa2f-e8f120d10fe6",
+        "symbol": "AMD",
+        "qty": "0.186377282",
+        "entry_price": "609.57",
+        "notional_cap": "113.60999978874",
+        "risk_cap": "9.07098231494",
+        "entry_ms": 1790863818797
+      },
+      {
+        "entry_order_id": "62513c25-0929-45ef-9a29-e219c9899a06",
+        "symbol": "META",
+        "qty": "0.141939508",
+        "entry_price": "724.534",
+        "notional_cap": "102.839999489272",
+        "risk_cap": "7.916534119192",
+        "entry_ms": 1790863822375
+      }
+    ]
+  },
+  "cost_protocol": {
+    "path": "reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json",
+    "sha256": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c",
+    "commission_rate": "0",
+    "regulatory_model": {
+      "fee_schedule_revision": "2026-10-01",
+      "sec_sell_value_rate": "0.0000206",
+      "taf_per_share_rate": "0",
+      "cat_nms_executed_share_rate": "0.000003",
+      "rounding": "each fee type aggregated daily per account then ceiling to USD0.01; exact fractional executed quantities",
+      "future_entry_fee": "ceil_cent(qty * CAT), conditional on unchanged retail schedule",
+      "future_exit_fees": "ceil_cent(exit_qty * exit_price * SEC) + ceil_cent(exit_qty * CAT); actual exit price/number of distinct settlement days unknown",
+      "unresolved_liability_must_be_separate": true,
+      "entry_rounding_reserve_cannot_be_hidden_in_commission_rate": true,
+      "historical_pending_fees_are_not_extra_published_charges": true,
+      "hard_future_loss_bound": false
+    },
+    "unresolved_liability_must_reduce_spendable_funding": true,
+    "cat_reserve_must_reduce_funding_before_reservation": true,
+    "quantity_1e9_is_representability_not_asset_minimum": true,
+    "future_accepted_symbol_binding": null
+  },
+  "protection": {
+    "document_sha256": "b955a1ef86c0692ea62160f792e422c2f3198b6310e3867e1bb8482f16e0eef0",
+    "mapping": "DAY fractional LIMIT buy / DAY STOP sell per official Trading API docs; actual acceptance still requires broker PAPER",
+    "eligibility_only_broker_acceptance": false,
+    "reference_distance": "frozen candidate signal close minus reference stop; actual frozen distance reanchored to actual fill",
+    "day_rearm": "first Monday entry held overnight requires actual TuesdayOct13 re-arm, not Monday PASS",
+    "clock_budget_cannot_abort_accepted_entry_protection": true
+  },
+  "last_broker_source": {
+    "receipt": "reports/evidence/alpaca_handoff_20261010/receipt.json",
+    "dated_utc": "2026-10-10T09:35:19.639Z",
+    "future_broker_truth": false,
+    "metadata_retirement_is_not_new_entry_permission": true
+  },
+  "candidate_unknown_fields": {
+    "symbol": null,
+    "ranking_proposal": null,
+    "friday_closed_data_manifest": null,
+    "source_available_ms": null,
+    "earnings": null,
+    "concentration": null,
+    "reentry": null,
+    "quantity": null,
+    "risk_distance": null,
+    "symbol_exclusion_evidence": null,
+    "single_owner_verified": null,
+    "cash_finality_verified": null,
+    "session_paper_attempt_review": null
+  },
+  "seven_preopen_checks": [
+    "source_config",
+    "ownership",
+    "protection_eligibility",
+    "earnings",
+    "concentration",
+    "cost_protocol",
+    "reservation_handoff"
+  ],
+  "preopen_remaining_actions": [
+    "Before Sunday handoff: fetch/retain full weekly-selector universe through Oct9 closed session with actual availability/preparation/raw hashes; compute unchanged weekly draft. Old XOM is not a candidate source.",
+    "Bind resulting symbol to raw earnings/reentry/concentration eligibility, frozen risk distance, protocol fresh-asset symbol projection and separate unresolved-liability model. Do not inherit XOM-specific True flags.",
+    "Exhaustive writer/cron/service/app/source-book/PAPER ownership inspection under original shared lock; exclude actual new symbol from every legacy PAPER writer before preparing reviewed exact session scope. Old XOM exclusion proves only XOM.",
+    "Stage reviewed exact local controller/source publisher/PAPER adapter files with manifest; verify retirement-aware active projection and no LIVE order route. Pin nonsecret source/template/credential-profile identities without publishing keys.",
+    "Prepare static inputs by12Oct13:15UTC/16:15Cyprus, READY by13:29UTC/16:29Cyprus. Mandatory opening GETs/reserve/dispatch only; any unresolved source blocks before reservation. No investigation/helper coding in five-minute window."
+  ],
+  "opening_fresh_checks": [
+    "exact account IDs/status/cash/nonmarginable/posted and pending fees",
+    "live positions/open orders vs sealed survivor inventory",
+    "actual symbol asset tradable/fractionable",
+    "raw IEX quote timestamp/receive/use max-age, not NBBO",
+    "separate unresolved liability plus source-bound CAT quantity-ceiling reserve",
+    "PAPER account legacy inventory/current orders, owned CIDs/state and original shared lock"
+  ],
+  "uncertain_dispatch": "no resend/reprice/duplicate; recover by exact IDs GET only; accepted fill protection remains owned",
+  "broker_lifecycle_pass": false,
+  "blocked_state": "BLOCKED_DATA_NEXT_SESSION_PACKET",
+  "source_sha256": {
+    "reports/ALPACA_DYNAMIC_V1_POLICY_2026_10_06.json": "e1624ed74f4e14e06147db28a52069fff6d75bd377fb909f542006f8a09e4ffc",
+    "reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c",
+    "research_lab/alpaca_open_dispatch_v2.py": "17f3376b20e088cb590ea596ce0c8c89365f9f08280971d25d5e9e45baef3134",
+    "scripts/run_alpaca_open_dispatch_v2.py": "ce9156df7c39e515466541f19d1fa411763177133c2743fa1c0c96e084b9e4fc",
+    "research_lab/alpaca_dynamic_v1.py": "50b0956b5d4fa5ed66c295a3c340ea8b71d4902b5a5bf0e5ff569a99f551145a",
+    "research_lab/alpaca_dynamic_paper.py": "f6dd44de9841b8b4fe5a1fff5f98ece4ce62f47220c3a053059b1772f1056edd",
+    "scripts/run_alpaca_dynamic_paper.py": "96998e245af71589a7516fa7efb98b225932ee5b8faa73e20694e9c248b21c98",
+    "reports/evidence/alpaca_handoff_20261010/receipt.json": "7014cb5733b6d859f4021f355aa47192ee549ae90561378edbfed0580dd86e86",
+    "reports/evidence/alpaca_handoff_20261010/review_permit.json": "ce82e8c1c97e827b9850094bc0cd0ccfb30f553558aba8c85ef83e89e624480a"
+  }
+}

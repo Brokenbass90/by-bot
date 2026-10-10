@@ -88,3 +88,7 @@ _to_delete/
 
 # Large local research archive; tracked manifest and hashes are under reports/.
 /research_lab/data/alpaca_pit_daily_deep_20260925/
+
+# Local source-only H1/H4 derivatives; source code and hash manifests are tracked.
+/research_lab/data/bounce_range_sources_20261010/
+/research_lab/data/bounce_range_sources_20261010_v2/
