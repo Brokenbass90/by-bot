@@ -1,5 +1,19 @@
 # ALPACA_DYNAMIC_V1 — local orders-OFF runbook
 
+October11 pre-open source preparation: **NET / MONDAY_RANKING_SOURCE_READY_NOT_DISPATCHABLE**.
+Read [SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md](SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md)
+and its Monday source receipt. All59 closed-Friday histories/57 earnings calendars
+prepared early; unchanged weekly selector repeated identically. No XOM carry,
+reservation, seal or entry. NET asset eligible; native stop still untested.
+NET exclusion is absent from legacy PAPER management. Stage/review the exact
+retirement-aware controller, symbol protocol/template, old-terminal/cash and
+Monday PAPER-only scope before T−15; no old True flags or Friday plan reuse.
+NET protocol projection has a non-executable schema/status and cannot satisfy
+the existing runner's protocol gate; it is a source draft, not session approval.
+Monday13:15UTC static deadline,13:29 READY,13:30–13:35 fresh-only opening.
+No Monday job armed; LIVE flat/HALT/caps untouched. First Monday overnight
+position needs actual TuesdayOct13 DAY rearm, not Monday PASS or automaticLIVEGO.
+
 October10 continuation: **EXPIRED_NONDISPATCH_APPLIED_ORDERS_OFF**.
 Read [ALPACA_HANDOFF_AND_CRYPTO_INPUTS_2026_10_10.md](ALPACA_HANDOFF_AND_CRYPTO_INPUTS_2026_10_10.md)
 and its actual receipt. Fresh09:35UTC LIVE flat/HALT/cash496.12/fees0; PAPER five

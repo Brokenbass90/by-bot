@@ -1,5 +1,35 @@
 # Codex session checkpoint — 2026-09-06
 
+October11 Sunday: **MONDAY_RANKING_SOURCE_READY_NOT_DISPATCHABLE**.
+Read [SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md](SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md)
+and reports/evidence/sunday_preparation_20261011/source_verification.json.
+The unchanged selector on all59 closed FridayOct9 histories chooses **NET**;
+57 stock earnings projections sourced, inherited reentry exclusions preserved,
+NET earningsOct29/concentration pass, exact repeated draft ranking, no seal/reserve.
+Sunday05:43UTC LIVE flat/HALT/cash496.12/pendingfees0/accrued0; PAPER five legacy
+positions/NETabsent/orders0/store0. Original intent1/retirement1/attempt0;
+61/23/46 app pins and production PIDs/NRestarts unchanged.
+NET asset active/tradable/fractionable is sourced eligibility, not native stop PASS.
+NET legacy exclusion and reviewed retirement-aware app/static template/Monday
+PAPER-only session scope remain required. No runner deployed/armed or new entry.
+Finish static by Monday13:15UTC/16:15Cyprus, READY13:29/16:29; fresh-only opening
+13:30–13:35UTC. First Monday overnight DAY rearm is TuesdayOct13.
+Bounce public funding archives BTC/ETH3958rows each through **Aug12 2026 00UTC**
+now hash/grid verified; narrower3012rows throughSep30 2025 16UTC is not certified
+holdout. Funding treatment, rawM5/PIT lineage and validation independence remain
+Claude inputs. No rate/PnL analysis, new judge or context filter.
+Breakout13 exactpaths also absent at two checked VPS roots; no universal archive
+absence or old-manifest repin. Recover originals or freeze a separate source.
+ETS2M originalOct10 19UTC terminal **BLOCKED_DATA/COHORT_PIN_MISMATCH** preserved,
+observed19:00:00.179UTC; outcomes/judge never reached, no rerun or strategy verdict.
+No broker/runtime writes, Claude edit/message, money authority or new automation.
+30 targeted dispatcher checks PASS. One runtime-verified6-astra/high review
+closed one P2: source-only NET projection now has non-executable schema/status;
+actual consumer regression proves rejection before quote, parent pins unchanged.
+Foreign allowlist untouched; product code unchanged/full-suite NOT_GREEN not rerun.
+Earlier dated pending ETS2M and missing funding-data statements are superseded
+only by these sources; funding policy/independence are still unapproved.
+
 October10 source-preparation follow-up: **BLOCKED_RESEARCH_SOURCE_CONTRACT**.
 Read [CRYPTO_SOURCE_PREPARATION_AND_MONDAY_STATIC_2026_10_10.md](CRYPTO_SOURCE_PREPARATION_AND_MONDAY_STATIC_2026_10_10.md)
 and reports/evidence/source_preparation_20261010/verification.json.

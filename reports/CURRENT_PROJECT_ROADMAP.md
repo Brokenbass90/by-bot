@@ -1,5 +1,20 @@
 # Current roadmap — owner scope October 8, 2026
 
+October11 current queue: read
+[SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md](SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md).
+P0 Monday NET closed-Friday ranking/source packet is prepared, **not dispatchable**.
+Finish NET legacy exclusion, reviewed isolated controller/template and exact PAPER
+session scope before16:15Cyprus; READY16:29, fresh-only opening16:30–16:35.
+LIVE flat/HALT/caps remain. First Monday overnight rearm is TuesdayOct13.
+P1 Claude evening: existing BTC/ETH funding archives are hash/grid verified;
+close versioned funding treatment, raw source/PIT lineage and independent
+validation, then one preregistered bounce baseline-versus-context KEEP/KILL test.
+Breakout source recovery/new-source identity remains next; no old-manifest repin.
+ETS2M original deadline ended **BLOCKED_DATA/COHORT_PIN_MISMATCH**; no judge result
+or rerun. B3 FAIL remains spent, no universal trend veto/new policy promotion.
+New strategy families, broad architecture and extra outcome runs do not preempt
+these two existing money/engineering lanes. No current income promise.
+
 October9 engineering delivery: **Alpaca LOCAL_CANDIDATE_PASS / operational
 BLOCKED_DATA_NEXT_SESSION_PACKET; CRYPTO_CORE_V2_BASELINES_READY_FOR_PREREG_INPUT.**
 Read [ALPACA_DISPATCH_AND_CRYPTO_BASELINES_2026_10_09.md](ALPACA_DISPATCH_AND_CRYPTO_BASELINES_2026_10_09.md)
