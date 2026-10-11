@@ -1,0 +1,4789 @@
+{
+ "provider": "bybit v5 /v5/market/kline linear interval=5",
+ "fayly": {
+  "1000PEPEUSDT/1000PEPEUSDT_2023-01.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T19:27:02+00:00",
+   "polnyy": false
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-02.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T19:27:02+00:00",
+   "polnyy": false
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-03.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T19:27:03+00:00",
+   "polnyy": false
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-04.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T19:27:03+00:00",
+   "polnyy": false
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-05.jsonl.gz": {
+   "strok": 8218,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7c1771e31f143e268028a4a2f64b7681dfd2ca7265e3e3ddcdf18b85ab3c4a36",
+   "zagruzheno": "2026-10-11T19:27:12+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "defc9e88be520453fdc8275994bb9f32d795200b16b93e0395dd32a9c93e34b1",
+   "zagruzheno": "2026-10-11T19:27:19+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c506d440df1f1c4eafde784d5bd4a5285f585863d0ab02b8e3447ead3ea11964",
+   "zagruzheno": "2026-10-11T19:27:26+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4e4e70f9a368088a6429762a7ca19e19e18885b53350be81caa25ceaeac7bd61",
+   "zagruzheno": "2026-10-11T19:27:34+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "39d7c8b97390e398b0f93b5ce4af3b91deea92c7c330bb69572f36891af3c68b",
+   "zagruzheno": "2026-10-11T19:27:41+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "73cf5c03c68c3ada862404c0d6c987407d39d6d529a4178e5c607b2ba9d0aabf",
+   "zagruzheno": "2026-10-11T19:27:49+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "12fe50dac8dcfe48d4f75533ab046a679a22df83eb904b42fe6fe7da94db6757",
+   "zagruzheno": "2026-10-11T19:27:56+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "1b89eec439d4f5834a87834b4309a949ac278a0b907c2894cec0a4a924479fa4",
+   "zagruzheno": "2026-10-11T19:28:03+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "58f98a49f62e9f598a17a02caf6883842f618574d5ed2cee2c5bd34e41710292",
+   "zagruzheno": "2026-10-11T19:28:09+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "d2f034243c6f5270c1a698b29a7ded825657c00f137eb820ffb712f57acb2fe0",
+   "zagruzheno": "2026-10-11T19:28:16+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "72a8e3a028646c85e45518c21488f9ff3d75b9d3c88d25379fea14d7a21c405e",
+   "zagruzheno": "2026-10-11T19:28:24+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "5b3449a8e59580e7f10e28305349ea16605edfb9cf6f11a3ef65b631153013f1",
+   "zagruzheno": "2026-10-11T19:28:30+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "b6167b4a05dea6bb9ef88c81c5436df95ad8a2222725a1ae91bfa961ddc7824d",
+   "zagruzheno": "2026-10-11T19:28:38+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "cb5a283963f6745dadd5e43ed3189b593a78340756bb68a0420bb3258519effb",
+   "zagruzheno": "2026-10-11T19:28:48+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9933db891524782a8a8b1168f22e1cf8c935e83182040cbc879ec1bb93104c04",
+   "zagruzheno": "2026-10-11T19:28:57+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "b12cc01ba63195ba52c40d8d0d6e1f9dd4200f690a17d0233e69a87a117617f7",
+   "zagruzheno": "2026-10-11T19:29:05+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "bbda65c7137379c48b316d29ac5ea03090980147f23f9eff0d00caf4bca4820c",
+   "zagruzheno": "2026-10-11T19:29:14+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cfe5a8e01679389aa9629da261499c39a1b2062646ac2d7e6a5ac82d7f59b269",
+   "zagruzheno": "2026-10-11T19:29:23+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "6db8edf6cbed70bcf27cd62fd47ab0c36afc23967b5a9037c8630cbc1a208418",
+   "zagruzheno": "2026-10-11T19:29:30+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "aaeac4c889559edd12d61d1905e982d2d1fcf11e7463df9e4db0830189a0ef0f",
+   "zagruzheno": "2026-10-11T19:29:37+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a19838064c12784796963365f8bfda209000c735a89f877f41316d7315e259cc",
+   "zagruzheno": "2026-10-11T19:29:44+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "fbd7cd21c89517e3e6a4fe18137cc08a1f71678e57f08700fcafc9f558d142e1",
+   "zagruzheno": "2026-10-11T19:29:51+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9c0c6ebd69bcdb5c63a82040d385406bf55cee91d552f928d104e44bc78d2775",
+   "zagruzheno": "2026-10-11T19:29:58+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "92832ab45ba0f3fd3106962505ad51bfcfe357cd1cfa0127375a82c9c4115432",
+   "zagruzheno": "2026-10-11T19:30:06+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "706128dc2f5a8b3399885417a3566f6ec0d1a128b7d565ce2bd15ac7fa7ebe06",
+   "zagruzheno": "2026-10-11T19:30:15+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "d25a45defa3a2f39d13fb1f2cf36a4a36a9697198263de911c00bf85d698ec07",
+   "zagruzheno": "2026-10-11T19:30:33+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "52f2498582351b1022b9adf8440e9f7da77a6ae1e56dccfcadab6754960da867",
+   "zagruzheno": "2026-10-11T19:30:51+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e6b82c87235e9ef7c776f84bb94175c342d9c5bd39bbaeab58ebbf561a7f149f",
+   "zagruzheno": "2026-10-11T19:31:00+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "099a6706f81827d9419d362afb08c38711d393bdf74233de6e87ae8abd1148c0",
+   "zagruzheno": "2026-10-11T19:31:09+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ef9f7653d8928fee9afd946d821e655bdf3357d9de5f97c98f4a3419ecfe0f55",
+   "zagruzheno": "2026-10-11T19:31:17+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "eefd3af0e509744ef4b2d4ad500b4f9a77e77abc0dfcf93579320ff6fc0e7a30",
+   "zagruzheno": "2026-10-11T19:31:24+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d643749d5321615039cb39a1d653478faa3a714ae640cdacb05afbeb7ae473a7",
+   "zagruzheno": "2026-10-11T19:31:33+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "f33a24fef1ed2dcad3a8bcc2334aaa030570edeafb4aa36aabac5ca94e6f2515",
+   "zagruzheno": "2026-10-11T19:31:41+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "d20589042a3e772accc6a1bd66ada537e00e46d86d01b72220cbf1320ae852ca",
+   "zagruzheno": "2026-10-11T19:32:00+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cbd92777d153b73663dc1992a0abaf14a0fbf4418b14091e5cd757853bd87fc4",
+   "zagruzheno": "2026-10-11T19:32:06+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "d136cd839f42ee10c51d99a22f064dd5a104a12d11e3a5abbf6cf98e3b7732ba",
+   "zagruzheno": "2026-10-11T19:32:12+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "76908d11f51b7508a85c53a02759eae6b780952d369fdbf8a20b569290b6b337",
+   "zagruzheno": "2026-10-11T19:32:18+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a0d150971edf98fbf5bea5b6bb91b334417e622d64ed586f74995c92edb1ac7c",
+   "zagruzheno": "2026-10-11T19:32:24+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6e94098de2e47e43cb323d67c7a43c654bb4d2efba4b13104ecb2dd7ee751c3a",
+   "zagruzheno": "2026-10-11T19:32:29+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d4483166ab64016d91c1e9a84f6575a50a2654b99094683e4597c4e40697aeab",
+   "zagruzheno": "2026-10-11T19:32:34+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "20c6cb161cd295b58e02aa6b7e883a6b1153dad44b067424bd8d40237ff06369",
+   "zagruzheno": "2026-10-11T19:32:39+00:00",
+   "polnyy": true
+  },
+  "1000PEPEUSDT/1000PEPEUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "991dc14d5dd6b34c711708f8dc3bd5878503a805a942f9c5b7270d29424d4fe0",
+   "zagruzheno": "2026-10-11T19:32:41+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "470640706f32995eac490ef64fc237e14805c7606bf276482e532f78721cad2b",
+   "zagruzheno": "2026-10-11T19:32:56+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "af9402d35b620ff2682ca03fd23c45391c18dde48fcfd6b20d82d015ce8cbf32",
+   "zagruzheno": "2026-10-11T19:33:02+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ad7d901871d0a2c3095db345875e3a3411d18c60ecbd46ea2c3168ebf69f3b7f",
+   "zagruzheno": "2026-10-11T19:33:07+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "9c81df7331cf679a5b951f171d76bb8b3b74c58d918366303db9af286eef041f",
+   "zagruzheno": "2026-10-11T19:33:15+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8f58b108501c7bf05304b85023b487b270c3f8335a7c762e15ecb3e137f72177",
+   "zagruzheno": "2026-10-11T19:33:20+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "ceb3220f3c9d1d34b794c990e6e24bdda81ed00df77185a49720af8b6acba441",
+   "zagruzheno": "2026-10-11T19:33:25+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5b81e8239207ed3bad72f4ed3f7982975edeb84b4ce877fc98f266c2198e25e8",
+   "zagruzheno": "2026-10-11T19:33:30+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "fb98c3dc12b7fd215b66adfa3b63d9bc80126f6e5997b3a049846bf673d358ac",
+   "zagruzheno": "2026-10-11T19:33:36+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "dcd2457e94e37e55d4df0cf29047681a0293667b9a346671edcba3b48305524e",
+   "zagruzheno": "2026-10-11T19:33:41+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "242da8a6c347304cae2046e284eb31aca5dfba258c95cfae6be8cba13f20b42a",
+   "zagruzheno": "2026-10-11T19:33:46+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "463d4383c4b404fb54085e589fd43064dfc2407fd2eb919135fbcf52db9b7b3d",
+   "zagruzheno": "2026-10-11T19:34:02+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "97e686193ae8cd9a9ec07b9027c5a6c236ea84e379239d9541876324bb6eba68",
+   "zagruzheno": "2026-10-11T19:34:07+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ce1d721d147c67d976bbb82fc1b8b3a044320942f449b87b7c87248eb7fa09ad",
+   "zagruzheno": "2026-10-11T19:34:13+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "52aff1bf664511d4c1a9452e69c4eba73f9771c4ed89ccf8a89a12c0478a6e2b",
+   "zagruzheno": "2026-10-11T19:34:18+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0f8bd0c0f15830a8d04182f799b159cd99472eb223c140d3632f1b0b3413df2f",
+   "zagruzheno": "2026-10-11T19:34:23+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "03a6a9866d99a56b88f3366dcd39a836bbe2e9ef0282473f9c6a717d0403825b",
+   "zagruzheno": "2026-10-11T19:34:29+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "27a9a9de3664c46e3637642fb30959631a75bebf2d52a1076ae2f3edd096a36f",
+   "zagruzheno": "2026-10-11T19:34:36+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "b1f616af047ae1deb45b8db5ad57dd6a2b2ca0d88440736eb11e9ea6c17b399c",
+   "zagruzheno": "2026-10-11T19:34:43+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "b069ea719f63c15a00f9ca7cd3dc511af45921314397db26d571509f07e3dd35",
+   "zagruzheno": "2026-10-11T19:34:50+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9f11f64eb2ed716311ade8b40fb8c623fd8a4ed738798ecb8dca3c2f0a8a38ff",
+   "zagruzheno": "2026-10-11T19:34:57+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "c5825c46a1e0cff9d295cee8e905036c14c35b4d0ae8737ffb24f9336243e6af",
+   "zagruzheno": "2026-10-11T19:35:04+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "27e51f8ffd63e6f601f3626196cb16c66a340a93db68d850342989b4c139c842",
+   "zagruzheno": "2026-10-11T19:35:13+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "665dbd75084f691a827685e6374e99f87f5b5ccf3503b0c1a2d50f81d386b330",
+   "zagruzheno": "2026-10-11T19:35:20+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ca9de25e160748e9eabf42bccaaa9571fbd1104560b165e307cf7ee1f6401f26",
+   "zagruzheno": "2026-10-11T19:35:28+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e9fb6e1c32ec435db34df4cfa717043d8f7d30ad7322e719c1cfc7411a9f40f9",
+   "zagruzheno": "2026-10-11T19:35:37+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "4a15f2b405ad1810c26d5818100752c2b2c1097014d63db85a1b2fcd1377c6d4",
+   "zagruzheno": "2026-10-11T19:35:44+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "371f1b32410d6c48000f667b25e182143bda13715ba634c95a711d3377bcb5f5",
+   "zagruzheno": "2026-10-11T19:35:53+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a1dd8a80b3e4660f63856767b7622df57bc57d9b0b2b21ada3287b58adecbf34",
+   "zagruzheno": "2026-10-11T19:36:01+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "537f26cdeeaf13b18830eb3f8c2515f54c54ae48008e1f32c6ddf38051f0eee0",
+   "zagruzheno": "2026-10-11T19:36:10+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "0dd7e66095e494dc85cbc3bb808c28f4034969dba140be7d9e9f29339546fe44",
+   "zagruzheno": "2026-10-11T19:36:18+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "1a069696af4083d17d5a192e240237e1b8b74cedf76e71be1ef41fcd89349690",
+   "zagruzheno": "2026-10-11T19:36:26+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6b8479722404b475ffb4c2339ebdfe5c3ff4af5d411d3c7e6ff8370c854a84c3",
+   "zagruzheno": "2026-10-11T19:36:35+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "7245bca6f1888889de40366015e5dae65272fa56dc244826095f453c7cdcd747",
+   "zagruzheno": "2026-10-11T19:36:45+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7fedbdaad294ed44c4baa29c5e0f158f66fcf16daf009a63c731cf90b98b8438",
+   "zagruzheno": "2026-10-11T19:36:54+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "621a49dd9a6fe7245b53702ae40cb532363a083155b8b9d80d03184ff0ecda3f",
+   "zagruzheno": "2026-10-11T19:37:02+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "34a3737e18cc5b8c8d55bf5fd6ed2abf0daa0fffbdb27fc4c0ff170cc5d8646a",
+   "zagruzheno": "2026-10-11T19:37:10+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8c6a90c5ff0d18b67c921db2de2e1461f583471eadc95e824e7e984553cbfde3",
+   "zagruzheno": "2026-10-11T19:37:28+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "e07ba1e99f5a80f7087fa6932b3583d37cd32303929d47226d55787599c31b7e",
+   "zagruzheno": "2026-10-11T19:37:35+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "294e5053a1c95c2eeba354a1b61ab4b9a8b9decf9dc42756c1c571c94877497d",
+   "zagruzheno": "2026-10-11T19:37:41+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "ce71059d38c21043a84848060bd412a77efdb79c02a067573c4b36a59c62a96f",
+   "zagruzheno": "2026-10-11T19:37:48+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5371e6b9ca38767091b21cbbd55ee0832a296cec76ff40521e5c02656317ddf8",
+   "zagruzheno": "2026-10-11T19:37:54+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "7e932cb11ae922bebf11133683c4022c3587d0e49ac106eb2aa5f4937264a19b",
+   "zagruzheno": "2026-10-11T19:38:11+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5beee2938c12d90227040155fa6a5c8c5f4e7890e255c49550c969babff1e567",
+   "zagruzheno": "2026-10-11T19:38:18+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "74a6e59e58efb6cd10880e2354b775d2503a6e3601213de1c83ff4e9539303b1",
+   "zagruzheno": "2026-10-11T19:38:24+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "589abdc5bc18ca85740d4001bd75ae9c800cdcb2e9356bb4459d6b1d00c1250e",
+   "zagruzheno": "2026-10-11T19:38:30+00:00",
+   "polnyy": true
+  },
+  "ADAUSDT/ADAUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "05d2d0a8064ec18747bbe68ee38d9bc7bc3a13df2694165f78612e6cf7dd553e",
+   "zagruzheno": "2026-10-11T19:38:34+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "144618cc35f3e602ca012705cc59167f93b92db82d0381e2f0806437e0948186",
+   "zagruzheno": "2026-10-11T19:38:39+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "22d70e68fde310886e3fc14801dbb8fe3dc9b8e0755803de92440321fb79f91d",
+   "zagruzheno": "2026-10-11T19:38:44+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "55ae7587ebde9d6d0994aa85c0dcb3a41d7f479c7ddca05d12574eccbc5c8763",
+   "zagruzheno": "2026-10-11T19:38:59+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "b3500b6ff09b6f66e26619f09c1e95f4ba9328b45dc57c3213d8a5fe0859d55b",
+   "zagruzheno": "2026-10-11T19:39:04+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "f9643846cdde432a7df91edcb701048efbc5b4e6f5950b0efe69e7b925431d01",
+   "zagruzheno": "2026-10-11T19:39:10+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "1f1a9d29dcc6c18a20b84082c71132501e5b23d8a7d89df9e8e37dd890ec8cd9",
+   "zagruzheno": "2026-10-11T19:39:15+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "85c00a898b1a7c71c8f661a1e9318ae292a0918fc4c4578f74f3b30508b76d59",
+   "zagruzheno": "2026-10-11T19:39:20+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a98fae12248e9d956b260c0fd39a0166c0a7a18dbf64ac5c5aa134710b1f3bed",
+   "zagruzheno": "2026-10-11T19:39:25+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "679e8ab5acfa517d344cb97316ef9f0f40b425008fbac80f95b6756ff080a5df",
+   "zagruzheno": "2026-10-11T19:39:30+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "beba3125240a5a1cf75d9bc1863e029dbcf540111b31ad5d3407a0c291d0bfa8",
+   "zagruzheno": "2026-10-11T19:39:35+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "571ef44e1e600eee7fb09683032ab7a7e119496c4fefb474422fd2ce32061a86",
+   "zagruzheno": "2026-10-11T19:39:40+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "80a6b2ecfe4e966869b57ae9e0c5898ec03437c0101b9f4972ae5b48c87ff2d0",
+   "zagruzheno": "2026-10-11T19:39:46+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "146a62b8a66666618727b6125e108592da92347b6d0ec6570729bec659d4d159",
+   "zagruzheno": "2026-10-11T19:39:50+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "eba85c9a2e3938619f5f330b0dd1aa847c4eaa6bf6a51b8ed12ce38d67f37a6a",
+   "zagruzheno": "2026-10-11T19:39:56+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "87e0f1c7c858712f8315103bac87565d50aa1328bd0cdee2d647b7b00320d1fc",
+   "zagruzheno": "2026-10-11T19:40:01+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "14dbb786f3e80d2bf04a1dbee4eaccc082225a79add18058feb7e27c772cae3c",
+   "zagruzheno": "2026-10-11T19:40:06+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0ae5371e265b8d490ac3ea62f80fd79e472b464966bb0541d51e86fbfe891cc6",
+   "zagruzheno": "2026-10-11T19:40:11+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "7c5a2796fefc34055aef96c8c811c89fa33f47822ad4245ce78d043d7cd8db6c",
+   "zagruzheno": "2026-10-11T19:40:17+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "11e8eb4d78ed2df3bc7b12789a52b282f6876644e2760540bb3c9326d72d912d",
+   "zagruzheno": "2026-10-11T19:40:23+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "568fa9b25dbd4e1809c0a7599b07b2762831d11fb632a1b8cf563f2708329b84",
+   "zagruzheno": "2026-10-11T19:40:30+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "718e339c08fe329547e1464a563a020a08038a173162369f71893ae7f8f24614",
+   "zagruzheno": "2026-10-11T19:40:36+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "f0c869843740f12eadfb0827a786fab88e405f685bb6eaccbf0678e5145f9782",
+   "zagruzheno": "2026-10-11T19:40:42+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "efdf9f6ab678c9a44f141dc4516d2a2eb5964c2bacef96bc59dbbc59b9a0915c",
+   "zagruzheno": "2026-10-11T19:40:48+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "55e44db02bf8635860cd3a90b7e9cc200598099c48cfec4b0c28e8c92b33d88a",
+   "zagruzheno": "2026-10-11T19:40:55+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a227575b840f81f57fb9dca0f2a85b404047f72dc1b1bf0b58fd546a280f12b6",
+   "zagruzheno": "2026-10-11T19:41:02+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "1c6f44f5985687266ee8a6063381ba334077668ec4029c3be7f08f75cf9696c8",
+   "zagruzheno": "2026-10-11T19:41:08+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "1ce9bdd3196185c12d5c5e8addece0a2f790cff1cb22dc9c25009f798a67482e",
+   "zagruzheno": "2026-10-11T19:41:15+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "509132ad559eda06c332f6837cd419ca9c2ccfa63a8098e5c24b62c4b00e8b85",
+   "zagruzheno": "2026-10-11T19:41:21+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "282aed0f3ddc63ea9cbfa83bb0a90deb5170541b31ebe9067ee31bbfcf007db2",
+   "zagruzheno": "2026-10-11T19:41:28+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "49418a5f123ea12c479c7245fcd71da2b8d34689368e25b7e07eebfe4e299241",
+   "zagruzheno": "2026-10-11T19:41:33+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "853def81543a3aab9284745d8d44d82980ddf10f5942a32d69e4af6090a2f4c8",
+   "zagruzheno": "2026-10-11T19:41:39+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6e54a6aa29f9a9c5d2a19de615b2685ec04ac98ed4e822a592cf9cde8b4a9658",
+   "zagruzheno": "2026-10-11T19:41:45+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "c6b109c254d1650eb74ba104dd2f39c7b4f5bb1186e2d4e8c8166f309795f2a8",
+   "zagruzheno": "2026-10-11T19:41:52+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d50157642cf08b4a32b985e9ed6a714a26867ffa64bf1a49a6b8efec0675bdc9",
+   "zagruzheno": "2026-10-11T19:41:57+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "439304c9ed66ee41839c0b3c51643ac7a7c43149e037d569f7655c7d5f1f00eb",
+   "zagruzheno": "2026-10-11T19:42:02+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0eac81e117838380df63f975cefc8be78ab9cab3639871d1b183f65ec69ae37d",
+   "zagruzheno": "2026-10-11T19:42:19+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "acd21c8ee5d619e656fd4fa81189b40e9b37c7c14bd77534acfc437c93adc2c5",
+   "zagruzheno": "2026-10-11T19:42:24+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "59995361e825652e324518007ec170a9ec409cac26566c33305c2633ace109ad",
+   "zagruzheno": "2026-10-11T19:42:29+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "efa339bc9906eb3fba69ff9f7617976d913830998a2014fee300f7e2051576de",
+   "zagruzheno": "2026-10-11T19:42:35+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "2bb87afc024e4ec6ba44c03be87d38062f500a5158ea026799f0f9613d5b3da9",
+   "zagruzheno": "2026-10-11T19:42:40+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0ca731a567d7eaade73d2c0e16ded71183a3f801037c6d26bb31c8bda2cd4467",
+   "zagruzheno": "2026-10-11T19:42:46+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "f2fb1d3a31c78d4465374f08de535c9a33c97436760dbede732cc536e269ef26",
+   "zagruzheno": "2026-10-11T19:42:51+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0310c5e19cbba16c85c65d2a7d244ee4a2b8cb2a8a67bff27f14fa5772d38e76",
+   "zagruzheno": "2026-10-11T19:42:56+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "104879d67545d92c21a429266aaae35e4b32a1d9880393190937401b76003e38",
+   "zagruzheno": "2026-10-11T19:43:11+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "7574d75b2ebb425511779e7696c72418f424e980a696fce54f67af213d7a037a",
+   "zagruzheno": "2026-10-11T19:43:17+00:00",
+   "polnyy": true
+  },
+  "AVAXUSDT/AVAXUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "3b4049dec2364c40b2f237504b18ce7dcd63442d526ef1037637a0423f71cbe1",
+   "zagruzheno": "2026-10-11T19:43:19+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3ddd6e6599e8e8b54afb0393822cc5a8bdb15cb44cebe2b2c570ac7976dee3fa",
+   "zagruzheno": "2026-10-11T19:43:24+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "8f43a2418096299469f99a9c8a3ea8cedf947c7057d0d94a96d504ca153549d5",
+   "zagruzheno": "2026-10-11T19:43:29+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c6de78cbca56cb39ed4f94c20c988eaf46c25b8f76716ad41872f4528b0673a5",
+   "zagruzheno": "2026-10-11T19:43:34+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "06913d1fcff024c7a8301d1d4c30aebd4a3c974fbab4dcfe98767fdc473caa5a",
+   "zagruzheno": "2026-10-11T19:43:40+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8137c22b2d3d88763092ad43e4edf5c4f8d56214dcf571f4199ac7e03ac2a247",
+   "zagruzheno": "2026-10-11T19:43:45+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "5d430048617d3df1403fa9363fb1ed412af9e545db51ca6b1bccb65e8dd20a55",
+   "zagruzheno": "2026-10-11T19:43:50+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "35de2adfc3c89178b506b98845031160e1c5ee7f07d4c805869b6ff0a8491fc1",
+   "zagruzheno": "2026-10-11T19:43:56+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e0beb9e4993d98e3aafed7363b0ebcfdfdd54a1e087dd5ed1337b21655b12e48",
+   "zagruzheno": "2026-10-11T19:44:02+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e83bfb2c49bc8ffba401db9151364bb55ed4c781dc72dd94599588f3dc8d4e0f",
+   "zagruzheno": "2026-10-11T19:44:07+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "98aee58c732511082e4b4964fb1f545cee47644a64e455fa8d34cfdf9e2bf439",
+   "zagruzheno": "2026-10-11T19:44:12+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a8c59fba2b7d16f78078f8e5eb0ff8f9a9b49d0e843eb4c8eb2f9487b863b100",
+   "zagruzheno": "2026-10-11T19:44:17+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "883876b99b819e110ae7ca3dd8b38227556ec9066551cb23bb86214a8042bc59",
+   "zagruzheno": "2026-10-11T19:44:22+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3ab219f110c4f9d1d53d4d4ea462cb67b2db3577266fa90669bb00fec7277c67",
+   "zagruzheno": "2026-10-11T19:44:28+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "7c8544450cdd8e6deba9b27652fa6a49d9c031f0c89b917f6da14805b8beabfd",
+   "zagruzheno": "2026-10-11T19:44:33+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ec8a8cef7c5e2da433f425d5c05c909a89f8c2bfb0841e0767545e8012490f38",
+   "zagruzheno": "2026-10-11T19:44:38+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "98ce77c4dc748ae9f670d4efcd805e19afe431c757617a45034ff2845676a370",
+   "zagruzheno": "2026-10-11T19:44:44+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "dcdb7d183ff268ad67683b5f33ae416215cf54ae4c8937f66d3de4c1a3faa653",
+   "zagruzheno": "2026-10-11T19:44:49+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "4b48749b162f50a9eca9ed9bf85388e1af0dcc3489e74b7aa7eabc766be3f946",
+   "zagruzheno": "2026-10-11T19:44:56+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "b4837c23b9b61db5f4700e52f3d015800eb68f1499231e5d469e446f2cfe2410",
+   "zagruzheno": "2026-10-11T19:45:03+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ffd041927e0c57a6186d21dac31e54df08fe6e29d95983173ff184ab59bba3f7",
+   "zagruzheno": "2026-10-11T19:45:09+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a5c7f9a660751b67e8d0d43d547110144a5fc4b48c556ea989b6564617612590",
+   "zagruzheno": "2026-10-11T19:45:15+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "873f9dbddbeaca6effea12b73079988f2d7862316c24a2bad76b21b084ea372c",
+   "zagruzheno": "2026-10-11T19:45:33+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a61898556b07fdb02ae43436c1cd9599dcd2dc6cf310e59d004ec3b92645a573",
+   "zagruzheno": "2026-10-11T19:45:40+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "922d61019b351b4bb7fea08c5ae11904937b3616632db6e56f64ce7578194111",
+   "zagruzheno": "2026-10-11T19:45:57+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8893a58b87b81a3675eb33d095331821f9426de3057df389e637080b5c5d3f22",
+   "zagruzheno": "2026-10-11T19:46:15+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "6f01b82ceb0fcca1369f8d699201904e241c9d90a135e326d37ea191712e67f1",
+   "zagruzheno": "2026-10-11T19:46:22+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c10e207b993f8c34a9d47a231fdc8d20f2da2c39fcb6291d1c257a10ae502a5a",
+   "zagruzheno": "2026-10-11T19:46:29+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "60368b7732509b665991ecdcc868f5b4f4381574e961c8bf7c663827aa30482c",
+   "zagruzheno": "2026-10-11T19:46:36+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "09c645f350ea8fccdbde340a191a44de72e86c0dd6e81cb8111221516697ea3b",
+   "zagruzheno": "2026-10-11T19:46:43+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a04f4390d23ec86cf8baf4dec94fd3a518d711114bd5a92f8816364d7407104f",
+   "zagruzheno": "2026-10-11T19:47:11+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8413c62ded2f967f9ff425cd41a24f200a315710edaa2c8d459cc820ad242118",
+   "zagruzheno": "2026-10-11T19:47:19+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "b309a6c472df942215d2cb595f525aba96c876ab909c0f3d414017710c047079",
+   "zagruzheno": "2026-10-11T19:47:25+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "b7a64c8dc301082bc95307a4252e0a2f90807b1c0dc6bb4046a99117a23ec70c",
+   "zagruzheno": "2026-10-11T19:47:33+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6693628d25ad6f4cdfd80368a7bce2f7a1f39cb813f709876f9fa92435b66b30",
+   "zagruzheno": "2026-10-11T19:47:41+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "6432fe63ecaf61f1bddf5049fce7b64d3bf2832d717cf0d1843897b37c920719",
+   "zagruzheno": "2026-10-11T19:47:48+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3e08d26aa07d15fbc63216da66baccb176bd4105b588c7391e6ff82db1eaa5a4",
+   "zagruzheno": "2026-10-11T19:47:56+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c156f73acbf7134bb06fcf3d2d4c1b10f1cf710ab01cb0387e96f098f1c7f3ee",
+   "zagruzheno": "2026-10-11T19:48:04+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "fc88ceb881edc20b8c5120fda60453d5e7f3728ccafce20037f73b62bf34997a",
+   "zagruzheno": "2026-10-11T19:48:11+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4c983ed3d920b77ece2db91621ca12cd897c6a3d4bf98f728fc5a183cd0103d6",
+   "zagruzheno": "2026-10-11T19:48:17+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "cea632c9049d55c12c45342db2d976e12407cf7a939a0ef1935fef7ca13ce971",
+   "zagruzheno": "2026-10-11T19:48:34+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "42b2062bb11e2477b72edd0ec59ade33fce15eeba304ea091bd7d7f9e419c63d",
+   "zagruzheno": "2026-10-11T19:48:40+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "fd711905edbf554a2c2400dd0bbaf440f58b6abc6d679e2bd850dee379f4c5ac",
+   "zagruzheno": "2026-10-11T19:48:46+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "541a0be3aa25fca1312e8e04f3472cf2eb0c1eeea374fd077334d8bc02e5ed44",
+   "zagruzheno": "2026-10-11T19:48:51+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d1d67b49022a2db054c894a7267eaf9515f3bc0b0f4a71c7e638b96bfd2d1471",
+   "zagruzheno": "2026-10-11T19:48:57+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "1dfae3db7b105e721ed8bd2fcd3327384c1f82d7ac0d4c77c3a74d048af04836",
+   "zagruzheno": "2026-10-11T19:49:14+00:00",
+   "polnyy": true
+  },
+  "BNBUSDT/BNBUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "b4222bbaaad5be53cf209e1fc3a18f08c150e79b4f52179c28e054b7b970d246",
+   "zagruzheno": "2026-10-11T19:49:16+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e649ac92008e5f047705ae3c833d5fd655658e36f0d46e4271ecb42e0add2b72",
+   "zagruzheno": "2026-10-11T19:49:21+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "952cf33242a744aff6500b28a6ff46da7f4ad3d6d3535e9d41f9fecda0b96f7c",
+   "zagruzheno": "2026-10-11T19:49:37+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4694b7b025b3c7fffe1f6acc90daf8a0b613898caccec916d82ebe4e8d5a8893",
+   "zagruzheno": "2026-10-11T19:49:42+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e6320e6a7992425638c91817b43b311690056244f644ef6455f4f818124f2e84",
+   "zagruzheno": "2026-10-11T19:49:47+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8537dceb5192aba898e9efc2c6411d2b94fac999fb24fc3057fd55c42b5ebbc4",
+   "zagruzheno": "2026-10-11T19:49:52+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "81b42c317f92f02507f62242dcd0ee44a3fd2f4b5989c0031b083e75037093f2",
+   "zagruzheno": "2026-10-11T19:49:58+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7eb22077a60d79d27ea969dae7029234838c00c1766f921cf1928a31edaef76d",
+   "zagruzheno": "2026-10-11T19:50:03+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3e10590bddedabb45db164b5e61e9713cacea03e00ed750b16f673ced70f4aa4",
+   "zagruzheno": "2026-10-11T19:50:08+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a03bde67ff44bf4a95afe42d510421627786a1544cec8b559c2d7b6472521a70",
+   "zagruzheno": "2026-10-11T19:50:13+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a781822d03ba2ca53e0c44bd9bf0da1ffbb1da3b5227c9742704f5778ef8da69",
+   "zagruzheno": "2026-10-11T19:50:18+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "7ec71551b7b87734de540f41036ef7a850cb05da0903719a1fb8958f71a8df93",
+   "zagruzheno": "2026-10-11T19:50:34+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9e4ff6f70c511aa726ae613b9b2d42e488905af957c912faa81b3c74e95c6968",
+   "zagruzheno": "2026-10-11T19:50:39+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4ada52d14fe562e5f9456f7074786f3241a3ac8634226f985a0585f15afb36ae",
+   "zagruzheno": "2026-10-11T19:50:44+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "3ba1966bfff12f3e1f4796e80dc1b0f49a07242366f446f68ed21883411ed509",
+   "zagruzheno": "2026-10-11T19:50:49+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e087f4198fe1ba4c173817631c548de3f15669743c7acab5e7c42de58b7a1956",
+   "zagruzheno": "2026-10-11T19:51:05+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "30f990a2ffdee75bad80c9932f112f9401727121d53d168020e72090f44ad0d6",
+   "zagruzheno": "2026-10-11T19:51:20+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8e788bb2af907cf1a2332ca26192ae9bf2f73cb8619953ff131ebd0e993b331f",
+   "zagruzheno": "2026-10-11T19:51:26+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "db418fa999d3f9ab01e84dd08bcd9e727ef23e5a214404673f1ec985754685ba",
+   "zagruzheno": "2026-10-11T19:51:31+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cb3dcbc9e2f7486cf051af9462d05be4fb69ed7edccef9c65a18dcce22c217f5",
+   "zagruzheno": "2026-10-11T19:51:36+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a5acb05e2da3d521888d89b3c63ce8a34f51d3b7ce569ee2c684e898c50deaa0",
+   "zagruzheno": "2026-10-11T19:51:41+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "3b0313490fcae51cdd1fa8fd7c0896ced356b388e0abb8d3cc381ed29b2d9a18",
+   "zagruzheno": "2026-10-11T19:51:46+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "540e4c64b51a1d70150d34f243fc96466ccd982b877d9ed0acc01ac51ec7bc7f",
+   "zagruzheno": "2026-10-11T19:51:52+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "d7a185a146c28fd17ab489e5a242f58a7e0a89adc7551f4455c1dd87bd4e1c3a",
+   "zagruzheno": "2026-10-11T19:51:57+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a981707e65cc76b79fcd5c84dad224ec4da1a9501ff01d0a69a37d3cb9a486af",
+   "zagruzheno": "2026-10-11T19:52:01+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "fd0202fa2b4e3b5615346e1b6427017404f7616997010453963f2963b6786954",
+   "zagruzheno": "2026-10-11T19:52:06+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "41465e3ca995ed9253ad68db917bdfab3e9e68c3928295c21c9596cfb2b16abe",
+   "zagruzheno": "2026-10-11T19:52:12+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "43a8fed4fae67893a80dcc27faaa64083d825e965687a77e191bda66d8c18f16",
+   "zagruzheno": "2026-10-11T19:52:17+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "c494d03b32da88e24b50587eeb9667e34ebb8097a7081b91c9ef3084cd2a337d",
+   "zagruzheno": "2026-10-11T19:52:22+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "682590db71f940a7f80a0d01738c335effe62f31a6c17f960215f7db39b30f30",
+   "zagruzheno": "2026-10-11T19:52:28+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "bbc027aa2018d0ef352e3674e7e67b148a299f8e883be7ddaaf942e324d6dbf2",
+   "zagruzheno": "2026-10-11T19:52:33+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "eb2ae854fa630806bab1d7abc3c3726fad6ed89dc330040f38ab36675b8c2f87",
+   "zagruzheno": "2026-10-11T19:52:40+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4d29681821f7011465c57affffef7e7835547f605169228b98e5c94925563bb1",
+   "zagruzheno": "2026-10-11T19:52:46+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "66227457368677527d69de9c61ff1387d0aac09e7b47b3e2b2f4f5ca63649522",
+   "zagruzheno": "2026-10-11T19:52:53+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e133b55c0929a20fb9fd9d1e7d4ee9a53c750b2212674a9cfbd490c5c0d9b654",
+   "zagruzheno": "2026-10-11T19:52:58+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "9a0a87e25dfdd756b8adb4c8e12cd007b000cd55e79eacf224ae4e6c2776ff35",
+   "zagruzheno": "2026-10-11T19:53:04+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "43df3a1fb73cc0be1b66ab433a680e1bf1bf1cd1def300ad1a9ebd95425edb52",
+   "zagruzheno": "2026-10-11T19:53:14+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e1cfe0f6433fa2876f58e557e2414792b9ca54f877e5fffa495594ca83785ab4",
+   "zagruzheno": "2026-10-11T19:53:21+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "2395e5b505081d7fea1ee453fa32f2efc8d30d2989421db46460dd390dd105cf",
+   "zagruzheno": "2026-10-11T19:53:37+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4d0046ae5bd2ee151aa95329a6358016b4cf700a1afa4c9f6912d0c6fe560757",
+   "zagruzheno": "2026-10-11T19:53:43+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "f2c3e9bec817e608d9d50347721f232111384f03c727da9fcf8e76507367db45",
+   "zagruzheno": "2026-10-11T19:53:48+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "2a5383b3705b20d2b519baa6971fac41f8a18c8d998cd474e5b65e16ad390b47",
+   "zagruzheno": "2026-10-11T19:53:53+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "ab330f4b06523ae3beba1e56090013d81f0eff36cb41aea204903b7544b0bc35",
+   "zagruzheno": "2026-10-11T19:53:59+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "097a568c8222b8db10418a09eaa2e757add3be00f69623a6c3686ab9ebc39d51",
+   "zagruzheno": "2026-10-11T19:54:15+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a1575d136de1f31f26a40e29f5c8a6ab2bb40faa7950ebe14d798ecf00140b87",
+   "zagruzheno": "2026-10-11T19:54:20+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "bcb2fec9e772c28354906a7315630a1a40eeeb1e1c0bf9669374c3a3eb467b02",
+   "zagruzheno": "2026-10-11T19:54:36+00:00",
+   "polnyy": true
+  },
+  "BTCUSDT/BTCUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "bc4f1d213c0f8c6f319ec204c9b120090ecefc2a43a6a853ecd677dc13c7e148",
+   "zagruzheno": "2026-10-11T19:54:38+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c9978dcc6ab259de429d1b7057914fb9b34f1fb53459b1f714836b4bac8209d2",
+   "zagruzheno": "2026-10-11T19:54:44+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "e5ae4711bf552c18d4b6a167c63c50021baf72a2b0d0bc3ab4b1222a3e9a1584",
+   "zagruzheno": "2026-10-11T19:54:48+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "328f5ef89a2e32bcbcf40ee05ae66252c60842f37afa7373811ff31b9f0d9c08",
+   "zagruzheno": "2026-10-11T19:54:54+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "95f08e9f8a4893e124536ec7d0bcf1274dc28d875192a8322d390c872471a97f",
+   "zagruzheno": "2026-10-11T19:54:59+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "15490d67d0e99fb9f361bbc19a64ce24b44dc6eaa0440fe97c3e37456b45a22e",
+   "zagruzheno": "2026-10-11T19:55:05+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "23b6b0158b95a1dfcafbda4a83355f18cb59c97e1663a8df6f8db7262f6aee28",
+   "zagruzheno": "2026-10-11T19:55:10+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "45ef7b0bb6a14e5a64f546ac3a734e3fe6afc724daa0d6db21c3dcf9937f2784",
+   "zagruzheno": "2026-10-11T19:55:26+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "68ab401e729ec47e9b5abd127bfdf2d190fe590ab8c95dc2d631a188fbda456b",
+   "zagruzheno": "2026-10-11T19:55:31+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "1921fad97f6cde72431edb19bb5eac94c59471cf2d80995acb741600e4ac1edf",
+   "zagruzheno": "2026-10-11T19:55:37+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "99ec525fc2674ede69fb725c809cabcee4921e1de653f2039f681d57681fff5d",
+   "zagruzheno": "2026-10-11T19:55:42+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "d9ca6e9b0fc27de9b2ea57609af07396bcd1e7b7e4960e4da764decd75690024",
+   "zagruzheno": "2026-10-11T19:55:47+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d6af70b64988b2a93dd0c06f75e33067eac9dd695ee4d487c51baa653fcc98a1",
+   "zagruzheno": "2026-10-11T19:56:02+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "488236071092b82ea9184d6efbb3a062eb9dd028bf675c2ef580929b939131eb",
+   "zagruzheno": "2026-10-11T19:56:07+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "4a3b4aa8b978a2bc88a7cbe72aa14ba20dbad300fb6f00b0d431abe6933669d8",
+   "zagruzheno": "2026-10-11T19:56:24+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7d321aec7cc827521ceae3a1889f5c7771cad58c23eb37ba31c691999a077d9a",
+   "zagruzheno": "2026-10-11T19:56:29+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "9298d46752e9fba4d6ba94a70d4e8ad179b01baeedf6be13f7661cfca3aee15c",
+   "zagruzheno": "2026-10-11T19:56:35+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9289f93a29046d653a49df3d7b3e8638e970654ba48f394fd1b08b24cf50db52",
+   "zagruzheno": "2026-10-11T19:56:41+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "36bcd66854cc1b631cc12af0ec43d57ae9ae548089e301e5b86715f0093c5498",
+   "zagruzheno": "2026-10-11T19:56:47+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d92d3d1d3b00e5cd99783f0ebc5301b5fb8bae42560ceb72658e424f4c540b80",
+   "zagruzheno": "2026-10-11T19:56:54+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "1cfed33fc3ffdc88b6ac008eb6fe7311ad1cfc6cabbaae96979aa53708066390",
+   "zagruzheno": "2026-10-11T19:57:00+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "cb41593d9f0f83af7bf37b7213b121fc9ae8d1351ba70f1559c75fb48477c1cf",
+   "zagruzheno": "2026-10-11T19:57:06+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3a021f820389d22b8a3ba999f310c0beeeadef17580e31c944ca2a4e0f629cde",
+   "zagruzheno": "2026-10-11T19:57:23+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "6952eb98f326d684071ff1a7f48cdbc9769fde7f37ff7245a4606cdc4f4cd8b1",
+   "zagruzheno": "2026-10-11T19:57:30+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "222bc033f235e2c49b13804802131d3d3cd33176260df2d9d29e8e08a74189d0",
+   "zagruzheno": "2026-10-11T19:57:37+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "bcf2f1a3c1cf936d5d0577548bdfd769be81dd37a42b79845fe8b202f0607d8c",
+   "zagruzheno": "2026-10-11T19:57:43+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "ee6571fa9ed834f7a09306810db9f55ffc6bc85225fa16e2b5e331d309192fc4",
+   "zagruzheno": "2026-10-11T19:57:50+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8becf74383f2716ae97fb0cd35e3a54274980f5838ee2e7ec8e86499585fdb20",
+   "zagruzheno": "2026-10-11T19:57:57+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "6a0a91320fa07b84a344f0951569c5dd5bc44041ef5827021d9d67746851bcb3",
+   "zagruzheno": "2026-10-11T19:58:03+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "93f6e4aebe8ee3d60c0996985fe3bc7b34f6eafd5013402484cc540fab5deec3",
+   "zagruzheno": "2026-10-11T19:58:11+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "77e9ac5cadb6b9f88d97fcab744e7bda75c12427e279736d5e0d28cd707e3bc1",
+   "zagruzheno": "2026-10-11T19:58:19+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "950658287e63fdb3a0ad20016ce4851a404fe213618eb890c43b6a67401353ca",
+   "zagruzheno": "2026-10-11T19:58:26+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "21d9c75e8f9e38959f37a6e29eaff9845d42e33a503b3ca8b3ed7029d3f28130",
+   "zagruzheno": "2026-10-11T19:58:33+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "bd865f888748d61878a859fbfb2c45e0f04b49583f520b3b08060dec85413089",
+   "zagruzheno": "2026-10-11T19:58:42+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5816125c977836a34750cc3fbfba3dc0b68975ee2b51f0f61ba79baad10feea4",
+   "zagruzheno": "2026-10-11T19:58:50+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "2aaea28a4da2a7abfe932c73be3ddcbde89f65e2bcd7b3e80ebbc7dd25623985",
+   "zagruzheno": "2026-10-11T19:58:59+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "091b806980b9e5f1ee9d6021b61cbc2a3f35d95bbf79d2797613b2f032d3eaf7",
+   "zagruzheno": "2026-10-11T19:59:07+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "219d875c584b3911e7bf93a029da00d8b6692c7d37880c23401d9573fcaadd7f",
+   "zagruzheno": "2026-10-11T19:59:15+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "67a9e2098293a5252986ad06ef84ab552e5e6892715bbbe9b1525d0f9fdd949f",
+   "zagruzheno": "2026-10-11T19:59:24+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9aa8222580fc55ac38d2f9f89bde0b77b1d47e3dc59bc7b188a1837cc69d90ff",
+   "zagruzheno": "2026-10-11T19:59:32+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "3b96a9160557a61ec787127964a91325244ed72d47e55980014607292d471668",
+   "zagruzheno": "2026-10-11T19:59:39+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "71e9420a8c479b6a7453b26a1f191e77f442df581b8177f7102d590fb7b6446b",
+   "zagruzheno": "2026-10-11T19:59:45+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "1f6152bb3f27c7c24a9ca0763d194c9055ab5990b9a797f8f1605df37f97dc21",
+   "zagruzheno": "2026-10-11T19:59:50+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3502d5f2835a84d292dfd7233cc461313fb0cd55cce825def2d5005d32fb3855",
+   "zagruzheno": "2026-10-11T19:59:56+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "2b97a3c14bb8fa95f636c23c21f24e8dfb13b1f2f9ead4f6f796224416e82373",
+   "zagruzheno": "2026-10-11T20:00:01+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "3bb843466f9ac8d1eab806538541114a4352ce4d8872033c6e6fa73f2d7e444f",
+   "zagruzheno": "2026-10-11T20:00:07+00:00",
+   "polnyy": true
+  },
+  "DOGEUSDT/DOGEUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "083994aa256150fafa36899764cb3a6af6e1bbec623e1cc65e7faffcc392ed1e",
+   "zagruzheno": "2026-10-11T20:00:09+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "f3c1a1f804c5237e869a2a593894bc1d5b303b77f4d99486e4e87572c16f75ff",
+   "zagruzheno": "2026-10-11T20:00:14+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "87404a4c34a42b343b7ef35ce1065867c9179c3695a48b2db72f405e5a6463af",
+   "zagruzheno": "2026-10-11T20:00:20+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "fb2f83bcfcdbea7260c47cf2c24ee0d2c583e74c8fcfe57fd7493cb8e210e118",
+   "zagruzheno": "2026-10-11T20:00:25+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "31b83fded8740ee6718872aa37132969ad790be20dcaeae87add432833787a3f",
+   "zagruzheno": "2026-10-11T20:00:30+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "17ec8e640cf4bee9000a1a5d7a70016af098518a2232528ed259a826155aa98b",
+   "zagruzheno": "2026-10-11T20:00:35+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "0a4b2515f72bff1f1066464b2414ec1a8b8181e9c4aa0e451b6f70ded3c353e5",
+   "zagruzheno": "2026-10-11T20:00:51+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "968928c6be45a40a6748301e5ebd2f6154d96c9f76e2a4fbe35d3ab000651e36",
+   "zagruzheno": "2026-10-11T20:00:56+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e93da7c1a435ec524b4c8b85f17599f411be61e3ff6e4c71ce2228e791663fdf",
+   "zagruzheno": "2026-10-11T20:01:12+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "96db8e9e89e2217c9be66b3875bec92ddd8fe7e2917f25a20eda57bd27149d15",
+   "zagruzheno": "2026-10-11T20:01:17+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "b853ef9bac13e8d9725a6cacbec5cd7077d798922a4b6fde8c0cc823529c1c9a",
+   "zagruzheno": "2026-10-11T20:01:22+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "24e01fd22569dfbf3869b6c1c15a76c5581321bbba4c67066f6df1bfe3d7891b",
+   "zagruzheno": "2026-10-11T20:01:28+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c97be80b0597ed608077c7258abe7ff32278e1b3990e4241f844fb2a7bcc90b2",
+   "zagruzheno": "2026-10-11T20:01:33+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cae35f4bb35b593f1f8ac8f2961f4f3f958c611f64f4358470cadc37682dda66",
+   "zagruzheno": "2026-10-11T20:01:38+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "d351b72ac797bec38450942f2ad17ec3fd7c8b55b4632663449b554e9f77e4a0",
+   "zagruzheno": "2026-10-11T20:01:43+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "784fe2f8410c6bee8a1150bd5d1cadfb11400a2fc27851b9c73ef858d611ac31",
+   "zagruzheno": "2026-10-11T20:01:59+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "b4cab95b688d30b120ddcf47462f7e944dca0bcff876e1a941f2d934a02f40a7",
+   "zagruzheno": "2026-10-11T20:02:04+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d99a486b5af151b8048e383ea656817f221bbeb9369ac8f64ce3dd236864caa0",
+   "zagruzheno": "2026-10-11T20:02:21+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "de4272ab47205fd49b293e7e4d316b12504d29707f1472d287f2ab467928e2f5",
+   "zagruzheno": "2026-10-11T20:02:47+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0bbb67cff7dd9f76dd3db446fd2a9fee71bdccdefbd092afb4c675058e3beeaf",
+   "zagruzheno": "2026-10-11T20:02:53+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "08c385dc04918bd3813864990d092ddfc0b5dc67396f3f59f12dae9227ebe6e0",
+   "zagruzheno": "2026-10-11T20:03:00+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "208ddee03b56f7cdf520153f6328ca8b605af6d72e94b67c27a5e0c8acb7d4f7",
+   "zagruzheno": "2026-10-11T20:03:07+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "10ffe3c79adadf3ec77d0df606a7b808aed446f71b8172ee6211aa6de6fcbbe4",
+   "zagruzheno": "2026-10-11T20:03:14+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "74d1e7f183638b210435e93d0a35b8ea729c5bacfba990f016c3fc89d3b5260f",
+   "zagruzheno": "2026-10-11T20:03:20+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "42d1aeaa7dd854198649818fc1b40cf4e886b9d1eece0df132a30000fa01dba4",
+   "zagruzheno": "2026-10-11T20:03:28+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7bc20b35748c350911735bbb32a0fe9e1ea221612a44d203e4e151cda5e5900e",
+   "zagruzheno": "2026-10-11T20:03:35+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "4ec9904bec0f2858d42383546f59c98f97cb1a9578bcec40e1773f5f148c6a2e",
+   "zagruzheno": "2026-10-11T20:03:42+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a2c049d401ff603d014181ff3ff8740d5e32fc69b40f93abbb9e3534b7b420b1",
+   "zagruzheno": "2026-10-11T20:04:01+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "d33a6f3f72a5da528c4bb3b2591466aa718cd54856adb34365a7c77a68858dbf",
+   "zagruzheno": "2026-10-11T20:04:08+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "23f5b4e52473692e7b77e0fdaf98e46dbb86d9d062672c11ccc7333b962d00b3",
+   "zagruzheno": "2026-10-11T20:04:15+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "7152e1bc6ecdcd6fcc84328bb85c1af7bc08d42ee5253eb116dd7f20d22adc10",
+   "zagruzheno": "2026-10-11T20:04:23+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0285954119e28fe10099647dc8d50325cf9992af2d91130e5f7c4737a7e8a440",
+   "zagruzheno": "2026-10-11T20:04:31+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "1d6e73923eb3c88213ac6406e09effff5ef923e174f3c606e32f21e6d9eab8bc",
+   "zagruzheno": "2026-10-11T20:04:40+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "070cd1d0ad49f98014e9fb52016fe9ca7a2bec9391d70facc57b017e9f4be755",
+   "zagruzheno": "2026-10-11T20:04:48+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a4fa3e11700c975f85b8fe7f6c6657e8d1c0d14cb9bdfe553532c171e95f2968",
+   "zagruzheno": "2026-10-11T20:04:55+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "feae7cb5d01f58512df14f6ad82ebc3b11610497adf3632a7318a3f5794d3cb3",
+   "zagruzheno": "2026-10-11T20:05:01+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d908402d3efb8097e48cb1373b87bc173b7248af702063fba1e046fb30c668c3",
+   "zagruzheno": "2026-10-11T20:05:09+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e2ec23e646480dd2d6f6733c886f8fbbf8e08ef669e066509ddb3d1a21ab492b",
+   "zagruzheno": "2026-10-11T20:05:16+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "cff67e156f8e9d8609a89959c4ad91c7fd29865ae100f383c526ba3ce0395c97",
+   "zagruzheno": "2026-10-11T20:05:32+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "93ede1c965997084a82347134257ae43f0872913ac217d7abd0751cfb65c8d8e",
+   "zagruzheno": "2026-10-11T20:05:38+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "46c7bcdef8d3f122bab8b1207431bee76d26e7636d414a998eda2951ca9f1360",
+   "zagruzheno": "2026-10-11T20:05:43+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c663af0adbab98e73290df3e0f8c484095be27d9b4295bd62d29a9fa7de5a490",
+   "zagruzheno": "2026-10-11T20:05:48+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e16138b00e22727846d4d9ff18a2cb8b4fedbd6fa08a2c54eec24741fc376140",
+   "zagruzheno": "2026-10-11T20:05:53+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "36a9ad0575d062e6af588a416806d07f6cd986ff079c8ab38a1236ed5af97d95",
+   "zagruzheno": "2026-10-11T20:05:59+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8531890826ee47b881fce9bd711e03a13050abf23afab51a66a4e98174a59b6b",
+   "zagruzheno": "2026-10-11T20:06:05+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "f0bddd8638508a39983459ca88ceb2e92d32210a3edfaee385eca3f02008fc51",
+   "zagruzheno": "2026-10-11T20:06:20+00:00",
+   "polnyy": true
+  },
+  "ETHUSDT/ETHUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "7d78d909d277a1dcd031149d26b61afb7bd7da04fdb4bb35667eaad27eb9c373",
+   "zagruzheno": "2026-10-11T20:06:23+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2023-01.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:23+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-02.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:23+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-03.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:24+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-04.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:24+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-05.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:25+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-06.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:25+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-07.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:25+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-08.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:26+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-09.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:26+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-10.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:27+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-11.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:27+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2023-12.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:06:28+00:00",
+   "polnyy": false
+  },
+  "ONDOUSDT/ONDOUSDT_2024-01.jsonl.gz": {
+   "strok": 2473,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "bb9b2b19858cd56250601cef8d999ac97f54b6ea7760e03a424297a9d7d4adb1",
+   "zagruzheno": "2026-10-11T20:06:30+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "85e5d456ed62691bd424414ea97c9979c6431d4f548cb998d25d0526f1d28200",
+   "zagruzheno": "2026-10-11T20:06:35+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "54e9dcf2f2353c57ffd4e00060964f880651693c13427e50edeb9e059ce0a9f0",
+   "zagruzheno": "2026-10-11T20:06:40+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "fd7bcfbfa374b11fe9b5aca89ae3a1f4826659510eef5478e6aaee994fcec2c1",
+   "zagruzheno": "2026-10-11T20:06:46+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "301fef2be50274a9c4fa8a3028c25caad06c26fa6e49b8a83381f98464fbc806",
+   "zagruzheno": "2026-10-11T20:06:52+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "63a1b25b60b90d8d7ef83622ae31f01b2662a1c945d9b15c6f6de196422e81a3",
+   "zagruzheno": "2026-10-11T20:07:10+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cbeaeecc224a67b523f982a888b85ed4df6bc8e3d718d9e2af971d784bcc1a88",
+   "zagruzheno": "2026-10-11T20:07:19+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cb79668f97d249e787ca0ec5b0b7bd74f8fd04891fa0a7749e7389e590b2dcfd",
+   "zagruzheno": "2026-10-11T20:07:26+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "79d01f38e8cd3efb7e26fe0eb233e19ae2c78a1adef35ad56f52158dcfbdd5e8",
+   "zagruzheno": "2026-10-11T20:07:32+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ab9278abcbe24778aaa73257283c7d1eb490da9c2e93f5a0582fbba7a4aa9e8b",
+   "zagruzheno": "2026-10-11T20:07:38+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "23da63d0263eab6a68a4036f8bf16ac6ecd6b70414a04bc367da8007e5bbef7b",
+   "zagruzheno": "2026-10-11T20:07:54+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4c4a9a0a01b6c6e284e83b8c858bbea4a377c4cca46a58638629f49c41d72368",
+   "zagruzheno": "2026-10-11T20:08:10+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "283af2a00257083fdad9c59e901010b3ec7d43700a9d52860c9047c8c829e94e",
+   "zagruzheno": "2026-10-11T20:08:18+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "f739c24cef3f4e69f2ebd8eaa12aff2d4932a4d653337a499099d1f69c18a112",
+   "zagruzheno": "2026-10-11T20:08:25+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cf3851c6cfcde3bdbca2d0a15e7e0fe2852835015052aff5bdab3434d81ca509",
+   "zagruzheno": "2026-10-11T20:08:42+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "6daec26bb4c7c613485718cebe1e03156ceb61640d8f79c12037ce5b8574104b",
+   "zagruzheno": "2026-10-11T20:08:50+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "87e43b8c6157dd7bf66acefa11b38c5690557debd1ad0652aec99bfc808a8327",
+   "zagruzheno": "2026-10-11T20:09:17+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "ad4682c62c1a32232e7e1b88f52942012266e761f2d84ef86004f44d5618267e",
+   "zagruzheno": "2026-10-11T20:09:25+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "f87e0d41bd1cb9025eb4e8cf3266883dfacd1a7e75432198d8bd5cc97b1c200c",
+   "zagruzheno": "2026-10-11T20:09:34+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "f6b14fb117d134ae511fbf0c067144e28d37be81c4403c2cd3091afdb08f84ca",
+   "zagruzheno": "2026-10-11T20:09:42+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "0c0e86029a166e07f1cd0b61bd892b740ed8fac2bb80e0ea770f3675eca134bf",
+   "zagruzheno": "2026-10-11T20:09:52+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "446418c18b39fe9882eb339f3aabdbb2fb97ad6d181e5b30360f32bf524812ed",
+   "zagruzheno": "2026-10-11T20:10:11+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a7e48e572a81ba9412b48599be94f479a6beadd58280437abb71ca308cfde387",
+   "zagruzheno": "2026-10-11T20:10:19+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c0f9e2ea451f79a89835e5052cf2afba73a1ebc4769b6d24c3ee4fdbbdf12278",
+   "zagruzheno": "2026-10-11T20:10:27+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8d1c182ee1c7999b6328fbc3304f1902ef4ec1a50b3d80e71b0494543fa30c56",
+   "zagruzheno": "2026-10-11T20:10:32+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "5a41fd9965a8bef5547d30d7de9e82beb6940bf2a3e138147d18346bfd351496",
+   "zagruzheno": "2026-10-11T20:10:37+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "98da39253492bea206c546436826449621828abfd597d1e0fbb0060f2f284533",
+   "zagruzheno": "2026-10-11T20:10:43+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "36471445475d17a1cc947fe63575ff7ef41cd96d70d614a238a8bd9f3b441ac5",
+   "zagruzheno": "2026-10-11T20:10:49+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a48a44fbe3d3f166d2c919ef60e4841dd115800df394d7240af8ad615436eae8",
+   "zagruzheno": "2026-10-11T20:10:54+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "fc06fa5a47daa3cbe4491282fa9e14f476c3932e1fbce0dca776b74ec4ac58d1",
+   "zagruzheno": "2026-10-11T20:11:00+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e927df69e1af80841e330e1d5afc82f701cddfda5aa2283e839eda2bc443ddd1",
+   "zagruzheno": "2026-10-11T20:11:06+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6af4676495c27beef96996e434aef6c68ad8ac273cb16ac38b5f0a56b09d681f",
+   "zagruzheno": "2026-10-11T20:11:11+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "4fc0ce49836f1aed753d8fbac53f09b1fca5bb7b946f977d7c803d9adcb4dc1a",
+   "zagruzheno": "2026-10-11T20:11:16+00:00",
+   "polnyy": true
+  },
+  "ONDOUSDT/ONDOUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "db2a1b61a8a7d3467a3adab0d7d0f2bcab84e55c9748b6d5c7ca1d215a07bbdf",
+   "zagruzheno": "2026-10-11T20:11:18+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ce4993ad24dfcbc2587424bbd5fbd40cb072fae21583b442feaff6ffdafd7178",
+   "zagruzheno": "2026-10-11T20:11:24+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "c9de7589b8b2ab4b4204b899fb18d3149520766aaf7ce13deef3e0339f302cae",
+   "zagruzheno": "2026-10-11T20:11:29+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0dd811854bcb8f2ba67eb9732ef5eda404dd2eba41c3c4257e910b5c73ccd9df",
+   "zagruzheno": "2026-10-11T20:11:34+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a70078d4cab4c32ff7e302a22bedf21b4e8ec2fd8cacc345985d5af7974efa60",
+   "zagruzheno": "2026-10-11T20:11:40+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "67935b15818e964f77fe5bcc2633b46acd8319650d6377044ba074740898be8e",
+   "zagruzheno": "2026-10-11T20:11:46+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "0cd67c805cfffc099832be91502fc99340c8e11170d064f5039234cc63944214",
+   "zagruzheno": "2026-10-11T20:11:51+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "90f21e68af9574e4627964a82c45f8703abdd83f9bb3970a69569cb28cc0363f",
+   "zagruzheno": "2026-10-11T20:11:57+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "89cd8d15980a7782d28b40a2f3678952fae4430445aa9006163765afed6ae04f",
+   "zagruzheno": "2026-10-11T20:12:02+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "6ec3e822d2c48a5c4bf17e97b0908bac42da9ecf82c5f6304d37684d5815bf4e",
+   "zagruzheno": "2026-10-11T20:12:07+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "35da2f8e2e10052efb56997931a068822cac8e7e8c1ab71f6d76fa2167d8ead4",
+   "zagruzheno": "2026-10-11T20:12:23+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "0ae93d3d1781bd9c48cd28e454d82c0327c22bf887e5b9f7cb04a5de613670dd",
+   "zagruzheno": "2026-10-11T20:12:28+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0f5546fb2e78551d76699296e0e35f5e9c60e068312d606aeabf1584802af86e",
+   "zagruzheno": "2026-10-11T20:12:33+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "37f24a92f6430810e6f5168c84fe363518f65b218de5674607302b3a4d591d8e",
+   "zagruzheno": "2026-10-11T20:12:38+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "ad51ff2a908edfee3ba65298cd250bf023c035439c792071c0826dece7264d9d",
+   "zagruzheno": "2026-10-11T20:12:43+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a1d257732072798e50d5ea5c93f5b20cc920ab59f56a62d6286287cb1d612896",
+   "zagruzheno": "2026-10-11T20:12:48+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "1b88d720c85231a2133a5383062bd6a61f032a38b2ca33975a1b7b248292b242",
+   "zagruzheno": "2026-10-11T20:12:53+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7f726f3ffd7f5f59210470eafe4d5bb93dee90092e1e4562d3f47b8e38ded7f0",
+   "zagruzheno": "2026-10-11T20:12:59+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "74c0fd2ebddd2b85811f2eaa47c422ea5eef0f962ebb5cf18e29c6715d1af127",
+   "zagruzheno": "2026-10-11T20:13:15+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "2b2d3ea7dafadafdc8002d7505e4d102d999bb65c06ced666bf8be9e14ae888c",
+   "zagruzheno": "2026-10-11T20:13:31+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "747a5f1b4e6c33779a4e94792894e2bbe9124dd8e4ce9310f7a877c194d08085",
+   "zagruzheno": "2026-10-11T20:13:37+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "6d2bc6c4691a6bc880ea7fd00b2344bec74e2d33a532013c1f3caf5c388a014f",
+   "zagruzheno": "2026-10-11T20:13:42+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d03f77a0185f86ffd19a0ae39d37db1f503c36242303e1ac9bca895453c09731",
+   "zagruzheno": "2026-10-11T20:13:48+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "166e0f11bf21e44690ac2083dccf4013e4f72ea367a3fbde96243858517d5e43",
+   "zagruzheno": "2026-10-11T20:13:54+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7fa7a53f6a3c6ef423c517b54e3c64fea0511860fe0b7830df20cd752048997f",
+   "zagruzheno": "2026-10-11T20:14:00+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0cb3db21adec93ad1101d99527be8eb1d61c000d131d572755efdd200dbf93ad",
+   "zagruzheno": "2026-10-11T20:14:16+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "af1c9bf722151f65f9a1149c6fe7b6bd87c05f729b31408cf1eff84ebc935f57",
+   "zagruzheno": "2026-10-11T20:14:23+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "af2062ea8ba0685b871c96e0ddef4d89a7fde66f883b08bdcd28f3d15434c75f",
+   "zagruzheno": "2026-10-11T20:14:30+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "66f464a0fc9671f9b48bfae7589164e379a2bc2ecb2a8b0b0a071fc1321979de",
+   "zagruzheno": "2026-10-11T20:14:37+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "1ff1bffee9ae09eccb08f45336f52b70bbf461cdb1873f59a20c6de495a0c761",
+   "zagruzheno": "2026-10-11T20:14:42+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "3b8baacf7bfcfa1d42bf864ade39231671789a1d9687fcc304c10697f719b2d0",
+   "zagruzheno": "2026-10-11T20:14:48+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3396f142d6a538fea004b0be85ec300e151f2f1573c1e98ff5cd1c81e453b09d",
+   "zagruzheno": "2026-10-11T20:14:55+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "69a0ef181802d395dedd94ee66c5d5f463044a96734e93af22218975be02ee8f",
+   "zagruzheno": "2026-10-11T20:15:01+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e5100a9de0392e27d6ecfb6cab16d14220abf774c420f817f2960e3e162f6ee3",
+   "zagruzheno": "2026-10-11T20:15:09+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "2fb7ad324452e77cb2632ddcc24e62cd79a071f51bc6ea1059dc6fd553caaaa9",
+   "zagruzheno": "2026-10-11T20:15:26+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "b8155d6311eadfcf8017bb2ca079f077f9798120ae99636517c808cd8a68832d",
+   "zagruzheno": "2026-10-11T20:15:33+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a4c2ce78d16fc118a0fb2ec5b291a8271b376e904a990b970469485ffa582e59",
+   "zagruzheno": "2026-10-11T20:15:38+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "02cfcde4bc63e213d43d8322eafb1c1cecb8e6203a822c226776b844faba309e",
+   "zagruzheno": "2026-10-11T20:15:44+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "7925cca80b10351a96a3ed0185bac66b7041388354fba39d70ce126ce872968f",
+   "zagruzheno": "2026-10-11T20:15:50+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c608fc7897f1cd9eaf41e05a677877f41e47be92cdba7d8bc8b7b20eb3a3f506",
+   "zagruzheno": "2026-10-11T20:15:55+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "57298de3b9c5009925e2c8338ce6fc1c9684ebe74b1297f08adf2d92908d9596",
+   "zagruzheno": "2026-10-11T20:16:01+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "b2de1c55048caf2cc66fa5ef04f81ad8026561ea54f267798ef45cba2c84af53",
+   "zagruzheno": "2026-10-11T20:16:27+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "92391b66d9d3ec05b510cb22a9f27a1656116ab38b8773143450317eb3387104",
+   "zagruzheno": "2026-10-11T20:16:33+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d9f251d939a46512f2e67539f3135a393717bf32fa8136e0d3a1a37cebd9cc22",
+   "zagruzheno": "2026-10-11T20:16:38+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e8bf520d2a78754c04f0dfb5567dbd5ed7aebda5f0d0ec139b74524a3fbfccce",
+   "zagruzheno": "2026-10-11T20:16:43+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "9e4fe5e76b33d1eadd329e066f388dc528bbf44c5fdb68ed344d864f4aa1682b",
+   "zagruzheno": "2026-10-11T20:16:48+00:00",
+   "polnyy": true
+  },
+  "SOLUSDT/SOLUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "0e4311226c9d5171dca5080810d459acfa78d829498e4f2cffbf5624d2cb05db",
+   "zagruzheno": "2026-10-11T20:16:50+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-01.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:16:50+00:00",
+   "polnyy": false
+  },
+  "SUIUSDT/SUIUSDT_2023-02.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:16:50+00:00",
+   "polnyy": false
+  },
+  "SUIUSDT/SUIUSDT_2023-03.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:16:51+00:00",
+   "polnyy": false
+  },
+  "SUIUSDT/SUIUSDT_2023-04.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:16:51+00:00",
+   "polnyy": false
+  },
+  "SUIUSDT/SUIUSDT_2023-05.jsonl.gz": {
+   "strok": 8189,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "93f1795d1039339996b06c4baf9457300fd9b3b30c4b465bccf123358199bffa",
+   "zagruzheno": "2026-10-11T20:16:57+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "2e7b3115eaecadf0475e928a1e64f3879d8ec6559022cb893caa1b617f94a267",
+   "zagruzheno": "2026-10-11T20:17:02+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ffb44df8738375f18fe1a68f56f0b55e55dce5d3c94f20e29f4046410c888cb2",
+   "zagruzheno": "2026-10-11T20:17:07+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "71280ecf3bcbb12d2085297910eb1875c7ceac3e60ed711461af05f63c317929",
+   "zagruzheno": "2026-10-11T20:17:12+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "84e284c8eb40552dd0f376b255e4c100bfdfe566685ad9ff066aa10d262fe5f1",
+   "zagruzheno": "2026-10-11T20:17:27+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "defa9822681b074e7335008ccb9f95bfc9e278cf5f26bad8920ac42c04a5aade",
+   "zagruzheno": "2026-10-11T20:17:32+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "69e621513bb4b08590c91df6aa951e09704f631d64a2a202b3947bf4fc11f39c",
+   "zagruzheno": "2026-10-11T20:17:38+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5ef6f5558ce72fc612e2d118438ee71e6bf81c083ca6684573e650df0e0dee6b",
+   "zagruzheno": "2026-10-11T20:17:43+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9d2178a3c7619e75b4061ab0a6ebebd9281544dc945ad8aa1b8406faf7a15901",
+   "zagruzheno": "2026-10-11T20:17:48+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "39fa7ac0c453c608652e4b41f6cd6c09a9a1df84f73ec1afab4aa004b07cd7cc",
+   "zagruzheno": "2026-10-11T20:17:53+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "473a11ad5dd9d668530ffa9593943e12c2b55af32c2ef072fb78c26899b4376a",
+   "zagruzheno": "2026-10-11T20:17:58+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "b534dd3fe5718224e3acadf87c01723da4f3accbb0db7f3c155da2fffbd82517",
+   "zagruzheno": "2026-10-11T20:18:05+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "edd71bd318d91864c5500662794759bb3b1e5cf8a819b8780e6d0d82ef9ca632",
+   "zagruzheno": "2026-10-11T20:18:11+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "db14386cc989e9808e8431d444186288ce1d268b9c771fae38b08fdbdc307da0",
+   "zagruzheno": "2026-10-11T20:18:18+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5b098641248289e062b4ab40f7b24450d3458f0013a85a64380215d95cf5fe61",
+   "zagruzheno": "2026-10-11T20:18:26+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "eef9a0074eaea4f328a621c72d5e7dc2ce51e820b09c027f0a6bb29dbb2d6aae",
+   "zagruzheno": "2026-10-11T20:18:33+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "8270b45c0835c5b56bb6f7053407f487c6501ed1196f9d0e3dd62a8460566efa",
+   "zagruzheno": "2026-10-11T20:18:39+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0a18ae7304b2ecb621560a36060933d847836d3c3b52187db7e678cf33d2818e",
+   "zagruzheno": "2026-10-11T20:18:46+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "df882f55a9a32c5e65316c71c8fb29f7643ce34faaf2a3fcd631f4ab478bee29",
+   "zagruzheno": "2026-10-11T20:18:54+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "865f218ba44f4885e31b333d487b3dfd7b638b03cc1c085b9bab0719bdd25a3b",
+   "zagruzheno": "2026-10-11T20:19:02+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "161bc80e3140724dabee8a0bd68e3d22b36fe7153fcfa3a945768abf9725befd",
+   "zagruzheno": "2026-10-11T20:19:09+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "12b481136060451b8b31fd1ece8d3cc16404805b244a015dad6c0b58eae9a45f",
+   "zagruzheno": "2026-10-11T20:19:16+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "1d6dfe8529b16ef7037d51f64b9f2cbea12c52d0ca91ed87d84de31b53f785f4",
+   "zagruzheno": "2026-10-11T20:19:24+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "c91feb1d718985f060345081050c54d1834b521cfc3670d42a2e812b150756f0",
+   "zagruzheno": "2026-10-11T20:19:31+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3bdccfac7ed53813443ec9dc617506d2815222069d0f43945ba314bd8f5efd3c",
+   "zagruzheno": "2026-10-11T20:19:39+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a3499db583f4015d69c17cc390fcc977c193e323f39f9ccac3c0c6857c9d9be2",
+   "zagruzheno": "2026-10-11T20:19:48+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "d9f2e5eca2f654f3b8c164070a9fa828099d44b79f4bafc23fb2a14d8c830410",
+   "zagruzheno": "2026-10-11T20:19:57+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "41dd2c4fab2b3dabb73c1f21e0503b65592f9645110817c121b2db079d6be6dd",
+   "zagruzheno": "2026-10-11T20:20:06+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "ac92d3ce116ff3865064bab9177e820891601cde5437255c88593ef9fdb3a35b",
+   "zagruzheno": "2026-10-11T20:20:15+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "89ecdda924c72cacb63398b5eaf73b9783dfa5340df8d12630c65d322b5dfe64",
+   "zagruzheno": "2026-10-11T20:20:23+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "ba8aa91dd06f9442c35c7b72f46572c402bfb06b595e109c2edbefd3de970a4f",
+   "zagruzheno": "2026-10-11T20:20:40+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "2ec571a89e4ac1c80e30d254186c08d046aa4563eb0b7030aeba6ef13177797f",
+   "zagruzheno": "2026-10-11T20:21:17+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a4a0c3ce3ffbdba9d675f89865b199da261715a38a7628153cd9c18af4adce19",
+   "zagruzheno": "2026-10-11T20:21:23+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "60afa7246b53c24d7fc6020cda9a88076422d87965c196b96e9aaca64cb746fd",
+   "zagruzheno": "2026-10-11T20:21:30+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "f4c30246fe4f21afa95badbb59b60243dc29b477aba6b1d1f31a71a3ca0c1ad3",
+   "zagruzheno": "2026-10-11T20:21:35+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "8b940f4799fd971b882382e5dc2a0285634f89155cbb3e61d3904fdaab90923d",
+   "zagruzheno": "2026-10-11T20:21:42+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "72ee07d27d0c5543bce281002b1a5417acbb3aea8a1bdcfe2471b81c408bb21e",
+   "zagruzheno": "2026-10-11T20:21:48+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "c5e791e7c934260babc3ca1093f9a7c42e758464500915d0d5c6b54b3162d851",
+   "zagruzheno": "2026-10-11T20:21:55+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "2f0f06d369e6681cc6d01066c247d252ba25d5497c35969695dcec071e420aae",
+   "zagruzheno": "2026-10-11T20:22:00+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c3b00a78385398f0e1f17a51d1361c042be91cc15d5c12c1db16f4adaa1d5d99",
+   "zagruzheno": "2026-10-11T20:22:06+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "65c7efe4c49532baa7db748005cba1c6fadcbbf6c67d6dcdf5a451661fbce9e0",
+   "zagruzheno": "2026-10-11T20:22:21+00:00",
+   "polnyy": true
+  },
+  "SUIUSDT/SUIUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "ac18956d3582b27897c6e1694ad2fe346a5b0dcec80ae27b7faf85a0d66dd282",
+   "zagruzheno": "2026-10-11T20:22:23+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2023-01.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:24+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-02.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:24+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-03.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:25+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-04.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:25+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-05.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:26+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-06.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:26+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-07.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:26+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-08.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:27+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-09.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:27+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-10.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:28+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-11.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:28+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2023-12.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:22:28+00:00",
+   "polnyy": false
+  },
+  "TAOUSDT/TAOUSDT_2024-01.jsonl.gz": {
+   "strok": 450,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5a65dcf5d701a961e2f6d4f0bc21b62108868ead91220c0fa9b43d47414b0d01",
+   "zagruzheno": "2026-10-11T20:22:29+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "d49b58df1a0b7854cdf25677f7b819c5f5ae10a70b0933be5446b65a774fcf74",
+   "zagruzheno": "2026-10-11T20:22:35+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8711061d4b876a5129b20460f909b394987946f0192efafe6b19e890cf4a3e40",
+   "zagruzheno": "2026-10-11T20:22:41+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a127124e3552a9b6ef561872ec070b5b9bdd50012f740faef05670d754011690",
+   "zagruzheno": "2026-10-11T20:22:46+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "40bd30592e6bee3365d15975bfa924ae2d035c06d4950217745d331de35bdf58",
+   "zagruzheno": "2026-10-11T20:22:52+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "499158da35462013e274658cd79899b2b8708b25efb77c8f0106fbfe5a07b45a",
+   "zagruzheno": "2026-10-11T20:22:59+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "469676dc39648f724fe5ff329c0c00d94dc7ae6f083e32aad2b865590aff8c83",
+   "zagruzheno": "2026-10-11T20:23:05+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "21eca972d00fe38e6105c21569b70c8dc7170a7558f2795a8209855d5554d288",
+   "zagruzheno": "2026-10-11T20:23:11+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "22f9affeeef7f21f6ba51e0887fbe249ba03916aef397807dc3ba37cf904b106",
+   "zagruzheno": "2026-10-11T20:23:17+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "98296d4a113660a92b971cd8cd5739a30914e4ff2165eff8e83c65b5cfc403a5",
+   "zagruzheno": "2026-10-11T20:23:24+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "0be3a154766cf93d6bfd508819aec5091f27b3cc48b09593418dd551cc9b3d3f",
+   "zagruzheno": "2026-10-11T20:23:30+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9a25c4fd0a7981d4b51a3c74d6c3cf70fdb7101e62ca8b6e1ef3551537c45788",
+   "zagruzheno": "2026-10-11T20:23:46+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5fe05c649f58b4a90ae1eec0044e3326b4c0e657ad77bed21fe0cff44b731dcd",
+   "zagruzheno": "2026-10-11T20:23:52+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "d15a86e4dee18fda4bf3f8d459cb5162d232a94a7be5b424185ae3585058ef29",
+   "zagruzheno": "2026-10-11T20:23:59+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "382c7a2af8bca64ab2013bd742727f9c32fd3fefddb0cc1ce0b96efe0818650c",
+   "zagruzheno": "2026-10-11T20:24:15+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "34443b272e9e9c12a79ec16d735a418531becb2d304221830465ade55e330017",
+   "zagruzheno": "2026-10-11T20:24:22+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9e90376c414d07364ffd50e866810de88c661a70c605bf44b3834b1a7737cb55",
+   "zagruzheno": "2026-10-11T20:24:29+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "84da493e512ff642c8182e948c8a56ecb82d1e99887925ae25a96770f6d3251f",
+   "zagruzheno": "2026-10-11T20:24:35+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "bd204ce9178550361f9f9d8833bdf93af080ec43058deaa7e193ec1216614827",
+   "zagruzheno": "2026-10-11T20:24:42+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "21c2b8e3a8baa68b2967be426747c4e53e81c69f9ab46b9397df3b7745f180f3",
+   "zagruzheno": "2026-10-11T20:24:49+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "604cda3464358cceb5bb8469b7126b0f1936e4acae88ee07e28f8674d8add067",
+   "zagruzheno": "2026-10-11T20:24:56+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5e4256486f031e154dc2be882912fbcd0cf1e18f3ad9cc0344b1d37fc704d810",
+   "zagruzheno": "2026-10-11T20:25:04+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "44f1222daad14fe5f8fdf3e6031dc0e212b190197d17993092eb120dc367d60c",
+   "zagruzheno": "2026-10-11T20:25:10+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a3e8ee81cd5187d2d2ede51f27e204552d183fed7c5600e94f8f6ccb77eb6e9e",
+   "zagruzheno": "2026-10-11T20:25:16+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7af1af8c759c9aee0944b92b90a2383e4f1d8c74a6b1317a0209d3d96d159058",
+   "zagruzheno": "2026-10-11T20:25:32+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "53d93eabe29e1ce2861206201fd611106777b4fabdabe6f7f78b431bbeb249f3",
+   "zagruzheno": "2026-10-11T20:25:48+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a56302094b4df821635ff472e82f32bfa548d897942e15221450e55eaba2dd15",
+   "zagruzheno": "2026-10-11T20:25:54+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "38e49949273494e92e819625bc172966fefbf9fb7ec58aed2f58c2ab10cfcc6b",
+   "zagruzheno": "2026-10-11T20:26:00+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6a4214161d8d729d73efd3092d51101dde234a1bba7195678e595a36c250747f",
+   "zagruzheno": "2026-10-11T20:26:06+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "cb1df494a4fa5224fc80a554c09dbf8f6606c2fe6d172c47a227eda125d3e4d9",
+   "zagruzheno": "2026-10-11T20:26:21+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0e6555891a691cefa10b11eea664fdaff968d4e341e0fdb25ecb5b0c2abc3643",
+   "zagruzheno": "2026-10-11T20:26:36+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c303b02c8e85e8c22ef35b02d3dbf60288af6faa51ba5e30e760cd5f4b0f20be",
+   "zagruzheno": "2026-10-11T20:26:41+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "56a352d3190663060470d12d95be1c016f80e9e3a8f3fe7f50dc6945e95fceba",
+   "zagruzheno": "2026-10-11T20:26:47+00:00",
+   "polnyy": true
+  },
+  "TAOUSDT/TAOUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "f90bbc2423dc34dc201dcd040532b746409d5140ffbbc92761794b1a96e3e5e6",
+   "zagruzheno": "2026-10-11T20:26:49+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2023-01.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:49+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-02.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:50+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-03.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:50+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-04.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:51+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-05.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:51+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-06.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:51+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-07.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:52+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-08.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:52+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-09.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:53+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-10.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:53+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-11.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:53+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2023-12.jsonl.gz": {
+   "strok": 0,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "zagruzheno": "2026-10-11T20:26:54+00:00",
+   "polnyy": false
+  },
+  "WIFUSDT/WIFUSDT_2024-01.jsonl.gz": {
+   "strok": 5898,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e45efd32987d4393fdc7c2af07491125640f3ddf4c12221a75a6b6fe55d2489e",
+   "zagruzheno": "2026-10-11T20:26:58+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "39209cdd2aca31e505c6e59c264848e283a535fb0067267ef620c4befc9c6ce1",
+   "zagruzheno": "2026-10-11T20:27:03+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "515fb887cb7ec57dd2dfd5667ebc72066f32a744e3247d543126ffb01758e322",
+   "zagruzheno": "2026-10-11T20:27:09+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "c107c1e6869b8fdae5e3e2b07cc302dfa06e4bb6f9c7e8b9e1ca82939f5ab7dc",
+   "zagruzheno": "2026-10-11T20:27:24+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "90f50b5a8b14f982bf9e35d19b8157077a339d38a1ae16567ca82218853e1521",
+   "zagruzheno": "2026-10-11T20:27:30+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "eed2c77a85f674c5aa8194b0ac30ba0e4680ddcdba0a0bec8a7f4d6dce723aa5",
+   "zagruzheno": "2026-10-11T20:27:37+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "45ccc015941c55280e89214cc7c66c4119ff1d833262efaeb21ec1a81d227081",
+   "zagruzheno": "2026-10-11T20:27:45+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "25809280e3b706cd4914b42af4c7ef19959a8213391631ea94a127d1b41606d3",
+   "zagruzheno": "2026-10-11T20:27:52+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "d48387a4d598ee4ae8a4de318e5c1974e5a881440aab1c085283fe84bd032c07",
+   "zagruzheno": "2026-10-11T20:27:58+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "8df47399f74a6b793bccc1a3e7cbe75e9afe51229597db562a56f2de7febadd5",
+   "zagruzheno": "2026-10-11T20:28:06+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "4bc352da86f67a25786b0a152094f5c9177ec01290453c7810f56cf30656ff8f",
+   "zagruzheno": "2026-10-11T20:28:23+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "922d7350e88930f3215993443c8bc5648df0e2771bfe08213cd9c08d5fdec100",
+   "zagruzheno": "2026-10-11T20:28:41+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9f425c068271b4ed661a67ffeba192ca514d3e8c384a4274471769957d860744",
+   "zagruzheno": "2026-10-11T20:28:49+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "f5309ea56c623ab004e8b225a2a8514fa0496e39c4042589e78a05af186a7921",
+   "zagruzheno": "2026-10-11T20:28:56+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "52da9812781a246d32ba7e248113bd61121cdfe08e72a09df8c1dc65d73d92b5",
+   "zagruzheno": "2026-10-11T20:29:04+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "dd509fa2cdacec7b625d9c2988baf402e93c8c423f8ebc5a502c55b5cd26765c",
+   "zagruzheno": "2026-10-11T20:29:11+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "a04b7f048be30d686447790aa59b9d8054f23f184f8f09076972d95dbb29d096",
+   "zagruzheno": "2026-10-11T20:29:19+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "2abe2c097f66af8102f239e450139be52c2f9c5b9b136f63819fcc3331f83253",
+   "zagruzheno": "2026-10-11T20:29:37+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "40c6f7da348fc4c38120ea4d403fa4586f64a6a08f16db45b2561e2ee0ee0f7f",
+   "zagruzheno": "2026-10-11T20:29:45+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6dd7ac55def536f16e0ed0beec6cab996fc32322f22c400622b94afc3b5398b7",
+   "zagruzheno": "2026-10-11T20:30:05+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a49c6d144c85a6e4174bd28564eab23b6b37a2c5539c72c1f9df1e98f8011e2c",
+   "zagruzheno": "2026-10-11T20:30:23+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "4ab02a91423d45923f8d0026b289fbb5b4bd4cfc6f3a87806e38dac270efa88a",
+   "zagruzheno": "2026-10-11T20:30:41+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "5fd6120c548808695b3a0b1983df02f26776ce08cba4acbf07c9131213e45b47",
+   "zagruzheno": "2026-10-11T20:30:50+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "365618cee908b813eccde873d4bc678471f042fe2be5a8fa3afa8d0545a3acb1",
+   "zagruzheno": "2026-10-11T20:30:58+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "ab70b4652596f068af93ec14b308845b60f49bbb99f4d4d8ff46cddcb15b8356",
+   "zagruzheno": "2026-10-11T20:31:05+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "11b686a98eabba9d01ac636744bbc6bc535741afa2ada007c3ea66e6685d7ec3",
+   "zagruzheno": "2026-10-11T20:31:13+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "051310707372493fab01ab05a558d9fe26a634a562253cee66bfa63920d566d3",
+   "zagruzheno": "2026-10-11T20:31:30+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "7d9fc3e8047b4dbc9af536aa74e1e3c4ad54544033749aaebb107cc9e4022824",
+   "zagruzheno": "2026-10-11T20:31:37+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "9cabc09c88e1e0bf4691e9e2d3a634a9efd422ba0eedb611cecad107481bfb6e",
+   "zagruzheno": "2026-10-11T20:31:43+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a3a59a790e28517f72ce69610b234d2208fca22a238dd681f829f6b012f2a7d0",
+   "zagruzheno": "2026-10-11T20:31:50+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "dff40497967ff35037abe76e90037795dc0b82d8111de18e5ee926b0236d1b92",
+   "zagruzheno": "2026-10-11T20:31:56+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "79531cc964d02bbffe96c2836eb6deebdc845d5f72ed59f27044c9f94c1d43a8",
+   "zagruzheno": "2026-10-11T20:32:12+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "acffa0b78f3777d9e36e86129c84e079fb4618d75e1023377cec935a11e8a0f9",
+   "zagruzheno": "2026-10-11T20:32:17+00:00",
+   "polnyy": true
+  },
+  "WIFUSDT/WIFUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "fa5490078772c0059a0cb53ba99c2de7a1e5d6faea6c8bc2067ea30766a9cfa5",
+   "zagruzheno": "2026-10-11T20:32:19+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "395737ffe56e97cefc49cf496abf6eab3a519840553963075c59cd9b3d8a65c9",
+   "zagruzheno": "2026-10-11T20:32:25+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "dff3f3c677641f3111589b13e16b5d7573dc986c4ff97c53c3876d8105d6b386",
+   "zagruzheno": "2026-10-11T20:32:41+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "aef55baea3e8bc3374ca753d01b52fdd550584170113f3684721c5300d2cfd27",
+   "zagruzheno": "2026-10-11T20:32:46+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a3a43ce0f9c56c46557a17bd421800bab8fa960afa09b8f99594bfbf2bf1e407",
+   "zagruzheno": "2026-10-11T20:33:01+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "23943bff8b33e5043704e55a6831c6582a310ce2de20b99c4629e867ded572da",
+   "zagruzheno": "2026-10-11T20:33:06+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "2f317c396b4caa1d139b8fd8d893588b35338c6bd5173ea18d504c18eda23102",
+   "zagruzheno": "2026-10-11T20:33:22+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "55f0102f584aeb7c95366a71ef02254c5df22038e4c21ae523043789b0de10b6",
+   "zagruzheno": "2026-10-11T20:33:27+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "6181b2941ff8817999e85d63b56aaf211dd9a260014e5c42e6186c0123e16a91",
+   "zagruzheno": "2026-10-11T20:33:33+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "b90a6bb39bd3e44bd610a92608e1fe8634a789c11bbe0b9f75f756d1cef1e546",
+   "zagruzheno": "2026-10-11T20:33:38+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "5a35be10ba9eee07633e3180ececa1a6f9cabb67954293a7c1e0abbdb1288c7c",
+   "zagruzheno": "2026-10-11T20:33:44+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "09a74f4133a67facb0b64fa91bba7c2a1272c4f576c882ea4dcf59c33ba3687b",
+   "zagruzheno": "2026-10-11T20:33:49+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2023-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "bc27c0de06960aad2ffdd9451f37ac20c3d1f57ad9c05d7f4127c2ebd3aa1129",
+   "zagruzheno": "2026-10-11T20:33:54+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "050dae185eb4b31fcd48265ccc9b4747f513138ef088046510425326af03d58b",
+   "zagruzheno": "2026-10-11T20:33:59+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-02.jsonl.gz": {
+   "strok": 8352,
+   "ozhidalos": 8352,
+   "dyr": 0,
+   "sha256": "35978b62ecdd1c2ce827f749cc5bd460e99b5660dc928d340addc8c8eb6aa900",
+   "zagruzheno": "2026-10-11T20:34:04+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "c80d459a7f49eaecbe5da1dc6378163a902abd6dff087decdfcb697ee7a80114",
+   "zagruzheno": "2026-10-11T20:34:20+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "607af48dd7f2f023729be68b508e190ce99aa3ac7511ad69f6a268cd6eafb432",
+   "zagruzheno": "2026-10-11T20:34:25+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "dcc952e4ba22ba44b4269a86cf90c1dc255deee991556b3487b6bf1c02a5d2dc",
+   "zagruzheno": "2026-10-11T20:34:32+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "fa5e5b8cd1e63da8eabfd5d1e289716b425feae0b0281d5a80e788aaaf34359c",
+   "zagruzheno": "2026-10-11T20:34:59+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "50406024f80db4c0ad8fefb99205510db156a019074eb1b7257144edfc5dcf03",
+   "zagruzheno": "2026-10-11T20:35:06+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "901e17ca595c06367cc1c78fc60e6ec0eb9f6604d558e15d8e8dc81eabae356f",
+   "zagruzheno": "2026-10-11T20:35:36+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "333ce8188a70b4f2c5f302542da8416f937b78c26f33cfc2f976f1f39b9873bd",
+   "zagruzheno": "2026-10-11T20:35:46+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "7929878666357fa4104ed7277dbb0a8d926fb6614616f7962477631dde49a7f7",
+   "zagruzheno": "2026-10-11T20:36:07+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "26380c8db346d61580d857dc41541b27970c9e852b1420fa619ce55553748e1b",
+   "zagruzheno": "2026-10-11T20:36:16+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2024-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "03bd57c767d3ee2032548ebbbdcb1e429921c28af0a47fe82f6ed638ec73eaee",
+   "zagruzheno": "2026-10-11T20:36:26+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "70ce48350dcf5ab9a572c2e6944eceff0c37a5e2774cbd8245f73f4589dfcf2e",
+   "zagruzheno": "2026-10-11T20:36:32+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "4ef8543235ac64d1b6ea8d44bfb8e1510558b07f2a2f91eca10549319edc8563",
+   "zagruzheno": "2026-10-11T20:36:40+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "68b10032ac83d5555a4a4510a687b508309a7fa848b2e47a126006c66d657cb0",
+   "zagruzheno": "2026-10-11T20:36:47+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "8ef7340b1007c49e167f9f8333be75f4bc77c680ea62446d2f7cf05634de92a8",
+   "zagruzheno": "2026-10-11T20:36:54+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "409f007b41c14d6056e0072ed3f69036d834d415d9659fdd24ae3e3af606307b",
+   "zagruzheno": "2026-10-11T20:37:01+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "4381c56091f2c9db881f9755ed834e8dcbe1a61110c268bd00800e678ed4e4f3",
+   "zagruzheno": "2026-10-11T20:37:08+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "27b0d4137ae32ff2d20bfd088659ba5186e00b9e58a894b47477d58d3e1b2106",
+   "zagruzheno": "2026-10-11T20:37:15+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "dd777563411a61157ee562fb0fee57705af5109e7bbff3b8011b216818dddb51",
+   "zagruzheno": "2026-10-11T20:37:23+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "cd9b456be864715844b704e3f1dc1710bdb63469237828d38a8f1afea883a487",
+   "zagruzheno": "2026-10-11T20:37:30+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-10.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "3c740184e445b9f4fdbaefccb7e6ea4f92eec86efe0c9debcded22fdd82a12a0",
+   "zagruzheno": "2026-10-11T20:37:37+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-11.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "dd3f6cecdfa22bcd763e18933af0415808589b59373d7599330a68189c229a39",
+   "zagruzheno": "2026-10-11T20:37:44+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2025-12.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "cc71d555c18aa82c891974696eb05ec992ad885044f5fb9352a939dfe2b3be0a",
+   "zagruzheno": "2026-10-11T20:37:51+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-01.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e84ecbefaa7b017fcb1f6c0178860ba6cb4cebb9f28b97d6f454434e584d293a",
+   "zagruzheno": "2026-10-11T20:37:58+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-02.jsonl.gz": {
+   "strok": 8064,
+   "ozhidalos": 8064,
+   "dyr": 0,
+   "sha256": "f0eae1b1a0104e0e115a1d3ef0bd4cae963b83156101083fd08ea04f3cad7b70",
+   "zagruzheno": "2026-10-11T20:38:05+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-03.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "0291b5e8d22238298a05bea9d54f3293e339439cea34ec8d251f355960017142",
+   "zagruzheno": "2026-10-11T20:38:11+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-04.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "39cb6dbca6b960a6e1861bc84d1130062ceb67d65de137c2b7c0d12b077ec793",
+   "zagruzheno": "2026-10-11T20:38:17+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-05.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "951eab42cde547c77387b1a6c0d890a4578b02961cf5a7dbc93e7296ef9bcf54",
+   "zagruzheno": "2026-10-11T20:38:33+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-06.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "bfaa59ebaf9361f01e76e26b29ac9721cbe8a50515dfabe5d19a3363a9afa3fc",
+   "zagruzheno": "2026-10-11T20:39:00+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-07.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "828a3d5d818a9b8b82dfd6ea7cf38facf6e6d6f0715f4babfc3669bdb5bdd86f",
+   "zagruzheno": "2026-10-11T20:39:16+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-08.jsonl.gz": {
+   "strok": 8928,
+   "ozhidalos": 8928,
+   "dyr": 0,
+   "sha256": "e8b24ce11d7bbb6dc795cb9ad0a98243dfd6a25ddf6fc7c5fcaadcd84b1838aa",
+   "zagruzheno": "2026-10-11T20:39:32+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-09.jsonl.gz": {
+   "strok": 8640,
+   "ozhidalos": 8640,
+   "dyr": 0,
+   "sha256": "a466cc2517674d3060b072d79b3c12274c3b61bcf8bc92aa7feb872575d1c9eb",
+   "zagruzheno": "2026-10-11T20:39:37+00:00",
+   "polnyy": true
+  },
+  "XRPUSDT/XRPUSDT_2026-10.jsonl.gz": {
+   "strok": 3096,
+   "ozhidalos": 3096,
+   "dyr": 0,
+   "sha256": "32612a176db114f872bc31c69613036e7911d322756e2f1ab20ede2a46a3468b",
+   "zagruzheno": "2026-10-11T20:39:39+00:00",
+   "polnyy": true
+  }
+ }
+}

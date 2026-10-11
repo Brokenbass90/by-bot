@@ -1,0 +1,162 @@
+{
+ "istochnik": "bybit v5 /v5/market/kline linear interval=5",
+ "simvoly": {
+  "1000PEPEUSDT": {
+   "strok": 362098,
+   "s": "2023-05-03T11:10:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.853390833798496e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "ADAUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.8480025357316325e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "AVAXUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.900610396070728e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "BNBUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 4.7674406730449745e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "BTCUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 31635,
+    "maks_otn": 4.768138539844938e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "DOGEUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.879802598545842e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "ETHUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 31635,
+    "maks_otn": 5.720286572616831e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "ONDOUSDT": {
+   "strok": 285793,
+   "s": "2024-01-23T09:55:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.883118012082948e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "SOLUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 31635,
+    "maks_otn": 5.900610396070728e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "SUIUSDT": {
+   "strok": 362069,
+   "s": "2023-05-03T13:35:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.883118012082948e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "TAOUSDT": {
+   "strok": 283770,
+   "s": "2024-01-30T10:30:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.714010902892704e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "WIFUSDT": {
+   "strok": 289218,
+   "s": "2024-01-11T12:30:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.883118012082948e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  },
+  "XRPUSDT": {
+   "strok": 397368,
+   "s": "2023-01-01T00:00:00",
+   "po": "2026-10-11T17:55:00",
+   "dyr": 0,
+   "dubley": 0,
+   "sverka_h1": {
+    "chasov": 17278,
+    "maks_otn": 5.883118012082948e-08,
+    "dolya_bolshe_1e4": 0.0
+   }
+  }
+ },
+ "kogda": "2026-10-11T21:00:59"
+}
