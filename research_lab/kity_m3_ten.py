@@ -185,7 +185,8 @@ def sverka(d: dt.date):
     """признак d−1 из архива data.binance.vision (дневные свечи) против живого; децили должны совпасть."""
     sig = json.loads((D / d.isoformat() / "signal.json").read_text()); d_1 = d - dt.timedelta(days=1); arh = {}
     for s in sig["vse_priznaki"]:
-        url = f"{ARH}/klines/{s}/1d/{s}-1d-{d_1.isoformat()}.zip"
+        q = urllib.parse.quote(s, safe="")   # 07–11.10: символы не-ASCII (币安人生USDT) без кодирования падали → сверка висла
+        url = f"{ARH}/klines/{q}/1d/{q}-1d-{d_1.isoformat()}.zip"
         try:
             b = urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "research-paper"}), timeout=30).read()
             with zipfile.ZipFile(io.BytesIO(b)) as z:
