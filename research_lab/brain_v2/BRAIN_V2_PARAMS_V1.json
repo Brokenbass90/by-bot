@@ -1,0 +1,6 @@
+{"kontekst": {"REZHIM": "REZHIM_V1 замок A1", "VOL": {"atr": 14, "tf": "1h", "okno_dney": 90, "granicy_percentil": [33, 67]}},
+ "skorer": {"kappa0": 300, "kappa1": 150, "koef_z": 4, "mult_min": 0.5, "mult_max": 1.5},
+ "kapital": {"bazovyy_risk": 0.005, "maks_otkrytyy_risk": 0.06, "maks_poziciy": 12, "na_simvol": 1, "dolya_nogi_max": 0.40, "napravlennyy_max": 0.60},
+ "izderzhki": {"komissiya_storona": 0.0006, "proskalzyvanie_storona": 0.0002, "fanding": "факт за удержание"},
+ "razvivayushchiy_filtr": {"sgiby": "как B3_KONFIG", "min_sgibov": 3, "dd_ratio_max": 1.1},
+ "prospektiv": {"vzglyady_nedeli": [16, 26], "min_sdelok_k_16": 300, "t_pass": 2.3, "t_fail": -1.0, "dd_ratio_max": 1.1}}
