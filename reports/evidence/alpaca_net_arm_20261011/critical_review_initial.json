@@ -1,0 +1,63 @@
+{
+  "schema": "ALPACA_NET_PAPER_CRITICAL_REVIEW_V1",
+  "status": "CHANGES_REQUIRED",
+  "proposal_sha256": "46b005696c3b98d17bdd6f6dd2fccb82c9a9b650d8728bfb34a203367ad2bafe",
+  "remaining_material_findings": 2,
+  "requested_model": "gpt-6-astra",
+  "requested_reasoning_effort": "high",
+  "model_effort_source": "AGENTS.md critical financial/security review routing",
+  "runtime_model_verification": "NOT_VERIFIED_BY_REVIEWER; parent must verify runtime metadata",
+  "scope": "One bounded local critical review of exact October12 NET PAPER install/arm proposal; no LIVE activation, new research, network, SSH, deployment or broker actions.",
+  "findings": [
+    {
+      "id": "P1_INITIAL_PROTECTION_RECOVERY",
+      "priority": "P1",
+      "file": "scripts/run_alpaca_paper_session_guard.py",
+      "line_start": 70,
+      "line_end": 75,
+      "title": "Initial stop failure or pre-receipt fill never reaches an owned terminal recovery path",
+      "detail": "Every intent lacking PAPER_PROTECTED re-enters execute_paper. A definitive first-stop HTTP422 leaves phase STOP_DISPATCHED; exact-CID absence subsequently produces UNCERTAIN_STOP_NO_RESEND forever. UNWIND_MS is ignored on this branch, so filled NET remains unprotected through the hard end. If the stop was accepted and fills before PAPER_PROTECTED is saved, recovery instead fails PAPER_POSITION_OWNERSHIP_MISMATCH before inspecting that exit; partial fills likewise strand recovery.",
+      "related_locations": [
+        "research_lab/alpaca_dynamic_paper.py:201",
+        "research_lab/alpaca_dynamic_paper.py:208",
+        "research_lab/alpaca_dynamic_paper.py:231",
+        "research_lab/alpaca_dynamic_paper_maintenance.py:153"
+      ],
+      "narrow_fix": "Persist definitive initial-stop rejection separately from unknown send; validate the exact owned terminal entry and pending ledger, then use the existing scoped quantity-bound PAPER kill helper for confirmed failed protection. Journal unwind dispatch before POST and GET-recover the same CID. Reconcile accepted initial stop terminal/partial fills and cancellation overlap before any remaining-quantity exit. Never fabricate PAPER_PROTECTED, resend an unknown POST, or blind-sell against an unresolved stop; unknown ownership must remain an explicit owner-action blocker with exact-CID polling.",
+      "verification": "Offline real execute_paper + guard_once synthetic reproductions: stop422 => UNCERTAIN_STOP_NO_RESEND both after window and after UNWIND_MS, NET remaining true; lost stop response/stop fully filled => PAPER_POSITION_OWNERSHIP_MISMATCH at both times; unknown stop => UNCERTAIN_STOP_NO_RESEND, NET remaining true. Existing76 tests pass and do not exercise this guard branch."
+    },
+    {
+      "id": "P1_RECOVERY_START_DELAY",
+      "priority": "P1",
+      "file": "scripts/run_alpaca_paper_session_guard.py",
+      "line_start": 103,
+      "line_end": 104,
+      "title": "Guard waits five minutes before recovering an already accepted entry",
+      "detail": "The opener can persist/send a BUY at13:30 and return immediately on a lost response, leaving a real accepted fill without a stop. Guard intentionally performs no recovery until13:35. The original shared lock already prevents overlap with a still-running opener; the unconditional sleep adds up to five minutes of avoidable unprotected exposure.",
+      "related_locations": [
+        "scripts/run_alpaca_paper_session_guard.py:49",
+        "scripts/run_alpaca_paper_session_guard.py:120",
+        "research_lab/alpaca_dynamic_paper.py:178",
+        "research_lab/alpaca_dynamic_paper.py:231"
+      ],
+      "narrow_fix": "Begin guard observation at opening and recover an existing persisted dispatch as soon as the original shared lock is available. During the opening window do not terminate merely because no reservation/invocation exists yet; require authoritative opener terminal evidence or closed window. Keep no-BUY enforcement, exact plan membership, one original lock and no restart/resend. Add targeted accepted-entry/lost-response and lock-overlap/no-premature-exit tests.",
+      "verification": "Control-flow review; existing test_accepted_entry_with_lost_response_recovers_same_fill_without_second_buy demonstrates recoverable accepted-entry state. No runtime or broker timing measured."
+    }
+  ],
+  "verified_local": {
+    "test_command": ".venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_alpaca_paper_source_plan.py tests/test_alpaca_paper_session_guard.py tests/test_alpaca_dynamic_paper.py tests/test_alpaca_dynamic_paper_maintenance.py tests/test_alpaca_open_dispatch_v2.py",
+    "test_result": "76 passed in1.59s",
+    "proposal_app_files_match_local_bytes": true,
+    "proposal_embedded_static_file_pins_match": true,
+    "exact_active_source_membership": "Narrow readonly change correctly covers intent_attempts, rejects retired/mutated plans and duplicate history; no source-book migration or history deletion.",
+    "source_install_scope": "Reviewed private capture locally: original source maps61/23/46; one original intent/one retirement/no attempts; NET absent and no PAPER open orders; LIVE HALT source true. Proposal uses original shared lock, CAS NET-only exclusion, original source book and separate app; no old app/cron/service changes in installer.",
+    "cash_minimum_cost_mapping": "Static496.12 is refreshed by opener account GET. Existing publisher adds CAT cent reserve from capped quantity ceiling, retains USD1 buy minimum and9-decimal quantity representation, and distinguishes asset eligibility from actual native stop acceptance. No additional material finding in these unchanged mappings.",
+    "finality": "Existing maintenance labels exits pending finality and net NOT_PROVEN; a flat synthetic result is not native protection/lifecycle/net-PASS."
+  },
+  "limitations": [
+    "No network, SSH, live broker, installed units or runtime model identity verified by this reviewer.",
+    "Source capture is provided archived evidence, not a new independent live read.",
+    "Review approval withheld pending targeted same-review closure of these two P1 findings and regenerated proposal pins.",
+    "No research outcomes consumed; no alpha gate requested."
+  ]
+}

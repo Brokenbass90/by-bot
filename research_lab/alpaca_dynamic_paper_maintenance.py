@@ -20,6 +20,88 @@ def unwind_cid(parent,account):
     return 'dyu-'+digest({'parent':parent,'paper_account':account})[:32]
 
 
+def _recover_initial_in_store(client,item,db,path,now_ms):
+    """Reconcile a filled entry without inventing an accepted protection floor."""
+    plan=item['plan'];symbol=plan['symbol']
+    entry=client.get_order_by_client_id(item['entry_cid'])
+    if (not entry or entry.get('client_order_id')!=item['entry_cid']
+        or entry.get('symbol')!=symbol or entry.get('side')!='buy' or entry.get('type')!='limit'
+        or entry.get('status') not in {'filled','canceled','expired'}
+        or not 0<positive(entry['filled_qty'])<=positive(plan['qty'])
+        or positive(entry['qty'])!=positive(plan['qty'])
+        or positive(entry['limit_price'])!=positive(plan['reference_ask']).quantize(dec('.01'),rounding='ROUND_DOWN')):
+        raise ValueError('INITIAL_ENTRY_FILL_NOT_PROVEN')
+    state,error=bridge._load_protective_floor_state(path/'protective_exit_hwm.json')
+    if error or set(state)!={symbol}:raise ValueError('INITIAL_SINGLE_PENDING_LEDGER_REQUIRED')
+    record=bridge._validated_existing_intended_lifecycle(state[symbol],item['account'],allow_pending=True)
+    if (record['entry_order_id']!=entry['id'] or positive(record['entry_fill_qty'])!=positive(entry['filled_qty'])
+        or positive(record['entry_price'])!=positive(entry['filled_avg_price'])):
+        raise ValueError('INITIAL_PENDING_ENTRY_SOURCE_CONFLICT')
+    stop=client.get_order_by_client_id(item['stop_cid'])
+    if stop and (stop.get('client_order_id')!=item['stop_cid'] or stop.get('symbol')!=symbol
+                 or stop.get('side')!='sell' or stop.get('type')!='stop'
+                 or positive(stop['qty'])!=positive(entry['filled_qty'])):
+        raise ValueError('INITIAL_STOP_SOURCE_CONFLICT')
+    rejection=item.get('initial_stop_rejection')
+    if rejection and (rejection!={'http_status':422,'client_order_id':item['stop_cid'],'entry_order_id':entry['id']} or stop):
+        raise ValueError('INITIAL_STOP_REJECTION_SOURCE_CONFLICT')
+    if not item.get('unwind_dispatched'):
+        if not stop and not rejection:
+            return result('BLOCKED_EXECUTION',reason='UNKNOWN_INITIAL_STOP_OWNER_ACTION_REQUIRED',
+                          no_resend=True,initial_full_protection_proven=False)
+        if stop and dec(stop.get('filled_qty','0'))==0 and stop.get('status') in bridge._ACTIVE_ORDER_STATUSES:
+            return result('PAPER_RECOVERY_REQUIRED',reason='INITIAL_STOP_SOURCE_CONFIRMED')
+        if stop and dec(stop.get('filled_qty','0'))==0 and stop.get('status') not in bridge._TERMINAL_ORDER_STATUSES:
+            raise ValueError('INITIAL_STOP_STATUS_UNKNOWN')
+        proof={'account_id':item['account'],'reason':'unprotected_after_reconcile','positions':[
+            {'symbol':symbol,'entry_order_id':entry['id'],'qty':entry['filled_qty'],'avg_entry_price':entry['filled_avg_price']}]}
+        # Exact current entry and remaining quantity, plus all active order sources.
+        _,positions,orders=bridge._validated_paper_kill_scope(proof=proof,client=client,base_url=PAPER)
+        if any(o.get('status') in bridge._ACTIVE_ORDER_STATUSES and o.get('client_order_id') not in
+               {item['entry_cid'],item['stop_cid'],unwind_cid(plan['receipt_id'],item['account'])} for o in orders):
+            raise ValueError('INITIAL_FOREIGN_ACTIVE_ORDER')
+        item['initial_failure_record']=record;_save(db,item)
+        if any(p.get('symbol')==symbol for p in positions):
+            cid=unwind_cid(plan['receipt_id'],item['account'])
+            if hasattr(client,'owned_client_ids'):client.owned_client_ids=frozenset([*client.owned_client_ids,cid])
+            if hasattr(client,'authorize_owned_unwind'):client.authorize_owned_unwind(proof,cid)
+            item['unwind_dispatched']=True;_save(db,item)  # before any cancellation/market POST
+            changes={'ALPACA_SEND_ORDERS':'1','ALPACA_ALLOW_NEW_ENTRIES':'0','ALPACA_PAPER_KILL_ACK':'PAPER_OWNED_EXITS_ONLY'}
+            previous={k:os.environ.get(k) for k in changes}
+            try:
+                os.environ.update(changes)
+                item['kill_receipt']=bridge.run_paper_owned_kill(proof=proof,client=client,base_url=PAPER,apply=True,state_dir=path)
+                _save(db,item)
+            finally:
+                for k,v in previous.items():
+                    if v is None:os.environ.pop(k,None)
+                    else:os.environ[k]=v
+    terminal=_exit_observation(client,item,record,now_ms)
+    if terminal['status'].endswith('EXIT_PENDING_FINALITY'):
+        terminal.update(status='PAPER_INITIAL_EXIT_PENDING_FINALITY',initial_full_protection_proven=False)
+        item['initial_terminal']=terminal;_save(db,item)
+    return terminal
+
+
+def recover_initial_paper(*,plan,policy,client,expected_paper_id,runtime,now_ms):
+    """No entry/protection resend; preserve initial stop/market/mixed terminal truth."""
+    try:
+        if client.base_url!=PAPER or expected_paper_id==policy['account_id']:
+            raise ValueError('EXACT_DISTINCT_PAPER_ENDPOINT_REQUIRED')
+        _plan_check(plan,policy)
+        if client.get_account()['id']!=expected_paper_id:raise ValueError('PAPER_ACCOUNT_MISMATCH')
+        identity=digest({'parent':plan['receipt_id'],'paper_account':expected_paper_id})
+        with _store(runtime) as (db,path):
+            row=db.execute('SELECT payload FROM intents WHERE id=?',(identity,)).fetchone()
+            if not row:raise ValueError('NO_EXISTING_PAPER_INTENT')
+            item=json.loads(row[0])
+            if item['plan']!=plan or item['account']!=expected_paper_id:raise ValueError('PAPER_INTENT_CONFLICT')
+            if item.get('receipt',{}).get('status')=='PAPER_PROTECTED':raise ValueError('INITIAL_RECOVERY_SCOPE_CONFLICT')
+            return _recover_initial_in_store(client,item,db,path,instant(now_ms))
+    except Exception as error:
+        return result('BLOCKED_EXECUTION',reason=str(error) or type(error).__name__)
+
+
 def _exit_observation(client,item,record,now_ms):
     """Read only the native stop/dispatch IDs; flatness never invents a fill."""
     symbol=item['plan']['symbol'];rows={}

@@ -1,0 +1,104 @@
+{
+  "schema": "BOUNCE_CLAUDE_SOURCE_HANDOFF_V1",
+  "status": "BLOCKED_RESEARCH_SOURCE_CONTRACT",
+  "prepared_utc": "2026-10-11",
+  "orders_allowed": false,
+  "money_authority": false,
+  "outcomes_or_rates_analyzed": false,
+  "universe": {
+    "symbols": ["BTCUSDT", "ETHUSDT"],
+    "scope": "EXISTING_MAJORS_ONLY_BASELINE",
+    "eight_symbol_prereg_separate": true
+  },
+  "baseline_and_cost_contract": {
+    "config": {
+      "path": "configs/research/bounce1_majors_three_regime_prereg_20260802.json",
+      "sha256": "62f196e58e86a97c94223208164f5ff594bc06634f38ec7eb08c4e9299311a37",
+      "exists": true
+    },
+    "strategy_source": {
+      "path": "strategies/alt_support_bounce_v1.py",
+      "sha256": "1f073053c27e116e2cee73882ecc1c187154250ddef573004079e3725f14ee89",
+      "exists": true
+    },
+    "source_builder": {
+      "path": "research_lab/build_h1_bundle.py",
+      "sha256": "f1f6581ac2ac30b6241804878c169d3eba375e59553db884a3d57d65ad5244ae",
+      "exists": true
+    },
+    "aggregation_source": {
+      "path": "bot/closed_bar_aggregation_v1.py",
+      "sha256": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa",
+      "exists": true
+    },
+    "packet_source": {
+      "path": "research_lab/bounce_range_source_packet.py",
+      "sha256": "8c95d462a4387bce01f021718d7855f24670a5dcf98f12682b09b0a4a0e284a7",
+      "exists": true
+    },
+    "approved_params": {
+      "path": "configs/approved_strategy_params.env",
+      "sha256": "52de3558c4afd3727211554d1f5365ee00df19479850a1bda84ab9a1b6b93184",
+      "exists": true
+    },
+    "cost_model": {
+      "fee_bps_per_side": 6.0,
+      "slippage_bps_per_side": 2.0,
+      "source_path": "configs/research/bounce1_majors_three_regime_prereg_20260802.json",
+      "treatment": "FROZEN_HISTORICAL_ASSUMPTIONS_NOT_MEASURED_CURRENT_ACCOUNT_COSTS"
+    }
+  },
+  "derived_packet_v2": {
+    "directory": "research_lab/data/bounce_range_sources_20261010_v2",
+    "manifest_sha256": "6e022b23ba94b19be11f24a90aabea2a4db63a8e340d293481e0f67b48c456e5",
+    "per_symbol": {
+      "BTCUSDT": {
+        "H1": {"path": "research_lab/data/bounce_range_sources_20261010_v2/BTCUSDT_H1.jsonl", "sha256": "cf46a4b0e6f0426dc8394f36508c2bfe2bd31265fa08b4ea290a01bcc355993c", "rows": 31635, "exists": true},
+        "H4": {"path": "research_lab/data/bounce_range_sources_20261010_v2/BTCUSDT_H4.jsonl", "sha256": "05bc64df187b52cc7d9b15c90a5350eeea6daa32cf2461a3be337bb2eefe48bc", "rows": 7908, "exists": true}
+      },
+      "ETHUSDT": {
+        "H1": {"path": "research_lab/data/bounce_range_sources_20261010_v2/ETHUSDT_H1.jsonl", "sha256": "569bc2bbad5820c0aab92ca60a72bfeee52c535741d35b9ecc97adc95d40bb72", "rows": 31635, "exists": true},
+        "H4": {"path": "research_lab/data/bounce_range_sources_20261010_v2/ETHUSDT_H4.jsonl", "sha256": "de55f10b04ccbd476782e119e8e7dbcd197f23a1258e7e879875d3f1ed6c9058", "rows": 7908, "exists": true}
+      }
+    },
+    "timestamp_semantics": "OPEN_TIME_UTC_MS",
+    "float_semantics": "float32_stored_widened_to_float64",
+    "leading_h1_excluded_from_h4_per_symbol": 3,
+    "raw_m5_lineage": "UNKNOWN",
+    "pit_publication_lineage": "UNKNOWN"
+  },
+  "funding_archives": {
+    "treatment": "UNAPPROVED",
+    "broad": {
+      "as_of_utc": "2026-08-12T07:37:18.343Z",
+      "through_settlement_utc": "2026-08-12T00:00:00Z",
+      "records_each": 3958,
+      "files": {
+        "BTCUSDT": {"path": "research_lab/data/bybit_public_archive_2023/funding/BTCUSDT.json", "sha256": "bf118af0df7975b41e8335477f3cdc90f700e78b1db296b55600d7ad09431bfd", "exists": true},
+        "ETHUSDT": {"path": "research_lab/data/bybit_public_archive_2023/funding/ETHUSDT.json", "sha256": "98860e26f78bfc83e6f3cba736fc7ef75d0ccf50ea0ca516972a668f646ae549", "exists": true}
+      }
+    },
+    "preholdout_named_archive": {
+      "through_settlement_utc": "2025-09-30T16:00:00Z",
+      "records_each": 3012,
+      "directory_name_does_not_establish_holdout": true,
+      "files": {
+        "BTCUSDT": {"path": "research_lab/data/bybit_public_preholdout_2023_20250930/funding/BTCUSDT.json", "sha256": "0f50c11666117e40daae9ec831dc259bfe56cd167f8022fdf42ec038782c57d8", "exists": true},
+        "ETHUSDT": {"path": "research_lab/data/bybit_public_preholdout_2023_20250930/funding/ETHUSDT.json", "sha256": "1dbaac6976505131dca8b7b53d650b3d46f4eb6ce313b1ffd237d728b33fd534", "exists": true}
+      }
+    }
+  },
+  "unknown_or_missing": [
+    {"item": "raw M5 provider/assembly/PIT manifest for cached H1", "status": "UNKNOWN", "path": null},
+    {"item": "complete discovery/consumption ledger and certified independent validation interval", "status": "UNKNOWN", "path": null},
+    {"item": "versioned funding debit/credit/timestamp/missing-data treatment", "status": "UNAPPROVED", "path": null}
+  ],
+  "verification": {
+    "referenced_hashes_checked": true,
+    "missing_referenced_files": [],
+    "network_or_ssh": false,
+    "strategy_or_judge_run": false,
+    "configs_changed": false,
+    "alpaca_or_root_files_changed": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "proposal_sha256": "dde67bfff6b028e091a091c5a14e335e04a36ad3ad010db6fc5a7c6758f3ccb3",
+  "base": "/opt/bybot-research/alpaca-net-paper-session-20261012",
+  "app_files": 81,
+  "session_files": {
+    "packet.json": "9ceda9395eda310bb32d1b05cb96c7be228945901a6574da359b36eb61d001dd",
+    "protocol.json": "7cbcb4ca812c8fc4cbe217a8e2af1489701345a7ff114b5e58fa05806be1ff08",
+    "template.json": "5d5e92501b6d970a43386c7c4a483628a7e5c4489e783a70c474c5393c2c888e",
+    "ranking.json": "3368b51d8a07465c9dcca6acf1ffd5ddc1831e12fd3332fd596d9d2ecea5a5fb",
+    "source_binding.json": "e51b4715714ea49a74d997731e070137c57f955ad26b3a624af8423281fcb07c"
+  },
+  "unit_files": {
+    "alpaca-net-paper-open-20261012.service": "bfee459cfeb39516f0bd7eceef1d36c7c95559d7d44b0d17df90704e7bf11c0a",
+    "alpaca-net-paper-guard-20261012.service": "7f301f112f2f33d702d38d5ab62dc4b2723e11bf4006a549cd3f2ef1650c4ab3"
+  },
+  "source_archive_sha256": "aa51ea160e3d7c9105adba45869d436244b873c76fc10bc079e1dba693838dc8",
+  "live_changes": false,
+  "broker_writes_before_open": 0
+}

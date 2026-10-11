@@ -120,6 +120,25 @@ def shared_lock_path(paper_env, env, key_id):
     return path
 
 
+def require_source_plan(path, plan):
+    """Read exact active receipt across original history and replacement attempts.
+
+    Never create/migrate this source book, resurrect a retired plan, or accept a
+    changed plan merely because it shares an inherited slot.
+    """
+    import sqlite3
+    from research_lab.alpaca_dynamic_v1 import DynamicBook
+    path = Path(path).absolute()
+    if not path.is_file() or any(p.is_symlink() for p in [path, *path.parents]):
+        raise ValueError('SOURCE_BOOK_IDENTITY')
+    with sqlite3.connect(path.as_uri()+'?mode=ro', uri=True) as db:
+        active = DynamicBook.active_from_db(db)
+    exact = next((p for p in active if p['receipt_id'] == plan.get('receipt_id')), None)
+    if exact is None or exact != plan:
+        raise ValueError('PLAN_NOT_IN_SOURCE_BOOK')
+    return exact
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--policy', type=Path, default=ROOT/'reports/ALPACA_DYNAMIC_V1_POLICY_2026_10_06.json')
@@ -135,14 +154,10 @@ def main():
     args = parser.parse_args()
     try:
         from dotenv import dotenv_values
-        import sqlite3
         plan, policy = json.loads(args.plan.read_text()), json.loads(args.policy.read_text())
         if digest(policy) != 'fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d':
             raise ValueError('SEALED_POLICY_CONFLICT')
-        with sqlite3.connect(args.plan_store.absolute().as_uri()+'?mode=ro', uri=True) as db:
-            row = db.execute('SELECT payload FROM intents WHERE entry=?', (plan['slot_entry_order_id'],)).fetchone()
-        if not row or any(json.loads(row[0]).get(k) != plan.get(k) for k in [*CORE, 'receipt_id', 'client_order_id', 'status', 'money_authority', 'orders_allowed']):
-            raise ValueError('PLAN_NOT_IN_SOURCE_BOOK')
+        require_source_plan(args.plan_store, plan)
         if args.runtime.exists() and any(args.runtime.iterdir()) and not (args.runtime/'paper.sqlite').is_file():
             raise ValueError('PAPER_RUNTIME_NOT_ISOLATED')
         env = dotenv_values(args.paper_env)

@@ -1,0 +1,38 @@
+{
+  "schema": "ALPACA_OCT11_DELIVERY_VERIFICATION_V1",
+  "status": "ALPACA_NEXT_SESSION_ARMED",
+  "financial_review": {
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "runtime_turn_context_verified": true,
+    "rollout_id": "01a12b87-427f-7721-a623-ccfba882cb64",
+    "proposal_sha256": "dde67bfff6b028e091a091c5a14e335e04a36ad3ad010db6fc5a7c6758f3ccb3",
+    "remaining_material_findings": 0,
+    "review_scope": "single bounded review plus targeted closure; PAPER install only"
+  },
+  "bounce_worker": {
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "runtime_turn_context_verified": true,
+    "rollout_id": "01a12b7a-567f-7f81-9f99-d7516b45df39",
+    "referenced_hashes_independently_verified": 14,
+    "outcomes_consumed": false
+  },
+  "local_tests": 138,
+  "vps_tests": 96,
+  "full_suite": "HISTORICALLY_NOT_GREEN_NOT_RERUN",
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "files": {
+    "arming_receipt.json": "9e5df439eae5d4f1361c1d5db1b99c5174e63d2275740a6324c96a76b4041f7a",
+    "install_manifest.json": "586aa6b5a151755a9f93d167723ce29f7993e60c80dd4fda26858598a5bc613e",
+    "critical_review.json": "df7e6a8e81a658059d02103ce974a1a3bfdbc74ba08c854e0ebf544e5c207346",
+    "local_targeted_tests.txt": "9e61d94aaf66ba07260fabd82d358ea1652159eceb8391ff47ab9909b26584b9",
+    "vps_targeted_tests_completed.txt": "4b0a47885c11d912e7e2f8eeec82a77dfa83a741620d2a5f8d010c8054c34993",
+    "install_reviewed_session.py": "fdbae78d0234f31ce9fe55dbba9c9268cc023ba03dca65f4811df46d95338cd9",
+    "read_armed_session.py": "9324f2888eb508bc71294caf85f7d434f0a172f7b705f07bfdad0ba06f67e828",
+    "verify_arming_readback.py": "4d7048131e54d145a15e1a48d283084acd7dbcb7f4299646d450368ffebe3089"
+  },
+  "sunday_broker_writes": 0,
+  "live_go": false,
+  "research_judge_run": false
+}

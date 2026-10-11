@@ -1,0 +1,14 @@
+{
+  "status": "BLOCKED_INSTALL_SOURCE_PIN",
+  "failure": "SOURCE_DRIFT:root_crontab",
+  "cause": "Static path is spool file; proposed hash incorrectly bound crontab -l output omitting three generated header lines. Both actual sources match captured hashes.",
+  "observed_ms": 1791732610777,
+  "spool_sha256": "0a3f3ef029db738ac32eb8786efd1872c982854e2872773e5a5ec19e8f5227d9",
+  "crontab_command_sha256": "690b403f8ec6cdeda37a95ba6f310416c59fab9849d6ee03cf629a99f8d23653",
+  "file_ends_with_command_output": true,
+  "omitted_header_lines": 3,
+  "new_session_exists": false,
+  "new_units_exist": [],
+  "broker_writes": 0,
+  "remote_mutations": 0
+}

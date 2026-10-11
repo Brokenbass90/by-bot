@@ -1,0 +1,16 @@
+{
+  "status": "STAGED_NOT_ARMED",
+  "observed_ms": 1791732777967,
+  "tests": "90 passed, 6 failed in8.29s",
+  "failures": "All six FileNotFoundError for same absent archived protocol fixture; no product assertion failure.",
+  "missing_file": "reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json",
+  "vps_test_output_sha256": "c9e5320f4f2c97622731c77eee0f5bcade61ecdf8e0f1ca2d0a2532ec7cdde18",
+  "legacy_exclusions_unchanged_sha256": "8171cd5ef14f8374e75f6406476d254c816465ef96cab8a52ac335d2f2122e3f",
+  "new_units_active": false,
+  "new_units_pids": [
+    0,
+    0
+  ],
+  "broker_writes": 0,
+  "old_services_changed": false
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "ALPACA_NET_NEXT_SESSION_ARMING_RECEIPT_V1",
+  "status": "ALPACA_NEXT_SESSION_ARMED",
+  "observed_ms": 1791733066544,
+  "source_capture_sha256": "169b959ba8bf04a54ad3e45548a5c9925dfe8bb48dc615ef7ec998b762db1890",
+  "proposal_sha256": "dde67bfff6b028e091a091c5a14e335e04a36ad3ad010db6fc5a7c6758f3ccb3",
+  "packet_sha256": "9ceda9395eda310bb32d1b05cb96c7be228945901a6574da359b36eb61d001dd",
+  "manifest_sha256": "85c58e7a6fdc2fae947ac3b56f0c947135e1086a52e8ba9c4281599d2a9359b1",
+  "review_sha256": "df7e6a8e81a658059d02103ce974a1a3bfdbc74ba08c854e0ebf544e5c207346",
+  "app_files": 81,
+  "prepared_ms": 1791733005627,
+  "ready_ms": 1791733005656,
+  "target_open_ms": 1791811800000,
+  "window_end_ms": 1791812100000,
+  "guard_unwind_not_before_ms": 1791898500000,
+  "guard_hard_end_ms": 1791900000000,
+  "units": {
+    "alpaca-net-paper-open-20261012.service": {
+      "Restart": "no",
+      "MainPID": "1979384",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "static",
+      "process_alive": true
+    },
+    "alpaca-net-paper-guard-20261012.service": {
+      "Restart": "no",
+      "MainPID": "1979385",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "static",
+      "process_alive": true
+    }
+  },
+  "production_services_unchanged": {
+    "bybot.service": [
+      "MainPID=1648585",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "trading-journal-web.service": [
+      "MainPID=1623208",
+      "NRestarts=0",
+      "ActiveState=active"
+    ],
+    "att1-lifecycle-zero-risk-v2.service": [
+      "MainPID=1584802",
+      "NRestarts=0",
+      "ActiveState=active"
+    ]
+  },
+  "old_source_maps_unchanged": true,
+  "cron_and_live_profiles_unchanged": true,
+  "original_tables_unchanged_sha256": "b1d4df04248d6f1876a364e8aa8f1f834c669cf2f4b78fe18e92dcdde15c24ec",
+  "original_intents": 1,
+  "retirements": 1,
+  "new_attempts": 0,
+  "paper_store_intents": 0,
+  "legacy_NET_exclusion_sha256": "fd51021b59442e71f373ac50a0a0f48aed7ead93b2d496aca06c852dfb5c91c9",
+  "paper_legacy_symbols": [
+    "ABNB",
+    "ABT",
+    "AMZN",
+    "MA",
+    "SCHW"
+  ],
+  "live_flat": true,
+  "live_halt": true,
+  "live_cash_usd": "496.12",
+  "live_nonmarginable_usd": "496.12",
+  "pending_fees_usd": "0",
+  "accrued_fees_usd": "0",
+  "local_targeted_tests": 138,
+  "local_test_output_sha256": "9e61d94aaf66ba07260fabd82d358ea1652159eceb8391ff47ab9909b26584b9",
+  "vps_targeted_tests": 96,
+  "vps_test_output_sha256": "4b0a47885c11d912e7e2f8eeec82a77dfa83a741620d2a5f8d010c8054c34993",
+  "retained_failed_stage_log_sha256": "c9e5320f4f2c97622731c77eee0f5bcade61ecdf8e0f1ca2d0a2532ec7cdde18",
+  "sunday_broker_writes": 0,
+  "paper_execution_pass": false,
+  "live_go": false,
+  "remaining_gates": [
+    "Monday fresh inputs and one actual PAPER entry/full stop/readback",
+    "owned restart/recovery/exit and terminal costs/finality",
+    "actual TuesdayOct13 DAY rearm if held overnight",
+    "exact LIVE dossier and separate owner GO"
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "ALPACA_NET_PAPER_CRITICAL_REVIEW_V1",
+  "status": "APPROVED_FOR_PAPER_INSTALL_ONLY",
+  "proposal_sha256": "52cfacc3d7bb0d12957bfd558fc708fba23d9a19611a269931e659f2e7936d7f",
+  "remaining_material_findings": 0,
+  "requested_model": "gpt-6-astra",
+  "requested_reasoning_effort": "high",
+  "model_effort_source": "AGENTS.md critical financial/security review routing",
+  "runtime_model_verification": "NOT_INDEPENDENTLY_READ_BY_REVIEWER; parent reports turn_context gpt-6-astra/high in rollout18-14-07, thread01a12b87-427f-7721-a623-ccfba882cb64.",
+  "scope": "One bounded local critical review of exact October12 NET PAPER install/arm proposal; no LIVE activation, new research, network, SSH, deployment or broker actions.",
+  "findings": [],
+  "verified_local": {
+    "test_command": ".venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_alpaca_initial_protection_recovery.py tests/test_alpaca_paper_session_guard.py tests/test_alpaca_paper_source_plan.py tests/test_alpaca_dynamic_paper.py tests/test_alpaca_dynamic_paper_maintenance.py tests/test_alpaca_open_dispatch_v2.py tests/test_alpaca_expired_reservation_handoff.py tests/test_alpaca_dynamic_v1.py",
+    "test_result": "137 passed in3.18s",
+    "proposal_app_files_match_local_bytes": true,
+    "proposal_embedded_static_file_pins_match": true,
+    "exact_active_source_membership": "Narrow readonly change correctly covers intent_attempts, rejects retired/mutated plans and duplicate history; no source-book migration or history deletion.",
+    "source_install_scope": "Reviewed private capture locally: original source maps61/23/46; one original intent/one retirement/no attempts; NET absent and no PAPER open orders; LIVE HALT source true. Proposal uses original shared lock, CAS NET-only exclusion, original source book and separate app; no old app/cron/service changes in installer.",
+    "cash_minimum_cost_mapping": "Static496.12 is refreshed by opener account GET. Existing publisher adds CAT cent reserve from capped quantity ceiling, retains USD1 buy minimum and9-decimal quantity representation, and distinguishes asset eligibility from actual native stop acceptance. No additional material finding in these unchanged mappings.",
+    "finality": "Existing maintenance labels exits pending finality and net NOT_PROVEN; a flat synthetic result is not native protection/lifecycle/net-PASS.",
+    "proposal_app_file_count": 80,
+    "protocol_utc_metadata": "Corrected explicit UTC timestamp2026-10-11T15:02:33.046000Z; current proposal pins reverified after metadata change."
+  },
+  "limitations": [
+    "No network, SSH, live broker, installed units or runtime model identity independently verified by this reviewer.",
+    "Source capture is provided archived evidence, not a new independent live read.",
+    "Approval applies only to installation of the exact hashed PAPER proposal. It does not assert broker protection acceptance, lifecycle PASS, terminal fee/net finality or LIVE approval.",
+    "Unknown broker sends remain explicit owner-action blockers and are never blindly resent or offset; the fixed hard guard deadline is not silently extended.",
+    "No research outcomes consumed; no alpha gate requested."
+  ],
+  "closed_findings": [
+    {
+      "id": "P1_INITIAL_PROTECTION_RECOVERY",
+      "status": "CLOSED",
+      "evidence": "Definitive stop422 provenance is persisted and exact owned pending-entry proof feeds the existing scoped PAPER kill helper immediately. Initial recovery independently reconciles stop/market/mixed fills without claiming PAPER_PROTECTED. Unwind is journaled before cancellation/POST; later recovery reads the same IDs. Unknown absent stop remains explicit OWNER_ACTION with no resend or blind sale.",
+      "files": [
+        "research_lab/alpaca_dynamic_paper.py",
+        "research_lab/alpaca_dynamic_paper_maintenance.py",
+        "tests/test_alpaca_initial_protection_recovery.py"
+      ]
+    },
+    {
+      "id": "P1_RECOVERY_START_DELAY",
+      "status": "CLOSED",
+      "evidence": "Guard now starts at OPEN_MS, waits rather than exits when dispatch is absent during opening, polls each second during opening and serializes through the original shared account lock. Existing accepted-entry recovery uses no-BUY client and exact persisted intent.",
+      "files": [
+        "scripts/run_alpaca_paper_session_guard.py",
+        "tests/test_alpaca_paper_session_guard.py"
+      ]
+    }
+  ],
+  "closure_scope": "Targeted same-review closure of the two original P1 findings and critical introduced recovery risks; no broad reaudit.",
+  "test_pin_closure": {
+    "prior_approved_proposal_sha256": "dc45923738f943ce30c82b3bc1d79cd585271f585c117013e420dd1acb80010b",
+    "changes_verified": "Only tests/test_alpaca_paper_session_guard.py plus derived source_manifest.json, source_binding.json app_manifest_sha256 and packet.json expected/check hashes changed. Product, policy, units and other proposal fields unchanged. Current embedded pins and local app bytes match.",
+    "reviewer_test_command": ".venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_alpaca_paper_session_guard.py::test_guard_recovers_accepted_lost_buy_during_window_without_second_entry",
+    "reviewer_test_result": "1 passed in0.19s",
+    "parent_reported_full_targeted_result": "138 PASS; prior137 directly verified by this reviewer; no broad rerun for test-only pin closure."
+  },
+  "source_pin_closure": {
+    "prior_approved_proposal_sha256": "cc48fecb6445db4bfa3eb2ec5d67c75c8f3487edc95d2073c648ca104cefb670",
+    "new_proposal_sha256": "52cfacc3d7bb0d12957bfd558fc708fba23d9a19611a269931e659f2e7936d7f",
+    "verified_diff": "The sole proposal change is session_files.packet.json. Decoded packet differs only at expected_sha256.root_crontab. All app files, units, other session files and top-level proposal fields are identical.",
+    "corrected_pin": "0a3f3ef029db738ac32eb8786efd1872c982854e2872773e5a5ec19e8f5227d9",
+    "pin_source": "Exact match to prearm_source.json response.cron_inventory[/var/spool/cron/crontabs].root.sha256 for static path /var/spool/cron/crontabs/root. Previous hash was crontab -l output, a different byte source.",
+    "receipt_inspected": "reports/evidence/alpaca_net_arm_20261011/install_precheck_failure.json; records unchanged source hashes and no session/unit creation or remote mutation. No independent live check by reviewer.",
+    "validation": "Local structural comparison and captured-source hash equality only; no test rerun, network, SSH or deployment."
+  }
+}

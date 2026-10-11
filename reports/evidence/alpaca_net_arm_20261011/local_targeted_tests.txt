@@ -1,0 +1,4 @@
+COMMAND: .venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_alpaca_paper_source_plan.py tests/test_alpaca_paper_session_guard.py tests/test_alpaca_initial_protection_recovery.py tests/test_alpaca_expired_reservation_handoff.py tests/test_alpaca_dynamic_v1.py tests/test_alpaca_dynamic_paper.py tests/test_alpaca_dynamic_paper_maintenance.py tests/test_alpaca_open_dispatch_v2.py
+........................................................................ [ 52%]
+..................................................................       [100%]
+138 passed in 2.80s

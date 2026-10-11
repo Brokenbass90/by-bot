@@ -211,8 +211,18 @@ def execute_paper(plan, policy, client, expected_paper_id, runtime, now_ms, *, s
                     return result('BLOCKED_EXECUTION', reason='UNCERTAIN_STOP_NO_RESEND', entry_order_id=entry['id'])
                 item['phase'] = 'STOP_DISPATCHED'
                 _save(db, item)
-                stop = client.submit_stop_sell(plan['symbol'], qty=float(qty), stop_price=float(floor),
-                    time_in_force=_persistent_exit_tif_for_qty('', float(qty)), client_order_id=stop_cid)
+                try:
+                    stop = client.submit_stop_sell(plan['symbol'], qty=float(qty), stop_price=float(floor),
+                        time_in_force=_persistent_exit_tif_for_qty('', float(qty)), client_order_id=stop_cid)
+                except Exception as error:
+                    from scripts.equities_alpaca_paper_bridge import AlpacaAPIError
+                    if isinstance(error,AlpacaAPIError) and error.status_code==422:
+                        item['initial_stop_rejection']={'http_status':422,'client_order_id':stop_cid,'entry_order_id':entry['id']}
+                        _save(db,item)
+                        from research_lab.alpaca_dynamic_paper_maintenance import _recover_initial_in_store
+                        exit_receipt=_recover_initial_in_store(client,item,db,path,now_ms+int((time.monotonic()-started)*1000))
+                        return result('BLOCKED_EXECUTION',reason='INITIAL_STOP_422_OWNED_EXIT',initial_exit_receipt=exit_receipt)
+                    raise
             if stop.get('client_order_id') != stop_cid:
                 raise ValueError('PAPER_STOP_OWNERSHIP_CONFLICT')
             confirmed = _complete_intended_paper_simple_stop(client=client, base_url=PAPER, state_dir=path,

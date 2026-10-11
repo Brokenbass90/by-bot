@@ -1,5 +1,31 @@
 # MASTER HANDOFF — 2026-10-05
 
+October11 Sunday evening: **ALPACA_NEXT_SESSION_ARMED / PAPER_ONLY**.
+Read [ALPACA_NET_NEXT_SESSION_2026_10_11.md](ALPACA_NET_NEXT_SESSION_2026_10_11.md)
+and reports/evidence/alpaca_net_arm_20261011/arming_receipt.json.
+Actual15:37:46UTC readback: NET opening/owned guard active PIDs1979384/1979385,
+NRestarts0, original shared lock,81-file isolated reviewed app/pins all match.
+Sunday STATIC_PREPARED15:36:45.627/READY15:36:45.656UTC; no reservation/order.
+MondayOct12 13:30–13:35UTC/16:30–16:35Cyprus is server-run fresh-only one PAPER
+attempt, no dependence on an active Codex turn/user computer. No opener restart.
+NET legacy exclusion now bound; five legacy holdings outside candidate authority.
+Original book1intent/1retirement/0attempts/store0 and five-table hash unchanged.
+LIVE flat/HALT/cash496.12/fees0; original61/23/46 maps/cron/LIVEprofiles/wrappers/
+production PIDs/NRestarts unchanged. Sunday brokerwrites0; no LIVE GO.
+138local/96VPS targetedPASS; initial missing fixture90PASS/6FAIL retained, completed
+only exact staged predecessor; spool-file/command hash mismatch retained/corrected.
+One runtime-verified6-astra/high financial review closed twoP1+narrow pin/dependency
+closures. Actual broker PAPER/protection/recovery/finality remains pending.
+First Monday overnight DAYrearm TuesdayOct13; guard scoped unwind13:35UTC,
+hard end14UTC Tuesday, no fakePASS/extension. Exact LIVE dossier+ownerGO afterward.
+[BOUNCE_CLAUDE_SOURCE_HANDOFF_2026_10_11.md](BOUNCE_CLAUDE_SOURCE_HANDOFF_2026_10_11.md)
+packages BTC/ETH/H1/H4/funding with14verified hashes; BLOCKED_RESEARCH_SOURCE_CONTRACT
+for funding treatment/rawM5-PIT provenance/independent validation. No outcomes,
+context thresholds/judge/Claude message/ATT1-KITY rescue. Breakout originals still
+unrecovered. Foreign allowlist untouched; full-suite historicallyNOT_GREEN not rerun.
+Earlier morning NOT_DISPATCHABLE statements below are dated history superseded
+only by this actual reviewed PAPER arming; they do not grant money authority.
+
 October11 Sunday: **MONDAY_RANKING_SOURCE_READY_NOT_DISPATCHABLE**.
 Read [SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md](SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md)
 and reports/evidence/sunday_preparation_20261011/source_verification.json.
