@@ -1,0 +1,89 @@
+{
+  "schema": "BRAIN_BOUNCE_INTAKE_TERMINAL_V1",
+  "status_by_track": {
+    "BRAIN_V2": "BLOCKED_DATA_FROZEN_INTEGRATION_CONTRACT",
+    "BOUNCE1_SHADOW_INTEGRITY": "BLOCKED_DATA_SOURCE_IDENTITY_AND_LEDGER",
+    "BOUNCE1_8": "BLOCKED_IMPLEMENTATION_CAUSAL_NEXT_OPEN_F1_PARITY"
+  },
+  "source_commit": "10a76a02bc8ed0a8d5b120c92c314167db8160d3",
+  "origin_commit": "2b7a960ec29cca509f34bdc677795fe467ac5384",
+  "brain_delivered_primitives": [
+    "immutable_opportunity",
+    "frozen_shrinkage_scorer",
+    "A1_closed_BTC_H4_regime_unknown",
+    "supplied_frozen_VOL_category_boundaries",
+    "frozen_ranking",
+    "exact_complete_proposal_caps",
+    "deterministic_inert_three_arm_sizing_receipt"
+  ],
+  "brain_not_delivered": [
+    "VOL_ATR_percentile_estimator",
+    "whole_hour_subset_allocator",
+    "durable_three_arm_portfolio_ledgers",
+    "paired_prospective_journal",
+    "actual_train_statistics"
+  ],
+  "brain_exact_blockers": [
+    "hour_batch_subset_bootstrap_policy_unfrozen",
+    "VOL_ATR_percentile_ties_window_method_unfrozen",
+    "pinned_train_mu_sigma_artifact_missing"
+  ],
+  "bounce1_closed_count": null,
+  "bounce1_count_status": "UNKNOWN_NOT_ZERO",
+  "bounce1_judge_run": false,
+  "bounce1_8_epoch_started": false,
+  "bounce1_8_service_installed": false,
+  "targeted_tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_brain_v2_frozen_primitives.py tests/test_bounce1_intake_protocol_limits.py tests/test_strategy_shadow_ledger.py tests/test_os2_shadow_review_regressions.py",
+    "passed": 73,
+    "failed": 0,
+    "location": "LOCAL_ONLY",
+    "full_suite": "NOT_RUN_HISTORICALLY_NOT_GREEN"
+  },
+  "critical_review": {
+    "requested_model": "gpt-6-astra",
+    "actual_model": "gpt-6-astra",
+    "actual_effort": "high",
+    "status": "USAGE_LIMIT_NO_REVIEW_DELIVERED",
+    "retried_or_replaced": false,
+    "root_self_verification": true
+  },
+  "mechanical_worker": {
+    "actual_model": "gpt-5.6-luna",
+    "actual_effort": "medium",
+    "status": "LOCAL_SOURCE_INVENTORY_RETURNED_NO_EDITS"
+  },
+  "boundaries": {
+    "orders_allowed": false,
+    "broker_writes": 0,
+    "service_changes": 0,
+    "alpaca_touched": false,
+    "old_state_or_sources_mutated": false,
+    "sealed_outcomes_read": false,
+    "B3_run": false,
+    "Claude_messaged": false
+  },
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "evidence_files": {
+    "reports/evidence/brain_bounce_intake_20261011/bounce1_8_source_candidate.json": "db12fec8fd46c433dae19bf5cb39d5b5f651255849a3b34f1c3e21a0c0957bdf",
+    "reports/evidence/brain_bounce_intake_20261011/bounce1_process_paths.json": "a01ac0eb058f5a624591585b28b6582e4506dc349e458226282a257200515ace",
+    "reports/evidence/brain_bounce_intake_20261011/bounce1_vps_metadata.json": "49c047dabed79f42373093479b7f9aa0b0ad50fa2c4bc388f7c5982744a4601b",
+    "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/PREREG_BOUNCE1_KEEP_KILL_2026_10_11.md": "100f5566ee415f8eb2c63c1e1aa62709825331f4b79272d7205899888ba78c43",
+    "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+    "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+    "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/os2/REZHIM_V1_ZAMOK.json": "e72ac465c9ede19ebf6b5b2b357e49e40d42d81fcdd29f2cbaf56febb43f1916",
+    "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/os2/rezhim_v1.py": "947af3c84e0c1849ed875e10bdcdc2afd1f0a656cac3a2631a1196a195abdde3",
+    "reports/evidence/brain_bounce_intake_20261011/read_bounce_integrity.py": "d175ba3ee2389e8aa145101eeef8511c94d533b55bce7572f0b11d72e3e9db75",
+    "reports/evidence/brain_bounce_intake_20261011/read_bounce_process_paths.py": "5f74ddf9f90b90794607c41d6461177bf13d1beda848884266f21ffd49322f74",
+    "reports/evidence/brain_bounce_intake_20261011/source_manifest.json": "82b3e23da2da6854a380ac1a96c72d14c5ad959225cd59fdb9bda8019ffdb063",
+    "reports/evidence/brain_bounce_intake_20261011/synthetic_cap_counterexamples.json": "6d2305d06cac435e47873bb827f6698dff781a61d6c7a005ac352eb1e9d80f89",
+    "reports/evidence/brain_bounce_intake_20261011/synthetic_primitive_receipt.json": "553ae2b5ae064abcffe5b2e87ff9a4dd70545503888c787fe171d65efc0a8fee",
+    "reports/evidence/brain_bounce_intake_20261011/bounce1_producer_anchors.json": "31874ffe1bffac13eb69ad02f200e624b91e1bac71884e1a6e33e5b3ee38153a",
+    "reports/evidence/brain_bounce_intake_20261011/read_bounce_producer_anchors.py": "c338d97cfa34fa2dfb9698f857b24ee376e7d8b29e49ee6d80dc8950d21443d8"
+  },
+  "implementation_files": {
+    "research_lab/brain_v2_frozen_primitives.py": "064b8c9561139bc76972a70205a1cf19cc3a71f1fc9d803cb3fcd68a71406f4d",
+    "tests/test_brain_v2_frozen_primitives.py": "658624bf59c579241746a38b757f2418b1c824e20ab0c2ee9aed247c8c149ae9",
+    "tests/test_bounce1_intake_protocol_limits.py": "831a915fa309c9d1960748f22cb4fb2c7fbc00740fdf3437e7200256664227d5"
+  }
+}

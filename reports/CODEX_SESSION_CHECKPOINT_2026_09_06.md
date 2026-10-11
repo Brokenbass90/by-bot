@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+October11 late Sunday: **BRAIN_V2_PRIMITIVES_PASS / INTEGRATION_BLOCKED_DATA**.
+Read [BRAIN_BOUNCE_FROZEN_INTAKE_2026_10_11.md](BRAIN_BOUNCE_FROZEN_INTAKE_2026_10_11.md)
+and reports/evidence/brain_bounce_intake_20261011/terminal_readiness.json.
+51 Brain primitive tests +4 synthetic protocol +2 legacy shadow +16 OS2 checks
+=73 local targeted PASS. Immutable opportunity, exact shrinkage/ranking/sizing,
+pinned A1 closed-H4 UNKNOWN, VOL category boundaries and literal proposed caps
+implemented orders-OFF. No full allocator/three portfolio ledgers/paired journal.
+Integrated blockers: frozen whole-hour subset/bootstrap policy, VOL estimator,
+actual pinned train mu/sigma table. No cap relaxation or new research math.
+Claude origin now2b7a960 contains all five exact local10a76a0 frozen artifacts;
+initial b9a95b4 absence is superseded. No branch merge/Claude edit/outcome read.
+BOUNCE1 integrity BLOCKED_DATA: actual root process PID1648585, expected ledger/
+state absent, heartbeat universe differs from BTC/ETH, on-disk strategy/wrapper
+pins differ. Closed count UNKNOWN, not0; no30/60 look/judge. Need exact original
+ledger/source continuity proof; do not count a different universe as old cohort.
+BOUNCE1_8 source candidate separately pinned; NOT_DEPLOYED/noepoch. Legacy tick
+writer is not closed-bar next-open/F1 parity; synthetic counterexamples retained.
+Need frozen causal observation/fill lifecycle before distinct public-only start.
+Critical6-astra/high reviewer hit usage limit/no review; no retry/replacement.
+Actual bybot/ATT1 lifecycle PIDs1648585/1584802,NRestarts0 unchanged; first query's
+nonexistent-unit aliases do not imply outages, web not rechecked. Zero runtime/
+service/broker writes. Armed Alpaca NET untouched: prior arming receipt below;
+MondayOct12 16:30–16:35Cyprus server PAPER only, no restart/LIVE GO. KITY/B3/ATT1/
+Claude research untouched, foreign allowlist preserved; full suite NOT_GREEN.
+
 October11 Sunday evening: **ALPACA_NEXT_SESSION_ARMED / PAPER_ONLY**.
 Read [ALPACA_NET_NEXT_SESSION_2026_10_11.md](ALPACA_NET_NEXT_SESSION_2026_10_11.md)
 and reports/evidence/alpaca_net_arm_20261011/arming_receipt.json.

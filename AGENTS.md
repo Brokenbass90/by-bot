@@ -220,3 +220,22 @@ Crypto two original engineering baselines are delivered; source-complete prereg
 remains blocked on inputs/costs/independence. Claude owns per-sleeve research,
 no universal trend veto, B3 rescue, new judge or Gold duplication. ETS2M original
 19UTC job/cohort pins remain; precheck mismatch is BLOCKED_DATA, never a repin.
+
+## October11 Brain/bounce owner implementation intake amendment
+
+Owner authorizes Brain V2 frozen implementation orders-OFF and source/count-first
+BOUNCE1 intake plus separate preregistered eight-major risk-zero variant. Read
+checkpoint TOP and BRAIN_BOUNCE_FROZEN_INTAKE_2026_10_11.md. Source primitives are
+delivered; no integrated allocator/portfolio journal or prospective Brain epoch
+is READY. Whole-hour bootstrap/subset policy, VOL estimator and pinned train
+table remain frozen-contract blockers; no Codex tuning or cap reinterpretation.
+Original BOUNCE1 source/ledger identity is not proven: expected root runtime
+files absent, effective universe differs, closed count UNKNOWN rather than zero.
+No judge before30 source-verified closed decisions; source mismatch cannot inherit
+the Aug8 cohort. BOUNCE1_8 source candidate is separate/not deployed: legacy tick
+ledger does not prove closed-bar next-open/F1 parity. Preserve original code/state
+and freeze the exact causal lifecycle before an independent future epoch.
+Alpaca NET Monday PAPER opener/guard remain armed under their prior receipt;
+never restart/change them for this work. No LIVE authority, B3 rerun, KITY rescue,
+Claude edits/messages or new families. Critical reviewer hit usage limit with no
+review; do not claim independent review PASS or silently retry that bucket.

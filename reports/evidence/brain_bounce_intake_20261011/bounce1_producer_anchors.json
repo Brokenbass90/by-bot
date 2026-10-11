@@ -1,0 +1,16 @@
+{
+  "anchors_present": {
+    "BOUNCE1_SHADOW_ENABLE": true,
+    "BOUNCE1_SHADOW_LEDGER.on_price": true,
+    "BOUNCE1_SHADOW_LEDGER.record_signal": true,
+    "bounce1_shadow_ledger.jsonl": true,
+    "bounce1_shadow_state.json": true,
+    "def _bounce1_shadow_active": true,
+    "def _ensure_bounce1_shadow_ledger": true,
+    "from bot.strategy_shadow_ledger import": true
+  },
+  "orders_allowed": false,
+  "scope": "ON_DISK_SOURCE_ONLY_NOT_IN_MEMORY_PROOF",
+  "sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+  "source_path": "/root/by-bot/smart_pump_reversal_bot.py"
+}

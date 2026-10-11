@@ -1,0 +1,62 @@
+{
+  "evidence_class": "SYNTHETIC_ONLY_NOT_RESEARCH_OR_ACCOUNT_TRUTH",
+  "receipt": {
+    "schema": "BRAIN_V2_PRIMITIVE_RECEIPT_V1",
+    "status": "BLOCKED_DATA",
+    "blocker": "FROZEN_WHOLE_BATCH_SUBSET_POLICY_AND_ACTUAL_STATS_VOL_SOURCE_REQUIRED",
+    "opportunity": {
+      "sleeve": "BOUNCE1",
+      "symbol": "BTCUSDT",
+      "side": "long",
+      "t_signal": 1760000000000,
+      "t_available": 1760000000001,
+      "entry_rule": "next_open",
+      "stop_distance_frac": 0.02,
+      "max_hold_h": 48,
+      "cost_model_id": "FROZEN_6_2_F1",
+      "source_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "opportunity_id": "8cab62d93a06bf22806ec88afffb3daee9428f31a85f34fc3ad37dae190beabd",
+    "stats_input_sha256": "66f674c2063d0132be329757bf25f9dd893569f290a14472439bfb27d758def6",
+    "score": {
+      "mu_s": 0.2,
+      "mu_context": 0.4,
+      "z": 0.2,
+      "multiplier": 1.5,
+      "context_status": "KNOWN_CONTEXT",
+      "stats_source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "arms": {
+      "RAW_SAFE": {
+        "risk_usd": 5.0,
+        "notional_usd": 250.0,
+        "multiplier": 1.0,
+        "allocation_status": "NOT_ALLOCATED",
+        "ledger_mutated": false
+      },
+      "FOUNDATION": {
+        "risk_usd": 5.0,
+        "notional_usd": 250.0,
+        "multiplier": 1.0,
+        "allocation_status": "NOT_ALLOCATED",
+        "ledger_mutated": false
+      },
+      "BRAIN_DET": {
+        "risk_usd": 7.5,
+        "notional_usd": 375.0,
+        "multiplier": 1.5,
+        "allocation_status": "NOT_ALLOCATED",
+        "ledger_mutated": false
+      }
+    },
+    "equity_input_usd": 1000,
+    "regime": "BULL",
+    "vol": "MID",
+    "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+    "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+    "orders_allowed": false,
+    "money_authority": false,
+    "portfolio_mutated": false,
+    "sha256": "b7b32f5e3bc5805b5a7e985fba4f9ece52b8fb5809b64040cec1815938812db7"
+  }
+}

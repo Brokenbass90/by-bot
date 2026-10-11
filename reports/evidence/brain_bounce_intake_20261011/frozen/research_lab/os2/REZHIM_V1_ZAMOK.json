@@ -1,0 +1,24 @@
+{
+ "imya": "REZHIM_V1",
+ "popravka": "A1 07.10: только полные закрытые 4h, UNKNOWN при дыре (OS2_FOUNDATION_AUDIT находка 3)",
+ "vybran": "D2_REGIME_ORCH_4H по os2/B2_KRITERII_REZHIMA.md",
+ "params": {
+  "macd_fast": 12,
+  "macd_slow": 26,
+  "macd_signal": 9,
+  "ema_fast_period": 20,
+  "ema_slow_period": 50,
+  "bear_consec": 3,
+  "bull_consec": 3,
+  "atr_chop_pct": 0.02,
+  "okno_4h": 200,
+  "min_barov_4h": 60,
+  "simvol": "BTCUSDT"
+ },
+ "kod_sha256": {
+  "bot/regime_orchestrator.py": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
+  "research_lab/os2/rezhim_v1.py": "947af3c84e0c1849ed875e10bdcdc2afd1f0a656cac3a2631a1196a195abdde3"
+ },
+ "metki_do_2025_10_01_sha256": "3617f7731a206d036197e638eadf49b66b84b054d7b9ee866b6c9273879560b3",
+ "chasov": 24095
+}

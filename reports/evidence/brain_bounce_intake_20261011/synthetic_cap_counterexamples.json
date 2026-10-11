@@ -1,0 +1,99 @@
+{
+  "evidence_class": "SYNTHETIC_ONLY",
+  "examples": {
+    "single_first_long": {
+      "RAW_SAFE": {
+        "arm": "RAW_SAFE",
+        "orders_allowed": false,
+        "portfolio_mutated": false,
+        "status": "PROPOSED_PORTFOLIO_FEASIBLE",
+        "violations": [],
+        "total_risk_usd": 5.0,
+        "net_risk_usd": 5.0,
+        "sleeve_risk_usd": {
+          "BOUNCE1": 5.0
+        },
+        "scope": "SUPPLIED_PROPOSAL_ONLY_NOT_AN_ALLOCATOR"
+      },
+      "FOUNDATION": {
+        "arm": "FOUNDATION",
+        "orders_allowed": false,
+        "portfolio_mutated": false,
+        "status": "PROPOSED_PORTFOLIO_REJECT",
+        "violations": [
+          "sleeve_share_cap",
+          "net_direction_cap"
+        ],
+        "total_risk_usd": 5.0,
+        "net_risk_usd": 5.0,
+        "sleeve_risk_usd": {
+          "BOUNCE1": 5.0
+        },
+        "scope": "SUPPLIED_PROPOSAL_ONLY_NOT_AN_ALLOCATOR"
+      },
+      "BRAIN_DET": {
+        "arm": "BRAIN_DET",
+        "orders_allowed": false,
+        "portfolio_mutated": false,
+        "status": "PROPOSED_PORTFOLIO_REJECT",
+        "violations": [
+          "sleeve_share_cap",
+          "net_direction_cap"
+        ],
+        "total_risk_usd": 5.0,
+        "net_risk_usd": 5.0,
+        "sleeve_risk_usd": {
+          "BOUNCE1": 5.0
+        },
+        "scope": "SUPPLIED_PROPOSAL_ONLY_NOT_AN_ALLOCATOR"
+      }
+    },
+    "three_sleeve_balanced": {
+      "RAW_SAFE": {
+        "arm": "RAW_SAFE",
+        "orders_allowed": false,
+        "portfolio_mutated": false,
+        "status": "PROPOSED_PORTFOLIO_FEASIBLE",
+        "violations": [],
+        "total_risk_usd": 15.0,
+        "net_risk_usd": 5.0,
+        "sleeve_risk_usd": {
+          "A": 5.0,
+          "B": 5.0,
+          "C": 5.0
+        },
+        "scope": "SUPPLIED_PROPOSAL_ONLY_NOT_AN_ALLOCATOR"
+      },
+      "FOUNDATION": {
+        "arm": "FOUNDATION",
+        "orders_allowed": false,
+        "portfolio_mutated": false,
+        "status": "PROPOSED_PORTFOLIO_FEASIBLE",
+        "violations": [],
+        "total_risk_usd": 15.0,
+        "net_risk_usd": 5.0,
+        "sleeve_risk_usd": {
+          "A": 5.0,
+          "B": 5.0,
+          "C": 5.0
+        },
+        "scope": "SUPPLIED_PROPOSAL_ONLY_NOT_AN_ALLOCATOR"
+      },
+      "BRAIN_DET": {
+        "arm": "BRAIN_DET",
+        "orders_allowed": false,
+        "portfolio_mutated": false,
+        "status": "PROPOSED_PORTFOLIO_FEASIBLE",
+        "violations": [],
+        "total_risk_usd": 15.0,
+        "net_risk_usd": 5.0,
+        "sleeve_risk_usd": {
+          "A": 5.0,
+          "B": 5.0,
+          "C": 5.0
+        },
+        "scope": "SUPPLIED_PROPOSAL_ONLY_NOT_AN_ALLOCATOR"
+      }
+    }
+  }
+}

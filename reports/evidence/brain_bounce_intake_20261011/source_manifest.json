@@ -1,0 +1,45 @@
+{
+  "schema": "BRAIN_BOUNCE_FROZEN_INTAKE_V1",
+  "research_commit": "10a76a02bc8ed0a8d5b120c92c314167db8160d3",
+  "source_repository": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28",
+  "origin_research_ref": "2b7a960ec29cca509f34bdc677795fe467ac5384",
+  "origin_contains_new_spec": true,
+  "recovery_base": "2adc742894c6b4d8dfee1c7c2fa51751a965461a",
+  "files": [
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "snapshot_path": "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+      "bytes": 8075
+    },
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "snapshot_path": "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+      "bytes": 716
+    },
+    {
+      "source_path": "research_lab/PREREG_BOUNCE1_KEEP_KILL_2026_10_11.md",
+      "snapshot_path": "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/PREREG_BOUNCE1_KEEP_KILL_2026_10_11.md",
+      "sha256": "100f5566ee415f8eb2c63c1e1aa62709825331f4b79272d7205899888ba78c43",
+      "bytes": 4823
+    },
+    {
+      "source_path": "research_lab/os2/rezhim_v1.py",
+      "snapshot_path": "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/os2/rezhim_v1.py",
+      "sha256": "947af3c84e0c1849ed875e10bdcdc2afd1f0a656cac3a2631a1196a195abdde3",
+      "bytes": 4422
+    },
+    {
+      "source_path": "research_lab/os2/REZHIM_V1_ZAMOK.json",
+      "snapshot_path": "reports/evidence/brain_bounce_intake_20261011/frozen/research_lab/os2/REZHIM_V1_ZAMOK.json",
+      "sha256": "e72ac465c9ede19ebf6b5b2b357e49e40d42d81fcdd29f2cbaf56febb43f1916",
+      "bytes": 816
+    }
+  ],
+  "orders_allowed": false,
+  "outcomes_read": false,
+  "initial_origin_research_ref": "b9a95b4b2ae2068f3409094dd4897165182d2db7",
+  "origin_verified_utc": "2026-10-11T20:16:06Z",
+  "all_frozen_files_equal_published_origin": true
+}

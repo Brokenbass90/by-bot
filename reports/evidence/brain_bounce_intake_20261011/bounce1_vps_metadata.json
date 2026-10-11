@@ -1,0 +1,215 @@
+{
+  "file_configuration_not_in_memory_proof": {
+    ".env": {
+      "selected": {},
+      "source": {
+        "bytes": 8688,
+        "mtime_ns": 1787413103470629890,
+        "path": "/root/by-bot/.env",
+        "sha256": "d9aa703ebf2995c59b6675f886d59fd45d1c89baa4ae1d23d94cac4252561cb3",
+        "size_after": 8688,
+        "stable_size": true
+      }
+    },
+    "configs/approved_strategy_params.env": {
+      "selected": {
+        "BOUNCE1_RISK_MULT": "0.00",
+        "BOUNCE1_SHADOW_ENABLE": "1",
+        "BOUNCE1_SHADOW_LEDGER_PATH": "runtime/bounce1_shadow_ledger.jsonl",
+        "BOUNCE1_SHADOW_STATE_PATH": "runtime/bounce1_shadow_state.json",
+        "BOUNCE1_SL_ATR_MULT": "1.6",
+        "BOUNCE1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT",
+        "BOUNCE1_TP1_FRAC": "0.15",
+        "BOUNCE1_TRAIL_ATR_MULT": "0.0",
+        "ENABLE_BOUNCE1_TRADING": "1"
+      },
+      "source": {
+        "bytes": 3779,
+        "mtime_ns": 1786166473055669995,
+        "path": "/root/by-bot/configs/approved_strategy_params.env",
+        "sha256": "52de3558c4afd3727211554d1f5365ee00df19479850a1bda84ab9a1b6b93184",
+        "size_after": 3779,
+        "stable_size": true
+      }
+    },
+    "runtime/strategy_pause.env": {
+      "selected": {},
+      "source": {
+        "bytes": 174,
+        "mtime_ns": 1791735902601238522,
+        "path": "/root/by-bot/runtime/strategy_pause.env",
+        "sha256": "b2a50db9f94d88282c32e424515c43fce2cf17e6ce06af0ee28a431068118aff",
+        "size_after": 174,
+        "stable_size": true
+      }
+    }
+  },
+  "judge_run": false,
+  "ledger": {
+    "missing": true,
+    "path": "/root/by-bot/runtime/bounce1_shadow_ledger.jsonl"
+  },
+  "observed_utc": "2026-10-11T20:02:09.478359+00:00",
+  "orders_allowed": false,
+  "outcome_analysis": false,
+  "runtime_report": {
+    "runtime/bot_heartbeat.json": {
+      "bounce_config": {
+        "allowlist": [
+          "ADAUSDT",
+          "AVAXUSDT",
+          "DOTUSDT",
+          "HYPEUSDT",
+          "LINKUSDT",
+          "SANDUSDT",
+          "SUIUSDT",
+          "ZECUSDT"
+        ],
+        "enabled": true,
+        "risk_mult": 0.0
+      },
+      "reported_timestamps": {
+        "ts": 1791748920
+      },
+      "source": {
+        "bytes": 9560,
+        "mtime_ns": 1791748920169157601,
+        "path": "/root/by-bot/runtime/bot_heartbeat.json",
+        "sha256": "49786af660ce9d1b1ff1ce49c1c85230ec50654eca438a45d92a02d2354f43a9",
+        "size_after": 9560,
+        "stable_size": true
+      },
+      "top_keys": [
+        "allocator_global_risk_mult",
+        "allocator_hard_block",
+        "allocator_safe_mode",
+        "base_risk_per_trade_pct",
+        "bybit_msgs",
+        "dry_run",
+        "max_open_portfolio_risk_pct",
+        "max_positions",
+        "open_trades",
+        "orch_global_risk_mult",
+        "regime",
+        "risk_per_trade_pct",
+        "runtime_counters",
+        "runtime_diag",
+        "strategy_runtime_config",
+        "trade_on",
+        "ts",
+        "uptime_s",
+        "voladj_atr_pct",
+        "voladj_mult",
+        "ws_guard_active"
+      ]
+    },
+    "runtime/runtime_diagnostics.json": {
+      "bounce_config": {
+        "allowlist": [
+          "ADAUSDT",
+          "AVAXUSDT",
+          "DOTUSDT",
+          "HYPEUSDT",
+          "LINKUSDT",
+          "SANDUSDT",
+          "SUIUSDT",
+          "ZECUSDT"
+        ],
+        "enabled": true,
+        "risk_mult": 0.0
+      },
+      "reported_timestamps": {
+        "ts": 1791748920
+      },
+      "source": {
+        "bytes": 9968,
+        "mtime_ns": 1791748920151157354,
+        "path": "/root/by-bot/runtime/runtime_diagnostics.json",
+        "sha256": "0cd807bdcc8bec05cf14fa1df271079f4101d81be4044cd53172ad3171eb382a",
+        "size_after": 9968,
+        "stable_size": true
+      },
+      "top_keys": [
+        "bybit_msgs",
+        "control_plane",
+        "dry_run",
+        "open_trades",
+        "portfolio",
+        "runtime_counters",
+        "runtime_diag",
+        "strategy_runtime_config",
+        "trade_on",
+        "ts",
+        "ts_iso",
+        "uptime_s"
+      ]
+    }
+  },
+  "schema": "BOUNCE1_METADATA_INTAKE_V1",
+  "services": {
+    "att1-ets2s-public-shadow.service": {
+      "ActiveState": "inactive",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "SubState": "dead"
+    },
+    "bybot-web.service": {
+      "ActiveState": "inactive",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "SubState": "dead"
+    },
+    "bybot.service": {
+      "ActiveState": "active",
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "SubState": "running"
+    }
+  },
+  "sources": {
+    "bot/strategy_shadow_ledger.py": {
+      "bytes": 11625,
+      "mtime_ns": 0,
+      "path": "/root/by-bot/bot/strategy_shadow_ledger.py",
+      "sha256": "46e1a08985488f6e267ce20ec2ff95ebf5edc95dbbe46ad11ff8fedaf71b7b70",
+      "size_after": 11625,
+      "stable_size": true
+    },
+    "configs/approved_strategy_params.env": {
+      "bytes": 3779,
+      "mtime_ns": 1786166473055669995,
+      "path": "/root/by-bot/configs/approved_strategy_params.env",
+      "sha256": "52de3558c4afd3727211554d1f5365ee00df19479850a1bda84ab9a1b6b93184",
+      "size_after": 3779,
+      "stable_size": true
+    },
+    "smart_pump_reversal_bot.py": {
+      "bytes": 708976,
+      "mtime_ns": 1789201700260287565,
+      "path": "/root/by-bot/smart_pump_reversal_bot.py",
+      "sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+      "size_after": 708976,
+      "stable_size": true
+    },
+    "strategies/alt_support_bounce_v1.py": {
+      "bytes": 16453,
+      "mtime_ns": 1786350063187568008,
+      "path": "/root/by-bot/strategies/alt_support_bounce_v1.py",
+      "sha256": "65fee98fd3a623e12a4d287d18a452efc20c41b60fb49f79f67ea24f10b35ff6",
+      "size_after": 16453,
+      "stable_size": true
+    },
+    "strategies/bounce1_live.py": {
+      "bytes": 3398,
+      "mtime_ns": 1783243213817544929,
+      "path": "/root/by-bot/strategies/bounce1_live.py",
+      "sha256": "9f89685bdc7c3ad49ce12e786461836729d2f6203e99d4755a5376fa6b6986a0",
+      "size_after": 3398,
+      "stable_size": true
+    }
+  },
+  "state": {
+    "missing": true,
+    "path": "/root/by-bot/runtime/bounce1_shadow_state.json"
+  }
+}

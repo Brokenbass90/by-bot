@@ -1,0 +1,92 @@
+{
+  "cwd": "/root/by-bot",
+  "files": {
+    "/root/by-bot/bot/strategy_shadow_ledger.py": {
+      "bytes": 11625,
+      "mtime_ns": 0,
+      "sha256": "46e1a08985488f6e267ce20ec2ff95ebf5edc95dbbe46ad11ff8fedaf71b7b70",
+      "size_after": 11625
+    },
+    "/root/by-bot/configs/approved_strategy_params.env": {
+      "bytes": 3779,
+      "mtime_ns": 1786166473055669995,
+      "sha256": "52de3558c4afd3727211554d1f5365ee00df19479850a1bda84ab9a1b6b93184",
+      "size_after": 3779
+    },
+    "/root/by-bot/runtime/bounce1_shadow_ledger.jsonl": {
+      "missing": true
+    },
+    "/root/by-bot/runtime/bounce1_shadow_state.json": {
+      "missing": true
+    },
+    "/root/by-bot/smart_pump_reversal_bot.py": {
+      "bytes": 708976,
+      "mtime_ns": 1789201700260287565,
+      "sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+      "size_after": 708976
+    },
+    "/root/by-bot/strategies/alt_support_bounce_v1.py": {
+      "bytes": 16453,
+      "mtime_ns": 1786350063187568008,
+      "sha256": "65fee98fd3a623e12a4d287d18a452efc20c41b60fb49f79f67ea24f10b35ff6",
+      "size_after": 16453
+    },
+    "/root/by-bot/strategies/bounce1_live.py": {
+      "bytes": 3398,
+      "mtime_ns": 1783243213817544929,
+      "sha256": "9f89685bdc7c3ad49ce12e786461836729d2f6203e99d4755a5376fa6b6986a0",
+      "size_after": 3398
+    }
+  },
+  "main_scripts": [
+    "smart_pump_reversal_bot.py"
+  ],
+  "selected_initial_process_env_not_runtime_proof": {},
+  "units": [
+    {
+      "name": "att1-ets2s-signal-shadow.service",
+      "properties": {
+        "ActiveState": "activating",
+        "MainPID": "1986625",
+        "NRestarts": "0",
+        "SubState": "start"
+      }
+    },
+    {
+      "name": "att1-fixed51-raw-shadow.service",
+      "properties": {
+        "ActiveState": "inactive",
+        "MainPID": "0",
+        "NRestarts": "0",
+        "SubState": "dead"
+      }
+    },
+    {
+      "name": "att1-fresh-epoch-observer.service",
+      "properties": {
+        "ActiveState": "inactive",
+        "MainPID": "0",
+        "NRestarts": "0",
+        "SubState": "dead"
+      }
+    },
+    {
+      "name": "att1-lifecycle-zero-risk-v2.service",
+      "properties": {
+        "ActiveState": "active",
+        "MainPID": "1584802",
+        "NRestarts": "0",
+        "SubState": "running"
+      }
+    },
+    {
+      "name": "bybot.service",
+      "properties": {
+        "ActiveState": "active",
+        "MainPID": "1648585",
+        "NRestarts": "0",
+        "SubState": "running"
+      }
+    }
+  ]
+}

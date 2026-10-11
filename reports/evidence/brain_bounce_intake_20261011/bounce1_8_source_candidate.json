@@ -1,0 +1,39 @@
+{
+  "schema": "BOUNCE1_8_FROZEN_SOURCE_CANDIDATE_V1",
+  "candidate_id": "BOUNCE1_8_20261011",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "source_research_commit": "10a76a02bc8ed0a8d5b120c92c314167db8160d3",
+  "prereg_sha256": "100f5566ee415f8eb2c63c1e1aa62709825331f4b79272d7205899888ba78c43",
+  "original_config_sha256": "62f196e58e86a97c94223208164f5ff594bc06634f38ec7eb08c4e9299311a37",
+  "strategy_source_sha256": "1f073053c27e116e2cee73882ecc1c187154250ddef573004079e3725f14ee89",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "ADAUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "DOTUSDT",
+    "SUIUSDT"
+  ],
+  "frozen_env": {
+    "ENABLE_BOUNCE1_TRADING": "1",
+    "BOUNCE1_RISK_MULT": "0.00",
+    "BOUNCE1_ALLOW_LONGS": "1",
+    "BOUNCE1_ALLOW_SHORTS": "0",
+    "BOUNCE1_SL_ATR_MULT": "1.6",
+    "BOUNCE1_TP1_FRAC": "0.15",
+    "BOUNCE1_TRAIL_ATR_MULT": "0.0",
+    "BOUNCE1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "BOUNCE1_SHADOW_ENABLE": "1"
+  },
+  "fee_bps_per_side": 6,
+  "slippage_bps_per_side": 2,
+  "funding_contract": "PREREG_F1_SECTION_1",
+  "ledger_namespace": "SEPARATE_NOT_DEPLOYED",
+  "epoch_started": false,
+  "orders_allowed": false,
+  "broker_calls_allowed": false,
+  "judge_run": false,
+  "blocker": "LEGACY_TICK_LEDGER_NOT_PARITY_WITH_CLOSED_BAR_NEXT_OPEN_F1"
+}
