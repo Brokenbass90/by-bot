@@ -14,7 +14,8 @@ Use executing-plans/TDD inline; no new formula, threshold, judge or old-run repa
 - [x] GREEN targeted synthetic mechanics plus preserved developing regressions.
 - [x] Read-only VPS MAX_LEV filesystem provenance; disclose timestamp limitations.
 - [x] Seal preparation manifest/report.
-- [ ] Scoped publication and remote verification (after commit/push).
+- [x] Scoped publication and remote verification: 4bdb8dd local/remote exact.
+  PUBLICATION_RECEIPT.json retained; no outcome run or LIVE authority.
 
 Stop at V1_1_ENGINEERING_PREPARED / RUN_NOT_AUTHORIZED. No evaluate(), RealInputs
 construction on full histories, training generator, run_v1_1 directory or STARTED

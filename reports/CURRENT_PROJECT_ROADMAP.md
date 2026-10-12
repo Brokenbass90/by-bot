@@ -37,6 +37,9 @@ not a fresh Mac runtime assertion; earlier V1-only wording below is historical.
 KITY Oct15/22 independent exact-basket checks remain not due today. Alpaca next
 actual Oct13 DAY rearm/exit/finality is P0; no new PAPER entry or LIVE GO inferred.
 
+October12 actual-entry/A7/sourceV2 code/evidence4bdb8dd pushed; local/remote
+SHA matched before any V1.1 outcomes. PUBLICATION_RECEIPT.json retained.
+
 October12 Breakout bridge: **BRIDGE_V2_ENGINEERING_PASS / ORDERS_OFF**.
 Read [BREAKOUT_BRIDGE_V2_2026_10_12.md](BREAKOUT_BRIDGE_V2_2026_10_12.md).
 Claude's full-aggregate/lookback hash mismatch reproduced RED; separate V2 requires

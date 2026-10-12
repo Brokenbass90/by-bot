@@ -1,0 +1,20 @@
+{
+  "schema": "POST_WINDOW_CODE_EVIDENCE_PUBLICATION_V1",
+  "verified_at_utc": "2026-10-12T14:19:06.815409+00:00",
+  "branch": "codex/recovery-20260824",
+  "commit": "4bdb8ddd1bd1e2e2551a0428dce6d27a953de837",
+  "remote_head": "4bdb8ddd1bd1e2e2551a0428dce6d27a953de837",
+  "remote_verified": true,
+  "manifest_canonical_sha256": "7f2968c722b4c1bc617c65e7c9f497fffc59108b1fa2318b7004ad33e5a5d60a",
+  "actual_v11_filter_runs": 0,
+  "owner_go_supplied": false,
+  "run_directory_exists": false,
+  "targeted_tests_passed": 55,
+  "live_halt_preserved": true,
+  "live_orders_allowed": false,
+  "installed_app_changed": false,
+  "guard_or_opener_restarted": false,
+  "v1_unchanged": true,
+  "foreign_allowlist_preserved": true,
+  "private_account_capture_committed": false
+}
