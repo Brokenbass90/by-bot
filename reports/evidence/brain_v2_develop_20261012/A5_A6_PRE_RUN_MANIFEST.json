@@ -1,0 +1,239 @@
+{
+  "schema": "BRAIN_V2_DEVELOP_INPUT_MANIFEST",
+  "scope": "BRAIN_V2_A5_A6_SINGLE_DEVELOPING_FILTER",
+  "research_commit": "e2d668ce415c82c1c22c44454df84e168a8c5f7d",
+  "research_origin_verified": true,
+  "a5_sha256": "c07cf7964f4013b98c696633ac2b46bdc55cdfce0756f51b33a26cd0ada6e84a",
+  "a6_sha256": "19a177e2a4b9e096e049552642b9ea49f51f8a5ce70630403dcc298f766e4441",
+  "adapter_manifest_sha256": "18e76f4463b3323a3f0ce0a494f6b5aec0761d7e5002b80070b4cfffec829b05",
+  "files": [
+    {
+      "path": "bot/regime_orchestrator.py",
+      "sha256": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
+      "bytes": 17376,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/TABLE_HASH_PUBLICATION.json",
+      "sha256": "9ec5166e1c2f66f33e1528f579c7d79a00288f0fb093c150b64704e3c833e94f",
+      "bytes": 1897,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/adapter_manifest.json",
+      "sha256": "30ebf90dc14e6bda424b3374e402bb85882190fd9302afbc43f2c61975a62eaa",
+      "bytes": 77233,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/bot/__init__.py",
+      "sha256": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+      "bytes": 120,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/bot/regime_orchestrator.py",
+      "sha256": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370",
+      "bytes": 17376,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/bot/strategy_priority_router.py",
+      "sha256": "01dcdba01e3f5e684aff2412a11e5a023edab070c03abd352ead81d749c7d469",
+      "bytes": 6653,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A1.md",
+      "sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+      "bytes": 4472,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A2.md",
+      "sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+      "bytes": 2247,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A3.md",
+      "sha256": "2740b6bad02f724eca1da94c695d9d2a08d341eb82c04ca355834f54e69ede21",
+      "bytes": 4543,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A4.md",
+      "sha256": "45be1c5455423e8414900c5c11db759028906066d49cfbf79b97e824754bb9a4",
+      "bytes": 1685,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A5.md",
+      "sha256": "c07cf7964f4013b98c696633ac2b46bdc55cdfce0756f51b33a26cd0ada6e84a",
+      "bytes": 6058,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A6.md",
+      "sha256": "19a177e2a4b9e096e049552642b9ea49f51f8a5ce70630403dcc298f766e4441",
+      "bytes": 4500,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+      "bytes": 716,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+      "bytes": 8075,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/MU_SIGMA_V1.json",
+      "sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020",
+      "bytes": 7285,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/brain_v2/mu_sigma.py",
+      "sha256": "4371d573ab0b14c9a4c65ba3c244100642ade8bdaf249ad10c33e8f3e658988c",
+      "bytes": 4542,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/os2/B3_KONFIG.json",
+      "sha256": "9b65e28c2d283f2cdf1e4ab17d95cc46a7afe672fdf9d72085685a90d4f2256f",
+      "bytes": 2137,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/os2/REZHIM_V1_ZAMOK.json",
+      "sha256": "e72ac465c9ede19ebf6b5b2b357e49e40d42d81fcdd29f2cbaf56febb43f1916",
+      "bytes": 816,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/os2/potoki/MANIFEST.json",
+      "sha256": "36b71e6517957712027d06633bbd598d77dfe9ed33782370264dd72935253644",
+      "bytes": 1376,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/os2/replay.py",
+      "sha256": "5685a9290077a024dced9b63c0a6b54ae95bdd5f8ee9bb2dc7a05e05fe897a8e",
+      "bytes": 3729,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/os2/rezhim_v1.py",
+      "sha256": "947af3c84e0c1849ed875e10bdcdc2afd1f0a656cac3a2631a1196a195abdde3",
+      "bytes": 4422,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/frozen/research_lab/os2/wf.py",
+      "sha256": "7cf6cb42fd83bfa154d14e8fb0ab4a405cd455cdc96406af8d100bfff3c9382f",
+      "bytes": 4272,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/source_manifest.json",
+      "sha256": "5b16be6c2176aca2745e846c2d96cd17df45b259a6c08401eda4dcbc535c3f55",
+      "bytes": 32378,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2023-07-01.json",
+      "sha256": "17482ae9f3a925ede796098898dc8ef637d7ce12a929673582915f7a8a0e2534",
+      "bytes": 4123,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2024-01-01.json",
+      "sha256": "b379cc4d0e8c878c20743bcfbdfebf49b3ced4b3a811b9cb32194b78a1140caf",
+      "bytes": 4515,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2024-07-01.json",
+      "sha256": "b126d029348e54aaa2c9cdd3920fd3050a66c915b6eec90ffc96da4f4c1c6d62",
+      "bytes": 7083,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2025-01-01.json",
+      "sha256": "36cd63abb4f6eeffe9900a357d558e0f396ad04e7b220f92b614860c826b05b1",
+      "bytes": 7271,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_a1.py",
+      "sha256": "db02f033a694e88d628ee3f9bf37e162813178d2c59a0e2baa99017dbd416cc7",
+      "bytes": 22619,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_a3.py",
+      "sha256": "727dfb67a1765ae9cc5efbdab186d12578cb9951e42551e36b92c9c8fe4b3f1b",
+      "bytes": 18757,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_develop.py",
+      "sha256": "3fd68f9546b22c3f86287722010988384df7ac6886ab0f21828fcc07d7a22831",
+      "bytes": 16320,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_develop_run.py",
+      "sha256": "2704a1884836da97b5fc770ef346c0b4bcb5ece2ca6a5a62a49ac5c6ff8fe6c0",
+      "bytes": 10249,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_frozen_primitives.py",
+      "sha256": "064b8c9561139bc76972a70205a1cf19cc3a71f1fc9d803cb3fcd68a71406f4d",
+      "bytes": 13505,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_sources.py",
+      "sha256": "dce2769c0addbe12ecf6c3ac7dec8d55b765749a987dcd7fca82902f6c2a9fad",
+      "bytes": 12700,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/os2_shadow_bridge.py",
+      "sha256": "6c42b5dbeb4fc4b4e0aeea2fcfd16885f035c645bc8374c2272cc94fc56cd788",
+      "bytes": 21947,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/os2_shadow_journal.py",
+      "sha256": "31cdf364dd39849c92d65c4ba4c166a092a93661d4af8b311def1f988efedfd5",
+      "bytes": 9022,
+      "role": "control"
+    }
+  ],
+  "orders_allowed": false,
+  "money_authority": false,
+  "filter_runs_allowed": 1,
+  "filter_started": false,
+  "python": "3.12.8",
+  "numpy": "2.5.2",
+  "historical_metric": "DD_ENV_A5_NOT_MTM",
+  "test_population": "t_available in [2023-07-01,2025-10-01); owned release-only tail afterward",
+  "funding_policy": "A6 source-bound last10 interval median; A4 UNKNOWN",
+  "initial_equity_usd": 100000,
+  "table_hashes_previously_published_commit": "697a96d7d03fcbb22240da0682d5eb7defae7947",
+  "root_review": {
+    "regression": "mutable funding source input RED-to-GREEN",
+    "local_targeted_pass": 278,
+    "independent_review": "prior quota unavailable; not retried"
+  },
+  "one_shot_output": "reports/evidence/brain_v2_develop_20261012/run_a5_a6",
+  "sha256": "476fc7ba3c00264ca11e8d79dbd90ba424c8a8a3495f77c2df05c1dd1c68721c"
+}

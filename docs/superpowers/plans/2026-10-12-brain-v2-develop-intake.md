@@ -72,3 +72,33 @@ pass; funding coverage remains explicit UNKNOWN. Developing comparison not run
 because the requested Claude A5 contracts and MTM/calendar inputs are absent.
 254 targeted PASS; root2 RED→GREEN regressions; no independent financial review.
 See BRAIN_V2_REAL_ADAPTERS_2026_10_12.md for pins/counts and unspent next gate.
+
+## Owner-supplied A5/A6 continuation (October12)
+
+Frozen research e2d668c: A5 c07cf796…e84a, A6 19a177e2…e4441. Supersedes
+only historical metric/carry/cold-start/calendar blockers; no train regeneration.
+Keep prior A1–A4/source-adapter versions and receipts unchanged.
+
+- [ ] TDD separate `brain_v2_develop.py`: A6 fold-table scorer and funding
+  calendar, A5 continuous100000USD realized ledgers/entry-fold attribution,
+  DD_ENV at each pre-packet15m tick and close-only tail. Context/caps/order and
+  A3 net-cost/A4 UNKNOWN accounting reused exactly. Test future R affects only
+  diagnostics, train-zero participation, calendar gaps/missing files, fold carry.
+- [ ] Bind real sources through a separate adapter/one-shot runner. Use exact
+  original frozen regime/VOL helpers and published tables/215-file snapshot;
+  missing funding yields A6 UNKNOWN, never0 or symbol exclusion. Preserve full
+  paired decisions/three separate closed ledgers and tick metrics with bounded
+  compressed journals and hashes. No original strategy simulation or B3 judge.
+- [ ] Publish all implementation/addendum/input/table hashes before evaluation;
+  inspect exact remote. Exclusive start marker before terminal data use, refuse
+  any second run. Match every pin again, then run exactly once. A5 expressly
+  permits closing owned historical test positions afterOctober1; no new entries.
+- [ ] Preserve PASS/STOP_V1/BLOCKED_DATA or failure receipt; root bounded review,
+  targeted tests, canonical handoff, scoped commit/push/remote verification.
+
+Review focus: repeated-start/crash must never rerun; earlier folding table may
+not read later stats; side funding signs/boundary-gap intervals; UNKNOWN cash
+entirely omitted but risk still held; DD_ENV future R cannot affect allocation;
+positions/realized equity carry across folds and tail attributed to entry fold.
+No new mathematics/retuning. A5 DD_ENV is a historical proxy, not MTM/edge proof.
+Independent reviewer prior quota restriction remains; do not retry that bucket.
