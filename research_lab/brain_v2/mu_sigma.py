@@ -8,6 +8,9 @@ import numpy as np
 LAB = Path(__file__).resolve().parents[1]; sys.path.insert(0, str(LAB / "os2"))
 import wf as W, replay as P
 K0, K1 = 300, 150; WIN = 90 * 24; H = 3600000
+# A2: ts в потоках B3 = время ОТКРЫТИЯ сигнального бара; сигнал известен на его закрытии → t_available = ts + длина бара базы ноги
+BAR_MS = {"ATT1": H, "SBR1": H, "ASR1": H, "BOUNCE1": H, "ETS2": 15 * 60000, "SF3": 15 * 60000}   # из os2/signaly.py NOGI (база 60/15)
+def t_available(t): return int(t["ts"]) + BAR_MS[t["leg"]]
 
 def natr_series(ts, o):
     h, l, c = o[:, 1], o[:, 2], o[:, 3]
@@ -41,7 +44,7 @@ def main():
                 z = np.load(f); ts = z["ts"].astype(np.int64); n, ok = natr_series(ts, z["ohlcv"].astype(float))
                 kesh[s] = (ts, n, ok)
             else: kesh[s] = None
-        chas = t["ts"] // H * H; rez = metki.get(chas) or "UNKNOWN"
+        chas = t_available(t) // H * H; rez = metki.get(chas) or "UNKNOWN"   # A2: floor(t_available)
         vb = "UNKNOWN"
         if kesh[s] is not None:
             ts, n, ok = kesh[s]; i = int(np.searchsorted(ts, chas - H, side="right")) - 1   # последний ЗАКРЫТЫЙ час до chas
@@ -57,7 +60,7 @@ def main():
             if c == "UNKNOWN": continue
             v = np.array(v); cells[c] = dict(n=len(v), mean=float(v.mean()), mu=(len(v) * float(v.mean()) + K1 * mu_s) / (len(v) + K1))
         tab[leg] = dict(n=ns, mean=ms, mu=mu_s, sigma=sd, n_unknown=len(d.get("UNKNOWN", [])), cells=cells)
-    out = dict(versiya="MU_SIGMA_V1", cutoff=a.cutoff, kappa0=K0, kappa1=K1, vol=dict(atr="Wilder 14 на закрытых H1", okno_ch=WIN, percentil="midrank", granicy=[33, 67]),
+    out = dict(versiya="MU_SIGMA_V1_A2", cutoff=a.cutoff, kappa0=K0, kappa1=K1, vol=dict(atr="Wilder 14 на закрытых H1", okno_ch=WIN, percentil="midrank", granicy=[33, 67]),
                istochnik=dict(b3_konfig_sha256=hashlib.sha256(W.KONF.read_bytes()).hexdigest(), rezhim="REZHIM_V1 A1"), nogi=tab)
     b = json.dumps(out, ensure_ascii=False, indent=1, sort_keys=True).encode(); Path(a.out).write_bytes(b)
     print("sha256", hashlib.sha256(b).hexdigest()); print({k: (v["n"], round(v["mu"], 4), round(v["sigma"], 3), v["n_unknown"]) for k, v in tab.items()})
