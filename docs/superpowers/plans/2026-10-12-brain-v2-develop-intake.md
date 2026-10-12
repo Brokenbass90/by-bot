@@ -39,12 +39,12 @@ owner October12 instruction approves exact train generation/adapters/one filter.
 Files: evidence/brain_v2_develop_20261012/source_manifest.json, frozen controls,
 four tables and publication receipt; ignored per-plan source staging only.
 
-- [ ] Verify immutable remote ref and all spec/params/addenda/generator pins.
-- [ ] Export exact code/dependencies/streams/used H1 from Git, verify original
+- [x] Verify immutable remote ref and all spec/params/addenda/generator pins.
+- [x] Export exact code/dependencies/streams/used H1 from Git, verify original
   four stream manifest and BTC regime code/label lock without B3 execution.
-- [ ] Run the exact generator with four --cutoff values and unique --out paths.
+- [x] Run the exact generator with four --cutoff values and unique --out paths.
   Save stdout/exit/source integrity; never patch dependencies or thresholds.
-- [ ] Publish outputs and hashes in scoped commit/push, verify exact remote.
+- [x] Publish outputs and hashes in scoped commit/push, verify exact remote.
 
 ### Task2: manifest-bound real adapters
 
@@ -52,17 +52,23 @@ Files: research_lab/brain_v2_sources.py, tests/test_brain_v2_sources.py.
 Consumes: immutable stream/bar/funding bytes and expected manifest row hashes.
 Produces: causal entry intent and separately released terminal/funding inputs.
 
-- [ ] RED tests for changed hashes/duplicate identities/grid/future outcome
+- [x] RED tests for changed hashes/duplicate identities/grid/future outcome
   separation/absent data; implement source loaders and source-only adapters.
-- [ ] Verify exact A2/A3/A4 timing/lev/cost contract without stream resimulation.
-- [ ] Consume only frozen developing dates; report source limitations/coverage.
+- [x] Verify exact A2/A3/A4 timing/lev/cost contract without stream resimulation.
+- [x] Consume only frozen developing dates; report source limitations/coverage.
 
 ### Task3: one frozen filter or exact pre-run blocker
 
 - [ ] Match every source/code/table/metric contract hash to published manifest.
-- [ ] Missing metric/cold-start/funding contract => BLOCKED_DATA before outcomes;
+- [x] Missing metric/cold-start/funding contract => BLOCKED_DATA before outcomes;
   preserve remaining evaluation permission rather than guess a favorable rule.
 - [ ] If all gates are frozen/complete, write exclusive one-shot start receipt,
   run exactly once and preserve PASS/STOP/BLOCKED receipt/raw paired report.
-- [ ] Targeted verification, bounded critical review, canonical checkpoint and
+- [x] Targeted verification, bounded critical review, canonical checkpoint and
   scoped publication. No independent signoff if reviewer remains quota-blocked.
+
+October12 terminal continuation: real entry/context adapters and source checks
+pass; funding coverage remains explicit UNKNOWN. Developing comparison not run
+because the requested Claude A5 contracts and MTM/calendar inputs are absent.
+254 targeted PASS; root2 RED→GREEN regressions; no independent financial review.
+See BRAIN_V2_REAL_ADAPTERS_2026_10_12.md for pins/counts and unspent next gate.

@@ -1,0 +1,96 @@
+{
+  "schema": "BRAIN_V2_REAL_ADAPTERS_TERMINAL_READINESS",
+  "recorded_at_utc": "2026-10-12T06:28:00.731355+00:00",
+  "status": "BLOCKED_DATA",
+  "engineering_status": "REAL_ENTRY_CONTEXT_SOURCE_ADAPTERS_PASS",
+  "source_integrity": {
+    "manifest_sha256": "18e76f4463b3323a3f0ce0a494f6b5aec0761d7e5002b80070b4cfffec829b05",
+    "file_count": 215,
+    "integrity": "PASS",
+    "orders_allowed": false
+  },
+  "train_manifest_sha256": "a2325b0b534713f072f5e50559d57633e389646b7a5e85861d5d72c8461050bf",
+  "train_table_publication_raw_sha256": "9ec5166e1c2f66f33e1528f579c7d79a00288f0fb093c150b64704e3c833e94f",
+  "train_tables_integrity": "4/4_PASS",
+  "implementation_sha256": {
+    "research_lab/brain_v2_sources.py": "dce2769c0addbe12ecf6c3ac7dec8d55b765749a987dcd7fca82902f6c2a9fad",
+    "research_lab/brain_v2_a1.py": "db02f033a694e88d628ee3f9bf37e162813178d2c59a0e2baa99017dbd416cc7",
+    "research_lab/brain_v2_a3.py": "727dfb67a1765ae9cc5efbdab186d12578cb9951e42551e36b92c9c8fe4b3f1b",
+    "research_lab/brain_v2_frozen_primitives.py": "064b8c9561139bc76972a70205a1cf19cc3a71f1fc9d803cb3fcd68a71406f4d",
+    "research_lab/os2_shadow_journal.py": "31cdf364dd39849c92d65c4ba4c166a092a93661d4af8b311def1f988efedfd5",
+    "research_lab/os2_shadow_bridge.py": "6c42b5dbeb4fc4b4e0aeea2fcfd16885f035c645bc8374c2272cc94fc56cd788",
+    "bot/regime_orchestrator.py": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370"
+  },
+  "earlier_adapter_code_sha256": "51193dd1c25d8570aee9ef32ad26cb7bacbe18f7ab6a2e9a1a1a7d0a94e9eeb3",
+  "code_change_reason": "Two root-review RED-to-GREEN regressions: sealed-boundary terminal exposure and malformed symbol identity",
+  "max_hold_source": {
+    "research_commit": "6e59c2cd10aea1e17cbf2a1973c470d241b3ce10",
+    "path": "research_lab/os2/signaly.py",
+    "git_blob": "311db8da239b77d554782cb365751a46305b03c3",
+    "sha256": "34f1e4640f40d8d6f73aadd8ee795ae60d7da5659a073ea581acee1334e6fa7b",
+    "bytes": 3504,
+    "max_hold_hours": {
+      "ATT1": 336,
+      "SBR1": 168,
+      "ASR1": 168,
+      "ETS2": 168,
+      "SF3": 336,
+      "BOUNCE1": 48
+    },
+    "parity": "PASS",
+    "strategy_runs": 0
+  },
+  "entry_projection_count": 70561,
+  "symbols": 97,
+  "funding_archives": 96,
+  "funding_absent_symbols": [
+    "HFTUSDT"
+  ],
+  "funding_calendar_and_publication": "UNKNOWN",
+  "btc_h4_parity": {
+    "status": "PASS",
+    "bars": 6023,
+    "rows_sha256": "0667d86f2b50e66a6fbe9710bb9bc2772a5b5690b469fbf5bd37983de0eae2ac"
+  },
+  "blockers": [
+    {
+      "id": "FROZEN_INITIAL_E_FOLD_CARRY_MISSING",
+      "source": "V1/A1-A4"
+    },
+    {
+      "id": "FROZEN_MTM_PARTIAL_EXIT_METRIC_MISSING",
+      "source": "V1 section6; aggregate B3 streams contain no intratrade path"
+    },
+    {
+      "id": "FROZEN_TEST_BOUNDARY_MISSING",
+      "source": "B3 ts versus A2/A3 t_available"
+    },
+    {
+      "id": "FROZEN_TRAIN_ZERO_SIGMA_RULE_MISSING",
+      "source": "2023-07-01 and 2024-01-01 tables omit ETS2/SF3"
+    },
+    {
+      "id": "FUNDING_CALENDAR_PUBLICATION_UNBOUND",
+      "source": "96 copied pair-only archives; HFTUSDT archive absent"
+    }
+  ],
+  "verification": {
+    "local_targeted_pass": 254,
+    "new_source_adapter_tests": 29,
+    "regression_red_green": 2,
+    "full_suite": "NOT_RUN_HISTORICALLY_NOT_GREEN",
+    "independent_review": "PRIOR_QUOTA_FAILURE_NOT_RETRIED_ROOT_BOUNDED_REVIEW_ONLY"
+  },
+  "filter_started": false,
+  "filter_runs": 0,
+  "filter_permission_consumed": false,
+  "developing_terminal_projection_calls": 0,
+  "B3_runs": 0,
+  "holdout_evaluation_runs": 0,
+  "orders_allowed": false,
+  "live_or_vps_operations": 0,
+  "alpaca": "Original Monday NET PAPER session and LIVE HALT/caps untouched; no fresh runtime assertion",
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "next_action": "Frozen Claude addendum and metric/calendar input hashes before any single developing comparison; do not rerun generators/B3 or repin original evidence",
+  "sha256": "2b10fff36f3a667c5cfb9626f064312ea31cc46e59eec94db1339080f69dc107"
+}

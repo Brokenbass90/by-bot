@@ -1,0 +1,2117 @@
+{
+  "schema": "BRAIN_V2_REAL_ADAPTER_SOURCE_CHECK",
+  "captured_at_utc": "2026-10-12T06:22:45.697097+00:00",
+  "train_manifest": {
+    "manifest_sha256": "a2325b0b534713f072f5e50559d57633e389646b7a5e85861d5d72c8461050bf",
+    "file_count": 119,
+    "integrity": "PASS",
+    "orders_allowed": false
+  },
+  "adapter_manifest": {
+    "manifest_sha256": "18e76f4463b3323a3f0ce0a494f6b5aec0761d7e5002b80070b4cfffec829b05",
+    "file_count": 215,
+    "integrity": "PASS",
+    "orders_allowed": false
+  },
+  "implementation_sha256": {
+    "research_lab/brain_v2_sources.py": "51193dd1c25d8570aee9ef32ad26cb7bacbe18f7ab6a2e9a1a1a7d0a94e9eeb3",
+    "research_lab/brain_v2_a1.py": "db02f033a694e88d628ee3f9bf37e162813178d2c59a0e2baa99017dbd416cc7",
+    "research_lab/brain_v2_a3.py": "727dfb67a1765ae9cc5efbdab186d12578cb9951e42551e36b92c9c8fe4b3f1b",
+    "research_lab/brain_v2_frozen_primitives.py": "064b8c9561139bc76972a70205a1cf19cc3a71f1fc9d803cb3fcd68a71406f4d",
+    "research_lab/os2_shadow_journal.py": "31cdf364dd39849c92d65c4ba4c166a092a93661d4af8b311def1f988efedfd5",
+    "research_lab/os2_shadow_bridge.py": "6c42b5dbeb4fc4b4e0aeea2fcfd16885f035c645bc8374c2272cc94fc56cd788",
+    "bot/regime_orchestrator.py": "56952650bd2dcb09421e87a2f5d4f9a27d1184b7ce64504f7f8ed54e00f85370"
+  },
+  "streams": [
+    {
+      "path": "research_lab/orch_signals.json",
+      "sleeves": [
+        "ATT1",
+        "SBR1"
+      ],
+      "closed_signal_entry_count": 6788,
+      "source_sha256": "cd82e7e4be3e4701fd42e99daf665f2c4160a735ca3d097825026a93885ba672",
+      "terminal_projection_calls": 0
+    },
+    {
+      "path": "research_lab/os2/potoki/ASR1.json",
+      "sleeves": [
+        "ASR1"
+      ],
+      "closed_signal_entry_count": 1035,
+      "source_sha256": "18d51ae9f2e0175f916e1100d62717d14feb6d980bbccb5b0e4904d04e88bd17",
+      "terminal_projection_calls": 0
+    },
+    {
+      "path": "research_lab/os2/potoki/ETS2.json",
+      "sleeves": [
+        "ETS2"
+      ],
+      "closed_signal_entry_count": 46134,
+      "source_sha256": "d4bcbaa8ecc5442b67b9be94f7bc357ba1528a5b28cdb88a6302fc94bb47d0c5",
+      "terminal_projection_calls": 0
+    },
+    {
+      "path": "research_lab/os2/potoki/SF3.json",
+      "sleeves": [
+        "SF3"
+      ],
+      "closed_signal_entry_count": 16453,
+      "source_sha256": "7739e7a4619bf238097de04afc8b41303b74718c64cc25a4022436296010fe45",
+      "terminal_projection_calls": 0
+    },
+    {
+      "path": "research_lab/os2/potoki/BOUNCE1.json",
+      "sleeves": [
+        "BOUNCE1"
+      ],
+      "closed_signal_entry_count": 151,
+      "source_sha256": "6e40c2bb453ec07f77d99f67c1283f475446cd5b89d8b1b4f787afad4184e33d",
+      "terminal_projection_calls": 0
+    }
+  ],
+  "h1": [
+    {
+      "path": "research_lab/data/h1/1000BONKUSDT.npz",
+      "source_sha256": "8d9b3e287286c3c62e5e52bd88ab9c683486dc12b144f957dae6d68996b15a42",
+      "closed_count": 23966,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/1000PEPEUSDT.npz",
+      "source_sha256": "28588ef273d311a482bddae7e46994dea314717dbcf1faa192267e064d2c7f93",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/1000RATSUSDT.npz",
+      "source_sha256": "080941fa59ff6c77037f89ba3c97173b9f4743d088de501667a32860d19a2cb0",
+      "closed_count": 16286,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/AAVEUSDT.npz",
+      "source_sha256": "b51425a4a2c89b81495527bb0c28cc8657c40658c87d2826223ad0d3714b4094",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ACEUSDT.npz",
+      "source_sha256": "f7086392354adb9e37a3130a34b8b62046c5e29edf68fb407bbe211c437c890e",
+      "closed_count": 15662,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ACTUSDT.npz",
+      "source_sha256": "53011dcb5e60ca5530adcb01dc934bfee3b63a66cca9ebe99249b7762678d19c",
+      "closed_count": 7766,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ADAUSDT.npz",
+      "source_sha256": "b08f0dde58c2b48c46bb92dd3328c7882f49acc02afb2ca73062511da60a0e23",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/AEROUSDT.npz",
+      "source_sha256": "c87aca88cd0d756ef1d3d074681da3474b69ed43b3ed1f939e2353209c707919",
+      "closed_count": 10622,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ALGOUSDT.npz",
+      "source_sha256": "6e2c17b67efc9985c5cf7ec97a734a3ce222b239b5b5b7915beecc70b89542d6",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/APTUSDT.npz",
+      "source_sha256": "2660b649aab7f6e3ce453277255d6c23c37e947b0cb458cebe08b09b0c727ff3",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ARBUSDT.npz",
+      "source_sha256": "19ca3d232e6aba97fafa0d6ef5251c1904bd4e48b84ede83eae713b9d1a0a6e4",
+      "closed_count": 22137,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ASTERUSDT.npz",
+      "source_sha256": "841d9850403b263e20021369b95c18c3c36d4f85459fb73d0d4cd7bd463ba63e",
+      "closed_count": 278,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ATOMUSDT.npz",
+      "source_sha256": "dc2c4d7a519b6d3161c0270761d912df05be31a7494b8fcea4035548728fce3d",
+      "closed_count": 2255,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/AVAXUSDT.npz",
+      "source_sha256": "6840f24e696a678d4ea932c248b9a0f0c2292bf655ba25efcea24ba9580987b8",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BANANAS31USDT.npz",
+      "source_sha256": "57413a16b8848ff2a30328379c67950ac0dd3f67e6b169378a25bc1c5ebe8bb8",
+      "closed_count": 4478,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BANKUSDT.npz",
+      "source_sha256": "53f0d103d82c82bd2f24fe3622f253fe80d691e246cf9e74bb64d57e353a417e",
+      "closed_count": 3494,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BCHUSDT.npz",
+      "source_sha256": "8464ebd396efcd57717457ef96601244bfef925d6c16ab10d6120005dc2cc231",
+      "closed_count": 2255,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BICOUSDT.npz",
+      "source_sha256": "36f58d2243c8c3cd9c068336c7cdd99f65ffa1f1557b83b950338961cfb2970d",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BIOUSDT.npz",
+      "source_sha256": "08b506fc25dd48c677d9b2e2aef714e10aac810b26cab6a4c92f2436e717e275",
+      "closed_count": 6711,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BLESSUSDT.npz",
+      "source_sha256": "61defa32e32f5c2efac6af864d118b053c7f6f7bb48538e71c1069f44487893b",
+      "closed_count": 157,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BMTUSDT.npz",
+      "source_sha256": "346d3ddc8c3f24cc1eecebbac15100939add5e92302f0351a92368bd259e575c",
+      "closed_count": 4839,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BNBUSDT.npz",
+      "source_sha256": "b732e946560fefd7db76de0ef2f577ab464c004054a5ff67c815535dbd90b447",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BOMEUSDT.npz",
+      "source_sha256": "9491bf552bcc7a859eca7853d4273b5dbe9ab3d46265e351e752a0d3df51fcf7",
+      "closed_count": 13549,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BROCCOLIUSDT.npz",
+      "source_sha256": "caede74642a32829fd96550caa1664800ad902cdfe3ada29c96a789f32000062",
+      "closed_count": 5483,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BTCUSDT.npz",
+      "source_sha256": "811c06ea3a1aadc522da4d67106591efa77905d128fac5f245b714bd33a75e49",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/BTRUSDT.npz",
+      "source_sha256": "c9ccbe8a4c61c315cf76c429e61c5c0afa5fe2347cd999e5d0f9f0c29b14a9d1",
+      "closed_count": 828,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/C98USDT.npz",
+      "source_sha256": "3ebe7dbcc8331835612bc35401233fdfb3bdc57f39af6c38e7e794578c5311c0",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/COOKIEUSDT.npz",
+      "source_sha256": "d641766db6e473039c72a325003270a519d67620b67afa9754bd8be7d4729f3a",
+      "closed_count": 6399,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/COTIUSDT.npz",
+      "source_sha256": "4f341b7d527e830c5aa93d6fc1005ef05f55fd4ca751897eddba10a248c938fd",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/CRVUSDT.npz",
+      "source_sha256": "d6a81c67f2aeb5b69d187cee122ba8cb5b5d4b2d29f0438471f60c6640293884",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/DEXEUSDT.npz",
+      "source_sha256": "9c76505406cda25bd6b6fa5f478dd66e0436ff4ae74072e67826a76c3073e9b1",
+      "closed_count": 10381,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/DOGEUSDT.npz",
+      "source_sha256": "b0b7f453f31d7ba639381d3cbcdda13ad0644ab3d7704fa9ed49dc71483632ff",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ENAUSDT.npz",
+      "source_sha256": "10c2a003a2d5dcaf993dc47b49b6f7a6afcf6617a5bc9a10b00d5436a638fd33",
+      "closed_count": 13116,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/EPICUSDT.npz",
+      "source_sha256": "45f016d909c36ea33e0a26f9ae9490f5ccf5c20b2eae696d4428b53fb82eb748",
+      "closed_count": 4815,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ESPORTSUSDT.npz",
+      "source_sha256": "d15b1c80591c009d99f382d97d4ad5208a48170925e097e2e91e20534d528aad",
+      "closed_count": 1525,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ETCUSDT.npz",
+      "source_sha256": "42bd099ab78eb84f37751e59f1cad263c7df8122e91afc5c7e81b93960021833",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ETHFIUSDT.npz",
+      "source_sha256": "f737f61138ddace1894be87b8ae074c29ce4824e990ed8efe42fcfecfc459c75",
+      "closed_count": 13473,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ETHUSDT.npz",
+      "source_sha256": "9c669dc6c1de71d561f42cc971c7083515116bf83086f6f556d89ba5f4bcbd8e",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/FARTCOINUSDT.npz",
+      "source_sha256": "a4ef25d94e741793720cfd4eea8ebbc6e4b2bb015210c0444158e3d808e646e5",
+      "closed_count": 6830,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/FILUSDT.npz",
+      "source_sha256": "f53daffb1e82065a53781babe0a6fd34e0320eda5dae891a3d33e46323653514",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/GALAUSDT.npz",
+      "source_sha256": "21030890457a73c660865554aa8a7707824e04fbf3db3964814959e9fd3156fd",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/GRASSUSDT.npz",
+      "source_sha256": "43ee9f6f41dd751d312c7502a56b62dc58c1c28db6f50b784af874bffcc9df1a",
+      "closed_count": 8366,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/GUNUSDT.npz",
+      "source_sha256": "c6929168aa611c83ab0b2adadf67f4c1b92240cf2f99f2fe788d933b95419ff7",
+      "closed_count": 4402,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/HBARUSDT.npz",
+      "source_sha256": "85c61bfa647ae3c3f7d4dadde96c1c3967042168867c349cef5b8058ed73ae06",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/HEIUSDT.npz",
+      "source_sha256": "7a8173a73fc0821184877561f22b3463799c6bc9d3de227c0bdb2fc704796006",
+      "closed_count": 5486,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/HFTUSDT.npz",
+      "source_sha256": "c0d155f90ca613459bac3de0d6b267be6d61803d82edd0b29692433107b3eade",
+      "closed_count": 22357,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/HOMEUSDT.npz",
+      "source_sha256": "ffc4cc61f7e2178f3877c21c579e2934e633947d23314434bab37791183b679f",
+      "closed_count": 2700,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/HYPEUSDT.npz",
+      "source_sha256": "8df690293b7b8d4ab466096f5f87409db87f0892741538143c01c420318fd3c4",
+      "closed_count": 2255,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ICPUSDT.npz",
+      "source_sha256": "23654b05b4669818f1054e892c096e20266cc3c55bd98b064a28d7c7a1363456",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/INJUSDT.npz",
+      "source_sha256": "f0cc4824d7bb5eac6c71bf8791a2b1a71047f2522e1f389be01fefa39a19f75f",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/JTOUSDT.npz",
+      "source_sha256": "3086593709d7c7658ca5e279339270d7db94421f719dced6321512248c1fa420",
+      "closed_count": 15907,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/KAITOUSDT.npz",
+      "source_sha256": "12ba9c0b8fda2732d927801ecfa71cd03451fac82e1b20fc4f875ad430daf4f1",
+      "closed_count": 5338,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/LAUSDT.npz",
+      "source_sha256": "ce162803389e61a6caf3342f70356fc35a3d26a519ed5f2d4e14499b362052ba",
+      "closed_count": 2825,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/LDOUSDT.npz",
+      "source_sha256": "71477786ce582f16396d9399b37b89a7de0338adf3371eb40f0ba917750dd886",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/MEUSDT.npz",
+      "source_sha256": "da4a44caffdf9ace2e6e756df010a65e1dc6d31862823c5d84ea7672948e1229",
+      "closed_count": 7406,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/MNTUSDT.npz",
+      "source_sha256": "4ba998800d30e6831ce76d04428f23bc747c8bf401392a25365b52dd973a37d8",
+      "closed_count": 17513,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/MUBARAKUSDT.npz",
+      "source_sha256": "a4f7f6ef921b18affe0b263ca23905b523cea92700e779dd11a8ab0eabbc14f0",
+      "closed_count": 4743,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/NILUSDT.npz",
+      "source_sha256": "ee6dfb35240113c4c5e08a3c471884f1273ad8575265a6313eda6363c0a32510",
+      "closed_count": 4666,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ONDOUSDT.npz",
+      "source_sha256": "4d73d1534c117a205430c86ef0ead3f49c18139b2676ed4cbd9088a4cd2407bd",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/OPUSDT.npz",
+      "source_sha256": "62c992d0af58fcd271444e7922be8d7f622a7a88179ccef6e894fc6d6724067d",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ORDIUSDT.npz",
+      "source_sha256": "bbf6d1b103657f671042970aa5b3b70f67c81c7cedcd5b36e4037256352d815d",
+      "closed_count": 20703,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/PAXGUSDT.npz",
+      "source_sha256": "50614fafc149a4140bef2a460edb88ed933c1b62cf4c808e1cfbec7ea59011ff",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/PENGUUSDT.npz",
+      "source_sha256": "98998236c475c3c20d709edb79250e104f5375c973546cc5a16fd5144788cb92",
+      "closed_count": 6897,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/PEOPLEUSDT.npz",
+      "source_sha256": "11fb0627754d9cd6ef65a7f07f6fa80a4b73a178d26882f9e0639f90dd3d901b",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/POLUSDT.npz",
+      "source_sha256": "3a7f64f1ab39e21956ccba3efd772dd79b881ffbb8b9426d99d5c2082ca236b2",
+      "closed_count": 9374,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/PUMPFUNUSDT.npz",
+      "source_sha256": "bea177dd49d49be45e47cddc4517d9c397969d8ae9a9f66e1826f5acddfee7c5",
+      "closed_count": 1986,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/RENDERUSDT.npz",
+      "source_sha256": "4f7ea85bc0358be18042bf3816ab510e83856b4a84f7bbe1a21fb8df515f7938",
+      "closed_count": 10359,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/SEIUSDT.npz",
+      "source_sha256": "76b0990f40b7485105bfd1d42b2c834306190e3084876e81e8647388cbdd8fe0",
+      "closed_count": 18643,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/SHIB1000USDT.npz",
+      "source_sha256": "84a76eae9092ba134360e3aa187dd6cff5620cda482f3593b0c48b19dfe542d3",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/SIRENUSDT.npz",
+      "source_sha256": "8e8f114b191ee6efd108cdf80b95a8a991bda03da8eb5c23f78bea2b6da7e26f",
+      "closed_count": 4628,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/SOLUSDT.npz",
+      "source_sha256": "b840fc63bbb6636f7f0e91b78944ca1fcb00f04ba8c44e8f6588016dbbad4074",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/SQDUSDT.npz",
+      "source_sha256": "1b9bb2b6ec424ce6f03ecdd5cb310c782b41291f8ef06fc1f9e4a9bbff73ac77",
+      "closed_count": 2676,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/STRKUSDT.npz",
+      "source_sha256": "36c39e27d3473ddddb57bed9f9678c84edab3bc546e101969b16539aeb76bc14",
+      "closed_count": 14121,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/SUIUSDT.npz",
+      "source_sha256": "d85028e0a468016600c1b0deada75b59e19645faf91627f7937e8d9910ced023",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/TAOUSDT.npz",
+      "source_sha256": "f8386eb0f0a31d800a999b406fdc09bcb01785f5bcc45a4f79c9531cbc27c701",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/THEUSDT.npz",
+      "source_sha256": "c33b079f5985df5e8a179a1d74a4412e8316d7e108f77355fb6fa9b51d366001",
+      "closed_count": 7382,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/TIAUSDT.npz",
+      "source_sha256": "0be99573498b91b85f31e7b96434e720c6c146cafa611f9648e0fd7596f029ef",
+      "closed_count": 16806,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/TRUMPUSDT.npz",
+      "source_sha256": "6263253d52950aafd40ddab144c2b4f2a872f682481c1499325baa1ea8097814",
+      "closed_count": 6133,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/TRXUSDT.npz",
+      "source_sha256": "e5d12c49d2643f55745a90d22036fd450bbf6d18543180f987b507424545665f",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/TUTUSDT.npz",
+      "source_sha256": "acb7a9d0102131eb54b9c0c2ffeb4a7f97a674299637168d4acc1514213798c9",
+      "closed_count": 4693,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/UBUSDT.npz",
+      "source_sha256": "33e0c69a8b63dd43ab0329a6cdfd5c306d94fc99861ae520bc613f3411aedb01",
+      "closed_count": 446,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/UNIUSDT.npz",
+      "source_sha256": "c497c54f3dbd912ef06a4eec6a8b8cfdd91f94e2f90da59b712a1767899d771c",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/USDCUSDT.npz",
+      "source_sha256": "01b9e2b72e6d29661712aaeb4b5593bc04b317d18c594de561e268842bff6f90",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/USELESSUSDT.npz",
+      "source_sha256": "597ecc355daad2223e4357b2d2e5e7736dee05a47d27f69e99dd77d2d0d72b86",
+      "closed_count": 1980,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/VELODROMEUSDT.npz",
+      "source_sha256": "efa8294f841cfbaaba6b5618f1ba898d293d0b05271eb6d53c3d04356082b2f2",
+      "closed_count": 6997,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/VIRTUALUSDT.npz",
+      "source_sha256": "30554171ead084944a54083e53aa363726a620ad34c76c6f873387d110b6c70d",
+      "closed_count": 8006,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/VVVUSDT.npz",
+      "source_sha256": "8d0d9e1512fd64728231b6d8c9010e84af06c19e3de1392ddd8fcbb60fa925e4",
+      "closed_count": 5899,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/WIFUSDT.npz",
+      "source_sha256": "9a1369834c9a9eb644164716c214e1fc82fa88aeead3392da0fb2d9762a1b260",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/WLDUSDT.npz",
+      "source_sha256": "db7daedbbf1075003139b9d171015830863d064e2e6d8aa7daca751d28e0168f",
+      "closed_count": 19188,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/WLFIUSDT.npz",
+      "source_sha256": "09eeb382cab51dba9b7f15d30a9337edc59f0d35daf8ae5f22fcc26d0cebe745",
+      "closed_count": 925,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/XAUTUSDT.npz",
+      "source_sha256": "f03b96f71cfe6a18372ae78dc6e987ce835b891e31f1a55e7a1bf628e8f2e8eb",
+      "closed_count": 4332,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/XLMUSDT.npz",
+      "source_sha256": "4c17a3ad8c13962fab060afce37ea6062e5aa1643687e6cf21afaef5c3e5bf1f",
+      "closed_count": 2255,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/XMRUSDT.npz",
+      "source_sha256": "c69819cb4200f1775e563f533120d55811f8d85bc200a3810409962f9469c692",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/XPLUSDT.npz",
+      "source_sha256": "b156175cd4d3f13d07bc5f9941930e1f8bdfae72d0b007409c83f3ce7ac40f26",
+      "closed_count": 948,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/XRPUSDT.npz",
+      "source_sha256": "0e142500ec243487dc7630c38c99541e34b9466590e1b8ef863a762a55991385",
+      "closed_count": 10631,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ZECUSDT.npz",
+      "source_sha256": "e061c728923f64cd79574333c928fbe50f952ce4465c8511cb59a717e28a3fa5",
+      "closed_count": 24095,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    },
+    {
+      "path": "research_lab/data/h1/ZROUSDT.npz",
+      "source_sha256": "c2cac0f06e697d306db5f5facab32bc3eaf0734af1a8603fe681f552f52c84ef",
+      "closed_count": 11216,
+      "incomplete_m5_children_count": 0,
+      "publication_basis": "HISTORICAL_CLOSE_MODEL_NOT_FEED_TIMESTAMP",
+      "raw_m5_pit_provenance": "UNKNOWN"
+    }
+  ],
+  "symbols_count": 97,
+  "funding": [
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "1000BONKUSDT",
+      "source_hash": "95a106985f4f0a7fc3b496c2763ec7aa4d538154cbfd89dd16a428733521ac41",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3773,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "1000PEPEUSDT",
+      "source_hash": "390c1e7970dee13d84345d6bd81b940e1cfe76ee5a24f871d22ffe4bb5d10ea5",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2646,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "1000RATSUSDT",
+      "source_hash": "fff08f66cbcecababce26033a7a0b5e187fd1ecaf967081af064980f560d561a",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2813,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "AAVEUSDT",
+      "source_hash": "d887eddea1d290143ee090289fbf0c6c6d0fbc42c8aaed942dc322bee56f0ca5",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ACEUSDT",
+      "source_hash": "500044bae30ed40b848963303fa3523bf67eb3f280a7397445cca30e8805b1a6",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2735,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ACTUSDT",
+      "source_hash": "a60bec43d646d35d527a91813f4ae176877c6b5c87276e84fb8c8a394e617813",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1748,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ADAUSDT",
+      "source_hash": "d46a26f77fa064d7e4e434085f7efdbffd51401d0e709d6714fdf3101eca8de7",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "AEROUSDT",
+      "source_hash": "f514ca9adb01eb405fc13ccd2e316943d3c83e3d2cbe25ff459f21be6f0ce88b",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2105,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ALGOUSDT",
+      "source_hash": "415b5f3d0656acaed5056157890e1a747cb2c45282ac3c3a74f6ceb2301e9075",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "APTUSDT",
+      "source_hash": "4a9328fc8a507a47e392e6395da1d5243dec00c826d5a3210083a04c0fbf671f",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ARBUSDT",
+      "source_hash": "284116480df98eb2e1198808b44e37dbfb3afb0990de4499b4620f0086ec31a4",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2769,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ASTERUSDT",
+      "source_hash": "623a803a68dd9a1eecd262352310888a5f9c0926115148c7faf77199c46b1a0d",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 71,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ATOMUSDT",
+      "source_hash": "cbda026c469c6f3bdd6c82a7294bce773420851b1cc71afee4af0208dc794aef",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "AVAXUSDT",
+      "source_hash": "a4ec289d75aa0537851a4ce4ad0f122832f37e9d3c7d176827908c40bee5f94c",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BANANAS31USDT",
+      "source_hash": "134ae434438f407c3baa036720c5b60f93a5d907d2d815ccb42e46ab20a920ab",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1121,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BANKUSDT",
+      "source_hash": "3ee495e2b96d20d7986de4f714269963919885ec160bbbf8b4c04e4a74cdcb5b",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 875,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BCHUSDT",
+      "source_hash": "717b3d838cd8a87700b9f69e98a4a9711c4ac9fd190666da57b00a9cf5f0336a",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BICOUSDT",
+      "source_hash": "237b8d78c134274f1a3005ef0cb0deec7c3f154ee034d9379d3d710c86924a64",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BIOUSDT",
+      "source_hash": "895419cc10365a2d651b7dda3458accbb8dc423afdc446079a676f32cd0043a4",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1358,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BLESSUSDT",
+      "source_hash": "a5538bfe832198c7895199622968a7db2f09701bd283a0d0f97541517d67da3c",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 41,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BMTUSDT",
+      "source_hash": "5576013a561dc4229dbb157cc35beb523b3bb2a784852262651120ced37e995e",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1211,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BNBUSDT",
+      "source_hash": "8970260d141d3215eab7b4e1900247829a6543aaab77b8ac3b4eb1d33ad776a1",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BOMEUSDT",
+      "source_hash": "e916cbad58cb09860e09c2de8e8aeab2d50f2efe888b4bce7c745ae52d149646",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2471,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BROCCOLIUSDT",
+      "source_hash": "05f5f2616def9b1d757b70045fa20f795f2b3f97852dced2d218315bc990ce23",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1372,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BTCUSDT",
+      "source_hash": "94828d6c30bc2513d7d98929ce3d902dda7e0da6417aa4cf6bb06ffcd80f9a1a",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "BTRUSDT",
+      "source_hash": "f8cc8aa0e34f991f8b14ab2b4ebf770f53f89f45818f9e9e50f34728bfad59c3",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 209,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "C98USDT",
+      "source_hash": "293863ddb54d6285d3e2417bd60acf020118de53efc464df2a81abe92a7a05e1",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "COOKIEUSDT",
+      "source_hash": "ecef4ddf2875e1a7c66d5e96f5167689408127046d3aae8579406c52cf86da95",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1500,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "COTIUSDT",
+      "source_hash": "8f7a65ac62bf3837a8028a3ec037b8ecfad5792f45931e6d899d650dc629bb95",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "CRVUSDT",
+      "source_hash": "e928b276cd4df3d95c3859585ad878dd992f6298632b91864985d6d4b3ddee89",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "DEXEUSDT",
+      "source_hash": "616f3cae6cc242fd3c1ee69264fd0ed5d9ae3689e0f11d4e42ce888dc7b84213",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2075,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "DOGEUSDT",
+      "source_hash": "4059d14eb17676c0ccc29589792cf828533d432658e76c40d0db8a863f383678",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ENAUSDT",
+      "source_hash": "e1181961debe68a07559641b8a1c7467150df16c8b87144973338aa12740ae64",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2417,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "EPICUSDT",
+      "source_hash": "65bafce97f47a4c46033c8ea24b4c176d547cbca226c7dc56e151a5500a63f70",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1205,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ESPORTSUSDT",
+      "source_hash": "694e21ea3df5761228382237e597c520948168d92f247fa35a26cda36de36feb",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 383,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ETCUSDT",
+      "source_hash": "df27981ad36d1c4ad97f1eb94df1560ae6e2a0eaf2ba33c83ce562db4e00ae9e",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ETHFIUSDT",
+      "source_hash": "a0943521c70726ef4c61b55bd6ea640026273fbb8db675627dcd0ccb2f6b864a",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2462,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ETHUSDT",
+      "source_hash": "5f252c5f25f9b580d0267f46cf58caea9115e7aea989f4b55058451c436d9f99",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "FARTCOINUSDT",
+      "source_hash": "235b92dbe765d71b3aab23966b1af65248c5a3d1e55778efddecb9199d537b4d",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1631,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "FILUSDT",
+      "source_hash": "aafb2001d311920367657b6b664198f287ca5573a6a48aed1d5039cafa94aacb",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "GALAUSDT",
+      "source_hash": "1ce7ab511afdfc30258def77743933e2766ee0ced9693fe7446dd854188d17fe",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "GRASSUSDT",
+      "source_hash": "92c15fd2f446074b0c42254bf911e5ce5a0356b66b44c702bbd008e8bac85bc9",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1823,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "GUNUSDT",
+      "source_hash": "c345bf0be66901e86d9b3edccdd07677353efa9c63d01deb0e381774f33e86c5",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1102,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "HBARUSDT",
+      "source_hash": "b6226a76d6aa940013b4640a91818a2c79c7253c887a359351c2030c4ac0102e",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "HEIUSDT",
+      "source_hash": "4ec1c2cc63f12ca0772090e880546287cab24684ed51a627ad20066ae76c4728",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1373,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "HOMEUSDT",
+      "source_hash": "dc9358e9ed7cee5b48da9590fca7fe24184bd139340991b63794e6f0af47af4c",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 677,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "HYPEUSDT",
+      "source_hash": "da81edb1e05b247d00730daaa0f4d4bd0df65a54b7fa3c5513006a695913c5f3",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 900,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ICPUSDT",
+      "source_hash": "8b4cd459d9f13571d43ec28cd2c472a18f3b4ad426b45f287ff6e01db08cbf77",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "INJUSDT",
+      "source_hash": "97b08f69330d7226593f70108022e051ceae92946e1bd377dd5545e4ff9fa2e0",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "JTOUSDT",
+      "source_hash": "508cc728d2a1efb880445e1b1f200971a5f19dbeaa21c6572e1642f498202f9a",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2766,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "KAITOUSDT",
+      "source_hash": "320729076f41c92302e5338aa18890b6b7552df9e7a5c6aa2630ffccf2c6ab7c",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 4707,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "LAUSDT",
+      "source_hash": "e256fea34eae3bbe6e31747044576e5eb7bcca5a9c5a7f35d9cbaef3334c72d2",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2823,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "LDOUSDT",
+      "source_hash": "4fb0e24880fd4f89be6ce138a576aa79e56aa2aa4774f06465d13cd507053bf1",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "MEUSDT",
+      "source_hash": "23e2e8cab9f8176e08e61ea645bc410d4f5dd88ace4f1f7a69b3095e9fed16fc",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1786,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "MNTUSDT",
+      "source_hash": "094c65fe8ae7c8bfc52812593e9835352af78b0dd6fd8b5146def800e457a25b",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2191,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "MUBARAKUSDT",
+      "source_hash": "cf1adfa4a838d7e07c64671e728ce1c6f76a6d65386f001c60de6726d074cf9c",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1188,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "NILUSDT",
+      "source_hash": "f2958eb49ad0826b15c3dfc46004ccdd029355504409a328a644c46ba5f84732",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1168,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ONDOUSDT",
+      "source_hash": "ff9806d008b2da96addbcccf69c805692edc48041ffde394dea76bdd6371213a",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2627,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "OPUSDT",
+      "source_hash": "2e962a71e503109d01fc076dcb61f660dfee2083ca82ce504d0f41caee26e2fa",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ORDIUSDT",
+      "source_hash": "dac34ad3bfc821f583a36709f13609f09422427a51229fa57aa8a66327fe3855",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3366,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "PAXGUSDT",
+      "source_hash": "4381d5ee5c27114c257de45b70de23eb57906af9892bf8aa8092474894628678",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3530,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "PENGUUSDT",
+      "source_hash": "011df36d8243b491532b800235d56ebf3465f2c7c47f8311865d3116496ffc01",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1726,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "PEOPLEUSDT",
+      "source_hash": "a83e63f1e1b77ba21162feafe6ad4969d02c4f0ba1e534857892f896f05d158e",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "POLUSDT",
+      "source_hash": "bd9c444247a26fcb42e74dc70b30e4d817ff49cf868699b02adabe18e4c52b66",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1949,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "PUMPFUNUSDT",
+      "source_hash": "674435aee9887bf5c3f949d3a91bf6ede48225071b2200f8e82ab21e9cb0bcf2",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 498,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "RENDERUSDT",
+      "source_hash": "042c622bb3414adbd641c6ea7896b85acada000c5998c06b31e69c44ab4354a6",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2072,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "SEIUSDT",
+      "source_hash": "a4b17ce96336ae2a5c1e32ceed9cd83211779c699ad86aa517066dcb16dd30b7",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2332,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "SHIB1000USDT",
+      "source_hash": "b918584c7f8040a2ecd497b74e58f94368564321e81690031588a19852802f3d",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "SIRENUSDT",
+      "source_hash": "cc175b7febbce9897d183367d1eb2571eb5bc3d7622ca436138bb03b59ef285e",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1159,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "SOLUSDT",
+      "source_hash": "a18f633da3c7fa7921e4c517a361a1e929a8678771367e4ac3c2805608996ed7",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "SQDUSDT",
+      "source_hash": "7c5fec584c1a042de16dbbfb1d15b904af1cb1167af1fbc9a1ec6a9779f51937",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 671,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "STRKUSDT",
+      "source_hash": "3e9355a2f3d3bc85801da683be44f3641bf2e69c168e4a5043ef5d0b24fae21e",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2543,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "SUIUSDT",
+      "source_hash": "94ae6d1413a77068eda6c62b0a8d5a07647b206815f707f667e9f382c6abc421",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2646,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "TAOUSDT",
+      "source_hash": "3274d9a1550c0cd20084d1c28fd27cf05eec4e80442ad9c1153fb1ea0ad44488",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2606,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "THEUSDT",
+      "source_hash": "2814aec0f50c0d9416f729f9473ef35c32a44dfd7580a6f6bd80fb9ef18bef6c",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1700,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "TIAUSDT",
+      "source_hash": "dbed5ac39e55b9201db0e9cea35b14fe93c4762a637a2b3dd5ba318520ec91e5",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2878,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "TRUMPUSDT",
+      "source_hash": "7202d9983b3acb128f94100a988124adf9eae8fd3311d4beb3d47e7a24c7bca8",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1535,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "TRXUSDT",
+      "source_hash": "47c42afe2093f1aa0cb0066f46b1bd1db18fdff342cb18236592ef1aaef51df3",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "TUTUSDT",
+      "source_hash": "e57e5bafb4f2f3107661df65689bf570e07fc69a453d95492b6267ae403e205d",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1175,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "UBUSDT",
+      "source_hash": "0c1cbf7e5678d30441c02a5432ee31e4571f34b28e4b3dcd886be4d124c2fd7a",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 113,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "UNIUSDT",
+      "source_hash": "c45f4445a1f74aa7c88e5c1a48471221caa19065dac31b681a42533b013c9793",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "USDCUSDT",
+      "source_hash": "1d42c5985d7288c3331a1ddc06a409723da9723cdf671364ff4054e468115822",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3131,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "USELESSUSDT",
+      "source_hash": "7243e58576110b140e1880d86b396e3f5e1c6af6682729b2aa57fd61d19b0481",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 497,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "VELODROMEUSDT",
+      "source_hash": "386c8c474dcd567524f323fff76fa21b0ebb852e7f3fb3523c77e786f36972c5",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1652,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "VIRTUALUSDT",
+      "source_hash": "19b589edbaf4779cf7ba6766ee325e8fbe1a7b228f53a6604a3d3f7a1c26fb4f",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1778,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "VVVUSDT",
+      "source_hash": "5b1bafb5bbe28aae7f760b3665da2835585475d5bbfa14c205e0a730bbc791be",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1476,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "WIFUSDT",
+      "source_hash": "10289495455c340a0d0e17c2617df7028c315d3b0174c578167e4351d6129559",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2663,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "WLDUSDT",
+      "source_hash": "6180438d4e8265746e2270548de3ecc9b6d76f3a6c35bb2aa6150185dc9d2202",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2400,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "WLFIUSDT",
+      "source_hash": "e4a58a99208de001745e61eed859f538e426db2bec70e1f5b5f1939808426bc1",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 233,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "XAUTUSDT",
+      "source_hash": "d90feafa5f8ae8c588d25104ba8151866ad51ecbca35631455ee8fd5b5cc610e",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 1085,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "XLMUSDT",
+      "source_hash": "863672e8d0640e0373bd45c437a8edb32c7e2abb5bfa1950e38aad9f961eca7d",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "XMRUSDT",
+      "source_hash": "798e47e3ee79b085d5569bd0d0232e07dc6ff083a39df08cdd13cede83da30b1",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "XPLUSDT",
+      "source_hash": "c6dc59e493975d53abd241e25404e765fe80418da02400259e5f68f1d9d86e93",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 239,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "XRPUSDT",
+      "source_hash": "b2e2c299f2d9c02983f2442cf282ac2ca530367b105f2d6f0fc70166a215ca06",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ZECUSDT",
+      "source_hash": "ee009d025b8d16d978fddd19b26a3c2f4ffcd653aece5830059ffef6e1455500",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 3012,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    },
+    {
+      "status": "BLOCKED_DATA",
+      "reason": "funding_calendar_and_publication_unbound",
+      "symbol": "ZROUSDT",
+      "source_hash": "2c5f0d678b23478e7b0eb7886ee9cc335aa23cae45151b7d5128f5a99fbd1c70",
+      "start_ms": 1672531200000,
+      "end_ms": 1759276800000,
+      "archive_event_count": 2180,
+      "calendar_status": "UNKNOWN",
+      "publication_status": "UNKNOWN",
+      "rate_sum": null,
+      "orders_allowed": false
+    }
+  ],
+  "funding_absent_symbols": [
+    "HFTUSDT"
+  ],
+  "btc_h4_parity": {
+    "status": "PASS",
+    "bars": 6023,
+    "rows_sha256": "0667d86f2b50e66a6fbe9710bb9bc2772a5b5690b469fbf5bd37983de0eae2ac"
+  },
+  "table_hash_publication_raw_sha256": "9ec5166e1c2f66f33e1528f579c7d79a00288f0fb093c150b64704e3c833e94f",
+  "future_terminal_projection_calls": 0,
+  "filter_runs": 0,
+  "judge_runs": 0,
+  "holdout_evaluation_runs": 0,
+  "orders_allowed": false,
+  "funding_integration_status": "BLOCKED_DATA_CALENDAR_PUBLICATION_UNBOUND"
+}

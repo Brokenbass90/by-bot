@@ -295,3 +295,9 @@ are published before filter; source snapshot/regime lock match. Early tables
 miss ETS2/SF3 train stats; cold-start/MTM/E-carry/test-window contracts must be
 frozen by Claude, never guessed/defaulted/dropped. Single filter remains unspent
 until complete. Preserve old sources/receipts, original NET session and LIVE.
+
+October12 real adapter continuation: read BRAIN_V2_REAL_ADAPTERS_2026_10_12.md.
+Real causal entry/context adapters and215-file extended source integrity pass;
+single developing filter remains BLOCKED_DATA/unspent pending frozen Claude A5
+E/carry/MTM/test-boundary/train-zero sigma/funding calendar-publication contracts.
+No funding0/assumed8h, new math, B3 retry or live/prospective authority is implied.

@@ -1,5 +1,26 @@
 # Current roadmap — owner scope October 8, 2026
 
+October12 real-source continuation: **ENTRY_CONTEXT_ADAPTERS_PASS /
+FILTER_BLOCKED_DATA_NOT_RUN**. Read
+[BRAIN_V2_REAL_ADAPTERS_2026_10_12.md](BRAIN_V2_REAL_ADAPTERS_2026_10_12.md) and
+reports/evidence/brain_v2_develop_20261012/terminal_readiness.json.
+Four exact train hashes already remote697a96d before comparison. New manifest
+extends original119 source files with96 captured public funding archives:
+215/215 integrityPASS, original5 streams70,561 causal entry projections/97symbols,
+97H1 valid,6,023BTC H4 exact frozen parity. Funding files are local byte-captured
+research archives, not Git blobs/current fees; HFTUSDT absent. Calendar/publication
+UNKNOWN, no assumed8h/empty=zero. Entry excludes R/actual hold; terminal separate,
+exact release only, no real outcome projection. 254local targetedPASS incl29new;
+root review2RED→GREEN. Previous source-check code pin preserved, final corrected
+pins in terminal readiness; independent reviewer quota not retried/no signoff.
+Filter0/unspent: frozen E/fold carry, MTM partial path, test-boundary, train-zero
+ETS2/SF3 sigma and source-bound funding contract requested in Claude A5 via owner.
+Do not invent defaults/realized-DD/drop legs or rerun generator/B3 to rescue.
+VPS Bounce closedBLOCKED_DATA; Codex BOUNCE1_8 cancelled, Claude Mac A1 separate.
+No VPS/broker/Claude working-file operations/new families; original NET opener/
+guard and LIVE HALT/caps untouched. Actual Alpaca PAPER receipt remains next
+independent money check; no fresh runtime assertion in this Brain cycle.
+
 October12 owner scope update: VPS BOUNCE1 is terminal **BLOCKED_DATA**;
 no further source excavation/judge. Codex BOUNCE1_8 cancelled before deployment;
 Claude Mac bounce_ten.py / PREREG A1@6e59c2c is the prospective research lane,
