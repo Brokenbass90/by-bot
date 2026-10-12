@@ -1,0 +1,32 @@
+{
+  "ASR1": {
+    "all_aggregate_fields_agree": true,
+    "a1_unknown": 108,
+    "a2_unknown": 108
+  },
+  "ATT1": {
+    "all_aggregate_fields_agree": true,
+    "a1_unknown": 581,
+    "a2_unknown": 580
+  },
+  "BOUNCE1": {
+    "all_aggregate_fields_agree": true,
+    "a1_unknown": 6,
+    "a2_unknown": 6
+  },
+  "ETS2": {
+    "all_aggregate_fields_agree": true,
+    "a1_unknown": 8724,
+    "a2_unknown": 8723
+  },
+  "SBR1": {
+    "all_aggregate_fields_agree": true,
+    "a1_unknown": 309,
+    "a2_unknown": 309
+  },
+  "SF3": {
+    "all_aggregate_fields_agree": true,
+    "a1_unknown": 5604,
+    "a2_unknown": 5604
+  }
+}

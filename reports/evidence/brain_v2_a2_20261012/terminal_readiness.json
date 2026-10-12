@@ -1,0 +1,78 @@
+{
+  "schema": "BRAIN_V2_A1_A2_DELIVERY_RECEIPT",
+  "observed_utc": "2026-10-12T04:58:18.708703+00:00",
+  "status": "BRAIN_V2_ENGINEERING_READY",
+  "scope": "ORDERS_OFF_LOCAL_ALLOCATOR_AND_ACCOUNTING_INTERFACES_NOT_FULL_SIMULATOR",
+  "research_commit": "47069002b5d189572b4a839e38c514e5d485f435",
+  "source_snapshot_files_verified": 11,
+  "local_targeted_tests": {
+    "passed": 182,
+    "failed": 0,
+    "full_suite_run": false,
+    "vps_tests_run": false
+  },
+  "independent_financial_review": "NOT_COMPLETED_PRIOR_QUOTA_FAILURE_NOT_RETRIED",
+  "root_final_review": "PASS_WITH_REPORTED_INTEGRATION_LIMITS",
+  "raw_outcomes_read": false,
+  "generator_executed": false,
+  "judge_run": false,
+  "developing_filter": "NOT_RUN",
+  "prospective_epoch": "NOT_STARTED",
+  "worker_installed": false,
+  "broker_calls": 0,
+  "service_mutations": 0,
+  "orders_allowed": false,
+  "money_authority": false,
+  "alpaca": "UNTOUCHED_ORIGINAL_NET_PAPER_OCT12_1330_1335UTC",
+  "BOUNCE1": "DATED_BLOCKED_DATA_CLOSED_COUNT_UNKNOWN",
+  "BOUNCE1_8": "DATED_BLOCKED_IMPLEMENTATION_NOT_DEPLOYED",
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "integration_blockers": [
+    "four_frozen_per_fold_tables_and_developing_filter",
+    "complete_causal_opportunity_terminal_mark_source_adapter",
+    "same_hour_entry_exit_and_delayed_finality_causal_contract",
+    "table_publication_time_and_source_history_seed",
+    "reviewed_long_horizon_retention_before_shadow_start",
+    "frozen_mixed_timeframe_batch_virtual_fill_time_price_contract_pending_claude"
+  ],
+  "files": [
+    {
+      "path": "research_lab/brain_v2_a1.py",
+      "sha256": "db02f033a694e88d628ee3f9bf37e162813178d2c59a0e2baa99017dbd416cc7"
+    },
+    {
+      "path": "research_lab/os2_shadow_journal.py",
+      "sha256": "31cdf364dd39849c92d65c4ba4c166a092a93661d4af8b311def1f988efedfd5"
+    },
+    {
+      "path": "tests/test_brain_v2_a1_context.py",
+      "sha256": "fe39178f44acecb1c61bb04fde0d77da2b0e51470d4a59d8bccf1ae299da4b57"
+    },
+    {
+      "path": "tests/test_brain_v2_a1_allocator.py",
+      "sha256": "7eb81b99eaa5fa3d763c7c9d00dc6fa58e1f02a27c11d0bf04ccdb6d2f9658a2"
+    },
+    {
+      "path": "tests/test_brain_v2_a1_journal.py",
+      "sha256": "7c8ac350724436634895828790b5af8d5cdf67873fb2f578a51181ad7e97d0f1"
+    },
+    {
+      "path": "tests/test_brain_v2_a1_review_regressions.py",
+      "sha256": "afd53e3a7bdd24020f2fd19c8b0e49f18492a621676dd345121ccc2068150ad5"
+    },
+    {
+      "path": "reports/BRAIN_V2_A1_A2_ORDERS_OFF_DELIVERY_2026_10_12.md",
+      "sha256": "44fb32927b7f3130086bd88dbed24e0d3ed22041218b620bfef2df1b8aed6b15"
+    },
+    {
+      "path": "reports/BRAIN_V2_A1_A2_RUNBOOK.md",
+      "sha256": "6a533a333a9063f01cde4482b2462bd41b59efa0e0955d0528dc842116c09b02"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-12-brain-v2-a1.md",
+      "sha256": "941ae62119f9e1bef0b8dfb45d290a575796e40eb53df1db60f1aa5a4101e267"
+    }
+  ],
+  "synthetic_replay_sha256": "467bda319a1a13a5fdbd5c500b039cb074c49bf4ccf8ed1bed4efe12de974512",
+  "research_timing_contract": "BLOCKED_RESEARCH_TIMING_CONTRACT"
+}

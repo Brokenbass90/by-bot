@@ -1,0 +1,48 @@
+{
+  "schema": "BRAIN_V2_A2_SOURCE_MANIFEST",
+  "research_commit": "47069002b5d189572b4a839e38c514e5d485f435",
+  "origin_verified_commit": "47069002b5d189572b4a839e38c514e5d485f435",
+  "recovery_base": "eabfac6edc616ec4c39c49c12dac3e62036aa464",
+  "files": [
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_ADDENDUM_A1.md",
+      "snapshot_path": "reports/evidence/brain_v2_a2_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A1.md",
+      "sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+      "bytes": 4472
+    },
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_ADDENDUM_A2.md",
+      "snapshot_path": "reports/evidence/brain_v2_a2_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A2.md",
+      "sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+      "bytes": 2247
+    },
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "snapshot_path": "reports/evidence/brain_v2_a2_20261012/frozen/research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+      "bytes": 8075
+    },
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "snapshot_path": "reports/evidence/brain_v2_a2_20261012/frozen/research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+      "bytes": 716
+    },
+    {
+      "source_path": "research_lab/brain_v2/MU_SIGMA_V1.json",
+      "snapshot_path": "reports/evidence/brain_v2_a2_20261012/frozen/research_lab/brain_v2/MU_SIGMA_V1.json",
+      "sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020",
+      "bytes": 7285
+    },
+    {
+      "source_path": "research_lab/brain_v2/mu_sigma.py",
+      "snapshot_path": "reports/evidence/brain_v2_a2_20261012/frozen/research_lab/brain_v2/mu_sigma.py",
+      "sha256": "4371d573ab0b14c9a4c65ba3c244100642ade8bdaf249ad10c33e8f3e658988c",
+      "bytes": 4542
+    }
+  ],
+  "supersedes_table_sha256": "55c329487b995a8339eb54b1fcf4ffcf309b099e4d289460f430a46d52882092",
+  "orders_allowed": false,
+  "raw_outcomes_read": false,
+  "generator_executed": false
+}

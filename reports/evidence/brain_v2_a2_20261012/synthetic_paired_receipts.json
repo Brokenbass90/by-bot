@@ -1,0 +1,737 @@
+{
+  "synthetic": true,
+  "status": "SYNTHETIC_PAIRED_REPLAY_PASS",
+  "orders_allowed": false,
+  "money_authority": false,
+  "raw_outcomes_read": false,
+  "restart_receipt_identical": true,
+  "receipts": [
+    {
+      "closed": {},
+      "decisions": {},
+      "input_sha256": "e96f2e1ea7ec15ed846864d32cfddcb2ae30fb275d6ecf1abdaf0da6143042ad",
+      "money_authority": false,
+      "orders_allowed": false,
+      "pins": {
+        "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+        "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+        "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+        "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+        "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+      },
+      "previous_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "request": {
+        "capital_known": true,
+        "epoch_start_ms": 1791763200000,
+        "initial_equity_usd": 1000,
+        "kind": "INIT",
+        "positions_known": true,
+        "protection_known": true,
+        "request_id": "synthetic_init",
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "request_id": "synthetic_init",
+      "schema": "BRAIN_V2_A1_RECEIPT",
+      "scope": "RESEARCH_HOUR_BATCH_SUPPLIED_SOURCES_NOT_BROKER_AUTHORITY",
+      "sequence": 1,
+      "sha256": "246856c5361b786175c1cd487648fef460a4b220e760d06959a13480ad20af22",
+      "state_after": {
+        "arms": {
+          "BRAIN_DET": {
+            "closed": {},
+            "initial_equity_usd": "1000",
+            "positions": {},
+            "realized_equity_usd": "1000"
+          },
+          "FOUNDATION": {
+            "closed": {},
+            "initial_equity_usd": "1000",
+            "positions": {},
+            "realized_equity_usd": "1000"
+          },
+          "RAW_SAFE": {
+            "closed": {},
+            "initial_equity_usd": "1000",
+            "positions": {},
+            "realized_equity_usd": "1000"
+          }
+        },
+        "epoch_start_ms": 1791763200000,
+        "last_hour_ms": null,
+        "opportunities": {},
+        "orders_allowed": false,
+        "pins": {
+          "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+          "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+          "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+          "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+          "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+        },
+        "schema": "BRAIN_V2_A1_STATE",
+        "state_sha256": "1ac7947d7c9472848b8eb3b83b7b23ac5fb939e8d62226a7d48ad38226f5aab3",
+        "terminals": {},
+        "version": "BRAIN_V2_A1_A2_ORDERS_OFF"
+      },
+      "status": "EPOCH_INITIALIZED_ORDERS_OFF",
+      "version": "BRAIN_V2_A1_A2_ORDERS_OFF"
+    },
+    {
+      "closed": {
+        "BRAIN_DET": {},
+        "FOUNDATION": {},
+        "RAW_SAFE": {}
+      },
+      "decisions": {
+        "BRAIN_DET": [
+          {
+            "accepted": true,
+            "arm": "BRAIN_DET",
+            "budget_usd": "60.00",
+            "context_sha256": "d3718e25a9d92d4a65f801f0364354fc7d61dc807197269e59a2273576c9cc59",
+            "context_status": "UNKNOWN_SLEEVE_FALLBACK",
+            "equity_at_batch_usd": "1000",
+            "mu_context": 0.023656827050997774,
+            "mu_s": 0.023656827050997774,
+            "multiplier": 1.0729003178737677,
+            "notional_usd": "268.22507946844192500",
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "reason": "accepted",
+            "risk_usd": "5.3645015893688385000",
+            "side": "long",
+            "sleeve": "BOUNCE1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "symbol": "BTCUSDT",
+            "t_available": 1791763200000,
+            "z": 0.018225079468441912
+          },
+          {
+            "accepted": true,
+            "arm": "BRAIN_DET",
+            "budget_usd": "60.00",
+            "context_sha256": "e6df0db2bc85d2371cc11f004b1104900492e5514e05de89afd0f2cc03976d54",
+            "context_status": "UNKNOWN_SLEEVE_FALLBACK",
+            "equity_at_batch_usd": "1000",
+            "mu_context": -0.010127919584690554,
+            "mu_s": -0.010127919584690554,
+            "multiplier": 0.9162091447302343,
+            "notional_usd": "229.05228618255857500",
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "reason": "accepted",
+            "risk_usd": "4.5810457236511715000",
+            "side": "short",
+            "sleeve": "ATT1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "symbol": "ETHUSDT",
+            "t_available": 1791763200000,
+            "z": -0.02094771381744142
+          }
+        ],
+        "FOUNDATION": [
+          {
+            "accepted": true,
+            "arm": "FOUNDATION",
+            "budget_usd": "60.00",
+            "context_sha256": "d3718e25a9d92d4a65f801f0364354fc7d61dc807197269e59a2273576c9cc59",
+            "context_status": "UNKNOWN_SLEEVE_FALLBACK",
+            "equity_at_batch_usd": "1000",
+            "mu_context": 0.023656827050997774,
+            "mu_s": 0.023656827050997774,
+            "multiplier": 1,
+            "notional_usd": "250.0",
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "reason": "accepted",
+            "risk_usd": "5.000",
+            "side": "long",
+            "sleeve": "BOUNCE1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "symbol": "BTCUSDT",
+            "t_available": 1791763200000,
+            "z": 0.018225079468441912
+          },
+          {
+            "accepted": true,
+            "arm": "FOUNDATION",
+            "budget_usd": "60.00",
+            "context_sha256": "e6df0db2bc85d2371cc11f004b1104900492e5514e05de89afd0f2cc03976d54",
+            "context_status": "UNKNOWN_SLEEVE_FALLBACK",
+            "equity_at_batch_usd": "1000",
+            "mu_context": -0.010127919584690554,
+            "mu_s": -0.010127919584690554,
+            "multiplier": 1,
+            "notional_usd": "250.0",
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "reason": "accepted",
+            "risk_usd": "5.000",
+            "side": "short",
+            "sleeve": "ATT1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "symbol": "ETHUSDT",
+            "t_available": 1791763200000,
+            "z": -0.02094771381744142
+          }
+        ],
+        "RAW_SAFE": [
+          {
+            "accepted": true,
+            "arm": "RAW_SAFE",
+            "budget_usd": "60.00",
+            "context_sha256": "d3718e25a9d92d4a65f801f0364354fc7d61dc807197269e59a2273576c9cc59",
+            "context_status": "UNKNOWN_SLEEVE_FALLBACK",
+            "equity_at_batch_usd": "1000",
+            "mu_context": 0.023656827050997774,
+            "mu_s": 0.023656827050997774,
+            "multiplier": 1,
+            "notional_usd": "250.0",
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "reason": "accepted",
+            "risk_usd": "5.000",
+            "side": "long",
+            "sleeve": "BOUNCE1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "symbol": "BTCUSDT",
+            "t_available": 1791763200000,
+            "z": 0.018225079468441912
+          },
+          {
+            "accepted": true,
+            "arm": "RAW_SAFE",
+            "budget_usd": "60.00",
+            "context_sha256": "e6df0db2bc85d2371cc11f004b1104900492e5514e05de89afd0f2cc03976d54",
+            "context_status": "UNKNOWN_SLEEVE_FALLBACK",
+            "equity_at_batch_usd": "1000",
+            "mu_context": -0.010127919584690554,
+            "mu_s": -0.010127919584690554,
+            "multiplier": 1,
+            "notional_usd": "250.0",
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "reason": "accepted",
+            "risk_usd": "5.000",
+            "side": "short",
+            "sleeve": "ATT1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "symbol": "ETHUSDT",
+            "t_available": 1791763200000,
+            "z": -0.02094771381744142
+          }
+        ]
+      },
+      "input_sha256": "0428a7fa0e428accfdaf82805fbaccc490f384ef7b32ed1cd6629cc91abcf7ca",
+      "money_authority": false,
+      "orders_allowed": false,
+      "pins": {
+        "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+        "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+        "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+        "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+        "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+      },
+      "previous_sha256": "246856c5361b786175c1cd487648fef460a4b220e760d06959a13480ad20af22",
+      "request": {
+        "contexts": {
+          "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+            "hour_ms": 1791763200000,
+            "known_at_ms": 1791763200000,
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "pins": {
+              "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+              "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+              "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+              "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+              "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+            },
+            "regime": {
+              "as_of_ms": 1791763200000,
+              "orders_allowed": false,
+              "reason": "source_absent",
+              "regime": "UNKNOWN"
+            },
+            "schema": "BRAIN_V2_A1_CONTEXT",
+            "sha256": "d3718e25a9d92d4a65f801f0364354fc7d61dc807197269e59a2273576c9cc59",
+            "vol": {
+              "hour_ms": 1791763200000,
+              "orders_allowed": false,
+              "reason": "source_absent",
+              "vol": "UNKNOWN"
+            }
+          },
+          "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+            "hour_ms": 1791763200000,
+            "known_at_ms": 1791763200000,
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "pins": {
+              "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+              "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+              "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+              "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+              "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+            },
+            "regime": {
+              "as_of_ms": 1791763200000,
+              "orders_allowed": false,
+              "reason": "source_absent",
+              "regime": "UNKNOWN"
+            },
+            "schema": "BRAIN_V2_A1_CONTEXT",
+            "sha256": "e6df0db2bc85d2371cc11f004b1104900492e5514e05de89afd0f2cc03976d54",
+            "vol": {
+              "hour_ms": 1791763200000,
+              "orders_allowed": false,
+              "reason": "source_absent",
+              "vol": "UNKNOWN"
+            }
+          }
+        },
+        "costs_known": true,
+        "coverage_end_ms": 1791766800000,
+        "hour_ms": 1791763200000,
+        "kind": "HOUR",
+        "opportunities": [
+          {
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "entry_rule": "next_open",
+            "max_hold_h": 48,
+            "side": "long",
+            "sleeve": "BOUNCE1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stop_distance_frac": 0.02,
+            "symbol": "BTCUSDT",
+            "t_available": 1791763200000,
+            "t_signal": 1791759600000
+          },
+          {
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "entry_rule": "next_open",
+            "max_hold_h": 48,
+            "side": "short",
+            "sleeve": "ATT1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stop_distance_frac": 0.02,
+            "symbol": "ETHUSDT",
+            "t_available": 1791763200000,
+            "t_signal": 1791759600000
+          }
+        ],
+        "positions_known": true,
+        "protection_known": true,
+        "request_id": "synthetic_hour1",
+        "sealed_at_ms": 1791766800000,
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "terminals": []
+      },
+      "request_id": "synthetic_hour1",
+      "schema": "BRAIN_V2_A1_RECEIPT",
+      "scope": "RESEARCH_HOUR_BATCH_SUPPLIED_SOURCES_NOT_BROKER_AUTHORITY",
+      "sequence": 2,
+      "sha256": "0fce7ae3127f2ebf179fe640ab7f6e79eb3d3ee37c2c2ae19d3462d15c7b95fa",
+      "state_after": {
+        "arms": {
+          "BRAIN_DET": {
+            "closed": {},
+            "initial_equity_usd": "1000",
+            "positions": {
+              "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+                "notional_usd": "268.22507946844192500",
+                "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+                "risk_usd": "5.3645015893688385000",
+                "side": "long",
+                "sleeve": "BOUNCE1",
+                "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "symbol": "BTCUSDT",
+                "t_available": 1791763200000
+              },
+              "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+                "notional_usd": "229.05228618255857500",
+                "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+                "risk_usd": "4.5810457236511715000",
+                "side": "short",
+                "sleeve": "ATT1",
+                "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "symbol": "ETHUSDT",
+                "t_available": 1791763200000
+              }
+            },
+            "realized_equity_usd": "1000"
+          },
+          "FOUNDATION": {
+            "closed": {},
+            "initial_equity_usd": "1000",
+            "positions": {
+              "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+                "notional_usd": "250.0",
+                "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+                "risk_usd": "5.000",
+                "side": "long",
+                "sleeve": "BOUNCE1",
+                "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "symbol": "BTCUSDT",
+                "t_available": 1791763200000
+              },
+              "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+                "notional_usd": "250.0",
+                "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+                "risk_usd": "5.000",
+                "side": "short",
+                "sleeve": "ATT1",
+                "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "symbol": "ETHUSDT",
+                "t_available": 1791763200000
+              }
+            },
+            "realized_equity_usd": "1000"
+          },
+          "RAW_SAFE": {
+            "closed": {},
+            "initial_equity_usd": "1000",
+            "positions": {
+              "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+                "notional_usd": "250.0",
+                "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+                "risk_usd": "5.000",
+                "side": "long",
+                "sleeve": "BOUNCE1",
+                "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "symbol": "BTCUSDT",
+                "t_available": 1791763200000
+              },
+              "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+                "notional_usd": "250.0",
+                "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+                "risk_usd": "5.000",
+                "side": "short",
+                "sleeve": "ATT1",
+                "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "symbol": "ETHUSDT",
+                "t_available": 1791763200000
+              }
+            },
+            "realized_equity_usd": "1000"
+          }
+        },
+        "epoch_start_ms": 1791763200000,
+        "last_hour_ms": 1791763200000,
+        "opportunities": {
+          "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "entry_rule": "next_open",
+            "max_hold_h": 48,
+            "side": "long",
+            "sleeve": "BOUNCE1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stop_distance_frac": 0.02,
+            "symbol": "BTCUSDT",
+            "t_available": 1791763200000,
+            "t_signal": 1791759600000
+          },
+          "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "entry_rule": "next_open",
+            "max_hold_h": 48,
+            "side": "short",
+            "sleeve": "ATT1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stop_distance_frac": 0.02,
+            "symbol": "ETHUSDT",
+            "t_available": 1791763200000,
+            "t_signal": 1791759600000
+          }
+        },
+        "orders_allowed": false,
+        "pins": {
+          "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+          "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+          "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+          "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+          "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+        },
+        "schema": "BRAIN_V2_A1_STATE",
+        "state_sha256": "b6674f4106052216813bd3ebf034812757c1d0f382717aa95812215fcacdec2f",
+        "terminals": {},
+        "version": "BRAIN_V2_A1_A2_ORDERS_OFF"
+      },
+      "status": "HOUR_RECORDED_ORDERS_OFF",
+      "version": "BRAIN_V2_A1_A2_ORDERS_OFF"
+    },
+    {
+      "closed": {
+        "BRAIN_DET": {
+          "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+            "actual_exit_ms": 1791766800100,
+            "arm": "BRAIN_DET",
+            "available_ms": 1791766800101,
+            "event_sha256": "3e8f0a0ada24d2214161b3b24c629d5cde63272172137a092c7930b16007f0d7",
+            "fees_usd": "0.32508879631575161310000",
+            "funding_usd": "0.26822507946844192500",
+            "gross_usd": "5.3645015893688385000",
+            "net_usd": "4.66282478147939442420000",
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "slippage_usd": "0.10836293210525053770000"
+          },
+          "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+            "actual_exit_ms": 1791766800100,
+            "arm": "BRAIN_DET",
+            "available_ms": 1791766800101,
+            "event_sha256": "62845d4454c9e9a550736807fd22f2afb097b040d76f04c097e2896bc7d6ae83",
+            "fees_usd": "0.27761137085326099290000",
+            "funding_usd": "0.22905228618255857500",
+            "gross_usd": "4.5810457236511715000",
+            "net_usd": "3.98184494299759826780000",
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "slippage_usd": "0.09253712361775366430000"
+          }
+        },
+        "FOUNDATION": {
+          "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+            "actual_exit_ms": 1791766800100,
+            "arm": "FOUNDATION",
+            "available_ms": 1791766800101,
+            "event_sha256": "3e8f0a0ada24d2214161b3b24c629d5cde63272172137a092c7930b16007f0d7",
+            "fees_usd": "0.3030000",
+            "funding_usd": "0.2500",
+            "gross_usd": "5.000",
+            "net_usd": "4.3460000",
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "slippage_usd": "0.1010000"
+          },
+          "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+            "actual_exit_ms": 1791766800100,
+            "arm": "FOUNDATION",
+            "available_ms": 1791766800101,
+            "event_sha256": "62845d4454c9e9a550736807fd22f2afb097b040d76f04c097e2896bc7d6ae83",
+            "fees_usd": "0.3030000",
+            "funding_usd": "0.2500",
+            "gross_usd": "5.000",
+            "net_usd": "4.3460000",
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "slippage_usd": "0.1010000"
+          }
+        },
+        "RAW_SAFE": {
+          "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+            "actual_exit_ms": 1791766800100,
+            "arm": "RAW_SAFE",
+            "available_ms": 1791766800101,
+            "event_sha256": "3e8f0a0ada24d2214161b3b24c629d5cde63272172137a092c7930b16007f0d7",
+            "fees_usd": "0.3030000",
+            "funding_usd": "0.2500",
+            "gross_usd": "5.000",
+            "net_usd": "4.3460000",
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "slippage_usd": "0.1010000"
+          },
+          "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+            "actual_exit_ms": 1791766800100,
+            "arm": "RAW_SAFE",
+            "available_ms": 1791766800101,
+            "event_sha256": "62845d4454c9e9a550736807fd22f2afb097b040d76f04c097e2896bc7d6ae83",
+            "fees_usd": "0.3030000",
+            "funding_usd": "0.2500",
+            "gross_usd": "5.000",
+            "net_usd": "4.3460000",
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "slippage_usd": "0.1010000"
+          }
+        }
+      },
+      "decisions": {
+        "BRAIN_DET": [],
+        "FOUNDATION": [],
+        "RAW_SAFE": []
+      },
+      "input_sha256": "36543ca22c6de6fade04943da2554c71c1d9e678b563b0c193576bdf92d0857a",
+      "money_authority": false,
+      "orders_allowed": false,
+      "pins": {
+        "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+        "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+        "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+        "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+        "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+      },
+      "previous_sha256": "0fce7ae3127f2ebf179fe640ab7f6e79eb3d3ee37c2c2ae19d3462d15c7b95fa",
+      "request": {
+        "contexts": {},
+        "costs_known": true,
+        "coverage_end_ms": 1791770400000,
+        "hour_ms": 1791766800000,
+        "kind": "HOUR",
+        "opportunities": [],
+        "positions_known": true,
+        "protection_known": true,
+        "request_id": "synthetic_hour2",
+        "sealed_at_ms": 1791770400000,
+        "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "terminals": [
+          {
+            "actual_exit_ms": 1791766800100,
+            "available_ms": 1791766800101,
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "exit_notional_ratio": 1.02,
+            "finality": "FINAL",
+            "funding_cost_frac": 0.001,
+            "gross_return_frac": 0.02,
+            "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "actual_exit_ms": 1791766800100,
+            "available_ms": 1791766800101,
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "exit_notional_ratio": 1.02,
+            "finality": "FINAL",
+            "funding_cost_frac": 0.001,
+            "gross_return_frac": 0.02,
+            "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "request_id": "synthetic_hour2",
+      "schema": "BRAIN_V2_A1_RECEIPT",
+      "scope": "RESEARCH_HOUR_BATCH_SUPPLIED_SOURCES_NOT_BROKER_AUTHORITY",
+      "sequence": 3,
+      "sha256": "a146dde73ae9cb57734e14c2430bfbc5ce180bd35939bf5f870cb1d2e5071b79",
+      "state_after": {
+        "arms": {
+          "BRAIN_DET": {
+            "closed": {
+              "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+                "actual_exit_ms": 1791766800100,
+                "arm": "BRAIN_DET",
+                "available_ms": 1791766800101,
+                "event_sha256": "3e8f0a0ada24d2214161b3b24c629d5cde63272172137a092c7930b16007f0d7",
+                "fees_usd": "0.32508879631575161310000",
+                "funding_usd": "0.26822507946844192500",
+                "gross_usd": "5.3645015893688385000",
+                "net_usd": "4.66282478147939442420000",
+                "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+                "slippage_usd": "0.10836293210525053770000"
+              },
+              "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+                "actual_exit_ms": 1791766800100,
+                "arm": "BRAIN_DET",
+                "available_ms": 1791766800101,
+                "event_sha256": "62845d4454c9e9a550736807fd22f2afb097b040d76f04c097e2896bc7d6ae83",
+                "fees_usd": "0.27761137085326099290000",
+                "funding_usd": "0.22905228618255857500",
+                "gross_usd": "4.5810457236511715000",
+                "net_usd": "3.98184494299759826780000",
+                "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+                "slippage_usd": "0.09253712361775366430000"
+              }
+            },
+            "initial_equity_usd": "1000",
+            "positions": {},
+            "realized_equity_usd": "1008.64466972447699269200000"
+          },
+          "FOUNDATION": {
+            "closed": {
+              "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+                "actual_exit_ms": 1791766800100,
+                "arm": "FOUNDATION",
+                "available_ms": 1791766800101,
+                "event_sha256": "3e8f0a0ada24d2214161b3b24c629d5cde63272172137a092c7930b16007f0d7",
+                "fees_usd": "0.3030000",
+                "funding_usd": "0.2500",
+                "gross_usd": "5.000",
+                "net_usd": "4.3460000",
+                "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+                "slippage_usd": "0.1010000"
+              },
+              "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+                "actual_exit_ms": 1791766800100,
+                "arm": "FOUNDATION",
+                "available_ms": 1791766800101,
+                "event_sha256": "62845d4454c9e9a550736807fd22f2afb097b040d76f04c097e2896bc7d6ae83",
+                "fees_usd": "0.3030000",
+                "funding_usd": "0.2500",
+                "gross_usd": "5.000",
+                "net_usd": "4.3460000",
+                "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+                "slippage_usd": "0.1010000"
+              }
+            },
+            "initial_equity_usd": "1000",
+            "positions": {},
+            "realized_equity_usd": "1008.6920000"
+          },
+          "RAW_SAFE": {
+            "closed": {
+              "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+                "actual_exit_ms": 1791766800100,
+                "arm": "RAW_SAFE",
+                "available_ms": 1791766800101,
+                "event_sha256": "3e8f0a0ada24d2214161b3b24c629d5cde63272172137a092c7930b16007f0d7",
+                "fees_usd": "0.3030000",
+                "funding_usd": "0.2500",
+                "gross_usd": "5.000",
+                "net_usd": "4.3460000",
+                "opportunity_id": "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb",
+                "slippage_usd": "0.1010000"
+              },
+              "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+                "actual_exit_ms": 1791766800100,
+                "arm": "RAW_SAFE",
+                "available_ms": 1791766800101,
+                "event_sha256": "62845d4454c9e9a550736807fd22f2afb097b040d76f04c097e2896bc7d6ae83",
+                "fees_usd": "0.3030000",
+                "funding_usd": "0.2500",
+                "gross_usd": "5.000",
+                "net_usd": "4.3460000",
+                "opportunity_id": "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f",
+                "slippage_usd": "0.1010000"
+              }
+            },
+            "initial_equity_usd": "1000",
+            "positions": {},
+            "realized_equity_usd": "1008.6920000"
+          }
+        },
+        "epoch_start_ms": 1791763200000,
+        "last_hour_ms": 1791766800000,
+        "opportunities": {
+          "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": {
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "entry_rule": "next_open",
+            "max_hold_h": 48,
+            "side": "long",
+            "sleeve": "BOUNCE1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stop_distance_frac": 0.02,
+            "symbol": "BTCUSDT",
+            "t_available": 1791763200000,
+            "t_signal": 1791759600000
+          },
+          "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": {
+            "cost_model_id": "BRAIN_V2_V1_6BP_2BP_ACTUAL_FUNDING",
+            "entry_rule": "next_open",
+            "max_hold_h": 48,
+            "side": "short",
+            "sleeve": "ATT1",
+            "source_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stop_distance_frac": 0.02,
+            "symbol": "ETHUSDT",
+            "t_available": 1791763200000,
+            "t_signal": 1791759600000
+          }
+        },
+        "orders_allowed": false,
+        "pins": {
+          "addendum_a1_sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+          "addendum_a2_sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10",
+          "params_sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+          "spec_sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+          "table_sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+        },
+        "schema": "BRAIN_V2_A1_STATE",
+        "state_sha256": "7760bbfca2d7dc800cc9ed6db3749daa08748b68a172f1bd5cbb838f9b4d9d56",
+        "terminals": {
+          "a85f61622f0b2ade8875c6827b22565d297adf903c7a7faf68d616c04806e7bb": "3e8f0a0ada24d2214161b3b24c629d5cde63272172137a092c7930b16007f0d7",
+          "c67733c4d0c79636c8cf7f63942fedaa3f138382afdb6a18eba55b2b33e0444f": "62845d4454c9e9a550736807fd22f2afb097b040d76f04c097e2896bc7d6ae83"
+        },
+        "version": "BRAIN_V2_A1_A2_ORDERS_OFF"
+      },
+      "status": "HOUR_RECORDED_ORDERS_OFF",
+      "version": "BRAIN_V2_A1_A2_ORDERS_OFF"
+    }
+  ]
+}

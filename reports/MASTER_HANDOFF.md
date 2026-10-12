@@ -1,5 +1,32 @@
 # MASTER HANDOFF — 2026-10-05
 
+October12 morning: **BRAIN_V2_ENGINEERING_READY / ORDERS_OFF_LOCAL**.
+Read [BRAIN_V2_A1_A2_ORDERS_OFF_DELIVERY_2026_10_12.md](BRAIN_V2_A1_A2_ORDERS_OFF_DELIVERY_2026_10_12.md),
+[BRAIN_V2_A1_A2_RUNBOOK.md](BRAIN_V2_A1_A2_RUNBOOK.md) and
+reports/evidence/brain_v2_a2_20261012/terminal_readiness.json.
+Verified origin4706900 A2; spec/params unchanged. A1 budget denominator .06E and
+A2 aggregate-sleeve caps/time mapping implemented as a separate local version.
+Active35fa0e08…7020 train table, old55c32948…2092 preserved/rejected, no generator
+execution/rawB3 outcomes/judge/Claude branch edit. Full Wilder14/2160 midrank VOL,
+causal UNKNOWN, exact scorer, greedy hourly allocator, three separate realized
+capital/position/terminal ledgers in one atomic paired journal; no order path.
+182local targetedPASS incl preservedV1/OS2; synthetic3receipt restart canonical
+byte equality PASS. Root final review fixed three RED→GREEN edge cases; prior
+independent6-astra quota failure not retried, no independent financial signoff.
+Developing four-fold table hashes/filter NOT_RUN; actual source/MTM/seed/publication
+and same-hour/delayed-finality/retention integration required before future epoch.
+Mixed H1/15m packet virtual entry time/price contract also needs Claude before
+comparison: do not fill at an earlier price after seeing later opportunities.
+ENGINEERING_READY is not researchPASS/prospective start/standalone edge/moneyGO.
+BOUNCE1 prior dated integrityBLOCKED/countUNKNOWN; BOUNCE1_8 NOT_DEPLOYED unchanged.
+No VPS/broker/service writes or readback this cycle; actual runtime facts remain
+those of preceding receipts. Original NET PAPER MondayOct12 13:30–13:35UTC /
+16:30–16:35Cyprus still independent; no restart/extension/LIVE authority. First
+held-overnight DAYrearm TuesdayOct13; actual lifecycle/fees/finality remain gates.
+Foreign allowlist preserved, full-suite historicallyNOT_GREEN/not rerun.
+Earlier primitive-only/missing-A1 statuses below are dated history, superseded
+only by this local A1/A2 engineering delivery.
+
 October11 late Sunday: **BRAIN_V2_PRIMITIVES_PASS / INTEGRATION_BLOCKED_DATA**.
 Read [BRAIN_BOUNCE_FROZEN_INTAKE_2026_10_11.md](BRAIN_BOUNCE_FROZEN_INTAKE_2026_10_11.md)
 and reports/evidence/brain_bounce_intake_20261011/terminal_readiness.json.

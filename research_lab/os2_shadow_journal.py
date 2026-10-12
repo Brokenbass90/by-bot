@@ -45,12 +45,21 @@ def blocked(reason):
 
 
 class ShadowJournal:
+    receipt_schema = 'OS2_SHADOW_RECEIPT_V1'
+    state_schema = 'OS2_SHADOW_STATE_V1'
+
+    def initial_state(self):
+        return empty_state()
+
+    def assess(self, bundle):
+        return assess_bundle(bundle, self.state)
+
     def __init__(self, root: Path):
         self.root = Path(root)
         self.root_fd = self.lock_fd = self.fd = None
         self.poisoned = False
         self.receipts = {}
-        self.state = empty_state()
+        self.state = self.initial_state()
         self.size = 0
         self.last_hash = "0" * 64
         try:
@@ -110,13 +119,13 @@ class ShadowJournal:
             try:
                 receipt = strict_json(line)
                 content = {k: v for k, v in receipt.items() if k != "sha256"}
-                valid = (receipt["schema"] == "OS2_SHADOW_RECEIPT_V1"
+                valid = (receipt["schema"] == self.receipt_schema
                          and receipt["sequence"] == len(self.receipts) + 1
                          and receipt["previous_sha256"] == self.last_hash
                          and receipt["sha256"] == digest(content)
                          and identity(receipt["request_id"])
                          and receipt["request_id"] not in self.receipts
-                         and receipt["state_after"]["schema"] == "OS2_SHADOW_STATE_V1")
+                         and receipt["state_after"]["schema"] == self.state_schema)
                 if not valid: raise BridgeBlocked("BLOCKED_DATA", "journal_corrupt_prefix")
             except (ValueError, KeyError, TypeError) as error:
                 raise BridgeBlocked("BLOCKED_DATA", "journal_corrupt_prefix") from error
@@ -157,8 +166,8 @@ class ShadowJournal:
                 raise BridgeBlocked("BLOCKED_DATA", "request_identity_conflict")
             return strict_json(canonical(receipt))  # Caller cannot mutate in-memory authority.
         if len(self.receipts) >= MAX_RECEIPTS: blocked("receipt_bound")
-        result = assess_bundle(bundle, self.state)
-        receipt = {"schema": "OS2_SHADOW_RECEIPT_V1", "sequence": len(self.receipts) + 1,
+        result = self.assess(bundle)
+        receipt = {"schema": self.receipt_schema, "sequence": len(self.receipts) + 1,
                    "request_id": key, "input_sha256": pin, "previous_sha256": self.last_hash, **result}
         receipt["sha256"] = digest(receipt)
         data = canonical(receipt) + b"\n"

@@ -1,0 +1,41 @@
+{
+  "schema": "BRAIN_V2_A1_SOURCE_MANIFEST",
+  "research_commit": "84c23597679f03d37094fbeeba5c2c486b781187",
+  "origin_verified_commit": "84c23597679f03d37094fbeeba5c2c486b781187",
+  "recovery_base": "eabfac6edc616ec4c39c49c12dac3e62036aa464",
+  "files": [
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_ADDENDUM_A1.md",
+      "snapshot_path": "reports/evidence/brain_v2_a1_20261012/frozen/research_lab/brain_v2/BRAIN_V2_ADDENDUM_A1.md",
+      "sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999",
+      "bytes": 4472
+    },
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "snapshot_path": "reports/evidence/brain_v2_a1_20261012/frozen/research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0",
+      "bytes": 8075
+    },
+    {
+      "source_path": "research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "snapshot_path": "reports/evidence/brain_v2_a1_20261012/frozen/research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157",
+      "bytes": 716
+    },
+    {
+      "source_path": "research_lab/brain_v2/MU_SIGMA_V1.json",
+      "snapshot_path": "reports/evidence/brain_v2_a1_20261012/frozen/research_lab/brain_v2/MU_SIGMA_V1.json",
+      "sha256": "55c329487b995a8339eb54b1fcf4ffcf309b099e4d289460f430a46d52882092",
+      "bytes": 7291
+    },
+    {
+      "source_path": "research_lab/brain_v2/mu_sigma.py",
+      "snapshot_path": "reports/evidence/brain_v2_a1_20261012/frozen/research_lab/brain_v2/mu_sigma.py",
+      "sha256": "c0948ce3f5ec11e6fbfef47e841e59ddc2bfb7adbbabee125a58d8eba857ed91",
+      "bytes": 4091
+    }
+  ],
+  "orders_allowed": false,
+  "raw_outcomes_read": false,
+  "generator_executed": false
+}

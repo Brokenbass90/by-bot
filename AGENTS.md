@@ -239,3 +239,24 @@ Alpaca NET Monday PAPER opener/guard remain armed under their prior receipt;
 never restart/change them for this work. No LIVE authority, B3 rerun, KITY rescue,
 Claude edits/messages or new families. Critical reviewer hit usage limit with no
 review; do not claim independent review PASS or silently retry that bucket.
+
+## October12 Brain A1/A2 continuation amendment
+
+Owner supplied frozen addenda A1@84c2359 and A2@4706900 during implementation.
+Read checkpoint TOP and BRAIN_V2_A1_A2_ORDERS_OFF_DELIVERY_2026_10_12.md/runbook.
+Local source-pinned context/scorer/greedy hourly allocator and paired journal now
+delivered BRAIN_V2_ENGINEERING_READY / ORDERS_OFF_LOCAL. Continue this candidate;
+do not restart primitives or infer prospective/research/money PASS from tests.
+A1 denominator is .06E risk budget; A2 confirms aggregate-sleeve .40B and exact
+signal-bar availability +60m for ATT1/SBR1/ASR1/BOUNCE1, +15m ETS2/SF3. Active
+MU_SIGMA_V1_A2 sha35fa0e08…7020 replaces A1 sha55c32948…2092, both preserved.
+Original V1 caps/receipts unchanged, no research numbers/tuning or B3 rerun.
+Four per-fold A2 train tables/hashes + developing filter remain NOT_RUN; complete
+actual opportunity/terminal/MTM inputs, canonical H1 seed/provenance, table-known
+epoch and reviewed retention/lifecycle integration precede future shadow start.
+Same-hour new-entry/exit or late finality cannot invent/backdate capital; BLOCKED.
+No worker/credentials/order path or deployed module/config was changed. NET
+original Monday opening/guard remain outside scope, no restart/extend/LIVE GO.
+BOUNCE1 source/count and BOUNCE1_8 lifecycle blockers are unchanged dated facts;
+no new VPS inspection/judge/epoch. Independent reviewer still unavailable, no
+retry/replacement or independent financial signoff; root review documented.
