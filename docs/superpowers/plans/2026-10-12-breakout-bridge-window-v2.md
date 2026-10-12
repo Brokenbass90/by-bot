@@ -60,7 +60,9 @@ bot/event_long_mtf_execution_bridge_v2.py.
   inferred from conversion and no Mac shadow change.
 - [x] Targeted V1/V2/aggregation/levels/MTF/state/execution regressions and root
   review; durable terminal report/runbook/canonical TOP.
-- [ ] Scoped commit/push and actual remote verification; foreign diff preserved.
+- [x] Scoped commit/push and actual remote verification; foreign diff preserved.
+  Implementation2502d8e published and matched actual ls-remote; publication receipt
+  is evidence/breakout_bridge_v2_20261012/publication_receipt.json.
 
 Stop at BRIDGE_V2_ENGINEERING_PASS or exact BLOCKED. No prospective acceptance,
 profitability verdict, broker readiness or money authority follows from this fix.

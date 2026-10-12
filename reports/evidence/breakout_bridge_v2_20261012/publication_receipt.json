@@ -1,0 +1,10 @@
+{
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "implementation_commit": "2502d8e92197671bc51782c300a15fd1e8174339",
+  "orders_allowed": false,
+  "remote_recovery_sha": "2502d8e92197671bc51782c300a15fd1e8174339",
+  "remote_research_sha": "e2d668ce415c82c1c22c44454df84e168a8c5f7d",
+  "shadow_integration": "NOT_APPLIED",
+  "status": "BRIDGE_V2_PUBLISHED_REMOTE_VERIFIED",
+  "verified_at_utc": "2026-10-12T07:48:09.694334+00:00"
+}

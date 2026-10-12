@@ -1,6 +1,7 @@
 # Breakout bridge V2 — orders-OFF engineering delivery
 
-**BRIDGE_V2_ENGINEERING_PASS**. Claude's reported source-scope defect is
+**BRIDGE_V2_ENGINEERING_PASS**. Implementation commit **2502d8e** published to
+`origin/codex/recovery-20260824` and actual remote SHA verified. Claude's reported source-scope defect is
 reproduced and corrected in a separate local V2. The Mac shadow has **not** been
 updated, rebridged, started or restarted. No broker/live integration or edge verdict.
 
