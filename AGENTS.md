@@ -405,3 +405,26 @@ research_lab/alpaca_dynamic_live_intake_v1.py and native-record handoff delivere
 integration or LIVE authority. Compiler declarations cannot grant GO. Continue
 explicit native runtime integration; no claimed PAPER/live readiness from these
 local tests. Source-frozen originals and Tuesday guard remain unchanged.
+
+## October12 Dynamic LIVE runtime delivery amendment
+
+The approved isolated runtime/native integration is implemented locally,
+orders-OFF. Read ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md, its RUNBOOK and
+evidence/alpaca_dynamic_live_runtime_20261012/delivery_receipt.json. This
+supersedes LIVE_PORT_REQUIRED for local code; do not restart that implementation.
+56 runtime counterexamples/299 targeted tests pass; full-suite60 failure names
+match the adjacent intake baseline, no material Dynamic execution blocker found.
+Full suite remains NOT_GREEN; root review only, prior independent-review quota
+restriction retained. No live source packet/owner permit/deployment fabricated.
+
+Keep original NET PAPER guard/app/book/PID/dates and LIVE HALT untouched.
+Oct13 actual DAY rearm/owned exit/fees/finality remains P0; if clean, assemble
+the exact LIVE dossier immediately with actual sources and this adapter.
+No extra PAPER/statistics/Brain/Factory gates. Distinct LIVE book/original lock,
+one entry owner/manager, unchanged policy/caps/native stops are required.
+Separate exact owner GO and authorized deployment precede any money; no env
+role override/monthly guard bypass/PAPER fill or validation-exit adoption.
+Runtime handles only its exact saved plan, no future replacement money authority.
+Unknown dispatch/stop replacement is never resent or sold against blindly;
+HALT blocks entries but not already-owned management. No service install,
+broker/VPS write, crypto/Claude work or Brain retry in this local delivery.

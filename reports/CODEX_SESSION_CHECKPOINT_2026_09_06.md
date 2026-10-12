@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+October12 Dynamic LIVE delivery: **DYNAMIC_LIVE_RUNTIME_IMPLEMENTED_ORDERS_OFF / ACTUAL_PAPER_LIFECYCLE_PENDING**.
+Read [ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md](ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md)
+and its RUNBOOK/delivery receipt. Isolated adapter + original-lock/native manager
+integration now implemented locally; supersedes the earlier LIVE_PORT_REQUIRED
+code status. 56 new runtime cases /299 targetedPASS; full4560PASS/60FAIL.
+All60 failure names match the preceding receipt; NOT_GREEN, no material
+Dynamic execution blocker identified. Independent review unavailable; root only.
+Default writesOFF; exact source-bound LIVE book/profile/permit, original caps,
+durable IDs, partial/422/uncertain-dispatch/restart/ratchet/rearm/scoped-exit and
+cost/finality integration. No deployment/credentials read/broker/VPS calls or
+NET guard/session mutation. Actual source declarations/fee closure are external
+real-evidence requirements, not authenticated by fixture hashes. LIVE stays HALTED.
+Oct13 original actual rearm13:30UTC/16:30Cyprus, unwind>=13:35/hardend14:00 and
+read-only13:32/14:05 checks unchanged. Clean lifecycle => immediate exact LIVE-GO
+dossier, no extra PAPER/statistics. Earliest next calendar openOct14, conditional
+on actual closure/fresh original gates/separateGO. BrainSTOP/KITY/Claude untouched.
+Earlier dated states below are preserved history, not current implementation.
+
 October12 local Dynamic LIVE intake: **LOCAL_INTAKE_PREPARED_ORDERS_OFF / LIVE_PORT_REQUIRED**.
 Separate transport-free compiler/native-record handoff delivered;196 targetedPASS
 (48 new). Fullsuite4504PASS/60fail (names preserved; current HEAD comparison NOT_DONE).

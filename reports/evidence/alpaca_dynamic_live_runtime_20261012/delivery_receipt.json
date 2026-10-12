@@ -1,0 +1,98 @@
+{
+  "schema": "ALPACA_DYNAMIC_LIVE_RUNTIME_DELIVERY_V1",
+  "status": "DYNAMIC_LIVE_RUNTIME_IMPLEMENTED_ORDERS_OFF",
+  "observed_utc": "2026-10-12T18:46:09.680695+00:00",
+  "baseline_git_head": "7e8c156a9151295fc27263de07308d0b4cd7b5b0",
+  "targeted": {
+    "command": ".venv/bin/python -m pytest -q tests/test_alpaca_dynamic_live_runtime_v1.py tests/test_alpaca_dynamic_live_intake_v1.py tests/test_alpaca_dynamic_v1.py tests/test_alpaca_dynamic_paper.py tests/test_alpaca_dynamic_paper_maintenance.py tests/test_alpaca_open_dispatch_v2.py tests/test_alpaca_initial_protection_recovery.py tests/test_alpaca_rearm_failure_isolation.py tests/test_alpaca_intended_restart_integration.py tests/test_alpaca_intended_fill_floor.py tests/test_alpaca_protective_exit_manager.py tests/test_alpaca_intended_single_owner.py tests/test_alpaca_intended_live_kill.py tests/test_alpaca_intended_entry_recovery.py tests/test_alpaca_emergency_reconcile.py",
+    "passed": 299,
+    "failed": 0,
+    "elapsed_seconds": 7.63,
+    "new_runtime_cases": 56,
+    "output": "299 passed in 7.63s",
+    "tool_session": 19845,
+    "kind": "LOCAL_DURABLE_SQLITE_AND_SIMULATED_BROKER_NOT_ACTUAL_LIVE"
+  },
+  "full_suite": {
+    "passed": 4560,
+    "failed": 60,
+    "warnings": 1,
+    "status": "NOT_GREEN",
+    "log_sha256": "a6d1c525157a793e7d474e369c30356309e220f703fec16b5c8040d03a4ef057",
+    "new_failure_names": [],
+    "removed_failure_names": []
+  },
+  "money_authority": false,
+  "ready_for_live_go": false,
+  "default_orders_off": true,
+  "actual_broker_operations": 0,
+  "actual_credentials_read": false,
+  "ssh_operations": 0,
+  "service_mutations": 0,
+  "remote_deployment": false,
+  "actual_manager_installed": false,
+  "independent_review": "UNAVAILABLE_PRIOR_ALLOWANCE_RESTRICTION_NO_REPLACEMENT_NO_RETRY",
+  "root_review": "COUNTEREXAMPLE_TESTS_AND_NATIVE_CALL_PATH_REVIEW",
+  "actual_paper_lifecycle": "PENDING_ORIGINAL_OCT13_REARM_EXIT_COST_FINALITY",
+  "actual_source_binding": "NOT_CREATED_NO_FIXTURE_ADOPTION",
+  "actual_owner_go": "ABSENT",
+  "original_native_paper_policy_sources_unchanged": true,
+  "files_sha256": {
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "ae1340ab292f6e553b1fd9fda19d671895ee58852909e70b0255f49f0d64770f",
+    "scripts/run_alpaca_dynamic_live_v1.py": "e7ccb10ad69e373dc17837cb0ca252539da8703bbb62efa80738239328b84443",
+    "tests/test_alpaca_dynamic_live_runtime_v1.py": "b30ac569a4ecb7df941aab8d7ce8740047fb59d4a8fe722223d2563f8017e554",
+    "research_lab/alpaca_dynamic_live_intake_v1.py": "793185317d54ab3d20bb60afc00ac851ca1b3eced5f42b624f4b14c16158e6a9",
+    "research_lab/alpaca_dynamic_v1.py": "50b0956b5d4fa5ed66c295a3c340ea8b71d4902b5a5bf0e5ff569a99f551145a",
+    "research_lab/alpaca_dynamic_paper.py": "1e121cee892ab38c7aca4f57cb71bcf150f17320a9ba2222c7b02de237ad2e67",
+    "research_lab/alpaca_open_dispatch_v2.py": "17f3376b20e088cb590ea596ce0c8c89365f9f08280971d25d5e9e45baef3134",
+    "scripts/equities_alpaca_paper_bridge.py": "758ca619ecb92d1d729b8ef4fb97e10d417a36e2c5ae5d54c4eaed55a8d038f4",
+    "scripts/alpaca_protective_exit_manager.py": "2d5243ee52d3857c14fd564cea671f8938dd1cdc7623f360293154c8bce5eea1",
+    "reports/ALPACA_DYNAMIC_V1_POLICY_2026_10_06.json": "e1624ed74f4e14e06147db28a52069fff6d75bd377fb909f542006f8a09e4ffc",
+    "docs/superpowers/plans/2026-10-12-alpaca-dynamic-live-runtime.md": "b9e89c6fd3189bc3041a8113f6fd5cc4cd65cab35b3b4e6737eb1f163e3d2e9a"
+  },
+  "foreign_preserved": {
+    "path": "configs/allowlist_change_log.json",
+    "sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+    "staged": false
+  },
+  "evidence_sha256": {
+    "full_suite_summary.json": "9b3395fd5993fb377f34b5f89e7e6be84be921c1df1e5c1a255fd9862d5ad539",
+    "failure_classification.json": "0b7806d38b2836ecfa165d65d672e9b75e8664fafb3fcce6ded44276e95e5890",
+    "targeted_validation.json": "4702053d1752d6c1dcd9cd112ea9af8adfc6d9cf0a3ad4e6a339791fd2eb3f3b"
+  },
+  "dated_actual_capture": {
+    "observed_utc": "2026-10-12T15:41:23.318Z",
+    "public_receipt": "reports/evidence/alpaca_net_paper_20261012/pre_tuesday_receipt.json",
+    "sha256": "34877ee337310645ae665f326760704c5ca3dca5973d36293ddf819fa19009fd",
+    "refreshed_in_this_local_delivery": false
+  },
+  "next_actual_gate": {
+    "date": "2026-10-13",
+    "rearm_utc": "13:30",
+    "unwind_not_before_utc": "13:35",
+    "hard_end_utc": "14:00",
+    "read_only_checks_utc": [
+      "13:32",
+      "14:05"
+    ],
+    "no_extra_paper_statistics": true,
+    "original_guard_unchanged": true
+  },
+  "earliest_next_calendar_open": {
+    "utc": "2026-10-14T13:30:00Z",
+    "cyprus": "2026-10-14 16:30",
+    "conditional_on": [
+      "actual lifecycle/source closure",
+      "fresh frozen original gates",
+      "separate exact owner GO",
+      "authorized deployment"
+    ]
+  },
+  "limitations": [
+    "Local simulated broker tests are not actual LIVE execution or edge.",
+    "Physical hashes do not authenticate fabricated source declarations or fee finality.",
+    "Runtime is one exact approved-plan canary, not automatic future replacement authority.",
+    "Full suite remains NOT_GREEN; no independent financial signoff.",
+    "Unknown order/replacement outcomes require exact-ID evidence; never blind resend/unwind."
+  ]
+}

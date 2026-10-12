@@ -1,5 +1,11 @@
 # Alpaca P0 — October13 lifecycle and Dynamic LIVE handoff
 
+**Local runtime update:** the isolated Dynamic LIVE port/native lifecycle is now
+implemented orders-OFF; see ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md and RUNBOOK.
+The older LIVE_PORT_REQUIRED statements below retain their earlier dated scope.
+Actual Oct13 PAPER/source dossier and separate owner GO still remain. No server
+state, schedule, profile or NET guard was changed by the local delivery.
+
 **Current: `PAPER_PROTECTED / ORIGINAL_NEXT_DAY_GUARD_RUNNING`.**
 **Dynamic LIVE: `LOCAL_INTAKE_PREPARED_ORDERS_OFF / LIVE_PORT_REQUIRED`; LIVE stays HALTED.**
 Brain V1.1 is terminal STOP_V1 and is not a money prerequisite. No extra

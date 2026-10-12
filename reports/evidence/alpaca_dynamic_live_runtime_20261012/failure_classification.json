@@ -1,0 +1,394 @@
+{
+  "total": 60,
+  "material_dynamic_execution_failures": [],
+  "rows": [
+    {
+      "test_file": "tests/test_alpaca_bakeoff_v2_preflight.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_alpaca_bakeoff_v2_preflight.py::test_preflight_freezes_future_window_but_stays_blocked_on_inputs"
+      ],
+      "imports": [
+        "__future__",
+        "backtest.alpaca_bakeoff_v2_contract",
+        "copy",
+        "scripts.preflight_alpaca_bakeoff_v2"
+      ],
+      "classification": "OLD_RESEARCH_INTAKE",
+      "reason": "Older bakeoff source receipt all(ok) fails; not the current Dynamic policy source guard or order path.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_alpaca_exact_parity_materialization.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_alpaca_exact_parity_materialization.py::test_materializer_records_real_blockers_without_performance_or_live_authority"
+      ],
+      "imports": [
+        "__future__",
+        "backtest.alpaca_exact_parity_contract",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "scripts.materialize_alpaca_exact_parity_inputs"
+      ],
+      "classification": "OLD_RESEARCH_REPORT",
+      "reason": "Old diagnostic schedule lacks observed_session_count. No failing current stop/protection assertion.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_att1_ets2s_signal_shadow_contract.py",
+      "count": 3,
+      "failure_names": [
+        "tests/test_att1_ets2s_signal_shadow_contract.py::test_repository_contract_is_default_off_and_binds_att1_ets2s_fixed51",
+        "tests/test_att1_ets2s_signal_shadow_contract.py::test_runtime_paths_are_beneath_caller_root_and_reject_escape_and_symlink",
+        "tests/test_att1_ets2s_signal_shadow_contract.py::test_manifest_source_closure_is_hash_bound_to_config_and_required_paths"
+      ],
+      "imports": [
+        "__future__",
+        "bot.att1_ets2s_signal_shadow_contract",
+        "pathlib"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_att1_fixed51_shadow.py",
+      "count": 8,
+      "failure_names": [
+        "tests/test_att1_fixed51_shadow.py::test_repository_config_pins_exact_fixed51_manifest_and_major8_money_universe",
+        "tests/test_att1_fixed51_shadow.py::test_preflight_is_no_network_and_reports_evidence_money_separation",
+        "tests/test_att1_fixed51_shadow.py::test_all_att1_environment_inputs_are_restored_after_cycle",
+        "tests/test_att1_fixed51_shadow.py::test_observation_and_open_bar_changes_are_idempotent_but_closed_mutation_conflicts",
+        "tests/test_att1_fixed51_shadow.py::test_next_closed_h1_creates_new_raw_event_per_symbol",
+        "tests/test_att1_fixed51_shadow.py::test_events_are_raw_only_include_runtime_reason_hashes_and_diagnostic_regime",
+        "tests/test_att1_fixed51_shadow.py::test_expected_hft_unavailable_is_explicit_but_unknown_gap_fails_partial",
+        "tests/test_att1_fixed51_shadow.py::test_zero_success_is_raw_fail_closed"
+      ],
+      "imports": [
+        "__future__",
+        "bot.att1_fixed51_shadow",
+        "pathlib",
+        "scripts.run_att1_fixed51_zero_risk_shadow"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_audit_alpaca_protection_challenger_v2.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_audit_alpaca_protection_challenger_v2.py::test_committed_alpaca_v2_receipt_passes_independent_audit"
+      ],
+      "imports": [
+        "pathlib",
+        "scripts.audit_alpaca_protection_challenger_v2"
+      ],
+      "classification": "OLD_RESEARCH_SOURCE_MISSING",
+      "reason": "Missing sibling research_lab/alpaca_protection_challenger_v2.py; frozen challenger is not the LIVE protection algorithm.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_audit_att1_pivot_sequence_v1.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_audit_att1_pivot_sequence_v1.py::test_committed_att1_pivot_sequence_receipt_passes"
+      ],
+      "imports": [
+        "pathlib",
+        "scripts.audit_att1_pivot_sequence_v1"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_audit_att1_sbr1_reserved_oos_v1.py",
+      "count": 2,
+      "failure_names": [
+        "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_is_metadata_only_and_ready",
+        "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_does_not_import_runner"
+      ],
+      "imports": [
+        "__future__",
+        "pathlib",
+        "research_lab.adapter_parity",
+        "research_lab.summarize_att1_sbr1_presealed_economics",
+        "scripts.audit_att1_sbr1_reserved_oos_v1"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_audit_frequent_crypto_rehab_v2.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_audit_frequent_crypto_rehab_v2.py::test_receipt_is_research_only_and_evidence_backed"
+      ],
+      "imports": [
+        "scripts.audit_frequent_crypto_rehab_v2"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_audit_inplay_causal_receipt.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_audit_inplay_causal_receipt.py::test_current_inplay_receipt_is_shadow_only_not_capital"
+      ],
+      "imports": [
+        "scripts.audit_inplay_causal_receipt"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_brain_v2_v1_1_a7.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_brain_v2_v1_1_a7.py::test_verify_only_cannot_construct_outcome_inputs"
+      ],
+      "imports": [
+        "dataclasses",
+        "pathlib",
+        "research_lab.brain_v2_develop",
+        "research_lab.brain_v2_frozen_primitives",
+        "research_lab.brain_v2_v1_1_a7",
+        "research_lab.brain_v2_v1_1_run",
+        "tests.test_brain_v2_develop"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_build_recovery_session_report.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_build_recovery_session_report.py::test_report_separates_scenarios_from_money_authority"
+      ],
+      "imports": [
+        "scripts.build_recovery_session_report"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_collect_inplay_prospective_shadow.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_collect_inplay_prospective_shadow.py::test_replay_records_signal_parity_diagnostics"
+      ],
+      "imports": [
+        "__future__",
+        "backtest.engine",
+        "scripts.collect_inplay_prospective_shadow",
+        "types"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_crypto_core_v2_baselines.py",
+      "count": 2,
+      "failure_names": [
+        "tests/test_crypto_core_v2_baselines.py::test_bounce_adapter_preserves_native_rejection_and_side",
+        "tests/test_crypto_core_v2_baselines.py::test_bounce_consumes_only_the_exact_validated_source_rows"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "pathlib",
+        "research_lab.crypto_core_v2_baselines",
+        "strategies.alt_support_bounce_v1"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_horizontal_breakout_long_72h_sealed_v1_runner.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_horizontal_breakout_long_72h_sealed_v1_runner.py::test_default_preflight_fails_before_any_market_row_is_opened"
+      ],
+      "imports": [
+        "__future__",
+        "pathlib"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_mac_att1_research_job.py",
+      "count": 9,
+      "failure_names": [
+        "tests/test_mac_att1_research_job.py::test_completed_immutable_job_is_a_noop_on_later_launchd_wakeup",
+        "tests/test_mac_att1_research_job.py::test_changed_hashed_input_refuses_to_reuse_completed_receipt",
+        "tests/test_mac_att1_research_job.py::test_crash_after_committed_stage_resumes_only_unfinished_stage",
+        "tests/test_mac_att1_research_job.py::test_inherited_lock_survives_parent_crash_until_active_child_exits",
+        "tests/test_mac_att1_research_job.py::test_failed_stage_persists_backoff_then_retries_within_attempt_limit",
+        "tests/test_mac_att1_research_job.py::test_runner_strips_secrets_and_cli_rejects_arbitrary_command_input",
+        "tests/test_mac_att1_research_job.py::test_caffeinate_process_is_released_when_stage_finishes",
+        "tests/test_mac_att1_research_job.py::test_stage_heartbeat_updates_while_child_runs",
+        "tests/test_mac_att1_research_job.py::test_os_sandbox_denies_network_and_local_credentials"
+      ],
+      "imports": [],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_preflight_event_expansion_retest_long_v1_phase1.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_preflight_event_expansion_retest_long_v1_phase1.py::test_current_phase1_identity_is_clean_but_performance_and_live_are_blocked"
+      ],
+      "imports": [
+        "__future__",
+        "pathlib",
+        "scripts.preflight_event_expansion_retest_long_v1_phase1"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_public_cashcarry_station_v1.py",
+      "count": 2,
+      "failure_names": [
+        "tests/test_public_cashcarry_station_v1.py::test_one_cycle_is_per_symbol_durable_and_resume_reconciles_without_overwrite",
+        "tests/test_public_cashcarry_station_v1.py::test_corrupt_state_and_adapter_identity_fail_closed"
+      ],
+      "imports": [
+        "__future__",
+        "bot.bybit_cashcarry_shadow_v1",
+        "bot.bybit_cashcarry_shadow_v2",
+        "bot.public_cashcarry_station_v1",
+        "pathlib"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_run_att1_sbr1_reserved_oos_v1.py",
+      "count": 19,
+      "failure_names": [
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_missing_authorization_never_opens_market_or_creates_claim",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[malformed]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[drifted]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_claim_is_durable_before_scorer_callback",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_existing_claim_refuses_before_scorer_callback",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[hash]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[schema]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[window]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[gap]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[records_sha]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[infinite_ohlc]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_stale_output_refuses_before_claim",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_symlinked_output_refuses_before_claim",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_interrupt_after_claim_writes_terminal_receipt",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_success_receipt_has_exact_forensic_identity_and_inventory",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_semantic_reserved_failure_preserves_observed_rows_and_staged_accounting",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_bootstrap_parse_failure_keeps_consumed_claim_and_partial_forensics",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[extra]",
+        "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[symlink]"
+      ],
+      "imports": [
+        "__future__",
+        "contextlib",
+        "pathlib",
+        "research_lab",
+        "scripts",
+        "scripts.materialize_att1_sbr1_reserved_m5_v1",
+        "scripts.run_att1_sbr1_reserved_oos_v1",
+        "types"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_sbr1_fixed51_universe.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_sbr1_fixed51_universe.py::test_preflight_rejects_fixed51_identity_or_provenance_drift"
+      ],
+      "imports": [
+        "__future__",
+        "bot.sbr1_universe",
+        "bot.sbr1_zero_risk_shadow",
+        "pathlib",
+        "scripts.run_sbr1_zero_risk_shadow"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_sbr1_zero_risk_shadow.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_sbr1_zero_risk_shadow.py::test_repository_config_pins_verified_manifest_and_full_source_closure"
+      ],
+      "imports": [
+        "__future__",
+        "bot.live_native_decision_contract",
+        "bot.live_native_manifest",
+        "bot.sbr1_zero_risk_shadow",
+        "decimal",
+        "pathlib",
+        "scripts.run_sbr1_zero_risk_shadow"
+      ],
+      "classification": "UNRELATED_RESEARCH_OR_CRYPTO",
+      "reason": "Tested module/command is outside the Dynamic LIVE execution call path; no repair or outcome consumption in this delivery.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_strategy_env_prefix_isolation.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_strategy_env_prefix_isolation.py::test_legacy_asb1_prefix_remains_a_fallback"
+      ],
+      "imports": [
+        "strategies.alt_slope_break_v1",
+        "strategies.alt_support_bounce_v1"
+      ],
+      "classification": "UNRELATED_CRYPTO_ENV",
+      "reason": "Legacy ASB1 fallback; passed in isolation but failed in full ordered suite. Neither ASB1 strategy nor env fallback is called by Dynamic LIVE.",
+      "dynamic_live_blocker": false
+    },
+    {
+      "test_file": "tests/test_strategy_promotion_queue.py",
+      "count": 1,
+      "failure_names": [
+        "tests/test_strategy_promotion_queue.py::test_queue_fails_when_active_wip_exceeds_limit"
+      ],
+      "imports": [
+        "__future__",
+        "pathlib",
+        "scripts.validate_strategy_promotion_queue"
+      ],
+      "classification": "UNRELATED_RESEARCH_QUEUE",
+      "reason": "Old WIP test appends one entry but configured queue no longer exceeds limit; no queue-based Dynamic money authority.",
+      "dynamic_live_blocker": false
+    }
+  ],
+  "evidence": "Original 60 names plus current adjacent failure reproduction; not asserted equivalent to all historical HEADs.",
+  "adjacent_reproduction_log_sha256": "d037693f6508d931b2065fd8596caeddaf5160d78df5a172c9d8fad24a7de74c",
+  "review": "ROOT_SCOPED_CALL_PATH_REVIEW",
+  "independent_financial_signoff": false,
+  "baseline_receipt": "reports/evidence/alpaca_tuesday_preparation_20261012/live_intake_validation.json",
+  "full_suite_log_sha256": "a6d1c525157a793e7d474e369c30356309e220f703fec16b5c8040d03a4ef057",
+  "scope_limit": "Names match adjacent published intake suite; no global-green or older-history claim."
+}
