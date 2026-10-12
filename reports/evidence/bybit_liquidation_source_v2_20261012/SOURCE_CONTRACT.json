@@ -1,0 +1,36 @@
+{
+  "schema": "BYBIT_LIQUIDATION_SOURCE_CONTRACT_V2",
+  "status": "SOURCE_V2_ENGINEERING_READY_PRODUCER_NOT_DEPLOYED",
+  "prepared_at_utc": "2026-10-12T14:10:33.286902+00:00",
+  "official_source": "https://bybit-exchange.github.io/docs/v5/websocket/public/all-liquidation",
+  "source_topic": "allLiquidation.<symbol>",
+  "position_side": {
+    "Buy": "long",
+    "Sell": "short"
+  },
+  "price_basis": "bankruptcy_price",
+  "usd_basis": "qty_times_bankruptcy_price_notional_proxy",
+  "timestamp": "raw item T only; missing/invalid => reject; frame/receive never substituted",
+  "receive_timestamp": "local receive when supplied; otherwise null/UNKNOWN",
+  "identity": "raw_item_canonical_sha256 hashes sorted canonical JSON of item, not raw wire bytes",
+  "candidate": {
+    "path": "bot/bybit_liquidation_source_v2.py",
+    "sha256": "f439e45e5ca123325bacb4a08709f84d58c7e555e10ffbd951bbde4296494223"
+  },
+  "tests": {
+    "path": "tests/test_bybit_liquidation_source_v2.py",
+    "sha256": "6ad94ed9da0e104b0b975d0a2a1578cbbef59da46405c5100884b01b2305e3a8"
+  },
+  "old_producer": {
+    "path": "scripts/collect_bybit_liquidations.py",
+    "sha256": "1255e3444690a27864828cd7ac2d996e6ba3f6686fdddc9bcd2a1cd9a89e6836",
+    "unchanged": true
+  },
+  "future_output": "runtime/liquidations_v2/<sealed-epoch>/bybit_all_liquidation_v2.jsonl",
+  "deployment_performed": false,
+  "old_artifacts_rewritten": false,
+  "old_judges_rerun": false,
+  "runtime_consumers_verified": false,
+  "orders_allowed": false,
+  "money_authority": false
+}

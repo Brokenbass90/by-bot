@@ -336,3 +336,30 @@ state_pri_plane prefix; no silent source repin, process restart or checkout edit
 Brain A5/A6 single filter remains spent BLOCKED_DATA, original sealed pins intact.
 Preserve NET original opener/guard/LIVE HALT/caps, actual PAPER gates and owner GO.
 Prior reviewer quota restriction remains; no retry or independent signoff claim.
+
+## October12 actual NET PAPER / A7 preparation amendment
+
+Owner requests read-only post-window NET inspection; original server attempt
+filled/protected exactly once. Read ALPACA_NET_PAPER_ENTRY_2026_10_12.md. Preserve
+opener completed/guard active, no repeat/reprice/restart or LIVE HALTclear. Full
+lifecycle requires actual Oct13 DAY rearm if held, scoped exit/cost/finality and
+separate LIVE GO; no extra statistical PAPER days. Offline actual-state restore
+is not an actual process restart. Initial transient blocker remains retained.
+Owner forwarded A7/V1.1 frozen engineering intake: preparation/tests only now;
+new outcome consumption requires explicit written owner GO, which is absent.
+Original spent V1 remains unchanged; no replacement of its tables/pins/receipts.
+
+## October12 post-P0 A7/source-version delivery amendment
+
+A7/freeze/five supplied tables verified against research origin36ab6ff. Separate
+V1.1 candidate/verify-only and55targetedPASS are engineering preparation, not a
+historical run or LIVE authority. No run_v1_1/STARTED; explicit direct owner
+GO_BRAIN_V2_V1_1_A7_ONCE required. V1's spent receipts/compressed ledgers and215
+source pins stay sealed. Scoped VPS MAX_LEV provenance remains FILESYSTEM_ONLY.
+Alpaca actual NET PAPER is protected; actual Oct13 DAY rearm/exit/finality P0,
+LIVE stays HALTED. No repeat/reprice/restart or extra statistical PAPER days.
+Bybit liquidation V2 is separate opt-in source semantics, NOT_DEPLOYED. Preserve
+old producer/events/results. Source-proven directional V1 evidence is tainted;
+unknown source remains blocked, side-blind volume consumers are separate. No
+Claude edits/messages/judge reruns or silent data correction. Prior reviewer
+quota restriction remains: root checks only, no independent signoff claim.

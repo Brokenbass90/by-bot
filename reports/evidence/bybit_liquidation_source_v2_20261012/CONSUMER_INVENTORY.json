@@ -1,0 +1,245 @@
+{
+  "schema": "BYBIT_LIQUIDATION_STATIC_CONSUMER_INVENTORY_V2",
+  "recovery_head": "32d43de5ee61f81416287815250214fb84da50a5",
+  "research_commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+  "scope": "both pinned repositories, source code and literal/glob consumers; not dynamic/deployed inventory",
+  "search_terms": [
+    "bybit_liquidations",
+    "runtime/liquidations",
+    "allLiquidation",
+    "liq.*jsonl",
+    "jsonl.*liq"
+  ],
+  "code_only": true,
+  "performance_outcomes_opened": false,
+  "consumers": [
+    {
+      "path": "scripts/collect_bybit_liquidations.py",
+      "status": "PRODUCER_V1_INVERTS_POSITION_SIDE",
+      "line": 50,
+      "note": "default source unchanged; raw S retained in mislabeled order_side",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "1255e3444690a27864828cd7ac2d996e6ba3f6686fdddc9bcd2a1cd9a89e6836"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "1255e3444690a27864828cd7ac2d996e6ba3f6686fdddc9bcd2a1cd9a89e6836"
+        }
+      ]
+    },
+    {
+      "path": "deploy/liquidation-collector.service",
+      "status": "STATIC_PRODUCER_CONFIG",
+      "line": 30,
+      "note": "actual deployed unit/PID not inspected or changed",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "b92ef722684968b60c3a5632cc1023e03d2b5befe191598cc20fa8ddc0332001"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "b92ef722684968b60c3a5632cc1023e03d2b5befe191598cc20fa8ddc0332001"
+        }
+      ]
+    },
+    {
+      "path": "research_lab/liquidation_cascade.py",
+      "status": "DIRECTIONAL_V1_SOURCE_BLOCKED",
+      "line": 66,
+      "note": "all directional findings depending on V1 side require separate source-version review",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "1176908b6bd086d89ca406e6b5e4e711275042dc1edb5943d87d1c9d81e21287"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "1176908b6bd086d89ca406e6b5e4e711275042dc1edb5943d87d1c9d81e21287"
+        }
+      ]
+    },
+    {
+      "path": "backtest/liquidation_sweep_run.py",
+      "status": "DIRECTIONAL_V1_SOURCE_BLOCKED_IF_REAL_INPUT",
+      "line": 78,
+      "note": "synthetic OHLC events are a separate source and are not invalidated by this mapping defect",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "382725a990d38dcb67523a58b5de0293f3ea5e22394d80f29107554db553efc6"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "382725a990d38dcb67523a58b5de0293f3ea5e22394d80f29107554db553efc6"
+        }
+      ]
+    },
+    {
+      "path": "backtest/liquidation_sweep_research.py",
+      "status": "DIRECTIONAL_DOWNSTREAM",
+      "line": 55,
+      "note": "event-side dominance determines reversal direction",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "841049b3c63680bc9a29d6b6b6383bcd157b3695596bcc8771ec3ccceaf95ece"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "841049b3c63680bc9a29d6b6b6383bcd157b3695596bcc8771ec3ccceaf95ece"
+        }
+      ]
+    },
+    {
+      "path": "scripts/run_cascade_real_gate.py",
+      "status": "SIDE_BLIND_AGGREGATION",
+      "line": 46,
+      "note": "event side ignored; do not invalidate its side-blind totals or pricedirection findings solely for S inversion",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "1b26c7eecdd358e9c03933a239006f9c7f8d4553b4f03332898e247e07ea69ce"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "1b26c7eecdd358e9c03933a239006f9c7f8d4553b4f03332898e247e07ea69ce"
+        }
+      ]
+    },
+    {
+      "path": "scripts/run_codex_overnight_20260707.sh",
+      "status": "SIDE_BLIND_LAUNCHER_WITH_AMBIGUOUS_SOURCE_GLOB",
+      "line": 109,
+      "note": "chooses latest *.jsonl; V2 must use a separate directory and explicit file pins, no auto-discovery",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "62bee12621d2619599c99754b7aeb225cc951926f7a3c19623c3aefaebcf9d22"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "62bee12621d2619599c99754b7aeb225cc951926f7a3c19623c3aefaebcf9d22"
+        }
+      ]
+    },
+    {
+      "path": "research_lab/liq_fuse.py",
+      "status": "SIDE_BLIND_AGGREGATION",
+      "line": 40,
+      "note": "sums usd by symbol/time, not liquidation direction",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "8ec586e9a9e4fcf7dee7022197f314850cdb1f17ead9232e404e699e397ba448"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "8ec586e9a9e4fcf7dee7022197f314850cdb1f17ead9232e404e699e397ba448"
+        }
+      ]
+    },
+    {
+      "path": "research_lab/ai_auditor.py",
+      "status": "ADVISORY_SOURCE_HEALTH",
+      "line": 228,
+      "note": "file health, not directional performance authority",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "79aeaae4216840610eabd61d611a2bbf860c0ef3196ad507aac84eaa2a3c6d92"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "79aeaae4216840610eabd61d611a2bbf860c0ef3196ad507aac84eaa2a3c6d92"
+        }
+      ]
+    },
+    {
+      "path": "scripts/update_project_map_snapshot.py",
+      "status": "INVENTORY_REFERENCE",
+      "line": 60,
+      "note": "references producer presence, does not load events",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "560ad1c034112f5face311fcf275e4ca0ddb402b5927f0935cbef3690a96b318"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "560ad1c034112f5face311fcf275e4ca0ddb402b5927f0935cbef3690a96b318"
+        }
+      ]
+    },
+    {
+      "path": "scripts/collect_bybit_orderbook_density.py",
+      "status": "DOC_REFERENCE_ONLY",
+      "line": 6,
+      "note": "not a liquidation-file reader",
+      "instances": [
+        {
+          "repository": "recovery",
+          "commit": "32d43de5ee61f81416287815250214fb84da50a5",
+          "sha256": "a08c9123f1e3ba2a14614d18369ba28ab8467846afe5290718ca2c2ef3174176"
+        },
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "d7cffba8aa556b312208444d6e39d0ef430828627b51316b600db0ff5cb44baa"
+        }
+      ]
+    },
+    {
+      "path": "research_lab/discovery_paket3.py",
+      "status": "DIRECTIONAL_V1_SOURCE_BLOCKED",
+      "line": 115,
+      "note": "L1 FORCED_FLOW_LIQ only; T1/T2/T3 quarterly mechanisms do not consume liquidation side",
+      "instances": [
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "3c477a54d687a432ec9220dffae5bff6378cb35ecbca5e8bd300f5182bd04f4b"
+        }
+      ]
+    },
+    {
+      "path": "research_lab/fabrika/kaskad_maker.py",
+      "status": "DIRECTIONAL_V1_SOURCE_BLOCKED",
+      "line": 33,
+      "note": "kaskad_maker/ITOG.json and sdelki.jsonl if derived from V1 side are semantically tainted; no judge/result read or rerun",
+      "instances": [
+        {
+          "repository": "research/fabrika-v1",
+          "commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+          "sha256": "2f2382d176cf8dc86805053a738f76dc7fe1303f74382650a18afd082d0684bb"
+        }
+      ]
+    }
+  ],
+  "directional_evidence_policy": "SEMANTICALLY_TAINTED where source pin proves inverted V1 normalization. Until source identity is proven, UNKNOWN/BLOCKED_SOURCE_SEMANTICS, never money-ready.",
+  "side_blind_policy": "S inversion alone does not change volume totals; timestamp/coverage/price semantics need their own provenance.",
+  "preserved_producer_raw_field": "V1 order_side retains raw S but is mislabeled; later explicit versioned migration may use it only with proven source pin and event T.",
+  "no_retroactive_strategy_verdict": "Do not reinterpret PASS/KILL or rerun outcome-consuming experiments. Source correction requires distinct data/version/prereg."
+}

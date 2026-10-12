@@ -1,5 +1,42 @@
 # Codex session checkpoint — 2026-09-06
 
+October12 actual Alpaca: **ENTRY_PROTECTED_LIFECYCLE_PENDING**.
+Read [ALPACA_NET_PAPER_ENTRY_2026_10_12.md](ALPACA_NET_PAPER_ENTRY_2026_10_12.md).
+Original server NET PAPER attempt completed13:30:10.710UTC: one full BUY
+0.325167779@$363.20, one accepted full DAY sell-stop329.66; actual principal
+118.1009373328/stop-distance risk10.90612730766 before gaps/costs. Fresh2993ms,
+reserve104ms, adapter6240ms. Authenticated13:35:36UTC readback and81source hashes
+PASS; source attempt1/PAPER intent1/PROTECTED/HWM/floor/broker exact. Two offline
+restores return same receipt with no dispatch; actual process restart NOT_DONE.
+Original guardPID1979385/NRestarts0 active/protected, opener exit0. Earlier guard
+LOCK_BUSY and transient FOREIGN_ACTIVE_ORDER retained; cause NOT_PROVEN, then
+protected13:30:14.940. No repeat/reprice/restart; legacy5holdings untouched.
+LIVE fresh flat/orders0/HALT/cash496.12/fees0; production PIDs/NRestarts unchanged.
+If held overnight: actual DAY rearmOct13, scoped unwind>=13:35UTC, hard end14UTC;
+unchanged schedule, no extra statistical PAPER days. Full PAPER/lifecycle/finality
+and LIVE-GO gates pending; no HALTclear or live entry. BrainV1 spent remains sealed.
+A7/V1.1 preparation may follow, but outcome run needs separate written owner GO.
+
+October12 post-P0 delivery: **V1_1_ENGINEERING_PREPARED / RUN_NOT_AUTHORIZED**.
+Read [BRAIN_V2_V1_1_A7_PREPARATION_2026_10_12.md](BRAIN_V2_V1_1_A7_PREPARATION_2026_10_12.md).
+Research origin36ab6ff verified; supplied A7/freeze/five new tables exact. Frozen
+lev>100 reject precedes all-arm scoring/allocation;100 yes/100.01 no/saved GRASS
+reject. Final55targetedPASS (41Brain/14liquidation). Native preparation pin
+7f2968c7…5d60a and all original215source pins PASS; V1 receipts/ledgers unchanged.
+V1.1 actual runs0/no run_v1_1 or STARTED, separate direct owner GO required;
+V1.1 development-only, not independent edge. Scoped VPS253dirs found no research_
+machine.py/ten.py: FILESYSTEM_ONLY/NOT_GIT_PROVEN, no service/source mutations.
+Latest captured NET guard13:54:15UTC still PROTECTED with same native stop.
+Read [BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md](BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md).
+Separate source V2 corrects official S position-side semantics; old producer/files
+preserved, V2 NOT_DEPLOYED. Static13-entry inventory marks directional V1-derived
+cascade/L1/kaskad-maker evidence source-blocked/tainted where proven; side-blind
+volume consumers separate. No Claude edit, judge or outcome/strategy rescue.
+Bridge V2 code integration now verified in pinned Claude36ab6ff (c60d570 included),
+not a fresh Mac runtime assertion; earlier V1-only wording below is historical.
+KITY Oct15/22 independent exact-basket checks remain not due today. Alpaca next
+actual Oct13 DAY rearm/exit/finality is P0; no new PAPER entry or LIVE GO inferred.
+
 October12 Breakout bridge: **BRIDGE_V2_ENGINEERING_PASS / ORDERS_OFF**.
 Read [BREAKOUT_BRIDGE_V2_2026_10_12.md](BREAKOUT_BRIDGE_V2_2026_10_12.md).
 Claude's full-aggregate/lookback hash mismatch reproduced RED; separate V2 requires

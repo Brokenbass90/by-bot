@@ -1,0 +1,105 @@
+{
+  "schema": "ALPACA_NET_PAPER_POST_ATTEMPT_V1",
+  "status": "ENTRY_PROTECTED_LIFECYCLE_PENDING",
+  "observed_ms": 1791812136064,
+  "capture_sha256": "da9d9c45e2cbe9fa57f10845e97e85f1a42c8580f1c662d77cebe186823c9403",
+  "packet_sha256": "9ceda9395eda310bb32d1b05cb96c7be228945901a6574da359b36eb61d001dd",
+  "app_manifest_sha256": "85c58e7a6fdc2fae947ac3b56f0c947135e1086a52e8ba9c4281599d2a9359b1",
+  "symbol": "NET",
+  "entry_order_id": "cc87d0ef-f344-49d3-9593-176a34e1f74d",
+  "stop_order_id": "54ad2cbc-86fc-4a46-a0a8-9dbb04a11ed7",
+  "filled_at": "2026-10-12T13:30:07.50654Z",
+  "stop_submitted_at": "2026-10-12T13:30:09.965780286Z",
+  "qty": "0.325167779",
+  "fill_price": "363.2",
+  "actual_notional_usd": "118.1009373328",
+  "stop_price": "329.66",
+  "stop_risk_usd_before_gap_and_costs": "10.90612730766",
+  "protection_tif": "day",
+  "full_current_native_protection": true,
+  "one_entry_one_stop": true,
+  "persistent_state_phase": "PROTECTED",
+  "source_attempt_count": 1,
+  "paper_intent_count": 1,
+  "offline_captured_state_recovery": [
+    {
+      "same_receipt": true,
+      "read_calls": [
+        "GET account",
+        "GET positions",
+        "GET order 54ad2cbc-86fc-4a46-a0a8-9dbb04a11ed7"
+      ],
+      "dispatch_calls": 0
+    },
+    {
+      "same_receipt": true,
+      "read_calls": [
+        "GET account",
+        "GET positions",
+        "GET order 54ad2cbc-86fc-4a46-a0a8-9dbb04a11ed7"
+      ],
+      "dispatch_calls": 0
+    }
+  ],
+  "actual_process_restart_performed": false,
+  "guard_status": "PAPER_PROTECTED",
+  "guard_pid": "1979385",
+  "opening_timings": [
+    {
+      "budget_ms": 30000,
+      "completed": true,
+      "elapsed_ms": 2993,
+      "end_ms": 1791811804361,
+      "includes_evidence_persistence": true,
+      "name": "fresh",
+      "start_ms": 1791811801367
+    },
+    {
+      "budget_ms": 5000,
+      "completed": true,
+      "elapsed_ms": 104,
+      "end_ms": 1791811804465,
+      "includes_evidence_persistence": true,
+      "name": "reserve",
+      "start_ms": 1791811804361
+    },
+    {
+      "budget_ms": null,
+      "elapsed_ms": 6240,
+      "end_ms": 1791811810710,
+      "name": "existing_paper_adapter",
+      "protection_not_aborted_by_dispatch_deadline": true,
+      "start_ms": 1791811804470
+    }
+  ],
+  "legacy_holdings_outside_authority": [
+    "ABNB",
+    "ABT",
+    "AMZN",
+    "MA",
+    "SCHW"
+  ],
+  "live_flat": true,
+  "live_halt": true,
+  "live_cash_usd": "496.12",
+  "live_pending_fees_usd": "0",
+  "transient_guard_blocker": {
+    "reason": "PAPER_FOREIGN_ACTIVE_ORDER",
+    "at_ms": 1791811811205,
+    "recovered_protected_at_ms": 1791811814940,
+    "cause": "NOT_PROVEN; raw failing GET response not captured"
+  },
+  "remaining_gates": [
+    "actual Oct13 DAY rearm if overnight",
+    "owned terminal exit and costs/finality",
+    "exact fresh LIVE GO dossier and separate owner GO"
+  ],
+  "guard_unwind_not_before_ms": 1791898500000,
+  "guard_hard_end_ms": 1791900000000,
+  "paper_execution_pass": false,
+  "ready_for_live_go": false,
+  "broker_writes": 0,
+  "remote_writes": 0,
+  "additional_paper_entries": 0,
+  "live_orders_allowed": false
+}

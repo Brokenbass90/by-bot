@@ -1,0 +1,16 @@
+{
+  "schema": "BYBIT_LIQUIDATION_V2_VALIDATION_V1",
+  "status": "SOURCE_V2_ENGINEERING_PASS_NOT_DEPLOYED",
+  "targeted_pass": 14,
+  "combined_pass": 55,
+  "source_contract_sha256": "127a67b93bbd9107976c4ec393f7b7342b55f515a11cbf504e6af1dcc63243fa",
+  "inventory_sha256": "794ceac203f4ebf9ad0c3d4f70ad3889e6c3c71096b3a645fd4b64dc568d8efc",
+  "source_sha256": "f439e45e5ca123325bacb4a08709f84d58c7e555e10ffbd951bbde4296494223",
+  "test_sha256": "6ad94ed9da0e104b0b975d0a2a1578cbbef59da46405c5100884b01b2305e3a8",
+  "old_source_sha256": "1255e3444690a27864828cd7ac2d996e6ba3f6686fdddc9bcd2a1cd9a89e6836",
+  "old_source_unchanged": true,
+  "deployment_performed": false,
+  "old_artifacts_rewritten": false,
+  "judge_runs": 0,
+  "orders_allowed": false
+}

@@ -1,0 +1,107 @@
+{
+  "schema": "BRAIN_V2_DEVELOP_INPUT_MANIFEST",
+  "scope": "BRAIN_V2_V1_1_A7_FROZEN_DEVELOPMENT",
+  "research_commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+  "research_origin_verified": true,
+  "a5_sha256": "c07cf7964f4013b98c696633ac2b46bdc55cdfce0756f51b33a26cd0ada6e84a",
+  "a6_sha256": "19a177e2a4b9e096e049552642b9ea49f51f8a5ce70630403dcc298f766e4441",
+  "a7_sha256": "0b40ce06fffd4afbc916b066021d523fee51b6fe56e01c8e935827c5f49279e1",
+  "freeze_sha256": "e650a34259ce6749f5fd47842f8228b6553c105054b1e21922663b85f5320b0a",
+  "owner_go_required": true,
+  "owner_go_supplied_at_preparation": false,
+  "attempts_if_owner_go": 1,
+  "filter_runs_at_preparation": 0,
+  "prospective_table_sha256": "206b35010712cce2daa4597e6d000d59c53de09732fdd941515eeaa7b2c13905",
+  "old_run_unchanged": true,
+  "development_only_not_independent": true,
+  "orders_allowed": false,
+  "money_authority": false,
+  "files": [
+    {
+      "path": "reports/evidence/brain_v2_develop_20261012/A5_A6_PRE_RUN_MANIFEST.json",
+      "sha256": "b62b52df8efcd5811d9c68bdb9b71e0db3315ad1d709a7cf164a4b70b925ecad",
+      "bytes": 9348,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/TABLE_HASH_PUBLICATION.json",
+      "sha256": "52e99da83eba18b2f3d2e8abb8cf57078f669c47f2fbb22b1687ead9040ce600",
+      "bytes": 1986,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/VPS_FILESYSTEM_PROVENANCE.json",
+      "sha256": "93bd8cd8b65541b9c09dcd9d367d1b84ae9cb4f2da36d6c77eaa623685ed21e2",
+      "bytes": 770,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_v1_1_a7.py",
+      "sha256": "5273a789b96075f352d46db0a5b264c7c27611b08511c26760f6315beb5394b4",
+      "bytes": 7079,
+      "role": "control"
+    },
+    {
+      "path": "research_lab/brain_v2_v1_1_run.py",
+      "sha256": "62c7d37f84b9b51f67467b0d3cae3164d09135dd3df699d7763bf89e59eb3327",
+      "bytes": 5454,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/alpaca_net_paper_20261012/post_attempt_receipt.json",
+      "sha256": "47e6a063989f88f8bcd5b3e00cebc0bd27aa2aeaf948d21114699dfa5788a645",
+      "bytes": 3120,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/BRAIN_V2_ADDENDUM_A7.md",
+      "sha256": "0b40ce06fffd4afbc916b066021d523fee51b6fe56e01c8e935827c5f49279e1",
+      "bytes": 4898,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/BRAIN_V2_V1_1_FREEZE.md",
+      "sha256": "e650a34259ce6749f5fd47842f8228b6553c105054b1e21922663b85f5320b0a",
+      "bytes": 6268,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/MU_SIGMA_V1_A7.json",
+      "sha256": "206b35010712cce2daa4597e6d000d59c53de09732fdd941515eeaa7b2c13905",
+      "bytes": 7390,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/MU_SIGMA_V1_A7_fold_2023-07-01.json",
+      "sha256": "3a336e2eac07a3f068c8822f0fbf1009d4f41bc5fe6981ee24a20a0352f09e2f",
+      "bytes": 4222,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/MU_SIGMA_V1_A7_fold_2024-01-01.json",
+      "sha256": "f807c926e91ca991b48df7bc36f8d58989a6d0a80593a55c394f77905f0be390",
+      "bytes": 4611,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/MU_SIGMA_V1_A7_fold_2024-07-01.json",
+      "sha256": "98eb3b5244f46167788ba3f0bdaad72a11927ff07036b30f8f49c2330695d773",
+      "bytes": 7183,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/MU_SIGMA_V1_A7_fold_2025-01-01.json",
+      "sha256": "1c2e61000ac88e28c29dd19defaec2aff3f8cf1b0d292e8aa357fb246c29e77d",
+      "bytes": 7370,
+      "role": "control"
+    },
+    {
+      "path": "reports/evidence/brain_v2_v1_1_20261012/frozen/mu_sigma_a7.py",
+      "sha256": "959eb4e852386a4b8a476f02f85cea20dfd709ca6919832d801af16738703d9c",
+      "bytes": 5074,
+      "role": "control"
+    }
+  ],
+  "version": "BRAIN_V2_V1_1_A7",
+  "sha256": "7f2968c722b4c1bc617c65e7c9f497fffc59108b1fa2318b7004ad33e5a5d60a"
+}

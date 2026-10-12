@@ -1,0 +1,25 @@
+{
+  "query_sha256": "633f398c77b7072f55ee3070abbf086e777bbdc9c40d785346cac6a38833a427",
+  "response": {
+    "observed_ms": 1791813258039,
+    "files": [],
+    "directories_visited": 253,
+    "inventory_bound_hit": false,
+    "scope": "VPS_FILESYSTEM_METADATA_ONLY_NOT_HISTORICAL_GIT_PROOF",
+    "broker_calls": 0,
+    "remote_writes": 0,
+    "guard_latest": {
+      "deadline_ms": 1791900000000,
+      "observed_ms": 1791813255626,
+      "receipt": {
+        "evidence_kind": "BROKER_PAPER",
+        "live_orders_allowed": false,
+        "money_authority": false,
+        "net_pnl_status": "NOT_PROVEN",
+        "status": "PAPER_PROTECTED",
+        "stop_order_id": "54ad2cbc-86fc-4a46-a0a8-9dbb04a11ed7"
+      },
+      "unwind_not_before_ms": 1791898500000
+    }
+  }
+}
