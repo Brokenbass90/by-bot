@@ -1,0 +1,46 @@
+{
+  "schema": "BRAIN_V2_A3_A4_SYNTHETIC_REPLAY_PROOF",
+  "authority": "SYNTHETIC_ONLY_ORDERS_OFF",
+  "receipt_count": 7,
+  "canonical_restart_exact": true,
+  "raw_journal_unchanged_on_replay": true,
+  "raw_journal_sha256": "b6f75bf407964c6856129f3f85c2b1e48d388f00fdc32593e91d92da1fa2c7bf",
+  "raw_journal_bytes": 73976,
+  "archive_sha256": "f1609e3518701c585107a70b26dddc1dda519177d7ed209833a823d86b1a3429",
+  "unknown_pnl_is_null": true,
+  "unknown_risk_released": true,
+  "late_funding_recredit_allowed": false,
+  "funding_coverage": {
+    "arms": {
+      "BRAIN_DET": {
+        "evaluated": 2,
+        "funding_unknown": 1,
+        "unknown_fraction": 0.5,
+        "unknown_risk_usd": "4.9682059452859490000",
+        "unknown_slot_hours": "1"
+      },
+      "FOUNDATION": {
+        "evaluated": 2,
+        "funding_unknown": 1,
+        "unknown_fraction": 0.5,
+        "unknown_risk_usd": "5.000",
+        "unknown_slot_hours": "1"
+      },
+      "RAW_SAFE": {
+        "evaluated": 2,
+        "funding_unknown": 1,
+        "unknown_fraction": 0.5,
+        "unknown_risk_usd": "5.000",
+        "unknown_slot_hours": "1"
+      }
+    },
+    "blocked_arms": [
+      "RAW_SAFE",
+      "FOUNDATION",
+      "BRAIN_DET"
+    ],
+    "pending_arms": [],
+    "status": "BLOCKED_DATA"
+  },
+  "orders_allowed": false
+}

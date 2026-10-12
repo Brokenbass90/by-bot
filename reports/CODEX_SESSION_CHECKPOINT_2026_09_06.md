@@ -1,5 +1,34 @@
 # Codex session checkpoint — 2026-09-06
 
+October12 morning A3/A4: **BRAIN_V2_ENGINEERING_READY / A3_A4_ORDERS_OFF_LOCAL**.
+Read [BRAIN_V2_A3_A4_ORDERS_OFF_DELIVERY_2026_10_12.md](BRAIN_V2_A3_A4_ORDERS_OFF_DELIVERY_2026_10_12.md),
+[BRAIN_V2_A3_A4_RUNBOOK.md](BRAIN_V2_A3_A4_RUNBOOK.md) and
+reports/evidence/brain_v2_a3_20261012/terminal_readiness.json.
+Owner-supplied frozen A3@1e4773b/A4@23411ae exact existing commits published by
+explicit owner push command; actual origin23411ae verified. Seven source pins,
+spec/params/A2 table unchanged. No Claude file edits/merge/generator/rawB3 trade
+outcome read/judge. New separate15m tick state/receipt removes whole-hour lookahead;
+release before allocation, context at floor(tick)/hour, entry metadata without
+R/actual-hold outcomes. Notional uses original streamlev; R already net6bps/side,
+subtract only2bps/side and signed Bybit funding with explicit settlement coverage.
+A4 UNKNOWN releases risk on schedule, whole cash null/excluded, E unchanged;
+per-arm unknown counts/slot-hours/risk and >5% diagnostic, never late E re-credit
+or new admission veto. UNKNOWN lifecycle contract is resolved by A4.
+231local targetedPASS (49new+182preserved),7synthetic paired receipt restart exact,
+source7/7/py_compile/whitespacePASS. Root bounded review5RED→GREEN; prior independent
+quota failure not retried, no independent financial signoff. Original A1/A2/V1/
+OS2 code and old evidence unchanged. Full-suite historicallyNOT_GREEN/not rerun.
+Four-fold tables/developing filter NOT_RUN; actual providers/calendar/publication/
+H1 seed/MTM/epoch/retention remain gates before an actual prospective worker.
+Synthetic unknown50% is an intentional test, not a market/strategy verdict.
+No VPS/broker/service operations; current runtime facts remain preceding dated
+receipts. Original NET PAPER MondayOct12 13:30–13:35UTC /16:30–16:35Cyprus opener/
+guard untouched; no restart/extend/HALTclear/LIVE GO. First held overnight DAY
+rearm TuesdayOct13. BOUNCE1/count, BOUNCE1_8, KITY/spentB3/ATT1 preserved.
+Next money check is actual Alpaca PAPER receipt; Brain continues only frozen
+source/research gates. Earlier hourly timing/UNKNOWN wording blockers below are
+historical and superseded by A3/A4 local implementation, not by research PASS.
+
 October12 morning: **BRAIN_V2_ENGINEERING_READY / ORDERS_OFF_LOCAL**.
 Read [BRAIN_V2_A1_A2_ORDERS_OFF_DELIVERY_2026_10_12.md](BRAIN_V2_A1_A2_ORDERS_OFF_DELIVERY_2026_10_12.md),
 [BRAIN_V2_A1_A2_RUNBOOK.md](BRAIN_V2_A1_A2_RUNBOOK.md) and

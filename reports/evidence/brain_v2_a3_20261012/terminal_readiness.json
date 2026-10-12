@@ -1,0 +1,46 @@
+{
+  "schema": "BRAIN_V2_A3_A4_LOCAL_TERMINAL_READINESS",
+  "status": "BRAIN_V2_ENGINEERING_READY",
+  "scope": "A3_A4_ORDERS_OFF_LOCAL",
+  "delivery_base_commit": "4ccb23ecdcc03bea543483aa794fee2d142456fa",
+  "research_remote_verified": "23411ae0e3a651af145462bf1734cf23ca25432d",
+  "code_sha256": {
+    "research_lab/brain_v2_a3.py": "727dfb67a1765ae9cc5efbdab186d12578cb9951e42551e36b92c9c8fe4b3f1b",
+    "tests/test_brain_v2_a3_ticks.py": "551610bf3cd017ac4f5485c6860f9a52c03f6d67a8c31f824542e30a63f08e8a",
+    "tests/test_brain_v2_a3_review_regressions.py": "f29bac77c4ee341e1c60d2fd8de84a12ca9a5a0a58d5789c78501262a6c2e78d"
+  },
+  "verification": {
+    "command": ".venv/bin/python -m pytest -q tests/test_brain_v2_a3_ticks.py tests/test_brain_v2_a3_review_regressions.py tests/test_brain_v2_a1_context.py tests/test_brain_v2_a1_allocator.py tests/test_brain_v2_a1_journal.py tests/test_brain_v2_a1_review_regressions.py tests/test_brain_v2_frozen_primitives.py tests/test_os2_shadow_journal.py tests/test_os2_shadow_bridge.py tests/test_os2_shadow_cli.py tests/test_os2_shadow_review_regressions.py tests/test_bounce1_intake_protocol_limits.py tests/test_strategy_shadow_ledger.py",
+    "targeted_local_pass": 231,
+    "a3_a4_tests": 49,
+    "existing_checks": 182,
+    "root_review_initial_red": 5,
+    "root_review_green": true,
+    "source_hashes_verified": 7,
+    "py_compile": "PASS",
+    "whitespace": "PASS",
+    "synthetic_paired_receipts": 7,
+    "canonical_restart_exact": true,
+    "full_repository_suite": "NOT_RUN_HISTORICALLY_NOT_GREEN",
+    "vps_tests": "NOT_RUN",
+    "independent_review": "UNAVAILABLE_PRIOR_QUOTA_NO_RETRY_NO_SIGNOFF"
+  },
+  "research_filter": "NOT_RUN",
+  "four_fold_tables": "NOT_GENERATED",
+  "prospective_worker": "NOT_STARTED",
+  "remaining_gates": [
+    "four pinned developing-fold train tables and frozen evaluation",
+    "actual complete causal opportunity/entry/terminal providers",
+    "source-bound historical settlement calendars and funding publication",
+    "canonical H1 seed/provenance and source-known epoch",
+    "actual MTM/cost integrity and reviewed journal retention"
+  ],
+  "synthetic_unknown_fraction": "50_PERCENT_INTENTIONAL_TEST_ONLY_NOT_A_MARKET_VERDICT",
+  "live_authority": false,
+  "orders_allowed": false,
+  "broker_operations": 0,
+  "vps_operations": 0,
+  "judge_runs": 0,
+  "raw_b3_trade_outcomes_read": false,
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}

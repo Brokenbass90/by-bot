@@ -260,3 +260,24 @@ original Monday opening/guard remain outside scope, no restart/extend/LIVE GO.
 BOUNCE1 source/count and BOUNCE1_8 lifecycle blockers are unchanged dated facts;
 no new VPS inspection/judge/epoch. Independent reviewer still unavailable, no
 retry/replacement or independent financial signoff; root review documented.
+
+## October12 Brain A3/A4 timing/cash continuation amendment
+
+Owner supplied frozen A3@1e4773b and A4@23411ae. Read checkpoint TOP and
+BRAIN_V2_A3_A4_ORDERS_OFF_DELIVERY_2026_10_12.md/runbook. Separate A3/A4 local
+tick allocator/paired journal delivered; original A1/A2/V1 code/evidence unchanged.
+Exact15m packages replace whole-hour allocation; context remains floor(tick)/hour,
+releases precede entry, source streamlev/R/hours preserved without resimulation.
+A4 resolves missing funding: scheduled risk release, whole PnL UNKNOWN/excluded,
+E unchanged, separate per-arm counts/slot-hours/risk, no retrospective credit.
+Greater-than5% is developing-data diagnostic only, not admission authority.
+Latest explicit owner push commands narrowly authorize publication of those
+existing research commits; no Claude checkout edits/merge/generator/outcome/judge.
+Origin23411ae verified; original spec/params/A2 table unchanged. Four fold tables/
+developing evaluation/actual worker remain NOT_RUN; complete real providers,
+source calendars/publication, H1 seed/MTM/epoch/retention precede prospective start.
+231 local targetedPASS,7 synthetic paired receipts exact after restart. No VPS/
+broker/service operations, LIVE authority or independent financial signoff. Prior
+reviewer quota failure remains, no retry/replacement. Preserve NET Monday opener/
+guard and actual PAPER gate; money owner GO remains separate. Continue frozen
+engineering/source work only, no policy tuning, B3 rerun or new strategy families.

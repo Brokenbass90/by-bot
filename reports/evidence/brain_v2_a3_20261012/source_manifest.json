@@ -1,0 +1,46 @@
+{
+  "schema": "BRAIN_V2_A3_FROZEN_SOURCES",
+  "research_commit": "23411ae0e3a651af145462bf1734cf23ca25432d",
+  "remote_verified": "23411ae0e3a651af145462bf1734cf23ca25432d",
+  "files": [
+    {
+      "path": "research_lab/brain_v2/BRAIN_V2_RESEARCH_PREREG_V1.md",
+      "bytes": 8075,
+      "sha256": "f96b73eca3607af7f997b821c2fe76fa8c868b8abc09d2ada64d0f2a54bfd6c0"
+    },
+    {
+      "path": "research_lab/brain_v2/BRAIN_V2_PARAMS_V1.json",
+      "bytes": 716,
+      "sha256": "305a00c7a752bec7cf97c647d5660e21ccc7a7e115cef21c3d436ab4c0dbc157"
+    },
+    {
+      "path": "research_lab/brain_v2/BRAIN_V2_ADDENDUM_A1.md",
+      "bytes": 4472,
+      "sha256": "11577585273fec71c499634e121df879bec1f861a8d3b265f65638ef5f3db999"
+    },
+    {
+      "path": "research_lab/brain_v2/BRAIN_V2_ADDENDUM_A2.md",
+      "bytes": 2247,
+      "sha256": "4e599ff09da9b0354ef95e1ec45c053b4a7c9b0f2bcac40b42fb2eaf79131a10"
+    },
+    {
+      "path": "research_lab/brain_v2/BRAIN_V2_ADDENDUM_A3.md",
+      "bytes": 4543,
+      "sha256": "2740b6bad02f724eca1da94c695d9d2a08d341eb82c04ca355834f54e69ede21"
+    },
+    {
+      "path": "research_lab/brain_v2/MU_SIGMA_V1.json",
+      "bytes": 7285,
+      "sha256": "35fa0e0809b0df2f63ef29d5c1483158573d35d6fb25212e79c1cfe500557020"
+    },
+    {
+      "path": "research_lab/brain_v2/BRAIN_V2_ADDENDUM_A4.md",
+      "bytes": 1685,
+      "sha256": "45be1c5455423e8414900c5c11db759028906066d49cfbf79b97e824754bb9a4"
+    }
+  ],
+  "raw_trade_outcomes_read": false,
+  "generator_run": false,
+  "orders_allowed": false,
+  "a3_research_commit": "1e4773bef1b5e21d764aaac348efe282737f64b9"
+}
