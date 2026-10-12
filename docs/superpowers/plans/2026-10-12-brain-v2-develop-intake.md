@@ -1,5 +1,11 @@
 # Brain V2 developing intake implementation plan
 
+October12 final state: A5/A6 mechanics/source binding published at55b04e0;
+single filter consumed and terminated BLOCKED_DATA/realized_capital_nonpositive.
+No retry or complete four-fold verdict. Read
+`reports/BRAIN_V2_A5_A6_SINGLE_FILTER_2026_10_12.md` and retained run receipts.
+Earlier pending contracts below are historical and superseded only by A5/A6.
+
 > **For agentic workers:** Use executing-plans inline. Continue8f0ae3c; no restart
 > of A3/A4, no new worktree/production operation/research math.
 
@@ -59,10 +65,10 @@ Produces: causal entry intent and separately released terminal/funding inputs.
 
 ### Task3: one frozen filter or exact pre-run blocker
 
-- [ ] Match every source/code/table/metric contract hash to published manifest.
+- [x] Match every source/code/table/metric contract hash to published manifest.
 - [x] Missing metric/cold-start/funding contract => BLOCKED_DATA before outcomes;
   preserve remaining evaluation permission rather than guess a favorable rule.
-- [ ] If all gates are frozen/complete, write exclusive one-shot start receipt,
+- [x] If all gates are frozen/complete, write exclusive one-shot start receipt,
   run exactly once and preserve PASS/STOP/BLOCKED receipt/raw paired report.
 - [x] Targeted verification, bounded critical review, canonical checkpoint and
   scoped publication. No independent signoff if reviewer remains quota-blocked.
@@ -79,21 +85,21 @@ Frozen research e2d668c: A5 c07cf796…e84a, A6 19a177e2…e4441. Supersedes
 only historical metric/carry/cold-start/calendar blockers; no train regeneration.
 Keep prior A1–A4/source-adapter versions and receipts unchanged.
 
-- [ ] TDD separate `brain_v2_develop.py`: A6 fold-table scorer and funding
+- [x] TDD separate `brain_v2_develop.py`: A6 fold-table scorer and funding
   calendar, A5 continuous100000USD realized ledgers/entry-fold attribution,
   DD_ENV at each pre-packet15m tick and close-only tail. Context/caps/order and
   A3 net-cost/A4 UNKNOWN accounting reused exactly. Test future R affects only
   diagnostics, train-zero participation, calendar gaps/missing files, fold carry.
-- [ ] Bind real sources through a separate adapter/one-shot runner. Use exact
+- [x] Bind real sources through a separate adapter/one-shot runner. Use exact
   original frozen regime/VOL helpers and published tables/215-file snapshot;
   missing funding yields A6 UNKNOWN, never0 or symbol exclusion. Preserve full
   paired decisions/three separate closed ledgers and tick metrics with bounded
   compressed journals and hashes. No original strategy simulation or B3 judge.
-- [ ] Publish all implementation/addendum/input/table hashes before evaluation;
+- [x] Publish all implementation/addendum/input/table hashes before evaluation;
   inspect exact remote. Exclusive start marker before terminal data use, refuse
   any second run. Match every pin again, then run exactly once. A5 expressly
   permits closing owned historical test positions afterOctober1; no new entries.
-- [ ] Preserve PASS/STOP_V1/BLOCKED_DATA or failure receipt; root bounded review,
+- [x] Preserve PASS/STOP_V1/BLOCKED_DATA or failure receipt; root bounded review,
   targeted tests, canonical handoff, scoped commit/push/remote verification.
 
 Review focus: repeated-start/crash must never rerun; earlier folding table may
@@ -102,3 +108,11 @@ entirely omitted but risk still held; DD_ENV future R cannot affect allocation;
 positions/realized equity carry across folds and tail attributed to entry fold.
 No new mathematics/retuning. A5 DD_ENV is a historical proxy, not MTM/edge proof.
 Independent reviewer prior quota restriction remains; do not retry that bucket.
+
+Actual one-shot started06:59:57UTC/terminated07:00:16UTC October12. Preserved
+five ledgers115721 records/62076 ticks throughApril7,2025 14:45UTC; first unsaved
+15:00UTC releases independently explain all arms' nonpositive capital. Existing
+SF3 GRASS R=-199.072,lev165060 admits60–98millionUSD gross despite stop-risk caps.
+Forensic reader calls no allocator/judge and makes no new decisions; all chains
+and recorded realized cash reconcile. No source repair/retuning or repeated run.
+Task closure is terminal BLOCKED, not complete developing comparison or moneyGO.

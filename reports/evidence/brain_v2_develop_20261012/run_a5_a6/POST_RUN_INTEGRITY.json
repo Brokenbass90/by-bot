@@ -1,0 +1,24 @@
+{
+  "adapter_files": 215,
+  "additional_allocator_runs": 0,
+  "filter_runs": 1,
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "forensic_script_sha256": "13da34c1abfa0f121d938cdbf8e8d97830b0c5a3d326d80c9e6b9297f67a643d",
+  "money_authority": false,
+  "orders_allowed": false,
+  "pre_run_manifest_sha256": "476fc7ba3c00264ca11e8d79dbd90ba424c8a8a3495f77c2df05c1dd1c68721c",
+  "sealed_receipts": {
+    "ARTIFACTS.json": "9c436db9f6a1f0b16b29ec6614de598897f38fd77f7ae47ff1b5a9fce5aad541",
+    "PARTIAL_CAPITAL_RECONCILIATION.json": "71c86059b4b9f1024e6443d3c68f1793767129942622d2b88306856c11350481",
+    "STARTED.json": "c1d2669dfe753877899d2efea67f916f7dfff931abef080137bd1dac78445926",
+    "TERMINAL.json": "5b0e2b70b7025edd7d6deec20c0d4bb435cf89ea1e97c3c0ff201982f574e389"
+  },
+  "status": "POST_RUN_PUBLISHED_PINS_PASS",
+  "table_hashes": [
+    "17482ae9f3a925ede796098898dc8ef637d7ce12a929673582915f7a8a0e2534",
+    "b379cc4d0e8c878c20743bcfbdfebf49b3ced4b3a811b9cb32194b78a1140caf",
+    "b126d029348e54aaa2c9cdd3920fd3050a66c915b6eec90ffc96da4f4c1c6d62",
+    "36cd63abb4f6eeffe9900a357d558e0f396ad04e7b220f92b614860c826b05b1"
+  ],
+  "verified_at_utc": "2026-10-12T07:14:46.966470+00:00"
+}

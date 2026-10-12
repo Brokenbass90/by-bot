@@ -1,5 +1,31 @@
 # MASTER HANDOFF — 2026-10-05
 
+October12 A5/A6 terminal: **FILTER_BLOCKED_DATA / PERMISSION_SPENT**.
+Read [BRAIN_V2_A5_A6_SINGLE_FILTER_2026_10_12.md](BRAIN_V2_A5_A6_SINGLE_FILTER_2026_10_12.md)
+and reports/evidence/brain_v2_develop_20261012/run_a5_a6/TERMINAL.json.
+A5/A6 exact research e2d668c published/verified; original17 controls/four train
+hashes unchanged. Separate continuous100000USD/fold-carry/DD_ENV/A6 mechanics,
+278local targetedPASS; code55b04e0/pre-run manifest476fc7ba…68721c remote verified
+before the single attempt06:59:57–07:00:16UTC. No B3/generator rerun/holdout entries.
+Actual run1 terminated realized_capital_nonpositive; any STARTED/run directory
+forbids retry. Full four-fold result/tail unavailable: no complete PASS/STOP_V1.
+Five preserved ledgers115721 records/62076 ticks through2025-04-07 14:45UTC pass
+hashchains and exact recorded cash. First unsaved15:00UTC release arithmetic:
+frozen SF3 GRASS R=-199.072/lev165060 admitted all3arms; model gross60–98millionUSD,
+GRASS loss96–158kUSD, all-arm capital nonpositive. Stop-risk caps do not bound
+notional/costs; no clamping/dropped leg/fee change/manifest repin/V1 rescue.
+PARTIAL_CAPITAL_RECONCILIATION.json/source-bound forensic reader calls no allocator,
+no new decisions. Due cash is explanatory arithmetic, not saved failed-tick state.
+Claude next: already-consumed SF3 normalization/source review and separately
+versioned execution-feasible gross/margin/cost contract; no new run authorized.
+DD_ENV remains historical proxy, not actual MTM. Previous independent reviewer
+quota not retried/no signoff; full-suite historicallyNOT_GREEN/not rerun.
+Zero VPS/broker/service operations; NET original Monday13:30–13:35UTC /16:30–16:35
+Cyprus PAPER opener/guard untouched. Actual receipt/overnight rearm/finality and
+separate LIVE GO still required; no fresh runtime/health/PAPER assertion here.
+VPS Bounce terminalBLOCKED_DATA/Codex BOUNCE1_8 cancelled/Claude Mac A1 separate.
+Earlier FILTER_NOT_RUN/unspent wording below is historical, superseded here.
+
 October12 real-source continuation: **ENTRY_CONTEXT_ADAPTERS_PASS /
 FILTER_BLOCKED_DATA_NOT_RUN**. Read
 [BRAIN_V2_REAL_ADAPTERS_2026_10_12.md](BRAIN_V2_REAL_ADAPTERS_2026_10_12.md) and

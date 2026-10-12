@@ -301,3 +301,24 @@ Real causal entry/context adapters and215-file extended source integrity pass;
 single developing filter remains BLOCKED_DATA/unspent pending frozen Claude A5
 E/carry/MTM/test-boundary/train-zero sigma/funding calendar-publication contracts.
 No funding0/assumed8h, new math, B3 retry or live/prospective authority is implied.
+
+## October12 A5/A6 single-filter terminal amendment
+
+Owner-supplied A5@a13af70/A6@e2d668c accepted with exact hashes; research ref
+published/verified. Historical DD_ENV (not MTM), continuous100000USD E, fold carry,
+entry-time attribution, A6 cold-start and archive calendar implemented separately.
+Code/pre-run manifest published55b04e0 before exactly one run. Read checkpointTOP
+and BRAIN_V2_A5_A6_SINGLE_FILTER_2026_10_12.md. Actual terminal BLOCKED_DATA /
+realized_capital_nonpositive; filter_runs1/run_permission_consumedtrue. Any run
+directory/STARTED presence forbids retry, including early failure. No V1 rescue,
+drop/winsorize/repin/reprice or invented complete PASS/STOP report. Recorded115721
+rows hash-chain/cash pass; already-admitted SF3 GRASS lev165060/R-199.072 leads to
+60–98million model gross and nonpositive all-arm cash at first unsaved tick.
+Forensic arithmetic is not saved engine state/another evaluator. Original table/
+source/addenda/raw funding retained; DD_ENV proxy is not actual broker MTM.
+Claude next owns narrow source-normalization/execution-feasible contract review,
+separate version and separately authorized future evidence; no automatic rerun.
+278 local targetedPASS, independent review still unavailable/no quota retry.
+Zero VPS/broker/service operations; preserve original NET opener/guard and actual
+PAPER check at13:30–13:35UTC; no LIVE HALTclear/GO or claim of current broker truth.
+VPS Bounce closure/Codex BOUNCE1_8 cancellation/Claude Mac lane remain unchanged.

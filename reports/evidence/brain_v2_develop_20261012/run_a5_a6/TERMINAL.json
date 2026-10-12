@@ -1,0 +1,1 @@
+{"exception_type":"BrainBlocked","filter_runs":1,"finished_at_utc":"2026-10-12T07:00:16.745535+00:00","manifest_sha256":"476fc7ba3c00264ca11e8d79dbd90ba424c8a8a3495f77c2df05c1dd1c68721c","money_authority":false,"orders_allowed":false,"reason":"realized_capital_nonpositive","run_permission_consumed":true,"status":"BLOCKED_DATA"}
