@@ -1,0 +1,36 @@
+{
+ "prereg": "PREREG_KASKAD_MAKER_2026_10_12.md",
+ "verdikt": "FAIL_TERMINAL_KILL",
+ "sobytiy": 1690,
+ "schetchiki": {
+  "nofill": 42
+ },
+ "n": 1648,
+ "dolya_fill": 0.975,
+ "sred_net_bps": -12.58,
+ "pf": 0.661,
+ "t_net": -4.77,
+ "izbytok": {
+  "n": 1570,
+  "sred": -3.68,
+  "t": -1.3
+ },
+ "long": {
+  "n": 800,
+  "sred": -7.9
+ },
+ "short": {
+  "n": 848,
+  "sred": -16.99
+ },
+ "polovina_1": {
+  "n": 620,
+  "sred": -0.38
+ },
+ "polovina_2": {
+  "n": 1028,
+  "sred": -19.94
+ },
+ "izderzhki_bps": 8.5,
+ "liq_sha256": "a27ae867460fa6d2855197016f39168e53cf8c3457b23238393d2fa50d645198"
+}
