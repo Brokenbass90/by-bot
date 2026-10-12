@@ -1,0 +1,37 @@
+{
+ "monet": 124,
+ "sobytiy": 20881,
+ "M1": {
+  "na_monetu_v_mes_med": 11.88,
+  "dolya_verh": 0.476,
+  "bar_provala": {
+   "1": 0.428,
+   "2": 0.251,
+   "3": 0.321
+  }
+ },
+ "M2": {
+  "vol_ratio_p25_p50_p75": [
+   1.11,
+   1.81,
+   3.12
+  ],
+  "dolya_ge_1_5": 0.6
+ },
+ "M3": {
+  "lev_p50_p90_p99": [
+   41.7,
+   98.7,
+   338.4
+  ],
+  "nevalidno_stop": 0,
+  "dolya_lev_le_100": 0.902,
+  "dolya_izderzhki_le_0_25R": 0.959,
+  "rr_do_seredina_p25_p50_p75": [
+   1.14,
+   1.82,
+   2.79
+  ],
+  "dolya_rr_le_0": 0.01
+ }
+}
