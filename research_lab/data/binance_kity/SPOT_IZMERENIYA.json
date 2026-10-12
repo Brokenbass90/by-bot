@@ -1,0 +1,21 @@
+{
+ "prereg": "PREREG_SPOT_POTOK_TEZIS_2026_10_12.md",
+ "kogda": "2026-10-12T12:37:33+00:00",
+ "PRIMARY": {
+  "nedel": 194,
+  "pokrytie": 0.959,
+  "med_monet": 47,
+  "M1_korr_spot_s_M3": 0.277,
+  "M2_korr_raznica_s_M3": -0.207,
+  "nedel_s_korr": 194
+ },
+ "REPLICATION": {
+  "nedel": 79,
+  "pokrytie": 0.722,
+  "med_monet": 50,
+  "M1_korr_spot_s_M3": 0.263,
+  "M2_korr_raznica_s_M3": -0.312,
+  "nedel_s_korr": 57
+ },
+ "reshenie": "VYBRAN_B_spot_minus_perp"
+}
