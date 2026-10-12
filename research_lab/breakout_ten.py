@@ -14,8 +14,10 @@ from pathlib import Path
 LAB = Path(__file__).resolve().parent; ROOT = LAB.parent
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(LAB))
 from strategies import event_expansion_retest_long_mtf_v1 as mtf
-from bot.event_long_mtf_execution_bridge_v1 import bridge_mtf_research_plan_v1
+from bot.event_long_mtf_execution_bridge_v1 import bridge_mtf_research_plan_v1  # noqa: F401 (история: v1 BLOCKED)
+from bot.event_long_mtf_execution_bridge_v2 import bridge_mtf_research_plan_v2   # Codex 2502d8e, sha 5745ef6b…4474
 from bot import event_long_execution_v1 as ex
+# ИСПРАВЛЕНО 12.10: зачёт только через bridge V2 (полный агрегат + окно уровня, точный M5-префикс). Было:
 # ИЗВЕСТНЫЙ ДЕФЕКТ (12.10, передан Codex): bridge сверяет provenance.output_sha256 (весь H1-агрегат) с level.source_bars_sha256
 # (только окно lookback, level_snapshot_v1 стр. 810/877) → на реальной истории > окна каждый план BLOCKED. Тень пишет планы и
 # state_pri_plane; после исправленной версии bridge — запуск с --perebridge, сделки досчитываются из сохранённых M5.
@@ -75,7 +77,7 @@ def epoha_init():
     src0 = (ep - PROGREV_DNEY * D) // H4 * H4
     sim, sn = vselennaya(src0)
     if "BTCUSDT" not in sim: sim = sim[:-1] + ["BTCUSDT"]  # BTC нужен для REZHIM; правило заранее
-    e = {"epoha_ms": ep, "epoha_utc": dt.datetime.utcfromtimestamp(ep / 1000).isoformat(), "src0_ms": src0,
+    e = {"epoha_ms": ep, "epoha_utc": dt.datetime.fromtimestamp(ep / 1000, dt.timezone.utc).replace(tzinfo=None).isoformat(), "src0_ms": src0,
          "simvoly": sim, "snimok_oi": sn, "zapisano": utc().isoformat(),
          "kod_sha256": sha_file(__file__),
          "strategiya_sha256": sha_file(ROOT / "strategies/event_expansion_retest_long_mtf_v1.py"),
@@ -130,13 +132,13 @@ def oblozhit(sym, rows, ep, cfg, uzhe, rezhim_fn):
         if st.plan is not None:
             if st.plan.plan_id not in uzhe:
                 fp, most = None, "ok"
-                try: fp = bridge_mtf_research_plan_v1(st.plan, state).frozen_plan
+                try: fp = bridge_mtf_research_plan_v2(st.plan, state, raw_closed_m5=rows[:state.source_count]).frozen_plan
                 except Exception as e: most = f"BLOCKED: {type(e).__name__}: {str(e)[:160]}"
                 jl_append(PLANY, {"plan_id": st.plan.plan_id, "symbol": sym, "known_at_ms": st.plan.known_at_ms,
                                   "valid_from_ms": st.plan.valid_from_m5_open_ts_ms,
                                   "v_epohe": st.plan.valid_from_m5_open_ts_ms >= ep["epoha_ms"],
                                   "rezhim": rezhim_fn(st.plan.known_at_ms), "zapisano": utc().isoformat(),
-                                  "mtf_plan": plan_obj(st.plan), "bridge": most,
+                                  "mtf_plan": plan_obj(st.plan), "bridge": most, "bridge_versiya": "v2",
                                   "frozen_plan": plan_obj(fp) if fp else None,
                                   "state_pri_plane": mtf.state_to_json(state)})   # для повторного bridge после исправления
                 uzhe.add(st.plan.plan_id)
@@ -189,7 +191,7 @@ def zakryt_sdelki(rows_by_sym, now_ms):
     posl = {}
     for p in jl_read(PLANY): posl[p["plan_id"]] = p
     for p in posl.values():
-        if p["plan_id"] in gotovo or not p["v_epohe"] or not p.get("frozen_plan"): continue
+        if p["plan_id"] in gotovo or not p["v_epohe"] or not p.get("frozen_plan") or p.get("bridge_versiya") != "v2": continue
         rows = rows_by_sym.get(p["symbol"])
         if not rows: continue
         i0 = (p["valid_from_ms"] - rows[0][0]) // M5
@@ -216,12 +218,15 @@ def perebridge(ep):
     posl = {}
     for p in jl_read(PLANY): posl[p["plan_id"]] = p
     for p in posl.values():
-        if p.get("frozen_plan"): continue
+        if p.get("frozen_plan") and p.get("bridge_versiya") == "v2": continue
+        rows = [tuple(r) for r in jl_read(M5DIR / f"{p['symbol']}.jsonl")]
         st = mtf.state_from_json(p["state_pri_plane"], expected_provider_fingerprint=ep["provider_fingerprint"], expected_cfg=cfg)
         plan = [x for x in st.plan_outbox if x.plan_id == p["plan_id"]][0]
-        try: fp = bridge_mtf_research_plan_v1(plan, st).frozen_plan
+        if not rows or rows[0][0] != st.source_start_open_ts_ms or len(rows) < st.source_count:
+            log("перебридж: нет точного префикса", p["plan_id"]); continue
+        try: fp = bridge_mtf_research_plan_v2(plan, st, raw_closed_m5=rows[:st.source_count]).frozen_plan
         except Exception as e: log("bridge всё ещё", p["plan_id"], str(e)[:120]); continue
-        q = dict(p); q.update(bridge="ok", frozen_plan=plan_obj(fp), zapisano=utc().isoformat()); jl_append(PLANY, q); n += 1
+        q = dict(p); q.update(bridge="ok", bridge_versiya="v2", frozen_plan=plan_obj(fp), zapisano=utc().isoformat()); jl_append(PLANY, q); n += 1
     log("перебридж:", n)
 
 
@@ -237,6 +242,7 @@ def shag(ep):
         if not rows: continue
         try: oblozhit(s, rows, ep, cfg, uzhe, rfn)
         except Exception as e: log("оркестратор", s, type(e).__name__, str(e)[:200])
+    perebridge(ep)
     zakryt_sdelki(rows_by, int(time.time() * 1000))
 
 
