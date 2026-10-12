@@ -1,0 +1,21 @@
+{
+  "actual_plan_ids": [
+    "2834ab795c880c1c1360763b88bc8570",
+    "332876cdcce3c9033df3d070cf3a1d83"
+  ],
+  "actual_plan_ids_sha256": "8f4d220a69c5dd0950fc4fc055e2d67cdfdce97c40a6f3195b3f81f67948d425",
+  "config_sha256": "b2a0529e343ed273675f9b3e11af27be95ca62c42b94c842c68929a87ecd3d4e",
+  "expected": {
+    "plan_ids_sha256": "8f4d220a69c5dd0950fc4fc055e2d67cdfdce97c40a6f3195b3f81f67948d425",
+    "planov_paket": 2,
+    "retestov": 7,
+    "sobytiy": 9,
+    "status": "PASS"
+  },
+  "judge_runs": 0,
+  "market_context_sha256": "34e79fbcca9bf33e1247a44ac5b57f0b33e6c1d188a329f28859ea6503a8054c",
+  "outcome_simulations": 0,
+  "research_local_ref": "e22c0e0b4837b9dbfea89fb6ea72baa1a510f5d7",
+  "research_parity_sha256": "2f55ae54bb909b3e549e4a914dd0f5f9717b985f27c927b1e291055a0efdd0bf",
+  "status": "CLAUDE_AVAX_PLAN_PARITY_PASS"
+}

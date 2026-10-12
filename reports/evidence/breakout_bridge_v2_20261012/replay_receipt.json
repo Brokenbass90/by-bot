@@ -1,0 +1,52 @@
+{
+  "broker_calls": 0,
+  "cases_sha256": "7a6d6242870bb53bd368efaeec686fc0251892af740b0ca043f91545852b5396",
+  "fixture_canonical_sha256": "cf5bbb2340bf0240b1c263116025fa0310a534b9e2f21ae24a6add97b16bb03c",
+  "fixture_compressed_sha256": "2127410a6e08c7b85bb04a2f8541255074adb8744d61e79b977025278ace5cd4",
+  "fixture_rows": 10782,
+  "input_window": [
+    1786492800000,
+    1791676800000
+  ],
+  "judge_runs": 0,
+  "mechanics_only": true,
+  "money_authority": false,
+  "new_bridge_sha256": "5745ef6ba1ddd1eb9c9159aaedec4f7ff7d8eeef8b29707ab9739ce837cd4474",
+  "orders_allowed": false,
+  "outcome_simulations": 0,
+  "plans": 2,
+  "provider": "bybit_v5_kline_linear_m5_breakout_m5_v2",
+  "provider_manifest_sha256": "200d7501b1acadcb621de48d58a945d2dfe3b634cbb22184490e449a0b4291b0",
+  "raw_source_files": [
+    {
+      "compressed_sha256": "9b62b67015a585da41771d3591ca1095257ba29035e073d3b5df024d29bc3eb4",
+      "manifest_uncompressed_sha256": "104879d67545d92c21a429266aaae35e4b32a1d9880393190937401b76003e38",
+      "path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/breakout_m5_v2/AVAXUSDT/AVAXUSDT_2026-08.jsonl.gz"
+    },
+    {
+      "compressed_sha256": "5d5ef0fb81d82cf0d7cc418965b31929baa29ebedd7ff5b7676244f0f9a92c5d",
+      "manifest_uncompressed_sha256": "7574d75b2ebb425511779e7696c72418f424e980a696fce54f67af213d7a037a",
+      "path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/breakout_m5_v2/AVAXUSDT/AVAXUSDT_2026-09.jsonl.gz"
+    },
+    {
+      "compressed_sha256": "3e11d9fbb84f7f1e42697b0c7599d3b46d961d256de1b4bd8c9b842234c4a667",
+      "manifest_uncompressed_sha256": "3b4049dec2364c40b2f237504b18ce7dcd63442d526ef1037637a0423f71cbe1",
+      "path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/breakout_m5_v2/AVAXUSDT/AVAXUSDT_2026-10.jsonl.gz"
+    }
+  ],
+  "recorded_at_utc": "2026-10-12T07:36:32.792611+00:00",
+  "research_local_commit": "e22c0e0b4837b9dbfea89fb6ea72baa1a510f5d7",
+  "research_local_published": false,
+  "research_origin_at_intake": "e2d668ce415c82c1c22c44454df84e168a8c5f7d",
+  "runtime_changes": 0,
+  "status": "BRIDGE_V2_SOURCE_ONLY_REPLAY_PASS",
+  "unchanged_core_pins": {
+    "bot/closed_bar_aggregation_v1.py": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa",
+    "bot/event_long_execution_v1.py": "8179b14f5dccefb273022c90e8abcd9ecd391092f6c9c08d706448ddb3ac1836",
+    "bot/event_long_mtf_execution_bridge_v1.py": "d2a7e55e9a2908a6a9bfb8db95af6963246e4319d958cd5fd02e905836eb5dd7",
+    "bot/level_snapshot_v1.py": "b776d2db30b350639be2705ded3c1b338ed34b976e1538c28c5e1e7c6586ad19",
+    "strategies/event_expansion_retest_long_mtf_v1.py": "2b3cb32d32a87c622a3484f0bc0d48282cc54fa316bf1f4252d37b076a7085fd"
+  },
+  "v1_rejects": 2,
+  "v2_conversions": 2
+}

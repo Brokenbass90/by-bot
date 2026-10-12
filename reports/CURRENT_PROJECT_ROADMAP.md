@@ -1,5 +1,22 @@
 # Current roadmap — owner scope October 8, 2026
 
+October12 Breakout bridge: **BRIDGE_V2_ENGINEERING_PASS / ORDERS_OFF**.
+Read [BREAKOUT_BRIDGE_V2_2026_10_12.md](BREAKOUT_BRIDGE_V2_2026_10_12.md).
+Claude's full-aggregate/lookback hash mismatch reproduced RED; separate V2 requires
+exact persisted raw M5 prefix, verifies both hash scopes and event/plan aggregates.
+Original V1/strategy/levels/aggregation/economics unchanged. 96 local targetedPASS;
+2 preserved AVAX plans rejected by V1, accepted by V2 with exact restart and original
+Claude plan-ID parity. Evidence/validation_receipt.json binds source and test pins.
+No real outcome simulation/judge, broker/service operations or independent signoff.
+Claude Mac shadow still imports V1: explicit versioned V2 + exact state_pri_plane
+source-prefix integration remains his next action; no silent SHA replacement.
+Research local e22c0e0 read immutably; origin at intake e2d668c, new local artifacts
+not published/merged by Codex. Brain A5/A6 remains spent BLOCKED_DATA, sealed receipts
+and all original input pins reverified; no rerun. Foreign allowlist preserved.
+Alpaca original NET Monday13:30–13:35UTC /16:30–16:35Cyprus opener/guard untouched;
+actual PAPER receipt/overnight DAY rearm/finality and separate LIVE GO remain P0.
+No fresh Alpaca runtime/broker/PAPER assertion in this source-only cycle.
+
 October12 A5/A6 terminal: **FILTER_BLOCKED_DATA / PERMISSION_SPENT**.
 Read [BRAIN_V2_A5_A6_SINGLE_FILTER_2026_10_12.md](BRAIN_V2_A5_A6_SINGLE_FILTER_2026_10_12.md)
 and reports/evidence/brain_v2_develop_20261012/run_a5_a6/TERMINAL.json.

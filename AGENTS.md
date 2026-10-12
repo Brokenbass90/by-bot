@@ -322,3 +322,17 @@ separate version and separately authorized future evidence; no automatic rerun.
 Zero VPS/broker/service operations; preserve original NET opener/guard and actual
 PAPER check at13:30–13:35UTC; no LIVE HALTclear/GO or claim of current broker truth.
 VPS Bounce closure/Codex BOUNCE1_8 cancellation/Claude Mac lane remain unchanged.
+
+## October12 owner Breakout bridge defect amendment
+
+Owner forwarded Claude's full-aggregate/lookback hash defect for engineering fix.
+Separate event_long_mtf_execution_bridge_v2 delivered orders-OFF; original V1/core
+sources remain unchanged. Read checkpointTOP/BREAKOUT_BRIDGE_V2_2026_10_12.md.
+V2 requires exact persisted raw M5 prefix, reconstructs complete/window provenance,
+and retains original MTF plan identity. 96 targetedPASS/2 exact AVAX source-only
+replays/restart/Claude plan parity. No outcomes/judge/research retuning or orders.
+Mac shadow integration remains Claude-owned: versioned V2 adapter and original
+state_pri_plane prefix; no silent source repin, process restart or checkout edit.
+Brain A5/A6 single filter remains spent BLOCKED_DATA, original sealed pins intact.
+Preserve NET original opener/guard/LIVE HALT/caps, actual PAPER gates and owner GO.
+Prior reviewer quota restriction remains; no retry or independent signoff claim.

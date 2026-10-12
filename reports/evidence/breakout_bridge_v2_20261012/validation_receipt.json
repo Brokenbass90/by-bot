@@ -1,0 +1,51 @@
+{
+  "archived_replay": {
+    "claude_plan_parity": "PASS",
+    "claude_plan_parity_sha256": "d0c0341757ced68737138a8cfbad2a35326deb5ed82c2d51ca9d0c230aec466d",
+    "replay_receipt_sha256": "c79f0c31f0f2f535772180c0a595937180eaecbcc50748ca312ee8c00414dc73",
+    "restart_exact": true,
+    "v1_rejects": 2,
+    "v2_pass": 2
+  },
+  "base_commit": "f3f52afba8198756715549ef43c3a78c9933c730",
+  "brain_preservation": {
+    "additional_filter_runs": 0,
+    "all_input_pins_verified": true,
+    "pre_run_manifest_sha256": "476fc7ba3c00264ca11e8d79dbd90ba424c8a8a3495f77c2df05c1dd1c68721c",
+    "sealed_receipts_unchanged": {
+      "ARTIFACTS.json": "9c436db9f6a1f0b16b29ec6614de598897f38fd77f7ae47ff1b5a9fce5aad541",
+      "PARTIAL_CAPITAL_RECONCILIATION.json": "71c86059b4b9f1024e6443d3c68f1793767129942622d2b88306856c11350481",
+      "STARTED.json": "c1d2669dfe753877899d2efea67f916f7dfff931abef080137bd1dac78445926",
+      "TERMINAL.json": "5b0e2b70b7025edd7d6deec20c0d4bb435cf89ea1e97c3c0ff201982f574e389"
+    }
+  },
+  "broker_calls": 0,
+  "claude_shadow_integration": "NOT_APPLIED",
+  "core_sources_unchanged_from_head": {
+    "bot/closed_bar_aggregation_v1.py": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa",
+    "bot/event_long_execution_v1.py": "8179b14f5dccefb273022c90e8abcd9ecd391092f6c9c08d706448ddb3ac1836",
+    "bot/event_long_mtf_execution_bridge_v1.py": "d2a7e55e9a2908a6a9bfb8db95af6963246e4319d958cd5fd02e905836eb5dd7",
+    "bot/level_snapshot_v1.py": "b776d2db30b350639be2705ded3c1b338ed34b976e1538c28c5e1e7c6586ad19",
+    "strategies/event_expansion_retest_long_mtf_v1.py": "2b3cb32d32a87c622a3484f0bc0d48282cc54fa316bf1f4252d37b076a7085fd"
+  },
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "implementation_sha256": "5745ef6ba1ddd1eb9c9159aaedec4f7ff7d8eeef8b29707ab9739ce837cd4474",
+  "money_authority": false,
+  "orders_allowed": false,
+  "review": "bounded root diff/source review; independent reviewer unavailable; no quota retry",
+  "runtime_operations": 0,
+  "status": "BRIDGE_V2_ENGINEERING_PASS",
+  "test_source_sha256": "c0c58e9cd31e113482ec22e478ab2ab5b89a2cbf0d0a9c434565813834778e1e",
+  "test_verification": {
+    "captured_tool_session": 32088,
+    "command": ".venv/bin/python -m pytest -q tests/test_event_long_mtf_execution_bridge_v2.py tests/test_event_long_mtf_execution_bridge_v1.py tests/test_level_snapshot_v1.py tests/test_closed_bar_aggregation_v1.py tests/test_event_expansion_retest_long_mtf_v1.py tests/test_event_expansion_retest_long_mtf_state_store.py tests/test_event_long_execution_v1.py",
+    "duration_seconds": 20.7,
+    "exit_code": 0,
+    "full_suite_run": false,
+    "observed_output": "96 passed in 20.70s",
+    "passed": 96,
+    "preserved_tests": 82,
+    "v2_tests": 14
+  },
+  "verified_at_utc": "2026-10-12T07:46:01.594163+00:00"
+}
