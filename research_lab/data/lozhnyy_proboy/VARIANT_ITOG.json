@@ -1,0 +1,30 @@
+{
+ "postmortem": "POSTMORTEM_LOZHNYY_PROBOY_I_VARIANT_2026_10_12.md",
+ "verdikt": "FAIL_TERMINAL_KILL",
+ "schetchiki": {
+  "sobytiy": 4377,
+  "ne_neutral": 820,
+  "otkaz_vol": 1550,
+  "otkaz_lev": 405,
+  "funding_unknown": 13
+ },
+ "n": 1589,
+ "sred_net_R": -0.1219,
+ "pf": 0.789,
+ "izbytok": {
+  "n": 1589,
+  "sred_izb": -0.0089,
+  "t": -0.28
+ },
+ "polovina_1": {
+  "n": 750,
+  "sred_izb": 0.0179,
+  "t": 0.41
+ },
+ "polovina_2": {
+  "n": 839,
+  "sred_izb": -0.0328,
+  "t": -0.78
+ },
+ "data_manifest_sha256": "b79385f357ad6135673f3aa58c177bbd3dd99b21aafa11b2ee22deab7dde8db7"
+}
