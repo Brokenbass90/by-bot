@@ -1,0 +1,44 @@
+{
+ "spot_taker_sha256": "cedeb78e48ca6a2224605a06032222124fdf43bc00b9cc72bda01c933d356fe9",
+ "rezultat_sha256": "44ea5c4d43608eb8b458dfe92f27c356ffce9733c89af69ad91b5a3e633cf94e",
+ "rezultat": {
+  "prereg": "PREREG_SPOT_POTOK_PNL_2026_10_12.md",
+  "priznak": "VYBRAN_B_spot_minus_perp",
+  "kogda": "2026-10-12T12:44:03+00:00",
+  "PRIMARY": {
+   "n": 186,
+   "dney": 186,
+   "edge_bps": -0.2,
+   "t": -0.01,
+   "polovinki_bps": [
+    8.0,
+    -8.4
+   ],
+   "syroy_bps": -0.2,
+   "verdikt": "KILLED",
+   "prichina": "эдж ≤ 0"
+  },
+  "REPLICATION": {
+   "n": 57,
+   "dney": 57,
+   "edge_bps": -160.5,
+   "t": -3.57,
+   "polovinki_bps": [
+    -152.2,
+    -168.4
+   ],
+   "syroy_bps": -160.5,
+   "verdikt": "KILLED",
+   "prichina": "эдж ≤ 0",
+   "status": "OPPOSITE"
+  },
+  "nezavisimost": {
+   "korr_s_KITY_M3": 0.05,
+   "nedel_m": 243,
+   "korr_s_impulsom_1d": 0.08,
+   "nedel_i": 243,
+   "ok": true
+  },
+  "status": "PRIMARY_FAIL (постмортем; G6: не более одного претендента)"
+ }
+}
