@@ -1,0 +1,313 @@
+{
+ "chto": "паритет адаптера BREAKOUT_M5_V2 -> event_expansion_retest_long_mtf_v1: пакет vs поток с рестартами + обрезка по known_at; исходы не читались",
+ "okna": [
+  {
+   "okno": [
+    "2026-08-12",
+    "2026-10-11"
+   ],
+   "simvoly": {
+    "1000PEPEUSDT": {
+     "sobytiy": 12,
+     "retestov": 6,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "ADAUSDT": {
+     "sobytiy": 6,
+     "retestov": 4,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "AVAXUSDT": {
+     "sobytiy": 9,
+     "retestov": 7,
+     "planov_paket": 2,
+     "plan_ids_sha256": "8f4d220a69c5dd0950fc4fc055e2d67cdfdce97c40a6f3195b3f81f67948d425",
+     "status": "PASS"
+    },
+    "BNBUSDT": {
+     "sobytiy": 4,
+     "retestov": 2,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "BTCUSDT": {
+     "sobytiy": 5,
+     "retestov": 1,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "DOGEUSDT": {
+     "sobytiy": 7,
+     "retestov": 3,
+     "planov_paket": 1,
+     "plan_ids_sha256": "10d971f9a2f1a78b7236e1dd5be1b98265f296c834c4202a8d47ed8886231bde",
+     "status": "PASS"
+    },
+    "ETHUSDT": {
+     "sobytiy": 7,
+     "retestov": 5,
+     "planov_paket": 1,
+     "plan_ids_sha256": "7655a1cac1c489ede69065eec9fa1add3d1424d3d6eafeeaef20998835df7feb",
+     "status": "PASS"
+    },
+    "ONDOUSDT": {
+     "sobytiy": 14,
+     "retestov": 14,
+     "planov_paket": 1,
+     "plan_ids_sha256": "72c867ef0a445eea90f245dc123300b23bad723ad8991ca6249ed130c3f9911c",
+     "status": "PASS"
+    },
+    "SOLUSDT": {
+     "sobytiy": 10,
+     "retestov": 6,
+     "planov_paket": 1,
+     "plan_ids_sha256": "3fc2818dbf663645ecbd4e529b3cf79d0bbb0b9c846584b331e50175785df576",
+     "status": "PASS"
+    },
+    "SUIUSDT": {
+     "sobytiy": 15,
+     "retestov": 12,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "TAOUSDT": {
+     "sobytiy": 9,
+     "retestov": 6,
+     "planov_paket": 1,
+     "plan_ids_sha256": "b3e1f24f6aea2cb02f33f0682f10b312ce0c1c55b05ebd17e2958851d014869c",
+     "status": "PASS"
+    },
+    "WIFUSDT": {
+     "sobytiy": 13,
+     "retestov": 9,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "XRPUSDT": {
+     "sobytiy": 8,
+     "retestov": 5,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    }
+   }
+  },
+  {
+   "okno": [
+    "2026-06-13",
+    "2026-08-12"
+   ],
+   "simvoly": {
+    "1000PEPEUSDT": {
+     "sobytiy": 13,
+     "retestov": 9,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "ADAUSDT": {
+     "sobytiy": 8,
+     "retestov": 7,
+     "planov_paket": 1,
+     "plan_ids_sha256": "3f82368ab932002aafe02123432ce20d257c8bba0d39fb8e5e5980c546127b05",
+     "status": "PASS"
+    },
+    "AVAXUSDT": {
+     "sobytiy": 5,
+     "retestov": 2,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "BNBUSDT": {
+     "sobytiy": 5,
+     "retestov": 3,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "BTCUSDT": {
+     "sobytiy": 5,
+     "retestov": 4,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "DOGEUSDT": {
+     "sobytiy": 4,
+     "retestov": 3,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "ETHUSDT": {
+     "sobytiy": 9,
+     "retestov": 6,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "ONDOUSDT": {
+     "sobytiy": 8,
+     "retestov": 5,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "SOLUSDT": {
+     "sobytiy": 10,
+     "retestov": 5,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "SUIUSDT": {
+     "sobytiy": 5,
+     "retestov": 3,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "TAOUSDT": {
+     "sobytiy": 6,
+     "retestov": 3,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "WIFUSDT": {
+     "sobytiy": 9,
+     "retestov": 9,
+     "planov_paket": 1,
+     "plan_ids_sha256": "e4084918154b969434f29ff921768258d42cc95e8aca1df1e1b1ab40a6bd3e87",
+     "status": "PASS"
+    },
+    "XRPUSDT": {
+     "sobytiy": 7,
+     "retestov": 5,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    }
+   }
+  },
+  {
+   "okno": [
+    "2026-04-14",
+    "2026-06-13"
+   ],
+   "simvoly": {
+    "1000PEPEUSDT": {
+     "sobytiy": 12,
+     "retestov": 11,
+     "planov_paket": 1,
+     "plan_ids_sha256": "ef8b52c6ed4fd0c9d7679e0bfa7f8f7fceada7cfb4014955d54317d20fa4cd6d",
+     "status": "PASS"
+    },
+    "ADAUSDT": {
+     "sobytiy": 10,
+     "retestov": 9,
+     "planov_paket": 1,
+     "plan_ids_sha256": "b4bd7bb63131b37a5e966fa7ea921c8d7cce66c635a95fb48cb2c7e3a7f9289d",
+     "status": "PASS"
+    },
+    "AVAXUSDT": {
+     "sobytiy": 3,
+     "retestov": 3,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "BNBUSDT": {
+     "sobytiy": 2,
+     "retestov": 1,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "BTCUSDT": {
+     "sobytiy": 4,
+     "retestov": 3,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "DOGEUSDT": {
+     "sobytiy": 9,
+     "retestov": 8,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "ETHUSDT": {
+     "sobytiy": 6,
+     "retestov": 4,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "ONDOUSDT": {
+     "sobytiy": 7,
+     "retestov": 7,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "SOLUSDT": {
+     "sobytiy": 9,
+     "retestov": 6,
+     "planov_paket": 1,
+     "plan_ids_sha256": "bd4e054a5500d08d0e866162c9af05c594ae086601436e93736cac93182d163e",
+     "status": "PASS"
+    },
+    "SUIUSDT": {
+     "sobytiy": 8,
+     "retestov": 8,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "TAOUSDT": {
+     "sobytiy": 10,
+     "retestov": 8,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    },
+    "WIFUSDT": {
+     "sobytiy": 7,
+     "retestov": 7,
+     "planov_paket": 1,
+     "plan_ids_sha256": "77d4e551307731a1d0e94a014aef86ab3706689457d68c26568d0b5fe12d1cfe",
+     "status": "PASS"
+    },
+    "XRPUSDT": {
+     "sobytiy": 4,
+     "retestov": 3,
+     "planov_paket": 0,
+     "plan_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+     "status": "PASS"
+    }
+   }
+  }
+ ],
+ "sobytiy": 304,
+ "retestov": 222,
+ "planov": 13,
+ "nesovpadeniy": 0,
+ "progonov": 39,
+ "strategiya_sha256": "2b3cb32d32a87c622a3484f0bc0d48282cc54fa316bf1f4252d37b076a7085fd",
+ "config_sha256": "b2a0529e343ed273675f9b3e11af27be95ca62c42b94c842c68929a87ecd3d4e",
+ "manifest_sha256": "200d7501b1acadcb621de48d58a945d2dfe3b634cbb22184490e449a0b4291b0",
+ "porog_planov": 10,
+ "status": "PASS",
+ "chastota": "13 планов / 180 дней / 13 монет"
+}
