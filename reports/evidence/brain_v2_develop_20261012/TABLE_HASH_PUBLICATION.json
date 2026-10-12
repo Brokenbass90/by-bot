@@ -1,0 +1,55 @@
+{
+  "schema": "BRAIN_V2_FOUR_TRAIN_TABLES_PRE_RUN_PUBLICATION",
+  "status": "TRAIN_TABLES_PINNED_FILTER_NOT_RUN",
+  "research_ref": "6e59c2cd10aea1e17cbf2a1973c470d241b3ce10",
+  "source_manifest_sha256": "a2325b0b534713f072f5e50559d57633e389646b7a5e85861d5d72c8461050bf",
+  "generator_sha256": "4371d573ab0b14c9a4c65ba3c244100642ade8bdaf249ad10c33e8f3e658988c",
+  "tables": [
+    {
+      "cutoff": "2023-07-01",
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2023-07-01.json",
+      "sha256": "17482ae9f3a925ede796098898dc8ef637d7ce12a929673582915f7a8a0e2534",
+      "bytes": 4123,
+      "missing_sleeves": [
+        "ETS2",
+        "SF3"
+      ]
+    },
+    {
+      "cutoff": "2024-01-01",
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2024-01-01.json",
+      "sha256": "b379cc4d0e8c878c20743bcfbdfebf49b3ced4b3a811b9cb32194b78a1140caf",
+      "bytes": 4515,
+      "missing_sleeves": [
+        "ETS2",
+        "SF3"
+      ]
+    },
+    {
+      "cutoff": "2024-07-01",
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2024-07-01.json",
+      "sha256": "b126d029348e54aaa2c9cdd3920fd3050a66c915b6eec90ffc96da4f4c1c6d62",
+      "bytes": 7083,
+      "missing_sleeves": []
+    },
+    {
+      "cutoff": "2025-01-01",
+      "path": "reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2025-01-01.json",
+      "sha256": "36cd63abb4f6eeffe9900a357d558e0f396ad04e7b220f92b614860c826b05b1",
+      "bytes": 7271,
+      "missing_sleeves": []
+    }
+  ],
+  "python": "3.12.8",
+  "numpy": "2.5.2",
+  "filter_started": false,
+  "filter_runs": 0,
+  "B3_runs": 0,
+  "orders_allowed": false,
+  "pre_run_blockers": [
+    "frozen train=0/missing sleeve sigma rule for early ETS2/SF3",
+    "initial equity and fold capital/position carry",
+    "MTM partial-exit price/time convention",
+    "test boundary ts versus t_available"
+  ]
+}

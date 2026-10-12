@@ -1,0 +1,67 @@
+{
+ "ETS2": {
+  "sdelok": 46134,
+  "sha256": "d4bcbaa8ecc5442b67b9be94f7bc357ba1528a5b28cdb88a6302fc94bb47d0c5",
+  "noga": [
+   "elder_triple_screen_v2",
+   "ElderTripleScreenV2Strategy",
+   "ETS2",
+   "short",
+   "4.0",
+   "168",
+   "36",
+   "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/os2/dannye_15m",
+   "15",
+   "None"
+  ],
+  "monet": 137
+ },
+ "ASR1": {
+  "sdelok": 1035,
+  "sha256": "18d51ae9f2e0175f916e1100d62717d14feb6d980bbccb5b0e4904d04e88bd17",
+  "noga": [
+   "alt_support_reclaim_v1",
+   "AltSupportReclaimV1Strategy",
+   "ASR1",
+   "long",
+   4.0,
+   168,
+   [],
+   6
+  ]
+ },
+ "SF3": {
+  "sdelok": 16453,
+  "sha256": "7739e7a4619bf238097de04afc8b41303b74718c64cc25a4022436296010fe45",
+  "noga": [
+   "spike_fade_v3",
+   "SpikeFadeV3Strategy",
+   "SF3",
+   "short",
+   "4.0",
+   "336",
+   "0",
+   "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/os2/dannye_15m",
+   "15",
+   "None"
+  ],
+  "monet": 137
+ },
+ "BOUNCE1": {
+  "sdelok": 151,
+  "sha256": "6e40c2bb453ec07f77d99f67c1283f475446cd5b89d8b1b4f787afad4184e33d",
+  "noga": [
+   "alt_support_bounce_v1",
+   "AltSupportBounceV1Strategy",
+   "BOUNCE1",
+   "long",
+   "1.0",
+   "48",
+   "72",
+   "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/h1",
+   "60",
+   "['BTCUSDT', 'ETHUSDT']"
+  ],
+  "monet": 2
+ }
+}

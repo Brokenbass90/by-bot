@@ -1,0 +1,31 @@
+{
+  "schema": "BRAIN_V2_EXACT_A2_TRAIN_GENERATION",
+  "cutoff": "2024-07-01",
+  "command": [
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.superpowers/sdd/brain-v2-develop-20261012/source/research_lab/brain_v2/mu_sigma.py",
+    "--cutoff",
+    "2024-07-01",
+    "--out",
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/reports/evidence/brain_v2_develop_20261012/tables/MU_SIGMA_2024-07-01.json"
+  ],
+  "manifest_sha256": "a2325b0b534713f072f5e50559d57633e389646b7a5e85861d5d72c8461050bf",
+  "generator_sha256": "4371d573ab0b14c9a4c65ba3c244100642ade8bdaf249ad10c33e8f3e658988c",
+  "exit_code": 0,
+  "stdout": "sha256 b126d029348e54aaa2c9cdd3920fd3050a66c915b6eec90ffc96da4f4c1c6d62\n{'ATT1': (1843, -0.005, 0.479, 291), 'SBR1': (742, 0.0185, 0.569, 157), 'ASR1': (321, -0.019, 0.809, 31), 'ETS2': (7072, 0.035, 0.526, 2166), 'SF3': (2804, -0.0541, 1.18, 1102), 'BOUNCE1': (55, -0.0256, 1.147, 6)}\n",
+  "stderr": "",
+  "source_integrity_after": true,
+  "filter_runs": 0,
+  "orders_allowed": false,
+  "table_sha256": "b126d029348e54aaa2c9cdd3920fd3050a66c915b6eec90ffc96da4f4c1c6d62",
+  "bytes": 7083,
+  "populated_sleeves": [
+    "ASR1",
+    "ATT1",
+    "BOUNCE1",
+    "ETS2",
+    "SBR1",
+    "SF3"
+  ],
+  "missing_sleeves": []
+}

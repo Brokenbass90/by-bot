@@ -1,0 +1,7 @@
+{
+  "schema": "FROZEN_SOURCE_WHITESPACE_EXCEPTION",
+  "path": "reports/evidence/brain_v2_develop_20261012/frozen/bot/strategy_priority_router.py",
+  "sha256": "01dcdba01e3f5e684aff2412a11e5a023edab070c03abd352ead81d749c7d469",
+  "reason": "unchanged upstream blank line at EOF retained to preserve exact source pin",
+  "mutable_changes_check": "PASS_WITH_FROZEN_PATH_EXCLUDED"
+}

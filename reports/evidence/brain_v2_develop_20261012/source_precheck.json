@@ -1,0 +1,13 @@
+{
+  "schema": "BRAIN_V2_DEVELOP_SOURCE_PRECHECK",
+  "manifest_sha256": "a2325b0b534713f072f5e50559d57633e389646b7a5e85861d5d72c8461050bf",
+  "source_integrity": "PASS",
+  "stream_manifest": "PASS",
+  "brain_control_pins": "PASS",
+  "regime_lock_exit": 0,
+  "regime_lock_stdout": "REZHIM_V1 замок: PASS\n",
+  "regime_lock_stderr": "",
+  "filter_runs": 0,
+  "judge_runs": 0,
+  "orders_allowed": false
+}

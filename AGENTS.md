@@ -281,3 +281,17 @@ broker/service operations, LIVE authority or independent financial signoff. Prio
 reviewer quota failure remains, no retry/replacement. Preserve NET Monday opener/
 guard and actual PAPER gate; money owner GO remains separate. Continue frozen
 engineering/source work only, no policy tuning, B3 rerun or new strategy families.
+
+## October12 owner developing-table / Bounce closure amendment
+
+VPS BOUNCE1 terminal BLOCKED_DATA accepted; stop excavation/judge. Codex BOUNCE1_8
+deployment cancelled before start. Claude owns Mac bounce_ten.py/PREREG A1 at
+research6e59c2c with separate cohorts; no Codex clone/adoption or process restart.
+Owner explicitly authorizes four exact A2 mu_sigma.py --cutoff train tables,
+source manifests/real adapters and one frozen developing filter ONLY after all
+hashes match. No new math/tuning, B3 rerun or independent sealed holdout use.
+Read checkpoint TOP and BRAIN_V2_FOUR_TABLE_HASHES_2026_10_12.md. Four train hashes
+are published before filter; source snapshot/regime lock match. Early tables
+miss ETS2/SF3 train stats; cold-start/MTM/E-carry/test-window contracts must be
+frozen by Claude, never guessed/defaulted/dropped. Single filter remains unspent
+until complete. Preserve old sources/receipts, original NET session and LIVE.

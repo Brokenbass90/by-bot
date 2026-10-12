@@ -1,5 +1,20 @@
 # Current roadmap — owner scope October 8, 2026
 
+October12 owner scope update: VPS BOUNCE1 is terminal **BLOCKED_DATA**;
+no further source excavation/judge. Codex BOUNCE1_8 cancelled before deployment;
+Claude Mac bounce_ten.py / PREREG A1@6e59c2c is the prospective research lane,
+separate journals/epochs; actual running/counts not inspected here.
+Brain **TRAIN_TABLES_PINNED / FILTER_NOT_RUN**: read
+[BRAIN_V2_FOUR_TABLE_HASHES_2026_10_12.md](BRAIN_V2_FOUR_TABLE_HASHES_2026_10_12.md)
+and reports/evidence/brain_v2_develop_20261012/TABLE_HASH_PUBLICATION.json.
+Four exact A2 generator cutoffs complete, all source pins/regime lock PASS;
+full hashes published before comparison. First two tables lack ETS2/SF3 train
+sigma; no future-statistics/default/dropped-leg rule invented. Frozen cold-start,
+E/fold carry, MTM partial-exit and test-boundary questions sent to Claude via
+owner; actual adapters next, single developing filter remains unspent.
+No B3 rerun/holdout evaluation/tuning/Claude working-file edit/VPS/broker action.
+Original NET Alpaca PAPER opener/guard/HALT/caps remain untouched.
+
 October11 current queue: read
 [SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md](SUNDAY_PREOPEN_AND_CRYPTO_SOURCE_DELTA_2026_10_11.md).
 P0 Monday NET closed-Friday ranking/source packet is prepared, **not dispatchable**.
