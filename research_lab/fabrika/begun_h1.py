@@ -27,6 +27,7 @@ ROOT = LAB.parent
 sys.path.insert(0, str(LAB)); sys.path.insert(0, str(ROOT))
 from random_control import sim_geo, ema, FLAT, LOOKBACK, DRAWS  # noqa: E402
 from research_machine import Store, pervyy_dlya, zapisat_sboy  # noqa: E402
+import ispolnimost as ISP  # noqa: E402
 
 OKNA = {"O1": (1709251200000, 1759276800000),
         "O2": (1672531200000, 1709251200000),
@@ -103,6 +104,7 @@ def main():
     rng_o3 = np.random.default_rng(8)
     CUT = OKNA["O3"][0]
     sboev = 0
+    otkazy = {}
     for k, fp in enumerate(files):
         dd = np.load(fp); ts, o = dd["ts"], dd["ohlcv"].astype(float)
         if len(ts) < LOOKBACK + 300:
@@ -137,11 +139,15 @@ def main():
             if risk <= 0 or len(tps) < 2:
                 continue
             stop_pct = risk / entry0
+            ok_isp, pr_isp, spred_R = ISP.dopusk(Path(fp).stem, stop_pct, 6.0, True)   # Фабрика V2: G1/G3
+            if not ok_isp:
+                otkazy[pr_isp] = otkazy.get(pr_isp, 0) + 1; continue
             rr1 = abs(tps[0] - entry0) / risk; rr2 = abs(tps[1] - entry0) / risk
             f1 = float((s.tp_fracs or [0.55])[0])
             r = sim_geo(B, i, short, stop_pct, rr1, rr2, f1, hold)
             if r is None:
                 continue
+            r -= spred_R
             block = i + hold // 4
             for w, (lo, hi) in OKNA.items():
                 if lo <= b[0] < hi:
@@ -151,10 +157,10 @@ def main():
                         for dr in range(DRAWS):
                             rc = sim_geo(B, int(rng.choice(pool)), short, stop_pct, rr1, rr2, f1, hold)
                             if rc is not None:
-                                ctrl[w][dr].append(rc)
+                                ctrl[w][dr].append(rc - spred_R)
         if (k + 1) % 20 == 0:
             print(f"... {k+1}/{len(files)}", flush=True)
-    rez = {"param": p, "monet": len(files), "limit": a.limit, "sboev": sboev,
+    rez = {"param": p, "monet": len(files), "limit": a.limit, "sboev": sboev, "otkazy_ispolnimosti": otkazy, "vorota": "V2_G1_G3",
            "okna": {w: okno_itog(real[w], ctrl[w]) for w in OKNA}}
     Path(a.vyhod).write_text(json.dumps(rez, ensure_ascii=False, indent=1))
     print("готово, сделок по окнам:", {w: v["n"] for w, v in rez["okna"].items()})

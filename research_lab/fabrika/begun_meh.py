@@ -18,6 +18,7 @@ import numpy as np
 DIR = Path(__file__).resolve().parent; LAB = DIR.parent
 sys.path.insert(0, str(DIR))
 from mehanizmy import MEHANIZMY, RYNKI  # noqa: E402
+import ispolnimost as ISP  # noqa: E402
 
 DRAWS, PROGREV = 20, 250
 
@@ -88,6 +89,7 @@ def main():
         files = files[: a.limit]
     real = {w: [] for w in OKNA}; ctrl = {w: [[] for _ in range(DRAWS)] for w in OKNA}
     rng = np.random.default_rng(7)
+    otkazy = {}
     for k, fp in enumerate(files):
         d = np.load(fp); ts = d["ts"].astype(np.int64)
         if RY.get("ts_mt5"):                                # время сервера MT5 → UTC (DEFEKT_VREMYA_MT5)
@@ -107,9 +109,13 @@ def main():
             if i < PROGREV or i <= block or i >= len(ts) - 1 or not (atr_[i] > 0):
                 continue
             stop_pct = M["stop"] * atr_[i] / o[i + 1]
+            ok_isp, pr_isp, spred_R = ISP.dopusk(Path(fp).stem, stop_pct, RY["fee_bps"], p["rynok"].startswith("crypto"))   # V2: G1/G3
+            if not ok_isp:
+                otkazy[pr_isp] = otkazy.get(pr_isp, 0) + 1; continue
             r = sim(o, h, l, c, i, short, stop_pct, M["rr1"], M["rr2"], M["f1"], M["hold"], RY["fee_bps"])
             if not np.isfinite(r):
                 continue
+            r -= spred_R
             block = i + M["hold"] // 4
             for w, (lo, hi) in OKNA.items():
                 if lo <= ts[i] < hi:
@@ -120,10 +126,10 @@ def main():
                             j = int(rng.choice(pool))
                             rc = sim(o, h, l, c, j, short, stop_pct, M["rr1"], M["rr2"], M["f1"], M["hold"], RY["fee_bps"])
                             if np.isfinite(rc):
-                                ctrl[w][dr].append(rc)
+                                ctrl[w][dr].append(rc - spred_R)
         if (k + 1) % 20 == 0:
             print(f"... {k+1}/{len(files)}", flush=True)
-    rez = {"param": p, "monet": len(files), "limit": a.limit,
+    rez = {"param": p, "monet": len(files), "limit": a.limit, "otkazy_ispolnimosti": otkazy, "vorota": "V2_G1_G3",
            "okna": {w: okno_itog(real[w], ctrl[w]) for w in OKNA}}
     tmp = Path(a.vyhod + ".tmp"); tmp.write_text(json.dumps(rez, ensure_ascii=False, indent=1))
     tmp.replace(a.vyhod)
