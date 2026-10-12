@@ -1,0 +1,82 @@
+{
+ "prereg": "PREREG_BREAKOUT_DEV_EARLY_2023_2024H1_2026_10_12.md @ bc442fe",
+ "chastey": 39,
+ "ozhidalos": 39,
+ "verdikt": "DEPRIORITIZE",
+ "n": 31,
+ "sred_net_r": -0.1743,
+ "pf": 0.586,
+ "summa_r": -5.405,
+ "funding_unknown": 0,
+ "otkazy_kontrakta": 0,
+ "bridge_fail": 0,
+ "opisatelno": {
+  "stress_sred": -0.2344,
+  "ne_bear": {
+   "n": 29,
+   "sred": -0.1496
+  },
+  "po_segmentam": {
+   "2023H1": {
+    "n": 10,
+    "sred": -0.1871
+   },
+   "2023H2": {
+    "n": 10,
+    "sred": 0.0788
+   },
+   "2024H1": {
+    "n": 11,
+    "sred": -0.3929
+   }
+  },
+  "vyhody": {
+   "max_hold": 16,
+   "stop": 8,
+   "tp1_then_max_hold": 5,
+   "tp1_tp2": 2
+  },
+  "po_monetam": {
+   "1000PEPEUSDT": {
+    "n": 2,
+    "sred": 0.2131
+   },
+   "ADAUSDT": {
+    "n": 2,
+    "sred": 0.3069
+   },
+   "AVAXUSDT": {
+    "n": 5,
+    "sred": -0.313
+   },
+   "BTCUSDT": {
+    "n": 3,
+    "sred": -0.3949
+   },
+   "DOGEUSDT": {
+    "n": 3,
+    "sred": -0.3765
+   },
+   "ETHUSDT": {
+    "n": 2,
+    "sred": -0.6722
+   },
+   "SOLUSDT": {
+    "n": 6,
+    "sred": 0.4113
+   },
+   "SUIUSDT": {
+    "n": 2,
+    "sred": -0.7016
+   },
+   "TAOUSDT": {
+    "n": 2,
+    "sred": -0.683
+   },
+   "XRPUSDT": {
+    "n": 4,
+    "sred": -0.23
+   }
+  }
+ }
+}
