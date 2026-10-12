@@ -1,0 +1,167 @@
+{
+  "a7_excluded": 353,
+  "a7_excluded_by_sleeve_fold": {
+    "0|ATT1": 3,
+    "1|ATT1": 3,
+    "1|ETS2": 7,
+    "1|SF3": 51,
+    "2|ATT1": 2,
+    "2|ETS2": 16,
+    "2|SF3": 82,
+    "3|ATT1": 3,
+    "3|BOUNCE1": 2,
+    "3|ETS2": 34,
+    "3|SF3": 150
+  },
+  "a7_rejected_before_context_and_score": true,
+  "additional_evaluator_runs": 0,
+  "arms": {
+    "BRAIN_DET": {
+      "accepted_lev_over_100": 0,
+      "closed": 3830,
+      "final_realized_usd": "81820.514437469849609216919605276881201868544288871",
+      "fold_net_usd": [
+        "847.64726073275720799676291949903921511052739255223",
+        "852.82013561823025683241064838384910855933183247976",
+        "-15249.840823162868365040864486353515835986914392652",
+        "-4630.1121357182694905713894762524912858144005433981"
+      ],
+      "funding_unknown": 58,
+      "known": 3772,
+      "net_usd": "-18179.485562530150390783080394723118798131455711129",
+      "rejections": {
+        "direction_cap": 4950,
+        "infeasible_stop_lev": 353,
+        "risk_budget": 8892,
+        "sleeve_cap": 11111,
+        "slots_full": 34534,
+        "symbol_overlap": 6071
+      },
+      "unknown_pnl_excluded": true
+    },
+    "FOUNDATION": {
+      "accepted_lev_over_100": 0,
+      "closed": 3662,
+      "final_realized_usd": "87235.645841081521973219864809589559079433902628002",
+      "fold_net_usd": [
+        "1705.4735241703153471398236607289352470608977589500",
+        "3878.3728851232105654696684412171711561759159150315",
+        "-7686.7579828938897734719637548958185487605594369526",
+        "-10661.442585318114165917663537460728775042351608723"
+      ],
+      "funding_unknown": 60,
+      "known": 3602,
+      "net_usd": "-12764.354158918478026780135190410440920566097371998",
+      "rejections": {
+        "direction_cap": 4236,
+        "infeasible_stop_lev": 353,
+        "risk_budget": 24229,
+        "sleeve_cap": 15102,
+        "slots_full": 13031,
+        "symbol_overlap": 9128
+      },
+      "unknown_pnl_excluded": true
+    },
+    "RAW_SAFE": {
+      "accepted_lev_over_100": 0,
+      "closed": 4287,
+      "final_realized_usd": "123075.10449420647857386154814794288812513492367128",
+      "fold_net_usd": [
+        "4262.7831005037007095729724016474502451689225700515",
+        "24866.087681221105244386321319520645345953585643211",
+        "-16096.884719361589721033449046683271553694245311308",
+        "10043.118431843262340935703473458064087706660769514"
+      ],
+      "funding_unknown": 77,
+      "known": 4210,
+      "net_usd": "23075.10449420647857386154814794288812513492367128",
+      "rejections": {
+        "infeasible_stop_lev": 353,
+        "risk_budget": 29601,
+        "slots_full": 27957,
+        "symbol_overlap": 7543
+      },
+      "unknown_pnl_excluded": true
+    }
+  },
+  "equity_ticks": 79012,
+  "filter_runs": 1,
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "full_release_tail_no_open_positions": true,
+  "ledger_integrity": {
+    "closed_BRAIN_DET": {
+      "compressed_bytes": 1187936,
+      "compressed_sha256": "874da74c282124e2c9ce2c8d1d2695b13763a04f90614edadad62b473e210ee3",
+      "last_record_sha256": "3af3244d79f946d5de67cb4775f93f9e5bb82ba5f53496de2f023e928b589745",
+      "path": "closed_BRAIN_DET.jsonl.gz",
+      "raw_bytes": 3674635,
+      "records": 3830,
+      "status": "PASS"
+    },
+    "closed_FOUNDATION": {
+      "compressed_bytes": 1110738,
+      "compressed_sha256": "064eda67e41c42f10d849414d7387060667782224d286d2968e15205b5c46893",
+      "last_record_sha256": "28693fa3757a02fddd388890a58f908982bb47f86f5e5d59ceeda117c65d3d6a",
+      "path": "closed_FOUNDATION.jsonl.gz",
+      "raw_bytes": 3508760,
+      "records": 3662,
+      "status": "PASS"
+    },
+    "closed_RAW_SAFE": {
+      "compressed_bytes": 1299530,
+      "compressed_sha256": "1d143de1ff642e7b6f33b2f4a1b6e6561c03a159e70406726f424b5b33b287b5",
+      "last_record_sha256": "5db421253c42da39bace05d72793d9793e3af7dd420dd358c1099fda0543d92b",
+      "path": "closed_RAW_SAFE.jsonl.gz",
+      "raw_bytes": 4104732,
+      "records": 4287,
+      "status": "PASS"
+    },
+    "equity_ticks": {
+      "compressed_bytes": 6243115,
+      "compressed_sha256": "0466522c7de9ae106860866421b778e7c537c38d038d19ac6683715fd50c1d07",
+      "last_record_sha256": "d025c42378004f162917332b475f859db6c7915da4c1b6caf58cf4ca878ff217",
+      "path": "equity_ticks.jsonl.gz",
+      "raw_bytes": 106988653,
+      "records": 79012,
+      "status": "PASS"
+    },
+    "paired_decisions": {
+      "compressed_bytes": 10386018,
+      "compressed_sha256": "fe214f983d3a70586205cf6780005ea30fc678130068c439ac2369fcaec6afb5",
+      "last_record_sha256": "4495627dffa06c1b3bb454e0ee2ba7a38396bef6761340615715ed7bd0cc59f7",
+      "path": "paired_decisions.jsonl.gz",
+      "raw_bytes": 113534232,
+      "records": 69741,
+      "status": "PASS"
+    }
+  },
+  "live_or_vps_operations": 0,
+  "manifest_sha256": "7f2968c722b4c1bc617c65e7c9f497fffc59108b1fa2318b7004ad33e5a5d60a",
+  "money_authority": false,
+  "new_decisions": 0,
+  "opportunities": 69741,
+  "orders_allowed": false,
+  "original_v1_receipts_and_ledgers_unchanged": true,
+  "owner_authorization_sha256": "1eb8f4f70903486a6532601a2d4e7814441b4cb595c095b7619a17a649df0001",
+  "prospective_table_pin": "206b35010712cce2daa4597e6d000d59c53de09732fdd941515eeaa7b2c13905",
+  "recorded_dd_env_and_cash_pass": true,
+  "sealed_run_files": {
+    "ARTIFACTS.json": "06d55907feafec4bd7b9dffc930915790f11315bda90c58dd8113d20e50552fc",
+    "OWNER_GO.json": "188605c635130188373c13bb35c2eeb5787ad6e43648217ecb41cf9571fe097f",
+    "STARTED.json": "309dfdedf5c136b48e81ca477e2610d7f9463810da30504e3606a4688d6e0331",
+    "TERMINAL.json": "a27b7cb152bc5647194d17a105ff717e7b0ef932dc0b1352703dc9104a83d3fd"
+  },
+  "source_files": 215,
+  "source_manifest_sha256": "18e76f4463b3323a3f0ce0a494f6b5aec0761d7e5002b80070b4cfffec829b05",
+  "status": "RECORDED_JOURNAL_CASH_AND_PINS_PASS",
+  "table_pins": [
+    "3a336e2eac07a3f068c8822f0fbf1009d4f41bc5fe6981ee24a20a0352f09e2f",
+    "f807c926e91ca991b48df7bc36f8d58989a6d0a80593a55c394f77905f0be390",
+    "98eb3b5244f46167788ba3f0bdaad72a11927ff07036b30f8f49c2330695d773",
+    "1c2e61000ac88e28c29dd19defaec2aff3f8cf1b0d292e8aa357fb246c29e77d"
+  ],
+  "terminal_status": "STOP_V1",
+  "total_records": 160532,
+  "verified_at_utc": "2026-10-12T15:22:32.913172+00:00",
+  "verifier_sha256": "860aa23d07c3a005d7acd700dc9d0869cdd09d6ab178f46fa77cb4c32815969c"
+}

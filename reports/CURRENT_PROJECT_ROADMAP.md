@@ -15,27 +15,43 @@ LIVE fresh flat/orders0/HALT/cash496.12/fees0; production PIDs/NRestarts unchang
 If held overnight: actual DAY rearmOct13, scoped unwind>=13:35UTC, hard end14UTC;
 unchanged schedule, no extra statistical PAPER days. Full PAPER/lifecycle/finality
 and LIVE-GO gates pending; no HALTclear or live entry. BrainV1 spent remains sealed.
-A7/V1.1 preparation may follow, but outcome run needs separate written owner GO.
+V1.1 completed exactly once under direct owner GO; terminal STOP_V1 below.
 
-October12 post-P0 delivery: **V1_1_ENGINEERING_PREPARED / RUN_NOT_AUTHORIZED**.
-Read [BRAIN_V2_V1_1_A7_PREPARATION_2026_10_12.md](BRAIN_V2_V1_1_A7_PREPARATION_2026_10_12.md).
-Research origin36ab6ff verified; supplied A7/freeze/five new tables exact. Frozen
-lev>100 reject precedes all-arm scoring/allocation;100 yes/100.01 no/saved GRASS
-reject. Final55targetedPASS (41Brain/14liquidation). Native preparation pin
-7f2968c7…5d60a and all original215source pins PASS; V1 receipts/ledgers unchanged.
-V1.1 actual runs0/no run_v1_1 or STARTED, separate direct owner GO required;
-V1.1 development-only, not independent edge. Scoped VPS253dirs found no research_
-machine.py/ten.py: FILESYSTEM_ONLY/NOT_GIT_PROVEN, no service/source mutations.
-Latest captured NET guard13:54:15UTC still PROTECTED with same native stop.
-Read [BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md](BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md).
-Separate source V2 corrects official S position-side semantics; old producer/files
-preserved, V2 NOT_DEPLOYED. Static13-entry inventory marks directional V1-derived
-cascade/L1/kaskad-maker evidence source-blocked/tainted where proven; side-blind
-volume consumers separate. No Claude edit, judge or outcome/strategy rescue.
-Bridge V2 code integration now verified in pinned Claude36ab6ff (c60d570 included),
-not a fresh Mac runtime assertion; earlier V1-only wording below is historical.
-KITY Oct15/22 independent exact-basket checks remain not due today. Alpaca next
-actual Oct13 DAY rearm/exit/finality is P0; no new PAPER entry or LIVE GO inferred.
+October12 direct-owner-authorized Brain: **V1_1_TERMINAL_STOP_V1 / PERMISSION_SPENT**.
+Read [BRAIN_V2_V1_1_A7_SINGLE_RUN_2026_10_12.md](BRAIN_V2_V1_1_A7_SINGLE_RUN_2026_10_12.md)
+and its native run_v1_1/TERMINAL.json. Direct owner GO recorded15:09:56UTC;
+preflight7f2968c7…5d60a/five tables/215 sources PASS; sole run15:10:16–15:10:46UTC.
+All69741 opportunities/79012 ticks complete,160532 journal records/cash/DD/hash
+chains PASS. Frozen BRAIN_DET noninferiority is1/4 (required3/4); DD_ENV boundPASS.
+Model100000USD net: RAW_SAFE+23075.10, FOUNDATION−12764.35, BRAIN_DET−18179.49;
+DD_ENV24.55%/29.33%/29.94%. All positions released, all-arm FUNDING_UNKNOWN<5%.
+A7 lev>100 rejected353 before context/scoring/allocation in each arm; no clipping.
+Actual STOP is a completed negative development result, not an execution crash;
+original V1 remains spent BLOCKED_DATA, all prior pins/journals unchanged.
+No repeat/rescue/retune, evaluator code changes or policy/money authority. RAW's
+positive development result is not independent edge or account feasibility.
+Trade/concentration/slot-hour diagnostics retained; bootstrap method and margin/
+idle-cash contract were unfrozen, remain NOT_COMPUTED/UNKNOWN. No new statistics
+chosen after outcomes. Pre-run41Brain targetedPASS, preceding55combinedPASS;
+no full-suite rerun or independent financial signoff. Foreign allowlist preserved.
+Zero broker/VPS/service operations during this authorization cycle; NET guard/
+original next-day lifecycle untouched. Current Alpaca truth is the dated capture
+above, not fresh broker readback. Oct13 rearm/exit/finality and separate LIVE GO
+remain P0; KITYOct15/22 independent, Claude research untouched. Liquidation V2
+remains NOT_DEPLOYED and requires its own deployment decision.
+
+Latest dated NET guard capture13:54:15UTC was PROTECTED with the same native stop.
+Bridge V2 integration is verified in pinned Claude36ab6ff (c60d570 included), not
+fresh Mac runtime truth; earlier V1-only statements below are historical.
+Read [BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md](BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md):
+opt-in V2 semantics/inventory delivered, old producers/events/results retained;
+directional source-proven V1 evidence stays tainted, side-blind consumers separate.
+
+October12 pre-run research origin36ab6ff/actual origin4260cbc had identical Brain
+files; code/preparation4bdb8dd was remote-verified before V1.1 outcome consumption.
+A7 MAX_LEV provenance remains FILESYSTEM_ONLY/NOT_GIT_PROVEN. The earlier
+RUN_NOT_AUTHORIZED/preparation-only statements below are superseded by this GO
+and sole spent terminal; no automatic reauthorization follows.
 
 October12 actual-entry/A7/sourceV2 code/evidence4bdb8dd pushed; local/remote
 SHA matched before any V1.1 outcomes. PUBLICATION_RECEIPT.json retained.

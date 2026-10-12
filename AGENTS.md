@@ -363,3 +363,19 @@ old producer/events/results. Source-proven directional V1 evidence is tainted;
 unknown source remains blocked, side-blind volume consumers are separate. No
 Claude edits/messages/judge reruns or silent data correction. Prior reviewer
 quota restriction remains: root checks only, no independent signoff claim.
+
+## October12 direct-owner V1.1 terminal amendment
+
+Direct human owner GO authorizes exactly one frozen BrainV1.1/A7 development run;
+completed15:10:16–15:10:46UTC under published7f2968c7…5d60a. Read checkpointTOP
+and BRAIN_V2_V1_1_A7_SINGLE_RUN_2026_10_12.md. Terminal STOP_V1 forV1.1 (1/4 net
+noninferior folds, required3/4; DD_ENV PASS), permission spent.160532 saved records,
+all69741 opportunities/79012 ticks, cash/DD/hash/source pins PASS;353 lev>100
+all-arm rejects before scoring. Both versioned attempts remain sealed. No retry,
+repair/rescue/retune/table regeneration or policy/money promotion. Recorded-trade
+reconciliation/diagnostics create no new decisions or evaluator run; undefined
+bootstrap and margin/idle-cash remain disclosed, not guessed. OriginalV1 and
+foreign allowlist unchanged. No VPS/broker/service operation, guard/NET mutation
+or liquidationV2 deploy; original Oct13 actual rearm/exit/finality remainsP0,
+LIVE HALTED pending complete dossier and separate GO. Prior reviewer allowance
+restriction remains; no replacement/retry or independent financial signoff.

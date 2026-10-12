@@ -1,0 +1,17 @@
+{
+  "schema": "DIRECT_OWNER_BRAIN_V11_GO_V1",
+  "recorded_at_utc": "2026-10-12T15:09:56.155618+00:00",
+  "question_call": "call_IIdNaE7EsMMbdNeP3EUFeIzi",
+  "source": "direct human reply to request_user_input_async",
+  "answer": "Да — GO на один прогон Brain V1.1; LIVE остаётся HALTED",
+  "translated_runner_authorization": "GO_BRAIN_V2_V1_1_A7_ONCE",
+  "manifest_canonical_sha256": "7f2968c722b4c1bc617c65e7c9f497fffc59108b1fa2318b7004ad33e5a5d60a",
+  "research_commit": "36ab6ff29d32b73972f7e2996f2c40bd0c00a35b",
+  "code_commit": "4bdb8ddd1bd1e2e2551a0428dce6d27a953de837",
+  "allowed_attempts": 1,
+  "development_only": true,
+  "orders_allowed": false,
+  "live_halt_preserved": true,
+  "no_alpaca_or_guard_operations": true,
+  "no_liquidation_deployment": true
+}
