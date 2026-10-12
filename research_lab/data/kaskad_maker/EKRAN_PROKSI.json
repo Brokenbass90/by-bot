@@ -1,0 +1,13 @@
+{
+ "kaskadov": 1690,
+ "proksi_v_okne": 93,
+ "kaskadov_sovpalo_s_proksi": 6,
+ "dolya": 0.004,
+ "proksi_pokryto_kaskadami": 63,
+ "recv_lag_ms": {
+  "p50": 328,
+  "p90": 528,
+  "p99": 601
+ },
+ "reshenie": "NEZAVISIM_ODIN_PNL"
+}
