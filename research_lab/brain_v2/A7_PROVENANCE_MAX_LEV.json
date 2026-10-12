@@ -1,0 +1,341 @@
+{
+ "chto": "Доказательства существования MAX_LEV=100 до инцидента 12.10.2026 (Brain V2 A7)",
+ "snyato": "2026-10-12T08:06:30+00:00",
+ "uroven": "ФАЙЛОВАЯ СИСТЕМА (mtime на Mac владельца), НЕ git: в истории git обоих репо MAX_LEV до b124d25 не найден",
+ "vyvod_mtime": [
+  "2026-08-30T19:07:05+00:00",
+  "2026-09-15T18:03:58+00:00"
+ ],
+ "faylov": 19,
+ "fayly": [
+  {
+   "fayl": "research_lab/research_machine.py",
+   "sha256": "95ca5322c1da54cf06cd213bdf8075eedc7eff68d3127594db3b3479d32e8572",
+   "mtime_utc": "2026-09-04T11:10:03+00:00",
+   "v_git": true,
+   "stroki": [
+    [
+     66,
+     "# держал MAX_LEV = 400 с комментарием «тот же потолок 0.12R при спреде"
+    ],
+    [
+     75,
+     "MAX_LEV = 0.12 / (2 * FEE_BPS_SIDE / 1e4)     # = 100.0"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/orderblock2.py",
+   "sha256": "c744e4052ebb6512843b9919558b9cc86f15160d4fcc748d5fed79c49fc16b22",
+   "mtime_utc": "2026-08-30T19:07:05+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     96,
+     "MAX_LEV = 100.0"
+    ],
+    [
+     173,
+     "if lev > MAX_LEV:                # дефект 8: вырожденная зона"
+    ],
+    [
+     240,
+     "globals()[\"MAX_LEV\"] = a.maxcost / (2 * a.fee / 1e4)"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/osi.py",
+   "sha256": "74201a01ddd70761bbbe821df5683d035b389ec402fdc17399ea62d542b58766",
+   "mtime_utc": "2026-09-02T15:19:26+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     68,
+     "from research_machine import (Store, simulate, MAX_LEV, ROZYGRYSHEY,  # noqa: E402"
+    ],
+    [
+     232,
+     "if res is None or res.get(\"lev\", 0) > MAX_LEV:"
+    ],
+    [
+     457,
+     "if 1.0 / sp > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/analiz_vselennoy.py",
+   "sha256": "d96c0491fdef988a158a5216e3b0de2e49d104ba2413c386eba0ae4a7475799c",
+   "mtime_utc": "2026-09-02T14:44:00+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     39,
+     "F1, MAX_LEV = 0.55, 100.0"
+    ],
+    [
+     98,
+     "if res is None or res.get(\"lev\",0) > MAX_LEV: continue"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/ten.py",
+   "sha256": "cec62e9e6836470f16bf60a620e245462edf52db6d401b6371376d1f1cb67b60",
+   "mtime_utc": "2026-09-15T06:21:49+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     46,
+     "from research_machine import (Store, MAX_LEV, pervyy_dlya,          # noqa: E402"
+    ],
+    [
+     295,
+     "if 1.0 / sp > MAX_LEV:"
+    ],
+    [
+     354,
+     "if rr is not None and rr.get(\"lev\", 0) <= MAX_LEV else None)"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/yadro.py",
+   "sha256": "b413a48f67158ccb4a69c769bb1114065468a9610eace7d367400555d4821b66",
+   "mtime_utc": "2026-09-15T18:03:58+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     67,
+     "from research_machine import Store, MAX_LEV, pervyy_dlya, zapisat_sboy  # noqa: E402"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/sverka_generatora.py",
+   "sha256": "33a8a531d3ae5df07be17409a0b044a8bb81c0026b7abf93f2f991295ffe3628",
+   "mtime_utc": "2026-09-15T17:51:33+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     33,
+     "from research_machine import Store, MAX_LEV, pervyy_dlya      # noqa: E402"
+    ],
+    [
+     67,
+     "if 1.0 / sp > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/vskrytie.py",
+   "sha256": "eb89bb161da57ad433bfb885b0f7c20a65715a664711d6193d00ca17fc7ab0a0",
+   "mtime_utc": "2026-09-03T04:19:03+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     56,
+     "from research_machine import (Store, MAX_LEV, pervyy_dlya,      # noqa: E402"
+    ],
+    [
+     208,
+     "if 1.0 / sp > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/vskrytie_att1.py",
+   "sha256": "056044c7186fcb437db40b08892b946e55135e97c168dd07bdda523bcf7e8ebc",
+   "mtime_utc": "2026-09-03T17:03:50+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     40,
+     "from research_machine import Store, pervyy_dlya, MAX_LEV        # noqa: E402"
+    ],
+    [
+     244,
+     "if 1.0 / sp > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/schet.py",
+   "sha256": "4c18240151ded18e1c667d66794cae6d951a1cb79fcaf82009bdace8420b8915",
+   "mtime_utc": "2026-09-03T18:07:10+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     40,
+     "from research_machine import (Store, MAX_LEV, pervyy_dlya, simulate,   # noqa: E402"
+    ],
+    [
+     127,
+     "if 1.0 / sp > MAX_LEV:"
+    ],
+    [
+     147,
+     "if rr is None or rr.get(\"lev\", 0) > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/placebo.py",
+   "sha256": "a4e754b253d3684705bcc0331d3ebaf8237d99f4eb82179faa292044cfee69f4",
+   "mtime_utc": "2026-09-02T14:44:00+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     41,
+     "from research_machine import MAX_LEV, ROZYGRYSHEY as DRAWS  # noqa: E402"
+    ],
+    [
+     114,
+     "if res is None or res.get(\"lev\",0) > MAX_LEV: continue"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/proverka_povedeniem.py",
+   "sha256": "0adf2b5e9c9b8ba3366ddb849cca0db0790f02b79d648e3c29f02930b2a177af",
+   "mtime_utc": "2026-09-02T16:13:10+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     197,
+     "Дефект 1 сентября: perebor_korzina держал MAX_LEV = 400, osi — 100."
+    ],
+    [
+     203,
+     "nado_lev, nado_roz = rm.MAX_LEV, rm.ROZYGRYSHEY"
+    ],
+    [
+     204,
+     "for imya, pole_lev, pole_roz in ((\"osi\", \"MAX_LEV\", \"ROZYGRYSHEY\"),"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/proverka_zolota.py",
+   "sha256": "15374aa61acc68fda8407c9089d80f500bceb0d7684e9637b39a13d5c25de80d",
+   "mtime_utc": "2026-09-02T14:44:00+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     23,
+     "from research_machine import zapisat_sboy, Store, simulate, MAX_LEV, ROZYGRYSHEY, pervyy_argument  # noqa: E402"
+    ],
+    [
+     81,
+     "if res is None or res.get(\"lev\", 0) > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/perebor_korzina.py",
+   "sha256": "f32ae3d8f7e38a31135d0b811faeadb17f1ee0d3cf47fd4550fe8c279eb12066",
+   "mtime_utc": "2026-09-02T16:12:35+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     90,
+     "from research_machine import MAX_LEV, ROZYGRYSHEY, pervyy_argument  # единый потолок и розыгрыши"
+    ],
+    [
+     205,
+     "if res.get(\"lev\", 0) > MAX_LEV:      # вырожденная зона"
+    ],
+    [
+     275,
+     "if res is None or res.get(\"lev\", 0) > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/ten_pump4.py",
+   "sha256": "fc0240935a643eae15be033732a75c61439cc01e01776451cb0a48155c102426",
+   "mtime_utc": "2026-09-02T14:44:00+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     41,
+     "STOP_MULT, HOLD, F1, MAX_LEV = 4.0, 168, 0.55, 100.0"
+    ],
+    [
+     194,
+     "if res is not None and res.get(\"lev\", 0) <= MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/read_sealed.py",
+   "sha256": "cf38a565cb824deb53b18321388aea972b3029367b990a07b3f7efd76f949e8b",
+   "mtime_utc": "2026-09-03T09:20:11+00:00",
+   "v_git": true,
+   "stroki": [
+    [
+     61,
+     "pervyy_dlya, MAX_LEV)"
+    ],
+    [
+     310,
+     "if 1.0 / sp > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/vmestimost.py",
+   "sha256": "a1142201f3df069690383552d6059d884e7e5cf78d207030df5a7f726967640a",
+   "mtime_utc": "2026-09-15T05:46:23+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     18,
+     "from research_machine import Store, MAX_LEV, pervyy_dlya, zapisat_sboy, otchet_sboev  # noqa: E402"
+    ],
+    [
+     65,
+     "if 1.0 / sp > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/vmeshchaetsya.py",
+   "sha256": "5187ab4dda0fe03ff0299a376437e2fb88cef0141fa2381e4005e98b0899168d",
+   "mtime_utc": "2026-09-01T12:56:56+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     32,
+     "from research_machine import simulate, MAX_LEV          # noqa: E402"
+    ],
+    [
+     82,
+     "if r is None or r.get(\"lev\", 0) > MAX_LEV:"
+    ]
+   ]
+  },
+  {
+   "fayl": "research_lab/data/ten_py_rezerv_20260914.txt",
+   "sha256": "1624f63b7a148f180bded1ef1a2c22cff6b7407389c3c883e04729bd676742e0",
+   "mtime_utc": "2026-09-14T17:35:49+00:00",
+   "v_git": false,
+   "stroki": [
+    [
+     46,
+     "from research_machine import (Store, MAX_LEV, pervyy_dlya,          # noqa: E402"
+    ],
+    [
+     282,
+     "if 1.0 / sp > MAX_LEV:"
+    ],
+    [
+     326,
+     "if rr is not None and rr.get(\"lev\", 0) <= MAX_LEV else None)"
+    ]
+   ]
+  }
+ ],
+ "nezavisimaya_proverka": "Codex (read-only): mtime/sha копий research_machine.py и ten.py на VPS (/root/by-bot/research_lab) — сервер вне Mac"
+}
