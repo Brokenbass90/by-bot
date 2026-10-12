@@ -1,0 +1,40 @@
+{
+ "prereg": "PREREG_SPOT_POTOK_PNL_2026_10_12.md + POPRAVKA_A1_CHALLENGER_A",
+ "priznak": "G6_CHALLENGER_A_spot",
+ "kogda": "2026-10-12T12:48:23+00:00",
+ "PRIMARY": {
+  "n": 186,
+  "dney": 186,
+  "edge_bps": 40.3,
+  "t": 1.26,
+  "polovinki_bps": [
+   9.5,
+   71.1
+  ],
+  "syroy_bps": 40.3,
+  "verdikt": "KILLED",
+  "prichina": "t=1.26 < 2"
+ },
+ "REPLICATION": {
+  "n": 57,
+  "dney": 57,
+  "edge_bps": -56.3,
+  "t": -1.25,
+  "polovinki_bps": [
+   5.5,
+   -115.9
+  ],
+  "syroy_bps": -56.3,
+  "verdikt": "KILLED",
+  "prichina": "эдж ≤ 0",
+  "status": "OPPOSITE"
+ },
+ "nezavisimost": {
+  "korr_s_KITY_M3": 0.22,
+  "nedel_m": 243,
+  "korr_s_impulsom_1d": 0.19,
+  "nedel_i": 243,
+  "ok": true
+ },
+ "status": "SPOT_POTOK_FAMILY_KILLED (G6 исчерпан)"
+}
