@@ -1,0 +1,62 @@
+{
+ "prereg": "PREREG_LOZHNYY_PROBOY_PNL_2026_10_12.md @ 648d2ae",
+ "verdikt": "FAIL",
+ "sobytiy_do_filtrov": 20881,
+ "otkaz_vol": 8363,
+ "otkaz_lev": 971,
+ "net_dannyh_ili_kontrolya": 0,
+ "funding_unknown": 160,
+ "funding_unknown_dolya": 0.0139,
+ "n": 11387,
+ "sred_net_R": -0.0824,
+ "summa_R": -938.8,
+ "pf": 0.861,
+ "izbytok": {
+  "n": 11387,
+  "sred_izb": 0.0093,
+  "t": 0.69
+ },
+ "polovina_1": {
+  "n": 4082,
+  "sred_izb": -0.064,
+  "t": -3.12
+ },
+ "polovina_2": {
+  "n": 7305,
+  "sred_izb": 0.0502,
+  "t": 3.19
+ },
+ "opisatelno": {
+  "stress_sred": -0.1361,
+  "verh_short": {
+   "n": 5644,
+   "sred_R": -0.0673,
+   "t": -0.14
+  },
+  "niz_long": {
+   "n": 5743,
+   "sred_R": -0.0973,
+   "t": 1.08
+  },
+  "bar1": {
+   "n": 4954,
+   "sred_R": -0.0946,
+   "t": 0.0
+  },
+  "bar2": {
+   "n": 2909,
+   "sred_R": -0.0957,
+   "t": -0.21
+  },
+  "bar3": {
+   "n": 3524,
+   "sred_R": -0.0545,
+   "t": 1.65
+  },
+  "vyhody": {
+   "stop": 6241,
+   "cel": 4456,
+   "vremya": 690
+  }
+ }
+}
