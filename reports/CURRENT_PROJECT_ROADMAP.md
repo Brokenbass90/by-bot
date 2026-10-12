@@ -1,5 +1,35 @@
 # Current roadmap — owner scope October 8, 2026
 
+October12 local Dynamic LIVE intake: **LOCAL_INTAKE_PREPARED_ORDERS_OFF / LIVE_PORT_REQUIRED**.
+Separate transport-free compiler/native-record handoff delivered;196 targetedPASS
+(48 new). Fullsuite4504PASS/60fail (names preserved; current HEAD comparison NOT_DONE).
+Deterministic LIVE IDs, exact quote/source/account/cap/liability checks,
+PAPER adoption refusal, partial-full-stop readback and monotonic native-state replay.
+No sender/reservation/credentials/manager install; declarations are INPUT_PROVIDED,
+not actual source custody or LIVE readiness. Remaining task is source-bound LIVE
+book/shared-lock/dispatch/recovery/one-manager runtime integration, then actual
+Oct13 lifecycle+dossier+separateGO. Original NET guard/session/broker sources and
+LIVE HALT unchanged. Read ALPACA_OCT13_MONEY_HANDOFF_2026_10_12.md.
+
+October12 evening Alpaca P0: **NEXT_DAY_SERVER_CONTROL_VERIFIED / DYNAMIC_LIVE_PORT_REQUIRED**.
+Read [ALPACA_OCT13_MONEY_HANDOFF_2026_10_12.md](ALPACA_OCT13_MONEY_HANDOFF_2026_10_12.md).
+Fresh15:41:23UTC GET/state proof: NET0.325167779@$363.20/fullDAY329.66 new, guard
+PID1979385/NRestarts0, one source attempt/intent,81app pins/owned-state recoveryPASS.
+LIVE flat/orders0/HALT/cash496.12; original3productionPIDs/NRestarts/legacy5unchanged.
+Zero broker/server writes. Original Oct13 rearm13:30UTC, scoped unwind>=13:35,
+hardend14:00 remain; Codex heartbeat alpaca-net-13 requests read-only13:32/14:05
+UTC checks only, pauses after terminal/second, does not own server execution.
+Bounded finality GET reader prepared/compiled/pinned; not run before its due time.
+No extra PAPER statistics/Brain/Factory gates. Existing Dynamic dispatcher is
+PAPER-only and old LIVE entry validator monthly-only: no automatic LIVE promotion
+or HALTclear. Next concrete engineering task is isolated native Dynamic LIVE
+adapter/ownership handoff with unchangedcaps/one actualOLD slot/limit-entry/
+fill-relative protection/once-only recovery; do not reuse PAPER plan/fills/book.
+Exact tests/dossier+separate ownerGO follow actual lifecycle; next valid opening
+from sealed calendar after scheduled validation unwind isOct14 13:30UTC, conditional
+on those closures/fresh originalgates. Earlier first-entry snapshots below retain
+their dates. BrainV1.1 remains spentSTOP_V1, KITYOct15/22 independent, Claude untouched.
+
 October12 actual Alpaca: **ENTRY_PROTECTED_LIFECYCLE_PENDING**.
 Read [ALPACA_NET_PAPER_ENTRY_2026_10_12.md](ALPACA_NET_PAPER_ENTRY_2026_10_12.md).
 Original server NET PAPER attempt completed13:30:10.710UTC: one full BUY
@@ -40,7 +70,7 @@ above, not fresh broker readback. Oct13 rearm/exit/finality and separate LIVE GO
 remain P0; KITYOct15/22 independent, Claude research untouched. Liquidation V2
 remains NOT_DEPLOYED and requires its own deployment decision.
 
-Latest dated NET guard capture13:54:15UTC was PROTECTED with the same native stop.
+Earlier dated NET guard capture13:54:15UTC was PROTECTED with the same native stop.
 Bridge V2 integration is verified in pinned Claude36ab6ff (c60d570 included), not
 fresh Mac runtime truth; earlier V1-only statements below are historical.
 Read [BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md](BYBIT_LIQUIDATION_SOURCE_V2_2026_10_12.md):

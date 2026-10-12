@@ -379,3 +379,29 @@ foreign allowlist unchanged. No VPS/broker/service operation, guard/NET mutation
 or liquidationV2 deploy; original Oct13 actual rearm/exit/finality remainsP0,
 LIVE HALTED pending complete dossier and separate GO. Prior reviewer allowance
 restriction remains; no replacement/retry or independent financial signoff.
+
+## October12 owner Alpaca money-lane continuation amendment
+
+Owner prioritizes completion of original NET PAPER Oct13 rearm/owned exit/cost/
+finality, then concrete Dynamic LIVE dossier with separate ownerGO; no extra
+statistical PAPER, Brain/Factory gates, strategy research or risk increase.
+Fresh15:41UTC guard/native source pass; read checkpointTOP and
+ALPACA_OCT13_MONEY_HANDOFF_2026_10_12.md. Native Dynamic dispatcher is PAPER-only,
+legacyLIVEentry schedule monthly-only: existing monthly/PAPER guards cannot be
+weakened or bypassed to call Dynamic live. Next engineering scope is explicit
+isolated Dynamic LIVE port using existing native ownership/protection/management
+with exact frozen caps/source semantics/one entry owner, not a new framework.
+Preserve PAPER sources/book/holdings, original guard dates/PID, LIVEHALT and old
+monthly entry authority OFF. No adopted PAPER fill or new monetary slot lineage.
+Two Oct13 observation checks belong to new bounded alpaca-net-13 heartbeat;
+no reset of original Oct8/9 monitor or guard dates, no broker/service writes by
+observer. Pause on terminal/second check. BrainV1.1 spentSTOP remains closed;
+KITYOct15/22 and Claude research independent. Prior independent-review allowance
+restriction remains: no quota replacement/retry or unperformed signoff claim.
+
+October12 local intake closure: transport-free
+research_lab/alpaca_dynamic_live_intake_v1.py and native-record handoff delivered;
+196 targetedPASS. No sender/runtime source custody/book/reservation/manager
+integration or LIVE authority. Compiler declarations cannot grant GO. Continue
+explicit native runtime integration; no claimed PAPER/live readiness from these
+local tests. Source-frozen originals and Tuesday guard remain unchanged.

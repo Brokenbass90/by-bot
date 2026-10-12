@@ -1,0 +1,17 @@
+{
+  "status": "READ_ONLY_NEXT_DAY_CAPTURE_PREPARED",
+  "script_sha256": "23ced0c8b469f44d880fdddaa546456fb1e913ce4fcf6a0ff7662294d2154837",
+  "query_sha256": "30d42799ff1ce7b6dc7675a95b84956870a3cea6e01828fbe79ca53efc0f751c",
+  "original_reader_sha256": "ce84d4f650ecce079ea3555134e36a76f9bb8df5b52aaefd6b6e7b14f8de3b51",
+  "original_earliest_unwind_ms": 1791898500000,
+  "guard_hard_end_ms": 1791900000000,
+  "source_receipt_sha256": "34877ee337310645ae665f326760704c5ca3dca5973d36293ddf819fa19009fd",
+  "check_kind": "LOCAL_QUERY_COMPILE_AND_SOURCE_PIN_CHECK_NO_REMOTE_RUN",
+  "script_executions": 0,
+  "broker_writes": 0,
+  "remote_writes": 0,
+  "orders_allowed": false,
+  "ready_for_live_go": false,
+  "heartbeat_id": "alpaca-net-13",
+  "private_directory_only": true
+}

@@ -1,0 +1,31 @@
+{
+  "automation_id": "alpaca-net-13",
+  "kind": "heartbeat",
+  "destination": "current_thread",
+  "status": "ACTIVE",
+  "requested_checks": [
+    {
+      "local": "2026-10-13 16:32",
+      "timezone": "Asia/Nicosia",
+      "utc": "2026-10-13 13:32"
+    },
+    {
+      "local": "2026-10-13 17:05",
+      "timezone": "Asia/Nicosia",
+      "utc": "2026-10-13 14:05"
+    }
+  ],
+  "tool_create_confirmed": true,
+  "tool_update_confirmed": true,
+  "tool_view_rendered_card": true,
+  "allowed_observations": 2,
+  "server_rearm_or_exit_owner": "original guard PID1979385; not heartbeat",
+  "original_guard_unwind_not_before_ms": 1791898500000,
+  "original_guard_hard_end_ms": 1791900000000,
+  "automatic_live_actions": false,
+  "automatic_restarts": false,
+  "notification_policy": "material_changes_only",
+  "pause_after_terminal_or_second_check": true,
+  "requires_codex_app_host_availability": true,
+  "scheduler_execution_not_yet_observed": true
+}
