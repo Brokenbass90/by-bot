@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """dannye_binance_spot.py — дневные СПОТОВЫЕ свечи Binance с колонками тейкеров для PREREG_SPOT_POTOK_TEZIS_2026_10_12.md.
-Монеты — те же, что KITY M3 (data/binance_kity/taker/*.json); перп 1000X/1000000X → спот X. Храним [ts_ms, quote_volume,
+Монеты — те же, что KITY M3 (data/binance_kity/taker/*.json); спот-имя: точное, иначе без префикса 10…0. Храним [ts_ms, quote_volume,
 taker_buy_quote]. Спот с 2025-01 пишет время в микросекундах → нормализуем в мс. Самопроверки: BTCUSDT 2023-01 и 2025-01 —
 по 31 бару, ts в мс, доля тейкеров в (0, 1) — иначе СТОП. Возобновляемо. Запуск на Mac (нужна сеть):
 
@@ -20,7 +20,10 @@ MES = [f"{y}-{m:02d}" for y in range(2021, 2027) for m in range(1, 13) if "2021-
 def url_spot(s, m): return f"{B.ARH}data/spot/monthly/klines/{s}/1d/{s}-1d-{m}.zip"
 
 
-def spot_imya(perp): return re.sub(r"^(1000000|1000)(?=[A-Z])", "", perp)
+def spot_imena(perp):
+    """Сначала точное имя (на споте бывают 1000SATS, 1000CAT), затем без префикса 10…0 (PEPE, SHIB, BONK)."""
+    bez = re.sub(r"^10+(?=[A-Z])", "", perp)
+    return [perp] + ([bez] if bez != perp else [])
 
 
 def razobrat(b):
@@ -50,10 +53,13 @@ def main():
         f = OUT / f"{p}.json"
         if f.exists():
             continue
-        s = spot_imya(p)
-        with ThreadPoolExecutor(B.POTOKI) as ex:
-            bb = list(ex.map(lambda m: B.get(url_spot(s, m)), MES))
-        rows = sorted({r[0]: r for b in bb if b for r in razobrat(b)}.values())
+        rows, s = [], p
+        for s in spot_imena(p):
+            with ThreadPoolExecutor(B.POTOKI) as ex:
+                bb = list(ex.map(lambda m: B.get(url_spot(s, m)), MES))
+            rows = sorted({r[0]: r for b in bb if b for r in razobrat(b)}.values())
+            if rows:
+                break
         if not rows: net.append(p)
         f.write_text(json.dumps(rows)); print(f"[{n}/{len(perps)}] {p} → {s}: {len(rows)} баров", flush=True)
     (K / "spot_taker_gotovo.json").write_text(json.dumps(dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
