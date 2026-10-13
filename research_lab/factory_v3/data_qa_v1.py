@@ -66,7 +66,7 @@ def hvost(p, n=20000):
 def q_m5_papka(cfg):
     defekt = {}; posl = 0
     for f in sorted(glob.glob(str(D / cfg["papka"] / "*.jsonl"))):
-        rows = [json.loads(l) for l in open(f) if l.strip()]
+        with open(f) as fh: rows = [json.loads(l) for l in fh if l.strip()]
         ts = [r[0] for r in rows]; posl = max(posl, ts[-1] if ts else 0)
         r = ryad(ts, M5); r["edinicy"] = edinicy(ts)
         plohie = sum(1 for x in rows if not (x[3] <= min(x[1], x[4]) and x[2] >= max(x[1], x[4])))
@@ -117,13 +117,14 @@ def q_ishody(cfg):
 def q_likvidacii(cfg):
     lf = ROOT / "runtime" / "liquidations" / "bybit_liquidations.jsonl"; mf = D / "breakout_ten" / "m5" / "BTCUSDT.jsonl"
     if not lf.exists() or not mf.exists(): return dict(status="NET_DANNYH")
-    bary = {r[0]: (r[1], r[4]) for r in (json.loads(l) for l in open(mf) if l.strip())}
+    with open(mf) as fh: bary = {r[0]: (r[1], r[4]) for r in (json.loads(l) for l in fh if l.strip())}
     kor = {}
     for e in hvost(lf, 200000):
         if e.get("symbol") != "BTCUSDT": continue
         b = int(e["ts_ms"]) // M5 * M5; k = kor.setdefault(b, [0.0, 0.0]); k[e.get("side") != "long"] += float(e.get("usd") or 0)
     r = storona_protiv_ceny({b: tuple(v) for b, v in kor.items()}, bary)
-    r["posl_ms"] = int(json.loads(open(lf).readlines()[-1])["ts_ms"]) if lf.stat().st_size else None
+    posl = hvost(lf, 1)
+    r["posl_ms"] = int(posl[-1]["ts_ms"]) if posl else None
     return r
 
 

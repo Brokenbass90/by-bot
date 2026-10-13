@@ -134,3 +134,4 @@
 {"byudzhet": 300, "id": "KRIPTO_H1M5_2023_2026Q3", "kogda": "2026-10-13T15:39:27+00:00", "konec": "2026-09-30", "nabor": "bybit H1/M5 (многократно просмотрено)", "nachalo": "2023-01-01", "rol": "DEV", "tip": "okno"}
 {"byudzhet": 20, "id": "KRIPTO_FWD_2026Q4", "kogda": "2026-10-13T15:39:27+00:00", "konec": "2026-12-31", "nabor": "вперёд: тени и сборщики", "nachalo": "2026-10-13", "rol": "CONFIRM", "tip": "okno"}
 {"byudzhet": 0, "id": "KRIPTO_FWD_2027H1", "kogda": "2026-10-13T15:39:27+00:00", "konec": "2027-06-30", "nabor": "вперёд: резерв", "nachalo": "2027-01-01", "rol": "HOLDOUT", "tip": "okno"}
+{"detali": {"n": 31, "okno": "2023-01..2024-06", "pf": 0.586, "primechanie": "DEV-сигнал; тень работает дальше", "sred_R": -0.174}, "dokument": "data/breakout_dev_early/ITOG.json @ 23f0ff9", "gipoteza": "BREAKOUT_TOP50", "kogda": "2026-10-13T15:56:21+00:00", "tip": "verdikt", "znachenie": "DEPRIORITIZE"}

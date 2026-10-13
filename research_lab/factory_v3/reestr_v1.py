@@ -27,6 +27,7 @@ TERMINAL = "KILL"
 ROLI_OKON = {"DEV": "SCREEN", "CONFIRM": "TEST"}          # роль окна → единственная стадия, которой оно доступно
 ALPHA = 0.05
 NUZHEN_GO = {"CANARY", "MONEY"}                          # переходы, требующие письменного GO владельца
+VERDIKTY_TENI = ("KEEP", "CONTINUE", "DEPRIORITIZE", "KILL")  # проспективные вердикты судей теней
 
 
 class OshibkaReestra(Exception):
@@ -87,6 +88,9 @@ class Reestr:
                 g = S["gipotezy"][e["gipoteza"]]; g["status"] = e["v"]; g["istoriya"].append(e)
             elif t == "nasledie":
                 g = S["gipotezy"][e["gipoteza"]]; g["status"] = e["status"]; g["istoriya"].append(e)
+            elif t == "verdikt":
+                g = S["gipotezy"][e["gipoteza"]]; g.setdefault("verdikty", []).append(e); g["istoriya"].append(e)
+                if e["znachenie"] == "KILL": g["status"] = TERMINAL
             elif t == "semya_kill":
                 S["semi"][e["semya"]]["status"] = TERMINAL; S["semi"][e["semya"]]["prichina_kill"] = e["prichina"]
         return S
@@ -145,6 +149,12 @@ class Reestr:
             g = S["gipotezy"].get(e["gipoteza"])
             if not g or g["istoriya"]: raise OshibkaReestra("наследие — только для новой гипотезы без истории")
             if e["status"] not in STADII + [TERMINAL] or not e.get("dokument"): raise OshibkaReestra("наследие: статус и документ-основание обязательны")
+        elif t == "verdikt":
+            g = S["gipotezy"].get(e["gipoteza"])
+            if not g: raise OshibkaReestra("нет гипотезы")
+            if g["status"] not in ("SHADOW", "CANARY", "MONEY"): raise OshibkaReestra("вердикт тени — только для SHADOW/CANARY/MONEY")
+            if e["znachenie"] not in VERDIKTY_TENI: raise OshibkaReestra(f"вердикт ∈ {VERDIKTY_TENI}")
+            if not e.get("dokument"): raise OshibkaReestra("вердикт без документа судьи не принимается")
         elif t == "semya_kill":
             if e["semya"] not in S["semi"]: raise OshibkaReestra("нет семьи")
             if S["semi"][e["semya"]].get("status") == TERMINAL: raise OshibkaReestra("семья уже закрыта")
@@ -183,6 +193,10 @@ class Reestr:
     def nasledie(self, gipoteza, status, dokument):
         """Перенос статуса, полученного ДО реестра (тени, старые KILL) — с обязательной ссылкой на документ."""
         return self._zapisat(dict(tip="nasledie", gipoteza=gipoteza, status=status, dokument=dokument))
+
+    def verdikt_teni(self, gipoteza, znachenie, dokument, detali=None):
+        """Вердикт замороженного судьи по тени/канарейке (KEEP/CONTINUE/DEPRIORITIZE/KILL). KILL → гипотеза в KILL."""
+        return self._zapisat(dict(tip="verdikt", gipoteza=gipoteza, znachenie=znachenie, dokument=dokument, detali=detali))
 
     def zakryt_semyu(self, semya, prichina):
         return self._zapisat(dict(tip="semya_kill", semya=semya, prichina=prichina))
