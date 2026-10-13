@@ -1,0 +1,39 @@
+{
+ "popytok_na_okne": 20,
+ "alpha_okna": 0.2,
+ "trebuemyy_t": 2.576,
+ "lozhnye_srabatyvaniya": 0.0,
+ "moshchnost": {
+  "50_bps": 0.1,
+  "103_bps": 0.45,
+  "150_bps": 0.75,
+  "200_bps": 1.0
+ },
+ "detali": {
+  "0_bps": {
+   "n": 20,
+   "pass_": 0,
+   "dolya": 0.0
+  },
+  "50_bps": {
+   "n": 20,
+   "pass_": 2,
+   "dolya": 0.1
+  },
+  "103_bps": {
+   "n": 20,
+   "pass_": 9,
+   "dolya": 0.45
+  },
+  "150_bps": {
+   "n": 20,
+   "pass_": 15,
+   "dolya": 0.75
+  },
+  "200_bps": {
+   "n": 20,
+   "pass_": 20,
+   "dolya": 1.0
+  }
+ }
+}

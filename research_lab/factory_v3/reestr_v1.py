@@ -13,7 +13,8 @@
               Результат принимается только к зарегистрированной попытке с тем же sha и только один раз.
 
 Поправка на перебор: требуемый t на окне = Φ⁻¹(1 − α / (2·k)), k — число попыток, зарегистрированных на окне к моменту
-результата (α = 0.05): k=1 → 1.96, k=10 → 2.81, k=100 → 3.48, k=1000 → 4.06.
+результата. α окна: DEV (скрининг, мягкий фильтр) 0.20, CONFIRM 0.05. Калибровка подложенным edge (13.10, KALIBROVKA_FERMY.json):
+эффект размера KITY M3 (103 bps/нед) виден в 74% при k=1 и лишь в 16% при k=100 → бюджеты окон маленькие (≈ 20).
 
 Хранилище: append-only JSONL (по умолчанию research_lab/data/factory_v3/reestr_v1.jsonl), запись под flock.
 Состояние = воспроизведение журнала; журнал ничего не удаляет.
@@ -80,6 +81,10 @@ class Reestr:
                 S["gipotezy"][e["id"]] = dict(e, status="NEW", istoriya=[])
             elif t == "okno":
                 S["okna"][e["id"]] = dict(e)
+            elif t == "okno_parametry":
+                o = S["okna"][e["okno"]]
+                if e.get("byudzhet") is not None: o["byudzhet"] = e["byudzhet"]
+                if e.get("alpha") is not None: o["alpha"] = e["alpha"]
             elif t == "popytka":
                 S["popytki"][e["id"]] = dict(e, rezultat=None)
             elif t == "rezultat":
@@ -112,8 +117,15 @@ class Reestr:
             if S["semi"][e["semya"]].get("status") == TERMINAL: raise OshibkaReestra(f"семья {e['semya']} закрыта (KILL)")
         elif t == "okno":
             if e["id"] in S["okna"]: raise OshibkaReestra(f"окно {e['id']} уже есть")
+            if e.get("alpha") is not None and not 0 < float(e["alpha"]) <= 0.25: raise OshibkaReestra("alpha ∈ (0, 0.25]")
             if e["rol"] not in ("DEV", "CONFIRM", "HOLDOUT"): raise OshibkaReestra("роль окна: DEV / CONFIRM / HOLDOUT")
             if e["rol"] != "HOLDOUT" and int(e.get("byudzhet", 0)) < 1: raise OshibkaReestra("у окна нужен бюджет ≥ 1")
+        elif t == "okno_parametry":
+            o = S["okna"].get(e["okno"])
+            if not o: raise OshibkaReestra("нет окна")
+            if self.popytok_na_okne(o["id"], S): raise OshibkaReestra("параметры окна меняются только до первой попытки")
+            if e.get("byudzhet") is not None and int(e["byudzhet"]) > int(o.get("byudzhet") or 0): raise OshibkaReestra("бюджет можно только уменьшать")
+            if e.get("alpha") is not None and not 0 < float(e["alpha"]) <= 0.25: raise OshibkaReestra("alpha ∈ (0, 0.25]")
         elif t == "popytka":
             if e["id"] in S["popytki"]: raise OshibkaReestra(f"попытка {e['id']} уже есть")
             g = S["gipotezy"].get(e["gipoteza"]); o = S["okna"].get(e["okno"])
@@ -176,8 +188,13 @@ class Reestr:
         return self._zapisat(dict(tip="gipoteza", id=id, semya=semya, mehanizm=mehanizm,
                                   istochniki_dannyh=list(istochniki_dannyh), avtor=avtor))
 
-    def okno(self, id, nabor, nachalo, konec, rol, byudzhet=0):
-        return self._zapisat(dict(tip="okno", id=id, nabor=nabor, nachalo=nachalo, konec=konec, rol=rol, byudzhet=int(byudzhet)))
+    def okno(self, id, nabor, nachalo, konec, rol, byudzhet=0, alpha=None):
+        """alpha: DEV (скрининг) по умолчанию 0.20 — мягкий фильтр; CONFIRM — 0.05. Калибровка 13.10: см. KALIBROVKA_FERMY.json."""
+        alpha = alpha if alpha is not None else (0.20 if rol == "DEV" else ALPHA)
+        return self._zapisat(dict(tip="okno", id=id, nabor=nabor, nachalo=nachalo, konec=konec, rol=rol, byudzhet=int(byudzhet), alpha=alpha))
+
+    def okno_parametry(self, okno, byudzhet=None, alpha=None, prichina=""):
+        return self._zapisat(dict(tip="okno_parametry", okno=okno, byudzhet=byudzhet, alpha=alpha, prichina=prichina))
 
     def zaregistrirovat_popytku(self, id, gipoteza, okno, stadiya, spec, kriterii):
         return self._zapisat(dict(tip="popytka", id=id, gipoteza=gipoteza, okno=okno, stadiya=stadiya,
@@ -186,7 +203,7 @@ class Reestr:
     def zapisat_rezultat(self, popytka, spec, t, n, metrika=None):
         S = self.sostoyanie(); p = S["popytki"].get(popytka)
         if not p: raise OshibkaReestra("результат к незарегистрированной попытке не принимается")
-        k = self.popytok_na_okne(p["okno"], S); t_req = trebuemyy_t(k)
+        k = self.popytok_na_okne(p["okno"], S); t_req = trebuemyy_t(k, float(S["okna"][p["okno"]].get("alpha") or ALPHA))
         kr = p["kriterii"]; znak_ok = (t > 0) if kr.get("znak", "+") == "+" else (t < 0)
         verdikt = "PASS" if (n >= kr["min_n"] and znak_ok and abs(t) >= t_req) else "FAIL"
         return self._zapisat(dict(tip="rezultat", popytka=popytka, spec_sha=spec_sha(spec), t=float(t), n=int(n),

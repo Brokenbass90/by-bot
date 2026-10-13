@@ -62,7 +62,7 @@ class TestReestr(unittest.TestCase):
         r = self.r; r.perehod("G1", "SCREEN", "старт")
         for i in range(3):
             r.zaregistrirovat_popytku(f"P{i}", "G1", "DEV1", "SCREEN", dict(SPEC, i=i), KR)
-        rez = r.zapisat_rezultat("P0", dict(SPEC, i=0), t=2.1, n=50)           # 2.1 ≥ 1.96, но < t(k=3)=2.39
+        rez = r.zapisat_rezultat("P0", dict(SPEC, i=0), t=1.8, n=50)           # DEV α=0.20: 1.8 ≥ t(k=1)=1.28, но < t(k=3)=1.83
         self.assertEqual(rez["verdikt"], "FAIL")
 
     def test_spec_nelzya_menyat_i_povtor(self):
@@ -107,6 +107,16 @@ class TestReestr(unittest.TestCase):
         self.assertEqual(r.sostoyanie()["gipotezy"]["G1"]["status"], "SHADOW")
         with self.assertRaises(OshibkaReestra):
             r.nasledie("G1", "MONEY", "PREREG_X.md")                            # только один раз
+
+    def test_alpha_i_byudzhet_okna(self):
+        r = self.r
+        self.assertEqual(r.sostoyanie()["okna"]["DEV1"]["alpha"], 0.20)
+        self.assertEqual(r.sostoyanie()["okna"]["CONF1"]["alpha"], 0.05)
+        with self.assertRaises(OshibkaReestra): r.okno_parametry("DEV1", byudzhet=50)        # увеличивать нельзя
+        r.okno_parametry("DEV1", byudzhet=2, alpha=0.10)
+        r.perehod("G1", "SCREEN", "s"); r.zaregistrirovat_popytku("P1", "G1", "DEV1", "SCREEN", SPEC, KR)
+        with self.assertRaises(OshibkaReestra): r.okno_parametry("DEV1", alpha=0.2)          # после попытки нельзя
+        self.assertAlmostEqual(r.zapisat_rezultat("P1", SPEC, t=1.7, n=50)["trebuemyy_t"], 1.645, 2)
 
     def test_zhurnal_append_only(self):
         n0 = len(self.r.put.read_text().splitlines())

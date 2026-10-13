@@ -18,9 +18,9 @@ SLUCHAI = {"M3_PERP": ("m3_perp", "m3_rezultat.json"), "SPOT_B": ("spot_minus_pe
            "SPOT_A": ("spot", "spot_A_rezultat.json")}
 
 
-def main(sluchay):
+def main(sluchay, put_reestra=None, pisat=True):
     priznak, etalon = SLUCHAI[sluchay]
-    r = Reestr(D / "factory_v3" / "validaciya_reestr.jsonl"); S = r.sostoyanie()
+    r = Reestr(put_reestra or D / "factory_v3" / "validaciya_reestr.jsonl"); S = r.sostoyanie()
     if "VALIDACIYA" not in S["semi"]: r.semya("VALIDACIYA", "воспроизведение известных вердиктов фермой")
     if "PRIMARY_KITY" not in S["okna"]: r.okno("PRIMARY_KITY", "binance_kity", "2023-01-01", "2026-09-23", "DEV", byudzhet=20)
     g = f"VAL_{sluchay}"
@@ -35,6 +35,7 @@ def main(sluchay):
     rez = dict(sluchay=sluchay, status="REPRODUCED" if sovp else "MISMATCH", ferma=it,
                ferma_metrika={k: m.get(k) for k in ("n", "edge_bps", "t", "polovinki_bps", "verdikt")} if m else None,
                etalon={k: e.get(k) for k in ("n", "edge_bps", "t", "polovinki_bps", "verdikt")})
+    if not pisat: return rez
     out = D / "factory_v3" / "VALIDACIYA_FERMY.json"
     vse = json.loads(out.read_text()) if out.exists() else {}
     vse[sluchay] = rez; out.write_text(json.dumps(vse, ensure_ascii=False, indent=1))

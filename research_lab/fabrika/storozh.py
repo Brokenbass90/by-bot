@@ -155,6 +155,13 @@ def prohod():
         import sudi_v_reestr; sudi_v_reestr.vse()
     except Exception as e:
         with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} мост судей: {e}\n")
+    try:                                                    # раз в 7 дней: известные ответы + калибровка фермы (factory_v3/kontrol_fermy)
+        import kontrol_fermy
+        if kontrol_fermy.pora():
+            k = kontrol_fermy.kontrol()
+            with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} контроль фермы: {k['status']} {'; '.join(k['problemy'])[:400]}\n")
+    except Exception as e:
+        with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} контроль фермы не прошёл: {e}\n")
     try:                                                    # ежедневная сводка владельцу (factory_v3/svodka_v1)
         import svodka_v1; svodka_v1.sobrat()
     except Exception as e:

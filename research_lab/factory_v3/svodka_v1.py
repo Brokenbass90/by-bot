@@ -73,12 +73,15 @@ def sobrat(segodnya=None):
         prog = {g: v.get("kvitancii", [{}])[-1].get("status") for g, v in _r.sostoyanie()["gipotezy"].items()
                 if any(k.get("vid") == "PROGRESS" for k in v.get("kvitancii", []))}
     except Exception as e: kan, prog = dict(oshibka=str(e)), {}
+    try: kf = json.loads((D / "factory_v3" / "KONTROL_FERMY.json").read_text())
+    except Exception: kf = dict(status="ещё не запускался")
     zh = st.get("zhurnaly", {}); plohie = {k: v["status"] for k, v in zh.items() if v.get("status") != "OK"}
     qa_plohie = {k: v["status"] for k, v in qa.items() if v.get("status") not in ("OK", "NET_DANNYH", "MALO")}
     izvestnye = {"likvidacii_bybit": "известно: сторона перевёрнута в старом файле, ждём сборщик V2 (Codex)"}
     nado = []
     p = push_nuzhen()
     if p: nado.append(f"`git push origin research/fabrika-v1` — локально впереди на {p} коммит(ов)")
+    if kf.get("status") == "TREVOGA": nado.append("контроль фермы TREVOGA: " + "; ".join(kf.get("problemy", []))[:300])
     if plohie: nado.append("посмотреть тени: " + ", ".join(f"{k} {v}" for k, v in plohie.items()))
     nado += [f"данные {k}: {v}" for k, v in qa_plohie.items() if k not in izvestnye]
     blizko = [f"- {d}: {t}" for d, t in sorted(KALENDAR) if 0 <= (dt.date.fromisoformat(d) - segodnya).days <= 10]
@@ -96,6 +99,8 @@ def sobrat(segodnya=None):
           *[f"- {k}: {v.get('status')}" + (f" — {izvestnye[k]}" if k in izvestnye else "") for k, v in qa.items()], "",
           "## Реестр экспериментов",
           f"- семей {rs.get('semey')} (KILL {rs.get('semey_kill')}), гипотезы {rs.get('gipotez')}, попыток {rs.get('popytok')}", "",
+          f"- контроль фермы (раз в неделю): {kf.get('status')} {kf.get('kogda', '')}"
+          + (f" — образцы {kf.get('obrazcy')}, мощность {kf.get('kalibrovka', {}).get('moshchnost')}" if kf.get('kogda') else ""), "",
           "## Ближайшие события", *(blizko or ["- в ближайшие 10 дней нет"]), "",
           "## Нужно от тебя", *([f"- {x}" for x in nado] or ["- ничего"])]
     out = "\n".join(md) + "\n"

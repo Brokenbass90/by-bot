@@ -1,0 +1,20 @@
+{
+ "kogda": "2026-10-13T18:44:50+00:00",
+ "status": "OK",
+ "obrazcy": {
+  "M3_PERP": "REPRODUCED",
+  "SPOT_B": "REPRODUCED",
+  "SPOT_A": "REPRODUCED"
+ },
+ "kalibrovka": {
+  "ls": 0.0,
+  "moshchnost": {
+   "50_bps": 0.1,
+   "103_bps": 0.45,
+   "150_bps": 0.75,
+   "200_bps": 1.0
+  }
+ },
+ "problemy": [],
+ "sekund": 8.2
+}

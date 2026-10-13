@@ -72,3 +72,24 @@ def xs_nedelya_binance(parametry, dostup):
     sob = [(ts(d), r, None) for d in K.SETKA if a <= d <= b for r in [nedelya(d)] if r is not None]
     it = P.itog(sob, s_kontrolem=False, lag=1)
     return dict(t=it.get("t", 0.0), n=it.get("dney", it.get("n", 0)), metrika=it)
+
+
+def xs_sintetika(parametry, dostup):
+    """Синтетический рынок для калибровки фабрики: 50 монет, недели окна dostup; признак известен ДО недели.
+    Истинный спред «верхний дециль − нижний» задан parametry['edge_bps'] (0 = чистый шум), шум откалиброван по KITY M3 (sd недельного спреда ≈ 550 bps).
+    Это НЕ стратегия: проверка мощности (находит ли фабрика подложенный эффект) и ложных срабатываний (не находит ли шум)."""
+    import math, statistics
+    rng = np.random.default_rng(int(parametry["seed"]))
+    nedel = max(10, int((dostup.t1 - dostup.t0) / (7 * 86_400_000)))
+    n_mon, sigma = 50, float(parametry.get("sigma", 0.176))           # 0.176 ⇒ шум недельного спреда ≈ 550 bps (как у KITY M3)
+    edge = parametry.get("edge_bps", 0) / 1e4
+    spred = []
+    for _ in range(nedel):
+        f = rng.standard_normal(n_mon)
+        z = (f - f.mean()) / f.std()
+        r = sigma * rng.standard_normal(n_mon) + 2 * edge * z / 3.5    # среднее по ногам ≈ edge (определение KITY)
+        k = n_mon // 10; o = np.argsort(f)
+        spred.append(float(r[o[-k:]].mean() - r[o[:k]].mean()) / 2)
+    m = statistics.fmean(spred); sd = statistics.stdev(spred)
+    t = m / (sd / math.sqrt(len(spred))) if sd else 0.0
+    return dict(t=t, n=len(spred), metrika=dict(edge_bps_ist=parametry.get("edge_bps", 0), edge_bps_izm=round(m * 1e4, 1)))
