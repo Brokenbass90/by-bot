@@ -1,5 +1,26 @@
 # Alpaca Dynamic LIVE — October13 preparation and existing PAPER postcheck
 
+## Post-Mac-reboot check — October13 17:17UTC /20:17 Cyprus
+
+One read-only SSH connection verified the already-installed37-file app and48
+package/source files, exact cron after-pin, disabled/unregistered Dynamic units,
+unchanged physical custody/HALT and consistent original lock. No lock acquired.
+All profile/writer/unit/cron maps and production PIDs/NRestarts match the prior
+post-handoff inventory. Local and remote `16750111fd3b821c554961121828355612a221be`
+match. LIVE is flat/orders0/HALT/cash496.12. No server state change, reinstall,
+service restart, reservation or broker write was performed.
+
+The one fresh fee observation still has only Oct12 CAT0.01; Oct13 exit-day
+rows are absent. PAPER NET is absent/orders0, legacy5 retained, cash99405.77.
+Existing actual-posted offline verifier returns
+`BLOCKED_DATA / PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT`.
+Result: **POST_REBOOT_INTEGRITY_PASS / FEE_FINALITY_PENDING**.
+Read [the sourced receipt](evidence/alpaca_live_readiness_20261013/post_reboot_integrity_receipt_v1.json).
+No more fee polling today. Later fee closure uses the same already closed
+lifecycle and installed package; no repeated cron/install/PAPER procedure.
+Final runtime binding/exact dossier and separate money GO remain required.
+Local Claude/Ollama/storozh processes were not restarted or audited by this task.
+
 ## Current result — physical orders-OFF install and exact handoff completed
 
 The direct subsequent owner answer **"Да, разрешаю сейчас, не ждать PAPER fee

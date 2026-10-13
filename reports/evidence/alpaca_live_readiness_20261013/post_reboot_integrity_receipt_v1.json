@@ -1,0 +1,71 @@
+{
+  "schema": "ALPACA_POST_MAC_REBOOT_INTEGRITY_RECEIPT_V1",
+  "observed_at_utc": "2026-10-13T17:17:15.979000+00:00",
+  "status": "POST_REBOOT_INTEGRITY_PASS_FEE_FINALITY_PENDING",
+  "git_local_and_remote_verified_sha256": "16750111fd3b821c554961121828355612a221be",
+  "vps_reachable": true,
+  "package_sha256": "0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20",
+  "verified_app_files": 37,
+  "verified_package_source_files": 48,
+  "exact_single_old_manager_cron_retirement_preserved": true,
+  "all_cron_maps_equal_after_handoff": true,
+  "original_profiles_writers_units_equal": true,
+  "original_production_services_pid_nrestarts_equal": true,
+  "active_dynamic_managers": 0,
+  "no_registered_candidate_units": true,
+  "source_book_intents": 0,
+  "live": {
+    "flat": true,
+    "open_orders": 0,
+    "halted": true,
+    "cash": "496.12"
+  },
+  "custody_status": "STATIC_SOURCES_BOUND_FINALITY_PENDING",
+  "custody_pin_unchanged": true,
+  "original_lock_path_consistent": true,
+  "lock_acquisitions": 0,
+  "remote_writes": 0,
+  "broker_writes": 0,
+  "paper": {
+    "owned_NET_absent": true,
+    "open_orders": 0,
+    "foreign_positions_preserved": 5,
+    "cash": "99405.77",
+    "activities_rows": 3,
+    "oct12_posted_CAT": "0.01",
+    "oct13_exit_day_fees": "NOT_PUBLISHED",
+    "finality_status": "FEE_FINALITY_PENDING"
+  },
+  "actual_postcheck": {
+    "live_orders_allowed": false,
+    "orders_allowed": false,
+    "ready_for_live_go": false,
+    "reason": "PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT",
+    "schema": "ALPACA_DYNAMIC_LIVE_READINESS_V1",
+    "status": "BLOCKED_DATA"
+  },
+  "reader_sha256": "6743f5656a6b418e7c337c54c4a85e53feaa44324520aae334bb68e72892b29a",
+  "private_capture_sha256": {
+    "deployed": "850d2adc26b3e073c4d64d85b9f820a80a4ff311b3efa67e62aa0e222f00e713",
+    "authority": "ee1ae2dcfec192d5170d14719bb2fc10e163406f1bcbe175aa80eef39c8cfa60",
+    "finality": "a72ee7917b43c1e06ba243128d0da7cf02ceb5a614b1c3571366e6d1407c3759",
+    "lock_custody": "88b45842e396ed9cc0a5076164fe13ea15818f104b57cff882bbaea205016a50"
+  },
+  "private_postcheck_sha256": "3d6e4ddff6d945624a3ec081159ecb1bb11d46fcafeb06a2b3075b91e486f83a",
+  "checks": {
+    "ssh_connections": 1,
+    "same_closed_lifecycle_fee_checks": 1,
+    "service_restarts": 0,
+    "reinstalls": 0,
+    "cron_writes": 0,
+    "extra_paper_trades": 0,
+    "local_claude_ai_storozh_started": false
+  },
+  "next_action": "No further fee poll today. Later actual fee publication for same closed lifecycle, bind full receipt to existing package without reinstall; exact first-LIVE dossier and separate money GO.",
+  "limitations": [
+    "original shared lock read only, not acquired",
+    "no active LIVE manager or monetary approval",
+    "no claim about local Claude/Ollama/storozh process survival",
+    "no trading tests/code or runtime changes"
+  ]
+}

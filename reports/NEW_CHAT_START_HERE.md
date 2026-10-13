@@ -1,5 +1,14 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October13 post-Mac-reboot17:17UTC: **INTEGRITY_PASS / FEE_FINALITY_PENDING**.
+Read checkpoint TOP and post_reboot_integrity_receipt_v1.json. One read-only SSH
+and one fee observation: installed37/48pins, exact old cron retirement, disabled
+new units, custody/HALT and original services/source/cron unchanged. LIVE flat/
+orders0/HALT/cash496.12; fees still absent. Local+remote1675011 verified.
+No more fee poll TODAY or reinstall/restart/cron/broker/PAPER action. Later actual
+fee closure → existing installed package final binding/dossier/separate moneyGO.
+Local Claude/Ollama/storozh not started. Original paused heartbeat unchanged.
+
 October13 CURRENT: **ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING**.
 Start checkpoint TOP and ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md CURRENT section.
 Direct owner approved fee-pending inert install; package0a3fce3b…87f20 installed

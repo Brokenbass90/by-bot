@@ -1,5 +1,22 @@
 # Codex session checkpoint — 2026-09-06
 
+October13 17:17:15UTC /20:17Cyprus post-Mac-reboot: **POST_REBOOT_INTEGRITY_PASS / FEE_FINALITY_PENDING**.
+One SSH connection/one same-closed-lifecycle fee observation, remote writes0.
+37app/48package+source pins/exact retired cron/HALT/custody PASS; all unrelated
+cron maps, profiles/writers/unit sources and production PIDs/NRestarts equal to
+post-handoff source. Original lock read-only/consistent, not acquired. New
+Dynamic manager disabled/not registered, no intent/GO/reservation. LIVE flat/
+orders0/HALT/cash496.12. PAPER NET absent/orders0/legacy5/cash99405.77; only
+Oct12CAT0.01 posted, Oct13 exit-day fees absent. Existing actual-posted offline
+postcheck gives exact BLOCKED_DATA/PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT.
+Local+remote16750111…221be verified after reboot. Read
+evidence/alpaca_live_readiness_20261013/post_reboot_integrity_receipt_v1.json.
+No more fee polling TODAY, reinstall/restart/cron/broker write or extra PAPER.
+Later published actual fees → final attestation on ALREADY installed package →
+physical runtime binding/exact first-intent dossier/separate owner moneyGO.
+Local Claude/Ollama/storozh survival not audited and nothing started. Original
+paused heartbeat and Claude research untouched. Earlier fee snapshots stay dated.
+
 October13 15:23UTC: **ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING**.
 Direct subsequent owner approval allows inert install despite pending PAPER fees.
 Corrected37-file package0a3fce3b…87f20 physically installed; exact proposal
