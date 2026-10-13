@@ -1,5 +1,35 @@
 # Alpaca Dynamic LIVE — October13 preparation and existing PAPER postcheck
 
+## Orders-OFF handoff approved; fresh finality source remains pending
+
+The owner directly answered **"Да, разрешаю этот orders-OFF handoff"** to the
+exact proposal `422c638c968486da38fdf88d11025944d6865e18f9f6eacea793207795c7aa4a`.
+Read `manager_handoff_owner_approval_receipt.json`. This permits only the reviewed
+single old `alpaca_intended_live_readonly --send-orders` cron retirement after
+actual PAPER cost/finality PASS, fresh authenticated LIVE flat/no-orders/HALT,
+original account lock, no old manager in flight and exact before cron pins.
+The new runtime stays disabled. Original proposal and its historical receipt
+are preserved. This approval persists; do not ask for it again. It is not an
+exact money GO, HALT-clear permission or permission to alter any other cron line.
+
+One new bounded GET-only source, captured at **15:01:20.341UTC /18:01 Cyprus**,
+SHA`88440d65e0cd07c6f27495ad88eaddb984776fb573d471dda58f054a9dc63c50`,
+still has only the actual Oct12 CAT0.01 debit. Oct13 sell-day CAT/SEC are not
+posted. PAPER cash is99405.77; pending0 does not prove full fee closure. NET is
+absent/no orders; the five legacy PAPER positions remain outside our authority.
+LIVE is flat/no orders/HALT, cash496.12. Original app file pins match; completed
+guard/open units have normal exit0 and no restarts, production PIDs unchanged.
+
+The unique offline actual-posted postcheck of this new source returns
+`BLOCKED_DATA / PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT`.
+Read `post_handoff_approval_observation_receipt.json`; raw broker data remain
+private. No cost closure/PAPER PASS was fabricated. **Handoff NOT_APPLIED;
+disabled app NOT_INSTALLED.** No broker/cron/profile/unit/HALT mutation or new
+PAPER trade occurred. The original heartbeat remains paused without extension.
+Next action is publication/reconciliation of fees for THIS completed lifecycle,
+then the already authorized disabled install and exact single-line handoff with
+fresh prerequisites. It requires no additional statistical PAPER cycle.
+
 ## Latest terminal observation — original second check COMPLETE
 
 ### Posted-fee source processor — subsequent local engineering closure

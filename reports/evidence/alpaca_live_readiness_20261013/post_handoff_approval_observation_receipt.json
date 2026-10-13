@@ -1,0 +1,85 @@
+{
+  "schema": "ALPACA_POST_HANDOFF_APPROVAL_OBSERVATION_V1",
+  "status": "ORDERS_OFF_HANDOFF_APPROVED_FINALITY_PENDING_NOT_APPLIED",
+  "observed_ms": 1791903680341,
+  "observed_at_utc": "2026-10-13T15:01:20.341000+00:00",
+  "capture_sha256": "88440d65e0cd07c6f27495ad88eaddb984776fb573d471dda58f054a9dc63c50",
+  "postcheck_sha256": "3d6e4ddff6d945624a3ec081159ecb1bb11d46fcafeb06a2b3075b91e486f83a",
+  "postcheck_status": "BLOCKED_DATA",
+  "postcheck_reason": "PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT",
+  "live": {
+    "flat": true,
+    "open_orders": 0,
+    "halted": true,
+    "cash": "496.12",
+    "pending_reg_taf_fees": "0"
+  },
+  "paper": {
+    "net_position_http_status": 404,
+    "open_orders": 0,
+    "legacy_position_count": 5,
+    "cash": "99405.77",
+    "pending_reg_taf_fees": "0",
+    "posted_fee_rows": [
+      {
+        "activity_type": "FEE",
+        "date": "2026-10-12",
+        "net_amount": "-0.01"
+      }
+    ],
+    "exit_day_fee_finality": "NOT_PUBLISHED_NOT_CLOSED"
+  },
+  "services": {
+    "alpaca-net-paper-open-20261012.service": {
+      "Restart": "no",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "ExecMainStatus": "0",
+      "ActiveState": "inactive",
+      "SubState": "dead"
+    },
+    "alpaca-net-paper-guard-20261012.service": {
+      "Restart": "no",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "ExecMainStatus": "0",
+      "ActiveState": "inactive",
+      "SubState": "dead"
+    },
+    "bybot.service": {
+      "Restart": "on-failure",
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    "trading-journal-web.service": {
+      "Restart": "always",
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    "att1-lifecycle-zero-risk-v2.service": {
+      "Restart": "on-failure",
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "ExecMainStatus": "0",
+      "ActiveState": "active",
+      "SubState": "running"
+    }
+  },
+  "original_app_manifest_sha256": "85c58e7a6fdc2fae947ac3b56f0c947135e1086a52e8ba9c4281599d2a9359b1",
+  "original_app_mismatches": [],
+  "broker_writes": 0,
+  "remote_writes": 0,
+  "handoff_applied": false,
+  "disabled_package_installed": false,
+  "no_new_paper_attempt": true,
+  "original_heartbeat_remains_paused": true,
+  "orders_allowed": false,
+  "ready_for_live_go": false,
+  "next_action": "After actual posted fees close THIS lifecycle, use the existing actual-posted postcheck, then disabled install and approved exact one-line handoff with fresh account/lock/process/cron pins. No new trade, date extension or repeated approval."
+}

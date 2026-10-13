@@ -1,5 +1,20 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October13 15:01:20UTC: **HANDOFF_OWNER_APPROVED / FINALITY_PENDING / NOT_APPLIED**.
+Direct human orders-OFF approval is recorded in manager_handoff_owner_approval_receipt.json;
+proposal422c638c…c7aa4a only, one old --send-orders cron line after actual cost PASS
+and fresh flat/no-orders/HALT/lock/process/cron pins. No repeated approval needed.
+Separate exact moneyGO still absent. Fresh GET SHA88440d65…63c50: LIVE flat/orders0/
+HALT/cash496.12; NET PAPER absent/orders0, five legacy positions untouched.
+Only Oct12 CAT0.01 posted; Oct13 exit-day fees still missing, cash99405.77/pending0.
+Actual-posted postcheck remains BLOCKED_DATA/PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT.
+No cron/install/profile/service/HALT/broker write; new package still local disabled.
+Original app pins/no restarts intact; original two-check heartbeat stays PAUSED.
+Read post_handoff_approval_observation_receipt.json and the latest readiness section.
+Continue with actual fee closure of THIS completed lifecycle, then approved disabled
+install/exact handoff/source binding/dossier. No new PAPER trade or extended dates.
+Earlier approval-request/observations below are dated history.
+
 October13 original lifecycle terminal: **ACTUAL_EXECUTION_STAGES_PASS_COST_FINALITY_PENDING / LIVE HALTED**.
 Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md latest posted-fee section and
 terminal_observation_receipt.json /posted_fee_engineering_receipt.json.

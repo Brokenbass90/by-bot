@@ -454,3 +454,19 @@ exclusive new authority/source binding must be proved, not a synthetic boolean.
 Preserve original readback scripts and private evidence. Heartbeat alpaca-net-13
 keeps its original two dates and pauses after second check. Prior independent
 review allowance restriction remains; root-only review, no replacement/retry.
+
+## October13 exact orders-OFF manager handoff approval
+
+Direct human reply: "Да, разрешаю этот orders-OFF handoff". See
+reports/evidence/alpaca_live_readiness_20261013/manager_handoff_owner_approval_receipt.json.
+This supersedes the preceding cron exclusion ONLY for proposal
+422c638c968486da38fdf88d11025944d6865e18f9f6eacea793207795c7aa4a:
+comment exactly the old alpaca_intended_live_readonly --send-orders cron line,
+after actual PAPER cost/finality PASS, fresh authenticated LIVE flat/no-orders/
+HALT, original account lock, no old manager in flight and exact cron pins.
+Preserve every other cron line; new app stays disabled/orders-OFF. No broker
+write, HALT clear, profile change, unit activation or money authority. Do not
+request the same handoff approval again. Exact monetary owner GO stays separate.
+At15:01:20UTC the fresh closed-lifecycle GET still has no posted Oct13 exit fees:
+PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT. Thus no install/handoff applied.
+Original two-check heartbeat remains paused; no new PAPER or extended schedule.
