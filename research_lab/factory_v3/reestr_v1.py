@@ -29,6 +29,9 @@ ROLI_OKON = {"DEV": "SCREEN", "CONFIRM": "TEST"}          # роль окна �
 ALPHA = 0.05
 NUZHEN_GO = {"CANARY", "MONEY"}                          # переходы, требующие письменного GO владельца
 VERDIKTY_TENI = ("KEEP", "CONTINUE", "DEPRIORITIZE", "KILL")  # проспективные вердикты судей теней
+REOPENED = "REOPENED"
+CHTO_NOVOGO = ("DANNYE", "INSTRUMENT", "KONTEKST", "MEHANIZM")  # что появилось нового с момента KILL семьи
+MAKS_PEREOTKRYTIY, MAKS_GIPOTEZ_NA_OTKRYTIE, POROG_NOVIZNY = 3, 5, 0.5
 
 
 class OshibkaReestra(Exception):
@@ -79,6 +82,8 @@ class Reestr:
                 S["semi"][e["id"]] = dict(e)
             elif t == "gipoteza":
                 S["gipotezy"][e["id"]] = dict(e, status="NEW", istoriya=[])
+                sm = S["semi"].get(e["semya"])
+                if sm and sm.get("status") == REOPENED: sm["gipotez_posle_otkrytiya"] += 1
             elif t == "okno":
                 S["okna"][e["id"]] = dict(e)
             elif t == "okno_parametry":
@@ -100,6 +105,9 @@ class Reestr:
                 S["gipotezy"][e["gipoteza"]].setdefault("kvitancii", []).append(e)
             elif t == "semya_kill":
                 S["semi"][e["semya"]]["status"] = TERMINAL; S["semi"][e["semya"]]["prichina_kill"] = e["prichina"]
+            elif t == "semya_otkryt":
+                sm = S["semi"][e["semya"]]; sm.setdefault("otkrytiya", []).append(e)
+                sm.update(status=REOPENED, byudzhet_gipotez=int(e["byudzhet_gipotez"]), gipotez_posle_otkrytiya=0)
         return S
 
     def popytok_na_okne(self, okno, S=None):
@@ -114,7 +122,11 @@ class Reestr:
         elif t == "gipoteza":
             if e["id"] in S["gipotezy"]: raise OshibkaReestra(f"гипотеза {e['id']} уже есть")
             if e["semya"] not in S["semi"]: raise OshibkaReestra(f"нет семьи {e['semya']}")
-            if S["semi"][e["semya"]].get("status") == TERMINAL: raise OshibkaReestra(f"семья {e['semya']} закрыта (KILL)")
+            sm = S["semi"][e["semya"]]
+            if sm.get("status") == TERMINAL:
+                raise OshibkaReestra(f"семья {e['semya']} закрыта (KILL); переоткрыть — semya_otkryt с новой причиной и бюджетом")
+            if sm.get("status") == REOPENED and sm["gipotez_posle_otkrytiya"] >= sm["byudzhet_gipotez"]:
+                raise OshibkaReestra(f"бюджет переоткрытия семьи {e['semya']} исчерпан ({sm['byudzhet_gipotez']} гипотез)")
         elif t == "okno":
             if e["id"] in S["okna"]: raise OshibkaReestra(f"окно {e['id']} уже есть")
             if e.get("alpha") is not None and not 0 < float(e["alpha"]) <= 0.25: raise OshibkaReestra("alpha ∈ (0, 0.25]")
@@ -177,6 +189,21 @@ class Reestr:
         elif t == "semya_kill":
             if e["semya"] not in S["semi"]: raise OshibkaReestra("нет семьи")
             if S["semi"][e["semya"]].get("status") == TERMINAL: raise OshibkaReestra("семья уже закрыта")
+        elif t == "semya_otkryt":
+            sm = S["semi"].get(e["semya"])
+            if not sm: raise OshibkaReestra("нет семьи")
+            if sm.get("status") != TERMINAL: raise OshibkaReestra("переоткрыть можно только семью в KILL")
+            if len(sm.get("otkrytiya", [])) >= MAKS_PEREOTKRYTIY: raise OshibkaReestra(f"семья уже переоткрывалась {MAKS_PEREOTKRYTIY} раза — хватит")
+            if e.get("chto_novogo") not in CHTO_NOVOGO: raise OshibkaReestra(f"что нового ∈ {CHTO_NOVOGO}")
+            if len(osnovy(e.get("prichina", ""))) < 8: raise OshibkaReestra("причина переоткрытия — причинный механизм, а не пара слов")
+            if not e.get("dokument"): raise OshibkaReestra("переоткрытие без документа-обоснования не принимается")
+            if not 1 <= int(e.get("byudzhet_gipotez", 0)) <= MAKS_GIPOTEZ_NA_OTKRYTIE:
+                raise OshibkaReestra(f"бюджет переоткрытия: 1..{MAKS_GIPOTEZ_NA_OTKRYTIE} гипотез")
+            a = osnovy(e["prichina"])
+            for star in [sm.get("prichina_kill", "")] + [o["prichina"] for o in sm.get("otkrytiya", [])]:
+                b = osnovy(star)
+                if b and len(a & b) / max(1, len(a | b)) >= POROG_NOVIZNY:
+                    raise OshibkaReestra("причина слишком похожа на прежнюю (причину KILL или прошлое переоткрытие) — нужна новая")
         else:
             raise OshibkaReestra(f"неизвестный тип события {t}")
 
@@ -230,6 +257,12 @@ class Reestr:
     def zakryt_semyu(self, semya, prichina):
         return self._zapisat(dict(tip="semya_kill", semya=semya, prichina=prichina))
 
+    def otkryt_semyu(self, semya, prichina, chto_novogo, byudzhet_gipotez, dokument, avtor="claude"):
+        """KILL убивает версию, не идею. Переоткрытие семьи: новая причинная гипотеза + что появилось нового (данные/инструмент/
+        контекст/механизм) + свой бюджет гипотез (1..5) + документ. Старые гипотезы остаются в KILL. Не больше 3 раз на семью."""
+        return self._zapisat(dict(tip="semya_otkryt", semya=semya, prichina=prichina, chto_novogo=chto_novogo,
+                                  byudzhet_gipotez=int(byudzhet_gipotez), dokument=dokument, avtor=avtor))
+
     def pohozhie(self, text, porog=0.2):
         """Сверка с кладбищем: семьи/гипотезы в KILL с похожим описанием (Жаккар по основам слов)."""
         S = self.sostoyanie(); a = osnovy(text); out = []
@@ -244,6 +277,7 @@ class Reestr:
     def svodka(self):
         S = self.sostoyanie(); from collections import Counter
         return dict(semey=len(S["semi"]), semey_kill=sum(s.get("status") == TERMINAL for s in S["semi"].values()),
+                    semey_pereotkryto=sum(s.get("status") == REOPENED for s in S["semi"].values()),
                     gipotez=dict(Counter(g["status"] for g in S["gipotezy"].values())),
                     okon={o["id"]: dict(rol=o["rol"], popytok=self.popytok_na_okne(o["id"], S), byudzhet=o.get("byudzhet"))
                           for o in S["okna"].values()},

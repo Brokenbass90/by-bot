@@ -118,6 +118,26 @@ class TestReestr(unittest.TestCase):
         with self.assertRaises(OshibkaReestra): r.okno_parametry("DEV1", alpha=0.2)          # после попытки нельзя
         self.assertAlmostEqual(r.zapisat_rezultat("P1", SPEC, t=1.7, n=50)["trebuemyy_t"], 1.645, 2)
 
+    def test_pereotkrytie_semi(self):
+        r = self.r
+        r.zakryt_semyu("S1", "спот-поток агрессора не дал края на недельном горизонте")
+        with self.assertRaises(OshibkaReestra): r.gipoteza("G2", "S1", "x", ["d"])                 # KILL — нельзя
+        PR = "трендовый контекст: эффект агрессора проявляется только при росте ширины рынка и слабом фандинге"
+        with self.assertRaises(OshibkaReestra): r.otkryt_semyu("S1", "попробуем ещё", "DANNYE", 2, "doc.md")        # пара слов
+        with self.assertRaises(OshibkaReestra): r.otkryt_semyu("S1", PR, "ХОЧЕТСЯ", 2, "doc.md")                   # не из списка
+        with self.assertRaises(OshibkaReestra): r.otkryt_semyu("S1", PR, "KONTEKST", 9, "doc.md")                  # бюджет > 5
+        with self.assertRaises(OshibkaReestra): r.otkryt_semyu("S1", PR, "KONTEKST", 2, "")                        # без документа
+        with self.assertRaises(OshibkaReestra):                                                                    # та же причина
+            r.otkryt_semyu("S1", "спот-поток агрессора не дал края на недельном горизонте вообще", "DANNYE", 1, "doc.md")
+        r.otkryt_semyu("S1", PR, "KONTEKST", 2, "doc.md")
+        self.assertEqual(r.sostoyanie()["gipotezy"]["G1"]["status"], "NEW")       # старые гипотезы не воскресают сами
+        r.gipoteza("G2", "S1", "агрессор × ширина", ["d"]); r.gipoteza("G3", "S1", "агрессор × фандинг", ["d"])
+        with self.assertRaises(OshibkaReestra): r.gipoteza("G4", "S1", "ещё одна", ["d"])                      # бюджет 2 исчерпан
+        with self.assertRaises(OshibkaReestra): r.otkryt_semyu("S1", PR + " ещё", "KONTEKST", 1, "d")           # не в KILL
+        self.assertEqual(r.svodka()["semey_pereotkryto"], 1)
+        r.zakryt_semyu("S1", "контекстные версии тоже без края")
+        with self.assertRaises(OshibkaReestra): r.otkryt_semyu("S1", PR, "KONTEKST", 1, "doc.md")                # похожа на прошлое
+
     def test_zhurnal_append_only(self):
         n0 = len(self.r.put.read_text().splitlines())
         self.r.perehod("G1", "SCREEN", "старт")
