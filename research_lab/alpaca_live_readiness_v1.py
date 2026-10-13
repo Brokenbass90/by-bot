@@ -310,6 +310,87 @@ def derive_paper_cost_closure(cash_before_path, after_path, paper_doc_path, prot
         official_source='https://docs.alpaca.markets/us/docs/paper-trading',live_cost_finality_proven=False)
 
 
+def derive_paper_posted_cost_closure_v2(*, cash_before_path, initial_path, rearm_path,
+                                      terminal_path, protocol_path, now_ms):
+    """Actual posted retail fees + four captured broker-cent checkpoints.
+
+    Narrow contract for this single NET round trip, not a publication SLA or a
+    general cash-ledger guess. Both CAT/SEC account-day assessments must actually
+    appear and match the already-pinned schedule. Missing rows stay BLOCKED.
+    The older no-fee/documentation derivation and its receipts remain unchanged.
+    """
+    from decimal import Decimal, ROUND_HALF_UP, ROUND_CEILING
+    from research_lab.alpaca_dynamic_live_runtime_v1 import read_json, safe_path
+    names=('cash_before','initial','rearm','terminal','protocol')
+    values=(cash_before_path,initial_path,rearm_path,terminal_path,protocol_path)
+    paths={n:safe_path(str(p),exists=True) for n,p in zip(names,values)}
+    captures={n:read_json(str(paths[n]))['response'] for n in names[:-1]}
+    protocol=read_json(str(paths['protocol']))
+    _require(sha(paths['protocol'].read_bytes())==COMMISSION_PROTOCOL_SHA
+        and dec(protocol['commission_rate'])==0, 'POSTED_FEE_PROTOCOL_CONFLICT')
+    pre,first,rearm,after=(captures[n] for n in names[:-1])
+    _require(pre['observed_ms']<first['observed_ms']<rearm['observed_ms']<after['observed_ms']<=now_ms
+        and after['observed_ms']>=POSTCHECK_MS
+        and after['activity_request_after_ms']<=pre['observed_ms'], 'POSTED_FEE_CAPTURE_TIMING_CONFLICT')
+    accounts=[]
+    for capture in (pre,first,rearm,after):
+        source=capture['paper_broker']['account']
+        _require(source.get('http_status',200)==200,'POSTED_FEE_ACCOUNT_GET_FAILED')
+        accounts.append(json.loads(source['raw']) if 'raw' in source else source['payload'])
+    _require(len({a['id'] for a in accounts})==1 and accounts[-1]['id']==after['packet']['paper_account']
+        and _payload(after,'live_broker','account')['id']==protocol['account_id'], 'POSTED_FEE_ACCOUNT_CONFLICT')
+    _require(dec(accounts[-1]['accrued_fees'])==dec(accounts[-1]['pending_reg_taf_fees'])==0,
+        'PAPER_LIABILITY_UNRESOLVED')
+    acts=_payload(after,'paper_broker','activities')
+    _require(len({a['id'] for a in acts})==len(acts),'DUPLICATE_CASH_ACTIVITY')
+    item=json.loads(after['databases']['paper']['tables']['intents']['rows'][0][3])
+    entry=item['receipt']['entry_order_id'];exit_ids={o['id'] for o in item['terminal']['exit_orders']}
+    fills=[a for a in acts if a['activity_type']=='FILL' and _ms(a['transaction_time'])>pre['observed_ms']]
+    _require(len(fills)==2 and {f['order_id'] for f in fills}=={entry}|exit_ids
+        and all(f['symbol']=='NET' and _ms(f['transaction_time'])<=after['observed_ms'] for f in fills),
+        'POSTED_FEE_EXACT_ROUND_TRIP_REQUIRED')
+    buy=next(f for f in fills if f['order_id']==entry)
+    sell=next(f for f in fills if f['order_id'] in exit_ids)
+    _require(buy['side']=='buy' and sell['side']=='sell'
+        and positive(buy['qty'])==positive(sell['qty']), 'POSTED_FEE_FILL_CONFLICT')
+    days=[f['transaction_time'][:10] for f in (buy,sell)]
+    _require(days[0]<days[1] and _ms(buy['transaction_time'])<=first['observed_ms']
+        and rearm['observed_ms']<_ms(sell['transaction_time']), 'POSTED_FEE_CHECKPOINT_ORDER')
+    model=protocol['regulatory_model'];ceil=lambda x:(x/Decimal('.01')).to_integral_value(rounding=ROUND_CEILING)*Decimal('.01')
+    _require(dec(model['taf_per_share_rate'])==0, 'POSTED_FEE_TAF_CONTRACT_CONFLICT')
+    expected={(days[0],'CAT'):ceil(positive(buy['qty'])*dec(model['cat_nms_executed_share_rate'])),
+        (days[1],'CAT'):ceil(positive(sell['qty'])*dec(model['cat_nms_executed_share_rate'])),
+        (days[1],'SEC'):ceil(positive(sell['qty'])*positive(sell['price'])*dec(model['sec_sell_value_rate']))}
+    actual={}
+    for row in acts:
+        if row['activity_type']=='FILL':continue
+        _require(row['activity_type']=='FEE','POSTED_FEE_FOREIGN_CASH_ACTIVITY')
+        kind=next((k for k in ('CAT','SEC') if row.get('description','').startswith(k+' fee ')),None)
+        key=(row.get('date'),kind)
+        _require(key in expected and dec(row['net_amount'])<=0,'POSTED_FEE_UNCLASSIFIED_ACTIVITY')
+        actual[key]=actual.get(key,dec(0))-dec(row['net_amount'])
+    _require(actual==expected, 'PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT')
+    cash=[dec(a['cash']) for a in accounts];quant=lambda x:x.quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
+    _require(cash[1]==quant(cash[0]-positive(buy['qty'])*positive(buy['price']))
+        and cash[2]==cash[1]-actual[(days[0],'CAT')]
+        and cash[3]==quant(cash[2]+positive(sell['qty'])*positive(sell['price']))
+                        -actual[(days[1],'CAT')]-actual[(days[1],'SEC')],
+        'POSTED_FEE_CENT_CHECKPOINT_RECONCILIATION')
+    gross=positive(sell['qty'])*positive(sell['price'])-positive(buy['qty'])*positive(buy['price'])
+    _require(gross==dec(item['terminal']['gross_before_fees']), 'POSTED_FEE_GROSS_CONFLICT')
+    regulatory=sum(actual.values(),dec(0));net=gross-regulatory
+    rows=[dict(path=str(paths[n]),sha256=sha(paths[n].read_bytes())) for n in names]
+    return dict(schema='ALPACA_PAPER_ACCOUNT_DAY_FINALITY_V1',account_id=accounts[-1]['id'],
+        entry_order_id=entry,exit_order_ids=sorted(exit_ids),cash_before=str(cash[0]),cash_after=str(cash[3]),
+        other_cash_net_usd='0',gross_usd=str(gross),commission_usd='0',regulatory_fees_usd=str(regulatory),
+        unresolved_liability_usd='0',closure_status='ACCOUNT_DAY_FEES_RECONCILED',observed_ms=now_ms,
+        capture_response_sha256=digest(after),activities_sha256=digest(acts),
+        source_files=rows,source_manifest_sha256=digest(rows),source_paths={n:str(paths[n]) for n in names},
+        cash_reconciliation_precision='BROKER_CENT_CHECKPOINT_CHAIN',cash_rounding_residual_usd=str(cash[3]-cash[0]-net),
+        source_contract='ACTUAL_POSTED_NET_SINGLE_ROUND_TRIP_V2',
+        fee_semantics='actual posted account-day CAT/SEC; no documentation-derived zero',live_cost_finality_proven=False)
+
+
 def verify_paper_lifecycle(arm, initial, before, after, fees, *, now_ms):
     """Captured original lifecycle; never substitutes fees=0 for missing rows.
 
@@ -464,6 +545,13 @@ def verify_paper_lifecycle(arm, initial, before, after, fees, *, now_ms):
         if fees.get('cash_reconciliation_precision')=='BROKER_USD_CENTS':
             from decimal import Decimal,ROUND_HALF_UP
             expected_cash=expected_cash.quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
+        elif fees.get('cash_reconciliation_precision')=='BROKER_CENT_CHECKPOINT_CHAIN':
+            # Reconstruct from every physically pinned raw checkpoint. A caller
+            # cannot introduce an arbitrary residual to force cash equality.
+            rebuilt=derive_paper_posted_cost_closure_v2(
+                **{n+'_path':p for n,p in fees['source_paths'].items()},now_ms=fees['observed_ms'])
+            _require(rebuilt==fees, 'POSTED_FEE_RECONSTRUCTION_CONFLICT')
+            expected_cash+=dec(fees['cash_rounding_residual_usd'])
         _require(cash == dec(fees['cash_after']) and cash == expected_cash,
             'ACCOUNT_DAY_CASH_RECONCILIATION')
         # A separately reviewed declaration is required even if activities are

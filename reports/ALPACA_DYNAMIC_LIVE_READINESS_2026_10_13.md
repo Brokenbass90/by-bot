@@ -2,6 +2,76 @@
 
 ## Latest terminal observation — original second check COMPLETE
 
+### Posted-fee source processor — subsequent local engineering closure
+
+The observed contradiction has a versioned **actual-posted** processor now,
+`derive_paper_posted_cost_closure_v2`, invoked explicitly with
+`postcheck --actual-posted-fees`. It consumes the original cash-before/entry/
+rearm/terminal captures and the unchanged pinned retail protocol. No new price,
+fee rate, risk number or publication SLA is selected. It supports this exact
+single NET round trip only; foreign movements/partials/unknown fee descriptions
+remain source-blocked rather than guessed. CAT/SEC account-day debits must both
+actually appear and match the source-bound existing schedule. Empty rows or
+pending0 do not replace the missing assessments.
+
+Four actual cent balances must reconstruct the buy, posted prior-day CAT, sell
+and posted exit-day fees. The explicit cash-rounding residual is separate from
+PnL/fees and is reconstructed again from all physically pinned inputs inside
+the full lifecycle verifier. An invented residual/fee0 cannot produce PASS.
+The old no-fee/documentation derivation, its failure and original packages remain
+preserved; the new source contract grants no order or money authority.
+
+Eight new counterexamples failed before implementation, then all **171** targeted
+intent/readiness/runtime/intake tests passed. The **same original14:05 snapshot**
+under this actual-fee contract is still `BLOCKED_DATA` with exact reason
+`PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT`. Original sourceSHA unchanged;
+no extra SSH/PAPER attempt. Known Oct12 CAT is accepted as actual evidence, not
+ignored or reclassified as zero. The expected Oct13 fees still must be published.
+Full verification after this source-processor change: **4627PASS /60FAIL /
+1warning**, exact same60 classified failure names, no new material Dynamic
+failure. Read `posted_fee_engineering_receipt.json`; full suite remains NOT_GREEN.
+Final corrected37-file local package is `disabled_package_posted_fee_v3.json`,
+SHA`0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20`.
+It is NOT_INSTALLED, orders-OFF. Both earlier packages/receipts are preserved;
+use this source-complete candidate rather than silently substituting old code.
+
+Next source check uses a **new uniquely named private capture** of this already
+closed lifecycle after fee settlement, then the following offline command. This
+does not extend/restart the original two-check heartbeat or create a new entry.
+Always pass absolute paths: the first historical relative-path call is retained.
+
+```bash
+ALPACA_TASK_ROOT=/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824
+.venv/bin/python scripts/prepare_alpaca_live_readiness_v1.py postcheck \
+  --actual-posted-fees \
+  --arm "$ALPACA_TASK_ROOT/reports/evidence/alpaca_net_arm_20261011/arming_receipt.json" \
+  --initial-receipt "$ALPACA_TASK_ROOT/reports/evidence/alpaca_net_paper_20261012/post_attempt_receipt.json" \
+  --initial-capture "$ALPACA_TASK_ROOT/.private/alpaca_net_paper_20261012/post_window_1335.json" \
+  --rearm-capture "$ALPACA_TASK_ROOT/.private/alpaca_net_paper_20261012/rearm_oct13_1332.json" \
+  --terminal-capture "$ALPACA_TASK_ROOT/.private/alpaca_live_readiness_20261013/finality_oct14_fee_publication.json" \
+  --cash-before-capture "$ALPACA_TASK_ROOT/.private/alpaca_net_arm_20261011/postarm_source.json" \
+  --commission-protocol "$ALPACA_TASK_ROOT/reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json" \
+  --cost-closure-output "$ALPACA_TASK_ROOT/.private/alpaca_live_readiness_20261013/paper_posted_cost_closure_after_publication_v2.json" \
+  --paper-receipt-output "$ALPACA_TASK_ROOT/.private/alpaca_live_readiness_20261013/paper_posted_lifecycle_after_publication_v2.json" \
+  --output "$ALPACA_TASK_ROOT/.private/alpaca_live_readiness_20261013/postcheck_after_fee_publication_v2.json"
+```
+
+No filename above establishes that a future capture/PASS exists. If the input
+does not exist or differs/misses fees, BLOCKED is final for that source. No
+manufactured posting, cash adjustment, broker reset or repeated PAPER trade.
+Only if that **actual** PAPER receipt is PASS, the already-reviewed inert
+installer uses the corrected source package and that exact receipt:
+
+```bash
+.venv/bin/python reports/evidence/alpaca_live_readiness_20261013/install_disabled_on_vps.py \
+  .private/alpaca_live_readiness_20261013/disabled_package_posted_fee_v3.json \
+  .private/alpaca_live_readiness_20261013/paper_posted_lifecycle_after_publication_v2.json \
+  .private/alpaca_live_readiness_20261013/disabled_deployment_posted_fee_v3_capture.json
+```
+
+No conditional installation was executed in this turn. No source custody,
+exclusive-manager proof or moneyGO follows automatically from an inert install.
+
 **ACTUAL_EXECUTION_STAGES_PASS_COST_FINALITY_PENDING / LIVE HALTED**.
 The original14:05UTC GET source was captured at14:05:20.303UTC, SHA
 `441886f0d1579f275b67993d73ba76446cafabd7e0752c61643a793613c479fc`.

@@ -307,6 +307,85 @@ def test_source_bound_paper_fee_semantics_close_cash_without_invented_fee(lifecy
     assert r['status']=='PAPER_EXECUTION_PASS' and r['net_usd']=='0.5',r
 
 
+@pytest.fixture
+def posted_case(lifecycle,tmp_path,monkeypatch):
+    """Recorded NET arithmetic with simulated IDs; no private broker fixtures."""
+    import hashlib
+    from decimal import Decimal
+    arm,initial,before,after,_=copy.deepcopy(lifecycle)
+    qty='0.325167779';buy='363.2';sell='349.344'
+    initial.update(qty=qty,fill_price=buy,stop_price='329.66')
+    for o in after['paper_broker']['net_orders']['payload']:
+        o['qty']=qty
+        if o['side']=='buy':o.update(filled_qty=qty,filled_avg_price=buy)
+        if o['type']=='market':o.update(filled_qty=qty,filled_avg_price=sell)
+        if o['type']=='stop':o['stop_price']='329.66'
+    stop=before['paper_broker']['open_orders']['payload'][0];stop.update(qty=qty,stop_price='329.66')
+    before['paper_broker']['positions']['payload'][-1]['qty']=qty
+    record=before['paper_runtime']['protective_exit_hwm.json']['payload']['NET']
+    record.update(qty=float(qty),entry_fill_qty=float(qty),entry_price=float(buy),hwm=float(buy),accepted_stop_floor=329.66)
+    item=json.loads(after['databases']['paper']['tables']['intents']['rows'][0][3])
+    item['terminal_preparation']['owned_record']=copy.deepcopy(record)
+    item['rearms']['2026-10-13'].update(qty=qty,floor='329.66')
+    exit=after['paper_broker']['net_orders']['payload'][-1]
+    item['terminal'].update(exit_orders=[exit],gross_before_fees=str(Decimal(qty)*(Decimal(sell)-Decimal(buy))))
+    after['databases']['paper']['tables']['intents']['rows'][0][3]=canonical(item).decode()
+    after['runtime']['runtime/guard/terminal.json']['payload']['receipt']=item['terminal']
+    fills=[dict(id='buy-fill',activity_type='FILL',order_id='entry',symbol='NET',qty=qty,price=buy,side='buy',transaction_time='2026-10-12T13:30:02Z'),
+           dict(id='sell-fill',activity_type='FILL',order_id='exit',symbol='NET',qty=qty,price=sell,side='sell',transaction_time='2026-10-13T13:35:01Z')]
+    after['paper_broker']['fills']['payload']=copy.deepcopy(fills)
+    fees=[dict(id='cat-buy',activity_type='FEE',date='2026-10-12',net_amount='-.01',description='CAT fee for proceed of 1 trades on 2026-10-12 by PAPER'),
+          dict(id='cat-sell',activity_type='FEE',date='2026-10-13',net_amount='-.01',description='CAT fee for proceed of 1 trades on 2026-10-13 by PAPER'),
+          dict(id='sec-sell',activity_type='FEE',date='2026-10-13',net_amount='-.01',description='SEC fee for proceed of 1 trades on 2026-10-13 by PAPER')]
+    after['paper_broker']['activities']['payload']=fills+fees
+    after['activity_request_after_ms']=1791676800000
+    after['paper_broker']['account']['payload'].update(cash='99405.75',accrued_fees='0',pending_reg_taf_fees='0')
+    before['paper_broker']['account']['payload'].update(cash='99292.17')
+    pre=dict(observed_ms=1791700000000,paper_broker=dict(account=dict(http_status=200,payload=dict(id='paper',cash='99410.28'))))
+    first=dict(observed_ms=1791812110000,paper_broker=dict(account=dict(http_status=200,payload=dict(id='paper',cash='99292.18'))))
+    paths={}
+    for name,data in [('cash_before',pre),('initial',first),('rearm',before),('terminal',after)]:
+        p=tmp_path/(name+'.json');p.write_bytes(canonical(dict(response=data)));paths[name]=p
+    protocol=json.loads((Path(__file__).resolve().parents[1]/'reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json').read_bytes())
+    protocol['account_id']='live';p=tmp_path/'protocol.json';p.write_bytes(canonical(protocol));paths['protocol']=p
+    monkeypatch.setattr(api(),'COMMISSION_PROTOCOL_SHA',hashlib.sha256(p.read_bytes()).hexdigest())
+    return arm,initial,before,after,paths
+
+
+def posted_closure(case):
+    paths=case[-1]
+    return api().derive_paper_posted_cost_closure_v2(**{n+'_path':p for n,p in paths.items()},now_ms=1791900300000)
+
+
+def test_actual_posted_fees_and_cent_checkpoint_chain_close_without_zero_assumption(posted_case):
+    fee=posted_closure(posted_case)
+    assert fee['regulatory_fees_usd']=='0.03'
+    assert fee['cash_rounding_residual_usd']=='0.005524745824'
+    r=api().verify_paper_lifecycle(*posted_case[:4],fee,now_ms=1791900300000)
+    assert r['status']=='PAPER_EXECUTION_PASS' and r['net_usd']=='-4.535524745824',r
+
+
+@pytest.mark.parametrize('fault',['missing_exit_fee','unknown_fee','foreign_fill','cash_drift','pending_liability','missing_checkpoint'])
+def test_posted_fee_closure_never_hides_missing_or_conflicting_sources(posted_case,fault):
+    paths=posted_case[-1];after=json.loads(paths['terminal'].read_bytes())['response']
+    rows=after['paper_broker']['activities']['payload']
+    if fault=='missing_exit_fee':rows.pop()
+    elif fault=='unknown_fee':rows[-1]['description']='Unclassified fee'
+    elif fault=='foreign_fill':rows.append({**rows[0],'id':'other','order_id':'unowned'})
+    elif fault=='cash_drift':after['paper_broker']['account']['payload']['cash']='99405.76'
+    elif fault=='pending_liability':after['paper_broker']['account']['payload']['pending_reg_taf_fees']='.01'
+    else:paths['initial'].unlink()
+    paths['terminal'].write_bytes(canonical(dict(response=after)))
+    with pytest.raises((ValueError,FileNotFoundError)):
+        posted_closure(posted_case)
+
+
+def test_forged_cent_residual_cannot_promote_full_lifecycle(posted_case):
+    fee=posted_closure(posted_case);fee['cash_rounding_residual_usd']='.02'
+    r=api().verify_paper_lifecycle(*posted_case[:4],fee,now_ms=1791900300000)
+    assert r['status']=='BLOCKED_DATA'
+
+
 def pre_entry_case(lifecycle,setup,tmp_path):
     import hashlib,sqlite3
     from datetime import datetime,timezone

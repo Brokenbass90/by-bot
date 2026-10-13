@@ -1,0 +1,57 @@
+{
+  "schema": "ALPACA_POSTED_FEE_SOURCE_ENGINEERING_V2",
+  "status": "LOCAL_ENGINEERING_PASS_ACTUAL_COST_DATA_PENDING",
+  "orders_allowed": false,
+  "ready_for_live_go": false,
+  "raw_oct13_capture_sha256": "441886f0d1579f275b67993d73ba76446cafabd7e0752c61643a793613c479fc",
+  "actual_current_postcheck": {
+    "live_orders_allowed": false,
+    "orders_allowed": false,
+    "ready_for_live_go": false,
+    "reason": "PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT",
+    "schema": "ALPACA_DYNAMIC_LIVE_READINESS_V1",
+    "status": "BLOCKED_DATA"
+  },
+  "postcheck_receipt_sha256": "3d6e4ddff6d945624a3ec081159ecb1bb11d46fcafeb06a2b3075b91e486f83a",
+  "source_contract": "ACTUAL_POSTED_NET_SINGLE_ROUND_TRIP_V2",
+  "frozen_fee_protocol_sha256": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c",
+  "earlier_zero_fee_derivation_and_failures_retained": true,
+  "actual_extra_broker_queries": 0,
+  "extra_paper_attempts": 0,
+  "targeted": {
+    "passed": 171,
+    "new_posted_fee_cases": 8,
+    "red_before_implementation": true
+  },
+  "full_suite": {
+    "passed": 4627,
+    "failed": 60,
+    "warnings": 1,
+    "new_failure_names": [],
+    "same_baseline_60": true,
+    "log_sha256": "f19ee50e603040a893835e9817fda743b0ff1cfe623ec949e140aa8f13eb68f7"
+  },
+  "source_pins": {
+    "research_lab/alpaca_live_readiness_v1.py": "6e6b558257cf7df9e2403bd9b1864b550bbc3a24b25121b46bf8c41dc1874fda",
+    "scripts/prepare_alpaca_live_readiness_v1.py": "e2147d6dd1fae2d1dc795ef196437821fe9ec50f7e1df0791c9c965863a755c1",
+    "tests/test_alpaca_live_readiness_v1.py": "22007971ed41e5e477fc4f5c3a95044c6d5a821cf51da54650943d786e1c3278"
+  },
+  "corrected_disabled_package_sha256": "0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20",
+  "app_files": 37,
+  "installed": false,
+  "root_financial_review": [
+    "all raw source hashes/account identities/timestamps must agree",
+    "full account activities must contain exact owned round trip; unknown cash movement blocked",
+    "actual CAT and SEC debits must match pinned account-day schedule; missing or differing assessments blocked",
+    "each cent checkpoint is reconstructed; residual is separately recorded and recomputed from physical inputs",
+    "unresolved liability/unknown description/foreign fill/cash drift never passes",
+    "no change to fees/risk/stop/selection/GO/admission"
+  ],
+  "independent_review": "UNAVAILABLE_PRIOR_RESTRICTION_NO_RETRY",
+  "original_policy_unchanged": true,
+  "old_paper_app_unchanged": true,
+  "foreign_file_original_restored": true,
+  "broker_writes": 0,
+  "vps_writes": 0,
+  "receipt_sha256": "0c25079042a8f7a22c5378daf62dad53f6a17dff6fa98bcf645b185ba708d105"
+}

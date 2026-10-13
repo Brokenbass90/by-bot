@@ -1,31 +1,36 @@
 # Codex session checkpoint — 2026-09-06
 
-October13 original second check COMPLETE: **ACTUAL_EXECUTION_STAGES_PASS_COST_FINALITY_PENDING / LIVE HALTED**.
-Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md latest terminal section and
-its terminal_observation_receipt.json. Actual rearm/full owned scheduled exit/
-fill/retirement/legacy/app81/production source checks pass; fee-unspecified verifier
-stops only at PAPER_COST_FINALITY_SOURCE_REQUIRED, not full PAPER_EXECUTION_PASS.
-Raw final GET14:05:20UTC SHA441886f0…c479fc; original two checks completed,
-heartbeat alpaca-net-13 PAUSED/no date or count extension. No new PAPER trade.
-Actual broker posted Oct12 CAT0.01, contradicting archived zero-regulatory PAPER
-assumption; absolute-path derivation BLOCKED PAPER_FEE_SEMANTICS_CONFLICT retained.
-Four actual broker-cent cash checkpoints reconcile99410.28→99292.18→99292.17→
-99405.77. Gross-4.505524745824; after known CAT net-4.515524745824 NOT_FINAL.
-Oct13 exit-day fees not published; sourced expected exit reserve0.02 is NOT
-an actual charge/unresolved0 declaration. Next bounded source action is posted
-fee/cash finality of THIS SAME closed lifecycle after broker settlement. No extra
-PAPER/statistics/Brain/Factory gate. No new monitor or original schedule extension.
-LIVE flat/HALT/cash496.12, guardexit0/no restart; broker/server observer writes0.
-Corrected raw-distance/cent-rounded intent veto: actual fresh stop-risk gate
-remains unchanged,163 targetedPASS incl two failing-before-fix NET counterexamples.
-New local37-file disabled package9c93c672…4767a, NOT_INSTALLED; originalc8b46565
-retained. Actual source book local only, no PAPER fill/intent adoption/reservation.
-Unapplied exact one-line old manager cron handoff proposal422c638c…c7aa4a is
-reviewable; old writer still scheduled, no fabricated single-manager proof.
-Full cost PASS precedes conditional disabled install/source binding/exclusive
-handoff/concrete bounded dossier/separate exact moneyGO. Earliest eligible
-Oct14 opening is conditional, never promised; no arbitrary Oct13 LIVE order.
-BrainSTOP/KITYOct15/22/ATT1/Claude research unchanged; root review only.
+October13 original lifecycle terminal: **ACTUAL_EXECUTION_STAGES_PASS_COST_FINALITY_PENDING / LIVE HALTED**.
+Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md latest posted-fee section and
+terminal_observation_receipt.json /posted_fee_engineering_receipt.json.
+Actual full DAY rearm13:30:05UTC/owned scheduled unwind13:35:33UTC/native retirement/
+app81/legacy/prod/no-restart checks pass. Original final GET14:05:20UTC SHA441886f0…
+c479fc; both original checks COMPLETE, heartbeat alpaca-net-13 PAUSED/no extension.
+Known Oct12 CAT0.01 is an actual debit despite conflicting PAPER docs. Four
+actual broker-cent cash checkpoints reconcile99410.28→99292.18→99292.17→99405.77.
+Gross-4.505524745824; after-known-fee net-4.515524745824 NOT_FINAL. Oct13 exit-day
+CAT/SEC not published; existing protocol expected reserve0.02 is NOT a charge.
+Versioned actual-posted fee processor/CLI now ready: --actual-posted-fees,
+all five physical source inputs, exact owned single NET round trip, full posted
+account-day fees, four cent checkpoints, residual independently reconstructed.
+Original zero-fee derivation/failures retained. Same raw14:05 source gives exact
+BLOCKED_DATA/PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT; no extra SSH or
+PAPER attempt. Next bounded data step is actual fee settlement of THIS closed
+lifecycle, not another PAPER trade/statistical day or an extended monitor.
+Eight new failing-before-fix cases;171 targetedPASS. Latest fullsuite4627PASS/
+60FAIL/1warning, exact prior60 names/no new material Dynamic fail; NOT_GREEN.
+Final local37-file disabled package0a3fce3b…87f20 /disabled_package_posted_fee_v3.json
+NOT_INSTALLED; c8b46565/9c93c672 historical packages preserved. Distinct LIVE book
+local only, no copied PAPER fill/intent or new reservation. First-intent cent-
+rounded stop-risk fix also ready; original risk/stop/selection/native pins frozen.
+Old manager still scheduled; exact one-line retirement proposal422c638c…c7aa4a
+NOT_APPLIED. Owner orders-OFF handoff approval requested separately because the
+conditional install scope excludes cron mutation. No fabricated single-manager
+proof or source binding. Full cost PASS precedes disabled install/binding/
+exclusive handoff/concrete sourced dossier/separate exact moneyGO. No LIVE entry,
+HALTclear, old profile/cron/service/broker mutation; original guard completedexit0.
+Earliest eligible Oct14 opening is conditional, not guaranteed. KITYOct15/22
+next crypto money lane; BrainSTOP/ATT1/Claude research unchanged. Root review only.
 Earlier morning preparation below is dated history, not current broker truth.
 
 October13 Alpaca P0: **LOCAL_PREPARATION_PASS / ACTUAL_LIFECYCLE_PENDING / ORDERS_OFF**.

@@ -18,6 +18,7 @@ from research_lab.alpaca_dynamic_live_runtime_v1 import read_json
 from research_lab.alpaca_live_readiness_v1 import (
     build_package, verify_package, verify_paper_lifecycle, initial_evidence,
     exact_dossier, pre_entry_dossier, install_disabled, write_new, blocked, derive_paper_cost_closure,
+    derive_paper_posted_cost_closure_v2,
 )
 
 
@@ -32,6 +33,8 @@ def main(argv=None):
     p.add_argument('--cash-before-capture',type=Path)
     p.add_argument('--paper-document',type=Path)
     p.add_argument('--commission-protocol',type=Path)
+    p.add_argument('--actual-posted-fees',action='store_true',
+        help='strict posted CAT/SEC and four actual cash checkpoints; missing fees remain BLOCKED')
     p.add_argument('--cost-closure-output',type=Path)
     p.add_argument('--deployment', type=Path); p.add_argument('--binding', type=Path)
     p.add_argument('--intake', type=Path); p.add_argument('--policy', type=Path,
@@ -65,7 +68,14 @@ def main(argv=None):
         else:
             initial = initial_evidence(args.initial_receipt, args.initial_capture)
             fees=load(args.cost_closure) if args.cost_closure else None
-            if fees is None and all((args.cash_before_capture,args.paper_document,args.commission_protocol)):
+            if fees is None and args.actual_posted_fees:
+                if not all((args.cash_before_capture,args.commission_protocol)):
+                    raise ValueError('POSTED_FEE_SOURCES_REQUIRED')
+                fees=derive_paper_posted_cost_closure_v2(cash_before_path=args.cash_before_capture,
+                    initial_path=args.initial_capture,rearm_path=args.rearm_capture,
+                    terminal_path=args.terminal_capture,protocol_path=args.commission_protocol,now_ms=now)
+                if args.cost_closure_output:write_new(args.cost_closure_output,canonical(fees))
+            elif fees is None and all((args.cash_before_capture,args.paper_document,args.commission_protocol)):
                 fees=derive_paper_cost_closure(args.cash_before_capture,args.terminal_capture,
                     args.paper_document,args.commission_protocol,now_ms=now)
                 if args.cost_closure_output:write_new(args.cost_closure_output,canonical(fees))
