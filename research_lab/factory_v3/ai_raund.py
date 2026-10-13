@@ -1,44 +1,118 @@
 #!/usr/bin/env python3
-"""ai_raund.py — раунд ИИ-исследователя на Маке (Ollama). Только предложения механизмов → NEW. 13.10.2026.
+"""ai_raund.py V2 — ОГРАНИЧЕННЫЙ раунд ИИ-исследователя (Ollama). 13.10.2026, после зависания Мака на V1.
 
-    .venv/bin/python research_lab/factory_v3/ai_raund.py                 # сухой прогон: копия реестра, ничего не пишет
-    .venv/bin/python research_lab/factory_v3/ai_raund.py --n 5 --zapisat # записать прошедшие контракт в реестр (NEW)
-    --model qwen3:8b   (по умолчанию — первая найденная qwen*/deepseek*)
-Журнал раундов: research_lab/data/factory_v3/ai_raundy.jsonl
+Причины зависания V1 (дефекты кода): нет лимита вывода (qwen3 «думает» вслух), нет лимита контекста, таймаут 300 с × 3 вызова,
+выбор «первой qwen*/deepseek*» без ограничения размера, нет проверки уже загруженных моделей, модель оставалась в памяти,
+нет проверки свободной RAM. V2 закрывает каждый пункт:
+
+  • разрешённые модели — только список MODELI (≤ 8B), размер по /api/tags ≤ MAX_GB;
+  • /api/ps должен быть ПУСТ (никакой второй модели/агента в памяти) — иначе отказ;
+  • свободная память macOS (vm_stat: free+inactive+speculative) ≥ размер модели + ZAPAS_GB — иначе отказ;
+  • один раунд одновременно (flock data/locks/ai_raund.lock), никаких фоновых циклов, n ≤ 3 (по умолчанию 1);
+  • вызов: num_ctx 2048, num_predict 512, num_thread 4, think=false, keep_alive=0 (выгрузка сразу), таймаут 120 с;
+  • общий дедлайн процесса 300 с (SIGALRM); по таймауту — принудительная выгрузка модели и выход с кодом 3;
+  • сухой режим (по умолчанию) НИЧЕГО не пишет в проект: реестр — копия во временной папке, итог — только на экран;
+    с --zapisat — NEW в реестр и журнал data/factory_v3/ai_raundy.jsonl.
+
+    .venv/bin/python research_lab/factory_v3/ai_raund.py --proverka     # только проверки ресурсов, модель НЕ грузится
+    .venv/bin/python research_lab/factory_v3/ai_raund.py                # 1 предложение, сухо
 """
-import argparse, datetime as dt, json, shutil, sys, tempfile, urllib.request
+import argparse, datetime as dt, fcntl, json, os, re, shutil, signal, subprocess, sys, tempfile, urllib.request
 from pathlib import Path
 HERE = Path(__file__).resolve().parent; sys.path.insert(0, str(HERE))
 from reestr_v1 import Reestr, PUT_PO_UMOLCHANIYU
 import ai_kontrakt_v1 as A
 
+MODELI = ("qwen3:4b", "qwen3:8b", "qwen2.5:7b", "deepseek-r1:7b", "deepseek-r1:8b")
+MAX_GB, ZAPAS_GB, N_MAX, TIMEOUT_S, DEDLAYN_S = 6.0, 4.0, 3, 120, 300
+LOCKS = HERE.parent / "data" / "locks"
 
-def modeli(host):
-    with urllib.request.urlopen(f"{host}/api/tags", timeout=10) as r:
-        return [m["name"] for m in json.loads(r.read()).get("models", [])]
+
+class Otkaz(Exception):
+    pass
 
 
-def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--n", type=int, default=3); ap.add_argument("--model")
+def _get(host, put, timeout=10):
+    with urllib.request.urlopen(f"{host}{put}", timeout=timeout) as r: return json.loads(r.read())
+
+
+def svobodno_gb():
+    """macOS: (free + inactive + speculative) страниц × размер страницы. На не-macOS — None (проверка не пройдена)."""
+    try: out = subprocess.run(["vm_stat"], capture_output=True, text=True, timeout=5).stdout
+    except Exception: return None
+    ps = int(re.search(r"page size of (\d+)", out).group(1))
+    v = lambda k: int(re.search(rf"{k}:\s+(\d+)", out).group(1)) if re.search(rf"{k}:\s+(\d+)", out) else 0
+    return (v("Pages free") + v("Pages inactive") + v("Pages speculative")) * ps / 2**30
+
+
+def vygruzit(host, model):
+    try:
+        body = json.dumps(dict(model=model, prompt="", keep_alive=0)).encode()
+        urllib.request.urlopen(urllib.request.Request(f"{host}/api/generate", data=body, headers={"Content-Type": "application/json"}), timeout=15).read()
+    except Exception:
+        pass
+
+
+def proverki(host, model, pamyat_fn=svobodno_gb):
+    """Возвращает dict ресурсов или бросает Otkaz. Модель не загружает."""
+    if model not in MODELI: raise Otkaz(f"модель {model} не в списке разрешённых {MODELI}")
+    tags = {m["name"]: m for m in _get(host, "/api/tags").get("models", [])}
+    if model not in tags: raise Otkaz(f"модели {model} нет в Ollama (есть: {sorted(tags)[:8]})")
+    gb = tags[model].get("size", 0) / 2**30
+    if gb > MAX_GB: raise Otkaz(f"{model} весит {gb:.1f} ГБ > {MAX_GB}")
+    zagr = [m.get("name") for m in _get(host, "/api/ps").get("models", [])]
+    if zagr: raise Otkaz(f"в памяти уже есть модели {zagr} — второй инференс запрещён")
+    sv = pamyat_fn()
+    if sv is None: raise Otkaz("не удалось измерить свободную память — отказ (fail-closed)")
+    if sv < gb + ZAPAS_GB: raise Otkaz(f"свободно {sv:.1f} ГБ < модель {gb:.1f} + запас {ZAPAS_GB} ГБ")
+    return dict(model=model, model_gb=round(gb, 2), svobodno_gb=round(sv, 1))
+
+
+def zamok():
+    LOCKS.mkdir(parents=True, exist_ok=True)
+    fd = os.open(LOCKS / "ai_raund.lock", os.O_RDWR | os.O_CREAT, 0o600)
+    try: fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError: raise Otkaz("раунд ИИ уже идёт (замок занят)")
+    return fd
+
+
+def main(argv=None, pamyat_fn=svobodno_gb):
+    ap = argparse.ArgumentParser(); ap.add_argument("--n", type=int, default=1); ap.add_argument("--model", default="qwen3:8b")
     ap.add_argument("--host", default="http://localhost:11434"); ap.add_argument("--zapisat", action="store_true")
+    ap.add_argument("--proverka", action="store_true")
     ap.add_argument("--zapros", default="Предложи механизм, независимый от уже убитых, на данных из каталога.")
-    a = ap.parse_args()
-    try: est = modeli(a.host)
-    except Exception as e: sys.exit(f"Ollama недоступна на {a.host}: {e}")
-    m = a.model or next((x for x in est if x.startswith(("qwen", "deepseek"))), est[0] if est else None)
-    if not m: sys.exit("в Ollama нет моделей (ollama pull qwen3:8b)")
+    a = ap.parse_args(argv)
+    if not 1 <= a.n <= N_MAX: print(f"n ∈ [1, {N_MAX}]"); return 2
+    try:
+        fd = zamok(); res = proverki(a.host, a.model, pamyat_fn)
+    except Otkaz as e:
+        print("ОТКАЗ:", e); return 2
+    except Exception as e:
+        print("ОТКАЗ: Ollama недоступна:", e); return 2
+    print("ресурсы:", res)
+    if a.proverka: return 0
+    def dedlayn(*_):
+        vygruzit(a.host, a.model); print(f"ABORTED: общий дедлайн {DEDLAYN_S} с, модель выгружена"); os._exit(3)
+    signal.signal(signal.SIGALRM, dedlayn); signal.alarm(DEDLAYN_S)
+    try: os.nice(10)
+    except Exception: pass
     if a.zapisat: r = Reestr()
     else:
         tmp = Path(tempfile.mkdtemp()) / "reestr_kopiya.jsonl"
         if PUT_PO_UMOLCHANIYU.exists(): shutil.copy(PUT_PO_UMOLCHANIYU, tmp)
         r = Reestr(tmp)
-    rez = A.raund(r, A.klient_ollama(m, a.host), a.zapros, a.n)
-    zap = dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), model=m, zapisano=a.zapisat, itogi=rez)
-    log = HERE.parent / "data" / "factory_v3" / "ai_raundy.jsonl"; log.parent.mkdir(parents=True, exist_ok=True)
-    with open(log, "a") as f: f.write(json.dumps(zap, ensure_ascii=False) + "\n")
-    print(f"модель {m}, {'ЗАПИСЬ в реестр' if a.zapisat else 'сухой прогон'}")
-    for x in rez: print(" ", json.dumps(x, ensure_ascii=False)[:300])
+    try:
+        rez = A.raund(r, A.klient_ollama(a.model, a.host, timeout_s=TIMEOUT_S), a.zapros, a.n)
+    finally:
+        signal.alarm(0); vygruzit(a.host, a.model)
+    if a.zapisat:
+        log = HERE.parent / "data" / "factory_v3" / "ai_raundy.jsonl"
+        with open(log, "a") as f:
+            f.write(json.dumps(dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), resursy=res, itogi=rez), ensure_ascii=False) + "\n")
+    print(f"модель {a.model}, {'ЗАПИСЬ в реестр' if a.zapisat else 'сухой прогон (в проект ничего не записано)'}")
+    for x in rez: print(" ", json.dumps(x, ensure_ascii=False)[:400])
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

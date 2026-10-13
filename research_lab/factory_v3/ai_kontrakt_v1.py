@@ -92,11 +92,16 @@ def predlozhit(obj, reestr, model="neizvestno", porog_dubl=0.3):
     return dict(status="NEW", gipoteza=gid, flag_cheloveku=bool(dubl))
 
 
-def klient_ollama(model="qwen3:8b", host="http://localhost:11434"):
+OPCII_BEZOPASNO = dict(num_ctx=2048, num_predict=512, num_thread=4, temperature=0.3)   # потолки ресурсов (13.10)
+
+
+def klient_ollama(model="qwen3:8b", host="http://localhost:11434", opcii=None, timeout_s=120):
+    """Один ограниченный вызов: контекст/вывод/потоки ограничены, без «размышлений», модель выгружается сразу (keep_alive 0)."""
     def vyzov(sistema, zapros):
-        body = json.dumps(dict(model=model, system=sistema, prompt=zapros, format="json", stream=False)).encode()
+        body = json.dumps(dict(model=model, system=sistema, prompt=zapros, format="json", stream=False, think=False,
+                               keep_alive=0, options=dict(OPCII_BEZOPASNO, **(opcii or {})))).encode()
         with urllib.request.urlopen(urllib.request.Request(f"{host}/api/generate", data=body,
-                                                           headers={"Content-Type": "application/json"}), timeout=300) as r:
+                                                           headers={"Content-Type": "application/json"}), timeout=timeout_s) as r:
             return json.loads(json.loads(r.read())["response"])
     vyzov.model = model
     return vyzov
@@ -105,7 +110,7 @@ def klient_ollama(model="qwen3:8b", host="http://localhost:11434"):
 def raund(reestr, klient, zapros="Предложи механизм.", n=1):
     """Один раунд: n предложений модели через контракт. Ошибки модели не роняют раунд."""
     S = reestr.sostoyanie()
-    kladb = ", ".join(sorted(s for s, v in S["semi"].items() if v.get("status") == "KILL"))[:4000]
+    kladb = ", ".join(sorted(s for s, v in S["semi"].items() if v.get("status") == "KILL"))[:800]
     sistema = PROMPT_SISTEMA.replace("{kladbische}", kladb); out = []
     for _ in range(n):
         try: obj = klient(sistema, zapros)
