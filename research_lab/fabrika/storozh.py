@@ -151,6 +151,10 @@ def prohod():
     (OUT / "OTCHET.json").write_text(json.dumps(rez, ensure_ascii=False, indent=1))
     with open(OUT / "storozh.log", "a") as f:
         f.write(f"{rez['kogda']} журналов {len(zh)}, тревог {len(trevogi)}: {'; '.join(trevogi)[:900]}\n")
+    try:                                                    # ежедневная сводка владельцу (factory_v3/svodka_v1)
+        import svodka_v1; svodka_v1.sobrat()
+    except Exception as e:
+        with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} сводка не собрана: {e}\n")
     return rez
 
 
