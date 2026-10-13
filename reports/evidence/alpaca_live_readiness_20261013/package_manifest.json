@@ -1,0 +1,179 @@
+{
+  "schema": "ALPACA_DYNAMIC_DISABLED_PACKAGE_V1",
+  "base": "/opt/bybot-research/alpaca-dynamic-live-20261013",
+  "orders_allowed": false,
+  "enabled": false,
+  "units": {
+    "alpaca-dynamic-live-entry-20261013.service": "[Unit]\nDescription=Disabled Alpaca Dynamic exact-plan orders-OFF check\nAfter=network-online.target\n[Service]\nType=oneshot\nUser=root\nWorkingDirectory=/opt/bybot-research/alpaca-dynamic-live-20261013/app\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nEnvironment=PYTHONUNBUFFERED=1\nEnvironment=ALPACA_ALLOW_NEW_ENTRIES=0\nUMask=0077\nRestart=no\nTimeoutStartSec=120\nTimeoutStopSec=60\nMemoryMax=1G\nTasksMax=32\nExecStart=/root/by-bot/.venv/bin/python -B scripts/run_alpaca_dynamic_live_v1.py --binding /opt/bybot-research/alpaca-dynamic-live-20261013/session/binding.json --intake /opt/bybot-research/alpaca-dynamic-live-20261013/session/intake.json --live-profile /root/by-bot/configs/alpaca_live_v38.env\n",
+    "alpaca-dynamic-live-manager-20261013.service": "[Unit]\nDescription=Disabled Alpaca Dynamic exact-plan orders-OFF check\nAfter=network-online.target\n[Service]\nType=oneshot\nUser=root\nWorkingDirectory=/opt/bybot-research/alpaca-dynamic-live-20261013/app\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nEnvironment=PYTHONUNBUFFERED=1\nEnvironment=ALPACA_ALLOW_NEW_ENTRIES=0\nUMask=0077\nRestart=no\nTimeoutStartSec=120\nTimeoutStopSec=60\nMemoryMax=1G\nTasksMax=32\nExecStart=/root/by-bot/.venv/bin/python -B scripts/run_alpaca_dynamic_live_v1.py --binding /opt/bybot-research/alpaca-dynamic-live-20261013/session/binding.json --intake /opt/bybot-research/alpaca-dynamic-live-20261013/session/intake.json --live-profile /root/by-bot/configs/alpaca_live_v38.env --maintenance\n"
+  },
+  "unapproved_activation_templates": {
+    "alpaca-dynamic-live-entry-20261013.service": "[Unit]\nDescription=Disabled Alpaca Dynamic exact-plan orders-OFF check\nAfter=network-online.target\n[Service]\nType=oneshot\nUser=root\nWorkingDirectory=/opt/bybot-research/alpaca-dynamic-live-20261013/app\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nEnvironment=PYTHONUNBUFFERED=1\nEnvironment=ALPACA_ALLOW_NEW_ENTRIES=0\nUMask=0077\nRestart=no\nTimeoutStartSec=120\nTimeoutStopSec=60\nMemoryMax=1G\nTasksMax=32\nExecStart=/root/by-bot/.venv/bin/python -B scripts/run_alpaca_dynamic_live_v1.py --binding /opt/bybot-research/alpaca-dynamic-live-20261013/session/binding.json --intake /opt/bybot-research/alpaca-dynamic-live-20261013/session/intake.json --live-profile /root/by-bot/configs/alpaca_live_v38.env --apply --owner-go /opt/bybot-research/alpaca-dynamic-live-20261013/session/owner-go.json --first-intent /opt/bybot-research/alpaca-dynamic-live-20261013/session/first-intent.json\n",
+    "alpaca-dynamic-live-manager-20261013.service": "[Unit]\nDescription=Disabled Alpaca Dynamic exact-plan orders-OFF check\nAfter=network-online.target\n[Service]\nType=oneshot\nUser=root\nWorkingDirectory=/opt/bybot-research/alpaca-dynamic-live-20261013/app\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nEnvironment=PYTHONUNBUFFERED=1\nEnvironment=ALPACA_ALLOW_NEW_ENTRIES=0\nUMask=0077\nRestart=no\nTimeoutStartSec=120\nTimeoutStopSec=60\nMemoryMax=1G\nTasksMax=32\nExecStart=/root/by-bot/.venv/bin/python -B scripts/run_alpaca_dynamic_live_v1.py --binding /opt/bybot-research/alpaca-dynamic-live-20261013/session/binding.json --intake /opt/bybot-research/alpaca-dynamic-live-20261013/session/intake.json --live-profile /root/by-bot/configs/alpaca_live_v38.env --apply --maintenance --owner-go /opt/bybot-research/alpaca-dynamic-live-20261013/session/owner-go.json --first-intent /opt/bybot-research/alpaca-dynamic-live-20261013/session/first-intent.json\n",
+    "alpaca-dynamic-live-manager-20261013.timer": "[Unit]\nDescription=UNAPPROVED Dynamic owned maintenance activation draft\n[Timer]\nOnCalendar=*-*-* *:00/5:00 UTC\nAccuracySec=1s\nPersistent=false\nUnit=alpaca-dynamic-live-manager-20261013.service\n"
+  },
+  "policy_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+  "manager_apply_arguments": [
+    "--apply",
+    "--maintenance",
+    "--owner-go"
+  ],
+  "lock": "original explicit LIVE profile-derived account lock; never create a second authority",
+  "restart_policy": "oneshot Restart=no; uncertain dispatch only exact-ID reconciliation",
+  "activation": "NOT_AUTHORIZED; unit templates only, no enable/start/timer/cron",
+  "rollback": "before dispatch retain HALT and disabled app; after fill retain scoped management until exit/finality; never delete ledger/journal",
+  "package_sha256": "c8b46565e08d9ff1490dbc0a9e29e2b01cdf07bbfbc5be544a6ed1c7f5742c8c",
+  "files": {
+    "backtest/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "backtest/alpaca_bakeoff_v2_contract.py": {
+      "sha256": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+      "bytes": 9920
+    },
+    "backtest/alpaca_exact_parity_contract.py": {
+      "sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "bytes": 14649
+    },
+    "backtest/alpaca_honest_portfolio.py": {
+      "sha256": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+      "bytes": 21583
+    },
+    "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": {
+      "sha256": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245",
+      "bytes": 5495
+    },
+    "forex/__init__.py": {
+      "sha256": "cb3d9b8c5abf89840ba2bf5e078ac2e1f09d7a7cecf6944f5518175a765833d1",
+      "bytes": 111
+    },
+    "forex/data.py": {
+      "sha256": "5bc4781af898206783319cb200ff04c2d9d43f5ae522db9385d5dd017eeda341",
+      "bytes": 1251
+    },
+    "forex/indicators.py": {
+      "sha256": "49f6b35d105b602d77e9dec2e02d06669f3c095e630e5b87a844649935e2eb37",
+      "bytes": 1453
+    },
+    "forex/strategies/breakout_continuation_session_v1.py": {
+      "sha256": "aa39b5072eca064ae9afae870405666720069e52326b417a9a245eec69464fdb",
+      "bytes": 4438
+    },
+    "forex/strategies/grid_reversion_session_v1.py": {
+      "sha256": "6c27e0eb138ae6c3ed231b829fc8db9d3cadc487b87bcca0b3b7431dcec0798e",
+      "bytes": 3334
+    },
+    "forex/strategies/trend_pullback_rebound_v1.py": {
+      "sha256": "2ab81ed3185d1c555945b7a9b0395c4f6a2dd4afdf4924e208fc6fc5c803e2f2",
+      "bytes": 4480
+    },
+    "forex/strategies/trend_retest_session_v1.py": {
+      "sha256": "db9c1298b90ccdc42c32b2a71c076993b8e918593f8a1ad3b7b22a15ba71e8c2",
+      "bytes": 5239
+    },
+    "forex/strategy_filters.py": {
+      "sha256": "0f7c0f2c7f0a97c6d09b542b3689183168b000ae797cb46f8eaefb209cf85632",
+      "bytes": 1412
+    },
+    "forex/types.py": {
+      "sha256": "50bb7dfcbedc83393ce3095cad157b5ad50876e46202ef2c7dc942608171c30e",
+      "bytes": 877
+    },
+    "reports/ALPACA_DYNAMIC_V1_POLICY_2026_10_06.json": {
+      "sha256": "e1624ed74f4e14e06147db28a52069fff6d75bd377fb909f542006f8a09e4ffc",
+      "bytes": 6852
+    },
+    "reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json": {
+      "sha256": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c",
+      "bytes": 4722
+    },
+    "reports/evidence/alpaca_net_arm_20261011/source_manifest.json": {
+      "sha256": "85c58e7a6fdc2fae947ac3b56f0c947135e1086a52e8ba9c4281599d2a9359b1",
+      "bytes": 9136
+    },
+    "research_lab/alpaca_dynamic_first_intent_v1.py": {
+      "sha256": "e7a5b1d61980f51d8b04212263d22856c13447a5e76fc0067ef6d01e7d720b6f",
+      "bytes": 6463
+    },
+    "research_lab/alpaca_dynamic_live_intake_v1.py": {
+      "sha256": "793185317d54ab3d20bb60afc00ac851ca1b3eced5f42b624f4b14c16158e6a9",
+      "bytes": 10365
+    },
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": {
+      "sha256": "a8eb507d06a6a07e3b12290f9419e36782ed3d22dba7f88f79db03b052f6ce0e",
+      "bytes": 44182
+    },
+    "research_lab/alpaca_dynamic_paper.py": {
+      "sha256": "1e121cee892ab38c7aca4f57cb71bcf150f17320a9ba2222c7b02de237ad2e67",
+      "bytes": 15382
+    },
+    "research_lab/alpaca_dynamic_paper_maintenance.py": {
+      "sha256": "dda84fd2f0a144723097b8f13a2349314ad6628b8354cc7f3d8ea82f0ac5eb3c",
+      "bytes": 22994
+    },
+    "research_lab/alpaca_dynamic_v1.py": {
+      "sha256": "50b0956b5d4fa5ed66c295a3c340ea8b71d4902b5a5bf0e5ff569a99f551145a",
+      "bytes": 24537
+    },
+    "research_lab/alpaca_live_readiness_v1.py": {
+      "sha256": "44125fd9f42d26ce0a881d81bf9dae414ec2320989d35140741762cbaeedba36",
+      "bytes": 43547
+    },
+    "scripts/alpaca_adaptive_paper.py": {
+      "sha256": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+      "bytes": 69851
+    },
+    "scripts/alpaca_adaptive_shadow.py": {
+      "sha256": "db19041a0365e609245acf0416390b7a52cac9a4ddd3ad077f43acdce136c392",
+      "bytes": 10817
+    },
+    "scripts/alpaca_protective_exit_manager.py": {
+      "sha256": "2d5243ee52d3857c14fd564cea671f8938dd1cdc7623f360293154c8bce5eea1",
+      "bytes": 22002
+    },
+    "scripts/alpaca_v3_event_backtest.py": {
+      "sha256": "8b76b541d8c32af96e9dc7c6e38aa759b74fbe6ac2e95d91435b6779e958bf2c",
+      "bytes": 13372
+    },
+    "scripts/build_equities_monthly_live_cycle.py": {
+      "sha256": "36fa73e2f6868f87a512f9c9f7196df9365657ecb60d1304d6986288942d51c2",
+      "bytes": 23842
+    },
+    "scripts/equities_alpaca_paper_bridge.py": {
+      "sha256": "758ca619ecb92d1d729b8ef4fb97e10d417a36e2c5ae5d54c4eaed55a8d038f4",
+      "bytes": 221894
+    },
+    "scripts/equities_earnings_filter.py": {
+      "sha256": "299921b7b5aaf8ea0c13341e5d3e406988368805224e629bbc216563a95496cb",
+      "bytes": 6018
+    },
+    "scripts/prepare_alpaca_live_readiness_v1.py": {
+      "sha256": "78d5e8f25c34eb87f845931193f35b25b3c8bdbfa8f4490ea3547659b5b590e7",
+      "bytes": 5378
+    },
+    "scripts/run_alpaca_dynamic_live_v1.py": {
+      "sha256": "1c74312838532e60601c269a65d1077dccdd1087404b19913f1f9602d46ba3d1",
+      "bytes": 4352
+    },
+    "strategies/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "strategies/alpaca_adaptive_v1.py": {
+      "sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b",
+      "bytes": 11467
+    },
+    "strategies/alpaca_dynamic_v3_event.py": {
+      "sha256": "6e12b8f492a45b395ba72bbd007fbe7111b0e3b0c917344848f9789ccf29be2c",
+      "bytes": 14901
+    },
+    "strategies/alpaca_dynamic_v4_event.py": {
+      "sha256": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a",
+      "bytes": 26710
+    }
+  },
+  "package_file_sha256": "2ee6af48881f4b4d40aba79662ca9ed3ded2b7c338ed44afd895f065eb27f973",
+  "evidence_kind": "LOCAL_PREPARED_NOT_INSTALLED",
+  "unit_templates_registered": false
+}

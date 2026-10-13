@@ -1,0 +1,14 @@
+{
+  "schema": "ALPACA_PAPER_FEE_SOURCE_CONTRACT_V1",
+  "official_url": "https://docs.alpaca.markets/us/docs/paper-trading",
+  "archived_markdown_sha256": "d43c9e2bdc1c4c9be8296a2a0b7b012441e6d293a44ea0d5c767d56d9709ade7",
+  "archived_bytes": 6260,
+  "paper_regulatory_fees_simulated": false,
+  "commission_protocol_path": "reports/evidence/alpaca_b3_gate_closure_20261008/alpaca_protocol_contract.json",
+  "commission_protocol_sha256": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c",
+  "personal_commission_zero_owner_attested": true,
+  "requires_full_cash_activity_reconciliation": true,
+  "paper_fee_absence_is_not_live_zero_cost_proof": true,
+  "live_cost_policy_unchanged": true,
+  "private_official_source_archived": true
+}

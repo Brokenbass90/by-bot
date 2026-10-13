@@ -195,8 +195,11 @@ def custody(binding,intake,policy):
     return runtime
 
 
-def owner_permit(path,binding,intake):
+def owner_permit(path,binding,intake,*,first_intent_path=None,policy=None):
     go=read_json(path)
+    if first_intent_path is not None:
+        from research_lab.alpaca_dynamic_first_intent_v1 import intent_permit
+        return intent_permit(go,read_json(str(first_intent_path)),binding,intake,policy)
     expected=dict(schema='ALPACA_DYNAMIC_EXACT_OWNER_GO_V1',account_id=intake['account_id'],endpoint=LIVE,
         intake_sha256=intake['intake_sha256'],binding_sha256=digest(binding),
         owner_go_text='GO ALPACA_DYNAMIC_V1 '+intake['intake_sha256'],session=intake['plan']['session'])
@@ -574,7 +577,7 @@ def maintain(db,item,client,binding,now_ms,kill):
 
 
 def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=None,maintenance=False,kill=False,
-             cost_finality_path=None):
+             cost_finality_path=None,first_intent_path=None):
     """Entry default OFF; separate exact GO + nonhalted entry + original lock.
 
     HALT never inhibits management of this runtime's already-owned fill. No code
@@ -589,6 +592,9 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
         if client.base_url!=LIVE or client.get_account()['id']!=binding['account_id']:
             raise ValueError('EXACT_LIVE_ACCOUNT_REQUIRED')
         if not apply:
+            if first_intent_path is not None:
+                from research_lab.alpaca_dynamic_first_intent_v1 import check_first_intent
+                check_first_intent(read_json(str(first_intent_path)),binding,intake,policy)
             source=safe_path(str(runtime/'live.sqlite'))
             if source.exists():
                 with sqlite3.connect(source.as_uri()+'?mode=ro',uri=True) as db:
@@ -598,7 +604,7 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
             check=compile_intake(intake['plan'],policy,intake['scope'],now_ms)
             if check['status']!='LIVE_INTAKE_PREPARED_ORDERS_OFF':return check
             return result('LIVE_READ_ONLY_READY',orders_allowed=False,money_authority=False)
-        go_hash=owner_permit(owner_go_path,binding,intake)
+        go_hash=owner_permit(owner_go_path,binding,intake,first_intent_path=first_intent_path,policy=policy)
         with account_lock(binding):
             with store(runtime) as db:
                 row=db.execute('SELECT payload FROM intents WHERE id=?',(intake['intake_sha256'],)).fetchone()
@@ -607,6 +613,8 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
                 if item and (item['intake']!=intake or item['binding_sha256']!=digest(binding) or item['owner_go_sha256']!=go_hash):
                     raise ValueError('PERSISTED_RUNTIME_SCOPE_CONFLICT')
                 if not item:
+                    if first_intent_path is not None and db.execute('SELECT 1 FROM intents').fetchone():
+                        raise ValueError('FIRST_DYNAMIC_ENTRY_ALREADY_CONSUMED')
                     if maintenance or kill:raise ValueError('NO_OWNED_LIVE_INTENT')
                     if safe_path(binding['halt_path']).exists():raise ValueError('ENTRY_HALTED')
                     ledger=safe_path(binding['ledger_path'])

@@ -1,0 +1,21 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_alpaca_live_readiness_v1.py",
+    "tests/test_alpaca_dynamic_first_intent_v1.py",
+    "tests/test_alpaca_dynamic_live_runtime_v1.py",
+    "tests/test_alpaca_dynamic_live_intake_v1.py",
+    "tests/test_alpaca_dynamic_paper_maintenance.py",
+    "tests/test_alpaca_paper_session_guard.py",
+    "tests/test_alpaca_rearm_failure_isolation.py"
+  ],
+  "exit_code": 0,
+  "output_sha256": "7bd7807a4411f9d21ccab4fed9aa371b249b8065f002d0fa4d53555c4fd37fbf",
+  "completed_ms": 1791877065957,
+  "evidence_kind": "LOCAL_TARGETED_TESTS_ONLY",
+  "actual_broker_lifecycle_pass": false,
+  "broker_writes": 0
+}

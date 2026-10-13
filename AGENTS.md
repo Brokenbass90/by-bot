@@ -428,3 +428,29 @@ Runtime handles only its exact saved plan, no future replacement money authority
 Unknown dispatch/stop replacement is never resent or sold against blindly;
 HALT blocks entries but not already-owned management. No service install,
 broker/VPS write, crypto/Claude work or Brain retry in this local delivery.
+
+## October13 first-entry intent and conditional disabled delivery
+
+Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md and its preparation receipt.
+Owner chose bounded intent for the first Dynamic LIVE entry only: one ticker/
+session, frozen maximum quantity/notional/stop risk and limit, one attempt,
+no reprice/repeat/transfer. Implementation approval is NOT money GO. Prepare
+the physical-source dossier before opening and require separate exact owner GO
+on its intent hash. Original exact-plan permit remains the default. Pin native
+manager code, static custody, original lock and untouched risk/stop policy.
+
+October13 local preparation194 targetedPASS; actual afternoon lifecycle remains
+pending. Morning LIVE flat/HALT and NET PAPER DAY-expired are dated sources.
+Original NET guard/PID/app81/schedule and two13:32/14:05UTC observations unchanged.
+Do not restart completed engineering or add PAPER/statistics/Brain/Factory gates.
+Official PAPER source excludes regulatory fees; complete actual cash activities
+plus existing commission attestation close simulated costs, never future LIVE
+fees. Use the published finalityV2 GET reader for full Oct11 cash coverage.
+
+The owner authorizes only a conditional new isolated app/inert-template install
+after actual PAPER PASS and original14:05UTC check. No broker/systemd/profile/
+cron/HALT/guard mutation or service activation. Old management cron still exists;
+exclusive new authority/source binding must be proved, not a synthetic boolean.
+Preserve original readback scripts and private evidence. Heartbeat alpaca-net-13
+keeps its original two dates and pauses after second check. Prior independent
+review allowance restriction remains; root-only review, no replacement/retry.

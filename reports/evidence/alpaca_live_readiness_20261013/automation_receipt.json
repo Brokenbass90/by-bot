@@ -1,0 +1,14 @@
+{
+  "automation_id": "alpaca-net-13",
+  "name": "Alpaca NET — завершение 13 октября",
+  "status": "ACTIVE",
+  "original_checks_utc": [
+    "2026-10-13T13:32:00Z",
+    "2026-10-13T14:05:00Z"
+  ],
+  "schedule_changed": false,
+  "dates_extended": false,
+  "prompt_sha256": "d9b65106e2396587100bcef2cc0e57153838ba8dd84239bb340c29048d057176",
+  "updated_at": 1791877302356,
+  "money_authority": false
+}

@@ -1,5 +1,37 @@
 # Codex session checkpoint — 2026-09-06
 
+October13 Alpaca P0: **LOCAL_PREPARATION_PASS / ACTUAL_LIFECYCLE_PENDING / ORDERS_OFF**.
+Read [ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md](ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md)
+and evidence/alpaca_live_readiness_20261013/preparation_receipt.json.
+Reuse the delivered LIVE runtime:194 targetedPASS (57 new preparation/intent
+cases),37-file exact disabled package, original shared lock/caps/native manager,
+source-bound offline PAPER verifier and pre-entry dossier implemented locally.
+Owner chose bounded first-entry intent (one ticker/session/attempt, fixed bounds,
+no transfer/reprice/repeat); this choice is implementation approval, NOT moneyGO.
+Concrete fresh dossier + separate exact GO on its intent hash remain mandatory.
+Missing GO/HALT/outside bounds => no entry. Stop manager/static source pins cannot
+change behind GO. Old exact-plan permit stays the default.
+Actual06:29:37UTC readback: LIVE flat/orders0/HALT/cash496.12; NET PAPER0.325167779,
+originalDAY expired/unfilled, guard1979385/NRestarts0 waiting.81app pins/production
+unchanged. Separate06:52:42UTC writer inventory old cron/profile pins unchanged;
+new LIVE base absent, old monthly entriesOFF/management still scheduled5min.
+No completed exclusive-manager handoff/source binding/dossier/owner permit.
+Official Alpaca PAPER source excludes regulatory fees; archived source + personal
+commission0 attestation + real complete cash/activity reconciliation can close
+PAPER costs. Never waive LIVE CAT/SEC/reserves or infer finality from emptyfees.
+FinalityV2 GET reader preserves original sources and covers actualOct11 cash.
+Actual afternoon rearm/owned exit/finality NOT_DUE; NET guard/original dates and
+13:32/14:05UTC (16:32/17:05Cyprus) heartbeat checks unchanged. After actualPASS and
+originalpostcheck only conditional new disabled app/inert templates installation
+is authorized; no systemd/profile/cron/guard/HALT/broker writes or activation.
+No deployment this morning. Separate source binding/exclusive handoff precede GO.
+No extra PAPER/statistics/Brain/Factory gates; prior fullsuite60fail remains dated
+NOT_GREEN and rootreview-only restriction retained. Foreign allowlist preserved.
+Heartbeat prompt updated to delivered verifier/fee semantics/intent without date
+extension; pause after second original check. KITY/ATT1/Claude/BrainSTOP untouched.
+Earliest next openingOct14 remains conditional, not promised LIVE execution.
+Earlier dated states below are preserved history.
+
 October12 Dynamic LIVE delivery: **DYNAMIC_LIVE_RUNTIME_IMPLEMENTED_ORDERS_OFF / ACTUAL_PAPER_LIFECYCLE_PENDING**.
 Read [ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md](ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md)
 and its RUNBOOK/delivery receipt. Isolated adapter + original-lock/native manager

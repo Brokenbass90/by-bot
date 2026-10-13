@@ -44,6 +44,7 @@ def main(argv=None):
     parser.add_argument('--binding',type=Path,required=True)
     parser.add_argument('--live-profile',type=Path,required=True)
     parser.add_argument('--owner-go',type=Path)
+    parser.add_argument('--first-intent',type=Path,help='separately sealed first-entry bounds; still requires exact separate owner GO')
     parser.add_argument('--apply',action='store_true')
     parser.add_argument('--maintenance',action='store_true',help='owned lifecycle only; no new entry')
     parser.add_argument('--kill',action='store_true',help='scoped owned exit; requires maintenance')
@@ -59,7 +60,8 @@ def main(argv=None):
         client=load_client(args.live_profile,binding,apply=args.apply)
         out=run_once(intake=intake,policy=policy,binding=binding,client=client,now_ms=time.time_ns()//1_000_000,
             apply=args.apply,owner_go_path=str(args.owner_go) if args.owner_go else None,
-            maintenance=args.maintenance,kill=args.kill,cost_finality_path=str(args.cost_finality) if args.cost_finality else None)
+            maintenance=args.maintenance,kill=args.kill,cost_finality_path=str(args.cost_finality) if args.cost_finality else None,
+            first_intent_path=str(args.first_intent) if args.first_intent else None)
     except Exception as e:
         # No profile values/credentials or HTTP headers in receipts.
         out=result('BLOCKED_DATA',reason=str(e) or type(e).__name__,orders_allowed=False)

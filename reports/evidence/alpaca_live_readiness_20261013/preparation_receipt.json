@@ -1,0 +1,44 @@
+{
+  "schema": "ALPACA_DYNAMIC_LIVE_READINESS_PREPARATION_V1",
+  "status": "LOCAL_PREPARATION_PASS_ACTUAL_LIFECYCLE_PENDING",
+  "orders_allowed": false,
+  "live_orders_allowed": false,
+  "ready_for_live_go": false,
+  "package_verification": {
+    "status": "DISABLED_PACKAGE_VERIFIED",
+    "package_sha256": "c8b46565e08d9ff1490dbc0a9e29e2b01cdf07bbfbc5be544a6ed1c7f5742c8c",
+    "app_files": 37,
+    "orders_allowed": false,
+    "enabled": false
+  },
+  "source_files": {
+    "research_lab/alpaca_dynamic_first_intent_v1.py": "e7a5b1d61980f51d8b04212263d22856c13447a5e76fc0067ef6d01e7d720b6f",
+    "research_lab/alpaca_live_readiness_v1.py": "44125fd9f42d26ce0a881d81bf9dae414ec2320989d35140741762cbaeedba36",
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "a8eb507d06a6a07e3b12290f9419e36782ed3d22dba7f88f79db03b052f6ce0e",
+    "scripts/run_alpaca_dynamic_live_v1.py": "1c74312838532e60601c269a65d1077dccdd1087404b19913f1f9602d46ba3d1",
+    "scripts/prepare_alpaca_live_readiness_v1.py": "78d5e8f25c34eb87f845931193f35b25b3c8bdbfa8f4490ea3547659b5b590e7",
+    "tests/test_alpaca_dynamic_first_intent_v1.py": "bab3b7bbb06466e1ed6c9178d15f026862f23d7dde75419eb937c510708db5eb",
+    "tests/test_alpaca_live_readiness_v1.py": "142413ba9c48bc766a183edea0d94913502829cadc977af85c8ae2f2cdb9345c",
+    "reports/evidence/alpaca_live_readiness_20261013/capture_authority_read_only.py": "9963bc257995878f9100c9be7baf90933d385ad1bd6d47330b64b9d952146404",
+    "reports/evidence/alpaca_live_readiness_20261013/capture_oct13_finality_v2.py": "ef2dba6b04e2c9ff2f9665487af21120d7feb8d1b44117f73382e9ffde7f300c",
+    "reports/evidence/alpaca_live_readiness_20261013/install_disabled_on_vps.py": "89609e25204c76bfa151c605bc58039dc0960a081e1e6940557ba698cec36b02"
+  },
+  "targeted_tests": {
+    "passed": 194,
+    "exit_code": 0,
+    "receipt_sha256": "ca09ef57943c00c09421265736818c87914a9567bccb03404d1e89826e655be1"
+  },
+  "read_only_morning_capture_sha256": "e53e60e841f838a6fa58b79c328997488b3bf28046ed38685e95e3c1101759f0",
+  "read_only_authority_capture_sha256": "6aadd0f1fea685d95c7850bfaa86c93c03f3ed4c9549769d18280b99bc419e96",
+  "actual_afternoon_day_rearm": "NOT_DUE",
+  "actual_paper_exit_finality": "NOT_DUE",
+  "actual_disabled_deployment": "NOT_DONE",
+  "actual_live_binding": "NOT_DONE",
+  "money_go": "NOT_GRANTED",
+  "root_review": "COMPLETE_NO_INDEPENDENT_REVIEW_AVAILABLE",
+  "broker_writes": 0,
+  "vps_writes": 0,
+  "NET_guard_changes": 0,
+  "new_paper_entries": 0,
+  "foreign_allowlist_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}
