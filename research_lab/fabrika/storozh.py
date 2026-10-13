@@ -14,7 +14,7 @@
     ликвидации — семантика стороны против цены (доля «long» на баре роста > 0.6 ⇒ SIDE_INVERTED).
 Запуск: разово `python3 research_lab/fabrika/storozh.py`; в screen `... storozh.py --cikl` (раз в час).
 """
-import datetime as dt, json, re, statistics, sys, time
+import datetime as dt, fcntl, json, os, re, statistics, sys, time
 from collections import Counter
 from pathlib import Path
 
@@ -112,6 +112,21 @@ def likvidacii_storona():
                 n=len(vverh) + len(vniz), svezhest_dney=round((time.time() - lf.stat().st_mtime) / 86400, 1))
 
 
+def zamki():
+    """Замки лаунчера edinstvennyy_zapusk: занят = процесс жив. Свободный замок у активной тени — признак смерти."""
+    out = {}
+    for p in sorted((D / "locks").glob("*.lock")) if (D / "locks").exists() else []:
+        fd = os.open(p, os.O_RDWR)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB); fcntl.flock(fd, fcntl.LOCK_UN); out[p.stem] = "SVOBODEN"
+        except BlockingIOError:
+            out[p.stem] = "ZANYAT"
+        finally:
+            os.close(fd)
+    svobodny = [k for k, v in out.items() if v == "SVOBODEN" and not k.startswith("test")]
+    return dict(status="OK" if not svobodny else "WARN", zamki=out, svobodny=svobodny)
+
+
 def prohod():
     now = time.time()
     spisok = json.loads(AKTIVNYE.read_text()) if AKTIVNYE.exists() else AKTIVNYE_DEFAULT
@@ -121,11 +136,16 @@ def prohod():
         zh[imya] = zhurnal(p, now) if p.exists() else dict(status="NET_ZHURNALA")
     jsonl = [p for p in D.rglob("*.jsonl") if now - p.stat().st_mtime < 86400 and "m5_bak" not in str(p)][:300]
     ed = {str(p.relative_to(D)): e for p in jsonl for e in [edinicy(p)] if e == "MKS_VMESTO_MS"}
-    rez = dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), zhurnaly=zh,
-               dannye=dict(breakout_m5=breakout_m5(), edinicy_vremeni=dict(status="OK" if not ed else "DEFEKT", fayly=ed),
-                           likvidacii=likvidacii_storona()))
+    try:                                                    # Data QA V1 (factory_v3) — единая библиотека проверок
+        sys.path.insert(0, str(LAB / "factory_v3")); import data_qa_v1
+        dannye = data_qa_v1.proverit_vse()
+    except Exception as e:
+        dannye = dict(data_qa=dict(status="OSHIBKA_PROVERKI", detal=str(e)[:200]))
+    dannye["edinicy_vremeni_jsonl"] = dict(status="OK" if not ed else "DEFEKT", fayly=ed)
+    dannye["zamki"] = zamki()
+    rez = dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), zhurnaly=zh, dannye=dannye)
     trevogi = [f"{k}: {v['status']}" for k, v in zh.items() if v["status"] != "OK"]
-    trevogi += [f"dannye/{k}: {v['status']}" for k, v in rez["dannye"].items() if v["status"] not in ("OK", "NET_DANNYH")]
+    trevogi += [f"dannye/{k}: {v['status']}" for k, v in rez["dannye"].items() if v["status"] not in ("OK", "NET_DANNYH", "MALO")]
     rez["trevogi"] = trevogi
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "OTCHET.json").write_text(json.dumps(rez, ensure_ascii=False, indent=1))
