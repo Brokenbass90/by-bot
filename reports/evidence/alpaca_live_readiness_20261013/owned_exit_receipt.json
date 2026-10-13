@@ -1,0 +1,21 @@
+{
+  "schema": "ALPACA_ACTUAL_OWNED_PAPER_EXIT_V1",
+  "status": "OWNED_EXIT_CONFIRMED_FINALITY_PENDING",
+  "symbol": "NET",
+  "qty": "0.325167779",
+  "fill_price": "349.344",
+  "filled_at": "2026-10-13T13:35:33.960224931Z",
+  "gross_usd": "-4.505524745824",
+  "net_usd": "NOT_PROVEN",
+  "capture_sha256": "a23d9bea02275fb794e6e1c5c4b20617697f93c215baf37c52372bcf3511bbb1",
+  "observed_ms": 1791898718236,
+  "native_record_retired": true,
+  "guard_exit_code": 0,
+  "guard_restarted": false,
+  "new_paper_entries": 0,
+  "broker_writes_by_observer": 0,
+  "server_writes_by_observer": 0,
+  "paper_execution_pass": false,
+  "live_orders_allowed": false,
+  "original_finality_check_ms": 1791900300000
+}

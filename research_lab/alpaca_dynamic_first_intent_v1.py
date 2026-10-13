@@ -41,7 +41,11 @@ def prepare_first_intent(*, policy, binding, ticker, session, ranking_sha256,
     require(qty==qty.quantize(Decimal('.000000001')) and limit==limit.quantize(Decimal('.01'))
         and limit>distance and notional <= min(positive(slot['notional_cap']),
              dec(policy['capital_usd'])*dec(policy['gross'])*Decimal('.60'))
-        and risk<=positive(slot['risk_cap']) and qty*distance<=risk, 'FIRST_INTENT_FROZEN_CAPS')
+        and risk<=positive(slot['risk_cap']), 'FIRST_INTENT_FROZEN_CAPS')
+    # The reference distance is unrounded ranking provenance. Actual stop risk
+    # uses the unchanged cent-rounded planner distance, checked below for EVERY
+    # fresh plan. Multiplying the maximum quantity by the raw reference here
+    # wrongly vetoed NET's admissible quantity; it is not an extra risk limit.
     from scripts import alpaca_protective_exit_manager as manager
     out=dict(schema=SCHEMA,account_id=policy['account_id'],endpoint=binding['endpoint'],
         policy_sha256=digest(policy),static_binding_sha256=static_binding_sha256(binding),

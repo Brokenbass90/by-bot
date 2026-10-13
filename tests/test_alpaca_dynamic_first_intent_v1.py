@@ -1,6 +1,8 @@
 """Owner-bounded first-entry authority only; broker calls are simulated."""
 import copy
 import importlib
+import json
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -119,3 +121,28 @@ def test_pre_entry_dossier_never_promotes_missing_actual_paper():
     r=importlib.import_module('research_lab.alpaca_live_readiness_v1').pre_entry_dossier(
         paper=dict(status='PAPER_PENDING'),deployment={},binding={},intent={},policy={},preparation={},now_ms=NOW)
     assert r['status']=='BLOCKED_DATA' and r['ready_for_live_go'] is False
+
+
+@pytest.mark.parametrize('ask,allowed',[('363.20',True),('363.2001',False)])
+def test_net_cent_rounded_stop_uses_actual_plan_risk_cap(ask,allowed):
+    """Oct12 NET quantity fits rounded stop; raw ranking distance must not veto it.
+
+    A 0.0001 wider actual distance still exceeds the SAME original risk cap and
+    must be rejected. This is a transport-free counterexample, not a LIVE source.
+    """
+    policy=json.loads((Path(__file__).resolve().parents[1]/
+        'reports/ALPACA_DYNAMIC_V1_POLICY_2026_10_06.json').read_bytes())
+    slot=next(s for s in policy['inherited_slots'] if s['entry_order_id'].startswith('2b559bee'))
+    binding=dict(account_id=policy['account_id'],endpoint='https://api.alpaca.markets',policy_sha256=digest(policy))
+    intent=api().prepare_first_intent(policy=policy,binding=binding,ticker='NET',session='2026-10-14',
+        ranking_sha256='a'*64,slot_entry_order_id=slot['entry_order_id'],risk_distance='33.54241333009',
+        max_qty='0.325167779',max_notional_usd=str(slot['notional_cap']),max_risk_usd=str(slot['risk_cap']),
+        max_limit_price='363.20',price_source_sha256='b'*64,quote_cts_ms=NOW-86400000,prepared_ms=NOW-86400000)
+    intake=dict(plan=dict(symbol='NET',session='2026-10-14',ranking_sha256=intent['ranking_sha256'],
+        slot_entry_order_id=slot['entry_order_id'],qty='0.325167779',reference_ask=ask,stop_price='329.66',
+        risk_distance=str(Decimal(ask)-Decimal('329.66'))),scope=dict(native_manager_source_sha256=intent['native_manager_source_sha256']),
+        entry_payload=dict(symbol='NET',qty='0.325167779',limit_price='363.20'))
+    if allowed:assert api().check_first_intent(intent,binding,intake,policy)==intent['intent_sha256']
+    else:
+        with pytest.raises(ValueError,match='FIRST_INTENT_CAP_EXCEEDED'):
+            api().check_first_intent(intent,binding,intake,policy)

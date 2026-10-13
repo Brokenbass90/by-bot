@@ -1,5 +1,33 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October13 original second check COMPLETE: **ACTUAL_EXECUTION_STAGES_PASS_COST_FINALITY_PENDING / LIVE HALTED**.
+Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md latest terminal section and
+its terminal_observation_receipt.json. Actual rearm/full owned scheduled exit/
+fill/retirement/legacy/app81/production source checks pass; fee-unspecified verifier
+stops only at PAPER_COST_FINALITY_SOURCE_REQUIRED, not full PAPER_EXECUTION_PASS.
+Raw final GET14:05:20UTC SHA441886f0…c479fc; original two checks completed,
+heartbeat alpaca-net-13 PAUSED/no date or count extension. No new PAPER trade.
+Actual broker posted Oct12 CAT0.01, contradicting archived zero-regulatory PAPER
+assumption; absolute-path derivation BLOCKED PAPER_FEE_SEMANTICS_CONFLICT retained.
+Four actual broker-cent cash checkpoints reconcile99410.28→99292.18→99292.17→
+99405.77. Gross-4.505524745824; after known CAT net-4.515524745824 NOT_FINAL.
+Oct13 exit-day fees not published; sourced expected exit reserve0.02 is NOT
+an actual charge/unresolved0 declaration. Next bounded source action is posted
+fee/cash finality of THIS SAME closed lifecycle after broker settlement. No extra
+PAPER/statistics/Brain/Factory gate. No new monitor or original schedule extension.
+LIVE flat/HALT/cash496.12, guardexit0/no restart; broker/server observer writes0.
+Corrected raw-distance/cent-rounded intent veto: actual fresh stop-risk gate
+remains unchanged,163 targetedPASS incl two failing-before-fix NET counterexamples.
+New local37-file disabled package9c93c672…4767a, NOT_INSTALLED; originalc8b46565
+retained. Actual source book local only, no PAPER fill/intent adoption/reservation.
+Unapplied exact one-line old manager cron handoff proposal422c638c…c7aa4a is
+reviewable; old writer still scheduled, no fabricated single-manager proof.
+Full cost PASS precedes conditional disabled install/source binding/exclusive
+handoff/concrete bounded dossier/separate exact moneyGO. Earliest eligible
+Oct14 opening is conditional, never promised; no arbitrary Oct13 LIVE order.
+BrainSTOP/KITYOct15/22/ATT1/Claude research unchanged; root review only.
+Earlier morning preparation below is dated history, not current broker truth.
+
 October13 Alpaca P0: **LOCAL_PREPARATION_PASS / ACTUAL_LIFECYCLE_PENDING / ORDERS_OFF**.
 Read [ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md](ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md)
 and evidence/alpaca_live_readiness_20261013/preparation_receipt.json.

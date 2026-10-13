@@ -1,5 +1,112 @@
 # Alpaca Dynamic LIVE — October13 preparation and existing PAPER postcheck
 
+## Latest terminal observation — original second check COMPLETE
+
+**ACTUAL_EXECUTION_STAGES_PASS_COST_FINALITY_PENDING / LIVE HALTED**.
+The original14:05UTC GET source was captured at14:05:20.303UTC, SHA
+`441886f0d1579f275b67993d73ba76446cafabd7e0752c61643a793613c479fc`.
+Read `terminal_observation_receipt.json`. With fees deliberately unspecified,
+the verifier passes every actual execution/re-arm/owned-exit/fill/retirement/
+legacy/production check and stops at `PAPER_COST_FINALITY_SOURCE_REQUIRED`.
+This is **not** full `PAPER_EXECUTION_PASS` or `READY_FOR_LIVE_GO`.
+
+Broker published one October12 CAT debit0.01, despite the archived PAPER
+documentation's no-regulatory-fee statement. The morning zero-fee derivation
+correctly fails `PAPER_FEE_SEMANTICS_CONFLICT`; its original failure is retained.
+The first relative-path invocation also failed `PATH_IDENTITY`; the absolute-
+path offline invocation consumed the same raw capture, not a second broker query.
+
+All four actual cash checkpoints reconcile exactly at broker cents:
+99410.28 → BUY118.1009373328 →99292.18 → postedCAT0.01 →99292.17 →
+SELL113.595412586976 →99405.77. Gross−4.505524745824; net after the known posting
+−4.515524745824USD, **not final**. October13 exit-day fee postings are absent.
+The already-sourced retail schedule implies0.02USD exit reserve (SEC/CAT cents);
+this is a reserve/expectation, not an invented broker charge or final liability0.
+The missing published fee frontier is a data/cost gate, not another PAPER trade.
+
+Alpaca's documentation still says regulatory fees are not simulated, while its
+own staff describes next-day PAPER fee debits. Actual broker cash/activities take
+precedence; neither contradictory document establishes current publication SLA:
+[PAPER documentation](https://docs.alpaca.markets/us/docs/paper-trading),
+[Alpaca staff response](https://forum.alpaca.markets/t/questions-about-account-equity-drop/11930).
+
+LIVE is flat/HALT/cash496.12; original guard ended normally/NRestarts0. No old
+service/profile/cron/HALT mutation, broker write, new PAPER entry or deployment.
+The original two-check heartbeat is **PAUSED**, dates/count retained. Next source
+action: read actual posted exit-day fees/cash of this **same closed lifecycle**
+after broker settlement. No new entry/re-arm/statistical day or extended monitor.
+Complete source-bound finality before conditional disabled installation, exact
+exclusive manager handoff/binding and the separately approved first-entry dossier.
+
+One actual NET counterexample exposed an unneeded raw-distance intent veto:
+0.325167779×33.54 =10.90612730766≤frozen10.906127324106, while multiplication by
+unrounded ranking33.54241333009 exceeded it. Fixed only preliminary envelope
+preparation: every fresh plan still must preserve the frozen rounded stop and
+pass exact quantity/notional/**actual distance risk** limits. Same quantity with
+distance33.5401 is rejected. Two new tests first failed, then all163 targeted
+intent/readiness/runtime/intake tests passed. No planner/strategy/stop/risk change.
+Full suite: **4619PASS /60FAIL /1warning**. All60 names exactly match the prior
+classified baseline; added/removed failure sets are empty. Full suite remains
+NOT_GREEN, no new material Dynamic failure. Read `intent_fix_verification_receipt.json`.
+The known watcher tests appended four rows to the foreign untracked allowlist
+log; exact original SHA/proven duplicate-only suffix verified, suffix archived
+privately, original restored byte-for-byte. No user history was removed/staged.
+Root review only; previous independent-review restriction remains.
+
+Corrected37-file local package `disabled_package_intent_fix_v2.json`, SHA
+`9c93c6721534cf5509eb9a05b143705bd335caf614843872fbb4555c81d4767a`, is disabled
+and **NOT_INSTALLED**. Originalc8b46565 package remains preserved; do not silently
+deploy it as the corrected candidate. Private first-entry preview is not a GO.
+
+`manager_handoff_proposal_receipt.json` pins a reviewable, unapplied one-line
+retirement of the old native manager cron. It retains every unrelated cron byte,
+the original account lock and rollback. No `single_manager_verified` declaration
+is fabricated while that writer remains scheduled. Exact handoff/proposal pin
+`422c638c968486da38fdf88d11025944d6865e18f9f6eacea793207795c7aa4a`.
+Owner approval of this bounded **orders-OFF handoff** was requested separately:
+current AGENTS.md450–452 conditional install scope explicitly excludes old cron
+mutation. This is not a moneyGO and no retirement is applied while unanswered.
+
+KITYOctober15/22 remains the next crypto money lane; BrainSTOP/Factory research,
+ATT1 and Claude are unchanged. No broad architecture or new research was started.
+
+## October13 opening — actual re-arm and owned exit
+
+Actual **DAY re-arm protection PASS**: full0.325167779 NET DAY sell-stop329.66
+accepted13:30:05.952UTC, read back13:32:54.080UTC. Guard and native ledger refer
+to exact stop88b7d80e…; original81app pins, PID1979385/NRestarts0 and production
+services unchanged. LIVE flat/HALT. Raw captureSHA
+`585604619259208843adebb252512ee4b72129c01aca342d961d67401caf549d`.
+
+The scheduled validation unwind then sold full0.325167779 at349.344 at
+**13:35:33.960UTC /16:35:33 Cyprus**. Additional bounded13:38:38.236UTC GET-only
+readback proves NET-flat/noNET-open-orders/native record retired, guard exit0
+without restart. Exact gross **−4.505524745824 USD**; net/finality NOT_PROVEN yet.
+`EMERGENCY_MARKET`/`unprotected_after_reconcile` are reused adapter receipt labels;
+the guard code explicitly requests `unwind=now_ms>=UNWIND_MS`, so this sale was
+the planned PAPER validation exit, not a detected spontaneous stop failure.
+Raw captureSHA
+`a23d9bea02275fb794e6e1c5c4b20617697f93c215baf37c52372bcf3511bbb1`.
+Legacy PAPER holdings and LIVE authority were not changed by the observer.
+
+Read `day_rearm_receipt.json` and `owned_exit_receipt.json` in this report's
+evidence directory. These confirm the two actual lifecycle stages, not full
+PAPER_EXECUTION_PASS, source-bound LIVE readiness or profit. The original
+**14:05UTC /17:05 Cyprus** full cash/finality check remains due; no new PAPER day.
+
+In the meantime a distinct local LIVE source book was prepared from the exact
+already-sealed October12 ranking (October9 closed session) and three actual OLD
+terminal slots, independently checked against the archived broker orders. No
+PAPER intent, fill, reservation or synthetic outcome is adopted. Rank identity
+`51f8cdad696a477fc470889e91d40af32af81464964f7bbaed5a73b7918cec14`
+and original risk distance33.54241333009 remain unchanged. Original sealing time
+is preserved as provenance of a copied ranking, never fabricated as a new seal.
+Read `live_source_basis_receipt.json`; its book/payload are private and not on
+VPS. Actual authority/quote/asset/cost bindings and moneyGO remain unbound.
+
+Earlier morning preparation below is dated history. No app deployment, LIVE
+entry, HALTclear, guard restart, strategy change or source retuning occurred.
+
 Status: **LOCAL_PREPARATION_PASS / ACTUAL_LIFECYCLE_PENDING / ORDERS_OFF**.
 This is preparation, not PAPER_EXECUTION_PASS, an installed runtime, a completed
 production handoff or READY_FOR_LIVE_GO. No monetary owner GO has been received.

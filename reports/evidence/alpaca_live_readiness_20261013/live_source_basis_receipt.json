@@ -1,0 +1,23 @@
+{
+  "schema": "ALPACA_DYNAMIC_LIVE_SOURCE_BASIS_V1",
+  "evidence_kind": "LOCAL_PREPARED_NOT_DEPLOYED",
+  "created_ms": 1791899046026,
+  "source_capture_sha256": "585604619259208843adebb252512ee4b72129c01aca342d961d67401caf549d",
+  "old_closed_order_capture_sha256": "aa51ea160e3d7c9105adba45869d436244b873c76fc10bc079e1dba693838dc8",
+  "ranking_sha256": "51f8cdad696a477fc470889e91d40af32af81464964f7bbaed5a73b7918cec14",
+  "ranking_original_window_ms": 1791811800000,
+  "ranking_signal_session": "2026-10-09",
+  "next_session": "2026-10-14",
+  "ticker": "NET",
+  "original_frozen_risk_distance": "33.54241333009",
+  "verified_old_slots": 3,
+  "source_book_sha256": "6abcf30313e58894e50361b5539e53144c7724dd7442cf6c3f2f75d3106800f9",
+  "copied_paper_intents": 0,
+  "copied_paper_fills": 0,
+  "new_reservations": 0,
+  "orders_allowed": false,
+  "actual_live_authority": "UNBOUND",
+  "actual_fresh_quote_asset_costs": "PENDING",
+  "actual_paper_finality": "PENDING_ORIGINAL_CHECK",
+  "physical_vps_book": "NOT_INSTALLED"
+}

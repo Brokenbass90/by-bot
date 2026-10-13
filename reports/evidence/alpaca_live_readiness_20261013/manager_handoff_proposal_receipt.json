@@ -1,0 +1,26 @@
+{
+  "schema": "ALPACA_DYNAMIC_MANAGER_HANDOFF_PROPOSAL_V1",
+  "status": "PREPARED_NOT_APPLIED",
+  "orders_allowed": false,
+  "original_shared_lock": "/root/by-bot/runtime/locks/alpaca_bridge_0d0c322aef55c952.lock",
+  "authority_capture_sha256": "6aadd0f1fea685d95c7850bfaa86c93c03f3ed4c9549769d18280b99bc419e96",
+  "archived_crontab_l_sha256": "690b403f8ec6cdeda37a95ba6f310416c59fab9849d6ee03cf629a99f8d23653",
+  "expected_root_spool_sha256": "0a3f3ef029db738ac32eb8786efd1872c982854e2872773e5a5ec19e8f5227d9",
+  "before_sha256": "690b403f8ec6cdeda37a95ba6f310416c59fab9849d6ee03cf629a99f8d23653",
+  "after_sha256": "c5729c174e49675400f533c8508636f95db669f4662d45953d829cab58d27939",
+  "remaining_lines_byte_preserved": true,
+  "prerequisites": [
+    "fresh authenticated LIVE flat/no orders/HALT",
+    "original account lock acquired for reviewed handoff",
+    "no old native manager process in flight",
+    "both current cron byte sources exactly match pins",
+    "actual PAPER_EXECUTION_PASS",
+    "new isolated app remains disabled"
+  ],
+  "action": "comment only the exact old native manager --send-orders cron line; no profile/HALT/broker write or new unit activation",
+  "rollback": "restore exact archived crontab only while flat/HALT/no Dynamic writer active; after a future fill keep owned management and never blindly restore competing writers",
+  "current_authority": "old native manager still scheduled; new app not yet installed or bound",
+  "next_gate": "explicit approval of concrete handoff before a true exclusive Dynamic authority declaration; exact money GO remains separate",
+  "proposal_sha256": "422c638c968486da38fdf88d11025944d6865e18f9f6eacea793207795c7aa4a",
+  "changed_line_marker": "alpaca_intended_live_readonly --send-orders only"
+}
