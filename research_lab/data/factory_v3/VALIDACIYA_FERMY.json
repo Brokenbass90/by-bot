@@ -1,0 +1,95 @@
+{
+ "SPOT_B": {
+  "sluchay": "SPOT_B",
+  "status": "REPRODUCED",
+  "ferma": {
+   "id": "VAL_SPOT_B_1",
+   "status": "FAIL",
+   "t": -0.01,
+   "n": 186,
+   "trebuemyy_t": 1.96
+  },
+  "ferma_metrika": {
+   "n": 186,
+   "edge_bps": -0.2,
+   "t": -0.01,
+   "polovinki_bps": [
+    8.0,
+    -8.4
+   ],
+   "verdikt": "KILLED"
+  },
+  "etalon": {
+   "n": 186,
+   "edge_bps": -0.2,
+   "t": -0.01,
+   "polovinki_bps": [
+    8.0,
+    -8.4
+   ],
+   "verdikt": "KILLED"
+  }
+ },
+ "SPOT_A": {
+  "sluchay": "SPOT_A",
+  "status": "REPRODUCED",
+  "ferma": {
+   "id": "VAL_SPOT_A_1",
+   "status": "FAIL",
+   "t": 1.26,
+   "n": 186,
+   "trebuemyy_t": 2.241
+  },
+  "ferma_metrika": {
+   "n": 186,
+   "edge_bps": 40.3,
+   "t": 1.26,
+   "polovinki_bps": [
+    9.5,
+    71.1
+   ],
+   "verdikt": "KILLED"
+  },
+  "etalon": {
+   "n": 186,
+   "edge_bps": 40.3,
+   "t": 1.26,
+   "polovinki_bps": [
+    9.5,
+    71.1
+   ],
+   "verdikt": "KILLED"
+  }
+ },
+ "M3_PERP": {
+  "sluchay": "M3_PERP",
+  "status": "REPRODUCED",
+  "ferma": {
+   "id": "VAL_M3_PERP_1",
+   "status": "PASS",
+   "t": 2.59,
+   "n": 194,
+   "trebuemyy_t": 2.394
+  },
+  "ferma_metrika": {
+   "n": 194,
+   "edge_bps": 103.2,
+   "t": 2.59,
+   "polovinki_bps": [
+    23.4,
+    183.1
+   ],
+   "verdikt": "SURVIVED"
+  },
+  "etalon": {
+   "n": 194,
+   "edge_bps": 103.2,
+   "t": 2.59,
+   "polovinki_bps": [
+    23.4,
+    183.1
+   ],
+   "verdikt": "SURVIVED"
+  }
+ }
+}

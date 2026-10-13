@@ -11,6 +11,8 @@
 | `sudya_most_v1.py` | 1 Реестр ↔ судьи | `sudit()` — попытка регистрируется ДО вызова судьи, результат пишется в реестр; `verdikt()` — проспективные вердикты теней KEEP/CONTINUE/DEPRIORITIZE/KILL с документом (KILL → гипотеза в KILL). Закрывает ворота G4/G5 Фабрики V2 | 3 теста; записан DEPRIORITIZE Breakout (23f0ff9) |
 | `ten_v1.py` + `ten_primery.py` | 5 Авто-тени | тень = JSON-конфиг `data/factory_v3/teni/<imya>.json`; старт только при SHADOW/CANARY в реестре, KILL в реестре → самоостановка; свой замок; журнал решений с izvestno_ms, отказ «из будущего», идемпотентность; пульс + авторегистрация у сторожа | 5 тестов |
 | `ai_raund.py` | 6 ИИ | раунд Ollama на Маке: по умолчанию сухой (копия реестра), `--zapisat` — NEW в реестр; журнал data/factory_v3/ai_raundy.jsonl | — (сеть) |
+| `sudi_v_reestr.py` + `ets2m_ocenka.py` | 1 Реестр ↔ настоящие судьи (P0) | квитанции KITY C1/C2 → реестр (идемпотентно по виду+sha), готовность канарейки KITY (2 чистые недели); Elder — вывод замороженного судьи как документ; Bounce/Breakout — счётчик закрытых решений до n=30; сторож вызывает раз в час | 3 теста |
+| `ferma_shablony.py` + `validaciya_fermy.py` | 3 Шаблоны + проверка фермы (P1/P3) | шаблон `xs_nedelya_binance` (закрытый словарь признаков, механика замороженных судей); ферма воспроизвела KITY M3 (+103.2 bps, t 2.59 → PASS), SPOT_A (+40.3, t 1.26 → FAIL), SPOT_B (−0.2, t −0.01 → FAIL) в точности | data/factory_v3/VALIDACIYA_FERMY.json |
 | `svodka_v1.py` | 0 Общение | ежедневная сводка: деньги → тени → данные → реестр → календарь → что нужно от владельца (data/svodka/<дата>.md); собирает сторож каждый час | 1 тест |
 
 Тесты: `python3 -m unittest discover -s research_lab/factory_v3/tests -t research_lab/factory_v3` (на Маке — `.venv/bin/python`).

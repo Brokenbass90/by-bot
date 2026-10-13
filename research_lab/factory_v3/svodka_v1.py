@@ -67,6 +67,12 @@ def sobrat(segodnya=None):
     try:
         from reestr_v1 import Reestr; rs = Reestr().svodka()
     except Exception as e: rs = dict(oshibka=str(e))
+    try:
+        import sudi_v_reestr; from reestr_v1 import Reestr as _R
+        _r = _R(); kan = sudi_v_reestr.gotovnost_kanareyki_kity(_r)
+        prog = {g: v.get("kvitancii", [{}])[-1].get("status") for g, v in _r.sostoyanie()["gipotezy"].items()
+                if any(k.get("vid") == "PROGRESS" for k in v.get("kvitancii", []))}
+    except Exception as e: kan, prog = dict(oshibka=str(e)), {}
     zh = st.get("zhurnaly", {}); plohie = {k: v["status"] for k, v in zh.items() if v.get("status") != "OK"}
     qa_plohie = {k: v["status"] for k, v in qa.items() if v.get("status") not in ("OK", "NET_DANNYH", "MALO")}
     izvestnye = {"likvidacii_bybit": "известно: сторона перевёрнута в старом файле, ждём сборщик V2 (Codex)"}
@@ -80,7 +86,9 @@ def sobrat(segodnya=None):
           "## Деньги",
           f"- **Alpaca:** {alpaca()}",
           f"- **KITY Bybit:** {kity()}",
-          f"- **Elder ETS2M:** {elder()}", "",
+          f"- **Elder ETS2M:** {elder()}",
+          f"- **Канарейка KITY:** чистых недель (C1 и C2 PASS) {kan.get('chistyh_nedel')} из 2" + (" → ГОТОВО к досье" if kan.get('gotovo_k_dosie') else ""),
+          f"- **До вердиктов теней (закрытых решений):** {prog}", "",
           "## Тени и сборщики",
           f"- живых по реестру: {sum(1 for v in zh.values() if v.get('status') == 'OK')} из {len(zh)}"
           + (f"; проблемы: {plohie}" if plohie else "; проблем нет") + f" (сторож {st.get('kogda', '—')})", "",

@@ -91,6 +91,8 @@ class Reestr:
             elif t == "verdikt":
                 g = S["gipotezy"][e["gipoteza"]]; g.setdefault("verdikty", []).append(e); g["istoriya"].append(e)
                 if e["znachenie"] == "KILL": g["status"] = TERMINAL
+            elif t == "kvitanciya":
+                S["gipotezy"][e["gipoteza"]].setdefault("kvitancii", []).append(e)
             elif t == "semya_kill":
                 S["semi"][e["semya"]]["status"] = TERMINAL; S["semi"][e["semya"]]["prichina_kill"] = e["prichina"]
         return S
@@ -155,6 +157,11 @@ class Reestr:
             if g["status"] not in ("SHADOW", "CANARY", "MONEY"): raise OshibkaReestra("вердикт тени — только для SHADOW/CANARY/MONEY")
             if e["znachenie"] not in VERDIKTY_TENI: raise OshibkaReestra(f"вердикт ∈ {VERDIKTY_TENI}")
             if not e.get("dokument"): raise OshibkaReestra("вердикт без документа судьи не принимается")
+        elif t == "kvitanciya":
+            g = S["gipotezy"].get(e["gipoteza"])
+            if not g: raise OshibkaReestra("нет гипотезы")
+            if not e.get("dokument") or not e.get("sha256"): raise OshibkaReestra("квитанция: документ и sha256 обязательны")
+            if any(k["sha256"] == e["sha256"] and k["vid"] == e["vid"] for k in g.get("kvitancii", [])): raise OshibkaReestra("эта квитанция уже записана")
         elif t == "semya_kill":
             if e["semya"] not in S["semi"]: raise OshibkaReestra("нет семьи")
             if S["semi"][e["semya"]].get("status") == TERMINAL: raise OshibkaReestra("семья уже закрыта")
@@ -197,6 +204,11 @@ class Reestr:
     def verdikt_teni(self, gipoteza, znachenie, dokument, detali=None):
         """Вердикт замороженного судьи по тени/канарейке (KEEP/CONTINUE/DEPRIORITIZE/KILL). KILL → гипотеза в KILL."""
         return self._zapisat(dict(tip="verdikt", gipoteza=gipoteza, znachenie=znachenie, dokument=dokument, detali=detali))
+
+    def kvitanciya(self, gipoteza, vid, status, dokument, sha256, detali=None):
+        """Операционная/измерительная квитанция судьи (C1, C2, OTSENKA, PROGRESS…). Не вердикт по edge; идемпотентна по sha256."""
+        return self._zapisat(dict(tip="kvitanciya", gipoteza=gipoteza, vid=vid, status=status, dokument=dokument,
+                                  sha256=sha256, detali=detali))
 
     def zakryt_semyu(self, semya, prichina):
         return self._zapisat(dict(tip="semya_kill", semya=semya, prichina=prichina))

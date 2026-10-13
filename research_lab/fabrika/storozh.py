@@ -151,6 +151,10 @@ def prohod():
     (OUT / "OTCHET.json").write_text(json.dumps(rez, ensure_ascii=False, indent=1))
     with open(OUT / "storozh.log", "a") as f:
         f.write(f"{rez['kogda']} журналов {len(zh)}, тревог {len(trevogi)}: {'; '.join(trevogi)[:900]}\n")
+    try:                                                    # квитанции настоящих судей → реестр (factory_v3/sudi_v_reestr)
+        import sudi_v_reestr; sudi_v_reestr.vse()
+    except Exception as e:
+        with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} мост судей: {e}\n")
     try:                                                    # ежедневная сводка владельцу (factory_v3/svodka_v1)
         import svodka_v1; svodka_v1.sobrat()
     except Exception as e:
