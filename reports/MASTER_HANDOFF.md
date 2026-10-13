@@ -1,5 +1,19 @@
 # MASTER HANDOFF — 2026-10-05
 
+October13 CURRENT: **ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING**.
+Use checkpoint TOP/readiness CURRENT, not earlier local-only states below.
+Owner directly waived fee-PASS for inert installation only. Corrected37-file
+Dynamic package physically installed15:23UTC, exact one old management cron
+commented under original lock/fresh LIVE flat/no-orders/HALT. Independent37/48
+file/cron/unit readbackPASS;58targetedPASS. New manager DISABLED/active0; no broker
+write/service activation/HALT clear/money GO. Source book/static custody bound,
+final runtime binding/intent absent. Same PAPER exit-day fees still missing in
+dated15:01source. Close actual fees → attach full PAPER receipt to existing
+deployment (no reinstall/cron repeat) → concrete dossier/separate exact moneyGO.
+No new PAPER/statistical wait/heartbeat extension. Read bounded additional
+research intake report; no PnL/holdout judge or autonomous AI loop was launched.
+KITY15/22/frozen Claude work/BrainSTOP preserved.
+
 October12 Dynamic LIVE delivery: **DYNAMIC_LIVE_RUNTIME_IMPLEMENTED_ORDERS_OFF / ACTUAL_PAPER_LIFECYCLE_PENDING**.
 Read [ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md](ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md)
 and its RUNBOOK/delivery receipt. Isolated adapter + original-lock/native manager

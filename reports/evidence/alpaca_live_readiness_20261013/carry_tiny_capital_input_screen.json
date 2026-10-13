@@ -1,0 +1,96 @@
+{
+  "schema": "CRYPTO_HEDGED_CARRY_TINY_CAPITAL_INPUT_SCREEN_V1",
+  "status": "SOURCE_INPUT_SCREEN_COMPLETE_NET_EDGE_NOT_TESTED",
+  "created_at_utc": "2026-10-13T15:41:34.139777+00:00",
+  "raw_capture_sha256": "2ea819de216ce8e5c5231d43a523d15e8d85f8788236b306052dce6cdfd0e170",
+  "actual_order_or_policy_authority": false,
+  "private_api_calls": 0,
+  "public_get_requests": 8,
+  "per_symbol": [
+    {
+      "symbol": "BTCUSDT",
+      "common_qty_reference": "0.001",
+      "perp_reference_price": "83366.50",
+      "reference_per_leg_notional": "83.36650",
+      "reference_unlevered_pair_capital": "166.73300",
+      "hypothetical_budget50_before_costs": "REJECT",
+      "hypothetical_budget100_before_costs": "REJECT",
+      "observed_funding_settlements": 20,
+      "positive_settlements": 13,
+      "negative_settlements": 7,
+      "actual_spot_quote": "NOT_CAPTURED",
+      "fees": "UNKNOWN_NOT_ZERO",
+      "slippage": "UNKNOWN_NOT_ZERO",
+      "assumptions": "Same linear-price reference for spot and perp, fully paid spot plus1x cash collateral for short, no leverage/borrowing benefit. Not actual spot notional, selected-account sizing or admission.",
+      "sources": [
+        {
+          "path": "/v5/market/instruments-info?category=spot&symbol=BTCUSDT",
+          "sha256": "b10b8834e375bf9c0b700224ad2786bc302e796e6463572d26a90f5f5adaa2c0",
+          "received_ms": 1791906005330
+        },
+        {
+          "path": "/v5/market/instruments-info?category=linear&symbol=BTCUSDT",
+          "sha256": "32db920e4757fddd0ba4bb79f36b689c30ad5f7b4eaaaf66a500390acf30bbd1",
+          "received_ms": 1791906005324
+        },
+        {
+          "path": "/v5/market/tickers?category=linear&symbol=BTCUSDT",
+          "sha256": "f1d094ee77aa25be01505411e1bb5a45ba3b512b1f8065dcc48f977e31604b94",
+          "received_ms": 1791906005396
+        },
+        {
+          "path": "/v5/market/funding/history?category=linear&symbol=BTCUSDT&limit=20",
+          "sha256": "85e3a28f384879a6a3f1da1c10b5cc5764d3e76c71e1e6998dcc4329ab5f9bfc",
+          "received_ms": 1791906005329
+        }
+      ]
+    },
+    {
+      "symbol": "ETHUSDT",
+      "common_qty_reference": "0.01",
+      "perp_reference_price": "2509.31",
+      "reference_per_leg_notional": "25.0931",
+      "reference_unlevered_pair_capital": "50.1862",
+      "hypothetical_budget50_before_costs": "REJECT",
+      "hypothetical_budget100_before_costs": "SIZE_ONLY_NOT_EXECUTION_PASS",
+      "observed_funding_settlements": 20,
+      "positive_settlements": 10,
+      "negative_settlements": 10,
+      "actual_spot_quote": "NOT_CAPTURED",
+      "fees": "UNKNOWN_NOT_ZERO",
+      "slippage": "UNKNOWN_NOT_ZERO",
+      "assumptions": "Same linear-price reference for spot and perp, fully paid spot plus1x cash collateral for short, no leverage/borrowing benefit. Not actual spot notional, selected-account sizing or admission.",
+      "sources": [
+        {
+          "path": "/v5/market/instruments-info?category=spot&symbol=ETHUSDT",
+          "sha256": "aaaef5c5c223e01f9c80df7888a2683b9a31765e3793a1a4d7be09fc6ebc8fd2",
+          "received_ms": 1791906005641
+        },
+        {
+          "path": "/v5/market/instruments-info?category=linear&symbol=ETHUSDT",
+          "sha256": "2515e55f16b757be21cd0635cb7ef017bea331e988aae9c1ed445f5ae2edbebf",
+          "received_ms": 1791906005643
+        },
+        {
+          "path": "/v5/market/tickers?category=linear&symbol=ETHUSDT",
+          "sha256": "58c446d1441efa3e849f48b268e6da30a9f458fda5dd3992d0a6b468c4663ff2",
+          "received_ms": 1791906005641
+        },
+        {
+          "path": "/v5/market/funding/history?category=linear&symbol=ETHUSDT&limit=20",
+          "sha256": "b3dccafa95c9745b791c1fbf2673fa179169a472b4b7dda524a1d5f6f50d1e92",
+          "received_ms": 1791906005724
+        }
+      ]
+    }
+  ],
+  "terminal_limitations": [
+    "reference prices are dated separate source observations, not a common fresh execution basket",
+    "50/100USD are scenarios, not actual balance or owner risk caps",
+    "account fees/spot quote/slippage/funding stress/permissions/margin/borrow/finality are unresolved",
+    "positive current funding is not persistent net edge; no PnL judge or holdout consumed"
+  ],
+  "priority_ruling": "Do not replace KITY/Elder money lane with tiny carry. On these1x reference assumptions BTC fails50/100 and ETH fails50 even before costs. Larger-capital/leveraged carry requires a separate frozen contract, never higher risk to rescue this screen.",
+  "live_changes": 0,
+  "claude_research_modified": false
+}

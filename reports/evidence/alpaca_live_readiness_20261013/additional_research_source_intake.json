@@ -1,0 +1,124 @@
+{
+  "schema": "ALPACA_ADDITIONAL_RESEARCH_SOURCE_INTAKE_V1",
+  "observed_at_utc": "2026-10-13T15:35:32.167763+00:00",
+  "research_ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+  "status": "DEVELOPMENT_DATA_PRESENT_INDEPENDENT_HOLDOUT_UNPROVEN",
+  "archive_completed_count": 1000,
+  "archive_failed_count": 0,
+  "archive_period": {
+    "start": "2024-08-12",
+    "end": "2026-08-12"
+  },
+  "point_in_time_full_market_membership": false,
+  "candidate_pool_size": 1000,
+  "source_archive_integrity_pass": false,
+  "clean_subset_integrity_pass": true,
+  "quarantined_count": 38,
+  "samples": [
+    {
+      "symbol": "AMD",
+      "status": "SAMPLE_ROWS_CHECKED",
+      "bars": 501,
+      "adjusted": true,
+      "schema": "massive_adjusted_daily_symbol_v1",
+      "duplicate_timestamps": 0,
+      "strict_time_order": true,
+      "first_bar_ms": 1723435200000,
+      "last_bar_ms": 1786420800000,
+      "declared_authority": "research_only_get_no_orders_no_risk_mutation",
+      "outcome_metrics_computed": false
+    },
+    {
+      "symbol": "CRWD",
+      "status": "SAMPLE_ROWS_CHECKED",
+      "bars": 501,
+      "adjusted": true,
+      "schema": "massive_adjusted_daily_symbol_v1",
+      "duplicate_timestamps": 0,
+      "strict_time_order": true,
+      "first_bar_ms": 1723435200000,
+      "last_bar_ms": 1786420800000,
+      "declared_authority": "research_only_get_no_orders_no_risk_mutation",
+      "outcome_metrics_computed": false
+    },
+    {
+      "symbol": "META",
+      "status": "SAMPLE_ROWS_CHECKED",
+      "bars": 501,
+      "adjusted": true,
+      "schema": "massive_adjusted_daily_symbol_v1",
+      "duplicate_timestamps": 0,
+      "strict_time_order": true,
+      "first_bar_ms": 1723435200000,
+      "last_bar_ms": 1786420800000,
+      "declared_authority": "research_only_get_no_orders_no_risk_mutation",
+      "outcome_metrics_computed": false
+    },
+    {
+      "symbol": "NET",
+      "status": "SAMPLE_ROWS_CHECKED",
+      "bars": 501,
+      "adjusted": true,
+      "schema": "massive_adjusted_daily_symbol_v1",
+      "duplicate_timestamps": 0,
+      "strict_time_order": true,
+      "first_bar_ms": 1723435200000,
+      "last_bar_ms": 1786420800000,
+      "declared_authority": "research_only_get_no_orders_no_risk_mutation",
+      "outcome_metrics_computed": false
+    },
+    {
+      "symbol": "QQQ",
+      "status": "MISSING_FROM_THIS_EQUITY_ARCHIVE_NOT_SYNTHESIZED"
+    },
+    {
+      "symbol": "SPY",
+      "status": "MISSING_FROM_THIS_EQUITY_ARCHIVE_NOT_SYNTHESIZED"
+    }
+  ],
+  "sources": [
+    {
+      "path": "research_lab/data/alpaca_pit_daily_v1/universe.json",
+      "ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+      "sha256": "6b0f1fb2c76ada7d426df59efc240636ebc38f5a01ef67adc9c152b8f9cd3919"
+    },
+    {
+      "path": "research_lab/data/alpaca_pit_daily_v1/membership_intervals.json",
+      "ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+      "sha256": "d16c4d299f697723bd80ec60b479c0bb9aebf0188a0fde60d343bd76551d25b6"
+    },
+    {
+      "path": "research_lab/data/alpaca_pit_daily_v1/status.json",
+      "ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+      "sha256": "a7e820671cf9a11c37dec2936ebfa561f4ceee365c1c0fe72615d7c74e3613f6"
+    },
+    {
+      "path": "research_lab/data/alpaca_pit_daily_v1/bars/AMD.json",
+      "ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+      "sha256": "3856433136fe9b64c9ace9175f34068e2ba937866859f702d803fa49a7731cb0"
+    },
+    {
+      "path": "research_lab/data/alpaca_pit_daily_v1/bars/CRWD.json",
+      "ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+      "sha256": "f68061dac5d3081f02f051ab5d3987618d28c472e831a4980cc86fe512b5a989"
+    },
+    {
+      "path": "research_lab/data/alpaca_pit_daily_v1/bars/META.json",
+      "ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+      "sha256": "098eb45605cb2c063cba3111443af13382c0c181d7bd6eeff2c9e5a3cc101f6c"
+    },
+    {
+      "path": "research_lab/data/alpaca_pit_daily_v1/bars/NET.json",
+      "ref": "e47e580ae624b02d1918fdaa630318beefe9bd25",
+      "sha256": "8a349fb286c38a06ababe661478d5ff5731ec53f8d3b5d3651a9367f226bec94"
+    }
+  ],
+  "consumed_period_note": "Published August protection/962-proxy work already used this family; no untouched holdout established by this intake.",
+  "available_next_step": "Freeze one weekly-baseline vs daily-refresh development challenger on accepted same source pool and full costs; preregister its one test before outcomes. Independent evidence needs separately verified unused data or forward.",
+  "no_new_pnl_judge": true,
+  "no_holdout_outcome_access": true,
+  "claude_branch_modified": false,
+  "orders_allowed": false,
+  "money_gate_effect": "NONE: this research cannot delay or promote existing Alpaca canary",
+  "ai_advisory_status": "Local qwen3:8b generic triage rejected as non-actionable; no automatic research/policy/order authority"
+}

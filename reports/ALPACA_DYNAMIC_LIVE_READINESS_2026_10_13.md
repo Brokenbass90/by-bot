@@ -1,5 +1,57 @@
 # Alpaca Dynamic LIVE — October13 preparation and existing PAPER postcheck
 
+## Current result — physical orders-OFF install and exact handoff completed
+
+The direct subsequent owner answer **"Да, разрешаю сейчас, не ждать PAPER fee
+finality"** authorizes the inert install despite pending fees. The first
+auto-review rejection preceded that answer and executed no remote action; it is
+retained as history, not an outstanding approval request. Money approval remains
+separate. The earlier NOT_INSTALLED/NOT_APPLIED sections below are dated history.
+
+At **15:23:22.548 UTC /18:23 Cyprus**, the corrected 37-file package
+`0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20`
+was physically installed at `/opt/bybot-research/alpaca-dynamic-live-20261013`.
+Only proposal `422c638c968486da38fdf88d11025944d6865e18f9f6eacea793207795c7aa4a`
+was applied: one old `alpaca_intended_live_readonly --send-orders` cron line
+commented, all other lines preserved. The original account lock was held; no
+old manager was in flight. Fresh authenticated LIVE checks before and after
+showed flat/no orders, cash496.12 and unchanged HALT. Original profiles/writers/
+unit sources and production PIDs/NRestarts were unchanged. No broker write,
+unit registration, activation or HALT clear occurred.
+
+The distinct LIVE source book and six physical static sources are pinned. The
+book has zero intents/reservations; no PAPER fill was adopted. Custody is
+`STATIC_SOURCES_BOUND_FINALITY_PENDING`: final runtime binding, first intent,
+money GO and activation are absent. **Zero Dynamic managers are active**; the
+future owner is designated but disabled. This is not active LIVE trading or
+`READY_FOR_LIVE_GO`.
+
+Independent readbacks at15:25 and15:26 UTC verify all37 app files and48 package/
+source files, installed Python compilation, exact cron after-SHA, unchanged
+original authorities and no registered candidate units/GO/intake/reservation.
+Read [the public deployment receipt](evidence/alpaca_live_readiness_20261013/orders_off_deployment_handoff_receipt_v2.json).
+Exact rollback bytes were verified and archived; rollback was not executed.
+
+The latest PAPER fee source remains the **dated15:01:20UTC** GET: only Oct12
+CAT0.01 is posted, Oct13 exit-day rows absent. No additional PAPER trade, retry,
+reprice, statistics or calendar extension is required. Original `alpaca-net-13`
+stays paused. The next bounded step is a uniquely named GET-only capture of
+THIS completed lifecycle, then the existing `postcheck --actual-posted-fees`.
+If actual costs close, attach the full PAPER receipt using
+`alpaca_orders_off_handoff_v2.bind_final_paper` to this already installed
+deployment; do not reinstall or repeat the cron mutation. Preserve the original
+install receipt and write a separate final attestation. Complete the existing
+physical runtime binding/pre-entry dossier, obtain separate exact owner money
+GO, then use only the first permitted session's fresh gates. A quote preview,
+this install approval or the old PAPER plan cannot authorize a BUY.
+
+Fresh verification: **58 targeted PASS** for readiness and orders-OFF handoff.
+Root financial/control review only, no independent signoff. Original PASS-only
+installer and money verifier remain unchanged. Full suite was not rerun this
+cycle; its prior4627PASS/60FAIL/1warning remains dated and NOT_GREEN.
+Research preparation is separate, cannot delay or promote this money path:
+[bounded source findings and next work orders](ADDITIONAL_RESEARCH_INTAKE_2026_10_13.md).
+
 ## Orders-OFF handoff approved; fresh finality source remains pending
 
 The owner directly answered **"Да, разрешаю этот orders-OFF handoff"** to the

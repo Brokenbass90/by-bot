@@ -1,5 +1,19 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October13 CURRENT: **ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING**.
+Start checkpoint TOP and ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md CURRENT section.
+Direct owner approved fee-pending inert install; package0a3fce3b…87f20 installed
+15:23UTC at/opt/bybot-research/alpaca-dynamic-live-20261013. Exact one old manager
+cron retired; original lock/HALT/profiles/prod unchanged. New manager DISABLED,
+no registered units/GO/intake/reservations. Independent physical37/48files readback
+PASS,58targetedPASS. Actual money runtime binding/dossier/ownerGO still absent.
+Latest PAPER fee source is dated15:01UTC, not fullcostPASS. Next uniquely named
+GET-only same closed lifecycle → actual-posted-fees postcheck → bind final receipt
+to existing deployment WITHOUT reinstall/cron repeat → exact dossier/owner moneyGO.
+No extra PAPER/statistics/original-heartbeat extension. Additional research source
+results/work orders: ADDITIONAL_RESEARCH_INTAKE_2026_10_13.md, not new strategyPASS.
+Earlier uninstalled/unapplied/approval-pending statements below are dated history.
+
 October13 15:01:20UTC: **HANDOFF_OWNER_APPROVED / FINALITY_PENDING / NOT_APPLIED**.
 Direct human orders-OFF approval is recorded in manager_handoff_owner_approval_receipt.json;
 proposal422c638c…c7aa4a only, one old --send-orders cron line after actual cost PASS

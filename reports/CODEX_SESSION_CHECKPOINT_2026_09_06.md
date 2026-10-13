@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+October13 15:23UTC: **ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING**.
+Direct subsequent owner approval allows inert install despite pending PAPER fees.
+Corrected37-file package0a3fce3b…87f20 physically installed; exact proposal
+422c638c…c7aa4a applied once: one old management --send-orders cron commented,
+all other lines preserved. Original account lock/fresh LIVE flat/orders0/HALT/
+cash496.12 pre/post; profiles/writers/units/prod PIDs/NRestarts unchanged.
+Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md CURRENT section and
+orders_off_deployment_handoff_receipt_v2.json. Independent15:25/15:26 readbacks
+verify37app/48package+source files, exact cron and no registered/active new units.
+New manager designated DISABLED; active Dynamic managers0, no GO/intake/intent.
+Static custody/source book physically bound; final money runtime binding remains
+pending. No broker write, HALT clear or service activation; rollback bytes verified,
+not executed.58 targetedPASS; no full-suite rerun/independent signoff this cycle.
+Latest PAPER source is dated15:01UTC: exit-day fee rows absent, NOT full PASS.
+Next: one unique GET-only same closed-lifecycle fee capture → existing actual-
+posted postcheck → attach full PAPER receipt WITHOUT reinstall/repeating cron →
+final binding/concrete first-intent dossier/separate exact owner money GO.
+Original alpaca-net-13 stays PAUSED; no extra PAPER/statistics or extended dates.
+Additional research source checks are complete, not PnL/holdout verdicts:
+ADDITIONAL_RESEARCH_INTAKE_2026_10_13.md. Alpaca development archive exists but
+independent holdout unproven; tiny carry reference minimums restrictive; one free
+Ollama advisory rejected as generic. No autonomous research loop/Claude message.
+KITY15/22 money lane, frozen Claude work and BrainSTOP remain unchanged.
+Earlier NOT_INSTALLED/NOT_APPLIED/pending-approval states below are dated history.
+
 October13 15:01:20UTC: **HANDOFF_OWNER_APPROVED / FINALITY_PENDING / NOT_APPLIED**.
 Direct human orders-OFF approval is recorded in manager_handoff_owner_approval_receipt.json;
 proposal422c638c…c7aa4a only, one old --send-orders cron line after actual cost PASS

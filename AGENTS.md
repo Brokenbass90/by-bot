@@ -470,3 +470,40 @@ request the same handoff approval again. Exact monetary owner GO stays separate.
 At15:01:20UTC the fresh closed-lifecycle GET still has no posted Oct13 exit fees:
 PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT. Thus no install/handoff applied.
 Original two-check heartbeat remains paused; no new PAPER or extended schedule.
+
+## October13 subsequent immediate orders-OFF scope
+
+The latest owner message supplies a proposed immediate disabled install/handoff
+scope despite pending posted PAPER fees. Auto-review rejected the attempted VPS
+action before execution: the earlier direct approval required finality; forwarded
+manager text did not establish direct approval to waive that prerequisite.
+Direct confirmation is pending. Do not retry/indirectly execute this mutation
+until it arrives. See orders_off_now_owner_authorization_v2.json and the control
+review receipt (package0a3fce3b…87f20/proposal422c638c…c7aa4a).
+If directly approved, only the prior fee-PASS prerequisite for inert install and
+that exact cron retirement is superseded. Preserve fresh LIVE flat/no-orders/HALT, original
+account lock, exact cron pins, no competing writer, no registered/active new
+unit, source custody and rollback proof. Do not fake PAPER PASS or final fees.
+Cost finality, concrete dossier/intent and separate exact owner money GO remain
+required for LIVE. Additional bounded research/AI advisory preparation is now
+authorized; preserve Claude research ownership and spent Brain/B3/KITY evidence.
+
+Direct human confirmation subsequently received: "Да, разрешаю сейчас, не ждать
+PAPER fee finality" (call_EPLbVzEJ6Xllj8MaaAjOkatg). The previously pending
+immediate orders-OFF scope is now approved. Install exact package0a3fce3b…87f20
+and retire only proposal422c638c…c7aa4a under the original lock/fresh safeguards.
+The auto-review rejection remains historical; it preceded this direct approval.
+No money GO, HALT clear or service activation follows from this confirmation.
+
+October13 immediate scope completed15:23UTC: physical37-file disabled install
+and EXACT one-line old-manager cron retirement verified under original lock,
+fresh flat/no-orders/HALT and exact source/cron pins. Independent readbacks
+verify37app/48package+source files/no registered units. New manager disabled,
+active0; no moneyGO/intake/reservation. Do not rerun install/cron mutation.
+Next actual fees for the SAME closed PAPER lifecycle → full actual-posted
+receipt → separate final attestation on installed sources → exact first-entry
+dossier and separate moneyGO. Earlier NOT_APPLIED/approval-pending statements
+are dated history. No extra PAPER/statistics or original heartbeat extension.
+Additional research source checks are separate, have no money gate effect;
+one public tiny-carry size screen is not netedgePASS, and generic Ollama triage
+was rejected, not a new autonomous research authority. Preserve Claude branch.

@@ -1,5 +1,22 @@
 # Current roadmap — owner scope October 8, 2026
 
+October13 CURRENT money delta: **ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING**.
+Dynamic37-file package installed15:23UTC; one exact old manager cron retired,
+original lock/HALT/profile/prod retained. Independent physical37/48files/cron/unit
+readbackPASS,58targetedPASS. New manager disabled/active0; no money authority.
+Same completed PAPER lifecycle: dated15:01source lacks posted exit-day fees.
+P0: actual fee closure → attach final PAPER/source receipt to installed package
+without reinstall/cron repeat → final runtime binding/exact intent+dossier →
+separate owner moneyGO → permitted fresh session. No new PAPER/statistical gate.
+P1: KITY Bybit15/22 frozen prospective checkpoints and account execution dossier.
+Bounded additional research intake is recorded in
+ADDITIONAL_RESEARCH_INTAKE_2026_10_13.md: Alpaca weekly-vs-daily challenger proposal
+requires one frozen test, consumed archive is development-only; public tiny-carry
+minimum-size screen completed, netedgeNOT_TESTED. One free Ollama generic answer
+rejected; no automatic authority/continuous researcher or paid API call.
+Claude frozen families remain its lane; no Brain/B3 rescue. Older states below
+are dated history, not current installation or broker truth.
+
 October12 Dynamic LIVE delivery: **DYNAMIC_LIVE_RUNTIME_IMPLEMENTED_ORDERS_OFF / ACTUAL_PAPER_LIFECYCLE_PENDING**.
 Read [ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md](ALPACA_DYNAMIC_LIVE_RUNTIME_2026_10_12.md)
 and its RUNBOOK/delivery receipt. Isolated adapter + original-lock/native manager

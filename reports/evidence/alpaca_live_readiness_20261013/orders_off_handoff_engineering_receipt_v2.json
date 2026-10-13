@@ -1,0 +1,57 @@
+{
+  "schema": "ALPACA_ORDERS_OFF_HANDOFF_ENGINEERING_RECEIPT_V2",
+  "created_at_utc": "2026-10-13T15:50:20.452486+00:00",
+  "status": "ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING",
+  "targeted_test_command": ".venv/bin/python -m pytest tests/test_alpaca_orders_off_handoff_v2.py tests/test_alpaca_live_readiness_v1.py -q --tb=short",
+  "targeted_pass": 58,
+  "targeted_fail": 0,
+  "full_suite_this_cycle": "NOT_RERUN",
+  "code_files": [
+    {
+      "path": "research_lab/alpaca_orders_off_handoff_v2.py",
+      "sha256": "16791f92643b952174fe3ed466d9740b05565522165175bb88c3a3335c102ba3"
+    },
+    {
+      "path": "tests/test_alpaca_orders_off_handoff_v2.py",
+      "sha256": "0832547948890902782dcd8c2bf9759899280aa2afb4d1f06af141cc284dfae5"
+    },
+    {
+      "path": "reports/evidence/alpaca_live_readiness_20261013/install_and_handoff_orders_off_v2.py",
+      "sha256": "59b844ead4af3944f6bb5f82bd0e3cd149d786c09d6c9b423d46cf83c39e354b"
+    },
+    {
+      "path": "reports/evidence/alpaca_live_readiness_20261013/verify_orders_off_deployment_v2.py",
+      "sha256": "e48a794c5280ca9fc06d22653f3fa6d3ae8bd3bcfb978e3a5774be7f02a54698"
+    }
+  ],
+  "private_capture_sha256": {
+    "install": "2c9cc4bc40bd130bc76df83155b221692a41d7580d54adc68555a0a392312483",
+    "authority": "b6818aa24017ef2d4faac614ce44e009dbddc95cb63ac47f064a53757b8873dc",
+    "deployed": "9c2f881e608fcac787c51af6067a9a75c8441570d5261aaf27b6cbc0d98eb24b",
+    "carry": "2ea819de216ce8e5c5231d43a523d15e8d85f8788236b306052dce6cdfd0e170"
+  },
+  "actual_execution": true,
+  "broker_write_count": 0,
+  "service_activations": 0,
+  "live_halt_cleared": false,
+  "exact_money_go_received": false,
+  "root_review": {
+    "status": "ROOT_REVIEW_PASS_INERT_CONTROL_SCOPE",
+    "independent_signoff": "NOT_AVAILABLE_NOT_CLAIMED",
+    "checked": [
+      "direct approval/pending-fee exception applies only to inert install",
+      "original full-PAPER installer and money verifier unchanged",
+      "exact one-line cron mutation under original account lock, no broker writes",
+      "fresh flat/no-orders/HALT pre/post and original PID/source equality",
+      "no systemd registration/activation or old profile/HALT mutation",
+      "source-bound disabled book has no PAPER intent/fill adoption",
+      "exact byte rollback archived and verified, not executed",
+      "physical readback, no repeat mutation and fee-PASS attachment separate"
+    ]
+  },
+  "limitations": [
+    "full actual PAPER cost closure pending in dated15:01 source",
+    "no final money runtime binding, intake, owner GO or active manager",
+    "no actual LIVE trade; targeted tests are engineering evidence only"
+  ]
+}

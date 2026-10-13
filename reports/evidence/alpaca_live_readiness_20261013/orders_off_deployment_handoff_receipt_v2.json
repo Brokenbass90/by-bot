@@ -1,0 +1,71 @@
+{
+  "schema": "ALPACA_ORDERS_OFF_INSTALL_HANDOFF_RECEIPT_V2",
+  "status": "ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING",
+  "observed_ms": 1791905002548,
+  "owner_authorization_sha256": "af302853c6d6aac58a142571900cd95bfe84a00db1f0ea0156e208672c3e2e66",
+  "proposal_sha256": "422c638c968486da38fdf88d11025944d6865e18f9f6eacea793207795c7aa4a",
+  "cron_before_sha256": "690b403f8ec6cdeda37a95ba6f310416c59fab9849d6ee03cf629a99f8d23653",
+  "cron_after_sha256": "c5729c174e49675400f533c8508636f95db669f4662d45953d829cab58d27939",
+  "root_spool_after_sha256": "d895834a37b2d2fefa37b7cb8b6968853bf680ba8dc3dc8c69158055447ed342",
+  "cron_write_count": 1,
+  "other_cron_lines_byte_preserved": true,
+  "original_lock_held": true,
+  "no_old_manager_inflight": true,
+  "broker_writes": 0,
+  "service_activations": 0,
+  "orders_allowed": false,
+  "money_go_received": false,
+  "full_paper_pass": false,
+  "rollback_bytes_verified": true,
+  "rollback": "Exact archived crontab only after fresh flat/HALT/no Dynamic writer/fill under original lock. No rollback performed.",
+  "next_action": "Bind actual final PAPER receipt without reinstall; prepare exact first-intent dossier; separate money GO then fresh opening gates.",
+  "completed_at_utc": "2026-10-13T15:23:22.548000+00:00",
+  "package_sha256": "0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20",
+  "installed_app_files": 37,
+  "installed_source_book_sha256": "6abcf30313e58894e50361b5539e53144c7724dd7442cf6c3f2f75d3106800f9",
+  "source_custody_status": "STATIC_SOURCES_BOUND_FINALITY_PENDING",
+  "active_dynamic_managers": 0,
+  "new_runtime_registered_or_enabled": false,
+  "live_halt_preserved": true,
+  "live_before_after": {
+    "before": {
+      "cash": "496.12",
+      "positions": 0,
+      "open_orders": 0
+    },
+    "after": {
+      "cash": "496.12",
+      "positions": 0,
+      "open_orders": 0
+    }
+  },
+  "production_services_unchanged": true,
+  "independent_authority_capture_sha256": "b6818aa24017ef2d4faac614ce44e009dbddc95cb63ac47f064a53757b8873dc",
+  "independent_deployed_readback": {
+    "broker_writes": 0,
+    "compiled_installed_python": true,
+    "cost_finality_pending": true,
+    "cron_after_sha256": "c5729c174e49675400f533c8508636f95db669f4662d45953d829cab58d27939",
+    "full_paper_pass": false,
+    "handoff_file_sha256": "b6b48ace1c2f0f48f2412f349c15385338078ab2199891bb6e26a94c3d63848d",
+    "no_go_intake_or_reservation": true,
+    "no_registered_new_units": true,
+    "observed_ms": 1791905206910,
+    "orders_allowed": false,
+    "package_sha256": "0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20",
+    "remote_writes": 0,
+    "schema": "ALPACA_DISABLED_DEPLOYED_READBACK_V2",
+    "source_book_intents": 0,
+    "status": "DEPLOYED_BYTES_CRON_AND_ORDERS_OFF_PASS",
+    "verified_app_files": 37,
+    "verified_source_files": 48
+  },
+  "original_profile_writer_unit_pins_unchanged": true,
+  "actual_paper_fees": "PENDING_NO_FULL_PAPER_PASS",
+  "remaining_money_sources": [
+    "actual closed PAPER cost finality",
+    "final PAPER source attached to physical deployment and runtime binding",
+    "exact first-intent/dossier and separate owner money GO",
+    "fresh permitted session account/quote/asset/cash/liability checks"
+  ]
+}
