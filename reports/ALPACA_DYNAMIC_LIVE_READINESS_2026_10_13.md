@@ -1,5 +1,63 @@
 # Alpaca Dynamic LIVE — October13 preparation and existing PAPER postcheck
 
+## Latest — fee-to-dossier closure prepared and staged18:43UTC, orders OFF
+
+The owner requested the final bounded fee-to-LIVE closure path. The additional
+27-file inert control kit is staged at
+`/opt/bybot-research/alpaca-dynamic-live-20261013/control/fee-to-live-v1`.
+Outer pin: `c0b044a90469fd41b90531e799f55c6746c355fdde0a5b8cee07c89fb2a8be58`.
+Installed `--verify-only` checks all permanent inputs/code and the physical
+37-file deployment, without executing either saved GET reader. Original app,
+custody, cron, HALT and production PIDs/NRestarts were unchanged. No broker
+request/write, service activation, lock acquisition or Claude change this cycle.
+
+Read [the closure receipt](evidence/alpaca_live_readiness_20261013/fee_to_live_closure_receipt_v1.json).
+89 targeted tests PASS, including12 closure counterexamples. Root review only;
+full suite not rerun and prior NOT_GREEN remains. Successful fee-to-dossier
+branch is fixture evidence. A separate offline replay of the retained17:17
+actual capture still returns the exact posted-fee PENDING blocker, without
+creating a binding or first intent. Actual PAPER PASS/LIVE GO are **absent**.
+
+The kit prebinds original arm/initial/re-arm/cash sources, actual OLD exits and
+known account-day finality, disabled deployment, exclusive disabled ownership,
+original lock/native ledger, source book, policy, NET ranking and inherited
+first-slot caps. It retains all raw provenance privately; timestamps are not
+reconstructed/backdated. CAT reserve0.01 is subtracted from spendable funding;
+future nonzero pending/accrued liabilities are rejected by the existing publisher.
+The upper quantity envelope is the inherited slot quantity; actual admitted
+quantity is still chosen by the unchanged planner and constrained independently
+by124.699999985736 notional/10.906127324106 stop-distance risk. This is not a
+request to buy that maximum quantity or an adoption of the PAPER fill.
+
+One future October14 **pre-open** invocation, using the outer pin above:
+
+```text
+/root/by-bot/.venv/bin/python -B /opt/bybot-research/alpaca-dynamic-live-20261013/control/fee-to-live-v1/observe-close-once.py c0b044a90469fd41b90531e799f55c6746c355fdde0a5b8cee07c89fb2a8be58
+```
+
+Run via the existing bounded SSH transport with an outer240-second timeout and
+private output capture; never execute a fee observation again on October13.
+This is a prepared command, **not a scheduled or running job**. The original
+heartbeat remains paused. Do not reset session/date or retry the sealed attempt.
+`--verify-only` executes no broker query and is the only verification mode.
+
+The command makes one original same-closed-lifecycle fee observation. If fees
+are absent/conflicting, it writes terminal BLOCKED and stops. If present, it
+checks current authority/source maps and obtains fresh account/asset/quote via
+the existing writes-disabled client/publisher. Raw quote CTS must meet the
+existing freshness limit; IEX is not NBBO. Fresh eligibility/source defects
+remain explicit BLOCKED, never fabricated true/zero. No rescan or new rule.
+
+Offline closure then writes a full PAPER receipt, separate final attestation
+on the already installed bytes, physical binding, and first-intent dossier/hash
+only if the existing verifier passes. Results live under `oct14-closure/`;
+original install/source receipts are never edited. Owner approval remains the
+exact `GO ALPACA_DYNAMIC_FIRST_INTENT_V1 <intent_sha256>` returned by the dossier.
+The helper creates no permit, reservation, intake, HALT clear, active manager
+or order. Subsequent authorized activation must bind that exact first-entry
+scope to the existing opening planner/runtime; this helper is not an opening
+dispatcher. No promised October14 fill, extra PAPER or statistics gate.
+
 ## Post-Mac-reboot check — October13 17:17UTC /20:17 Cyprus
 
 One read-only SSH connection verified the already-installed37-file app and48

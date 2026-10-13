@@ -1,5 +1,26 @@
 # Codex session checkpoint — 2026-09-06
 
+October13 18:43UTC /21:43Cyprus: **FEE_TO_LIVE_STATIC_KIT_STAGED_ORDERS_OFF**.
+Owner requested bounded final fee→dossier closure. Separate27-file control kit
+physically staged below the existing disabled base; outerpin c0b044a9…a8be58.
+Read readiness LATEST and fee_to_live_closure_receipt_v1.json. Installed
+--verify-only PASS/no broker observation; frozen37-app/source custody, cron,
+HALT and production PIDs/NRestarts unchanged.89 targetedPASS/12new; root review
+only/full suite not rerun. Cached actual17:17 source replay remains exact
+PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT; no actual PAPER PASS/intent/GO.
+No fee poll TODAY, service restart/activation/cron/broker write/Claude change.
+One prepared Oct14 pre-open invocation with existing sources and bounded outer
+timeout: actual fees→full PAPER receipt→installed-byte separate attestation→
+physical first-entry binding→fresh dossier/hash; missing fees/CTS/account/gates
+=> terminal BLOCKED/no loop/retry/date transfer. This command is NOT scheduled.
+Original paused heartbeat remains paused. Exact owner moneyGO still separate;
+no permit/HALTclear/intake/reservation/order from this helper. It is not an
+opening dispatcher; authorized activation still binds exact first-entry scope
+to the existing planner/runtime. Do not promise calendar BUY or extra PAPER.
+Additional unpublished earlier local kit drafts were never staged; use ONLY
+c0b044a9…a8be58. Foreign allowlist add587f1…f19a1 preserved; Claude working in
+parallel is untouched. Earlier snapshots below retain their dates and scope.
+
 October13 17:17:15UTC /20:17Cyprus post-Mac-reboot: **POST_REBOOT_INTEGRITY_PASS / FEE_FINALITY_PENDING**.
 One SSH connection/one same-closed-lifecycle fee observation, remote writes0.
 37app/48package+source pins/exact retired cron/HALT/custody PASS; all unrelated

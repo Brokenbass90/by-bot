@@ -1,5 +1,15 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October13 18:43UTC: **FEE_TO_LIVE_STATIC_KIT_STAGED_ORDERS_OFF**.
+Read checkpoint TOP/readiness LATEST and fee_to_live_closure_receipt_v1.json.
+Separate27-file closure kit c0b044a9…a8be58 staged/installed verify-only PASS;
+37 trading files/cron/HALT/production unchanged.89targetedPASS, actual cached
+fees still PENDING. No broker query this cycle or further fee query TODAY.
+ONE Oct14 pre-open command is prepared, not scheduled: fees→actual receipt→
+installed final attestation→fresh physical dossier/hash; unknown=>BLOCKED.
+No permit/entry/reservation/activation/HALTclear; exact ownerGO separate. Do not
+repeat installation/cron/PAPER/Brain, extend heartbeat or touch Claude research.
+
 October13 post-Mac-reboot17:17UTC: **INTEGRITY_PASS / FEE_FINALITY_PENDING**.
 Read checkpoint TOP and post_reboot_integrity_receipt_v1.json. One read-only SSH
 and one fee observation: installed37/48pins, exact old cron retirement, disabled

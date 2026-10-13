@@ -1,5 +1,15 @@
 # MASTER HANDOFF — 2026-10-05
 
+October13 18:43UTC LATEST: **FEE_TO_LIVE_STATIC_KIT_STAGED_ORDERS_OFF**.
+Use checkpoint TOP/readiness LATEST/fee_to_live_closure_receipt_v1.json.
+27-file separate inert closure kit c0b044a9…a8be58 staged and static-verified;
+frozen trading37files/HALT/cron/production unchanged, no broker query this cycle.
+89targetedPASS; actual retained17:17fee source still PENDING, not PAPER PASS.
+Next one Oct14 pre-open prepared (not scheduled) fee observation→full receipt→
+existing installed-byte final binding→fresh dossier/exact owner moneyGO.
+No automatic order/permit/activation/HALTclear/extra PAPER or calendar promise.
+Preserve Claude working in parallel and original paused heartbeat.
+
 October13 CURRENT: **ORDERS_OFF_DEPLOYMENT_HANDOFF_VERIFIED_FINALITY_PENDING**.
 Use checkpoint TOP/readiness CURRENT, not earlier local-only states below.
 Owner directly waived fee-PASS for inert installation only. Corrected37-file
