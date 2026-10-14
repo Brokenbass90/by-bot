@@ -10,7 +10,7 @@
   ts_priznakov_ms  — самый поздний момент данных, вошедших в признаки (обязан быть ≤ ts_resheniya_ms)
   ts_vhoda_ms      — момент входа (обязан быть ≥ ts_resheniya_ms)
   simvol, mehanizm, versiya, storona (+1/−1)
-  cena_vhoda, izderzhki_dolya (круг), priznaki_json (словарь признаков, известных к ts_priznakov_ms)
+  cena_vhoda (может быть пусто, если нога считает исход в R), izderzhki_dolya (круг), priznaki_json (словарь признаков, известных к ts_priznakov_ms)
   ts_vyhoda_ms, cena_vyhoda, fanding_dolya, dohod_net_dolya   — ИСХОД (заполняется отдельно, после закрытия; может быть пусто)
 Проверка причинности встроена: запись с нарушенным порядком времени отклоняется.
 """
@@ -33,7 +33,7 @@ def zapis(ts_resheniya_ms, ts_priznakov_ms, ts_vhoda_ms, simvol, mehanizm, versi
         raise NarushenieVremeni(f"{simvol}: выход не позже входа")
     if storona not in (1, -1): raise ValueError("storona ∈ {+1, −1}")
     return dict(ts_resheniya_ms=int(ts_resheniya_ms), ts_priznakov_ms=int(ts_priznakov_ms), ts_vhoda_ms=int(ts_vhoda_ms),
-                simvol=simvol, mehanizm=mehanizm, versiya=versiya, storona=int(storona), cena_vhoda=float(cena_vhoda),
+                simvol=simvol, mehanizm=mehanizm, versiya=versiya, storona=int(storona), cena_vhoda=None if cena_vhoda is None else float(cena_vhoda),
                 izderzhki_dolya=float(izderzhki_dolya), priznaki_json=json.dumps(priznaki, sort_keys=True),
                 ts_vyhoda_ms=ts_vyhoda_ms, cena_vyhoda=cena_vyhoda, fanding_dolya=fanding_dolya, dohod_net_dolya=dohod_net_dolya)
 
