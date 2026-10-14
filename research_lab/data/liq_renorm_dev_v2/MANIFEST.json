@@ -1,0 +1,20 @@
+{
+ "dataset": "LIQ_RENORMALIZED_DEV_V2",
+ "istochnik": "runtime/liquidations/bybit_liquidations.jsonl",
+ "istochnik_sha256": "a27ae867460fa6d2855197016f39168e53cf8c3457b23238393d2fa50d645198",
+ "kollektor": "scripts/collect_bybit_liquidations.py @4abf8f9 (min_usd=0, T из биржи, S дословно)",
+ "provenance": {
+  "zapisey": 234049,
+  "s_buy": 118346,
+  "s_sell": 115703,
+  "t_ravno_priemu": 0,
+  "nevalid": 0
+ },
+ "simvolov": 12,
+ "t_pervyy": 1781597679943,
+ "t_posledniy": 1789325642185,
+ "dyr_unknown": 311,
+ "dyry_chasov": 804.6,
+ "semantika": "V2: S=Buy → long ликвидирован; S=Sell → short",
+ "events_sha256": "6e546c8e51d7222f2a62f791327e9e881593472f47603c4075d3dcd88067ab59"
+}
