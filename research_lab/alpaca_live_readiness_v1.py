@@ -417,6 +417,54 @@ def derive_paper_posted_cost_closure_v3(**kwargs):
     return _derive_paper_posted_cost_closure(**kwargs,semantic_v3=True)
 
 
+def _order_timestamp_ns_v1(value):
+    import re
+    from datetime import timezone
+    match=re.fullmatch(r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?(Z|[+-]\d{2}:\d{2})',value or '')
+    _require(match is not None,'EXECUTION_TIMESTAMP_FORMAT')
+    base=datetime.fromisoformat(match[1]+match[3].replace('Z','+00:00'))
+    delta=base.astimezone(timezone.utc)-datetime(1970,1,1,tzinfo=timezone.utc)
+    fraction=match[2] or ''
+    return (delta.days*86400+delta.seconds)*1000000000+int(fraction.ljust(9,'0') or '0'),len(fraction)
+
+
+def execution_identity_v1(retained,broker):
+    """Exact owned economic identity, narrow REST/event representation compatibility.
+
+    Never changes either JSON. Unknown field changes still reject. Only an added
+    access_key source and 7-9 digit to <=6 digit microsecond rounding are eligible;
+    equal-precision timestamp differences are not a blanket timing tolerance.
+    """
+    required={'id','symbol','side','type','qty','filled_qty','filled_avg_price','status'}
+    _require(required<=retained.keys() and required<=broker.keys(),'EXECUTION_IDENTITY_FIELDS_REQUIRED')
+    _require(bool(retained['id']),'EXECUTION_ORDER_ID_REQUIRED')
+    _require(set(retained)-{'source'}==set(broker)-{'source'},'EXECUTION_FIELD_SET_CONFLICT')
+    ignored=[]
+    if retained.get('source')!=broker.get('source'):
+        _require(retained.get('source') is None and broker.get('source')=='access_key','EXECUTION_SOURCE_CONFLICT')
+        ignored.append('source')
+    normalized=[]
+    for key in sorted(set(retained)-{'source'}):
+        old,new=retained[key],broker[key]
+        if key.endswith('_at'):
+            if old is None or new is None:
+                _require(old is new,'EXECUTION_TIMESTAMP_NULL_CONFLICT:'+key)
+                continue
+            a,pa=_order_timestamp_ns_v1(old);b,pb=_order_timestamp_ns_v1(new)
+            if a!=b:
+                high,low,ph,pl=(a,b,pa,pb) if pa>pb else (b,a,pb,pa)
+                _require(ph>6 and pl<=6 and ((high+500)//1000)*1000==low,
+                    'EXECUTION_TIMESTAMP_CONFLICT:'+key)
+                normalized.append(key)
+        else:
+            _require(old==new,'EXECUTION_MATERIAL_FIELD_CONFLICT:'+key)
+    return dict(schema='ALPACA_EXECUTION_IDENTITY_V1',status='EXECUTION_IDENTITY_MATCH',
+        retained_raw_sha256=digest(retained),broker_raw_sha256=digest(broker),
+        hash_basis='complete canonical JSON payload; original capture/wire-source hashes retained separately',
+        timestamp_compatibility='exact UTC nanoseconds, or high-precision value rounded to the REST microsecond grid',
+        normalized_timestamp_fields=normalized,permitted_metadata_additions=ignored)
+
+
 def verify_paper_lifecycle(arm, initial, before, after, fees, *, now_ms):
     """Captured original lifecycle; never substitutes fees=0 for missing rows.
 
@@ -531,7 +579,8 @@ def verify_paper_lifecycle(arm, initial, before, after, fees, *, now_ms):
         _require(bool(exits) and len({o['id'] for o in exits}) == len(exits), 'EXIT_IDS_CONFLICT')
         for order in exits:
             actual = order_map[order['id']]
-            _require(actual == order and actual['symbol'] == 'NET' and actual['side'] == 'sell'
+            execution_identity_v1(order,actual)
+            _require(actual['symbol'] == 'NET' and actual['side'] == 'sell'
                 and actual['type'] in {'market', 'stop'} and actual['status'] in TERMINAL,
                 'EXACT_OWNED_EXIT_CONFLICT')
             _require(_ms(actual['filled_at']) <= after['observed_ms'], 'EXIT_FILL_FUTURE')

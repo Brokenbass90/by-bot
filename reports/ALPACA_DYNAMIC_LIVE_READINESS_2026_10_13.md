@@ -600,3 +600,53 @@ manager remains disabled and no owner permit/reservation/order exists.
 
 See [V3 terminal receipt](evidence/alpaca_live_readiness_20261014/reg_v3_offline_terminal_receipt.json)
 and [official semantics pin](evidence/alpaca_live_readiness_20261014/reg_semantics_v3.json).
+
+
+## October14 semantic comparison delivery — READY_FOR_LIVE_GO for Oct15
+
+The owner authorized the narrow versioned execution comparator. IDs, client ID,
+symbol, side, order type/TIF, quantity, filled quantity/price, status, ownership
+and every other raw field remain exact. Only source null→access_key and the
+observed 7–9-digit timestamp→REST microsecond representation are compatible.
+Same-precision changes, a material timestamp change, unknown added metadata
+or altered fill still BLOCK. Raw capture remains unchanged and fully pinned.
+Official order/trade-update examples document different representations; this
+contract does not invent an Alpaca precision or publication SLA.
+
+RED observed;116 targetedPASS. Same-capture offline full lifecycle is
+**PAPER_EXECUTION_PASS**: re-arm, owned exit, persisted recovery, costs .03 and
+net PAPER -4.535524745824. No additional PAPER trade/fee poll/statistical gate.
+Physical source binding on VPS accepted the actual full PAPER receipt against
+the unchanged37-file package0a3fce3b…87f20. Original installation/kit receipts
+were not edited; new versioned control/evidence is separate.
+
+A pre-GET control import failure revealed the publisher was absent from the
+37-file trading app. Phase readback retained this failure; the continuation
+loaded the exact unchanged publisher from the sealed81-file session by its
+source-manifest hash. No opener/guard ran, trading app was not reinstalled, no
+fee query or live-source GET repeated from that failed pre-GET phase.
+
+Fresh authenticated account/asset/IEX quote and existing source/custody gates
+passed. Final dossier: **NET /2026-10-15**, max qty .469970151 (an envelope,
+not a reservation), simultaneous notional cap124.699999985736 and modeled
+stop-risk cap10.906127324106, maximum limit349.82, liability reserve .01.
+Actual next-opening qty must fit EVERY unchanged bound or reject; gap losses
+can exceed modeled stop risk. Native actual-fill distance/floor/HWM/DAY re-arm
+unchanged. Exact sealed intent:
+`198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd`.
+
+**Next window: Oct15 16:30–16:35 Cyprus (13:30–13:35UTC).** Oct14 first-intent
+preparation deadline was its13:30UTC opening; helper did not backdate, extend
+window or transfer a GO. Oct15 is a separately prepared non-authoritative
+proposal under the existing planner calendar. No owner money GO/permit/intake/
+reservation/order, HALT clear or service activation. PREPARED, NOT ARMED.
+
+Owner's exact action, only if this complete envelope is accepted:
+`GO ALPACA_DYNAMIC_FIRST_INTENT_V1 198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd`
+
+See [sanitized dossier](evidence/alpaca_live_readiness_20261014/first_live_net_oct15_dossier_public.json),
+[delivery receipt](evidence/alpaca_live_readiness_20261014/execution_identity_v1_delivery_receipt.json)
+and [source/comparator contract](evidence/alpaca_live_readiness_20261014/execution_identity_v1_source_contract.json).
+Separate GO then existing operational activation/fresh opening checks are still
+required. Current package remains disabled, LIVE HALTED, old manager retired.
+No new research/PAPER gate. Preserve Claude/KITY/ATT1/source collectors.

@@ -1,5 +1,26 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 semantic execution fix completed: **PAPER_EXECUTION_PASS +
+READY_FOR_LIVE_GO / NET Oct15**. Read latest section in
+ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md and first_live_net_oct15_dossier_public.json.
+Same original13:08 raw capture, REGV3 actualfees .03/cash chain and semantic
+execution comparator PASS;116targetedPASS. All material IDs/client/symbol/
+side/type/status/qty/fill/ownership exact; only source null→access_key and narrow
+REST microsecond timestamp representation accepted. Unknown/material changes
+BLOCK, full raw retained. Separate physical final attestation bound actual
+PAPER receipt70f5a03d…1888 to unchanged37 package0a3fce3b…87f20.
+Pre-GET missing publisher import resolved using unchanged sealed81-file
+source by manifest pin; failed phase preserved/no fee query/live GET repeat.
+Fresh account/asset/quote/source custody passed; original HALT/disabled manager/
+cron/production/Claude/KITY/ATT1 preserved. No permit/intake/reservation/order.
+NET new proposal Oct15 16:30–16:35Cyprus; maxnotional124.699999985736,
+maxstoprisk10.906127324106, maxqty.469970151, maxlimit349.82, CATreserve.01.
+Actual fresh size must fit ALL bounds, no reprice/repeat/session transfer.
+Exact intent198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd.
+Separate human GO required; PREPARED NOT ARMED, LIVE HALTED. Today's14
+first-intent preparation deadline passed13:30UTC; not backdated/extended.
+No extra PAPER/research/statistics or fee wait. Original heartbeat PAUSED.
+
 October14 REG/SEC owner-authorized offline fix: **FEES_RECONCILED /
 BLOCKED_DATA: EXACT_OWNED_EXIT_CONFLICT**. Read latest dated section in
 ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md and reg_v3_offline_terminal_receipt.json.
