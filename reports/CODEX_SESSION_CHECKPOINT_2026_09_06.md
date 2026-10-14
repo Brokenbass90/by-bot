@@ -1,5 +1,19 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 REG/SEC owner-authorized offline fix: **FEES_RECONCILED /
+BLOCKED_DATA: EXACT_OWNED_EXIT_CONFLICT**. Read latest dated section in
+ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md and reg_v3_offline_terminal_receipt.json.
+Official FEE/REG SEC semantics verified; real legacy fieldactivity_sub_type.
+V3 accepts exact executed USD typed REG only, preserves raw;97targetedPASS.
+Same13:08 capture/no new broker query: actual fees .03 + four cash checkpoints
+PASS. Full PAPER verifier blocks on entire-JSON equality: order IDs/client ID/
+side/type/TIF/qty/fill/price/status all match, but broker rounded timestamps
+and added source=access_key. Exactly one new blocker returned per owner scope.
+Next fix is reviewed exit-order semantic/precision comparison on this SAME
+capture, not more PAPER/fee polling. No full PAPER_PASS/dossier/intent/permit/
+reservation/order, no VPS app/kit/manager/HALT mutation. Original37 package and
+spent observations preserved. Latest broker truth dated13:08UTC; LIVE HALTED.
+
 October14 16:08:23.342Cyprus: **ALPACA_PREOPEN_SINGLE_CHECK_BLOCKED_DATA**.
 One approved GET-only observation consumed; automation alpaca-fee-check-14-16-00
 PAUSED, no repeat/poll/date transfer. Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md

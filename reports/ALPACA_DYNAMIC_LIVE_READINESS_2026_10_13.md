@@ -571,3 +571,32 @@ write. Three separate evidence-only files were created outside the sealed
 kit; morning artifacts were untouched. This heartbeat is PAUSED and spent.
 No polling, retry, next-day transfer or new PAPER cycle. See
 [evidence receipt](evidence/alpaca_live_readiness_20261014/preopen_1300_terminal_receipt.json).
+
+
+## October14 REG semantics V3 — fees closed, exact JSON exit blocker
+
+Owner authorized the versioned REG/SEC fix and offline replay of the retained
+13:08:23.342UTC capture. Official Activities documentation identifies FEE/REG
+as Regulatory (SEC) fee. Actual REST rows use `activity_sub_type`; unified
+schema uses `activity_subtype`. V3 checks executed/USD/FEE/subtype agreement,
+keeps raw REG and refuses absent/conflicting REG subtype or wrong amounts.
+Original V2 behavior and sealed artifacts remain available; deployed37 app/kit
+were not changed. Regression verified RED then97 targetedPASS; no full suite
+or new money gate. No fresh broker/fee/source observation was needed.
+
+Actual CAT entry .01 + CAT exit .01 + REG exit .01 and all four broker-cent
+checkpoints reconcile: gross -4.505524745824, fees .03, cash99410.28→99405.75.
+Full PAPER verifier returns **EXACT_OWNED_EXIT_CONFLICT**, not missing fees.
+Its `actual == retained_order` check compares the entire JSON. The actual
+order's ID/client-ID/symbol/side/type/TIF/qty/filled_qty/price/status match.
+Only source=access_key and serialized created/submitted/updated/filled times
+differ (nanosecond retained values vs broker microsecond precision/rounding).
+Do not silently loosen the next contract under a REG-only patch. Return this
+one concrete blocker, preserve same raw capture and no full PAPER PASS/dossier.
+Next bounded engineering fix: reviewed financial/order identity comparison
+with documented timestamp precision, replaying this same evidence. No extra
+PAPER, fee wait, rescan or source/risk/stop changes. LIVE stays HALTED; new
+manager remains disabled and no owner permit/reservation/order exists.
+
+See [V3 terminal receipt](evidence/alpaca_live_readiness_20261014/reg_v3_offline_terminal_receipt.json)
+and [official semantics pin](evidence/alpaca_live_readiness_20261014/reg_semantics_v3.json).

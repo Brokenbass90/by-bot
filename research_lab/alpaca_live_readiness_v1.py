@@ -310,8 +310,8 @@ def derive_paper_cost_closure(cash_before_path, after_path, paper_doc_path, prot
         official_source='https://docs.alpaca.markets/us/docs/paper-trading',live_cost_finality_proven=False)
 
 
-def derive_paper_posted_cost_closure_v2(*, cash_before_path, initial_path, rearm_path,
-                                      terminal_path, protocol_path, now_ms):
+def _derive_paper_posted_cost_closure(*, cash_before_path, initial_path, rearm_path,
+                                      terminal_path, protocol_path, now_ms, semantic_v3=False):
     """Actual posted retail fees + four captured broker-cent checkpoints.
 
     Narrow contract for this single NET round trip, not a publication SLA or a
@@ -366,6 +366,8 @@ def derive_paper_posted_cost_closure_v2(*, cash_before_path, initial_path, rearm
         if row['activity_type']=='FILL':continue
         _require(row['activity_type']=='FEE','POSTED_FEE_FOREIGN_CASH_ACTIVITY')
         kind=next((k for k in ('CAT','SEC') if row.get('description','').startswith(k+' fee ')),None)
+        if semantic_v3:
+            kind=_posted_fee_kind_v3(row)
         key=(row.get('date'),kind)
         _require(key in expected and dec(row['net_amount'])<=0,'POSTED_FEE_UNCLASSIFIED_ACTIVITY')
         actual[key]=actual.get(key,dec(0))-dec(row['net_amount'])
@@ -387,8 +389,32 @@ def derive_paper_posted_cost_closure_v2(*, cash_before_path, initial_path, rearm
         capture_response_sha256=digest(after),activities_sha256=digest(acts),
         source_files=rows,source_manifest_sha256=digest(rows),source_paths={n:str(paths[n]) for n in names},
         cash_reconciliation_precision='BROKER_CENT_CHECKPOINT_CHAIN',cash_rounding_residual_usd=str(cash[3]-cash[0]-net),
-        source_contract='ACTUAL_POSTED_NET_SINGLE_ROUND_TRIP_V2',
+        source_contract='ACTUAL_POSTED_NET_SINGLE_ROUND_TRIP_V3' if semantic_v3 else 'ACTUAL_POSTED_NET_SINGLE_ROUND_TRIP_V2',
         fee_semantics='actual posted account-day CAT/SEC; no documentation-derived zero',live_cost_finality_proven=False)
+
+
+def _posted_fee_kind_v3(row):
+    """Alpaca FEE/REG is SEC; keep legacy and unified subtype spellings explicit."""
+    old=row.get('activity_sub_type');new=row.get('activity_subtype')
+    _require(old is None or new is None or old==new,'POSTED_FEE_SUBTYPE_CONFLICT')
+    subtype=old if old is not None else new
+    prefix=next((k for k in ('CAT','SEC','REG') if row.get('description','').startswith(k+' fee ')),None)
+    if subtype is None:
+        _require(prefix in {'CAT','SEC'},'POSTED_FEE_DOCUMENTED_SUBTYPE_REQUIRED')
+        return prefix
+    _require(row.get('activity_type')=='FEE' and row.get('status')=='executed'
+        and row.get('currency')=='USD' and subtype in {'CAT','REG','SEC'},'POSTED_FEE_SCHEMA_CONFLICT')
+    kind='SEC' if subtype=='REG' else subtype
+    _require(prefix is None or ('SEC' if prefix=='REG' else prefix)==kind,'POSTED_FEE_DESCRIPTION_SUBTYPE_CONFLICT')
+    return kind
+
+
+def derive_paper_posted_cost_closure_v2(**kwargs):
+    return _derive_paper_posted_cost_closure(**kwargs)
+
+
+def derive_paper_posted_cost_closure_v3(**kwargs):
+    return _derive_paper_posted_cost_closure(**kwargs,semantic_v3=True)
 
 
 def verify_paper_lifecycle(arm, initial, before, after, fees, *, now_ms):
@@ -548,7 +574,8 @@ def verify_paper_lifecycle(arm, initial, before, after, fees, *, now_ms):
         elif fees.get('cash_reconciliation_precision')=='BROKER_CENT_CHECKPOINT_CHAIN':
             # Reconstruct from every physically pinned raw checkpoint. A caller
             # cannot introduce an arbitrary residual to force cash equality.
-            rebuilt=derive_paper_posted_cost_closure_v2(
+            derive=derive_paper_posted_cost_closure_v3 if fees.get('source_contract')=='ACTUAL_POSTED_NET_SINGLE_ROUND_TRIP_V3' else derive_paper_posted_cost_closure_v2
+            rebuilt=derive(
                 **{n+'_path':p for n,p in fees['source_paths'].items()},now_ms=fees['observed_ms'])
             _require(rebuilt==fees, 'POSTED_FEE_RECONSTRUCTION_CONFLICT')
             expected_cash+=dec(fees['cash_rounding_residual_usd'])
