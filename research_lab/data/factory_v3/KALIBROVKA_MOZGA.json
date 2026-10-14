@@ -1,0 +1,35 @@
+{
+ "n": 1376,
+ "povtorov": 40,
+ "priznakov": 8,
+ "kriteriy": "все 3 эпохи: AUC ≥ 0.55 и > p95 из 40 перестановок",
+ "model": "логистическая регрессия (numpy)",
+ "seed": 20261014,
+ "sluchai": {
+  "SHUM": {
+   "istinnaya_auc": 0.502,
+   "dolya_pass": 0.0
+  },
+  "NESTABIL": {
+   "istinnaya_auc": 0.646,
+   "dolya_pass": 0.0
+  },
+  "STABIL_0.55": {
+   "istinnaya_auc": 0.551,
+   "dolya_pass": 0.05
+  },
+  "STABIL_0.60": {
+   "istinnaya_auc": 0.598,
+   "dolya_pass": 0.6
+  },
+  "STABIL_0.65": {
+   "istinnaya_auc": 0.648,
+   "dolya_pass": 0.925
+  },
+  "STABIL_0.70": {
+   "istinnaya_auc": 0.69,
+   "dolya_pass": 1.0
+  }
+ },
+ "sekund": 37.5
+}

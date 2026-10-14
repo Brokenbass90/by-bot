@@ -1,0 +1,18 @@
+# Прозвонка Factory V3 на каждый пуш: юнит-тесты (реестр, ферма, судьи, тени, ИИ-контракт и шлюз, калибровки).
+# Ничего не торгует, ключей не требует, сети к биржам не использует.
+name: factory-v3-tests
+on:
+  push:
+    paths: ["research_lab/factory_v3/**", "research_lab/fabrika/**", ".github/workflows/factory_v3.yml"]
+  workflow_dispatch:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install numpy==2.2.6
+      - run: python -m unittest discover -s research_lab/factory_v3/tests -t research_lab/factory_v3 -v

@@ -23,12 +23,37 @@ def _hvost_stroki(p, n=40):
     except Exception: return []
 
 
+# Ожидаемая частота закрытых решений теней (в месяц) — до своих 14 дней наблюдения; источники в скобках.
+CHASTOTA_PRIOR = {"BOUNCE1": (5.0, "PREREG_BOUNCE1_KEEP_KILL п.4: BTC/ETH ~5/мес"),
+                  "BOUNCE1_8": (20.0, "оценка: 8 монет × ~2.5/мес на монету как у BTC/ETH"),
+                  "BREAKOUT_TOP50": (1.7, "breakout_dev_early ITOG: 31 сделка за 18 мес")}
+EPOHI = {"BOUNCE1": D / "bounce_ten_BOUNCE1" / "EPOHA.json", "BOUNCE1_8": D / "bounce_ten_BOUNCE1_8" / "EPOHA.json",
+         "BREAKOUT_TOP50": D / "breakout_ten" / "EPOHA.json"}
+
+
+def eta_tenei(prog, segodnya, porog=30):
+    """Когда тень наберёт n=30: по своей наблюдаемой частоте (≥14 дней и ≥3 решения), иначе по априорной."""
+    out = {}
+    for g, st in prog.items():
+        try: n = int(str(st).split("/")[0])
+        except Exception: continue
+        dney = None
+        try: dney = (segodnya - dt.datetime.fromtimestamp(json.loads(EPOHI[g].read_text())["epoha_ms"] / 1000, dt.timezone.utc).date()).days
+        except Exception: pass
+        if dney and dney >= 14 and n >= 3: v_mes, ist = n / dney * 30.4, "наблюдаемая"
+        elif g in CHASTOTA_PRIOR: v_mes, ist = CHASTOTA_PRIOR[g][0], "априорная"
+        else: continue
+        dni = max(0, porog - n) / v_mes * 30.4
+        out[g] = f"{n}/{porog}, ≈ {(segodnya + dt.timedelta(days=round(dni))).isoformat()} ({ist} {v_mes:.1f}/мес)"
+    return out
+
+
 def alpaca():
     f = sorted(glob.glob(str(CODEX / "reports" / "ALPACA_DYNAMIC_LIVE_READINESS_*.md")))
     if not f: return "нет доступа к отчёту Codex"
     txt = Path(f[-1]).read_text(errors="replace")
     zag = next((l.strip("# ").strip() for l in txt.splitlines() if l.startswith("## ")), "")
-    st = re.findall(r"`([A-Z_]{6,}(?: / [A-Z_]{6,})?)`", txt[:4000])
+    st = re.findall(r"Status: \*\*([^*]+)\*\*", txt) or re.findall(r"`([A-Z_]{6,}(?: / [A-Z_]{6,})?)`", txt[:4000])
     return f"{zag} — {st[0] if st else 'статус не найден'} ({Path(f[-1]).name})"
 
 
@@ -91,7 +116,8 @@ def sobrat(segodnya=None):
           f"- **KITY Bybit:** {kity()}",
           f"- **Elder ETS2M:** {elder()}",
           f"- **Канарейка KITY:** чистых недель (C1 и C2 PASS) {kan.get('chistyh_nedel')} из 2" + (" → ГОТОВО к досье" if kan.get('gotovo_k_dosie') else ""),
-          f"- **До вердиктов теней (закрытых решений):** {prog}", "",
+          "- **До вердиктов теней (закрытых решений → когда n=30):**",
+          *[f"  - {g}: {t}" for g, t in eta_tenei(prog, segodnya).items()], "",
           "## Тени и сборщики",
           f"- живых по реестру: {sum(1 for v in zh.values() if v.get('status') == 'OK')} из {len(zh)}"
           + (f"; проблемы: {plohie}" if plohie else "; проблем нет") + f" (сторож {st.get('kogda', '—')})", "",
