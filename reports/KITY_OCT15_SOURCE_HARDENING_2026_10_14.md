@@ -1,5 +1,56 @@
 # KITY Oct15 source hardening — current gate
 
+## CURRENT — KITY_OCT15_CAPTURE_READY (A1.3)
+
+[Terminal receipt](evidence/kity_oct15_source_hardening_20261014/capture_readiness_terminal.json).
+Research `e27ef524c94f8d7835c5e8e99f5d77ab6fdc5552` is independently verified
+on origin; producer SHA256
+`8d05c3988f34d2939c06cdcd56cdceb19fa3b143c5c1ded96abc6bbc2326140a`.
+A1.3 uses immutable raw files per attempt and binds their hash into the success
+receipt. All previously demonstrated defects are closed on the replayed paths.
+[15 source checks PASS](evidence/kity_oct15_source_hardening_20261014/a13_offline_source_replay.json);
+[reproducible fixture](evidence/kity_oct15_source_hardening_20261014/replay_a13_source_only.py).
+Observer/C2 tests **49 PASS** including raw conflicts and capture timing.
+Nine economic/source functions and frozen constants match after the approved
+I/O and source-receipt guard normalization; four research pins and three C2
+pins remain exact. No outcome, real snapshot, C1/C2 or money PASS is asserted.
+
+Actual18:15:50UTC readback: one Python **29930**, started17:42:17UTC after the
+owner's restart, disk source predates it and matches A1.3; inherited and own
+writer locks **HELD**. Heartbeat17:42:18UTC is within the hourly schedule.
+Five unrelated prior Python PIDs remain unchanged. Mac is on AC,100%, sleep0;
+future Oct15 files absent. Codex did not restart/edit the source or other
+processes. Loaded-source hash is checked against the future real publisher
+receipt; it has not been invented from a future capture.
+
+[Pre-capture deployment manifest V2](evidence/kity_oct15_source_hardening_20261014/deadline_deployment_manifest_v2.json)
+and exclusive private config are sealed. The old PENDING code manifest/V1
+blocker receipts below remain historical and are superseded, not rewritten.
+The SAME one-shot heartbeat now pins the reviewed V2 observer/config; original
+Oct15 **03:01 Cyprus** check and COUNT=1 are unchanged. No date extension.
+
+Actual snapshot window remains Oct15 **02:50 ≤ completion < 03:00 Cyprus**.
+External target: `research_lab/data/kity_bybit_ten/2026-10-15/snimok_2355.json`;
+producer receipt `snimok_CAPTURE_RECEIPT.json`, raw
+`popytki/tickers_<capture_ms>.raw`; failure `snimok_PROPUSHCHEN.json`.
+Independent observer validates producer/raw/snapshot hashes, capture/completion
+clock and OI; it writes its own date-bound result and never writes these files.
+
+Exact one-check command AFTER original deadline only:
+
+```sh
+.venv/bin/python scripts/kity_oct15_deadline_v1.py --config-sha256 d6b689603ca9f4a24c2f131af0ac63d54617a15b9a148cc8f51344c64a38674b
+```
+
+Before deadline this returns WATCH_PENDING with no terminal/source writes.
+After deadline it preserves one CAPTURE_OBSERVATION_PASS or exact CAPTURE_BLOCKED;
+no polling/retry/reapproval. Automation pauses/deletes after that single check.
+A reboot/delayed wake is recorded honestly, not promised away. C2 independently
+reconstructs only after actual raw sources exist; this observer does not run it.
+Alpaca remains frozen/HALTED; no orders, judge, strategy/risk/hold/cost change.
+
+## Historical A1.1 blocker — resolved by A1.2/A1.3
+
 **KITY_OCT15_CAPTURE_BLOCKED: A1.1 source defects reproduced offline.**
 This is source engineering, not a strategy, C1/C2, PnL or money verdict.
 Alpaca's frozen STATIC_PREFLIGHT_PASS and LIVE HALT remain unchanged.

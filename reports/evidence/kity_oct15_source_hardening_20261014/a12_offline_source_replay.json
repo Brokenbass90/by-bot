@@ -1,0 +1,58 @@
+{
+  "schema": "KITY_A12_OFFLINE_SOURCE_REPLAY_V1",
+  "research_commit": "0331e989f2130beb519571ab0fd3db28991d380e",
+  "producer_sha256": "b6db8f2dc2141c07ab16a7c4f20f499da2069da88bf988cb83e117047914845a",
+  "checks": [
+    {
+      "case": "missing",
+      "status": "PASS"
+    },
+    {
+      "case": "null",
+      "status": "PASS"
+    },
+    {
+      "case": "nan",
+      "status": "PASS"
+    },
+    {
+      "case": "inf",
+      "status": "PASS"
+    },
+    {
+      "case": "bool",
+      "status": "PASS"
+    },
+    {
+      "case": "negative",
+      "status": "PASS"
+    },
+    {
+      "case": "valid",
+      "status": "PASS"
+    },
+    {
+      "case": "short-write-completed",
+      "status": "PASS"
+    },
+    {
+      "case": "no-overwrite",
+      "status": "PASS"
+    },
+    {
+      "case": "file-fsync-failure-no-final",
+      "status": "PASS"
+    },
+    {
+      "case": "late-publication-unconsumed-blocked",
+      "status": "PASS"
+    },
+    {
+      "case": "retry-after-raw-only-crash",
+      "status": "BLOCKED_RAW_HASH_CONFLICT"
+    }
+  ],
+  "network_calls": 0,
+  "actual_prospective_data_reads": 0,
+  "claude_writes": 0
+}

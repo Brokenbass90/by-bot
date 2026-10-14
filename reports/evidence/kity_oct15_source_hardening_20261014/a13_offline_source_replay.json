@@ -1,0 +1,72 @@
+{
+  "schema": "KITY_A13_OFFLINE_SOURCE_REPLAY_V1",
+  "status": "SOURCE_CONTRACT_REPLAY_PASS",
+  "research_commit": "e27ef524c94f8d7835c5e8e99f5d77ab6fdc5552",
+  "producer_sha256": "8d05c3988f34d2939c06cdcd56cdceb19fa3b143c5c1ded96abc6bbc2326140a",
+  "checks": [
+    {
+      "case": "missing",
+      "status": "PASS"
+    },
+    {
+      "case": "null",
+      "status": "PASS"
+    },
+    {
+      "case": "nan",
+      "status": "PASS"
+    },
+    {
+      "case": "inf",
+      "status": "PASS"
+    },
+    {
+      "case": "bool",
+      "status": "PASS"
+    },
+    {
+      "case": "negative",
+      "status": "PASS"
+    },
+    {
+      "case": "actual-a13-receipt-adapter",
+      "status": "PASS"
+    },
+    {
+      "case": "valid",
+      "status": "PASS"
+    },
+    {
+      "case": "short-write-completed",
+      "status": "PASS"
+    },
+    {
+      "case": "no-overwrite",
+      "status": "PASS"
+    },
+    {
+      "case": "file-fsync-failure-no-final",
+      "status": "PASS"
+    },
+    {
+      "case": "late-publication-unconsumed-blocked",
+      "status": "PASS"
+    },
+    {
+      "case": "retry-after-raw-only-crash",
+      "status": "PASS"
+    },
+    {
+      "case": "attempt-name-conflict-no-pass",
+      "status": "PASS"
+    },
+    {
+      "case": "temp-cleanup",
+      "status": "PASS"
+    }
+  ],
+  "checks_passed": 15,
+  "network_calls": 0,
+  "actual_prospective_data_reads": 0,
+  "claude_writes": 0
+}

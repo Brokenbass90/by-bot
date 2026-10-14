@@ -1,0 +1,51 @@
+{
+  "schema": "KITY_OCT15_CAPTURE_READINESS_TERMINAL_V1",
+  "status": "KITY_OCT15_CAPTURE_READY",
+  "observed_utc": "2026-10-14T18:19:10.016824+00:00",
+  "research_commit": "e27ef524c94f8d7835c5e8e99f5d77ab6fdc5552",
+  "producer_sha256": "8d05c3988f34d2939c06cdcd56cdceb19fa3b143c5c1ded96abc6bbc2326140a",
+  "source_version": "KITY_BYBIT_PREREG_A1.3_SOURCE_ONLY",
+  "actual_python_pid": 29930,
+  "writer_locks": [
+    {
+      "name": "kity_bybit.lock",
+      "state": "HELD"
+    },
+    {
+      "name": "kity_bybit_ten.lock",
+      "state": "HELD"
+    }
+  ],
+  "snapshot_destination": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/kity_bybit_ten/2026-10-15/snimok_2355.json",
+  "success_receipt_name": "snimok_CAPTURE_RECEIPT.json",
+  "missed_receipt_name": "snimok_PROPUSHCHEN.json",
+  "raw_attempt_reference": "popytki/tickers_<capture_ms>.raw",
+  "window_utc": {
+    "start": "2026-10-14T23:50:00Z",
+    "end_exclusive": "2026-10-15T00:00:00Z"
+  },
+  "window_cyprus": {
+    "start": "2026-10-15T02:50:00+03:00",
+    "end_exclusive": "2026-10-15T03:00:00+03:00"
+  },
+  "deadline_observer": {
+    "id": "kity-oct15-one-source-deadline-observation",
+    "status": "ACTIVE",
+    "local_time": "2026-10-15T03:01:00+03:00",
+    "single_check": true,
+    "reboot_survival_claimed": false
+  },
+  "observer_c2_unit_tests_passed": 49,
+  "source_counterexamples_passed": 15,
+  "source_capture_yet": false,
+  "c1_pass": false,
+  "c2_pass": false,
+  "pnl_run": false,
+  "money_authority": false,
+  "source_restarts_by_codex": 0,
+  "other_processes_preserved": true,
+  "alpaca_changed": false,
+  "claude_checkout_edits_by_codex": 0,
+  "config_sha256": "d6b689603ca9f4a24c2f131af0ac63d54617a15b9a148cc8f51344c64a38674b",
+  "deployment_manifest_sha256": "e630ac1099ab6e6422f9eade4b960310b390284cb918413d8809bb2ab483c01a"
+}

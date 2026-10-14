@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 KITY source hardening terminal: **KITY_OCT15_CAPTURE_READY / ORDERS_OFF**.
+Read CURRENT in KITY_OCT15_SOURCE_HARDENING_2026_10_14.md and capture_readiness_terminal.
+CRO A1.3 research e27ef52 independently published; source8d05c398…6140a.15 bounded
+source casesPASS, including originalUNKNOWN/atomic/late defects and retry after
+raw-only crash; per-attempt raw+successreceipt hashes exact.49 observer/C2 tests
+PASS; normalized9economic ASTs/constants and4research/3C2 pins unchanged.
+Fresh18:15:50UTC actual onePython29930/start17:42:17/heartbeat17:42:18; inherited+
+ownlocksHELD, AC100%/sleep0, futurefilesabsent, five unrelatedPythonPIDs unchanged.
+Owner restarted, Codex did not; no Claude edits/broker/PnL/C1/C2 or otherprocess writes.
+ManifestV2 e630ac10…3c01a/privateconfig d6b68960…8674b sealed BEFORE first source.
+SameCOUNT1 heartbeat updated to final pins, Oct15 03:01Cyprus remains fixed.
+Original captureOct14 23:50≤completion<Oct15 00:00UTC =02:50–02:59Cyprus.
+Raw popytki/tickers_<capture_ms>.raw; snapshot snimok_2355.json; success
+snimok_CAPTURE_RECEIPT.json; missed snimok_PROPUSHCHEN.json. Independentobserver
+ownprivate result only; raw/snapshot/source/time conflict=>BLOCKED, no repair/
+zero/overwrite/date transfer. Actual capture/C1/C2 remain FUTURE/PENDING, no
+loadedhash/future success invented. Preserve originalAlpaca freeze/HALT. Old
+A1.1/A1.2 blockers are retained history and resolved, not a current wait condition.
+
+
 October14 KITY source-only GO: **A1.1 SOURCE_BLOCKED / INDEPENDENT DEADLINE READY**.
 Read KITY_OCT15_SOURCE_HARDENING_2026_10_14.md and its evidence. Research566c6d1
 actually published; disk producer916a849a…0c82. A1.1 fixes missing/null/NaN/

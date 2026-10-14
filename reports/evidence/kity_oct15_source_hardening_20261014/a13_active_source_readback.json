@@ -1,0 +1,72 @@
+{
+  "schema": "KITY_A13_ACTIVE_SOURCE_READBACK_V1",
+  "observed_utc": "2026-10-14T18:15:50.935702+00:00",
+  "status": "ACTIVE_SINGLE_WRITER_SOURCE_READY",
+  "source_hash": "8d05c3988f34d2939c06cdcd56cdceb19fa3b143c5c1ded96abc6bbc2326140a",
+  "source_mtime_utc": "2026-10-14T17:41:34.087294+00:00",
+  "kity_process": {
+    "pid": 29930,
+    "ppid": 29916,
+    "start": "Wed Oct 14 20:42:17 2026",
+    "process": "kity_bybit_ten.py",
+    "command": "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python research_lab/kity_bybit_ten.py --cikl"
+  },
+  "lock_probes": [
+    {
+      "name": "kity_bybit.lock",
+      "state": "HELD"
+    },
+    {
+      "name": "kity_bybit_ten.lock",
+      "state": "HELD"
+    }
+  ],
+  "future_files_present": [],
+  "last_log_lines": [
+    "2026-10-14T17:38:00+00:00 \u043f\u0443\u043b\u044c\u0441: \u0436\u0438\u0432, \u043f\u0435\u0440\u0432\u044b\u0439 \u0447\u0435\u0442\u0432\u0435\u0440\u0433 2026-10-15",
+    "2026-10-14T17:42:18+00:00 \u043f\u0443\u043b\u044c\u0441: \u0436\u0438\u0432, \u043f\u0435\u0440\u0432\u044b\u0439 \u0447\u0435\u0442\u0432\u0435\u0440\u0433 2026-10-15"
+  ],
+  "unrelated_prior_python_pids_preserved": [
+    14400,
+    14404,
+    15591,
+    15599,
+    24018
+  ],
+  "unrelated_prior_python_pids_changed_or_unobserved": [],
+  "unrelated_prior_python_pids_unchanged": true,
+  "code_restarts_by_codex": 0,
+  "actual_loaded_source_hash_receipt": "PENDING_REAL_CAPTURE",
+  "mac_power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=22151267)\t100%; charged; 0:00 remaining present: true",
+  "ac_sleep_settings": [
+    "Battery Power:",
+    " Sleep On Power Button 1",
+    " lowpowermode         0",
+    " standby              1",
+    " ttyskeepawake        1",
+    " hibernatemode        3",
+    " powernap             1",
+    " hibernatefile        /var/vm/sleepimage",
+    " displaysleep         10",
+    " womp                 1",
+    " networkoversleep     0",
+    " sleep                0",
+    " lessbright           1",
+    " tcpkeepalive         1",
+    " disksleep            180",
+    "AC Power:",
+    " Sleep On Power Button 1",
+    " lowpowermode         0",
+    " standby              1",
+    " ttyskeepawake        1",
+    " hibernatemode        3",
+    " powernap             1",
+    " hibernatefile        /var/vm/sleepimage",
+    " displaysleep         10",
+    " womp                 1",
+    " networkoversleep     0",
+    " sleep                0",
+    " tcpkeepalive         1",
+    " disksleep            180"
+  ]
+}

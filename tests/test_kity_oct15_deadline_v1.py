@@ -17,14 +17,21 @@ def cfg(tmp_path):
     return dict(schema='KITY_OCT15_DEADLINE_OBSERVER_V1',day='2026-10-15',
         producer_path=str(source),producer_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
         snapshot_path=str(tmp_path/'snimok_2355.json'),publisher_receipt_path=str(tmp_path/'publisher-receipt.json'),
+        source_raw_dir=str(tmp_path/'popytki'),
         output_path=str(tmp_path/'observer.json'),approval_scope='SOURCE_ONLY_NO_STRATEGY_CHANGE')
 
 
 def complete(cfg,m):
-    snapshot=dict(vremya='2026-10-14T23:55:00+00:00',oi_usd={'BTCUSDT':1},instrumenty={'BTCUSDT':{}},oi_otsutstvuet=[])
+    raw=b'{"result":{"list":[{"symbol":"BTCUSDT","openInterestValue":"1"}]}}'
+    raw_dir=Path(cfg['source_raw_dir']);raw_dir.mkdir(exist_ok=True)
+    (raw_dir/f'tickers_{m.START+300000}.raw').write_bytes(raw);raw_hash=hashlib.sha256(raw).hexdigest()
+    snapshot=dict(vremya='2026-10-14T23:55:00+00:00',capture_ms=m.START+300000,
+        sha256_tickers=raw_hash,oi_usd={'BTCUSDT':1},instrumenty={'BTCUSDT':{}},oi_otsutstvuet=[])
     p=Path(cfg['snapshot_path']);p.write_text(json.dumps(snapshot))
     r=dict(status='CAPTURE_PASS',day='2026-10-15',producer_sha256=cfg['producer_sha256'],
-        snapshot_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),completed_ms=m.END-1000)
+        snapshot_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),source_sha256=raw_hash,
+        source_raw=f'popytki/tickers_{m.START+300000}.raw',
+        capture_ms=m.START+300000,completed_ms=m.END-1000)
     Path(cfg['publisher_receipt_path']).write_text(json.dumps(r))
     return p,r
 
@@ -144,3 +151,17 @@ def test_source_replacement_during_read_is_explicit_unknown(cfg,monkeypatch):
         return raw
     monkeypatch.setattr(Path,'read_bytes',replaced)
     assert m.run_once(cfg,now_ms=m.END)['reason']=='SOURCE_CHANGED_DURING_READ'
+
+
+@pytest.mark.parametrize('fault,reason',[
+    ('missing','TICKER_RAW_MISSING'),('replaced','RAW_SOURCE_PIN_CONFLICT'),
+    ('receipt_hash','RAW_SOURCE_PIN_CONFLICT'),('capture_late','CAPTURE_OUTSIDE_WINDOW')])
+def test_captured_raw_and_capture_clock_are_bound(cfg,fault,reason):
+    m=api();p,r=complete(cfg,m)
+    raw_path=Path(cfg['source_raw_dir'])/f'tickers_{m.START+300000}.raw'
+    if fault=='missing':raw_path.unlink()
+    elif fault=='replaced':raw_path.write_bytes(b'previous failed attempt')
+    elif fault=='receipt_hash':r['source_sha256']='0'*64
+    elif fault=='capture_late':r['capture_ms']=m.END
+    Path(cfg['publisher_receipt_path']).write_text(json.dumps(r))
+    assert m.run_once(cfg,now_ms=m.END)['reason']==reason

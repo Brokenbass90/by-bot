@@ -85,6 +85,8 @@ def inspect(cfg):
     if receipt.get('producer_sha256')!=cfg['producer_sha256']:raise ValueError('PRODUCER_SOURCE_DRIFT')
     completed=receipt.get('completed_ms')
     if type(completed) is not int or not START<=completed<END:raise ValueError('PUBLICATION_OUTSIDE_WINDOW')
+    capture=receipt.get('capture_ms')
+    if type(capture) is not int or not START<=capture<=completed:raise ValueError('CAPTURE_OUTSIDE_WINDOW')
     raw_hash=sha(snapshot_raw)
     if receipt.get('snapshot_sha256')!=raw_hash:raise ValueError('SNAPSHOT_PIN_CONFLICT')
     try:
@@ -93,13 +95,22 @@ def inspect(cfg):
         ms=int(stamp.timestamp()*1000)
     except (KeyError,ValueError,TypeError):raise ValueError('SNAPSHOT_OUTSIDE_WINDOW') from None
     if not START<=ms<=completed<END:raise ValueError('SNAPSHOT_OUTSIDE_WINDOW')
+    if not ms<=capture<ms+1000 or s.get('capture_ms')!=capture:raise ValueError('CAPTURE_OUTSIDE_WINDOW')
+    raw_dir=Path(cfg['source_raw_dir'])
+    expected=f'popytki/tickers_{capture}.raw'
+    if (raw_dir!=p.parent/'popytki' or receipt.get('source_raw')!=expected):raise ValueError('RAW_SOURCE_PATH_CONFLICT')
+    raw_path=path(str(raw_dir/f'tickers_{capture}.raw'))
+    if not raw_path.exists():raise ValueError('TICKER_RAW_MISSING')
+    source_hash=sha(stable_bytes(raw_path))
+    if source_hash!=receipt.get('source_sha256') or source_hash!=s.get('sha256_tickers'):raise ValueError('RAW_SOURCE_PIN_CONFLICT')
     oi=s.get('oi_usd')
     if not isinstance(oi,dict) or not oi or s.get('oi_otsutstvuet'):raise ValueError('SNAPSHOT_OI_UNKNOWN')
     for value in oi.values():
         try:v=float(value)
         except (ValueError,TypeError):raise ValueError('SNAPSHOT_OI_UNKNOWN') from None
         if isinstance(value,bool) or not math.isfinite(v) or v<0:raise ValueError('SNAPSHOT_OI_UNKNOWN')
-    return dict(snapshot_sha256=raw_hash,publisher_receipt_sha256=sha(receipt_raw),snapshot_ms=ms,completed_ms=completed)
+    return dict(snapshot_sha256=raw_hash,publisher_receipt_sha256=sha(receipt_raw),
+        source_sha256=source_hash,source_raw=expected,capture_ms=capture,snapshot_ms=ms,completed_ms=completed)
 
 
 def existing_receipt(out):
