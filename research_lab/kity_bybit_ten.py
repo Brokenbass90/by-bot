@@ -48,31 +48,59 @@ def atomno(f, tekst):
     with open(tmp, "w") as h: h.write(tekst); h.flush(); os.fsync(h.fileno())
     os.replace(tmp, f)
 
+def opublikovat(f, tekst):
+    """POPRAVKA_A1.1: публикация без перезаписи — эксклюзивный уникальный temp, fsync файла, os.link (падает, если цель есть),
+    fsync каталога. Возвращает False, если файл уже опубликован."""
+    f.parent.mkdir(parents=True, exist_ok=True)
+    tmp = f.with_name(f".{f.name}.{os.getpid()}.{time.time_ns()}.tmp")
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+    try:
+        os.write(fd, tekst.encode()); os.fsync(fd)
+    finally: os.close(fd)
+    try: os.link(tmp, f); ok = True
+    except FileExistsError: ok = False
+    finally: os.unlink(tmp)
+    dfd = os.open(f.parent, os.O_RDONLY)
+    try: os.fsync(dfd)
+    finally: os.close(dfd)
+    return ok
+
+def konec_okna(d_1): return dt.datetime(d_1.year, d_1.month, d_1.day, tzinfo=dt.timezone.utc) + dt.timedelta(days=1)   # 00:00 UTC дня d
+
+POSL_NEIZV = {}                                       # d_1 → список монет без валидного OI в последней попытке окна
+
 def snimok(d_1):
-    f = D / (d_1 + dt.timedelta(days=1)).isoformat() / "snimok_2355.json"
-    if f.exists(): return
+    papka = D / (d_1 + dt.timedelta(days=1)).isoformat(); f = papka / "snimok_2355.json"
+    if f.exists() or (papka / "snimok_PROPUSHCHEN.json").exists(): return
     r, b = get("/v5/market/tickers", category="linear"); instr = instrumenty()
-    if not r or not r.get("list"):                                   # POPRAVKA_A1: нет ответа — без нулей; повтор в окне
+    if not r or not r.get("list"):
         log("снимок: тикеры не получены, повтор в окне", d_1); return
-    oi, net_oi = {}, []
+    oi, neizv = {}, []
     for t in r["list"]:
         if t["symbol"] not in instr: continue
-        v = t.get("openInterestValue")
-        try: v = float(v)
+        try: v = float(t.get("openInterestValue"))
         except (TypeError, ValueError): v = None
-        if v is None or v != v: net_oi.append(t["symbol"])            # POPRAVKA_A1: отсутствующий OI ≠ 0 — исключается и перечисляется
+        if v is None or v != v or v < 0: neizv.append(t["symbol"])
         else: oi[t["symbol"]] = v
-    atomno(f, json.dumps(dict(vremya=utc().isoformat(timespec="seconds"), sha256_tickers=sha(b), oi_usd=oi, instrumenty=instr,
-                              oi_otsutstvuet=sorted(net_oi)), sort_keys=True))
-    log("снимок", d_1, "монет", len(oi), "без OI", len(net_oi))
+    if neizv:                                          # POPRAVKA_A1.1: невалидный OI → весь захват SOURCE_UNKNOWN (монеты не удаляются)
+        POSL_NEIZV[d_1] = sorted(neizv); log("снимок: OI невалиден у", len(neizv), "— SOURCE_UNKNOWN, повтор в окне", d_1); return
+    if utc() >= konec_okna(d_1):                       # POPRAVKA_A1.1: позднее завершение → BLOCKED (снимок не публикуется)
+        log("снимок завершён после окна — не публикуется", d_1); return
+    ok = opublikovat(f, json.dumps(dict(vremya=utc().isoformat(timespec="seconds"), sha256_tickers=sha(b), oi_usd=oi, instrumenty=instr),
+                                   sort_keys=True))
+    log("снимок", d_1, "монет", len(oi), "опубликован" if ok else "уже был")
 
 def propusk_okna(d_1):
-    """POPRAVKA_A1: окно 23:50–23:59 UTC d−1 прошло, снимка нет → явная квитанция BLOCKED_DATA (неделя не выдумывается)."""
+    """POPRAVKA_A1.1: окно 23:50–23:59 UTC d−1 закрылось без опубликованного снимка → квитанция BLOCKED_DATA (без перезаписи);
+    причина SOURCE_UNKNOWN, если последняя попытка видела невалидный OI."""
     papka = D / (d_1 + dt.timedelta(days=1)).isoformat(); f = papka / "snimok_2355.json"; q = papka / "snimok_PROPUSHCHEN.json"
-    if f.exists() or q.exists(): return
-    atomno(q, json.dumps(dict(status="BLOCKED_DATA", prichina="окно снимка 23:50–23:59 UTC пропущено (процесс/сеть)",
-                              d_1=d_1.isoformat(), zapisano=utc().isoformat(timespec="seconds")), ensure_ascii=False))
-    log("ОКНО СНИМКА ПРОПУЩЕНО", d_1, "→ BLOCKED_DATA")
+    if f.exists() or q.exists() or utc() < konec_okna(d_1): return
+    neizv = POSL_NEIZV.get(d_1)
+    opublikovat(q, json.dumps(dict(status="BLOCKED_DATA", prichina="SOURCE_UNKNOWN: невалидный OI" if neizv else
+                                   "окно снимка 23:50–23:59 UTC закрыто без снимка (процесс/сеть/позднее завершение)",
+                                   oi_neizvesten=neizv or [], d_1=d_1.isoformat(), zapisano=utc().isoformat(timespec="seconds")),
+                              ensure_ascii=False))
+    log("ОКНО СНИМКА ЗАКРЫТО БЕЗ СНИМКА", d_1, "→ BLOCKED_DATA")
 
 def svechi(sym, do_ms, limit=75):
     r, _ = get("/v5/market/kline", category="linear", symbol=sym, interval="D", end=do_ms - 1, limit=limit)
