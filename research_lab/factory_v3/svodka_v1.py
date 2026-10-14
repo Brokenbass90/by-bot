@@ -40,11 +40,12 @@ def eta_tenei(prog, segodnya, porog=30):
         dney = None
         try: dney = (segodnya - dt.datetime.fromtimestamp(json.loads(EPOHI[g].read_text())["epoha_ms"] / 1000, dt.timezone.utc).date()).days
         except Exception: pass
-        if dney and dney >= 14 and n >= 3: v_mes, ist = n / dney * 30.4, "наблюдаемая"
-        elif g in CHASTOTA_PRIOR: v_mes, ist = CHASTOTA_PRIOR[g][0], "априорная"
+        if dney and dney >= 14 and n >= 10: v_mes, ist = n / dney * 30.4, "своя частота, уверенность средняя"
+        elif dney and dney >= 14 and n >= 3: v_mes, ist = n / dney * 30.4, "своя частота, уверенность низкая"
+        elif g in CHASTOTA_PRIOR: v_mes, ist = CHASTOTA_PRIOR[g][0], f"чужая/историческая частота, уверенность низкая: {CHASTOTA_PRIOR[g][1]}"
         else: continue
         dni = max(0, porog - n) / v_mes * 30.4
-        out[g] = f"{n}/{porog}, ≈ {(segodnya + dt.timedelta(days=round(dni))).isoformat()} ({ist} {v_mes:.1f}/мес)"
+        out[g] = f"{n}/{porog}; ОЦЕНКА (не срок) n=30 ≈ {(segodnya + dt.timedelta(days=round(dni))).strftime('%Y-%m')} — {v_mes:.1f}/мес, {ist}"
     return out
 
 
@@ -68,8 +69,20 @@ def kity():
 
 
 def elder():
-    s = [l for l in _hvost_stroki(D / "yadro_ETS2M.log", 60) if "ishodov" in l]
-    return s[-1].strip()[:160] if s else "нет данных"
+    """Два разных знаменателя — не путать: сырые исходы источника (все сделки ядра, по двигателям) и
+    решения, годные для судьи ETS2M_V2 (когорта: ts ≥ T0, обнаружены ≤ 6 ч; окно 1 = первые 900; закрыто = уже в ядре)."""
+    from collections import Counter
+    try:
+        with open(D / "yadro" / "ETS2M" / "ishody.jsonl") as f:
+            syrye = Counter(json.loads(l).get("dvigatel") for l in f if l.strip())
+    except Exception: syrye = {}
+    try:
+        sys.path.insert(0, str(LAB / "fabrika")); sys.path.insert(0, str(LAB)); import ets2m_v2_kogorta as K, yadro
+        vse, vovr = K.chleny(); hs = K.hs_yadra(); v_yadre = {x["id"] for x in K.jl(K.PAPKA / "vhody.jsonl")}
+        ch = vovr[:K.OKNO]; zakr = sum(yadro.id_vhoda(hs, s_, ts) in v_yadre for s_, ts in ch)
+        sud = f"годных для судьи (окно 1): {len(ch)}/{K.OKNO}, из них закрыто {zakr}; всего решений с T0 {len(vse)} (поздних {len(vse) - len(vovr)})"
+    except Exception as e: sud = f"счётчик когорты недоступен: {e}"
+    return f"{sud}. Сырые исходы источника (все сделки ядра, не знаменатель судьи): {dict(syrye)}"
 
 
 def push_nuzhen():
