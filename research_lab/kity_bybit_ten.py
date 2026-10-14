@@ -96,9 +96,12 @@ def snimok(d_1):
     if (papka / "snimok_CAPTURE_RECEIPT.json").exists() or (papka / "snimok_PROPUSHCHEN.json").exists(): return
     t_cap = utc(); cap_ms = int(t_cap.timestamp() * 1000)                       # A1.2: одна зафиксированная отметка захвата
     r, b = get("/v5/market/tickers", category="linear"); instr = instrumenty()
-    nd = papka / "neudachi"
+    nd = papka / "popytki"                                                       # A1.3: сырые байты КАЖДОЙ попытки — своё неизменяемое имя
+    raw_put = nd / f"tickers_{cap_ms}.raw"
+    if not opublikovat(raw_put, b or b""):
+        log("снимок: сырой файл попытки уже существует — попытка отклонена", d_1); return
     if not r or not r.get("list"):
-        opublikovat(nd / f"tickers_{cap_ms}.raw", b or b""); log("снимок: тикеры не получены, сырой ответ сохранён, повтор", d_1); return
+        log("снимок: тикеры не получены, сырой ответ сохранён, повтор", d_1); return
     oi, neizv = {}, []
     for t in r["list"]:
         if t["symbol"] not in instr: continue
@@ -106,10 +109,11 @@ def snimok(d_1):
         if v is None: neizv.append(t["symbol"])
         else: oi[t["symbol"]] = v
     if neizv:                                          # невалидный OI → весь захват SOURCE_UNKNOWN, монеты не удаляются
-        POSL_NEIZV[d_1] = sorted(neizv); opublikovat(nd / f"tickers_{cap_ms}.raw", b)
+        POSL_NEIZV[d_1] = sorted(neizv)
         log("снимок: OI невалиден у", len(neizv), "— SOURCE_UNKNOWN, сырой ответ сохранён, повтор", d_1); return
     if utc() >= konec_okna(d_1): log("снимок: захват после окна — не публикуется", d_1); return
-    opublikovat(papka / "tickers_raw.json", b)
+    if sha(raw_put.read_bytes()) != sha(b):                                     # A1.3: сырой файл попытки = байты этой попытки, иначе SOURCE_UNKNOWN
+        log("снимок: конфликт сырого файла попытки — SOURCE_UNKNOWN", d_1); return
     telo = json.dumps(dict(vremya=t_cap.isoformat(timespec="seconds"), capture_ms=cap_ms, sha256_tickers=sha(b), oi_usd=oi,
                            instrumenty=instr), sort_keys=True).encode()
     if not opublikovat(f, telo): log("снимок уже существует без квитанции — не потребляется", d_1); return
@@ -118,6 +122,7 @@ def snimok(d_1):
         log("снимок: завершение после окна — квитанции успеха нет (BLOCKED при закрытии окна)", d_1); return
     opublikovat(papka / "snimok_CAPTURE_RECEIPT.json", json.dumps(dict(
         status="CAPTURE_PASS", day=d.isoformat(), producer_sha256=PRODUCER_SHA256, source_sha256=sha(b),
+        source_raw=str(raw_put.relative_to(papka)),
         snapshot_sha256=sha(telo), capture_ms=cap_ms, completed_ms=zav_ms), sort_keys=True))
     log("снимок", d_1, "монет", len(oi), "CAPTURE_PASS")
 
