@@ -63,10 +63,20 @@ def _priznak(imya, D):
             if i >= len(x["ts"]) or x["ts"][i] != t or i < 1 or x["c"][i - 1] <= 0: return None
             return (float(x["c"][i] / x["c"][i - 1] - 1.0), float(a))          # доход и поток ОДНОГО дня d−1
         return f
+    if imya.startswith("glubina_imb"):                     # перекос стакана дня d−1 (dannye_binance_glubina, PREREG_GLUBINA_PEREKOS)
+        pole = imya.split("glubina_")[1]
+        G = D.setdefault("glubina", {})
+        def f(s, vch):
+            if s not in G:
+                fp = LAB / "data" / "binance_glubina" / f"{s}.json"
+                G[s] = json.loads(fp.read_text()) if fp.exists() else {}
+            x = G[s].get(vch)
+            return None if not x else x.get(pole)
+        return f
     raise KeyError(f"признак {imya} не в закрытом словаре")
 
 
-PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie")
+PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie", "glubina_imb1", "glubina_imb2", "glubina_imb5")
 SOSTAVNYE = {"pogloshchenie"}       # значения-пары → остаток z(доход) после проекции на z(поток) внутри недели
 
 
