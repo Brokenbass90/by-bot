@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 16:08:23.342Cyprus: **ALPACA_PREOPEN_SINGLE_CHECK_BLOCKED_DATA**.
+One approved GET-only observation consumed; automation alpaca-fee-check-14-16-00
+PAUSED, no repeat/poll/date transfer. Read ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md
+latest dated section and evidence/alpaca_live_readiness_20261014/
+preopen_1300_terminal_receipt.json. Actual Oct13 CAT-.01 + REG-.01 now posted;
+PAPER cash99405.75 (morning99405.77), pending/accrued0. This is a NEW source
+contract blocker, not still missing fees: frozen checker recognizes CAT/SEC,
+returns POSTED_FEE_UNCLASSIFIED_ACTIVITY on REG. No inferred REG=SEC, cost
+finality/PAPER_PASS/dossier/intent. Next concrete action: authoritative REG
+semantics + reviewed separately versioned compatibility fix/replay of this
+retained capture; no broker repoll/new PAPER/installed-kit mutation from this scope.
+Installed37 package0a3fce3b…87f20 and kitc0b044a9…8be58 match; original
+profiles/writers/cron/units/account lock/custody unchanged, new manager disabled.
+LIVE flat/orders0/HALT/cash496.12; PAPER ownedNETabsent/orders0/legacy5 retained.
+PIDs Bybit1648585/web1623208/ATT11584802 unchanged/NRestarts0.
+Raw private capturebe14d7dd…234; exclusive separate evidence artifacts outside
+sealed kit, spent morning singleton intact. Broker/operational writes0, no
+permit/reservation/order/activation/GO/HALTclear. Exact separate human money
+GO remains required. Claude/ATT1/KITY/source collectors untouched.
+
 October14 11:42:49Cyprus: **LIQUIDATION_V2_1_SOURCE_RUNNING / RESEARCH_GATE_PENDING**.
 Prereg3f73a250…21a63 verified at published researchca8a9e8 requires BASE events
 across≥15 symbols; original12 cannot meet this. Source-only GO compatibility

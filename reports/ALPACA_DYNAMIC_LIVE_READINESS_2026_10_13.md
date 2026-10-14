@@ -545,3 +545,29 @@ profit proof. Actual first-entry ticker/quantity/price/dossier/GO are not yet
 available. Earliest next calendar openOct14 remains conditional on the existing
 closures, fresh gates and separate owner approval. No promised execution date,
 extra PAPER day, Brain rescue or KITY/ATT1/Claude change.
+
+
+## October14 single pre-open check — terminal BLOCKED_DATA
+
+At 13:08:23.342 UTC / 16:08 Cyprus the one approved observation found a
+material change: October13 CAT -$0.01 and **REG -$0.01** are actually posted.
+PAPER cash is $99,405.75, down $0.02 from the sealed morning observation.
+The old assertion that both exit-day fee rows are absent is now historical.
+
+The unchanged checker returns `POSTED_FEE_UNCLASSIFIED_ACTIVITY`: it only
+classifies CAT/SEC description prefixes, while the broker supplied REG.
+Do not silently alias REG to SEC or claim PAPER_EXECUTION_PASS. The retained
+raw capture supports a bounded source-semantics review and separately
+versioned compatibility repair/replay; it does not authorize another query.
+
+All 37 installed app pins, the sealed static kit and the original authority
+inventory match. LIVE remains flat, open orders=0, cash=$496.12 and HALTED;
+new manager remains disabled. The owned PAPER NET position is absent, no
+PAPER open orders, five unrelated PAPER holdings retained. Production
+Bybit/web/ATT1 PIDs and NRestarts match their pinned baseline.
+
+No dossier/intent/permit/reservation/order/activation or operational state
+write. Three separate evidence-only files were created outside the sealed
+kit; morning artifacts were untouched. This heartbeat is PAUSED and spent.
+No polling, retry, next-day transfer or new PAPER cycle. See
+[evidence receipt](evidence/alpaca_live_readiness_20261014/preopen_1300_terminal_receipt.json).

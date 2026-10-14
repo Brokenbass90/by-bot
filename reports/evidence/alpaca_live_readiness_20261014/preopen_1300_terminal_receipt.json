@@ -1,0 +1,106 @@
+{
+  "schema": "ALPACA_SINGLE_PREOPEN_FEE_CHECK_TERMINAL_V1",
+  "automation_id": "alpaca-fee-check-14-16-00",
+  "status": "BLOCKED_DATA",
+  "reason": "POSTED_FEE_UNCLASSIFIED_ACTIVITY",
+  "observed_ms": 1791983303342,
+  "observed_utc": "2026-10-14T13:08:23.342000+00:00",
+  "observed_cyprus": "2026-10-14 16:08:23.342 +03:00",
+  "actual_change": "Oct13 CAT and REG fee rows are now posted; missing-fee claim no longer current. Strict frozen checker does not classify REG as SEC.",
+  "paper": {
+    "cash": "99405.75",
+    "cash_change_from_morning": "-0.02",
+    "pending_reg_taf_fees": "0",
+    "accrued_fees": "0",
+    "owned_NET_position_absent": true,
+    "open_orders": 0,
+    "legacy_positions_retained": 5,
+    "posted_fees": [
+      {
+        "activity_type": "FEE",
+        "date": "2026-10-12",
+        "net_amount": "-0.01",
+        "description_prefix": "CAT"
+      },
+      {
+        "activity_type": "FEE",
+        "date": "2026-10-13",
+        "net_amount": "-0.01",
+        "description_prefix": "CAT"
+      },
+      {
+        "activity_type": "FEE",
+        "date": "2026-10-13",
+        "net_amount": "-0.01",
+        "description_prefix": "REG"
+      }
+    ],
+    "cost_finality": "NOT_VALIDATED_UNCLASSIFIED_REG_ACTIVITY",
+    "lifecycle_newly_passed": false
+  },
+  "live": {
+    "cash": "496.12",
+    "positions": 0,
+    "open_orders": 0,
+    "halted": true,
+    "new_manager": "DESIGNATED_DISABLED; original authority inventory unchanged",
+    "orders_allowed": false
+  },
+  "integrity": {
+    "package_sha256": "0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20",
+    "app_files": 37,
+    "app_mismatches": [],
+    "kit_sha256": "c0b044a90469fd41b90531e799f55c6746c355fdde0a5b8cee07c89fb2a8be58",
+    "authority_inventory_unchanged": true,
+    "paper_app_files": 81,
+    "paper_app_mismatches": [],
+    "production_services": {
+      "bybot.service": {
+        "Restart": "on-failure",
+        "MainPID": "1648585",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      },
+      "trading-journal-web.service": {
+        "Restart": "always",
+        "MainPID": "1623208",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      },
+      "att1-lifecycle-zero-risk-v2.service": {
+        "Restart": "on-failure",
+        "MainPID": "1584802",
+        "NRestarts": "0",
+        "ActiveState": "active"
+      }
+    }
+  },
+  "private_capture_sha256": "be14d7ddcbe224903c31105f84adecaac385a900e3eec0d31abc078738c20234",
+  "get_query_sha256": "3470a46cf68d2edb5a58b47c2f55ec9c8384d15c20563ba1cb66e8d7d53bcdff",
+  "orchestrator_sha256": "f88414410d7e8399e6ee79bc8d7514eacaa85b358869956212e413f87793aa41",
+  "observation_query_sha256": "a485aa88290c1d0f0c5fb1ecf0ced6ecfa8cff2942bb98e2c0cb515fa34b1db5",
+  "remote_evidence_file_pins": {
+    "closure/terminal.json": "ad75e1eb7aaa0543e773fa9f1ffc288d81aec3fdca090706a2b36b7c92d072bc",
+    "observation-manifest.json": "9a19825b54ba6028bfe35d7bcfc5328b46a4408d6757231ade0ae7fc8d5f49dc",
+    "terminal-capture.json": "e39d353769fa61d024564eac7810670bb7eb43c909164e90e81abd2e1e4ade5d"
+  },
+  "morning_capture_preserved": true,
+  "spent_morning_helper_executed": false,
+  "installed_kit_mutated": false,
+  "broker_writes": 0,
+  "operational_remote_writes": 0,
+  "evidence_only_remote_files_created": 3,
+  "service_activations": 0,
+  "lock_acquisitions": 0,
+  "observations": 1,
+  "polling": false,
+  "retry": false,
+  "live_dossier_created": false,
+  "owner_permit_created": false,
+  "reservation_created": false,
+  "next_action": "Clarify authoritative REG activity semantics; review a separately versioned compatibility fix and replay this retained capture. Do not assume REG equals SEC. No additional broker observation, reinstallation or money action authorized by this heartbeat.",
+  "automation_status": "PAUSED",
+  "repeat_or_date_transfer": false,
+  "separate_exact_human_money_go_required": true,
+  "receipt_sha256": "5807f25f6d16a5fe5fa7acdd2446e6ad4b96099b6c92eff463c84694ecbf1a5a"
+}
