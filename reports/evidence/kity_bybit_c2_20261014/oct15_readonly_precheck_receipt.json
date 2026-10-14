@@ -1,0 +1,92 @@
+{
+  "schema": "KITY_OCT15_PROSPECTIVE_READONLY_PRECHECK_V1",
+  "status": "KITY_OCT15_CAPTURE_BLOCKED",
+  "observed_utc": "2026-10-14T16:56:14.105545+00:00",
+  "observed_cyprus": "2026-10-14T19:56:14.105545+03:00",
+  "research_ref": "cb47f0eb57e7a64ea5fcb948d7ae12d617c2abe1",
+  "frozen_sources_match": {
+    "research_lab/KITY_BYBIT_CANARY_DOSIE_KARKAS_2026_10_12.md": true,
+    "research_lab/KITY_BYBIT_CANARY_USLOVIYA_2026_10_11.md": true,
+    "research_lab/PREREG_KITY_BYBIT_TEN_2026_10_11.md": true,
+    "research_lab/kity_bybit_paritet.py": true,
+    "research_lab/kity_bybit_ten.py": true
+  },
+  "independent_sources_match": {
+    "research_lab/kity_bybit_c2.py": true,
+    "scripts/kity_bybit_c2.py": true,
+    "tests/test_kity_bybit_c2.py": true
+  },
+  "runtime": {
+    "python_pid": 14408,
+    "python_count": 1,
+    "parent_screen_pid": 14364,
+    "caffeinate_pid": 14443,
+    "watchdog_pid": 24018,
+    "lock_held": true,
+    "lock_probe": "read-only FD; nonblocking flock refused as held; no file write",
+    "last_heartbeat_utc": "2026-10-14T16:30:14+00:00",
+    "sleep_policy": "AC sleep0 + actual caffeinate assertion; reboot survival not proven"
+  },
+  "schedule": {
+    "window_utc": "2026-10-14 23:50:00 <= t < 2026-10-15 00:00:00",
+    "window_cyprus": "2026-10-15 02:50:00 <= t < 03:00:00",
+    "mechanism": "existing --cikl UTC loop, 60s cadence; not cron",
+    "edge_predicates_verified": true,
+    "actual_window_not_reached": true
+  },
+  "storage": {
+    "free_bytes": 72684797952,
+    "own_dirs_empty": 8,
+    "own_dir_modes": "0700",
+    "external_snapshot_present": false,
+    "external_directory_present": false,
+    "own_raw_collector": "NOT_STARTED per original storage contract; no second collector deployed"
+  },
+  "c2": {
+    "available": true,
+    "imports_claude_shadow": false,
+    "reads_outcomes_before_reconstruction": false,
+    "create_exclusive_output": true,
+    "stale_or_wrong_day_snapshot_rejected": true,
+    "targeted_tests_passed": 23,
+    "actual_reconstruction_run": false,
+    "actual_comparison_run": false
+  },
+  "blockers": [
+    {
+      "id": "B1",
+      "reason": "SNAPSHOT_WRITE_NOT_CREATE_EXCLUSIVE",
+      "source": "research_lab/kity_bybit_ten.py:45-51",
+      "detail": "exists() -> Path.write_text(), no O_EXCL/fsync/atomic completed publication; writer lock is held but interrupted write can leave an existing incomplete snapshot."
+    },
+    {
+      "id": "B2",
+      "reason": "MISSING_OI_COERCED_TO_SYNTHETIC_ZERO",
+      "source": "research_lab/kity_bybit_ten.py:49",
+      "detail": "Memory-only frozen-function counterexample: ticker without openInterestValue is published as oi_usd=0.0, no UNKNOWN/BLOCKED status."
+    },
+    {
+      "id": "B3",
+      "reason": "MISSED_WINDOW_TERMINAL_NOT_IMPLEMENTED",
+      "source": "research_lab/kity_bybit_ten.py:139-165",
+      "detail": "Memory-only midnight fixture calls no snapshot and returns None; main logs heartbeat/errors but writes no date-bound missed-window BLOCKED receipt. Watchdog source has no KITY snapshot-deadline check; expected launchd jobs not loaded."
+    }
+  ],
+  "checks_not_done": [
+    "No actual snapshot/candles/archives before their real availability",
+    "No public endpoint pre-poll/download and no PnL/judge",
+    "No source/process/config fixes under read-only scope"
+  ],
+  "next_action": "Owner/Claude-reviewed narrow source-only hardening: completed create-exclusive snapshot publication; missing OI stays UNKNOWN/BLOCKED; explicit date-bound missed/late-window receipt. Preserve ranking/universe/hold/costs and old hashes; do not silently patch/restart the frozen running shadow.",
+  "mutations": {
+    "strategy_code": 0,
+    "configuration": 0,
+    "process_start_restart_stop": 0,
+    "claude_checkout_writes": 0,
+    "broker_requests": 0,
+    "public_network_requests": 0,
+    "orders": 0,
+    "actual_oct15_results_created": 0,
+    "alpaca_changes": 0
+  }
+}

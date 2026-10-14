@@ -1,5 +1,24 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 evening KITY prospective precheck: **KITY_OCT15_CAPTURE_BLOCKED**.
+Read KITY_OCT15_PROSPECTIVE_PRECHECK_2026_10_14.md and its sanitized receipt.
+Research5pins/independentC2 3pins unchanged; one actualPython14408, inheritedlock
+HELD, caffeinate/ACsleep0, latest16:30:14UTC heartbeat. UTC60sloop correctly
+selects Oct14 23:50–23:59 = Oct15 02:50–02:59Cyprus; own8rawdirs empty0700,
+67.7GiB free; future external snapshot not present;23 C2 testsPASS, no actualrun.
+Three requested source guarantees FAIL: snapshotexists→write_text is not
+create-exclusive/atomic/fsynced; missingopenInterestValue becomes synthetic0;
+no persisted date-boundBLOCKED on missed/late window. Memory-only frozen-function
+counterexamples confirm latter2; no future result/source created. C2 rejects
+outside-window snapshot but cannot distinguish normalized missingOI from real0.
+Genericstorozh checks logs/locks, not this deadline; expectedresearch-station/
+com.bot.teni launchd jobs not loaded, no reboot survival promise. Process stays
+running; no strategy/config/prereg/source/deploy/restart or Claude edit/message.
+Next concrete action is reviewed source-only publication/UNKNOWN/deadline
+hardening, not PnL/research/rule changes. Read-only scope ended at exactblockers.
+Alpaca STATIC_PREFLIGHT_PASS/freeze/HALT below remains unchanged; no moneyGO.
+
+
 October14 FINAL ALPACA LIVE PREOPEN HARDENING completed: **STATIC_PREFLIGHT_PASS**.
 Read ALPACA_OCT15_FINAL_LIVE_PREFLIGHT.md and evidence/alpaca_oct15_final_preflight_20261014/.
 Actual original37 package0a3fce3b…87f20 and fee kit preserved. Narrow observation-clock
