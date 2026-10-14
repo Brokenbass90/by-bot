@@ -1,0 +1,52 @@
+{
+ "prereg": "PREREG_ATT1_KONTEKST_2026_10_14.md",
+ "vhod_sha256": "20785fdf00678afb944115f6002547cbb73a77b9cb54dc488072de36c2ff2921",
+ "sdelok_vsego": 4603,
+ "vne_epoh": 0,
+ "nichyi_isklyucheno": 996,
+ "priznaki": [
+  "f_vozrast_linii",
+  "f_probitiy",
+  "f_entrydist",
+  "f_r2",
+  "f_vozrast_pivota",
+  "f_naklon",
+  "f_body",
+  "f_atrpct",
+  "f_trend24",
+  "f_trend72",
+  "f_trend168",
+  "f_rezhim_monety",
+  "f_btc_rezhim",
+  "f_btc_trend72"
+ ],
+ "epohi": {
+  "2023": {
+   "n_test": 979,
+   "n_train": 2597,
+   "dolya_y1_test": 0.6599,
+   "auc": 0.4917,
+   "p95_perestanovok": 0.5375,
+   "ok": false
+  },
+  "2024": {
+   "n_test": 1226,
+   "n_train": 2286,
+   "dolya_y1_test": 0.668,
+   "auc": 0.4803,
+   "p95_perestanovok": 0.5207,
+   "ok": false
+  },
+  "2025": {
+   "n_test": 1402,
+   "n_train": 2150,
+   "dolya_y1_test": 0.6427,
+   "auc": 0.4713,
+   "p95_perestanovok": 0.5528,
+   "ok": false
+  }
+ },
+ "verdikt": "FAIL",
+ "znachenie": "контекст не даёт устойчивой информации; семья ATT1 закрывается окончательно (до новых внешних данных/механизма)",
+ "kogda": "2026-10-14T05:57:59+00:00"
+}
