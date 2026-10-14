@@ -1,0 +1,39 @@
+{
+  "created_ms": 1791964412864,
+  "duplicate_policy": "flag_candidates_retain_all_no_unique_exchange_id",
+  "endpoint": "wss://stream.bybit.com/v5/public/linear",
+  "epoch_id": "ec8456549b574850a44cb051b68c08ba",
+  "full_exchange_coverage": "UNKNOWN_NO_SEQUENCE_OR_BACKFILL",
+  "manifest_sha256": "a9bcb7a12973a57e451557bcdc8d9297830e5e6c1a54098a6b5fd98d6d59ff5e",
+  "max_capture_bytes": 4294967296,
+  "min_free_bytes": 1073741824,
+  "normalized_schema": "BYBIT_ALL_LIQUIDATION_SOURCE_V2",
+  "official_protocol": "https://bybit-exchange.github.io/docs/v5/websocket/public/all-liquidation",
+  "orders_allowed": false,
+  "price_basis": "bankruptcy_not_execution_price",
+  "private_api_allowed": false,
+  "schema": "BYBIT_LIQUIDATION_CAPTURE_MANIFEST_V2",
+  "side_semantics": "Buy=liquidated_long;Sell=liquidated_short",
+  "source_files": {
+    "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+    "bot/bybit_liquidation_collector_v2.py": "01ffe19714a98014417ba37ba62c3268e0d83bc329826b9a898ccd7666432129",
+    "bot/bybit_liquidation_source_v2.py": "f439e45e5ca123325bacb4a08709f84d58c7e555e10ffbd951bbde4296494223",
+    "deploy/bybit-liquidation-source-v2.service": "f719e825f1b01162bae7b24c589cd22d81299923ffefa7213149c5349c5e45d7",
+    "scripts/collect_bybit_liquidations_v2.py": "3e51315385b67455a801d8f02baba845200d50dad8025cbd3e6a36c401143603"
+  },
+  "strategy_authority": false,
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "SUIUSDT",
+    "DOGEUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "ADAUSDT",
+    "BNBUSDT",
+    "AVAXUSDT",
+    "XRPUSDT",
+    "NEARUSDT"
+  ]
+}

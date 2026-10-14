@@ -1,0 +1,32 @@
+{
+  "file_sha256": {
+    "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+    "bot/bybit_liquidation_collector_v2.py": "01ffe19714a98014417ba37ba62c3268e0d83bc329826b9a898ccd7666432129",
+    "bot/bybit_liquidation_source_v2.py": "f439e45e5ca123325bacb4a08709f84d58c7e555e10ffbd951bbde4296494223",
+    "deploy/bybit-liquidation-source-v2.service": "f719e825f1b01162bae7b24c589cd22d81299923ffefa7213149c5349c5e45d7",
+    "scripts/collect_bybit_liquidations_v2.py": "3e51315385b67455a801d8f02baba845200d50dad8025cbd3e6a36c401143603",
+    "tests/test_bybit_liquidation_collector_v2.py": "171205c1ec65fd48003aa3bbf60819a5a1c3ba1265c1bc78d7f67f0c402b7b53",
+    "tests/test_collect_bybit_liquidations_v2.py": "96624c6ab793df95ad53f84dc51d9d07d536c1f229f23f2ccb56d6e07d22cffd"
+  },
+  "full_suite_rerun": false,
+  "independent_external_review": "NOT_PERFORMED; previous quota restriction preserved; root review only",
+  "install_manifest_sha256": "72327da774bfb8866d0b36ae55fa9a4e635dccb432928f95fb1d4b2c02b9b09a",
+  "installer_sha256": "6d1172bda41e6743799eddfa7de99c617c7c1c99e2bb4b68e02fe316d3216654",
+  "judge_runs": 0,
+  "local_targeted_pass": 48,
+  "old_v1_source_sha256": "1255e3444690a27864828cd7ac2d996e6ba3f6686fdddc9bcd2a1cd9a89e6836",
+  "old_v2_normalizer_sha256": "f439e45e5ca123325bacb4a08709f84d58c7e555e10ffbd951bbde4296494223",
+  "orders_allowed": false,
+  "owner_scope": "Direct GO on implementation and launch source/data V2 only",
+  "receipt_sha256": "ff8abc596ad956331122c07f6a25ce82ecdbc0befddf5a5858316c6afcd8dd33",
+  "schema": "BYBIT_LIQUIDATION_V2_PACKAGE_RECEIPT_V1",
+  "source_files": {
+    "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+    "bot/bybit_liquidation_collector_v2.py": "01ffe19714a98014417ba37ba62c3268e0d83bc329826b9a898ccd7666432129",
+    "bot/bybit_liquidation_source_v2.py": "f439e45e5ca123325bacb4a08709f84d58c7e555e10ffbd951bbde4296494223",
+    "deploy/bybit-liquidation-source-v2.service": "f719e825f1b01162bae7b24c589cd22d81299923ffefa7213149c5349c5e45d7",
+    "scripts/collect_bybit_liquidations_v2.py": "3e51315385b67455a801d8f02baba845200d50dad8025cbd3e6a36c401143603"
+  },
+  "strategy_runs": 0,
+  "vps_new_collector_targeted_pass": 34
+}

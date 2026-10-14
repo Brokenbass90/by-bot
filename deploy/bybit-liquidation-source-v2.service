@@ -1,0 +1,41 @@
+[Unit]
+Description=Bybit public liquidation source V2 (no strategy or money authority)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=root
+WorkingDirectory=/opt/bybot-research/liquidation-source-v2-20261014/app
+ExecStart=/root/by-bot/.venv/bin/python -B scripts/collect_bybit_liquidations_v2.py --root /opt/bybot-research/liquidation-source-v2-20261014/runtime
+Environment=PYTHONNOUSERSITE=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+TimeoutStartSec=600
+TimeoutStopSec=20
+WatchdogSec=45
+Restart=on-failure
+RestartSec=10
+RestartPreventExitStatus=73 78
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+InaccessiblePaths=-/root/.ssh -/root/by-bot/.env -/root/by-bot/configs -/root/by-bot/runtime
+ReadWritePaths=/opt/bybot-research/liquidation-source-v2-20261014/runtime
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=192M
+CPUQuota=20%
+Nice=10
+IOSchedulingClass=idle
+TasksMax=32
+LimitNOFILE=64
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

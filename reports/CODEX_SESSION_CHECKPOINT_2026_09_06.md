@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 10:56:50Cyprus: **LIQUIDATION_V2_RUNNING_WAIT_FIRST_EVENT**.
+Direct human GO authorizes source/data implementation and launch only. Read
+BYBIT_LIQUIDATION_COLLECTOR_V2_2026_10_14.md and its PACKAGE/SOURCE_MANIFEST/
+DEPLOYMENT receipts. Separate /opt/bybot-research/liquidation-source-v2-20261014,
+one enabled public-only servicePID2094234/NRestarts0; subscribe/publicpong/
+45s watchdog actual. Independent readback196.251s since ACK:10protocol frames,
+0 liquidation events. Raw/hash-chain integrity PASS; actual event normalization
+WAIT_FIRST_EVENT; full exchange coverageUNKNOWN/no sequence/backfill. Never
+turn quiet or observed/raw count into completeness/independent sample evidence.
+Source manifest a9bcb7a1…9ff5e/epoch ec8456549b574850a44cb051b68c08ba; twelve
+major source symbols, immutable V2 separate from V1. Raw+normalized events in
+one fsynced chained record, explicit duplicate candidates/gaps/timestamp/schema
+QA, receive availability and bankruptcy price basis.4GiB capture/min1GiBfree
+fail closed without auto deletion/expansion. Same-epoch restart checks existing
+chains; corrupt/partial/source drift explicitly BLOCKED, never silent repair.
+48local/34VPS targetedPASS; actual duplicate-writer probe73/no network; unit/pin/
+watchdog readback. Root review only/full suite not rerun/no quota replacement.
+All37 Alpaca app pins/HALT/cron preserved; production Bybit1648585/web1623208/
+ATT11584802/V1492740 unchanged/NRestarts0. V1script/unit/prefix/inode intact;
+its existing append-only service remains running, no rewritten/rejudged evidence.
+No broker query/write, money authority, Claude change/message, strategy/judge or
+LIQ_OTSKOK_4H_V2 run. Separate future prereg/source-count gate/GO required.
+Alpaca16:00Cyprus one check below remains P0; broker truth still dated08:34.
+KITY tonight's first source window/caps/frozen policy unchanged.
+
 October14 09:40+Cyprus: **SINGLE_PREOPEN_FEE_CHECK_SCHEDULED_NOT_OBSERVED**.
 Direct owner reply "Да, один чек в 16:00" authorizes one new read-only check
 today16:00Asia/Nicosia/13:00UTC. App heartbeat alpaca-fee-check-14-16-00 ACTIVE,

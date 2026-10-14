@@ -1,0 +1,146 @@
+{
+  "alpaca_37_files_cron_halt_preserved": true,
+  "base": "/opt/bybot-research/liquidation-source-v2-20261014",
+  "broker_queries": 0,
+  "broker_writes": 0,
+  "capture_prefixes": {
+    "runs/1791964412864-974c8d685f9b4741be171b45c9308f37/frames.jsonl": {
+      "prefix_sha256": "5941d3710630e17b56d1e4f0e95ae6c194c8ee38afc4df900f7b3f83641242bc",
+      "tip": "29cc30c54c786b2a60e673aee73ec6012d75894296e76e255773f0c0a5efffa4",
+      "validated_bytes": 8711
+    }
+  },
+  "claude_state_writes": 0,
+  "deployment_capture_sha256": "3ee9b785d322f832c442a66dea449bc99c7e88557cdd1d824a06bc7675b61b64",
+  "disk_stop_bounds": {
+    "max_capture_bytes": 4294967296,
+    "min_free_bytes": 1073741824
+  },
+  "epoch_id": "ec8456549b574850a44cb051b68c08ba",
+  "first_event": null,
+  "full_exchange_coverage": "UNKNOWN_NO_SEQUENCE_OR_BACKFILL",
+  "health": {
+    "as_of_ms": 1791964607242,
+    "capture_bytes": 8711,
+    "capture_run_id": "1791964412864-974c8d685f9b4741be171b45c9308f37",
+    "capture_tip_sha256": "29cc30c54c786b2a60e673aee73ec6012d75894296e76e255773f0c0a5efffa4",
+    "counts": {
+      "CONNECTED": 1,
+      "FRAME": 10,
+      "PROCESS_START": 1
+    },
+    "disk_free_bytes": 38344855552,
+    "epoch_id": "ec8456549b574850a44cb051b68c08ba",
+    "frame_count": 10,
+    "full_exchange_coverage": "UNKNOWN_NO_SEQUENCE_OR_BACKFILL",
+    "heartbeat_sha256": "2380d697a22246759824e43793e4acadf46fc0fb16118f513b204c6bca34af2d",
+    "last_event_ms": null,
+    "last_pong_ms": 1791964597062,
+    "last_receive_ms": 1791964597062,
+    "observed_event_count": 0,
+    "orders_allowed": false,
+    "pid": 2094234,
+    "private_api_allowed": false,
+    "qa_counts": {},
+    "qa_status": "OBSERVATIONAL_PASS",
+    "restart_gap_count": 0,
+    "schema": "BYBIT_LIQUIDATION_COLLECTOR_HEALTH_V2",
+    "source_manifest_sha256": "a9bcb7a12973a57e451557bcdc8d9297830e5e6c1a54098a6b5fd98d6d59ff5e",
+    "status": "CONNECTED_QUIET",
+    "strategy_authority": false,
+    "subscription_confirmed": true,
+    "symbol_event_counts": {},
+    "symbols": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "SUIUSDT",
+      "DOGEUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "ADAUSDT",
+      "BNBUSDT",
+      "AVAXUSDT",
+      "XRPUSDT",
+      "NEARUSDT"
+    ],
+    "transport_gap_count": 0,
+    "unique_exchange_event_count": null
+  },
+  "independent_capture_sha256": "5f3dc5643b9dbd07864320896925ed9a62fbc28496c550440f51584cc60627b3",
+  "judge_runs": 0,
+  "live_halt_cleared": false,
+  "next_action": "Collect public raw evidence; no strategy/judge until separate prereg/GO/source-count gate. Recheck count when new source evidence exists; quiet is not completeness.",
+  "observed_ms": 1791964610168,
+  "observed_seconds_since_subscription_ack": 196.251,
+  "observed_utc": "2026-10-14T07:56:50.168000+00:00",
+  "old_v1_evidence_reinterpreted": false,
+  "old_v1_existing_service_kept_running": true,
+  "old_v1_script_unit_pid_prefix_inode_preserved": true,
+  "orders_allowed": false,
+  "package_receipt_sha256": "ff8abc596ad956331122c07f6a25ce82ecdbc0befddf5a5858316c6afcd8dd33",
+  "protected_production_services": {
+    "att1-lifecycle-zero-risk-v2.service": {
+      "ActiveState": "active",
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "SubState": "running",
+      "WatchdogTimestampMonotonic": "0",
+      "WatchdogUSec": "0"
+    },
+    "bybit-liquidation-source-v2.service": {
+      "ActiveState": "active",
+      "MainPID": "2094234",
+      "NRestarts": "0",
+      "SubState": "running",
+      "WatchdogTimestampMonotonic": "1259146206922",
+      "WatchdogUSec": "45s"
+    },
+    "bybot.service": {
+      "ActiveState": "active",
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "SubState": "running",
+      "WatchdogTimestampMonotonic": "0",
+      "WatchdogUSec": "0"
+    },
+    "liquidation-collector.service": {
+      "ActiveState": "active",
+      "MainPID": "492740",
+      "NRestarts": "0",
+      "SubState": "running",
+      "WatchdogTimestampMonotonic": "0",
+      "WatchdogUSec": "0"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "active",
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "SubState": "running",
+      "WatchdogTimestampMonotonic": "0",
+      "WatchdogUSec": "0"
+    }
+  },
+  "raw_and_chain_integrity": "PASS",
+  "receipt_sha256": "cf4c337a88892be65169846b8a4553640f3b329c0f72c9558f542e06bccde88a",
+  "schema": "BYBIT_LIQUIDATION_V2_DEPLOYMENT_AND_READBACK_RECEIPT_V1",
+  "side_and_causal_reconstruction": "WAIT_FIRST_EVENT",
+  "single_instance_actual_probe": "SECOND_WRITER_EXIT_73_ALREADY_RUNNING",
+  "source_manifest_sha256": "a9bcb7a12973a57e451557bcdc8d9297830e5e6c1a54098a6b5fd98d6d59ff5e",
+  "source_version": "BYBIT_ALL_LIQUIDATION_SOURCE_V2",
+  "status": "COLLECTOR_RUNNING_WAIT_FIRST_EVENT",
+  "strategy_runs": 0,
+  "subscription_ack_ms": 1791964413917,
+  "unit": "bybit-liquidation-source-v2.service",
+  "unit_state": {
+    "ActiveState": "active",
+    "MainPID": "2094234",
+    "NRestarts": "0",
+    "SubState": "running",
+    "WatchdogTimestampMonotonic": "1259146206922",
+    "WatchdogUSec": "45s"
+  },
+  "validated_event_count": 0,
+  "validated_record_count": 12,
+  "watchdog": "systemd 45s; durable heartbeat before notify; timestamp advanced at independent readback"
+}
