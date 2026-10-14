@@ -67,35 +67,47 @@ def elder():
     O.zapisat(OPP / "ELDER_ETS2M.csv.gz", out); return len(out)
 
 
-def liq_v2(put, prog_dney=14, porog_usd=50_000, dominir=3.0, zapas_ms=120_000):
-    """События PREREG_LIQ_OTSKOK_4H_V2 (BASE). Только лента V2; цены/исходы не читаются."""
-    chas = defaultdict(lambda: defaultdict(lambda: [0.0, 0.0])); pozdnie = 0
+def liq_v2(put, prog_dney=14, porog_usd=50_000, dominir=3.0, zapas_ms=120_000, dyry=(), epoha=None, min_izvestno=0.8):
+    """События PREREG_LIQ_OTSKOK_4H_V2 (BASE) + ПОПРАВКА A1: эпоха, дыры = UNKNOWN (не ноль), дубликаты по canonical sha один раз,
+    опоздание по t_available_ms. Только лента V2; цены/исходы не читаются. dyry = [(начало_мс, конец_мс), ...] из heartbeat Codex."""
+    chas = defaultdict(lambda: defaultdict(lambda: [0.0, 0.0])); qa = dict(pozdnie=0, dubli=0, chuzhaya_epoha=0, bez_chasov=0)
+    vid = set()
     for e in _jl(put):
-        if e.get("schema") != "BYBIT_ALL_LIQUIDATION_SOURCE_V2": continue
-        h = e["ts_ms"] // H * H
-        if e.get("recv_ts_ms") is not None and e["recv_ts_ms"] > h + H + zapas_ms: pozdnie += 1; continue
+        if e.get("schema", "BYBIT_ALL_LIQUIDATION_SOURCE_V2") != "BYBIT_ALL_LIQUIDATION_SOURCE_V2": continue
+        if epoha and e.get("epoch", e.get("epoha")) not in (None, epoha): qa["chuzhaya_epoha"] += 1; continue
+        if e.get("clock_status") == "UNKNOWN": qa["bez_chasov"] += 1; continue
+        k = e.get("raw_item_canonical_sha256")
+        if k:
+            if k in vid: qa["dubli"] += 1; continue
+            vid.add(k)
+        h = e["ts_ms"] // H * H; dost = e.get("t_available_ms", e.get("recv_ts_ms"))
+        if dost is not None and dost > h + H + zapas_ms: qa["pozdnie"] += 1; continue
         chas[e["symbol"]][h][0 if e["side"] == "long" else 1] += float(e["usd"])
+    def v_dyre(h): return any(a < h + H and b > h for a, b in dyry)
     out = []
     for s, ser in chas.items():
         hs = sorted(ser); h0 = hs[0]; okno = prog_dney * 24
         vse = list(range(h0, hs[-1] + H, H)); L = {h: ser.get(h, [0.0, 0.0]) for h in vse}
+        neizv = {h for h in vse if v_dyre(h)}
         poka = -1
         for k, h in enumerate(vse):
-            if k < okno or h <= poka: continue
+            if k < okno or h <= poka or h in neizv: continue
+            ist_h = [x for x in vse[k - okno:k] if x not in neizv]
+            if len(ist_h) < min_izvestno * okno: continue
             for ind, side in ((0, 1), (1, -1)):
                 tek, prot = L[h][ind], L[h][1 - ind]
                 if tek < porog_usd or tek < dominir * prot: continue
-                ist = sorted(L[x][ind] for x in vse[k - okno:k]); p99 = ist[int(0.99 * (len(ist) - 1))]
+                ist = sorted(L[x][ind] for x in ist_h); p99 = ist[int(0.99 * (len(ist) - 1))]
                 if tek < p99: continue
                 t_res = h + H + zapas_ms
                 out.append(O.zapis(t_res, h + H - 1, t_res, s, "LIQ_OTSKOK_4H_V2", "BASE", side, None, KOM,
                                    dict(L_long=round(L[h][0], 2), L_short=round(L[h][1], 2), p99_14d=round(p99, 2))))
                 poka = h + 4 * H; break
-    O.zapisat(OPP / "LIQ_OTSKOK_4H_V2.csv.gz", out); return len(out), pozdnie
+    O.zapisat(OPP / "LIQ_OTSKOK_4H_V2.csv.gz", out); return len(out), qa
 
 
 if __name__ == "__main__":
     a = sys.argv[1:] or ["kity", "elder"]
     if "kity" in a: print("KITY_BYBIT:", kity_bybit())
     if "elder" in a: print("ELDER_ETS2M:", elder())
-    if "liq" in a: print("LIQ_OTSKOK_4H_V2 (событий, поздних):", liq_v2(a[a.index("liq") + 1]))
+    if "liq" in a: print("LIQ_OTSKOK_4H_V2 (событий, QA):", liq_v2(a[a.index("liq") + 1]))
