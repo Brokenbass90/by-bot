@@ -1,0 +1,170 @@
+{
+  "census_count": 906,
+  "eligible_count": 63,
+  "exclusion_counts": {
+    "BELOW_TURNOVER_FLOOR": 446,
+    "NOT_PERPETUAL": 40,
+    "NOT_USDT": 68,
+    "SOURCE_SYMBOL_GRAMMAR_UNSUPPORTED": 12,
+    "TRADFI": 277
+  },
+  "freeze_happened_before_strategy_outcomes": true,
+  "instrument_raw_body_sha256s": [
+    "c69b41300c4da3f0bde58afdbf94eee3ff55b3960ffc2d9d420241a6fe3cf7df"
+  ],
+  "judge_runs": 0,
+  "liquidation_history_reads": 0,
+  "orders_allowed": false,
+  "precapture_rule_sha256": "cb6ade293e85e9c048d9c30e7540a77d229b6c21570ba4c527b1129a785633e0",
+  "prepared_ms": 1791966412426,
+  "prereg_research_ref_verified": "ca8a9e86187a319b0d199e14c374b79a1306d289",
+  "prereg_sha256": "3f73a2507c8e4a26c9b2da205114f819d4d5e709669e97dc1ae219d634421a63",
+  "public_requests": 2,
+  "ranked_selected": [
+    {
+      "symbol": "BTCUSDT",
+      "turnover24h_usdt": "3528594630.8414"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "turnover24h_usdt": "1916054203.6555"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "turnover24h_usdt": "503627831.3300"
+    },
+    {
+      "symbol": "ZECUSDT",
+      "turnover24h_usdt": "339643781.6122"
+    },
+    {
+      "symbol": "NEARUSDT",
+      "turnover24h_usdt": "323683287.2290"
+    },
+    {
+      "symbol": "XRPUSDT",
+      "turnover24h_usdt": "248854736.5628"
+    },
+    {
+      "symbol": "HYPEUSDT",
+      "turnover24h_usdt": "111018327.3424"
+    },
+    {
+      "symbol": "STRKUSDT",
+      "turnover24h_usdt": "104720292.8823"
+    },
+    {
+      "symbol": "BTWUSDT",
+      "turnover24h_usdt": "89821085.5149"
+    },
+    {
+      "symbol": "ENAUSDT",
+      "turnover24h_usdt": "88659811.0145"
+    },
+    {
+      "symbol": "SUIUSDT",
+      "turnover24h_usdt": "71229836.1360"
+    },
+    {
+      "symbol": "WLDUSDT",
+      "turnover24h_usdt": "64283410.3670"
+    },
+    {
+      "symbol": "OPUSDT",
+      "turnover24h_usdt": "63445000.1134"
+    },
+    {
+      "symbol": "QNTUSDT",
+      "turnover24h_usdt": "60568141.8553"
+    },
+    {
+      "symbol": "ADAUSDT",
+      "turnover24h_usdt": "59252903.5677"
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "turnover24h_usdt": "54770189.8146"
+    },
+    {
+      "symbol": "PUMPFUNUSDT",
+      "turnover24h_usdt": "52766142.0641"
+    },
+    {
+      "symbol": "1000PEPEUSDT",
+      "turnover24h_usdt": "52311974.8704"
+    },
+    {
+      "symbol": "UNIUSDT",
+      "turnover24h_usdt": "50484629.8170"
+    },
+    {
+      "symbol": "TRUTHUSDT",
+      "turnover24h_usdt": "46738547.9251"
+    },
+    {
+      "symbol": "INJUSDT",
+      "turnover24h_usdt": "41997602.4959"
+    },
+    {
+      "symbol": "TIAUSDT",
+      "turnover24h_usdt": "41734343.3782"
+    },
+    {
+      "symbol": "BATUSDT",
+      "turnover24h_usdt": "41637692.6861"
+    },
+    {
+      "symbol": "ONDOUSDT",
+      "turnover24h_usdt": "41092851.6529"
+    },
+    {
+      "symbol": "OGNUSDT",
+      "turnover24h_usdt": "32504607.8913"
+    }
+  ],
+  "raw_public_capture_sha256": "9e698fc60d15be532bb0c6e1b3eaffc31170060ac622b316ec05e31f9838933a",
+  "receipt_sha256": "5ce689af3fdbe505c4643382dbbdfa73cac1b22e1b99e84edd9e099a114b0e79",
+  "rule": {
+    "count": 25,
+    "eligibility": "Trading;LinearPerpetual;USDT quote+settle;not prelisting;not TradFi;source symbol grammar",
+    "minimum_turnover24h_usdt": "10000000",
+    "order": "descending Decimal(turnover24h), ascending symbol",
+    "refresh": "NONE; a changed universe requires a separate epoch",
+    "selector_inputs": "instrument census + ticker snapshot only; no liquidation/outcome inputs",
+    "version": "LIQUIDATION_UNIVERSE_V2_1"
+  },
+  "schema": "BYBIT_LIQUIDATION_UNIVERSE_MANIFEST_V2_1",
+  "source_gate_pass": false,
+  "strategy_runs": 0,
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "ZECUSDT",
+    "NEARUSDT",
+    "XRPUSDT",
+    "HYPEUSDT",
+    "STRKUSDT",
+    "BTWUSDT",
+    "ENAUSDT",
+    "SUIUSDT",
+    "WLDUSDT",
+    "OPUSDT",
+    "QNTUSDT",
+    "ADAUSDT",
+    "DOGEUSDT",
+    "PUMPFUNUSDT",
+    "1000PEPEUSDT",
+    "UNIUSDT",
+    "TRUTHUSDT",
+    "INJUSDT",
+    "TIAUSDT",
+    "BATUSDT",
+    "ONDOUSDT",
+    "OGNUSDT"
+  ],
+  "ticker_raw_body_sha256": "d3105c51b79d8c3a530392b8e11d2039f29b0e84841d963223dbe045951c3cb2",
+  "universe_file_sha256": "02c6b27ec4e48c3d1c14d0934c081b9a002f3453f1f41036ad7cec715f7cedeb",
+  "universe_manifest_sha256": "fca461efdb07fbe8395c4acf56e2519368c2601a88c9f3cef0db1a149a0785b3",
+  "unpublished_draft_preserved": "b12f1d67…75015 contained commodity classification defect; never activated; fixed under pre-capture not-TradFi rule before outcomes"
+}

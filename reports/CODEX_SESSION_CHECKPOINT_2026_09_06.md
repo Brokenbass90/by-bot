@@ -1,5 +1,34 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 11:42:49Cyprus: **LIQUIDATION_V2_1_SOURCE_RUNNING / RESEARCH_GATE_PENDING**.
+Prereg3f73a250…21a63 verified at published researchca8a9e8 requires BASE events
+across≥15 symbols; original12 cannot meet this. Source-only GO compatibility
+correction: new deterministic25-symbol epoch, same V2 core/semantics/schema;
+read LIQUIDATION_V2_1_READONLY_HANDOFF_2026_10_14.md and its four evidence files.
+Rulecb6ade29…633e0 fixed BEFORE two public GETs/906instrument census: eligible
+crypto USDT perps, turnover≥10M/top25/lexical ties/no refresh. Commodity-type
+classification defect fixed under existing not-TradFi rule before activation;
+unpublished draft retained/no outcome/liquidation selection. Universefca461ef…
+0785b3, source46895caa…a4ddd/epoch0688909d05884004b991bec76c6e4847.
+Started08:35:34.223UTC/11:35Cyprus; separateV2.1 unitPID2095785/NRestarts0,
+subscribe/pong/watchdog actual. Readback50RAW items/14symbols/65frames, QAflags0,
+gaps0, actual side/time/raw/chain PASS. BASEcountNOT_COMPUTED; source gateNOT_PASS:
+14d warmup+200BASE/20differentdays/15symbols plus frozen QA/checks, no judge yet.
+Full exchange completenessUNKNOWN; missing intervals never zero; duplicate
+candidates retained. Read-only flat50row snapshot/receipt on VPS and local own
+private mirror; active normalized stream remains FRAME.normalized_events.
+Original12 epoch preserved with157raw/246records/330280byte validchain; no
+merge/backfill. Old unitDISABLED/PID0, but stop timed out/SIGKILL AFTER STOPPED
+heartbeat: explicit retirement incident, NOT graceful-stop PASS. Initial
+inactive-only assertion failed; preserved diagnostic then independent disabled/
+PID0+chain verification completed handoff without install/start/stop retry or
+reset-failed. All37Alpaca/HALT/cron/prodBybit/web/ATT1/V1 preserved.67local/
+53VPS targetedPASS/rootreview/fullsuite not rerun; no quota replacement.
+No strategy/PnL/judge, LIQ_OTSKOK_4H_V2/money authority, Claude edit/message or
+private broker query. Engineering STOP; collect source only. Alpaca16:00 one
+check remains P0; KITY prospective sources tonight unchanged. DataLake/Polars/
+cross-market journals deferred until those operational money windows are secured.
+
 October14 10:56:50Cyprus: **LIQUIDATION_V2_RUNNING_WAIT_FIRST_EVENT**.
 Direct human GO authorizes source/data implementation and launch only. Read
 BYBIT_LIQUIDATION_COLLECTOR_V2_2026_10_14.md and its PACKAGE/SOURCE_MANIFEST/
