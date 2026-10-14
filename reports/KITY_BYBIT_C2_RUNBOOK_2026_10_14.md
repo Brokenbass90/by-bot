@@ -19,6 +19,21 @@ First snapshot is not yet present: its frozen window is October14 23:50–23:59
 UTC, **October15 02:50–02:59 Cyprus**. Do not fabricate that prospective input.
 This Bybit-native window differs from Binance M3's exact23:55 contract.
 
+## Raw storage prepared before the first snapshot
+
+Read [the storage receipt](evidence/kity_bybit_c2_20261014/storage_preparation_receipt.json).
+Our private root now has separate `2026-10-15` and `2026-10-22` directories,
+each with owner-only empty `snapshot/`, `candles/`, `archives/`, `receipts/`.
+The physical manifest is `.private/kity_bybit_c2/capture_layout_20261014_v1.json`,
+layout digest `20594ba31c61b9c6f02b1e290e60aee06020472a249640dc3d51d8c875df2043`.
+It pins absolute paths for future raw inputs and independent receipts and marks
+the external Claude paths READ_ONLY. Free disk at preparation was71.21GiB;
+no allocation, download, collector, reconstructed signal or comparison occurred.
+Existing1GiB/8GiB per-file reader resource limits are unchanged. Recheck actual
+free space when collecting; do not remove Claude/evidence/runtime files or omit
+symbols to solve a storage issue. Raw input bundles are not created yet, because
+their source hashes and capture times must come from real future files.
+
 ## Raw input bundle
 
 Schema `KITY_BYBIT_C2_INPUT_V1`, `day` and exact `research_ref` above, with:

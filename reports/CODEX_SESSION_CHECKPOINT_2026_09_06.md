@@ -1,5 +1,35 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 09:40+Cyprus: **SINGLE_PREOPEN_FEE_CHECK_SCHEDULED_NOT_OBSERVED**.
+Direct owner reply "Да, один чек в 16:00" authorizes one new read-only check
+today16:00Asia/Nicosia/13:00UTC. App heartbeat alpaca-fee-check-14-16-00 ACTIVE,
+COUNT1/same chat verified; read preopen_fee_check_scheduling_receipt.json.
+After one check pause/delete THIS heartbeat regardless PASS/BLOCKED; no polling,
+retry/date transfer. Late outside today's pre-open window => expire/no query.
+Original Oct13 heartbeat stays PAUSED; spent morning singleton stays sealed.
+Use one bounded GET-only SSH observation with the existing full-coverage reader,
+new separate private capture/public receipt; never rerun observe-close-once.py.
+Actual fees, if posted, close THIS lifecycle under existing rules, followed by
+physical installed binding/fresh dossier when sources permit. No fabricated
+fee-zero/quote/PASS, order/permit/intake/reservation/HALTclear/manager activation.
+Separate exact moneyGO remains required. No broker query this scheduling turn;
+latest actual fee/account/PID truth remains dated08:34Cyprus below. Local app
+must stay running for this scheduled local check. KITY/Claude state untouched.
+
+October14 09:28+Cyprus narrow continuation: **KITY_RAW_STORAGE_READY_NOT_COLLECTING**.
+Own private15/22directories and empty snapshot/candles/archives/receipts paths
+created/verified; layout20594ba3…df2043. Read storage_preparation_receipt.json and
+KITY C2 runbook storage section.71.21GiB free at preparation, no download/process/
+Claude write/reconstruction/comparison/new architecture or research. Existing
+per-file resource bounds unchanged; real future source hashes still absent.
+Alpaca latest actual check remains08:34Cyprus/PENDING; no immediate repeated
+query and no new money authority. A single16:00Cyprus automatic read-only check
+was initially asked as an optional scheduling choice; subsequent direct owner
+approval/scheduling is recorded ABOVE. Do not restart/reset the spent morning
+singleton or extend original heartbeat dates. One new receipt/GET-only observation,
+exact existing rules, no order/HALTclear/activation/extra PAPER; report only a
+material change/failure/required owner action.
+
 October14 morning: **ACTUAL_POSTED_EXIT_FEES_STILL_PENDING / LIVE HALTED**.
 One prepared helper invocation05:34:30UTC/08:34Cyprus, source SHA024beb90…39791;
 read morning_fee_receipt.json/readiness latest. Only Oct12CAT0.01, no Oct13CAT/SEC;
