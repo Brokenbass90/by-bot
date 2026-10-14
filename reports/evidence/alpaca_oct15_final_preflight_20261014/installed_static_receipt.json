@@ -1,0 +1,27 @@
+{
+  "status": "INSTALLED_STATIC_READBACK_AND_UNIT_SYNTAX_PASS",
+  "observed_ms": 1791994622993,
+  "spec_sha256": "3d92ae10124a208f3e4eebfac15d28a0745ac53a72f4e1e7f86103c2b946f074",
+  "package_sha256": "0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20",
+  "all_original_sources_match": true,
+  "all_control_pins_match": true,
+  "source_counts": {
+    "intents": 0,
+    "intent_attempts": 0
+  },
+  "original_halt_unchanged": true,
+  "native_ledger_flat": true,
+  "crontab_unchanged": true,
+  "no_runtime_reservation": true,
+  "no_owner_go": true,
+  "units_registered": 0,
+  "service_activations": 0,
+  "broker_queries": 0,
+  "broker_writes": 0,
+  "unit_verification": {
+    "exit": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "unit_syntax_pass": true,
+  "raw_capture_sha256": "4f6976735bbae3e535073153689ebabd688fc900941ce10036c477295c05586c"
+}

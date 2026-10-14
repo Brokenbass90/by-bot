@@ -1,0 +1,41 @@
+{
+  "status": "EXACT_INTENT_RAM_REPLAY_PASS",
+  "evidence_kind": "COUNTERFACTUAL_CLOCK_REPLAY_NOT_FUTURE_MARKET_EVIDENCE",
+  "retained": {
+    "original_capture_sha256": "36a36f8c77924dfb8e3c7ed6369402faf4d274ab534320d856c0373dda1c277d",
+    "raw_cts": 1791985678433,
+    "receive_ms": 1791985687419
+  },
+  "rows": [
+    {
+      "label": "retained_price_projected_clock",
+      "status": "FIRST_ENTRY_PREVIEW_ONLY",
+      "reason": null,
+      "symbol": "NET",
+      "qty": "0.325167779",
+      "notional": "113.75019244978",
+      "risk_distance": "33.54",
+      "stop": "316.28",
+      "limit": "349.82",
+      "projected_time_not_actual": true
+    },
+    {
+      "label": "price_cap_reject",
+      "status": "BLOCKED_DATA",
+      "reason": "FIRST_INTENT_PRICE_CAP",
+      "projected_time_not_actual": true
+    }
+  ],
+  "source_book_unchanged": true,
+  "source_counts": {
+    "intents": 0,
+    "intent_attempts": 0
+  },
+  "halt_unchanged": true,
+  "broker_queries": 0,
+  "broker_writes": 0,
+  "permits_created": 0,
+  "reservations_created": 0,
+  "source_book_writes": 0,
+  "observed_ms": 1791993919130
+}

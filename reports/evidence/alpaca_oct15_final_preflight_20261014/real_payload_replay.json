@@ -1,0 +1,39 @@
+{
+  "status": "REAL_RETAINED_PAYLOAD_REPLAY_PASS",
+  "paper_status": "PAPER_EXECUTION_PASS",
+  "fee_usd": "0.03",
+  "net_usd": "-4.535524745824",
+  "raw_sources_unchanged": true,
+  "broker_queries": 0,
+  "broker_writes": 0,
+  "source_hashes": [
+    {
+      "name": "cash-before.json",
+      "sha256": "169b959ba8bf04a54ad3e45548a5c9925dfe8bb48dc615ef7ec998b762db1890"
+    },
+    {
+      "name": "initial-capture.json",
+      "sha256": "da9d9c45e2cbe9fa57f10845e97e85f1a42c8580f1c662d77cebe186823c9403"
+    },
+    {
+      "name": "rearm-capture.json",
+      "sha256": "585604619259208843adebb252512ee4b72129c01aca342d961d67401caf549d"
+    },
+    {
+      "name": "terminal-capture.json",
+      "sha256": "e39d353769fa61d024564eac7810670bb7eb43c909164e90e81abd2e1e4ade5d"
+    },
+    {
+      "name": "commission-protocol.json",
+      "sha256": "800ac28c805fec1ed01927edc63bae1696f66eff368a6ebe6ec5281c1d517a2c"
+    },
+    {
+      "name": "arm-receipt.json",
+      "sha256": "9e5df439eae5d4f1361c1d5db1b99c5174e63d2275740a6324c96a76b4041f7a"
+    },
+    {
+      "name": "initial-evidence.json",
+      "sha256": "329f7ec5d5a300b06d8adc083cd262013d7d8a07cbb708eee3dd57a7887bec9b"
+    }
+  ]
+}

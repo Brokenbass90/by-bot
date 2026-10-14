@@ -1,0 +1,102 @@
+{
+  "schema": "ALPACA_OCT15_FIRST_ENTRY_STATIC_SOURCE_CONTRACT_V1",
+  "status": "STATIC_PREFLIGHT_PASS",
+  "intent_sha256": "198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd",
+  "static_binding_sha256": "47cc8ce61750bd32d981f3ba7ed93e2096fdaf607bb8c8bd50d123dfea294c62",
+  "original37_package_sha256": "0a3fce3b3d1af18060c2e5e4fdf787828e12eaf803df15b847df78a613187f20",
+  "static_control_spec_sha256": "3d92ae10124a208f3e4eebfac15d28a0745ac53a72f4e1e7f86103c2b946f074",
+  "control_directory": "/opt/bybot-research/alpaca-dynamic-live-20261013/control/oct15-first-entry-v1-1",
+  "control_files": [
+    {
+      "file": "spec.json",
+      "sha256": "3d92ae10124a208f3e4eebfac15d28a0745ac53a72f4e1e7f86103c2b946f074"
+    },
+    {
+      "file": "manager.timer",
+      "sha256": "634ef2372f8fe8e702f873288d93b60a74e8e6d0992e31f1f07310a9946e81d1"
+    },
+    {
+      "file": "entry.service",
+      "sha256": "99e7f01208d739cd55d7c4515d0fecb1c49391710a595541f396b61d1140596d"
+    },
+    {
+      "file": "manager.service",
+      "sha256": "8701b89eb876a87e15faaf6bfae0459525504621ae3287458e7a1cce4e627ce2"
+    },
+    {
+      "file": "assembly-v1.py",
+      "sha256": "602dd6accbeb9397b66293903614daa39689e83bfb0e15083fbb3506822bbaf2"
+    },
+    {
+      "file": "control-v1.py",
+      "sha256": "249459fc536f3ca513c1d5738c9211e7f443f40d6d731fcf90af43ce2c4ca240"
+    },
+    {
+      "file": "runtime-clock-v2.py",
+      "sha256": "05166883fbedecad1ab55a01bc28d00714b4e1fce9e86bb706997dd9a6656530"
+    }
+  ],
+  "entry_timer_sha256": "ebab5c3b6108646219348e932f0ef1bc543c2b12481405fc8442d6f2655b2bd6",
+  "scope": {
+    "broker_writes": 0,
+    "owner_go_received": false,
+    "permits_created": 0,
+    "reservations_created": 0,
+    "halt_cleared": false,
+    "units_registered": 0,
+    "services_activated": 0
+  },
+  "defects_fixed": [
+    "HTTP observation clock wrongly compared normal later broker events to CLI invocation time",
+    "Missing one-session source-plan/intake/controller wiring",
+    "Isolated control bootstrap missing explicit app_root",
+    "Draft 120s service timeout could interrupt accepted-entry protection; new inert templates have TimeoutStartSec=infinity"
+  ],
+  "preserved": [
+    "Frozen strategy/selector/ranking/reference risk distance/capital/gross/max_positions",
+    "Exact intent and all four bounds/one-attempt/no-reprice/no-session-transfer",
+    "Original37 app/fee kit/raw captures/sourcebook/nativeledger/HALT/cron and unrelated PIDs",
+    "No Claude/KITY/ATT1/Liquidation changes"
+  ],
+  "timing": {
+    "session": "2026-10-15",
+    "open_utc": "13:30:00",
+    "end_utc": "13:35:00",
+    "latest_start_exclusive_utc": "13:32:25",
+    "fresh_ms": 30000,
+    "reserve_ms": 5000,
+    "existing_entry_preflight_allowance_ms": 120000,
+    "post_dispatch_protection_hard_timeout": false
+  },
+  "evidence": [
+    {
+      "name": "oct15_static_installed_capture.json",
+      "sha256": "bb573851e2b37cc6bc1531a46a6d872d69ff9b116aa6b6767b8b3de913f3b1a1"
+    },
+    {
+      "name": "oct15_control_stage_capture.json",
+      "sha256": "0429ce4fa8ba7d9b7356a231660ad9d52d9597c627549ab7d466a43ec7829b8d"
+    },
+    {
+      "name": "oct15_control_stage_v1_1_capture.json",
+      "sha256": "bf3592954a919d1ae1bf2867506c6485702f0ec1943dab5dd8b57dc24b4d003d"
+    },
+    {
+      "name": "oct15_ram_replay_capture.json",
+      "sha256": "a6d8c033b913a0b4dec6f509a83549feaf3ec91410bce2f61c60678364f744cd"
+    },
+    {
+      "name": "oct15_final_static_readback.json",
+      "sha256": "4f6976735bbae3e535073153689ebabd688fc900941ce10036c477295c05586c"
+    }
+  ],
+  "targeted_tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -B -m pytest -q tests/test_alpaca_first_entry_control_v1.py tests/test_alpaca_first_entry_assembly_v1.py tests/test_alpaca_live_observation_clock.py tests/test_alpaca_dynamic_live_runtime_v1.py tests/test_alpaca_dynamic_first_intent_v1.py tests/test_alpaca_dynamic_live_intake_v1.py tests/test_alpaca_open_dispatch_v2.py tests/test_alpaca_live_readiness_v1.py tests/test_alpaca_fee_to_live_closure_v1.py tests/test_alpaca_execution_identity_v1.py tests/test_alpaca_posted_fee_reg_v3.py tests/test_alpaca_protective_exit_manager.py",
+    "passed": 279,
+    "failed": 0,
+    "full_suite": "not rerun; historic non-green suite is not a new launch gate"
+  },
+  "branch_count": 318,
+  "reachable_function_count": 114,
+  "rehearsal_kind": "COUNTERFACTUAL_CLOCK_REPLAY_NOT_FUTURE_MARKET_EVIDENCE"
+}

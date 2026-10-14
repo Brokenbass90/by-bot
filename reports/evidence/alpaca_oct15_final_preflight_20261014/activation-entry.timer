@@ -1,0 +1,7 @@
+[Unit]
+Description=One Oct15 first-intent opening; no carry
+[Timer]
+OnCalendar=2026-10-15 13:30:00 UTC
+AccuracySec=100ms
+Persistent=false
+Unit=alpaca-oct15-first-entry.service

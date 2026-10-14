@@ -277,7 +277,7 @@ def dispatch(db,item,client,payload,key):
         raise
 
 
-def owned_snapshot(client,item,record):
+def owned_snapshot(client,item,record,*,observation_ms=None):
     """Bounded exhaustive symbol history + exact original entry and exit lineage."""
     symbol=item['intake']['plan']['symbol'];entry=item['entry']
     current=client.get_order(entry['id'])
@@ -286,6 +286,7 @@ def owned_snapshot(client,item,record):
         raise ValueError('ENTRY_FILL_SOURCE_CHANGED')
     history=client.list_orders(status='all',limit=500,symbols=[symbol])
     orders=client.list_orders(status='open',limit=100,symbols=[symbol])
+    if observation_ms is not None:item['observed_ms']=observation_ms()
     if len(history)>=500 or len(orders)>=100: raise ValueError('ORDER_HISTORY_INCOMPLETE')
     buys=[o for o in history if o['side']=='buy' and dec(o.get('filled_qty','0'))>0]
     if not buys or max(buys,key=lambda o:o.get('filled_at',''))['id']!=entry['id']:
@@ -326,8 +327,8 @@ def owned_snapshot(client,item,record):
     return positions,orders,owned,remaining,gross
 
 
-def finish_exit(db,item,client,record,binding):
-    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record)
+def finish_exit(db,item,client,record,binding,*,observation_ms=None):
+    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record,observation_ms=observation_ms)
     if remaining:return result('BLOCKED_EXECUTION',reason='PARTIAL_OR_UNCERTAIN_EXIT_NO_RESEND',remaining_qty=str(remaining))
     actual=[o for o in owned if dec(o.get('filled_qty','0'))>0]
     if not actual:raise ValueError('NO_ACTUAL_EXIT_FILL')
@@ -386,7 +387,7 @@ def finalize_costs(db,item,client,terminal,path):
     return out
 
 
-def unwind(db,item,client,record,binding):
+def unwind(db,item,client,record,binding,*,observation_ms=None):
     halt(binding,'OWNED_EXIT_IN_PROGRESS')  # blocks entries, never stops maintenance
     for key,attempt in item.get('replacements',{}).items():
         if not attempt.get('accepted_id'):
@@ -403,8 +404,8 @@ def unwind(db,item,client,record,binding):
             row=client.get_order_by_client_id(attempt['payload']['client_order_id'])
             if not row:raise ValueError('UNKNOWN_STOP_DISPATCH_OWNER_ACTION_REQUIRED')
             order_contract(row,attempt['payload'])
-    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record)
-    if not remaining:return finish_exit(db,item,client,record,binding)
+    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record,observation_ms=observation_ms)
+    if not remaining:return finish_exit(db,item,client,record,binding,observation_ms=observation_ms)
     for o in orders:
         if o['side']!='sell' or o['type']!='stop': raise ValueError('UNWIND_ACTIVE_CONFLICT')
         if o['id'] not in item.setdefault('cancel_dispatches',[]):
@@ -413,8 +414,8 @@ def unwind(db,item,client,record,binding):
             client.cancel_order(o['id'])
         if client.get_order(o['id'])['status'] not in native._TERMINAL_ORDER_STATUSES:
             return result('BLOCKED_EXECUTION',reason='UNCERTAIN_CANCEL_NO_RESEND')
-    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record)
-    if not remaining:return finish_exit(db,item,client,record,binding)
+    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record,observation_ms=observation_ms)
+    if not remaining:return finish_exit(db,item,client,record,binding,observation_ms=observation_ms)
     if orders:raise ValueError('UNWIND_REQUIRES_TERMINAL_STOP_CANCELLATION')
     payload=dict(symbol=item['intake']['plan']['symbol'],side='sell',type='market',
                  qty=str(remaining),time_in_force='day',client_order_id='dyx-'+item['id'][:32])
@@ -422,10 +423,12 @@ def unwind(db,item,client,record,binding):
     prior=item.get('dispatches',{}).get('exit')
     if prior:payload=prior['payload']
     dispatch(db,item,client,payload,'exit')
-    return finish_exit(db,item,client,record,binding)
+    return finish_exit(db,item,client,record,binding,observation_ms=observation_ms)
 
 
 def initial(db,item,client,binding,now_ms,*,allow_new_entry=False):
+    started=time.monotonic()
+    observed=lambda:now_ms+int((time.monotonic()-started)*1000)
     intake=item['intake'];plan=intake['plan'];symbol=plan['symbol']
     if not allow_new_entry and 'entry' not in item.get('dispatches',{}):
         raise ValueError('RESERVATION_WITHOUT_DISPATCH_NO_LATE_BUY')
@@ -467,17 +470,18 @@ def initial(db,item,client,binding,now_ms,*,allow_new_entry=False):
     payload=dict(symbol=symbol,side='sell',type='stop',qty=str(qty),stop_price=format(floor,'.2f'),
         time_in_force=native._persistent_exit_tif_for_qty('',float(qty)),client_order_id=intake['stop_client_order_id'])
     if item.get('dispatches',{}).get('stop',{}).get('state')=='REJECTED_422':
-        return unwind(db,item,client,record,binding)
+        return unwind(db,item,client,record,binding,observation_ms=observed)
     try:stop=dispatch(db,item,client,payload,'stop')
     except native.AlpacaAPIError as e:
-        if e.status_code==422:return unwind(db,item,client,record,binding)
+        if e.status_code==422:return unwind(db,item,client,record,binding,observation_ms=observed)
         raise
+    item['observed_ms']=observed()  # receive/use time, not CLI invocation time
     if dec(stop.get('filled_qty','0'))>0:
         # Broker can execute the stop before our first readback. This is a real
         # STOP exit, never fabricated initial full-protection acceptance.
         item['initial_full_protection_proven']=False
-        positions,orders,owned,remaining,gross=owned_snapshot(client,item,record)
-        if not remaining:return finish_exit(db,item,client,record,binding)
+        positions,orders,owned,remaining,gross=owned_snapshot(client,item,record,observation_ms=observed)
+        if not remaining:return finish_exit(db,item,client,record,binding,observation_ms=observed)
         if (stop['status']!='partially_filled' or len(orders)!=1 or orders[0]['id']!=stop['id']
             or positive(stop['qty'])-dec(stop['filled_qty'])!=remaining
             or positive(stop['stop_price'])<floor or stop['time_in_force']!=payload['time_in_force']):
@@ -490,7 +494,7 @@ def initial(db,item,client,binding,now_ms,*,allow_new_entry=False):
         item['phase']='PROTECTED';item['native_record']=updated;save(db,item)
         return result('LIVE_PARTIAL_STOP_PROTECTED',remaining_qty=str(remaining),
                       initial_full_protection_proven=False,net_pnl_status='NOT_PROVEN')
-    handoff=native_handoff(intake,entry,stop,observed_ms=now_ms,
+    handoff=native_handoff(intake,entry,stop,observed_ms=observed(),
                           existing=record if not record.get('protection_pending') else None)
     if handoff['status']!='NATIVE_HANDOFF_PREPARED_ORDERS_OFF':raise ValueError(handoff['reason'])
     native._atomic_write_json(ledger,{**state,symbol:handoff['native_record']})
@@ -501,19 +505,21 @@ def initial(db,item,client,binding,now_ms,*,allow_new_entry=False):
 
 
 def maintain(db,item,client,binding,now_ms,kill):
+    started=time.monotonic()
+    observed=lambda:now_ms+int((time.monotonic()-started)*1000)
     symbol=item['intake']['plan']['symbol'];ledger=safe_path(binding['ledger_path'],exists=True)
     state=read_json(ledger);record=state.get(symbol) or item.get('retired_record')
     native._validated_existing_intended_lifecycle(record,item['account'],allow_pending=True)
     if record.get('dynamic_intake_sha256')!=item['intake']['intake_sha256']:raise ValueError('MANAGER_LINEAGE_CONFLICT')
-    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record)
-    if not remaining:return finish_exit(db,item,client,record,binding)
-    if kill or item.get('dispatches',{}).get('exit'):return unwind(db,item,client,record,binding)
+    positions,orders,owned,remaining,gross=owned_snapshot(client,item,record,observation_ms=observed)
+    if not remaining:return finish_exit(db,item,client,record,binding,observation_ms=observed)
+    if kill or item.get('dispatches',{}).get('exit'):return unwind(db,item,client,record,binding,observation_ms=observed)
     clock=client.get_clock();stamp=native._parse_iso_utc(clock['timestamp'])
-    if stamp is None or abs(int(stamp.timestamp()*1000)-now_ms)>5000:raise ValueError('MANAGER_CLOCK_CONFLICT')
+    if stamp is None or abs(int(stamp.timestamp()*1000)-observed())>5000:raise ValueError('MANAGER_CLOCK_CONFLICT')
     if not clock['is_open']:return result('LIVE_WAITING_REGULAR_SESSION',protection_present=bool(orders))
     if record.get('protection_pending'):
         rejection=item.get('dispatches',{}).get('stop',{}).get('state')=='REJECTED_422'
-        if rejection:return unwind(db,item,client,record,binding)
+        if rejection:return unwind(db,item,client,record,binding,observation_ms=observed)
         raise ValueError('UNKNOWN_INITIAL_PROTECTION_OWNER_ACTION_REQUIRED')
     if dec(record['qty'])!=remaining:
         # Partial stop fills leave only the proven remainder under management.
@@ -533,7 +539,7 @@ def maintain(db,item,client,binding,now_ms,kill):
         proposed={**record,**next_state[symbol]}
         state[symbol]=proposed;native._atomic_write_json(ledger,state)
         row=rows[0]
-        if row['action']=='escalate_below_accepted_floor':return unwind(db,item,client,proposed,binding)
+        if row['action']=='escalate_below_accepted_floor':return unwind(db,item,client,proposed,binding,observation_ms=observed)
         if row['action']=='blocked':raise ValueError(row['reason'])
         if row['action']=='replace_stop':
             key=stop['id'];attempt=item.setdefault('replacements',{}).get(key)
@@ -566,10 +572,10 @@ def maintain(db,item,client,binding,now_ms,kill):
         stop_price=format(positive(record['accepted_stop_floor']),'.2f'),
         time_in_force=native._persistent_exit_tif_for_qty('',float(remaining)),client_order_id=cid)
     if positive(positions[0]['current_price'])<=positive(record['accepted_stop_floor']):
-        return unwind(db,item,client,record,binding)
+        return unwind(db,item,client,record,binding,observation_ms=observed)
     try:stop=dispatch(db,item,client,payload,'rearm:'+session)
     except native.AlpacaAPIError as e:
-        if e.status_code==422:return unwind(db,item,client,record,binding)
+        if e.status_code==422:return unwind(db,item,client,record,binding,observation_ms=observed)
         raise
     native._rearm_intended_position(client=client,symbol=symbol,position=positions[0],existing_stops=[stop],
         state=state,state_path=ledger,account_id=item['account'])
@@ -627,7 +633,7 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
                     account=client.get_account();clock=client.get_clock();stamp=native._parse_iso_utc(clock['timestamp'])
                     if (account['id']!=binding['account_id'] or account.get('trading_blocked') is not False
                         or account.get('account_blocked') is not False or not clock['is_open'] or stamp is None
-                        or abs(int(stamp.timestamp()*1000)-now_ms)>5000):raise ValueError('FRESH_ACCOUNT_CLOCK_REQUIRED')
+                        or abs(int(stamp.timestamp()*1000)-(now_ms+int((time.monotonic()-started)*1000)))>5000):raise ValueError('FRESH_ACCOUNT_CLOCK_REQUIRED')
                     cash=min(dec(account['cash']),dec(account['non_marginable_buying_power']))
                     if cash-dec(intake['scope']['liability_reserve_usd'])<positive(intake['plan']['funding_limit_usd']):
                         raise ValueError('FRESH_LIABILITY_CASH_REJECT')
@@ -657,6 +663,7 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
                         raise ValueError('RAW_QUOTE_CTS_REQUIRED')
                     positive(quote['ap'])
                     final_clock=client.get_clock();cts=native._parse_iso_utc(final_clock['timestamp'])
+                    effective_ms=now_ms+int((time.monotonic()-started)*1000)
                     if (not session_at(policy['calendar_sessions'],effective_ms) or not final_clock['is_open']
                         or cts is None or abs(effective_ms-int(cts.timestamp()*1000))>5000):
                         raise ValueError('FINAL_DISPATCH_WINDOW_OR_CLOCK')
@@ -668,7 +675,7 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
                 if item['phase']=='NO_FILL_TERMINAL':return result('LIVE_NO_FILL_TERMINAL',no_resend=True)
                 item['observed_ms']=now_ms+int((time.monotonic()-started)*1000)
                 if item.get('entry') and item['phase'] in {'PROTECTED','EXIT_PENDING_FINALITY'}:
-                    out=maintain(db,item,client,binding,now_ms,kill)
+                    out=maintain(db,item,client,binding,item['observed_ms'],kill)
                     if cost_finality_path:
                         if out['status']!='LIVE_EXIT_PENDING_FINALITY':raise ValueError('OWNED_EXIT_NOT_TERMINAL')
                         return finalize_costs(db,item,client,out,cost_finality_path)
@@ -677,8 +684,9 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
                     return out
                 if kill and item.get('entry'):
                     state=read_json(binding['ledger_path'])
-                    return unwind(db,item,client,state[intake['plan']['symbol']],binding)
-                return initial(db,item,client,binding,now_ms,allow_new_entry=allow_new_entry)
+                    return unwind(db,item,client,state[intake['plan']['symbol']],binding,
+                        observation_ms=lambda:now_ms+int((time.monotonic()-started)*1000))
+                return initial(db,item,client,binding,item['observed_ms'],allow_new_entry=allow_new_entry)
     except Exception as error:
         if apply and dispatched:
             try:halt(binding,'DYNAMIC_RUNTIME_'+type(error).__name__)

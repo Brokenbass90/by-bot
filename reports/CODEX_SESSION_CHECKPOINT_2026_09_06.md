@@ -1,5 +1,35 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 FINAL ALPACA LIVE PREOPEN HARDENING completed: **STATIC_PREFLIGHT_PASS**.
+Read ALPACA_OCT15_FINAL_LIVE_PREFLIGHT.md and evidence/alpaca_oct15_final_preflight_20261014/.
+Actual original37 package0a3fce3b…87f20 and fee kit preserved. Narrow observation-clock
+fix + first-intent planner/intake/controller wiring installed as separate inert
+control/oct15-first-entry-v1-1; spec3d92ae10…f074; explicit app_root bootstrap;
+new oneshot templates have no timeout that can kill accepted-entry protection.
+Actual prepare/ready PASS today, but NOT ARMED/no GO/no session intake/reservation.
+279targetedPASS; synthetic whole GO→one source plan→one BUY→full stop→duplicate
+refusal; real raw PAPER/fee replayPASS/.03 fees and unchanged original sources.
+Exact19890348…f2fd Oct15 intent passes RAM-only projected-clock sizing at retained
+349.82: qty.325167779/notional113.75019244978/risk10.90612730766;349.83 rejects.
+This is explicitly counterfactual timing, never future quote/plan/broker truth.
+Complete explicit branch matrix 318 sites/114 functions with phase/materiality/test
+mapping; no blanket coverage claim. Final16:17:02.993UTC file/service readback:
+all53controlpins/original37/HALT/native empty ledger/cron unchanged, source0/0,
+no runtime DB/GO/sessiondir, proposed4unitsNOT_FOUND/unregistered/inactive;
+Bybit1648585/web1623208/ATT11584802 NRestarts0 preserved. No broker query in
+final readback, no broker write anywhere this cycle. Failed first bootstrap
+stage retained; never launch it or old generic120s draft service templates.
+Code FROZEN until Oct15 fresh preflight. Before16:15 fresh bounded dossier→exact
+humanGO→scoped original-lock/HALT handoff→prepared4unit arm before16:29;
+16:30 one entry, latest start strictly BEFORE16:32:25 per existing155sbudget.
+Full runbook includes exact GO JSON, target units, entry/owned manager/kill,
+corrected-overlay bootstrap for actual terminal cost CLI and scoped rollback.
+No GO or price/caps/freshness failure => no order/no repeat/reprice/carry. No new
+PAPER/statistical/research gates. Claude/KITY/ATT1/Liquidation untouched. Broker
+flat snapshot still dated14:52UTC; fresh Oct15 account/price/clock/ownership and
+actual future fills/protection remain unconsumed. LIVE remains HALTED.
+
+
 October14 semantic execution fix completed: **PAPER_EXECUTION_PASS +
 READY_FOR_LIVE_GO / NET Oct15**. Read latest section in
 ALPACA_DYNAMIC_LIVE_READINESS_2026_10_13.md and first_live_net_oct15_dossier_public.json.
