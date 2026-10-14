@@ -8,7 +8,8 @@
 
 Шаблоны:
   xs_nedelya_binance — недельная кросс-секция PIT топ-50 по OI Binance (скелет KITY M3 / SPOT_POTOK):
-      parametry = {"priznak": "m3_perp" | "spot" | "spot_minus_perp" | "m3_vsplesk" | "pogloshchenie", "znak": +1 | -1}
+      parametry = {"priznak": "m3_perp" | "spot" | "spot_minus_perp" | "m3_vsplesk" | "pogloshchenie" | glubina_*, "znak": +1 | -1,
+                   "zaderzhka": 1 (по умолчанию, вход закрытием d) | 0 (закрытием d−1) | 2 (закрытием d+1)}
       m3_vsplesk (14.10): доля тейкера-покупателя на перпе дня d−1 минус её среднее за 28 предыдущих дней монеты (≥ 20 дней).
       pogloshchenie (14.10, составной): внутри недели остаток z(доход дня d−1) после проекции на z(доля тейкера дня d−1) — часть
       движения цены, НЕ объяснённая потоком (поглощение пассивной стороной); ортогонален KITY m3 по построению; вход как у KITY.
@@ -116,7 +117,9 @@ def xs_nedelya_binance(parametry, dostup):
         if parametry["priznak"] in SOSTAVNYE:
             rows = [(float(z), s, i) for z, (_, s, i) in zip(zz, rows)]
         rows.sort(); k = len(rows) // 10
-        leg = [K.sdelka(M[s], i, 7, -znak) for _, s, i in rows[:k]] + [K.sdelka(M[s], i, 7, +znak) for _, s, i in rows[-k:]]
+        sd = int(parametry.get("zaderzhka", 1)) - 1                     # 1 = закрытие d (эталон KITY); 0 = закрытие d−1; 2 = d+1
+        leg = [K.sdelka(M[s], i + sd, 7, -znak) for _, s, i in rows[:k] if 0 <= i + sd < len(M[s]["ts"])] + \
+              [K.sdelka(M[s], i + sd, 7, +znak) for _, s, i in rows[-k:] if 0 <= i + sd < len(M[s]["ts"])]
         leg = [r for r in leg if r is not None]
         return float(np.mean(leg)) if leg else None
 
