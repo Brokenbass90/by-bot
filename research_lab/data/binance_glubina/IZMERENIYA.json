@@ -1,0 +1,26 @@
+{
+ "M1": {
+  "nedel": 194,
+  "nedel_ge30": 193,
+  "mediana_monet": 50
+ },
+ "M2_avtokorrelyaciya": {
+  "imb1": 0.568,
+  "imb2": 0.593,
+  "imb5": 0.497
+ },
+ "M3_korr_s_kity_m3": {
+  "imb1": -0.139,
+  "imb2": -0.218,
+  "imb5": -0.27
+ },
+ "M3_korr_s_dohodom_d1": {
+  "imb1": -0.083,
+  "imb2": -0.131,
+  "imb5": -0.17
+ },
+ "vybrana_polosa": "imb2",
+ "priznak": "glubina_imb2",
+ "dublikat_kity": false,
+ "reshenie": "ЗАМОРОЖЕНО к одному PnL-тесту"
+}
