@@ -1,0 +1,27 @@
+{
+ "ABSORB": {
+  "sobytiy": 2174,
+  "monet": 222,
+  "po_epoham": {
+   "2021H2-22": 316,
+   "2023": 326,
+   "2024": 466,
+   "2025-26": 1066
+  },
+  "dolya_long": 0.625,
+  "korr_storona_x_kity_rang": -0.144
+ },
+ "NORMAL": {
+  "sobytiy": 18385,
+  "monet": 306,
+  "po_epoham": {
+   "2021H2-22": 3517,
+   "2023": 4369,
+   "2024": 3925,
+   "2025-26": 6574
+  },
+  "dolya_long": 0.651,
+  "korr_storona_x_kity_rang": -0.115
+ },
+ "reshenie": "НЕЗАВИСИМО — к одному тесту"
+}
