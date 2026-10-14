@@ -1,0 +1,18 @@
+{
+  "status": "SOURCE_ONLY_AST_PARITY_PASS",
+  "economic_functions_unchanged_after_io_normalization": {
+    "get": true,
+    "chetverg_dlya": true,
+    "instrumenty": true,
+    "svechi": true,
+    "potok": true,
+    "signal": true,
+    "zakrytie": true,
+    "vhod": true,
+    "vyhod": true
+  },
+  "frozen_constants_match": true,
+  "old_sha256": "bdfeabd6a9457866f81e7e7e3708788009dbb9af6f32e4d2353c38d8172c3cab",
+  "a11_sha256": "916a849ad5a7c01fb4ae8c9c2702e089d169507a7a13368df8a47b9055df0c82",
+  "actual_outcome_reads": 0
+}

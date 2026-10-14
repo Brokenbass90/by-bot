@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 KITY source-only GO: **A1.1 SOURCE_BLOCKED / INDEPENDENT DEADLINE READY**.
+Read KITY_OCT15_SOURCE_HARDENING_2026_10_14.md and its evidence. Research566c6d1
+actually published; disk producer916a849a…0c82. A1.1 fixes missing/null/NaN/
+negativeOI and overwrite, but bounded synthetic replay still proves +inf/bool
+accepted, short os.write publishes partial JSON, and check→stamp crosses deadline.
+Raw failed ticker bytes and immutable source/hash/completion success receipt are
+absent. All residual corrections sent together; no new strategy/economic gate.
+Nine normalized economic/source ASTs and frozen constants unchanged.45 targeted
+observer+C2 PASS; actual prospective/C1/C2/PnL unconsumed. Independent observer
+code manifest frozen; one COUNT1 heartbeat kity-oct15-one-source-deadline-observation
+for Oct15 03:01Cyprus; fixed original23:50≤completion<00:00UTC window. Own private
+terminal only, no overwrite/source repair; pending/unapproved deployment becomes
+explicit CAPTURE_BLOCKED after deadline. Final source/config pins PENDING.
+Fresh17:34UTC: external restart already occurred, actualPython27731/caffeinate27786,
+start17:24:42UTC/heartbeat same; original+own writerlocks HELD, future files absent.
+Codex did NOT restart/deploy/edit Claude or query brokers; never use broadpkill/
+podnyat_vse for this scope. Await corrected committed source, bounded replay,
+then exact one-writer handoff if needed. Alpaca frozenPASS/HALT and all other
+money/research authority preserved. No READY/source success/date transfer invented.
+
 October14 evening KITY prospective precheck: **KITY_OCT15_CAPTURE_BLOCKED**.
 Read KITY_OCT15_PROSPECTIVE_PRECHECK_2026_10_14.md and its sanitized receipt.
 Research5pins/independentC2 3pins unchanged; one actualPython14408, inheritedlock

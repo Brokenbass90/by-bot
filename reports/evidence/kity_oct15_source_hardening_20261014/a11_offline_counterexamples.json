@@ -1,0 +1,78 @@
+{
+  "status": "A11_SOURCE_CONTRACT_MISMATCH_REPRODUCED",
+  "source_sha256": "916a849ad5a7c01fb4ae8c9c2702e089d169507a7a13368df8a47b9055df0c82",
+  "cases": [
+    {
+      "case": "missing",
+      "snapshot_written": false,
+      "unknown_symbols": [
+        "BTCUSDT"
+      ],
+      "raw_failure_retained": false
+    },
+    {
+      "case": "null",
+      "snapshot_written": false,
+      "unknown_symbols": [
+        "BTCUSDT"
+      ],
+      "raw_failure_retained": false
+    },
+    {
+      "case": "nan",
+      "snapshot_written": false,
+      "unknown_symbols": [
+        "BTCUSDT"
+      ],
+      "raw_failure_retained": false
+    },
+    {
+      "case": "inf",
+      "snapshot_written": true,
+      "unknown_symbols": null,
+      "raw_failure_retained": false
+    },
+    {
+      "case": "bool",
+      "snapshot_written": true,
+      "unknown_symbols": null,
+      "raw_failure_retained": false
+    },
+    {
+      "case": "negative",
+      "snapshot_written": false,
+      "unknown_symbols": [
+        "BTCUSDT"
+      ],
+      "raw_failure_retained": false
+    },
+    {
+      "case": "valid",
+      "snapshot_written": true,
+      "unknown_symbols": null,
+      "raw_failure_retained": false
+    },
+    {
+      "case": "existing-final",
+      "overwrite": false,
+      "new_publication": false
+    },
+    {
+      "case": "short-write",
+      "published_bytes": "{\"",
+      "partial_final_published": true
+    },
+    {
+      "case": "late-response",
+      "snapshot_written": false
+    },
+    {
+      "case": "deadline-cross-between-check-and-stamp",
+      "snapshot_written": true,
+      "stamp": "2026-10-15T00:00:00+00:00"
+    }
+  ],
+  "actual_prospective_source_reads": 0,
+  "network_calls": 0,
+  "claude_writes": 0
+}

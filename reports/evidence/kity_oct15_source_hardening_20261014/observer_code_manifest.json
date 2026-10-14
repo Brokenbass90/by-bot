@@ -1,0 +1,20 @@
+{
+  "actual_c1_c2_run": false,
+  "day": "2026-10-15",
+  "files": {
+    "research_lab/kity_oct15_deadline_v1.py": "4913e882ea241c4ed911d357a79ce10332e45d7cc02872fbf74010eefa01c66a",
+    "scripts/kity_oct15_deadline_v1.py": "73a20407ee49e25ccca990f3c924bdd1b7b193e2d8c80cc6e898c87058ab79a5",
+    "tests/test_kity_oct15_deadline_v1.py": "aa788b15c0dad0e45ea542004e3781b77eb827a960ede36084aad45deeb44ece"
+  },
+  "money_authority": false,
+  "schema": "KITY_OCT15_INDEPENDENT_OBSERVER_CODE_MANIFEST_V1",
+  "source_approval": "PENDING_FINAL_CORRECTION",
+  "source_only": true,
+  "source_producer_a11_sha256": "916a849ad5a7c01fb4ae8c9c2702e089d169507a7a13368df8a47b9055df0c82",
+  "source_switch_applied": false,
+  "targeted_tests_passed": 45,
+  "window_utc": {
+    "end_exclusive": "2026-10-15T00:00:00Z",
+    "start": "2026-10-14T23:50:00Z"
+  }
+}
