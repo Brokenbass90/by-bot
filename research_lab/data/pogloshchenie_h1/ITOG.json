@@ -1,0 +1,98 @@
+{
+ "prereg": "PREREG_POGLOSHCHENIE_H1_2026_10_14.md",
+ "glavnoe_okno": {
+  "ABSORB": {
+   "n": 1858,
+   "dney": 816,
+   "mean_bps": 33.0,
+   "t": 1.06,
+   "polovinki_bps": [
+    9.7,
+    56.3
+   ],
+   "t_req": 1.645
+  },
+  "NORMAL": {
+   "n": 14868,
+   "dney": 1351,
+   "mean_bps": 19.9,
+   "t": 1.89,
+   "polovinki_bps": [
+    9.1,
+    30.7
+   ]
+  },
+  "raznica_t": 0.4
+ },
+ "replikaciya_2021H2_22": {
+  "n": 316,
+  "dney": 210,
+  "mean_bps": 25.7,
+  "t": 0.6,
+  "polovinki_bps": [
+   -32.3,
+   83.8
+  ],
+  "t_req": 2.054
+ },
+ "epohi": {
+  "2021H2-22": {
+   "n": 316,
+   "dney": 210,
+   "mean_bps": 25.7,
+   "t": 0.6,
+   "polovinki_bps": [
+    -32.3,
+    83.8
+   ]
+  },
+  "2023": {
+   "n": 326,
+   "dney": 194,
+   "mean_bps": -52.8,
+   "t": -1.09,
+   "polovinki_bps": [
+    -30.2,
+    -75.5
+   ]
+  },
+  "2024": {
+   "n": 466,
+   "dney": 203,
+   "mean_bps": 79.8,
+   "t": 1.59,
+   "polovinki_bps": [
+    56.9,
+    102.5
+   ]
+  },
+  "2025-26": {
+   "n": 1066,
+   "dney": 419,
+   "mean_bps": 50.0,
+   "t": 0.98,
+   "polovinki_bps": [
+    78.5,
+    21.7
+   ]
+  }
+ },
+ "izderzhki": {
+  "0_bps": {
+   "mean_bps": 45.0,
+   "t": 1.44
+  },
+  "11_bps": {
+   "mean_bps": 33.0,
+   "t": 1.06
+  },
+  "23_bps": {
+   "mean_bps": 21.0,
+   "t": 0.67
+  }
+ },
+ "opportunity": "data/opportunities/POGLOSHCHENIE_H1_v1.csv.gz",
+ "zapisey": 2174,
+ "verdikt": "FAIL",
+ "kogda": "2026-10-14T07:45:56+00:00"
+}
