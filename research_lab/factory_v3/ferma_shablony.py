@@ -73,11 +73,18 @@ def _priznak(imya, D):
             x = G[s].get(vch)
             return None if not x else x.get(pole)
         return f
+    if imya == "glubina_ort":                              # PREREG_GLUBINA_PEREKOS_V2: (imb2, поток d−1, доход d−1)
+        g, m3, dd = _priznak("glubina_imb2", D), _priznak("m3_perp", D), _priznak("pogloshchenie", D)
+        def f(s, vch):
+            a, b, c = g(s, vch), m3(s, vch), dd(s, vch)
+            return None if a is None or b is None or c is None else (float(a), float(b), float(c[0]))
+        return f
     raise KeyError(f"признак {imya} не в закрытом словаре")
 
 
-PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie", "glubina_imb1", "glubina_imb2", "glubina_imb5")
-SOSTAVNYE = {"pogloshchenie"}       # значения-пары → остаток z(доход) после проекции на z(поток) внутри недели
+PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie", "glubina_imb1", "glubina_imb2", "glubina_imb5",
+            "glubina_ort")
+SOSTAVNYE = {"pogloshchenie", "glubina_ort"}   # значения-кортежи → остаток после проекции внутри недели
 
 
 def _z(a): a = np.asarray(a, float); sd = a.std(); return (a - a.mean()) / sd if sd > 0 else a * 0
@@ -100,9 +107,13 @@ def xs_nedelya_binance(parametry, dostup):
             v = pr(s, vch)
             if v is not None and np.all(np.isfinite(v)): rows.append((v, s, i))
         if len(rows) < 30: return None
-        if parametry["priznak"] in SOSTAVNYE:
+        if parametry["priznak"] == "pogloshchenie":
             zr, zf = _z([v[0] for v, _, _ in rows]), _z([v[1] for v, _, _ in rows])
             zz = zr - (float(np.mean(zr * zf)) * zf)          # доход, ортогональный потоку недели: «цена сильнее/слабее, чем велел поток»
+        elif parametry["priznak"] == "glubina_ort":
+            y = _z([v[0] for v, _, _ in rows]); X = np.c_[_z([v[1] for v, _, _ in rows]), _z([v[2] for v, _, _ in rows])]
+            zz = y - X @ np.linalg.lstsq(X, y, rcond=None)[0]   # перекос, не объяснённый потоком и ценой дня
+        if parametry["priznak"] in SOSTAVNYE:
             rows = [(float(z), s, i) for z, (_, s, i) in zip(zz, rows)]
         rows.sort(); k = len(rows) // 10
         leg = [K.sdelka(M[s], i, 7, -znak) for _, s, i in rows[:k]] + [K.sdelka(M[s], i, 7, +znak) for _, s, i in rows[-k:]]
