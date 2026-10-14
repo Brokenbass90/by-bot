@@ -8,7 +8,10 @@
 
 Шаблоны:
   xs_nedelya_binance — недельная кросс-секция PIT топ-50 по OI Binance (скелет KITY M3 / SPOT_POTOK):
-      parametry = {"priznak": "m3_perp" | "spot" | "spot_minus_perp", "znak": +1 | -1}
+      parametry = {"priznak": "m3_perp" | "spot" | "spot_minus_perp" | "m3_vsplesk" | "pogloshchenie", "znak": +1 | -1}
+      m3_vsplesk (14.10): доля тейкера-покупателя на перпе дня d−1 минус её среднее за 28 предыдущих дней монеты (≥ 20 дней).
+      pogloshchenie (14.10, составной): внутри недели остаток z(доход дня d−1) после проекции на z(доля тейкера дня d−1) — часть
+      движения цены, НЕ объяснённая потоком (поглощение пассивной стороной); ортогонален KITY m3 по построению; вход как у KITY.
 Данные читаются через замороженный kity_sudya.zagruzit() (путь судьи); окно ограничено забором dostup.
 """
 import datetime as dt, json, sys
@@ -41,10 +44,33 @@ def _priznak(imya, D):
             a, b = spot.get(s, {}).get(vch), perp.get(s, {}).get(vch)
             return None if a is None or b is None else a - b
         return f
+    if imya == "m3_vsplesk":
+        import bisect
+        dni = D.setdefault("perp_dni", {s_: sorted(v) for s_, v in perp.items()})
+        def f(s, vch):
+            v, dd = perp.get(s, {}).get(vch), dni.get(s)
+            if v is None or not dd: return None
+            j = bisect.bisect_left(dd, vch); okno = [perp[s][x] for x in dd[max(0, j - 28):j]]   # строго до vch
+            return None if len(okno) < 20 else v - sum(okno) / len(okno)
+        return f
+    if imya == "pogloshchenie":
+        M = D["M"]
+        def f(s, vch):
+            a, x = perp.get(s, {}).get(vch), M.get(s)
+            if a is None or x is None: return None
+            d = dt.date.fromisoformat(vch); t = int(dt.datetime(d.year, d.month, d.day, tzinfo=dt.timezone.utc).timestamp() * 1000)
+            i = int(np.searchsorted(x["ts"], t))
+            if i >= len(x["ts"]) or x["ts"][i] != t or i < 1 or x["c"][i - 1] <= 0: return None
+            return (float(x["c"][i] / x["c"][i - 1] - 1.0), float(a))          # доход и поток ОДНОГО дня d−1
+        return f
     raise KeyError(f"признак {imya} не в закрытом словаре")
 
 
-PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp")
+PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie")
+SOSTAVNYE = {"pogloshchenie"}       # значения-пары → остаток z(доход) после проекции на z(поток) внутри недели
+
+
+def _z(a): a = np.asarray(a, float); sd = a.std(); return (a - a.mean()) / sd if sd > 0 else a * 0
 
 
 def xs_nedelya_binance(parametry, dostup):
@@ -62,8 +88,12 @@ def xs_nedelya_binance(parametry, dostup):
             x = M[s]; i = int(np.searchsorted(x["ts"], ts(d)))
             if i >= len(x["ts"]) or x["ts"][i] != ts(d) or i < 60: continue
             v = pr(s, vch)
-            if v is not None and np.isfinite(v): rows.append((v, s, i))
+            if v is not None and np.all(np.isfinite(v)): rows.append((v, s, i))
         if len(rows) < 30: return None
+        if parametry["priznak"] in SOSTAVNYE:
+            zr, zf = _z([v[0] for v, _, _ in rows]), _z([v[1] for v, _, _ in rows])
+            zz = zr - (float(np.mean(zr * zf)) * zf)          # доход, ортогональный потоку недели: «цена сильнее/слабее, чем велел поток»
+            rows = [(float(z), s, i) for z, (_, s, i) in zip(zz, rows)]
         rows.sort(); k = len(rows) // 10
         leg = [K.sdelka(M[s], i, 7, -znak) for _, s, i in rows[:k]] + [K.sdelka(M[s], i, 7, +znak) for _, s, i in rows[-k:]]
         leg = [r for r in leg if r is not None]
