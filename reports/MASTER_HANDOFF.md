@@ -1,5 +1,13 @@
 # MASTER HANDOFF — 2026-10-05
 
+October14 morning LATEST: **actual Alpaca exit fees PENDING / LIVE HALTED**.
+One05:34UTC source, no Oct13CAT/SEC/actual PAPERcostPASS/dossier/GO/entry. Preserve
+terminal helper attempt/no auto retry/reset/PAPER. Read checkpoint TOP/readiness.
+Approved KITY_BYBIT independent C2 delivered locally: 392targetedPASS, frozen
+researchcb47f0e/Claude untouched; source intake waits tonight23:50-23:59UTC.
+Read KITY_BYBIT_C2_RUNBOOK_2026_10_14.md. Actual C1/C2/moneyPASS absent. One
+real Python collector confirmed; wrapper processes are not duplicate cycles.
+
 October13 18:43UTC LATEST: **FEE_TO_LIVE_STATIC_KIT_STAGED_ORDERS_OFF**.
 Use checkpoint TOP/readiness LATEST/fee_to_live_closure_receipt_v1.json.
 27-file separate inert closure kit c0b044a9…a8be58 staged and static-verified;

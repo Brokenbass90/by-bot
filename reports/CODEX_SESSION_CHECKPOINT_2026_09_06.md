@@ -1,5 +1,31 @@
 # Codex session checkpoint — 2026-09-06
 
+October14 morning: **ACTUAL_POSTED_EXIT_FEES_STILL_PENDING / LIVE HALTED**.
+One prepared helper invocation05:34:30UTC/08:34Cyprus, source SHA024beb90…39791;
+read morning_fee_receipt.json/readiness latest. Only Oct12CAT0.01, no Oct13CAT/SEC;
+PAPER NETabsent/orders0/foreign5/cash99405.77/pending0; LIVEflat/orders0/HALT/
+cash496.12 and prodPIDs/NRestarts unchanged. Exact pending blocker, two new
+artifact files only. No quote/dossier/intent/GO/reservation/order/HALTclear/
+activation/PAPER. Preserve terminal Oct14 attempt; no reset/auto polling/date
+transfer. Next observation requires new fee evidence or explicit bounded owner
+check. Same closed lifecycle/caps/native rules; no extra statistical/PAPER gate.
+
+Parallel approved KITY C2: **C2_CALCULATOR_READY_WAIT_FUTURE_SOURCES**.
+Read KITY_BYBIT_C2_RUNBOOK_2026_10_14.md and its preparation_receipt.json.
+Frozen remote researchcb47f0e verified; five committed spec/interface files equal
+Claude checkout. Independent stdlib local reader/own create-exclusive CLI;
+23new cases/392targetedPASS, rootreview only/fullsuite not rerun. No imported
+shadow/comparator, mathematical change/outcome judge/network/order path. Full
+raw replay/hash coverage prevents partial/unrelated archive hashes from C2PASS.
+Actual C2/C1/moneyPASS absent. Shadow log05:28:41UTC fresh, one PythonPID14408;
+SCREEN/login/sh/caffeinate are wrappers. No process/file change in Claude.
+First snapshot tonightOct14 23:50-23:59UTC /Oct15 02:50-02:59Cyprus; not yet due.
+Need SAME raw gzip archives with shadow hashes plus independent closed-day
+candle captures (shadow does not retain those bodies). Intake before independent
+reconstruction/comparison; no second shadow/new dataset family. C1 two weeks15/22,
+C3/account/caps/cost/finality and ownerGO remain separate. Frozen37Alpaca package
+0a3fce3b…87f20 and foreign allowlist add587f1…f19a1 unchanged.
+
 October13 18:43UTC /21:43Cyprus: **FEE_TO_LIVE_STATIC_KIT_STAGED_ORDERS_OFF**.
 Owner requested bounded final fee→dossier closure. Separate27-file control kit
 physically staged below the existing disabled base; outerpin c0b044a9…a8be58.

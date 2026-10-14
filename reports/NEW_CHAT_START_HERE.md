@@ -1,5 +1,14 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+October14 morning: **actual exit fees still PENDING / LIVE HALTED**.
+Read checkpoint TOP/readiness October14 and morning_fee_receipt.json. One
+05:34UTC invocation, no exitCAT/SEC; LIVEflat/HALT, unchanged prod. Terminal
+attempt preserved, no automatic retry/reset/PAPER/order/new dossier.
+Approved independent KITYC2 reader/CLI delivered locally, 392targetedPASS;
+read KITY_BYBIT_C2_RUNBOOK_2026_10_14.md. Frozen researchcb47f0e, Claude unchanged.
+First raw input tonight23:50-23:59UTC; C2/C1/money not yet passed. Need raw gzip
+and independently captured closed candles in own directory, no shadow import.
+
 October13 18:43UTC: **FEE_TO_LIVE_STATIC_KIT_STAGED_ORDERS_OFF**.
 Read checkpoint TOP/readiness LATEST and fee_to_live_closure_receipt_v1.json.
 Separate27-file closure kit c0b044a9…a8be58 staged/installed verify-only PASS;

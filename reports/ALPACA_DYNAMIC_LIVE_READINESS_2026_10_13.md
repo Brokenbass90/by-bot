@@ -1,5 +1,30 @@
 # Alpaca Dynamic LIVE — October13 preparation and existing PAPER postcheck
 
+## October14 morning — actual posted exit fees still pending
+
+One owner-authorized prepared invocation at **05:34:30UTC /08:34 Cyprus**.
+Actual fee/cash capture is preserved privately; public
+[morning receipt](evidence/alpaca_live_readiness_20261014/morning_fee_receipt.json).
+The existing helper verified its static pins and installed trading sources, then
+returned exact `BLOCKED_DATA / PAPER_POSTED_EXIT_FEE_FINALITY_PENDING_OR_CONFLICT`.
+Only Oct12CAT0.01 is posted; Oct13CAT/SEC are still absent. PAPER cash99405.77,
+pending0, NET absent/openorders0, five legacy holdings retained. Pending0 does
+not prove absent future assessments are zero. LIVE flat/orders0/HALT/cash496.12;
+original production PIDs/NRestarts unchanged. No new PAPER, broker write,
+HALTclear, service activation or source/strategy change.
+
+The sealed Oct14 helper attempt has terminal.json plus the actual GET capture;
+no first intent, binding, dossier or fresh quote capture was created. Preserve
+it; never reset the attempt/date or run an automatic fee polling loop. Newly
+published fee evidence or another explicit bounded owner check may justify a
+new observation, with its own receipt. Full cost closure, fresh dossier/exact
+owner GO remain necessary. No additional PAPER/statistical gate.
+
+While source publication is pending, the previously authorized KITY independent
+C2 was implemented locally: [runbook](KITY_BYBIT_C2_RUNBOOK_2026_10_14.md),
+392 targetedPASS. Claude files/processes unchanged; first unseen input is due
+tonight. No actual C2/C1/money PASS, new strategy or Brain/B3 rerun.
+
 ## Latest — fee-to-dossier closure prepared and staged18:43UTC, orders OFF
 
 The owner requested the final bounded fee-to-LIVE closure path. The additional
