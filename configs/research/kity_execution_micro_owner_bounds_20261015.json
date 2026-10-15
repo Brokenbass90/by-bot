@@ -1,0 +1,17 @@
+{
+  "schema": "kity_execution_micro_owner_bounds_v1",
+  "purpose": "EXECUTION_MICRO_LIVE",
+  "max_gross_usdt": "210",
+  "max_all_in_loss_usdt": "15",
+  "hard_final_loss_cap_required": true,
+  "duration_ms": 1800000,
+  "max_rounding_shortfall_fraction": "0.203",
+  "one_experiment_only": true,
+  "allow_scaling": false,
+  "allow_averaging": false,
+  "allow_reentry": false,
+  "research_evidence_eligible": false,
+  "counts_toward_C1_C2_C3": false,
+  "owner_money_go": false,
+  "source_reply_id": "call_97d470124f1e40728c7172870f18ac54"
+}

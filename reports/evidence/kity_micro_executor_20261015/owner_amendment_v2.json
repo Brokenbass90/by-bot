@@ -1,0 +1,20 @@
+{
+  "counts_toward_C1_C2_C3": false,
+  "hard_final_loss_cap_required": true,
+  "hard_loss_reinterpreted_as_threshold": false,
+  "money_go": false,
+  "orders_allowed": false,
+  "owner_approved_preparation_bounds": {
+    "duration_ms": 1800000,
+    "max_gross_usdt": "210",
+    "max_rounding_shortfall_fraction": "0.203",
+    "requested_hard_final_all_in_loss_usdt": "15"
+  },
+  "policy_meaning_clarification_pending": true,
+  "readiness": "BLOCKED_EXECUTION",
+  "recorded_utc": "2026-10-15T06:06:20.281027+00:00",
+  "research_evidence_eligible": false,
+  "schema": "kity_micro_owner_bounds_amendment_v2",
+  "source_production_writes": 0,
+  "source_reply_id": "call_97d470124f1e40728c7172870f18ac54"
+}

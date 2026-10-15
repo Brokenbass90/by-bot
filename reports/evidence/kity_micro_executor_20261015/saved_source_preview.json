@@ -1,0 +1,250 @@
+{
+  "status": "ORDERS_OFF_PREVIEW",
+  "orders_allowed": false,
+  "plan": {
+    "schema": "kity_execution_micro_plan_v1",
+    "purpose": "EXECUTION_MICRO_LIVE",
+    "bounds": {
+      "schema": "kity_execution_micro_owner_bounds_v1",
+      "purpose": "EXECUTION_MICRO_LIVE",
+      "max_gross_usdt": "210",
+      "max_all_in_loss_usdt": "15",
+      "hard_final_loss_cap_required": true,
+      "duration_ms": 1800000,
+      "max_rounding_shortfall_fraction": "0.203",
+      "one_experiment_only": true,
+      "allow_scaling": false,
+      "allow_averaging": false,
+      "allow_reentry": false,
+      "research_evidence_eligible": false,
+      "counts_toward_C1_C2_C3": false,
+      "owner_money_go": false,
+      "source_reply_id": "call_97d470124f1e40728c7172870f18ac54"
+    },
+    "legs": [
+      {
+        "symbol": "BTWUSDT",
+        "side": "Buy",
+        "quantity": "10",
+        "rounding_shortfall_fraction": "0",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E00",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "2.18429",
+          "qty": "10",
+          "reduceOnly": false,
+          "side": "Buy",
+          "symbol": "BTWUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X00"
+      },
+      {
+        "symbol": "XAUUSDT",
+        "side": "Buy",
+        "quantity": "0.005",
+        "rounding_shortfall_fraction": "0.04919676416593034807649167464",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E01",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "4153.66",
+          "qty": "0.005",
+          "reduceOnly": false,
+          "side": "Buy",
+          "symbol": "XAUUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X01"
+      },
+      {
+        "symbol": "LTCUSDT",
+        "side": "Buy",
+        "quantity": "0.3",
+        "rounding_shortfall_fraction": "0.2027157566074101882076097954",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E02",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "58.05",
+          "qty": "0.3",
+          "reduceOnly": false,
+          "side": "Buy",
+          "symbol": "LTCUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X02"
+      },
+      {
+        "symbol": "VVVUSDT",
+        "side": "Buy",
+        "quantity": "0.98",
+        "rounding_shortfall_fraction": "0.005234652907809860412307889520",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E03",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "22.1720",
+          "qty": "0.98",
+          "reduceOnly": false,
+          "side": "Buy",
+          "symbol": "VVVUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X03"
+      },
+      {
+        "symbol": "BNBUSDT",
+        "side": "Buy",
+        "quantity": "0.03",
+        "rounding_shortfall_fraction": "0.01193065023417220240902078021",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E04",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "719.41",
+          "qty": "0.03",
+          "reduceOnly": false,
+          "side": "Buy",
+          "symbol": "BNBUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X04"
+      },
+      {
+        "symbol": "XAUTUSDT",
+        "side": "Sell",
+        "quantity": "0.005",
+        "rounding_shortfall_fraction": "0.05234881815143593570450810103",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E05",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "4139.89",
+          "qty": "0.005",
+          "reduceOnly": false,
+          "side": "Sell",
+          "symbol": "XAUTUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X05"
+      },
+      {
+        "symbol": "XPLUSDT",
+        "side": "Sell",
+        "quantity": "280",
+        "rounding_shortfall_fraction": "0.003465657032720014283817624949",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E06",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "0.07774",
+          "qty": "280",
+          "reduceOnly": false,
+          "side": "Sell",
+          "symbol": "XPLUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X06"
+      },
+      {
+        "symbol": "XAGUSDT",
+        "side": "Sell",
+        "quantity": "0.389",
+        "rounding_shortfall_fraction": "0.00002517980671064739572126411786",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E07",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "56.15",
+          "qty": "0.389",
+          "reduceOnly": false,
+          "side": "Sell",
+          "symbol": "XAGUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X07"
+      },
+      {
+        "symbol": "GRASSUSDT",
+        "side": "Sell",
+        "quantity": "34",
+        "rounding_shortfall_fraction": "0.006908423332066712753343191609",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E08",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "0.63800",
+          "qty": "34",
+          "reduceOnly": false,
+          "side": "Sell",
+          "symbol": "GRASSUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X08"
+      },
+      {
+        "symbol": "SPCXUSDT",
+        "side": "Sell",
+        "quantity": "0.14",
+        "rounding_shortfall_fraction": "0.04185799504644529801445778720",
+        "request": {
+          "category": "linear",
+          "orderLinkId": "KXM1-632204848818-E09",
+          "orderType": "Limit",
+          "positionIdx": 0,
+          "price": "149.49",
+          "qty": "0.14",
+          "reduceOnly": false,
+          "side": "Sell",
+          "symbol": "SPCXUSDT",
+          "timeInForce": "IOC"
+        },
+        "exit_prefix": "KXM1-632204848818-X09"
+      }
+    ],
+    "source_dossier_sha256": "f7da06cff507df648247bcd117ab42cb6f0b40de5f13be0c7d8f31340f690474",
+    "captured_source_sha256": "f11cea6d70dcbe70e7cbd6b95dd9424a7512af041f74ab13fae468e34cff38e9",
+    "c2_reconstruction_receipt_sha256": "ec4f6ab451922ac12420868dde09dbb6b46738e594bdaff8ceb1dcbcaf09c406",
+    "reference_source_ms": 1792041185550,
+    "reference_gross_usdt": "210.266660",
+    "planned_limit_gross_usdt": "210.266660",
+    "blocked_reasons": [
+      "GROSS_CAP_EXCEEDED"
+    ],
+    "orders_allowed": false,
+    "research_evidence_eligible": false,
+    "counts_toward_C1_C2_C3": false,
+    "real_transport_bound": false,
+    "plan_id": "61aa1cb5a53508d5a6f785f27ed56ae9e3b54ae434c621708c8fdf1f034dddc7"
+  },
+  "readiness": {
+    "status": "BLOCKED_EXECUTION",
+    "reasons": [
+      "GROSS_CAP_EXCEEDED",
+      "HARD_FINAL_LOSS_CAP_NOT_ENFORCEABLE_ON_PERPETUALS",
+      "REAL_TRANSPORT_AND_EXCLUSIVE_WRITER_BINDING_REQUIRED",
+      "FRESH_ACCOUNT_AND_COMMON_2S_BASKET_REQUIRED",
+      "SEPARATE_EXACT_OWNER_GO_REQUIRED",
+      "CURRENT_ACCOUNT_USES_SHARED_CROSS_COLLATERAL"
+    ],
+    "orders_allowed": false,
+    "requested_hard_loss_cap_usdt": "15",
+    "guaranteed_final_loss_cap": false,
+    "local_controller_available": true,
+    "research_evidence_eligible": false
+  },
+  "research_evidence_eligible": false,
+  "broker_calls": 0,
+  "broker_writes": 0
+}

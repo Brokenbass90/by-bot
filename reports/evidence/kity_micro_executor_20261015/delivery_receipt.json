@@ -1,0 +1,32 @@
+{
+  "broker_calls_this_cycle": 0,
+  "broker_writes": 0,
+  "deployments": 0,
+  "files": {
+    "configs/research/kity_execution_micro_owner_bounds_20261015.json": "53fce5006627658facd3d9521c1aad34f210423d09609684001f37adb157331a",
+    "docs/superpowers/plans/2026-10-15-kity-micro-executor.md": "9490bdabf28bb35d241758beb948cdf926a16e77c1fa770f0064a5905816ae9d",
+    "reports/KITY_EXECUTION_MICRO_CONTROLLER_2026_10_15.md": "b6a464617f1fadbfd988114f5df74f8fbfa1f44c865c29a5ebe17a244d38229d",
+    "reports/evidence/kity_micro_executor_20261015/owner_amendment_v2.json": "29c09923863304bffea59ada353be5926f6440d3ce2f0795951cce829bd28422",
+    "reports/evidence/kity_micro_executor_20261015/saved_source_preview.json": "757c51d084563784e5c49ab9258351cccfc555b60913d3e885b35ce6a5e5f062",
+    "research_lab/kity_execution_micro_bybit_v1.py": "0e0e8440caa79512b1ffda1c5f00db5a9e72caef0441e7cb0c2d200c77202f6d",
+    "research_lab/kity_execution_micro_runtime_v1.py": "5c1fe9419d258b74c0259d8a2553ede5fde77b0d4519d6331ad2f5e1392bf88d",
+    "scripts/run_kity_execution_micro_v1.py": "806ecbc91f78f1458bc46db1c72c194a56e4875690fde1738b7cee7c6c6872ee",
+    "tests/test_kity_micro_bybit_v1.py": "511aac01c5131baa27bc8913152e1a42969796f9eed68b1e2d54486f75eca035",
+    "tests/test_kity_micro_cli_v1.py": "2e64b9ebcb30252091c7d347a3474273f4efce75433713e2a9812d259396fa94",
+    "tests/test_kity_micro_runtime_v1.py": "55922e1b46dde7532a4df7f1d4d2831abd87940e9a2bb44af5cb5c37825d06da"
+  },
+  "foreign_untracked_file_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1",
+  "full_suite_run": false,
+  "guaranteed_final_loss_cap": false,
+  "local_controller_status": "LOCAL_CONTROLLER_REPLAY_PASS",
+  "new_runtime_adapter_cli_tests_passed": 64,
+  "orders_allowed": false,
+  "original_source_pins_unchanged": true,
+  "owner_money_go": false,
+  "requested_hard_final_loss_cap_preserved": true,
+  "root_review_only": true,
+  "schema": "kity_micro_controller_delivery_v1",
+  "status": "BLOCKED_EXECUTION",
+  "targeted_tests_passed": 462,
+  "vps_writes": 0
+}

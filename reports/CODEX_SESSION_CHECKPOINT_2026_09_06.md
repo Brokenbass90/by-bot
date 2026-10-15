@@ -1,5 +1,33 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 complete owner bounds recorded; **LOCAL_CONTROLLER_REPLAY_PASS /
+BLOCKED_EXECUTION**. Read KITY_EXECUTION_MICRO_CONTROLLER_2026_10_15.md,
+docs/superpowers/plans/2026-10-15-kity-micro-executor.md and
+evidence/kity_micro_executor_20261015/{owner_amendment_v2,saved_source_preview}.json.
+Directreply fixes210gross,15HARDfinalall-inloss,30min,20.3%legshortfall,
+separateexecutionledger/noC1–C3/strategyinference,noaveraging/scaling/reentry,
+and separateexactGO beforeorders. LocalnormBybitidentityadapters+SQLiteFULL
+hashchain/oneplan/controller/CLIimplemented.462targetedPASS(64newruntime/adapters/
+CLI+previous398). Syntheticfull10entry/protection/readback/exits/finalityPASS,
+partials/unknownsend/dedup/latefees/restart/foreignDB/ownership/deadlinecovered;
+notrealbroker/PAPER/moneypass. Knownlegunwind isolatedfromotherlegUNKNOWN.
+Firstdurablesendintent anchors30m;deadlineobservationpersistedbeforeactions.
+L2fullquantityexitdepth+actualcash/fees/fundingreserve used;slippagealreadyinprices,
+unknownfees/depth/reserve=>UNKNOWN,nozero;actualnetbelow-15=>LOSS_BOUND_BREACHED.
+CLIhasNO--apply/credentials/network/sendauthority;previewdefaultcreatesnojournal.
+Explicitlocalreplayonly. Realoldcaptureplan61aa1cb5…4dddc7replaysidenticallyunder
+networkdeny. Originalsource/intakepinsunchanged. Noadditionalbrokerobservation.
+Materialpolicyblocker: ownerrequiresguaranteedfinal15maximum; currentcrossperps/
+nativeSL/IOC cannotestablishthatguarantee. assessreadinessalwaysBLOCKEDunderthis
+requirement; doNOTsilentlyrelabel15asatrigger. A directpolicy-meaningquestionis
+pending; ifownerkeepsguarantee, stayordersOFF. Also oldgross210.266660>210;
+rounding20.2716%nowfits203permille butdoesnotwaivegrosscap. Freshaccount/basket,
+physicalexclusivewriter/transport/protection-supervisorbindingstillNOT_PROVEN.
+NoREADY/exactmoneyGOstring/permit/reservation/activation produced. Codeislocal
+candidate,notinstalledsender. PreserveAlpacaP0freeze/HALT/16:15fresh/GO/opening,
+Claude/ATT1/LIQ/research. NoVPSwrite/restart/source/PnL/judge/automationchange;
+rootreviewonly,foreignallowlistfilepreserved.
+
 October15 direct owner budget reply **$210** recorded as MAX_AGGREGATE_GROSS_USDT
 for micro preparation; not margin deposit/loss budget or exact monetary GO.
 Read evidence/kity_micro_live_20261015/owner_gross_bound_v1.json. Offline exact
