@@ -1,0 +1,59 @@
+{
+  "amount_is_margin_deposit_or_loss_budget": false,
+  "broker_observations": 0,
+  "broker_writes": 0,
+  "duration_ms": null,
+  "interpretation": "MAX_AGGREGATE_GROSS_USDT",
+  "margin_policy_approved": false,
+  "max_aggregate_gross_usdt": "210",
+  "maximum_planned_loss_including_costs_usdt": null,
+  "money_go": false,
+  "orders_allowed": false,
+  "owner_reply_exact": "$210",
+  "recorded_utc": "2026-10-15T05:26:03.410005+00:00",
+  "remaining_inputs": [
+    "PLANNED_LOSS_INCLUDING_COSTS",
+    "EXPERIMENT_DURATION",
+    "ROUNDING_AND_ACCOUNT_POLICY"
+  ],
+  "rounding_tolerance_approved": null,
+  "runtime_changes": 0,
+  "saved_source_budget_checks": [
+    {
+      "cap_usdt": "210",
+      "is_fresh_dispatch_evidence": false,
+      "over_cap_usdt": "0.266660",
+      "profile": "VENUE_FLOOR_DIAGNOSTIC",
+      "source_gross_usdt": "210.266660",
+      "within_cap_at_saved_prices": false
+    },
+    {
+      "cap_usdt": "210",
+      "is_fresh_dispatch_evidence": false,
+      "over_cap_usdt": "448.062380",
+      "profile": "ROUNDING_.05",
+      "source_gross_usdt": "658.062380",
+      "within_cap_at_saved_prices": false
+    },
+    {
+      "cap_usdt": "210",
+      "is_fresh_dispatch_evidence": false,
+      "over_cap_usdt": "660.433860",
+      "profile": "ROUNDING_.02",
+      "source_gross_usdt": "870.433860",
+      "within_cap_at_saved_prices": false
+    },
+    {
+      "cap_usdt": "210",
+      "is_fresh_dispatch_evidence": false,
+      "over_cap_usdt": "3523.106280",
+      "profile": "ROUNDING_.01",
+      "source_gross_usdt": "3733.106280",
+      "within_cap_at_saved_prices": false
+    }
+  ],
+  "schema": "kity_micro_owner_gross_bound_v1",
+  "source_intake_sha256": "285b56120689e496eeec14e06ad011495e5676f0e69448c8ea71102042a8cece",
+  "source_question_id": "call_72dac553a9fd43a39c659295dc2ce2e7",
+  "status": "BLOCKED_EXECUTION_SAVED_BASKET_OVER_GROSS_CAP"
+}

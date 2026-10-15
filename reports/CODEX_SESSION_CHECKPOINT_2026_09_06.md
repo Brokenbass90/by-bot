@@ -1,5 +1,15 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 direct owner budget reply **$210** recorded as MAX_AGGREGATE_GROSS_USDT
+for micro preparation; not margin deposit/loss budget or exact monetary GO.
+Read evidence/kity_micro_live_20261015/owner_gross_bound_v1.json. Offline exact
+Decimal comparison on the SAME saved capture: cheapest common-target basket
+210.266660 exceeds210 by0.266660USDT. No cent rounding/tolerance/top-up silently
+allowed; no leg dropped/reweighted to force cap. The saved basket is
+BLOCKED_EXECUTION_SAVED_BASKET_OVER_GROSS_CAP; not a current-price claim.
+Owner loss budget includingcosts/duration/rounding/accountpolicy still unset.
+No new broker query, source/PnL run, runtime write, Alpaca change or order.
+
 October15 owner-directed parallel micro execution intake: **BLOCKED_EXECUTION /
 ORDERS_OFF**, actual feasibility measured and local candidate delivered.
 Read KITY_EXECUTION_MICRO_LIVE_INTAKE_2026_10_15.md and
