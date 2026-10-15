@@ -1,0 +1,218 @@
+{
+  "schema": "KITY_FINAL_NIGHT_STATIC_AND_GET_READINESS_V3",
+  "status": "STATIC_READY_ORDERS_OFF_TERMS_UNCONFIRMED",
+  "observed_ms": 1792089627085,
+  "app_root": "/opt/bybot-research/kity-micro-owner-20261015/app-v3-final-night",
+  "runtime_root": "/opt/bybot-research/kity-micro-owner-20261015/runtime/night-final-20261015",
+  "custody_runtime_root": "/opt/bybot-research/kity-micro-owner-20261015/runtime",
+  "config_sha256": "4b67083fe925735b69eada2a038e30fc9d4aaf0bd76552e7c110ea3a074f220f",
+  "unit_sha256": "39719c687fe8e9f8e541a6bad04f9847bdd7873168ab1f220cd3f81288950541",
+  "source_files": {
+    "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+    "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+    "configs/research/kity_execution_micro_owner_bounds_v3_20261015.json": "9d8c6e036fe9446de539c20b89164dd019c0d6012464ce66f25581fe572b80ad",
+    "reports/evidence/kity_bybit_c2_actual_20261015/c2_public_receipt.json": "b93d0994e74e3ac61df676410e74771a3230e8e23a81e052665994e686c6e903",
+    "reports/evidence/kity_micro_live_20261015/build_readonly_dossier.py": "73f4870d8a6c24cb14180f5157fcbdaee2a5756a75a14839bb9f8d473276ef5c",
+    "research_lab/kity_execution_micro_bybit_v1.py": "2ba72fc372253d157e55ab5ec82051c083d9f0bccb2584c6a9807329cd1bb0ac",
+    "research_lab/kity_execution_micro_runtime_v1.py": "096680750fc1c532fa04d96c2cbbe64987738ea4ac293bc46d366e92596281a0",
+    "research_lab/kity_execution_micro_v1.py": "bd7a8c5903b67129185404e4db6b761d37185e6e450d6624d83ee56a71860b74",
+    "research_lab/kity_micro_account_bridge_v1.py": "14ae88b9df55614736c9194ba1a2689391ee2d3677bdddb2091e103cb2a079ee",
+    "research_lab/kity_micro_bounded_owner_v2.py": "24fb4b82954085153806beaf8a196f5417ebaca053b46afd30dfd9592483efd8",
+    "research_lab/kity_micro_handoff_v1.py": "d85439dd2b25e36b51868ccd6946ae22a900e2fc30a963d76b0a901eb3315b09",
+    "research_lab/kity_micro_physical_owner_v1.py": "35a6fdb7e6f10b67e4b770444d45812e02ff22be38dcab5cf32a0482d5af78c2",
+    "research_lab/kity_micro_preflight_v1.py": "e16055dc5db88255ff129f046c63f7851647eb63da0f01c23b8f13a54ad44acc",
+    "research_lab/kity_micro_pricing_intent_v2.py": "52ee222d7f2c6b64593068b907006baa5105b96ccc95d2390547dcf69a96a8dd",
+    "research_lab/kity_micro_supervisor_v1.py": "593bd62ba34d87461a3e2f344a2c55cf95ca58bce39eec251ae8616f491f8a93",
+    "research_lab/kity_micro_transport_v1.py": "562c8a9b5ffd1b24b7742bfed02320bf0c19407de7727c2b304c2823167f5294"
+  },
+  "unit": {
+    "MainPID": "2209853",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "health_before": {
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "observed_ms": 1792089560477,
+    "status": "HEALTHY",
+    "restart_allowed": false,
+    "orders_allowed": false,
+    "reason": "CURRENT_OWNER_HEALTHY",
+    "owner": "KITY_MICRO",
+    "pid": 2208912,
+    "age_ms": 255
+  },
+  "health_after": {
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "observed_ms": 1792089562946,
+    "status": "HEALTHY",
+    "restart_allowed": false,
+    "orders_allowed": false,
+    "reason": "CURRENT_OWNER_HEALTHY",
+    "owner": "KITY_MICRO",
+    "pid": 2209853,
+    "age_ms": 181
+  },
+  "account_flat": true,
+  "positions": 0,
+  "open_orders": 0,
+  "original_account_lock_inode": 818853,
+  "second_lease_refused": true,
+  "predecessor_terminal_and_accounting_verified": true,
+  "predecessor_net_usdt": "-0.07953733",
+  "new_experiment_prepared": false,
+  "new_selected_experiment": false,
+  "new_money_go": false,
+  "new_broker_posts": 0,
+  "historical_post_barriers": 3,
+  "mode": "ORDERS_OFF",
+  "heartbeat_error": null,
+  "account_specific_instruments": [
+    {
+      "symbol": "BNBUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "bd45820f5201d27d78b453e17fa42e743de20b2fdfac3302c835293f3fb83975",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "bd45820f5201d27d78b453e17fa42e743de20b2fdfac3302c835293f3fb83975"
+    },
+    {
+      "symbol": "XAUTUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "7b1d42604093bf0599bf8634b146ea90a94b4ed61c5f98dd30f1388981d91f79",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "7b1d42604093bf0599bf8634b146ea90a94b4ed61c5f98dd30f1388981d91f79"
+    },
+    {
+      "symbol": "GRASSUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "eb29f062c0868eef9136b594bfd44c15db5b4b45d188cace482056df82417362",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "eb29f062c0868eef9136b594bfd44c15db5b4b45d188cace482056df82417362"
+    },
+    {
+      "symbol": "LTCUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "bbce70660d22263a901b6dd72f0f456f7777953f09a92e21589945a0747de414",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "bbce70660d22263a901b6dd72f0f456f7777953f09a92e21589945a0747de414"
+    },
+    {
+      "symbol": "XAGUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "5c46e1ceb0a4c49f88a0d846b97c2372feec0414dfcf5cc8ca791a169db7ca3a",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "5c46e1ceb0a4c49f88a0d846b97c2372feec0414dfcf5cc8ca791a169db7ca3a"
+    },
+    {
+      "symbol": "XAUUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "5c4f90d1514e38b1d90bea49cf55a634d036d4367597f6cfc3aab43effbee9b8",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "5c4f90d1514e38b1d90bea49cf55a634d036d4367597f6cfc3aab43effbee9b8"
+    },
+    {
+      "symbol": "SPCXUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "9bec554ce3692234b2460a109007ed0532483d7c026df4caff4fa29634809d55",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "9bec554ce3692234b2460a109007ed0532483d7c026df4caff4fa29634809d55"
+    },
+    {
+      "symbol": "VVVUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "63d9d7f2db2b0487ee8c52c47341500b2512160d7c6fc775d87221049a166fb8",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "63d9d7f2db2b0487ee8c52c47341500b2512160d7c6fc775d87221049a166fb8"
+    },
+    {
+      "symbol": "BTWUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "a000175916f790a226555ff132ad160d0b6257f897aaf615ffb352d002719ecb",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "a000175916f790a226555ff132ad160d0b6257f897aaf615ffb352d002719ecb"
+    },
+    {
+      "symbol": "XPLUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "bec66da53d3388adb2df1d286354ffb96f7a3c3cd757125a1b5b741b1c420319",
+      "status": "Trading",
+      "account_public_specification_match": true,
+      "terms_state": "UNKNOWN_NOT_EXPOSED_BY_CHECKED_GET",
+      "raw_evidence_sha256": "bec66da53d3388adb2df1d286354ffb96f7a3c3cd757125a1b5b741b1c420319"
+    }
+  ],
+  "api_account_is_master": false,
+  "api_read_only_flag": 0,
+  "api_contract_permissions": [
+    "Order",
+    "Position"
+  ],
+  "api_derivatives_permissions": [
+    "DerivativesTrade"
+  ],
+  "api_expiry": "2026-11-06T08:43:37Z",
+  "account_ui_identity_match": "UNCONFIRMED_OWNER_CHECK_PENDING",
+  "account_terms_acknowledgement": "UNKNOWN",
+  "owner_reported_ui_terms_confirmation": false,
+  "static_blockers": [],
+  "execution_blockers": [
+    "XAU_TRADING_TERMS_PREVIOUSLY_REJECTED_110123_ACKNOWLEDGEMENT_NOT_CONFIRMED"
+  ],
+  "fresh_only": [
+    "Next actual quote/depth/cash/margin/fees/funding/eligibility snapshot after blocker closure",
+    "Separate exact human GO on one new immutable intent"
+  ],
+  "targeted_tests_passed": 169,
+  "new_v3_tests": 9,
+  "full_repository_suite_run": false,
+  "review": "ROOT_ONLY",
+  "research_evidence_eligible": false,
+  "counts_toward_C1_C2_C3": false,
+  "official_sources": [
+    "https://bybit-exchange.github.io/docs/v5/account/instrument",
+    "https://bybit-exchange.github.io/docs/v5/user/apikey-info",
+    "https://bybit-exchange.github.io/docs/v5/error"
+  ],
+  "private_evidence_sha256": {
+    "initial-health.json": "2007079fabd6bbfaaa709b01629b413748979e21fdd763d6878c830002180459",
+    "install-result-v3.json": "e63bba4c59d65b028dc15ad2378ecd06d44bf5d28a6bd1443751ba29b2f2580a",
+    "account-eligibility-terms-observation.json": "b1ef74b8517d4bf435cc1b3b47cb6f78de559700b89f552929f2623a87d5808b"
+  }
+}

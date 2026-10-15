@@ -1,5 +1,13 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT October15 final-night: checkpoint TOP then
+KITY_FINAL_NIGHT_READINESS_2026_10_15.md. V3 physically installed/HEALTHY/
+ORDERS_OFF,169targetedPASS; no new intent/GO/POST. Owner explicitly NO ORDERS.
+Remaining TradingTerms acknowledgement unknown; master account signs metals/
+stockperps agreement, checkedGETs/listingTrading are not acceptance. No signing
+POST or probeorder. Resolve personally/UI/support, then separate fresh exactGO.
+Priorf040 net-.07953733/TERMINAL retained, no ten-legPASS. Preserve Alpaca LIVE.
+
 CURRENT October15: start canonical checkpoint TOP, then
 KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md. KITY micro TERMINAL/FLAT,
 net-.07953733; XAU110123 requires owner Trading Terms, ten-legPASS absent.

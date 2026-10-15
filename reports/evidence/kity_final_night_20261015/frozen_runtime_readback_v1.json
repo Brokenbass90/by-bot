@@ -1,0 +1,32 @@
+{
+  "schema": "KITY_FROZEN_V3_FINAL_READBACK_V1",
+  "observed_ms": 1792090185077,
+  "status": "FROZEN_V3_ORDERS_OFF_VERIFIED",
+  "source_files_verified": 16,
+  "unit": {
+    "MainPID": "2209853",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "health": {
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "observed_ms": 1792090185003,
+    "status": "HEALTHY",
+    "restart_allowed": false,
+    "orders_allowed": false,
+    "reason": "CURRENT_OWNER_HEALTHY",
+    "owner": "KITY_MICRO",
+    "pid": 2209853,
+    "age_ms": 2442
+  },
+  "mode": "ORDERS_OFF",
+  "phase": "NO_ACTIVE_PLAN",
+  "historical_post_barriers": 3,
+  "new_intent": false,
+  "new_selection": false,
+  "broker_gets": 0,
+  "broker_posts": 0,
+  "readback_script_sha256": "1a764b08514f60087ff84124c3ef7a11096b096a646dd38c50ecd114d5267e89",
+  "config_sha256": "4b67083fe925735b69eada2a038e30fc9d4aaf0bd76552e7c110ea3a074f220f",
+  "unit_sha256": "39719c687fe8e9f8e541a6bad04f9847bdd7873168ab1f220cd3f81288950541"
+}

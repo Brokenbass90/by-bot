@@ -1,5 +1,13 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT October15 final-night: checkpoint TOP and
+KITY_FINAL_NIGHT_READINESS_2026_10_15.md supersede the recovery-only identity
+below. V3 installedHEALTHY/ORDERS_OFF,169targetedPASS,no new intent/GO/POST.
+Owner requests NO ORDERS while TradingTerms are unconfirmed; official agreement
+is master-signed/inherited by subaccounts, not established by instrumentGET.
+Personal acceptance/UI/support required; no agent legal-signing/probeorder.
+Prior filled/accounted terminal remains pinned. Alpaca LIVE management untouched.
+
 CURRENT October15: canonical checkpoint TOP supersedes dated history below.
 KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md closes actual f040 micro:
 broker flat/actual finality/net-.07953733, XAU TradingTerms110123/no ten-legPASS.

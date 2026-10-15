@@ -5,7 +5,7 @@ lives in experiments-v2/<intent_id>. No literal plan GO is fabricated from the
 human intent GO. The existing bridge receives its internal exact-plan token
 only after the physical owner validates that independent bounded permission.
 """
-import argparse,copy,hashlib,json,re,sqlite3,time,tempfile
+import argparse,copy,hashlib,json,os,re,sqlite3,time,tempfile
 from pathlib import Path
 
 from bot.kity_m3_orders_off import digest
@@ -14,7 +14,7 @@ from research_lab.kity_micro_account_bridge_v1 import MicroAccountBridge
 from research_lab.kity_micro_physical_owner_v1 import (
     PhysicalOwner,AccountLease,SignedPostOnce,EvidenceReader,platform_verifier,
     load_bound_credentials,publish,sha,now_ms,capture_account,
-    rows,
+    rows,batch_get,
 )
 from research_lab.kity_micro_transport_v1 import BybitReadTransport,SourceError,wire_get
 from research_lab.kity_micro_supervisor_v1 import Supervisor,sd_notify,recover_without_reentry
@@ -44,14 +44,69 @@ def read_predecessor(config):
         p=Path(name)
         if not p.is_file() or any(x.is_symlink() for x in (p,*p.absolute().parents)) or sha(p.read_bytes())!=pin:
             raise SourceError('PREDECESSOR_SOURCE_DRIFT')
-    root=Path(config['runtime_root']);d=json.loads((root/'active-plan.json').read_bytes())
+    root=Path(config.get('predecessor_store',config['runtime_root']));d=json.loads((root/'active-plan.json').read_bytes())
     rt.validate_plan(d['plan'])
     if d['plan']['plan_id']!=config['predecessor_plan_id']:raise SourceError('PREDECESSOR_PLAN_CONFLICT')
+    if config.get('predecessor_kind')=='ACCOUNTED_MICRO_TERMINAL':
+        receipt=Path(config['predecessor_receipt'])
+        required={str(root/n) for n in ('active-plan.json','lifecycle.sqlite','owner-go.json')}|{str(receipt)}
+        if not required<=set(config['predecessor_files']):raise SourceError('PREDECESSOR_REQUIRED_PINS_MISSING')
+        s=read_state(root/'lifecycle.sqlite',d['plan'],JournalV2);proof=json.loads(receipt.read_bytes())
+        if (not terminal_orders_off(s) or proof.get('phase')!='TERMINAL'
+            or proof.get('plan_id')!=d['plan']['plan_id'] or proof.get('broker_flat_proven') is not True
+            or rt.signed(proof.get('terminal_net_usdt'))!=rt.signed(s['terminal_net_usdt'])):
+            raise SourceError('PREDECESSOR_ACCOUNTING_OR_FLAT_CONFLICT')
+        return s
     s=read_state(root/'lifecycle.sqlite',d['plan'])
     if (s['phase']!='TERMINAL' or s.get('execution_verdict')!='NO_SEND_NOT_LIFECYCLE_PASS'
         or s['entries'] or s['exits'] or s['fills'] or s['first_send_ms'] is not None
         or s['broker_flat_proven'] is not True):raise SourceError('PREDECESSOR_NOT_EXACT_NO_SEND')
     return s
+
+
+def terminal_orders_off(state):
+    if not state or state.get('phase')!='TERMINAL' or state.get('broker_flat_proven') is not True:return False
+    try:
+        rt.signed(state['terminal_net_usdt'])
+        return (not state['ownership_conflict'] and not state['fee_unknown_execution_ids']
+            and all(rt.numeric(q,zero=True)==0 for q in state['held'].values())
+            and all(rt._accounted(o) for o in list(state['entries'].values())+list(state['exits'].values())))
+    except (KeyError,ValueError,TypeError):return False
+
+
+def runtime_roots(config):
+    root=Path(config['runtime_root']);custody=Path(config.get('custody_runtime_root',root))
+    if custody!=root and (root.parent!=custody or root.name!='night-final-20261015'
+        or config.get('operation_scope')!='ONE_FINAL_NIGHT_2026_10_15'
+        or config.get('predecessor_kind')!='ACCOUNTED_MICRO_TERMINAL'):
+        raise SourceError('FINAL_NIGHT_RUNTIME_CUSTODY_SCOPE')
+    if any(p.is_symlink() for p in (root,*root.absolute().parents,custody,*custody.absolute().parents)):
+        raise SourceError('RUNTIME_CUSTODY_SYMLINK')
+    return root,custody
+
+
+def check_unselected_history(root,custody,config):
+    if config.get('operation_scope')!='ONE_FINAL_NIGHT_2026_10_15' or (root/'selected-v2.json').exists():return
+    known=config['wire_baseline_files']
+    if (any(str(p) not in known for p in (custody/'wire').glob('send-*.json'))
+        or any(p.is_file() for p in (root/'experiments-v2').glob('**/*'))):
+        raise SourceError('MISSING_SELECTED_STATE_WITH_HISTORY')
+
+
+def account_instrument_available(cap,symbol):
+    result=BybitReadTransport.result(cap);items=result.get('list')
+    if result.get('category')!='linear' or not isinstance(items,list) or len(items)!=1:
+        raise SourceError('ACCOUNT_INSTRUMENT_SOURCE_UNKNOWN:'+symbol)
+    i=items[0]
+    if (i.get('symbol')!=symbol or i.get('status')!='Trading' or i.get('contractType')!='LinearPerpetual'
+        or i.get('quoteCoin')!='USDT' or i.get('settleCoin')!='USDT'
+        or i.get('unifiedMarginTrade') is not True or i.get('isPreListing') is not False):
+        raise SourceError('ACCOUNT_INSTRUMENT_NOT_ELIGIBLE:'+symbol)
+    for field in ('minOrderQty','maxOrderQty','maxMktOrderQty','qtyStep','minNotionalValue'):
+        rt.numeric(i['lotSizeFilter'][field])
+    rt.numeric(i['priceFilter']['tickSize'])
+    return dict(symbol=symbol,account_instrument_available=True,create_acceptance_proven=False,
+        terms_acceptance_proven=False,source_sha256=cap.get('raw_sha256'),status=i['status'])
 
 
 def selected_store(root,selection):
@@ -154,6 +209,9 @@ class BoundedOwner(PhysicalOwner):
             raise SourceError('ROLLBACK_INHIBITS_ENTRY')
     def validate_preflight(self,plan,request,role):
         if role=='ENTRY':self.entry_fence()
+        if role=='ENTRY' and getattr(self,'require_account_instruments',False):
+            cap=self.reader.get('/v5/account/instruments-info',dict(category='linear',symbol=request['symbol']))
+            account_instrument_available(cap,request['symbol'])
         super().validate_preflight(plan,request,role)
         if role=='ENTRY':self.entry_fence()
     def mark_no_wire(self,req):
@@ -195,14 +253,17 @@ def validate_control(x):
 
 class BoundedSupervisor(Supervisor):
     def __init__(self,config):
-        self.config=config;self.root=Path(config['runtime_root'])
-        self.lease=AccountLease(self.root/'account.lock')
+        self.config=config;self.root,self.custody_root=runtime_roots(config)
+        if self.custody_root!=self.root and not (self.custody_root/'account.lock').is_file():
+            raise SourceError('ORIGINAL_LOCK_MISSING')
+        check_unselected_history(self.root,self.custody_root,config)
+        self.lease=AccountLease(self.custody_root/'account.lock')
         if self.lease.inode!=config['account_lock_inode']:raise SourceError('ORIGINAL_LOCK_INODE_CONFLICT')
         self.previous=read_predecessor(config);key,secret=load_bound_credentials(config)
         self.check=platform_verifier(config)
         wire=lambda method,url,headers,data,timeout:wire_get(method,url,headers,data,2)
-        self.reader=EvidenceReader(BybitReadTransport(key,secret,wire=wire),self.root/'raw')
-        self.writer=SignedPostOnce(key,secret,self.root/'wire')
+        self.reader=EvidenceReader(BybitReadTransport(key,secret,wire=wire),self.custody_root/'raw')
+        self.writer=SignedPostOnce(key,secret,self.custody_root/'wire')
         self.journal=None;self.owner=None;self.spec=None;self.experiment_root=None
         selection=self.root/'selected-v2.json'
         if selection.exists():
@@ -225,7 +286,8 @@ class BoundedSupervisor(Supervisor):
         self.spec={i['symbol']:i for i in dossier['instruments']};self.dossier=dossier
         self.journal=JournalV2(store/'lifecycle.sqlite',dossier['plan'])
         self.owner=BoundedOwner(self.journal,self.reader,self.lease,store,platform_check=self.check,
-            post=self.writer.post,dossier=dossier,wire_root=self.root/'wire')
+            post=self.writer.post,dossier=dossier,wire_root=self.custody_root/'wire')
+        self.owner.require_account_instruments=self.config.get('require_account_instruments') is True
         self.bridge=MicroAccountBridge(self.journal,self.reader,owner=self.owner)
     def recover_saved_terms_rejections(self):
         """Resolve a saved, definite POST refusal; empty GETs alone prove nothing."""
@@ -234,7 +296,8 @@ class BoundedSupervisor(Supervisor):
             if order['terminal'] or order['order_id'] is not None or rt.numeric(order['filled'],zero=True):continue
             request=next(l['request'] for l in self.journal.plan['legs'] if l['symbol']==symbol)
             key=digest(dict(path='/v5/order/create',request=request))
-            send=self.root/'wire'/('send-'+key+'.json');response=self.root/'wire'/('response-'+key+'.json')
+            wire=getattr(self,'custody_root',self.root)/'wire'
+            send=wire/('send-'+key+'.json');response=wire/('response-'+key+'.json')
             if not send.is_file() or not response.is_file():continue
             if send.is_symlink() or response.is_symlink():raise SourceError('REJECTION_WIRE_SYMLINK')
             sent=json.loads(send.read_bytes());cap=json.loads(response.read_bytes())
@@ -258,7 +321,12 @@ class BoundedSupervisor(Supervisor):
                 ret_code=body['retCode'],at_ms=now_ms(),source_sha256=sha(response.read_bytes()),
                 event_id='saved-terms-rejection-'+order['link']))
     def fresh(self,store):
+        permissions={}
+        if self.config.get('require_account_instruments') is True:
+            permissions=batch_get(self.reader,[(s,'/v5/account/instruments-info',dict(category='linear',symbol=s)) for s,_ in rt.BASKET])
+            for s,cap in permissions.items():account_instrument_available(cap,s)
         cap=capture_account(self.reader);cap['response']['physical_config_sha256']=self.config['_config_sha256']
+        if permissions:cap['response']['account_instruments']=permissions
         p=store/'captures'/('capture-'+str(cap['response']['started_ms'])+'.json');pin=publish(p,cap)
         bounds=json.loads((Path(self.config['app_root'])/self.config['bounds_file']).read_bytes())
         return load_source(p,pin,bounds,self.config['_config_sha256'])
@@ -266,7 +334,17 @@ class BoundedSupervisor(Supervisor):
         if self.config.get('recovery_binding') is not None:raise SourceError('RECOVERY_ONLY_NO_NEW_SELECTION')
         if (self.root/'rollback-request.json').exists():raise SourceError('CONTROL_CLOSED_FOR_ROLLBACK')
         if (self.root/'selected-v2.json').exists():raise SourceError('ONE_BOUNDED_EXPERIMENT_ALREADY_SELECTED')
+        check_unselected_history(self.root,getattr(self,'custody_root',self.root),self.config)
         read_predecessor(self.config);self.check()
+    def heartbeat(self,error=None):
+        state=self.journal.snapshot() if self.journal else None
+        custody=getattr(self,'custody_root',self.root)
+        active=bool(self.owner and self.owner._authorized and not terminal_orders_off(state))
+        publish(custody/'heartbeat.json',dict(schema='kity_micro_owner_heartbeat_v1',pid=os.getpid(),
+            at_ms=now_ms(),mode='EXACT_GO_SCOPED_MANAGEMENT' if active else 'ORDERS_OFF',
+            account_lock_inode=self.lease.inode,active_plan_id=state['plan_id'] if state else None,
+            phase=state['phase'] if state else 'NO_ACTIVE_PLAN',state=state,error=None if error==[] else error,
+            trading_post_attempts=len(list((custody/'wire').glob('send-*.json')))),exclusive=False)
     def control(self,x):
         validate_control(x);kind=x['kind']
         if kind=='KILL':return super().control(x)
@@ -286,7 +364,7 @@ class BoundedSupervisor(Supervisor):
         if kind=='REHEARSE_BOUNDED':
             d,c=self.fresh(self.root/'bounded-rehearsals');out=materialize(i,d,c,now_ms=now_ms())
             verify_materialization(out);results=[]
-            before=len(list((self.root/'wire').glob('send-*.json')))
+            before=len(list((self.custody_root/'wire').glob('send-*.json')))
             with tempfile.TemporaryDirectory(prefix='bounded-no-send-',dir=self.root) as tmp:
                 j=JournalV2(Path(tmp)/'rehearsal.sqlite',out['plan'])
                 o=PhysicalOwner(j,self.reader,self.lease,tmp,platform_check=self.check,post=self.writer.post)
@@ -302,7 +380,7 @@ class BoundedSupervisor(Supervisor):
                         results.append(dict(symbol=leg['symbol'],fresh_result=status))
                     if j.snapshot()['entries']:raise SourceError('REHEARSAL_CREATED_ENTRY_INTENT')
                 finally:j.close()
-            if len(list((self.root/'wire').glob('send-*.json')))!=before:raise SourceError('REHEARSAL_POST_BARRIER_CHANGED')
+            if len(list((self.custody_root/'wire').glob('send-*.json')))!=before:raise SourceError('REHEARSAL_POST_BARRIER_CHANGED')
             fresh_only=[r for r in results if r['fresh_result']!='FRESH_PREFLIGHT_PASS_POST_INHIBITED']
             return dict(status='BOUNDED_GET_ONLY_REHEARSAL_PASS' if not fresh_only else 'BOUNDED_REHEARSAL_FRESH_ONLY',intent_id=i['intent_id'],
                 plan_id=out['plan']['plan_id'],gross=out['current_basket_gross_usdt'],
@@ -336,6 +414,7 @@ def rollback(config):
     """Explicit operator path only. Never invoked by a watchdog or source check."""
     from research_lab.kity_micro_handoff_v1 import verify_files,fresh_flat,run,OLD_UNITS
     from research_lab.kity_micro_physical_owner_v1 import unit_state
+    if config.get('custody_runtime_root'):raise SourceError('FINAL_NIGHT_NO_LEGACY_ROLLBACK')
     root=Path(config['runtime_root']);verify_files(config);read_predecessor(config)
     if not (root/'rollback-request.json').exists():publish(root/'rollback-request.json',dict(at_ms=now_ms(),reason='BOUNDED_OWNER_RETURN_REQUESTED'))
     rollback_state(config)

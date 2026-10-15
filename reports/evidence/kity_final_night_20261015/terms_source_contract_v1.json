@@ -1,0 +1,46 @@
+{
+  "schema": "KITY_TRADING_TERMS_SOURCE_CONTRACT_V1",
+  "status": "TRADING_TERMS_ACKNOWLEDGEMENT_UNCONFIRMED",
+  "recorded_at_utc": "2026-10-15T18:47:54.801533+00:00",
+  "prior_receipt_sha256": "f81e7164710be93eb9f678b73853fec4c437e47b56d6714322267683e110912a",
+  "owner_report": {
+    "intended_subaccount_ui_checked": true,
+    "agreement_prompt_shown": false,
+    "personal_acceptance_confirmed": false,
+    "latest_authority": "READ_ONLY_NO_ORDERS"
+  },
+  "checked_authenticated_gets": [
+    "/v5/account/instruments-info",
+    "/v5/user/query-api",
+    "/v5/account/info"
+  ],
+  "get_conclusion": "CHECKED_GET_RESPONSES_DO_NOT_EXPOSE_ACCEPTED_TERMS_ACKNOWLEDGEMENT",
+  "official_sources": [
+    {
+      "url": "https://bybit-exchange.github.io/docs/v5/user/sign-agreement",
+      "title": "Sign Agreement",
+      "operation": "POST /v5/user/agreement",
+      "operation_semantics": "SIGNS_LEGAL_AGREEMENT_NOT_READ_ONLY_STATUS",
+      "api_signing_account": "MASTER_ONLY",
+      "subaccounts_inherit": true,
+      "metals_and_stock_perps_categoryV2": 1,
+      "legacy_category": 2
+    },
+    {
+      "url": "https://www.bybit.com/en/learn/bybit-tradfi/trade-tradfi-perpetuals-bybit",
+      "title": "How to trade TradFi Perpetuals on Bybit",
+      "finding": "METALS_AGREEMENT_SEPARATE_FROM_GENERAL_TRADFI_RISK_DISCLOSURE"
+    }
+  ],
+  "agent_operations": {
+    "agreement_post_called": false,
+    "order_precheck_post_called": false,
+    "new_broker_orders": 0,
+    "new_intent_prepared": false,
+    "new_money_go": false
+  },
+  "next_action": "OWNER_PERSONAL_AGREEMENT_RESOLUTION_VIA_MASTER_ACCOUNT_UI_OR_SUPPORT_THEN_ONE_FRESH_PROPOSAL_AND_SEPARATE_EXACT_GO",
+  "permissions_not_inferred_from_instrument_listing": true,
+  "raw_account_identity_retained_private": true,
+  "research_or_C1_C2_C3_authority": false
+}

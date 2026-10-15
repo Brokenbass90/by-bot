@@ -1,5 +1,31 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 18:40UTC / subsequent owner UI check CURRENT:
+KITY_FINAL_NIGHT_STATIC_READY_ORDERS_OFF_TERMS_UNCONFIRMED. Read
+KITY_FINAL_NIGHT_READINESS_2026_10_15.md and its static/source-contract receipts.
+Owner's attached final-night scope authorized a separate V3 single-writer kit;
+installed18:39:23UTC app-v3-final-night, config4b67083f…220f,unit39719c68…5541,
+PID2209853/NRestarts0, original818853lock/wire/heartbeat.16pins,169targetedPASS,
+HEALTHY/ORDERS_OFF/noactiveplan/errornull; fresh install flat/open0/3historical
+POSTbarriers/no newPOST. Priorf040 TERMINAL/net-.07953733/alltenfalse is pinned,
+never reset. Newruntime namespace night-final-20261015,0intent/selection/GO.
+Authenticated10/10 account-instrument GET/publicspec match; listingTrading and
+APIOrder/Position permissions do NOT prove accepted TradingTerms/create success.
+Owner checked the intended subaccount; still no terms popup, NOT acceptance.
+Official /v5/user/agreement is signingPOST, master-only with subaccount-inherited
+eligibility; categoryV2=1 covers metals/stockperps. Agent did NOT call it or place
+probeorders. User explicitly NO ORDERS pending read-only eligibility check.
+One remaining blocker TRADING_TERMS_ACKNOWLEDGEMENT_UNCONFIRMED; owner resolves
+personal acceptance/UI/support, then one fresh final-night proposal/exactGO only.
+No premature10minTTL, repeatoldGO, automatic nextday scope or legacyrollback.
+Oldbybot/web inhibited; Alpacaownedmanager/ATT1/LIQ/cron/Claude unchanged. Older
+V2.2-as-current and no-new-scope paragraphs below are dated history, not current
+kit identity. Historical evidence stays immutable; no ten-leg/researchPASS.
+Final18:49:45UTC read-only kit/lock/health check confirms same16pins/PID2209853/
+NRestarts0/HEALTHY/ORDERS_OFF/noactiveplan/0newintent/0newPOST; no broker query
+in that final readback. See frozen_runtime_readback_v1.json. No moneyGO pending
+question; current required action is personal agreement resolution, not BUY.
+
 October15 18:15:14UTC CURRENT: KITY micro TERMINAL/FLAT_FINALITY_COMPLETE,
 not ten-legPASS. Read KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md and
 micro_terminal_2100.json. Human GO f040d23e…c436 consumed once; BTW Buy10

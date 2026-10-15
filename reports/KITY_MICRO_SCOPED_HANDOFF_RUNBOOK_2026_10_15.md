@@ -1,5 +1,14 @@
 # KITY physical owner app v1.2 / health custody v1.3 — operator runbook
 
+CURRENT October15 final-night: use ONLY
+KITY_FINAL_NIGHT_READINESS_2026_10_15.md for current V3 config/commands.
+app-v3-final-night/config4b67083f…220f/unit39719c68…5541/PID2209853;
+same818853lock/sharedwire, new night-final-20261015 control namespace.
+HEALTHY/ORDERS_OFF, no intent/selection/newGO/POST;169targetedPASS. Owner says
+NO ORDERS pending TradingTerms acknowledgement. No legal-signing/probeorder,
+legacyrollback, oldGO reuse or prematureTTL. Priorf040 actual terminal retained.
+The V1/V2 recipes below are history, NOT current executable instructions.
+
 CURRENT October15: read KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md.
 Actual f040…c436 spent/TERMINAL/flat/final accounting, ten-legPASS false;
 XAU110123 requires owner Trading Terms. V2.2 recovery-only config1033ffe7…d068e/

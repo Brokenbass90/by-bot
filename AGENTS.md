@@ -632,3 +632,19 @@ only. Next owner action: personally review/accept applicable Bybit Trading Terms
 agent must not accept legal terms. Future experiment needs separate fresh scope/
 proposal/exact GO, never reset/reuse spent experiments. Old bybot/web inhibited;
 Alpaca/ATT1/LIQ/cron/Claude preserved. Existing recovery owner stays authoritative.
+
+October15 subsequent final-night owner scope is implemented orders-OFF. Read
+KITY_FINAL_NIGHT_READINESS_2026_10_15.md/current checkpoint TOP. Separate16-file
+V3 app-v3-final-night with new night-final-20261015 control namespace replaces
+the physical KITY process, retaining original818853lock/wire/heartbeat and
+pinned priorf040 TERMINAL/net-.07953733. Config4b67083f…220f/unit39719c68…5541,
+PID2209853/NRestarts0/HEALTHY/ORDERS_OFF,169targetedPASS/no newintent/GO/POST.
+The latest human explicitly requires NO ORDERS during terms investigation.
+Authenticated10/10account-instrument GET/publicspec match does not establish
+legal acknowledgement or successful create. Human checked intended subaccount
+UI; no terms prompt, not acceptance. Official /v5/user/agreement signs metals/
+stockperp agreement (categoryV2=1) from master, inherited by subaccounts; do NOT
+call it for the human. Remaining blocker is unconfirmed TradingTerms. After
+personal acceptance/UI/support resolution, one fresh final-night proposal and
+separate exactGO; no10minTTL before that, no oldGO/nextday transfer/probeorder.
+No legacyrollback from this namespace. Alpaca/ATT1/LIQ/cron/Claude preserved.
