@@ -1,0 +1,97 @@
+{
+ "prereg": "PREREG_ELDER_ETS2M_HIST_DEV_2026_10_15.md",
+ "resheniy": 5673,
+ "ispolneno": 5076,
+ "dolya_ispolneniya": 0.8948,
+ "sha256_sdelki": "f95fc76b3480a39aa6ef619723a9e2841aa221f9225ebea2b4138b201f1dae6d",
+ "po_eram_n": {
+  "E1": 748,
+  "E2": 2125,
+  "E3": 2203
+ },
+ "kandidaty": {
+  "CONTROL_dengi": {
+   "srednee": 0.031309818163908584,
+   "sigma_moneta": 4.256050923918769,
+   "sigma_nedelya": 1.2812790373748228,
+   "po_eram": {
+    "E1": -0.030818758021390374,
+    "E2": 0.043618296470588236,
+    "E3": 0.04053208715388107
+   },
+   "srednee_R": 0.031309818163908584,
+   "srednee_R_po_eram": {
+    "E1": -0.030818758021390374,
+    "E2": 0.043618296470588236,
+    "E3": 0.04053208715388107
+   },
+   "summa_R": 158.92863699999998,
+   "uslovia": {
+    "1_srednee>0": true,
+    "2_sigma_moneta>2.50": true,
+    "3_sigma_nedelya>2.00": false,
+    "4_znak_vo_vseh_erah": false,
+    "5_srednee_R>0_vsego_i_vo_vseh_erah": false
+   },
+   "verdikt": "FAIL"
+  },
+  "24H_vs_CONTROL": {
+   "srednee": -0.03578576871552404,
+   "sigma_moneta": -5.889156876412591,
+   "sigma_nedelya": -1.750669065847126,
+   "po_eram": {
+    "E1": 0.0069154759358288735,
+    "E2": -0.049992890823529416,
+    "E3": -0.03658032001815706
+   },
+   "srednee_R": -0.004475950551615445,
+   "srednee_R_po_eram": {
+    "E1": -0.023903282085561497,
+    "E2": -0.006374594352941177,
+    "E3": 0.003951767135724012
+   },
+   "summa_R": -22.719925,
+   "uslovia": {
+    "1_srednee>0": false,
+    "2_sigma_moneta>2.50": false,
+    "3_sigma_nedelya>2.00": false,
+    "4_znak_vo_vseh_erah": false,
+    "5_srednee_R>0_vsego_i_vo_vseh_erah": false
+   },
+   "verdikt": "FAIL"
+  },
+  "WIDE_vs_CONTROL": {
+   "srednee": 0.021082692868400317,
+   "sigma_moneta": 4.981379251291825,
+   "sigma_nedelya": 1.259782844882952,
+   "po_eram": {
+    "E1": -0.03089740909090909,
+    "E2": 0.021461507764705887,
+    "E3": 0.03836645801180209
+   },
+   "srednee_R": 0.05239251103230891,
+   "srednee_R_po_eram": {
+    "E1": -0.06171616711229946,
+    "E2": 0.06507980423529411,
+    "E3": 0.07889854516568315
+   },
+   "summa_R": 265.944386,
+   "uslovia": {
+    "1_srednee>0": true,
+    "2_sigma_moneta>2.50": true,
+    "3_sigma_nedelya>2.00": false,
+    "4_znak_vo_vseh_erah": false,
+    "5_srednee_R>0_vsego_i_vo_vseh_erah": false
+   },
+   "verdikt": "FAIL"
+  }
+ },
+ "info_edzh_CONTROL": {
+  "vse": 0.02860349940711462,
+  "sigma_moneta": 4.285025259001478,
+  "E1": -0.04398517583892618,
+  "E2": 0.035172033003300324,
+  "E3": 0.04690190565177758
+ },
+ "VERDIKT": "ELDER_HIST_DEV_KILL"
+}
