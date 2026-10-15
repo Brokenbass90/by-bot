@@ -1,0 +1,119 @@
+{
+  "schema": "KITY_PRICING_INTENT_LOCAL_DELIVERY_V2",
+  "status": "PRICING_INTENT_COMPILER_LOCAL_PASS",
+  "validation": "DATED_CAPTURE_OFFLINE_REPLAY_NOT_CURRENT_NOT_OWNER_GO",
+  "source_ms": 1792071663803,
+  "capture_sha256": "9203850c7bde00f37147565b2ea839bc8d1dcb869ac84a2ddc96787b7d389192",
+  "predecessor_plan_id": "ffeb4bc4924fe64586469377372dca88caaa9545544dc2920f3d1bc438ee6570",
+  "intent_id": "5878875a5ad0bd8b56fc3c0512c8d2e4c16fc3cf438830e1cb2870ce091b6858",
+  "materialized_plan_id": "4388afec9166c7c303038e3b1df2c0561a60a3c1ad86cc1bb87759a16efeaba4",
+  "proposed_collar_bps": "50",
+  "proposed_ttl_ms": 600000,
+  "proposal_parameters_owner_approved": false,
+  "source_hashes": {
+    "research_lab/kity_micro_pricing_intent_v2.py": "52ee222d7f2c6b64593068b907006baa5105b96ccc95d2390547dcf69a96a8dd",
+    "tests/test_kity_micro_pricing_intent_v2.py": "f236fcbd571039ddead8658a221a8ab2f7fe8e91d1597b0712f5efbb44021cac"
+  },
+  "gross_reference": "206.482530",
+  "ioc_limit_gross": "206.470400",
+  "max_all_reference_price_band_gross": "207.508680",
+  "estimated_entry_exit_fee_reserve": "0.21691617200",
+  "exact_bands": [
+    {
+      "symbol": "BTWUSDT",
+      "side": "Buy",
+      "quantity": "10",
+      "tick_size": "0.00001",
+      "min_price": "2.01823",
+      "max_price": "2.03851"
+    },
+    {
+      "symbol": "XAUUSDT",
+      "side": "Buy",
+      "quantity": "0.005",
+      "tick_size": "0.01",
+      "min_price": "4142.85",
+      "max_price": "4184.47"
+    },
+    {
+      "symbol": "LTCUSDT",
+      "side": "Buy",
+      "quantity": "0.3",
+      "tick_size": "0.01",
+      "min_price": "57.98",
+      "max_price": "58.56"
+    },
+    {
+      "symbol": "VVVUSDT",
+      "side": "Buy",
+      "quantity": "0.94",
+      "tick_size": "0.0010",
+      "min_price": "22.6990",
+      "max_price": "22.9270"
+    },
+    {
+      "symbol": "BNBUSDT",
+      "side": "Buy",
+      "quantity": "0.03",
+      "tick_size": "0.01",
+      "min_price": "714.38",
+      "max_price": "721.54"
+    },
+    {
+      "symbol": "XAUTUSDT",
+      "side": "Sell",
+      "quantity": "0.005",
+      "tick_size": "0.01",
+      "min_price": "4128.55",
+      "max_price": "4170.03"
+    },
+    {
+      "symbol": "XPLUSDT",
+      "side": "Sell",
+      "quantity": "262",
+      "tick_size": "0.00001",
+      "min_price": "0.08159",
+      "max_price": "0.08239"
+    },
+    {
+      "symbol": "XAGUSDT",
+      "side": "Sell",
+      "quantity": "0.378",
+      "tick_size": "0.01",
+      "min_price": "56.58",
+      "max_price": "57.14"
+    },
+    {
+      "symbol": "GRASSUSDT",
+      "side": "Sell",
+      "quantity": "34",
+      "tick_size": "0.00010",
+      "min_price": "0.61720",
+      "max_price": "0.62340"
+    },
+    {
+      "symbol": "SPCXUSDT",
+      "side": "Sell",
+      "quantity": "0.14",
+      "tick_size": "0.01",
+      "min_price": "142.90",
+      "max_price": "144.32"
+    }
+  ],
+  "native_stop_payloads": 10,
+  "quantities_unchanged": true,
+  "rounding_basis": "FROZEN_INTENT_REFERENCE_ONLY",
+  "money_authority": false,
+  "broker_posts": 0,
+  "process_changes": 0,
+  "physical_intent_runtime_bound": false,
+  "previous_GO_plan_journal_modified": false,
+  "independent_review": "ROOT_ONLY_EXISTING_QUOTA_RESTRICTION",
+  "pending_binding": [
+    "existing physical owner GO_INTENT command",
+    "separate experiment journal with immutable predecessor evidence and same account lock",
+    "expiry checks at fresh validation and immediately before each ENTRY POST; owned exits remain available",
+    "restart/selected-journal/rollback/health source binding",
+    "versioned deployment and actual GET-only no-send rehearsal"
+  ]
+}

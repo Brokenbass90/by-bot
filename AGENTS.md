@@ -572,3 +572,15 @@ or treat this as execution/strategy PASS. A new experiment or pricing-intent
 change needs separate explicit authorization. Preserve Alpaca owned management,
 KITY terminal recovery ownership and all research/shadows. Current checkpoint TOP
 and updated KITY RUNBOOK supersede old config/cron/PID/no-GO statements below.
+
+October15 next owner request: read-only NET ratchet verification completed,
+TRAILING_ACTIVE_AND_BOUND but below activation. Read
+ALPACA_OCT15_TRAILING_VERIFICATION.md; do not hot-change current LIVE protection.
+Owner also requests bounded pricing preparation before a later separate micro
+GO. Local compiler/replay delivered in KITY_BOUNDED_PRICING_PREPARATION_2026_10_15.md,
+30new/56targetedPASS; proposed50bps/10min pending owner selection. This is not
+physical runtime integration/installation or new money authority. The old
+ffeb…NO_SEND/GO/plan/journal stay consumed and immutable. Current one writer
+remains authoritative; no second sender, repeated legacy GO or legacy rollback
+on an unbound selected experiment. Subsequent actual intent GO and fresh binding
+must precede any new entry. Preserve research/Claude and failed Brain verdicts.

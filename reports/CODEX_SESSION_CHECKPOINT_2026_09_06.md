@@ -1,5 +1,29 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 bounded KITY pricing preparation: PRICING_INTENT_COMPILER_LOCAL_PASS,
+NOT physically installed/bound and NOT money READY. Read
+KITY_BOUNDED_PRICING_PREPARATION_2026_10_15.md for the complete remaining binding
+scope (GO_INTENT, separate selected journal/same lock, per-entry expiry,
+restart/health/rollback, source-pinned deployment/no-send). New module only;
+existing V1 physical writer/old plan/GO/journal remain unchanged and consumed.
+30 new/56 targetedPASS; recorded13:41 source replay exact oldplan then new
+same10quantity native-guard plan. No new capture/POST/process/research changes.
+Proposed50bps/600000ms parameters pending owner selection; no actionable hash
+or monetary GO. Do not use an expired replay hash, synthesize human exact-plan
+GO or point a selected new experiment at V1's old-journal rollback reader.
+
+October15 14:43:05.588UTC CURRENT read-only trailing verification:
+TRAILING_ACTIVE_AND_BOUND, not yet activated. NET .325167779, entry311.222,
+mark310.2494, HWM315.505, fullSTOP277.69/new, exact native lineage/PROTECTED.
+Manager14:40:03exit0;53installedpins verified. First exactactivation322.114770,
+cent-grid example322.12→312.77; next324.45→313.09. Read
+ALPACA_OCT15_TRAILING_VERIFICATION.md for formula/recovery and source limit:
+ratchet consumes position.current_price without independent markCTS validation;
+fresh broker clock is not mark freshness. Do not hot-change LIVE policy/stop.
+Privatecapture4d3c53fa…cbbf0; zero observer broker/native/service mutations.
+Latest owner asks bounded KITY pricing preparation/new separate GO, followed
+by Elder/common records; previous ffeb…NO_SEND and its GO stay consumed.
+
 Final13:56:31.988UTC GET-only guard confirms same NET fullSTOP277.69/qty.325167779,
 manager13:55exit0/53pins. ATT1 actualunit att1-lifecycle-zero-risk-v2.service
 PID1584802 and LIQactualunit bybit-liquidation-source-v2_1.service PID2095785
