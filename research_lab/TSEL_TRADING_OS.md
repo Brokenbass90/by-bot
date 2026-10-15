@@ -33,3 +33,9 @@ HEALTH / DEGRADATION → FACTORY → CHALLENGERS (стратегии и моде
 1. Сейчас: Alpaca → tiny LIVE; KITY → canary (15.10, 22.10); больше независимых проверенных sleeves. Ничто не задерживает 1.
 2. Средний срок: автоматический QA данных, execution ledger, feature store, health/degradation, ежедневная сводка владельцу.
 3. Дальше: ML-scorer challenger (LightGBM/XGBoost → neural), model registry (MLflow), drift/calibration, meta-brain.
+
+## Модуль TAX & ACCOUNTING OS (добавлено 15.10.2026, владелец + PM)
+Стратегический модуль Trading OS: цифровой налоговый помощник — неизменяемый финансовый журнал → сверка → классификация →
+налоговые правила по году (Кипр первым) → расчёт → доказательства/происхождение средств → декларация → подача и оплата только
+с подтверждения владельца. Полный план: TAX_ACCOUNTING_OS_ROADMAP.md. Сейчас ROADMAP ONLY; ближайшее требование (TAX-A) —
+журналы реального исполнения сохраняют учётные данные с первой сделки. Денежные контуры не блокирует.
