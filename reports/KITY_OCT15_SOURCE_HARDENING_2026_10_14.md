@@ -1,6 +1,25 @@
 # KITY Oct15 source hardening — current gate
 
-## CURRENT — KITY_OCT15_CAPTURE_READY (A1.3)
+## CURRENT — October15 CAPTURE_OBSERVATION_PASS
+
+[Sanitized terminal receipt](evidence/kity_oct15_source_observation_20261015/source_observation_terminal.json).
+The original one-shot observer ran exactly once at **00:01:46.055UTC /
+03:01:46.055 Cyprus** after verifying every published manifest/code/config pin.
+Actual capture **Oct14 23:50:20.224UTC**, completed **23:50:21.809UTC**,
+equivalent to Oct15 **02:50:20.224–02:50:21.809 Cyprus**. Both lie within the
+original frozen window. Producer/raw/snapshot/publisher hashes match; OI checks
+passed without missing-to-zero substitution.
+
+Private date-bound terminal receipt is retained unchanged and self-hash verified.
+Only the compact sanitized public receipt/checkpoint were added. No C2/C1,
+PnL/judge, broker/order, source write, restart or Claude edit was performed.
+The original heartbeat is **PAUSED**, with no repeat or date extension.
+Actual source capture is now PASS; independent C2, prospective lifecycle and
+money gates remain separate. Alpaca remains frozen/HALTED, pending its existing
+fresh preflight and separate exact owner GO.
+
+
+## October14 readiness — KITY_OCT15_CAPTURE_READY (A1.3)
 
 [Terminal receipt](evidence/kity_oct15_source_hardening_20261014/capture_readiness_terminal.json).
 Research `e27ef524c94f8d7835c5e8e99f5d77ab6fdc5552` is independently verified

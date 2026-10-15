@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 03:01 one source check COMPLETE: **CAPTURE_OBSERVATION_PASS**.
+Read reports/evidence/kity_oct15_source_observation_20261015/source_observation_terminal.json
+and CURRENT in KITY_OCT15_SOURCE_HARDENING_2026_10_14.md. Exact pre-capture
+manifest/observer/config pins match. CLI invoked EXACTLY ONCE at00:01:46.055UTC;
+private immutable receipt valid, body07c2aa04…9f40a8. Real capture23:50:20.224UTC,
+completed23:50:21.809UTC October14 =Oct15 02:50:20.224→02:50:21.809Cyprus,
+inside original23:50≤t<00:00UTC. Producer8d05c398…6140a/rawc9f2bde8…e9a75d/
+snapshot139bb9d8…8f69ea/publishera60cc482…38f13b match; OI finite/nonbool/≥0.
+This is ACTUAL source-only PASS, not merely READY and not actualC1/C2/moneyPASS.
+Own private terminal plus compact sanitized public receipt preserved; source
+files untouched. No source repair/re-read loop, C2 reconstruction/comparison,
+PnL/judge/broker/order/restart/Claude edit or Alpaca/ATT1/LIQ change. SAME heartbeat
+kity-oct15-one-source-deadline-observation now PAUSED after its one original check;
+no repeat/new date. Next KITY action is independent C2 only after its required
+actual archives/closed candles exist; existing frozen canary gates unchanged.
+Alpaca code remains frozen/HALT; fresh preflight and exact owner GO separate.
+
+
 October14 KITY source hardening terminal: **KITY_OCT15_CAPTURE_READY / ORDERS_OFF**.
 Read CURRENT in KITY_OCT15_SOURCE_HARDENING_2026_10_14.md and capture_readiness_terminal.
 CRO A1.3 research e27ef52 independently published; source8d05c398…6140a.15 bounded
