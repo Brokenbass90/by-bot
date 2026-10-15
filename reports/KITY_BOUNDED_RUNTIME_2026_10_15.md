@@ -1,5 +1,12 @@
 # KITY bounded single-writer runtime — October 15
 
+**SUPERSEDED by V2.1:** read KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md. The old
+7aa4504d…145cd intent expired unused; no GO/order/selection. An author-review
+PLANNING_DEFECT (expiry before slow final custody) was reproduced RED and fixed
+at the transport callback boundary. Separate app-v2-1-bounded deployed ordersOFF,
+240targetedPASS, PID2188843/NRestarts0. No old GO may be transferred. The text
+below, including old config/PID/exact GO command, is dated V2 history.
+
 **KITY_EXECUTION_MICRO_LIVE_READY / ORDERS OFF / MONEY GO PENDING.**
 Direct owner parameter reply `call_fae5497f3ccc42b391a1df63a4809274` approves
 ±0.5%, ten minutes and binding to the existing writer. It is not monetary GO.

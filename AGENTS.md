@@ -606,3 +606,15 @@ Do NOT rerun installation or old GO. New exact intent money GO pending, expires
 Oct15 18:30:11.877CY, hash7aa4504d…145cd. No transfer/extension/retry. V2 selected
 journal/rollback and local no-wire proofs preserve unknown-send barriers. Current
 LIVE Alpaca owned manager remains independent and unchanged.
+
+October15 V2.1 CURRENT supersedes the preceding V2 readiness identity. Author
+review found/reproduced PLANNING_DEFECT: expiry could pass during final parent
+custody; final callback fence added before transport invocation,240targetedPASS.
+Separate app-v2-1-bounded/config6d420ec0…5f54b2/unit08b7f04e…1671d installed
+ordersOFF,PID2188843/NRestarts0,same818853lock,originalffeb fourpins/oldkits intact.
+Old7aa…145cd intent expired unused/noGO/POST/selection; never extend/transfer it.
+Operator-owned temporary entry fence removed only by CAS after fresh no-risk
+upgrade. No monetary permission or old-writer restoration. Read
+KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md; make one new readiness proposal/rehearsal
+after code/docs freeze, then ask separate exact GO on the new hash. Research,
+Alpaca/ATT1/LIQ/Claude and risk/cost/hold bounds remain unchanged.

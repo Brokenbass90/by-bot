@@ -90,6 +90,19 @@ class BoundedOwner(PhysicalOwner):
     def __init__(self,*args,dossier,wire_root,**kwargs):
         super().__init__(*args,**kwargs)
         self.dossier=dossier;self.intent=dossier['pricing_intent'];self.wire_root=Path(wire_root)
+        transport=self.post
+        def final_transport(path,request):
+            # Parent post_once performs its custody check after our outer
+            # check. Recheck at the final call boundary, before the one-use
+            # SignedPostOnce barrier/signature/wire path, with no slow GET/CAS
+            # between this fence and that transport invocation.
+            if path=='/v5/order/create' and request.get('reduceOnly') is False:
+                try:self.entry_fence()
+                except SourceError:
+                    self.mark_no_wire(request)
+                    raise
+            return transport(path,request)
+        self.post=final_transport
         verify_materialization(dossier)
         c=json.loads((self.store/'intent-claim.json').read_bytes())
         if (c['intent_id']!=self.intent['intent_id']

@@ -87,6 +87,16 @@ def test_validation_checks_expiry_again_after_the_slow_get_preflight(tmp_path,mo
     assert not j.snapshot()['entries'] and not calls
 
 
+def test_expiry_during_final_custody_check_is_rechecked_at_transport_boundary(tmp_path,monkeypatch):
+    o,j,i,clock,calls=bound(tmp_path,monkeypatch)
+    o.accept_intent_go('GO KITY_EXECUTION_MICRO_INTENT_V2 '+i['intent_id'])
+    req=j.plan['legs'][0]['request'];j.append(event('ENTRY_INTENT',symbol=req['symbol']))
+    clock[0]=600999;o._ticket=(digest(req),'ENTRY',600999)
+    monkeypatch.setattr(o,'assert_exclusive',lambda *_:clock.__setitem__(0,601000))
+    with pytest.raises(ValueError,match='INTENT_CLOCK'):o.post_once('/v5/order/create',req)
+    assert calls==[] and j.snapshot()['entries'][req['symbol']]['local_not_sent']
+
+
 def test_predecessor_is_hash_verified_and_replayed_readonly(tmp_path):
     d,_=source();p=d['plan'];publish(tmp_path/'active-plan.json',d)
     j=MicroJournal(tmp_path/'lifecycle.sqlite',p)

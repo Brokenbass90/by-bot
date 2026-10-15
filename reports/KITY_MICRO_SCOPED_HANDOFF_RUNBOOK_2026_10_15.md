@@ -1,5 +1,11 @@
 # KITY physical owner app v1.2 / health custody v1.3 — operator runbook
 
+LATEST: V2.1 now supersedes the following V2 header. Read
+KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md: app-v2-1-bounded,
+config6d420ec0…5f54b2,unit08b7f04e…1671d,PID2188843/NRestarts0/ORDERS_OFF.
+240targetedPASS; last transport-boundary expiry regression fixed. Old7aa…145cd
+intent EXPIRED_UNUSED, no transferable GO. Same account lock/old-source custody.
+
 CURRENT subsequent bounded-pricing version: read
 `KITY_BOUNDED_RUNTIME_2026_10_15.md`. Owner PID2186777/NRestarts0/ORDERS_OFF,
 app-v2-bounded, config-v2-bounded.json36f3d72e…2269f,

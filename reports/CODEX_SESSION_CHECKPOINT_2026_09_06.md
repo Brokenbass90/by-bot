@@ -1,5 +1,19 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 subsequent CURRENT: V2.1 physically installed ORDERS_OFF/STATIC_READY.
+Read KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md. Author found PLANNING_DEFECT: expiry
+could pass during final parent custody after outer fence. New RED regression,
+callback-boundary final fence,240targetedPASS. Old intent7aa4504d…145cd expired
+unused/noGO/POST/selection; no extension/transfer. New immutable app-v2-1-bounded,
+config-v2-1-bounded.json6d420ec0…5f54b2,unit08b7f04e…1671d,
+PID2188843/NRestarts0/original lock818853.16pins,original ffeb fourfiles and
+oldsourcekits unchanged,3fresh flat/readback stages zero,oldwriters inhibited,
+cron/ATT1/LIQ/Alpaca unchanged. Own temporary entry fence removed by exactCAS
+after readiness, no ownerHALTclear/moneygrant. Installreceipt49bacf85…1bb50.
+Prepare one new V2.1 readiness proposal last, then actual GET-only rehearsal,
+new exact owner question. Earlier V2 READY/oldhash/config/PID paragraphs below
+are dated history. No monetary GO from the parameter reply or old question.
+
 October15 CURRENT bounded KITY physical binding COMPLETE/ORDERS_OFF:
 KITY_EXECUTION_MICRO_LIVE_READY,239targetedPASS,root-only review. Read
 KITY_BOUNDED_RUNTIME_2026_10_15.md and physical_owner_packet_v2.json under
