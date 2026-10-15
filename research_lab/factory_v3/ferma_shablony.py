@@ -17,7 +17,7 @@
       движения цены, НЕ объяснённая потоком (поглощение пассивной стороной); ортогонален KITY m3 по построению; вход как у KITY.
 Данные читаются через замороженный kity_sudya.zagruzit() (путь судьи); окно ограничено забором dostup.
 """
-import datetime as dt, json, sys
+import datetime as dt, json, math, sys
 from pathlib import Path
 import numpy as np
 LAB = Path(__file__).resolve().parents[1]
@@ -82,6 +82,26 @@ def _priznak(imya, D):
             a, b, c = g(s, vch), m3(s, vch), dd(s, vch)
             return None if a is None or b is None or c is None else (float(a), float(b), float(c[0]))
         return f
+    if imya == "up_premiya":                               # PREREG_UPBIT_PREMIYA_XS: премия Upbit KRW к перпу Binance дня d−1 минус
+        M = D["M"]; PU = D.setdefault("up_pr", {})        # её среднее за 28 предыдущих дней (≥ 20); курс KRW/USDT общий для всех монет
+        def ryad_u(s):
+            if s not in PU:
+                fp = LAB / "data" / "upbit_d1" / f"{s}.json"
+                up = json.loads(fp.read_text()) if fp.exists() else {}
+                x = M.get(s); r = {}
+                if up and x is not None:
+                    for t, c in zip(x["ts"], x["c"]):
+                        dd = dt.datetime.fromtimestamp(int(t) / 1000, dt.timezone.utc).date().isoformat()
+                        if dd in up and c > 0 and up[dd] > 0: r[dd] = math.log(up[dd] / float(c))
+                PU[s] = (sorted(r), r)
+            return PU[s]
+        import bisect, math
+        def f(s, vch):
+            dni, r = ryad_u(s)
+            if vch not in r: return None
+            j = bisect.bisect_left(dni, vch); okno = [r[x] for x in dni[max(0, j - 28):j]]
+            return None if len(okno) < 20 else r[vch] - sum(okno) / len(okno)
+        return f
     if imya == "cb_premiya":                               # PREREG_COINBASE_PREMIYA_XS: премия Coinbase USD к перпу Binance дня d−1
         M = D["M"]; CB = D.setdefault("coinbase", {}); PR = D.setdefault("cb_pr", {})   # минус её среднее за 28 предыдущих дней (≥ 20)
         def ryad(s):
@@ -113,7 +133,7 @@ def _priznak(imya, D):
 
 
 PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie", "glubina_imb1", "glubina_imb2", "glubina_imb5",
-            "glubina_ort", "cb_premiya", "cb_premiya_shok")
+            "glubina_ort", "cb_premiya", "cb_premiya_shok", "up_premiya")
 SOSTAVNYE = {"pogloshchenie", "glubina_ort"}   # значения-кортежи → остаток после проекции внутри недели
 
 
