@@ -1,5 +1,9 @@
 # KITY bounded owner V2.1 — October 15
 
+SUPERSEDED CURRENT: actual f040 micro is TERMINAL/flat/final accounting, no
+ten-legPASS. Read KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md and checkpoint TOP.
+V2.2 is recovery-only; no old proposal/GO/command below may be repeated.
+
 **KITY_EXECUTION_MICRO_LIVE_READY / ORDERS OFF / EXACT GO PENDING.**
 Same approved50bps/600000ms,215gross/15immediateall-intrigger/30minutes/20.3%
 reference rounding; accepted execution overshoot and research firewalls unchanged.

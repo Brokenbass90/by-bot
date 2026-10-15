@@ -1,0 +1,142 @@
+{
+  "schema": "kity_micro_fresh_proposal_20261015_2100",
+  "status": "EXACT_OWNER_GO_PENDING_ORDERS_OFF",
+  "observed_ms": 1792087348142,
+  "intent_id": "f040d23eec5a951e324825e0568764e45b74d699491a2aa610995a7d8961c436",
+  "created_ms": 1792087341420,
+  "expires_ms": 1792087941420,
+  "expires_utc": "2026-10-15T18:12:21.420000+00:00",
+  "reference_gross_usdt": "208.633120",
+  "maximum_band_reference_gross_usdt": "209.669450",
+  "bounds": {
+    "allow_averaging": false,
+    "allow_execution_overshoot": true,
+    "allow_reentry": false,
+    "allow_scaling": false,
+    "counts_toward_C1_C2_C3": false,
+    "duration_ms": 1800000,
+    "hard_final_loss_cap_required": false,
+    "loss_policy": "IMMEDIATE_ALL_IN_EXIT_THRESHOLD",
+    "max_all_in_loss_usdt": "15",
+    "max_gross_usdt": "215",
+    "max_rounding_shortfall_fraction": "0.203",
+    "one_experiment_only": true,
+    "owner_money_go": false,
+    "purpose": "EXECUTION_MICRO_LIVE",
+    "research_evidence_eligible": false,
+    "schema": "kity_execution_micro_owner_bounds_v3",
+    "source_owner_message": "2026-10-15 GO KITY MICRO-LIVE EXECUTION INTEGRATION — ORDERS OFF",
+    "source_reply_id": "call_6b8bf99c313243c1b85f5c3504a5c292",
+    "supersedes_policy_sha256": "49bf03e4733711d3c97c684ec2436fff988817e8fb6d9cef351b71708a882bb3"
+  },
+  "price_bands": [
+    {
+      "max_price": "1.88267",
+      "min_price": "1.86395",
+      "quantity": "10",
+      "side": "Buy",
+      "symbol": "BTWUSDT",
+      "tick_size": "0.00001"
+    },
+    {
+      "max_price": "4183.77",
+      "min_price": "4142.15",
+      "quantity": "0.005",
+      "side": "Buy",
+      "symbol": "XAUUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "60.59",
+      "min_price": "59.99",
+      "quantity": "0.3",
+      "side": "Buy",
+      "symbol": "LTCUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "25.2110",
+      "min_price": "24.9610",
+      "quantity": "0.87",
+      "side": "Buy",
+      "symbol": "VVVUSDT",
+      "tick_size": "0.0010"
+    },
+    {
+      "max_price": "737.23",
+      "min_price": "729.91",
+      "quantity": "0.03",
+      "side": "Buy",
+      "symbol": "BNBUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "4171.12",
+      "min_price": "4129.62",
+      "quantity": "0.005",
+      "side": "Sell",
+      "symbol": "XAUTUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "0.08639",
+      "min_price": "0.08555",
+      "quantity": "255",
+      "side": "Sell",
+      "symbol": "XPLUSDT",
+      "tick_size": "0.00001"
+    },
+    {
+      "max_price": "57.47",
+      "min_price": "56.91",
+      "quantity": "0.384",
+      "side": "Sell",
+      "symbol": "XAGUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "0.66910",
+      "min_price": "0.66250",
+      "quantity": "33",
+      "side": "Sell",
+      "symbol": "GRASSUSDT",
+      "tick_size": "0.00010"
+    },
+    {
+      "max_price": "147.59",
+      "min_price": "146.13",
+      "quantity": "0.14",
+      "side": "Sell",
+      "symbol": "SPCXUSDT",
+      "tick_size": "0.01"
+    }
+  ],
+  "writer": {
+    "MainPID": "2188843",
+    "NRestarts": "0",
+    "ActiveState": "active",
+    "SubState": "running",
+    "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service"
+  },
+  "heartbeat": {
+    "account_lock_inode": 818853,
+    "active_plan_id": null,
+    "at_ms": 1792087326997,
+    "error": null,
+    "mode": "ORDERS_OFF",
+    "phase": "NO_ACTIVE_PLAN",
+    "pid": 2188843,
+    "schema": "kity_micro_owner_heartbeat_v1",
+    "state": null,
+    "trading_post_attempts": 0
+  },
+  "source_pins": 16,
+  "prepare_command": "1792087329484261664",
+  "old_intents": {
+    "7aa4504da8268b16e61e316b5d64e81988e8a07b2c4686c21d7960d465c145cd": "EXPIRED_UNSELECTED_NO_SEND_OBSERVED",
+    "7d7f99d7c8479d5c5b12b5c6eb49aac2ff4c71897208029c6e3c88b858b47791": "EXPIRED_UNSELECTED_NO_SEND_OBSERVED"
+  },
+  "research_evidence_eligible": false,
+  "counts_toward_C1_C2_C3": false,
+  "broker_writes": 0
+}

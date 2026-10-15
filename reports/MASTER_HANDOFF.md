@@ -1,5 +1,11 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT October15: canonical checkpoint TOP supersedes dated history below.
+KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md closes actual f040 micro:
+broker flat/actual finality/net-.07953733, XAU TradingTerms110123/no ten-legPASS.
+V2.2 recovery-only/no new entry. Alpaca already owned LIVE; preserve manager,
+never rerun old flat/HALT activation.
+
 October14 morning LATEST: **actual Alpaca exit fees PENDING / LIVE HALTED**.
 One05:34UTC source, no Oct13CAT/SEC/actual PAPERcostPASS/dossier/GO/entry. Preserve
 terminal helper attempt/no auto retry/reset/PAPER. Read checkpoint TOP/readiness.

@@ -14,6 +14,7 @@ from research_lab.kity_micro_account_bridge_v1 import MicroAccountBridge
 from research_lab.kity_micro_physical_owner_v1 import (
     PhysicalOwner,AccountLease,SignedPostOnce,EvidenceReader,platform_verifier,
     load_bound_credentials,publish,sha,now_ms,capture_account,
+    rows,
 )
 from research_lab.kity_micro_transport_v1 import BybitReadTransport,SourceError,wire_get
 from research_lab.kity_micro_supervisor_v1 import Supervisor,sd_notify,recover_without_reentry
@@ -59,6 +60,30 @@ def selected_store(root,selection):
     p=Path(root)/'experiments-v2'/identifier
     if any(x.is_symlink() for x in (p,*p.absolute().parents)):raise SourceError('SELECTED_STORE_SYMLINK')
     return p
+
+
+def bound_config_pin(config,dossier,store,*,create=False):
+    """A new source kit may recover only the exact existing old-config journal.
+
+    This does not transfer GO to a proposal: PREPARE/selection are disabled for
+    recovery-only configs, and neither the intent nor dossier is rewritten.
+    """
+    recovery=config.get('recovery_binding')
+    if recovery is None:return config['_config_sha256']
+    if (create or recovery.get('mode')!='OWNED_RECOVERY_ONLY'
+        or recovery.get('intent_id')!=dossier['pricing_intent']['intent_id']
+        or not (store/'lifecycle.sqlite').is_file()
+        or sha((store/'active-plan.json').read_bytes())!=recovery.get('active_plan_sha256')):
+        raise SourceError('RECOVERY_ONLY_BINDING_CONFLICT')
+    original=Path(recovery['original_config_path'])
+    if (original.is_symlink() or not original.is_file()
+        or sha(original.read_bytes())!=recovery.get('original_config_sha256')):
+        raise SourceError('RECOVERY_ORIGINAL_CONFIG_DRIFT')
+    old=json.loads(original.read_bytes())
+    for key in ('runtime_root','account_lock_inode','account_fingerprint','credential_source',
+                'credential_source_sha256','predecessor_files','predecessor_plan_id','inhibitors','inhibit_marker','unit'):
+        if old.get(key)!=config.get(key):raise SourceError('RECOVERY_ORIGINAL_CUSTODY_CONFLICT:'+key)
+    return recovery['original_config_sha256']
 
 
 def apply_v2(plan,state,event):
@@ -185,7 +210,8 @@ class BoundedSupervisor(Supervisor):
             if (self.experiment_root/'active-plan.json').exists():
                 self.bind(json.loads((self.experiment_root/'active-plan.json').read_bytes()))
                 if (self.experiment_root/'owner-go.json').exists():self.owner.recover_go()
-                self.owner.recover_no_wire();recover_without_reentry(self.journal,now_ms())
+                self.owner.recover_no_wire();self.recover_saved_terms_rejections()
+                recover_without_reentry(self.journal,now_ms())
             elif not (self.experiment_root/'no-send.json').exists():
                 publish(self.experiment_root/'no-send.json',dict(status='CONTROL_INTERRUPTED_NOT_RETRIED',
                     intent_id=selected['intent_id'],observed_ms=now_ms(),broker_writes=0))
@@ -193,7 +219,7 @@ class BoundedSupervisor(Supervisor):
         store=self.experiment_root
         if store is None:raise SourceError('SEPARATE_EXPERIMENT_STORE_REQUIRED')
         i=dossier['pricing_intent']
-        if (store!=selected_store(self.root,i) or i['physical_config_sha256']!=self.config['_config_sha256']
+        if (store!=selected_store(self.root,i) or i['physical_config_sha256']!=bound_config_pin(self.config,dossier,store,create=create)
             or i['predecessor_plan_id']!=self.config['predecessor_plan_id']):raise SourceError('SELECTED_BINDING_CONFLICT')
         if not create and not (store/'lifecycle.sqlite').is_file():raise SourceError('RECOVERY_JOURNAL_MISSING')
         self.spec={i['symbol']:i for i in dossier['instruments']};self.dossier=dossier
@@ -201,12 +227,43 @@ class BoundedSupervisor(Supervisor):
         self.owner=BoundedOwner(self.journal,self.reader,self.lease,store,platform_check=self.check,
             post=self.writer.post,dossier=dossier,wire_root=self.root/'wire')
         self.bridge=MicroAccountBridge(self.journal,self.reader,owner=self.owner)
+    def recover_saved_terms_rejections(self):
+        """Resolve a saved, definite POST refusal; empty GETs alone prove nothing."""
+        state=self.journal.snapshot()
+        for symbol,order in state['entries'].items():
+            if order['terminal'] or order['order_id'] is not None or rt.numeric(order['filled'],zero=True):continue
+            request=next(l['request'] for l in self.journal.plan['legs'] if l['symbol']==symbol)
+            key=digest(dict(path='/v5/order/create',request=request))
+            send=self.root/'wire'/('send-'+key+'.json');response=self.root/'wire'/('response-'+key+'.json')
+            if not send.is_file() or not response.is_file():continue
+            if send.is_symlink() or response.is_symlink():raise SourceError('REJECTION_WIRE_SYMLINK')
+            sent=json.loads(send.read_bytes());cap=json.loads(response.read_bytes())
+            if sent.get('path')!='/v5/order/create' or sent.get('request')!=request:
+                raise SourceError('REJECTION_WIRE_REQUEST_CONFLICT')
+            raw=cap.get('raw')
+            if not isinstance(raw,str) or sha(raw.encode())!=cap.get('raw_sha256'):
+                raise SourceError('REJECTION_RESPONSE_HASH')
+            body=json.loads(raw)
+            if (cap.get('http_status')!=200 or type(body.get('retCode')) is not int
+                or body['retCode'] not in (110123,110125)):continue
+            if not isinstance(body.get('result'),dict) or body['result'].get('orderId'):
+                raise SourceError('REJECTION_ACK_CONFLICT')
+            params=dict(category='linear',symbol=symbol,orderLinkId=order['link'])
+            for path,limit in (('/v5/order/realtime','50'),('/v5/order/history','50'),('/v5/execution/list','100')):
+                if rows(self.reader,path,dict(params,limit=limit)):raise SourceError('REJECTION_READBACK_CONFLICT')
+            positions=rows(self.reader,'/v5/position/list',dict(category='linear',settleCoin='USDT',limit='200'))
+            if any(rt.numeric(p['size'],zero=True) for p in positions if p.get('symbol')==symbol):
+                raise SourceError('REJECTION_READBACK_CONFLICT')
+            self.journal.append(dict(kind='DISPATCH_REJECTED',symbol=symbol,order_link_id=order['link'],
+                ret_code=body['retCode'],at_ms=now_ms(),source_sha256=sha(response.read_bytes()),
+                event_id='saved-terms-rejection-'+order['link']))
     def fresh(self,store):
         cap=capture_account(self.reader);cap['response']['physical_config_sha256']=self.config['_config_sha256']
         p=store/'captures'/('capture-'+str(cap['response']['started_ms'])+'.json');pin=publish(p,cap)
         bounds=json.loads((Path(self.config['app_root'])/self.config['bounds_file']).read_bytes())
         return load_source(p,pin,bounds,self.config['_config_sha256'])
     def before_selection(self):
+        if self.config.get('recovery_binding') is not None:raise SourceError('RECOVERY_ONLY_NO_NEW_SELECTION')
         if (self.root/'rollback-request.json').exists():raise SourceError('CONTROL_CLOSED_FOR_ROLLBACK')
         if (self.root/'selected-v2.json').exists():raise SourceError('ONE_BOUNDED_EXPERIMENT_ALREADY_SELECTED')
         read_predecessor(self.config);self.check()

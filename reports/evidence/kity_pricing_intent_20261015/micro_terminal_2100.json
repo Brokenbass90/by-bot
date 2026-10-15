@@ -1,0 +1,174 @@
+{
+  "schema": "KITY_EXECUTION_MICRO_TERMINAL_V2_2",
+  "status": "BLOCKED_EXECUTION_ACCOUNT_TERMS_FLAT_FINALITY_COMPLETE",
+  "intent_id": "f040d23eec5a951e324825e0568764e45b74d699491a2aa610995a7d8961c436",
+  "exact_go": "GO KITY_EXECUTION_MICRO_INTENT_V2 f040d23eec5a951e324825e0568764e45b74d699491a2aa610995a7d8961c436",
+  "human_reply_id": "call_ef4ab3ff455b4f8789ee315eb1bdbc3a",
+  "go_command_id": "1792087447559644944",
+  "prepare_command_id": "1792087329484261664",
+  "plan_id": "43c744f0d2b35c6db6c17729cd0c90a22247072e47791bc5b20c80bc2e59444b",
+  "observed_ms": 1792088114237,
+  "phase": "TERMINAL",
+  "broker_flat_proven": true,
+  "actual_positions": 0,
+  "actual_open_orders": 0,
+  "entry_orders_attempted": 2,
+  "entry_legs_filled": 1,
+  "all_ten_complete": false,
+  "trading_posts_total": 3,
+  "first_durable_entry_intent_ms": 1792087458996,
+  "unchanged_30min_deadline_ms": 1792089258996,
+  "fills": [
+    {
+      "kind": "ENTRY_FILL",
+      "symbol": "BTWUSDT",
+      "link": "KXM2-2f180fbc9436-E00",
+      "order_id": "7a82c0b7-593a-4f58-9683-a3654f7efa9a",
+      "quantity": "10",
+      "price": "1.86998",
+      "fee_usdt": "0.01028489",
+      "source_execution_ms": 1792087459289
+    },
+    {
+      "kind": "EXIT_FILL",
+      "symbol": "BTWUSDT",
+      "link": "KXM2-2f180fbc9436-X00-1",
+      "order_id": "8c951831-5f13-48dd-bc5b-56428050c1bc",
+      "quantity": "10",
+      "price": "1.86408",
+      "fee_usdt": "0.01025244",
+      "source_execution_ms": 1792087642818
+    }
+  ],
+  "native_stop": {
+    "symbol": "BTWUSDT",
+    "quantity": "10",
+    "trigger_price": "1.74928",
+    "order_id": "7003fff8-ca40-4008-967a-751f4fac7218",
+    "terminal": true,
+    "terminal_quantity": "0",
+    "retired_by_broker_after_flat": true
+  },
+  "gross_realized_usdt": "-0.05900",
+  "posted_execution_fees_usdt": "0.02053733",
+  "funding_cash_usdt": "0",
+  "terminal_net_usdt": "-0.07953733",
+  "fee_unknown_execution_count": 0,
+  "actual_cash_reconciliation": "EXACT",
+  "finality_observed_ms": 1792088074889,
+  "all_in_exit_threshold_exceeded": false,
+  "guaranteed_final_loss_cap": false,
+  "material_findings": [
+    {
+      "kind": "ACCOUNT_EXECUTION_BLOCKER",
+      "symbol": "XAUUSDT",
+      "retCode": 110123,
+      "raw_retMsg": "You must agree to the Trading Terms before trading this contract.",
+      "required_owner_action": "Review and personally accept applicable Bybit Trading Terms before a future independently approved experiment.",
+      "substitution_or_retry": false
+    },
+    {
+      "kind": "PLANNING_DEFECT",
+      "code": "EXIT_POSITION_MODE_UNKNOWN",
+      "cause": "Paginated symbol position source returned one live one-way row followed by an empty placeholder; exit verifier required one aggregate row.",
+      "workaround": "Exclusive operator-owned reduce-only unwind under original account lock; main writer stopped during operator write, then resumed. Native stop retained until flat.",
+      "fix": "Complete settleCoin nonzero-position source for owned exit; strict flat one-way source for residual native cancellation."
+    },
+    {
+      "kind": "PLANNING_DEFECT",
+      "code": "TERMS_REJECTION_LEFT_UNKNOWN",
+      "fix": "Official 110123/110125 create refusals recognized. Saved immutable wire response hash plus exact request and fresh realtime/history/execution/position readback resolve only proven refusal, never empty GET alone."
+    }
+  ],
+  "recovery_install": {
+    "status": "RECOVERY_ONLY_V2_2_INSTALLED",
+    "app_root": "/opt/bybot-research/kity-micro-owner-20261015/app-v2-2-recovery",
+    "config_path": "/opt/bybot-research/kity-micro-owner-20261015/runtime/config-v2-2-recovery.json",
+    "config_sha256": "1033ffe728d9a4809840a6cc324f752579e0c3a9eabf115ec31a8979377d068e",
+    "unit_sha256": "a284dd9c6fbb4be53a0fef8a1d2fc005d9f02afc6b551b9fb1cdec9738ab3d99",
+    "source_count": 16,
+    "source_files": {
+      "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+      "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+      "configs/research/kity_execution_micro_owner_bounds_v3_20261015.json": "9d8c6e036fe9446de539c20b89164dd019c0d6012464ce66f25581fe572b80ad",
+      "reports/evidence/kity_bybit_c2_actual_20261015/c2_public_receipt.json": "b93d0994e74e3ac61df676410e74771a3230e8e23a81e052665994e686c6e903",
+      "reports/evidence/kity_micro_live_20261015/build_readonly_dossier.py": "73f4870d8a6c24cb14180f5157fcbdaee2a5756a75a14839bb9f8d473276ef5c",
+      "research_lab/kity_execution_micro_bybit_v1.py": "2ba72fc372253d157e55ab5ec82051c083d9f0bccb2584c6a9807329cd1bb0ac",
+      "research_lab/kity_execution_micro_runtime_v1.py": "096680750fc1c532fa04d96c2cbbe64987738ea4ac293bc46d366e92596281a0",
+      "research_lab/kity_execution_micro_v1.py": "bd7a8c5903b67129185404e4db6b761d37185e6e450d6624d83ee56a71860b74",
+      "research_lab/kity_micro_account_bridge_v1.py": "14ae88b9df55614736c9194ba1a2689391ee2d3677bdddb2091e103cb2a079ee",
+      "research_lab/kity_micro_bounded_owner_v2.py": "b821483c1789408d952b8fa21498a94d6aa68d05d45507d3af3c574c8cb62b12",
+      "research_lab/kity_micro_handoff_v1.py": "d85439dd2b25e36b51868ccd6946ae22a900e2fc30a963d76b0a901eb3315b09",
+      "research_lab/kity_micro_physical_owner_v1.py": "35a6fdb7e6f10b67e4b770444d45812e02ff22be38dcab5cf32a0482d5af78c2",
+      "research_lab/kity_micro_preflight_v1.py": "e16055dc5db88255ff129f046c63f7851647eb63da0f01c23b8f13a54ad44acc",
+      "research_lab/kity_micro_pricing_intent_v2.py": "52ee222d7f2c6b64593068b907006baa5105b96ccc95d2390547dcf69a96a8dd",
+      "research_lab/kity_micro_supervisor_v1.py": "593bd62ba34d87461a3e2f344a2c55cf95ca58bce39eec251ae8616f491f8a93",
+      "research_lab/kity_micro_transport_v1.py": "17c833c0e3c7a78b3cc9f48bf88ca24c3fc013da2b8388b9ade0bad687f3007d"
+    },
+    "unit": {
+      "MainPID": "2208912",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "SubState": "running",
+      "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service"
+    },
+    "original_intent_config_sha256": "6d420ec075ebf3c23f97386de3b16c36020e5135b46d6ab36f2634e5095f54b2",
+    "account_lock_inode": 818853,
+    "second_writer_lease_refused": true,
+    "new_entries_allowed": false,
+    "broker_posts_after_recovery_install": 0
+  },
+  "preserved_units": {
+    "bybot.service": {
+      "MainPID": "0",
+      "NRestarts": "0",
+      "ActiveState": "failed"
+    },
+    "trading-journal-web.service": {
+      "MainPID": "0",
+      "NRestarts": "0",
+      "ActiveState": "failed"
+    },
+    "att1-lifecycle-zero-risk-v2.service": {
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "ActiveState": "active"
+    },
+    "bybit-liquidation-source-v2_1.service": {
+      "MainPID": "2095785",
+      "NRestarts": "0",
+      "ActiveState": "active"
+    }
+  },
+  "old_intents": {
+    "7aa4504da8268b16e61e316b5d64e81988e8a07b2c4686c21d7960d465c145cd": "EXPIRED_UNEXECUTED_NOT_TRANSFERRED",
+    "7d7f99d7c8479d5c5b12b5c6eb49aac2ff4c71897208029c6e3c88b858b47791": "EXPIRED_UNEXECUTED_NOT_TRANSFERRED"
+  },
+  "verification": {
+    "targeted_tests_passed": 160,
+    "new_regression_cases": 13,
+    "root_review_only": true,
+    "full_repository_suite_run": false
+  },
+  "private_evidence_sha256": {
+    "observe-1792087476783556000.json": "d0ff687df26277d467fbb5e3ac48a33f7d5bc5f819b7beb902fd6437347b7bc0",
+    "install-recovery-result.json": "f3746ff2b6ff96dfe0e3e8ecf64453a5323df50de83df7ae2433f67d3f31b92f",
+    "final-readback-1792088114312741000.json": "07925711a5ad17e15af8ea35ee631eb3b157d1b5f0b2eb92fd34046931d7fd39",
+    "incident-1792087509543379000.json": "0431523a45eaea7c71fe5335278cf132511f1ae39106c17205afc722529aeec3",
+    "recovery-inventory.json": "66af6f7453bcc0ec238cdbf2893603d34ca728848713d762d5a107a012391d82",
+    "prepare-result.json": "6593dd8403fad68039a2aaaa4299860327dc071117c237a51b104f5344e0bb1e",
+    "exact-go-queue-result.json": "0f10648aee4b7aa90aa3596c434ea37005c05d9031c0bf5b4c2267c064c06bc4",
+    "actual-flat-readback-1792087694013344000.json": "bf32d04084411fe1f3eb1be5bdfdb21e7d566407ac1581d6cf57df2fe8e852d3",
+    "emergency-owned-exit-result.json": "e1a7acbe8240c9be75965121e7cfbd10e0ff7a5bd91c65503a33f400711bddb8",
+    "prepare-queue-observation.json": "4b5810b5b4fed4055fcfd6f89624be9ffea61fedad6477e74bbda7686d8da8dd",
+    "human-exact-go.json": "296b715b0a2253351514df095016539b41b6803a1de4bf16ccc5024873045344"
+  },
+  "research_evidence_eligible": false,
+  "counts_toward_C1_C2_C3": false,
+  "full_basket_execution_pass": false,
+  "next_automatic_attempt": false,
+  "official_sources": [
+    "https://bybit-exchange.github.io/docs/v5/error",
+    "https://bybit-exchange.github.io/docs/v5/position"
+  ]
+}

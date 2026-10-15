@@ -226,10 +226,20 @@ class PhysicalOwner:
             validate_fresh_entry(self.reader,self.journal,request,self.clock)
         else:
             # Exits need actual signed same-symbol size, never entry-price gates.
-            ps=rows(self.reader,'/v5/position/list',dict(category='linear',symbol=request['symbol']))
+            # A symbol cursor can append an empty position placeholder after
+            # the real row. The complete settleCoin query returns open positions.
+            held=numeric(self.journal.snapshot()['held'][request['symbol']],zero=True)
+            ps=[p for p in rows(self.reader,'/v5/position/list',dict(category='linear',settleCoin='USDT',limit='200'))
+                if p.get('symbol')==request['symbol']]
+            if not held and not ps:
+                # Cancellation of an owned native stop after flat still needs
+                # an explicit one-way empty-position source, not an assumed mode.
+                result=self.reader.result(self.reader.get('/v5/position/list',dict(category='linear',symbol=request['symbol'])))
+                if result.get('nextPageCursor'):raise SourceError('EXIT_POSITION_MODE_UNKNOWN')
+                ps=result['list']
             if len(ps)!=1 or type(ps[0].get('positionIdx')) is not int or ps[0]['positionIdx']!=0:
                 raise SourceError('EXIT_POSITION_MODE_UNKNOWN')
-            held=numeric(self.journal.snapshot()['held'][request['symbol']],zero=True)
+            if ps[0].get('symbol')!=request['symbol']:raise SourceError('EXIT_POSITION_SYMBOL_CONFLICT')
             expected=next(l['side'] for l in plan['legs'] if l['symbol']==request['symbol'])
             if numeric(ps[0]['size'],zero=True)!=held or (held and ps[0]['side']!=expected):
                 raise SourceError('EXIT_OWNERSHIP_QUANTITY_CONFLICT')

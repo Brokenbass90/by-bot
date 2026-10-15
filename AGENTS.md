@@ -618,3 +618,17 @@ upgrade. No monetary permission or old-writer restoration. Read
 KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md; make one new readiness proposal/rehearsal
 after code/docs freeze, then ask separate exact GO on the new hash. Research,
 Alpaca/ATT1/LIQ/Claude and risk/cost/hold bounds remain unchanged.
+
+October15 21:00Cyprus subsequent actual micro: read canonical TOP and
+KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md. Human literal GO f040…c436 consumed
+once; BTW filled/protected, XAU refused110123 TradingTerms. Exit pagination and
+definite-refusal mapping defects fixed after one exclusive original-lock owned
+emergency unwind. Actual broker flat/open0, journal TERMINAL/net-.07953733 from
+posted fees/cash, all_ten_complete=false. No repeat or strategy/C1–C3 PASS.
+Separate16-file V2.2 RECOVERY_ONLY kit/config1033ffe7…d068e/unit a284dd9c…b3d99,
+PID2208912/NRestarts0/same818853lock. Exact old intent/GO/plan/wire/history retained;
+no new selection/PREPARE/entry authority. 160targetedPASS/13incident cases, root
+only. Next owner action: personally review/accept applicable Bybit Trading Terms;
+agent must not accept legal terms. Future experiment needs separate fresh scope/
+proposal/exact GO, never reset/reuse spent experiments. Old bybot/web inhibited;
+Alpaca/ATT1/LIQ/cron/Claude preserved. Existing recovery owner stays authoritative.

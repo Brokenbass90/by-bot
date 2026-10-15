@@ -1,5 +1,13 @@
 # KITY physical owner app v1.2 / health custody v1.3 — operator runbook
 
+CURRENT October15: read KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md.
+Actual f040…c436 spent/TERMINAL/flat/final accounting, ten-legPASS false;
+XAU110123 requires owner Trading Terms. V2.2 recovery-only config1033ffe7…d068e/
+unita284dd9c…b3d99/PID2208912 cannot prepare/select another experiment. Same
+818853lock/all original sources/journal retained. No old GO/entry/retry/rollback
+from historical recipes below; current ownership KITY, bybot/web stay inhibited.
+Alpaca manager untouched.
+
 LATEST: V2.1 now supersedes the following V2 header. Read
 KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md: app-v2-1-bounded,
 config6d420ec0…5f54b2,unit08b7f04e…1671d,PID2188843/NRestarts0/ORDERS_OFF.

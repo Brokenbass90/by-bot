@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 18:15:14UTC CURRENT: KITY micro TERMINAL/FLAT_FINALITY_COMPLETE,
+not ten-legPASS. Read KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md and
+micro_terminal_2100.json. Human GO f040d23e…c436 consumed once; BTW Buy10
+filled1.86998/full nativeSTOP1.74928, XAU create refused110123/TradingTerms.
+Exit pagination PLANNING_DEFECT required one exclusive operator reduce-only
+unwind under original818853lock with main writer stopped; Sell10 filled1.86408.
+Actual gross-.05900/postedfees.02053733/funding0/net-.07953733; brokerpositions0/
+open0, all_ten_complete=false, no unknownfees. No retry/substitution/strategyPASS.
+Both engineering defects fixed/tested (160targetedPASS/13incident cases; root
+only) in separate app-v2-2-recovery. Config1033ffe7…d068e,unita284dd9c…b3d99,
+PID2208912/NRestarts0,sameinode818853; recovery-only existing selected intent/
+plan, PREPARE/new selection forbidden. Original6d420ec0 config/intent/GO/plan/
+wire and journal history retained; refusal resolved by saved exact response and
+authenticated empty exact readbacks. Actual journal FINALITY18:14:34.889UTC;
+3POST total, none added by V2.2 installation. Owner must personally review/accept
+Bybit Trading Terms before a separately approved future experiment; other8 legs
+unattempted/not proven. Do not reuse f040/7d7/7aa/ffeb GOs or reset journals.
+Oldbybot/web inhibited; ATT1/LIQ/cron unchanged. Alpaca management and Claude
+untouched. Earlier READY/noGO/oldPID/source statements below are dated history.
+
 October15 CURRENT V2.1 KITY_EXECUTION_MICRO_LIVE_READY/ORDERS_OFF:240targetedPASS,
 10/10 actual GET/no-sendPASS,STATIC/FRESH_ONLY=[],noactualGO/POST/selected/journal.
 Read KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md current proposal and

@@ -1,5 +1,11 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT October15: start canonical checkpoint TOP, then
+KITY_MICRO_ACTUAL_ATTEMPT_2100_2026_10_15.md. KITY micro TERMINAL/FLAT,
+net-.07953733; XAU110123 requires owner Trading Terms, ten-legPASS absent.
+V2.2 recovery-only, no repeat/new intent. Alpaca already owned LIVE; preserve
+manager. Older fee/HALT/noLIVE statements below are superseded history.
+
 October14 morning: **actual exit fees still PENDING / LIVE HALTED**.
 Read checkpoint TOP/readiness October14 and morning_fee_receipt.json. One
 05:34UTC invocation, no exitCAT/SEC; LIVEflat/HALT, unchanged prod. Terminal
