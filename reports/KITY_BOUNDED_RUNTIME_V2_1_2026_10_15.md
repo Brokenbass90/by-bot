@@ -1,6 +1,6 @@
 # KITY bounded owner V2.1 — October 15
 
-**V2.1 INSTALLED / ORDERS OFF / STATIC READY.** Separate exact money GO is absent.
+**KITY_EXECUTION_MICRO_LIVE_READY / ORDERS OFF / EXACT GO PENDING.**
 Same approved50bps/600000ms,215gross/15immediateall-intrigger/30minutes/20.3%
 reference rounding; accepted execution overshoot and research firewalls unchanged.
 The old intent `7aa4504d…145cd` expired at18:30:11.877Cyprus without GO/order/selection
@@ -40,10 +40,10 @@ Installation receiptSHA256 `49bacf85c27b055b7f24e735b411bf00a5c3a7ccb82d351e85d2
 
 ## Remaining operational action
 
-All engineering binding is complete. Prepare one **new** reference intent and
-perform its existing GET-only rehearsal through this daemon. This is a new
-version's readiness proposal, not a retry of the consumed ffeb experiment or an
-extension of the expired V2 hash. Keep every earlier source/receipt intact.
+All engineering binding and the one new V2.1 reference/rehearsal are complete;
+see the current ready proposal below. Do not repeat PREPARE/rehearsal now. This
+is a new version's proposal, not a retry of the consumed ffeb experiment or an
+extension of the expired V2 hash. Every earlier source/receipt is retained.
 Only a separate literal human GO on that new exact hash may create a selected
 experiment and dispatch. No auto-entry, follow-up timer or repeating loop added.
 A new proposal's immutable ten quantities/price bands/expiry must be shown before
@@ -62,3 +62,33 @@ explicit --rollback path resolving the selected journal; never V1 old-journal
 rollback for a selected new experiment. No rollback to old writers was executed.
 
 Sanitized deployment/source pins: evidence/kity_pricing_intent_20261015/physical_binding_v2_1.json.
+
+## Current V2.1 ready proposal — new hash, no money GO
+
+**10/10 actual GET-only preflight PASS**, STATIC=[],FRESH_ONLY=[].
+CommandIDs 1792078507189468804 / 1792078513337913671.
+Intent **7d7f99d7c8479d5c5b12b5c6eb49aac2ff4c71897208029c6e3c88b858b47791**, expires **2026-10-15T18:45:12.898000+03:00**.
+Reference gross **208.778500**, rehearsal **208.753490**,
+all upper reference bands **209.817520 <215USDT**.
+No monetary GO, actual selection/journal or trading POST. These prices/counts are
+frozen proposal sources; after GO exactly one fresh capture/derived plan remains
+mandatory. Fees/funding/native stops use that capture and unchanged15threshold;
+current actual cost/PnL/finality does not exist because no trade occurred.
+
+| Symbol | Side | Fixed qty | Lower | Upper |
+| --- | --- | --- | --- | --- |
+| BTWUSDT | Buy | 10 | 1.91565 | 1.93489 |
+| XAUUSDT | Buy | 0.005 | 4142.03 | 4183.65 |
+| LTCUSDT | Buy | 0.3 | 60.03 | 60.63 |
+| VVVUSDT | Buy | 0.88 | 24.8010 | 25.0490 |
+| BNBUSDT | Buy | 0.03 | 728.01 | 735.31 |
+| XAUTUSDT | Sell | 0.005 | 4129.40 | 4170.90 |
+| XPLUSDT | Sell | 258 | 0.08464 | 0.08548 |
+| XAGUSDT | Sell | 0.383 | 56.91 | 57.47 |
+| GRASSUSDT | Sell | 32 | 0.66560 | 0.67220 |
+| SPCXUSDT | Sell | 0.14 | 147.30 | 148.78 |
+
+Only pending literal money GO on this **new** proposal:
+`GO KITY_EXECUTION_MICRO_INTENT_V2 7d7f99d7c8479d5c5b12b5c6eb49aac2ff4c71897208029c6e3c88b858b47791`.
+No old GO is transferred. On expiry failclosed; no automatic repeat/extension.
+Full sanitized packet: evidence/kity_pricing_intent_20261015/physical_owner_packet_v2_1.json.

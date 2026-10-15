@@ -1,5 +1,17 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 CURRENT V2.1 KITY_EXECUTION_MICRO_LIVE_READY/ORDERS_OFF:240targetedPASS,
+10/10 actual GET/no-sendPASS,STATIC/FRESH_ONLY=[],noactualGO/POST/selected/journal.
+Read KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md current proposal and
+physical_owner_packet_v2_1.json. PID2188843/NRestarts0,same818853lock,
+config6d420ec0…5f54b2/unit08b7f04e…1671d. New intent7d7f99d7c8479d5c5b12b5c6eb49aac2ff4c71897208029c6e3c88b858b47791
+expires2026-10-15T18:45:12.898000+03:00;referencegross208.778500,
+rehearsal208.753490,maxband209.817520<215.
+Commands 1792078507189468804 / 1792078513337913671.
+Separate exact human GO pending; parameter reply/old7aaGO are not money authority.
+Old7aa expiredunused,ffeb consumedNO_SEND preserved; no transfer/retry/extension.
+All existing fresh guards and new final transport expiry fence remain required.
+
 October15 subsequent CURRENT: V2.1 physically installed ORDERS_OFF/STATIC_READY.
 Read KITY_BOUNDED_RUNTIME_V2_1_2026_10_15.md. Author found PLANNING_DEFECT: expiry
 could pass during final parent custody after outer fence. New RED regression,
