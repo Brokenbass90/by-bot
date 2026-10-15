@@ -1,0 +1,46 @@
+{
+  "broker_calls": 0,
+  "completed_by_utc": "2026-10-15T06:30:10Z",
+  "current_process_dry_run": "false",
+  "exact_remote_observation_timestamp_available": false,
+  "inferred_runtime_TRADE_ON": null,
+  "loaded_code_hash_proven": false,
+  "local_capture_file_mtime_utc": "2026-10-15T06:28:09.483911+00:00",
+  "notes": [
+    "Disk source initializes TRADE_ON=True; current in-memory value was not read.",
+    "DRY_RUN=false is an actual process environment observation, not proof of a recent fill.",
+    "Earlier linear-USDT 0 positions/0 orders is dated broker truth, not proof of sole ownership.",
+    "No interprocess shared account writer lock was proven; do not start a second sender."
+  ],
+  "orders_allowed": false,
+  "private_capture_sha256": "cddf46be4d26acdbfda8c4f2f383de2a98157e1084f78bdb59c09ba610155463",
+  "process_changes": 0,
+  "production_cron_sha256": "c5729c174e49675400f533c8508636f95db669f4662d45953d829cab58d27939",
+  "production_disk_source_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+  "python_process_count": 5,
+  "query_sha256": "d2a962c166649375963caaf7d8d2aaf5b78f705fbe2c3169d88beddc82bf9b9e",
+  "remote_writes": 0,
+  "schema": "kity_micro_writer_custody_observation_v1",
+  "selected_account_binding_source": "prior signed 05:13 capture matched same PID credentials",
+  "selected_process_exists": true,
+  "selected_process_pid": 1648585,
+  "source_anchors": [
+    {
+      "line": 1048,
+      "text": "TRADE_ON = True"
+    },
+    {
+      "line": 1554,
+      "text": "DRY_RUN = os.getenv(\"DRY_RUN\", \"True\").strip().lower() in (\"1\",\"true\",\"yes\",\"y\")"
+    },
+    {
+      "line": 1570,
+      "text": "POS_IS_ONEWAY = (BYBIT_POS_MODE != \"hedge\")"
+    },
+    {
+      "line": 7501,
+      "text": "POS_IS_ONEWAY = (BYBIT_POS_MODE != \"hedge\")"
+    }
+  ],
+  "status": "EXCLUSIVE_WRITER_NOT_PROVEN"
+}

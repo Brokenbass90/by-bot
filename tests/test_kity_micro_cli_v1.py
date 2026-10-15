@@ -24,7 +24,7 @@ def test_no_apply_or_owner_go_flag_can_enable_orders(tmp_path):
 
 
 def test_real_saved_intake_is_cap_blocked_and_hard_loss_blocked_without_network():
-    r=subprocess.run([sys.executable,str(CLI)],capture_output=True,text=True,cwd=ROOT)
+    r=subprocess.run([sys.executable,str(CLI),'--bounds',str(ROOT/'configs/research/kity_execution_micro_owner_bounds_20261015.json')],capture_output=True,text=True,cwd=ROOT)
     assert r.returncode==2
     out=json.loads(r.stdout)
     assert 'GROSS_CAP_EXCEEDED' in out['readiness']['reasons']

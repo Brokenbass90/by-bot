@@ -1,0 +1,20 @@
+{
+  "allow_averaging": false,
+  "allow_execution_overshoot": true,
+  "allow_reentry": false,
+  "allow_scaling": false,
+  "counts_toward_C1_C2_C3": false,
+  "duration_ms": 1800000,
+  "hard_final_loss_cap_required": false,
+  "loss_policy": "IMMEDIATE_ALL_IN_EXIT_THRESHOLD",
+  "max_all_in_loss_usdt": "15",
+  "max_gross_usdt": "210",
+  "max_rounding_shortfall_fraction": "0.203",
+  "one_experiment_only": true,
+  "owner_money_go": false,
+  "purpose": "EXECUTION_MICRO_LIVE",
+  "research_evidence_eligible": false,
+  "schema": "kity_execution_micro_owner_bounds_v2",
+  "source_reply_id": "call_6b8bf99c313243c1b85f5c3504a5c292",
+  "supersedes_policy_sha256": "53fce5006627658facd3d9521c1aad34f210423d09609684001f37adb157331a"
+}

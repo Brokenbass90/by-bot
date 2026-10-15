@@ -2,8 +2,8 @@
 
 Consumes normalized evidence and proposes actions; no credential loader, HTTP,
 service or broker writer exists here. Event hashes prove consistency, never
-broker authentication. A requested absolute final-loss guarantee is not replaced
-by a loss trigger: current real-money readiness is explicitly BLOCKED.
+broker authentication. Both the preserved guarantee policy and the separately
+owner-approved V2 exit-threshold policy remain replayable. Neither grants GO.
 """
 import copy
 import hashlib
@@ -15,7 +15,7 @@ import sqlite3
 from decimal import Decimal, InvalidOperation
 
 from bot.kity_m3_orders_off import digest, _levels, _vwap
-from research_lab.kity_execution_micro_v1 import numeric
+from research_lab.kity_execution_micro_v1 import numeric, common_source_clock
 
 BASKET = (('BTWUSDT', 'Buy'), ('XAUUSDT', 'Buy'), ('LTCUSDT', 'Buy'),
           ('VVVUSDT', 'Buy'), ('BNBUSDT', 'Buy'), ('XAUTUSDT', 'Sell'),
@@ -56,9 +56,17 @@ def _owner_bounds(bounds):
                 'max_rounding_shortfall_fraction': Decimal('.203')}
     if any(numeric(b.get(k)) != v for k, v in expected.items()):
         raise ValueError('OWNER_BOUND_CONFLICT')
-    if (b.get('duration_ms') != 1800000 or type(b.get('duration_ms')) is not int
+    legacy = (b.get('schema') == 'kity_execution_micro_owner_bounds_v1'
+              and b.get('hard_final_loss_cap_required') is True)
+    amended = (b.get('schema') == 'kity_execution_micro_owner_bounds_v2'
+        and b.get('hard_final_loss_cap_required') is False
+        and b.get('loss_policy') == 'IMMEDIATE_ALL_IN_EXIT_THRESHOLD'
+        and b.get('allow_execution_overshoot') is True
+        and b.get('source_reply_id') == 'call_6b8bf99c313243c1b85f5c3504a5c292'
+        and b.get('supersedes_policy_sha256') == '53fce5006627658facd3d9521c1aad34f210423d09609684001f37adb157331a')
+    if (not (legacy or amended)
+            or b.get('duration_ms') != 1800000 or type(b.get('duration_ms')) is not int
             or b.get('one_experiment_only') is not True or b.get('purpose') != 'EXECUTION_MICRO_LIVE'
-            or b.get('hard_final_loss_cap_required') is not True
             or b.get('owner_money_go') is not False
             or any(b.get(k) is not False for k in ('allow_scaling', 'allow_averaging', 'allow_reentry',
                                                 'research_evidence_eligible', 'counts_toward_C1_C2_C3'))):
@@ -118,15 +126,22 @@ def prepare_micro_plan(dossier, bounds):
 def assess_micro_readiness(plan, account):
     validate_plan(plan)
     reasons = list(plan['blocked_reasons'])
-    reasons += ['HARD_FINAL_LOSS_CAP_NOT_ENFORCEABLE_ON_PERPETUALS',
-                'REAL_TRANSPORT_AND_EXCLUSIVE_WRITER_BINDING_REQUIRED',
+    if plan['bounds']['hard_final_loss_cap_required']:
+        reasons.append('HARD_FINAL_LOSS_CAP_NOT_ENFORCEABLE_ON_PERPETUALS')
+    reasons += ['REAL_TRANSPORT_AND_EXCLUSIVE_WRITER_BINDING_REQUIRED',
                 'FRESH_ACCOUNT_AND_COMMON_2S_BASKET_REQUIRED', 'SEPARATE_EXACT_OWNER_GO_REQUIRED']
-    if account.get('marginMode') == 'REGULAR_MARGIN':
+    if account.get('marginMode') == 'REGULAR_MARGIN' and plan['bounds']['hard_final_loss_cap_required']:
         reasons.append('CURRENT_ACCOUNT_USES_SHARED_CROSS_COLLATERAL')
-    return dict(status='BLOCKED_EXECUTION', reasons=reasons, orders_allowed=False,
+    result = dict(status='BLOCKED_EXECUTION', reasons=reasons, orders_allowed=False,
                 requested_hard_loss_cap_usdt=plan['bounds']['max_all_in_loss_usdt'],
                 guaranteed_final_loss_cap=False, local_controller_available=True,
                 research_evidence_eligible=False)
+    if not plan['bounds']['hard_final_loss_cap_required']:
+        result.pop('requested_hard_loss_cap_usdt')
+        result.update(loss_policy='IMMEDIATE_ALL_IN_EXIT_THRESHOLD', loss_threshold_usdt='15',
+                      execution_overshoot_accepted=True,
+                      shared_cross_collateral_observed=account.get('marginMode') == 'REGULAR_MARGIN')
+    return result
 
 
 def validate_plan(plan):
@@ -140,13 +155,18 @@ def validate_plan(plan):
 
 
 def initial(plan):
-    return dict(schema='kity_micro_lifecycle_replay_v1', phase='PREPARED', plan_id=plan['plan_id'],
+    state = dict(schema='kity_micro_lifecycle_replay_v1', phase='PREPARED', plan_id=plan['plan_id'],
         held={s: '0' for s, _ in BASKET}, entries={}, exits={}, fills={}, funding={},
         trade_cash_usdt='0', fees_usdt='0', funding_cash_usdt='0', fee_unknown_execution_ids=[],
         first_send_ms=None, deadline_ms=None, entry_blocked=False, ownership_conflict=False,
         broker_flat_proven=False, last_fill_ms=None, last_snapshot_ms=None,
         orders_allowed=False, research_evidence_eligible=False, counts_toward_C1_C2_C3=False,
         terminal_net_usdt=None, all_ten_complete=False)
+    if not plan['bounds']['hard_final_loss_cap_required']:
+        state.update(loss_policy='IMMEDIATE_ALL_IN_EXIT_THRESHOLD', loss_threshold_usdt='15',
+                     execution_overshoot_accepted=True, guaranteed_final_loss_cap=False,
+                     leg_rounding_shortfalls={l['symbol']: l['rounding_shortfall_fraction'] for l in plan['legs']})
+    return state
 
 
 def _money_add(state, key, amount):
@@ -300,6 +320,16 @@ def apply_event(plan, state, e):
                 raise ValueError('FUNDING_CONFLICT')
         else:
             s['funding'][key] = row; _money_add(s, 'funding_cash_usdt', cash)
+    elif kind == 'RISK_OBSERVATION':
+        value = current_valuation(s, e['books'], e['exit_fee_rates'],
+                                  funding_reserve_usdt=e['funding_reserve_usdt'], now_ms=at)
+        s['last_risk_observation'] = dict(value, observed_ms=at, source_sha256=e['source_sha256'])
+        if value['action'] != 'MONITOR':
+            s['entry_blocked'], s['phase'] = True, 'UNWINDING'
+    elif kind == 'RISK_SOURCE_UNKNOWN':
+        s['last_risk_observation'] = dict(net_usdt=None, action='UNWIND_DATA_UNKNOWN',
+            observed_ms=at, reason=e['reason'], orders_allowed=False, source_sha256=e['source_sha256'])
+        s['entry_blocked'], s['phase'] = True, 'UNWINDING'
     elif kind == 'CLOCK':
         if s['deadline_ms'] is not None and at >= s['deadline_ms']:
             s['entry_blocked'], s['phase'] = True, 'UNWINDING'
@@ -334,8 +364,13 @@ def apply_event(plan, state, e):
         s['finality_observed_ms'] = at
         s['flat_readback_observed_ms'] = s['last_snapshot_ms']
         s['flat_readback_after_deadline_ms'] = max(0, s['last_snapshot_ms'] - s['deadline_ms'])
-        s['requested_loss_bound_breached'] = net < -Decimal(plan['bounds']['max_all_in_loss_usdt'])
-        s['terminal_verdict'] = 'LOSS_BOUND_BREACHED' if s['requested_loss_bound_breached'] else 'REPLAY_FINALITY_COMPLETE'
+        exceeded = net < -Decimal(plan['bounds']['max_all_in_loss_usdt'])
+        if plan['bounds']['hard_final_loss_cap_required']:
+            s['requested_loss_bound_breached'] = exceeded
+            s['terminal_verdict'] = 'LOSS_BOUND_BREACHED' if exceeded else 'REPLAY_FINALITY_COMPLETE'
+        else:
+            s['all_in_exit_threshold_exceeded'] = exceeded
+            s['terminal_verdict'] = 'EXIT_THRESHOLD_OVERSHOOT' if exceeded else 'REPLAY_FINALITY_COMPLETE'
         s['all_ten_complete'] = len(s['entries']) == 10 and all(
             Decimal(s['entries'][symbol]['filled']) == Decimal(legs[symbol]['quantity']) for symbol in legs)
     else:
@@ -460,6 +495,29 @@ class MicroJournal:
                 return [dict(kind='PROTECTION_READBACK', symbol=leg['symbol'], orders_allowed=False)]
         return [dict(kind='MONITOR', deadline_ms=state['deadline_ms'], orders_allowed=False)]
 
+    def observe_risk(self, books, exit_fee_rates, *, funding_reserve_usdt, now_ms):
+        """Persist the market observation/kill decision; never submit an order.
+
+        Raw source custody/authentication belongs to the future bound reader.
+        Replayed price recovery cannot undo the first recorded unwind decision.
+        """
+        integer(now_ms)
+        payload = dict(books=books, exit_fee_rates=exit_fee_rates,
+                       funding_reserve_usdt=funding_reserve_usdt)
+        try:
+            pin = digest(payload)
+        except (ValueError, TypeError):
+            pin = digest(dict(reason='INVALID_RISK_SOURCE', observed_ms=now_ms))
+            e = dict(kind='RISK_SOURCE_UNKNOWN', reason='INVALID_RISK_SOURCE')
+        else:
+            e = dict(kind='RISK_OBSERVATION', **payload)
+        e.update(at_ms=now_ms, source_sha256=pin, event_id='risk-' + digest(dict(pin=pin, at_ms=now_ms)))
+        if len(canonical(e).encode()) > 131072:
+            e = dict(kind='RISK_SOURCE_UNKNOWN', reason='RISK_SOURCE_SIZE_BOUND',
+                     at_ms=now_ms, source_sha256=pin, event_id=e['event_id'])
+        self.append(e)
+        return self.snapshot()['last_risk_observation']
+
     def close(self):
         self.db.close()
 
@@ -490,4 +548,34 @@ def liquidation_value(state, books, *, funding_reserve_usdt):
             guaranteed_final_loss_cap=False, orders_allowed=False, research_evidence_eligible=False,
             source_freshness_checked=False, slippage_already_in_fill_and_liquidation_prices=True)
     except (KeyError, ValueError, InvalidOperation):
+        return unknown
+
+
+def current_valuation(state, captures, fees, *, funding_reserve_usdt, now_ms):
+    unknown = dict(net_usdt=None, action='UNWIND_DATA_UNKNOWN', orders_allowed=False,
+                   research_evidence_eligible=False, guaranteed_final_loss_cap=False)
+    held = {s for s, qty in state['held'].items() if Decimal(qty) > 0}
+    try:
+        if not isinstance(captures, dict) or not isinstance(fees, dict) or set(captures) != held or set(fees) != held:
+            return unknown
+        normalized = {}
+        for symbol, cap in captures.items():
+            if (not isinstance(cap, dict) or not isinstance(cap.get('params'), dict)
+                    or not isinstance(cap.get('body'), dict)
+                    or not isinstance(cap['body'].get('result'), dict)
+                    or cap.get('endpoint') != '/v5/market/orderbook'
+                    or cap['params'].get('category') != 'linear' or cap['params'].get('symbol') != symbol
+                    or type(cap['body'].get('retCode')) is not int or cap['body']['retCode'] != 0
+                    or cap['body']['result'].get('s') != symbol):
+                return unknown
+            book = cap['body']['result']
+            normalized[symbol] = dict(bids=book['b'], asks=book['a'], exit_taker_fee=fees[symbol])
+        if held:
+            clock = common_source_clock(list(captures.values()), now_ms)
+            if clock['status'] != 'OBSERVED_COMMON_2S_PASS':
+                return dict(unknown, source_clock_status=clock['status'])
+        result = liquidation_value(state, normalized, funding_reserve_usdt=funding_reserve_usdt)
+        result['source_freshness_checked'] = True
+        return result
+    except (KeyError, ValueError, TypeError, InvalidOperation):
         return unknown

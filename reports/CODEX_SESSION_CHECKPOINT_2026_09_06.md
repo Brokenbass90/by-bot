@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 CURRENT owner loss clarification implemented: **POLICY_V2_MONITOR_PASS /
+BLOCKED_EXECUTION / ORDERS_OFF**. Read KITY_EXECUTION_MICRO_POLICY_V2_2026_10_15.md
+and evidence/kity_micro_policy_v2_20261015/{delivery_receipt,writer_custody_receipt,
+saved_source_preview_v2}.json. Directreply call_6b8bf99c313243c1b85f5c3504a5c292
+explicitly makes15 an IMMEDIATE_ALL_IN_EXIT_THRESHOLD and accepts execution
+overshoot; former guaranteed-final15 blocker is SUPERSEDED, not current.
+V2policy49bf03e4…82bb3;210gross/30min/.203rounding/exact10/noC1-C3/noaveraging/
+scaling/reentry/exactGO unchanged. Persisted risk observation uses full exitdepth,
+common sourceCTS2s, actualfees/signedfunding/reserve;≤-15=>durableunwind. UNKNOWN/
+stale/malformed/nonfinite/oversizedsource=>durableunwind;price/restartcannotundo.
+Finalovershoot explicit;originalV1policy/report/previewretained/replaysidentically.
+488targetedPASS(26newpolicy/monitor+prior462),including251vectors;rootreviewonly.
+One bounded read-only VPS inventory completedby06:30:10UTC: PID1648585 env
+DRY_RUN=false; exactremoteobservationtime not captured, loadedhash/runtimeTRADE_ON
+notproven. Privatecapture cddf46be…55463; no broker requests or remote writes.
+Actualremainingblocker: existingselected-accountwriter not coordinated withmicro;
+doNOTinferexclusiveownershipfromearlier0/0. Realtransport/protection/recovery/
+supervisorbindingstillunimplemented, not a researchgate. Oldgross210.266660>210
+andexpired;freshaccount/common2sbook/fees/funding+exactGO still required. NoREADY/
+permit/reservation/sender/deploy/restart/cron/HALT/processchange. PreserveAlpaca
+Oct15P0freeze/before16:15fresh/exactGO/arm/opening,Claude/ATT1/LIQ/sourcepins.
+Earlier hard-guarantee/pending-policy paragraphs below are DATED HISTORY.
+
 October15 complete owner bounds recorded; **LOCAL_CONTROLLER_REPLAY_PASS /
 BLOCKED_EXECUTION**. Read KITY_EXECUTION_MICRO_CONTROLLER_2026_10_15.md,
 docs/superpowers/plans/2026-10-15-kity-micro-executor.md and
