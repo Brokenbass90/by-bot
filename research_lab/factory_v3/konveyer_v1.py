@@ -100,3 +100,23 @@ def zapas(put=OCHERED):
     karty = [k["imya"] for k in json.loads(p.read_text()) if k.get("status") == "OZHIDAET"] if p.exists() else []
     n = len(v_ocheredi) + len(karty)
     return dict(n=n, zayavki=v_ocheredi, karty=karty, status="OK" if n >= MIN_ZAPAS else "TREVOGA_MALO_KANDIDATOV")
+
+
+def kladbishche(slova, koren=None):
+    """Поиск по ОБОИМ кладбищам: реестр V3 (семьи/гипотезы) и старый реестр Фабрики V2 (data/reestr.json, 148 записей).
+    15.10: кандидат «ночной дрейф золота» прошёл проверку только по V3, а в V2 он уже NEGATIVE (UTC-ретест 01.10) — дыра закрыта.
+    Возвращает совпадения (id, состояние); пустой список = похожего не найдено."""
+    koren = Path(koren) if koren else HERE.parent
+    slova = [w.lower() for w in slova]; out = []
+    p2 = koren / "data" / "reestr.json"
+    if p2.exists():
+        for z in json.loads(p2.read_text()):
+            t = json.dumps(z, ensure_ascii=False).lower()
+            if all(w in t for w in slova): out.append((z.get("id"), z.get("sostoyanie")))
+    p3 = koren / "data" / "factory_v3" / "reestr_v1.jsonl"
+    if p3.exists():
+        for l in open(p3, encoding="utf-8"):
+            t = l.lower()
+            if l.strip() and all(w in t for w in slova):
+                z = json.loads(l); out.append((z.get("id") or z.get("gipoteza") or z.get("popytka"), z.get("status") or z.get("verdikt") or z.get("tip")))
+    return out
