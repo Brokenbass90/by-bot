@@ -1,5 +1,32 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 CURRENT micro real-transport preparation: **BLOCKED_EXECUTION —
+PHYSICAL_SINGLE_WRITER_DISPATCH_PROTECTION_RECOVERY_NOT_BOUND**. Owner directly
+approved gross215 (V3),15immediateall-inexitthreshold/overshootaccepted,30min,.203
+rounding/exact10/noC1-C3/noaveraging/scaling/reentry/exactmoneyGO unchanged.
+Read KITY_MICRO_REAL_TRANSPORT_2026_10_15.md and evidence/kity_micro_integration_20261015/
+{prepared_dossier_native_v2,account_observation_receipt,handoff_design,delivery_receipt}.json.
+ActualnewGETtransport59GET at06:51:20.824–06:51:25.882UTC,private692f7d8c…5cfb2c;
+keyOrder/Position,REGULAR_MARGIN/oneway,sources10legs,completeUSDTlinear0/0,
+commonCTS890msPASS then (nowEXPIRED/notdispatch). Minimum approved-rounding
+target21.4797=>206.530670gross<215,worst19.3424489%;old210.266660notcurrentblocker.
+Marginreference29.707497,takerroundtripfees.21598153225;30minfundinglimitforecast0,
+notactualfuturecash/guarantee. Exact10proposalwithnativeguard4855c37a…d7d83;
+NOmonetaryreadyGOpacket. Get/history/execution/transactionconnectivityactualPASS;
+emptytransactionnullcursorversionedoffline,rawunchanged/noadditionalpoll.
+Localowner-dispatchadapterdurableintent/unknownsend/partial/nativeSL/readback/
+cashfinalityimplemented;NOnewindependentsender/defaultowner/credentialwriter/
+installedsupervisor.536targetedPASS incl251vectors;V1/V2/actualV3network-denied
+replays exact;rootreviewonly. Actualbybot.service PID1648585 DRY_RUNfalse, local
+asyncreservationlock;webPID1623208hasadmin/AIcontrolroutes,noreadonlyguarantee.
+Selectedallowedfallback:exactSCOPED_HANDOFF_DESIGN_ONLY,proposal2d23784f…2382;
+oldunit/source/cronpinsandrollbackbound. Perownerinstruction DONOTperformhandoff
+yet; oldunitsNOTstopped/masked,nonewownerinstalled/activated. Realexclusivewriter
+pluspost_once/protection/guard-supervisorbindingremainactualengineeringblocker;
+doNOTclaimitisonlyatoggle.59brokerGET,5boundedSSH(onefailedsourceinventory
+retained),0broker/VPSwrites/processchanges. ExistingAlpacaOct15freeze/HALT/P0,
+Claude/ATT1/LIQ/researchpreserved. Earlier210/guaranteeblockersaredatedhistory.
+
 October15 CURRENT owner loss clarification implemented: **POLICY_V2_MONITOR_PASS /
 BLOCKED_EXECUTION / ORDERS_OFF**. Read KITY_EXECUTION_MICRO_POLICY_V2_2026_10_15.md
 and evidence/kity_micro_policy_v2_20261015/{delivery_receipt,writer_custody_receipt,

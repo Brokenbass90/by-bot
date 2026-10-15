@@ -52,7 +52,8 @@ def integer(value):
 
 def _owner_bounds(bounds):
     b = copy.deepcopy(bounds)
-    expected = {'max_gross_usdt': Decimal('210'), 'max_all_in_loss_usdt': Decimal('15'),
+    v3 = b.get('schema') == 'kity_execution_micro_owner_bounds_v3'
+    expected = {'max_gross_usdt': Decimal('215' if v3 else '210'), 'max_all_in_loss_usdt': Decimal('15'),
                 'max_rounding_shortfall_fraction': Decimal('.203')}
     if any(numeric(b.get(k)) != v for k, v in expected.items()):
         raise ValueError('OWNER_BOUND_CONFLICT')
@@ -64,7 +65,13 @@ def _owner_bounds(bounds):
         and b.get('allow_execution_overshoot') is True
         and b.get('source_reply_id') == 'call_6b8bf99c313243c1b85f5c3504a5c292'
         and b.get('supersedes_policy_sha256') == '53fce5006627658facd3d9521c1aad34f210423d09609684001f37adb157331a')
-    if (not (legacy or amended)
+    integrated = (v3 and b.get('hard_final_loss_cap_required') is False
+        and b.get('loss_policy') == 'IMMEDIATE_ALL_IN_EXIT_THRESHOLD'
+        and b.get('allow_execution_overshoot') is True
+        and b.get('source_reply_id') == 'call_6b8bf99c313243c1b85f5c3504a5c292'
+        and b.get('source_owner_message') == '2026-10-15 GO KITY MICRO-LIVE EXECUTION INTEGRATION — ORDERS OFF'
+        and b.get('supersedes_policy_sha256') == '49bf03e4733711d3c97c684ec2436fff988817e8fb6d9cef351b71708a882bb3')
+    if (not (legacy or amended or integrated)
             or b.get('duration_ms') != 1800000 or type(b.get('duration_ms')) is not int
             or b.get('one_experiment_only') is not True or b.get('purpose') != 'EXECUTION_MICRO_LIVE'
             or b.get('owner_money_go') is not False
@@ -152,6 +159,24 @@ def validate_plan(plan):
             or plan.get('research_evidence_eligible') is not False or plan.get('counts_toward_C1_C2_C3') is not False
             or [(l['symbol'], l['side']) for l in plan['legs']] != list(BASKET)):
         raise ValueError('PLAN_PIN_CONFLICT')
+    gross=Decimal(0)
+    for leg in plan['legs']:
+        req=leg['request'];quantity=numeric(leg['quantity'])
+        if (req.get('symbol')!=leg['symbol'] or req.get('side')!=leg['side']
+            or req.get('category')!='linear' or req.get('orderType')!='Limit' or req.get('timeInForce')!='IOC'
+            or type(req.get('positionIdx')) is not int or req['positionIdx']!=0 or req.get('reduceOnly') is not False
+            or numeric(req.get('qty'))!=quantity
+            or numeric(leg['rounding_shortfall_fraction'],zero=True)>Decimal(plan['bounds']['max_rounding_shortfall_fraction'])):
+            raise ValueError('PLAN_BOUND_OR_REQUEST_CONFLICT')
+        gross+=quantity*numeric(req.get('price'))
+        if 'stopLoss' in req:
+            stop=numeric(req['stopLoss']);price=numeric(req['price'])
+            if (req.get('tpslMode')!='Full' or req.get('slOrderType')!='Market' or req.get('slTriggerBy')!='LastPrice'
+                or (stop>=price if leg['side']=='Buy' else stop<=price)):
+                raise ValueError('PLAN_BOUND_OR_NATIVE_GUARD_CONFLICT')
+    exceeded=max(gross,numeric(plan['reference_gross_usdt']))>Decimal(plan['bounds']['max_gross_usdt'])
+    if gross!=numeric(plan['planned_limit_gross_usdt']) or exceeded!=('GROSS_CAP_EXCEEDED' in plan['blocked_reasons']):
+        raise ValueError('PLAN_BOUND_OR_GROSS_CONFLICT')
 
 
 def initial(plan):
@@ -222,7 +247,7 @@ def apply_event(plan, state, e):
         if quantity > Decimal(s['held'][symbol]) or s['ownership_conflict']:
             raise ValueError('EXIT_QUANTITY_OR_OWNERSHIP_CONFLICT')
         prior = [v for v in s['exits'].values() if v['symbol'] == symbol]
-        if any(not _accounted(o) for o in prior):
+        if any(not _accounted(o) and not o.get('is_native_protection') for o in prior):
             raise ValueError('EXIT_RECONCILIATION_REQUIRED')
         link = legs[symbol]['exit_prefix'] + f'-{len(prior)}'
         s['exits'][link] = dict(symbol=symbol, link=link, order_id=None, quantity=text(quantity),
@@ -282,6 +307,8 @@ def apply_event(plan, state, e):
         s['fills'][execution] = normalized
         s['last_fill_ms'] = max(at, s['last_fill_ms'] or at)
         s['broker_flat_proven'] = False
+        if exit and order.get('is_native_protection'):
+            s['entry_blocked'],s['phase']=True,'UNWINDING'
         gross = sum((Decimal(v['quantity']) * Decimal(v['price']) for v in s['fills'].values() if v['kind'] == 'ENTRY_FILL'), Decimal(0))
         if gross > Decimal(plan['bounds']['max_gross_usdt']):
             s['entry_blocked'], s['phase'] = True, 'UNWINDING'
@@ -299,6 +326,31 @@ def apply_event(plan, state, e):
         order.update(order_id=e['order_id'], terminal=True, terminal_quantity=text(quantity))
         if not exit and quantity != expected:
             s['entry_blocked'], s['phase'] = True, 'UNWINDING'
+        if exit and order.get('is_native_protection') and Decimal(s['held'][symbol])>0:
+            s['entry_blocked'],s['phase']=True,'UNWINDING'
+    elif kind == 'NATIVE_PROTECTION_BIND':
+        entry=s['entries'].get(symbol);req=legs[symbol]['request'];quantity=numeric(e['quantity'])
+        if (not entry or not _entry_complete(entry) or quantity!=Decimal(s['held'][symbol])
+            or req.get('tpslMode')!='Full' or req.get('slOrderType')!='Market'
+            or req.get('slTriggerBy')!='LastPrice' or numeric(e['trigger_price'])!=numeric(req.get('stopLoss'))
+            or e.get('side')!=('Sell' if legs[symbol]['side']=='Buy' else 'Buy')
+            or e.get('reduce_only') is not True or type(e.get('position_idx')) is not int or e['position_idx']!=0
+            or not isinstance(e.get('order_id'),str) or not e['order_id'] or e['order_id']==entry['order_id']):
+            raise ValueError('NATIVE_PROTECTION_IDENTITY_CONFLICT')
+        link=legs[symbol]['exit_prefix']+'-SL'
+        if link in s['exits']:
+            old=s['exits'][link]
+            if old['order_id']!=e['order_id'] or Decimal(old['quantity'])!=quantity:
+                raise ValueError('NATIVE_PROTECTION_IDENTITY_CONFLICT')
+        else:
+            s['exits'][link]=dict(symbol=symbol,link=link,order_id=e['order_id'],quantity=text(quantity),
+                filled='0',terminal=False,terminal_quantity=None,is_native_protection=True,cancel_sent=False)
+        entry['protected'],entry['stop_id']=text(quantity),e['order_id']
+    elif kind == 'NATIVE_CANCEL_INTENT':
+        order=s['exits'].get(e.get('order_link_id'))
+        if not order or not order.get('is_native_protection') or order['symbol']!=symbol or order['cancel_sent']:
+            raise ValueError('NATIVE_PROTECTION_CANCEL_CONFLICT')
+        order['cancel_sent']=True
     elif kind == 'PROTECTION_READBACK':
         order = s['entries'].get(symbol)
         quantity = numeric(e['quantity'])
@@ -465,7 +517,7 @@ class MicroJournal:
         if state['ownership_conflict']:
             return [dict(kind='OWNERSHIP_CONFLICT', orders_allowed=False)]
         orders = list(state['entries'].values()) + list(state['exits'].values())
-        pending = [o for o in orders if not _accounted(o)]
+        pending = [o for o in orders if not _accounted(o) and not o.get('is_native_protection')]
         unwind = state['entry_blocked'] or (state['deadline_ms'] is not None and now_ms >= state['deadline_ms'])
         if unwind:
             result = []
@@ -480,6 +532,15 @@ class MicroJournal:
                         qty=qty, orderType='Market', positionIdx=0, reduceOnly=True,
                         orderLinkId=leg['exit_prefix'] + f'-{count}')
                     result.append(dict(kind='EXIT', symbol=symbol, quantity=qty, request=request, orders_allowed=False))
+                else:
+                    for native in state['exits'].values():
+                        if native['symbol']==symbol and native.get('is_native_protection') and not _accounted(native):
+                            if native['cancel_sent']:
+                                result.append(dict(kind='RECONCILE',symbol=symbol,orders_allowed=False))
+                            else:
+                                result.append(dict(kind='CANCEL_NATIVE_PROTECTION',symbol=symbol,
+                                    order_link_id=native['link'],request=dict(category='linear',symbol=symbol,
+                                        orderId=native['order_id']),orders_allowed=False))
             return result or [dict(kind='FINALITY_READBACK', orders_allowed=False)]
         if pending:
             result = [dict(kind='RECONCILE', symbol=o['symbol'], orders_allowed=False) for o in pending]

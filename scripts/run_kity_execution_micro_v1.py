@@ -2,7 +2,7 @@
 """No-send preview/replay. No --apply, credentials, dispatcher or service mode.
 
 Real-money readiness stays BLOCKED until transport/custody/freshness/exact GO
-are established. V2 uses the owner's approved $15 exit threshold. Exit2 is the
+are established. V3 uses the owner's $215 gross / $15 exit threshold. Exit2 is the
 expected sourced readiness result, not a reason to retry broker observations.
 Explicit --events/--journal writes only a local
 offline replay journal, never an order/reservation/permit.
@@ -30,7 +30,7 @@ def read(path):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--dossier', type=Path, default=ROOT/'reports/evidence/kity_micro_live_20261015/execution_intake_terminal.json')
-    parser.add_argument('--bounds', type=Path, default=ROOT/'configs/research/kity_execution_micro_owner_bounds_v2_20261015.json')
+    parser.add_argument('--bounds', type=Path, default=ROOT/'configs/research/kity_execution_micro_owner_bounds_v3_20261015.json')
     parser.add_argument('--events', type=Path)
     parser.add_argument('--journal', type=Path)
     parser.add_argument('--output', type=Path)

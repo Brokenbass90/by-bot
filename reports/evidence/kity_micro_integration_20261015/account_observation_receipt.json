@@ -1,0 +1,200 @@
+{
+  "apple_double_metadata_not_importable": true,
+  "application_web_source_repaired": false,
+  "broker_get_requests": 59,
+  "broker_writes": 0,
+  "first_failure_stderr_sha256": "63ba361e9d9072832cb8df31d36098acaf1c839580ea4324ea546a5d2f4a25f3",
+  "first_recursive_web_audit_failed": true,
+  "observed_end_ms": 1792047085882,
+  "observed_start_ms": 1792047080824,
+  "orders_allowed": false,
+  "owner_money_go": false,
+  "private_account_capture_sha256": "692f7d8c3406c762adb687f40d068f1e01a65c9207165c661dc367b1615cfb2c",
+  "private_handoff_pins_sha256": "c9e9355967743acfee8760b3649b63a3d2ad45b6fdcb8dd6892bdf63eebd69c7",
+  "private_web_source_sha256": "f0f84a8c642e2dc38dd7ad68abdbbae8ac2bee6d84413516e874ded33ffbef3f",
+  "private_writer_capture_sha256": "20f5396c7057677168c1501693484e92a9205dfaddc2cbe6468cc4f0d05e5455",
+  "process_changes": 0,
+  "remote_writes": 0,
+  "schema": "kity_micro_real_account_observation_v1",
+  "services": {
+    "att1-lifecycle-zero-risk-v2.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/att1-lifecycle-zero-risk-v2.service",
+      "Id": "att1-lifecycle-zero-risk-v2.service",
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "Restart": "on-failure",
+      "SubState": "running"
+    },
+    "bybot.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/bybot.service",
+      "Id": "bybot.service",
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "Restart": "on-failure",
+      "SubState": "running"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/trading-journal-web.service",
+      "Id": "trading-journal-web.service",
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "Restart": "always",
+      "SubState": "running"
+    }
+  },
+  "source_is_current_dispatch_quote": false,
+  "ssh_observations": 5,
+  "status": "AUTHENTICATED_GET_AND_SIZING_OBSERVED",
+  "units": {
+    "att1-lifecycle-zero-risk-v2.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/att1-lifecycle-zero-risk-v2.service",
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "fragment_sha256": "5053874b6a19429ba31c4b6cc297d78e816d02054c5cc20dfef6307e8ba4f86b"
+    },
+    "bybot.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/bybot.service",
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "fragment_sha256": "5ca485113ac54e5934a74eef2ac06b271ea5793340fad56d27d510c2928b3c5b"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/trading-journal-web.service",
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "fragment_sha256": "422e5db53260ae13e8fd4742e46eaff05928b152ba6b0e49c248cb29016f81b9"
+    }
+  },
+  "web_direct_source_files": [
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/deps.py",
+      "sha256": "9b3f5c022175bbc780a76e97745d078366a957b8861e66bdb79fe7c18970d71e"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/reset_password.py",
+      "sha256": "a61f519a6c0a21b8de46dfe62cc5664ea40bea0052057e8f4e649dc06ef572f8"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/auth.py",
+      "sha256": "83dbf8fec7b619b1418f4654579c269b05eb53f5b4cce00e1b516fd116c9d4b8"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/__init__.py",
+      "sha256": "7e8fe96df8409f8389030cb6426e7f486547380c7f4b1ed976b99dfa06e430b1"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [
+        "run"
+      ],
+      "path": "/root/by-bot/web/setup_totp.py",
+      "sha256": "5ae48bce630f5f627873f4d9e00a71b086281ee294e88c6ef41268d29aec2f59"
+    },
+    {
+      "path": "/root/by-bot/web/._auth.py",
+      "status": "SyntaxError"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/activity_feed.py",
+      "sha256": "70e92344f94ab21595b74ff5549c9a92bf40ba6df69e4c18a72c1d469adec5a4"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/main.py",
+      "sha256": "96c8a2bc6beffce685eb8d31e8fc771c72cd81e0860accf0ab5d32239c845e34"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/routes/data_routes.py",
+      "sha256": "8fbd4178b78f6ef65bc770e5688c95903fbf1a531a5cab585e04b36aa3776a39"
+    },
+    {
+      "path": "/root/by-bot/web/routes/._extra_routes.py",
+      "status": "SyntaxError"
+    },
+    {
+      "path": "/root/by-bot/web/routes/._data_routes.py",
+      "status": "SyntaxError"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [
+        "post",
+        "run"
+      ],
+      "path": "/root/by-bot/web/routes/admin_routes.py",
+      "sha256": "36719c7df812b706319f30d1248b01df2434f0bad20e7c655fe760cd5c41f700"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/routes/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bybit_endpoints": [
+        "/v5/position/list"
+      ],
+      "effect_calls": [],
+      "path": "/root/by-bot/web/routes/position_routes.py",
+      "sha256": "610a8848c00aa29032a0369d073c95fa37df1c46de6378018f16af5e1a243058"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [
+        "post"
+      ],
+      "path": "/root/by-bot/web/routes/auth_routes.py",
+      "sha256": "95677cf70af4c362c1ceb574060fab2c93c14a5c0ca89550eef9db298493b808"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [
+        "post"
+      ],
+      "path": "/root/by-bot/web/routes/tv_routes.py",
+      "sha256": "1a00aa245a9edcebf4b6441c51c4ed4db19bd23826af05998479f9ee159a7718"
+    },
+    {
+      "bybit_endpoints": [
+        "/v5/position/list"
+      ],
+      "effect_calls": [
+        "post"
+      ],
+      "path": "/root/by-bot/web/routes/extra_routes.py",
+      "sha256": "e44b7b04bfcf99f98754b9865b4f0a1355baddc735a70a9b5033314d24c267ad"
+    },
+    {
+      "path": "/root/by-bot/web/routes/._ai_routes.py",
+      "status": "SyntaxError"
+    },
+    {
+      "bybit_endpoints": [],
+      "effect_calls": [
+        "Popen",
+        "post"
+      ],
+      "path": "/root/by-bot/web/routes/ai_routes.py",
+      "sha256": "ce2b90bbda772bb89e08fe05c26d22a9f25d372fb737e3df80dc5bf81a7aaaf0"
+    }
+  ]
+}

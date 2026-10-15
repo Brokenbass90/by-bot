@@ -1,0 +1,125 @@
+{
+  "application_preconditions": [
+    "Separate explicit owner approval for this physical handoff; this design supplies none.",
+    "Fresh authenticated same-account complete owned-risk inventory; original legacy linear-USDT positions/orders must be flat/terminal. Unknown/nonflat => reject, never flatten/adopt.",
+    "Recheck exact original unit/source/cron pins and process identity before mutation; drift => stop.",
+    "First install/review the replacement physical owner binding, post_once/no-retry transport and supervisor in disabled/orders-OFF form. Local adapter interfaces alone are insufficient.",
+    "Prove no other enabled local writer/account key path remains; external operator/manual writes paused for the scoped experiment.",
+    "Keep replacement disabled until a separate exact fresh money GO; handoff approval is not entry permission."
+  ],
+  "authorizing_scope": "Owner allows exact scoped handoff design if hot integration unsafe; explicitly forbids performing it now.",
+  "candidate_is_monetary_ready": false,
+  "expected_original_writer": {
+    "ActiveState": "active",
+    "After": "system.slice sysinit.target basic.target -.mount network-online.target",
+    "Before": "multi-user.target shutdown.target",
+    "BindsTo": "",
+    "Conflicts": "shutdown.target",
+    "ExecMainStartTimestamp": "Sun 2026-10-04 02:35:47 UTC",
+    "FragmentPath": "/etc/systemd/system/bybot.service",
+    "Id": "bybot.service",
+    "KillMode": "mixed",
+    "MainPID": "1648585",
+    "NRestarts": "0",
+    "PartOf": "",
+    "Requires": "sysinit.target -.mount system.slice",
+    "Restart": "on-failure",
+    "SubState": "running",
+    "UnitFileState": "enabled",
+    "Wants": "network-online.target"
+  },
+  "expected_root_cron_sha256": "c5729c174e49675400f533c8508636f95db669f4662d45953d829cab58d27939",
+  "expected_units": {
+    "att1-lifecycle-zero-risk-v2.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/att1-lifecycle-zero-risk-v2.service",
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "fragment_sha256": "5053874b6a19429ba31c4b6cc297d78e816d02054c5cc20dfef6307e8ba4f86b"
+    },
+    "bybot.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/bybot.service",
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "fragment_sha256": "5ca485113ac54e5934a74eef2ac06b271ea5793340fad56d27d510c2928b3c5b"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/trading-journal-web.service",
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "fragment_sha256": "422e5db53260ae13e8fd4742e46eaff05928b152ba6b0e49c248cb29016f81b9"
+    }
+  },
+  "handoff_authorized": false,
+  "integration_interfaces": {
+    "binding_status": "NOT_INSTALLED_OR_ACTIVATED",
+    "implemented_local_components": [
+      "authenticated GET",
+      "durable intent/ACK/unknown dispatch adapter",
+      "history/execution reconciliation",
+      "native guard proposal/readback/cancel state",
+      "owned position snapshot",
+      "actual cash/funding finality adapter",
+      "persistent15/30min controller"
+    ],
+    "owner": [
+      "assert_exclusive(plan)",
+      "validate_preflight(plan,request,role)",
+      "post_once(path,request)"
+    ],
+    "required_loop": "reconcile orders -> bind native SL -> reconcile native executions -> positions -> persisted source risk/deadline -> scoped dispatch -> actual transaction finality"
+  },
+  "mutator_units_requiring_quiescence_or_proven_inhibition": [
+    "bybot.service",
+    "trading-journal-web.service"
+  ],
+  "old_lock_is_cross_process_account_ownership": false,
+  "old_reservation_lock": [
+    {
+      "line": 9793,
+      "text": "_ENTRY_RESERVATION_LOCK = asyncio.Lock()"
+    },
+    {
+      "line": 9921,
+      "text": "async with _ENTRY_RESERVATION_LOCK:"
+    }
+  ],
+  "orders_allowed": false,
+  "owner_money_go": false,
+  "plan_candidate_sha256": "11705c04ce35c0f662627be19a73ef299834f4bfef7217088f31579febeaac46",
+  "preserve": [
+    "Alpaca app/HALT/timers",
+    "Claude checkout/shadows",
+    "ATT1 research",
+    "all unrelated cron lines/services",
+    "all old source/evidence/ledger data"
+  ],
+  "preserve_units": [
+    "att1-lifecycle-zero-risk-v2.service",
+    "bybit-liquidation-source-v2_1.service"
+  ],
+  "production_source_sha256": "c8ca2c325884a31521f160e9d690c301b8a58297443f32f3cde395e9c9a699d1",
+  "proposal_sha256": "2d23784fafe0a3d2f2018d3e15cc0a251959b265c2956fae06631708f2e72382",
+  "proposed_sequence": [
+    "Acquire persistent account ownership lock; it supplements, never substitutes for quiescing non-cooperating old writers.",
+    "With fresh legacy flat/no-orders proof, quiesce only the explicitly approved old mutator units and inhibit their restart for the bounded handoff; preserve original enabled/restart/source state.",
+    "Bind exactly one replacement physical owner to MicroAccountBridge and the same private account custody; no independent reader-side sender.",
+    "Read-only verify old owner absent, replacement source/unit/PID/lock/supervisor identity and ledger recovery; remain orders OFF.",
+    "Only after fresh10-leg dossier/account/book/fees/funding gates and separate exact monetary GO may the single owner issue one durable-intent entry sequence.",
+    "Every trigger, protection rejection/unknown, partial failure or deadline uses only proven owned reduce-only unwind; uncertain sends require history/execution readback, not resend.",
+    "After own flat/no-open-orders and all uncertain/attempted orders resolved, stop the micro owner and restore only the changed original unit states from pinned receipts; finality UNKNOWN is explicit, never a fake PASS."
+  ],
+  "research_gate_added": false,
+  "rollback_preconditions": [
+    "No positive owned quantity, no unresolved dispatch and no nonterminal owned/native order.",
+    "Preserve isolated journal/raw receipts; rollback is not deletion.",
+    "If flat cannot be proven, retain scoped recovery ownership and notify owner; do not revive competing writers."
+  ],
+  "schema": "kity_micro_scoped_handoff_design_v1",
+  "selected_account_binding": "same existing selected credentials, pinned in private authenticated capture; no new credentials",
+  "source_count_gate_added": false,
+  "status": "DESIGN_ONLY_NOT_APPLIED",
+  "why_web_included": "Admin/AI subprocess/control routes are present. Complete transitive broker-write absence is NOT proven; keeping web untouched/running would not establish exclusivity."
+}

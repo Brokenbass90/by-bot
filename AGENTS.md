@@ -507,3 +507,16 @@ are dated history. No extra PAPER/statistics or original heartbeat extension.
 Additional research source checks are separate, have no money gate effect;
 one public tiny-carry size screen is not netedgePASS, and generic Ollama triage
 was rejected, not a new autonomous research authority. Preserve Claude branch.
+
+## October15 micro execution engineering amendment
+
+The owner approves orders-OFF real-account integration preparation with gross215,
+immediate all-in exit threshold15/overshoot accepted,30min, exact10 and20.3%
+floor rounding. Preserve all research firewalls and require separate exact money
+GO. If integrating into the existing single writer is unsafe, prepare an exact
+scoped handoff design instead; the owner explicitly says not to perform it yet.
+The selected fallback is DESIGN_ONLY_NOT_APPLIED, not permission to stop/mask
+bybot/web, activate another sender or deploy a monetary supervisor. Read
+KITY_MICRO_REAL_TRANSPORT_2026_10_15.md and handoff_design.json. Existing authority,
+Alpaca P0 and root-only review restriction remain. V1/V2 are historical policies;
+V3 cap215 supersedes210 only, without changing other bounds.
