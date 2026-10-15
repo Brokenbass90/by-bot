@@ -34,7 +34,7 @@ def metriki(dnevnye, periodov_v_godu=365):
 
 def sravnit(papka):
     hr = V2.Hranilishche(papka)
-    opp = {z["opp_id"]: z for z in hr.opp.zapisi if not z["late"]}
+    opp = {z["opp_id"]: z for z in hr.opp.zapisi if not z["late"] and z["t_available_ms"] - z["t_observation_ms"] <= 6 * 3_600_000}
     po_politike = defaultdict(lambda: defaultdict(float)); n_ish = defaultdict(int); oborot = defaultdict(float); izd = defaultdict(float)
     for d in hr.dec.zapisi:
         o = opp.get(d["opp_id"]); ish = hr.ishody.get(d["opp_id"])

@@ -102,11 +102,18 @@ def _priznak(imya, D):
             j = bisect.bisect_left(dni, vch); okno = [r[x] for x in dni[max(0, j - 28):j]]      # строго до vch
             return None if len(okno) < 20 else r[vch] - sum(okno) / len(okno)
         return f
+    if imya == "cb_premiya_shok":                          # POSTMORTEM_COINBASE_PREMIYA_XS: суточный ПРИРОСТ премии p(d−1) − p(d−2)
+        base = _priznak("cb_premiya", D); base("BTCUSDT", "2025-01-01")
+        def f(s, vch):
+            base(s, vch); dni, r = D["cb_pr"].get(s, ([], {}))
+            d1 = (dt.date.fromisoformat(vch) - dt.timedelta(days=1)).isoformat()
+            return None if vch not in r or d1 not in r else r[vch] - r[d1]
+        return f
     raise KeyError(f"признак {imya} не в закрытом словаре")
 
 
 PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie", "glubina_imb1", "glubina_imb2", "glubina_imb5",
-            "glubina_ort", "cb_premiya")
+            "glubina_ort", "cb_premiya", "cb_premiya_shok")
 SOSTAVNYE = {"pogloshchenie", "glubina_ort"}   # значения-кортежи → остаток после проекции внутри недели
 
 

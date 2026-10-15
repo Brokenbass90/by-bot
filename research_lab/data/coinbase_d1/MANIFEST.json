@@ -1,0 +1,30 @@
+{
+ "dataset": "coinbase_d1",
+ "istochnik": "https://api.exchange.coinbase.com/products/{id}/candles granularity=86400",
+ "period": [
+  "2022-11-01",
+  "2026-09-30"
+ ],
+ "monet": 168,
+ "sha256": "cf989b377134f273eeea498088bf5d7976df6babe2702e075250c114357f5bbe",
+ "sobrano": "2026-10-15T16:00:13+00:00",
+ "izmereniya": {
+  "nedel": 194,
+  "mediana_pokrytiya": 35.0,
+  "nedel_s_pokrytiem": 194,
+  "razbros_premii_mediana_bps": 8.2,
+  "korr_s_m3_mediana": -0.031,
+  "uslovia": {
+   "pokrytie": true,
+   "nedeli": true,
+   "nezavisimost_ot_kity": true
+  }
+ },
+ "porogi": {
+  "mediana_pokrytiya": 20,
+  "nedel_s_pokrytiem": 104,
+  "korr_s_m3_max": 0.5
+ },
+ "gotovo": true,
+ "status": "DATA_READY"
+}

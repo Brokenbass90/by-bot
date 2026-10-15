@@ -29,7 +29,7 @@ PRIORY = {
                         ref="POSTMORTEM_ELDER_HIST_DEV_2026_10_15: CONTROL +0.031R, σ недели 1.28",
                         status="HIST_DEV_KILL; PROSPECTIVE_PENDING(ETS2M 900)"),
 }
-RISK = dict(total=20.0, sleeve=10.0, symbol=1.0, cluster=6.0)       # единицы риска; кластер = (рукав, сторона) — прокси корреляции
+RISK = dict(total=20.0, sleeve=10.0, symbol=1.0, cluster=6.0, stale_ms=6 * 3_600_000)   # v1.1: сигнал, доступный позже 6 ч после наблюдения, — не причинный       # единицы риска; кластер = (рукав, сторона) — прокси корреляции
 BRAIN = dict(k_unc=0.5, masshtab=20.0, k_klaster=6.0, oborot=0.5)
 POLICY_SHA = hashlib.sha256(json.dumps([PRIORY, RISK, BRAIN, "v1"], sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
@@ -114,11 +114,16 @@ def iz_elder(btc):
 
 
 # ---------- Risk Engine (детерминированный, общий для обеих политик) и политики
+def prichinno(o):
+    return not o.get("late", False) and o["t_available_ms"] - o["t_observation_ms"] <= RISK["stale_ms"]
+
+
 def otkryto(hr, policy, t, vklyuchaya_budushchie=False):
     opp = {z["opp_id"]: z for z in hr.opp.zapisi}; out = []
     for d in hr.dec.zapisi:
         if d["policy"] != policy or d["allocation_units"] <= 0: continue
         o = opp[d["opp_id"]]
+        if not prichinno(o): continue                 # бэкфилл и устаревшие сигналы не занимают риск-бюджет
         if (vklyuchaya_budushchie or o["t_decision_ms"] <= t) and t < o["t_decision_ms"] + o["horizon_ms"]:
             out.append((o, d["allocation_units"]))
     return out
@@ -186,8 +191,8 @@ def _prohod(hr, btc=None, seychas=None):
         except Exception:
             btc = None
     btc = kontekst_fabrika(btc)
-    novye = [z for z in sorted(iz_kity(btc) + iz_elder(btc), key=lambda v: (v["t_decision_ms"], v["sleeve"], v["symbol"]))
-             if hr.dobavit_vozmozhnost(z, seychas)]
+    novye = [z for z in (hr.dobavit_vozmozhnost(v, seychas) for v in
+                         sorted(iz_kity(btc) + iz_elder(btc), key=lambda v: (v["t_decision_ms"], v["sleeve"], v["symbol"]))) if z]
     resh = 0
     t0 = novye[0]["t_decision_ms"] if novye else 0
     otkr = {imya: otkryto(hr, imya, t0, vklyuchaya_budushchie=True) for imya in POLITIKI}
@@ -196,7 +201,11 @@ def _prohod(hr, btc=None, seychas=None):
         for imya, f in POLITIKI.items():
             otkr[imya] = [(o, a) for o, a in otkr[imya] if o["t_decision_ms"] + o["horizon_ms"] > t]
             tek = [(o, a) for o, a in otkr[imya] if o["t_decision_ms"] <= t]
-            zh, ogr1 = f(v, tek); u, ogr2 = risk_engine(v, zh, tek)
+            if not prichinno(v):
+                zh, ogr1 = 0.0, ["ne_prichinno"]
+            else:
+                zh, ogr1 = f(v, tek)
+            u, ogr2 = risk_engine(v, zh, tek)
             hr.dobavit_reshenie(v["opp_id"], imya, SHA[imya], u, ogr1 + ogr2, seychas); resh += 1
             if u > 0: otkr[imya].append((v, u))
     ish = prikrepit_kity(hr, seychas)
