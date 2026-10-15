@@ -1,0 +1,32 @@
+# Контракты research → Codex (15.10.2026, Claude CRO). Production не меняется; LIVE-журналы сейчас НЕ подключаются.
+
+## 1. OpportunityRecord V2 — адаптер join (готовить сейчас, включать после KITY canary)
+Цель: исполнение и исходы LIVE попадают в Brain Shadow как отдельные записи `joins.jsonl`, без доступа research к ключам/ордерам.
+Codex выдаёт **файл экспорта только для чтения** (append-only JSONL, своя копия, не рабочий журнал):
+| поле | тип | обязательность |
+|---|---|---|
+| `opp_id` | 32 hex = sha256(`sleeve|mechanism|version|symbol|side|t_observation_ms`)[:32] (функция opportunity_v2.opp_id) | да; если связи нет — `UNKNOWN` и `source_ref` сигнала |
+| `execution_owner_id` | ID владельца исполнения Codex (owner/intent hash) | да |
+| `kind` | `execution` / `outcome` | да |
+| `order_ids`, `fills` [{t_ms, qty, px, fee, fee_ccy, liquidity}] | — | для execution |
+| `t_outcome_ms`, `realized_net_bps` (после комиссий и фандинга), `realized_gross_bps`, `funding_bps` | число или `UNKNOWN` | для outcome |
+| `source_ref`, `source_sha256` | путь/ID и sha256 строки журнала Codex | да |
+| `accounting` {venue, account_type, instrument_type, ccy, trade_id} | — | да (провенанс для TAX OS с первой сделки) |
+Правила: только дописывание; исправление = новая строка с `supersedes`, не перезапись; ключей/секретов нет; время — мс UTC.
+Research читает файл, проверяет sha и вызывает `Hranilishche.prikrepit_ispolnenie / prikrepit_ishod`. Конфликт исхода → отказ.
+Порядок: KITY micro (после 23.10) → Alpaca LIVE → остальные. Включение — отдельным решением после canary, не сейчас.
+
+## 2. Elder execution adapter — бумага, работа Codex НЕ запрашивается
+Статус: ELDER_HIST_DEV_KILL (POSTMORTEM_ELDER_HIST_DEV_2026_10_15). Строить имеет смысл только если проспективный судья 900 PASS
+**и** будет показана недельная устойчивость. До этого — только спецификация, чтобы потом не ждать:
+- вход: лимит шорт ref×(1+0.002) от закрытия сигнального H1-бара, живёт 6 баров; не исполнился — отмена, сделки нет;
+- стоп = e_ref + (sl − e_ref)×4, нативный reduce-only стоп на бирже сразу после исполнения; цели — по ветке, прошедшей судью
+  (CONTROL k1/k2 стратегии; WIDE 0.5R/1.0R, f1 0.55); удержание 336 ч, выход по времени рыночным reduce-only;
+- одна позиция на монету (блокировка как ten.py), плечо ≤ MAX_LEV, риск на сделку = фиксированная доля в R;
+- переиспользуемые примитивы Codex: transport, owner/intent, recovery, native protection, health — те же, что KITY micro;
+- журнал исполнения = формат §1 (mechanism `ELDER_ETS2S`, version `ETS2M_<эпоха>`).
+
+## 3. LIQ — один экспорт с VPS разблокирует DEV-полосу (просьба остаётся в силе)
+(а) продолжение ленты V1 `runtime/liquidations/bybit_liquidations.jsonl` с 13.09 по сейчас; (б) журнал systemd/переподключений
+сборщика (время разрыва/восстановления). Только чтение, копия файла. Без этого LIQ_RENORMALIZED_DEV_V2 = BLOCKED_DATA
+(сейчас 13 BASE-событий в окне полноты — тест бессилен), а не KILL.

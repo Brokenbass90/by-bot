@@ -155,6 +155,17 @@ def prohod():
         import sudi_v_reestr; sudi_v_reestr.vse()
     except Exception as e:
         with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} мост судей: {e}\n")
+    try:                                                    # конвейер Фабрики: заявки с картой кандидата → ферма → реестр (factory_v3/konveyer_v1)
+        import konveyer_v1; it = konveyer_v1.prohod()
+        if it:
+            with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} конвейер: {[(x['id'], x['status']) for x in it]}\n")
+    except Exception as e:
+        with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} конвейер не прошёл: {e}\n")
+    try:                                                    # Brain Shadow v1: возможности → OpportunityRecord V2 → решения BASELINE/BRAIN (без полномочий)
+        import brain_shadow_v1; b = brain_shadow_v1.prohod()
+        with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} brain_shadow: {json.dumps(b, ensure_ascii=False)}\n")
+    except Exception as e:
+        with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} brain_shadow не прошёл: {e}\n")
     try:                                                    # раз в 7 дней: известные ответы + калибровка фермы (factory_v3/kontrol_fermy)
         import kontrol_fermy
         if kontrol_fermy.pora():

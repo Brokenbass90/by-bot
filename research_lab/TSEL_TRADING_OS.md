@@ -39,3 +39,44 @@ HEALTH / DEGRADATION → FACTORY → CHALLENGERS (стратегии и моде
 налоговые правила по году (Кипр первым) → расчёт → доказательства/происхождение средств → декларация → подача и оплата только
 с подтверждения владельца. Полный план: TAX_ACCOUNTING_OS_ROADMAP.md. Сейчас ROADMAP ONLY; ближайшее требование (TAX-A) —
 журналы реального исполнения сохраняют учётные данные с первой сделки. Денежные контуры не блокирует.
+
+## Матрица Trading OS — 15.10.2026 вечер (Claude CRO; Codex = production/execution, Claude = research/Factory/Brain)
+| lane | current evidence | running now | missing component | can complete now | genuinely waits for data | next money/research milestone | owner |
+|---|---|---|---|---|---|---|---|
+| ALPACA | первый LIVE 15.10: NET 0.325 @ $311.22, нативный стоп $277.69, LIVE_PROTECTED | менеджер 5 мин | join исполнения в Brain (контракт §1) | — (production не трогаем) | закрытие сделки → первый реальный исход | первый закрытый LIVE-исход с учётным провенансом | Codex |
+| KITY frozen (C1–C3) | capture PASS, C2 PASS (15.10) | тень, сторож | — | C1 после 00:05 UTC 16.10 (одна команда) | сигнал/C2 22.10, выход недели 22.10+ | досье 23.10 → канарейка (GO владельца) | Claude C1 / Codex C2 |
+| KITY micro execution | NO_SEND (безопасно), границы владельца: $215 gross, немедленный выход при −$15 all-in; bounded intent привязан к владельцу | Codex | — | Codex: pricing intent | ближайший сигнал | первый исполненный micro-ордер | Codex |
+| KITY V2 | вопрос non-crypto vs crypto-only записан | — | prereg челленджера | prereg (без прогона до конца frozen-evidence) | frozen-evidence C1–C3 | челленджер-тест после канарейки | Claude |
+| ELDER | **HIST_DEV KILL** 15.10 (σ недель 1.3; прибыль = 10 недель обвала); аудит: EDGE_DEV_PASS нет | ETS2M 900 (только счётчики) | недельная устойчивость | — (адаптер = бумага, контракт §2) | окно 900 ≈ 20–25.10; ≥ 26 нед устойчивости | вердикт судьи 900 | Claude / Codex позже |
+| BRAIN SHADOW v1 | код + 6 тестов; policy_sha 4437ab42 | включится со стартом сторожа | LIVE join (после канарейки) | перезапуск сторожа | ≥ 30 причинных исходов на политику | первое сравнение BASELINE vs BRAIN | Claude |
+| CONTEXT | ContextRecord v1 = REZHIM_V1 + EMA200-метка + BTC доходности | в Brain Shadow | funding/OI в контексте | — | — | ContextRecord v2 (режим монеты, funding) | Claude |
+| FACTORY | конвейер заявок + карта кандидата обязательна; контроль фермы OK | сторож (после перезапуска) | генерация гипотез; данные новых семей | загрузчик + prereg COINBASE_PREMIYA_XS | загрузка на Маке (сеть) | первый HIST_DEV новой семьи | Claude |
+| LIQ | V1: provenance PASS, полнота BLOCKED (13 BASE) | V2.1 копит (VPS, эпоха 0688909d) | экспорт VPS (V1 продолжение + reconnect) | — | экспорт Codex или 16.11 | DEV baseline + ≤1 challenger → PASS/KILL | Codex экспорт / Claude тест |
+| OPPORTUNITY / EVIDENCE v2 | opportunity_v2: lineage, UNKNOWN, late, цепочка хешей, исход один раз | Brain Shadow | экспорт Codex (§1) | — | канарейка KITY | подключение KITY micro → Alpaca | Claude / Codex |
+| TAX OS | ROADMAP; TAX-A = учётные поля в журналах | — | — | — | первые закрытые LIVE-сделки | TAX-A проверка журналов | Codex поля / Claude проверка |
+
+### Что Фабрика делает во время ожиданий
+Ежечасно (сторож): квитанции судей → реестр, конвейер заявок (ферма, один прогон на заявку), Brain Shadow, Data QA, сводка.
+Еженедельно: известные ответы + калибровка фермы. Claude: COINBASE_PREMIYA_XS (публичные данные) → prereg; чистка мёртвых теней
+(SILA STALE, rebal_ten без MT5) решением в реестре; σ по неделям — обязательна во всех новых prereg.
+
+### Что Brain уже собирает в тени
+Каждая возможность KITY (10 ног/нед) и Elder (~77/сутки) до решения: lineage+sha, три времени, контекст REZHIM_V1, признаки,
+приор края с неопределённостью, издержки; решения BASELINE_V1 и BRAIN_V1 под общим Risk Engine. Исходы: KITY — по закрытию недели;
+Elder — эмбарго до судьи 900; Alpaca/KITY LIVE — после контракта §1.
+
+### Полный путь Elder до micro-LIVE
+HIST_DEV KILL (15.10) → судья 900 (≈ 20–25.10, замороженный, без подглядывания): FAIL → постмортем, KILL семьи выходов;
+PASS → это ещё НЕ денежный PASS: нужна недельная устойчивость (≥ 26 недель проспективно, σ по неделям > 2) → тогда Codex строит адаптер
+по контракту §2 на примитивах KITY micro → бумажный прогон исполнения → micro-LIVE по GO владельца. Параллельно Brain V2 проверяет
+Elder как портфельную «страховку от обвала» (без денег). Честный срок автономного Elder-денег: не раньше апреля 2027.
+
+### Полный путь KITY до canary
+16.10 после 00:05 UTC: C1 недели 1 (`kity_bybit_kvitanciya.py 2026-10-15`) → 22.10: сигнал недели 2, выход недели 1, C1/C2 →
+23.10: `kity_dosie.py 2026-10-15 2026-10-22 --c2 …` → DOSIE_READY → GO владельца → canary (Codex, owner-bounded intent: $215 gross,
+выход при −$15 all-in). Параллельно micro-execution Codex (не evidence C1–C3).
+
+### Кто что делает
+Codex: Alpaca LIVE, KITY C2 и micro-исполнение, экспорт LIQ с VPS, экспорт join §1 (после канарейки), адаптер Elder (только после PASS).
+Claude: C1 KITY, досье, Brain Shadow/метрики/контекст, Фабрика (конвейер, карты, новые семьи), prereg/судьи/постмортемы, TAX-проверка полей.
+Владелец: перезапуск сторожа (включает конвейер + Brain), GO канарейки 23.10, решения о бюджетах данных.
