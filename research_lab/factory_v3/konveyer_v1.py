@@ -82,4 +82,21 @@ def _prohod(put, reestr, processov, koren):
                      k_teni=bool(x.get("status") == "PASS" and k["ispolnimost"] == "ponyatna"))
             itogi.append(x)
     for x in itogi: dopisat(x, put)
+    try:                                              # запас кандидатов виден без рестарта сторожа (модуль перечитывается)
+        (Path(put).parent / "ZAPAS.json").write_text(json.dumps(dict(zapas(put), kogda=int(time.time() * 1000)), ensure_ascii=False))
+    except Exception:
+        pass
     return itogi
+
+
+MIN_ZAPAS = 3
+
+
+def zapas(put=OCHERED):
+    """Правило 15.10: впереди всегда ≥ MIN_ZAPAS независимых кандидатов (заявки без итога + карты в KANDIDATY_V_OCHEREDI.json)."""
+    zap = chitat(put); sdelano = {z["id"] for z in zap if z["tip"] == "itog"}
+    v_ocheredi = [z["spec"]["id"] for z in zap if z["tip"] == "zayavka" and z["spec"]["id"] not in sdelano]
+    p = Path(put).parent / "KANDIDATY_V_OCHEREDI.json"
+    karty = [k["imya"] for k in json.loads(p.read_text()) if k.get("status") == "OZHIDAET"] if p.exists() else []
+    n = len(v_ocheredi) + len(karty)
+    return dict(n=n, zayavki=v_ocheredi, karty=karty, status="OK" if n >= MIN_ZAPAS else "TREVOGA_MALO_KANDIDATOV")

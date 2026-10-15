@@ -159,6 +159,9 @@ def prohod():
         import importlib, ferma_shablony, konveyer_v1; importlib.reload(ferma_shablony); importlib.reload(konveyer_v1); it = konveyer_v1.prohod()   # reload: правки кода без рестарта сторожа
         if it:
             with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} конвейер: {[(x['id'], x['status']) for x in it]}\n")
+        z = konveyer_v1.zapas()
+        if z["status"] != "OK":
+            with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} ТРЕВОГА Фабрики: впереди {z['n']} кандидатов (< {konveyer_v1.MIN_ZAPAS})\n")
     except Exception as e:
         with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} конвейер не прошёл: {e}\n")
     try:                                                    # Brain Shadow v1: возможности → OpportunityRecord V2 → решения BASELINE/BRAIN (без полномочий)
