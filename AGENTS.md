@@ -539,3 +539,15 @@ and cron retained.14 installed pins/real GET no-send/restart/lock verified,
 STATIC=[],558 targetedPASS; fresh checks and exact monetary GO remain separate.
 No actual GO/journal/intent/order. Do not reapply handoff/install or start old
 writers alongside this owner. Missing state never means a fresh experiment.
+
+October15 Alpaca direct exact monetary GO received in human reply
+call_c768d5e4cc8e471aa5569c67f1981417: GO ALPACA_DYNAMIC_FIRST_INTENT_V1
+198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd. Human explicitly
+permits fixed-envelope approval before an actual opening quote because IEX has
+no valid premarket ask; actual opening freshness/all frozen gates remain required.
+At13:10:34UTC original scoped HALT archived under lock, GO/provenance retained,
+exact four units installed and only two pinned timers armed/enabled. Entry waits
+13:30UTC Oct15 only; no repeat/reprice/session transfer. Observe, do not rearm or
+invoke another entry. No current fill/protection claim yet. Keep owned manager
+through uncertainty/exposure; prior HALT/no-GO statements are historical only
+within this exact Alpaca authorization. KITY money GO is still NOT received.

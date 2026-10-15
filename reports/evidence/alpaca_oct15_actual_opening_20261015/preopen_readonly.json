@@ -1,0 +1,51 @@
+{
+  "schema": "ALPACA_OCT15_ACTUAL_PREOPEN_OBSERVATION_V1",
+  "observed_ms": 1792069497910,
+  "status": "FRESH_ACCOUNT_PASS_QUOTE_PENDING_OPEN",
+  "intent_sha256": "198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd",
+  "static_pins_verified": 53,
+  "account": {
+    "status": "ACTIVE",
+    "blocked": false,
+    "cash": "496.12",
+    "nonmarginable_cash": "496.12",
+    "pending_fees": "0",
+    "accrued_fees": "0",
+    "positions": 0,
+    "open_orders": 0
+  },
+  "asset": {
+    "symbol": "NET",
+    "tradable": true,
+    "fractionable": true
+  },
+  "native_ledger_empty": true,
+  "source_intents": 0,
+  "source_attempts": 0,
+  "live_database_exists": false,
+  "old_monthly_cron_retired": true,
+  "halt_present": true,
+  "units_registered": 0,
+  "quote": {
+    "status": "FRESH_RAW_QUOTE_CLOCK",
+    "raw_cts": "2026-10-14T20:00:01.977130548Z",
+    "ask": "0",
+    "usable": false,
+    "feed": "IEX"
+  },
+  "private_captures": [
+    {
+      "path": "/opt/bybot-research/alpaca-dynamic-live-20261013/observations/oct15-preopen-1792069449571.json",
+      "sha256": "4d857ce0d965b4256b2ff99d60c4a66915d3e30531500b4fd4e173a6edf8acb6"
+    },
+    {
+      "path": "/opt/bybot-research/alpaca-dynamic-live-20261013/observations/oct15-account-1792069497910.json",
+      "sha256": "70b135ade137df2823e999341bfb1b3f9c4a68a194178f5b559fea432db43317"
+    }
+  ],
+  "broker_writes": 0,
+  "owner_go_received": false,
+  "permits_created": 0,
+  "reservations_created": 0,
+  "activation": false
+}

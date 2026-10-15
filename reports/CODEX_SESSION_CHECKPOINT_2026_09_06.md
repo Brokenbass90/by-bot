@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 13:10:34UTC /16:10:34Cyprus CURRENT Alpaca: **ARMED, NOT YET SENT**.
+Direct human exact GO call_c768d5e4cc8e471aa5569c67f1981417 received for intent
+198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd after explicit
+disclosure that IEX premarket quote is yesterday/ask0. Human authorizes the fixed
+envelope with mandatory actual opening fresh quote/all unchanged gates; no fake
+fresh dossier. Fresh LIVE ACTIVE/unblocked/cash496.12/fees0/flat0/open0, NET
+eligible,53pins/source roles/native empty/original lock/retired cron verified.
+Original scoped HALT archived under account lock, bytes e1a137bc…7f53ad retained
+in CONTROL/session/original-halt.json; owner-go/provenance/arming receipts0600.
+Four exact frozen units installed; only entry/owned-manager timers started and
+enabled via timers.target wants (unchanged static template bytes). Readback
+13:11:29UTC: entry waits13:30UTC, manager next13:15UTC. No source reservation,
+broker write or LIVE fill yet. CONTROL remains oct15-first-entry-v1-1. Do not
+rearm/reinvoke/prepare/reprice; observe existing dispatch receipts at opening,
+then report actual fill/protection or terminal reason. Existing max qty/notional/
+risk/price and one-session/no-repeat semantics unchanged. Before any restore or
+kill inspect actual owned exposure; keep manager during uncertainty. Earlier
+HALTED/no money-GO notes below are dated history for Alpaca activation only.
+Read reports/evidence/alpaca_oct15_actual_opening_20261015/preopen_readonly.json.
+Operator's first arm command failed on a field name before all writes; corrected
+operator lookup uses existing max_notional_usd, no frozen trading-code change.
+Telegram stale alerts sourced to old watchdog/old intentionally stopped bybot;
+new KITY PID2147336/NRestarts0/fresh ORDERS_OFF/0POST verified13:07UTC. Do not
+start old writer. Monitoring mutation remains after Alpaca opening handling.
+
 October15 CURRENT actual KITY physical handoff: **KITY_EXECUTION_MICRO_LIVE_READY /
 ORDERS_OFF**, known STATIC blockers **[]**. Read
 KITY_MICRO_SCOPED_HANDOFF_2026_10_15.md and its RUNBOOK; evidence directory
