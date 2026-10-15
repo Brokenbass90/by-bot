@@ -1,0 +1,221 @@
+{
+  "schema": "KITY_BOUNDED_EXECUTION_OWNER_PACKET_V2",
+  "status": "KITY_EXECUTION_MICRO_LIVE_READY",
+  "intent_id": "7aa4504da8268b16e61e316b5d64e81988e8a07b2c4686c21d7960d465c145cd",
+  "owner_go_text": "GO KITY_EXECUTION_MICRO_INTENT_V2 7aa4504da8268b16e61e316b5d64e81988e8a07b2c4686c21d7960d465c145cd",
+  "expires_ms": 1792078211877,
+  "expires_utc": "2026-10-15T15:30:11.877000+00:00",
+  "expires_cyprus": "2026-10-15T18:30:11.877000+03:00",
+  "collar_bps": "50",
+  "ttl_ms": 600000,
+  "reference_source_ms": 1792077611778,
+  "reference_gross_usdt": "208.450500",
+  "rehearsal_gross_usdt": "208.473730",
+  "maximum_all_reference_price_band_gross_usdt": "209.494960",
+  "exact_ten_bands": [
+    {
+      "max_price": "1.91056",
+      "min_price": "1.89156",
+      "quantity": "10",
+      "side": "Buy",
+      "symbol": "BTWUSDT",
+      "tick_size": "0.00001"
+    },
+    {
+      "max_price": "4185.60",
+      "min_price": "4143.96",
+      "quantity": "0.005",
+      "side": "Buy",
+      "symbol": "XAUUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "60.41",
+      "min_price": "59.81",
+      "quantity": "0.3",
+      "side": "Buy",
+      "symbol": "LTCUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "24.8180",
+      "min_price": "24.5720",
+      "quantity": "0.88",
+      "side": "Buy",
+      "symbol": "VVVUSDT",
+      "tick_size": "0.0010"
+    },
+    {
+      "max_price": "734.96",
+      "min_price": "727.66",
+      "quantity": "0.03",
+      "side": "Buy",
+      "symbol": "BNBUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "4172.01",
+      "min_price": "4130.51",
+      "quantity": "0.005",
+      "side": "Sell",
+      "symbol": "XAUTUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "0.08487",
+      "min_price": "0.08403",
+      "quantity": "259",
+      "side": "Sell",
+      "symbol": "XPLUSDT",
+      "tick_size": "0.00001"
+    },
+    {
+      "max_price": "57.57",
+      "min_price": "57.01",
+      "quantity": "0.382",
+      "side": "Sell",
+      "symbol": "XAGUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "0.67740",
+      "min_price": "0.67080",
+      "quantity": "32",
+      "side": "Sell",
+      "symbol": "GRASSUSDT",
+      "tick_size": "0.00010"
+    },
+    {
+      "max_price": "149.57",
+      "min_price": "148.09",
+      "quantity": "0.14",
+      "side": "Sell",
+      "symbol": "SPCXUSDT",
+      "tick_size": "0.01"
+    }
+  ],
+  "bounds": {
+    "allow_averaging": false,
+    "allow_execution_overshoot": true,
+    "allow_reentry": false,
+    "allow_scaling": false,
+    "counts_toward_C1_C2_C3": false,
+    "duration_ms": 1800000,
+    "hard_final_loss_cap_required": false,
+    "loss_policy": "IMMEDIATE_ALL_IN_EXIT_THRESHOLD",
+    "max_all_in_loss_usdt": "15",
+    "max_gross_usdt": "215",
+    "max_rounding_shortfall_fraction": "0.203",
+    "one_experiment_only": true,
+    "owner_money_go": false,
+    "purpose": "EXECUTION_MICRO_LIVE",
+    "research_evidence_eligible": false,
+    "schema": "kity_execution_micro_owner_bounds_v3",
+    "source_owner_message": "2026-10-15 GO KITY MICRO-LIVE EXECUTION INTEGRATION \u2014 ORDERS OFF",
+    "source_reply_id": "call_6b8bf99c313243c1b85f5c3504a5c292",
+    "supersedes_policy_sha256": "49bf03e4733711d3c97c684ec2436fff988817e8fb6d9cef351b71708a882bb3"
+  },
+  "native_protection": "FRESH_FEE_FUNDING_BOUND_15_THRESHOLD_DERIVATION_BEFORE_FIRST_DISPATCH",
+  "static_blockers": [],
+  "fresh_only_at_rehearsal": [],
+  "owner_money_go_received": false,
+  "broker_posts": 0,
+  "actual_experiment_selected": false,
+  "actual_new_journal_created": false,
+  "physical_config_sha256": "36f3d72e9ee55b8561e6b0429ec827dc5f5ad827969486604a04f587a452269f",
+  "physical_unit_sha256": "f89b633b7df2a6d0d42261566a69a2e727b142d155d2291da86cb2fa7da8aeca",
+  "owner": {
+    "MainPID": "2186777",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "account_lock_inode": 818853,
+  "new_source_count": 16,
+  "predecessor_files_unchanged": {
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/active-plan.json": "3b97eb4844872a13d7bcfd20d5ffbdd6b8e2e32de8f6bc442589a5a9cf03cdd8",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/owner-go.json": "43f373ef531881b2a49c3931537293de8eb71b337d1ec30b7a5304e7fefd082b",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/lifecycle.sqlite": "37771a15783d7d809da9c117b1c4138f403bd54d7a4661f7933db4868200f5a8",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/micro-terminal-receipt-v1.json": "69f53029d94d09cd5921eaaf66b0c224a391f905625fbaa6a833a9f12f590ea4"
+  },
+  "source_map": {
+    "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+    "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+    "configs/research/kity_execution_micro_owner_bounds_v3_20261015.json": "9d8c6e036fe9446de539c20b89164dd019c0d6012464ce66f25581fe572b80ad",
+    "reports/evidence/kity_bybit_c2_actual_20261015/c2_public_receipt.json": "b93d0994e74e3ac61df676410e74771a3230e8e23a81e052665994e686c6e903",
+    "reports/evidence/kity_micro_live_20261015/build_readonly_dossier.py": "73f4870d8a6c24cb14180f5157fcbdaee2a5756a75a14839bb9f8d473276ef5c",
+    "research_lab/kity_execution_micro_bybit_v1.py": "2ba72fc372253d157e55ab5ec82051c083d9f0bccb2584c6a9807329cd1bb0ac",
+    "research_lab/kity_execution_micro_runtime_v1.py": "54b3169e496c05abf0d0f2aa2450785691864d83ad69333250ac0b179993e3ff",
+    "research_lab/kity_execution_micro_v1.py": "bd7a8c5903b67129185404e4db6b761d37185e6e450d6624d83ee56a71860b74",
+    "research_lab/kity_micro_account_bridge_v1.py": "14ae88b9df55614736c9194ba1a2689391ee2d3677bdddb2091e103cb2a079ee",
+    "research_lab/kity_micro_bounded_owner_v2.py": "6775fbfacc47aa2de85d46e88dac290b86d890eeba28a658ad84332a05c69f7b",
+    "research_lab/kity_micro_handoff_v1.py": "d85439dd2b25e36b51868ccd6946ae22a900e2fc30a963d76b0a901eb3315b09",
+    "research_lab/kity_micro_physical_owner_v1.py": "6541461901249837564f6bfc51e14c01305fb39ee863bcd06cc2542aa9a08e7a",
+    "research_lab/kity_micro_preflight_v1.py": "e16055dc5db88255ff129f046c63f7851647eb63da0f01c23b8f13a54ad44acc",
+    "research_lab/kity_micro_pricing_intent_v2.py": "52ee222d7f2c6b64593068b907006baa5105b96ccc95d2390547dcf69a96a8dd",
+    "research_lab/kity_micro_supervisor_v1.py": "593bd62ba34d87461a3e2f344a2c55cf95ca58bce39eec251ae8616f491f8a93",
+    "research_lab/kity_micro_transport_v1.py": "17c833c0e3c7a78b3cc9f48bf88ca24c3fc013da2b8388b9ade0bad687f3007d"
+  },
+  "tests": "239 targeted PASS; root-only review; full repository suite not run",
+  "controls": {
+    "prepare_command": "1792077597739127900",
+    "rehearsal_command": "1792077612379710108"
+  },
+  "deployment_receipt_sha256": "9fdf60a8b815f0236ad2ea4c03fc64ab2f6d30f6978c3177b83cd73a1e8f6edc",
+  "rehearsal": {
+    "actual_journal_created": false,
+    "broker_writes": 0,
+    "fresh_only": [],
+    "gross": "208.473730",
+    "intent_id": "7aa4504da8268b16e61e316b5d64e81988e8a07b2c4686c21d7960d465c145cd",
+    "legs": [
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "BTWUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "XAUUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "LTCUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "VVVUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "BNBUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "XAUTUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "XPLUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "XAGUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "GRASSUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "SPCXUSDT"
+      }
+    ],
+    "native_stop_payloads": 10,
+    "plan_id": "bf1797cce5fa8dc4a93e9e483dbafd2208e60f892f3f4e702a4d69b0827d8868",
+    "static_blockers": [],
+    "status": "BOUNDED_GET_ONLY_REHEARSAL_PASS"
+  },
+  "research_evidence_eligible": false,
+  "counts_toward_C1_C2_C3": false,
+  "required_fresh_on_GO": "one new authenticated capture; unchanged gates again per entry; expiry at validation and immediately before POST",
+  "rollback": "V2 selected-journal reader only; old-journal rollback is not valid for a selected V2 experiment"
+}

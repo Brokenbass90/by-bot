@@ -1,5 +1,16 @@
 # KITY physical owner app v1.2 / health custody v1.3 — operator runbook
 
+CURRENT subsequent bounded-pricing version: read
+`KITY_BOUNDED_RUNTIME_2026_10_15.md`. Owner PID2186777/NRestarts0/ORDERS_OFF,
+app-v2-bounded, config-v2-bounded.json36f3d72e…2269f,
+unitf89b633b…8aeca, same lockinode818853. Original V1 plan/GO/DB and source kit
+are retained unchanged.10/10actual GET-only rehearsal PASS,239targetedPASS.
+New exact intent GO remains separate/pending; old ffebGO stays consumed.
+**Never invoke the old rollback below for a selected V2 experiment.** V2's
+explicit operator rollback resolves the selected journal before any restoration.
+The remaining text is V1/health-v1.3 history, superseded for current commands,
+config/unit identity and selected-experiment recovery only.
+
 Current13:39:48UTC monitoring rebind: PID2182409/NRestarts0, config1699930e…1d7f2,
 unit88ef47e4…1be7d, cronf01f0d95…507cd. Only one watchdog line changed; the
 14 trading sources and all policy/bounds are unchanged. New monitor is read-only,

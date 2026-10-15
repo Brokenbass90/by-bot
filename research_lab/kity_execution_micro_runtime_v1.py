@@ -462,6 +462,7 @@ def apply_event(plan, state, e):
 
 class MicroJournal:
     """One isolated replay experiment. No transport method or live enable flag."""
+    event_reducer = staticmethod(apply_event)
     def __init__(self, path, plan):
         validate_plan(plan)
         self.plan = copy.deepcopy(plan)
@@ -506,7 +507,7 @@ class MicroJournal:
             e = json.loads(raw)
             if seq != n or e['event_id'] != event_id or pin != hashlib.sha256((previous + raw).encode()).hexdigest():
                 raise ValueError('JOURNAL_CHAIN_CONFLICT')
-            state = apply_event(self.plan, state, e); previous = pin
+            state = self.event_reducer(self.plan, state, e); previous = pin
         if previous != meta[0][1] or n != meta[0][2]:
             raise ValueError('JOURNAL_HEAD_CONFLICT')
         self._cache=(stamp,copy.deepcopy((state,previous,n)))
@@ -532,7 +533,7 @@ class MicroJournal:
                 self._replay(); self.db.commit(); return False
             state, previous, n = self._replay()
             verified_version=self._cache[0][0]
-            updated=apply_event(self.plan, state, event)
+            updated=self.event_reducer(self.plan, state, event)
             pin = hashlib.sha256((previous + raw).encode()).hexdigest()
             self.db.execute('INSERT INTO events VALUES(?,?,?,?)', (n + 1, event['event_id'], raw, pin))
             self.db.execute('UPDATE meta SET head=?,n=?', (pin, n + 1))

@@ -1,5 +1,12 @@
 # KITY bounded pricing — local preparation, October 15
 
+**Subsequent CURRENT:** owner approved50bps/ten minutes in
+`call_fae5497f3ccc42b391a1df63a4809274`. Physical integration/deployment and
+10/10 actual GET-only rehearsal are now complete. Read
+`KITY_BOUNDED_RUNTIME_2026_10_15.md`; it supersedes the pending binding list below.
+New exact money GO remains separate and pending. The rest of this document
+and local_delivery.json are preserved local-phase history, not current blockers.
+
 **PRICING_INTENT_COMPILER_LOCAL_PASS / ORDERS OFF.** This is a local compiler
 delivery, **not** `KITY_EXECUTION_MICRO_LIVE_READY`. The currently installed
 physical owner still runs V1 with the consumed `ffeb…6570` experiment. No VPS

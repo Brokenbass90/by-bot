@@ -1,5 +1,29 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 CURRENT bounded KITY physical binding COMPLETE/ORDERS_OFF:
+KITY_EXECUTION_MICRO_LIVE_READY,239targetedPASS,root-only review. Read
+KITY_BOUNDED_RUNTIME_2026_10_15.md and physical_owner_packet_v2.json under
+evidence/kity_pricing_intent_20261015. Direct parameter reply
+call_fae5497f3ccc42b391a1df63a4809274 approves50bps/600000ms/binding, NOT money.
+Installed app-v2-bounded16files, config-v2-bounded.json
+36f3d72e9ee55b8561e6b0429ec827dc5f5ad827969486604a04f587a452269f,
+unitf89b633b7df2a6d0d42261566a69a2e727b142d155d2291da86cb2fa7da8aeca,
+PID2186777/NRestarts0, same lockinode818853. Original app/config/GO/plan/DB
+fourpins unchanged; oldbybot/web inhibited; cron/ATT1/LIQ unchanged.0POST/
+newGO/selected/newactualjournal. Private installreceipt9fdf60a8…8f6edc.
+PREPARE1792077597739127900 then REHEARSE1792077612379710108:
+10/10actual fresh per-legPASS/POSTinhibited,STATIC=[],FRESH_ONLY=[].
+Referencegross208.450500,rehearsal208.473730,maxband209.494960<215.
+Intent7aa4504da8268b16e61e316b5d64e81988e8a07b2c4686c21d7960d465c145cd
+expiresOct15 15:30:11.877UTC/18:30:11.877CY. New exact monetary question pending;
+NO send from parameter approval or old ffebGO. If late, failclosed/no extend,
+no automatic reprepare/retry. Fresh capture and original entry gates required
+after separate literal GO KITY_EXECUTION_MICRO_INTENT_V2 <that hash>.
+V2 resolves selected experiments-v2/<id> on restart/rollback; do NOT use legacy
+rollback reader for selected V2. No-wire local terminal needs absent sendbarrier;
+possible wire staysUNKNOWN/reconcile-only. Expiry never disables owned exits or
+resets30min. Alpaca native manager/position/stop and research untouched.
+
 October15 bounded KITY pricing preparation: PRICING_INTENT_COMPILER_LOCAL_PASS,
 NOT physically installed/bound and NOT money READY. Read
 KITY_BOUNDED_PRICING_PREPARATION_2026_10_15.md for the complete remaining binding

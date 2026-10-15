@@ -1,0 +1,55 @@
+{
+  "status": "BOUNDED_PHYSICAL_SOURCE_VERIFIED_ORDERS_OFF",
+  "observed_ms": 1792078060298,
+  "owner": {
+    "MainPID": "2186777",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "source_files": 16,
+  "old_files_unchanged": {
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/active-plan.json": "3b97eb4844872a13d7bcfd20d5ffbdd6b8e2e32de8f6bc442589a5a9cf03cdd8",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/lifecycle.sqlite": "37771a15783d7d809da9c117b1c4138f403bd54d7a4661f7933db4868200f5a8",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/micro-terminal-receipt-v1.json": "69f53029d94d09cd5921eaaf66b0c224a391f905625fbaa6a833a9f12f590ea4",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/owner-go.json": "43f373ef531881b2a49c3931537293de8eb71b337d1ec30b7a5304e7fefd082b"
+  },
+  "lock_inode": 818853,
+  "posts": 0,
+  "selection": false,
+  "preserved_units": {
+    "bybot.service": {
+      "MainPID": "0",
+      "NRestarts": "0",
+      "ActiveState": "failed"
+    },
+    "trading-journal-web.service": {
+      "MainPID": "0",
+      "NRestarts": "0",
+      "ActiveState": "failed"
+    },
+    "att1-lifecycle-zero-risk-v2.service": {
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "ActiveState": "active"
+    },
+    "bybit-liquidation-source-v2_1.service": {
+      "MainPID": "2095785",
+      "NRestarts": "0",
+      "ActiveState": "active"
+    },
+    "alpaca-oct15-owned-manager.timer": {
+      "ActiveState": "active"
+    }
+  },
+  "cron_sha256": "f01f0d95e854dcf60edffc4b5b29bf152071b33dd0828443a6aced81dbb507cd",
+  "cost_reference_at_source_ms": 1792077611778,
+  "estimated_entry_exit_fees": "0.21824180675",
+  "funding_limit_scenario": "0E-10",
+  "margin_reference": "30.171920",
+  "fully_funded_reference": "208.66874180675",
+  "account_mode": "REGULAR_MARGIN",
+  "trade_permissions": true,
+  "cost_use": "DATED_CAPTURE_REFERENCE_ONLY_NOT_FINAL_FEES_OR_FUTURE_ZERO_FUNDING",
+  "auxiliary_attempt": "earlier optional RAM materialization at later intent creation time rejected stale book CTS; no broker query/write or runtime failure",
+  "private_capture_sha256": "5cfa42c944ab4a5ce06e042f72037034412a78875e7bceb73eb5f87812ab8227"
+}

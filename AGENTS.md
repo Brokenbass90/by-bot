@@ -584,3 +584,25 @@ ffeb…NO_SEND/GO/plan/journal stay consumed and immutable. Current one writer
 remains authoritative; no second sender, repeated legacy GO or legacy rollback
 on an unbound selected experiment. Subsequent actual intent GO and fresh binding
 must precede any new entry. Preserve research/Claude and failed Brain verdicts.
+
+October15 direct parameter/binding reply call_fae5497f3ccc42b391a1df63a4809274:
+"Да, ±0.5% и 10 минут". Approved bounded-pricing binding to the current physical
+writer orders-OFF, not a new monetary GO. Complete the published remaining
+scope via a separately versioned package/current-owner upgrade under fresh
+flatness, unchanged original account-lock inode, exact source/unit CAS and old
+NO_SEND file pins. Preserve original app/config/journal/GO and old bybot/web
+inhibition; one physical writer only. A failed no-GO upgrade may return to the
+previous KITY terminal owner after fresh no-exposure proof, never resurrect
+legacy writers automatically. New selected-experiment recovery/rollback must
+use its own journal. No entry without separate literal intent GO. Keep Alpaca
+management, ATT1, LIQ, Claude and research unchanged. Root-only review retained.
+
+October15 bounded binding is now ACTUALLY DEPLOYED orders-OFF: app-v2-bounded,
+config36f3d72e…2269f/unitf89b633b…8aeca,PID2186777/NRestarts0,sameinode818853.
+239targetedPASS;10/10actual GET/no-send rehearsalPASS,STATIC/FRESH_ONLY empty.
+Read KITY_BOUNDED_RUNTIME_2026_10_15.md and canonical TOP; older local-only/
+pending-binding notes are history. Original ffeb plan/GO/DB and old app untouched.
+Do NOT rerun installation or old GO. New exact intent money GO pending, expires
+Oct15 18:30:11.877CY, hash7aa4504d…145cd. No transfer/extension/retry. V2 selected
+journal/rollback and local no-wire proofs preserve unknown-send barriers. Current
+LIVE Alpaca owned manager remains independent and unchanged.

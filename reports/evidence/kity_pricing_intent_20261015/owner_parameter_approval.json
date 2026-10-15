@@ -1,0 +1,16 @@
+{
+  "schema": "KITY_PRICING_PARAMETERS_OWNER_APPROVAL_V2",
+  "reply_id": "call_fae5497f3ccc42b391a1df63a4809274",
+  "literal_answer": "Да, ±0.5% и 10 минут",
+  "scope": "Bind prepared bounded pricing intent to the existing physical writer; orders OFF until separate new exact GO",
+  "collar_bps": "50",
+  "ttl_ms": 600000,
+  "max_gross_usdt": "215",
+  "immediate_all_in_exit_threshold_usdt": "15",
+  "accepted_execution_overshoot": true,
+  "duration_ms_from_first_durable_entry_intent": 1800000,
+  "max_reference_rounding_shortfall_fraction": "0.203",
+  "preserve_spent_predecessor": "ffeb4bc4924fe64586469377372dca88caaa9545544dc2920f3d1bc438ee6570",
+  "new_money_go": false,
+  "research_authority": false
+}
