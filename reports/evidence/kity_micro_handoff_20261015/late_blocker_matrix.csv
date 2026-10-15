@@ -1,0 +1,16 @@
+class,layer,condition,evidence
+STATIC,Source/custody,14 installed file pins + normalized unit/config pins; retained v1/v1.1,actual source verification + config pin in ExecStart
+STATIC,Single writer,old bybot/web quiescent; persistent condition inhibition; no root cron change,actual start-inhibition readback; source/cron CAS
+STATIC,Physical lease,"one service PID, account flock, same lock inode after restart",actual second flock denied
+STATIC,Actual transport,GET HMAC/allowlist/raw retention; physical no-retry POST bound but inhibited,actual 10-leg rehearsal + signing/send-barrier tests
+STATIC,Durable identity,exact plan/one namespace/intent-before-send/unknown not resent,journal+bridge regression; physical E2E synthetic venue
+STATIC,Partials/native,per-leg readback isolation; exact native ID; Full stop resize/cancel handling,native and partial regression
+STATIC,Risk/deadline,persistent <=-15 all-in trigger + original 30min from first intent; no re-entry,monitor/runtime tests; synthetic deadline unwind
+STATIC,Restart/corruption,restart recovery unwind; missing journal/GO proof fails closed; chain cache checks external writes,actual no-GO restart + corruption/recovery regression
+STATIC,No-send finality,"fresh-rejection/crash before first send ends NO_SEND, not fake lifecycle PASS",regression: empty restart and original send counters
+STATIC,Funding/accounting,dedup actual settlement; strictly actual holding interval; unknown never zero,funding boundary/dedup/cash identity regression
+STATIC,Rollback,persistent entry fence; no uncertain send/held qty/native open; fresh flat before old owner restoration,rollback guard tests + applied inhibition CAS; actual restore NOT performed
+STATIC,Alpaca/research preservation,"Alpaca53 pins/HALT, ATT1/LIQ same PIDs/NRestarts, root cron same",actual final readback; research refs not changed
+FRESH_ONLY,Future market/account,source freshness/minima/mode/permissions/cash/caps/funding and exact IOC price,must be read at future authorized dispatch
+OWNER_GO,Monetary approval,"exact new plan ID, one experiment only",not received; no permit/real journal/intent
+FUTURE_ORDER_EVENT,Actual venue acceptance,actual fills/native acceptance/fee publication/partials/refusal,tested recovery synthetically; real micro test still required

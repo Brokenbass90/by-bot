@@ -87,3 +87,45 @@ def test_protection_api_unknown_durably_blocks_entries_and_keeps_owned_exit_avai
     j,s=protected_journal(tmp_path)
     MicroAccountBridge(j,FailedReader(),owner=Owner(j),clock=lambda:2100).bind_native_protection()
     assert j.snapshot()['entry_blocked'] is True and j.actions(2200)[0]['kind']=='EXIT'
+
+
+def test_bound_native_reconciliation_queries_broker_id_not_synthetic_link(tmp_path):
+    from research_lab.kity_micro_account_bridge_v1 import MicroAccountBridge
+    j,s=protected_journal(tmp_path);bind(j,s)
+    class Reader:
+        def pages(self,path,params):
+            if params.get('orderLinkId','').endswith('-SL'):
+                pytest.fail('native SL has no exchange orderLinkId; must query orderId')
+            return dict(complete=True,pages=[dict(http_status=200,body=dict(retCode=0,result=dict(list=[])))])
+    MicroAccountBridge(j,Reader(),clock=lambda:2100).reconcile_orders()
+
+
+def test_one_order_readback_failure_does_not_skip_other_owned_order(tmp_path):
+    from research_lab.kity_micro_account_bridge_v1 import MicroAccountBridge
+    j,s=protected_journal(tmp_path);bind(j,s);seen=[]
+    class Reader:
+        def pages(self,path,params):
+            seen.append(params)
+            if params.get('orderLinkId')==j.plan['legs'][0]['request']['orderLinkId']:
+                return dict(complete=False,pages=[])
+            return dict(complete=True,pages=[dict(http_status=200,body=dict(retCode=0,result=dict(list=[])))])
+    with pytest.raises(ValueError):MicroAccountBridge(j,Reader(),clock=lambda:2100).reconcile_orders()
+    assert any(p.get('orderId')=='native-stop-1' for p in seen)
+
+
+def test_bound_full_native_stop_can_shrink_after_partial_owned_unwind(tmp_path):
+    from research_lab.kity_micro_account_bridge_v1 import MicroAccountBridge
+    from test_kity_micro_account_bridge_v1 import Reader
+    j,s=protected_journal(tmp_path);bind(j,s)
+    native=next(iter(j.snapshot()['exits'].values()))
+    row=dict(symbol=s,side='Sell',orderId='native-stop-1',orderLinkId='',qty='.5',orderType='Market',
+        positionIdx=0,reduceOnly=True,orderStatus='Filled',cumExecQty='.5',stopOrderType='StopLoss',triggerPrice='.9')
+    execution=dict(row,execId='half-native',execType='Trade',execTime='2100',execQty='.5',execPrice='.9',execFee='.001')
+    reader=Reader(row,[execution])
+    # Isolate the bound native query; parent terminal order was already proved.
+    j.snapshot
+    b=MicroAccountBridge(j,reader,clock=lambda:2200)
+    b._reconcile_one(native)
+    assert j.snapshot()['exits'][native['link']]['quantity']=='0.5'
+    assert j.snapshot()['exits'][native['link']]['terminal']
+    assert j.snapshot()['held'][s]=='0.5'

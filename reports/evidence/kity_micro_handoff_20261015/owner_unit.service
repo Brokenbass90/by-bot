@@ -1,0 +1,30 @@
+[Unit]
+Description=Exclusive KITY execution micro owner (default orders OFF)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/bybot-research/kity-micro-owner-20261015/app-v1-2
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/root/by-bot/.venv/bin/python -B -m research_lab.kity_micro_supervisor_v1 --config /opt/bybot-research/kity-micro-owner-20261015/runtime/config-v1-2.json --config-sha256 7ee8a1b6f88473946e728523292fa46c5ee508c89b519db82cc3e5971c0e8cdd
+Restart=always
+RestartSec=2
+WatchdogSec=45
+NotifyAccess=main
+KillMode=control-group
+KillSignal=SIGKILL
+TimeoutStopSec=5
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/bybot-research/kity-micro-owner-20261015/runtime
+PrivateTmp=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

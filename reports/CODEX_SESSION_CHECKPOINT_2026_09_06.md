@@ -1,5 +1,37 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 CURRENT actual KITY physical handoff: **KITY_EXECUTION_MICRO_LIVE_READY /
+ORDERS_OFF**, known STATIC blockers **[]**. Read
+KITY_MICRO_SCOPED_HANDOFF_2026_10_15.md and its RUNBOOK; evidence directory
+kity_micro_handoff_20261015/{package_manifest,physical_readback_v1_2,owner_go_packet}.json.
+Owner explicitly superseded DESIGN_ONLY; actual handoff08:08UTC after fresh
+flat/open/history/executions0. Old bybot/web deliberately stopped/inhibited with
+scoped persistent condition drop-ins, original bytes/enabled state retained;
+root cron unchanged. Do NOT restore/start old writers alongside new owner.
+Final v1.2 app /opt/bybot-research/kity-micro-owner-20261015/app-v1-2;
+runtime config-v1-2.json7ee8a1b6…e8cdd,unitd8787049…79c08. Actual08:28:28.984UTC
+readback PID2147336/NRestarts0/ORDERS_OFF; account-lockinode818853,secondflockdenied;
+14sourcepins,linearUSDTflat0/open0/recentorders0/exec0,0POST/GO/activeplan/actualDB.
+Original source epochs v1/v1.1 and unit/config backups preserved.558targetedPASS
+incl251vectors; full repo suite not run; root review only. Local synthetic full
+10/native/restart/deadline/cash path passes; not real money lifecycle/edge evidence.
+Actual10-leg GET rehearsal6freshPASS/postinhibited;4savedIOCpricesmoved=>FRESH_ONLY,
+no reprice. Dated plan72aea4bc…46ed25 at08:26UTC,gross208.084850<215,
+fees.21770046100,fundingforecast0(notactualfuturecash),capitalref208.30255046100,
+marginref29.946145(notexchangecertified). Fresh account/CTS2s/price/caps and separate
+exact humanGO required; saved proposal is not a current dispatch-price assertion.
+15immediateall-inthreshold/overshootaccepted,30min fromfirstintent,.203rounding,
+exact10/noaveraging/scaling/reentry/noC1-C3/edge unchanged. Owner-go client/actual
+singlePOST/preflight/recovery/guard/nativeunwind/accounting/rollback implemented;
+no unbound callback/supervisor engineering remains. Review fixed nativebrokerID/
+isolation/resize, fundingdedup/calendar, NO_SEND terminal and missingjournal
+failclosed before money. Never fabricate PASS from no-send or absent fees.
+ATT1PID1584802/LIQ2095785NRestarts0 and Alpaca53staticpins/HALT retained.
+AlpacaOct15 fresh-before16:15CY/exactGO/arm/opening16:30–16:35 remains P0;
+Alpaca money GO not received. Claude/research/KITYC1-C3/B3/Brain untouched.
+Earlier BLOCKED/design-only paragraphs below are dated history superseded only
+for this approved physical execution handoff, not strategy/live policy authority.
+
 October15 CURRENT micro real-transport preparation: **BLOCKED_EXECUTION —
 PHYSICAL_SINGLE_WRITER_DISPATCH_PROTECTION_RECOVERY_NOT_BOUND**. Owner directly
 approved gross215 (V3),15immediateall-inexitthreshold/overshootaccepted,30min,.203

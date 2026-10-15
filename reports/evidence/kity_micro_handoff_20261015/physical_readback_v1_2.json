@@ -1,0 +1,81 @@
+{
+  "active_plan_exists": false,
+  "actual_journal_exists": false,
+  "after_restart": {
+    "ActiveState": "active",
+    "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service",
+    "MainPID": "2147336",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "alpaca_halt_present": true,
+  "alpaca_static_files_match": 53,
+  "at_ms": 1792052908984,
+  "before_restart": {
+    "ActiveState": "active",
+    "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service",
+    "MainPID": "2146563",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "broker_writes": 0,
+  "config_sha256": "7ee8a1b6f88473946e728523292fa46c5ee508c89b519db82cc3e5971c0e8cdd",
+  "cron_sha256": "c5729c174e49675400f533c8508636f95db669f4662d45953d829cab58d27939",
+  "flat": {
+    "completed_ms": 1792052908533,
+    "open_orders": 0,
+    "positions": 0,
+    "recent_executions": 0,
+    "recent_orders": 0,
+    "source_sha256": "e0fef621a2f3aaaef3ecf235d7e085c5507e3071051ab06231a834a2641db600"
+  },
+  "heartbeat": {
+    "account_lock_inode": 818853,
+    "active_plan_id": null,
+    "at_ms": 1792052907018,
+    "error": null,
+    "mode": "ORDERS_OFF",
+    "phase": "NO_ACTIVE_PLAN",
+    "pid": 2147336,
+    "schema": "kity_micro_owner_heartbeat_v1",
+    "state": null,
+    "trading_post_attempts": 0
+  },
+  "lock_proof": "SECOND_WRITER_LOCK_REJECTED",
+  "other_units": {
+    "att1-lifecycle-zero-risk-v2.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/att1-lifecycle-zero-risk-v2.service",
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "SubState": "running"
+    },
+    "bybit-liquidation-source-v2_1.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/bybit-liquidation-source-v2_1.service",
+      "MainPID": "2095785",
+      "NRestarts": "0",
+      "SubState": "running"
+    },
+    "bybot.service": {
+      "ActiveState": "failed",
+      "FragmentPath": "/etc/systemd/system/bybot.service",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "SubState": "failed"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "failed",
+      "FragmentPath": "/etc/systemd/system/trading-journal-web.service",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "SubState": "failed"
+    }
+  },
+  "owner_go_exists": false,
+  "raw_get_capture_files": 517,
+  "source_files_verified": 14,
+  "status": "PHYSICAL_OWNER_RESTART_AND_READONLY_VERIFICATION_PASS",
+  "unit_sha256": "d87870493ee8fe552e6bc570e1360a73dc697355ce1ae9f74fce163e54079c08",
+  "wire_barriers": 0
+}

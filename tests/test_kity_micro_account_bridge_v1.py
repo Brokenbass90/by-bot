@@ -138,3 +138,17 @@ def test_missing_fee_cash_row_cannot_be_zero_or_false_finality(tmp_path):
     with pytest.raises(SourceError,match='OWNED_EXECUTION_CASH_SOURCE_MISSING'):
         MicroAccountBridge(j,AccountReader(),owner=Owner(j),clock=lambda:2200).finalize_accounting({s:[]})
     assert j.snapshot()['phase']!='TERMINAL'
+
+
+def test_documented_parameter_rejection_is_terminal_no_fill_not_unknown_resend(tmp_path):
+    j=journal(tmp_path)
+    class Reject(Owner):
+        def post_once(self,path,request):
+            self.sent.append((path,request));return dict(retCode=10001,retMsg='Request parameter error',result={})
+    o=Reject(j);b=MicroAccountBridge(j,None,owner=o,clock=lambda:2100)
+    r=b.dispatch_next('GO KITY_EXECUTION_MICRO_LIVE '+j.plan['plan_id'])
+    assert r['status']=='DEFINITE_REJECTION'
+    assert j.snapshot()['entries'][BASKET[0][0]]['terminal'] is True
+    assert j.snapshot()['entry_blocked'] and len(o.sent)==1
+    b.dispatch_next('GO KITY_EXECUTION_MICRO_LIVE '+j.plan['plan_id'])
+    assert len(o.sent)==1

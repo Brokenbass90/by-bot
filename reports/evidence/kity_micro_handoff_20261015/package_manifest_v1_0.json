@@ -1,0 +1,28 @@
+{
+  "app_root": "/opt/bybot-research/kity-micro-owner-20261015/app",
+  "broker_writes": 0,
+  "config_sha256": "a7b996823fab98af46e2bcc1ed44feedf226758f207feb7f8795299e114e11b2",
+  "monetary_go": false,
+  "orders_off": true,
+  "runtime_root": "/opt/bybot-research/kity-micro-owner-20261015/runtime",
+  "schema": "kity_micro_physical_package_manifest_v1",
+  "source_count": 14,
+  "source_files": {
+    "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+    "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+    "configs/research/kity_execution_micro_owner_bounds_v3_20261015.json": "9d8c6e036fe9446de539c20b89164dd019c0d6012464ce66f25581fe572b80ad",
+    "reports/evidence/kity_bybit_c2_actual_20261015/c2_public_receipt.json": "b93d0994e74e3ac61df676410e74771a3230e8e23a81e052665994e686c6e903",
+    "reports/evidence/kity_micro_live_20261015/build_readonly_dossier.py": "73f4870d8a6c24cb14180f5157fcbdaee2a5756a75a14839bb9f8d473276ef5c",
+    "research_lab/kity_execution_micro_bybit_v1.py": "2ba72fc372253d157e55ab5ec82051c083d9f0bccb2584c6a9807329cd1bb0ac",
+    "research_lab/kity_execution_micro_runtime_v1.py": "555ccba4a36e7e8fc8672b5a3327a7817c93fb9f69f7c27298ecfbeb715a0df8",
+    "research_lab/kity_execution_micro_v1.py": "bd7a8c5903b67129185404e4db6b761d37185e6e450d6624d83ee56a71860b74",
+    "research_lab/kity_micro_account_bridge_v1.py": "e6dd71ff3054f8db65bc0031f74e516e3f7c55b39a20941106f2259ba5e3fb86",
+    "research_lab/kity_micro_handoff_v1.py": "d85439dd2b25e36b51868ccd6946ae22a900e2fc30a963d76b0a901eb3315b09",
+    "research_lab/kity_micro_physical_owner_v1.py": "6541461901249837564f6bfc51e14c01305fb39ee863bcd06cc2542aa9a08e7a",
+    "research_lab/kity_micro_preflight_v1.py": "e16055dc5db88255ff129f046c63f7851647eb63da0f01c23b8f13a54ad44acc",
+    "research_lab/kity_micro_supervisor_v1.py": "5adff5a30282c15a2de89bbadc0b9c4bc0e0b5d7c0464a2eef7efab7a4f98a85",
+    "research_lab/kity_micro_transport_v1.py": "17c833c0e3c7a78b3cc9f48bf88ca24c3fc013da2b8388b9ade0bad687f3007d"
+  },
+  "unit": "kity-execution-micro-owner.service",
+  "unit_sha256": "94bfb7bc134ab109a10c1cac1570a90e64f91b2c6101c0fe99c85a235370611f"
+}

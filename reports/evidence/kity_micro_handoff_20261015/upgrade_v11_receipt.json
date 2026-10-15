@@ -1,0 +1,25 @@
+{
+  "at_ms": 1792052422422,
+  "broker_writes": 0,
+  "config_sha256": "6d343d306e00ba1d0fc23a60c428a48c52496c3f70a8a33cfb39f9e3e914c51a",
+  "flat_before": {
+    "completed_ms": 1792052419856,
+    "open_orders": 0,
+    "positions": 0,
+    "recent_executions": 0,
+    "recent_orders": 0,
+    "source_sha256": "4c97a93efd93b25a0b82557672fd789b658af85d4d52548443b613124cc7a33a"
+  },
+  "new_owner": {
+    "ActiveState": "active",
+    "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service",
+    "MainPID": "2145851",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "old_app_retained": true,
+  "old_config_retained": true,
+  "original_unit_backup_sha256": "94bfb7bc134ab109a10c1cac1570a90e64f91b2c6101c0fe99c85a235370611f",
+  "status": "VERSIONED_ORDERS_OFF_UPGRADE_V1_1_APPLIED",
+  "unit_sha256": "b100b5eeb8741e482050330bb790e06dd795c6e4e43fc4ad6467b795618b5f5b"
+}

@@ -1,0 +1,58 @@
+{
+  "queued": {
+    "command_id": "1792052821907715867",
+    "result": "/opt/bybot-research/kity-micro-owner-20261015/runtime/results/1792052821907715867.json",
+    "status": "COMMAND_QUEUED"
+  },
+  "result": {
+    "actual_intents_created": 0,
+    "broker_writes": 0,
+    "legs": [
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "BTWUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "XAUUSDT"
+      },
+      {
+        "fresh_result": "EXACT_IOC_LIMIT_NOT_MARKETABLE",
+        "symbol": "LTCUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "VVVUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "BNBUSDT"
+      },
+      {
+        "fresh_result": "EXACT_IOC_LIMIT_NOT_MARKETABLE",
+        "symbol": "XAUTUSDT"
+      },
+      {
+        "fresh_result": "EXACT_IOC_LIMIT_NOT_MARKETABLE",
+        "symbol": "XPLUSDT"
+      },
+      {
+        "fresh_result": "EXACT_IOC_LIMIT_NOT_MARKETABLE",
+        "symbol": "XAGUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "GRASSUSDT"
+      },
+      {
+        "fresh_result": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+        "symbol": "SPCXUSDT"
+      }
+    ],
+    "permits_created": 0,
+    "physical_owner_pid": 2146563,
+    "plan_id": "72aea4bcba4af95c21c5a65a61cd0387f93abbc953dd9abbd6f7f5da0b46ed25",
+    "static_blockers": [],
+    "status": "NO_SEND_REHEARSAL_COMPLETE"
+  }
+}

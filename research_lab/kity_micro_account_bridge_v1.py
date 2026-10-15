@@ -9,7 +9,7 @@ from decimal import Decimal
 import time
 
 from bot.kity_m3_orders_off import digest
-from research_lab.kity_execution_micro_runtime_v1 import BASKET,signed,numeric
+from research_lab.kity_execution_micro_runtime_v1 import BASKET,signed,numeric,DEFINITE_CREATE_REJECT,record_funding_cash
 from research_lab.kity_execution_micro_bybit_v1 import execution_event,order_events
 from research_lab.kity_micro_transport_v1 import BybitReadTransport,SourceError
 
@@ -19,7 +19,7 @@ class MicroAccountBridge:
         self.journal,self.reader,self.owner=journal,reader,owner
         self.clock=clock or (lambda:time.time_ns()//1_000_000)
 
-    def dispatch_next(self,exact_go=None):
+    def dispatch_next(self,exact_go=None,*,exclude_symbols=()):
         """Delegate at most ONE call to an already exclusive physical owner.
 
         Exact GO is required for entry. Owned emergency recovery does not depend
@@ -28,7 +28,7 @@ class MicroAccountBridge:
         """
         if self.owner is None:raise SourceError('PHYSICAL_OWNER_UNBOUND')
         plan=self.journal.plan;self.owner.assert_exclusive(plan)
-        actions=self.journal.actions(self.clock())
+        actions=[a for a in self.journal.actions(self.clock()) if a.get('symbol') not in exclude_symbols]
         if not actions:return dict(status='TERMINAL',orders_allowed=False)
         action=next((a for a in actions if a['kind']=='EXIT'),actions[0])
         if action['kind'] not in ('ENTRY','EXIT','CANCEL_NATIVE_PROTECTION'):
@@ -58,6 +58,10 @@ class MicroAccountBridge:
         try:
             response=self.owner.post_once('/v5/order/create',request)
             result=response.get('result',{})
+            if type(response.get('retCode')) is int and response['retCode'] in DEFINITE_CREATE_REJECT and not result.get('orderId'):
+                self.journal.append(dict(kind='DISPATCH_REJECTED',symbol=symbol,order_link_id=request['orderLinkId'],
+                    ret_code=response['retCode'],at_ms=self.clock(),source_sha256=digest(response),event_id='rejected-'+request['orderLinkId']))
+                return dict(status='DEFINITE_REJECTION',ret_code=response['retCode'],orders_allowed=False)
             if (type(response.get('retCode')) is not int or response['retCode']!=0
                 or not isinstance(result.get('orderId'),str) or not result['orderId']
                 or result.get('orderLinkId')!=request['orderLinkId']):
@@ -96,30 +100,46 @@ class MicroAccountBridge:
         if self.reader is None:raise SourceError('AUTHENTICATED_READER_UNBOUND')
         original=self.journal.snapshot()
         orders=list(original['entries'].values())+list(original['exits'].values())
-        matched=0
+        matched=0;errors=[]
         for order in orders:
-            symbol,link=order['symbol'],order['link']
-            params=dict(category='linear',symbol=symbol,orderLinkId=link,limit='100')
-            realtime=self._rows('/v5/order/realtime',dict(params,limit='50'))
-            history=self._rows('/v5/order/history',dict(params,limit='50'))
-            executions=self._rows('/v5/execution/list',params)
-            pending_terminal=[]
-            for row in realtime+history:
-                state=self.journal.snapshot()
-                normalized=order_events(self.journal.plan,state,row,observed_ms=self.clock())
-                if link in {v['link'] for v in state['entries'].values()}:
-                    leg=next(l for l in self.journal.plan['legs'] if l['symbol']==symbol)
-                    if (Decimal(row.get('price','NaN'))!=Decimal(leg['request']['price'])
-                        or row.get('timeInForce')!='IOC'):
-                        raise SourceError('EXACT_ENTRY_PRICE_OR_TIF_CONFLICT')
-                self.journal.append(normalized[0]);pending_terminal.extend(normalized[1:]);matched+=1
-            for row in executions:
-                e=execution_event(self.journal.plan,self.journal.snapshot(),row,observed_ms=self.clock())
-                self.journal.append(e)
-            # Terminal cumulative quantities never invent their execution rows.
-            for e in pending_terminal:self.journal.append(e)
+            if (getattr(self.reader,'skip_terminal',False) and order['terminal']
+                and Decimal(order['terminal_quantity'])==Decimal(order['filled'])
+                and not any(v['order_id']==order['order_id'] and v['fee_usdt'] is None for v in original['fills'].values())):
+                continue
+            try:matched+=self._reconcile_one(order)
+            except (ValueError,TypeError,ArithmeticError) as exc:
+                errors.append(dict(symbol=order['symbol'],link=order['link'],reason=str(exc)))
+        if errors:raise SourceError('OWNED_ORDER_READBACK_ERRORS:'+str(errors))
         return dict(status='ORDER_EXECUTION_RECONCILED',matched_order_rows=matched,
                     owned_orders=len(orders),state=self.journal.snapshot(),orders_allowed=False)
+
+    def _reconcile_one(self,order):
+        matched=0
+        symbol,link=order['symbol'],order['link']
+        identity={'orderId':order['order_id']} if order.get('is_native_protection') else {'orderLinkId':link}
+        params=dict(category='linear',symbol=symbol,limit='100',**identity)
+        realtime=self._rows('/v5/order/realtime',dict(params,limit='50'))
+        history=self._rows('/v5/order/history',dict(params,limit='50'))
+        executions=self._rows('/v5/execution/list',params)
+        pending_terminal=[]
+        for row in realtime+history:
+            state=self.journal.snapshot()
+            normalized=order_events(self.journal.plan,state,row,observed_ms=self.clock())
+            if link in {v['link'] for v in state['entries'].values()}:
+                leg=next(l for l in self.journal.plan['legs'] if l['symbol']==symbol)
+                if (Decimal(row.get('price','NaN'))!=Decimal(leg['request']['price'])
+                    or row.get('timeInForce')!='IOC'):
+                    raise SourceError('EXACT_ENTRY_PRICE_OR_TIF_CONFLICT')
+            for e in normalized:
+                if e['kind'] in ('ENTRY_TERMINAL','EXIT_TERMINAL'):pending_terminal.append(e)
+                else:self.journal.append(e)
+            matched+=1
+        for row in executions:
+            e=execution_event(self.journal.plan,self.journal.snapshot(),row,observed_ms=self.clock())
+            self.journal.append(e)
+        # Terminal cumulative quantities never invent their execution rows.
+        for e in pending_terminal:self.journal.append(e)
+        return matched
 
     def reconcile_positions(self):
         """Complete linear-USDT readback; foreign same-symbol quantity is conflict."""
@@ -207,14 +227,24 @@ class MicroAccountBridge:
         self.owner.assert_exclusive(self.journal.plan)
         state=self.reconcile_positions()
         if not state['broker_flat_proven']:raise SourceError('BROKER_FLAT_NOT_PROVEN')
+        if state['first_send_ms'] is None:
+            self.journal.append(dict(kind='FINALITY_NO_SEND',at_ms=self.clock(),
+                source_sha256=digest(state),event_id='finality-no-send-'+self.journal.plan['plan_id']))
+            return self.journal.snapshot()
         symbols={v['symbol'] for v in state['fills'].values() if v['kind']=='ENTRY_FILL'}
-        if not symbols or not isinstance(expected_settlements,dict) or set(expected_settlements)!=symbols:
+        if not isinstance(expected_settlements,dict) or set(expected_settlements)!=symbols:
             raise SourceError('FUNDING_CALENDAR_SOURCE_REQUIRED')
         expected={(s,t) for s,ts in expected_settlements.items() for t in ts}
         if any(type(t) is not int or t<=state['first_send_ms'] or t>self.clock() for _,t in expected):
             raise SourceError('FUNDING_CALENDAR_CLOCK_CONFLICT')
         rows=self._rows('/v5/account/transaction-log',dict(accountType='UNIFIED',category='linear',currency='USDT',
             startTime=str(state['first_send_ms']),endTime=str(self.clock()),limit='50'))
+        if not symbols:
+            if any(r.get('orderId') in {o['order_id'] for o in state['entries'].values() if o['order_id']} for r in rows):
+                raise SourceError('NO_FILL_CASH_CONFLICT')
+            self.journal.append(dict(kind='FINALITY_NO_EXECUTIONS',complete_cash_source_no_owned_rows=True,
+                at_ms=self.clock(),source_sha256=digest(rows),event_id='no-fill-finality-'+digest(rows)))
+            return self.journal.snapshot()
         unique={}
         for row in rows:
             identifier=row.get('id')
@@ -244,9 +274,7 @@ class MicroAccountBridge:
                     raise SourceError('FUNDING_IDENTITY_OR_CALENDAR_CONFLICT')
                 amount=signed(row.get('funding'))
                 if amount!=signed(row.get('change')):raise SourceError('FUNDING_CASH_SOURCE_CONFLICT')
-                self.journal.append(dict(kind='FUNDING_CASH',symbol=row['symbol'],settlement_id=row['id'],
-                    settlement_ms=t,cash_usdt=str(amount),at_ms=self.clock(),source_sha256=digest(row),
-                    event_id='funding-'+digest(row)))
+                record_funding_cash(self.journal,row,self.clock())
                 observed.add(pair);net+=amount
         if observed!=expected:raise SourceError('FUNDING_CASH_SOURCE_MISSING')
         self.journal.append(dict(kind='FINALITY',funding_complete=True,net_cash_usdt=str(net),

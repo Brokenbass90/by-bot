@@ -520,3 +520,22 @@ bybot/web, activate another sender or deploy a monetary supervisor. Read
 KITY_MICRO_REAL_TRANSPORT_2026_10_15.md and handoff_design.json. Existing authority,
 Alpaca P0 and root-only review restriction remain. V1/V2 are historical policies;
 V3 cap215 supersedes210 only, without changing other bounds.
+
+## October15 subsequent physical handoff approval
+
+Latest direct owner GO KITY SCOPED HANDOFF IMPLEMENTATION — ORDERS OFF supersedes
+only the preceding DESIGN_ONLY/not-perform restriction. Complete and apply the
+prepared single-writer handoff under fresh flat/no-orders/source/unit/cron CAS;
+inhibit confirmed old bybot/web mutator paths, preserve ATT1/LIQ/Alpaca/foreign
+ownership. Real single owner/supervisor/transport/readback/recovery and no-send
+E2E are required. Separate exact monetary GO remains mandatory. No trading POST
+in this task. Return one exhaustive STATIC blocker list or engineering READY;
+FRESH_ONLY/OWNER_GO are separate. No additional research/PAPER/statistics gates.
+
+October15 physical handoff complete: read KITY_MICRO_SCOPED_HANDOFF_2026_10_15.md
+and its RUNBOOK before further action. Current owner v1.2 is active ORDERS_OFF,
+PID2147336 at08:28UTC; old bybot/web deliberately inhibited, all original bytes
+and cron retained.14 installed pins/real GET no-send/restart/lock verified,
+STATIC=[],558 targetedPASS; fresh checks and exact monetary GO remain separate.
+No actual GO/journal/intent/order. Do not reapply handoff/install or start old
+writers alongside this owner. Missing state never means a fresh experiment.

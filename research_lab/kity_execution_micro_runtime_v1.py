@@ -22,6 +22,10 @@ BASKET = (('BTWUSDT', 'Buy'), ('XAUUSDT', 'Buy'), ('LTCUSDT', 'Buy'),
           ('XPLUSDT', 'Sell'), ('XAGUSDT', 'Sell'), ('GRASSUSDT', 'Sell'), ('SPCXUSDT', 'Sell'))
 _SHA = re.compile(r'[0-9a-f]{64}\Z')
 TERMINAL = {'Filled', 'Cancelled', 'Rejected', 'PartiallyFilledCanceled', 'Deactivated'}
+# Official create-order validation/auth/funds refusals, not timeout/server/duplicate codes.
+DEFINITE_CREATE_REJECT={10001,10002,10003,10004,10005,10007,10008,10009,10010,
+    10024,10027,10028,10029,100028,110003,110004,110006,110007,110009,110012,
+    110017,110020,110021,110023,110029,110032,30208,30209,30228}
 
 
 def text(value):
@@ -266,6 +270,14 @@ def apply_event(plan, state, e):
             order['order_id'] = e['order_id']
         else:
             raise ValueError('ORDER_ROLE_CONFLICT')
+    elif kind == 'DISPATCH_REJECTED':
+        if type(e.get('ret_code')) is not int or e['ret_code'] not in DEFINITE_CREATE_REJECT:
+            raise ValueError('DEFINITE_REJECTION_SOURCE_REQUIRED')
+        order=s['exits'].get(e['order_link_id']) or s['entries'].get(symbol)
+        if not order or order['link']!=e['order_link_id'] or order['order_id'] is not None or Decimal(order['filled'])!=0:
+            raise ValueError('DEFINITE_REJECTION_CONFLICT')
+        order.update(terminal=True,terminal_quantity='0',definite_rejection=e['ret_code'])
+        s['entry_blocked'],s['phase']=True,'UNWINDING'
     elif kind in ('ENTRY_FILL', 'EXIT_FILL'):
         exit = kind == 'EXIT_FILL'
         order = _order_for_fill(s, e, exit)
@@ -328,6 +340,12 @@ def apply_event(plan, state, e):
             s['entry_blocked'], s['phase'] = True, 'UNWINDING'
         if exit and order.get('is_native_protection') and Decimal(s['held'][symbol])>0:
             s['entry_blocked'],s['phase']=True,'UNWINDING'
+    elif kind == 'NATIVE_PROTECTION_RESIZE':
+        order=s['exits'].get(e['order_link_id']);q=numeric(e['quantity'])
+        if (not order or not order.get('is_native_protection') or order['order_id']!=e['order_id']
+            or order['symbol']!=symbol or q>Decimal(order['quantity']) or q<Decimal(order['filled'])):
+            raise ValueError('NATIVE_RESIZE_IDENTITY_CONFLICT')
+        order['quantity']=text(q)
     elif kind == 'NATIVE_PROTECTION_BIND':
         entry=s['entries'].get(symbol);req=legs[symbol]['request'];quantity=numeric(e['quantity'])
         if (not entry or not _entry_complete(entry) or quantity!=Decimal(s['held'][symbol])
@@ -401,6 +419,18 @@ def apply_event(plan, state, e):
             s['entry_blocked'] = True
         s['broker_flat_proven'] = match and not unknown and not any(expected.values()) and not e['open_order_links']
         s['last_snapshot_ms'] = at
+    elif kind == 'FINALITY_NO_SEND':
+        if (not s['broker_flat_proven'] or not s['entry_blocked'] or s['entries'] or s['exits']
+            or s['fills'] or s['first_send_ms'] is not None):
+            raise ValueError('NO_SEND_FINALITY_NOT_PROVEN')
+        s.update(phase='TERMINAL',terminal_net_usdt='0',execution_verdict='NO_SEND_NOT_LIFECYCLE_PASS')
+    elif kind == 'FINALITY_NO_EXECUTIONS':
+        if (not s['broker_flat_proven'] or s['fills'] or not s['entries']
+            or any(not _accounted(o) for o in list(s['entries'].values())+list(s['exits'].values()))
+            or e.get('complete_cash_source_no_owned_rows') is not True):
+            raise ValueError('NO_EXECUTION_FINALITY_NOT_PROVEN')
+        s.update(phase='TERMINAL',entry_blocked=True,terminal_net_usdt='0',
+                 execution_verdict='NO_EXECUTION_NOT_LIFECYCLE_PASS')
     elif kind == 'FINALITY':
         if (not s['broker_flat_proven'] or any(Decimal(v) for v in s['held'].values())
                 or any(not _accounted(o) for o in list(s['entries'].values()) + list(s['exits'].values()))
@@ -435,6 +465,7 @@ class MicroJournal:
     def __init__(self, path, plan):
         validate_plan(plan)
         self.plan = copy.deepcopy(plan)
+        self._cache = None
         p = Path(path)
         if p.is_symlink() or any(parent.is_symlink() for parent in p.absolute().parents):
             raise ValueError('JOURNAL_SYMLINK')
@@ -463,6 +494,9 @@ class MicroJournal:
             self.db.rollback(); self.db.close(); raise
 
     def _replay(self):
+        stamp=(self.db.execute('PRAGMA data_version').fetchone()[0],self.db.total_changes)
+        if self._cache is not None and self._cache[0]==stamp:
+            return copy.deepcopy(self._cache[1])
         meta = self.db.execute('SELECT plan,head,n FROM meta').fetchall()
         if len(meta) != 1 or meta[0][0] != canonical(self.plan):
             raise ValueError('JOURNAL_PLAN_CONFLICT')
@@ -475,6 +509,7 @@ class MicroJournal:
             state = apply_event(self.plan, state, e); previous = pin
         if previous != meta[0][1] or n != meta[0][2]:
             raise ValueError('JOURNAL_HEAD_CONFLICT')
+        self._cache=(stamp,copy.deepcopy((state,previous,n)))
         return state, previous, n
 
     def snapshot(self):
@@ -496,11 +531,16 @@ class MicroJournal:
                     raise ValueError('EVENT_CONFLICT')
                 self._replay(); self.db.commit(); return False
             state, previous, n = self._replay()
-            apply_event(self.plan, state, event)
+            verified_version=self._cache[0][0]
+            updated=apply_event(self.plan, state, event)
             pin = hashlib.sha256((previous + raw).encode()).hexdigest()
             self.db.execute('INSERT INTO events VALUES(?,?,?,?)', (n + 1, event['event_id'], raw, pin))
             self.db.execute('UPDATE meta SET head=?,n=?', (pin, n + 1))
-            self.db.commit(); return True
+            self.db.commit()
+            # Do not stamp an outside commit occurring just after ours as verified.
+            stamp=(verified_version,self.db.total_changes)
+            self._cache=(stamp,copy.deepcopy((updated,pin,n+1)))
+            return True
         except Exception:
             self.db.rollback(); raise
 
@@ -527,6 +567,9 @@ class MicroJournal:
                     result.append(dict(kind='RECONCILE', symbol=symbol, orders_allowed=False))
                     continue
                 if Decimal(qty) > 0:
+                    if any(o.get('definite_rejection') for o in state['exits'].values() if o['symbol']==symbol):
+                        result.append(dict(kind='RECONCILE',symbol=symbol,reason='OWNED_EXIT_REJECTED_OWNER_ACTION',orders_allowed=False))
+                        continue
                     count = sum(v['symbol'] == symbol for v in state['exits'].values())
                     request = dict(category='linear', symbol=symbol, side='Sell' if leg['side'] == 'Buy' else 'Buy',
                         qty=qty, orderType='Market', positionIdx=0, reduceOnly=True,
@@ -581,6 +624,20 @@ class MicroJournal:
 
     def close(self):
         self.db.close()
+
+
+def record_funding_cash(journal,row,observed_ms):
+    """One actual settlement, regardless of later GET observation time/metadata."""
+    symbol=row['symbol'];identifier=row['id'];t=int(row['transactionTime'])
+    expected=dict(symbol=symbol,cash_usdt=text(signed(row['funding'])),settlement_ms=integer(t))
+    if signed(row['funding'])!=signed(row['change']):raise ValueError('FUNDING_CASH_SOURCE_CONFLICT')
+    prior=journal.snapshot()['funding'].get(canonical([symbol,identifier]))
+    if prior is not None:
+        if prior!=expected:raise ValueError('FUNDING_CONFLICT')
+        return
+    journal.append(dict(kind='FUNDING_CASH',symbol=symbol,settlement_id=identifier,
+        settlement_ms=t,cash_usdt=expected['cash_usdt'],at_ms=observed_ms,
+        source_sha256=digest(row),event_id='funding-'+digest(row)))
 
 
 def liquidation_value(state, books, *, funding_reserve_usdt):

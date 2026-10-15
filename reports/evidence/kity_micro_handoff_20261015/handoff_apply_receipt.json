@@ -1,0 +1,56 @@
+{
+  "at_ms": 1792051695311,
+  "broker_writes": 0,
+  "config_sha256": "a7b996823fab98af46e2bcc1ed44feedf226758f207feb7f8795299e114e11b2",
+  "flat_source": {
+    "completed_ms": 1792051694480,
+    "open_orders": 0,
+    "positions": 0,
+    "recent_executions": 0,
+    "recent_orders": 0,
+    "source_sha256": "f1289e60cbfa7e0017761a19eaa962cf957bf4f1eba261521f5590f0e0e1cb20"
+  },
+  "money_go": false,
+  "new_owner": {
+    "ActiveState": "active",
+    "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service",
+    "MainPID": "2143791",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "old_units_after": {
+    "bybot.service": {
+      "ActiveState": "failed",
+      "FragmentPath": "/etc/systemd/system/bybot.service",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "SubState": "failed"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "failed",
+      "FragmentPath": "/etc/systemd/system/trading-journal-web.service",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "SubState": "failed"
+    }
+  },
+  "original_cron_unchanged": true,
+  "original_units": {
+    "bybot.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/bybot.service",
+      "MainPID": "1648585",
+      "NRestarts": "0",
+      "SubState": "running"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "active",
+      "FragmentPath": "/etc/systemd/system/trading-journal-web.service",
+      "MainPID": "1623208",
+      "NRestarts": "0",
+      "SubState": "running"
+    }
+  },
+  "schema": "kity_micro_physical_handoff_receipt_v1",
+  "status": "HANDOFF_APPLIED_ORDERS_OFF"
+}

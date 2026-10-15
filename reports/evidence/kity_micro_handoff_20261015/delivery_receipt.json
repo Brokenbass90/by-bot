@@ -1,0 +1,46 @@
+{
+  "actual_venue_fills_tested": false,
+  "broker_writes": 0,
+  "counts_toward_C1_C2_C3": false,
+  "evidence_files": {
+    "docs/superpowers/plans/2026-10-15-kity-physical-handoff.md": "455f6dd06c24649ec9f996b7363d14ded1968d9eda03eb9bbc9e6da16d2ac0cf",
+    "reports/KITY_MICRO_SCOPED_HANDOFF_2026_10_15.md": "8e3879b1271b3323f4f88f348ddcc490aa0a1979c6686e6275d25d0dc169bf5e",
+    "reports/KITY_MICRO_SCOPED_HANDOFF_RUNBOOK_2026_10_15.md": "1b72d320b8d0bf763a9576f5ad9fc91af3ebcbe68576c9bdbbfa108c54d78222",
+    "reports/evidence/kity_micro_handoff_20261015/actual_no_send_rehearsal_v1_2.json": "87b1830d76c5d5a7d4e951cf5fa4fafaa06adbc4f097a16f49b3cc1bf73c84be",
+    "reports/evidence/kity_micro_handoff_20261015/build_package.py": "bbf94c6905e6e105e7990daa2ba4a8bec810535f53810a2888061b611a4d26b0",
+    "reports/evidence/kity_micro_handoff_20261015/build_package_v1_0.py": "d175d06204e995b7264f2eac7e93f8001f25fa0f4a98ff4df9d4d8efb905bde1",
+    "reports/evidence/kity_micro_handoff_20261015/build_package_v1_1.py": "e3ee788f87d4f1932eaccbdf3ac63d24f6522d0022015d7603d2ced534fdd5d4",
+    "reports/evidence/kity_micro_handoff_20261015/disabled_install_receipt.json": "0093cfe43f682291988e8b50c1d219dada3f1c98549ef01e23ce0f26fdfed0a0",
+    "reports/evidence/kity_micro_handoff_20261015/handoff_apply_receipt.json": "ab6c1292e9cb849b08a7a669d8a55b01eb5eb826501c3578dbfc3108e5d6207c",
+    "reports/evidence/kity_micro_handoff_20261015/install_disabled.py": "1c39d24ccc5358f7d96c2a1c0b451d4cb234acb971a086457bccc21ce89860ca",
+    "reports/evidence/kity_micro_handoff_20261015/late_blocker_matrix.csv": "02ef790011c74409dd8fc49802e8e49585e260c57ead6e7f60d58566b07c208d",
+    "reports/evidence/kity_micro_handoff_20261015/owner_go_packet.json": "3cf1b99cadb689fb7b13ba41a84e43d725927b63c40fb86123d618ca5a7d25fb",
+    "reports/evidence/kity_micro_handoff_20261015/owner_unit.service": "d87870493ee8fe552e6bc570e1360a73dc697355ce1ae9f74fce163e54079c08",
+    "reports/evidence/kity_micro_handoff_20261015/owner_unit_v1_0.service": "94bfb7bc134ab109a10c1cac1570a90e64f91b2c6101c0fe99c85a235370611f",
+    "reports/evidence/kity_micro_handoff_20261015/owner_unit_v1_1.service": "b100b5eeb8741e482050330bb790e06dd795c6e4e43fc4ad6467b795618b5f5b",
+    "reports/evidence/kity_micro_handoff_20261015/package_manifest.json": "3342c99f13173426a2ad55187826d991117fd3a0b6361f8638286c618dc128bd",
+    "reports/evidence/kity_micro_handoff_20261015/package_manifest_v1_0.json": "1ea73c29b474db360d2299f7c9ec7127f2f857bc819a7d8bb1abccefa612ec76",
+    "reports/evidence/kity_micro_handoff_20261015/package_manifest_v1_1.json": "0ced953d78f7e6c6b743c673456f508652625ee30626a86bbf6d45b99820a2c8",
+    "reports/evidence/kity_micro_handoff_20261015/physical_readback_v1_2.json": "c3da92a1840e846a7dbf21171c4e408634e8789c839580ad74c4529198edc9ab",
+    "reports/evidence/kity_micro_handoff_20261015/upgrade_orders_off_v1_1.py": "69b80c8daa984ca82ef8edad6e5252eb6f649632d0df6370a7a6cc8738e5e746",
+    "reports/evidence/kity_micro_handoff_20261015/upgrade_orders_off_v1_2.py": "0d3a9c01a1ebf0956ca7f42f10f02fde0e470668106323bbe4850a3b5f373a4b",
+    "reports/evidence/kity_micro_handoff_20261015/upgrade_v11_receipt.json": "f75b0b684567cc7817a761125f2713d1cf97f77a44e64ab69abf605c4552f53d",
+    "reports/evidence/kity_micro_handoff_20261015/upgrade_v12_receipt.json": "9ec56c0baa35b339d2a86edb38e766a3d9723b0cd49d4fb9722c8b6b9a2cc3d2"
+  },
+  "fresh_only": [
+    "actual account/source/quote/caps/IOC eligibility"
+  ],
+  "full_repository_suite_run": false,
+  "installed_manifest_sha256": "3342c99f13173426a2ad55187826d991117fd3a0b6361f8638286c618dc128bd",
+  "known_static_blockers": [],
+  "monetary_go": false,
+  "orders_allowed": false,
+  "owner_go": [
+    "separate exact human GO"
+  ],
+  "research_evidence_eligible": false,
+  "review": "ROOT_ONLY",
+  "schema": "kity_micro_physical_delivery_receipt_v1_2",
+  "status": "KITY_EXECUTION_MICRO_LIVE_READY",
+  "targeted_tests": 558
+}
