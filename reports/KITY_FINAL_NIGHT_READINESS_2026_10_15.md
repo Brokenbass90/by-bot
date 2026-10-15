@@ -4,6 +4,40 @@
 selection, money GO or order. The owner's latest instruction is explicitly
 read-only/no orders while investigating the missing Trading Terms prompt.
 
+**Subsequent owner request / actual18:58:07UTC result:** inspect existing master
+credentials before suggesting support. Two distinct supplied/configured keys
+were checked using only GET `/v5/user/query-api`: the active key is a subaccount,
+readOnly0, Wallet permissions empty; the other returns33004/expired, so its owner
+identity is not authenticated. **No usable master key in the checked sources.**
+No signing POST, key mutation, order, service change or new TTL intent. See
+[master_key_readonly_audit_v1.json](evidence/kity_final_night_20261015/master_key_readonly_audit_v1.json).
+The scope is the existing live env/overlays and local checkout credential files,
+not all possible keychains/accounts on the owner's computer. Full UIDs and raw
+private account replies are not committed. The active GET's parentUid gives the
+intended master/sub relationship, not an authenticated master credential.
+
+The owner can create a dedicated **master-account** system-generated HMAC key
+on the official [API Management page](https://www.bybit.com/app/user/api-management):
+Read-Write and Wallet **Account Transfer** (`AccountTransfer`) only, with VPS IP
+`64.226.73.119` restricted. `SubMemberTransfer` is the documented alternative;
+both are not needed. Do not enable withdrawal or trading permissions for this
+separate agreement credential. Existing trading credentials/config stay intact.
+Exact UI translations may differ; the required documented permission is the
+API value above, to be confirmed by a subsequent GET before any action.
+
+An empty0600 private template was prepared at
+`.private/kity_master_agreement_20261015/master-signing.env`; owner can save the
+two new values there, not in chat. No API key has been created by the agent.
+Before any further operation: authenticate the new key read-only, verify master
+identity/parent relationship and minimum permission, show the official
+[agreement](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-TradFi-Perps)
+and exact proposed body `{"categoryV2":1,"agree":true}`. The document endpoint
+returned its title through the text reader; its full legal text was not inspected
+or accepted here. **No separate legal approval has been received.** The user's
+instruction is prepare first, then ask; it is not approval to send the POST.
+Money approval remains separate. The earlier support draft below is an optional
+fallback, not the current required owner action.
+
 ## Actual engineering result
 
 The separately scoped V3 kit is installed as the sole KITY physical owner.

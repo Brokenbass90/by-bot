@@ -648,3 +648,14 @@ call it for the human. Remaining blocker is unconfirmed TradingTerms. After
 personal acceptance/UI/support resolution, one fresh final-night proposal and
 separate exactGO; no10minTTL before that, no oldGO/nextday transfer/probeorder.
 No legacyrollback from this namespace. Alpaca/ATT1/LIQ/cron/Claude preserved.
+
+October15 subsequent human asks official agreement-API preparation, read-only
+first. Existing master-key audit completed18:58UTC:2distinctkeys, activeSUB
+Wallet[] and other33004expired; no usableMASTER in checkedsources. No POST or
+keymutation. User can supply a separately created minimalMASTER key, Read-Write/
+WalletAccountTransfer (alternativeSubMemberTransfer), noWithdrawal/trading.
+Do not alter deployedtradingcredentials. Verify futurekey with query-api, exact
+master/subrelationship/permissions and present officialagreement/body before
+any separate explicit legaldecision. Current prompt is not legal or monetary
+GO. No newintent/TTL/order, manager/source changes or terms acceptance now.
+Support is not required before this preparation. See currentcheckpoint/report.

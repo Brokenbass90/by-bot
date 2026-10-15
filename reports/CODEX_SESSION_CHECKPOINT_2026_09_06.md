@@ -1,5 +1,19 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 18:58:07UTC subsequent CURRENT: owner requests official agreement API
+preparation, not support. READ_ONLY existing master-key audit complete:
+2distinct configured keys GETquery-api, active subaccount/readOnly0/Wallet[],
+other33004expired/identityUNKNOWN. No suitable master key in checkedlive/local
+envsources. Read KITY_FINAL_NIGHT_READINESS_2026_10_15.md top and
+master_key_readonly_audit_v1.json. No agreementPOST/keymutation/servicechange/
+newintent/order. Owner needs dedicated MASTER Read-Write+WalletAccountTransfer
+only (or SubMemberTransfer), IP64.226.73.119; Withdrawal/trading not requested.
+Empty0600 private master-signing.env prepared outside Git; secrets never chat.
+Then verify GETmasteridentity/relationship/permissions and show agreement/body
+before separate explicit legal approval. Current request is NOT that approval
+or new moneyGO. Earlier mandatory-support/UI-only wording is superseded only
+for this read-only preparation scope. InstalledV3/Alpaca/ATT1/LIQ/Claude unchanged.
+
 October15 18:40UTC / subsequent owner UI check CURRENT:
 KITY_FINAL_NIGHT_STATIC_READY_ORDERS_OFF_TERMS_UNCONFIRMED. Read
 KITY_FINAL_NIGHT_READINESS_2026_10_15.md and its static/source-contract receipts.

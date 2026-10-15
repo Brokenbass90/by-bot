@@ -1,0 +1,72 @@
+{
+  "schema": "KITY_EXISTING_MASTER_KEY_READONLY_AUDIT_V1",
+  "status": "NO_USABLE_MASTER_KEY_IN_CHECKED_CREDENTIAL_SOURCES",
+  "observed_ms": 1792090687078,
+  "unique_candidates": 2,
+  "identity_gets": [
+    {
+      "status": "IDENTITY_GET_BLOCKED",
+      "http_status": 200,
+      "ret_code": 33004,
+      "is_master": null,
+      "read_only": null,
+      "wallet_permissions": null,
+      "existing_master_can_sign": false,
+      "raw_response_sha256": "4629137da99511c79a824024b631236f9d07ce6904d09592e055f9f14cb98466"
+    },
+    {
+      "status": "IDENTITY_GET_PASS",
+      "http_status": 200,
+      "ret_code": 0,
+      "is_master": false,
+      "read_only": 0,
+      "wallet_permissions": [],
+      "existing_master_can_sign": false,
+      "raw_response_sha256": "0694f54e3f9bc8423bd320b77fdefc19ab1579b91047cd8c7f3a8483944e739a"
+    }
+  ],
+  "checked_scope": [
+    "Existing live VPS credential source and non-backup root env overlays",
+    "Existing sibling checkout .env and both checked-out server_clean.env files"
+  ],
+  "unscanned_scope": [
+    "Other accounts or keys not supplied/configured in these sources",
+    "OS keychains, browser password stores and unrelated projects"
+  ],
+  "master_uid_not_authenticated": true,
+  "relationship_source": "Successful active subaccount query-api includes parentUid; full UID retained privately",
+  "agreement_request_not_executed": {
+    "method": "POST",
+    "path": "/v5/user/agreement",
+    "body": {
+      "categoryV2": 1,
+      "agree": true
+    }
+  },
+  "minimum_requested_key": {
+    "owner": "MASTER_ACCOUNT",
+    "read_only_flag": 0,
+    "wallet_permission": "AccountTransfer",
+    "alternative_wallet_permission": "SubMemberTransfer",
+    "withdrawal_requested": false,
+    "trading_permissions_requested": false,
+    "suggested_vps_ip_whitelist": [
+      "64.226.73.119"
+    ]
+  },
+  "separate_legal_approval_received": false,
+  "separate_new_money_go_received": false,
+  "new_intent_created": false,
+  "agreement_posts": 0,
+  "order_posts": 0,
+  "key_mutations": 0,
+  "service_or_runtime_mutations": 0,
+  "private_audit_sha256": "d12c127145e7b8202c5edaf33005093cb5d201a317e21f006e93edd65aacf8b4",
+  "official_sources": [
+    "https://bybit-exchange.github.io/docs/v5/user/sign-agreement",
+    "https://bybit-exchange.github.io/docs/v5/user/apikey-info",
+    "https://bybit-exchange.github.io/docs/v5/error",
+    "https://www.bybit.com/en/help-center/article/How-to-create-your-API-key",
+    "https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-TradFi-Perps"
+  ]
+}
