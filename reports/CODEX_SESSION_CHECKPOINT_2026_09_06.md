@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 morning actual KITY: **C2_PASS_MATCH_ONLY / ORDERS_OFF**.
+Read KITY_BYBIT_C2_ACTUAL_2026_10_15.md and evidence/kity_bybit_c2_actual_20261015.
+Night sourcePASS retained/no observer rerun. Independent public intake50closed
+Dcaptures+50dailyCSVgzip/652204621bytes forOct14; all50 meet original60bar rule,
+no omission/substitution. Own ec4f6ab4…09c406 reconstruction sealed04:36:59.285UTC
+BEFORE shadow signal/flow read. Existing comparator fully replays own raw, then
+actualPASS dfd209ed…9c0bf7:50feature names/50archive hashes/exact5L5S match;
+maxabsdiff4.968053020082408e-7<1e-6. Frozen calculator/CLI/research rules unchanged.
+L BTW,XAU,LTC,VVV,BNB; S XAUT,XPL,XAG,GRASS,SPCX (all USDT exact names inreceipt).
+Not profitability/C1/C3/account/moneyPASS. First PAPERentry onlyafterOct16
+00:05UTC (03:05Cyprus); secondsignalOct22/C2 unchanged. C1 code read only, never
+executed/written to Claude ledger. Actual account/minima/depth/cost/caps/unwind/
+finality dossier remains separate, ordersOFF; no new money/research gates.
+No source/process/Claude edits/restart, broker call or order. Alpaca remains
+frozenNET Oct15 P0: fresh dossier before16:15, exact ownerGO, armbefore16:29,
+opening16:30Cyprus. No fresh broker/price/activation claim from this C2 cycle.
+
+
 October15 03:01 one source check COMPLETE: **CAPTURE_OBSERVATION_PASS**.
 Read reports/evidence/kity_oct15_source_observation_20261015/source_observation_terminal.json
 and CURRENT in KITY_OCT15_SOURCE_HARDENING_2026_10_14.md. Exact pre-capture
