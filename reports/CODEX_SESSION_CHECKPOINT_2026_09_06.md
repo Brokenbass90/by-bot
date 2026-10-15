@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 frozen KITY reconciliation: **CARDINALITY_CONTRACT_MATCH**.
+Read the reconciliation section in KITY_BYBIT_C2_ACTUAL_2026_10_15.md. cb47f0e
+prereg/source k=n//10; n30..50=>exact6/8/10legs. Actualn50=>5L5S correct; Oct8
+M3n49=>4L4S was a dated basket, not fixedcontract. Current local assessor already
+accepts exact2k; original fixed10 restriction supersededOct5. No C2/judge rerun.
+XAU/XAUT/XAG pass frozen source filters (Trading LinearPerpetual/USDT, no crypto-
+only exclusion) and actualfeature eligibility. Account-specific availability,
+fees/mode/margin/1x/equal-notional minima/reserves remain NOT_CONFIRMED this cycle;
+no omission/substitution or shadow$100/leg promotion. Currentbasket10legs.
+C1 requires2valid entries, not2full exits: earliestsecondentryOct23 after03:05CY.
+Earliest canary dossier targetOct23, contingent on existingC1/C2/C3/account/
+executor/caps/ownerGO. A ready dossier is not a free-timing or late-entry permit;
+first money must respect the reviewed execution window. Alpaca earliesttoday
+Oct15 16:30CY only afterfreshpreflight/exactGO/arm. No broker/source/runtime edits.
+
+
 October15 morning actual KITY: **C2_PASS_MATCH_ONLY / ORDERS_OFF**.
 Read KITY_BYBIT_C2_ACTUAL_2026_10_15.md and evidence/kity_bybit_c2_actual_20261015.
 Night sourcePASS retained/no observer rerun. Independent public intake50closed

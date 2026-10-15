@@ -33,6 +33,31 @@ dfd209ed…9c0bf7. No discrepancies.
 | Long | BTWUSDT, XAUUSDT, LTCUSDT, VVVUSDT, BNBUSDT |
 | Short | XAUTUSDT, XPLUSDT, XAGUSDT, GRASSUSDT, SPCXUSDT |
 
+## Frozen cardinality reconciliation — October15, read-only
+
+Frozen cb47f0e prereg and source use **k = n//10**, with30≤n≤50, hence exact
+6/8/10-leg baskets. Current n50 →5long+5short is contract-correct. The October8
+Binance M3 basket had n49 →4+4; that was one dated basket, not a permanent8-leg
+rule. The research canary packet's8legs/~$800 is an illustrative sizing example,
+not authority to truncate the actual basket. Existing local assessor `_signal`
+already validates k=n//10 and exact2k cardinality; its October5 compatibility
+closure supersedes the original fixed-ten restriction. No C2 rerun was needed.
+
+Bybit-native frozen `instrumenty` admits Trading LinearPerpetual contracts with
+quoteCoin USDT; it contains no crypto-only or precious-metals exclusion. XAUUSDT,
+XAUTUSDT and XAGUSDT are present in the actual top50 and eligible50. Their source
+membership is confirmed; current selected-account permission/margin/fees and
+live per-leg feasibility remain **NOT_CONFIRMED**, not inferred from that fact.
+No name may be removed or substituted. Money sizing must use actual2k legs;
+$100/leg is the shadow reference, not an approved LIVE size or capital bound.
+
+C1's frozen canary conditions require two valid **entry** observations, not two
+complete seven-day exits. First entry evidence can arriveOct16 after00:05UTC;
+secondOct23 after00:05UTC. October23 is thus the earliest canary-dossier target,
+conditional on secondC2/C3/ready executor/account/caps and ownerGO. The first
+money order must still use its reviewed permitted entry window; dossier readiness
+does not itself authorize an arbitrary late entry or promise an October23 fill.
+
 This proves signal/source parity, not profitability, capital feasibility or an
 order admission. No positions/orders/credentials/account modes were inspected
 or changed. Existing live execution2s/cap/risk/finality requirements remain.
