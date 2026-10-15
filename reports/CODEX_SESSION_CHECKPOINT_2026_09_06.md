@@ -1,5 +1,37 @@
 # Codex session checkpoint — 2026-09-06
 
+October15 owner-directed parallel micro execution intake: **BLOCKED_EXECUTION /
+ORDERS_OFF**, actual feasibility measured and local candidate delivered.
+Read KITY_EXECUTION_MICRO_LIVE_INTAKE_2026_10_15.md and
+evidence/kity_micro_live_20261015/execution_intake_terminal.json (285b5612…8cece),
+plus docs/superpowers/specs/2026-10-15-kity-execution-micro-live-v1-design.md.
+Owner permits PREPARING a distinct EXECUTION_MICRO_LIVE lane; no money limits,
+exact GO, account changes or orders approved. Frozen KITY research/C1–C3 separate;
+micro need not waitOct23 to prepare, but cannot replace those gates or proveedge.
+One actual05:13:00.235–05:13:05.550UTC55-GET Bybit capture f11cea6d…f38e9,
+private0600. Existingselectedcredentials matchproductionprocess. All10exact
+symbolsTrading/UTA; actualkeyOrder/Position permission. UTA2REGULAR_MARGIN;
+LTC/BNBstored3x,others10x,oneway0. No config/mode/leverage write. LinearUSDT
+completeposition/orderpages0/0, not globalspot/inverse/USDCclearance or writerlock.
+Accountavailable1020.21638839USD; not coinwallet1021.49325496. CommonCTS2s
+observation1477msupperPASS atcapture; EXPIRED/notdispatch. Mincommonreference
+21.84290/leg→210.266660bookgross butLTC20.27%undersized: diagnosticONLY.
+Unapproved5%roundingprofile658.062380gross;2%870.433860;1%3733.106280.
+Feesactualperleg(5.5bpsmost,11VVV,2.75XAU/XAG/SPCX); flatcostfloor.255878073,
+neverfuturecap. Crossmargin/shorttails do not guarantee tiny loss from smallnotional.
+Pure geometry/clock+tenIOCtemplates implemented,398targetedPASS including29new;
+offlinecapture replayexact/no-networkcandidatePASS. No integratedbasket sender/
+ownedrestart/unwind/finalityPASS claimed. Requiredownerinputs pending: absolute
+gross/perleg/loss/costbounds,rounding,probeduration/accountpolicy. Completeisolated
+runtimeagainstthosebounds→exactplanGO; no inventedmoneyGOtext. Researchfirewall:
+separateledger/IDs;microPnLneverC1/C2/C3/edge/KEEP-KILL. ExistingElderprereg's
+informationaledge is not cost-adjusted executableDEVPASS; no prospectivePnLread.
+LIQhistoricalrenorm remainsClaude/sourceidentitytask; no judge/oldV1rescue here.
+AlpacaOct15frozenP0/HALTunchanged, NO fresh Alpaca check/GO/arm thiscycle;
+freshpreflightbefore16:15/exactGO/armbefore16:29/open16:30CY remain. NoVPSwrite,
+restart/deploy/Claudeedit/message/sourcechange/automation added. Rootreviewonly;
+foreignconfigs/allowlist_change_log.json add587f1…f19a1 preserved.
+
 October15 frozen KITY reconciliation: **CARDINALITY_CONTRACT_MATCH**.
 Read the reconciliation section in KITY_BYBIT_C2_ACTUAL_2026_10_15.md. cb47f0e
 prereg/source k=n//10; n30..50=>exact6/8/10legs. Actualn50=>5L5S correct; Oct8

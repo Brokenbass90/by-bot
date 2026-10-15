@@ -1,0 +1,30 @@
+{
+  "authority": "ORDERS_OFF_NO_MONEY_GO",
+  "broker_get_requests": 55,
+  "broker_writes": 0,
+  "existing_research_document_pins": {
+    "research_lab/PREREG_ETS2M_V2_VPERED_2026_10_11.md": "7b9e104ee469f9fd7a3ae99b61bf9600b47c19077e9bd03b0f1e98b6466e77f0",
+    "research_lab/PREREG_KITY_BYBIT_ARHIV_2026_10_07.md": "9d45c639d3d06fddefcbe26c7260e27a2f10890f6c1a05eea0c9c863e6eb5b57",
+    "research_lab/PREREG_KITY_BYBIT_TEN_2026_10_11.md": "ab47e6ea020d4515633cbb8d6793add2e3805725aac627efe277a55e3b891aec"
+  },
+  "full_suite_run": false,
+  "money_ready": false,
+  "new_micro_tests_passed": 29,
+  "private_capture_mode": "0600",
+  "private_capture_sha256": "f11cea6d70dcbe70e7cbd6b95dd9424a7512af041f74ab13fae468e34cff38e9",
+  "public_files": {
+    "docs/superpowers/specs/2026-10-15-kity-execution-micro-live-v1-design.md": "54ff3f6ef6c421924dd261ed7249cf1e07e65159aa625f65a85181298f9b56ac",
+    "reports/KITY_EXECUTION_MICRO_LIVE_INTAKE_2026_10_15.md": "774444049bd0df9cacbcb6051010160b5a6dd7271e429ef4a3e821494db245a0",
+    "reports/evidence/kity_micro_live_20261015/build_readonly_dossier.py": "73f4870d8a6c24cb14180f5157fcbdaee2a5756a75a14839bb9f8d473276ef5c",
+    "reports/evidence/kity_micro_live_20261015/capture_bybit_get_only.py": "74c253d3f2e5d9ebbffeb3fecd133f157b65341480aae6a87c0b198c6eb97a52",
+    "reports/evidence/kity_micro_live_20261015/execution_intake_terminal.json": "285b56120689e496eeec14e06ad011495e5676f0e69448c8ea71102042a8cece",
+    "research_lab/kity_execution_micro_v1.py": "bd7a8c5903b67129185404e4db6b761d37185e6e450d6624d83ee56a71860b74",
+    "tests/test_kity_execution_micro_v1.py": "8ce6f6960e1bddcd014fd993794f1a5602c3ba588b981aa7ccbdca24ec534ed1"
+  },
+  "remote_writes": 0,
+  "research_ref": "e27ef524c94f8d7835c5e8e99f5d77ab6fdc5552",
+  "schema": "kity_micro_intake_evidence_manifest_v1",
+  "source_shadow_mutations": 0,
+  "targeted_tests_passed": 398,
+  "unrelated_untracked_file_sha256": "add587f1bd7059c2c706f1f7c604e36c2fb7b36b258b127e01fcd2101d3f19a1"
+}
