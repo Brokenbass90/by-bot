@@ -52,3 +52,5 @@ ELDER_EVIDENCE_AUDIT: формального EDGE_DEV_PASS нет. Один boun
 ## Поправка 15.10 вечер (PM) — Elder
 Standalone Elder = KILL, 26-недельных ворот нет. Деньги Elder — только как страховка портфеля (ITOG_ELDER_CRASH_HEDGE_2026_10_15:
 DEV_PASS варианта REZHIM_V1 ≠ BULL_TREND). Путь: 900 (≈ 20–25.10, научно) → адаптер Codex → бумажный паритет 2 недели → micro по GO.
+
+Поправка 15.10 18:53: адаптер ORDERS_OFF строится сейчас (Codex), «2 недели PAPER» заменены критериями паритета P1–P5 (KONTRAKTY §2b).

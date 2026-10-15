@@ -47,7 +47,7 @@ HEALTH / DEGRADATION → FACTORY → CHALLENGERS (стратегии и моде
 | KITY frozen (C1–C3) | capture PASS, C2 PASS (15.10) | тень, сторож | — | C1 после 00:05 UTC 16.10 (одна команда) | сигнал/C2 22.10, выход недели 22.10+ | досье 23.10 → канарейка (GO владельца) | Claude C1 / Codex C2 |
 | KITY micro execution | NO_SEND (безопасно), границы владельца: $215 gross, немедленный выход при −$15 all-in; bounded intent привязан к владельцу | Codex | — | Codex: pricing intent | ближайший сигнал | первый исполненный micro-ордер | Codex |
 | KITY V2 | вопрос non-crypto vs crypto-only записан | — | prereg челленджера | prereg (без прогона до конца frozen-evidence) | frozen-evidence C1–C3 | челленджер-тест после канарейки | Claude |
-| ELDER | standalone **KILL** (σ недель 1.3); **CRASH_HEDGE_REZHIM DEV_PASS**: MaxDD портфеля 6.95% → 3.33%, Calmar 2.42 → 5.18 | Brain HEDGE_V1 пишет решения; окно 900 = научное завершение | адаптер Elder (Codex) | — | 900 ≈ 20–25.10 (паритет движков) | бумажный паритет исполнения → micro-страховка по GO | Claude / Codex |
+| ELDER | standalone **KILL** (σ недель 1.3); **CRASH_HEDGE_REZHIM DEV_PASS**: MaxDD портфеля 6.95% → 3.33%, Calmar 2.42 → 5.18 | HEDGE_V1 заморожен; Brain HEDGE_V1 (после рестарта сторожа); окно 900 = научное завершение | ORDERS_OFF-адаптер (Codex, сейчас) | контракт §2b готов | 900 ≈ 20–25.10; ≥ 30 событий страховки для паритета | P1–P5 PASS → досье micro-страховки → GO | Claude / Codex |
 | BRAIN SHADOW v1 | код + тесты; BASELINE/BRAIN policy_sha 4437ab42, HEDGE_V1 fff87748 | включится со стартом сторожа | LIVE join (после канарейки) | перезапуск сторожа | ≥ 30 причинных исходов на политику | первое сравнение BASELINE vs BRAIN | Claude |
 | CONTEXT | ContextRecord v1 = REZHIM_V1 + EMA200-метка + BTC доходности | в Brain Shadow | funding/OI в контексте | — | — | ContextRecord v2 (режим монеты, funding) | Claude |
 | FACTORY | конвейер заявок + карта; COINBASE_PREMIYA_XS: prereg, гипотеза SCREEN в реестре, заявка в очереди (ждёт MANIFEST) | сторож (после перезапуска) | данные Coinbase | — | загрузка на Маке (dannye_coinbase.py) | конвейер сам: измерения → ферма → PASS/KILL | Claude / владелец (запуск загрузки) |
@@ -65,11 +65,10 @@ HEALTH / DEGRADATION → FACTORY → CHALLENGERS (стратегии и моде
 приор края с неопределённостью, издержки; решения BASELINE_V1 и BRAIN_V1 под общим Risk Engine. Исходы: KITY — по закрытию недели;
 Elder — эмбарго до судьи 900; Alpaca/KITY LIVE — после контракта §1.
 
-### Полный путь Elder до micro-LIVE (поправка PM 15.10 вечер: без полугодовых ворот)
-Standalone Elder = KILL, денежная ветка закрыта. Деньги — только как страховка портфеля (ELDER_CRASH_HEDGE_REZHIM DEV_PASS):
-окно 900 закрывается ≈ 20–25.10 (научно + паритет движков) → Codex: адаптер Elder по контракту §2 на примитивах KITY micro →
-бумажный паритет исполнения 2 недели → micro-страховка ≤ 1/3 риска портфеля, только при REZHIM_V1 ≠ BULL_TREND → GO владельца.
-FAIL паритета → стоп и постмортем. Параллельно Brain Shadow HEDGE_V1 копит решения вперёд.
+### Полный путь Elder до micro-LIVE (поправки PM 15.10: без полугодовых и календарных ворот)
+Standalone = KILL. ELDER_CRASH_HEDGE_V1 = замороженный DEV-челленджер. Параллельно и сразу: Brain Shadow HEDGE_V1 (вклад в портфель) +
+Codex строит ORDERS_OFF-адаптер по §2b. Окно 900 (≈ 20–25.10) — научное завершение: противоречит механике → KILL страховки.
+Дальше паритет по событиям P1–P5 (≥ 30 событий, 0 материальных дефектов) → досье → bounded micro-LIVE через Risk Engine (≤ ~1/3 риск-бюджета) → GO.
 
 ### Полный путь KITY до canary
 16.10 после 00:05 UTC: C1 недели 1 (`kity_bybit_kvitanciya.py 2026-10-15`) → 22.10: сигнал недели 2, выход недели 1, C1/C2 →

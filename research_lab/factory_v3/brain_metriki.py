@@ -17,7 +17,7 @@ MIN_ISHODOV = 30
 DEN = 86_400_000
 
 
-def metriki(dnevnye):
+def metriki(dnevnye, periodov_v_godu=365):
     x = np.asarray(dnevnye, float)
     if len(x) == 0: return {}
     kum = np.cumsum(x); pik = np.maximum.accumulate(np.concatenate([[0.0], kum]))[1:]; dd = pik - kum
@@ -26,9 +26,9 @@ def metriki(dnevnye):
         tek = tek + 1 if v > 1e-12 else 0; pod_vodoy = max(pod_vodoy, tek)
     hvost = np.sort(x)[:max(1, int(math.ceil(0.05 * len(x))))]
     vniz = x[x < 0]; sd_vniz = float(np.sqrt(np.mean(vniz ** 2))) if len(vniz) else 0.0
-    god = float(x.mean() * 365)
+    god = float(x.mean() * periodov_v_godu)
     return dict(dney=int(len(x)), net=float(x.sum()), sredniy_den=float(x.mean()), maxdd=maxdd, cvar95=float(hvost.mean()),
-                sortino=float(x.mean() / sd_vniz * math.sqrt(365)) if sd_vniz > 0 else None,
+                sortino=float(x.mean() / sd_vniz * math.sqrt(periodov_v_godu)) if sd_vniz > 0 else None,
                 calmar=float(god / maxdd) if maxdd > 0 else None, recovery_dney_max=int(pod_vodoy))
 
 
@@ -57,3 +57,25 @@ def sravnit(papka):
 
 if __name__ == "__main__":
     print(json.dumps(sravnit(sys.argv[1] if len(sys.argv) > 1 else HERE.parent / "data" / "brain_shadow_v1"), ensure_ascii=False, indent=1))
+
+
+def hedge_vklad(papka, s_hedgem="HEDGE_V1", bez="BRAIN_V1", nedelya_ms=7 * DEN):
+    """Вклад страховки в портфель (не PnL Elder): недельные ряды двух политик на одних возможностях.
+    stoimost_strahovki = Σ(HEDGE − BEZ) по неделям, где BEZ > 0 (сколько хороших недель «съедено»);
+    vyplata_v_hudshih = Σ(HEDGE − BEZ) в 20% худших недель BEZ; плюс MaxDD/CVaR/Calmar/recovery обеих."""
+    r = sravnit(papka)
+    if r["status"] != "SRAVNENIE" or s_hedgem not in r or bez not in r:
+        return dict(status="NEDOSTATOCHNO", sravnenie=r)
+    hr = V2.Hranilishche(papka); opp = {z["opp_id"]: z for z in hr.opp.zapisi if not z["late"]}
+    ned = defaultdict(lambda: defaultdict(float))
+    for d in hr.dec.zapisi:
+        o, ish = opp.get(d["opp_id"]), hr.ishody.get(d["opp_id"])
+        if o is None or ish is None or ish["realized_net_bps"] == V2.UNKNOWN or d["policy"] not in (s_hedgem, bez): continue
+        if d["t_recorded_ms"] > o["t_available_ms"] + V2.LAG_MS: continue
+        ned[d["policy"]][ish["t_outcome_ms"] // nedelya_ms] += d["allocation_units"] * ish["realized_net_bps"]
+    w = sorted(set(ned[s_hedgem]) | set(ned[bez])); a = np.array([ned[bez].get(x, 0.0) for x in w]); h = np.array([ned[s_hedgem].get(x, 0.0) for x in w])
+    if len(w) == 0: return dict(status="NEDOSTATOCHNO")
+    hud = a <= np.quantile(a, 0.2)
+    return dict(status="SRAVNENIE", nedel=len(w), stoimost_strahovki_bps=float((h - a)[a > 0].sum()),
+                syedeno_horoshih_nedel=int(((h < a) & (a > 0)).sum()), vyplata_v_hudshih_bps=float((h - a)[hud].sum()),
+                **{f"{bez}": metriki(a, 52), f"{s_hedgem}": metriki(h, 52)})
