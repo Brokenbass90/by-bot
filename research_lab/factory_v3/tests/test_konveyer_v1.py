@@ -29,6 +29,15 @@ class T(unittest.TestCase):
         self.assertIn({x["id"]: x["status"] for x in it}["G_1"], ("PASS", "FAIL"))
         self.assertEqual(K.prohod(self.q, reestr=self.r, processov=1), [])
 
+    def test_manifest_zhdyot(self):
+        K.podat(self.spec(3), dict(KARTA, data_ready="manifest:m.json"), self.q)
+        self.assertEqual(K.prohod(self.q, reestr=self.r, processov=1, koren=self.d), [])          # манифеста нет → ждём, без итога
+        (Path(self.d) / "m.json").write_text('{"gotovo": false}')
+        self.assertEqual(K.prohod(self.q, reestr=self.r, processov=1, koren=self.d), [])
+        (Path(self.d) / "m.json").write_text('{"gotovo": true}')
+        it = K.prohod(self.q, reestr=self.r, processov=1, koren=self.d)
+        self.assertEqual([x["id"] for x in it], ["G_3"])
+
 
 if __name__ == "__main__":
     unittest.main()

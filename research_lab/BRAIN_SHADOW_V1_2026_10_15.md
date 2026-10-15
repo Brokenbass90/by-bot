@@ -40,6 +40,10 @@
 (POSTMORTEM_ELDER_HIST_DEV, статус KILL → BRAIN_V1 Elder не берёт; BASELINE берёт). Это и есть первый вопрос мозга:
 «убрать Elder» против «держать всё» на одних и тех же возможностях.
 
+- **HEDGE_V1** (добавлена 15.10 вечер, policy_sha fff87748; BASELINE/BRAIN не меняются): KITY как BRAIN_V1; Elder — рукав-страховка
+  1 ед., только если REZHIM_V1 на наблюдении ≠ BULL_TREND (ITOG_ELDER_CRASH_HEDGE_2026_10_15, DEV_PASS). Главный вопрос вперёд:
+  HEDGE_V1 против BRAIN_V1 по MaxDD/CVaR при net не хуже.
+
 ## Сравнение (factory_v3/brain_metriki.py)
 Только причинные записи (не late, решение ≤ t_available + 2 ч, исход прикреплён). Метрики: net, MaxDD, CVaR95 (дневной),
 Sortino, Calmar, максимальное восстановление (дней под водой), оборот, издержки. До 30 исходов у каждой политики — статус

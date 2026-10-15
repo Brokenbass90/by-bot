@@ -1,0 +1,51 @@
+{
+ "prereg": "PREREG_ELDER_CRASH_HEDGE_REZHIM_2026_10_15.md",
+ "nedel": 188,
+ "s": "2023-01-05",
+ "po": "2026-08-06",
+ "corr_elder_B": -0.1496762829984354,
+ "corr_elder_kity": 0.11672651121718672,
+ "corr_elder_spy": -0.31345260627291777,
+ "elder_v_hudshih_nedelyah_B": 0.006408217971565132,
+ "B": {
+  "net": 0.6077486986805671,
+  "maxdd": 0.06952041547444385,
+  "cvar95": -0.01718832471583779,
+  "calmar": 2.4180048801947183,
+  "sortino": 2.662457591351257,
+  "nedel_pod_vodoy": 12
+ },
+ "T": {
+  "net": 0.6235023006151446,
+  "maxdd": 0.03329877438254003,
+  "cvar95": -0.014259333585180908,
+  "calmar": 5.179112034805008,
+  "sortino": 2.9767578693736727,
+  "nedel_pod_vodoy": 13
+ },
+ "polovinki_maxdd": {
+  "B": [
+   0.030707886141088436,
+   0.06952041547444388
+  ],
+  "T": [
+   0.029992753289039303,
+   0.03329877438254003
+  ]
+ },
+ "bootstrap_dolya": 0.811,
+ "uslovia": {
+  "1_corr_elder_B<0": true,
+  "2_elder_v_hudshih_nedelyah_B>0": true,
+  "3_maxdd_T<B": true,
+  "4_cvar95_T>B": true,
+  "5_calmar_T>B_i_maxdd_v_polovinah": true,
+  "6_bootstrap_maxdd_T<B>=0.80": true
+ },
+ "VERDIKT": "ELDER_CRASH_HEDGE_REZHIM_DEV_PASS",
+ "filtr_rezhima": {
+  "vsego": 5076,
+  "bull": 405,
+  "unknown": 0
+ }
+}

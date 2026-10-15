@@ -150,11 +150,36 @@ def brain_v1(v, otkr):
     return min(1.0, skor / BRAIN["masshtab"]) / (1.0 + n_kl / BRAIN["k_klaster"]), ["correlation_penalty"] if n_kl else []
 
 
-POLITIKI = {"BASELINE_V1": baseline_v1, "BRAIN_V1": brain_v1}
+def hedge_v1(v, otkr):
+    """ELDER_CRASH_HEDGE (PREREG_ELDER_CRASH_HEDGE_REZHIM_2026_10_15, HIST DEV PASS): KITY как BRAIN_V1; Elder — страховка,
+    1 ед., только если REZHIM_V1 на наблюдении ≠ BULL_TREND (UNKNOWN → берём, как в prereg). Добавлена 15.10 как третья политика;
+    решения BASELINE_V1/BRAIN_V1 не меняются (их policy_sha прежний)."""
+    if v["sleeve"] == "ELDER":
+        return (0.0, ["hedge_off_bull"]) if v["context"].get("rezhim_v1") == "BULL_TREND" else (1.0, ["hedge_on"])
+    return brain_v1(v, otkr)
+
+
+POLITIKI = {"BASELINE_V1": baseline_v1, "BRAIN_V1": brain_v1, "HEDGE_V1": hedge_v1}
+HEDGE_SHA = hashlib.sha256(json.dumps([POLICY_SHA, "HEDGE_V1", "elder_if_rezhim_v1_not_BULL_TREND", 1.0], sort_keys=True).encode()).hexdigest()
+SHA = {"BASELINE_V1": POLICY_SHA, "BRAIN_V1": POLICY_SHA, "HEDGE_V1": HEDGE_SHA}
 
 
 def prohod(hr=None, btc=None, seychas=None):
-    hr = hr or V2.Hranilishche(PAPKA)
+    if hr is None:                                   # один писатель: цепочка хешей не переживает двух одновременных проходов
+        import fcntl
+        PAPKA.mkdir(parents=True, exist_ok=True); fd = open(PAPKA / ".lock", "w")
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            return dict(status="ZANYATO", prichina="другой проход Brain Shadow держит замок")
+        try:
+            return _prohod(V2.Hranilishche(PAPKA), btc, seychas)
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN); fd.close()
+    return _prohod(hr, btc, seychas)
+
+
+def _prohod(hr, btc=None, seychas=None):
     if btc is None:
         try:
             sys.path.insert(0, str(LAB)); from ten import svechi; btc = svechi("BTCUSDT")
@@ -172,7 +197,7 @@ def prohod(hr=None, btc=None, seychas=None):
             otkr[imya] = [(o, a) for o, a in otkr[imya] if o["t_decision_ms"] + o["horizon_ms"] > t]
             tek = [(o, a) for o, a in otkr[imya] if o["t_decision_ms"] <= t]
             zh, ogr1 = f(v, tek); u, ogr2 = risk_engine(v, zh, tek)
-            hr.dobavit_reshenie(v["opp_id"], imya, POLICY_SHA, u, ogr1 + ogr2, seychas); resh += 1
+            hr.dobavit_reshenie(v["opp_id"], imya, SHA[imya], u, ogr1 + ogr2, seychas); resh += 1
             if u > 0: otkr[imya].append((v, u))
     ish = prikrepit_kity(hr, seychas)
     return dict(novyh=len(novye), resheniy=resh, ishodov=ish, late=sum(1 for z in hr.opp.zapisi if z["late"]), vsego=len(hr.opp.zapisi))

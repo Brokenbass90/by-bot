@@ -11,6 +11,8 @@
       parametry = {"priznak": "m3_perp" | "spot" | "spot_minus_perp" | "m3_vsplesk" | "pogloshchenie" | glubina_*, "znak": +1 | -1,
                    "zaderzhka": 1 (по умолчанию, вход закрытием d) | 0 (закрытием d−1) | 2 (закрытием d+1)}
       m3_vsplesk (14.10): доля тейкера-покупателя на перпе дня d−1 минус её среднее за 28 предыдущих дней монеты (≥ 20 дней).
+      cb_premiya (15.10): премия Coinbase USD к перпу Binance дня d−1 минус её среднее за 28 предыдущих дней (≥ 20);
+      min_strok (по умолч. 30) и dolya (по умолч. децили) — параметры заявки, у известных ответов не меняются.
       pogloshchenie (14.10, составной): внутри недели остаток z(доход дня d−1) после проекции на z(доля тейкера дня d−1) — часть
       движения цены, НЕ объяснённая потоком (поглощение пассивной стороной); ортогонален KITY m3 по построению; вход как у KITY.
 Данные читаются через замороженный kity_sudya.zagruzit() (путь судьи); окно ограничено забором dostup.
@@ -80,11 +82,31 @@ def _priznak(imya, D):
             a, b, c = g(s, vch), m3(s, vch), dd(s, vch)
             return None if a is None or b is None or c is None else (float(a), float(b), float(c[0]))
         return f
+    if imya == "cb_premiya":                               # PREREG_COINBASE_PREMIYA_XS: премия Coinbase USD к перпу Binance дня d−1
+        M = D["M"]; CB = D.setdefault("coinbase", {}); PR = D.setdefault("cb_pr", {})   # минус её среднее за 28 предыдущих дней (≥ 20)
+        def ryad(s):
+            if s not in PR:
+                fp = LAB / "data" / "coinbase_d1" / f"{s}.json"
+                cb = json.loads(fp.read_text()) if fp.exists() else {}
+                x = M.get(s); r = {}
+                if cb and x is not None:
+                    for t, c in zip(x["ts"], x["c"]):
+                        dd = dt.datetime.fromtimestamp(int(t) / 1000, dt.timezone.utc).date().isoformat()
+                        if dd in cb and c > 0 and cb[dd] > 0: r[dd] = cb[dd] / float(c) - 1.0
+                PR[s] = (sorted(r), r)
+            return PR[s]
+        import bisect
+        def f(s, vch):
+            dni, r = ryad(s)
+            if vch not in r: return None
+            j = bisect.bisect_left(dni, vch); okno = [r[x] for x in dni[max(0, j - 28):j]]      # строго до vch
+            return None if len(okno) < 20 else r[vch] - sum(okno) / len(okno)
+        return f
     raise KeyError(f"признак {imya} не в закрытом словаре")
 
 
 PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie", "glubina_imb1", "glubina_imb2", "glubina_imb5",
-            "glubina_ort")
+            "glubina_ort", "cb_premiya")
 SOSTAVNYE = {"pogloshchenie", "glubina_ort"}   # значения-кортежи → остаток после проекции внутри недели
 
 
@@ -107,7 +129,7 @@ def xs_nedelya_binance(parametry, dostup):
             if i >= len(x["ts"]) or x["ts"][i] != ts(d) or i < 60: continue
             v = pr(s, vch)
             if v is not None and np.all(np.isfinite(v)): rows.append((v, s, i))
-        if len(rows) < 30: return None
+        if len(rows) < int(parametry.get("min_strok", 30)): return None
         if parametry["priznak"] == "pogloshchenie":
             zr, zf = _z([v[0] for v, _, _ in rows]), _z([v[1] for v, _, _ in rows])
             zz = zr - (float(np.mean(zr * zf)) * zf)          # доход, ортогональный потоку недели: «цена сильнее/слабее, чем велел поток»
@@ -116,7 +138,7 @@ def xs_nedelya_binance(parametry, dostup):
             zz = y - X @ np.linalg.lstsq(X, y, rcond=None)[0]   # перекос, не объяснённый потоком и ценой дня
         if parametry["priznak"] in SOSTAVNYE:
             rows = [(float(z), s, i) for z, (_, s, i) in zip(zz, rows)]
-        rows.sort(); k = len(rows) // 10
+        rows.sort(); k = len(rows) // 10 if "dolya" not in parametry else max(1, int(round(len(rows) * float(parametry["dolya"]), 9)))
         sd = int(parametry.get("zaderzhka", 1)) - 1                     # 1 = закрытие d (эталон KITY); 0 = закрытие d−1; 2 = d+1
         leg = [K.sdelka(M[s], i + sd, 7, -znak) for _, s, i in rows[:k] if 0 <= i + sd < len(M[s]["ts"])] + \
               [K.sdelka(M[s], i + sd, 7, +znak) for _, s, i in rows[-k:] if 0 <= i + sd < len(M[s]["ts"])]

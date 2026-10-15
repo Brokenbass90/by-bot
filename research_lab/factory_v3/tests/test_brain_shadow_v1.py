@@ -48,6 +48,13 @@ class T(unittest.TestCase):
         self.assertEqual(B.risk_engine(opp(sym="ZUSDT"), 1.0, otkr)[0], 0.0)           # кластер (рукав, сторона) = 6
         self.assertEqual(B.risk_engine(opp(sym="ZUSDT", side=-1), 1.0, otkr)[0], 1.0)
 
+    def test_hedge(self):
+        e = opp(sleeve="ELDER", status="HIST_DEV_KILL", context=dict(rezhim_v1="BULL_TREND"))
+        self.assertEqual(B.hedge_v1(e, [])[0], 0.0)
+        self.assertEqual(B.hedge_v1(opp(sleeve="ELDER", status="HIST_DEV_KILL", context=dict(rezhim_v1="BEAR_TREND")), [])[0], 1.0)
+        self.assertEqual(B.hedge_v1(opp(sleeve="ELDER", status="HIST_DEV_KILL", context=dict(rezhim_v1=V2.UNKNOWN)), [])[0], 1.0)
+        self.assertEqual(B.hedge_v1(opp(), [])[0], B.brain_v1(opp(), [])[0])
+
     def test_kontekst_tolko_proshloe(self):
         bary = [[i * H, 100, 101, 99, 100 + i * 0.01, 1] for i in range(600)]
         c = B.kontekst(500 * H, bary); self.assertEqual(c["bar_ts"], 499 * H); self.assertEqual(c["rezhim_v1"], V2.UNKNOWN)
