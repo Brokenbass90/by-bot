@@ -1,5 +1,14 @@
 # KITY scoped physical handoff — October15
 
+CURRENT subsequent13:39:48UTC monitoring rebind: read KITY_OWNER_HEALTH_2026_10_15.md
+and the updated RUNBOOK. Trading app-v1-2/14 sources unchanged, current config
+config-v1-3-health.json1699930e…1d7f2,unit88ef47e4…1be7d,cronf01f0d95…507cd,
+PID2182409. Exactly one legacy watchdog line replaced; new observer has no
+restart/order authority. Original v1.2 receipts below are immutable dated history.
+Subsequent exact micro GO ffeb4bc4…6570 was consumed13:49UTC; terminal NO_SEND
+at13:49:59, exact IOC limit not marketable,0POST/fills, independent flat readback.
+Not actual lifecycle PASS; do not repeat/reprice/reset or reuse that GO.
+
 **KITY_EXECUTION_MICRO_LIVE_READY — engineering, ORDERS_OFF.**
 
 Remaining known STATIC material blockers: **[]**. FRESH_ONLY and OWNER_GO are separate below. This is readiness for the separate execution micro experiment; actual venue acceptance/fills/protection/finality have not been exercised with money and are not claimed PASS. No KITY/C1–C3/edge authority changes.

@@ -1,0 +1,22 @@
+{
+  "schema": "ELDER_READONLY_DISCOVERY_COUNTS_V1",
+  "observed_ms": 1792071911071,
+  "source_sha256": "aad9fbaea4f94d1e48456674ead20022305757f5dd9d434fc1d9a418a78d4810",
+  "source_size": 3890246,
+  "source_mtime_ns": 1792071610309654245,
+  "source_mutable_live_prefix": true,
+  "source_modified": false,
+  "source_invalid_rows": 0,
+  "source_partial_tail": false,
+  "total_post_T0": 1214,
+  "timely_post_T0": 544,
+  "late_post_T0": 670,
+  "window1_count": 544,
+  "window2_count": 0,
+  "negative_discovery_lags": 0,
+  "future_discoveries": 0,
+  "judge_run": false,
+  "outcome_fields_accessed": false,
+  "cohort_pin_written": false,
+  "interpretation": "COUNTS_ONLY_NOT_RESEARCH_VERDICT"
+}

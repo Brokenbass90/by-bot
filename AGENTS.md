@@ -551,3 +551,24 @@ exact four units installed and only two pinned timers armed/enabled. Entry waits
 invoke another entry. No current fill/protection claim yet. Keep owned manager
 through uncertainty/exposure; prior HALT/no-GO statements are historical only
 within this exact Alpaca authorization. KITY money GO is still NOT received.
+
+October15 Alpaca entry actually FILLED13:30:06UTC and native full STOP confirmed.
+NET .325167779 at311.222, stop277.69, durable PROTECTED. NONFLAT: do not rerun
+flat-only preflight, rearm/repeat entry or restore monthly manager. Preserve
+owned maintenance and inspect actual13:35 tick;13:30 manager ran before binding.
+No posted LIVE fee finality or strategy profitability claim. KITY remains separate
+ORDERS_OFF; user requests owner-aware health monitoring after Alpaca handling.
+
+October15 subsequent CURRENT: Alpaca recurring manager13:35/13:50 exit0;
+NET LIVE_PROTECTED/NONFLAT. KITY monitoring successfully rebound13:39:48UTC:
+config-v1-3-health.json1699930e…1d7f2,unit88ef47e4…1be7d,cronf01f0d95…507cd,
+PID2182409. One stale-watchdog cron line replaced by tested read-only/no-restart
+observer; trading14-file app/bounds unchanged. Oldbybot/web remain inhibited.
+Exact human KITY money GO then received call_21f2e55ad6384a808313ca5b32add1f7
+for ffeb4bc4…6570 and consumed once. Terminal NO_SEND_NOT_LIFECYCLE_PASS13:49:59:
+EXACT_IOC_LIMIT_NOT_MARKETABLE,0POST/intents/fills, independent fresh flat0/open0/
+recentorders0/executions0. Do not retry/reprice/delete/reset actual GO/plan/journal
+or treat this as execution/strategy PASS. A new experiment or pricing-intent
+change needs separate explicit authorization. Preserve Alpaca owned management,
+KITY terminal recovery ownership and all research/shadows. Current checkpoint TOP
+and updated KITY RUNBOOK supersede old config/cron/PID/no-GO statements below.

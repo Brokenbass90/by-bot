@@ -1,0 +1,46 @@
+{
+  "schema": "ALPACA_OCT15_ACTUAL_LIVE_GUARD_RECEIPT_V1",
+  "status": "LIVE_PROTECTED",
+  "intent_sha256": "198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd",
+  "owner_go_received": true,
+  "owner_go_reply_id": "call_c768d5e4cc8e471aa5569c67f1981417",
+  "money_scope": "ONE_NET_OCT15_FIRST_INTENT_AND_OWNED_MANAGEMENT",
+  "entry": {
+    "id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+    "symbol": "NET",
+    "side": "buy",
+    "qty": "0.325167779",
+    "filled_avg_price": "311.222",
+    "status": "filled",
+    "filled_at": "2026-10-15T13:30:06.234131Z",
+    "limit_price": "328.22",
+    "gross_notional_usd": "101.199366515938"
+  },
+  "native_stop": {
+    "id": "28ecadfb-376d-4e4f-b34f-40e5fd16843c",
+    "side": "sell",
+    "type": "stop",
+    "status": "new",
+    "qty": "0.325167779",
+    "stop_price": "277.69"
+  },
+  "initial_modeled_price_risk_usd": "10.903525965428",
+  "final_loss_guaranteed": false,
+  "duplicate_entry": false,
+  "regular_manager_verified_ticks_utc": [
+    "13:35",
+    "13:50",
+    "13:55"
+  ],
+  "final_observed_ms": 1792072591988,
+  "static_pins_verified": 53,
+  "position_count": 1,
+  "open_order_count": 1,
+  "native_full_protection_proven": true,
+  "private_opening_capture_sha256": "a97ef8e8c6d9a9d3523e0f5a32bb9c1cc41388040ad08dcfcaaa18f4e1387437",
+  "private_regular_manager_capture_sha256": "a86e0441877c998229e10dd35d5aadb64158cf162b1e11947b5541efe0c9e823",
+  "private_final_guard_capture_sha256": "bdc21b849ad63a416689b411c693b0cfc9756cbe7bb09e19f2e1d51fd8004a64",
+  "net_pnl_status": "NOT_PROVEN",
+  "posted_live_fee_finality": "NOT_OBSERVED",
+  "new_paper_cycles": 0
+}

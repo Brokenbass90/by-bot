@@ -1,5 +1,61 @@
 # Codex session checkpoint — 2026-09-06
 
+Final13:56:31.988UTC GET-only guard confirms same NET fullSTOP277.69/qty.325167779,
+manager13:55exit0/53pins. ATT1 actualunit att1-lifecycle-zero-risk-v2.service
+PID1584802 and LIQactualunit bybit-liquidation-source-v2_1.service PID2095785
+remain active/NRestarts0. Do not confuse retired similarly named units with
+current sources. Closing receipts evidence/kity_owner_health_20261015/
+{health_switch,micro_terminal}.json; consolidated Claude handoff is
+TRADING_OS_SOURCE_SYNC_2026_10_15.md, prepared NOT SENT. No pending monetary
+approval; both exactGOs received, Alpaca liveowned, KITY plan consumedNO_SEND.
+
+October15 13:52UTC CURRENT: Alpaca actual NET LIVE_PROTECTED/NONFLAT; regular
+13:35 and13:50 manager exit0. Keep owned manager/native fullSTOP, no flat-only
+preflight/reentry. Read ALPACA_OCT15_ACTUAL_LIVE_OPENING.md.
+KITY micro exactGO RECEIVED call_21f2e55ad6384a808313ca5b32add1f7 for plan
+ffeb4bc4924fe64586469377372dca88caaa9545544dc2920f3d1bc438ee6570. One command
+1792072189069696558 accepted. TERMINAL13:49:59.372UTC, NO_SEND_NOT_LIFECYCLE_PASS:
+durableUNWIND reason DISPATCH_PREFLIGHT:EXACT_IOC_LIMIT_NOT_MARKETABLE.0POST/
+intents/fills,held0,brokerflatproven. Independent13:51:43.592UTC GET proves
+linearUSDTpositions0/open0/recentorders0/executions0,source54e08656…ea1882.
+No30min test ran because no first send; not money lifecycle/edge/C1-C3 PASS.
+DO NOT retry/reprice/reset/delete actual plan/GO/journal or reuse this GO.
+Human-approved quotes were fixed at13:41; later fresh dispatch rejected them.
+Any subsequent experiment/pricing-intent change needs separate explicit approval.
+
+KITY monitoring COMPLETE13:39:48UTC; KITY_OWNER_HEALTH_2026_10_15.md and updated
+KITY_MICRO_SCOPED_HANDOFF_RUNBOOK_2026_10_15.md are current. Same14 trading sources/
+app-v1-2/policy/bounds; new config-v1-3-health.json1699930e…1d7f2,
+unit88ef47e4…1be7d,rootcronf01f0d95…507cd. Exactly one stale-watchdog line changed;
+legacy source retained. Observer read-only/no restart/order authority; actual
+cron13:40–13:52HEALTHY. PID2182409,NRestarts0,lockinode818853. Oldbybot/web remain
+PID0/inhibited; don't restore alongside this owner. Initial operator heartbeat
+race fully rolled back, failure retained; bounded PID-ready wait then passed.
+Use current config1699930e… for commands/rollback; never reapply handoff/migration.
+Elder discovery-only544timely/900,670late/nojudge/pin/PnL; actual Mac KITY/Elder/
+Bounce/Breakout/storozh workers alive. Read TRADING_OS_SOURCE_SYNC_2026_10_15.md.
+Research524229b read-only. Opportunity schema/research adapters exist but LIVE
+Alpaca/KITYmicro->Brain wiring/scheduled exporter not proven. BrainSTOP unchanged,
+no new research run, Claude edit/message or monetary gate introduced.
+
+October15 CURRENT Alpaca **LIVE_PROTECTED / NONFLAT — DO NOT RERUN FLAT PREFLIGHT**.
+Actual server timer13:30:00UTC, entry service completed13:30:08 exit0. Broker
+BUY705a1b5b-1d45-4ba1-97cf-9c646033d78d FILLED13:30:06.234131UTC: NET
+.325167779 at311.222USD, gross101.199366515938USD. Native STOP sell fullqty,
+28ecadfb-376d-4e4f-b34f-40e5fd16843c, statusnew, stop277.69USD at13:30:07.7376;
+modeled initial price risk10.903525965428USD, within envelope (not gap guarantee).
+Actual readback13:30:56.595UTC confirms one NET position, one full native STOP,
+durablephasePROTECTED/native record1; controller OPENING_PATH_COMPLETED and
+execution LIVE_PROTECTED. No duplicate entry. Same exact humanGO and manager
+scope. Private opening capture observations/oct15-opening-1792071055168.json,
+SHAa97ef8e8c6d9a9d3523e0f5a32bb9c1cc41388040ad08dcfcaaa18f4e1387437.
+Owned-manager13:30 tick ran before session binding existed and returned2;
+actual13:35–13:35:03 tick subsequently returnedLIVE_PROTECTED/exit0, same full
+STOP and durablephasePROTECTED confirmed13:35:43.534UTC. Capturea86e0441…9e823.
+Keep manager/timer/GO/book/native state during exposure;
+never restore old monthly authority, rearm/repeat entry or run flat-only checks.
+Alpaca code/strategy/caps unchanged. No posted LIVE cost finality claim yet.
+
 October15 13:10:34UTC /16:10:34Cyprus CURRENT Alpaca: **ARMED, NOT YET SENT**.
 Direct human exact GO call_c768d5e4cc8e471aa5569c67f1981417 received for intent
 198903481c94357e3ae76d11688aa23f9a8740f2515062a64c7c267f0600f2fd after explicit

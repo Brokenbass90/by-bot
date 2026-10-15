@@ -1,6 +1,20 @@
-# KITY physical owner v1.2 — operator runbook
+# KITY physical owner app v1.2 / health custody v1.3 — operator runbook
 
-Installed service is running **ORDERS_OFF**, no active plan/GO/journal/POST.
+Current13:39:48UTC monitoring rebind: PID2182409/NRestarts0, config1699930e…1d7f2,
+unit88ef47e4…1be7d, cronf01f0d95…507cd. Only one watchdog line changed; the
+14 trading sources and all policy/bounds are unchanged. New monitor is read-only,
+no restart/order authority, with complete-rollback legacy observation support.
+Read KITY_OWNER_HEALTH_2026_10_15.md and evidence/kity_owner_health_20261015.
+Earlier physical v1.2 receipt is immutable history, not current config authority.
+
+CURRENT subsequent exactGO for ffeb4bc4…6570 was received and consumed once.
+Runtime now retains actual GO/plan/journal, mode EXACT_GO_SCOPED_MANAGEMENT,
+phase TERMINAL, verdict NO_SEND_NOT_LIFECYCLE_PASS,0POST/fills. Fixed IOC limit
+became unmarketable; independent complete flat/open/history/execution readback0.
+Do not prepare/GO another plan in this one-experiment runtime, reset/delete state
+or reuse the spent GO. The generic command documentation below is retained for
+operator reference, not permission to retry. Owned recovery/rollback remains
+available under the existing safeguards.
 Use this existing owner; never start another credential-bearing sender. Current
 source receipt: `evidence/kity_micro_handoff_20261015/package_manifest.json`.
 Old bybot/web are deliberately inhibited; original ATT1 admission/risk/source,
@@ -16,8 +30,8 @@ On VPS, from `/opt/bybot-research/kity-micro-owner-20261015/app-v1-2`:
 
 ```bash
 /root/by-bot/.venv/bin/python -B -m research_lab.kity_micro_supervisor_v1 \
-  --config /opt/bybot-research/kity-micro-owner-20261015/runtime/config-v1-2.json \
-  --config-sha256 7ee8a1b6f88473946e728523292fa46c5ee508c89b519db82cc3e5971c0e8cdd \
+  --config /opt/bybot-research/kity-micro-owner-20261015/runtime/config-v1-3-health.json \
+  --config-sha256 1699930e80fc314612388867761d3eed6241cd46de1b5e2ddfeed894d5b1d7f2 \
   --command '{"kind":"PREPARE"}'
 ```
 
@@ -33,7 +47,7 @@ A no-send rehearsal is queued through the same command interface with
 all fresh gates PASS. Saved IOC prices can become unmarketable; rejection is
 FRESH_ONLY. No reprice, automatic replay or repeat entry is authorized.
 
-## Exact money GO — NOT RECEIVED / DO NOT EXECUTE NOW
+## Exact money GO — CONSUMED / DO NOT REPEAT
 
 Show the human the exact fresh proposal. Only a direct human reply
 `GO KITY_EXECUTION_MICRO_LIVE <exact plan_id>` authorizes submitting the following
@@ -86,8 +100,8 @@ orders readback is complete:
 
 ```bash
 /root/by-bot/.venv/bin/python -B -m research_lab.kity_micro_handoff_v1 \
-  --config /opt/bybot-research/kity-micro-owner-20261015/runtime/config-v1-2.json \
-  --config-sha256 7ee8a1b6f88473946e728523292fa46c5ee508c89b519db82cc3e5971c0e8cdd \
+  --config /opt/bybot-research/kity-micro-owner-20261015/runtime/config-v1-3-health.json \
+  --config-sha256 1699930e80fc314612388867761d3eed6241cd46de1b5e2ddfeed894d5b1d7f2 \
   --action rollback
 ```
 
