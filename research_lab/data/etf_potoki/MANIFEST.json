@@ -1,0 +1,27 @@
+{
+ "btc": {
+  "snimkov": 793,
+  "dney": 699,
+  "s": "2024-01-11",
+  "po": "2026-10-01",
+  "dolya_pravok": 0.036,
+  "zaderzhka_dostupnosti_dney_mediana": 9.64,
+  "zaderzhka_p90": 200.92,
+  "dolya_strok_s_raskhozhdeniem_summy": 0.0
+ },
+ "eth": {
+  "snimkov": 438,
+  "dney": 561,
+  "s": "2024-07-23",
+  "po": "2026-10-01",
+  "dolya_pravok": 0.011,
+  "zaderzhka_dostupnosti_dney_mediana": 55.48,
+  "zaderzhka_p90": 435.63,
+  "dolya_strok_s_raskhozhdeniem_summy": 0.0
+ },
+ "sha256": "446b3d9c031b23d3422da179031deab9b22d828be911650a3d4b4bca91a39e3c",
+ "gotovo": false,
+ "sobrano": "2026-10-16T15:54:28+00:00",
+ "pravilo": "first_total из самого раннего архивного снимка не раньше дата+30ч; available_ms = момент снимка; «-» в Total = не опубликовано",
+ "pravilo_versiya": 2
+}

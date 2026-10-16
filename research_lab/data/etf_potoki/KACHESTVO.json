@@ -1,0 +1,51 @@
+{
+ "btc": {
+  "snimkov": 791,
+  "prigodnyh_dney": 699,
+  "s": "2024-01-11",
+  "po": "2026-10-01",
+  "pokrytie_budney": 0.983,
+  "zaderzhka_dney": {
+   "10": 1.46,
+   "50": 9.64,
+   "75": 114.63,
+   "90": 200.92,
+   "99": 295.63
+  },
+  "tolko_rannie_snimki": 0,
+  "dolya_tolko_rannih": 0.0,
+  "dolya_pravok": 0.036,
+  "pravki_musd": {
+   "10": 0.0,
+   "50": 0.0,
+   "75": 0.0,
+   "90": 0.0,
+   "99": 27.3
+  }
+ },
+ "eth": {
+  "snimkov": 436,
+  "prigodnyh_dney": 561,
+  "s": "2024-07-23",
+  "po": "2026-10-01",
+  "pokrytie_budney": 0.979,
+  "zaderzhka_dney": {
+   "10": 1.77,
+   "50": 55.48,
+   "75": 274.63,
+   "90": 435.63,
+   "99": 524.63
+  },
+  "tolko_rannie_snimki": 0,
+  "dolya_tolko_rannih": 0.0,
+  "dolya_pravok": 0.011,
+  "pravki_musd": {
+   "10": 0.0,
+   "50": 0.0,
+   "75": 0.0,
+   "90": 0.0,
+   "99": 0.5
+  }
+ },
+ "VERDIKT": "BLOCKED_DATA"
+}
