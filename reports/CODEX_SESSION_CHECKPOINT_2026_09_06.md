@@ -1,5 +1,24 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 07:01:19UTC CURRENT: human PERSONALLY ran owner-micro-go-oct16.sh,
+command1792134014834752632 for intent86b5349b…b1205. Actual result CONTROL_BLOCKED;
+immutable no-send07:00:23.079UTC: INTENT_PRICE_ENVELOPE_EXCEEDED:BTWUSDT.
+Complete GET positions0/openorders0, no active/materialized plan, original
+3tradingPOSTbarriers unchanged (0new), PID2209853/NRestarts0/ORDERS_OFF/
+NO_ACTIVE_PLAN/errornull. Agreement remains ACCEPTED; not all-ten executionPASS.
+Saved-source offline replay reproduces exact rejection without network/writes.
+BTW1.98659 reference ->1.89871(-4.4237%); VVV24.5990->24.4690 and
+GRASS.68070->.67320 also outside original +/-0.5%. No strategy/risk/source fix.
+Read KITY_OCT16_EXECUTION_OWNER_PACKET.md CURRENT and
+evidence/kity_master_agreement_20261016/owner_micro_no_send_oct16_v1.json.
+selected-v2.json + intent-claim.json + no-send.json PERSIST: this GO is spent.
+NEVER delete/reset/overwrite selection or retry launcher/GO; no automatic
+PREPARE/next attempt/session transfer. A later separately scoped experiment
+requires a new immutable proposal and personal human monetary action. Agent
+read-only observation only; no financial control/order/legal POST. Original
+writer/lock/sourcekit/units/Alpaca/ATT1/LIQ/Claude remain unchanged. Earlier
+unselected/no-monetaryGO paragraphs below are dated pre-launch history.
+
 October16 CURRENT: owner personally ran agreement command; ACTUAL acceptance
 verified locally AND against remote response.raw/receipt/claim. HTTP200/intcode0,
 rawSHAa1074aa7…14f85, completed06:45:10.209UTC. Agreement blocker CLOSED, no repeat

@@ -1,5 +1,35 @@
 # KITY October16 — owner execution packet
 
+**CURRENT — October16 07:01:19 UTC: `NO_SEND_PRICE_ENVELOPE_EXCEEDED`.**
+
+The human personally executed the launcher below. Command
+`1792134014834752632` was processed once; its actual result is `CONTROL_BLOCKED`,
+reason `INTENT_PRICE_ENVELOPE_EXCEEDED:BTWUSDT`. The durable no-send record is
+dated 07:00:23.079 UTC. No materialized/active plan was created, and the original
+three trading POST barriers remain unchanged. Independent complete account GET
+at 07:01:19 UTC reports zero linear-USDT positions and open orders. One original
+writer remains active, PID2209853, zero restarts, `ORDERS_OFF / NO_ACTIVE_PLAN`.
+
+The exact saved capture reproduces the rejection offline, with zero network
+requests. BTW's consumed ask was 1.89871 against an approved range
+1.97666–1.99652 (reference1.98659, change -4.4237%). VVV24.4690 and GRASS0.67320
+also fall outside their approved ranges. The existing two-sided envelope was
+applied as approved; no widening or policy/source changes were made.
+
+**The following proposal/launcher is spent history. Do not run it again.**
+The immutable selection, claim, source and no-send files must remain in place.
+A later experiment needs its own separately scoped proposal and personal owner
+monetary action; there is no automatic reprepare, reset or retry. This attempt
+does not prove ten-leg execution or strategy profitability. Agreement acceptance
+remains verified; no further agreement signing is needed.
+
+Sanitized terminal observation:
+[owner_micro_no_send_oct16_v1.json](evidence/kity_master_agreement_20261016/owner_micro_no_send_oct16_v1.json).
+Raw captures/account evidence stay private. Agent activity was read-only/offline;
+existing Alpaca, ATT1, LIQ, Claude, services and source kit were unchanged.
+
+The pre-launch proposal below is retained verbatim as history.
+
 Agreement acceptance is verified from exact remote raw response/hash and local
 owner-run receipt. KITY HEALTHY/ORDERS_OFF, one original lock/writer, complete
 linearUSDT positions0/openorders0, all10 instrument GET checks PASS. This is not

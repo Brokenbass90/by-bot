@@ -680,3 +680,14 @@ personally chooses whether to execute the new exact MONEY-GO command. No actual
 monetaryGO/selection/tradingPOST yet. Expired=>no automatic reprepare/retry.
 Read currentcheckpoint and KITY_OCT16_EXECUTION_OWNER_PACKET.md. Preserve existing
 Alpaca/ATT1/LIQ/Claude/sourcekit/cron; observe actual receipts read-only afterward.
+
+October16 owner launch actually consumed intent86b5349b…b1205, command
+1792134014834752632. Durable NO_SEND07:00:23UTC, reason
+INTENT_PRICE_ENVELOPE_EXCEEDED:BTWUSDT; exact saved-source offline replay matches.
+07:01:19UTC complete GET positions0/open0,0newPOST, originalPID/lock intact,
+ORDERS_OFF/NO_ACTIVE_PLAN. Selection/claim/no-send persist despite no active
+plan: NEVER reset/delete/overwrite or retry this intent/launcher. No automatic
+reprepare or next experiment. Read currentcheckpoint/owner packet and
+owner_micro_no_send_oct16_v1.json. Agreement ACCEPTED remains closed; all-ten
+execution is NOT proven. Agents observe read-only and must not submit monetary
+GO/orders/legal acceptance. Preserve original sourcekit and other live/research.
