@@ -1,0 +1,17 @@
+{
+  "schema": "OPERATIONAL_TARGETED_VERIFICATION_20261016",
+  "total_passed": 172,
+  "alpaca_passed": 112,
+  "kity_passed": 60,
+  "full_suite_rerun": false,
+  "independent_review_performed": false,
+  "commands": [
+    ".venv/bin/python -m pytest tests/test_alpaca_owned_stop_repair_v1.py tests/test_alpaca_dynamic_live_runtime_v1.py tests/test_alpaca_execution_identity_v1.py tests/test_kity_fresh_eligibility_watch_v1.py tests/test_kity_micro_post_go_pricing_v1.py tests/test_kity_micro_low_latency_v1.py -q"
+  ],
+  "source_sha256": {
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "a0710690e43ffbb4a96329de33ec8f65edf1d4c4ab11e549ed9b1911249548e4",
+    "research_lab/alpaca_owned_stop_repair_v1.py": "62a73c7a37c1a3d649fc24df53bbd17429157e3eca250c10356da0d6151ad452",
+    "research_lab/kity_fresh_eligibility_watch_v1.py": "bdbf7d951b8134312f114eb33667ca7f1556c43a0a34f484fb348b7c03da8ce3"
+  },
+  "money_actions_by_agent": 0
+}

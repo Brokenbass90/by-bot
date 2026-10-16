@@ -1,0 +1,25 @@
+{
+  "schema": "ALPACA_SAVED_SELECTION_REPLAY_V1",
+  "signal_session": "2026-10-09",
+  "intended_entry_session": "2026-10-12",
+  "picks_exact": true,
+  "regime_gate_exact": true,
+  "picks": [
+    {
+      "symbol": "NET",
+      "rawscore": 0.3020903331008842,
+      "score": 0.6,
+      "weight": 0.6,
+      "atr20": 16.771206665045003,
+      "atr20_pct": 4.646664728721919,
+      "signal_close": 360.9299926758,
+      "stop_price": 327.38757934571
+    }
+  ],
+  "source_sha256": "3ee3add36ae0b28b8fbb85ab690078dae88e97633a931e489249b44e0c403b45",
+  "source_book_signal_session": "2026-10-09",
+  "actual_live_entry": "2026-10-15",
+  "latest_completed_session_before_live": "2026-10-14",
+  "latest_selection_source_available": false,
+  "strategy_outcomes_run": false
+}

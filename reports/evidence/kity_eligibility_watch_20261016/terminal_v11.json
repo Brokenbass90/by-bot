@@ -1,0 +1,98 @@
+{
+  "schema": "KITY_ELIGIBILITY_WATCH_CLOSEOUT_V11",
+  "observation_ms": 1792166651537,
+  "terminal": {
+    "account_instrument_checks": 10,
+    "broker_writes": 0,
+    "checks": 10,
+    "expires_ms": 1792184400000,
+    "gross": "206.694000",
+    "observed_ms": 1792155956306,
+    "owner_authority": false,
+    "per_symbol": [
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "BTWUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "XAUUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "LTCUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "VVVUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "BNBUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "XAUTUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "XPLUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "XAGUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "GRASSUSDT"
+      },
+      {
+        "status": "EXISTING_FRESH_PREFLIGHT_PASS",
+        "symbol": "SPCXUSDT"
+      }
+    ],
+    "policy_consumed_by_watcher": false,
+    "policy_id": "9051edb3b7b69c87a81dd73a7ab0a1075ad841b6d88ad70889f96e71ec515155",
+    "reason": null,
+    "schema": "KITY_EXACT_POLICY_WATCH_TERMINAL_V1",
+    "source_completed_ms": 1792155945758,
+    "source_sha256": "d457015172ef2ba21d308fed79b666e31a44113b685f46b80d0e26eb0907e133",
+    "spec_sha256": "bd3362cee3a077326503414b759ba13e8313e24af32b92add1de6433e4d0551f",
+    "status": "KITY_FRESH_COMPATIBLE_READY",
+    "terminal_id": "222e5e03adf9cfd354d2e8622077c83658a6448bc904eba75a4394ced0944ac7"
+  },
+  "watcher_unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "NRestarts": "0",
+    "ActiveState": "inactive"
+  },
+  "notification": {
+    "broker_writes": 0,
+    "delivered": true,
+    "http_status": 200,
+    "message_id": 15203,
+    "response_sha256": "7fa190249829bcca8a61b0a3326f1ae2344354ace167064a289659465747b158",
+    "status": "NOTIFICATION_DELIVERED",
+    "terminal_id": "222e5e03adf9cfd354d2e8622077c83658a6448bc904eba75a4394ced0944ac7"
+  },
+  "writer_heartbeat": {
+    "account_lock_inode": 818853,
+    "active_plan_id": null,
+    "at_ms": 1792166652014,
+    "error": null,
+    "mode": "ORDERS_OFF",
+    "phase": "NO_ACTIVE_PLAN",
+    "pid": 2314960,
+    "schema": "kity_micro_owner_heartbeat_v1",
+    "state": null,
+    "trading_post_attempts": 34
+  },
+  "financial_send_count": 34,
+  "watcher_source_sha256": "bdbf7d951b8134312f114eb33667ca7f1556c43a0a34f484fb348b7c03da8ce3",
+  "spec_sha256": "bd3362cee3a077326503414b759ba13e8313e24af32b92add1de6433e4d0551f",
+  "broker_writes_by_observer": 0,
+  "chat_automation_status": "PAUSED",
+  "readiness_is_historical_not_current_market": true,
+  "actual_ten_leg_execution_pass": false
+}

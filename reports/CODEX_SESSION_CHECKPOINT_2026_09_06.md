@@ -1,5 +1,45 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 16:15:36UTC CURRENT P0 SAFETY: NET0.325167779 remains LIVE/NONFLAT,
+STOP277.69 DAY expired/openorders0; owned manager repeatedly BLOCKED_EXECUTION /
+ENTRY_FILL_SOURCE_CHANGED (first06:40UTC). Owner immediately notified and chose
+personal restoration of exact priorstop; completion NOT yet confirmed. Do not
+claim yesterday LIVE_PROTECTED. Read ALPACA_STRATEGY_PARITY_REPAIR_2026_10_16.md.
+Root cause proven: same entry nanoseconds→REST microseconds +source access_key;
+old string equality blocks DAYrearm. Narrow runtime identity fix112targetedPASS.
+Inert repair-v2 staged,56original+newpins/actualGET owned_snapshotPASS, NOTactivated;
+original sourcekit/unit/manager/ledger/stop unchanged, observer0brokerwrites.
+Entry HALT already existed/preserved byte-exact under original lock, maintenance unaffected.
+Human-only restored-stop binder/manager activation prepared DEFAULTno-network;
+agents MUST NEVER run its --owner-bind-and-activate/privateownerlauncher or start
+monetarymanager. It requires exact restored NETSTOP277.69/fullqty or exact expired original with
+no activeorder/fillidentity/oldunit; then binds ifneeded+switches onlymaintenance.
+GET-only ownerrecoveryV2precheckPASS; one personalcommand provided, completion
+pending. No blind adoption/rearm/doubleorder. No stop widening/riskincrease/newentry/retuning.
+Strategy parity NOTPASS: Oct9rank/ATR carried toOct15; Dynamicweekly was separately
+approved Oct6 but differs from validatedmonthly baseline9e1cff1a/c78b78dd.
+SavedOct9 selection replay exact; Oct14 qualification/ATR UNKNOWN. Stop IS actual
+fillrelative but stale distance. Dailyproxy cannotprove5minmanager parity.
+CurrentNET quarantined OFF_PROTOCOL baseline-evidence; Oct12–13PAPER is
+OPERATIONAL_VALIDATION. OlderintentsUNKNOWN until complete sourceinventory;
+latest brokerhistory hit100limit, no ALL-history claim. Do not redefine baseline.
+
+KITY watcher CLOSED successfully, not unfinished/not still polling:
+KITY_FRESH_COMPATIBLE_READY at13:05:56.306UTC/16:05:56CY, gross206.694000,
+10accountinstrument+10freshpreflightPASS; sixpriorincompatiblecapturesretained.
+Read KITY_FRESH_ELIGIBILITY_WATCH_2026_10_16.md and terminal_v11.json.
+V11specbd3362ce…551f/sourcebdbf7d95…8ce3, watcher serviceinactive/success/PID0,
+NRestarts0; terminal222e5e03…44ac7; one TGmessage15203delivered. Existingwriter
+2314960/ORDERS_OFF/NO_ACTIVE_PLAN/lock818853/34sendbarriers unchanged onreadback.
+No policyclaim/GO/reservation/orders. Policy9051…515155 remains originalscope,
+expiresOct16 21UTC ONLY; oldREADYcapture is NOT currentprice/financialapproval.
+60targetedPASS. InitialV1 readonlyhealthCLIlockfailure preserved; V11purehealth
+fix verified. Chatheartbeatkity-9051-expiryPAUSED; do not restart/dateextend.
+KITYbatch/WS not implemented;350gross is proposal NOTapproved. Original215/
+20.3%/50bps/70s/15trigger/30min intact. ElderHEDGE/Reportingqueued after safety.
+Claudecheckout/ATT1/LIQ/unrelatedallowlist preserved. Rootonlyreview, no new
+reviewer/subagent retry or claimed independent signoff. No further brokerpollloop.
+
 October16 12:26:19UTC CURRENT: next policy prepared per explicit owner reply
 "Да, подготовить одну новую policy". ORDERS_OFF; FRESH_BLOCKED_GROSS_CAP,
 not10/10READY/PASS. Read evidence/kity_closeout2_20261016/owner_packet.json and

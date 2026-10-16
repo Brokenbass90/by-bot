@@ -1,0 +1,23 @@
+{
+  "schema": "ALPACA_PARITY_REFERENCE_INVENTORY_V1",
+  "brief_commit": "9e1cff1a9f324aae9926b857039514e11f7ae1c2",
+  "brief_strategy_id": "ALPACA-BASELINE-c78b78dd7e68ef75",
+  "actual_live_native_strategy_id": "ALPACA-BASELINE-26f7ff663dc98e87",
+  "reference_code": {
+    "reports/ALPACA_AGENT_BRIEF.md": "bb4ed3cb45a8c9255b888bc5a6fe34714108ffb80bbcb479b018ce2086043257",
+    "research_lab/alpaca_paper_ready_v1.py": "6e41f1601b92bd9ca44d98a922c30e5fbcc45b025522620db335a5c21704c86a",
+    "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+    "research_lab/alpaca_dvizhok_x_v1.py": "b744bb591cd3d7479a7c6bf2e372acb8335f87d29fc791a1cf49a07080ee86c9",
+    "scripts/run_alpaca_honest_diagnostic.py": "1d14dd1dd1dda5e258a0a510c83215d91a9a393267730ea6eb16c060bd1bdca8"
+  },
+  "validated_contract": "monthly last-completed-session selection, next open, actual-fill 2*ATR20, original ratchet",
+  "approved_live_contract": "ALPACA_DYNAMIC_V1 weekly ranking, replacements at subsequent opens",
+  "new_entries": "HALTED",
+  "parity_status": "BLOCKED_CADENCE_AND_SOURCE_BINDING",
+  "limitations": [
+    "Daily proxy explicitly cannot prove intraday observation parity.",
+    "Original diagnostic default is signal_close stop anchor; brief specifies entry_fill. Execution-specific manifest/runner arguments for selected baseline must be bound explicitly.",
+    "No Oct14 completed-history source is present in the saved Oct15 entry packet; qualification and ATR20 as of Oct14 remain UNKNOWN.",
+    "Latest order history request hit limit 100; no exhaustive ALL-historical-intents claim."
+  ]
+}

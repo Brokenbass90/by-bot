@@ -816,3 +816,28 @@ schedule/poll automatically. Next action: existing fresh compatible marketgates
 then human personalexactGO; if owner wants a boundary amendment it requires
 explicit newdecision, never silently apply. This cycle is preparation only.
 Alpaca/ATT1/LIQ/Claude/cron/legacyweb and unrelatedallowlist unchanged.
+
+
+## October16 NET protection incident and watcher terminal amendment
+
+Read checkpoint TOP and ALPACA_STRATEGY_PARITY_REPAIR_2026_10_16.md first.
+NET remained open with DAY stop expired and no active stop on last16:15UTC GET;
+manager string timestamp comparison blocked re-arm. Owner chose personal exact
+stop restoration, not yet broker-confirmed. Existing money protection takes P0
+above KITY/Elder/Reporting. Entry-only HALT is now set; never clear it while
+strategy parity is unresolved. It does not block owned maintenance.
+Narrow identity fix and human-only restored-stop binding are112targetedPASS,
+inert repair-v2/56pins/actual GET-only snapshot verified, NOT activated. Do not
+run owner-bind-manager-once.sh, --owner-bind-and-activate, monetary manager start
+or submit orders as agent. Require actual personally restored exact full stop,
+then concrete human maintenance activation, then independent broker readback.
+Never adopt a foreign/manual stop silently, widen floor or increase risk.
+Baseline monthly and approved Dynamic weekly differ; do not relabel NET as
+baseline evidence or claim ALPACA_STRATEGY_PARITY_PASS. Older-intent audit is not
+complete. Preserve forced PAPER lifecycle as OPERATIONAL_VALIDATION.
+KITY watcher V1.1 actually reached206.694gross/10+10PASS at13:05:56UTC,
+not unfinished: it notified once15203 then exited. Its priorV1 failed sandbox
+attempt stays immutable. Native watcher is truth; chatheartbeat remainsPAUSED.
+No policy9051moneyGO/claim, expiry21UTC remains, no restart/reset/extension.
+No cap350 approval/batch-WS deployment/standing KITY authority. Preserve source,
+Claude/ATT1/LIQ/unrelatedallowlist; root-only review restriction remains.

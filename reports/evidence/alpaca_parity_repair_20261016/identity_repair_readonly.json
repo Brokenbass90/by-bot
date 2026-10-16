@@ -1,0 +1,27 @@
+{
+  "observed_ms": 1792167161572,
+  "open_orders": [],
+  "broker_writes": 0,
+  "manager_changes": 0,
+  "source_pins": 56,
+  "status": "OWNED_SNAPSHOT_IDENTITY_REPAIR_READONLY_PASS",
+  "entry_identity": {
+    "schema": "ALPACA_EXECUTION_IDENTITY_V1",
+    "status": "EXECUTION_IDENTITY_MATCH",
+    "retained_raw_sha256": "2e34e83f1a4505f11c50fbc940a4e385bcc79c014cffb21e838068ca27a7a18d",
+    "broker_raw_sha256": "f51c5daab7fe3026c230ef72c759a69099eaa23f879b3aa40e9867db979e9109",
+    "hash_basis": "complete canonical JSON payload; original capture/wire-source hashes retained separately",
+    "timestamp_compatibility": "exact UTC nanoseconds, or high-precision value rounded to the REST microsecond grid",
+    "normalized_timestamp_fields": [
+      "created_at",
+      "filled_at",
+      "submitted_at",
+      "updated_at"
+    ],
+    "permitted_metadata_additions": [
+      "source"
+    ]
+  },
+  "remaining": "0.325167779",
+  "owned_open_orders": []
+}

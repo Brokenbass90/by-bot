@@ -1,0 +1,22 @@
+{
+  "status": "READ_ONLY_WATCHER_V11_SERVICE_STARTED",
+  "at_ms": 1792155163738,
+  "unit": "kity-fresh-eligibility-watch-oct16.service",
+  "watcher_unit_state": {
+    "MainPID": "2319822",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "core_unit_state": {
+    "MainPID": "2314960",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "source_sha256": "bdbf7d951b8134312f114eb33667ca7f1556c43a0a34f484fb348b7c03da8ce3",
+  "spec_sha256": "bd3362cee3a077326503414b759ba13e8313e24af32b92add1de6433e4d0551f",
+  "unit_sha256": "883b9b278faaf330d2862a43f1c3e32c1cc7c86d330c5aaa4d89d882bec65d96",
+  "orders_off": true,
+  "policy_unspent": true,
+  "broker_writes": 0,
+  "original_account_lock_inode": 818853
+}

@@ -282,8 +282,15 @@ def owned_snapshot(client,item,record,*,observation_ms=None):
     symbol=item['intake']['plan']['symbol'];entry=item['entry']
     current=client.get_order(entry['id'])
     order_contract(current,item['intake']['entry_payload'])
-    if any(current.get(k)!=entry.get(k) for k in ('filled_qty','filled_avg_price','filled_at','status')):
-        raise ValueError('ENTRY_FILL_SOURCE_CHANGED')
+    # REST may round the original nanosecond event timestamp and add the
+    # documented access-key source. Keep both raw orders intact; use the same
+    # strict identity proof as PAPER finality rather than blocking DAY re-arm
+    # on a representation change. Material execution/ownership drift rejects.
+    from research_lab.alpaca_live_readiness_v1 import execution_identity_v1
+    try:
+        item['entry_identity_v1']=execution_identity_v1(entry,current)
+    except ValueError as exc:
+        raise ValueError('ENTRY_FILL_SOURCE_CHANGED:'+str(exc)) from exc
     history=client.list_orders(status='all',limit=500,symbols=[symbol])
     orders=client.list_orders(status='open',limit=100,symbols=[symbol])
     if observation_ms is not None:item['observed_ms']=observation_ms()

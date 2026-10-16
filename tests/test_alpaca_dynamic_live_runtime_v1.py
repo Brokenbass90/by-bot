@@ -558,3 +558,44 @@ def test_stale_native_owner_blocks_before_buy_not_after_fill(setup):
     out=run(setup,apply=True)
     assert out['status']=='BLOCKED_DATA' and out['reason']=='PRE_ENTRY_NATIVE_OWNER_CONFLICT'
     assert setup[1].writes==[] and ledger.read_bytes()==before
+
+
+def _entry_with_event_timestamp(setup, monkeypatch):
+    broker=setup[1]; original=broker._request
+    def event_response(method,path,payload=None):
+        row=original(method,path,payload)
+        if payload and payload.get('side')=='buy':
+            row['filled_at']='2026-10-14T13:30:02.234131481Z'
+            broker.orders[row['id']]=copy.deepcopy(row)
+        return row
+    monkeypatch.setattr(broker,'_request',event_response)
+    assert run(setup,apply=True)['status']=='LIVE_PROTECTED'
+    return next(o for o in broker.orders.values() if o['side']=='buy')
+
+
+def test_next_day_rearm_accepts_same_fill_rest_precision_and_source(setup,monkeypatch):
+    entry=_entry_with_event_timestamp(setup,monkeypatch)
+    entry.update(filled_at='2026-10-14T13:30:02.234131Z',source='access_key')
+    stop=next(o for o in setup[1].orders.values() if o['type']=='stop')
+    stop['status']='expired'
+    out=run(setup,now=NOW+86400000,apply=True,maintenance=True)
+    assert out['status']=='LIVE_PROTECTED',out
+    assert len(setup[1].writes)==3
+    assert setup[1].writes[-1]['stop_price']==stop['stop_price']
+    assert setup[1].writes[-1]['qty']==stop['qty']
+    assert run(setup,now=NOW+86401000,apply=True,maintenance=True)['status']=='LIVE_PROTECTED'
+    assert len(setup[1].writes)==3
+
+
+@pytest.mark.parametrize('field,value',[
+    ('filled_qty','.4'),('filled_avg_price','98.99'),('status','canceled'),
+    ('filled_at','2026-10-14T13:30:02.234132Z'),('source','foreign'),
+])
+def test_next_day_rearm_still_rejects_changed_execution(setup,monkeypatch,field,value):
+    entry=_entry_with_event_timestamp(setup,monkeypatch)
+    entry.update(filled_at='2026-10-14T13:30:02.234131Z',source='access_key')
+    entry[field]=value
+    stop=next(o for o in setup[1].orders.values() if o['type']=='stop');stop['status']='expired'
+    out=run(setup,now=NOW+86400000,apply=True,maintenance=True)
+    assert out['status']=='BLOCKED_EXECUTION'
+    assert len(setup[1].writes)==2

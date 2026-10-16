@@ -1,0 +1,61 @@
+{
+  "schema": "ALPACA_NET_PROTECTION_INCIDENT_V1",
+  "observed_ms": 1792166705686,
+  "position": {
+    "symbol": "NET",
+    "qty": "0.325167779",
+    "avg_entry_price": "311.222",
+    "current_price": "293.6397",
+    "unrealized_pl": "-5.717198"
+  },
+  "open_orders": [],
+  "native": {
+    "entry_order_id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+    "accepted_order_id": "28ecadfb-376d-4e4f-b34f-40e5fd16843c",
+    "accepted_stop_floor": 277.69,
+    "hwm": 315.505,
+    "qty": 0.325167779
+  },
+  "orders": [
+    {
+      "id": "28ecadfb-376d-4e4f-b34f-40e5fd16843c",
+      "client_order_id": "dyf-42f1b8d34273c8583750e3f223207243",
+      "symbol": "NET",
+      "side": "sell",
+      "type": "stop",
+      "status": "expired",
+      "qty": "0.325167779",
+      "filled_qty": "0",
+      "filled_avg_price": null,
+      "stop_price": "277.69",
+      "submitted_at": "2026-10-15T13:30:07.737637Z",
+      "filled_at": null,
+      "expired_at": "2026-10-15T20:05:03.535318Z"
+    },
+    {
+      "id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+      "client_order_id": "dyl-42f1b8d34273c8583750e3f223207243",
+      "symbol": "NET",
+      "side": "buy",
+      "type": "limit",
+      "status": "filled",
+      "qty": "0.325167779",
+      "filled_qty": "0.325167779",
+      "filled_avg_price": "311.222",
+      "stop_price": null,
+      "submitted_at": "2026-10-15T13:30:06.228325Z",
+      "filled_at": "2026-10-15T13:30:06.234131Z",
+      "expired_at": null
+    }
+  ],
+  "manager": "ExecMainExitTimestamp=Fri 2026-10-16 16:05:02 UTC\nExecMainStatus=2\nActiveState=failed\n",
+  "manager_failure_summary": {
+    "first": "2026-10-16T06:40:01+00:00 ubuntu-s-1vcpu-1gb-fra1-01 python[2282065]: {\"status\": \"BLOCKED_EXECUTION\", \"ready_for_live_go\": false, \"reason\": \"ENTRY_FILL_SOURCE_CHANGED\", \"orders_allowed\": false, \"no_blind_retry\": true}",
+    "last": "2026-10-16T16:15:01+00:00 ubuntu-s-1vcpu-1gb-fra1-01 python[2341069]: {\"status\": \"BLOCKED_EXECUTION\", \"ready_for_live_go\": false, \"reason\": \"ENTRY_FILL_SOURCE_CHANGED\", \"orders_allowed\": false, \"no_blind_retry\": true}",
+    "count": 116
+  },
+  "native_unchanged": true,
+  "broker_writes": 0,
+  "protection_status": "UNPROTECTED_DAY_EXPIRED_MANAGER_BLOCKED",
+  "owner_action": "Human chose to restore existing exact stop personally; completion not yet confirmed"
+}
