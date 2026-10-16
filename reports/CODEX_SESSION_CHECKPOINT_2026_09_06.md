@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 07:21:xxUTC CURRENT: owner's subsequent stale-price flow correction
+implemented/deployed ORDERS_OFF. Read KITY_DYNAMIC_POST_GO_PRICING_2026_10_16.md
+and evidence/kity_post_go_pricing_20261016/{policy,readiness,verification}.json.
+DYNAMIC_POST_GO_PRICING_READY, exact price-free policye3b3f531…54325, valid until
+Oct16 21UTC/Oct17 00Cyprus only. Original basket/sizing frontier/.203/215/15trigger/
+acceptedovershoot/30min/native/recovery/firewall unchanged; no old prices/qty.
+HUMAN personal MONEYGO -> ONE fresh capture -> deterministic guarded IOC plan,
+all entries<=60s from server GO issue; queue/capture/custody included. No second
+human approval/reprice/recapture; missed entry deadline leaves owned exits live.
+Separate18-file app-post-go-v1/post-go-20261016 namespace, config0b915895…bc914,
+unit83e67c5a…d491a, same818853lock,PID2286916/NRestarts0/HEALTHY/ORDERS_OFF.
+Fresh completeflat0/open0 before/quiescent/after install;3oldPOSTbarriers/0new.
+Old16sources and spentOct16 selection/claim/no-send hash-pinned unchanged.
+PREPARE1792135272982096679 + GET rehearsal1792135274489071764PASS; no actual
+selection/claim/journal/monetaryGO.108targetedPASS; full5089PASS/60FAIL/1warning,
+exact same60baseline names/0new, fullsuiteNOT_GREEN. Root-only review retained.
+Owner-only .private/kity_post_go_20261016/owner-post-go-micro-once.sh prepared;
+AGENTS MUST NOT execute it or --owner-go-policy/GO_POST_GO. Only personal owner
+action grants this new monetary approval; afterward agent observes read-only.
+No automatic retry/date transfer. Existing Alpaca/ATT1/LIQ/Claude unchanged.
+Foreign allowlist not staged/restored; observed concurrentchange retained.
+
 October16 07:01:19UTC CURRENT: human PERSONALLY ran owner-micro-go-oct16.sh,
 command1792134014834752632 for intent86b5349b…b1205. Actual result CONTROL_BLOCKED;
 immutable no-send07:00:23.079UTC: INTENT_PRICE_ENVELOPE_EXCEEDED:BTWUSDT.

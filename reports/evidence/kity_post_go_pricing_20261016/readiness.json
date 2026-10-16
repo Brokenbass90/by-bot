@@ -1,0 +1,188 @@
+{
+  "schema": "KITY_DYNAMIC_POST_GO_PRICING_READINESS_V1",
+  "status": "DYNAMIC_POST_GO_PRICING_READY",
+  "authority": "INSTALLED_ORDERS_OFF_NO_MONEY_GO",
+  "planning_defect": "HUMAN_APPROVAL_LATENCY_INVALIDATES_ABSOLUTE_PRICE_BANDS",
+  "policy_id": "e3b3f5310b2c9afdf4f503b453673054607a3a3ecca7d222817f7e2352d54325",
+  "policy_file_sha256": "3fb02561c47a342f2bfa3ad36b6867e009e57e40ced5f960fcf56d4135209fd4",
+  "policy_valid_until_ms": 1792184400000,
+  "policy_go_prefix": "GO KITY_EXECUTION_MICRO_POLICY_V1 ",
+  "configuration_sha256": "0b91589535f4cc8c0f7e09130419d61d41acc8d325f3be9e3c4cf8d6c58bc914",
+  "unit_sha256": "83e67c5a4897d7cc5534a63592fbd752c2ab5f53c06ee1f061d68a5426dd491a",
+  "source_map": {
+    "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+    "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+    "configs/research/kity_execution_micro_owner_bounds_v3_20261015.json": "9d8c6e036fe9446de539c20b89164dd019c0d6012464ce66f25581fe572b80ad",
+    "reports/evidence/kity_bybit_c2_actual_20261015/c2_public_receipt.json": "b93d0994e74e3ac61df676410e74771a3230e8e23a81e052665994e686c6e903",
+    "reports/evidence/kity_micro_live_20261015/build_readonly_dossier.py": "73f4870d8a6c24cb14180f5157fcbdaee2a5756a75a14839bb9f8d473276ef5c",
+    "research_lab/kity_execution_micro_bybit_v1.py": "2ba72fc372253d157e55ab5ec82051c083d9f0bccb2584c6a9807329cd1bb0ac",
+    "research_lab/kity_execution_micro_runtime_v1.py": "096680750fc1c532fa04d96c2cbbe64987738ea4ac293bc46d366e92596281a0",
+    "research_lab/kity_execution_micro_v1.py": "bd7a8c5903b67129185404e4db6b761d37185e6e450d6624d83ee56a71860b74",
+    "research_lab/kity_micro_account_bridge_v1.py": "14ae88b9df55614736c9194ba1a2689391ee2d3677bdddb2091e103cb2a079ee",
+    "research_lab/kity_micro_bounded_owner_v2.py": "24fb4b82954085153806beaf8a196f5417ebaca053b46afd30dfd9592483efd8",
+    "research_lab/kity_micro_handoff_v1.py": "d85439dd2b25e36b51868ccd6946ae22a900e2fc30a963d76b0a901eb3315b09",
+    "research_lab/kity_micro_physical_owner_v1.py": "35a6fdb7e6f10b67e4b770444d45812e02ff22be38dcab5cf32a0482d5af78c2",
+    "research_lab/kity_micro_post_go_owner_v1.py": "7630b1606371b1b824f651a60b7a4a7c622ebdb62a94ed6491c5f56a54b5d5ed",
+    "research_lab/kity_micro_post_go_pricing_v1.py": "51929708bb89c8d66beca7d041d79fa655f0491ca8b33407e2ffc014d253bfcf",
+    "research_lab/kity_micro_preflight_v1.py": "e16055dc5db88255ff129f046c63f7851647eb63da0f01c23b8f13a54ad44acc",
+    "research_lab/kity_micro_pricing_intent_v2.py": "52ee222d7f2c6b64593068b907006baa5105b96ccc95d2390547dcf69a96a8dd",
+    "research_lab/kity_micro_supervisor_v1.py": "593bd62ba34d87461a3e2f344a2c55cf95ca58bce39eec251ae8616f491f8a93",
+    "research_lab/kity_micro_transport_v1.py": "562c8a9b5ffd1b24b7742bfed02320bf0c19407de7727c2b304c2823167f5294"
+  },
+  "installation": {
+    "status": "DYNAMIC_POST_GO_OWNER_INSTALLED_ORDERS_OFF_HEALTHY",
+    "at_ms": 1792135227054,
+    "source_count": 18,
+    "config_sha256": "0b91589535f4cc8c0f7e09130419d61d41acc8d325f3be9e3c4cf8d6c58bc914",
+    "unit_sha256": "83e67c5a4897d7cc5534a63592fbd752c2ab5f53c06ee1f061d68a5426dd491a",
+    "unit": {
+      "MainPID": "2286916",
+      "NRestarts": "0",
+      "ActiveState": "active"
+    },
+    "before": {
+      "label": "night-before",
+      "at_ms": 1792135222887,
+      "positions": 0,
+      "open_orders": 0
+    },
+    "quiescent": {
+      "label": "night-quiescent",
+      "at_ms": 1792135223967,
+      "positions": 0,
+      "open_orders": 0
+    },
+    "after": {
+      "label": "night-after",
+      "at_ms": 1792135226933,
+      "positions": 0,
+      "open_orders": 0
+    },
+    "health_before": {
+      "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+      "observed_ms": 1792135223220,
+      "status": "HEALTHY",
+      "restart_allowed": false,
+      "orders_allowed": false,
+      "reason": "CURRENT_OWNER_HEALTHY",
+      "owner": "KITY_MICRO",
+      "pid": 2209853,
+      "age_ms": 209
+    },
+    "health_after": {
+      "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+      "observed_ms": 1792135226378,
+      "status": "HEALTHY",
+      "restart_allowed": false,
+      "orders_allowed": false,
+      "reason": "CURRENT_OWNER_HEALTHY",
+      "owner": "KITY_MICRO",
+      "pid": 2286916,
+      "age_ms": 213
+    },
+    "account_lock_inode": 818853,
+    "second_lease_refused": true,
+    "new_broker_posts": 0,
+    "prepared_intents": 0,
+    "money_go_received": false
+  },
+  "prepare_command_id": "1792135272982096679",
+  "rehearsal": {
+    "command_id": "1792135274489071764",
+    "result": {
+      "actual_journal_created": false,
+      "broker_writes": 0,
+      "gross": "175.684210",
+      "owner_authority": false,
+      "plan_id": "500b1031c0a684c29e59c09ade23083f5083fdfcef9f8eecc45fc4098f575342",
+      "policy_id": "e3b3f5310b2c9afdf4f503b453673054607a3a3ecca7d222817f7e2352d54325",
+      "status": "POST_GO_SAVED_SOURCE_REHEARSAL_PASS"
+    }
+  },
+  "policy_basket": [
+    {
+      "side": "Buy",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "LTCUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "SPCXUSDT"
+    }
+  ],
+  "quantity_rule": "MINIMUM_APPROVED_ROUNDING_FRONTIER_FROM_SINGLE_POST_GO_CAPTURE",
+  "pricing_rule": "WORST_CONSUMED_DEPTH_PRICE_OF_FRESH_SIZED_QUANTITY",
+  "collar_bps": "50",
+  "dispatch_window_ms": 60000,
+  "prior_no_send_file_pins": {
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/night-final-20261015/bounded-intents/86b5349b7e120f646e4fdd7f505803abcdc24a5791142218b7ef391e61bb1205.json": "f3e1375c0433085efdaffb1e9c56aba243923370563ec301b7293ba83a03b318",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/night-final-20261015/experiments-v2/86b5349b7e120f646e4fdd7f505803abcdc24a5791142218b7ef391e61bb1205/captures/capture-1792134017003.json": "3f8c2ed4c8a7dcd46e88c2b93d22e0d3b218b700f31975bce43a19f4bf5959f3",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/night-final-20261015/experiments-v2/86b5349b7e120f646e4fdd7f505803abcdc24a5791142218b7ef391e61bb1205/intent-claim.json": "3cf5df93327394db126cbcc308b8d5396d99b3c81f9a4cbddf263a426e75c3c0",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/night-final-20261015/experiments-v2/86b5349b7e120f646e4fdd7f505803abcdc24a5791142218b7ef391e61bb1205/no-send.json": "ab38fe50eb0413cba774d73e2595f32e7af04cdef0818f19220294d5cda9d396",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/night-final-20261015/results/1792134014834752632.json": "b0fd285596e1ae89753ff04e9cb053634940c7ac0130c1c2dfba11b435e1ac25",
+    "/opt/bybot-research/kity-micro-owner-20261015/runtime/night-final-20261015/selected-v2.json": "8a47b12964fd33195a72d15e4d34e5cd849ac9fad351bb30f08ac311bde650d6"
+  },
+  "old_16_sources_unchanged": true,
+  "old_no_send_preserved": true,
+  "static_blockers": [],
+  "fresh_only": [
+    "One post-GO authenticated capture, source CTS <=2s, account/asset/balance/cost/funding/margin/lot/depth and all existing preflight checks.",
+    "Ten derived requests must fit the unchanged 215 gross/rounding/native-stop bounds and reach each entry transport before the 60s GO deadline."
+  ],
+  "money_go_received": false,
+  "monetary_command_executed_by_agent": false,
+  "trading_posts_by_agent": 0,
+  "owner_launcher_sha256": "f6d1e754a5e1ebbd9ef0486091b9df4bd38a41097471e93ba620ac5d8ada19d0",
+  "owner_launcher": "OWNER ONLY .private/kity_post_go_20261016/owner-post-go-micro-once.sh; AGENTS MUST NOT EXECUTE",
+  "offline_exact_prior_capture_replay": {
+    "source_sha256": "3f8c2ed4c8a7dcd46e88c2b93d22e0d3b218b700f31975bce43a19f4bf5959f3",
+    "gross": "209.505230",
+    "limit_gross": "209.483570",
+    "orders": 10,
+    "elapsed_after_go_ms": 7131,
+    "network_calls": 0,
+    "broker_writes": 0,
+    "development_only": true
+  },
+  "tests": {
+    "targeted_pass": 108,
+    "full_pass": 5089,
+    "full_fail": 60,
+    "new_failure_names": [],
+    "full_status": "NOT_GREEN; exact same 60 names as published baseline",
+    "independent_review": false
+  },
+  "research_evidence_eligible": false,
+  "counts_toward_C1_C2_C3": false
+}

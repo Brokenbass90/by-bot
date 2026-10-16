@@ -691,3 +691,19 @@ reprepare or next experiment. Read currentcheckpoint/owner packet and
 owner_micro_no_send_oct16_v1.json. Agreement ACCEPTED remains closed; all-ten
 execution is NOT proven. Agents observe read-only and must not submit monetary
 GO/orders/legal acceptance. Preserve original sourcekit and other live/research.
+
+October16 subsequent owner requested dynamic post-GO pricing under the same
+215/15trigger/30min/.203/50bps/basket/risk/research bounds. Delivered/deployed
+DYNAMIC_POST_GO_PRICING_READY ordersOFF: read currentcheckpoint and
+KITY_DYNAMIC_POST_GO_PRICING_2026_10_16.md. New app-post-go-v1, original lock,
+new post-go-20261016 namespace; spent86b5349b…NO_SEND files/old16sources pinned
+unchanged. Price-free policye3b3f531…54325 expires Oct16 21UTC only. Personal
+owner GO -> exactly one fresh capture -> derived fixed guarded IOC requests;
+all entries within60s of GO issue, existing fresh per-leg gates/no reprice.
+No new capture/retry/reentry; exit/recovery/30min management survives deadline.
+108targetedPASS, full5089PASS/60FAIL same60baseline (NOT_GREEN), root-only review.
+One new owner-only launcher is prepared, not executed. Agents MUST NOT invoke
+--owner-go-policy, GO_POST_GO or owner-post-go-micro-once.sh, including after a
+chat approval: human personally executes financial authority; agent observes
+actual results read-only. No new policy/session/experiment automatically.
+Preserve Alpaca/ATT1/LIQ/Claude, prior money history and external allowlist.
