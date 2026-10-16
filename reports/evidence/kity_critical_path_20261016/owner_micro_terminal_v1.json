@@ -1,0 +1,260 @@
+{
+  "actual_entry_gross_usdt": "188.00218",
+  "all_ten_complete": false,
+  "broker_flat_proven": true,
+  "command_id": "1792148543710282327",
+  "counts_toward_C1_C2_C3": false,
+  "entry_dispatch_deadline_ms": 1792148603710,
+  "entry_intent_offsets_ms": [
+    {
+      "after_go_ms": 13237,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "after_go_ms": 18189,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "after_go_ms": 22694,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "after_go_ms": 28380,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "after_go_ms": 33246,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "after_go_ms": 38995,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "after_go_ms": 45700,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "after_go_ms": 50512,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "after_go_ms": 56104,
+      "symbol": "GRASSUSDT"
+    }
+  ],
+  "exchange_create_rejections": 0,
+  "execution_verdict": "PARTIAL_BASKET_UNWIND_ACCOUNTED_NOT_ALL_TEN_PASS",
+  "fee_unknown_execution_ids": [],
+  "fees_usdt": "0.20737112",
+  "filled_legs": 9,
+  "finality_ms": 1792148656915,
+  "first_entry_intent_ms": 1792148556947,
+  "funding_usdt": "0",
+  "go_actor": "HUMAN_OWNER_PERSONAL_LAUNCH",
+  "go_ms": 1792148543710,
+  "gross_pnl_usdt": "-0.18043",
+  "independent_execution_rows": 28,
+  "independent_open_orders": 0,
+  "independent_owned_trade_cash_rows": 28,
+  "independent_positions": 0,
+  "native_bind_offsets_ms": [
+    {
+      "after_go_ms": 15913,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "after_go_ms": 20693,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "after_go_ms": 25748,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "after_go_ms": 31107,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "after_go_ms": 36095,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "after_go_ms": 43138,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "after_go_ms": 48649,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "after_go_ms": 53779,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "after_go_ms": 59613,
+      "symbol": "GRASSUSDT"
+    }
+  ],
+  "native_proof_source_sha256": "d90cb0a629b5775488352823f741c6ce484ce549d066037626ce7682b37b91b2",
+  "native_source_proofs": [
+    {
+      "raw_sha256": "fa7b819d21696b01fe7a4d912331f7d6fdaec7b7dad4b01536db2b3704da9914",
+      "source_file_sha256": "8388f869d0703c456d5ea089e465b64f57d9d403ef7241db284d2cff4aee519e",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "raw_sha256": "5cab0d4bd100199dcb8161439c2b637e4878aeab1728d1741066f7027388fa3d",
+      "source_file_sha256": "6c43fdf4c52412cf40a1271251315ea4bd57bdd345530bea83865124f504c6bb",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "raw_sha256": "5cab0d4bd100199dcb8161439c2b637e4878aeab1728d1741066f7027388fa3d",
+      "source_file_sha256": "6c43fdf4c52412cf40a1271251315ea4bd57bdd345530bea83865124f504c6bb",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "raw_sha256": "deacecec28457073e819c587fa1182c31533e575eade2ff123d1c38008aa1378",
+      "source_file_sha256": "9e86d6e44afc2481b8f72ceda6c0c62df1ea01922f710f502360f7b7f6d12d6a",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "raw_sha256": "13777d683973c0d5177025453627c12ba564fd7cfce30005c9e9dc1e174f4441",
+      "source_file_sha256": "5494a91e7bc3621d2dad248023ac529159f276e266f786da20c4c34fbfc706dd",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "raw_sha256": "ec201e6042fb18f04caf30b25bfe5cb602cb16a4efb5d117f8134d1bffe11af7",
+      "source_file_sha256": "96c83abc156cb7533157454710d6f115df74d436f22019c3b0d88d6ae4afcfab",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "raw_sha256": "5cab0d4bd100199dcb8161439c2b637e4878aeab1728d1741066f7027388fa3d",
+      "source_file_sha256": "6c43fdf4c52412cf40a1271251315ea4bd57bdd345530bea83865124f504c6bb",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "raw_sha256": "5cab0d4bd100199dcb8161439c2b637e4878aeab1728d1741066f7027388fa3d",
+      "source_file_sha256": "6c43fdf4c52412cf40a1271251315ea4bd57bdd345530bea83865124f504c6bb",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "raw_sha256": "5cab0d4bd100199dcb8161439c2b637e4878aeab1728d1741066f7027388fa3d",
+      "source_file_sha256": "6c43fdf4c52412cf40a1271251315ea4bd57bdd345530bea83865124f504c6bb",
+      "symbol": "LTCUSDT"
+    }
+  ],
+  "new_go_required": true,
+  "not_attempted_legs": [
+    "SPCXUSDT"
+  ],
+  "observation_completed_ms": 1792148688443,
+  "observer_broker_writes": 0,
+  "orders_off": true,
+  "ownership_conflict": false,
+  "per_symbol": {
+    "BNBUSDT": {
+      "entry_executions": 1,
+      "entry_quantity": "0.03",
+      "exit_executions": 1,
+      "fees_usdt": "0.02415551",
+      "held_final": "0.00",
+      "native_stop_full_quantity": "0.03",
+      "side": "Buy"
+    },
+    "BTWUSDT": {
+      "entry_executions": 1,
+      "entry_quantity": "10",
+      "exit_executions": 1,
+      "fees_usdt": "0.02029385",
+      "held_final": "0",
+      "native_stop_full_quantity": "10",
+      "side": "Buy"
+    },
+    "GRASSUSDT": {
+      "entry_executions": 3,
+      "entry_quantity": "32",
+      "exit_executions": 1,
+      "fees_usdt": "0.02386384",
+      "held_final": "0",
+      "native_stop_full_quantity": "32",
+      "side": "Sell"
+    },
+    "LTCUSDT": {
+      "entry_executions": 3,
+      "entry_quantity": "0.3",
+      "exit_executions": 1,
+      "fees_usdt": "0.02015475",
+      "held_final": "0.0",
+      "native_stop_full_quantity": "0.3",
+      "side": "Buy"
+    },
+    "VVVUSDT": {
+      "entry_executions": 2,
+      "entry_quantity": "0.90",
+      "exit_executions": 2,
+      "fees_usdt": "0.04827521",
+      "held_final": "0.00",
+      "native_stop_full_quantity": "0.9",
+      "side": "Buy"
+    },
+    "XAGUSDT": {
+      "entry_executions": 1,
+      "entry_quantity": "0.379",
+      "exit_executions": 1,
+      "fees_usdt": "0.01206614",
+      "held_final": "0.000",
+      "native_stop_full_quantity": "0.379",
+      "side": "Sell"
+    },
+    "XAUTUSDT": {
+      "entry_executions": 1,
+      "entry_quantity": "0.005",
+      "exit_executions": 1,
+      "fees_usdt": "0.02293889",
+      "held_final": "0.000",
+      "native_stop_full_quantity": "0.005",
+      "side": "Sell"
+    },
+    "XAUUSDT": {
+      "entry_executions": 1,
+      "entry_quantity": "0.005",
+      "exit_executions": 1,
+      "fees_usdt": "0.01150296",
+      "held_final": "0.000",
+      "native_stop_full_quantity": "0.005",
+      "side": "Buy"
+    },
+    "XPLUSDT": {
+      "entry_executions": 3,
+      "entry_quantity": "257",
+      "exit_executions": 3,
+      "fees_usdt": "0.02411997",
+      "held_final": "0",
+      "native_stop_full_quantity": "257",
+      "side": "Sell"
+    }
+  },
+  "plan_id": "5904642a78860331e6895dccc615ec5a9cece1810b0128bc7320bb30f39846f7",
+  "planned_lifecycle_deadline_ms": 1792150356947,
+  "planned_ten_leg_gross_usdt": "209.078020",
+  "planning_defect": "ACTUAL_SERIAL_READBACK_PATH_STILL_EXCEEDS_60S_MODEL_WAS_OPTIMISTIC",
+  "policy_id": "98ae40e5c04754bb7aeea2095f66c7531bc8185051c622684f1364f55a78f3ee",
+  "policy_spent": true,
+  "required_legs": 10,
+  "research_evidence_eligible": false,
+  "schema": "KITY_POST_GO_OWNER_MICRO_TERMINAL_V1",
+  "source_sha256": "0dec5c76716554dd6de791ee478513498cea8843935be8ec36950022b894792b",
+  "state_files_sha256": {
+    "active-plan.json": "ebf9a82cea98fead728cfb623ca4a47a03c170a966be4068d838af67186f4b71",
+    "lifecycle.sqlite": "bbae03d6ca3b646aca3ca2b0c8333731fb3486e7e40c9a62dfb799d105361bcf",
+    "materialized.json": "ebf9a82cea98fead728cfb623ca4a47a03c170a966be4068d838af67186f4b71",
+    "owner-go.json": "2df6da795885de427199d1774f7e8b73f2f39390ef97bfa88a809eaef1dfb5b0",
+    "policy-claim.json": "c3195eb804f8fec623cd49317144c7618da41afeff17ff9c62e740e31ecffcd6"
+  },
+  "status": "FAILED_SAFE_FLAT",
+  "terminal_net_usdt": "-0.38780112",
+  "unknown_dispatches": 0,
+  "unwind_ms": 1792148604640,
+  "unwind_reason": "DISPATCH_PREFLIGHT:POST_GO_DISPATCH_DEADLINE"
+}

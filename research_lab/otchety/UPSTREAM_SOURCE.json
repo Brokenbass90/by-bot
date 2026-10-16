@@ -1,0 +1,30 @@
+{
+  "ref": "origin/research/fabrika-v1",
+  "commit": "a82d2a6ce339fee9b673afbf3b876ac2c0cb8ead",
+  "files": {
+    "sobytiya_v1.py": "e67ff0a424983eb907bcfe22695e1191ae58ee8e68f4b4fd1c0615b08b8d5540",
+    "stil.py": "affd3cc237a83bfdbff1b9f324324a43eb5e14a5ea2d84e080712e91d5448442",
+    "karta_sdelki.py": "26baead49cae9098a93c0d109813a9c6dc8dcf8747bd7225e14499b0f5f9cebd",
+    "karta_korzina.py": "f7255a28489e2858c75bd843570e42f947187982d824503bb8d953b9d31d0aff",
+    "karta_portfel.py": "26f7de7b75ce808e6a131b7e4bc4f749df626c532d9eb6b5ad9992707f29cb37",
+    "tekst_tg.py": "b50bd63e1d075f50ff428c74ba099267265e5802358da680f5fa1b64bae362a1",
+    "TRADING_OS_REPORTING_V1.md": "5ccc5c2fbe10f7da747166f7cd22dfb042ce7f44a2f3a0a4465307080891c3b0",
+    "KONTRAKT_OTCHETOV_TG_WEB_2026_10_16.md": "e40bbd53fb438e0d80171c5d6034631af81cbc1d9ab6f2d18c65a6b76a5e27b6",
+    "tests/test_otchety_v1.py": "200e3a754ef1acf62b035fbf2f08e389711eeb820b66733f3e1ebb1b4a90da7b"
+  },
+  "unchanged_upstream": false,
+  "local_integration_changes": {
+    "karta_korzina.py": "Label stop / entry +s distinguishes protection boolean from entry-intent timing; values/math unchanged."
+  },
+  "integrated_files": {
+    "sobytiya_v1.py": "e67ff0a424983eb907bcfe22695e1191ae58ee8e68f4b4fd1c0615b08b8d5540",
+    "stil.py": "affd3cc237a83bfdbff1b9f324324a43eb5e14a5ea2d84e080712e91d5448442",
+    "karta_sdelki.py": "26baead49cae9098a93c0d109813a9c6dc8dcf8747bd7225e14499b0f5f9cebd",
+    "karta_korzina.py": "af39ee01fa546d3e7d9147bab53054eb09feb2f6ac615c12976c4d7ca3fa875c",
+    "karta_portfel.py": "26f7de7b75ce808e6a131b7e4bc4f749df626c532d9eb6b5ad9992707f29cb37",
+    "tekst_tg.py": "b50bd63e1d075f50ff428c74ba099267265e5802358da680f5fa1b64bae362a1",
+    "TRADING_OS_REPORTING_V1.md": "5ccc5c2fbe10f7da747166f7cd22dfb042ce7f44a2f3a0a4465307080891c3b0",
+    "KONTRAKT_OTCHETOV_TG_WEB_2026_10_16.md": "e40bbd53fb438e0d80171c5d6034631af81cbc1d9ab6f2d18c65a6b76a5e27b6",
+    "tests/test_otchety_v1.py": "200e3a754ef1acf62b035fbf2f08e389711eeb820b66733f3e1ebb1b4a90da7b"
+  }
+}

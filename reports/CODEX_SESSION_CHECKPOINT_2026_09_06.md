@@ -1,5 +1,39 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 11:14:14UTC reporting followup: one ACTUAL KITY terminal card delivered
+via existing Telegramphoto sender (HTTP200/oktrue/message15199), exact receipt
+money net-.38780112; evidence/kity_critical_path_20261016/telegram_delivery.json.
+One-off only: continuous reporter/web NOT installed or CONNECTED. First attempt
+stopped before send-claim/HTTP on Bybit-only credential source; then existing
+/root/by-bot/.env TG_TOKEN/TG_CHAT was mapped to photo sender without brokerkeys.
+No repeat send. Frozen Reporting modules imported from researcha82d2a6 (contains
+81d99b5), upstream3testsPASS/cardvisuallychecked; one local column-label correction
+distinguishes stopstatus from entrytime, all money copied from journal. Oldweb
+still inhibited. Elder §2b/HEDGE_V1 source manifest prepared; standaloneKILL;
+adapter NOT implemented, no research/900outcomes read. Remaining nonmoney work
+is explicit in docs/superpowers/plans/2026-10-16-reporting-elder-followup.md;
+do not mistake intake/oneoffdelivery for completed production integration.
+
+October16 11:04:48UTC CURRENT: human personally launched latency owner script,
+command1792148543710282327, policy98ae40e5…8f3ee SPENT. Actual FAILED_SAFE_FLAT,
+NOT10/10PASS:9filled/9nativeFullsourceproofs,SPCXnotattempted. Same60sdeadline
+beforetenthleg ->automaticownedunwind/accountedTERMINAL11:04:16.937UTC.
+IndependentcompleteGET11:04:48.443UTCpositions0/open0;28executions/28postedcash
+rows reconcilegross-.18043/fees.20737112/funding0/net-.38780112USDT;feeUNKNOWN0/
+ownershipconflictfalse/noexchangecreaterefusal/unknownsend. Firstintent+13.237s,
+ninth+56.104s/native+59.613s/unwind+60.930s; deterministicmodelwasoptimistic.
+Read KITY_CRITICAL_PATH_READY_2026_10_16.md CURRENT and its
+evidence/kity_critical_path_20261016/owner_micro_terminal_v1.json plus actual
+timingJSON. SamePID2290919/NRestarts0/ORDERS_OFF/TERMINAL/original818853lock,
+15prior+18newtradingPOSTbarriers. Agent made0brokerwrites. NEVER rerun personal
+launcher/GO, resetclaim/selection/journal, auto-reprepare or expanddeadline.
+Nextmonetaryattempt requires separately authorized scope/policy/personalaction.
+No C1–C3/strategyPASS. Researcha82d2a6 including Reporting81d99b5 is pushed;
+Codex latency engineering f6bf331 pushed. Current nonmoney followup: Reporting
+production integration without reviving old web writer; Elder ONLY frozen
+HEDGE_V1 ordersOFF/shadow per KONTRAKTY_DLYA_CODEX_2026_10_15§2b (standaloneKILL),
+not new research/judge/900outcomeconsumption. Alpaca/ATT1/LIQ/Claude untouched.
+
 October16 08:22:18UTC CURRENT: owner-authorized latency correction is physically
 installed ORDERS_OFF. Read KITY_CRITICAL_PATH_READY_2026_10_16.md and
 evidence/kity_critical_path_20261016/. KITY_CRITICAL_PATH_READY: separate19-file

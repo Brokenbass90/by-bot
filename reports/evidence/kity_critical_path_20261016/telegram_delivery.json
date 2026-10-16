@@ -1,0 +1,13 @@
+{
+  "at_ms": 1792149254120,
+  "broker_writes": 0,
+  "continuous_reporting_installed": false,
+  "evidence_id": "kity_micro:1792148543710282327",
+  "http_status": 200,
+  "message_id": 15199,
+  "photo_sha256": "8ba9ed0d858ba77a06507b75e444ce90dd6e2f7a0eda4aae0f653cc6c097c113",
+  "renderer": "Claude Reporting V1 integrated",
+  "response_sha256": "ffe7148db174f3db9c5ba37043aab350acb9cc63e2de85b983f067c8b795aafe",
+  "status": "KITY_TERMINAL_CARD_TG_DELIVERED",
+  "web_activated": false
+}

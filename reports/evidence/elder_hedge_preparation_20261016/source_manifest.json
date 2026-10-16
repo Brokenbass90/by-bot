@@ -1,0 +1,49 @@
+{
+  "authority": "ORDERS_OFF_SHADOW_ONLY",
+  "broker_writes": 0,
+  "candidate": "ELDER_CRASH_HEDGE_HEDGE_V1",
+  "control_target_fields": [
+    "k1",
+    "k2"
+  ],
+  "entry": {
+    "limit_offset": "0.002",
+    "side": "short",
+    "wait_closed_H1_bars": 6
+  },
+  "external_source_checkout": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28",
+  "external_source_pins": {
+    "research_lab/vnutri.py": "6fa0e19fff3d24abf2c4e30351494890e7f9d0ba17217d67a83747f49a989b68",
+    "research_lab/yadro.py": "b413a48f67158ccb4a69c769bb1114065468a9610eace7d367400555d4821b66",
+    "strategies/elder_triple_screen_v2.py": "6439db1f9df4f7285c3211802cb15abc5d0bb8450a60d3b78a3a7be2093e982a"
+  },
+  "external_sources_not_adopted": true,
+  "first_target_fraction": "0.55",
+  "gate": "REZHIM_V1_AT_SIGNAL_HOUR_NOT_BULL_TREND; UNKNOWN_ADMITTED_AS_FROZEN",
+  "hold_hours": 336,
+  "implementation_next": "Consume first pre-outcome ETS2S source records; reuse exact pinned yadro fill semantics; source-bind context/risk; separate shadow ownership/journal; no money sender",
+  "native_stop": "e_ref+(original_sl-e_ref)*4",
+  "no_new_research_or_judge": true,
+  "prerequisites": {
+    "P1": ">=30 valid prospective hedge opportunities",
+    "P2": ">=97% intent parity within one tick/lot step; zero unexplained differences",
+    "P3": ">=95% shadow-fill parity vs yadro.ispolnenie",
+    "P4": "zero material defects plus forced restart PASS",
+    "P5": "<=5min intention latency in >=95%"
+  },
+  "prospective_900_outcomes_not_read": true,
+  "research_commit": "a82d2a6ce339fee9b673afbf3b876ac2c0cb8ead",
+  "research_ref": "origin/research/fabrika-v1",
+  "risk_budget": "caller_supplies_sourced_budget; sleeve<=1/3_portfolio_risk; no_money_size_invented",
+  "schema": "ELDER_HEDGE_V1_ENGINEERING_INTAKE_V1",
+  "source_pins": {
+    "research_lab/ITOG_ELDER_CRASH_HEDGE_2026_10_15.md": "e329f21f5d867dcbc97e2c39176184c8c37d71e6367d295805ca84e27fba5379",
+    "research_lab/KONTRAKTY_DLYA_CODEX_2026_10_15.md": "57cab4c0f40e8af0b519cb1e109921da2e902de285332b14d0a6e1bfcd416ba3",
+    "research_lab/POSTMORTEM_ELDER_HIST_DEV_2026_10_15.md": "b49a6b81344c7ed93f4915f1732b315f832ca778a13811ac61b96b312ae07f8d",
+    "research_lab/PREREG_ELDER_CRASH_HEDGE_REZHIM_2026_10_15.md": "c76d025296bcb39441aa8b0edbc0c3e6b59ae9c7b255e3076a2e268a48879e03",
+    "research_lab/PREREG_ETS2M_V2_POPRAVKA_A1_2026_10_12.md": "5ee165497d2388dc0f7e373cafe56b27de0a67d635c320353154abb69a664eb3",
+    "research_lab/factory_v3/brain_shadow_v1.py": "a487dafb06c65f7bed58c109f4fc3ea44f8e57049ffe4820e492c059f3046216"
+  },
+  "standalone": "KILL",
+  "status": "FROZEN_CONTRACT_PREPARED_ADAPTER_NOT_IMPLEMENTED"
+}

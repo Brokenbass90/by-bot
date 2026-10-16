@@ -1,0 +1,224 @@
+[
+  {
+    "sleeve": "KITY",
+    "venue": "Bybit",
+    "strategy": "KITY_MICRO_EXEC",
+    "evidence_id": "kity_micro:1792148543710282327",
+    "mode": "LIVE",
+    "type": "FAILED_SAFE_FLAT",
+    "ts_ms": 1792148656915,
+    "reason": "DISPATCH_PREFLIGHT:POST_GO_DISPATCH_DEADLINE",
+    "defect": "ACTUAL_SERIAL_READBACK_PATH_STILL_EXCEEDS_60S_MODEL_WAS_OPTIMISTIC",
+    "owner_flat": true,
+    "legs": [
+      {
+        "symbol": "BNBUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.03,
+        "fees": 0.02415551,
+        "protected": true,
+        "after_go_ms": 33246
+      },
+      {
+        "symbol": "BTWUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 10.0,
+        "fees": 0.02029385,
+        "protected": true,
+        "after_go_ms": 13237
+      },
+      {
+        "symbol": "GRASSUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 32.0,
+        "fees": 0.02386384,
+        "protected": true,
+        "after_go_ms": 56104
+      },
+      {
+        "symbol": "LTCUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.3,
+        "fees": 0.02015475,
+        "protected": true,
+        "after_go_ms": 22694
+      },
+      {
+        "symbol": "VVVUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.9,
+        "fees": 0.04827521,
+        "protected": true,
+        "after_go_ms": 28380
+      },
+      {
+        "symbol": "XAGUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 0.379,
+        "fees": 0.01206614,
+        "protected": true,
+        "after_go_ms": 50512
+      },
+      {
+        "symbol": "XAUTUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 0.005,
+        "fees": 0.02293889,
+        "protected": true,
+        "after_go_ms": 38995
+      },
+      {
+        "symbol": "XAUUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.005,
+        "fees": 0.01150296,
+        "protected": true,
+        "after_go_ms": 18189
+      },
+      {
+        "symbol": "XPLUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 257.0,
+        "fees": 0.02411997,
+        "protected": true,
+        "after_go_ms": 45700
+      },
+      {
+        "symbol": "SPCXUSDT",
+        "side": null,
+        "status": "НЕ ОТПРАВЛЕНА",
+        "qty": 0.0,
+        "fees": 0.0,
+        "protected": null,
+        "after_go_ms": null
+      }
+    ],
+    "filled": 9,
+    "required": 10,
+    "gross_pnl": -0.18043,
+    "fees": 0.20737112,
+    "funding": 0.0,
+    "net_pnl": -0.38780112,
+    "ccy": "USDT",
+    "go_ms": 1792148543710,
+    "entry_deadline_ms": 1792148603710,
+    "planned_gross": 209.07802,
+    "actual_gross": 188.00218,
+    "exchange_rejections": 0
+  },
+  {
+    "sleeve": "KITY",
+    "venue": "Bybit",
+    "strategy": "KITY_MICRO_EXEC",
+    "evidence_id": "kity_micro:1792148543710282327",
+    "mode": "LIVE",
+    "type": "ACCOUNTING_FINAL",
+    "ts_ms": 1792148688443,
+    "gross_pnl": -0.18043,
+    "fees": 0.20737112,
+    "funding": 0.0,
+    "net_pnl": -0.38780112,
+    "ccy": "USDT",
+    "legs": [
+      {
+        "symbol": "BNBUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.03,
+        "fees": 0.02415551,
+        "protected": true,
+        "after_go_ms": 33246
+      },
+      {
+        "symbol": "BTWUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 10.0,
+        "fees": 0.02029385,
+        "protected": true,
+        "after_go_ms": 13237
+      },
+      {
+        "symbol": "GRASSUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 32.0,
+        "fees": 0.02386384,
+        "protected": true,
+        "after_go_ms": 56104
+      },
+      {
+        "symbol": "LTCUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.3,
+        "fees": 0.02015475,
+        "protected": true,
+        "after_go_ms": 22694
+      },
+      {
+        "symbol": "VVVUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.9,
+        "fees": 0.04827521,
+        "protected": true,
+        "after_go_ms": 28380
+      },
+      {
+        "symbol": "XAGUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 0.379,
+        "fees": 0.01206614,
+        "protected": true,
+        "after_go_ms": 50512
+      },
+      {
+        "symbol": "XAUTUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 0.005,
+        "fees": 0.02293889,
+        "protected": true,
+        "after_go_ms": 38995
+      },
+      {
+        "symbol": "XAUUSDT",
+        "side": "long",
+        "status": "FILLED→CLOSED",
+        "qty": 0.005,
+        "fees": 0.01150296,
+        "protected": true,
+        "after_go_ms": 18189
+      },
+      {
+        "symbol": "XPLUSDT",
+        "side": "short",
+        "status": "FILLED→CLOSED",
+        "qty": 257.0,
+        "fees": 0.02411997,
+        "protected": true,
+        "after_go_ms": 45700
+      },
+      {
+        "symbol": "SPCXUSDT",
+        "side": null,
+        "status": "НЕ ОТПРАВЛЕНА",
+        "qty": 0.0,
+        "fees": 0.0,
+        "protected": null,
+        "after_go_ms": null
+      }
+    ]
+  }
+]

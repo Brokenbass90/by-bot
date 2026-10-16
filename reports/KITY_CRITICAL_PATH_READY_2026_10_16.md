@@ -1,8 +1,31 @@
 # KITY critical path — October 16
 
-CURRENT: **`KITY_CRITICAL_PATH_READY`**, physically installed **ORDERS_OFF**.
-New monetary policy is prepared but **not authorized or executed**.
-This is execution engineering, not KITY strategy/C1–C3 evidence.
+CURRENT after personal owner launch11:02UTC: **`FAILED_SAFE_FLAT`**, 9/10 filled,
+9/9 native Full stops proven, SPCX not attempted. Before the tenth leg the
+unchanged60s entry fence fired. Automatic owned unwind/finality completed
+11:04:16.937UTC. Independent GET11:04:48.443UTC proves positions0/open0;
+28 executions match28 posted cash rows. Gross−0.18043/fees0.20737112/funding0/
+**net−0.38780112 USDT**. Policy98ae…8f3ee and personal launcher are **SPENT**.
+Do not run again, reset selection/claim/journal, prepare a new policy or expand
+the deadline automatically. Same runtime is ORDERS_OFF/TERMINAL. No all-ten
+PASS or C1–C3/strategy evidence. See `owner_micro_terminal_v1.json` and
+`actual_nine_leg_latency.json` in this report's evidence directory.
+
+Actual first/ninth intents: +13.237s/+56.104s; ninth native readback+59.613s;
+unwind+60.930s. The model below was optimistic: serial readbacks and initial
+capture/owner authorization exceeded its assumptions. This remains a concrete
+execution latency blocker. No exchange rejection/unknown send was observed.
+The actual trace retained714 GETs through initial unwind, including116 cursor
+continuations. This workload is not established as a worst-case bound by the
+earlier deterministic fixture. No deadline change/new attempt was prepared.
+
+The journal-backed actual terminal card was delivered once in Telegram at
+11:14UTC (message15199, HTTP200/oktrue). Card/events/caption and delivery hash
+are retained alongside this receipt. This is one-off delivery, not continuous
+Reporting/Web integration; the old web writer remains inhibited.
+
+The remainder records the **dated pre-launch engineering readiness**, not a
+current unused permission or live all-ten result.
 
 ## What changed
 

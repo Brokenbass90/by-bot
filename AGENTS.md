@@ -736,3 +736,16 @@ launcher, --owner-go-policy or GO_POST_GO, even on chat approval. Human personal
 executes financial authority; afterward observeactualreceipts read-only. No
 reset/retry/newpolicy/date-transfer without separate scope. ExistingAlpaca/ATT1/
 LIQ/Claude/research unchanged; unrelated allowlist preserved, not staged.
+
+October16 11:04:48UTC actual latency attempt closed FAILED_SAFE_FLAT: human
+personally ran newlauncher/command1792148543710282327/policy98ae40e5…8f3ee,
+nowSPENT.9/10filled+nativeFullstops,SPCXnotattempted;60sdeadline beforetenth,
+automaticunwind/accountingTERMINAL, independentGETflat0/open0/28exec28cash,
+net-.38780112USDT. Model was optimistic, no actual10/10PASS. Read canonicalTOP/
+KITY_CRITICAL_PATH_READY_2026_10_16.md CURRENT/owner_micro_terminal_v1.json.
+Samewriter2290919/NRestarts0/ORDERS_OFF/TERMINAL/same818853lock. Never retry
+launcher/GO, reset journal/selection/claim, auto-create a policy or change60s.
+Reporting/Telegram/Web and Elder HEDGE_V1 ordersOFF preparation are authorized
+next nonmoney scope; preserve oldweb inhibition until read-only deployment is
+proven to have no writer credentials/paths. Do not resurrect standalone Elder
+or consume 900 outcomes. Existing Alpaca/ATT1/LIQ/research/Claude untouched.

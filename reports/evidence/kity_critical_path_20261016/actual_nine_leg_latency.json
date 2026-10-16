@@ -1,0 +1,117 @@
+{
+  "actual_cursor_continuation_gets": 116,
+  "control_claim_ms": 2624,
+  "cursor_continuation_gets_by_endpoint": {
+    "/v5/execution/list": 13,
+    "/v5/order/history": 18,
+    "/v5/order/realtime": 74,
+    "/v5/position/list": 11
+  },
+  "deadline_changed": false,
+  "endpoints": {
+    "/v5/account/fee-rate": 29,
+    "/v5/account/info": 10,
+    "/v5/account/instruments-info": 19,
+    "/v5/account/transaction-log": 1,
+    "/v5/account/wallet-balance": 10,
+    "/v5/execution/list": 69,
+    "/v5/market/instruments-info": 72,
+    "/v5/market/orderbook": 145,
+    "/v5/market/tickers": 72,
+    "/v5/market/time": 1,
+    "/v5/order/history": 83,
+    "/v5/order/realtime": 150,
+    "/v5/position/list": 43,
+    "/v5/user/query-api": 10
+  },
+  "entry_intents": [
+    {
+      "after_go_ms": 13237,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "after_go_ms": 18189,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "after_go_ms": 22694,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "after_go_ms": 28380,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "after_go_ms": 33246,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "after_go_ms": 38995,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "after_go_ms": 45700,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "after_go_ms": 50512,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "after_go_ms": 56104,
+      "symbol": "GRASSUSDT"
+    }
+  ],
+  "former_deterministic_model_proved_insufficient": true,
+  "gets_to_deadline_and_initial_unwind": 714,
+  "go_ms": 1792148543710,
+  "materialization_complete_ms": 10929,
+  "model_limitation": "Deterministic fixture did not establish the observed production cursor-page and source-group workload as a worst-case bound.",
+  "native_bindings": [
+    {
+      "after_go_ms": 15913,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "after_go_ms": 20693,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "after_go_ms": 25748,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "after_go_ms": 31107,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "after_go_ms": 36095,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "after_go_ms": 43138,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "after_go_ms": 48649,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "after_go_ms": 53779,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "after_go_ms": 59613,
+      "symbol": "GRASSUSDT"
+    }
+  ],
+  "new_attempt_prepared": false,
+  "owner_authorization_ms": 11349,
+  "request_latency_ms": {
+    "max": 1234,
+    "median": 238.0
+  },
+  "schema": "KITY_NINE_LEG_ACTUAL_LATENCY_V1",
+  "source_sha256": "ce5611e11c7c574f57e6ef68126500c797eb7b76c6c807f6a3827b26c9dfafb1",
+  "unwind_ms": 60930
+}
