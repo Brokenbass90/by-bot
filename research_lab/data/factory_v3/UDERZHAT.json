@@ -1,0 +1,20 @@
+[
+ {
+  "id": "ETF_POTOK_BTC_V1_1",
+  "prichina": "правило данных v2 (Total «-» ≠ 0; снимок ≥ дата+30ч) исправлено после постановки заявки, до любых результатов",
+  "poka": {
+   "path": "data/etf_potoki/MANIFEST.json",
+   "key": "pravilo_versiya",
+   "value": 2
+  }
+ },
+ {
+  "id": "ETF_POTOK_ETH_V1_1",
+  "prichina": "правило данных v2 (Total «-» ≠ 0; снимок ≥ дата+30ч) исправлено после постановки заявки, до любых результатов",
+  "poka": {
+   "path": "data/etf_potoki/MANIFEST.json",
+   "key": "pravilo_versiya",
+   "value": 2
+  }
+ }
+]

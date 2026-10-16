@@ -63,7 +63,7 @@ def razobrat(html):
         d = data_stroki(r[0])
         if not d: continue
         vals = [chislo(x) for x in r[1:]]
-        if vals[-1] is None or not r[-1].strip(): continue          # Total ещё не опубликован
+        if vals[-1] is None or r[-1].strip() in ("", "-", "–", "—"): continue   # Total ещё не опубликован («-» ≠ 0 для итога)
         fondy = [v for v in vals[:-1] if v is not None]
         if fondy and abs(sum(fondy) - vals[-1]) > max(1.0, 0.02 * abs(vals[-1])): bad += 1
         out[d] = vals[-1]
@@ -87,7 +87,9 @@ def main():
                 except Exception: continue
             tab, bad = razobrat(fp.read_bytes()); vsego += len(tab); plohih += bad
             t_ms = int(dt.datetime.strptime(ts, "%Y%m%d%H%M%S").replace(tzinfo=dt.timezone.utc).timestamp() * 1000)
-            for d, v in tab.items():
+            for d, v in tab.items():                               # v2: значение дня принимается только из снимка ≥ дата + 30 ч
+                t_den = int(dt.datetime.fromisoformat(d).replace(tzinfo=dt.timezone.utc).timestamp() * 1000)
+                if t_ms < t_den + 30 * 3_600_000: continue          # (день США закрыт, данные фондов дошли) — без частичных итогов
                 if d not in first: first[d] = (v, t_ms, ts)
                 last[d] = v
         ryad = [dict(date=d, first_total_musd=first[d][0], available_ms=first[d][1], snapshot=first[d][2], last_total_musd=last[d],
@@ -101,10 +103,10 @@ def main():
                           dolya_strok_s_raskhozhdeniem_summy=round(plohih / max(1, vsego), 4))
         print(aktiv, man[aktiv], flush=True)
     ok = man.get("btc", {}).get("dney", 0) >= 300 and man["btc"]["dolya_strok_s_raskhozhdeniem_summy"] < 0.05 and \
-         (man["btc"]["zaderzhka_dostupnosti_dney_mediana"] or 99) <= 3
+         (man["btc"]["zaderzhka_dostupnosti_dney_mediana"] or 99) <= 4
     h = hashlib.sha256(b"".join((OUT / f"{a}.json").read_bytes() for a in STRANICY if (OUT / f"{a}.json").exists())).hexdigest()
     (OUT / "MANIFEST.json").write_text(json.dumps(dict(man, sha256=h, gotovo=ok, sobrano=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-                                                       pravilo="first_total из самого раннего архивного снимка; available_ms = момент снимка"), ensure_ascii=False, indent=1))
+                                                       pravilo="first_total из самого раннего архивного снимка не раньше дата+30ч; available_ms = момент снимка; «-» в Total = не опубликовано", pravilo_versiya=2), ensure_ascii=False, indent=1))
     print("gotovo", ok)
 
 

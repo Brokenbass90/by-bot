@@ -70,6 +70,8 @@ def _prohod(put, reestr, processov, koren):
     novye = [z for z in zap if z["tip"] == "zayavka" and z["spec"]["id"] not in sdelano]
     itogi = []
     gt = {z["spec"]["id"]: gotovnost(z["karta"]["data_ready"], koren) for z in novye}
+    for i, usl in uderzhat(put, koren).items():                 # 16.10: удержание заявки до условия (напр. исправленное правило данных)
+        if i in gt and gt[i] is True: gt[i] = None
     for z in novye:
         if gt[z["spec"]["id"]] is False:
             itogi.append(dict(tip="itog", id=z["spec"]["id"], status="BLOCKED_DATA", kogda=int(time.time() * 1000)))
@@ -194,3 +196,18 @@ def avto_postmortem(itog, reestr=None):
              else "ни прямой, ни обратный знак не значимы — спасение только причинным вариантом, иначе KILL")
     put = OCHERED.parent / "postmortem_avto" / f"{itog['id']}.json"; put.parent.mkdir(parents=True, exist_ok=True)
     put.write_text(json.dumps(z, ensure_ascii=False, indent=1)); return z
+
+
+def uderzhat(put=OCHERED, koren=None):
+    """data/factory_v3/UDERZHAT.json: [{id, prichina, poka: {path, key, value}}] — заявка не исполняется, пока в файле path
+    поле key не равно value. Используется, когда правило данных исправлено после постановки заявки (без подглядывания в результат)."""
+    p = Path(put).parent / "UDERZHAT.json"; out = {}
+    if not p.exists(): return out
+    for z in json.loads(p.read_text()):
+        u = z.get("poka") or {}
+        try:
+            v = json.loads(((Path(koren) if koren else HERE.parent) / u["path"]).read_text()).get(u["key"])
+        except Exception:
+            v = None
+        if v != u.get("value"): out[z["id"]] = z
+    return out
