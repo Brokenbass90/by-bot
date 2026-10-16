@@ -1,5 +1,22 @@
 # KITY final-night runtime — October 15
 
+**October16 latest: actual owner-run `AGREEMENT_ACCEPTED` verified.** The previous
+pending-terms sections are history. Remote raw bytes hash matches the local and
+remote immutable receipt, exact proposal/body/master claim and HTTP200/intretCode0.
+Completion06:45:10.209UTC; no agent legal POST or new trading POST. New bounded
+GET snapshot06:47:30UTC proves one original KITY writer/lock/HEALTHY/ORDERS_OFF,
+complete linearUSDT positions0/openorders0, all10 instrument checks PASS.
+
+One new October16 **draft only** now exists; no monetary permit or selected
+experiment. See [KITY_OCT16_EXECUTION_OWNER_PACKET.md](KITY_OCT16_EXECUTION_OWNER_PACKET.md).
+Intent86b5349b…b1205, referencegross210.714720, expiry10:04:59.302CyprusTODAY.
+Only the human may personally execute the prepared exact owner-MONEY-GO launcher;
+agents must not execute it or submit trading controls. The old installation
+directory remains custody identity, not reused Oct15 monetary authority. If
+expired, no new GO or automatic replacement. This is execution-only under the
+same215/15trigger/acceptedovershoot/30min/50bps/10min/20.3% bounds. Actual complete
+ten-leg acceptance/protection/exit/finality remains unproven until personal run.
+
 **CURRENT: `STATIC_READY_ORDERS_OFF_TERMS_UNCONFIRMED`.** No new intent,
 selection, money GO or order. The owner's latest instruction is explicitly
 read-only/no orders while investigating the missing Trading Terms prompt.

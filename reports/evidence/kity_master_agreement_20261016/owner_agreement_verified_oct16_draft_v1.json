@@ -1,0 +1,233 @@
+{
+  "schema": "BYBIT_OWNER_AGREEMENT_VERIFIED_AND_OCT16_DRAFT_V1",
+  "status": "AGREEMENT_VERIFIED_NEW_DRAFT_ONLY_OWNER_EXECUTION_REQUIRED",
+  "observed_ms": 1792133250756,
+  "agreement_status": "AGREEMENT_ACCEPTED",
+  "agreement_http_status": 200,
+  "agreement_ret_code": 0,
+  "agreement_raw_sha256": "a1074aa7b5474cdc2ff5ebda693a83d9e15b4ddedc4feed86d61a4d05da14f85",
+  "agreement_post_actor": "HUMAN_OWNER_VIA_PERSONALLY_RUN_COMMAND",
+  "agreement_completed_ms": 1792133110209,
+  "agent_agreement_posts": 0,
+  "agent_trade_posts": 0,
+  "positions": 0,
+  "open_orders": 0,
+  "account_scope": "LINEAR_USDT_COMPLETE_PAGINATION",
+  "health": {
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "observed_ms": 1792133245095,
+    "status": "HEALTHY",
+    "restart_allowed": false,
+    "orders_allowed": false,
+    "reason": "CURRENT_OWNER_HEALTHY",
+    "owner": "KITY_MICRO",
+    "pid": 2209853,
+    "age_ms": 897
+  },
+  "unit": {
+    "MainPID": "2209853",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "original_account_lock_inode": 818853,
+  "original_account_lock_held": true,
+  "old_writer_pids": {
+    "bybot.service": "0",
+    "trading-journal-web.service": "0"
+  },
+  "instrument_checks": [
+    {
+      "symbol": "LTCUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "c1a0275960242aefc43340212bb16cf5e1c6ae3706225d2f90b923e96a3c026c",
+      "status": "Trading"
+    },
+    {
+      "symbol": "XAUUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "2077afb35a85c72479bc1b154b06009c5de54853db908b4f6caa53128874d6be",
+      "status": "Trading"
+    },
+    {
+      "symbol": "XAUTUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "b67aab773ca3566eff7ecd81e75a208af202d820d46522511b5cb6b1cf7d1e7d",
+      "status": "Trading"
+    },
+    {
+      "symbol": "BTWUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "713a263e97f1381ab88d98b85dc0c74e46a081e7e3936009718b6727afbb0d37",
+      "status": "Trading"
+    },
+    {
+      "symbol": "XAGUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "9b29be4389a1d90d7932025620ba5cf9d49d1fc8f1cfa9c001147304ca908185",
+      "status": "Trading"
+    },
+    {
+      "symbol": "XPLUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "764308e584aaac49f105b9040d2fcc27c55488a55cadc48d8dd7392e04eaf335",
+      "status": "Trading"
+    },
+    {
+      "symbol": "VVVUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "46b4720894d4dad0d24bd14d777b63a3d75391c4aa30d88de902228e8e125f65",
+      "status": "Trading"
+    },
+    {
+      "symbol": "GRASSUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "b591da7b26920461214a085e647476ad9cd4fc212e00fd1b1ff8aca6a495be2a",
+      "status": "Trading"
+    },
+    {
+      "symbol": "SPCXUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "8c6003563fbe0577763c05057eb93d4acb48233705bf54641f138254ac77182b",
+      "status": "Trading"
+    },
+    {
+      "symbol": "BNBUSDT",
+      "account_instrument_available": true,
+      "create_acceptance_proven": false,
+      "terms_acceptance_proven": false,
+      "source_sha256": "f4db04766ca8b51acd40267b4d389726e809e64039d3ec30cde7f097d9b8fc85",
+      "status": "Trading"
+    }
+  ],
+  "existing_trading_post_barriers": 3,
+  "new_intent_only": true,
+  "new_selected_experiment": false,
+  "money_authority": false,
+  "new_draft_intent_id": "86b5349b7e120f646e4fdd7f505803abcdc24a5791142218b7ef391e61bb1205",
+  "new_draft_created_ms": 1792133699302,
+  "new_draft_expires_ms": 1792134299302,
+  "new_draft_expires_nicosia": "2026-10-16T10:04:59.302000+03:00",
+  "new_draft_reference_gross_usdt": "210.714720",
+  "new_draft_price_bands": [
+    {
+      "max_price": "1.99652",
+      "min_price": "1.97666",
+      "quantity": "10",
+      "side": "Buy",
+      "symbol": "BTWUSDT",
+      "tick_size": "0.00001"
+    },
+    {
+      "max_price": "4206.38",
+      "min_price": "4164.54",
+      "quantity": "0.005",
+      "side": "Buy",
+      "symbol": "XAUUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "61.34",
+      "min_price": "60.74",
+      "quantity": "0.3",
+      "side": "Buy",
+      "symbol": "LTCUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "24.7210",
+      "min_price": "24.4770",
+      "quantity": "0.89",
+      "side": "Buy",
+      "symbol": "VVVUSDT",
+      "tick_size": "0.0010"
+    },
+    {
+      "max_price": "734.24",
+      "min_price": "726.94",
+      "quantity": "0.03",
+      "side": "Buy",
+      "symbol": "BNBUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "4193.43",
+      "min_price": "4151.71",
+      "quantity": "0.005",
+      "side": "Sell",
+      "symbol": "XAUTUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "0.08644",
+      "min_price": "0.08558",
+      "quantity": "254",
+      "side": "Sell",
+      "symbol": "XPLUSDT",
+      "tick_size": "0.00001"
+    },
+    {
+      "max_price": "58.12",
+      "min_price": "57.56",
+      "quantity": "0.378",
+      "side": "Sell",
+      "symbol": "XAGUSDT",
+      "tick_size": "0.01"
+    },
+    {
+      "max_price": "0.68410",
+      "min_price": "0.67730",
+      "quantity": "32",
+      "side": "Sell",
+      "symbol": "GRASSUSDT",
+      "tick_size": "0.00010"
+    },
+    {
+      "max_price": "153.91",
+      "min_price": "152.39",
+      "quantity": "0.14",
+      "side": "Sell",
+      "symbol": "SPCXUSDT",
+      "tick_size": "0.01"
+    }
+  ],
+  "max_gross_usdt": "215",
+  "immediate_loss_trigger_usdt": "15",
+  "execution_overshoot_previously_accepted": true,
+  "duration_ms": 1800000,
+  "rounding_shortfall_fraction_max": "0.203",
+  "one_attempt_only": true,
+  "counts_toward_C1_C2_C3": false,
+  "oct15_go_transferred": false,
+  "installation_namespace_is_historical_label": true,
+  "oct16_financial_activation_requires_new_personal_owner_action": true,
+  "owner_launcher_sha256": "8dc635352b1ecd02a5b4faf36dab1ff4e60234cc5089bfc654ed79376ed9c4f1",
+  "owner_launcher_executed_by_agent": false,
+  "private_readonly_capture_sha256": "8a1326add3c183e060f8c55c9d3e157938b39f880cdeb3e7c7ed7ed1abce6b03",
+  "private_draft_result_sha256": "d334ef986bd220022fdde1f0289c81cd9b1323510bb69077c10ede3c8e6560e0",
+  "older_reference_costs": {
+    "source_completed_ms": 1792133250756,
+    "gross_usdt": "211.151590",
+    "estimated_roundtrip_fees_usdt": "0.22099649550",
+    "estimated_spread_usdt": "0.039770",
+    "margin_reference_usdt": "30.504399",
+    "source_use": "DATED_REFERENCE_NOT_FINAL_FILL_OR_EXCHANGE_MARGIN_CERTIFICATION"
+  }
+}

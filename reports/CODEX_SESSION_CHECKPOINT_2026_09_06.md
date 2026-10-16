@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 CURRENT: owner personally ran agreement command; ACTUAL acceptance
+verified locally AND against remote response.raw/receipt/claim. HTTP200/intcode0,
+rawSHAa1074aa7…14f85, completed06:45:10.209UTC. Agreement blocker CLOSED, no repeat
+POST.06:47:30UTC one bounded GET observation verifies unchanged16sourcepins/
+config4b67083f…220f, samePID2209853/NRestarts0/original818853lock held,
+HEALTHY/ORDERS_OFF/NO_ACTIVE_PLAN, oldwritersPID0. Complete linearUSDT positions0/
+open0; all10 account-instrument checks PASS (not create-acceptance proof).
+Existing3 tradingPOSTbarriers unchanged, agent0legal/tradingPOST.
+After closure one Oct16 PREPARE_BOUNDED draft only was queued through existing
+owner, no GO/selection/intake/monetarypermit. This is a NEW dated proposal,
+not transfer/reuse of Oct15 approvals; existing installation namespace retained.
+Intent86b5349b7e120f646e4fdd7f505803abcdc24a5791142218b7ef391e61bb1205,
+referencegross210.714720<=215, expires TODAY10:04:59.302Cyprus(07:04:59UTC).
+Read KITY_OCT16_EXECUTION_OWNER_PACKET.md and owner_agreement_verified_oct16_draft_v1.json.
+Prepared private owner-micro-go-oct16.sh; **AGENTS MUST NEVER EXECUTE IT**:
+the HUMAN may personally accept this exact new Oct16 MONEY GO/run it once.
+15immediate all-in exit trigger/acceptedovershoot,30min/50bps/10min/20.3% and
+original10/basket/native/recovery/researchfirewall unchanged. No actual moneyGO
+or trade occurred this cycle. Expiry=>NO_GO_SENT, no automatic reprepare/retry.
+After personal owner launch inspect source/positions/protection/terminal costs
+read-only. Do not issue trading POST/controlGO/activation via agent tools.
+Alpaca/ATT1/LIQ/Claude/serviceconfig/cron unchanged. Prior pending-terms headers
+below are dated history. Shell brew/pyenv startup messages did not prevent the
+successful explicit-venv agreement command; unrelated shell config not edited.
+
 October16 subsequent CURRENT: direct human "Да давай все разрешаю" is recorded
 as consent to the previously shown legal proposal a952b806…ae257 ONLY, not money
 GO. Assistant corrected its prior offer: financial-service legal acceptance

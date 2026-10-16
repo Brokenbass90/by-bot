@@ -1,5 +1,11 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT October16: checkpointTOP and KITY_OCT16_EXECUTION_OWNER_PACKET.md.
+Actual owner-run agreement accepted/verified; KITY HEALTHY/ORDERS_OFF/flat
+linearUSDT, all10instrumentGETPASS. New Oct16 draft86b5349b…b1205 only, no moneyGO/
+selection/trade; expires10:04:59CyprusTODAY. Personal owner action only for new
+financial activation, never agent controls/POST. Alpaca owned manager preserved.
+
 CURRENT October15 final-night: checkpoint TOP and
 KITY_FINAL_NIGHT_READINESS_2026_10_15.md supersede the recovery-only identity
 below. V3 installedHEALTHY/ORDERS_OFF,169targetedPASS,no new intent/GO/POST.

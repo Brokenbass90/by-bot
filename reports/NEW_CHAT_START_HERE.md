@@ -1,5 +1,13 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT October16: checkpoint TOP → KITY_OCT16_EXECUTION_OWNER_PACKET.md.
+Owner personally accepted agreement, rawresponse/receipt verified HTTP200/code0.
+KITY HEALTHY/ORDERS_OFF/positions0/open0/original lock; all10instrumentGETPASS.
+One NEW Oct16 draft only86b5349b…b1205 expires10:04:59CyprusTODAY, reference210.714720.
+No actual monetaryGO/selection/tradingPOST. Owner alone may run the private
+owner-MONEY-GO launcher; agents NEVER run it or issue trading controls. No oldGO
+reuse/auto-refresh/date transfer. Preserve Alpaca LIVE manager and other lanes.
+
 CURRENT October15 final-night: checkpoint TOP then
 KITY_FINAL_NIGHT_READINESS_2026_10_15.md. V3 physically installed/HEALTHY/
 ORDERS_OFF,169targetedPASS; no new intent/GO/POST. Owner explicitly NO ORDERS.

@@ -669,3 +669,14 @@ agreementPOST/order/transfer/sourcekit/service mutation. Read canonicalTOP and
 owner_command_preparation_v1.json. Actual acceptance awaits owner-run receipt;
 then read-only inspection only. Original spent approvals and Oct15 session stay
 spent; no implied moneyGO, research evidence or position-management change.
+
+October16 latest owner personally executed agreement; actual raw/receipts
+verified code0/HTTP200. No repeat signing. KITY one original writer/lock,
+HEALTHY/ORDERS_OFF/linearUSDTpositions0/open0,10instrumentGETPASS. One NEW Oct16
+draft PREPARE only86b5349b…b1205, expires10:04:59CyprusTODAY, gross210.714720.
+This is not oldGO/date-transfer authority. Agents MUST NOT run private
+owner-micro-go-oct16.sh, submit GO_BOUNDED or dispatch financial orders. Human
+personally chooses whether to execute the new exact MONEY-GO command. No actual
+monetaryGO/selection/tradingPOST yet. Expired=>no automatic reprepare/retry.
+Read currentcheckpoint and KITY_OCT16_EXECUTION_OWNER_PACKET.md. Preserve existing
+Alpaca/ATT1/LIQ/Claude/sourcekit/cron; observe actual receipts read-only afterward.
