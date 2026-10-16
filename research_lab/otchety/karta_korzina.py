@@ -26,8 +26,9 @@ def risovat(e, put):
               f" · фандинг {e.get('funding', 0):+.4f})", fontsize=10); y -= 0.32
     if "owner_flat" in e:
         prot = [l["protected"] for l in legs if l.get("protected") is not None]
+        zashch = "— (исполненных ног нет)" if not prot else (OK if all(prot) else NET_)      # 16.10: ноль исполнений ≠ «нет защиты»
         t(0.2, y, f"Счёт плоский {OK if e['owner_flat'] else NET_}    Стоп на каждой исполненной ноге "
-                  f"{OK if prot and all(prot) else NET_}    Отказов биржи {e.get('exchange_rejections', 0)}", fontsize=9.5); y -= 0.42
+                  f"{zashch}    Отказов биржи {e.get('exchange_rejections', 0)}", fontsize=9.5); y -= 0.42
     # таблица ног
     kol = [0.2, 1.9, 2.8, 4.6, 5.6, 6.7]
     for x, z in zip(kol, ("нога", "сторона", "статус", "кол-во", "комиссия", "защита · +с")):

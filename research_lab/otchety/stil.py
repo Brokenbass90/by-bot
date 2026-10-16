@@ -26,6 +26,8 @@ PRICHINY = {   # машинные причины → по-русски (неиз
     "SIXTY_SECOND_TEN_LEG_SEQUENTIAL_ENTRY_BUDGET_INSUFFICIENT": "60 с мало для 10 последовательных ног",
     "TERMS_NOT_ACCEPTED": "биржа требует принять условия инструмента",
     "PRICE_ENVELOPE": "цена вышла из допустимого конверта",
+    "EC_NoImmediateQtyToFill": "IOC не исполнился: на цене лимита не оказалось объёма",
+    "FRESH_BLOCKED_GROSS_CAP": "минимальный объём корзины по шагам лотов выше потолка",
 }
 
 
