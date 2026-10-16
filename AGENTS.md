@@ -659,3 +659,13 @@ master/subrelationship/permissions and present officialagreement/body before
 any separate explicit legaldecision. Current prompt is not legal or monetary
 GO. No newintent/TTL/order, manager/source changes or terms acceptance now.
 Support is not required before this preparation. See currentcheckpoint/report.
+
+October16 subsequent consent "Да давай все разрешаю" binds only legal proposal
+a952b806…ae257, not monetary GO. Correction: agent must not perform this legally
+binding financial-service acceptance. Owner personally executes the standalone
+bybit_agreement_owner_once helper. Agents MUST NOT invoke --owner-execute or
+delegate/automate it; default mode is no-network.10offline testsPASS, no actual
+agreementPOST/order/transfer/sourcekit/service mutation. Read canonicalTOP and
+owner_command_preparation_v1.json. Actual acceptance awaits owner-run receipt;
+then read-only inspection only. Original spent approvals and Oct15 session stay
+spent; no implied moneyGO, research evidence or position-management change.

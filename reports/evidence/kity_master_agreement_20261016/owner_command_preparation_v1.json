@@ -1,0 +1,23 @@
+{
+  "schema": "BYBIT_AGREEMENT_OWNER_COMMAND_PREPARATION_V1",
+  "status": "OWNER_CONSENT_RECORDED_OWNER_EXECUTION_REQUIRED_NOT_SENT",
+  "recorded_at_utc": "2026-10-16T06:40:22.008263+00:00",
+  "proposal_sha256": "a952b806d560e1099dc57691a51c6d5c4ce57f606e968c2c093cfec3977ae257",
+  "consent_received": true,
+  "money_authority": false,
+  "agent_agreement_posts": 0,
+  "agent_order_posts": 0,
+  "agent_transfer_posts": 0,
+  "runtime_or_service_mutations": 0,
+  "owner_command": "cd /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824 && .venv/bin/python -m research_lab.bybit_agreement_owner_once --owner-execute",
+  "default_cli_status": "OWNER_COMMAND_PREPARED_NO_NETWORK",
+  "script_sha256": "124bdc320204dfdb73cb49b57c8659f360c56fb12f6c11695aff4a718e68adaf",
+  "offline_tests_passed": 10,
+  "full_repository_suite_run": false,
+  "review": "ROOT_ONLY",
+  "actual_agreement_acceptance_proven": false,
+  "actual_dispatcher_activated": false,
+  "private_consent_sha256": "7246f433b8d5a456c479db8b15b049c15c24ab81485e9d0750efde0fcb60f44b",
+  "official_endpoint": "https://bybit-exchange.github.io/docs/v5/user/sign-agreement",
+  "original_oct15_money_go_transferred": false
+}

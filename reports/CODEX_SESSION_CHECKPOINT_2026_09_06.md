@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 subsequent CURRENT: direct human "Да давай все разрешаю" is recorded
+as consent to the previously shown legal proposal a952b806…ae257 ONLY, not money
+GO. Assistant corrected its prior offer: financial-service legal acceptance
+must be executed personally by the owner, not submitted by agent tools. No
+agreementPOST occurred. Owner-only helper research_lab/bybit_agreement_owner_once.py
+prepared; default invocation NO_NETWORK, explicit --owner-execute for the HUMAN
+terminal only. Agents MUST NOT run that flag, even with recorded consent.10
+offline targetedPASS (HTTP is a fixture), raw-response hash/one durable claim/
+timeout-no-retry/role/permission/source-tamper checks. No fullsuite or production
+mutation. See owner_command_preparation_v1.json and current readiness top.
+Private owner-legal-consent-v1.json binds the exact proposal. Owner command:
+cd /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824 &&
+.venv/bin/python -m research_lab.bybit_agreement_owner_once --owner-execute
+Only after actual owner-run receipt may read-only verification establish
+AGREEMENT_ACCEPTED; not true yet. No orders/transfers/newintent/session transfer;
+Alpaca/KITY/ATT1/LIQ/Claude services/configs untouched. Earlier promise to send
+the legal POST through agent tools was incorrect and is superseded.
+
 October16 06:24:53.423UTC CURRENT: updated dedicated key VERIFIED by two GETs.
 MASTER/isMastertrue/parent0/readOnly0/Wallet[AccountTransfer], intended live
 subaccount parent relationship matches. NoWithdrawal; additional ContractTrade/

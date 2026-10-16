@@ -4,6 +4,41 @@
 selection, money GO or order. The owner's latest instruction is explicitly
 read-only/no orders while investigating the missing Trading Terms prompt.
 
+**Subsequent direct human consent received:** "Да давай все разрешаю" answers
+the specific preceding legal-consent question. Recorded against proposal
+`a952b806d560e1099dc57691a51c6d5c4ce57f606e968c2c093cfec3977ae257`;
+this is not monetary activation. The assistant corrected its earlier offer to
+send the legal acceptance on the owner's behalf: this financial-service action
+requires the owner to execute it personally. **No agreement POST has been sent.**
+
+A standalone owner-run helper is ready, separate from every trading runtime:
+
+```bash
+cd /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824 && .venv/bin/python -m research_lab.bybit_agreement_owner_once --owner-execute
+```
+
+**The human runs this command personally. Agents must never invoke the execution
+flag**, remotely, through a tool, timer, service or another agent. Default mode
+prints the prepared body and performs no network/credential access. Owner mode
+loads the existing0600 dedicated key, verifies frozen proposal/source/consent
+hashes, sends secrets over encrypted SSH stdin only, freshly verifies master
+identity/Wallet permission, and implements only the fixed agreement POST. No
+order/transfer route is supported. The first durable claim is retained under
+`/opt/bybot-research/bybit-agreement-owner-20261016`; HTTP response bytes/hash and
+terminal receipt are retained there. Timeout or unknown response never retries.
+Repeated owner execution reads existing state rather than sending again. Local
+result: `.private/kity_master_agreement_20261016/owner_execution_receipt.json`.
+
+Offline10 targetedPASS, including a signed fake venue, source/role/permission
+blocks, raw tamper, unknown-send, crash-claim, and local/remote source compilation.
+These are not actual API acceptance evidence. The default CLI alone was executed
+by the agent; no SSH invocation of the new helper or real signing request.
+Full repository suite not run, root review only. See
+[owner_command_preparation_v1.json](evidence/kity_master_agreement_20261016/owner_command_preparation_v1.json).
+After the owner runs it, inspect the actual receipt read-only. Until then Terms
+remain unconfirmed. Keep all deployed trading source/config/units unchanged;
+no new money intent or carryover of October15 approvals.
+
 **October16 06:24:53.423UTC updated-key verification PASS:** authenticated GETs
 now prove MASTER/isMaster=true/parentUid0/readOnly0 and WalletAccountTransfer,
 with the intended live subaccount's parent relationship matching. Withdrawal
