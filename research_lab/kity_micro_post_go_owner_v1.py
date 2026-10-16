@@ -22,6 +22,10 @@ from research_lab.kity_micro_post_go_pricing_v1 import (
 from research_lab.kity_micro_supervisor_v1 import recover_without_reentry, sd_notify
 from research_lab.kity_micro_transport_v1 import BybitReadTransport, SourceError, wire_get
 
+CLOSEOUT_SCOPES={
+    'ONE_CLOSEOUT_MICRO_2026_10_16':'post-go-closeout-20261016',
+    'ONE_CLOSEOUT2_MICRO_2026_10_16':'post-go-closeout2-20261016',
+}
 
 def check_history(root, custody, config):
     for name,pin in config.get('prior_no_send_files', {}).items():
@@ -120,7 +124,7 @@ def validate_control(x):
 
 def entry_window(config):
     """The owner's single 70s amendment belongs only to the new namespace."""
-    closeout=config.get('operation_scope')=='ONE_CLOSEOUT_MICRO_2026_10_16'
+    closeout=config.get('operation_scope') in CLOSEOUT_SCOPES
     window=config.get('entry_dispatch_window_ms',60000)
     if (type(window) is not int or window!=(70000 if closeout else 60000)
             or closeout and config.get('critical_path_profile')!='ACCOUNT_READBACK_V2'):
@@ -144,7 +148,7 @@ class PostGoSupervisor(bo.BoundedSupervisor):
         self.custody_root=Path(config['custody_runtime_root'])
         allowed={'ONE_POST_GO_MICRO_2026_10_16':'post-go-20261016',
             'ONE_LATENCY_MICRO_2026_10_16':'post-go-fast-20261016',
-            'ONE_CLOSEOUT_MICRO_2026_10_16':'post-go-closeout-20261016'}
+            **CLOSEOUT_SCOPES}
         if (self.root.parent!=self.custody_root
                 or self.root.name!=allowed.get(config.get('operation_scope'))
                 or not (self.custody_root/'account.lock').is_file()
@@ -220,7 +224,7 @@ class PostGoSupervisor(bo.BoundedSupervisor):
             self.unwind('OWNER_KILL'); return dict(status='OWNED_UNWIND_REQUESTED')
         self.before_selection()
         if kind=='PREPARE_POST_GO':
-            if (self.config.get('operation_scope')=='ONE_CLOSEOUT_MICRO_2026_10_16'
+            if (self.config.get('operation_scope') in CLOSEOUT_SCOPES
                     and any((self.root/'policies').glob('*.json'))):
                 raise SourceError('ONE_CLOSEOUT_POLICY_ALREADY_PREPARED')
             bounds=json.loads((Path(self.config['app_root'])/self.config['bounds_file']).read_bytes())

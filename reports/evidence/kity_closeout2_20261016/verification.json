@@ -1,0 +1,14 @@
+{
+  "broker_writes": 0,
+  "final_rehearsal_error": "INTENT_REFERENCE_PLAN_BLOCKED:GROSS_CAP_EXCEEDED",
+  "full_suite": "NOT_RERUN_NARROW_SCOPE_REGISTRATION_ONLY_PRIOR_FULL_SUITE_NOT_GREEN",
+  "post_go_captures": 0,
+  "pre_go_captures": 2,
+  "production_change": "EXPLICIT_NEXT_ONCE_SCOPE_ONLY_NO_EXECUTION_OR_PRICING_RULE_CHANGE",
+  "root_only_review": true,
+  "status": "66_TARGETED_PASS_STATIC_SOURCE_PASS_FRESH_GROSS_BLOCKED",
+  "targeted_fail": 0,
+  "targeted_log_sha256": "8ea2c32136ba10606747b8f3bceb2a2dc0187444654536bde8c006885eeecd39",
+  "targeted_pass": 66,
+  "ten_entry_preflights_executed": false
+}

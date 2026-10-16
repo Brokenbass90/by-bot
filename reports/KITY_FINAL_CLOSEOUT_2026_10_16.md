@@ -1,5 +1,60 @@
 # KITY final execution closeout — October 16
 
+CURRENT: **NEXT_POLICY_PREPARED / ORDERS_OFF / FRESH_BLOCKED_GROSS_CAP**.
+
+Owner explicitly authorized ONE new policy with the same70s/10legs/215gross/
+50bps/20.3% rounding/15exit-trigger+acceptedovershoot/native/30min/oneattempt
+rules, **preparation only**. New policy:
+`9051edb3b7b69c87a81dd73a7ab0a1075ad841b6d88ad70889f96e71ec515155`.
+It is UNSPENT, valid only untilOct16 21UTC /Oct17 00Cyprus. No monetary GO,
+selection, journal or order. Prior3ca9…c5c5 stays spent; its actual zero-fill
+receipt and all previous issued packets remain unchanged.
+
+## Next-policy preparation result
+
+Separate20-fileapp-closeout2-v2/post-go-closeout2-20261016 installed under the
+same account lock only after fresh flat/open0 before/quiescent/after. PID2314960,
+NRestarts0,HEALTHY/ORDERS_OFF/NO_ACTIVE_PLAN,818853lock;34 prior sendbarriers,
+0new. Source/config/unit/old namespace bytes preserved. Config4d7c2157…b67f,
+unitbf2a2cdc…91cd. Code only registers the explicitly authorized next namespace;
+execution/scorer/pricing/sizing rules are unchanged.66 targeted tests PASS,
+including same70s model path and repeat-PREPARE refusal. No broad suite rerun.
+
+Two pre-GO source observations, both retained with no overwrite or polling loop:
+
+| Saved observation | Minimum gross under unchanged floor rule | Common CTS |
+| --- | ---: | --- |
+| Initial |329.574760USDT|PASS,598ms upper age|
+| Final |332.091250USDT|PASS,638ms upper age|
+
+Both fail the **existing215USDT gross cap** before compilation/per-leg entry
+preflights. Those10 entry preflights were therefore **not run/claimed PASS**.
+Actual source capture and account/instrument GETs were read-only; final account
+positions0/openorders0. No fees, exposure or money authority was created.
+
+Offline replay proves the current sizing discontinuity. Minimum target starts
+17.26680; LTC's next lot requires18.345. At that target BNB floor quantity has
+20.4339057% shortfall, above the20.3% owner maximum. Its next lot raises target
+to21.8946, where BTW's floor shortfall21.1367% is too large. BTW's next lot raises
+the common target to34.53360, producing gross332.091250. The first capture showed
+the same mechanism. This is not a new gate or demonstrated code defect. No
+historical strategy outcome or tuning was used.
+
+STATIC blockers: none found in this next-scope preparation. FRESH_ONLY blocker:
+GROSS_CAP_EXCEEDED at these source prices. MONEY GO has not been requested. The
+human launcher exists privately and is syntax-checked, not executed or released
+as a ready monetary action. **Do not run a historical command below.**
+
+Next action under unchanged bounds: a compatible fresh source observation,
+then separate personal exactGO; actual post-GO capture/gates may still NO_SEND.
+Do not automatically repeat captures/entries, change215 or20.3%, or extend dates.
+An owner boundary change would be a separate explicit decision, not an inferred
+repair. New evidence: `evidence/kity_closeout2_20261016/owner_packet.json`,
+`first_geometry.json`, `final_geometry.json`, `installation.json`,
+`source_manifest.json`, `static_observation.json`, `verification.json`.
+
+## Previous actual attempt — immutable terminal history
+
 CURRENT ACTUAL: **FAILED_SAFE_FLAT — IOC_CANCELLED_ZERO_FILL**.
 Owner personally ran launcher/command1792152234662877089. Policy
 `3ca9ca2321a704f8f8a4ade2156d519dbace1401e86fc5f679a913896f74c5c5`

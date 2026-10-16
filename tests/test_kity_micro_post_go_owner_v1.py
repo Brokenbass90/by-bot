@@ -114,6 +114,17 @@ def test_70s_bound_only_to_new_closeout_scope_and_profile():
         with pytest.raises(ValueError):po.entry_window(config)
 
 
+def test_next_explicit_owner_scope_preserves_70s_and_cannot_prepare_twice(tmp_path):
+    config=dict(operation_scope='ONE_CLOSEOUT2_MICRO_2026_10_16',
+        critical_path_profile='ACCOUNT_READBACK_V2',entry_dispatch_window_ms=70000)
+    assert po.entry_window(config)==70000
+    s=po.PostGoSupervisor.__new__(po.PostGoSupervisor)
+    s.config=config;s.root=tmp_path;s.before_selection=lambda:None
+    publish(tmp_path/'policies'/('b'*64+'.json'),{'existing':'immutable policy'})
+    with pytest.raises(ValueError,match='ONE_CLOSEOUT_POLICY_ALREADY_PREPARED'):
+        s.control(dict(kind='PREPARE_POST_GO'))
+
+
 def test_post_go_owner_all_ten_native_restart_deadline_and_final_cash(tmp_path,monkeypatch,latency=None):
     """Real journal/lease/dispatch/readback/exit against the deterministic venue.
 

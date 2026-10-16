@@ -1,0 +1,83 @@
+{
+  "agent_may_execute": false,
+  "basket": [
+    {
+      "side": "Buy",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "LTCUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "SPCXUSDT"
+    }
+  ],
+  "collar_bps": "50",
+  "counts_toward_C1_C2_C3": false,
+  "entry_deadline_ms": 70000,
+  "exit_trigger_usdt": "15",
+  "expiry_cyprus": "2026-10-17T00:00:00+03:00",
+  "expiry_utc": "2026-10-16T21:00:00Z",
+  "first_observed_gross_usdt": "329.574760",
+  "fresh_only_blockers": [
+    "GROSS_CAP_EXCEEDED"
+  ],
+  "go_request_issued": false,
+  "gross_cap_usdt": "215",
+  "latest_observed_gross_usdt": "332.091250",
+  "latest_small_target_bnb_shortfall": "0.2043390569637503406922867266",
+  "latest_source_ms": 1792153456047,
+  "latest_target_usdt": "34.53360",
+  "launcher_prepared_not_executed": true,
+  "launcher_released_for_money_go": false,
+  "launcher_sha256": "a918d619ca30e9d0ec0aaa610a15a50d593cc3fcc99f51cf03b2f3b3094fc65c",
+  "lifecycle_max_ms": 1800000,
+  "money_go_received": false,
+  "native_full_stops": true,
+  "new_broker_posts": 0,
+  "next_action": "FRESH_COMPATIBLE_MARKET_DATA_THEN_PERSONAL_EXACT_GO_NO_AUTOMATIC_CHECK_OR_ENTRY",
+  "no_reentry": true,
+  "one_attempt": true,
+  "overshoot_accepted": true,
+  "per_dispatch_cts_max_ms": 2000,
+  "policy_id": "9051edb3b7b69c87a81dd73a7ab0a1075ad841b6d88ad70889f96e71ec515155",
+  "policy_schema": "KITY_EXECUTION_MICRO_POST_GO_POLICY_V2_70S",
+  "policy_spent": false,
+  "quantity_rule": "MINIMUM_APPROVED_ROUNDING_FRONTIER_FROM_SINGLE_POST_GO_CAPTURE",
+  "remaining_static_blockers": [],
+  "research_evidence_eligible": false,
+  "rounding_shortfall_max": "0.203",
+  "status": "NEXT_POLICY_PREPARED_ORDERS_OFF_FRESH_BLOCKED_GROSS_CAP",
+  "thresholds_changed": false,
+  "valid_until_ms": 1792184400000
+}

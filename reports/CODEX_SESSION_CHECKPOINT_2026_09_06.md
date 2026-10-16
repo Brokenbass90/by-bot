@@ -1,5 +1,29 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 12:26:19UTC CURRENT: next policy prepared per explicit owner reply
+"Да, подготовить одну новую policy". ORDERS_OFF; FRESH_BLOCKED_GROSS_CAP,
+not10/10READY/PASS. Read evidence/kity_closeout2_20261016/owner_packet.json and
+CURRENT in KITY_FINAL_CLOSEOUT_2026_10_16.md. Policy9051edb3b7b69c87a81dd73a7ab0a1075ad841b6d88ad70889f96e71ec515155
+is UNSPENT, expiresOct16 21UTC/Oct17 00Cyprus only, no MONEYGO/selection/journal.
+One newexplicitnamespace post-go-closeout2-20261016/app-closeout2-v2,
+config4d7c2157…b67f/unitbf2a2cdc…91cd,PID2314960/NRestarts0/HEALTHY,
+original818853lock/34oldsendbarriers/oldkits+spent3ca9history preserved.
+Freshflat/open0 before/quiescent/after install;0newbrokerwrites.66targetedPASS;
+code change is only next-once scope registration, same70s/profile/risk/math.
+Two pre-GO GET-only captures were retained, no poll-until-PASS: firstminimum
+329.574760USDT, final332.091250>215. BothCOMMON_2S_PASS. Exactofflinegeometry
+confirms LTCfloor→smalltarget18.345→BNBshortfall20.4339%>20.3%→BNBnextlot→
+BTWnextlot→commontarget34.53360. Not a parser/source/sender error or newgate.
+No quantity-rule/cap/rounding relaxation. Tenentrypreflights not executed:
+compiler refused blocked reference before them. Newpolicy not consumed, one
+personal launcher prepared/syntaxchecked NOT executed/releasedforMONEYGO.
+Do NOT run it as agent, request blindmoneyGO on incompatiblecapture, rerun any
+oldspentlauncher/resetselected/journal, auto-create policy, expandbounds or
+schedule/poll automatically. Next action: existing fresh compatible marketgates
+then human personalexactGO; if owner wants a boundary amendment it requires
+explicit newdecision, never silently apply. This cycle is preparation only.
+Alpaca/ATT1/LIQ/Claude/cron/legacyweb and unrelatedallowlist unchanged.
+
 October16 12:05:38UTC CURRENT ACTUAL: human personally ran closeout launcher,
 command1792152234662877089, policy3ca9…c5c5 nowSPENT. FAILED_SAFE_FLAT, NOT10/10:
 ONE BTW Buy IOC was actually sent/accepted(retCode0), then exchange Cancelled/

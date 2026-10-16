@@ -1,0 +1,233 @@
+{
+  "account_open_orders": 0,
+  "account_positions": 0,
+  "blocked_reasons": [
+    "GROSS_CAP_EXCEEDED"
+  ],
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "capture_sha256": "4caa2f9c740532a290fb3a59a1e3be5586b07b90a971ce1d5d4b075344f00341",
+  "common_clock": {
+    "common_observation_ms": 1792153456047,
+    "max_engine_age_upper_ms": 638,
+    "server_offset_interval_ms": [
+      -80,
+      83
+    ],
+    "status": "OBSERVED_COMMON_2S_PASS",
+    "valid_for_dispatch": false
+  },
+  "common_target": "34.53360",
+  "geometry": [
+    {
+      "entry_reference_notional": "34.53360",
+      "quantity": "20",
+      "rounding_shortfall_fraction": "0",
+      "side": "Buy",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "entry_reference_notional": "33.48344",
+      "quantity": "0.008",
+      "rounding_shortfall_fraction": "0.03040980378529895522042300832",
+      "side": "Buy",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "entry_reference_notional": "30.575",
+      "quantity": "0.5",
+      "rounding_shortfall_fraction": "0.1146303889545254476799406954",
+      "side": "Buy",
+      "symbol": "LTCUSDT"
+    },
+    {
+      "entry_reference_notional": "34.412000",
+      "quantity": "1.40",
+      "rounding_shortfall_fraction": "0.003521208330437602798433988927",
+      "side": "Buy",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "entry_reference_notional": "29.1928",
+      "quantity": "0.04",
+      "rounding_shortfall_fraction": "0.1546551764079041860680612505",
+      "side": "Buy",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "entry_reference_notional": "33.37800",
+      "quantity": "0.008",
+      "rounding_shortfall_fraction": "0.03346306206129682396274932240",
+      "side": "Sell",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "entry_reference_notional": "34.48575",
+      "quantity": "405",
+      "rounding_shortfall_fraction": "0.001385607060949336298561401070",
+      "side": "Sell",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "entry_reference_notional": "34.49810",
+      "quantity": "0.595",
+      "rounding_shortfall_fraction": "0.001027984339889267264345449070",
+      "side": "Sell",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "entry_reference_notional": "34.31280",
+      "quantity": "51",
+      "rounding_shortfall_fraction": "0.006393773021057752449788032525",
+      "side": "Sell",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "entry_reference_notional": "33.2200",
+      "quantity": "0.22",
+      "rounding_shortfall_fraction": "0.03803831630643778812518822248",
+      "side": "Sell",
+      "symbol": "SPCXUSDT"
+    }
+  ],
+  "gross": "332.091250",
+  "rows": [
+    {
+      "bid": "1.72513",
+      "maximum": "601000",
+      "min_notional": "5",
+      "minimum": "10",
+      "price": "1.72668",
+      "side": "Buy",
+      "step": "10",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "bid": "4185.42",
+      "maximum": "250.000",
+      "min_notional": "5",
+      "minimum": "0.001",
+      "price": "4185.43",
+      "side": "Buy",
+      "step": "0.001",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "bid": "61.14",
+      "maximum": "3000.0",
+      "min_notional": "5",
+      "minimum": "0.1",
+      "price": "61.15",
+      "side": "Buy",
+      "step": "0.1",
+      "symbol": "LTCUSDT"
+    },
+    {
+      "bid": "24.5720",
+      "maximum": "10000.00",
+      "min_notional": "5",
+      "minimum": "0.01",
+      "price": "24.5800",
+      "side": "Buy",
+      "step": "0.01",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "bid": "729.81",
+      "maximum": "370.00",
+      "min_notional": "5",
+      "minimum": "0.01",
+      "price": "729.82",
+      "side": "Buy",
+      "step": "0.01",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "bid": "4172.25",
+      "maximum": "105.000",
+      "min_notional": "5",
+      "minimum": "0.001",
+      "price": "4172.25",
+      "side": "Sell",
+      "step": "0.001",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "bid": "0.08515",
+      "maximum": "700000",
+      "min_notional": "5",
+      "minimum": "1",
+      "price": "0.08515",
+      "side": "Sell",
+      "step": "1",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "bid": "57.98",
+      "maximum": "16000.000",
+      "min_notional": "5",
+      "minimum": "0.001",
+      "price": "57.98",
+      "side": "Sell",
+      "step": "0.001",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "bid": "0.67280",
+      "maximum": "93000",
+      "min_notional": "5",
+      "minimum": "1",
+      "price": "0.67280",
+      "side": "Sell",
+      "step": "1",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "bid": "151.00",
+      "maximum": "6000.00",
+      "min_notional": "5",
+      "minimum": "0.01",
+      "price": "151.00",
+      "side": "Sell",
+      "step": "0.01",
+      "symbol": "SPCXUSDT"
+    }
+  ],
+  "status": "OFFLINE_FROZEN_GEOMETRY_CONFIRMED",
+  "steps": [
+    {
+      "target": "17.26680",
+      "violations": [
+        {
+          "next_target": "18.345",
+          "shortfall": "0.2917043111636203581439525564",
+          "symbol": "LTCUSDT"
+        }
+      ]
+    },
+    {
+      "target": "18.345",
+      "violations": [
+        {
+          "next_target": "21.8946",
+          "shortfall": "0.2043390569637503406922867266",
+          "symbol": "BNBUSDT"
+        }
+      ]
+    },
+    {
+      "target": "21.8946",
+      "violations": [
+        {
+          "next_target": "34.53360",
+          "shortfall": "0.2113671864295305691814419994",
+          "symbol": "BTWUSDT"
+        }
+      ]
+    },
+    {
+      "target": "34.53360",
+      "violations": []
+    }
+  ]
+}

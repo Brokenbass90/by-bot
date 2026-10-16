@@ -1,0 +1,24 @@
+{
+  "account_lock_inode": 818853,
+  "actual_journal": false,
+  "actual_selection": false,
+  "all_source_custody_pins_match": true,
+  "heartbeat_at_ms": 1792153579194,
+  "initial_fresh_capture_ms": 6925,
+  "mode": "ORDERS_OFF",
+  "new_broker_posts": 0,
+  "observed_ms": 1792153579333,
+  "one_new_policy": true,
+  "owner_go": false,
+  "phase": "NO_ACTIVE_PLAN",
+  "policy_id": "9051edb3b7b69c87a81dd73a7ab0a1075ad841b6d88ad70889f96e71ec515155",
+  "source_files": 20,
+  "status": "NEXT_POLICY_STATIC_READY_ORDERS_OFF_FRESH_BLOCKED_GROSS",
+  "trading_send_barriers": 34,
+  "unit": {
+    "ActiveState": "active",
+    "MainPID": "2314960",
+    "NRestarts": "0"
+  },
+  "verification_is": "STATIC_SOURCE_AND_RUNTIME_ONLY_NO_BROKER_OBSERVATION"
+}
