@@ -1,5 +1,19 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 05:54:26.901UTC CURRENT: owner supplied a new key in the prepared
+private master-signing.env. Two authenticated GETquery-api observations succeed,
+but providedkey is SUB/isMasterfalse/readOnly0/Wallet[] and belongs to the same
+live subaccount (distinct key). MASTER identity/signing permission FAIL, no
+agreementPOST/order/keymutation/servicechange/newintent. Owner must create key
+on the parent MASTER account with WalletAccountTransfer (or SubMemberTransfer),
+then replace only the dedicated private template values; preserve live key/env.
+See evidence/kity_master_agreement_20261016/master_credential_verification_v1.json
+and KITY_FINAL_NIGHT_READINESS_2026_10_15.md top. Privatecapture/raw identities
+remain private; no secrets/UID committed. No legalapproval requested/received
+while credential fails. October15 final-night/moneyGO NOT date-transferred;
+later money preparation still requires separately scoped fresh authorization.
+Alpaca/ATT1/LIQ/Claude and deployed KITY source/service untouched this cycle.
+
 October15 18:58:07UTC subsequent CURRENT: owner requests official agreement API
 preparation, not support. READ_ONLY existing master-key audit complete:
 2distinct configured keys GETquery-api, active subaccount/readOnly0/Wallet[],

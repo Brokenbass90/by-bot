@@ -4,6 +4,26 @@
 selection, money GO or order. The owner's latest instruction is explicitly
 read-only/no orders while investigating the missing Trading Terms prompt.
 
+**October16 05:54:26.901UTC actual new-credential check:** the owner populated
+the dedicated private file. GETquery-api succeeds for both provided and active
+keys. The supplied key is distinct from the live bot key, but its owner is the
+same **subaccount**, `isMaster=false`, readOnly0, Wallet permissions empty.
+It cannot authenticate the master-only signing operation. Full UIDs/permissions
+and account relationship are retained only in the0600 private capture; sanitized
+[verification receipt](evidence/kity_master_agreement_20261016/master_credential_verification_v1.json)
+contains no key/secret/account IDs. No agreement POST, order, key/service change
+or new intent. Agent did not replace the trading credential.
+
+Required next owner action: switch to the parent **main/master account** before
+opening API Management, create a separate Read-Write key with Wallet
+`AccountTransfer` only (or documented `SubMemberTransfer` alternative), and
+update the same dedicated private file. Do not change the existing trading
+key/profile. Then another explicitly dated read-only verification, preserving
+this failed observation, must confirm role/relationship/permissions before
+presenting any legal approval request. No legal approval is pending now.
+October15 final-night scope and expired monetary GOs have not been carried into
+October16; no entry is authorized by supplying the key.
+
 **Subsequent owner request / actual18:58:07UTC result:** inspect existing master
 credentials before suggesting support. Two distinct supplied/configured keys
 were checked using only GET `/v5/user/query-api`: the active key is a subaccount,
