@@ -16,7 +16,7 @@ import json, time, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent; sys.path.insert(0, str(HERE))
 OCHERED = HERE.parent / "data" / "factory_v3" / "ochered.jsonl"
-RAZRESHENO = {"ferma_shablony:xs_nedelya_binance", "ferma_primery:moment_na_shume", "shablony_v2:odin_aktiv_chas", "shablony_v2:sobytie"}
+RAZRESHENO = {"ferma_shablony:xs_nedelya_binance", "ferma_primery:moment_na_shume", "shablony_v2:odin_aktiv_chas", "shablony_v2:sobytie", "shablony_v2:vneshniy_ryad_nedelya"}
 KARTA = {"data_ready": (bool, str), "istochniki": list, "hist_dev": str, "sobytiy_v_nedelyu": (int, float), "ozhidanie_vpered_dney": (int, float),
          "ispolnimost": str, "put_k_micro_live": str, "mehanizm": str}
 

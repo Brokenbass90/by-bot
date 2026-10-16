@@ -15,20 +15,20 @@ MEHANIZMY = {
     "поток агрессора": r"kity|m3|taker|potok|pogloshch|order_flow|vsplesk",
     "толпа/позиции/OI": r"tolpa|crowd|oi_|_oi|pozicii|squeeze|l2_|l3_|speculation",
     "carry/funding/basis": r"carry|funding|fanding|basis|term_|xex|roll",
-    "разворот": r"razvorot|reversal|otkat|vozvrat|weekly_rev|quiet_drop",
-    "импульс/тренд/пробой": r"moment|impuls|mom_|trend|proboy|breakout|52w|maksimum|att1|elder|ets2|sbr1|frog|bull|otstayush|obem_impuls|gap_volume|diffusion",
+    "разворот": r"razvorot|reversal|otkat|vozvrat|weekly_rev|quiet_drop|pustoy_hod|peregrev",
+    "импульс/тренд/пробой": r"moment|impuls|mom_|trend|proboy|breakout|52w|maksimum|att1|elder|ets2|sbr1|frog|bull|otstayush|obem_impuls|gap_volume|diffusion|sila|rotaciya|xsec_v3|bliz_max|alpaca",
     "ликвидность/микроструктура": r"glubina|order_book|microstr|maker|spread|razmah|telo_svechi|price_adj|illiquid|cs_oborot|oborot|shirina",
     "вынужденный поток": r"liq|likvid|kaskad|forced|settlement|rebal|cap_stress",
     "география площадок": r"coinbase|upbit|premiya|dislocation|arb_|tradfi|dolya_obema|token_gold",
     "время суток/календарь": r"nochnoy|chas|london|vyhodn|turn_of_month|overnight|gep|session|intraday",
-    "волатильность/страх": r"strah|dvol|szhatie|vol_|low_vol|v1_prem|v2_vspl|lottery",
-    "события/отчёты/предложение": r"otchet|e1_|e2_|e3_|listing|razlok|vozrast|edgar|novye_dengi|information",
+    "волатильность/страх": r"strah|dvol|szhatie|vol_|low_vol|v1_prem|v2_vspl|lottery|asimmetriya_vol|razbros|low_price",
+    "события/отчёты/предложение": r"otchet|e1_|e2_|e3_|listing|razlok|vozrast|edgar|novye_dengi|information|etf_potok",
     "рынки предсказаний": r"poly",
-    "уровни/геометрия": r"uroven|svip|otboy|lozhnyy|bounce|urovni",
+    "уровни/геометрия": r"uroven|svip|otboy|lozhnyy|bounce|urovni|geometr|^gold\b",
     "бета/корреляция": r"beta|korr",
 }
-RYNKI = {"акции США": r"eq_|akc|alpaca|52w|frog|e1_|e2_|e3_|overnight|lottery|low_price|illiquid|edgar",
-         "FX/золото": r"fx|gold|zoloto|london|nochnoy|svip|gep_vyh|token_gold", "Polymarket": r"poly"}
+RYNKI = {"акции США": r"eq_|akc|alpaca|52w|frog|e1_|e2_|e3_|overnight|lottery|low_price|illiquid|edgar|indeks",
+         "FX/золото": r"fx|gold|zoloto|london|nochnoy|svip|gep_vyh|token_gold|^gold", "Polymarket": r"poly"}
 GORIZONT = {"неделя": r"nedel|weekly|xs|kity|7d|_w|carry", "часы": r"_h1|chas|intraday|nochnoy|london|4h|kaskad", "день": r"1d|d1|sutoch|razvorot"}
 ITOG = lambda st: "PASS/жив" if str(st).upper() in ("SHADOW", "CANARY", "MONEY", "CONFIRMED", "PASS", "SCREEN", "ACTIVE", "NEW", "POSITIVE_LEAD") else \
     ("KILL" if str(st).upper() in ("KILL", "NEGATIVE", "FAIL", "KILLED", "ОПРОВЕРГНУТА") else str(st))

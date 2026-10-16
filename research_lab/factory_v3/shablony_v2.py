@@ -106,3 +106,37 @@ def sobytie(parametry, dostup):
     rez["metrika"].update(syroy_posle_izderzhek_bps=round(float(np.mean(raw)), 2) if raw else None, sobytiy_vzyato=len(abn),
                           sobytiy_vsego=len(sob))
     return rez
+
+
+def vneshniy_ryad_nedelya(parametry, dostup):
+    """16.10: ОДИН актив, недельное решение по ВНЕШНЕМУ причинному ряду (ETF-притоки, стейблкоины …).
+    ryad: JSON [{date, first_total_musd, available_ms}]; решение в 00:00 UTC дня den_resheniya (0 = пн): сумма значений с датами
+    за предыдущие okno_dney дней и available_ms < момента решения; z = сумма / sd прошлых недельных сумм (≥ min_nedel, окно norm_nedel).
+    Позиция sign(z)·znak на hold дней с открытия дня решения (закрытие предыдущего дня Binance), минус izderzhki_bps и фандинг.
+    Без позиции, если |z| < porog_z. Возвращает недельные доходы (bps), половины и долю лонгов (раскрыть бету)."""
+    import datetime as dt
+    p = parametry; ryad = json.loads((LAB / p["ryad"]).read_text())
+    kl = json.loads((LAB / "data" / "binance_kity" / "klines" / f"{p['aktiv']}.json").read_text())
+    fp = LAB / "data" / "binance_kity" / "funding" / f"{p['aktiv']}.json"
+    fr = json.loads(fp.read_text()) if fp.exists() else []
+    cl = {dt.datetime.fromtimestamp(int(k[0]) / 1000, dt.timezone.utc).date(): float(k[4]) for k in kl}
+    den0 = dt.datetime.fromtimestamp(dostup.t0 / 1000, dt.timezone.utc).date(); den1 = dt.datetime.fromtimestamp(dostup.t1 / 1000, dt.timezone.utc).date()
+    d = den0 + dt.timedelta(days=(int(p.get("den_resheniya", 0)) - den0.weekday()) % 7)
+    okno, hold, znak, izd = int(p.get("okno_dney", 7)), int(p.get("hold", 7)), int(p["znak"]), float(p["izderzhki_bps"])
+    sums, r, kogda, longs = [], [], [], 0
+    while d + dt.timedelta(days=hold) <= den1:
+        t_res = int(dt.datetime(d.year, d.month, d.day, tzinfo=dt.timezone.utc).timestamp() * 1000)
+        lo = (d - dt.timedelta(days=okno)).isoformat(); hi = (d - dt.timedelta(days=1)).isoformat()
+        vals = [x["first_total_musd"] for x in ryad if lo <= x["date"] <= hi and x["available_ms"] < t_res]
+        s = float(sum(vals)) if vals else None
+        if s is not None and len(sums) >= int(p.get("min_nedel", 12)):
+            sd = float(np.std(sums[-int(p.get("norm_nedel", 26)):], ddof=1)); z = s / sd if sd > 0 else 0.0
+            c0, c1 = cl.get(d - dt.timedelta(days=1)), cl.get(d + dt.timedelta(days=hold - 1))
+            if abs(z) >= float(p.get("porog_z", 0)) and c0 and c1 and z != 0:
+                st = (1 if z > 0 else -1) * znak; longs += st > 0
+                f = sum(float(x[1]) for x in fr if t_res <= int(x[0]) < t_res + hold * 86_400_000)
+                r.append(st * (c1 / c0 - 1) * 1e4 - izd - st * f * 1e4); kogda.append(t_res)
+        if s is not None: sums.append(s)
+        d += dt.timedelta(days=7)
+    rez = _itog(r, kogda or [0]); rez["metrika"]["dolya_longov"] = round(longs / max(1, len(r)), 3)
+    return rez

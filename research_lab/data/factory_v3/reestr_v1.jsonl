@@ -223,3 +223,8 @@
 {"gipoteza": "DOLYA_OBEMA_COINBASE_V1", "iz": "SCREEN", "kogda": "2026-10-16T13:23:45+00:00", "owner_go": null, "prichina": "POSTMORTEM_DOLYA_OBEMA_PLOSHCHADOK_2026_10_16", "tip": "perehod", "v": "KILL"}
 {"gipoteza": "DOLYA_OBEMA_UPBIT_V1", "iz": "SCREEN", "kogda": "2026-10-16T13:23:45+00:00", "owner_go": null, "prichina": "POSTMORTEM_DOLYA_OBEMA_PLOSHCHADOK_2026_10_16", "tip": "perehod", "v": "KILL"}
 {"kogda": "2026-10-16T13:23:45+00:00", "prichina": "обе гипотезы FAIL; Coinbase-доля выдохлась после эпохи ETF; причинного варианта нет", "semya": "DOLYA_OBEMA_PLOSHCHADOK", "tip": "semya_kill"}
+{"id": "ETF_POTOK", "istochnik": null, "kogda": "2026-10-16T13:45:26+00:00", "opisanie": "притоки спотовых ETF → недельный сигнал BTC/ETH (PREREG_ETF_POTOK_2026_10_16)", "status": "ACTIVE", "tip": "semya"}
+{"avtor": "claude", "id": "ETF_POTOK_BTC_V1", "istochniki_dannyh": ["etf_potoki", "binance_kity"], "kogda": "2026-10-16T13:45:26+00:00", "mehanizm": "первая публикация притоков ETF → направление следующей недели", "semya": "ETF_POTOK", "tip": "gipoteza"}
+{"gipoteza": "ETF_POTOK_BTC_V1", "iz": "NEW", "kogda": "2026-10-16T13:45:26+00:00", "owner_go": null, "prichina": "prereg 16.10", "tip": "perehod", "v": "SCREEN"}
+{"avtor": "claude", "id": "ETF_POTOK_ETH_V1", "istochniki_dannyh": ["etf_potoki", "binance_kity"], "kogda": "2026-10-16T13:45:26+00:00", "mehanizm": "первая публикация притоков ETF → направление следующей недели", "semya": "ETF_POTOK", "tip": "gipoteza"}
+{"gipoteza": "ETF_POTOK_ETH_V1", "iz": "NEW", "kogda": "2026-10-16T13:45:26+00:00", "owner_go": null, "prichina": "prereg 16.10", "tip": "perehod", "v": "SCREEN"}

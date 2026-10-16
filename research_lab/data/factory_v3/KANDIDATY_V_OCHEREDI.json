@@ -10,11 +10,12 @@
  },
  {
   "imya": "ETF_POTOK_KONTEKST",
-  "status": "OZHIDAET",
+  "status": "V_OCHEREDI",
   "mehanizm": "дневные притоки спотовых ETF BTC/ETH (институциональный US-спрос) → направление крипто-рынка следующей недели; как признак ContextRecord для Brain и фильтр рукавов, не отдельный рукав",
   "data_ready": "нет — публичные таблицы потоков, загрузчик",
   "nuzhno": "загрузчик + измерение без доходностей",
-  "put": "контекст Brain V2"
+  "put": "контекст Brain V2",
+  "prichina": "стал заявками ETF_POTOK_BTC/ETH_V1_1"
  },
  {
   "imya": "KITY_V2_NECRYPTO",
