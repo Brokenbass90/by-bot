@@ -1,0 +1,54 @@
+{
+ "schema": "alpaca_etalon_parity_v1",
+ "source_commit": "2e68b1f (claude/alpaca-2026-09-07)",
+ "runner": "backtest.alpaca_honest_portfolio.simulate_live_protection_daily_proxy",
+ "selection": "scripts.run_alpaca_honest_diagnostic._decisions('v38_successor_gated')",
+ "code_sha256": {
+  "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+  "backtest/alpaca_exact_parity_contract.py": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+  "backtest/alpaca_bakeoff_v2_contract.py": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+  "research_lab/alpaca_dannye.py": "0c480947b7829632223c7876097c86fe179bb59ee75df67b903c893d047858d1",
+  "research_lab/alpaca_tozhdestvo_v1.py": "40c3451d91cdca3ec025af3f83bc936dda55e7c23a862af0e454a189f48f6e98",
+  "scripts/run_alpaca_honest_diagnostic.py": "1d14dd1dd1dda5e258a0a510c83215d91a9a393267730ea6eb16c060bd1bdca8",
+  "strategies/alpaca_dynamic_v4_event.py": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a",
+  "research_lab/alpaca_dvizhok_x_v1.py": "b744bb591cd3d7479a7c6bf2e372acb8335f87d29fc791a1cf49a07080ee86c9"
+ },
+ "config_sha256": {
+  "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245"
+ },
+ "universe": {
+  "faylov": 59,
+  "sha256": "36da070b2e1fb6c7a10d3df99716c94e2afcabc7bae57d3ca172441736107172",
+  "agregaciya": "research_lab.alpaca_dannye.v_dnevnye (часовые → дневные)"
+ },
+ "params": {
+  "window": "2024-08-01..2026-07-11 excl",
+  "initial_capital": 1000.0,
+  "target_gross_exposure": 0.7,
+  "cost_bps_per_side": 10.0,
+  "slots": 4,
+  "policy": {
+   "fallback_stop_pct": 0.05,
+   "activate_gain_pct": 3.5,
+   "trail_pct": 3.5,
+   "minimum_lock_gain_pct": 0.5,
+   "market_gap_bps": 10.0,
+   "reentry_block_calendar_days": 21,
+   "initial_stop_anchor": "entry_fill",
+   "maximum_positive_entry_gap_pct": null
+  }
+ },
+ "summary": {
+  "initial_capital": 1000.0,
+  "final_equity": 1299.7103791632053,
+  "return_pct": 29.97103791632052,
+  "daily_max_drawdown_pct": 7.569155255862947,
+  "profit_factor_realized": 1.810941917777547,
+  "realized_trades": 64,
+  "red_months": 9,
+  "months": 24,
+  "worst_month_pct": -4.2445794955803695,
+  "average_gross_exposure_pct": 26.13485391620054
+ },
+ "trades_core_sha16": "2347a7ec606cd845"
+}
