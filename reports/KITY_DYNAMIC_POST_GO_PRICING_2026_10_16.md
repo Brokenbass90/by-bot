@@ -1,5 +1,44 @@
 # KITY micro — dynamic post-GO pricing, October16
 
+**CURRENT07:30:13UTC: `PARTIAL_BASKET_UNWIND_ACCOUNTED_NOT_ALL_TEN_PASS`.**
+
+The human personally executed the launcher, command1792135566488854893. Policy
+e3b3f531…54325 is **spent**. Do not rerun the launcher, reset its local marker,
+delete selection/claim/journal or prepare another experiment automatically.
+The earlier READY/no-GO text below is retained as dated pre-launch history.
+
+One post-GO capture produced a new ten-leg plan, planned gross173.852660USDT.
+Six entries actually filled: BTW10, XAU.004, LTC.3, VVV.74, BNB.02, XAUT.004;
+actual entry gross102.35242. All six native Full stops were bound and independently
+matched to retained raw broker rows/hashes. XAU and XAUT creates were accepted;
+zero exchange refusals/uncertain dispatches. Split VVV entry/exit executions
+were fully reconciled; this does not prove recovery from a cancelled partial IOC.
+
+The seventh entry failed before dispatch:
+`DISPATCH_PREFLIGHT:POST_GO_DISPATCH_DEADLINE`. The selected60s total entry
+budget was insufficient for the existing sequential preflight/protection loop.
+This is a **planning defect**, not an exchange/terms/source rejection. GO was
+07:26:06.488UTC; first durable entry07:26:18.491 (+12.003s), sixth07:27:02.845
+(+56.357s). Entry deadline07:27:06.488; unwind persisted07:27:11.041.
+XPL/XAG/GRASS/SPCX were never attempted. No deadline or policy was hot-changed.
+
+The existing runtime automatically closed all six owned positions and reached
+TERMINAL07:27:47.498UTC. Independent complete broker GET07:30:13UTC confirms
+positions0/openorders0. Fourteen exact actual executions and fourteen owned
+transaction rows independently reconcile: gross PnL **+0.05802**, fees
+**0.12331398**, funding **0** (source-bound expected calendar empty),
+net **-0.06529398USDT**. No unknown fees or ownership conflict. All18 source
+pins and six previous NO_SEND-file pins still match. SamePID2286916/NRestarts0,
+ORDERS_OFF/TERMINAL/errornull. Three historical plus twelve new POST barriers;
+observer made zero broker writes and no service/source changes.
+
+The complete ten-leg execution experiment remains **NOT PASS**; no strategy,
+C1–C3 or profitable-edge inference. Next engineering action is an orders-OFF
+critical-path latency correction/rehearsal. No automatic new policy/GO/retry or
+expanded timing/risk authority is granted. Preserve Alpaca/ATT1/LIQ/Claude.
+Actual terminal receipt:
+evidence/kity_post_go_pricing_20261016/owner_micro_terminal_v1.json.
+
 **DYNAMIC_POST_GO_PRICING_READY / INSTALLED_ORDERS_OFF. No monetary GO received.**
 
 The owner requested a bounded correction for

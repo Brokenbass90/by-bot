@@ -707,3 +707,15 @@ One new owner-only launcher is prepared, not executed. Agents MUST NOT invoke
 chat approval: human personally executes financial authority; agent observes
 actual results read-only. No new policy/session/experiment automatically.
 Preserve Alpaca/ATT1/LIQ/Claude, prior money history and external allowlist.
+
+October16 post-GO owner launcher was personally executed by human:
+command1792135566488854893, policye3b3f531…54325 SPENT. Six actual fills/native
+stops then seventh preflight exceeded selected60s total entry deadline; automatic
+owned unwind TERMINAL07:27:47UTC. Independent07:30:13UTC completeflat0/open0,
+14executions/14cashrows net-.06529398, feesknown, fundingcalendar0. No exchange
+refusals; exact timing shows planning defect in sequential60s budget. NOT all-ten
+PASS, no C1–C3/strategy evidence. Samewriter/sourcepins/oldNO_SENDfiles intact,
+ORDERS_OFF/TERMINAL. Read canonicalTOP/current report/owner_micro_terminal_v1.json.
+NEVER rerun launcher/GO, reset its localclaim/selection/journal or auto-prepare
+another policy. No timing/risk expansion or hot-change. Agent observations were
+read-only. Preserve Alpaca/ATT1/LIQ/Claude; future engineering stays orders-OFF.

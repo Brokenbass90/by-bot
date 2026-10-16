@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 07:30:13UTC CURRENT: human personally ran the NEW post-GO owner
+launcher, command1792135566488854893. Policye3b3f531…54325 is SPENT. Actual
+PARTIAL_BASKET_UNWIND_ACCOUNTED_NOT_ALL_TEN_PASS; read current
+KITY_DYNAMIC_POST_GO_PRICING_2026_10_16.md and owner_micro_terminal_v1.json.
+ONE post-GO capture -> ten-leg plan dd2b98f4…86070/gross173.852660. Six legs
+actually filled/protected(BTW/XAU/LTC/VVV/BNB long,XAUT short); six raw-native
+source row/hash proofs verified. Actual entrygross102.35242, no exchange reject/
+unknownsend. Seventh preflight hit POST_GO_DISPATCH_DEADLINE: selected60s
+budget insufficient for sequential fresh/protection loop (planning defect).
+GO07:26:06.488, firstintent+12.003s, sixth+56.357s, unwind+64.553s. Remaining
+XPL/XAG/GRASS/SPCX not attempted. No timing/policy/risk hot-change or re-entry.
+Runtime automatically closed all owned positions; TERMINAL07:27:47.498UTC.
+Independent complete GET07:30:13UTCflat0/open0,14exactactualexecutions/14cashrows
+reconcile gross+.05802/fees.12331398/funding0/net-.06529398USDT. FeeUNKNOWN0,
+ownershipconflictfalse, allheld0, all_ten_completefalse; NO strategy/C1-C3PASS.
+SamePID2286916/NRestarts0/ORDERS_OFF/TERMINAL, original818853lock;18source/
+6priorNO_SENDpins match;3historical+12newPOST barriers, observer0brokerwrites.
+NEVER retry owner-post-go-micro-once.sh, reset localclaim/selection/journal or
+reuse policy/GO. No automatic new policy/experiment/session transfer. Next
+engineering scope: orders-OFF critical-path latency correction/rehearsal only;
+no expanded money/timing/risk authority. Alpaca/ATT1/LIQ/Claude untouched.
+Older READY/no-monetaryGO headers below are dated pre-launch history.
+
 October16 07:21:xxUTC CURRENT: owner's subsequent stale-price flow correction
 implemented/deployed ORDERS_OFF. Read KITY_DYNAMIC_POST_GO_PRICING_2026_10_16.md
 and evidence/kity_post_go_pricing_20261016/{policy,readiness,verification}.json.

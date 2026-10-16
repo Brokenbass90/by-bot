@@ -1,0 +1,188 @@
+{
+  "schema": "KITY_POST_GO_OWNER_MICRO_TERMINAL_V1",
+  "status": "PARTIAL_BASKET_UNWIND_ACCOUNTED_NOT_ALL_TEN_PASS",
+  "command_id": "1792135566488854893",
+  "policy_id": "e3b3f5310b2c9afdf4f503b453673054607a3a3ecca7d222817f7e2352d54325",
+  "plan_id": "dd2b98f47507ae2a8af2f37e40720387df56e981c6f3a6dcef3c7fa357686070",
+  "go_actor": "HUMAN_OWNER_PERSONAL_LAUNCH",
+  "go_ms": 1792135566488,
+  "first_entry_intent_ms": 1792135578491,
+  "entry_dispatch_deadline_ms": 1792135626488,
+  "planned_lifecycle_deadline_ms": 1792137378491,
+  "unwind_ms": 1792135631041,
+  "finality_ms": 1792135667498,
+  "observation_completed_ms": 1792135813176,
+  "planned_ten_leg_gross_usdt": "173.852660",
+  "actual_entry_gross_usdt": "102.35242",
+  "required_legs": 10,
+  "filled_legs": 6,
+  "not_attempted_legs": [
+    "XPLUSDT",
+    "XAGUSDT",
+    "GRASSUSDT",
+    "SPCXUSDT"
+  ],
+  "native_source_proofs": [
+    {
+      "symbol": "BTWUSDT",
+      "source_file_sha256": "a71cd75d7de5abede64edfe91de75fef96638d4e82f8bd6d476db5216018a4bb",
+      "raw_sha256": "dd7ea1b1057e21bedca26468c8e92b7960f172fc1a1f86f3f4b2ed21258f7e2f"
+    },
+    {
+      "symbol": "BNBUSDT",
+      "source_file_sha256": "854619d7071f899f4560872327427ff33327809d4cf8f5dd4fbaa3c2b3ac54ac",
+      "raw_sha256": "28b1881eb2dbfafc1f97f4db8634737bc9fa5917d283f8fa8ba2112fc547989f"
+    },
+    {
+      "symbol": "XAUTUSDT",
+      "source_file_sha256": "7be9ae319167ed2771f58508f8dedad0a6812c92fdb4b2b03fdd7ed71cb5af67",
+      "raw_sha256": "f9e3117785a83684c18daf7d7f431090727951ce70503a7b253a142ba2b06dc4"
+    },
+    {
+      "symbol": "XAUUSDT",
+      "source_file_sha256": "a31f5550f45afb054ab019fda24dc9c96b9e86113d1664a2a54aadc98b5743c2",
+      "raw_sha256": "c462a80c886b4fe953ea75a94befb1709e6c76fa0b2b7d2758ed6152dce82e14"
+    },
+    {
+      "symbol": "VVVUSDT",
+      "source_file_sha256": "a71cd75d7de5abede64edfe91de75fef96638d4e82f8bd6d476db5216018a4bb",
+      "raw_sha256": "dd7ea1b1057e21bedca26468c8e92b7960f172fc1a1f86f3f4b2ed21258f7e2f"
+    },
+    {
+      "symbol": "LTCUSDT",
+      "source_file_sha256": "a71cd75d7de5abede64edfe91de75fef96638d4e82f8bd6d476db5216018a4bb",
+      "raw_sha256": "dd7ea1b1057e21bedca26468c8e92b7960f172fc1a1f86f3f4b2ed21258f7e2f"
+    }
+  ],
+  "per_symbol": {
+    "BTWUSDT": {
+      "side": "Buy",
+      "entry_quantity": "10",
+      "native_stop_full_quantity": "10",
+      "held_final": "0",
+      "entry_executions": 1,
+      "exit_executions": 1,
+      "fees_usdt": "0.01962895"
+    },
+    "XAUUSDT": {
+      "side": "Buy",
+      "entry_quantity": "0.004",
+      "native_stop_full_quantity": "0.004",
+      "held_final": "0.000",
+      "entry_executions": 1,
+      "exit_executions": 1,
+      "fees_usdt": "0.00922890"
+    },
+    "LTCUSDT": {
+      "side": "Buy",
+      "entry_quantity": "0.3",
+      "native_stop_full_quantity": "0.3",
+      "held_final": "0.0",
+      "entry_executions": 1,
+      "exit_executions": 2,
+      "fees_usdt": "0.02013825"
+    },
+    "VVVUSDT": {
+      "side": "Buy",
+      "entry_quantity": "0.74",
+      "native_stop_full_quantity": "0.74",
+      "held_final": "0.00",
+      "entry_executions": 2,
+      "exit_executions": 1,
+      "fees_usdt": "0.03984744"
+    },
+    "BNBUSDT": {
+      "side": "Buy",
+      "entry_quantity": "0.02",
+      "native_stop_full_quantity": "0.02",
+      "held_final": "0.00",
+      "entry_executions": 1,
+      "exit_executions": 1,
+      "fees_usdt": "0.01608618"
+    },
+    "XAUTUSDT": {
+      "side": "Sell",
+      "entry_quantity": "0.004",
+      "native_stop_full_quantity": "0.004",
+      "held_final": "0.000",
+      "entry_executions": 1,
+      "exit_executions": 1,
+      "fees_usdt": "0.01838426"
+    }
+  },
+  "entry_intent_offsets_ms": [
+    {
+      "symbol": "BTWUSDT",
+      "after_go_ms": 12003
+    },
+    {
+      "symbol": "XAUUSDT",
+      "after_go_ms": 19777
+    },
+    {
+      "symbol": "LTCUSDT",
+      "after_go_ms": 27760
+    },
+    {
+      "symbol": "VVVUSDT",
+      "after_go_ms": 36057
+    },
+    {
+      "symbol": "BNBUSDT",
+      "after_go_ms": 44781
+    },
+    {
+      "symbol": "XAUTUSDT",
+      "after_go_ms": 56357
+    }
+  ],
+  "unwind_reason": "DISPATCH_PREFLIGHT:POST_GO_DISPATCH_DEADLINE",
+  "planning_defect": "SIXTY_SECOND_TEN_LEG_SEQUENTIAL_ENTRY_BUDGET_INSUFFICIENT",
+  "exchange_create_rejections": 0,
+  "uncertain_dispatch_events": 0,
+  "gross_pnl_usdt": "0.05802",
+  "fees_usdt": "0.12331398",
+  "funding_usdt": "0",
+  "terminal_net_usdt": "-0.06529398",
+  "broker_positions": 0,
+  "broker_open_orders": 0,
+  "broker_flat_proven": true,
+  "complete_broker_source_pagination": true,
+  "actual_owned_execution_rows": 14,
+  "actual_owned_cash_rows": 14,
+  "fee_unknown_execution_ids": [],
+  "funding_expected_settlements": {
+    "BTWUSDT": [],
+    "XAUUSDT": [],
+    "LTCUSDT": [],
+    "VVVUSDT": [],
+    "BNBUSDT": [],
+    "XAUTUSDT": []
+  },
+  "source_pins_verified": 18,
+  "prior_no_send_pins_verified": 6,
+  "unit": {
+    "MainPID": "2286916",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "terminal_mode": "ORDERS_OFF",
+  "trading_posts_during_this_attempt": 12,
+  "prior_trading_post_barriers": 3,
+  "total_trading_post_barriers": 15,
+  "observer_broker_writes": 0,
+  "service_or_source_mutations_during_attempt": false,
+  "code_policy_unchanged": true,
+  "automatic_retry_allowed": false,
+  "all_ten_execution_proven": false,
+  "research_evidence_eligible": false,
+  "counts_toward_C1_C2_C3": false,
+  "private_source_sha256": {
+    "owner-run-observation-v1.json": "9a7d57098ccd197f30e886b3c8178d0d07d190ca8bbb429e51fe8ebb90744698",
+    "owner-run-observation-v2.json": "8fc186838daff106dc677b71a2ca4df753ce3740ceefd05e79a8d17e665c5e77",
+    "owner-run-observation-v3.json": "067b969055c8c08d2c2351de18d906b3627dbbedb6f1c3fba33a452d4057788b",
+    "terminal-readonly-source.json": "cf64e356be69b2c440bde67a9aab29e7bb5b41d78df3c9dc312b11673dfc778c",
+    "native-proof-saved-source.json": "110481cfb7b6c9be6cd306fd1f2aca36c0875e6cb65e3ecfae7a0d19c1025516"
+  },
+  "next_action": "Orders-OFF critical-path latency correction/rehearsal, preserving spent policy/GO/selection/journal. No automatic new policy, exposure or monetary retry."
+}
