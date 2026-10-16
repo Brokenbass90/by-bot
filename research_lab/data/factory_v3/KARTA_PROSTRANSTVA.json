@@ -1,0 +1,689 @@
+{
+ "semey": 255,
+ "nerazmecheno": [
+  "ALPACA_INTENDED",
+  "GOLD",
+  "ALPACA_A_G2",
+  "RAZBROS_RYNKA",
+  "XSEC_V3_TEN",
+  "P_AKC_BLIZ_MAX_126",
+  "P_AKC_SILA_K_INDEKSU",
+  "P_KR_SILA_K_BTC_LS",
+  "TEN_SILA",
+  "P_KR_ASIMMETRIYA_VOL",
+  "S_ROTACIYA_IZ_BTC",
+  "EQ_LOW_PRICE",
+  "GOLD_FX_GEOMETRY",
+  "PEREGREV_HVOSTA",
+  "PUSTOY_HOD",
+  "ALPACA",
+  "ALPACA_NET_DYNAMIC"
+ ],
+ "matrica": {
+  "импульс/тренд/пробой": {
+   "крипта": {
+    "n": 40,
+    "kill": 24,
+    "zhiv": 6,
+    "id": [
+     "ETS2S",
+     "ATT1_KASANIE",
+     "ATT1_AGG",
+     "ATT1_FILTER",
+     "IMPULS_7D",
+     "ETS2M",
+     "SBR1_MAJOR8",
+     "SBR1_ISSLED",
+     "PROBOY_55__crypto137__long",
+     "PROBOY_55__crypto137__short",
+     "OTKAT_V_TRENDE__crypto137__long",
+     "OTKAT_V_TRENDE__crypto137__short"
+    ]
+   },
+   "FX/золото": {
+    "n": 43,
+    "kill": 28,
+    "zhiv": 0,
+    "id": [
+     "ATT1_LONG_TREND",
+     "ATT1_SHORT_TREND",
+     "SBR1_LONG_TREND",
+     "PROBOY_55__gold__long",
+     "PROBOY_55__gold__short",
+     "OTKAT_V_TRENDE__gold__long",
+     "OTKAT_V_TRENDE__gold__short",
+     "OBEM_IMPULS__gold__long",
+     "OBEM_IMPULS__gold__short",
+     "MOMENTUM_30D__gold__long",
+     "MOMENTUM_30D__gold__short",
+     "PROBOY_55__fx7__long"
+    ]
+   },
+   "акции США": {
+    "n": 6,
+    "kill": 6,
+    "zhiv": 0,
+    "id": [
+     "P_AKC_MOM_6_1",
+     "P_AKC_MOM_6_1_LONG",
+     "P_AKC_NOVYY_MAKSIMUM",
+     "EQ_FROG_IN_PAN",
+     "EQ_MOMENTUM_60",
+     "NEAR_52W_HIGH"
+    ]
+   },
+   "Polymarket": {
+    "n": 1,
+    "kill": 0,
+    "zhiv": 0,
+    "id": [
+     "P_BULL_VOL_EXPANSION_POLY"
+    ]
+   }
+  },
+  "география площадок": {
+   "крипта": {
+    "n": 12,
+    "kill": 8,
+    "zhiv": 4,
+    "id": [
+     "ARB_EGLD",
+     "ARB_EVENT_CLASS",
+     "PRICE_DISLOCATION",
+     "TRADFI_CLOSED_MARKET",
+     "V1_PREMIYA_ZA_STRAH",
+     "COINBASE_PREMIYA_XS",
+     "COINBASE_PREMIYA_XS_V1",
+     "UPBIT_PREMIYA_XS",
+     "UPBIT_PREMIYA_XS_V1",
+     "DOLYA_OBEMA_PLOSHCHADOK",
+     "DOLYA_OBEMA_COINBASE_V1",
+     "DOLYA_OBEMA_UPBIT_V1"
+    ]
+   },
+   "FX/золото": {
+    "n": 13,
+    "kill": 8,
+    "zhiv": 1,
+    "id": [
+     "NOCHNOY_DREYF__crypto137__long",
+     "NOCHNOY_DREYF__fx7__long",
+     "NOCHNOY_DREYF__fx7__short",
+     "NOCHNOY_DREYF__crypto137__short",
+     "NOCHNOY_DREYF__gold__long",
+     "NOCHNOY_DREYF__gold__short",
+     "NOCHNOY_DREYF__gold_glub_utc__long",
+     "NOCHNOY_DREYF__fx7_glub_utc__long",
+     "NOCHNOY_DREYF__gold_glub_utc__short",
+     "NOCHNOY_DREYF__fx7_glub_utc__short",
+     "NOCHNOY_DREYF__fx7_glub_utc__long__PODTV",
+     "NOCHNOY_DREYF"
+    ]
+   }
+  },
+  "НЕ РАЗМЕЧЕНО": {
+   "акции США": {
+    "n": 7,
+    "kill": 3,
+    "zhiv": 1,
+    "id": [
+     "ALPACA_INTENDED",
+     "ALPACA_A_G2",
+     "P_AKC_BLIZ_MAX_126",
+     "P_AKC_SILA_K_INDEKSU",
+     "EQ_LOW_PRICE",
+     "ALPACA",
+     "ALPACA_NET_DYNAMIC"
+    ]
+   },
+   "FX/золото": {
+    "n": 2,
+    "kill": 1,
+    "zhiv": 1,
+    "id": [
+     "GOLD",
+     "GOLD_FX_GEOMETRY"
+    ]
+   },
+   "крипта": {
+    "n": 8,
+    "kill": 2,
+    "zhiv": 2,
+    "id": [
+     "RAZBROS_RYNKA",
+     "XSEC_V3_TEN",
+     "P_KR_SILA_K_BTC_LS",
+     "TEN_SILA",
+     "P_KR_ASIMMETRIYA_VOL",
+     "S_ROTACIYA_IZ_BTC",
+     "PEREGREV_HVOSTA",
+     "PUSTOY_HOD"
+    ]
+   }
+  },
+  "уровни/геометрия": {
+   "крипта": {
+    "n": 4,
+    "kill": 2,
+    "zhiv": 1,
+    "id": [
+     "UROVNI_OTBOY",
+     "LOZHNYY_PROBOY",
+     "BOUNCE",
+     "BOUNCE1"
+    ]
+   },
+   "FX/золото": {
+    "n": 11,
+    "kill": 7,
+    "zhiv": 0,
+    "id": [
+     "SVIP_UROVNYA__fx7__long",
+     "SVIP_UROVNYA__crypto137__long",
+     "SVIP_UROVNYA__fx7__short",
+     "SVIP_UROVNYA__crypto137__short",
+     "SVIP_UROVNYA__gold__long",
+     "SVIP_UROVNYA__gold__short",
+     "SVIP_UROVNYA__gold_glub_utc__long",
+     "SVIP_UROVNYA__fx7_glub_utc__long",
+     "SVIP_UROVNYA__gold_glub_utc__short",
+     "SVIP_UROVNYA__fx7_glub_utc__short",
+     "SVIP_UROVNYA"
+    ]
+   },
+   "акции США": {
+    "n": 1,
+    "kill": 0,
+    "zhiv": 0,
+    "id": [
+     "BOUNCE1_8"
+    ]
+   }
+  },
+  "толпа/позиции/OI": {
+   "крипта": {
+    "n": 10,
+    "kill": 10,
+    "zhiv": 0,
+    "id": [
+     "OI_RASHOZHDENIE",
+     "OI_KVINTIL",
+     "P_KR_OI_NAKOPLENIE",
+     "KITY_POZICII",
+     "L2_SDVIG_TOLPY_XS",
+     "L3_TOLPA_PROTIV_ROSTA",
+     "OI_CROWDING",
+     "SPECULATION_SHARE",
+     "SQUEEZE_FUEL",
+     "TOLPA_XS"
+    ]
+   }
+  },
+  "ликвидность/микроструктура": {
+   "крипта": {
+    "n": 14,
+    "kill": 14,
+    "zhiv": 0,
+    "id": [
+     "CS_OBOROT",
+     "RAZMAH_SVECHI",
+     "RAZMAH_NORM",
+     "TELO_SVECHI",
+     "S_OBOROT_TOLCHOK",
+     "S_SHIRINA_TOLCHOK",
+     "S_OBOROT_TOLCHOK__PODTV",
+     "KASKAD_LIKVIDACIY",
+     "MARKET_MICROSTRUCTURE",
+     "ORDER_BOOK_IMBALANCE",
+     "PRICE_ADJUSTMENT_DELAY",
+     "GLUBINA_PEREKOS"
+    ]
+   },
+   "акции США": {
+    "n": 1,
+    "kill": 1,
+    "zhiv": 0,
+    "id": [
+     "EQ_ILLIQUIDITY"
+    ]
+   },
+   "Polymarket": {
+    "n": 1,
+    "kill": 1,
+    "zhiv": 0,
+    "id": [
+     "POLY_MICROSTRUCTURE"
+    ]
+   }
+  },
+  "события/отчёты/предложение": {
+   "крипта": {
+    "n": 4,
+    "kill": 4,
+    "zhiv": 0,
+    "id": [
+     "VOZRAST_MONETY",
+     "INFORMATION_FLOW",
+     "LISTING_SUPPLY",
+     "NOVYE_DENGI"
+    ]
+   },
+   "акции США": {
+    "n": 4,
+    "kill": 3,
+    "zhiv": 0,
+    "id": [
+     "E1_PREMIA_PERED_OTCHETOM",
+     "E2_DREYF_POSLE_OTCHETA",
+     "E3_OPOZDAVSHIY",
+     "BOUNCE1_8"
+    ]
+   }
+  },
+  "разворот": {
+   "крипта": {
+    "n": 12,
+    "kill": 10,
+    "zhiv": 0,
+    "id": [
+     "OTKAT_KRIPTA",
+     "RAZVOROT_1D",
+     "OTKAT_V_TRENDE__crypto137__long",
+     "OTKAT_V_TRENDE__crypto137__short",
+     "VOZVRAT_K_SREDNEY__crypto137__long",
+     "VOZVRAT_K_SREDNEY__crypto137__short",
+     "KAPITULYACIYA__crypto137__long",
+     "KAPITULYACIYA__crypto137__short",
+     "P_XSEC_3D_REVERSAL",
+     "OTKAT_V_TRENDE",
+     "VOZVRAT_K_SREDNEY",
+     "WEEKLY_REVERSAL"
+    ]
+   },
+   "FX/золото": {
+    "n": 14,
+    "kill": 6,
+    "zhiv": 0,
+    "id": [
+     "OTKAT_V_TRENDE__gold__long",
+     "OTKAT_V_TRENDE__gold__short",
+     "VOZVRAT_K_SREDNEY__gold__long",
+     "VOZVRAT_K_SREDNEY__gold__short",
+     "KAPITULYACIYA__gold__long",
+     "KAPITULYACIYA__gold__short",
+     "OTKAT_V_TRENDE__fx7__long",
+     "OTKAT_V_TRENDE__fx7__short",
+     "VOZVRAT_K_SREDNEY__fx7__long",
+     "VOZVRAT_K_SREDNEY__fx7__short",
+     "KAPITULYACIYA__fx7__long",
+     "KAPITULYACIYA__fx7__short"
+    ]
+   },
+   "акции США": {
+    "n": 2,
+    "kill": 1,
+    "zhiv": 0,
+    "id": [
+     "P_AKC_REVERSAL_5D",
+     "EQ_QUIET_DROP_REVERSAL"
+    ]
+   }
+  },
+  "бета/корреляция": {
+   "крипта": {
+    "n": 2,
+    "kill": 2,
+    "zhiv": 0,
+    "id": [
+     "BETA_BTC",
+     "P_KR_BETA_LS"
+    ]
+   }
+  },
+  "время суток/календарь": {
+   "FX/золото": {
+    "n": 32,
+    "kill": 18,
+    "zhiv": 1,
+    "id": [
+     "NOCHNOY_RAZRYV",
+     "LONDON_PROBOY__fx7__long",
+     "GEP_VYHODNYH__fx7__long",
+     "LONDON_PROBOY__fx7__short",
+     "LONDON_PROBOY__crypto137__long",
+     "GEP_VYHODNYH__fx7__short",
+     "GEP_VYHODNYH__crypto137__long",
+     "NOCHNOY_DREYF__crypto137__long",
+     "LONDON_PROBOY__crypto137__short",
+     "NOCHNOY_DREYF__fx7__long",
+     "NOCHNOY_DREYF__fx7__short",
+     "GEP_VYHODNYH__crypto137__short"
+    ]
+   },
+   "акции США": {
+    "n": 4,
+    "kill": 4,
+    "zhiv": 0,
+    "id": [
+     "EQ_INTRADAY_INSTITUTIONAL",
+     "EQ_OVERNIGHT_CLIENTELE",
+     "OVERNIGHT_PREMIUM",
+     "OVERNIGHT_VOLUME"
+    ]
+   },
+   "крипта": {
+    "n": 1,
+    "kill": 1,
+    "zhiv": 0,
+    "id": [
+     "TURN_OF_MONTH"
+    ]
+   }
+  },
+  "волатильность/страх": {
+   "FX/золото": {
+    "n": 7,
+    "kill": 4,
+    "zhiv": 0,
+    "id": [
+     "SZHATIE_BB__gold__long",
+     "SZHATIE_BB__gold__short",
+     "SZHATIE_BB__fx7__long",
+     "SZHATIE_BB__fx7__short",
+     "SZHATIE_BB__gold_glub__long",
+     "SZHATIE_BB__gold_glub__short",
+     "SZHATIE_BB"
+    ]
+   },
+   "крипта": {
+    "n": 7,
+    "kill": 3,
+    "zhiv": 0,
+    "id": [
+     "SZHATIE_BB__crypto137__long",
+     "SZHATIE_BB__crypto137__short",
+     "XSEC_EXACT_TARGET_WEIGHTS_PIT",
+     "P_BULL_VOL_EXPANSION_BASE",
+     "P_BULL_VOL_EXPANSION_FILTERED",
+     "V1_PREMIYA_ZA_STRAH",
+     "V2_VSPLESK_STRAHA"
+    ]
+   },
+   "акции США": {
+    "n": 3,
+    "kill": 3,
+    "zhiv": 0,
+    "id": [
+     "P_AKC_LOW_VOL_60",
+     "EQ_LOW_VOL",
+     "LOTTERY_DEMAND"
+    ]
+   },
+   "Polymarket": {
+    "n": 1,
+    "kill": 0,
+    "zhiv": 0,
+    "id": [
+     "P_BULL_VOL_EXPANSION_POLY"
+    ]
+   }
+  },
+  "вынужденный поток": {
+   "FX/золото": {
+    "n": 4,
+    "kill": 0,
+    "zhiv": 0,
+    "id": [
+     "KAPITULYACIYA__gold__long",
+     "KAPITULYACIYA__gold__short",
+     "KAPITULYACIYA__fx7__long",
+     "KAPITULYACIYA__fx7__short"
+    ]
+   },
+   "крипта": {
+    "n": 9,
+    "kill": 5,
+    "zhiv": 1,
+    "id": [
+     "KAPITULYACIYA__crypto137__long",
+     "KAPITULYACIYA__crypto137__short",
+     "CAP_STRESS",
+     "FORCED_FLOW",
+     "KASKAD_LIKVIDACIY",
+     "LIQ_PROVISION",
+     "SETTLEMENT_FLOW",
+     "FORCED_FLOW_LIQ",
+     "LIQ_OTSKOK_4H_V2"
+    ]
+   },
+   "акции США": {
+    "n": 1,
+    "kill": 1,
+    "zhiv": 0,
+    "id": [
+     "EQ_ILLIQUIDITY"
+    ]
+   }
+  },
+  "carry/funding/basis": {
+   "крипта": {
+    "n": 12,
+    "kill": 12,
+    "zhiv": 0,
+    "id": [
+     "P_KR_FANDING_KERRI",
+     "BASIS",
+     "BASIS_SPOT_PERP",
+     "CARRY_BASKET",
+     "FUNDING_CARRY_XS",
+     "NOVYE_DENGI",
+     "REZHIMNYY_CARRY",
+     "ROLL_PRESSURE",
+     "TERM_CARRY",
+     "TERM_SIGNAL",
+     "TERM_STRUCTURE",
+     "XEX_FUNDING"
+    ]
+   },
+   "FX/золото": {
+    "n": 1,
+    "kill": 1,
+    "zhiv": 0,
+    "id": [
+     "FX_MESYAC_HEDZH"
+    ]
+   }
+  },
+  "рынки предсказаний": {
+   "Polymarket": {
+    "n": 10,
+    "kill": 7,
+    "zhiv": 0,
+    "id": [
+     "POLY_SBOR",
+     "P_BULL_VOL_EXPANSION_POLY",
+     "POLY_SENSOR_INFO_3D",
+     "PM2_POLY_MONOTONNOST",
+     "POLY_CALIBRATION",
+     "POLY_MICROSTRUCTURE",
+     "POLY_MONOTONNOST",
+     "POLY_OVERREACTION",
+     "POLY_PATH",
+     "POLY_VS_MODEL"
+    ]
+   }
+  },
+  "поток агрессора": {
+   "крипта": {
+    "n": 12,
+    "kill": 10,
+    "zhiv": 1,
+    "id": [
+     "KITY_POZICII",
+     "ORDER_FLOW_MISMATCH",
+     "SPOT_POTOK",
+     "V2_VSPLESK_STRAHA",
+     "KITY",
+     "KITY_M3_BYBIT_TEN",
+     "POGLOSHCHENIE",
+     "POGLOSHCHENIE_V1",
+     "KITY_VSPLESK_V1",
+     "KITY_ZADERZHKA_0",
+     "KITY_ZADERZHKA_2",
+     "POGLOSHCHENIE_H1_V1"
+    ]
+   }
+  }
+ },
+ "shortlist": [
+  {
+   "istochnik": "obem_coinbase_d1",
+   "status_istochnika": "LOCAL",
+   "mehanizm": "география площадок",
+   "proverok_na_kripte": 12,
+   "kill": 8,
+   "zhivyh": 4,
+   "primery": [
+    "ARB_EGLD",
+    "ARB_EVENT_CLASS",
+    "PRICE_DISLOCATION",
+    "TRADFI_CLOSED_MARKET",
+    "V1_PREMIYA_ZA_STRAH",
+    "COINBASE_PREMIYA_XS"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "obem_upbit_d1",
+   "status_istochnika": "NET_FAYLOV",
+   "mehanizm": "география площадок",
+   "proverok_na_kripte": 12,
+   "kill": 8,
+   "zhivyh": 4,
+   "primery": [
+    "ARB_EGLD",
+    "ARB_EVENT_CLASS",
+    "PRICE_DISLOCATION",
+    "TRADFI_CLOSED_MARKET",
+    "V1_PREMIYA_ZA_STRAH",
+    "COINBASE_PREMIYA_XS"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "deribit_dvol",
+   "status_istochnika": "LOCAL",
+   "mehanizm": "волатильность/страх",
+   "proverok_na_kripte": 7,
+   "kill": 3,
+   "zhivyh": 0,
+   "primery": [
+    "SZHATIE_BB__crypto137__long",
+    "SZHATIE_BB__crypto137__short",
+    "XSEC_EXACT_TARGET_WEIGHTS_PIT",
+    "P_BULL_VOL_EXPANSION_BASE",
+    "P_BULL_VOL_EXPANSION_FILTERED",
+    "V1_PREMIYA_ZA_STRAH"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "etf_btc_eth_flows",
+   "status_istochnika": "PLANNED",
+   "mehanizm": "события/отчёты/предложение",
+   "proverok_na_kripte": 4,
+   "kill": 4,
+   "zhivyh": 0,
+   "primery": [
+    "VOZRAST_MONETY",
+    "INFORMATION_FLOW",
+    "LISTING_SUPPLY",
+    "NOVYE_DENGI"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "etf_btc_eth_flows",
+   "status_istochnika": "PLANNED",
+   "mehanizm": "поток агрессора",
+   "proverok_na_kripte": 12,
+   "kill": 10,
+   "zhivyh": 1,
+   "primery": [
+    "KITY_POZICII",
+    "ORDER_FLOW_MISMATCH",
+    "SPOT_POTOK",
+    "V2_VSPLESK_STRAHA",
+    "KITY",
+    "KITY_M3_BYBIT_TEN"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "stablecoin_supply",
+   "status_istochnika": "PLANNED",
+   "mehanizm": "события/отчёты/предложение",
+   "proverok_na_kripte": 4,
+   "kill": 4,
+   "zhivyh": 0,
+   "primery": [
+    "VOZRAST_MONETY",
+    "INFORMATION_FLOW",
+    "LISTING_SUPPLY",
+    "NOVYE_DENGI"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "hyperliquid_funding_oi",
+   "status_istochnika": "PLANNED",
+   "mehanizm": "толпа/позиции/OI",
+   "proverok_na_kripte": 10,
+   "kill": 10,
+   "zhivyh": 0,
+   "primery": [
+    "OI_RASHOZHDENIE",
+    "OI_KVINTIL",
+    "P_KR_OI_NAKOPLENIE",
+    "KITY_POZICII",
+    "L2_SDVIG_TOLPY_XS",
+    "L3_TOLPA_PROTIV_ROSTA"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "hyperliquid_funding_oi",
+   "status_istochnika": "PLANNED",
+   "mehanizm": "география площадок",
+   "proverok_na_kripte": 12,
+   "kill": 8,
+   "zhivyh": 4,
+   "primery": [
+    "ARB_EGLD",
+    "ARB_EVENT_CLASS",
+    "PRICE_DISLOCATION",
+    "TRADFI_CLOSED_MARKET",
+    "V1_PREMIYA_ZA_STRAH",
+    "COINBASE_PREMIYA_XS"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  },
+  {
+   "istochnik": "liq_v2",
+   "status_istochnika": "PLANNED",
+   "mehanizm": "вынужденный поток",
+   "proverok_na_kripte": 9,
+   "kill": 5,
+   "zhivyh": 1,
+   "primery": [
+    "KAPITULYACIYA__crypto137__long",
+    "KAPITULYACIYA__crypto137__short",
+    "CAP_STRESS",
+    "FORCED_FLOW",
+    "KASKAD_LIKVIDACIY",
+    "LIQ_PROVISION"
+   ],
+   "deystvie": "TREBUET_TEZISA (знак и отличие от убитых — до прогона)"
+  }
+ ]
+}

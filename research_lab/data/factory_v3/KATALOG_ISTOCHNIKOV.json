@@ -1,0 +1,435 @@
+{
+ "sobrano": "2026-10-16T09:54:09+00:00",
+ "istochniki": [
+  {
+   "id": "binance_perp_d1",
+   "papka": "binance_kity/klines",
+   "ploshchadka": "Binance USDT-perp",
+   "polya": [
+    "o",
+    "h",
+    "l",
+    "c",
+    "v(база)"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0 закрытие дня UTC",
+   "riski": "вселенная — монеты, доступные на дату (PIT по OI среды); делистинги в архиве есть",
+   "limity": "data.binance.vision публично",
+   "semyi": [
+    "импульс/разворот (KILL)",
+    "объём",
+    "доля площадки (знаменатель)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 335,
+    "s": "2021-04-01",
+    "po": "2026-09-30",
+    "s_mediana": "2023-07-24"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "binance_metrics_w",
+   "papka": "binance_kity/metrics",
+   "ploshchadka": "Binance",
+   "polya": [
+    "toptrader_ls_acc",
+    "toptrader_ls_pos",
+    "ls_global",
+    "taker_ls_vol",
+    "OI"
+   ],
+   "chastota": "1 раз в неделю (среда)",
+   "zaderzhka": "T+0",
+   "riski": "только среды — для других дней недели вселенная берётся с прошлой среды",
+   "limity": "публично",
+   "semyi": [
+    "толпа/позиции (KILL: TOLPA_XS, KITY_POZICII)",
+    "OI (KILL: OI_CROWDING, OI_KVINTIL)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 876,
+    "s": "2021-06-30",
+    "po": "2026-09-16",
+    "s_mediana": "2025-03-26"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "binance_funding",
+   "papka": "binance_kity/funding",
+   "ploshchadka": "Binance",
+   "polya": [
+    "funding_rate"
+   ],
+   "chastota": "8h",
+   "zaderzhka": "известен в момент начисления",
+   "riski": "—",
+   "limity": "публично",
+   "semyi": [
+    "carry (KILL: FUNDING_CARRY_XS, CARRY_BASKET)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 335,
+    "s": "2021-06-01",
+    "po": "2026-09-30",
+    "s_mediana": "2023-07-24"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "binance_taker_d1",
+   "papka": "binance_kity/taker",
+   "ploshchadka": "Binance perp",
+   "polya": [
+    "taker_buy_quote",
+    "quote_vol"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0",
+   "riski": "—",
+   "limity": "публично",
+   "semyi": [
+    "поток агрессора (KITY — PASS)",
+    "всплеск (KILL)",
+    "поглощение (KILL)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 335,
+    "s": "2021-04-01",
+    "po": "2026-09-30",
+    "s_mediana": "2023-07-24"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "binance_spot_taker_d1",
+   "papka": "binance_kity/spot_taker",
+   "ploshchadka": "Binance spot",
+   "polya": [
+    "taker_buy_quote",
+    "quote_vol"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0",
+   "riski": "—",
+   "limity": "публично",
+   "semyi": [
+    "спот-поток (KILL: SPOT_POTOK)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 335,
+    "s": "2021-04-01",
+    "po": "2026-09-30",
+    "s_mediana": "2021-08-10"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "binance_bookdepth_d1",
+   "papka": "binance_glubina",
+   "ploshchadka": "Binance perp",
+   "polya": [
+    "imb1",
+    "imb2",
+    "imb5"
+   ],
+   "chastota": "1d снимки",
+   "zaderzhka": "T+0",
+   "riski": "снимок дня, не поток",
+   "limity": "публично",
+   "semyi": [
+    "перекос стакана (KILL: GLUBINA)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 312,
+    "s": "2023-01-04",
+    "po": "2026-09-16",
+    "s_mediana": "2024-02-07"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "bybit_h1_137",
+   "papka": "h1",
+   "ploshchadka": "Bybit perp",
+   "polya": [
+    "ohlcv"
+   ],
+   "chastota": "1h",
+   "zaderzhka": "закрытие часа",
+   "riski": "137 монет, отбор по ликвидности на дату сборки (возможен survivorship)",
+   "limity": "публично",
+   "semyi": [
+    "Elder (KILL standalone)",
+    "ATT1 (KILL)",
+    "часовые шаблоны"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 137,
+    "s": "2023-01-01",
+    "po": "2026-08-11",
+    "s_mediana": "2025-02-14"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "coinbase_d1",
+   "papka": "coinbase_d1",
+   "ploshchadka": "Coinbase USD",
+   "polya": [
+    "close"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0",
+   "riski": "листинги Coinbase позже Binance — короткие ряды",
+   "limity": "публично, 10 rps",
+   "semyi": [
+    "премия (KILL)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 168,
+    "s": "2022-11-01",
+    "po": "2026-09-30",
+    "s_mediana": "2022-11-01"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "upbit_d1",
+   "papka": "upbit_d1",
+   "ploshchadka": "Upbit KRW",
+   "polya": [
+    "close"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0",
+   "riski": "KRW, капитальный контроль",
+   "limity": "публично",
+   "semyi": [
+    "премия (KILL)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 128,
+    "s": "2022-11-01",
+    "po": "2026-09-30",
+    "s_mediana": "2024-07-09"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "obem_coinbase_d1",
+   "papka": "obem_coinbase_d1",
+   "ploshchadka": "Coinbase USD",
+   "polya": [
+    "volume(база)"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0",
+   "riski": "—",
+   "limity": "публично",
+   "semyi": [
+    "доля площадки в объёме (в тесте)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 102,
+    "s": "2022-11-01",
+    "po": "2026-09-30",
+    "s_mediana": "2022-11-01"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "obem_upbit_d1",
+   "papka": "obem_upbit_d1",
+   "ploshchadka": "Upbit KRW",
+   "polya": [
+    "volume(база)"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0",
+   "riski": "—",
+   "limity": "публично",
+   "semyi": [
+    "доля площадки в объёме (в тесте)"
+   ],
+   "status": "NET_FAYLOV",
+   "istoriya": {
+    "instrumentov": 0,
+    "s": null,
+    "po": null
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "fx7_h1",
+   "papka": "fx_h1",
+   "ploshchadka": "MT5 демо (метки переведены в UTC)",
+   "polya": [
+    "ohlcv"
+   ],
+   "chastota": "1h",
+   "zaderzhka": "закрытие часа",
+   "riski": "демо-котировки, спред не доказан",
+   "limity": "нужен MT5",
+   "semyi": [
+    "ночной дрейф FX (CONFIRMED, исполнимость BLOCKED)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 7,
+    "s": "2018-01-02",
+    "po": "2025-09-29",
+    "s_mediana": "2018-12-20"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "gold_h1",
+   "papka": "gold_h1",
+   "ploshchadka": "золото",
+   "polya": [
+    "ohlcv"
+   ],
+   "chastota": "1h",
+   "zaderzhka": "закрытие часа",
+   "riski": "—",
+   "limity": "—",
+   "semyi": [
+    "ночной дрейф золота (KILL)",
+    "лондонский пробой (KILL)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 1,
+    "s": "2024-07-08",
+    "po": "2025-09-30",
+    "s_mediana": "2024-07-08"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "deribit_dvol",
+   "papka": "deribit",
+   "ploshchadka": "Deribit",
+   "polya": [
+    "DVOL ohlc"
+   ],
+   "chastota": "1h",
+   "zaderzhka": "закрытие часа",
+   "riski": "только BTC/ETH",
+   "limity": "публично",
+   "semyi": [
+    "премия за страх (KILL: V1/V2)"
+   ],
+   "status": "LOCAL",
+   "istoriya": {
+    "instrumentov": 2,
+    "s": "2021-04-01",
+    "po": "2026-10-01"
+   },
+   "istoriya_proverena": true
+  },
+  {
+   "id": "etf_btc_eth_flows",
+   "ploshchadka": "эмитенты спотовых ETF (публичные таблицы потоков)",
+   "polya": [
+    "net_flow_usd по фонду"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "публикуется после закрытия США (T+0 вечер / T+1)",
+   "riski": "ревизии задним числом — хранить первую публикацию",
+   "limity": "без ключа",
+   "semyi": [
+    "институциональный спрос → рынок (контекст Brain)"
+   ],
+   "status": "PLANNED",
+   "istoriya": "НЕ ПРОВЕРЕНО",
+   "istoriya_proverena": false
+  },
+  {
+   "id": "stablecoin_supply",
+   "ploshchadka": "DefiLlama stablecoins (бесплатный эндпоинт)",
+   "polya": [
+    "supply по цепочкам"
+   ],
+   "chastota": "1d",
+   "zaderzhka": "T+0/T+1",
+   "riski": "ревизии; эмиссия ≠ покупка",
+   "limity": "бесплатно",
+   "semyi": [
+    "новые деньги (близко к KILL NOVYE_DENGI — проверить отличие)"
+   ],
+   "status": "PLANNED",
+   "istoriya": "НЕ ПРОВЕРЕНО",
+   "istoriya_proverena": false
+  },
+  {
+   "id": "hyperliquid_funding_oi",
+   "ploshchadka": "Hyperliquid info API",
+   "polya": [
+    "funding (история)",
+    "OI (только текущий)"
+   ],
+   "chastota": "1h",
+   "zaderzhka": "T+0",
+   "riski": "история OI недоступна → только вперёд",
+   "limity": "публично",
+   "semyi": [
+    "миграция плеча на DEX",
+    "межплощадочный funding (близко к XEX_FUNDING)"
+   ],
+   "status": "PLANNED",
+   "istoriya": "НЕ ПРОВЕРЕНО",
+   "istoriya_proverena": false
+  },
+  {
+   "id": "liq_v2",
+   "ploshchadka": "Bybit ликвидации (сборщик Codex V2.1)",
+   "polya": [
+    "side",
+    "qty",
+    "px",
+    "t"
+   ],
+   "chastota": "поток",
+   "zaderzhka": "секунды",
+   "riski": "полнота V1 BLOCKED; V2.1 копится с 14.10",
+   "limity": "VPS",
+   "semyi": [
+    "вынужденный поток (LIQ_OTSKOK_4H_V2 — ждёт данных)"
+   ],
+   "status": "PLANNED",
+   "istoriya": "НЕ ПРОВЕРЕНО",
+   "istoriya_proverena": false
+  },
+  {
+   "id": "basis_spot_perp",
+   "ploshchadka": "Bybit/Binance spot+perp",
+   "polya": [
+    "basis"
+   ],
+   "chastota": "1h/1d",
+   "zaderzhka": "T+0",
+   "riski": "—",
+   "limity": "публично",
+   "semyi": [
+    "basis (KILL: BASIS, BASIS_SPOT_PERP, TERM_*)"
+   ],
+   "status": "PLANNED",
+   "istoriya": "НЕ ПРОВЕРЕНО",
+   "istoriya_proverena": false
+  }
+ ]
+}

@@ -16,7 +16,7 @@ import json, time, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent; sys.path.insert(0, str(HERE))
 OCHERED = HERE.parent / "data" / "factory_v3" / "ochered.jsonl"
-RAZRESHENO = {"ferma_shablony:xs_nedelya_binance", "ferma_primery:moment_na_shume"}
+RAZRESHENO = {"ferma_shablony:xs_nedelya_binance", "ferma_primery:moment_na_shume", "shablony_v2:odin_aktiv_chas", "shablony_v2:sobytie"}
 KARTA = {"data_ready": (bool, str), "istochniki": list, "hist_dev": str, "sobytiy_v_nedelyu": (int, float), "ozhidanie_vpered_dney": (int, float),
          "ispolnimost": str, "put_k_micro_live": str, "mehanizm": str}
 
@@ -101,6 +101,10 @@ def _prohod(put, reestr, processov, koren):
         if x.get("status") == "FAIL":
             try: avto_postmortem(x, reestr)
             except Exception: pass
+    try:
+        obnovit_kartu()
+    except Exception:
+        pass
     try:                                              # запас кандидатов виден без рестарта сторожа (модуль перечитывается)
         (Path(put).parent / "ZAPAS.json").write_text(json.dumps(dict(zapas(put), kogda=int(time.time() * 1000)), ensure_ascii=False))
     except Exception:
@@ -118,7 +122,21 @@ def zapas(put=OCHERED):
     p = Path(put).parent / "KANDIDATY_V_OCHEREDI.json"
     karty = [k["imya"] for k in json.loads(p.read_text()) if k.get("status") == "OZHIDAET"] if p.exists() else []
     n = len(v_ocheredi) + len(karty)
-    return dict(n=n, zayavki=v_ocheredi, karty=karty, status="OK" if n >= MIN_ZAPAS else "TREVOGA_MALO_KANDIDATOV")
+    rez = dict(n=n, zayavki=v_ocheredi, karty=karty, status="OK" if n >= MIN_ZAPAS else "TREVOGA_MALO_KANDIDATOV")
+    if n < MIN_ZAPAS:                                         # авто-пополнение: предложения из карты пространства (не запускаются сами)
+        kp = Path(put).parent / "KARTA_PROSTRANSTVA.json"
+        if kp.exists():
+            sl = json.loads(kp.read_text()).get("shortlist", [])
+            rez["predlozheniya"] = sorted(sl, key=lambda z: (z["status_istochnika"] != "LOCAL", z["kill"] - z["zhivyh"]))[:5]
+    return rez
+
+
+def obnovit_kartu(maks_vozrast_ch=24):
+    """Каталог источников и карта пространства пересобираются не чаще раза в сутки (из часового прохода сторожа)."""
+    kp = OCHERED.parent / "KARTA_PROSTRANSTVA.json"
+    if kp.exists() and time.time() - kp.stat().st_mtime < maks_vozrast_ch * 3600: return False
+    import katalog_istochnikov, karta_prostranstva
+    katalog_istochnikov.main(); karta_prostranstva.main(); return True
 
 
 def kladbishche(slova, koren=None):
