@@ -1,0 +1,87 @@
+{
+  "schema": "ALPACA_OWNER_REPAIR_INDEPENDENT_READBACK_V1",
+  "status": "LIVE_PROTECTED_READBACK_CONFIRMED",
+  "observed_ms": 1792169721662,
+  "position": {
+    "symbol": "NET",
+    "qty": "0.325167779",
+    "avg_entry_price": "311.222",
+    "current_price": "294.82",
+    "unrealized_pl": "-5.333402"
+  },
+  "stop": {
+    "id": "6a789147-74a9-4fcc-9836-ba5a7ad0348f",
+    "client_order_id": "dyr-879c3dd5f892aeaac3991d71522c72f6",
+    "symbol": "NET",
+    "side": "sell",
+    "type": "stop",
+    "status": "new",
+    "time_in_force": "day",
+    "qty": "0.325167779",
+    "filled_qty": "0",
+    "stop_price": "277.69",
+    "submitted_at": "2026-10-16T16:54:05.637518108Z"
+  },
+  "positions": 1,
+  "open_orders": 1,
+  "native": {
+    "qty": 0.325167779,
+    "entry_price": 311.222,
+    "hwm": 315.505,
+    "accepted_stop_floor": 277.69,
+    "accepted_order_id": "6a789147-74a9-4fcc-9836-ba5a7ad0348f",
+    "entry_order_id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+    "accepted_order_tif": "day"
+  },
+  "runtime_phase": "PROTECTED",
+  "entry_identity_proof": {
+    "schema": "ALPACA_EXECUTION_IDENTITY_V1",
+    "status": "EXECUTION_IDENTITY_MATCH",
+    "retained_raw_sha256": "2e34e83f1a4505f11c50fbc940a4e385bcc79c014cffb21e838068ca27a7a18d",
+    "broker_raw_sha256": "f51c5daab7fe3026c230ef72c759a69099eaa23f879b3aa40e9867db979e9109",
+    "hash_basis": "complete canonical JSON payload; original capture/wire-source hashes retained separately",
+    "timestamp_compatibility": "exact UTC nanoseconds, or high-precision value rounded to the REST microsecond grid",
+    "normalized_timestamp_fields": [
+      "created_at",
+      "filled_at",
+      "submitted_at",
+      "updated_at"
+    ],
+    "permitted_metadata_additions": [
+      "source"
+    ]
+  },
+  "static_source_pins": 56,
+  "manager": {
+    "ExecMainExitTimestamp": "Fri 2026-10-16 16:55:03 UTC",
+    "ExecMainStatus": "0",
+    "ExecStart": "{ path=/root/by-bot/.venv/bin/python ; argv[]=/root/by-bot/.venv/bin/python -B /opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/control-v1.py --spec /opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/spec.json --maintenance --owner-go /opt/bybot-research/alpaca-dynamic-live-20261013/control/oct15-first-entry-v1-1/session/owner-go.json ; ignore_errors=no ; start_time=[Fri 2026-10-16 16:55:00 UTC] ; stop_time=[Fri 2026-10-16 16:55:03 UTC] ; pid=2345512 ; code=exited ; status=0 }",
+    "ActiveState": "inactive"
+  },
+  "timer": {
+    "Unit": "alpaca-oct15-owned-manager.service",
+    "NextElapseUSecRealtime": "Fri 2026-10-16 17:00:00 UTC",
+    "ActiveState": "active"
+  },
+  "entry_halt_preserved": true,
+  "entry_halt_sha256": "f650419b466d016ba0fe7201590714a71d2c274c5ecf1703c84e7ff0f150c115",
+  "manager_unit_sha256": "7cf7bc5366c2741d93a9b166f6ba9bd7c6ffd1336f3edb7a0cebc12b24667eda",
+  "owner_repair_receipt_path": "/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/owner-restored-stop-1792169641054.json",
+  "owner_repair_receipt_sha256": "9015d20392693035e9ee2aefd5459ed880f8ac7bb1b947afa284310af63451a7",
+  "source_sha256": {
+    "runtime": "a0710690e43ffbb4a96329de33ec8f65edf1d4c4ab11e549ed9b1911249548e4",
+    "spec": "8f392da86c16fd8edfa7959786aadca89445c86b723bf42dd27a32786a4dbf69",
+    "identity": "6118def75cf6e98b216a03dd02eb22d4bc405e8d5a71a1e524d1a0aa2bb3346a"
+  },
+  "private_capture_sha256": "3d220d7f393b777b17d87837f4389510a2f427670fc2c324f1e62c13b2054a23",
+  "native_unchanged_during_observation": true,
+  "broker_writes_by_observer": 0,
+  "native_writes_by_observer": 0,
+  "service_changes_by_observer": 0,
+  "strategy_parity": "BLOCKED",
+  "new_entry_authority": false,
+  "limitations": [
+    "Current DAY stop is actual; future session re-arm is not yet observed.",
+    "Manager uses broker position mark without an independent mark timestamp."
+  ]
+}

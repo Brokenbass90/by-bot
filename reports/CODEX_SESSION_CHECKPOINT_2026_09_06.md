@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 16:55:21.662UTC CURRENT: ALPACA LIVE_PROTECTED_READBACK_CONFIRMED.
+Human personally executed owner-bind-manager-once.sh; repairreceipt
+owner-restored-stop-1792169641054.json retained, SHA in post_owner_readback.json.
+Actual NET0.325167779, one full SELLSTOP/DAY277.69,new,filled0,
+ID6a789147-74a9-4fcc-9836-ba5a7ad0348f. NativeacceptedID/qty/floor match;
+HWM315.505 preserved. No duplicate entry/stop. Existing manager now uses pinned
+repair-v2,56sourcepins verified; actual next scheduled16:55tick exit0,
+timeractive/next17:00UTC. NOT just ownerconsole status: independent GET+
+readonlyDB/ledger/systemd readback confirms it. OriginalentryHALT SHA
+f650419b466d016ba0fe7201590714a71d2c274c5ecf1703c84e7ff0f150c115 preserved.
+Observer0broker/native/servicewrites, nativebytesunchangedduringcapture.
+Read ALPACA_STRATEGY_PARITY_REPAIR_2026_10_16.md CURRENT and evidence/
+alpaca_parity_repair_20261016/post_owner_readback.json. Historical unprotected/
+NOTactivated statements below are the PRE-REPAIR incident, not current truth.
+NEVER rerun personal launcher/claim or switch back to the broken oldmanager.
+No riskincrease/stopwidening/newentry/HALTclear. Strategy parity stillBLOCKED,
+NET excluded from baseline-edge evidence. Future DAYrearm has NOTyetbeen observed;
+do not claim restart/nextsession proof from currenttick. KITY watcher terminal/
+policybounds/expiry, Claude/ATT1/LIQ/unrelatedallowlist unchanged.
+
 October16 16:15:36UTC CURRENT P0 SAFETY: NET0.325167779 remains LIVE/NONFLAT,
 STOP277.69 DAY expired/openorders0; owned manager repeatedly BLOCKED_EXECUTION /
 ENTRY_FILL_SOURCE_CHANGED (first06:40UTC). Owner immediately notified and chose

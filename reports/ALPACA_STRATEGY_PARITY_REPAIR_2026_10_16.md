@@ -1,6 +1,23 @@
 # Alpaca NET protection incident and strategy parity — October16
 
-CURRENT: **ALPACA_STRATEGY_PARITY_BLOCKED**. More urgent, actual NET protection
+CURRENT — **2026-10-16 16:55:21.662 UTC /19:55:21 Cyprus**:
+**LIVE_PROTECTED_READBACK_CONFIRMED**. The owner personally executed the repair
+launcher. Independent GET/SQLite/ledger/systemd readback proves one actual NET
+position0.325167779 and one native sellSTOP/DAY277.69,filled0,statusnew,
+ID `6a789147-74a9-4fcc-9836-ba5a7ad0348f`. Native ID/qty/floor match; HWM315.505
+unchanged. Existing manager's next scheduled16:55tick exited0; timeractive,
+next17:00UTC. All56sourcepins and repaired unitSHA match; original entryHALT
+preserved byte-for-byte. Observer performed zero broker/native/service writes.
+[Actual post-owner receipt](evidence/alpaca_parity_repair_20261016/post_owner_readback.json).
+
+**ALPACA_STRATEGY_PARITY remains BLOCKED**; no new-entry authority. The failed
+DAY re-arm incident is fixed/activated and current protection is proven; future
+session re-arm/restart survival is not claimed from one regular tick. Never
+repeat the personal launcher or return to the broken old manager.
+
+The following dated incident/preparation record is retained as history:
+
+PRE-ACTIVATION: **ALPACA_STRATEGY_PARITY_BLOCKED**. Actual NET protection
 is **UNPROTECTED_DAY_EXPIRED_MANAGER_BLOCKED** at the last completed GETs.
 Owner notified immediately and chose to restore the existing stop personally;
 completion/readback is still pending. Do not report LIVE_PROTECTED from yesterday.

@@ -841,3 +841,17 @@ attempt stays immutable. Native watcher is truth; chatheartbeat remainsPAUSED.
 No policy9051moneyGO/claim, expiry21UTC remains, no restart/reset/extension.
 No cap350 approval/batch-WS deployment/standing KITY authority. Preserve source,
 Claude/ATT1/LIQ/unrelatedallowlist; root-only review restriction remains.
+
+
+## October16 owner-executed NET maintenance repair confirmed
+
+CURRENT16:55:21UTC supersedes the preceding unprotected/pre-activation state.
+Human personally ran the exact recovery launcher. Independent actual GET proves
+NET0.325167779/one full nativeDAYSTOP277.69 ID6a789147…348f; durableownership/
+HWM/floor match. Repaired manager's next16:55scheduledtick exit0, timeractive,
+56sourcepins/unit binding and originalHALT preserved. Read checkpoint TOP and
+post_owner_readback.json. Agent made0broker/native/servicewrites. Never rerun
+ownerlauncher/claim, recreate stop or revert to original broken manager. No new
+entry/risk/HALTclear authority; strategy parity remainsBLOCKED. Future session
+DAYrearm/restart is not proven by this regular tick. Keep source history and
+unrelatedClaude/ATT1/LIQ/KITY/allowlist unchanged.
