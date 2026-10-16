@@ -1,0 +1,32 @@
+{
+ "dataset": "upbit_d1",
+ "istochnik": "https://api.upbit.com/v1/candles/days",
+ "period": [
+  "2022-11-01",
+  "2026-09-30"
+ ],
+ "monet": 128,
+ "sha256": "73ccef9be612f24562df88760cfe63101faedf0d5c805cc9b93b3b23d8bf3f96",
+ "sobrano": "2026-10-15T16:39:10+00:00",
+ "izmereniya": {
+  "nedel": 194,
+  "mediana_pokrytiya": 24.0,
+  "nedel_s_pokrytiem": 171,
+  "korr_s_m3_mediana": -0.049,
+  "mediana_modulya_bps": 108.81,
+  "uslovia": {
+   "pokrytie": true,
+   "nedeli": true,
+   "nezavisimost_ot_kity": true,
+   "velichina_vyshe_izderzhek": true
+  }
+ },
+ "porogi": {
+  "mediana_pokrytiya": 20,
+  "nedel_s_pokrytiem": 104,
+  "korr_s_m3_max": 0.5,
+  "mediana_modulya_bps": 12.0
+ },
+ "gotovo": true,
+ "status": "DATA_READY"
+}

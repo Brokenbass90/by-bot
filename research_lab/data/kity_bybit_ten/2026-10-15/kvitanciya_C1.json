@@ -1,0 +1,43 @@
+{
+ "d": "2026-10-15",
+ "sostavleno": "2026-10-16T08:42:56+00:00",
+ "status": "OPERATIONAL_PASS",
+ "proverki": [
+  {
+   "proverka": "C1.1 снимок 23:50–23:59 d−1",
+   "status": "PASS",
+   "detal": "2026-10-14T23:50:20+00:00"
+  },
+  {
+   "proverka": "C1.2 сигнал до 23:00 UTC дня d",
+   "status": "PASS",
+   "detal": "2026-10-15T02:04:22+00:00"
+  },
+  {
+   "proverka": "C1.3 ≥ 30 монет с признаком",
+   "status": "PASS",
+   "detal": "50"
+  },
+  {
+   "proverka": "C1.3a хэши входов сигнала",
+   "status": "PASS",
+   "detal": "snimok/potok sha совпадают с файлами"
+  },
+  {
+   "proverka": "C1.4 все ноги Trading (в снимке)",
+   "status": "PASS",
+   "detal": "BTWUSDT,XAUUSDT,LTCUSDT,VVVUSDT,BNBUSDT,XAUTUSDT,XPLUSDT,XAGUSDT,GRASSUSDT,SPCXUSDT"
+  },
+  {
+   "proverka": "C1.5a цены входа получены",
+   "status": "PASS",
+   "detal": ""
+  },
+  {
+   "proverka": "C1.5b лот проходит при $100",
+   "status": "PASS",
+   "detal": ""
+  }
+ ],
+ "pnl_v_kvitancii": false
+}

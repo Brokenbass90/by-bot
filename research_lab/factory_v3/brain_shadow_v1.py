@@ -91,25 +91,29 @@ def iz_kity(btc):
     return out
 
 
-POLYA_ELDER = ("id", "ts", "sym", "side", "stop_dolya", "k1", "k2", "epoha", "zapisano")      # R_istochnika НЕ читается
+POLYA_ELDER = ("ts", "sym", "side", "zapisano", "vovremya", "zapozdanie_ch")      # исходы (R и пр.) НЕ читаются
 
 
 def iz_elder(btc):
-    p = D / "yadro" / "ETS2M" / "vhody.jsonl"; out = []
+    """v1.2 (16.10): источник — ПЕРВАЯ запись живой тени ETS2S (data/ten_ETS2S.jsonl, пишется в момент обнаружения сигнала),
+    а не yadro/ETS2M/vhody.jsonl: ядро переносит входы с задержкой 25–280 ч, и все такие записи были не причинными.
+    Стоп в момент обнаружения ещё не записан → ожидаемый край UNKNOWN (BRAIN_V1 воздерживается, BASELINE/HEDGE считают в единицах)."""
+    p = D / "ten_ETS2S.jsonl"; out = []; vidennye = set()
     if not p.exists(): return out
     P = PRIORY["ELDER_ETS2S"]
     for l in open(p, encoding="utf-8"):
         if not l.strip(): continue
-        x = json.loads(l); x = {k: x.get(k) for k in POLYA_ELDER}
-        sp = float(x["stop_dolya"]); t_obs = int(x["ts"]) + H; t_av = max(t_obs, int(x["zapisano"]))
-        out.append(V2.vozmozhnost(source_ref=f"data/yadro/ETS2M/vhody.jsonl#{x['id']}",
+        x = json.loads(l); klyuch = (x.get("sym"), int(x.get("ts", 0)))
+        if klyuch in vidennye or x.get("side") not in ("long", "short"): continue
+        vidennye.add(klyuch); x = {k: x.get(k) for k in POLYA_ELDER}
+        t_obs = int(x["ts"]) + H; t_av = max(t_obs, int(x["zapisano"]))
+        out.append(V2.vozmozhnost(source_ref=f"data/ten_ETS2S.jsonl#{x['sym']}:{x['ts']}",
                                   source_sha256=_sha(json.dumps(x, sort_keys=True).encode()), t_observation_ms=t_obs, t_available_ms=t_av,
-                                  t_decision_ms=t_av, sleeve="ELDER", mechanism="ELDER_ETS2S", version=f"ETS2M_{x['epoha']}", symbol=x["sym"],
+                                  t_decision_ms=t_av, sleeve="ELDER", mechanism="ELDER_ETS2S", version="ETS2S_live", symbol=x["sym"],
                                   side=1 if x["side"] == "long" else -1, horizon_ms=P["horizon"], context=btc(t_obs),
-                                  features=dict(stop_dolya=sp, k1=x["k1"], k2=x["k2"]),
-                                  exp_gross_bps=round((P["R"] * sp * 1e4) + P["fee_bps"], 3), cost_fee_bps=P["fee_bps"],
-                                  cost_spread_bps=P["spread"], cost_slip_bps=P["slip"], cost_funding_bps=P["funding"],
-                                  uncertainty_bps=round(P["R_se"] * sp * 1e4, 3), prior_ref=P["ref"], prior_status=P["status"]))
+                                  features=dict(vovremya=x["vovremya"], zapozdanie_ch=x["zapozdanie_ch"]),
+                                  exp_gross_bps=U, cost_fee_bps=P["fee_bps"], cost_spread_bps=P["spread"], cost_slip_bps=P["slip"],
+                                  cost_funding_bps=P["funding"], uncertainty_bps=U, prior_ref=P["ref"], prior_status=P["status"]))
     return out
 
 
