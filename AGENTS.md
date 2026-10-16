@@ -772,3 +772,23 @@ once, then agent observes actual receipts only. Old98ae…8f3ee remainsSPENT/
 FAILED_SAFE_FLAT/net-.38780112; no reset/retry/replacement/date-transfer. No
 C1–C3/research/strategy/autonomy/scaling authority. No Alpaca/ATT1/LIQ/Claude/
 cron/oldweb change. Elder/Reporting queued after KITY; unrelatedallowlistuntouched.
+
+October16 12:05:38UTC CURRENT ACTUAL: human personally ran closeout launcher,
+command1792152234662877089, policy3ca9…c5c5 nowSPENT. FAILED_SAFE_FLAT, NOT10/10:
+ONE BTW Buy IOC was actually sent/accepted(retCode0), then exchange Cancelled/
+EC_NoImmediateQtyToFill/cumExecQty0. Other9 notattempted; nofill/noexposure,
+not NO_SEND. Runtime no-execution finality12:04:12.298UTC; independent complete
+GET positions0/open0/executions0/cashrows0, gross0/fees0/funding0/net0USDT.
+Latest savedpreflightask1.66400×10, Buy limit1.67140, CTSage819ms atwire;
+marketable atthat snapshot. Matching-timebook unavailable: no claim that market
+movement itself is proven. This is not70sdeadlinefailure; ten-leg performance
+remains unproven. No staticcodefix or repeatedcapture/entry/reprice performed.
+SamePID2311456/NRestarts0/ORDERS_OFF/TERMINAL/original818853lock,
+33prior+1newsendbarrier, unknownsend0, observerbrokerwrites0. Read CURRENT in
+KITY_FINAL_CLOSEOUT_2026_10_16.md and evidence/kity_closeout_20261016/
+owner_micro_terminal_v1.json. Original readiness/policy/launcher preserved as
+historical issued packets. NEVER rerun/reset claim/selection/journal/policy,
+auto-create replacement, widen collar/deadline or infer C1–C3/edge from this.
+Human's70s authorization covered ONE policy already spent; any further attempt
+needs new explicit scope/policy/personal financial GO. No standing authority.
+Alpaca/ATT1/LIQ/Claude/cron/services/sourcekit unchanged in this observation.

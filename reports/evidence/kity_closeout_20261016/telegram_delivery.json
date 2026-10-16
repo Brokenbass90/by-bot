@@ -1,0 +1,12 @@
+{
+  "at_ms": 1792152673906,
+  "broker_writes": 0,
+  "continuous_reporting_installed": false,
+  "evidence_id": "kity_micro:1792152234662877089",
+  "http_status": 200,
+  "message_id": 15200,
+  "response_sha256": "de2481fb192215155a8b9d050688d2e9798c46c5b31d848979041ee0822b5c0a",
+  "status": "KITY_TERMINAL_TEXT_TG_DELIVERED",
+  "text_fallback_reason": "CURRENT_RENDERER_ZERO_FILL_PROTECTION_NOT_APPLICABLE",
+  "web_activated": false
+}

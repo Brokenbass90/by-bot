@@ -1,5 +1,51 @@
 # KITY final execution closeout — October 16
 
+CURRENT ACTUAL: **FAILED_SAFE_FLAT — IOC_CANCELLED_ZERO_FILL**.
+Owner personally ran launcher/command1792152234662877089. Policy
+`3ca9ca2321a704f8f8a4ade2156d519dbace1401e86fc5f679a913896f74c5c5`
+is **SPENT**. No retry/replacement policy is prepared or authorized. Original
+engineering readiness below remains historical; it is not an actual10/10 PASS.
+
+## Actual terminal result
+
+- One BTWUSDT Buy IOC,qty10,limit1.67140 was actually dispatched. HTTP200 /
+  retCode0 acknowledged it; realtime and history independently returned the same
+  owned order Cancelled,cumExecQty0,`EC_NoImmediateQtyToFill`.
+- Other9 legs were not attempted. No entry fills, native stops or unwind were
+  required because exposure never opened. **This is not NO_SEND**: one create
+  POST occurred; the observer issued none.
+- Runtime reached FINALITY_NO_EXECUTIONS at12:04:12.298UTC. Independent complete
+  broker GET at12:05:38.600UTC: positions0,openorders0,executionrows0,cashrows0.
+  Journal gross0/fees0/funding0/net0USDT reconciles those actual sources.
+- Same PID2311456,NRestarts0,ORDERS_OFF/TERMINAL,original818853lock.34 total
+  financialsendbarriers =33 prior+1 thisattempt. Unknownsend0.
+- Latest saved preflight book: ask1.66400×10; IOC Buy limit1.67140. CTS was819ms
+  old at actual wire start. The limit was marketable at that snapshot. Create
+  ACK took374ms. The exact matching-time book was not captured; intervening
+  market movement is a possible explanation, **not a proven source fact**.
+
+[Official Bybit enums](https://bybit-exchange.github.io/docs/v5/enum) define this
+reason as failure to find an immediate maker. Matching is not guaranteed by an
+HTTP acceptance. The70s deadline was not reached by the failed entry; this run
+cannot prove ten-leg latency. There is no basis here to widen prices/deadline or
+change the strategy. Full immutable sanitized receipt:
+`evidence/kity_closeout_20261016/owner_micro_terminal_v1.json`.
+
+No new policy/GO/order/service change was made in the observation. A next attempt
+requires separate explicit scope and a new policy/personal GO: owner authorized
+70s for **one policy**, which is now spent. Never rerun the printed historical
+launcher below or reset its claim/selection/journal. No money/research/standing
+permission is inherited. Alpaca/ATT1/LIQ/Claude were untouched.
+
+One actual terminal text notification delivered through the existing Telegram
+sender: HTTP200/oktrue/message15200. Text fallback used because the current
+basket renderer displays absent protection as failure for zero-fill baskets.
+That is a reporting-only gap for the queued Reporting integration, not a money
+gate. No broker credentials entered the reporting process;0 broker writes,
+continuous reporter/web remain unactivated. No duplicate delivery/retry.
+
+## Historical engineering packet — issued before actual attempt
+
 CURRENT: **KITY_10_OF_10_READY — ENGINEERING / ORDERS_OFF**.
 This is readiness for ONE new owner-authorized execution test, **not an actual
 10/10 fill, strategy PASS, standing trading authority or C1–C3 evidence**.
