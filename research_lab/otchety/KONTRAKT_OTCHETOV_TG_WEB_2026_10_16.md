@@ -19,3 +19,20 @@ P&L всегда со знаком и стрелкой, не только цве
   не блокирует торговлю (отчёт — побочный канал).
 - Те же поля события = строки TAX-A (fill/fees/funding/realized) — одна правда для отчёта и для налогового журнала.
 Зависимость: matplotlib в окружении бота (`pip install matplotlib`).
+
+## Поправка 16.10 11:55 — единый вид с крипто-ботом и подключение к вебу
+Карточка перекрашена под существующий крипто-бот (`smart_pump_reversal_bot._make_trade_chart`): тёмный фон, cyan = ВХОД,
+green = ЦЕЛЬ, red = СТОП, orange = ВЫХОД, пунктирные вертикали в моменты входа и выхода, подписи уровней справа.
+Подпись в TG — в формате крипто-бота (символ, сторона, стратегия, время, P&L, причина).
+
+**Telegram (Codex):** у Alpaca уже есть `scripts/equities_alpaca_tg_report.py::_tg_send_photo` — на события fill / перенос стопа /
+выход вызвать `karta_sdelki.risovat` (бары — дневные/часовые Alpaca из своего источника) и отправить фото.
+
+**Веб (Codex), ничего нового не изобретать — повторить путь крипты:**
+1. События Alpaca писать тем же форматом, что читает `web/activity_feed.read_trade_events`:
+   `{event: entry_filled|close|order_submitted, ts, symbol, side, strategy, fill_price|entry_price, sl_price, exit_price, pnl, venue: "alpaca"}`
+   → они сразу появятся в ленте активности с русским текстом (`render_trade_event_ru`).
+2. Маршрут `GET /trades/chart` (сейчас свечи только Bybit) — параметр `venue=alpaca`: свечи из Alpaca Market Data, тот же ответ
+   `{time_ms, open, high, low, close, volume}` → фронтенд рисует те же маркеры без изменений.
+3. Опционально — отдавать готовый PNG карточки (`/trades/card?id=`), чтобы веб и TG показывали одну и ту же картинку.
+Важно: по отчёту Codex 16.10 старый bybot/web сейчас остановлен (inhibited) — включение веба отдельным решением Codex/владельца.
