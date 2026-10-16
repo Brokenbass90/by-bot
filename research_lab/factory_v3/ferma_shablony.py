@@ -82,6 +82,35 @@ def _priznak(imya, D):
             a, b, c = g(s, vch), m3(s, vch), dd(s, vch)
             return None if a is None or b is None or c is None else (float(a), float(b), float(c[0]))
         return f
+    if imya.startswith("dolya_obema_"):                    # PREREG_DOLYA_OBEMA_PLOSHCHADOK: доля площадки в объёме монеты (база, без цены)
+        plosh = imya.split("dolya_obema_")[1]; KESH = D.setdefault("obem_" + plosh, {}); BN = D.setdefault("bn_obem", {})
+        import bisect
+        def ryad_o(s):
+            if s not in KESH:
+                fp = LAB / "data" / f"obem_{plosh}_d1" / f"{s}.json"; v = json.loads(fp.read_text()) if fp.exists() else {}
+                if s not in BN:
+                    fb = LAB / "data" / "binance_kity" / "klines" / f"{s}.json"
+                    BN[s] = {dt.datetime.fromtimestamp(int(k[0]) / 1000, dt.timezone.utc).date().isoformat(): float(k[5])
+                             for k in (json.loads(fb.read_text()) if fb.exists() else [])}
+                r = {d_: v[d_] / (v[d_] + BN[s][d_]) for d_ in v if d_ in BN[s] and v[d_] > 0 and BN[s][d_] > 0}
+                KESH[s] = (sorted(r), r)
+            return KESH[s]
+        def f(s, vch):
+            dni, r = ryad_o(s)
+            if vch not in r: return None
+            j = bisect.bisect_left(dni, vch); okno = [r[x] for x in dni[max(0, j - 28):j]]
+            return None if len(okno) < 20 else r[vch] - sum(okno) / len(okno)
+        return f
+    if imya == "vyhodnye":                                 # PREREG_VYHODNYE_XS: доходность выходных (закрытие вс / закрытие пт) − 1
+        M = D["M"]                                          # при входе закрытием понедельника vch = воскресенье
+        def f(s, vch):
+            x = M.get(s)
+            if x is None: return None
+            d = dt.date.fromisoformat(vch); t1 = int(dt.datetime(d.year, d.month, d.day, tzinfo=dt.timezone.utc).timestamp() * 1000)
+            i = int(np.searchsorted(x["ts"], t1))
+            if i >= len(x["ts"]) or x["ts"][i] != t1 or i < 2 or x["ts"][i] - x["ts"][i - 2] != 2 * 86_400_000 or x["c"][i - 2] <= 0: return None
+            return float(x["c"][i] / x["c"][i - 2] - 1.0)
+        return f
     if imya == "up_premiya":                               # PREREG_UPBIT_PREMIYA_XS: премия Upbit KRW к перпу Binance дня d−1 минус
         M = D["M"]; PU = D.setdefault("up_pr", {})        # её среднее за 28 предыдущих дней (≥ 20); курс KRW/USDT общий для всех монет
         def ryad_u(s):
@@ -133,7 +162,7 @@ def _priznak(imya, D):
 
 
 PRIZNAKI = ("m3_perp", "spot", "spot_minus_perp", "m3_vsplesk", "pogloshchenie", "glubina_imb1", "glubina_imb2", "glubina_imb5",
-            "glubina_ort", "cb_premiya", "cb_premiya_shok", "up_premiya")
+            "glubina_ort", "cb_premiya", "cb_premiya_shok", "up_premiya", "vyhodnye", "dolya_obema_coinbase", "dolya_obema_upbit")
 SOSTAVNYE = {"pogloshchenie", "glubina_ort"}   # значения-кортежи → остаток после проекции внутри недели
 
 
@@ -149,7 +178,8 @@ def xs_nedelya_binance(parametry, dostup):
 
     def nedelya(d):
         vch = (d - dt.timedelta(days=1)).isoformat()
-        oi = sorted([(x["met"][vch][4], s) for s, x in M.items() if vch in x["met"] and x["met"][vch][4]], reverse=True)[:50]
+        _v = d - dt.timedelta(days=1); vu = (_v - dt.timedelta(days=(_v.weekday() - 2) % 7)).isoformat()   # OI есть только по средам: вселенная —
+        oi = sorted([(x["met"][vu][4], s) for s, x in M.items() if vu in x["met"] and x["met"][vu][4]], reverse=True)[:50]  # последняя среда ≤ d−1
         rows = []
         for _, s in oi:
             x = M[s]; i = int(np.searchsorted(x["ts"], ts(d)))
@@ -172,7 +202,9 @@ def xs_nedelya_binance(parametry, dostup):
         leg = [r for r in leg if r is not None]
         return float(np.mean(leg)) if leg else None
 
-    sob = [(ts(d), r, None) for d in K.SETKA if a <= d <= b for r in [nedelya(d)] if r is not None]
+    sdv = int(parametry.get("sdvig_dney", 0))                         # 16.10: неделя может начинаться не в четверг (0 = эталон KITY)
+    setka = [d + dt.timedelta(days=sdv) for d in K.SETKA]
+    sob = [(ts(d), r, None) for d in setka if a <= d <= b for r in [nedelya(d)] if r is not None]
     it = P.itog(sob, s_kontrolem=False, lag=1)
     return dict(t=it.get("t", 0.0), n=it.get("dney", it.get("n", 0)), metrika=it)
 

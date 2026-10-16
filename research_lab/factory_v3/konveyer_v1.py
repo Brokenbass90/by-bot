@@ -74,6 +74,21 @@ def _prohod(put, reestr, processov, koren):
         if gt[z["spec"]["id"]] is False:
             itogi.append(dict(tip="itog", id=z["spec"]["id"], status="BLOCKED_DATA", kogda=int(time.time() * 1000)))
     gotovye = [z for z in novye if gt[z["spec"]["id"]] is True]
+    proshli = []
+    for z in gotovye:                                            # общий шаг измерений без доходностей, если в карте заданы пороги
+        por = z["karta"].get("izmereniya_porogi")
+        if not por:
+            proshli.append(z); continue
+        try:
+            iz = izmereniya_xs(z["spec"])
+        except Exception as e:
+            iz = dict(oshibka=str(e)[:200])
+        ok = ("oshibka" not in iz and iz["mediana_pokrytiya"] >= por.get("pokrytie", 20) and iz["mediana_modulya_bps"] >= por.get("modul_bps", 12)
+              and iz["korr_s_m3_mediana"] is not None and abs(iz["korr_s_m3_mediana"]) < por.get("korr_m3", 0.5))
+        dopisat(dict(tip="izmereniya", id=z["spec"]["id"], rez=iz, porogi=por, status="PASS" if ok else "FAIL", kogda=int(time.time() * 1000)), put)
+        if ok: proshli.append(z)
+        else: itogi.append(dict(tip="itog", id=z["spec"]["id"], status="BLOCKED_BY_MEASUREMENT", izmereniya=iz, kogda=int(time.time() * 1000)))
+    gotovye = proshli
     if gotovye:
         import ferma_v1
         for x in ferma_v1.zapustit([z["spec"] for z in gotovye], reestr=reestr, processov=processov):
@@ -81,7 +96,11 @@ def _prohod(put, reestr, processov, koren):
             x.update(tip="itog", kogda=int(time.time() * 1000),
                      k_teni=bool(x.get("status") == "PASS" and k["ispolnimost"] == "ponyatna"))
             itogi.append(x)
-    for x in itogi: dopisat(x, put)
+    for x in itogi:
+        dopisat(x, put)
+        if x.get("status") == "FAIL":
+            try: avto_postmortem(x, reestr)
+            except Exception: pass
     try:                                              # запас кандидатов виден без рестарта сторожа (модуль перечитывается)
         (Path(put).parent / "ZAPAS.json").write_text(json.dumps(dict(zapas(put), kogda=int(time.time() * 1000)), ensure_ascii=False))
     except Exception:
@@ -120,3 +139,40 @@ def kladbishche(slova, koren=None):
             if l.strip() and all(w in t for w in slova):
                 z = json.loads(l); out.append((z.get("id") or z.get("gipoteza") or z.get("popytka"), z.get("status") or z.get("verdikt") or z.get("tip")))
     return out
+
+
+def izmereniya_xs(spec, okno_ot="2023-01-01", okno_do="2026-09-23"):
+    """16.10: ОБЩИЙ шаг измерений без доходностей для недельной кросс-секции — новая семья = функция признака + карта, без своего
+    кода измерений. Считает по неделям окна DEV: покрытие топ-50, медиану |признака| (bps), корр. с KITY m3 (независимость)."""
+    import datetime as dt, statistics, numpy as np, ferma_shablony as F, kity_sudya as K
+    D = F._dannye(); M = D["M"]; p = spec["parametry"]; pr = F._priznak(p["priznak"], D); m3 = F._priznak("m3_perp", D)
+    sdv = int(p.get("sdvig_dney", 0)); pokr, modul, korr = [], [], []
+    for d0 in K.SETKA:
+        d = d0 + dt.timedelta(days=sdv)
+        if not dt.date.fromisoformat(okno_ot) <= d <= dt.date.fromisoformat(okno_do): continue
+        vch = (d - dt.timedelta(days=1)).isoformat()
+        _v = d - dt.timedelta(days=1); vu = (_v - dt.timedelta(days=(_v.weekday() - 2) % 7)).isoformat()   # OI есть только по средам: вселенная —
+        oi = sorted([(x["met"][vu][4], s) for s, x in M.items() if vu in x["met"] and x["met"][vu][4]], reverse=True)[:50]  # последняя среда ≤ d−1
+        pary = [(pr(s, vch), m3(s, vch)) for _, s in oi]
+        pary = [(a, b) for a, b in pary if a is not None and not isinstance(a, tuple)]
+        pokr.append(len(pary)); modul += [abs(a) for a, _ in pary]
+        bb = [(a, b) for a, b in pary if b is not None]
+        if len(bb) >= 20 and np.std([a for a, _ in bb]) > 0: korr.append(float(np.corrcoef([a for a, _ in bb], [b for _, b in bb])[0, 1]))
+    return dict(nedel=len(pokr), mediana_pokrytiya=statistics.median(pokr) if pokr else 0,
+                mediana_modulya_bps=round(statistics.median(modul) * 1e4, 2) if modul else 0.0,
+                korr_s_m3_mediana=round(statistics.median(korr), 3) if korr else None)
+
+
+def avto_postmortem(itog, reestr=None):
+    """16.10: на FAIL конвейер сам пишет черновик постмортема: метрики, половины, «прошёл бы обратный знак?». Решение о варианте спасения —
+    за исследователем (бюджет: ≤ 2 диагностики + 1 причинный вариант); без него семья закрывается."""
+    from reestr_v1 import Reestr
+    r = reestr or Reestr(); p = r.sostoyanie()["popytki"].get(itog["id"], {}); m = (p.get("rezultat") or {}).get("metrika") or {}
+    t = float(itog.get("t", 0)); treb = float(itog.get("trebuemyy_t", 0) or 0)
+    z = dict(id=itog["id"], status=itog["status"], t=t, trebuemyy_t=treb, edge_bps=m.get("edge_bps"), polovinki_bps=m.get("polovinki_bps"),
+             n=itog.get("n"), obratnyy_znak_proshel_by=abs(t) >= treb and t < 0,
+             polovinki_soglasny=(m.get("polovinki_bps") or [0, 0])[0] * (m.get("polovinki_bps") or [0, 0])[1] > 0,
+             vyvod="обратный знак значим — это НОВАЯ гипотеза с собственным prereg, не спасение" if abs(t) >= treb and t < 0
+             else "ни прямой, ни обратный знак не значимы — спасение только причинным вариантом, иначе KILL")
+    put = OCHERED.parent / "postmortem_avto" / f"{itog['id']}.json"; put.parent.mkdir(parents=True, exist_ok=True)
+    put.write_text(json.dumps(z, ensure_ascii=False, indent=1)); return z
