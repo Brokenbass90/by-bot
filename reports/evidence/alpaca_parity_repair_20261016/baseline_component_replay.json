@@ -1,0 +1,57 @@
+{
+  "schema": "ALPACA_BASELINE_CANDIDATE_REPLAY_V1",
+  "status": "OFFLINE_BASELINE_COMPONENT_PARITY_PASS",
+  "deployed_live_parity": "BLOCKED_DYNAMIC_WEEKLY_INTRADAY",
+  "orders_allowed": false,
+  "money_authority": false,
+  "reference_commit": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+  "reference_research_commit": "981b62f7da598df95b0cf265902f28c920929469",
+  "published_manifest_sha256": "ea6e42d29fd536c86542e60b0b7642c2c7feac74d7843ef76677f9188606e24c",
+  "universe_sha256": "36da070b2e1fb6c7a10d3df99716c94e2afcabc7bae57d3ca172441736107172",
+  "universe_files": 59,
+  "source_sha256": {
+    "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+    "backtest/alpaca_exact_parity_contract.py": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+    "backtest/alpaca_bakeoff_v2_contract.py": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+    "strategies/alpaca_dynamic_v4_event.py": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a",
+    "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245",
+    "scripts/alpaca_adaptive_paper.py": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+    "research_lab/alpaca_strategy_parity_v1.py": "bec4669c89cd48793fb499152883ac97b4ced5640792d326528763ec365684c8"
+  },
+  "replay_script_sha256": "b4e6ef9118b6639a8cfc4896b937195590acb2ea5ae252ce26909bbb17dd892c",
+  "selection_decisions_exact": 24,
+  "trades_core_sha16": "2347a7ec606cd845",
+  "trades_compared": 64,
+  "numeric_tolerance": 1e-09,
+  "checks": {
+    "initial_stops": 66,
+    "daily_pre_states": 695,
+    "daily_post_states": 637,
+    "stop_exits": 56
+  },
+  "final_close_not_evaluated_without_next_session": [
+    {
+      "symbol": "BAC",
+      "session": "2026-07-10"
+    },
+    {
+      "symbol": "SNOW",
+      "session": "2026-07-10"
+    }
+  ],
+  "summary": {
+    "initial_capital": 1000,
+    "final_equity": 1299.7103791632053,
+    "return_pct": 29.97103791632052,
+    "daily_max_drawdown_pct": 7.569155255862947,
+    "profit_factor_realized": 1.810941917777547,
+    "realized_trades": 64,
+    "red_months": 9,
+    "months": 24,
+    "worst_month_pct": -4.24457949558038,
+    "average_gross_exposure_pct": 26.13485391620053
+  },
+  "broker_calls": 0,
+  "production_changes": 0,
+  "limitation": "Component replay; monthly production binding, rotation/retention and independent review remain separate."
+}

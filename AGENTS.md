@@ -855,3 +855,22 @@ ownerlauncher/claim, recreate stop or revert to original broken manager. No new
 entry/risk/HALTclear authority; strategy parity remainsBLOCKED. Future session
 DAYrearm/restart is not proven by this regular tick. Keep source history and
 unrelatedClaude/ATT1/LIQ/KITY/allowlist unchanged.
+
+## October16 exact baseline component parity delivery
+
+Read checkpoint TOP and ALPACA_BASELINE_PARITY_CANDIDATE_2026_10_16.md.
+Research981b62f/reference2e68b1f exact runner is supplied and reproduced:64trade
+core2347a7ec606cd845. Final V2 component differential24monthly selections/
+66initialstops/56protectiveexits and daily states PASS;266targetedPASS.
+This is OFFLINE_BASELINE_COMPONENT_PARITY_PASS, NEVER full deployed strategy
+parity or money authority. Local Dynamic TTL/ATR validation and transport-free
+monthly/daily adapter are NOT deployed into current NET. Future production
+binding/rotation/retention/dailyclosedsource/durable ratchet and independent
+Claude review remain. Owner was asked to choose validatedmonthly/daily vs
+previously approvedweekly separatevalidation; no activation follows the choice.
+No new PAPER/statistical gate. Old retained836PAPER/214LIVE history+4books were
+read GET-only; absent oldlineage UNKNOWN, moneyjournal untouched. Do not repeat
+the history observation to chase PASS or lower current277.69 to the diagnostic
+277.67. Current maintenance remains exact repairedkit, entryHALT preserved.
+No ownerlauncher/money flag/managerstart/oldwriter rollback as agent. Preserve
+KITY/ATT1/LIQ/Claude and unrelated allowlist; rootonly review restriction remains.

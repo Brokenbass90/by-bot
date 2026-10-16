@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 17:26UTC PARITY CURRENT: OFFLINE_BASELINE_COMPONENT_PARITY_PASS only,
+NOT ALPACA_STRATEGY_PARITY_PASS. Read ALPACA_BASELINE_PARITY_CANDIDATE_2026_10_16.md.
+Claude research981b62f confirmed actualorigin; exact reference2e68b1f/8code/
+config/59data pins verified; independent suppliedrunner core2347a7ec606cd845,
+64trades. Final adapterreplayV2:24monthlyselections/66initialstops/695prestates/
+637poststates/56protectiveexits match.2finalclose publications deliberately
+not evaluated without nextsessioncalendar.266targetedPASS, rootonly/no reviewer.
+Local Dynamic sessionTTL/ATR seal rejects saved Oct9→Oct15 source. New pure
+monthly/daily actualfill+rawATR receipts/ratchet candidate has no broker/permit/
+reservation/service authority. Not deployed; current NETkit/stop/HWM untouched.
+Known remaining: ownerchoice validatedmonthly/daily vs approvedweekly needing
+separatevalidation; actual versioned monthly production/rotation/retention +
+dailyclose source/durable ratchet binding; independentClaude review, then only
+fresh operational gates and separate monetaryauthority. No newPAPER/statsgate.
+OneboundedGETonly audit exhausted retained836PAPER/214LIVEorders+4declaredbooks;
+all346buyorders classified,341UNKNOWN incl nofill; no oldmissinglineage invented.
+NETPAPER OPERATIONAL_VALIDATION; NETLIVE OFF_PROTOCOL_STALE_SIGNAL/RISK_REFERENCE
+relativebaseline, not claim unauthorizedmoney. Oct1actual14:10vs13:30open and
+AMD/META centrounding differences explicit. Moneyjournal unchanged. EntryHALT
+preserved; lastfullactualNETprotection readback remains16:55:21UTC below.
+KITYwatcher/9051expiry21UTC/bounds and Claude/ATT1/LIQ/allowlist unchanged.
+
 October16 16:55:21.662UTC CURRENT: ALPACA LIVE_PROTECTED_READBACK_CONFIRMED.
 Human personally executed owner-bind-manager-once.sh; repairreceipt
 owner-restored-stop-1792169641054.json retained, SHA in post_owner_readback.json.

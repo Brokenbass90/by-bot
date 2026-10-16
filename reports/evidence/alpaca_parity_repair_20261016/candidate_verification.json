@@ -1,0 +1,21 @@
+{
+  "schema": "ALPACA_PARITY_CANDIDATE_VERIFICATION_V1",
+  "status": "LOCAL_COMPONENTS_VERIFIED_NOT_DEPLOYED",
+  "test_command": ".venv/bin/python -m pytest tests/test_alpaca_strategy_parity_v1.py tests/test_alpaca_dynamic_v1.py tests/test_alpaca_dynamic_paper.py tests/test_alpaca_dynamic_paper_maintenance.py tests/test_alpaca_dynamic_live_intake_v1.py tests/test_alpaca_dynamic_live_runtime_v1.py tests/test_alpaca_dynamic_first_intent_v1.py tests/test_alpaca_owned_stop_repair_v1.py -q",
+  "result": "266 passed in 3.87s",
+  "source_sha256": {
+    "research_lab/alpaca_strategy_parity_v1.py": "d87f5e07dc3353664f06661dc9a7ef2e16ce37342ad5df9c255a30f4f150efb8",
+    "research_lab/alpaca_dynamic_v1.py": "7ab36fd92c93103c648002eae16d775225d73c98fa765d470652a00d84c09622",
+    "scripts/replay_alpaca_baseline_parity_v1.py": "b4e6ef9118b6639a8cfc4896b937195590acb2ea5ae252ce26909bbb17dd892c",
+    "scripts/audit_alpaca_prior_intents_v1.py": "3530223df19fd6d671b1bf2703d9de877af362656173e04a59878664f7127b33",
+    "tests/test_alpaca_strategy_parity_v1.py": "88b3c9aace053659f8063693c37c3a99725ae7dcb605d0550d41b2dfe0611d89",
+    "tests/test_alpaca_dynamic_v1.py": "2ef322a7fedd33a15ebee7a41da8ce582dd826d476485408200b70b0cce83176"
+  },
+  "public_secret_account_key_scan": "PASS",
+  "independent_reviewer": false,
+  "production_changes": 0,
+  "broker_writes": 0,
+  "exact_reference_core": "2347a7ec606cd845",
+  "orders_allowed": false,
+  "money_authority": false
+}

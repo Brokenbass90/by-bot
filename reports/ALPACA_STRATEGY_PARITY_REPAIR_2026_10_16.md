@@ -1,5 +1,16 @@
 # Alpaca NET protection incident and strategy parity — October16
 
+PARITY UPDATE **17:26UTC**: exact executable reference accepted/reproduced,
+`OFFLINE_BASELINE_COMPONENT_PARITY_PASS`, **not deployed full-strategy PASS**.
+Read [candidate/replay delivery](ALPACA_BASELINE_PARITY_CANDIDATE_2026_10_16.md).
+64trade core2347a7ec606cd845/24selections/66initialstops/56protectiveexits match.
+New local session-TTL rejects saved Oct9→Oct15 intent; raw ATR/actual-fill stop
+and daily-close next-session ratchet candidate delivered orders-OFF.266targetedPASS.
+All retained broker history now exhausted836PAPER/214LIVE,4sourcebooks; old
+missing selection/ATR lineage stays UNKNOWN. Monthly/daily vs approved weekly/
+intraday production binding remains materially unresolved; owner choice pending.
+No deployed NET/stop/manager/risk change. Last full protection readback below.
+
 CURRENT — **2026-10-16 16:55:21.662 UTC /19:55:21 Cyprus**:
 **LIVE_PROTECTED_READBACK_CONFIRMED**. The owner personally executed the repair
 launcher. Independent GET/SQLite/ledger/systemd readback proves one actual NET

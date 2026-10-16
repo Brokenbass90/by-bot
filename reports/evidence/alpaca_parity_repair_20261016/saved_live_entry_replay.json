@@ -1,0 +1,23 @@
+{
+  "schema": "ALPACA_SAVED_LIVE_INPUT_PARITY_V1",
+  "status": "STALE_SIGNAL_RESELECT_FAIL",
+  "money_authority": false,
+  "orders_allowed": false,
+  "raw_inventory_sha256": "9a8cb64b10f6246a324d111ef65a1185e0f39d55219b5b64a7bf4a6304d310cf",
+  "ranking_sha256": "51f8cdad696a477fc470889e91d40af32af81464964f7bbaed5a73b7918cec14",
+  "calendar_sha256": "1c67698db02229d98c162f8900586a57134bd16997285e265af312bada0e6356",
+  "actual_intake_sha256": "8ad379c67ddcd2acebbe82c61c6a6f2d54c7debca1ce0306d9bf06bf68000e46",
+  "signal_session": "2026-10-09",
+  "intended_entry_window_ms": 1791811800000,
+  "actual_entry_session": "2026-10-15",
+  "observed_entry_window_ms": 1792071000000,
+  "new_session_ttl_accepts": false,
+  "atr20": 16.771206665045003,
+  "atr20_session": "2026-10-09",
+  "actual_fill": 311.222,
+  "actual_initial_stop": 277.69,
+  "baseline_rounding_audit_only": 277.67,
+  "latest_oct14_selection_atr": "UNKNOWN_NOT_IN_ENTRY_SOURCES",
+  "current_stop_recomputed_or_changed": false,
+  "broker_calls": 0
+}

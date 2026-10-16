@@ -46,6 +46,13 @@ def session_at(calendar,now):
         seen.add(d);previous=row
     return next((r for r in calendar if r['open_ms']<=now<r['open_ms']+300000),None)
 
+def ranking_matches_entry_window(ranking,calendar,window_ms):
+    """Session TTL, independent of account state, prices and order authority."""
+    prior=[row for row in calendar if row['close_ms']<window_ms]
+    return bool(prior and ranking['signal_session']==prior[-1]['session']
+                and ranking['window_ms']==window_ms)
+
+
 def policy_check(p):
     if (p['schema']!='ALPACA_DYNAMIC_V1' or p['mode']!='ORDERS_OFF' or p['money_authority'] is not False
         or dec(p['capital_usd'])!=Decimal('487.42') or dec(p['gross'])!=Decimal('.70')
@@ -141,6 +148,12 @@ class DynamicBook:
             if pick['symbol'] in seen or pick['symbol'] in r['blocked_symbols'] or pick['symbol'] not in p['universe']:raise ValueError('INVALID_RANKING')
             seen.add(pick['symbol'])
             if not positive(pick['signal_close'])>positive(pick['stop_price']):raise ValueError('INVALID_REFERENCE_STOP')
+            try:atr=positive(pick['atr20'])
+            except (KeyError,ValueError,ArithmeticError) as exc:raise ValueError('RANKING_ATR20_UNKNOWN') from exc
+            # Reproduce the frozen selector's own floating-point expression,
+            # not a new risk tolerance or a silently retained old distance.
+            if float(pick['stop_price'])!=float(pick['signal_close'])-2.0*float(atr):
+                raise ValueError('RANKING_ATR20_REFERENCE_CONFLICT')
         with self.db() as db:
             old=db.execute('SELECT payload FROM rankings WHERE window=?',(window,)).fetchone();raw=canonical(r).decode()
             if old and old[0]!=raw:raise ValueError('RANKING_CONFLICT')
@@ -278,6 +291,10 @@ class DynamicBook:
             if child['symbol'] not in held and child not in vacancies:raise ValueError('PAPER_POSITION_UNRECONCILED')
         if any(p['session']==current['session'] for p in self.history_from_db(db)):return self.result('SESSION_ENTRY_BUDGET')
         if len(held)>=p['max_positions']:return self.result('NO_ELIGIBLE_CANDIDATE',reason='POSITION_CAP')
+        if not ranking_matches_entry_window(ranking,calendar,current['open_ms']):
+            # One intended next-session entry. A missed window must not turn
+            # a weekly list into an off-cycle entry or substitute a new ticker.
+            return self.result('NO_SEND',reason='STALE_SIGNAL_RESELECT_FAIL')
         gross=sum((positive(r['market_value']) for r in s['positions']),Decimal(0))
         if gross<0:raise ValueError('INVALID_GROSS')
         available_gross=dec(p['capital_usd'])*dec(p['gross'])-gross;slot=free[0]

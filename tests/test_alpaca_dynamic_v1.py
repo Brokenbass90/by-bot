@@ -120,7 +120,7 @@ def test_marked_gross_and_cost_liability_bound_quantity_without_upscaling_surviv
 
 
 def test_sealed_ranking_cannot_change_reference_stop(book,snapshot,calendar,ranking):
-    ranking['picks'][0]['stop_price']=80;ranking['input_sha256']='c'*64
+    ranking['picks'][0].update(stop_price=80,atr20=10);ranking['input_sha256']='c'*64
     # A different ranking for the sealed window must be rejected, never overwrite.
     with pytest.raises(ValueError,match='RANKING_CONFLICT'):book.seal_ranking(ranking,calendar,NOW)
     assert book.intent_count()==0
@@ -130,7 +130,7 @@ def test_no_late_selection_or_implicit_daily_ranking_refresh(book,snapshot,calen
     assert book.propose(snapshot,calendar,NOW+300001)['status']=='NOT_SELECTION_WINDOW'
     next_day=1791466201000;snapshot['observed_ms']=next_day;snapshot['quotes']['NET']['received_ms']=next_day
     r=book.propose(snapshot,calendar,next_day)
-    assert r['status']=='RESERVED_ORDERS_OFF'  # same frozen weekly list, first unused vacancy
+    assert r['status']=='NO_SEND' and r['reason']=='STALE_SIGNAL_RESELECT_FAIL'
     monday=1791811801000;snapshot['observed_ms']=monday
     assert book.propose(snapshot,calendar,monday)['status']=='BLOCKED_DATA'
 
@@ -183,7 +183,13 @@ def test_replacement_full_exit_can_free_next_slot_but_cooldown_preserves_old_nam
         'qty':plan['qty'],'price':'100','stop_qty':plan['qty'],'stop_price':'96','stop_status':'new','filled_ms':NOW+2000}
     book.register_paper_fill(plan['receipt_id'],fill)
     t=1791466201000;snapshot['observed_ms']=t;snapshot['exits']=[{'entry_order_id':'paper-net','orders':[{'id':'net-exit','symbol':'NET','side':'sell','status':'filled','filled_qty':plan['qty'],'filled_avg_price':'104','filled_ms':t-10000}]}]
-    assert book.propose(snapshot,calendar,t)['status']=='NO_ELIGIBLE_CANDIDATE'  # only NET in frozen weekly list, cannot reenter it
+    out=book.propose(snapshot,calendar,t)
+    assert out['status']=='NO_SEND' and out['reason']=='STALE_SIGNAL_RESELECT_FAIL'
+    monday=next(r for r in calendar if r['session']=='2026-10-12')['open_ms']
+    ranking.update(window_ms=monday,signal_session='2026-10-09',source_available_ms=monday)
+    book.seal_ranking(ranking,calendar,monday+1000)
+    snapshot['observed_ms']=monday+1000;snapshot['quotes']['NET']['received_ms']=monday+1000
+    assert book.propose(snapshot,calendar,monday+1000)['status']=='NO_ELIGIBLE_CANDIDATE'  # fresh rank cannot bypass21-day cooldown
 
 
 def test_two_independent_readers_racing_for_same_vacancy_emit_one_persisted_intent(book,snapshot,calendar,api,policy):
@@ -293,3 +299,29 @@ def test_filled_paper_child_missing_from_account_and_exit_source_blocks_new_slot
     snapshot['positions']=[p for p in snapshot['positions'] if p['symbol']!='CRWD']
     snapshot['exits'].append({'entry_order_id':crwd['entry_order_id'],'orders':[{'id':'crwd-exit','symbol':'CRWD','side':'sell','status':'filled','filled_qty':crwd['qty'],'filled_avg_price':'280','filled_ms':t-10000}]})
     assert book.propose(snapshot,calendar,t)['reason']=='PAPER_POSITION_UNRECONCILED'
+
+
+def test_missed_next_session_signal_never_reserves_from_same_weekly_list(book,snapshot,calendar):
+    later=1791466201000  # Oct8, original signal Oct6/intended Oct7.
+    snapshot['observed_ms']=later;snapshot['quotes']['NET']['received_ms']=later
+    out=book.propose(snapshot,calendar,later)
+    assert out['status']=='NO_SEND' and out['reason']=='STALE_SIGNAL_RESELECT_FAIL',out
+    assert book.intent_count()==0
+
+
+def test_fresh_friday_signal_is_valid_for_monday_not_a_wall_clock_24h_ttl(book,snapshot,calendar,ranking,api,policy):
+    monday=next(r for r in calendar if r['session']=='2026-10-12')['open_ms']
+    ranking.update(window_ms=monday,signal_session='2026-10-09',source_available_ms=monday)
+    book.seal_ranking(ranking,calendar,monday+1000)
+    snapshot['observed_ms']=monday+1000;snapshot['quotes']['NET']['received_ms']=monday+1000
+    out=book.propose(snapshot,calendar,monday+1000)
+    assert out['status']=='RESERVED_ORDERS_OFF',out
+
+
+@pytest.mark.parametrize('atr', [None,0,-1,float('nan'),float('inf'),True,3])
+def test_ranked_stop_must_be_reproducible_from_its_finite_atr20(api,policy,ranking,calendar,tmp_path,atr):
+    ranking['policy_sha256']=api.digest(policy)
+    ranking['picks'][0]['atr20']=atr
+    b=api.DynamicBook(tmp_path/'bad-atr.sqlite',policy)
+    with pytest.raises((ValueError,ArithmeticError,TypeError)):
+        b.seal_ranking(ranking,calendar,NOW)
