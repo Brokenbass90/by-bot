@@ -210,14 +210,23 @@ class Supervisor:
                     record_funding_cash(self.journal,r,now_ms())
                     found.add(pair)
             if found!={(s,t) for s,ts in expected.items() for t in ts}:raise SourceError('FUNDING_CASH_PENDING')
-        tasks=[]
+        all_fees=getattr(self.reader,'all_symbol_fee_snapshot',False) is True
+        tasks=[('all_fees','/v5/account/fee-rate',dict(category='linear'))] if all_fees else []
         for s in held:
-            tasks.extend((('fee:'+s,'/v5/account/fee-rate',dict(category='linear',symbol=s)),
-                ('ticker:'+s,'/v5/market/tickers',dict(category='linear',symbol=s)),
+            if not all_fees:tasks.append(('fee:'+s,'/v5/account/fee-rate',dict(category='linear',symbol=s)))
+            tasks.extend((('ticker:'+s,'/v5/market/tickers',dict(category='linear',symbol=s)),
                 ('inst:'+s,'/v5/market/instruments-info',dict(category='linear',symbol=s))))
         sources=batch_get(self.reader,tasks);fees={}
         for s in held:
-            fee=self.reader.result(sources['fee:'+s])['list'];ticker=self.reader.result(sources['ticker:'+s])['list'];i=self.reader.result(sources['inst:'+s])['list']
+            if all_fees:
+                # Official GET category=linear without symbol returns all
+                # derivative fee rows. Keep that entire raw source unchanged;
+                # select exactly one matching symbol here, never a default fee.
+                cap=sources['all_fees']
+                if cap.get('params')!=dict(category='linear'):raise SourceError('FEE_SNAPSHOT_SOURCE_CONFLICT')
+                fee=[r for r in self.reader.result(cap)['list'] if r.get('symbol')==s]
+            else:fee=self.reader.result(sources['fee:'+s])['list']
+            ticker=self.reader.result(sources['ticker:'+s])['list'];i=self.reader.result(sources['inst:'+s])['list']
             if any(len(v)!=1 or v[0]['symbol']!=s for v in (fee,ticker,i)):raise SourceError('RISK_SYMBOL_SOURCE_UNKNOWN')
             spec=self.spec[s]
             if i[0]['fundingInterval']!=spec['funding_interval_minutes']:raise SourceError('FUNDING_CALENDAR_CHANGED')

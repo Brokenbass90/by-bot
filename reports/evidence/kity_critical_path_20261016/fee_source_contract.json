@@ -1,0 +1,11 @@
+{
+  "broker_writes": 0,
+  "contract": "GET /v5/account/fee-rate category=linear, symbol omitted returns all derivative rows; consumer requires exactly one matching symbol",
+  "exact_ten_symbol_fee_parity": true,
+  "missing_or_duplicate_symbol": "SOURCE_UNKNOWN",
+  "official_source": "https://bybit-exchange.github.io/docs/v5/account/fee-rate",
+  "raw_preserved_private": true,
+  "schema": "KITY_ALL_CONTRACT_FEE_SOURCE_V1",
+  "source_sha256": "90e2100f231638a1563af35c913ad4c161e4a3a243a3c3c8700b879b1bed8323",
+  "status": "EXACT_TEN_FEE_PARITY_PASS"
+}

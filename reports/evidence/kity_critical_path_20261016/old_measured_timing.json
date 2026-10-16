@@ -1,0 +1,93 @@
+{
+  "all_ten_complete": false,
+  "broker_requests_this_replay": 0,
+  "broker_writes": 0,
+  "control_claim_from_go_ms": 2732,
+  "fresh_capture_and_compile_complete_ms": 8695,
+  "go_ms": 1792135566488,
+  "owner_authorization_from_go_ms": 9032,
+  "per_leg": [
+    {
+      "entry_intent_from_go_ms": 12003,
+      "execution_exchange_from_go_ms": 12329,
+      "fill_readback_from_go_ms": 14536,
+      "native_protection_attached_in_entry": true,
+      "post_ack_ms": 281,
+      "preflight_ms": 2179,
+      "preflight_start_from_go_ms": 9824,
+      "protection_readback_from_go_ms": 16011,
+      "separate_native_protection_post": false,
+      "symbol": "BTWUSDT",
+      "wire_start_from_go_ms": 12129
+    },
+    {
+      "entry_intent_from_go_ms": 19777,
+      "execution_exchange_from_go_ms": 20059,
+      "fill_readback_from_go_ms": 22098,
+      "native_protection_attached_in_entry": true,
+      "post_ack_ms": 282,
+      "preflight_ms": 1901,
+      "preflight_start_from_go_ms": 17876,
+      "protection_readback_from_go_ms": 23618,
+      "separate_native_protection_post": false,
+      "symbol": "XAUUSDT",
+      "wire_start_from_go_ms": 19856
+    },
+    {
+      "entry_intent_from_go_ms": 27760,
+      "execution_exchange_from_go_ms": 28121,
+      "fill_readback_from_go_ms": 30680,
+      "native_protection_attached_in_entry": true,
+      "post_ack_ms": 322,
+      "preflight_ms": 1985,
+      "preflight_start_from_go_ms": 25775,
+      "protection_readback_from_go_ms": 31808,
+      "separate_native_protection_post": false,
+      "symbol": "LTCUSDT",
+      "wire_start_from_go_ms": 27881
+    },
+    {
+      "entry_intent_from_go_ms": 36057,
+      "execution_exchange_from_go_ms": 36323,
+      "fill_readback_from_go_ms": 38852,
+      "native_protection_attached_in_entry": true,
+      "post_ack_ms": 259,
+      "preflight_ms": 1917,
+      "preflight_start_from_go_ms": 34140,
+      "protection_readback_from_go_ms": 40049,
+      "separate_native_protection_post": false,
+      "symbol": "VVVUSDT",
+      "wire_start_from_go_ms": 36144
+    },
+    {
+      "entry_intent_from_go_ms": 44781,
+      "execution_exchange_from_go_ms": 45069,
+      "fill_readback_from_go_ms": 48157,
+      "native_protection_attached_in_entry": true,
+      "post_ack_ms": 283,
+      "preflight_ms": 1773,
+      "preflight_start_from_go_ms": 43008,
+      "protection_readback_from_go_ms": 49677,
+      "separate_native_protection_post": false,
+      "symbol": "BNBUSDT",
+      "wire_start_from_go_ms": 44865
+    },
+    {
+      "entry_intent_from_go_ms": 56357,
+      "execution_exchange_from_go_ms": 56983,
+      "fill_readback_from_go_ms": 60304,
+      "native_protection_attached_in_entry": true,
+      "post_ack_ms": 587,
+      "preflight_ms": 2451,
+      "preflight_start_from_go_ms": 53906,
+      "protection_readback_from_go_ms": 61480,
+      "separate_native_protection_post": false,
+      "symbol": "XAUTUSDT",
+      "wire_start_from_go_ms": 56483
+    }
+  ],
+  "prior_net_usdt": "-0.06529398",
+  "schema": "KITY_ACTUAL_SIX_LEG_LATENCY_DECOMPOSITION_V1",
+  "source_sha256": "44d1cf9fae0133a22b1d0c098109027c3e0cf97becece7f20d208ae14348f826",
+  "total_gets_before_unwind": 407
+}

@@ -719,3 +719,20 @@ ORDERS_OFF/TERMINAL. Read canonicalTOP/current report/owner_micro_terminal_v1.js
 NEVER rerun launcher/GO, reset its localclaim/selection/journal or auto-prepare
 another policy. No timing/risk expansion or hot-change. Agent observations were
 read-only. Preserve Alpaca/ATT1/LIQ/Claude; future engineering stays orders-OFF.
+
+October16 latest owner explicitly authorizes narrow latency engineering and one
+new proposal, separate personal MONEY GO afterward. Delivered/deployed
+KITY_CRITICAL_PATH_READY_2026_10_16.md: isolated19-file app-post-go-fast-v1,
+post-go-fast-20261016 namespace, original818853lock/PID2290919/ORDERS_OFF.
+GET-only reuse/parallelreadback/globalfees/progresspause; financialsender,
+60sdeadline/215/15trigger/overshoot/30min/50bps/.203/recovery/firewall unchanged.
+120targetedPASS; full5116PASS/60sameFAIL/0new(NOT_GREEN), rootonlyreview.
+Installedfresh10/10GETpreflightPASS/noGO/noorders; deterministicmodel lastentry
+48.440s/native52.325s, not actualalltenPASS or guaranteednetworkbound. Oldspent
+policye3b3…54325 and all history preserved. Newpricefreepolicy98ae40e5…8f3ee
+expiresOct16 21UTC only. Human-only .private/kity_latency_20261016/owner-micro-once.sh
+prepared/syntaxchecked NOT executed. Agents must never execute/schedule this
+launcher, --owner-go-policy or GO_POST_GO, even on chat approval. Human personally
+executes financial authority; afterward observeactualreceipts read-only. No
+reset/retry/newpolicy/date-transfer without separate scope. ExistingAlpaca/ATT1/
+LIQ/Claude/research unchanged; unrelated allowlist preserved, not staged.

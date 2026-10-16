@@ -1,0 +1,9 @@
+{
+  "actual_journal_created": false,
+  "broker_writes": 0,
+  "gross": "210.015420",
+  "owner_authority": false,
+  "plan_id": "33e6f119bf0f331a01ff60763caf07075809d6a2356184efec1f1a7a2b9656bc",
+  "policy_id": "98ae40e5c04754bb7aeea2095f66c7531bc8185051c622684f1364f55a78f3ee",
+  "status": "POST_GO_SAVED_SOURCE_REHEARSAL_PASS"
+}

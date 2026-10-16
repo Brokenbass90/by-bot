@@ -90,6 +90,16 @@ class PostGoOwner(bo.BoundedOwner):
         if (self.store/'rollback-request.json').exists() or (self.lease.path.parent/'rollback-request.json').exists():
             raise SourceError('ROLLBACK_INHIBITS_ENTRY')
 
+    def validate_preflight(self,plan,request,role):
+        if role!='ENTRY' or not getattr(self,'parallel_entry_preflight',False):
+            return super().validate_preflight(plan,request,role)
+        from research_lab.kity_micro_low_latency_v1 import ParallelPreflightGets
+        self.entry_fence(); original=self.reader
+        self.reader=ParallelPreflightGets(original,request['symbol'],
+            getattr(self,'require_account_instruments',False))
+        try:return super().validate_preflight(plan,request,role)
+        finally:self.reader=original
+
 
 def validate_control(x):
     allowed={'PREPARE_POST_GO':{'kind'}, 'REHEARSE_POST_GO':{'kind','policy_id'},
@@ -109,11 +119,18 @@ def validate_control(x):
 
 
 class PostGoSupervisor(bo.BoundedSupervisor):
+    def cycle(self):
+        if self.config.get('critical_path_profile')!='POOL_PARALLEL_V1':return super().cycle()
+        from research_lab.kity_micro_low_latency_v1 import cycle_with_sources
+        return cycle_with_sources(self,super().cycle)
+
     def __init__(self,config):
         self.config=config; self.root=Path(config['runtime_root'])
         self.custody_root=Path(config['custody_runtime_root'])
-        if (self.root.parent!=self.custody_root or self.root.name!='post-go-20261016'
-                or config.get('operation_scope')!='ONE_POST_GO_MICRO_2026_10_16'
+        allowed={'ONE_POST_GO_MICRO_2026_10_16':'post-go-20261016',
+            'ONE_LATENCY_MICRO_2026_10_16':'post-go-fast-20261016'}
+        if (self.root.parent!=self.custody_root
+                or self.root.name!=allowed.get(config.get('operation_scope'))
                 or not (self.custody_root/'account.lock').is_file()
                 or not config.get('prior_no_send_files')):
             raise SourceError('POST_GO_RUNTIME_CUSTODY_SCOPE')
@@ -125,8 +142,14 @@ class PostGoSupervisor(bo.BoundedSupervisor):
             raise SourceError('ORIGINAL_LOCK_INODE_CONFLICT')
         self.previous=bo.read_predecessor(config)
         key,secret=load_bound_credentials(config); self.check=platform_verifier(config)
-        wire=lambda m,u,h,d,t:wire_get(m,u,h,d,2)
+        profile=config.get('critical_path_profile')
+        if profile not in (None,'POOL_PARALLEL_V1'):raise SourceError('CRITICAL_PATH_PROFILE_UNKNOWN')
+        if profile=='POOL_PARALLEL_V1':
+            from research_lab.kity_micro_low_latency_v1 import ReusableGetWire
+            wire=ReusableGetWire()
+        else:wire=lambda m,u,h,d,t:wire_get(m,u,h,d,2)
         self.reader=EvidenceReader(BybitReadTransport(key,secret,wire=wire),self.custody_root/'raw')
+        self.reader.all_symbol_fee_snapshot=profile=='POOL_PARALLEL_V1'
         self.writer=SignedPostOnce(key,secret,self.custody_root/'wire')
         self.journal=None; self.owner=None; self.spec=None; self.experiment_root=None
         selection=self.root/'selected-v2.json'
@@ -162,7 +185,12 @@ class PostGoSupervisor(bo.BoundedSupervisor):
         self.owner=PostGoOwner(self.journal,self.reader,self.lease,store,platform_check=self.check,
             post=self.writer.post,dossier=dossier,wire_root=self.custody_root/'wire')
         self.owner.require_account_instruments=self.config.get('require_account_instruments') is True
-        self.bridge=MicroAccountBridge(self.journal,self.reader,owner=self.owner)
+        self.owner.parallel_entry_preflight=self.config.get('critical_path_profile')=='POOL_PARALLEL_V1'
+        bridge=MicroAccountBridge
+        if self.config.get('critical_path_profile')=='POOL_PARALLEL_V1':
+            from research_lab.kity_micro_low_latency_v1 import ParallelReadBridge
+            bridge=ParallelReadBridge
+        self.bridge=bridge(self.journal,self.reader,owner=self.owner)
 
     def control(self,x):
         validate_control(x); kind=x['kind']
@@ -242,13 +270,19 @@ def main(argv=None):
             try:result=s.control(json.loads(path.read_bytes()))
             except Exception as exc:result=dict(status='CONTROL_BLOCKED',reason=str(exc)[:2000],orders_allowed=False)
             publish(done,result)
+        before=s.journal.snapshot() if s.journal else None
         try:
             if not s.journal:s.check()
             error=s.cycle()
         except Exception as exc:
             error=type(exc).__name__+':'+str(exc)[:1024]; s.unwind('SUPERVISOR_FAILURE:'+type(exc).__name__)
         s.heartbeat(error); sd_notify('WATCHDOG=1')
-        time.sleep(1 if s.journal and s.journal.snapshot()['phase']!='TERMINAL' else 3)
+        after=s.journal.snapshot() if s.journal else None
+        delay=1
+        if c.get('critical_path_profile')=='POOL_PARALLEL_V1':
+            from research_lab.kity_micro_low_latency_v1 import cycle_delay
+            delay=cycle_delay(before,after)
+        time.sleep(delay if after and after['phase']!='TERMINAL' else 3)
 
 
 if __name__=='__main__':main()

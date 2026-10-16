@@ -102,7 +102,7 @@ def test_owner_cli_default_only_reports_no_network_without_starting_service(caps
     assert 'OWNER_PREPARATION_ONLY_NO_NETWORK' in capsys.readouterr().out
 
 
-def test_post_go_owner_all_ten_native_restart_deadline_and_final_cash(tmp_path,monkeypatch):
+def test_post_go_owner_all_ten_native_restart_deadline_and_final_cash(tmp_path,monkeypatch,latency=None):
     """Real journal/lease/dispatch/readback/exit against the deterministic venue.
 
     Synthetic source replay is the only replaced parser boundary. No actual
@@ -132,6 +132,8 @@ def test_post_go_owner_all_ten_native_restart_deadline_and_final_cash(tmp_path,m
         store=Path(args[3])
         publish(store/'policy-claim.json',dict(policy_id=p['policy_id'],
             owner_go_text=GO_PREFIX+p['policy_id'],go_ms=at,accepted_ms=at))
-        return HarnessOwner(*args,**kwargs,dossier=out,wire_root=tmp_path/'wire')
+        o=HarnessOwner(*args,**kwargs,dossier=out,wire_root=tmp_path/'wire')
+        o.parallel_entry_preflight=latency is not None
+        return o
     monkeypatch.setattr(venue,'PhysicalOwner',factory);monkeypatch.setattr(venue,'MicroJournal',JournalV2)
-    venue.test_concrete_owner_all_ten_native_restart_deadline_and_actual_cash_path(tmp_path,monkeypatch)
+    venue.test_concrete_owner_all_ten_native_restart_deadline_and_actual_cash_path(tmp_path,monkeypatch,latency=latency)

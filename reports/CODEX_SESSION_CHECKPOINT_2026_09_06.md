@@ -1,5 +1,29 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 08:22:18UTC CURRENT: owner-authorized latency correction is physically
+installed ORDERS_OFF. Read KITY_CRITICAL_PATH_READY_2026_10_16.md and
+evidence/kity_critical_path_20261016/. KITY_CRITICAL_PATH_READY: separate19-file
+app-post-go-fast-v1/post-go-fast-20261016, config20b63604…b168,
+unit8795ad7a…0b69, PID2290919/NRestarts0, original818853lock; oldsource/history
+pins preserved. Freshflat/open0 before/quiescent/after and finalGETrehearsal;
+all15oldPOSTbarriers unchanged,0new. Oldbybot/web remain inhibited. Sequential
+financialPOST/unknownsend/nativeFull/recovery unchanged. GET TLSreuse/paced
+parallelreadbacks/oneactualglobalfeerate/percycleview/progresssleep optimized.
+Actual407GET oldtrace replay35.606s/0APIerrors; fresh10/10installedpreflightPASS
+10.761s(noorders/GO/journal). Earlierdatedplancheck9/10PASS+GRASSnotmarketable
+retained, no collar/gatechange. Deterministic300msGET/600msPOST/initial9s model:
+lastentry48.440s/allnative52.325s/11.560smargin under UNCHANGED60s. Model is NOT
+actualfills/guaranteedworstcase.120targetedPASS; full5116PASS/60FAIL/1warning,
+sameexact60baseline/0new; fullsuiteNOT_GREEN/rootonlyreview. No deadline/risk
+increase; all215/15trigger/overshoot/30min/50bps/.203/basket/firewall retained.
+ONE newpricefreepolicy98ae40e5c04754bb7aeea2095f66c7531bc8185051c622684f1364f55a78f3ee
+validuntilOct16 21UTC ONLY. Humanonly launcher prepared at
+.private/kity_latency_20261016/owner-micro-once.sh; NOT executed. Agents must NEVER
+run it/--owner-go-policy/GO_POST_GO. No monetaryGO/selection/journal yet. Human
+personally decides/runs once; then read actualreceipts only. Previouse3b3…54325
+and all earlierGO remain spent; no reset/retry/automaticnewpolicy/date transfer.
+Freshmarket/accountcaps can still NO_SEND/unwind. Alpaca/ATT1/LIQ/Claude untouched.
+
 October16 07:30:13UTC CURRENT: human personally ran the NEW post-GO owner
 launcher, command1792135566488854893. Policye3b3f531…54325 is SPENT. Actual
 PARTIAL_BASKET_UNWIND_ACCOUNTED_NOT_ALL_TEN_PASS; read current

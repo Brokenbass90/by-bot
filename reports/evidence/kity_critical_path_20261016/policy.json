@@ -1,0 +1,85 @@
+{
+  "broker_writes": 0,
+  "owner_go_text": "GO KITY_EXECUTION_MICRO_POLICY_V1 98ae40e5c04754bb7aeea2095f66c7531bc8185051c622684f1364f55a78f3ee",
+  "policy": {
+    "basket": [
+      {
+        "side": "Buy",
+        "symbol": "BTWUSDT"
+      },
+      {
+        "side": "Buy",
+        "symbol": "XAUUSDT"
+      },
+      {
+        "side": "Buy",
+        "symbol": "LTCUSDT"
+      },
+      {
+        "side": "Buy",
+        "symbol": "VVVUSDT"
+      },
+      {
+        "side": "Buy",
+        "symbol": "BNBUSDT"
+      },
+      {
+        "side": "Sell",
+        "symbol": "XAUTUSDT"
+      },
+      {
+        "side": "Sell",
+        "symbol": "XPLUSDT"
+      },
+      {
+        "side": "Sell",
+        "symbol": "XAGUSDT"
+      },
+      {
+        "side": "Sell",
+        "symbol": "GRASSUSDT"
+      },
+      {
+        "side": "Sell",
+        "symbol": "SPCXUSDT"
+      }
+    ],
+    "bounds": {
+      "allow_averaging": false,
+      "allow_execution_overshoot": true,
+      "allow_reentry": false,
+      "allow_scaling": false,
+      "counts_toward_C1_C2_C3": false,
+      "duration_ms": 1800000,
+      "hard_final_loss_cap_required": false,
+      "loss_policy": "IMMEDIATE_ALL_IN_EXIT_THRESHOLD",
+      "max_all_in_loss_usdt": "15",
+      "max_gross_usdt": "215",
+      "max_rounding_shortfall_fraction": "0.203",
+      "one_experiment_only": true,
+      "owner_money_go": false,
+      "purpose": "EXECUTION_MICRO_LIVE",
+      "research_evidence_eligible": false,
+      "schema": "kity_execution_micro_owner_bounds_v3",
+      "source_owner_message": "2026-10-15 GO KITY MICRO-LIVE EXECUTION INTEGRATION \u2014 ORDERS OFF",
+      "source_reply_id": "call_6b8bf99c313243c1b85f5c3504a5c292",
+      "supersedes_policy_sha256": "49bf03e4733711d3c97c684ec2436fff988817e8fb6d9cef351b71708a882bb3"
+    },
+    "collar_bps": "50",
+    "counts_toward_C1_C2_C3": false,
+    "created_ms": 1792138752195,
+    "dispatch_window_ms": 60000,
+    "orders_allowed": false,
+    "physical_config_sha256": "20b636046603c0b2b98a125f709f6f02290e73ddd5f08c634123de74bf48b168",
+    "policy_id": "98ae40e5c04754bb7aeea2095f66c7531bc8185051c622684f1364f55a78f3ee",
+    "predecessor_plan_id": "dd2b98f47507ae2a8af2f37e40720387df56e981c6f3a6dcef3c7fa357686070",
+    "pricing_anchor": "WORST_CONSUMED_DEPTH_PRICE_OF_FRESH_SIZED_QUANTITY",
+    "purpose": "EXECUTION_MICRO_LIVE",
+    "quantity_rule": "MINIMUM_APPROVED_ROUNDING_FRONTIER_FROM_SINGLE_POST_GO_CAPTURE",
+    "research_evidence_eligible": false,
+    "schema": "KITY_EXECUTION_MICRO_POST_GO_POLICY_V1",
+    "source_rule": "ONE_POST_GO_CAPTURE_COMMON_CTS_MAX_2_SECONDS",
+    "valid_until_ms": 1792184400000
+  },
+  "status": "POST_GO_POLICY_PREPARED_ORDERS_OFF"
+}

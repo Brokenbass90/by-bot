@@ -1,0 +1,25 @@
+{
+  "broker_writes": 0,
+  "interpretation": "ACTUAL_GET_ONLY_REPLAY_407_OLD_SIX_LEG_REQUESTS_NOT_TEN_LEG_EXECUTION",
+  "original_wave_count": 94,
+  "result": {
+    "broker_writes": 0,
+    "completed_ms": 1792137446402,
+    "failures": [],
+    "pool_metrics": {
+      "errors": 0,
+      "new_connections": 45,
+      "rate_wait_ms": 62310.62083179131,
+      "requests": 409,
+      "reused_connections": 364
+    },
+    "request_count": 407,
+    "schema": "KITY_GET_POOL_REAL_LATENCY_REPLAY_V1",
+    "source_sha256": "92ff9b8d9926a5267ec6db50cce5ded84e6b4ecaa0aa07537d2982d6fa5a122a",
+    "started_ms": 1792137410796,
+    "status": "GET_REPLAY_COMPLETE",
+    "trading_post_count_unchanged": true
+  },
+  "schema": "KITY_GET_TRANSPORT_BENCHMARK_V1",
+  "source_sha256": "210359c02cb565c75d3ddfdfb2284ad775d6b85f5739dcf4deba5b78607e86fc"
+}
