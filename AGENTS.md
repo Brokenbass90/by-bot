@@ -749,3 +749,26 @@ Reporting/Telegram/Web and Elder HEDGE_V1 ordersOFF preparation are authorized
 next nonmoney scope; preserve oldweb inhibition until read-only deployment is
 proven to have no writer credentials/paths. Do not resurrect standalone Elder
 or consume 900 outcomes. Existing Alpaca/ATT1/LIQ/research/Claude untouched.
+
+October16 11:46:39UTC CURRENT: KITY_10_OF_10_READY engineering/ORDERS_OFF,
+NOTactual10/10PASS. Owner explicitly authorized70s for ONE new policy only;
+MONEYGO still requires personal action. Read KITY_FINAL_CLOSEOUT_2026_10_16.md
+and evidence/kity_closeout_20261016/owner_packet.json. New20-fileapp-closeout-v2/
+post-go-closeout-20261016,configba23a26f…ee9b/unit99d091e1…3290,
+PID2311456/NRestarts0/HEALTHY/ORDERS_OFF/NO_ACTIVE_PLAN/original818853lock.
+Freshflat/open0 before/quiescent/after install; oldkits/history/33sendbarriers
+preserved,0newbrokerwrites. Narrowaccount GET coalescing only ENTERING; actual
+81/81 sourceparity + latestoffline81/81; fresh10/10GETpreflightPASS9.178s.
+Actual9-run latency replay:old60s correctly refuses; authorized70s model tenth
+63.130s/allnative67.407s,138targetedPASS. Model is not actualfills/worstcase;
+2.593s protection margin can be consumed by network delays. CTS≤2s perdispatch,
+215gross/15trigger+acceptedovershoot/30min/50bps/.203/native/recovery unchanged.
+ONE pricefreepolicy3ca9ca2321a704f8f8a4ade2156d519dbace1401e86fc5f679a913896f74c5c5
+expiresOct16 21UTC/Oct17 00Cyprus ONLY. Human-only launcher
+.private/kity_closeout_20261016/owner-micro-once.sh prepared NOT executed;
+no selection/journal/MONEYGO. Agent must NEVER execute/schedule it,
+--owner-go-policy or GO_POST_GO even on chat approval; human personally runs
+once, then agent observes actual receipts only. Old98ae…8f3ee remainsSPENT/
+FAILED_SAFE_FLAT/net-.38780112; no reset/retry/replacement/date-transfer. No
+C1–C3/research/strategy/autonomy/scaling authority. No Alpaca/ATT1/LIQ/Claude/
+cron/oldweb change. Elder/Reporting queued after KITY; unrelatedallowlistuntouched.

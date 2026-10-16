@@ -1,0 +1,508 @@
+{
+  "actual_comparisons": 81,
+  "actual_completed_ms": 1792150378529,
+  "actual_page_counts": {
+    "closed": 2,
+    "executions": 2,
+    "history": 2,
+    "open": 1
+  },
+  "actual_source_sha256": "d38b0d8717f2467e669d0160d5c2d77d9ca0cdec62929c43c5724e6af174d7bb",
+  "broker_writes": 0,
+  "flat": true,
+  "latest_candidate_sha256": "8500b50d89e19fa3435e60ad78da9fb19fdc6995a4c6679d2518213f38bc128d",
+  "mismatches": 0,
+  "new_commands": 0,
+  "offline_comparisons": 81,
+  "open_orders": 0,
+  "original_candidate_sha256": "3358c6fca3713df337aa507281f9a5b603041eb92bc3e14746bfe6bd353429e9",
+  "results": [
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 3,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 2,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 3,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 3,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 0,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 2,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 3,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "endpoint": "/v5/order/realtime",
+      "parity": true,
+      "rows": 1,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/order/history",
+      "parity": true,
+      "rows": 1,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "endpoint": "/v5/execution/list",
+      "parity": true,
+      "rows": 1,
+      "symbol": "GRASSUSDT"
+    }
+  ],
+  "status": "ACTUAL_GET_ONLY_81_AND_LATEST_OFFLINE_81_PARITY_PASS"
+}

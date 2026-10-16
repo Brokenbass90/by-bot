@@ -1,0 +1,79 @@
+{
+  "agent_may_execute": false,
+  "basket": [
+    {
+      "side": "Buy",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "LTCUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "side": "Buy",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "side": "Sell",
+      "symbol": "SPCXUSDT"
+    }
+  ],
+  "collar_bps": "50",
+  "counts_toward_C1_C2_C3": false,
+  "expiry_cyprus": "2026-10-17T00:00:00+03:00",
+  "expiry_utc": "2026-10-16T21:00:00Z",
+  "fresh_only": [
+    "ONE_POST_GO_CAPTURE_AND_ALL_EXISTING_ENTRY_GATES",
+    "CTS_ACCOUNT_MARGIN_OWNERSHIP_CAPS_COLLAR_NATIVE_PROTECTION"
+  ],
+  "fresh_rehearsal_reference_gross_usdt": "174.526790",
+  "gross_cap_usdt": "215",
+  "immediate_all_in_exit_trigger_usdt": "15",
+  "launch_executed": false,
+  "launcher_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_closeout_20261016/owner-micro-once.sh",
+  "launcher_sha256": "a4be1681caae2ca584c87045a2f47c93726f1b739576f9ea9effd7c2f33dbf22",
+  "lifecycle_max_ms": 1800000,
+  "meaning": "ENGINEERING_READY_ORDERS_OFF_NOT_ACTUAL_EXECUTION_PASS",
+  "money_go_received": false,
+  "native_full_stops": true,
+  "no_reentry": true,
+  "one_attempt": true,
+  "overshoot_accepted": true,
+  "owner_action": "HUMAN_PERSONALLY_EXECUTES_LAUNCHER_ONCE_IF_APPROVED_NO_BLIND_RETRY",
+  "per_dispatch_cts_max_ms": 2000,
+  "policy_id": "3ca9ca2321a704f8f8a4ade2156d519dbace1401e86fc5f679a913896f74c5c5",
+  "policy_schema": "KITY_EXECUTION_MICRO_POST_GO_POLICY_V2_70S",
+  "post_go_entry_deadline_ms": 70000,
+  "price_free_quantity_rule": "MINIMUM_APPROVED_ROUNDING_FRONTIER_FROM_SINGLE_POST_GO_CAPTURE",
+  "remaining_static_blockers": [],
+  "rounding_shortfall_max": "0.203",
+  "scaling_authority": false,
+  "source_rule": "ONE_POST_GO_CAPTURE_COMMON_CTS_MAX_2_SECONDS",
+  "status": "KITY_10_OF_10_READY",
+  "strategy_research_authority": false,
+  "valid_until_ms": 1792184400000
+}

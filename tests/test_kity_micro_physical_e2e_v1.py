@@ -50,7 +50,7 @@ def test_concrete_owner_all_ten_native_restart_deadline_and_actual_cash_path(tmp
         elif path=='/v5/user/query-api':result=dict(readOnly=0,permissions=dict(ContractTrade=['Order','Position']))
         elif path=='/v5/account/info':result=dict(marginMode='REGULAR_MARGIN',unifiedMarginStatus=5)
         elif path=='/v5/account/wallet-balance':result=dict(list=[dict(totalAvailableBalance='1000')])
-        elif path=='/v5/market/instruments-info':result=dict(list=[dict(symbol=params['symbol'],contractType='LinearPerpetual',status='Trading',quoteCoin='USDT',settleCoin='USDT',unifiedMarginTrade=True,fundingInterval=480,lotSizeFilter=dict(minOrderQty='.001',maxOrderQty='10000',minNotionalValue='.1',qtyStep='.001'),priceFilter=dict(tickSize='.0001'))])
+        elif path in ('/v5/market/instruments-info','/v5/account/instruments-info'):result=dict(category='linear',list=[dict(symbol=params['symbol'],contractType='LinearPerpetual',status='Trading',quoteCoin='USDT',settleCoin='USDT',unifiedMarginTrade=True,isPreListing=False,fundingInterval=480,lotSizeFilter=dict(minOrderQty='.001',maxOrderQty='10000',maxMktOrderQty='10000',minNotionalValue='.1',qtyStep='.001'),priceFilter=dict(tickSize='.0001'))])
         elif path=='/v5/account/fee-rate':result=dict(list=[dict(symbol=s,takerFeeRate='.001') for s in ([params['symbol']] if 'symbol' in params else SYMBOLS)])
         elif path=='/v5/market/tickers':result=dict(list=[dict(symbol=params['symbol'],lastPrice='1',nextFundingTime=str(funding_next))])
         elif path=='/v5/market/orderbook':result=dict(s=params['symbol'],b=[['1','1000']],a=[['1.0001','1000']],cts=now())
@@ -60,10 +60,17 @@ def test_concrete_owner_all_ten_native_restart_deadline_and_actual_cash_path(tmp
         elif path in ('/v5/order/history','/v5/order/realtime','/v5/execution/list'):
             rows=execs if path.endswith('/execution/list') else list(orders.values())
             rows=[r for r in rows if (not params.get('symbol') or r['symbol']==params['symbol']) and (not params.get('orderId') or r['orderId']==params['orderId']) and (not params.get('orderLinkId') or r.get('orderLinkId')==params['orderLinkId'])]
-            if path.endswith('/realtime'):rows=[r for r in rows if r['orderStatus'] in ('Untriggered','New')]
-            result=dict(list=rows,nextPageCursor='')
+            if path.endswith('/realtime'):
+                rows=[r for r in rows if (r['orderStatus'] in ('Untriggered','New'))==(params.get('openOnly')!='1')]
+            result=dict(category='linear',list=rows,nextPageCursor='')
         elif path=='/v5/account/transaction-log':result=dict(list=cash,nextPageCursor='')
         else:raise AssertionError(path)
+        if (method=='GET' and getattr(latency,'production_pagination',False)
+                and path in ('/v5/order/history','/v5/order/realtime','/v5/execution/list','/v5/position/list')):
+            # Actual Bybit traces include a non-empty cursor even when the
+            # following page is empty. Do not model every lookup as one page.
+            if params.get('cursor')=='tail':result.update(list=[],nextPageCursor='')
+            elif result.get('list'):result['nextPageCursor']='tail'
         return 200,json.dumps(dict(retCode=0,result=result,time=now())).encode()
     getwire=latency.get_wire(wire) if latency is not None else wire
     reader=EvidenceReader(BybitReadTransport('test-key','test-secret',wire=getwire,clock=now),tmp_path/'raw')

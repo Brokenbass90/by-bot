@@ -1,0 +1,73 @@
+{
+  "actual_journal_created": false,
+  "broker_writes": 0,
+  "flat": true,
+  "gross": "174.526790",
+  "metrics": {
+    "errors": 0,
+    "new_connections": 15,
+    "rate_wait_ms": 38211.28886565566,
+    "requests": 267,
+    "reused_connections": 252
+  },
+  "observed_ms": 1792151162508,
+  "open_orders": 0,
+  "owner_authority": false,
+  "policy_id": "3ca9ca2321a704f8f8a4ade2156d519dbace1401e86fc5f679a913896f74c5c5",
+  "results": [
+    {
+      "elapsed_ms": 774,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "BTWUSDT"
+    },
+    {
+      "elapsed_ms": 1196,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "elapsed_ms": 774,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "LTCUSDT"
+    },
+    {
+      "elapsed_ms": 793,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "elapsed_ms": 1127,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "elapsed_ms": 783,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "elapsed_ms": 784,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "elapsed_ms": 757,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "elapsed_ms": 1023,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "elapsed_ms": 775,
+      "status": "FRESH_PREFLIGHT_PASS_POST_INHIBITED",
+      "symbol": "SPCXUSDT"
+    }
+  ],
+  "selection": false,
+  "source_capture_sha256": "60ae926cf34e1fec11c0325b829a0b457e30ee1b0d0ef4e494a408ede7dec156",
+  "status": "INSTALLED_TEN_GET_PREFLIGHT_PASS",
+  "total_ms": 9178
+}

@@ -102,6 +102,18 @@ def test_owner_cli_default_only_reports_no_network_without_starting_service(caps
     assert 'OWNER_PREPARATION_ONLY_NO_NETWORK' in capsys.readouterr().out
 
 
+def test_70s_bound_only_to_new_closeout_scope_and_profile():
+    assert po.entry_window({})==60000
+    assert po.entry_window(dict(operation_scope='ONE_CLOSEOUT_MICRO_2026_10_16',
+        critical_path_profile='ACCOUNT_READBACK_V2',entry_dispatch_window_ms=70000))==70000
+    for config in [dict(entry_dispatch_window_ms=70000),
+        dict(operation_scope='ONE_LATENCY_MICRO_2026_10_16',entry_dispatch_window_ms=70000),
+        dict(operation_scope='ONE_CLOSEOUT_MICRO_2026_10_16',entry_dispatch_window_ms=70000),
+        dict(operation_scope='ONE_CLOSEOUT_MICRO_2026_10_16',critical_path_profile='ACCOUNT_READBACK_V2'),
+        dict(entry_dispatch_window_ms=True)]:
+        with pytest.raises(ValueError):po.entry_window(config)
+
+
 def test_post_go_owner_all_ten_native_restart_deadline_and_final_cash(tmp_path,monkeypatch,latency=None):
     """Real journal/lease/dispatch/readback/exit against the deterministic venue.
 
@@ -120,7 +132,8 @@ def test_post_go_owner_all_ten_native_restart_deadline_and_final_cash(tmp_path,m
     d['plan']=plan;d['observed_start_ms']=at
     for row in d['instruments']:row['taker_fee']='.6'
     p=make_policy(created_ms=at-1000,valid_until_ms=at+86400000-1000,
-        physical_config_sha256=PIN,predecessor_plan_id='a'*64,bounds=V3)
+        physical_config_sha256=PIN,predecessor_plan_id='a'*64,bounds=V3,
+        dispatch_window_ms=getattr(latency,'entry_window_ms',60000))
     out=compile_after_go(p,d,c,go_ms=at,now_ms=at)
     monkeypatch.setattr(venue,'prepare_micro_plan',lambda *_:copy.deepcopy(out['plan']))
     monkeypatch.setattr(po,'verify_compilation',lambda *_:None)
@@ -134,6 +147,7 @@ def test_post_go_owner_all_ten_native_restart_deadline_and_final_cash(tmp_path,m
             owner_go_text=GO_PREFIX+p['policy_id'],go_ms=at,accepted_ms=at))
         o=HarnessOwner(*args,**kwargs,dossier=out,wire_root=tmp_path/'wire')
         o.parallel_entry_preflight=latency is not None
+        o.require_account_instruments=getattr(latency,'real_account_instrument_gate',False)
         return o
     monkeypatch.setattr(venue,'PhysicalOwner',factory);monkeypatch.setattr(venue,'MicroJournal',JournalV2)
     venue.test_concrete_owner_all_ten_native_restart_deadline_and_actual_cash_path(tmp_path,monkeypatch,latency=latency)

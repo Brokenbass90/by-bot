@@ -118,17 +118,33 @@ def validate_control(x):
     return x
 
 
+def entry_window(config):
+    """The owner's single 70s amendment belongs only to the new namespace."""
+    closeout=config.get('operation_scope')=='ONE_CLOSEOUT_MICRO_2026_10_16'
+    window=config.get('entry_dispatch_window_ms',60000)
+    if (type(window) is not int or window!=(70000 if closeout else 60000)
+            or closeout and config.get('critical_path_profile')!='ACCOUNT_READBACK_V2'):
+        raise SourceError('ENTRY_WINDOW_SCOPE_CONFLICT')
+    return window
+
+
 class PostGoSupervisor(bo.BoundedSupervisor):
     def cycle(self):
-        if self.config.get('critical_path_profile')!='POOL_PARALLEL_V1':return super().cycle()
+        profile=self.config.get('critical_path_profile')
+        if profile not in ('POOL_PARALLEL_V1','ACCOUNT_READBACK_V2'):return super().cycle()
         from research_lab.kity_micro_low_latency_v1 import cycle_with_sources
+        if profile=='ACCOUNT_READBACK_V2':
+            from research_lab.kity_micro_account_readbacks_v2 import AccountCycleSources
+            return cycle_with_sources(self,super().cycle,view_type=AccountCycleSources)
         return cycle_with_sources(self,super().cycle)
 
     def __init__(self,config):
         self.config=config; self.root=Path(config['runtime_root'])
+        entry_window(config)
         self.custody_root=Path(config['custody_runtime_root'])
         allowed={'ONE_POST_GO_MICRO_2026_10_16':'post-go-20261016',
-            'ONE_LATENCY_MICRO_2026_10_16':'post-go-fast-20261016'}
+            'ONE_LATENCY_MICRO_2026_10_16':'post-go-fast-20261016',
+            'ONE_CLOSEOUT_MICRO_2026_10_16':'post-go-closeout-20261016'}
         if (self.root.parent!=self.custody_root
                 or self.root.name!=allowed.get(config.get('operation_scope'))
                 or not (self.custody_root/'account.lock').is_file()
@@ -143,13 +159,13 @@ class PostGoSupervisor(bo.BoundedSupervisor):
         self.previous=bo.read_predecessor(config)
         key,secret=load_bound_credentials(config); self.check=platform_verifier(config)
         profile=config.get('critical_path_profile')
-        if profile not in (None,'POOL_PARALLEL_V1'):raise SourceError('CRITICAL_PATH_PROFILE_UNKNOWN')
-        if profile=='POOL_PARALLEL_V1':
+        if profile not in (None,'POOL_PARALLEL_V1','ACCOUNT_READBACK_V2'):raise SourceError('CRITICAL_PATH_PROFILE_UNKNOWN')
+        if profile in ('POOL_PARALLEL_V1','ACCOUNT_READBACK_V2'):
             from research_lab.kity_micro_low_latency_v1 import ReusableGetWire
             wire=ReusableGetWire()
         else:wire=lambda m,u,h,d,t:wire_get(m,u,h,d,2)
         self.reader=EvidenceReader(BybitReadTransport(key,secret,wire=wire),self.custody_root/'raw')
-        self.reader.all_symbol_fee_snapshot=profile=='POOL_PARALLEL_V1'
+        self.reader.all_symbol_fee_snapshot=profile in ('POOL_PARALLEL_V1','ACCOUNT_READBACK_V2')
         self.writer=SignedPostOnce(key,secret,self.custody_root/'wire')
         self.journal=None; self.owner=None; self.spec=None; self.experiment_root=None
         selection=self.root/'selected-v2.json'
@@ -177,7 +193,8 @@ class PostGoSupervisor(bo.BoundedSupervisor):
         store=self.experiment_root
         if (store!=bo.selected_store(self.root,{'intent_id':policy['policy_id']})
                 or policy['physical_config_sha256']!=self.config['_config_sha256']
-                or policy['predecessor_plan_id']!=self.config['predecessor_plan_id']):
+                or policy['predecessor_plan_id']!=self.config['predecessor_plan_id']
+                or policy['dispatch_window_ms']!=entry_window(self.config)):
             raise SourceError('POST_GO_SELECTED_BINDING_CONFLICT')
         if not create and not (store/'lifecycle.sqlite').is_file():raise SourceError('RECOVERY_JOURNAL_MISSING')
         self.spec={i['symbol']:i for i in dossier['instruments']}; self.dossier=dossier
@@ -185,11 +202,14 @@ class PostGoSupervisor(bo.BoundedSupervisor):
         self.owner=PostGoOwner(self.journal,self.reader,self.lease,store,platform_check=self.check,
             post=self.writer.post,dossier=dossier,wire_root=self.custody_root/'wire')
         self.owner.require_account_instruments=self.config.get('require_account_instruments') is True
-        self.owner.parallel_entry_preflight=self.config.get('critical_path_profile')=='POOL_PARALLEL_V1'
+        self.owner.parallel_entry_preflight=self.config.get('critical_path_profile') in ('POOL_PARALLEL_V1','ACCOUNT_READBACK_V2')
         bridge=MicroAccountBridge
         if self.config.get('critical_path_profile')=='POOL_PARALLEL_V1':
             from research_lab.kity_micro_low_latency_v1 import ParallelReadBridge
             bridge=ParallelReadBridge
+        elif self.config.get('critical_path_profile')=='ACCOUNT_READBACK_V2':
+            from research_lab.kity_micro_account_readbacks_v2 import AccountReadBridge
+            bridge=AccountReadBridge
         self.bridge=bridge(self.journal,self.reader,owner=self.owner)
 
     def control(self,x):
@@ -200,15 +220,20 @@ class PostGoSupervisor(bo.BoundedSupervisor):
             self.unwind('OWNER_KILL'); return dict(status='OWNED_UNWIND_REQUESTED')
         self.before_selection()
         if kind=='PREPARE_POST_GO':
+            if (self.config.get('operation_scope')=='ONE_CLOSEOUT_MICRO_2026_10_16'
+                    and any((self.root/'policies').glob('*.json'))):
+                raise SourceError('ONE_CLOSEOUT_POLICY_ALREADY_PREPARED')
             bounds=json.loads((Path(self.config['app_root'])/self.config['bounds_file']).read_bytes())
             p=make_policy(created_ms=now_ms(),valid_until_ms=self.config['policy_valid_until_ms'],
                 physical_config_sha256=self.config['_config_sha256'],
-                predecessor_plan_id=self.config['predecessor_plan_id'],bounds=bounds)
+                predecessor_plan_id=self.config['predecessor_plan_id'],bounds=bounds,
+                dispatch_window_ms=entry_window(self.config))
             publish(self.root/'policies'/(p['policy_id']+'.json'),p)
             return dict(status='POST_GO_POLICY_PREPARED_ORDERS_OFF',policy=p,
                 owner_go_text=GO_PREFIX+p['policy_id'],broker_writes=0)
         p=json.loads((self.root/'policies'/(x['policy_id']+'.json')).read_bytes()); validate_policy(p)
-        if p['policy_id']!=x['policy_id'] or p['physical_config_sha256']!=self.config['_config_sha256']:
+        if (p['policy_id']!=x['policy_id'] or p['physical_config_sha256']!=self.config['_config_sha256']
+                or p['dispatch_window_ms']!=entry_window(self.config)):
             raise SourceError('EXACT_PREPARED_POLICY_REQUIRED')
         if kind=='REHEARSE_POST_GO':
             # Pre-GO source validation only: no claim, selection, journal or
@@ -279,7 +304,7 @@ def main(argv=None):
         s.heartbeat(error); sd_notify('WATCHDOG=1')
         after=s.journal.snapshot() if s.journal else None
         delay=1
-        if c.get('critical_path_profile')=='POOL_PARALLEL_V1':
+        if c.get('critical_path_profile') in ('POOL_PARALLEL_V1','ACCOUNT_READBACK_V2'):
             from research_lab.kity_micro_low_latency_v1 import cycle_delay
             delay=cycle_delay(before,after)
         time.sleep(delay if after and after['phase']!='TERMINAL' else 3)

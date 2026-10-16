@@ -1,0 +1,57 @@
+{
+  "account_lock_inode": 818853,
+  "after": {
+    "at_ms": 1792151088089,
+    "label": "latency-after",
+    "open_orders": 0,
+    "positions": 0
+  },
+  "at_ms": 1792151088197,
+  "before": {
+    "at_ms": 1792151083934,
+    "label": "latency-before",
+    "open_orders": 0,
+    "positions": 0
+  },
+  "config_sha256": "ba23a26fa81e8440882a9bccca2ecbf643853ac82742c1ac111afb6eee5eee9b",
+  "health_after": {
+    "age_ms": 251,
+    "observed_ms": 1792151087566,
+    "orders_allowed": false,
+    "owner": "KITY_MICRO",
+    "pid": 2311456,
+    "reason": "CURRENT_OWNER_HEALTHY",
+    "restart_allowed": false,
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "status": "HEALTHY"
+  },
+  "health_before": {
+    "age_ms": 30,
+    "observed_ms": 1792151084155,
+    "orders_allowed": false,
+    "owner": "KITY_MICRO",
+    "pid": 2290919,
+    "reason": "CURRENT_OWNER_HEALTHY",
+    "restart_allowed": false,
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "status": "HEALTHY"
+  },
+  "money_go_received": false,
+  "new_broker_posts": 0,
+  "prepared_intents": 0,
+  "quiescent": {
+    "at_ms": 1792151085191,
+    "label": "latency-quiescent",
+    "open_orders": 0,
+    "positions": 0
+  },
+  "second_lease_refused": true,
+  "source_count": 20,
+  "status": "CLOSEOUT_OWNER_INSTALLED_ORDERS_OFF_HEALTHY",
+  "unit": {
+    "ActiveState": "active",
+    "MainPID": "2311456",
+    "NRestarts": "0"
+  },
+  "unit_sha256": "99d091e10cde0103fa6177f5700b6dd2e18fc7f5ae4dd5522d432561a3973290"
+}

@@ -1,0 +1,24 @@
+{
+  "account_lock_inode": 818853,
+  "actual_journal": false,
+  "actual_selection": false,
+  "all_source_custody_pins_match": true,
+  "heartbeat_at_ms": 1792151197017,
+  "initial_fresh_capture_ms": 6989,
+  "mode": "ORDERS_OFF",
+  "new_broker_posts": 0,
+  "observed_ms": 1792151199066,
+  "one_new_policy": true,
+  "owner_go": false,
+  "phase": "NO_ACTIVE_PLAN",
+  "policy_id": "3ca9ca2321a704f8f8a4ade2156d519dbace1401e86fc5f679a913896f74c5c5",
+  "source_files": 20,
+  "status": "KITY_10_OF_10_READY_ORDERS_OFF_NOT_EXECUTION_PASS",
+  "trading_send_barriers": 33,
+  "unit": {
+    "ActiveState": "active",
+    "MainPID": "2311456",
+    "NRestarts": "0"
+  },
+  "verification_is": "STATIC_SOURCE_AND_RUNTIME_ONLY_NO_BROKER_OBSERVATION"
+}

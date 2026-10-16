@@ -117,3 +117,24 @@ def test_fresh_caps_cannot_be_bypassed_by_dynamic_pricing():
     d,c=fresh(price='1.074')
     with pytest.raises(ValueError,match='215'):
         pg.compile_after_go(policy(),d,c,go_ms=4999800,now_ms=5000001)
+
+
+def test_70s_is_a_new_version_and_never_changes_old_policy_identity():
+    old=policy()
+    args={k:old[k] for k in ('created_ms','valid_until_ms','physical_config_sha256','predecessor_plan_id','bounds')}
+    assert pg.make_policy(**args,dispatch_window_ms=60000)==old
+    new=pg.make_policy(**args,dispatch_window_ms=70000)
+    assert new['schema']!=old['schema'] and new['policy_id']!=old['policy_id']
+    assert pg.validate_policy(new)==new
+    pg.dispatch_window(new,5000000,5069999)
+    with pytest.raises(ValueError,match='DISPATCH_DEADLINE'):
+        pg.dispatch_window(new,5000000,5070000)
+    forged=dict(old,dispatch_window_ms=70000)
+    forged['policy_id']=digest({k:v for k,v in forged.items() if k!='policy_id'})
+    with pytest.raises(ValueError):pg.validate_policy(forged)
+
+
+@pytest.mark.parametrize('window',[True,60001,90000,70000.0])
+def test_no_arbitrary_entry_window(window):
+    old=policy();args={k:old[k] for k in ('created_ms','valid_until_ms','physical_config_sha256','predecessor_plan_id','bounds')}
+    with pytest.raises(ValueError):pg.make_policy(**args,dispatch_window_ms=window)

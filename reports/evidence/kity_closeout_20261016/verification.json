@@ -1,0 +1,45 @@
+{
+  "actual_81_readback_parity": true,
+  "actual_profile_file_sha256": "b7edd3d5d41dbf2e99cb30309d36cd6e1e30a60bde08b523913b7cb65db2ab89",
+  "actual_ten_fill_proof": false,
+  "broker_writes": 0,
+  "full_suite": "NOT_RERUN_THIS_NARROW_CYCLE_PRIOR_5116_PASS_60_EXISTING_FAIL_NOT_GREEN",
+  "last_entry_margin_ms": 6870,
+  "network_bound_guaranteed": false,
+  "offline_latest_81_readback_parity": true,
+  "old_actual_v1_60s_policy_validated": true,
+  "protection_margin_ms": 2593,
+  "root_only_review": true,
+  "status": "TARGETED_AND_SAVED_ACTUAL_SOURCE_PASS",
+  "targeted_fail": 0,
+  "targeted_log_sha256": "e16d432e12e41b1210eb4d23b114989cb84dfb08acc9a734382efb199266a2cd",
+  "targeted_pass": 138,
+  "trace_replays": [
+    {
+      "all_protected_ms": null,
+      "cursor_tail_pages": true,
+      "custody_ms": 191,
+      "entry_window_ms": 60000,
+      "expected_block": true,
+      "initial_ms": 11349,
+      "last_entry_ms": null,
+      "mode": "ACTUAL_TRACE_DETERMINISTIC_REPLAY_NOT_REAL_FILLS",
+      "owner_window_changed": false,
+      "permission_gate": true,
+      "source_profile_sha256": "6cbbf668e46aaeabb387ed23d04f9ddf2b6ecdf01e8e5c916f851ddd247dded7"
+    },
+    {
+      "all_protected_ms": 67407,
+      "cursor_tail_pages": true,
+      "custody_ms": 191,
+      "entry_window_ms": 70000,
+      "expected_block": false,
+      "initial_ms": 11349,
+      "last_entry_ms": 63130,
+      "mode": "ACTUAL_TRACE_DETERMINISTIC_REPLAY_NOT_REAL_FILLS",
+      "owner_window_changed": true,
+      "permission_gate": true,
+      "source_profile_sha256": "6cbbf668e46aaeabb387ed23d04f9ddf2b6ecdf01e8e5c916f851ddd247dded7"
+    }
+  ]
+}

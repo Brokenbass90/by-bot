@@ -184,14 +184,14 @@ class CycleSources:
     def result(self,cap):return self.reader.result(cap)
 
 
-def cycle_with_sources(supervisor,run):
+def cycle_with_sources(supervisor,run,*,view_type=None):
     from research_lab.kity_micro_supervisor_v1 import now_ms
     if not supervisor.journal or not supervisor.owner:return run()
     supervisor.journal.actions(now_ms())  # persist deadline BEFORE network, as before
     state=supervisor.journal.snapshot()
     if state['phase']!='ENTERING' or state['entry_blocked']:return run()
     original=supervisor.reader;owner_reader=supervisor.owner.reader;bridge_reader=supervisor.bridge.reader
-    view=CycleSources(original,state)
+    view=(view_type or CycleSources)(original,state)
     supervisor.reader=view;supervisor.owner.reader=view;supervisor.bridge.reader=view
     try:return run()
     finally:

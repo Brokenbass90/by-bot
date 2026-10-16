@@ -15,24 +15,27 @@ from research_lab.kity_micro_pricing_intent_v2 import (
 from research_lab.kity_micro_transport_v1 import SourceError
 
 SCHEMA = 'KITY_EXECUTION_MICRO_POST_GO_POLICY_V1'
+SCHEMA_70S = 'KITY_EXECUTION_MICRO_POST_GO_POLICY_V2_70S'
 GO_PREFIX = 'GO KITY_EXECUTION_MICRO_POLICY_V1 '
 QUANTITY_RULE = 'MINIMUM_APPROVED_ROUNDING_FRONTIER_FROM_SINGLE_POST_GO_CAPTURE'
 
 
 def make_policy(*, created_ms, valid_until_ms, physical_config_sha256,
-                predecessor_plan_id, bounds):
+                predecessor_plan_id, bounds, dispatch_window_ms=60000):
     _clock(created_ms); _clock(valid_until_ms)
     if not 0 < valid_until_ms - created_ms <= 86400000:
         raise SourceError('POLICY_SESSION_CLOCK')
     bounds = _owner_bounds(bounds)
     if bounds['schema'] != 'kity_execution_micro_owner_bounds_v3':
         raise SourceError('POLICY_V3_BOUNDS_REQUIRED')
-    p = dict(schema=SCHEMA, purpose='EXECUTION_MICRO_LIVE',
+    if type(dispatch_window_ms) is not int or dispatch_window_ms not in (60000,70000):
+        raise SourceError('POLICY_ENTRY_WINDOW_NOT_AUTHORIZED')
+    p = dict(schema=SCHEMA if dispatch_window_ms==60000 else SCHEMA_70S, purpose='EXECUTION_MICRO_LIVE',
         created_ms=created_ms, valid_until_ms=valid_until_ms,
         physical_config_sha256=_sha(physical_config_sha256),
         predecessor_plan_id=_sha(predecessor_plan_id), bounds=bounds,
         basket=[dict(symbol=s, side=side) for s,side in BASKET],
-        quantity_rule=QUANTITY_RULE, collar_bps='50', dispatch_window_ms=60000,
+        quantity_rule=QUANTITY_RULE, collar_bps='50', dispatch_window_ms=dispatch_window_ms,
         pricing_anchor='WORST_CONSUMED_DEPTH_PRICE_OF_FRESH_SIZED_QUANTITY',
         source_rule='ONE_POST_GO_CAPTURE_COMMON_CTS_MAX_2_SECONDS',
         orders_allowed=False, research_evidence_eligible=False,
@@ -45,7 +48,7 @@ def validate_policy(policy):
     try:
         expected = make_policy(**{k:policy[k] for k in (
             'created_ms', 'valid_until_ms', 'physical_config_sha256',
-            'predecessor_plan_id', 'bounds')})
+            'predecessor_plan_id', 'bounds','dispatch_window_ms')})
         if policy != expected:
             raise SourceError('POLICY_PIN_OR_RULE_CONFLICT')
     except (KeyError, TypeError) as exc:

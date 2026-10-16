@@ -1,5 +1,10 @@
 # KITY critical path — October 16
 
+October16 later closeout supersedes prior runtime/readiness below: read
+KITY_FINAL_CLOSEOUT_2026_10_16.md and canonical checkpoint TOP. Separate70s
+owner-approved policy3ca9…c5c5 is engineering-ready ORDERS_OFF, not actual10/10.
+Old98ae…8f3ee remains SPENT/FAILED_SAFE_FLAT; never reuse its launcher.
+
 CURRENT after personal owner launch11:02UTC: **`FAILED_SAFE_FLAT`**, 9/10 filled,
 9/9 native Full stops proven, SPCX not attempted. Before the tenth leg the
 unchanged60s entry fence fired. Automatic owned unwind/finality completed
