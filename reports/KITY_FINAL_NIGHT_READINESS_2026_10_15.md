@@ -4,6 +4,28 @@
 selection, money GO or order. The owner's latest instruction is explicitly
 read-only/no orders while investigating the missing Trading Terms prompt.
 
+**October16 06:24:53.423UTC updated-key verification PASS:** authenticated GETs
+now prove MASTER/isMaster=true/parentUid0/readOnly0 and WalletAccountTransfer,
+with the intended live subaccount's parent relationship matching. Withdrawal
+is absent. ContractTrade/Spot/Options/Derivatives/Earn rights are also present;
+they were not exercised. The prior failed role observation remains unchanged.
+See [master_credential_verification_v2.json](evidence/kity_master_agreement_20261016/master_credential_verification_v2.json).
+
+One proposed legal request is prepared, **not authorized or sent**:
+`POST https://api.bybit.com/v5/user/agreement`, body
+`{"categoryV2":1,"agree":true}`, proposalSHA256
+`a952b806d560e1099dc57691a51c6d5c4ce57f606e968c2c093cfec3977ae257`.
+Private proposal binds credential/source/identity hashes and verified master/
+subaccount IDs. The official API says the metals/stock-perp agreement applies
+to the master's subaccounts once signed. Owner should personally review the
+[official agreement](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-TradFi-Perps)
+before separate explicit legal approval; the agent's text reader retrieved
+only its title and does not claim legal-text review. "Готово пробуй" continues
+the key GET check, not consent to sign.0agreementPOST/order/transfer/key/service
+mutation/newintent. No current health/position assertion from these identity
+GETs. Money approval and an appropriately scoped new session remain separate;
+October15 approvals are not transferred.
+
 **October16 05:54:26.901UTC actual new-credential check:** the owner populated
 the dedicated private file. GETquery-api succeeds for both provided and active
 keys. The supplied key is distinct from the live bot key, but its owner is the

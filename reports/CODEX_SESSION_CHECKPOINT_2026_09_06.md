@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+October16 06:24:53.423UTC CURRENT: updated dedicated key VERIFIED by two GETs.
+MASTER/isMastertrue/parent0/readOnly0/Wallet[AccountTransfer], intended live
+subaccount parent relationship matches. NoWithdrawal; additional ContractTrade/
+Spot/Options/Derivatives/Earn permissions are present but unused. Previous failed
+subaccount-key observation remains immutable. See master_credential_verification_v2.json
+under evidence/kity_master_agreement_20261016. Prepared NOT_SENT legal proposal
+a952b806d560e1099dc57691a51c6d5c4ce57f606e968c2c093cfec3977ae257:
+POST https://api.bybit.com/v5/user/agreement {"categoryV2":1,"agree":true},
+official TradFi Perps agreement URL/source pinned in private proposal. Agent
+text reader only receives legal-page title, not full legal text; owner must
+personally review. Await separate explicit legal approval; "Готово пробуй"
+authorized key verification, NOT terms acceptance.0POST/orders/transfers/key/
+service mutations/newintent. No moneyGO/session transfer from Oct15. Preserve
+original V3/Alpaca/ATT1/LIQ/Claude; this check makes no current-position or health
+claim. Full account IDs/keys/secret/private captures remain uncommitted.
+
 October16 05:54:26.901UTC CURRENT: owner supplied a new key in the prepared
 private master-signing.env. Two authenticated GETquery-api observations succeed,
 but providedkey is SUB/isMasterfalse/readOnly0/Wallet[] and belongs to the same
