@@ -1,5 +1,11 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT Oct17 batch/WS: checkpoint TOP → KITY_BATCH_WS_ORDERS_OFF_2026_10_17.md.
+160targetedPASS; actual privateWS auth/sub/pong + flatGET,0orders. Finalkit
+installed disabled; activewriter unchanged/sequential. Not10/10moneyREADY.
+Next is single-owner production service/control binding ordersOFF, never reuse
+expired9051/oldGO or transfer70s authority. DAY f7d3145 remains active GETonly.
+
 CURRENT Oct17: DAY monitoring is now operational GET-only; see
 ALPACA_DAY_MONITOR_DELIVERY_2026_10_17.md and checkpoint TOP. Own timer next
 Oct19 13:30UTC, TG test15210 delivered; V3/HALT/NET manager unchanged.

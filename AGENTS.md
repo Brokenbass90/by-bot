@@ -952,3 +952,22 @@ Do not rerun install/testnotification; retain journal/deliveryclaims. CurrentNET
 and originalmoney manager remain independent. KITY9051expired/oldGO not reused;
 batch/WS engineering grants no writer/permit/newmoney policy. ElderstandaloneKILL,
 onlyHEDGEfromfrozencontract. Root-only reviewer restriction remains.
+
+
+## October17 KITY batch/private WS candidate
+
+October17 batch/WS CURRENT: KITY_BATCH_WS_ORDERS_OFF_CANDIDATE, not money-ready
+active binding or10/10 executionPASS. Read KITY_BATCH_WS_ORDERS_OFF_2026_10_17.md.
+New atomic ten-intent journal, batch signed-once adapter,65sharedGET preflight,
+aggregate gross/accountflat checks, private raw inbox+REST reconnect barrier,
+existing native/recovery/accounting composition.160targetedPASS/33new. Actual
+private auth+subscribe+pong1.835s, before/afterGET flat/open0, PID2314960/ORDERS_OFF,
+153pins/unit/lock unchanged,0POST. Final22-filekit installed disabled; spec
+cd4103634fc0ef11ff549fe4cfe4fbc17966dc27e50980565dd7dcbf0bdd23ef.
+Earlier protocol probe e6120734 source differs from final account/runtime delta;
+not an actual fill/protection performance proof. Existing service still uses
+sequential sourcekit: reviewed single-owner service/control binding remains
+nextengineering before a newdated policy and PERSONALmoneyGO. No9051/spentGO
+reuse/extension, no70s standingauthority, no newpolicy or accountlease/service
+activation. DAYmonitor f7d3145 active GETonly; monthlyV3/HALT/NET unchanged.
+ElderHEDGE ORDERSOFF delivery is next; preserve Claude/ATT1/LIQ/allowlist/rootonly.

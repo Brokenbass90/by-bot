@@ -1,0 +1,30 @@
+{
+  "broker_writes": 0,
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_kity_batch_ws_v1.py",
+    "tests/test_kity_micro_runtime_v1.py",
+    "tests/test_kity_micro_account_bridge_v1.py",
+    "tests/test_kity_micro_native_protection_v1.py",
+    "tests/test_kity_micro_physical_owner_v1.py",
+    "tests/test_kity_micro_account_readbacks_v2.py",
+    "tests/test_kity_micro_post_go_pricing_v1.py",
+    "tests/test_kity_micro_post_go_owner_v1.py",
+    "tests/test_kity_micro_integration_v3.py"
+  ],
+  "files": {
+    "research_lab/kity_batch_ws_v1.py": "c7a9694e1eee2fb6fdeb507339e29d440ecbdff7434f407ac4a9fcdf8c2d28a2",
+    "scripts/verify_kity_batch_ws_orders_off_v1.py": "ca3185a389b47b81c5ecaf9508a74633128c5b691989723093cb4132873a7a5a",
+    "tests/test_kity_batch_ws_v1.py": "9ddb6ca8e3aae12167836cc2967fd7bae8e830671fa4b9044cda9f414eb9634e"
+  },
+  "full_suite_rerun": false,
+  "log_sha256": "cc3520cdb0eb5bce095d9eea34a54aeb0bfce387c5abebc3434487f47174016a",
+  "monetary_activation": false,
+  "new_tests": 33,
+  "observed_utc": "2026-10-17T07:54:49.721018+00:00",
+  "schema": "TRADING_OS_TARGETED_VERIFICATION_V1",
+  "targeted_pass": 160
+}

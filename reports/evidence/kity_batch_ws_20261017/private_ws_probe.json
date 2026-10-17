@@ -1,0 +1,46 @@
+{
+  "after": {
+    "at_ms": 1792222773610,
+    "complete": true,
+    "label": "after",
+    "open_orders": 0,
+    "positions": 0
+  },
+  "before": {
+    "at_ms": 1792222771842,
+    "complete": true,
+    "label": "before",
+    "open_orders": 0,
+    "positions": 0
+  },
+  "broker_posts": 0,
+  "candidate_root": "/opt/bybot-research/kity-batch-ws-20261017/source-e6120734fd227673",
+  "heartbeat": {
+    "at_ms": 1792222771974,
+    "error": null,
+    "mode": "ORDERS_OFF",
+    "phase": "NO_ACTIVE_PLAN",
+    "pid": 2314960
+  },
+  "lock_inode_unchanged": true,
+  "new_policy_created": false,
+  "observed_ms": 1792222773677,
+  "old_go_reused": false,
+  "private_ws_auth": true,
+  "private_ws_pong": true,
+  "private_ws_subscription": true,
+  "probe_elapsed_seconds": 1.835,
+  "rest_barrier_remained_closed": true,
+  "source_pins_unchanged": true,
+  "source_pins_verified": 153,
+  "source_sha256": "e6120734fd2276731f8fc1a1b0dbea57ea824e150c0daff01cf14453e252e6df",
+  "status": "KITY_BATCH_PRIVATE_WS_ORDERS_OFF_CANDIDATE",
+  "topics": [
+    "order.linear",
+    "execution.linear",
+    "position.linear"
+  ],
+  "unit_state": "MainPID=2314960\nNRestarts=0\nActiveState=active\n",
+  "unit_unchanged": true,
+  "writer_activated": false
+}
