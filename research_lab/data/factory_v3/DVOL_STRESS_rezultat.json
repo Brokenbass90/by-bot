@@ -1,0 +1,116 @@
+{
+ "DVOL_RAZMER_V1": {
+  "n_sdelok": 548,
+  "sredniy_razmer": 1.0187,
+  "potoki": {
+   "LONG": {
+    "POSTOYANNYY": {
+     "chistyy_pnl": -10217.2,
+     "maks_prosadka": 16856.6,
+     "pnl_k_prosadke": -0.606,
+     "kapital_sredniy": 1.019,
+     "kapital_pik": 1.019,
+     "cvar5": -807.3,
+     "hudshaya": -1761.7
+    },
+    "POLITIKA": {
+     "chistyy_pnl": -10920.8,
+     "maks_prosadka": 17278.0,
+     "pnl_k_prosadke": -0.632,
+     "kapital_sredniy": 1.019,
+     "kapital_pik": 1.318,
+     "cvar5": -798.2,
+     "hudshaya": -1843.8
+    },
+    "usloviya": {
+     "prosadka": false,
+     "cvar5": false,
+     "pnl": true
+    }
+   },
+   "SHORT": {
+    "POSTOYANNYY": {
+     "chistyy_pnl": -2064.7,
+     "maks_prosadka": 10463.1,
+     "pnl_k_prosadke": -0.197,
+     "kapital_sredniy": 1.019,
+     "kapital_pik": 1.019,
+     "cvar5": -768.4,
+     "hudshaya": -1319.0
+    },
+    "POLITIKA": {
+     "chistyy_pnl": -1361.1,
+     "maks_prosadka": 10305.1,
+     "pnl_k_prosadke": -0.132,
+     "kapital_sredniy": 1.019,
+     "kapital_pik": 1.318,
+     "cvar5": -755.5,
+     "hudshaya": -1421.9
+    },
+    "usloviya": {
+     "prosadka": false,
+     "cvar5": false,
+     "pnl": true
+    }
+   }
+  },
+  "verdikt": "FAIL"
+ },
+ "STRESS_RAZMER_V1": {
+  "n_sdelok": 548,
+  "sredniy_razmer": 0.9553,
+  "potoki": {
+   "LONG": {
+    "POSTOYANNYY": {
+     "chistyy_pnl": -9580.9,
+     "maks_prosadka": 15806.8,
+     "pnl_k_prosadke": -0.606,
+     "kapital_sredniy": 0.955,
+     "kapital_pik": 0.955,
+     "cvar5": -757.0,
+     "hudshaya": -1652.0
+    },
+    "POLITIKA": {
+     "chistyy_pnl": -10039.0,
+     "maks_prosadka": 16642.2,
+     "pnl_k_prosadke": -0.603,
+     "kapital_sredniy": 0.955,
+     "kapital_pik": 1.0,
+     "cvar5": -783.4,
+     "hudshaya": -1729.3
+    },
+    "usloviya": {
+     "prosadka": false,
+     "cvar5": false,
+     "pnl": true
+    }
+   },
+   "SHORT": {
+    "POSTOYANNYY": {
+     "chistyy_pnl": -1936.1,
+     "maks_prosadka": 9811.4,
+     "pnl_k_prosadke": -0.197,
+     "kapital_sredniy": 0.955,
+     "kapital_pik": 0.955,
+     "cvar5": -720.6,
+     "hudshaya": -1236.8
+    },
+    "POLITIKA": {
+     "chistyy_pnl": -1478.0,
+     "maks_prosadka": 10158.5,
+     "pnl_k_prosadke": -0.145,
+     "kapital_sredniy": 0.955,
+     "kapital_pik": 1.0,
+     "cvar5": -728.1,
+     "hudshaya": -1294.7
+    },
+    "usloviya": {
+     "prosadka": false,
+     "cvar5": false,
+     "pnl": true
+    }
+   }
+  },
+  "verdikt": "FAIL"
+ }
+}
