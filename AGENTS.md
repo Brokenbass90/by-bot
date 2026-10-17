@@ -996,3 +996,20 @@ single-owner service/control binding ordersOFF, not new research; no expired
 9051/oldGO/70s scope transfer. DAY f7d3145 active GETonly/nextMon13:30UTC,
 monthlyV3 independentstrategyPASS but disabled, HALT/NET manager unchanged.
 Do not repeat completed baseline/DAYinstall/TGtest or broad audits.
+
+## October17 batch single-owner production binding completed
+
+Read checkpoint TOP and KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md.
+Authorized ordersOFF engineering completed: sameunit/originalaccountlease now
+selects batch/privateWS service, PID2440673/HEALTHY/ORDERSOFF/auth+subtrue.
+23source/155guardpins readbackPASS; originallock818853/oldwire34/history/
+inhibitors/AlpacaDAY95pins preserved, secondlease refused. FreshGET flat/open0
+before/quiescent/after.173targetedPASS; no broad suite/old60FAILwaiver.
+One nonmonetary PREPARE_BATCH gross207.953940/commonCTS2sPASS, no newpolicy,
+selection, actualentryintent or POST. money_go=false and60s newnamespace;
+oldone-policy70s nottransferred. No10/10executionPASS/newmoneyGO. Earlier
+sequentialcurrent/servicebindingpending statuses are superseded. Do not redo
+binding or use oldGO9051/spentlaunchers. Futureactivation/newdatedpolicy and
+PERSONALexactGO separate; agent never runs moneycontrol/ownerlauncher.
+Elder57a09db clarification received; no new research/NETexit permission inferred.
+Root-only finalreview; preserveClaude/ATT1/LIQ/foreignallowlist/AlpacaHALT.

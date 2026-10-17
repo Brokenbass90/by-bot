@@ -1,5 +1,22 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 08:30UTC CURRENT: KITY_BATCH_WS_PRODUCTION_BOUND_ORDERS_OFF.
+Read KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md. Same productionunit now
+selects23-file batch/WS service; PID2440673/NRestarts0/HEALTHY/ORDERSOFF,
+privateauth/subtrue, originalaccountlock818853, secondlease refused. FreshGET
+flat/open0 before/quiescent/after; oldhistory/wire34/inhibitors/unrelatedunits
+and95AlpacaDAYpins preserved. Independentreadback23source/155guardpinsPASS.
+One actual PREPARE_BATCH1792225500587902567: gross207.953940, commonCTS2sPASS,
+fresh_only[], no policy/selection/entryintent/newPOST. money_go=false;60s
+newnamespace does not transfer oldone-policy70s.173targetedPASS; no fullsuite
+rerun/waiver. Existing healthobserver works with newheartbeat. Rollback reviewed,
+not fault-injected. Productionbindingpending/sequentialcurrent statements below
+are superseded history. No actual10/10executionPASS, newfinancialactivation,
+policy or personalGO; neverreuse9051/spentGO/launchers. ElderV1.1clarification
+is supplied by Claude57a09db; source-only adapter closeout follows separately.
+No NETclose/migration/stopchange, no monthlyHALTclear. DAY f7d3145 activeGETonly;
+firstMondayrearmreadback stillfuture. PreserveClaude/ATT1/LIQ/foreignallowlist.
+
 October17 Elder CURRENT: ELDER_HEDGE_ORDERS_OFF_ADAPTER_DELIVERED /
 BLOCKED_SOURCE_CONTRACT. Read ELDER_HEDGE_ORDERS_OFF_ADAPTER_2026_10_17.md.
 20new/31targetedPASS; pure ispolnenie copied unchanged from pinned yadro

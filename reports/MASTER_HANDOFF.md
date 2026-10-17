@@ -1,5 +1,12 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT Oct17 08:30UTC: checkpoint TOP → KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md.
+KITY sameowner unit now batch/privateWS, HEALTHY/ORDERSOFF,173targetedPASS.
+Real GET-only PREPARE207.953940/commonCTS2sPASS;0newpolicies/intents/POST.
+Singleoriginallease/oldhistory/AlpacaDAYpins preserved. Notactual10/10PASS;
+newfinancialactivation and personalnewGO separate, no expiredpolicy/70s reuse.
+ElderV1.1 clarification supplied57a09db, sourcecloseout follows. No NETexitGO.
+
 CURRENT Oct17 Elder: checkpointTOP → ELDER_HEDGE_ORDERS_OFF_ADAPTER_2026_10_17.md.
 31targetedPASS/20new, disabled24-filekit, no live rows/outcomes/money. Need
 first-record causal geometry and native/CONTROL stop-anchor clarification from

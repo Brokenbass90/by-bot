@@ -1,5 +1,14 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT Oct17 08:30UTC: checkpoint TOP →
+KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md. Binding complete: SAME unit,
+original lock, PID2440673/HEALTHY/ORDERSOFF/privateauth+sub.173targetedPASS.
+Actual read-only PREPARE207.953940/commonCTS2sPASS, no policy/intents/POST.
+No actual10/10PASS or new financialauthority; old9051/GO/70s nevertransfer.
+ElderV1.1 sourceclarification from57a09db is now supplied, closeout follows.
+AlpacaDAY/monthlyV3/HALT/NET unchanged. Earlier binding/sourcepending paragraphs
+below are dated history; do not restart completed implementation or writer.
+
 CURRENT Oct17 Elder: checkpointTOP → ELDER_HEDGE_ORDERS_OFF_ADAPTER_2026_10_17.md.
 31targetedPASS/20new, disabled24-filekit, no live rows/outcomes/money. Need
 first-record causal geometry and native/CONTROL stop-anchor clarification from

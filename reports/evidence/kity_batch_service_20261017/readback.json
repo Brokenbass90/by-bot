@@ -1,0 +1,37 @@
+{
+  "account_lock_inode": 818853,
+  "broker_requests_this_readback": 0,
+  "config_sha256": "4fd3634a70676306349fc7233c25eda784d9ceedc2ffc84c227f9e4571fe459f",
+  "guard_count": 155,
+  "heartbeat": {
+    "error": null,
+    "mode": "ORDERS_OFF",
+    "phase": "NO_ACTIVE_PLAN",
+    "pid": 2440673,
+    "private_authenticated": true,
+    "private_last_receive_ms": 1792225821001,
+    "private_subscribed": true
+  },
+  "money_config_enabled": false,
+  "new_wire_count": 0,
+  "observed_ms": 1792225831548,
+  "policy_count": 0,
+  "prepare_command_id": "1792225500587902567",
+  "prepare_result": {
+    "actual_intents_created": 0,
+    "broker_writes": 0,
+    "fresh_only": [],
+    "gross": "207.953940",
+    "monetary_transport_authorized": false,
+    "policy_created": false,
+    "private_authenticated": true,
+    "private_subscribed": true,
+    "source_clock": "OBSERVED_COMMON_2S_PASS",
+    "status": "KITY_BATCH_WS_BOUND_ORDERS_OFF"
+  },
+  "prepare_result_sha256": "58f8220e6d32aed2491c2ab1f711a4d11fc6edc514ba2c71a954a42d9b2327dd",
+  "selected": false,
+  "source_count": 23,
+  "status": "KITY_BATCH_WS_PRODUCTION_BOUND_READBACK_PASS",
+  "unit": "MainPID=2440673\nNRestarts=0\nActiveState=active\n"
+}

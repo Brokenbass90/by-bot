@@ -1,0 +1,23 @@
+{
+  "command": ".venv/bin/python -m pytest -q tests/test_kity_batch_service_v1.py tests/test_kity_batch_ws_v1.py tests/test_kity_micro_runtime_v1.py tests/test_kity_micro_account_bridge_v1.py tests/test_kity_micro_native_protection_v1.py tests/test_kity_micro_physical_owner_v1.py tests/test_kity_micro_account_readbacks_v2.py tests/test_kity_micro_post_go_pricing_v1.py tests/test_kity_micro_post_go_owner_v1.py tests/test_kity_micro_integration_v3.py",
+  "files": {
+    "research_lab/kity_batch_service_v1.py": "542e8c181a04bf479fae5d0ac6833472166705dbcad88458cbae6a5f744a8be2",
+    "research_lab/kity_batch_ws_v1.py": "c7a9694e1eee2fb6fdeb507339e29d440ecbdff7434f407ac4a9fcdf8c2d28a2",
+    "tests/test_kity_batch_service_v1.py": "117f8d9c41cbb6cc197b5bbf7e35c1d7af10ac9043ed4bae8bb72bc11becf035",
+    "tests/test_kity_batch_ws_v1.py": "9ddb6ca8e3aae12167836cc2967fd7bae8e830671fa4b9044cda9f414eb9634e",
+    "tests/test_kity_micro_account_bridge_v1.py": "c7844e1aabfb6c2e985cc87b4530703f50d8b1b508f32a6350987c9f08efda72",
+    "tests/test_kity_micro_account_readbacks_v2.py": "ebb8eb0029998745a734f899d6c4764081f0fe027d7fa2a5ccdc889aa0998d24",
+    "tests/test_kity_micro_integration_v3.py": "9abd366ea78d23e8ecb501ba9bd183dbb4f56b41519500cce7ea5a988942d0d8",
+    "tests/test_kity_micro_native_protection_v1.py": "3ffc40ed5913cc363de1fd47116d998e7bdf8fd5382e8a524e2397660d23eb11",
+    "tests/test_kity_micro_physical_owner_v1.py": "2a0c4494a12a8dd6806dfd8a56dd724950bb8fc3b835df61bcd3ef300ab90ef3",
+    "tests/test_kity_micro_post_go_owner_v1.py": "5475b327f29764c9ac1e5f727a01952fbc130af7ff58200cf4972520b8aba32b",
+    "tests/test_kity_micro_post_go_pricing_v1.py": "8092f585757698e98b588efe4f1c82afbb45c75e40f9f5de71f37253d5f547d3",
+    "tests/test_kity_micro_runtime_v1.py": "55922e1b46dde7532a4df7f1d4d2831abd87940e9a2bb44af5cb5c37825d06da"
+  },
+  "full_suite_rerun": false,
+  "historical_full_suite_failures_not_waived": 60,
+  "log_sha256": "445d555c888adae9db465a9f9b4eba5338e3cd5aed4b06ecdf1b50404a127e1c",
+  "passed": 173,
+  "reviewer": "root-only; existing allowance restriction retained",
+  "status": "TARGETED_PASS"
+}
