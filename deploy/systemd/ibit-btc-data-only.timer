@@ -1,0 +1,15 @@
+[Unit]
+Description=Calendar-checked IBIT post-close source receipts (DATA ONLY)
+[Timer]
+OnCalendar=Mon..Fri *-*-* 13:16:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 16:16:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 16:21:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 16:26:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 17:01:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 20:01:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 22:01:00 America/New_York
+AccuracySec=1s
+Persistent=true
+Unit=ibit-btc-data-only.service
+[Install]
+WantedBy=timers.target

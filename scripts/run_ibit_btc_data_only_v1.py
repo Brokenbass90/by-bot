@@ -37,6 +37,10 @@ def main(argv=None):
     commands = parser.add_subparsers(dest='command')
     imp = commands.add_parser('import', help='verify explicit saved source envelope')
     imp.add_argument('--sources', required=True)
+    seed = commands.add_parser('seed', help='seal archival warmup only; no prospective decisions')
+    seed.add_argument('--sources', required=True)
+    seed.add_argument('--store', required=True)
+    seed.add_argument('--now', help='offline replay clock, timezone-aware ISO')
     qa = commands.add_parser('qa', help='append Massive saved-source reconciliation')
     qa.add_argument('--massive', required=True)
     qa.add_argument('--received-at', required=True)
@@ -50,13 +54,16 @@ def main(argv=None):
         return 0
     try:
         store = checked_path(args.store)
-        source = checked_path(args.sources if args.command == 'import' else args.massive, regular=True)
+        source = checked_path(args.sources if args.command in ('import','seed') else args.massive, regular=True)
         if source == store or store in source.parents or source in store.parents:
             raise ValueError('saved input overlaps runtime store')
         adapter = Adapter(store)
         if args.command == 'import':
             result = adapter.import_session(args.session, _strict_load(args.sources),
                                             args.now or dt.datetime.now(dt.timezone.utc))
+        elif args.command == 'seed':
+            adapter.seed_history(_strict_load(args.sources),args.now or dt.datetime.now(dt.timezone.utc))
+            result = adapter.historical_seed_summary()
         else:
             result = adapter.reconcile(args.session, _strict_load(args.massive), args.received_at)
         print(json.dumps(result, sort_keys=True, ensure_ascii=False, allow_nan=False))

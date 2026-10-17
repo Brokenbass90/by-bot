@@ -1,0 +1,17 @@
+[Unit]
+Description=IBIT BTC source collector (DATA ONLY ORDERS OFF)
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/bybot-research/ibit-btc-data-only-20261017/app
+Environment=PYTHONPATH=/opt/bybot-research/ibit-btc-data-only-20261017/app
+Environment=PYTHONDONTWRITEBYTECODE=1
+UMask=0077
+ExecStart=/root/by-bot/.venv/bin/python -B /opt/bybot-research/ibit-btc-data-only-20261017/app/scripts/run_ibit_btc_source_ops_v1.py --network --spec /opt/bybot-research/ibit-btc-data-only-20261017/spec.json --spec-sha256 d1a2b879de6e3944c6133202eaaa9959fdb44a60282b96d637a5c4d0e68e4ad0 --runtime /opt/bybot-research/ibit-btc-data-only-20261017/runtime --credentials /root/by-bot/configs/alpaca_live_v38.env
+TimeoutStartSec=180
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/bybot-research/ibit-btc-data-only-20261017/runtime

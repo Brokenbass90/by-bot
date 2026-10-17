@@ -237,6 +237,10 @@ class Adapter:
             rows.append(row)
         if name == 'decisions.jsonl' and len({r['session'] for r in rows}) != len(rows):
             raise ValueError('duplicate journal session')
+        if name == 'decisions.jsonl' and rows:
+            _, warmup_sha = self._warmup()
+            if any(row.get('warmup_sha') != warmup_sha for row in rows):
+                raise ValueError('decision warmup identity mismatch')
         return rows
 
     def _append(self, name, row):
@@ -289,6 +293,103 @@ class Adapter:
         with self._lock():
             return self._read('qa.jsonl')
 
+    def historical_seed_summary(self):
+        with self._lock():
+            rows, pin = self._warmup()
+            return {'status':'HISTORICAL_WARMUP_ONLY' if rows else 'NO_HISTORY_SEED',
+                    'sessions':len(rows),'seed_sha':pin,'prospective_sessions':0,
+                    'orders_enabled':False}
+
+    def _warmup(self, now=None):
+        path = checked_path(self.root / 'warmup.json', regular=True)
+        if not path.exists():
+            return [], None
+        with _open_file(path, 'rb') as f:
+            seed = json.load(f)
+        if seed.get('seed_sha') != _sha({k:v for k,v in seed.items() if k != 'seed_sha'}):
+            raise ValueError('warmup hash mismatch')
+        if seed.get('rule_sha') != RULE_SHA or seed.get('status') != 'HISTORICAL_WARMUP_ONLY':
+            raise ValueError('warmup rule identity')
+        if now is not None and any(_stamp(value) > now for value in seed['source_received_at'].values()):
+            raise ValueError('warmup not available at decision')
+        for name, pin in seed['source_sha'].items():
+            if name not in {'calendar', 'alpaca_sip', 'binance'} or not isinstance(pin, str) or len(pin) != 64 or any(c not in '0123456789abcdef' for c in pin):
+                raise ValueError('warmup source identity')
+            with _open_file(self.root / 'raw' / name / (pin+'.json'), 'rb') as f:
+                if hashlib.sha256(f.read()).hexdigest() != pin:
+                    raise ValueError('warmup source hash mismatch')
+        return seed['rows'], seed['seed_sha']
+
+    def seed_history(self, sources, now):
+        """Seal archival inputs once BEFORE prospective decisions, never backdate.
+
+        Historical retrievals retain actual receipt timestamps. They create no
+        decision, freshness PASS, QA PASS or prospective session. Exactly the
+        frozen rule consumes these prices, followed by future decision rows.
+        The 81-session minimum supplies all 60 prior premium observations.
+        """
+        now = _stamp(now)
+        if not isinstance(sources, dict) or set(sources) != {'calendar','alpaca_sip','binance'}:
+            raise ValueError('warmup sources')
+        receipts = {name:_stamp(source['received_at']) for name,source in sources.items()}
+        if any(receipt > now for receipt in receipts.values()):
+            raise ValueError('warmup receipt in future')
+        sip, btc = sources['alpaca_sip'], sources['binance']
+        if (sip.get('feed') != 'sip' or sip.get('timeframe') != '1Day'
+            or btc.get('symbol') != 'BTCUSDT' or btc.get('interval') != '1h'
+            or sip['raw'].get('next_page_token')):
+            raise ValueError('warmup source provenance or pagination')
+        calendar = sources['calendar']['raw']
+        if not isinstance(calendar,list) or not 81 <= len(calendar) <= 400:
+            raise ValueError('warmup requires 81 to 400 complete broker sessions')
+        days = [r['date'] for r in calendar]
+        if days != sorted(set(days)):
+            raise ValueError('warmup calendar order or duplicate')
+        bars = sip['raw']['bars']['IBIT']
+        if not isinstance(bars,list) or len(bars) != len(days):
+            raise ValueError('warmup SIP session coverage')
+        closes = {}
+        for bar in bars:
+            stamp = _stamp(bar['t']);day = stamp.astimezone(NY).date().isoformat()
+            if day in closes or day not in days:
+                raise ValueError('warmup SIP session identity')
+            closes[day] = (stamp,_price(bar['c']))
+        hourly = btc['raw']
+        if not isinstance(hourly,list) or len(hourly) > 12000:
+            raise ValueError('warmup BTC bound')
+        indexed = {}
+        for bar in hourly:
+            key = int(bar[0])
+            if key in indexed:
+                raise ValueError('warmup duplicate BTC hour')
+            indexed[key] = bar
+        rows = []
+        for cal in calendar:
+            day = _day(cal['date'])
+            opened = dt.datetime.combine(day,dt.time.fromisoformat(cal['open']),NY)
+            closed = dt.datetime.combine(day,dt.time.fromisoformat(cal['close']),NY).astimezone(UTC)
+            ref_end = dt.datetime.combine(day,dt.time(16),NY).astimezone(UTC)
+            if opened.time() != dt.time(9,30) or closed <= opened or closed.astimezone(NY).time() not in (dt.time(13),dt.time(16)):
+                raise ValueError('warmup calendar geometry')
+            stamp, price = closes[day.isoformat()]
+            start = _millis(ref_end)-3600000;bar = indexed.get(start)
+            if (stamp > closed or any(receipt < ref_end for receipt in receipts.values())
+                or bar is None or int(bar[6]) != start+3599999):
+                raise ValueError('warmup missing or noncausal reference')
+            rows.append({'session':day.isoformat(),'ibit_close':price,'btc_ref_binance':_price(bar[4]),
+                         'freshness':'HISTORICAL_WARMUP'})
+        with self._lock():
+            if self._read('decisions.jsonl'):
+                raise ValueError('warmup must be sealed before prospective decisions')
+            hashes = {name:self._preserve(name,source['raw']) for name,source in sources.items()}
+            body = {'schema':'IBIT_HISTORICAL_WARMUP_V1','status':'HISTORICAL_WARMUP_ONLY',
+                    'rule_sha':RULE_SHA,'source_sha':hashes,'source_received_at':{k:v.isoformat() for k,v in receipts.items()},
+                    'rows':rows,'sessions':len(rows),'prospective_sessions':0,'orders_enabled':False}
+            seed = {**body,'seed_sha':_sha(body)}
+            self._immutable(self.root/'warmup.json',canonical(seed))
+            self._warmup()
+            return seed
+
     def _pending(self, row):
         qa = self._read('qa.jsonl')
         if not any(q['row_sha'] == row['row_sha'] for q in qa):
@@ -332,10 +433,15 @@ class Adapter:
             # Preserve timestamped envelopes as well as canonical raw responses.
             self._preserve('observations', {'session':session, 'sources':sources})
             rows = self._read('decisions.jsonl')
+            warmup, warmup_sha = self._warmup(now=now)
             previous = next((r for r in rows if r['session'] == session), None)
             if previous:
+                if previous.get('warmup_sha') != warmup_sha:
+                    raise ValueError('decision warmup identity mismatch')
                 self._pending(previous)
                 return previous
+            if warmup and session <= warmup[-1]['session']:
+                raise ValueError('prospective session warmup overlap')
             if rows and session <= max(r['session'] for r in rows):
                 raise ValueError('out-of-order session would revise frozen history')
             ready = True; ibit = binance = bybit = bar_t = None
@@ -405,11 +511,12 @@ class Adapter:
                    'freshness':freshness,'decided_at':now.isoformat(),'rule_sha':RULE_SHA,
                    'rule_source_commit':RULE_COMMIT,'rule_source_path':RULE_PATH,'source_sha':hashes,
                    'execution':'NO_SEND','orders_enabled':False,'sverka_massive':'PENDING_SVERKA',
-                   'status':'DECISION','data_eligible':freshness=='FRESH' and not half and discrepancy is not None and not discrepancy_flag}
+                   'status':'DECISION','data_eligible':freshness=='FRESH' and not half and discrepancy is not None and not discrepancy_flag,
+                   'warmup_sha':warmup_sha}
             if freshness != 'MISSING':
-                row.update(rule_values([*rows, row]))
+                row.update(rule_values([*warmup, *rows, row]))
             else:
-                row.update(premiya=None,z=None,sobytie=False,znak=0,event_ts=None,history_sessions=len(_valid_rows(rows)))
+                row.update(premiya=None,z=None,sobytie=False,znak=0,event_ts=None,history_sessions=len(_valid_rows([*warmup,*rows])))
             row.update(received_at_ms=_millis(first_receipt) if first_receipt is not None else None,
                        session_close_ts_ms=_millis(closed), decided_at_ms=_millis(now),
                        source_received_at_ms={k:_millis(v) for k,v in received.items()})
