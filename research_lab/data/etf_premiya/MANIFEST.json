@@ -29,5 +29,10 @@
  "kod_sha256": {
   "etf_premiya_sobytiya.py": "48d57d4ca06dbfe634e22c2435f1d2c1ddff83d18f8ea9fe95858c1987c48906",
   "etf_premiya_izmereniya.py": "851a5be4d165504163097ec329d5e51e3964067d3fd48f3f938e7deddfea14ae"
+ },
+ "OBEM": {
+  "sobytiy": 30,
+  "plyus": 18,
+  "sha256": "8a52fbe02e399dda978af57dfccf8574505a1524a2d0ad5dfbf13989844b9148"
  }
 }

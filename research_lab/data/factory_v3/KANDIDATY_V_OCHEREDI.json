@@ -90,12 +90,13 @@
  },
  {
   "imya": "ETF_OBEM_UCHASTIE",
-  "status": "OZHIDAET",
+  "status": "V_OCHEREDI",
   "ot_kill": "ETF_PREMIYA_ETH_V1",
   "mehanizm": "аномальный долларовый объём IBIT (vs 20 сессий) = институциональное участие; знак дня × объём → продолжение BTC на следующие 24 ч (другой канал, чем премия)",
   "data_ready": "да: akcii_grouped (v, vw) + Binance h1",
   "nuzhno": "измерение: корреляция объёма с |потоком| Farside; совпадение событий с ETF_PREMIYA < 50 % (иначе не независим)",
-  "put": "событийный рукав / признак Brain"
+  "put": "событийный рукав / признак Brain",
+  "prichina": "И1–И3 PASS; PREREG_ETF_OBEM_UCHASTIE_2026_10_17"
  },
  {
   "imya": "MAKRO_SHOK_VSE",
