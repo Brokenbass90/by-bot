@@ -1,0 +1,18 @@
+[Unit]
+Description=Alpaca monthly full-universe source operations (ORDERS OFF)
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/bybot-research/alpaca-monthly-source-ops-20261017/app
+Environment=PYTHONPATH=/opt/bybot-research/alpaca-monthly-source-ops-20261017/app
+Environment=XDG_CACHE_HOME=/opt/bybot-research/alpaca-monthly-source-ops-20261017/runtime/cache
+Environment=PYTHONDONTWRITEBYTECODE=1
+UMask=0077
+ExecStart=/root/by-bot/.venv/bin/python -B /opt/bybot-research/alpaca-monthly-source-ops-20261017/app/scripts/run_alpaca_monthly_source_ops_v1.py --package-spec /opt/bybot-research/alpaca-monthly-source-ops-20261017/spec.json --package-spec-sha256 73b37f25da947e16a905bac1c59ed86a2230a47fe467694246ae2c1dfa2b5154 --runtime /opt/bybot-research/alpaca-monthly-source-ops-20261017/runtime --calendar-profile /root/by-bot/configs/alpaca_live_v38.env --capture --bind-orders-off
+TimeoutStartSec=900
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/bybot-research/alpaca-monthly-source-ops-20261017/runtime

@@ -1,0 +1,10 @@
+[Unit]
+Description=Calendar-checked Alpaca source/daily/month-end schedule (ORDERS OFF)
+[Timer]
+OnCalendar=Mon..Fri *-*-* 13:20:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 16:20:00 America/New_York
+AccuracySec=1s
+Persistent=true
+Unit=alpaca-monthly-source-ops.service
+[Install]
+WantedBy=timers.target
