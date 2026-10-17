@@ -1,0 +1,82 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "capture_duration_ms": 6491,
+  "capture_path": "/opt/bybot-research/kity-micro-owner-20261015/runtime/batch-ws-20261017-v1/readiness/captures/capture-1792228234392.json",
+  "capture_sha256": "2d949b4088f5e0d76d30fc83ebc6d5ae522ae6e9918df231edc9a40372f7642c",
+  "clock": {
+    "common_observation_ms": 1792228240883,
+    "max_engine_age_upper_ms": 2862,
+    "server_offset_interval_ms": [
+      -80,
+      84
+    ],
+    "status": "COMMON_BASKET_STALE",
+    "valid_for_dispatch": false
+  },
+  "completed_ms": 1792228240883,
+  "legs": [
+    {
+      "engine_age_upper_ms": 736,
+      "receive_age_ms": 165,
+      "request_duration_ms": 273,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "engine_age_upper_ms": 659,
+      "receive_age_ms": 277,
+      "request_duration_ms": 167,
+      "symbol": "BTWUSDT"
+    },
+    {
+      "engine_age_upper_ms": 2862,
+      "receive_age_ms": 15,
+      "request_duration_ms": 412,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "engine_age_upper_ms": 657,
+      "receive_age_ms": 212,
+      "request_duration_ms": 229,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "engine_age_upper_ms": 786,
+      "receive_age_ms": 48,
+      "request_duration_ms": 371,
+      "symbol": "SPCXUSDT"
+    },
+    {
+      "engine_age_upper_ms": 462,
+      "receive_age_ms": 187,
+      "request_duration_ms": 251,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "engine_age_upper_ms": 850,
+      "receive_age_ms": 104,
+      "request_duration_ms": 327,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "engine_age_upper_ms": 493,
+      "receive_age_ms": 139,
+      "request_duration_ms": 296,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "engine_age_upper_ms": 473,
+      "receive_age_ms": 217,
+      "request_duration_ms": 226,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "engine_age_upper_ms": 494,
+      "receive_age_ms": 97,
+      "request_duration_ms": 336,
+      "symbol": "XPLUSDT"
+    }
+  ],
+  "policy_claimed": false,
+  "status": "SAVED_CAPTURE_CLOCK_DIAGNOSIS"
+}

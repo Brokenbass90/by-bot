@@ -1055,3 +1055,10 @@ afteronecheck/no date-transfer. NET remainsOFF_PROTOCOL/notmonthlyevidence.
 IBIT/FarsideresearchownedbyClaude; sourcealreadypushed, storozh notchanged.
 PreserveDAY95pins/monthlyV3/HALT/NETmanager/Claude/ATT1/LIQ/foreignallowlist;
 root-only review restriction unchanged. No actualbatch10/10PASS yet.
+
+October17 latest bounded source observation: PREPARE1792228229477683854,
+gross207.668760/staticreasons[], commonCTSSTALE becauseGRASS2862ms>2s
+(other9fresh). Offline samecapturediagnosis only, no newbrokerquery/relaxation.
+Newpolicy stillunused/0POST. Do not claimfreshSENDPASS. Alreadyapproved
+pricefree PERSONALlauncher stillrequires its ONE newpostGOcapture/allCTSgates;
+NO_SEND consumesattempt iffails. No automaticretry or anotherpolicy.

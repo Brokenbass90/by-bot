@@ -40,6 +40,16 @@ New inactive config SHA256 `3f107a63afd91d6db61f8cb0f2dfcb1807264e458827980f482e
 suite rerun or actual monetary attempt. Source/readback/test evidence is in
 `evidence/owner_decisions_20261017/`. No actual10/10 PASS from preparation.
 
+Latest single GET-only PREPARE1792228229477683854: gross207.668760/215,
+static quantity/eligibility reasons[], but **COMMON_BASKET_STALE**. Offline
+diagnosis of that SAME capture: GRASS engine-age upper2862ms exceeds2000;
+other9 legs462–850ms. Total capture6491ms; GRASS HTTP412ms/receive-age15ms,
+so HTTP receipt is not a valid replacement for the engine CTS. No new broker
+query/retry was used for diagnosis. Policy remains unclaimed, no entry/POST.
+This is not a fresh SEND approval. The authorized price-free personal command
+still takes ONE new post-GO capture; if this condition recurs, NO_SEND and the
+one attempt is spent. No automatic retry, CTS relaxation or fabricated READY.
+
 ## NET — November2 owned legacy exit
 
 Owner authorized planned exit of ONLY original NET entry705a1b5b…d78d, at most

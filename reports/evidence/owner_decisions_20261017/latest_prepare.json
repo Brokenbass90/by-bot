@@ -1,0 +1,19 @@
+{
+  "command_id": "1792228229477683854",
+  "new_broker_posts": 0,
+  "observed_ms": 1792228256411,
+  "policy_claimed": false,
+  "result": {
+    "actual_intents_created": 0,
+    "broker_writes": 0,
+    "fresh_only": [],
+    "gross": "207.668760",
+    "monetary_transport_authorized": false,
+    "policy_created": false,
+    "private_authenticated": true,
+    "private_subscribed": true,
+    "source_clock": "COMMON_BASKET_STALE",
+    "status": "KITY_BATCH_WS_BOUND_ORDERS_OFF"
+  },
+  "result_sha256": "a2e27688c0d85e9e1f9fdeee33bdb60ca84364b492d7b4bda3409c54d5efaa0a"
+}

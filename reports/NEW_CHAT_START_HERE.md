@@ -1,5 +1,9 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+LATEST KITYpreGO:207.668760gross but GRASSCTS2862ms>2s, notfreshSENDready.
+Policya1c97e6b…stillunused; personalpricefree launcher obtains ONE newpostGO
+capture andmayNO_SEND/no retry. No stalebookreceive-time substitution.
+
 CURRENT Oct17 ownerGO: checkpointTOP → OWNER_DECISIONS_KITY_NET_2026_10_17.md.
 Research7b3bfff decisionsverified. KITYONEa1c97e6b…fb8845c8 policyunused,
 expiresTODAY21UTC; PERSONAL newlauncherready, activewriterstillORDERSOFF.

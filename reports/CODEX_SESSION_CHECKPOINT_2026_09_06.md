@@ -1,5 +1,13 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 09:10UTC latest KITYsource: ONE GET-only PREPARE1792228229477683854
+gross207.668760, quantity/eligibilityreasons[], BUT COMMON_BASKET_STALE.
+Samecapture offlineproof: GRASSengineageupper2862ms>2000; other9 462–850ms.
+No CTS substitute/relaxation/requery. Newa1c97e6b…policy stillunclaimed/
+0newPOST/ORDERSOFF. Do not label this freshSENDready. The authorized PERSONAL
+pricefree launcher takes ONE new postGOcapture, then existing2s gates; failure
+NO_SEND/spent/noautoRetry. Report/evidence OWNER_DECISIONS_KITY_NET_2026_10_17.
+
 October17 CURRENT owner-decision delivery: read OWNER_DECISIONS_KITY_NET_2026_10_17.md.
 Human forwarded written four-itemGO, verified research7b3bfff local+origin.
 This supersedes prior proposal-only status for Nov2NETexit. KITY ONE newbatch
