@@ -1,0 +1,70 @@
+{
+  "status": "ALPACA_MONTHLY_SIZING_PARITY_PASS_WIRE_FIX_REVIEW_PENDING",
+  "targeted": "394 passed in 6.03s",
+  "targeted_log_sha256": "522bda89ae2c7da7ff6ebdb4d4adbe6efc5d48be46e400d2892b3c9bca8b2cc3",
+  "source_code_sha256": {
+    "research_lab/alpaca_monthly_native_binding_v1.py": "c38a8540b0c1a777330ca903b1fb7b41ab3a85a3de37b00372eedc5f8d609396",
+    "scripts/equities_alpaca_paper_bridge.py": "f51405c2ec8f5fe613af2d2945b070bbfb4606b68da7e6275176592289b632c6",
+    "scripts/audit_alpaca_monthly_sizing_v1.py": "12b5fee36c58496f0a34ff553ec242576cabf5f67cb79b89bdd4af7874fdf4de"
+  },
+  "strategy_identity": {
+    "strategy_id": "ALPACA_MONTHLY_BASELINE_8f6d1fd2a5f72cf88133cdc390eb3230ed2ab8fc6686e6bf808145223277c799",
+    "material": {
+      "schema": "ALPACA_MONTHLY_STRATEGY_IDENTITY_V1",
+      "contract": {
+        "schema": "ALPACA_BASELINE_MONTHLY_DAILY_V1",
+        "enabled": false,
+        "orders_allowed": false,
+        "money_authority": false,
+        "owner_choice_date": "2026-10-16",
+        "reference_commit": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+        "reference_trades_core_sha16": "2347a7ec606cd845",
+        "selection": "MONTH_END_NEXT_OPEN",
+        "ratchet": "DAILY_CLOSE_NEXT_SESSION",
+        "initial_stop_anchor": "ACTUAL_FILL_MINUS_RAW_2ATR20",
+        "reentry_calendar_days": 21,
+        "capital_ceiling_usd": "487.42",
+        "gross_ceiling": ".70",
+        "maximum_weight": ".60",
+        "max_positions": 4
+      },
+      "reference_universe_sha256": "36da070b2e1fb6c7a10d3df99716c94e2afcabc7bae57d3ca172441736107172",
+      "reference_trades_core_sha16": "2347a7ec606cd845",
+      "files": {
+        "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+        "backtest/alpaca_exact_parity_contract.py": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+        "backtest/alpaca_bakeoff_v2_contract.py": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+        "strategies/alpaca_dynamic_v4_event.py": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a",
+        "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245",
+        "scripts/alpaca_adaptive_paper.py": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+        "research_lab/alpaca_dynamic_v1.py": "7ab36fd92c93103c648002eae16d775225d73c98fa765d470652a00d84c09622",
+        "research_lab/alpaca_strategy_parity_v1.py": "d87f5e07dc3353664f06661dc9a7ef2e16ce37342ad5df9c255a30f4f150efb8",
+        "research_lab/alpaca_monthly_binding_v1.py": "ec792083d0cec9b5220577f60679c6785f7a0ffbde11a7035db3e167ebaafb0e",
+        "research_lab/alpaca_monthly_native_binding_v1.py": "c38a8540b0c1a777330ca903b1fb7b41ab3a85a3de37b00372eedc5f8d609396",
+        "research_lab/alpaca_completed_session_source_v1.py": "4fb18217e9039ff3925f04f2373ad43181294f81bb2def9d36c2508147debdc2",
+        "scripts/equities_alpaca_paper_bridge.py": "f51405c2ec8f5fe613af2d2945b070bbfb4606b68da7e6275176592289b632c6"
+      }
+    }
+  },
+  "current_NET_source_pins_unchanged": 59,
+  "entry_halt_preserved": true,
+  "actual_broker_requests": 0,
+  "actual_broker_writes": 0,
+  "production_capital_usd": "487.42",
+  "policy_contract_sha256": "a32aaec31e8bb31d6fab8274661ecc4e79ed1557192a689cd8461fb8983e402e",
+  "global_strategy_parity": "PENDING_CLAUDE_WIRE_DELTA_CONFIRMATION",
+  "last_full_suite": "b95550b scope:5257PASS/60FAIL. Not rerun after this narrow wire encoding fix; no current full-suite green claim.",
+  "wire_regression": {
+    "compiled_notional": "204.7164",
+    "old_encoded_notional": "204.72",
+    "old_result": "reserved_entry_order_mismatch; wire exceeded compiled budget",
+    "new_encoded_notional": "204.716400000",
+    "red_reproduced_offline": true,
+    "green_verified_actual_AlpacaClient_serializer": true,
+    "legacy_default_precision": 2,
+    "monthly_precision": 9,
+    "rounding": "DOWN",
+    "raw_readback_notional_exact": true,
+    "official_contract": "https://docs.alpaca.markets/us/docs/fractional-trading"
+  }
+}

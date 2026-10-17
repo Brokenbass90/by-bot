@@ -1,0 +1,1068 @@
+{
+  "schema": "ALPACA_MONTHLY_SIZING_PARITY_AUDIT_V1",
+  "status": "ALPACA_MONTHLY_SIZING_PARITY_PASS",
+  "orders_allowed": false,
+  "money_authority": false,
+  "broker_calls": 0,
+  "production_changes": 0,
+  "source_code_sha256": {
+    "research_lab/alpaca_monthly_native_binding_v1.py": "c38a8540b0c1a777330ca903b1fb7b41ab3a85a3de37b00372eedc5f8d609396",
+    "scripts/equities_alpaca_paper_bridge.py": "f51405c2ec8f5fe613af2d2945b070bbfb4606b68da7e6275176592289b632c6",
+    "scripts/audit_alpaca_monthly_sizing_v1.py": "12b5fee36c58496f0a34ff553ec242576cabf5f67cb79b89bdd4af7874fdf4de"
+  },
+  "source_universe_sha256": "36da070b2e1fb6c7a10d3df99716c94e2afcabc7bae57d3ca172441736107172",
+  "reference_core_sha16": "2347a7ec606cd845",
+  "input_sha256": {
+    "claude-ETALON.json": "ea6e42d29fd536c86542e60b0b7642c2c7feac74d7843ef76677f9188606e24c",
+    "claude-sdelki.json": "316b7560b44f4e7e2acd19289dd778f9663b20b28480f3e4869a31513921284e",
+    "claude-resheniya.json": "e9dffb7df8741a38cc4103651a9b8905808f08645a7ca81ee50b1c6bb3b69a82"
+  },
+  "compared_closed_entries": 64,
+  "all_entries_computed": 66,
+  "closed_lifecycles": 64,
+  "monthly_selections": 24,
+  "retained_position_marks": 2,
+  "sequential_cash_debits": 66,
+  "production_ceiling_cases": 66,
+  "production_capital_ceiling_usd": "487.42",
+  "numeric_tolerance": 1e-09,
+  "maximum_absolute_errors": {
+    "notional_error": 1.1368683772161603e-13,
+    "qty_error": 1.7763568394002505e-15,
+    "wire_notional_error": 9.870291250990704e-10,
+    "wire_qty_error": 1.9767520953450912e-11
+  },
+  "remaining_symbols": [
+    "BAC",
+    "SNOW"
+  ],
+  "reference_final_equity_error": 0.0,
+  "comparisons": [
+    {
+      "entry_session": "2024-08-01",
+      "symbol": "GS",
+      "cash_before": 1000.0,
+      "open_equity": 1000.0,
+      "weight": 0.5271541680220395,
+      "notional": 369.0079176154277,
+      "qty": 0.7228221143864523,
+      "wire_notional": "369.007917615",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.276898835087195e-10,
+        "wire_qty_error": 8.377742943821431e-13
+      }
+    },
+    {
+      "entry_session": "2024-08-01",
+      "symbol": "KO",
+      "cash_before": 630.9920823845723,
+      "open_equity": 1000.0,
+      "weight": 0.3392166663121505,
+      "notional": 237.45166641850537,
+      "qty": 3.5405142084558037,
+      "wire_notional": "237.451666418",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.053664153820137e-10,
+        "wire_qty_error": 7.535305712735862e-12
+      }
+    },
+    {
+      "entry_session": "2024-08-01",
+      "symbol": "PLTR",
+      "cash_before": 393.5404159660669,
+      "open_equity": 1000.0,
+      "weight": 0.10670476002901762,
+      "notional": 74.69333202031233,
+      "qty": 2.761610364276096,
+      "wire_notional": "74.693332020",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 3.1232616493070964e-10,
+        "wire_qty_error": 1.1547651723731178e-11
+      }
+    },
+    {
+      "entry_session": "2024-08-01",
+      "symbol": "AAPL",
+      "cash_before": 318.8470839457546,
+      "open_equity": 1000.0,
+      "weight": 0.02692440563679236,
+      "notional": 18.84708394575465,
+      "qty": 0.08391610331064821,
+      "wire_notional": "18.847083945",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 7.546496760824084e-10,
+        "wire_qty_error": 3.3600622284524206e-12
+      }
+    },
+    {
+      "entry_session": "2024-09-03",
+      "symbol": "SBUX",
+      "cash_before": 992.9743302862721,
+      "open_equity": 992.9743302862721,
+      "weight": 0.3271476112373809,
+      "notional": 227.3944261212344,
+      "qty": 2.413335445562936,
+      "wire_notional": "227.394426121",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.3439383767254185e-10,
+        "wire_qty_error": 2.4877877535800508e-12
+      }
+    },
+    {
+      "entry_session": "2024-09-03",
+      "symbol": "PLTR",
+      "cash_before": 765.5799041650378,
+      "open_equity": 992.9743302862721,
+      "weight": 0.24430931484333035,
+      "notional": 169.81501480247778,
+      "qty": 5.41133548225264,
+      "wire_notional": "169.815014802",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.777689355250914e-10,
+        "wire_qty_error": 1.5225154470499547e-11
+      }
+    },
+    {
+      "entry_session": "2024-09-03",
+      "symbol": "PANW",
+      "cash_before": 595.76488936256,
+      "open_equity": 992.9743302862721,
+      "weight": 0.20941780224425632,
+      "notional": 145.56255135345938,
+      "qty": 0.8120573437017607,
+      "wire_notional": "145.562551353",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.5938008952361997e-10,
+        "wire_qty_error": 2.5628388300447114e-12
+      }
+    },
+    {
+      "entry_session": "2024-09-03",
+      "symbol": "REGN",
+      "cash_before": 450.2023380091006,
+      "open_equity": 992.9743302862721,
+      "weight": 0.21912527167503246,
+      "notional": 152.31003892321894,
+      "qty": 0.12908629080738332,
+      "wire_notional": "152.310038923",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.1893242774240207e-10,
+        "wire_qty_error": 1.8554602299047929e-13
+      }
+    },
+    {
+      "entry_session": "2024-10-01",
+      "symbol": "ORCL",
+      "cash_before": 1008.980805482528,
+      "open_equity": 1008.980805482528,
+      "weight": 0.38447942536913954,
+      "notional": 271.55265221028975,
+      "qty": 1.5937103095641414,
+      "wire_notional": "271.552652210",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.8973090593353845e-10,
+        "wire_qty_error": 1.7004175845158898e-12
+      }
+    },
+    {
+      "entry_session": "2024-10-01",
+      "symbol": "CAT",
+      "cash_before": 737.4281532722382,
+      "open_equity": 1008.980805482528,
+      "weight": 0.28187457446753,
+      "notional": 199.08422463390525,
+      "qty": 0.5083071660976453,
+      "wire_notional": "199.084224633",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 9.05259867067798e-10,
+        "wire_qty_error": 2.311262292664651e-12
+      }
+    },
+    {
+      "entry_session": "2024-11-01",
+      "symbol": "WFC",
+      "cash_before": 1001.1828922149546,
+      "open_equity": 1001.1828922149546,
+      "weight": 0.5896298417645599,
+      "notional": 413.2291172198617,
+      "qty": 6.3295966450843935,
+      "wire_notional": "413.229117219",
+      "errors": {
+        "notional_error": 1.1368683772161603e-13,
+        "qty_error": 1.7763568394002505e-15,
+        "wire_notional_error": 8.616893865109887e-10,
+        "wire_qty_error": 1.3197443138324161e-11
+      }
+    },
+    {
+      "entry_session": "2024-11-01",
+      "symbol": "CRM",
+      "cash_before": 587.9537749950929,
+      "open_equity": 1001.1828922149546,
+      "weight": 0.1652873399352618,
+      "notional": 115.83799993003123,
+      "qty": 0.39872609058972,
+      "wire_notional": "115.837999930",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 1.1102230246251565e-16,
+        "wire_notional_error": 3.1235458664014004e-11,
+        "wire_qty_error": 1.074140776324839e-13
+      }
+    },
+    {
+      "entry_session": "2024-11-01",
+      "symbol": "ABBV",
+      "cash_before": 472.11577506506165,
+      "open_equity": 1001.1828922149546,
+      "weight": 0.14910592820510205,
+      "notional": 104.4976131127456,
+      "qty": 0.5108050221999878,
+      "wire_notional": "104.497613112",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 1.1102230246251565e-16,
+        "wire_notional_error": 7.456009143425035e-10,
+        "wire_qty_error": 3.644529122937001e-12
+      }
+    },
+    {
+      "entry_session": "2024-11-01",
+      "symbol": "PLTR",
+      "cash_before": 367.6181619523161,
+      "open_equity": 1001.1828922149546,
+      "weight": 0.09597689009507626,
+      "notional": 67.2632942878297,
+      "qty": 1.6025780515271464,
+      "wire_notional": "67.263294287",
+      "errors": {
+        "notional_error": 1.4210854715202004e-14,
+        "qty_error": 2.220446049250313e-16,
+        "wire_notional_error": 8.29700752547069e-10,
+        "wire_qty_error": 1.9767520953450912e-11
+      }
+    },
+    {
+      "entry_session": "2024-12-02",
+      "symbol": "PLTR",
+      "cash_before": 1050.0169792013137,
+      "open_equity": 1050.0169792013137,
+      "weight": 0.30462755633685273,
+      "notional": 223.90487454041005,
+      "qty": 3.322655887717433,
+      "wire_notional": "223.904874540",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.100400019524386e-10,
+        "wire_qty_error": 6.084910353365558e-12
+      }
+    },
+    {
+      "entry_session": "2024-12-02",
+      "symbol": "TSLA",
+      "cash_before": 826.1121046609037,
+      "open_equity": 1050.0169792013137,
+      "weight": 0.25501425593064375,
+      "notional": 187.43850906589566,
+      "qty": 0.5311866162491059,
+      "wire_notional": "187.438509065",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 8.956533292803215e-10,
+        "wire_qty_error": 2.538191878898033e-12
+      }
+    },
+    {
+      "entry_session": "2024-12-02",
+      "symbol": "SNOW",
+      "cash_before": 638.673595595008,
+      "open_equity": 1050.0169792013137,
+      "weight": 0.2951663037262359,
+      "notional": 216.95074142044777,
+      "qty": 1.2382677765216719,
+      "wire_notional": "216.950741420",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.4775561036658473e-10,
+        "wire_qty_error": 2.5557334026871104e-12
+      }
+    },
+    {
+      "entry_session": "2024-12-02",
+      "symbol": "NFLX",
+      "cash_before": 421.7228541745602,
+      "open_equity": 1050.0169792013137,
+      "weight": 0.14519188400626762,
+      "notional": 106.71776041416605,
+      "qty": 1.2001300085008653,
+      "wire_notional": "106.717760414",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 1.6605383734713541e-10,
+        "wire_qty_error": 1.8673951274195133e-12
+      }
+    },
+    {
+      "entry_session": "2025-01-02",
+      "symbol": "AVGO",
+      "cash_before": 1119.0703754512444,
+      "open_equity": 1119.0703754512444,
+      "weight": 0.6,
+      "notional": 470.0095576895226,
+      "qty": 1.988228363782011,
+      "wire_notional": "470.009557689",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.225615495874081e-10,
+        "wire_qty_error": 2.2106760866336117e-12
+      }
+    },
+    {
+      "entry_session": "2025-01-02",
+      "symbol": "PLTR",
+      "cash_before": 649.0608177617219,
+      "open_equity": 1119.0703754512444,
+      "weight": 0.22466683828961162,
+      "notional": 175.99260215333976,
+      "qty": 2.3070041658579465,
+      "wire_notional": "175.992602153",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 4.440892098500626e-16,
+        "wire_notional_error": 3.397531145310495e-10,
+        "wire_qty_error": 4.453326596376428e-12
+      }
+    },
+    {
+      "entry_session": "2025-01-02",
+      "symbol": "GOOGL",
+      "cash_before": 473.0682156083821,
+      "open_equity": 1119.0703754512444,
+      "weight": 0.17533316171038843,
+      "notional": 137.34710297300867,
+      "qty": 0.7197707053739304,
+      "wire_notional": "137.347102973",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 8.668621376273222e-12,
+        "wire_qty_error": 4.551914400963142e-14
+      }
+    },
+    {
+      "entry_session": "2025-02-03",
+      "symbol": "NET",
+      "cash_before": 1071.5705437537265,
+      "open_equity": 1071.5705437537265,
+      "weight": 0.29358173371516477,
+      "notional": 220.2154766233246,
+      "qty": 1.6541013619712965,
+      "wire_notional": "220.215476623",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 2.220446049250313e-16,
+        "wire_notional_error": 3.2460434340464417e-10,
+        "wire_qty_error": 2.4382718066817688e-12
+      }
+    },
+    {
+      "entry_session": "2025-02-03",
+      "symbol": "SBUX",
+      "cash_before": 851.355067130402,
+      "open_equity": 1071.5705437537265,
+      "weight": 0.3075043682519613,
+      "notional": 230.65883616608022,
+      "qty": 2.179610339554215,
+      "wire_notional": "230.658836166",
+      "errors": {
+        "notional_error": 5.684341886080802e-14,
+        "qty_error": 4.440892098500626e-16,
+        "wire_notional_error": 8.023448572203051e-11,
+        "wire_qty_error": 7.585043704239069e-13
+      }
+    },
+    {
+      "entry_session": "2025-02-03",
+      "symbol": "META",
+      "cash_before": 620.6962309643218,
+      "open_equity": 1071.5705437537265,
+      "weight": 0.19206067915716954,
+      "notional": 144.0645964787107,
+      "qty": 0.21292876495571345,
+      "wire_notional": "144.064596478",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 5.551115123125783e-17,
+        "wire_notional_error": 7.107132660166826e-10,
+        "wire_qty_error": 1.0504930259003231e-12
+      }
+    },
+    {
+      "entry_session": "2025-02-03",
+      "symbol": "GS",
+      "cash_before": 476.6316344856111,
+      "open_equity": 1071.5705437537265,
+      "weight": 0.2068532188757043,
+      "notional": 155.16047135949293,
+      "qty": 0.24761256532523856,
+      "wire_notional": "155.160471359",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 2.7755575615628914e-17,
+        "wire_notional_error": 4.929177066514967e-10,
+        "wire_qty_error": 7.866762796737703e-13
+      }
+    },
+    {
+      "entry_session": "2025-03-03",
+      "symbol": "COST",
+      "cash_before": 1160.572308835869,
+      "open_equity": 1160.572308835869,
+      "weight": 0.5778565386052914,
+      "notional": 469.4510080295326,
+      "qty": 0.4459106151312243,
+      "wire_notional": "469.451008029",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.326228347257711e-10,
+        "wire_qty_error": 5.058731211704526e-13
+      }
+    },
+    {
+      "entry_session": "2025-03-03",
+      "symbol": "GE",
+      "cash_before": 691.1213008063364,
+      "open_equity": 1160.572308835869,
+      "weight": 0.42214346139470854,
+      "notional": 342.94960815557573,
+      "qty": 1.6543870163356609,
+      "wire_notional": "342.949608155",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.757101462222636e-10,
+        "wire_qty_error": 2.7773339184022916e-12
+      }
+    },
+    {
+      "entry_session": "2025-06-02",
+      "symbol": "SNOW",
+      "cash_before": 1118.716964830797,
+      "open_equity": 1118.716964830797,
+      "weight": 0.579448417878156,
+      "notional": 453.76714272726065,
+      "qty": 2.204083400273542,
+      "wire_notional": "453.767142727",
+      "errors": {
+        "notional_error": 5.684341886080802e-14,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.6062707547680475e-10,
+        "wire_qty_error": 1.2656542480726785e-12
+      }
+    },
+    {
+      "entry_session": "2025-06-02",
+      "symbol": "NVDA",
+      "cash_before": 664.9498221035365,
+      "open_equity": 1118.716964830797,
+      "weight": 0.420551582121844,
+      "notional": 329.3347326542973,
+      "qty": 2.4273700990444893,
+      "wire_notional": "329.334732654",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.972910806420259e-10,
+        "wire_qty_error": 2.191580250610059e-12
+      }
+    },
+    {
+      "entry_session": "2025-07-01",
+      "symbol": "ORCL",
+      "cash_before": 1196.5279959779473,
+      "open_equity": 1196.5279959779473,
+      "weight": 0.4067954575958473,
+      "notional": 340.7195075550638,
+      "qty": 1.5521163870947943,
+      "wire_notional": "340.719507555",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 6.377831596182659e-11,
+        "wire_qty_error": 2.9043434324194095e-13
+      }
+    },
+    {
+      "entry_session": "2025-07-01",
+      "symbol": "COIN",
+      "cash_before": 855.8084884228836,
+      "open_equity": 1196.5279959779473,
+      "weight": 0.31653420328705334,
+      "notional": 265.1194251422738,
+      "qty": 0.7790298312049142,
+      "wire_notional": "265.119425142",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.738147486525122e-10,
+        "wire_qty_error": 8.045786259458509e-13
+      }
+    },
+    {
+      "entry_session": "2025-07-01",
+      "symbol": "AMD",
+      "cash_before": 590.6890632806097,
+      "open_equity": 1196.5279959779473,
+      "weight": 0.2766703391170993,
+      "notional": 231.7306644872253,
+      "qty": 1.6684624527704752,
+      "wire_notional": "231.730664487",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.2529889065481257e-10,
+        "wire_qty_error": 1.6224799281872038e-12
+      }
+    },
+    {
+      "entry_session": "2025-08-01",
+      "symbol": "XYZ",
+      "cash_before": 1268.2341216950983,
+      "open_equity": 1268.2341216950983,
+      "weight": 0.19422506916547452,
+      "notional": 172.4260020029717,
+      "qty": 2.296716643396227,
+      "wire_notional": "172.426002002",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 9.717098237160826e-10,
+        "wire_qty_error": 1.2943424110289925e-11
+      }
+    },
+    {
+      "entry_session": "2025-08-01",
+      "symbol": "NET",
+      "cash_before": 1095.8081196921266,
+      "open_equity": 1268.2341216950983,
+      "weight": 0.13340961967997184,
+      "notional": 118.43624228835432,
+      "qty": 0.5955799968937725,
+      "wire_notional": "118.436242288",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 3.5431924061413156e-10,
+        "wire_qty_error": 1.7817969322209137e-12
+      }
+    },
+    {
+      "entry_session": "2025-09-02",
+      "symbol": "MDB",
+      "cash_before": 1277.3213761814284,
+      "open_equity": 1277.3213761814284,
+      "weight": 0.6,
+      "notional": 536.4749779961999,
+      "qty": 1.7288356095394926,
+      "wire_notional": "536.474977996",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 1.9986146071460098e-10,
+        "wire_qty_error": 6.439293542825908e-13
+      }
+    },
+    {
+      "entry_session": "2025-09-02",
+      "symbol": "SHOP",
+      "cash_before": 740.8463981852285,
+      "open_equity": 1277.3213761814284,
+      "weight": 0.4,
+      "notional": 357.64998533079995,
+      "qty": 2.61218576168983,
+      "wire_notional": "357.649985330",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 7.999574336281512e-10,
+        "wire_qty_error": 5.842881733997274e-12
+      }
+    },
+    {
+      "entry_session": "2025-10-01",
+      "symbol": "TSM",
+      "cash_before": 1311.1904124287448,
+      "open_equity": 1311.1904124287448,
+      "weight": 0.28726230489823873,
+      "notional": 263.65890602432745,
+      "qty": 0.9453914947858527,
+      "wire_notional": "263.658906024",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 3.2747493605711497e-10,
+        "wire_qty_error": 1.1741718708435656e-12
+      }
+    },
+    {
+      "entry_session": "2025-10-01",
+      "symbol": "PLTR",
+      "cash_before": 1047.5315064044173,
+      "open_equity": 1311.1904124287448,
+      "weight": 0.17897365704247342,
+      "notional": 164.267980233981,
+      "qty": 0.9016696503166121,
+      "wire_notional": "164.267980233",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 9.810037226998247e-10,
+        "wire_qty_error": 5.384803714036934e-12
+      }
+    },
+    {
+      "entry_session": "2025-10-01",
+      "symbol": "CAT",
+      "cash_before": 883.2635261704363,
+      "open_equity": 1311.1904124287448,
+      "weight": 0.2223153935594115,
+      "notional": 204.04846879929642,
+      "qty": 0.42956256691649203,
+      "wire_notional": "204.048468799",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.964100076496834e-10,
+        "wire_qty_error": 6.240008509905692e-13
+      }
+    },
+    {
+      "entry_session": "2025-11-03",
+      "symbol": "AMD",
+      "cash_before": 1365.5352158446763,
+      "open_equity": 1365.5352158446763,
+      "weight": 0.4192462885570179,
+      "notional": 400.7468997957508,
+      "qty": 1.5433262856400098,
+      "wire_notional": "400.746899795",
+      "errors": {
+        "notional_error": 5.684341886080802e-14,
+        "qty_error": 2.220446049250313e-16,
+        "wire_notional_error": 7.507878763135523e-10,
+        "wire_qty_error": 2.8916868899386827e-12
+      }
+    },
+    {
+      "entry_session": "2025-11-03",
+      "symbol": "GOOGL",
+      "cash_before": 964.7883160489255,
+      "open_equity": 1365.5352158446763,
+      "weight": 0.17874040446022207,
+      "notional": 170.85342174932785,
+      "qty": 0.604925447887686,
+      "wire_notional": "170.853421749",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 1.1102230246251565e-16,
+        "wire_notional_error": 3.278444182797102e-10,
+        "wire_qty_error": 1.1609602168505262e-12
+      }
+    },
+    {
+      "entry_session": "2025-11-03",
+      "symbol": "DDOG",
+      "cash_before": 793.9348942995977,
+      "open_equity": 1365.5352158446763,
+      "weight": 0.14902352676409913,
+      "notional": 142.4478116500243,
+      "qty": 0.8718097768099473,
+      "wire_notional": "142.447811650",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 2.220446049250313e-16,
+        "wire_notional_error": 2.4300561562995426e-11,
+        "wire_qty_error": 1.48991929904696e-13
+      }
+    },
+    {
+      "entry_session": "2025-12-01",
+      "symbol": "LLY",
+      "cash_before": 1167.437001025712,
+      "open_equity": 1359.6218232039548,
+      "weight": 0.4901751377955963,
+      "notional": 466.51697017722887,
+      "qty": 0.4337859203818771,
+      "wire_notional": "466.516970177",
+      "errors": {
+        "notional_error": 5.684341886080802e-14,
+        "qty_error": 5.551115123125783e-17,
+        "wire_notional_error": 2.2885160433361307e-10,
+        "wire_qty_error": 2.1288526497187377e-13
+      }
+    },
+    {
+      "entry_session": "2025-12-01",
+      "symbol": "GS",
+      "cash_before": 700.9200308484833,
+      "open_equity": 1359.6218232039548,
+      "weight": 0.10617508543237435,
+      "notional": 101.05057426408032,
+      "qty": 0.12332134686177997,
+      "wire_notional": "101.050574264",
+      "errors": {
+        "notional_error": 1.4210854715202004e-14,
+        "qty_error": 1.3877787807814457e-17,
+        "wire_notional_error": 8.031975085032173e-11,
+        "wire_qty_error": 9.803269307440132e-14
+      }
+    },
+    {
+      "entry_session": "2025-12-01",
+      "symbol": "CAT",
+      "cash_before": 599.869456584403,
+      "open_equity": 1359.6218232039548,
+      "weight": 0.07546013766161447,
+      "notional": 71.81807496269397,
+      "qty": 0.12578028437782007,
+      "wire_notional": "71.818074962",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 2.7755575615628914e-17,
+        "wire_notional_error": 6.939728791621746e-10,
+        "wire_qty_error": 1.2154444117840058e-12
+      }
+    },
+    {
+      "entry_session": "2026-01-02",
+      "symbol": "ABNB",
+      "cash_before": 1338.3858600248352,
+      "open_equity": 1338.3858600248352,
+      "weight": 0.37812376589456087,
+      "notional": 354.2528511288349,
+      "qty": 2.6059347686981016,
+      "wire_notional": "354.252851128",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 8.349161362275481e-10,
+        "wire_qty_error": 6.141753772226366e-12
+      }
+    },
+    {
+      "entry_session": "2026-01-02",
+      "symbol": "MDB",
+      "cash_before": 984.1330088960003,
+      "open_equity": 1338.3858600248352,
+      "weight": 0.2702150658704608,
+      "notional": 253.1564163286929,
+      "qty": 0.5972734978400859,
+      "wire_notional": "253.156416328",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 0.0,
+        "wire_notional_error": 6.928928542038193e-10,
+        "wire_qty_error": 1.6346923814580805e-12
+      }
+    },
+    {
+      "entry_session": "2026-01-02",
+      "symbol": "WFC",
+      "cash_before": 730.9765925673074,
+      "open_equity": 1338.3858600248352,
+      "weight": 0.20348437477247577,
+      "notional": 190.63842695203311,
+      "qty": 2.041243009041743,
+      "wire_notional": "190.638426952",
+      "errors": {
+        "notional_error": 2.842170943040401e-14,
+        "qty_error": 0.0,
+        "wire_notional_error": 3.311129148642067e-11,
+        "wire_qty_error": 3.5438318946034997e-13
+      }
+    },
+    {
+      "entry_session": "2026-01-02",
+      "symbol": "MRK",
+      "cash_before": 540.3381656152743,
+      "open_equity": 1338.3858600248352,
+      "weight": 0.14817679346250254,
+      "notional": 138.8224076078237,
+      "qty": 1.3141639864317232,
+      "wire_notional": "138.822407607",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 8.236895610025385e-10,
+        "wire_qty_error": 7.797540391152324e-12
+      }
+    },
+    {
+      "entry_session": "2026-02-02",
+      "symbol": "LMT",
+      "cash_before": 1304.1672314607433,
+      "open_equity": 1304.1672314607433,
+      "weight": 0.4914686256916394,
+      "notional": 448.67009384265714,
+      "qty": 0.7229385031785267,
+      "wire_notional": "448.670093842",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 6.571099220309407e-10,
+        "wire_qty_error": 1.0589307208874743e-12
+      }
+    },
+    {
+      "entry_session": "2026-02-02",
+      "symbol": "TXN",
+      "cash_before": 855.4971376180862,
+      "open_equity": 1304.1672314607433,
+      "weight": 0.3207951748642171,
+      "notional": 292.8593885480417,
+      "qty": 1.3575557012836543,
+      "wire_notional": "292.859388548",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.1666226024972275e-11,
+        "wire_qty_error": 1.9317880628477724e-13
+      }
+    },
+    {
+      "entry_session": "2026-02-02",
+      "symbol": "SCHW",
+      "cash_before": 562.6377490700445,
+      "open_equity": 1304.1672314607433,
+      "weight": 0.0658287481246178,
+      "notional": 60.09618733454656,
+      "qty": 0.5787732501733277,
+      "wire_notional": "60.096187334",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.465636832013843e-10,
+        "wire_qty_error": 5.263789404352792e-12
+      }
+    },
+    {
+      "entry_session": "2026-03-02",
+      "symbol": "CAT",
+      "cash_before": 1318.565655405282,
+      "open_equity": 1318.565655405282,
+      "weight": 0.35498289060999644,
+      "notional": 327.647773470382,
+      "qty": 0.4462507428530326,
+      "wire_notional": "327.647773470",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 3.8198777474462986e-10,
+        "wire_qty_error": 5.203060204905796e-13
+      }
+    },
+    {
+      "entry_session": "2026-03-02",
+      "symbol": "XOM",
+      "cash_before": 990.9178819349002,
+      "open_equity": 1318.565655405282,
+      "weight": 0.3796237937895241,
+      "notional": 350.3912275258664,
+      "qty": 2.1966813488050345,
+      "wire_notional": "350.391227525",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 8.664073902764358e-10,
+        "wire_qty_error": 5.431655125676116e-12
+      }
+    },
+    {
+      "entry_session": "2026-03-02",
+      "symbol": "WMT",
+      "cash_before": 640.5266544090338,
+      "open_equity": 1318.565655405282,
+      "weight": 0.14409116967021368,
+      "notional": 132.9955673020233,
+      "qty": 1.0419786869386793,
+      "wire_notional": "132.995567302",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 2.3277380023500882e-11,
+        "wire_qty_error": 1.8252066524837574e-13
+      }
+    },
+    {
+      "entry_session": "2026-03-02",
+      "symbol": "REGN",
+      "cash_before": 507.5310871070105,
+      "open_equity": 1318.565655405282,
+      "weight": 0.12130214593026575,
+      "notional": 111.96139048542561,
+      "qty": 0.14505193163765207,
+      "wire_notional": "111.961390485",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.256150987203e-10,
+        "wire_qty_error": 5.51392265180084e-13
+      }
+    },
+    {
+      "entry_session": "2026-05-01",
+      "symbol": "TXN",
+      "cash_before": 1267.8854668622237,
+      "open_equity": 1267.8854668622237,
+      "weight": 0.512013026014988,
+      "notional": 454.421712169987,
+      "qty": 1.6278830723067699,
+      "wire_notional": "454.421712169",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 9.870291250990704e-10,
+        "wire_qty_error": 3.5358382888261985e-12
+      }
+    },
+    {
+      "entry_session": "2026-05-01",
+      "symbol": "AMZN",
+      "cash_before": 813.4637546922366,
+      "open_equity": 1267.8854668622237,
+      "weight": 0.324783308783756,
+      "notional": 288.25162596044515,
+      "qty": 1.084894963810175,
+      "wire_notional": "288.251625960",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 4.4514081309898756e-10,
+        "wire_qty_error": 1.6755485887642863e-12
+      }
+    },
+    {
+      "entry_session": "2026-05-01",
+      "symbol": "SBUX",
+      "cash_before": 525.2121287317915,
+      "open_equity": 1267.8854668622237,
+      "weight": 0.16320366520125604,
+      "notional": 144.84648867312438,
+      "qty": 1.3714508952378426,
+      "wire_notional": "144.846488673",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 1.2437340046744794e-10,
+        "wire_qty_error": 1.177724584522366e-12
+      }
+    },
+    {
+      "entry_session": "2026-06-01",
+      "symbol": "QCOM",
+      "cash_before": 1001.5400604668057,
+      "open_equity": 1290.436749650136,
+      "weight": 0.6,
+      "notional": 541.9834348530571,
+      "qty": 2.3204988154593567,
+      "wire_notional": "541.983434853",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.718447937397286e-11,
+        "wire_qty_error": 2.446931546273845e-13
+      }
+    },
+    {
+      "entry_session": "2026-06-01",
+      "symbol": "NET",
+      "cash_before": 459.55662561374857,
+      "open_equity": 1290.436749650136,
+      "weight": 0.1223086759414253,
+      "notional": 110.48212716510525,
+      "qty": 0.45234325987580154,
+      "wire_notional": "110.482127165",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 1.0525980087550124e-10,
+        "wire_qty_error": 4.309330670082545e-13
+      }
+    },
+    {
+      "entry_session": "2026-06-01",
+      "symbol": "UNH",
+      "cash_before": 349.07449844864334,
+      "open_equity": 1290.436749650136,
+      "weight": 0.11640668702948775,
+      "notional": 105.15082679351097,
+      "qty": 0.27929907324825537,
+      "wire_notional": "105.150826793",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.109797029945184e-10,
+        "wire_qty_error": 1.3571921364530226e-12
+      }
+    },
+    {
+      "entry_session": "2026-07-01",
+      "symbol": "GE",
+      "cash_before": 1033.284192020792,
+      "open_equity": 1306.40440975827,
+      "weight": 0.29803210953359693,
+      "notional": 272.54532350097554,
+      "qty": 0.7260033899601562,
+      "wire_notional": "272.545323500",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 9.755467544891872e-10,
+        "wire_qty_error": 2.598699033740104e-12
+      }
+    },
+    {
+      "entry_session": "2026-07-01",
+      "symbol": "ABBV",
+      "cash_before": 760.7388685198165,
+      "open_equity": 1306.40440975827,
+      "weight": 0.24424235978123346,
+      "notional": 223.35550710757852,
+      "qty": 0.8898599191738612,
+      "wire_notional": "223.355507107",
+      "errors": {
+        "notional_error": 0.0,
+        "qty_error": 0.0,
+        "wire_notional_error": 5.785238954558736e-10,
+        "wire_qty_error": 2.304822999121825e-12
+      }
+    }
+  ],
+  "reference_scale_fixture": "Initial cash1000; no production constructor/client/runtime; selection gates supplied as reviewed fixtures. prepare_entry itself computes every notional. Live ceiling487.42 remains enforced.",
+  "limitation": "Known exit dates/fills are sealed inputs, not independent exit/edge evidence or predictions of actual future broker fills. No simulator/outcome judge invoked."
+}

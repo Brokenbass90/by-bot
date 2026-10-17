@@ -899,3 +899,22 @@ Next engineering: KITYbatch/privateWS ORDERSOFF, then ElderHEDGE ORDERSOFF.
 KITY9051 expiredOct16 21UTC; do not reuse/extend its policy/GO/launcher or restart
 oldwatcher. No new research/retuning/extraPAPER/strategycanary authority. Preserve
 Claudecheckout/ATT1/LIQ/unrelatedallowlist. Root-only reviewer restriction remains.
+
+## October17 sizing proof and serializer delta
+
+Read checkpointTOP / ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md. Claude7800b72
+independently acceptedb95550b logic, requested sizeproof. Actual compiler math
+now computes66quantities with referencecashcurve,64closed entries match≤1e-9;
+66production-ceiling casesPASS. No archivedqtyinput/newbaseline run. A real-client
+encoder regression reproduced204.7164→204.72 overshoot/readback mismatch; only
+monthly-tagged wire encoding now9dpROUND_DOWN with exact durable/readback amount.
+Legacy2dp default and frozen numerical strategy/capital487.42 unchanged.
+394targetedPASS; previous full5257PASS/60FAIL is historical, not post-delta green.
+Corrected32-fileV3 installed disabled/source-binding-v3/app,59NET/HALTpins
+unchanged,0brokerrequests/writes/serviceactivation. Preserve V1/V2 history; do
+not activate V2. New global strategyPASS still needs Claude's wire-delta/size
+confirmation; do not convert his earlier conditional review into automaticGO.
+Existing NET/stop/manager unchanged; new entries HALTED, owner activation separate.
+Next operationalwork: confirmed regular-session DAY readback/alert and UNKNOWN-
+aware protection-time reporting; no new observer activated in this sizing task.
+Then KITYbatch/privateWS ORDERSOFF, ElderHEDGE ORDERSOFF; no expiredpolicy reuse.

@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 06:00UTC CURRENT: ALPACA_MONTHLY_SIZING_PARITY_PASS, global strategyPASS
+still pending Claude confirmation of the serializer delta. Read
+ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md. Received exact7800b72 independent
+review ofb95550b: monthly/daily logicPASS, sizingUNKNOWN. Actual prepare_entry
+sizing now independently computes66entries/referencecashcurve;64closedqty/
+notional match≤1e-9, final equityerror0;66production-ceiling casesPASS. No new
+baseline simulation, archivedqty onlycomparison. Real client encoder regression
+found old204.7164→204.72 budget overshoot/readback mismatch; monthly-only9dp
+ROUND_DOWN+durable exactwire notional fixes it, legacy2dp default unchanged.
+394targetedPASS. Lastfullb955scope5257PASS/60oldFAIL, not rerun/currentgreen.
+New32-fileV3 installed disabled06:00:47.035UTC (actual receipt);
+spec14aea403bc8ccce376f438d766a4648bc1de03e333a9184e650eafcfd6776e3d,
+strategy8f6d1fd2…277c799. V1/V2 immutable, neveractivate V2asfinalcandidate.
+59NET/source/unit/HALTpins unchanged,0brokerrequests/writes/services/cron.
+CurrentNET/stop/manager/caps untouched; no new money or HALTclear. Sourcebook
+contracthasha32aa... remains unchanged. New review needed only sizeproof+wire
+delta; do not auto-record ClaudePASS for a code change he has not reviewed.
+Next operationalwork: regular-session DAY readback/alert/UNKNOWN-aware reporting,
+not activated here; then KITYbatch/privateWS ordersOFF, ElderHEDGE ordersOFF.
+
 October17 05:25UTC CURRENT: ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE,
 NOT ALPACA_STRATEGY_PARITY_PASS / not financial activation. Owner selected
 validated MONTHLY selection + DAILY close ratchet; old choice-pending text below

@@ -1,5 +1,14 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT October17 sizing continuation: checkpointTOP →
+ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md. Claude7800b72 logicPASS received;
+64/64sizing nowPASS,66ownquantities/no archivedqtyinput. Narrow monthly wire
+ROUND_DOWN9dp fixes204.7164→204.72,394targetedPASS. Corrected32-fileV3 installed
+disabled; NET59pins/HALT preserved/0brokerrequests. Claude wire-delta confirmation
+stillpending; no global strategyPASS/moneyactivation. Do not deploy/activate old
+V2 or repeat baseline simulation. Next: DAY readback/alerts, then KITYbatch/WS,
+ElderHEDGE ordersOFF. Older CURRENT entries below are dated history.
+
 CURRENT October17: canonical checkpoint TOP →
 ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE_2026_10_17.md →
 ALPACA_MONTHLY_CLAUDE_REVIEW_2026_10_17.md. Monthly/daily choice already made;

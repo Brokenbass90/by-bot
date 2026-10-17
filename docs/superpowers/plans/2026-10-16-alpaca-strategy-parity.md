@@ -80,3 +80,15 @@ event replay64/64,24selections/66stops/637closes/152ACKs/56protective exits/
 fills, not independent sizing/accounting proof. Root review found/fixed original
 HALT-path omission; finaltargeted + physicalpackage verification cover it.
 IndependentClaude review/final strategyPASS/ownerHALTrelease remain unchecked.
+
+October17 independent review7800b72: logicalmonthly/dailyPASS, sizeUNKNOWN.
+- [x] Sizeproof: invoke actual prepare_entry calculation on referencecash1000
+      with uncapped no-client/no-constructor fixture; independently debitcash,
+      markretained names and compute66qty;64closednotional/qty match≤1e-9.
+- [x] Confirm66productionceiling cases and constructor487.42 guard unchanged.
+- [x] Real-client serializer regression found204.7164→204.72 budget overshoot;
+      monthly9dpROUND_DOWN +exactwire journal/readback fixes it, legacy2dp stays.
+- [x] 394targetedPASS; V3disabled32fileinstall/59NETpins unchanged/0brokerHTTP.
+- [ ] Claude confirms sizingproof +narrowwireencodingdiff, then fullstrategyPASS.
+- [ ] Existing operational DAYreadback/alert/protection-time gaps handled before
+      financialactivation; not a newstrategy/statistical requirement.

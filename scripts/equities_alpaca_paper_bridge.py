@@ -579,10 +579,13 @@ class AlpacaClient:
             "type": "market", "time_in_force": "day", "client_order_id": client_order_id,
         })
 
-    def submit_market_buy(self, symbol: str, notional: float, *, client_order_id: str | None = None) -> dict[str, Any]:
+    def submit_market_buy(self, symbol: str, notional: float, *, client_order_id: str | None = None,
+                          notional_precision: int = 2) -> dict[str, Any]:
+        if type(notional_precision) is not int or notional_precision not in {2,9}:
+            raise ValueError('notional_precision_invalid')
         payload = {
             "symbol": symbol,
-            "notional": f"{notional:.2f}",
+            "notional": _monthly_notional_wire(notional) if notional_precision==9 else f"{notional:.2f}",
             "side": "buy",
             "type": "market",
             "time_in_force": "day",
@@ -1555,6 +1558,15 @@ class IntendedPaperProtectionError(RuntimeError):
     """An intended-paper entry cannot be proven terminal and protected."""
 
 
+def _monthly_notional_wire(notional: float) -> str:
+    """Alpaca permits9dp; never round the monthly budget upward on the wire."""
+    if isinstance(notional,bool) or not math.isfinite(float(notional)) or float(notional)<=0:
+        raise IntendedPaperProtectionError('baseline_notional_invalid')
+    value=Decimal(str(notional)).quantize(Decimal('.000000001'),rounding=ROUND_DOWN)
+    if value<=0:raise IntendedPaperProtectionError('baseline_notional_below_precision')
+    return format(value,'.9f')
+
+
 _INTENDED_PAPER_STRATEGY_ID = "ALPACA-BASELINE-26f7ff663dc98e87"
 
 
@@ -1722,6 +1734,9 @@ def _finish_intended_entry_intent(*, client: Any, base_url: str, account_id: str
         or entry.get("time_in_force") != "day"
         or not math.isclose(_safe_float(entry.get("notional")), intent["notional"], abs_tol=.000001)):
         raise IntendedPaperProtectionError("reserved_entry_order_mismatch")
+    if (intent.get('baseline_wire_notional') is not None
+        and Decimal(str(entry['notional']))!=Decimal(intent['baseline_wire_notional'])):
+        raise IntendedPaperProtectionError('baseline_wire_notional_readback_conflict')
     final = _terminal_intended_entry(client, entry, expected_symbol=symbol, timeout_sec=timeout_sec)
     qty, price = float(final["filled_qty"]), float(final["filled_avg_price"])
     positions = [p for p in client.list_positions() if p.get("symbol") == symbol]
@@ -1810,7 +1825,8 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
             raise IntendedPaperProtectionError('baseline_source_metadata_invalid')
         distance=2.0*baseline_atr20
         baseline_fields=dict(baseline_contract='ALPACA_BASELINE_MONTHLY_DAILY_V1',atr20=baseline_atr20,
-            signal_session=baseline_signal_session,baseline_selection_sha256=baseline_selection_sha256)
+            signal_session=baseline_signal_session,baseline_selection_sha256=baseline_selection_sha256,
+            baseline_wire_notional=_monthly_notional_wire(notional))
         if baseline_entry_gate is not None:
             from research_lab.alpaca_dynamic_v1 import digest
             gate=baseline_entry_gate
@@ -1843,7 +1859,10 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
         _atomic_write_json(reentry_path, payload)
     entry = client.get_order_by_client_id(client_id)
     if entry is None:
-        entry = client.submit_market_buy(pick.ticker, notional, client_order_id=client_id)
+        if baseline_fields:
+            entry=client.submit_market_buy(pick.ticker,notional,client_order_id=client_id,notional_precision=9)
+        else:
+            entry = client.submit_market_buy(pick.ticker, notional, client_order_id=client_id)
     return _finish_intended_entry_intent(client=client, base_url=base_url, account_id=account_id, capital=capital,
         payload=payload, client_id=client_id, entry=entry, reentry_path=reentry_path,
         state_path=state_path, state_dir=state_dir, timeout_sec=timeout_sec)

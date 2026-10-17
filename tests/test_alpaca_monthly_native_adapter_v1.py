@@ -15,10 +15,11 @@ class Broker:
     def list_orders(self,**kw):return [copy.deepcopy(o) for o in self.orders.values()
         if (kw.get('status')=='all' or o['status'] in {'new','partially_filled'})
         and (not kw.get('symbols') or o['symbol'] in kw['symbols'])]
-    def submit_market_buy(self,symbol,notional,*,client_order_id):
+    def submit_market_buy(self,symbol,notional,*,client_order_id,notional_precision=2):
         self.sent.append('buy')
         o=dict(id='entry',client_order_id=client_order_id,symbol=symbol,side='buy',type='market',
-            time_in_force='day',notional=str(notional),qty='.3',status='filled',filled_qty='.3',
+            time_in_force='day',notional=native._monthly_notional_wire(notional) if notional_precision==9 else str(notional),
+            qty='.3',status='filled',filled_qty='.3',
             filled_avg_price='311.222',filled_at='2026-11-02T14:30:01Z')
         self.orders['entry']=o;self.positions=[dict(symbol=symbol,qty='.3',avg_entry_price='311.222',side='long')]
         if self.lose_once:self.lose_once=False;raise OSError('response lost after accepted')

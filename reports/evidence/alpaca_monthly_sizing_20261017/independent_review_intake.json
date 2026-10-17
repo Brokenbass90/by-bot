@@ -1,0 +1,11 @@
+{
+  "source_commit": "7800b726d87cc92cf6dfda9c2c3859998197d525",
+  "source_path": "research_lab/ALPACA_REVYU_MONTHLY_CODEX_2026_10_17.md",
+  "source_sha256": "723d5df6602907e6b36b52254d7ac7d09d5a5a1eb012a676c8ce5e1befbd845d",
+  "reviewed_candidate": "b95550b15fca4588d02a624e3425f2ad70f28966",
+  "review_received_from": "Owner-provided Claude independent review",
+  "logic_verdict": "PASS",
+  "sizing_verdict_at_review": "UNKNOWN",
+  "latest_source_delta_review": "PENDING",
+  "strategy_pass_not_assumed": true
+}

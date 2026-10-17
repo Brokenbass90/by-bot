@@ -1,5 +1,11 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT October17: checkpointTOP / ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md.
+Claude7800b72 logicPASS, new64/64sizingPASS; monthly wire precision defect fixed
+and32-fileV3 installed disabled.394targetedPASS; no actual broker requests/writes
+or NET/HALT/manager/cap change. Global strategyPASS awaits Claude delta review;
+monetaryactivation remains separate. Old V2 is historical, not final activation.
+
 CURRENT October17: checkpoint TOP and
 ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE_2026_10_17.md supersede dated history.
 Monthly/daily production-binding candidate delivered/installed disabled;375

@@ -1,5 +1,10 @@
 # Alpaca monthly production-binding candidate — October17
 
+Continuation supersedes the source version below:
+[sizing closeout and serializer correction/V3](ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md).
+Claude7800b72 accepted logic; sizing now64/64PASS. V2 stays immutable/disabled
+and must not be activated as the final candidate; new wire delta review pending.
+
 CURRENT: **ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE**, orders-OFF.
 This is **not ALPACA_STRATEGY_PARITY_PASS and not LIVE activation**.
 Owner chose monthly selection + daily ratchet. Independent Claude review remains
