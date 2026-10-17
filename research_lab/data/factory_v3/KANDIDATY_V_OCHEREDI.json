@@ -128,12 +128,13 @@
  },
  {
   "imya": "DERIBIT_EKSPIRACIYA",
-  "status": "OZHIDAET",
+  "status": "FAIL_IZMERENIY_17_10",
   "ot_kill": "PRE_FOMC_DREYF_V1",
   "mehanizm": "месячная экспирация опционов Deribit (последняя пятница, 08:00 UTC): притяжение к страйку max-pain до и всплеск волатильности после — не макро, другой источник",
   "data_ready": "частично: DVOL Deribit в каталоге; open interest по страйкам — нужен архив",
   "nuzhno": "сначала измерение: изменение реализованной волатильности до/после экспирации без доходностей",
-  "put": "рукав волатильности / признак Brain"
+  "put": "рукав волатильности / признак Brain",
+  "itog": "EKSPIRACIYA_izmereniya.json: нет всплеска после; прижатие до — наблюдение"
  },
  {
   "imya": "MAKRO_SHOK_CLAIMS",

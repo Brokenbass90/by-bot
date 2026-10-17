@@ -1,0 +1,19 @@
+{
+ "2021H2_2022": {
+  "n": 18,
+  "kontrolnyh": 61,
+  "M1_do": 0.803,
+  "M2_posle": 1.132,
+  "M2_k_M1": 1.41,
+  "M3_dolya_posle_bolshe": 0.444
+ },
+ "2023_2026Q3": {
+  "n": 43,
+  "kontrolnyh": 145,
+  "M1_do": 0.837,
+  "M2_posle": 0.961,
+  "M2_k_M1": 1.148,
+  "M3_dolya_posle_bolshe": 0.442
+ },
+ "verdikt": "FAIL"
+}
