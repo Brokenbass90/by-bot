@@ -20,7 +20,7 @@ evidence, blocker, next action, дата/событие — research-ветку 
 | **Elder hedge** | V1.1 паритет (`667cf61`), тень пишет геометрию (`6a858f1`) | ≥ 30 проспективных событий | по мере событий (недели) | идёт само |
 | **ETF_PREMIYA_BTC** | DEV PASS t 2.50 (`5eadba0`); тень вперёд работает (`7b3bfff`, `51e6667`) | первая проспективная запись | **19.10** (первая сессия после заморозки) | идёт само |
 | | вердикт CONFIRM | n ≥ 20 событий | **≤ 31.03.2027** | Claude |
-| **Фабрика** | 17.10: 9 гипотез проверено, 1 DEV PASS (ETF_PREMIYA_BTC), 4 KILL семей (POLY_FED, ETH-премия, CPI, PRE_FOMC); резерв 8 | MAKRO_SHOK_VSE первым DEV на 2021H2–2022 | после официальных календарей NFP/PPI/PCE | Claude |
+| **Фабрика** | 17.10: 11 прогонов, 1 DEV PASS (ETF_PREMIYA_BTC), KILL: POLY_FED, ETH-премия, CPI, PRE_FOMC, MAKRO_SHOK_VSE; автопродвижение работает; резерв 10 | следующий механизм из резерва + BRAIN_V2 Context Engine | 17–18.10 | Claude |
 | **Brain Shadow** | v1.2, причинные записи идут | Brain v2 prereg (контекст: ETF-премия, режим) | после первого CONFIRM | Claude |
 
 **Счёт стратегий (метрика PM):** прошли DEV: 1 (ETF_PREMIYA_BTC) · реплицированы: 0 · подтверждены вперёд: 0 · готовы
