@@ -58,6 +58,15 @@ def kontekst_fabrika(btc_bary):
 
 
 def kontekst(t_obs_ms, btc_bary, rv=None):
+    ctx = _kontekst_v1(t_obs_ms, btc_bary, rv)
+    try:                                                     # 17.10 BRAIN_V2 этап 1: Context Engine — только запись, решения не меняет
+        import importlib, kontekst_v2; importlib.reload(kontekst_v2); ctx = kontekst_v2.dopolnit(ctx, t_obs_ms, btc_bary)
+    except Exception as e:
+        ctx = dict(ctx, kontekst_v2=dict(oshibka=str(e)[:160]))
+    return ctx
+
+
+def _kontekst_v1(t_obs_ms, btc_bary, rv=None):
     ctx = dict(schema="ContextRecord v1", rezhim_v1=U, btc_rezhim=U, btc_otkl_ema200=U, btc_ret_24h=U, btc_ret_168h=U, bar_ts=U,
                source="bybit_kline_60 BTCUSDT" if btc_bary else U, funding=U, oi=U)
     if not btc_bary: return ctx
