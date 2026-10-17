@@ -14,6 +14,7 @@ z = premiya / sd(60 прошлых, ≥40); событие |z| ≥ 1.5, знак
   VPERED         — сессии ≥ 2026-10-19: запись решения ДО исхода. Вход DEV (закрытие+1 ч) И исполнимый вход
                    (первый полный час после момента записи) — оба исхода пишутся; CONFIRM судится по исполнимому.
 Исходы пишутся отдельным журналом и только когда все 24 бара закрыты.
+Farside: `prospektivno=True` только у дат, впервые увиденных в снимке ПОСЛЕ первого (первый снимок 17.10 = история).
 """
 import datetime as dt, gzip, hashlib, json, math, sys, time, urllib.request
 from pathlib import Path
@@ -174,10 +175,12 @@ def farside():
             itog[aktiv] = f"ошибка {type(e).__name__}"; continue
         (F / f"{aktiv}_{t}.html.gz").write_bytes(gzip.compress(html))
         znach, plohih = P.razobrat(html); put = F / f"potoki_vpered_{aktiv}.jsonl"
-        vid = {(r["date"]) for r in _jsonl(put)}; nov = 0
+        bylo = _jsonl(put); vid = {r["date"] for r in bylo}; nov = 0
+        pervyy = not bylo                         # первый снимок = загрузка истории, НЕ наше первое наблюдение
         for d, v in sorted(znach.items()):
             if d not in vid:
-                _dopisat(put, dict(date=d, first_total_musd=v, first_observed_ms=t, sobstvennyy=True)); nov += 1
+                _dopisat(put, dict(date=d, first_total_musd=v, first_observed_ms=t, sobstvennyy=True,
+                                   prospektivno=not pervyy)); nov += 1
         itog[aktiv] = f"дней {len(znach)}, новых {nov}, расхождений {plohih}"
     s["farside_den"] = segodnya; SOST.write_text(json.dumps(s))
     return itog
