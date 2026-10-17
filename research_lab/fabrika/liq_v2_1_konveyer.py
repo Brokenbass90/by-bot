@@ -21,9 +21,20 @@ PROGREV = 14 * DEN; POROG_USD = 50_000.0; KRAT = 3.0; PERC = 99.0; OPOZD = 2 * M
 VOROTA = dict(min_sobytiy=200, min_sutok=20, min_monet=15, maks_dolya_pozdnih=0.05)
 
 
+def kvitanciya_ok(p):
+    """Контракт передачи п.2: sha256 и число строк файла = receipt. Нет receipt → None (принимается с пометкой)."""
+    import hashlib
+    r = Path(str(p)[:-6] + ".receipt.json")
+    if not r.exists(): return None
+    k = json.loads(r.read_text()); b = Path(p).read_bytes()
+    sha = k.get("normalized_sha256") or k.get("sha256"); n = k.get("event_count") if k.get("event_count") is not None else k.get("rows")
+    return (sha is None or hashlib.sha256(b).hexdigest() == sha) and (n is None or n == len([x for x in b.splitlines() if x.strip()]))
+
+
 def zagruzit(puti):
     vse, dubl, chuzhie = {}, 0, 0
     for p in puti:
+        if kvitanciya_ok(p) is False: chuzhie += 10 ** 6; continue        # снимок отвергнут: QA увидит огромное chuzhaya_epoha
         for s in Path(p).read_text().splitlines():
             if not s.strip(): continue
             z = json.loads(s)
