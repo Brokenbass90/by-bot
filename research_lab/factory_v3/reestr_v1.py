@@ -211,9 +211,19 @@ class Reestr:
     def semya(self, id, opisanie, status="ACTIVE", istochnik=None):
         return self._zapisat(dict(tip="semya", id=id, opisanie=opisanie, status=status, istochnik=istochnik))
 
-    def gipoteza(self, id, semya, mehanizm, istochniki_dannyh, avtor="claude"):
+    def gipoteza(self, id, semya, mehanizm, istochniki_dannyh, avtor="claude", otlichie=None):
+        """17.10: сверка с закрытыми семьями (dubl_proverka) — при совпадении ≥ 2 понятий нужен otlichie (чем отличается)."""
+        try:
+            import sys as _s; _s.path.insert(0, str(Path(__file__).resolve().parent)); import dubl_proverka
+            S = self.sostoyanie()
+            dubli = [d for d in dubl_proverka.najti(f"{id} {semya} {mehanizm}", S) if d[0] != semya]
+        except ImportError:
+            dubli = []
+        if dubli and not otlichie:
+            raise OshibkaReestra(f"похоже на закрытые семьи {dubli[:5]} — укажите otlichie (что нового: данные/горизонт/класс)")
         return self._zapisat(dict(tip="gipoteza", id=id, semya=semya, mehanizm=mehanizm,
-                                  istochniki_dannyh=list(istochniki_dannyh), avtor=avtor))
+                                  istochniki_dannyh=list(istochniki_dannyh), avtor=avtor,
+                                  **({"otlichie": otlichie, "pohozhie_kill": dubli[:5]} if dubli else {})))
 
     def okno(self, id, nabor, nachalo, konec, rol, byudzhet=0, alpha=None):
         """alpha: DEV (скрининг) по умолчанию 0.20 — мягкий фильтр; CONFIRM — 0.05. Калибровка 13.10: см. KALIBROVKA_FERMY.json."""
