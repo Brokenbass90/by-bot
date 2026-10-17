@@ -52,4 +52,48 @@ def dopolnit(ctx, t_obs_ms, btc_bary):
             def sd(a): m = sum(a) / len(a); return math.sqrt(sum((x - m) ** 2 for x in a) / (len(a) - 1))
             v = sd(r[-24:]); hist = [sd(r[j - 24:j]) for j in range(len(r) - 720, len(r))]
             k["vol_24ch_bps"] = round(v * 1e4, 2); k["vol_pct_720"] = round(sum(h <= v for h in hist) / len(hist), 3)
+    k.update(rezhim(t_obs_ms, btc_bary))
     return ctx
+
+
+LIQ = LAB / "data/liq_v2_1"
+
+
+def _likv(t_obs_ms):
+    """Ликвидационный стресс: BASE-события LIQ (25 монет) с решением в [t−4ч, t]. UNKNOWN, если лента не покрывает t."""
+    try:
+        vor = json.loads((LIQ / "VOROTA.json").read_text())
+        if vor.get("lenta_do_ms", 0) < t_obs_ms or t_obs_ms < vor.get("progrev_do_ms", 0): return U
+        n = 0
+        for s in (LIQ / "sobytiya_BASE.jsonl").read_text().splitlines():
+            if s.strip():
+                e = json.loads(s)
+                if t_obs_ms - 4 * H <= e["reshenie_ms"] <= t_obs_ms: n += 1
+        return n
+    except Exception:
+        return U
+
+
+def rezhim(t_obs_ms, btc_bary):
+    """17.10 этап 2 Context Engine: режим рынка по BTC (только закрытые бары) — ЗАПИСЬ, решения политик не меняет.
+    er_14d: эффективность движения по суточным закрытиям за 14 дней (пороги — квартили BTC 2023–26: 0.10 / 0.42,
+    описательные, без исходов); impuls: |ход 24 ч − среднее| ≥ 2 σ суточных ходов за 30 дней; likv_4ch: события LIQ.
+    Метка rezhim_v2: STRESS (likv ≥ 3) > IMPULS > TREND_UP / TREND_DOWN (er ≥ 0.42) > BOKOVIK (er ≤ 0.10) > NEYASNO."""
+    out = dict(er_14d=U, impuls=U, likv_4ch=_likv(t_obs_ms), rezhim_v2=U)
+    if not btc_bary: return out
+    b = [x for x in btc_bary if x[0] + H <= t_obs_ms]
+    if len(b) < 24 * 31 + 1: return out
+    c = [float(x[4]) for x in b]
+    d = [c[-1 - 24 * j] for j in range(14, -1, -1)]                      # суточные закрытия, 15 точек
+    dvizh = sum(abs(d[j] - d[j - 1]) for j in range(1, len(d)))
+    er = abs(d[-1] - d[0]) / dvizh if dvizh > 0 else 0.0
+    sut = [math.log(c[-1 - 24 * d] / c[-1 - 24 * (d + 1)]) for d in range(1, 31)]
+    m = sum(sut) / len(sut); sd = math.sqrt(sum((x - m) ** 2 for x in sut) / (len(sut) - 1))
+    r24 = math.log(c[-1] / c[-25]); imp = bool(sd > 0 and abs(r24 - m) >= 2 * sd)
+    out.update(er_14d=round(er, 3), impuls=imp)
+    if isinstance(out["likv_4ch"], int) and out["likv_4ch"] >= 3: out["rezhim_v2"] = "STRESS"
+    elif imp: out["rezhim_v2"] = "IMPULS"
+    elif er >= 0.42: out["rezhim_v2"] = "TREND_UP" if d[-1] > d[0] else "TREND_DOWN"
+    elif er <= 0.10: out["rezhim_v2"] = "BOKOVIK"
+    else: out["rezhim_v2"] = "NEYASNO"
+    return out
