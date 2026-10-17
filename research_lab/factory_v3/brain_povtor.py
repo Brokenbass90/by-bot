@@ -39,6 +39,38 @@ def povtor(zapisi, t0_ms=T0_MS, politiki=None):
     return out
 
 
+# Издержки, которых НЕТ в исходе источника (KITY: vyhod.json уже вычел комиссию 12 bps и фандинг → остаются спред и проскальзывание).
+# Для Elder состав исхода фиксируется отдельной версией prereg до снятия эмбарго ETS2M; до этого Elder в оценку не входит.
+DOP_IZDERZHKI = {"KITY_BYBIT": ("cost_spread_bps", "cost_slip_bps")}
+
+
+def ocenka(resheniya, zapisi, ishody):
+    """resheniya — итог povtor(); ishody — {opp_id: realized_net_bps}. Каждая политика — своя изолированная книга.
+    → по политике: чистый PnL (ед. риска × bps после издержек), макс. просадка по кривой, пик занятого риска,
+       принято / отклонено (с причинами) / без исхода."""
+    po = {z["opp_id"]: z for z in zapisi}; out = {}
+    for p, d in resheniya.items():
+        pnl, prichiny, vzyato, otkl, bez = [], {}, 0, 0, 0; knigi = []
+        for oid, u, ogr in d:
+            if u <= 0:
+                otkl += 1
+                for o in ogr: prichiny[o] = prichiny.get(o, 0) + 1
+                continue
+            vzyato += 1; v = po[oid]; knigi.append((v["t_decision_ms"], v["t_decision_ms"] + v["horizon_ms"], u))
+            if v["sleeve"] not in DOP_IZDERZHKI or oid not in ishody: bez += 1; continue
+            net = ishody[oid] - sum(v[k] for k in DOP_IZDERZHKI[v["sleeve"]])
+            pnl.append((v["t_decision_ms"] + v["horizon_ms"], u * net))
+        kum, pik, prosadka = 0.0, 0.0, 0.0
+        for _, x in sorted(pnl):
+            kum += x; pik = max(pik, kum); prosadka = max(prosadka, pik - kum)
+        tochki = sorted({a for a, _, _ in knigi})
+        pik_riska = max((sum(u for a, b, u in knigi if a <= t < b) for t in tochki), default=0.0)
+        out[p] = dict(chistyy_pnl=round(kum, 2), maks_prosadka=round(prosadka, 2),
+                      pnl_k_prosadke=round(kum / prosadka, 3) if prosadka > 0 else None, pik_riska=round(pik_riska, 3),
+                      prinyato=vzyato, otkloneno=otkl, prichiny_otkaza=prichiny, bez_ishoda=bez, s_ishodom=len(pnl))
+    return out
+
+
 def kod_sha():
     return hashlib.sha256(Path(__file__).read_bytes() + Path(B.__file__).read_bytes()
                           + (HERE / "brain_v2.py").read_bytes()).hexdigest()[:16]

@@ -40,6 +40,22 @@ class TestPovtor(unittest.TestCase):
         r = P.povtor(z, politiki={"BASELINE_V1": P.B.POLITIKI["BASELINE_V1"]})
         self.assertEqual([u for _, u, _ in r["BASELINE_V1"]], [1.0, 0.0, 0.0])   # symbol cap 1
 
+    def test_knigi_izolirovany(self):
+        z = [opp(i, self.T0 + i, sym="SAMEUSDT") for i in range(3)]
+        vse = P.povtor(z, politiki={"VSE": lambda v, o: (1.0, []), "NIKOGO": lambda v, o: (0.0, ["net"]),
+                                    "BASELINE_V1": P.B.POLITIKI["BASELINE_V1"]})
+        odna = P.povtor(z, politiki={"BASELINE_V1": P.B.POLITIKI["BASELINE_V1"]})
+        self.assertEqual(vse["BASELINE_V1"], odna["BASELINE_V1"])   # решения соседей не занимают чужой лимит
+        self.assertEqual(vse["VSE"], odna["BASELINE_V1"])
+
+    def test_ocenka_izderzhki_i_prosadka(self):
+        z = [opp(1, self.T0, sym="AUSDT"), opp(2, self.T0 + 20 * H, sym="BUSDT"), opp(3, self.T0 + 40 * H, sym="CUSDT")]
+        r = P.povtor(z, politiki={"B": P.B.POLITIKI["BASELINE_V1"], "N": lambda v, o: (0.0, ["net"])})
+        o = P.ocenka(r, z, {"o1": 100.0, "o2": -50.0, "o3": 30.0})
+        self.assertEqual(o["B"]["chistyy_pnl"], 94 + -56 + 24)       # минус спред 3 и проскальзывание 3
+        self.assertEqual(o["B"]["maks_prosadka"], 56)
+        self.assertEqual(o["N"]["otkloneno"], 3); self.assertEqual(o["N"]["prichiny_otkaza"], {"net": 3})
+
 
 if __name__ == "__main__":
     unittest.main()
