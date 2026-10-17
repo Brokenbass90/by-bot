@@ -1031,3 +1031,27 @@ KITY7351514 productionbinding completeORDERSOFF, no actual10/10moneyPASS.
 AlpacaDAY/V3/HALT/NET unchanged. PastedETFhooks/Farside/Nov2NETclose are only
 researchproposals, not ownerfinancial/productionGO. PreserveClaude/ATT1/LIQ/
 foreignallowlist; root-only finalreview restriction remains.
+
+## October17 forwarded owner decisions / personal execution packets
+
+Read checkpointTOP and OWNER_DECISIONS_KITY_NET_2026_10_17.md. Human forwarded
+research7b3bfff four writtenGOitems: ONE new<=215KITYbatchmicro, IBIT/ETFshadow,
+legacyNETexitNov2beforemonthlybuy/unlessstopfirst, publicFarsiderecording.
+Local+originresearchverified. This supersedes prior NET-proposal-only language.
+No monthlymoneyactivation: separateNov1ownerGO and existingchecklist remain.
+NewKITYa1c97e6b…fb8845c8 prepared/unclaimed, expiresTODAYOct17 21UTC. Active
+configstillmoneyfalse, newmoneyconfig/unit onlyinert;54targetedPASS/readbackPASS.
+Humanpersonallyruns newprivateowner-batch-micro-once.sh; agentNEVER runs it,
+--owner-execute or monetarycontrols. Do not ask again for approvedscope, mint
+anotherpolicy, reuseoldGO or transferdate/70s. Afterpersonalqueue, observeonly
+and letboundwriter complete lifecycle; never blindlyrepeat uncertainqueue.
+NET original705a1b5b…d78d ownedexitpacket preparedNOTARMED,69targetedPASS.
+Oneactualbroker calendarGET provesNov2open14:30UTC/16:30Cyprus, five-minwindow;
+old13:30UTC inClaudechecklist is wrong. No newmanager, stopchange/HALTclear,
+financialtimer, monthlyadoption or agentexit. Ownerpersonalcommandfuturedateonly;
+oldownedmanager/sharedlock/recovery retained. Appheartbeatnet-2-preflight is
+ONE READONLY reminderNov2 16:20local, neverexecutesfinancialcommands; expire
+afteronecheck/no date-transfer. NET remainsOFF_PROTOCOL/notmonthlyevidence.
+IBIT/FarsideresearchownedbyClaude; sourcealreadypushed, storozh notchanged.
+PreserveDAY95pins/monthlyV3/HALT/NETmanager/Claude/ATT1/LIQ/foreignallowlist;
+root-only review restriction unchanged. No actualbatch10/10PASS yet.

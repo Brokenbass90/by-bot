@@ -1,0 +1,42 @@
+{
+  "broker_requests": 0,
+  "current_money_config_enabled": false,
+  "inspections": [
+    {
+      "broker_requests": 0,
+      "broker_writes": 0,
+      "policy_id": "a1c97e6b94e3d1a1c8927e7dba252cbd12a1c6f49012133587a85c27fb8845c8",
+      "status": "OWNER_PACKET_INSPECTION_PASS",
+      "valid_until_ms": 1792270800000
+    },
+    {
+      "broker_requests": 0,
+      "broker_writes": 0,
+      "plan": {
+        "end_ms": 1793630100000,
+        "entry_order_id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+        "evidence_classification": "OFF_PROTOCOL",
+        "initial_quantity": "0.325167779",
+        "intake_sha256": "bc9c73b25aafa596e45244f66ead07e08fa0915ab72cd00a2a62358813edce37",
+        "monthly_activation_authorized": false,
+        "monthly_evidence_eligible": false,
+        "open_ms": 1793629800000,
+        "scheduled_dispatch": false,
+        "session": "2026-11-02",
+        "stop_widening_allowed": false,
+        "symbol": "NET"
+      },
+      "status": "NET_EXIT_PACKET_PREPARED_NOT_ARMED"
+    }
+  ],
+  "kity_mode": "ORDERS_OFF",
+  "kity_pid": 2440673,
+  "new_broker_posts": 0,
+  "observed_ms": 1792227978316,
+  "personal_launchers_executed": false,
+  "policy_claimed": false,
+  "policy_count": 1,
+  "private_authenticated": true,
+  "private_subscribed": true,
+  "status": "BOTH_OWNER_PACKETS_READBACK_PASS_ORDERS_OFF"
+}

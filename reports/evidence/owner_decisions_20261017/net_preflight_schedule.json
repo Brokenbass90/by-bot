@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-02",
+  "expected_utc": "14:20",
+  "expire_after_one_check": true,
+  "financial_commands_prohibited": true,
+  "id": "net-2-preflight",
+  "kind": "heartbeat",
+  "orders_scheduled": false,
+  "purpose": "ONE READ-ONLY reminder/preflight, not a financial execution",
+  "requested_cyprus": "16:20",
+  "status": "ACTIVE"
+}

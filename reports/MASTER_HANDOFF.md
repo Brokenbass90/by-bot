@@ -1,5 +1,12 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT Oct17 ownerGO: checkpointTOP → OWNER_DECISIONS_KITY_NET_2026_10_17.md.
+KITY oneNEWa1c97e6b… policy/unspent/personalcommandready/54targetedPASS,
+currentunitstillORDERSOFF; no agentmoneyaction. ExpiresTODAY21UTC, noreuse.
+NETNov2exit authorized andpersonalpacketprepared69PASS; actual14:30UTCopen,
+no automaticfinancialtimer. One read-onlypreflightheartbeat16:20CyprusNov2.
+Monthlymoneyactivation separatelyNov1ownerGO; currentNET/V3/HALT unchanged.
+
 CURRENT Oct17 08:33UTC: checkpoint TOP → ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md.
 Research57a09db clarifiedCONTROLactualfill and firstgeom; both sourceblockers
 closed.39targetedPASS/new24-filedisabledkit/readbackPASS, no realrows/outcomes/

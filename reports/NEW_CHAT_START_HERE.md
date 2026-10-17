@@ -1,5 +1,14 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT Oct17 ownerGO: checkpointTOP → OWNER_DECISIONS_KITY_NET_2026_10_17.md.
+Research7b3bfff decisionsverified. KITYONEa1c97e6b…fb8845c8 policyunused,
+expiresTODAY21UTC; PERSONAL newlauncherready, activewriterstillORDERSOFF.
+54targetedPASS, no agentfinancialcommand/POST. Neverreuseorautorefreshpolicy.
+NETNov2ownedexit nowauthorized, disabledpersonalpacketready69PASS; actualopen
+14:30UTC/16:30Cyprus (old13:30wrong). Notfinanciallyarmed. Readonlyheartbeat
+Nov2 16:20local only; monthlymoneyGO stillseparateNov1. No stop/NETmanager/
+AlpacaHALT/storozh change. KITY/Elderengineering deliveries below stand.
+
 CURRENT Oct17 08:33UTC: checkpoint TOP →
 ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md →
 KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md.

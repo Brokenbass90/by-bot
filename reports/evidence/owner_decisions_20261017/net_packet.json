@@ -1,0 +1,46 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "existing_manager_unchanged": true,
+  "helper_path": "/opt/bybot-research/alpaca-dynamic-live-20261013/legacy-exit-20261102/personal_net_exit_v1.py",
+  "helper_sha256": "522988f3b9c626cbb0a21402a6cda3f33bd6d335c4d3a1b52e9f1c53d55f8fd5",
+  "inspection": {
+    "broker_requests": 0,
+    "broker_writes": 0,
+    "plan": {
+      "end_ms": 1793630100000,
+      "entry_order_id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+      "evidence_classification": "OFF_PROTOCOL",
+      "initial_quantity": "0.325167779",
+      "intake_sha256": "bc9c73b25aafa596e45244f66ead07e08fa0915ab72cd00a2a62358813edce37",
+      "monthly_activation_authorized": false,
+      "monthly_evidence_eligible": false,
+      "open_ms": 1793629800000,
+      "scheduled_dispatch": false,
+      "session": "2026-11-02",
+      "stop_widening_allowed": false,
+      "symbol": "NET"
+    },
+    "status": "NET_EXIT_PACKET_PREPARED_NOT_ARMED"
+  },
+  "manifest_path": "/opt/bybot-research/alpaca-dynamic-live-20261013/legacy-exit-20261102/manifest.json",
+  "manifest_sha256": "d6fe5870b30ddfb64b9874e0c97788f00e40152d90700279eae9b25729c21b58",
+  "new_service_or_timer": false,
+  "observed_ms": 1792227822714,
+  "personal_execution_required": true,
+  "plan": {
+    "end_ms": 1793630100000,
+    "entry_order_id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+    "evidence_classification": "OFF_PROTOCOL",
+    "initial_quantity": "0.325167779",
+    "intake_sha256": "bc9c73b25aafa596e45244f66ead07e08fa0915ab72cd00a2a62358813edce37",
+    "monthly_activation_authorized": false,
+    "monthly_evidence_eligible": false,
+    "open_ms": 1793629800000,
+    "scheduled_dispatch": false,
+    "session": "2026-11-02",
+    "stop_widening_allowed": false,
+    "symbol": "NET"
+  },
+  "status": "NET_NOV02_EXIT_PACKET_PREPARED_NOT_ARMED"
+}

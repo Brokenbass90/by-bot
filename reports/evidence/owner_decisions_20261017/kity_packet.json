@@ -1,0 +1,108 @@
+{
+  "current_config_unchanged": true,
+  "current_runtime_money_go": false,
+  "current_unit_unchanged": true,
+  "helper_path": "/opt/bybot-research/kity-micro-owner-20261015/owner-packet-20261017/owner_handoff_v1.py",
+  "helper_sha256": "13f717b369e832da1e8e82c396885deeecd237c9fa6d167a01c50b8f89a19b2e",
+  "inspection": {
+    "broker_requests": 0,
+    "broker_writes": 0,
+    "policy_id": "a1c97e6b94e3d1a1c8927e7dba252cbd12a1c6f49012133587a85c27fb8845c8",
+    "status": "OWNER_PACKET_INSPECTION_PASS",
+    "valid_until_ms": 1792270800000
+  },
+  "manifest_path": "/opt/bybot-research/kity-micro-owner-20261015/owner-packet-20261017/manifest.json",
+  "manifest_sha256": "4b525b2c36c4f069ff83ed0b2b5ad76fe0c094855bfaebf5e87a2d26d596872d",
+  "new_broker_posts": 0,
+  "new_config_sha256": "3f107a63afd91d6db61f8cb0f2dfcb1807264e458827980f482ecb52b12e7960",
+  "observed_ms": 1792227451926,
+  "owner_command_executed": false,
+  "policy": {
+    "base_policy": {
+      "basket": [
+        {
+          "side": "Buy",
+          "symbol": "BTWUSDT"
+        },
+        {
+          "side": "Buy",
+          "symbol": "XAUUSDT"
+        },
+        {
+          "side": "Buy",
+          "symbol": "LTCUSDT"
+        },
+        {
+          "side": "Buy",
+          "symbol": "VVVUSDT"
+        },
+        {
+          "side": "Buy",
+          "symbol": "BNBUSDT"
+        },
+        {
+          "side": "Sell",
+          "symbol": "XAUTUSDT"
+        },
+        {
+          "side": "Sell",
+          "symbol": "XPLUSDT"
+        },
+        {
+          "side": "Sell",
+          "symbol": "XAGUSDT"
+        },
+        {
+          "side": "Sell",
+          "symbol": "GRASSUSDT"
+        },
+        {
+          "side": "Sell",
+          "symbol": "SPCXUSDT"
+        }
+      ],
+      "bounds": {
+        "allow_averaging": false,
+        "allow_execution_overshoot": true,
+        "allow_reentry": false,
+        "allow_scaling": false,
+        "counts_toward_C1_C2_C3": false,
+        "duration_ms": 1800000,
+        "hard_final_loss_cap_required": false,
+        "loss_policy": "IMMEDIATE_ALL_IN_EXIT_THRESHOLD",
+        "max_all_in_loss_usdt": "15",
+        "max_gross_usdt": "215",
+        "max_rounding_shortfall_fraction": "0.203",
+        "one_experiment_only": true,
+        "owner_money_go": false,
+        "purpose": "EXECUTION_MICRO_LIVE",
+        "research_evidence_eligible": false,
+        "schema": "kity_execution_micro_owner_bounds_v3",
+        "source_owner_message": "2026-10-15 GO KITY MICRO-LIVE EXECUTION INTEGRATION \u2014 ORDERS OFF",
+        "source_reply_id": "call_6b8bf99c313243c1b85f5c3504a5c292",
+        "supersedes_policy_sha256": "49bf03e4733711d3c97c684ec2436fff988817e8fb6d9cef351b71708a882bb3"
+      },
+      "collar_bps": "50",
+      "counts_toward_C1_C2_C3": false,
+      "created_ms": 1792227451557,
+      "dispatch_window_ms": 60000,
+      "orders_allowed": false,
+      "physical_config_sha256": "3f107a63afd91d6db61f8cb0f2dfcb1807264e458827980f482ecb52b12e7960",
+      "policy_id": "9d9411a5eff6837dac500292b5dd38b225ec42756ee5c500f8912efc66d184d7",
+      "predecessor_plan_id": "a8d858dc740d42975b1fb0450d7edf440e836dc34410885c5b9514ca8221ab6e",
+      "pricing_anchor": "WORST_CONSUMED_DEPTH_PRICE_OF_FRESH_SIZED_QUANTITY",
+      "purpose": "EXECUTION_MICRO_LIVE",
+      "quantity_rule": "MINIMUM_APPROVED_ROUNDING_FRONTIER_FROM_SINGLE_POST_GO_CAPTURE",
+      "research_evidence_eligible": false,
+      "schema": "KITY_EXECUTION_MICRO_POST_GO_POLICY_V1",
+      "source_rule": "ONE_POST_GO_CAPTURE_COMMON_CTS_MAX_2_SECONDS",
+      "valid_until_ms": 1792270800000
+    },
+    "batch_policy_id": "a1c97e6b94e3d1a1c8927e7dba252cbd12a1c6f49012133587a85c27fb8845c8",
+    "orders_allowed": false,
+    "schema": "KITY_TEN_NATIVE_GUARDED_BATCH_V1"
+  },
+  "policy_claimed": false,
+  "prepared_unit_sha256": "86c114c7db21ae8316d428d703f956ce280f8a2d7dd00f30ba3db54c2edf822e",
+  "status": "KITY_BATCH_OWNER_PACKET_STAGED_ORDERS_OFF"
+}

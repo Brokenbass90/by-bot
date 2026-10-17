@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 CURRENT owner-decision delivery: read OWNER_DECISIONS_KITY_NET_2026_10_17.md.
+Human forwarded written four-itemGO, verified research7b3bfff local+origin.
+This supersedes prior proposal-only status for Nov2NETexit. KITY ONE newbatch
+policy a1c97e6b…fb8845c8 prepared; expiresOct17 21UTC/Oct18 00Cyprus.215gross,
+50bps/CTS2s/60s/15exittrigger+acceptedovershoot/30min/oneattempt, noC1-C3authority.
+Inert moneyconfig/unit staged, activeconfigstillfalse/originalunit unchanged;
+policyunused/noentry/no newPOST. PERSONAL command prepared in
+.private/kity_batch_owner_20261017/owner-batch-micro-once.sh. Agent never runs
+owner-execute/launcher.54targetedPASS; queue uses pinned-app module cwd, durable
+GO uncertaintybarrier forbids rollback/resend after possiblequeue. Do not create
+anotherpolicy or reuseoldGO. Exact ownerdecision accepted; no repeat scopeGO
+question required, but personalfinancialinitiation stillrequired.
+NET originalentry705a1b5b…d78d/remaining<=.325167779 ownedexit authorizedNov2,
+unless stoppedearlier. CalendaractualGET correctedopen14:30UTC/16:30Cyprus;
+window14:30-14:35UTC, NOT13:30. Separate disabledpersonalexitpacket prepared
+legacy-exit-20261102/specd6fe5870…29c21b58,69targetedPASS. Existing sharedlock/
+ownedruntime unwind only; no newmonthlyadoption/buy/HALTclear/stopwiden.
+No financialtimer armed or orderplaced. One appheartbeatnet-2-preflight is
+READONLY Nov2 16:20local, expiresafteronecheck; no trade/launcher execution.
+IndependentbothpacketreadbackPASS/0brokerrequests/0POST; currentKITYORDERSOFF,
+policycount1/unclaimed. Monthlyactivation stillseparateNov1ownerGO/checklist.
+DAYf7d3145active/NETmanager/V3/HALT unchanged; ElderV1.1deliveredbelow.
+IBIT/FarsideClaudeownedscope; researchalreadypushed, storozh nottouched.
+No newresearch/outcome/judge or broadered60suitewaiver; foreignallowlistpreserved.
+
 October17 08:33UTC CURRENT: ELDER_HEDGE_V1_1_SOURCE_CONTRACT_RECONCILED_ORDERS_OFF.
 Read ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md. Claude research57a09db
 local/origin verified; contracta25e4af2…fea3a28, ten.py2eb740e6…88d6f.

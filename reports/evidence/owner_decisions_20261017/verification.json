@@ -1,0 +1,27 @@
+{
+  "actual_money_branches_executed": false,
+  "checks": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_kity_batch_owner_handoff_v1.py tests/test_kity_batch_service_v1.py tests/test_kity_batch_ws_v1.py",
+      "files": {
+        "scripts/kity_batch_owner_handoff_v1.py": "13f717b369e832da1e8e82c396885deeecd237c9fa6d167a01c50b8f89a19b2e",
+        "tests/test_kity_batch_owner_handoff_v1.py": "84cc47ee2a33a9afe597c0ea437a970db90ed7dbbdec6e484614bcbc96e8a57c"
+      },
+      "full_suite_rerun": false,
+      "log_sha256": "a24e0520f2688b279f0497bfee1918371a7c5dd6f14f37647a422121d37127cb",
+      "passed": 54
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_alpaca_legacy_net_exit_once_v1.py tests/test_alpaca_dynamic_live_runtime_v1.py",
+      "files": {
+        "scripts/alpaca_legacy_net_exit_once_v1.py": "522988f3b9c626cbb0a21402a6cda3f33bd6d335c4d3a1b52e9f1c53d55f8fd5",
+        "tests/test_alpaca_legacy_net_exit_once_v1.py": "e1a6d4665546388dd3ec225d643e998482e2015713ccf1d769eb6f8612ee56c4"
+      },
+      "full_suite_rerun": false,
+      "log_sha256": "b3e661cadaa12a132cf1e0ea34e25f20a9891bee0b08d8b0d828d979bd923cab",
+      "passed": 69
+    }
+  ],
+  "root_review": true,
+  "status": "TARGETED_PASS"
+}

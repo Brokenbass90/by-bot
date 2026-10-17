@@ -1,0 +1,23 @@
+{
+  "broker_requests": 1,
+  "broker_writes": 0,
+  "calendar": [
+    {
+      "close": "16:00",
+      "date": "2026-11-02",
+      "open": "09:30",
+      "session_close": "2000",
+      "session_open": "0400",
+      "settlement_date": "2026-11-03"
+    }
+  ],
+  "calendar_sha256": "4e43033801dfc8eaddb7754c41fc918eca694042804ce8c859ad7b43bb46d584",
+  "observed_ms": 1792227267394,
+  "open_cyprus": "2026-11-02T16:30:00+02:00",
+  "open_ms": 1793629800000,
+  "open_utc": "2026-11-02T14:30:00+00:00",
+  "orders_scheduled": 0,
+  "session": "2026-11-02",
+  "source_pins_preserved": 95,
+  "status": "NET_ROTATION_SESSION_CALENDAR_VERIFIED"
+}
