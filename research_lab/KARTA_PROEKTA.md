@@ -22,7 +22,7 @@ evidence, blocker, next action, дата/событие — research-ветку 
 | | вердикт CONFIRM | n ≥ 20 событий | **≤ 31.03.2027** | Claude |
 | | DATA-ONLY источник IBIT (P1, за KITY/Alpaca) | intake `a10667a` принят; контракт v1.1 закрыл 4 вопроса | реализация — после P0 | Codex |
 | **Фабрика** | 17.10: 11 прогонов, 1 DEV PASS (ETF_PREMIYA_BTC), KILL: POLY_FED, ETH-премия, CPI, PRE_FOMC, MAKRO_SHOK_VSE; автопродвижение работает; резерв 10 | следующий механизм из резерва + BRAIN_V2 Context Engine | 17–18.10 | Claude |
-| **Brain Shadow → BRAIN_V2 (P1)** | v1.2 работает; 17.10 этап 1 Context Engine включён (макро-календарь, премия ETF, волатильность; только запись) | этап 2: детектор деградации | с первых живых исходов Alpaca (02.11) / KITY | Claude (Codex — интеграция журнала) |
+| **Brain Shadow → BRAIN_V2 (P1)** | v1.2 работает; 17.10: Context Engine + BRAIN_V2_DET (4-я политика: конфликты, макро-окно, хедж, волатильность, чистая направленность; TRADE/HEDGE/ABSTAIN) в тени | вердикт BRAIN_V2_DET vs BASELINE (≥30 исходов KITY или 12.12); детектор деградации | с первых живых исходов Alpaca (02.11) / KITY | Claude (Codex — интеграция журнала) |
 
 **Счёт стратегий (метрика PM):** прошли DEV: 1 (ETF_PREMIYA_BTC) · реплицированы: 0 · подтверждены вперёд: 0 · готовы
 к исполнению (досье): 0 (1 DRAFT) · в LIVE с доказанной логикой: 1 (Alpaca monthly, с 02.11).

@@ -180,6 +180,12 @@ def hedge_v1(v, otkr):
 POLITIKI = {"BASELINE_V1": baseline_v1, "BRAIN_V1": brain_v1, "HEDGE_V1": hedge_v1}
 HEDGE_SHA = hashlib.sha256(json.dumps([POLICY_SHA, "HEDGE_V1", "elder_if_rezhim_v1_not_BULL_TREND", 1.0], sort_keys=True).encode()).hexdigest()
 SHA = {"BASELINE_V1": POLICY_SHA, "BRAIN_V1": POLICY_SHA, "HEDGE_V1": HEDGE_SHA}
+try:                                                   # 17.10 BRAIN_V2_DET — четвёртая политика (PREREG_BRAIN_V2_DET_2026_10_17); первые три не меняются
+    import importlib, brain_v2 as _B2; importlib.reload(_B2)
+    POLITIKI["BRAIN_V2_DET"] = lambda v, otkr: _B2.brain_v2_det(v, otkr, brain_v1)
+    SHA["BRAIN_V2_DET"] = _B2.SHA
+except Exception:
+    pass
 
 
 def prohod(hr=None, btc=None, seychas=None):
