@@ -1,0 +1,13 @@
+{
+ "gotovo": true,
+ "kalendar_sha256": "56da2386ef04f1a58cda323de73b6334d4bfa0cbfa61c5413c4c703222eefbb3",
+ "cpi_pereakciya": {
+  "sobytiy": 41,
+  "sha256": "e686aafab187873bae1c7cf020d790b67bdf089d3c4e30ad1110b99cd46751e0"
+ },
+ "pre_fomc": {
+  "sobytiy": 32,
+  "sha256": "8dfa6e77e5bb125f6022380a20a96b3775470092d249dea9ac84066835c8382c"
+ },
+ "kod_sha256": "57951925ee2ca4f4a050876b500b8c2e845f23f0aceb30197a811ff8ed7cfeee"
+}
