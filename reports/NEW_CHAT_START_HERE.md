@@ -1,5 +1,11 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT October17: independent ALPACA_STRATEGY_PARITY_PASS received507f782.
+Read ALPACA_PARITY_ACCEPTED_DAY_NEXT_2026_10_17.md / checkpoint TOP. NET is
+not automatically closing Monday; monthly candidate remains disabled. DAY
+readback component is local-ready, recurring capture/alert wiring PENDING.
+No money activation; next monthly calendar opportunity Nov2, not Oct19.
+
 CURRENT October17 sizing continuation: checkpointTOP →
 ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md. Claude7800b72 logicPASS received;
 64/64sizing nowPASS,66ownquantities/no archivedqtyinput. Narrow monthly wire

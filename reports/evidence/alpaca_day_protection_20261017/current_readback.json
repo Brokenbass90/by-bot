@@ -1,0 +1,31 @@
+{
+  "schema": "ALPACA_DAY_CURRENT_READONLY_RECEIPT_V1",
+  "status": "CLOSED_SESSION_NET_OPEN_DAY_STOP_EXPIRED",
+  "observed_ms": 1792218519330,
+  "observed_at_utc": "2026-10-17T06:28:39.330000+00:00",
+  "source_capture_sha256": "1f5d75c7e0e63c8bedb2dcd4795aba0961a040008d8e55a419c20740e15614a3",
+  "clock": {
+    "is_open": false,
+    "next_close": "2026-10-19T16:00:00-04:00",
+    "next_open": "2026-10-19T09:30:00-04:00",
+    "timestamp": "2026-10-17T02:28:39.245619514-04:00"
+  },
+  "calendar": [],
+  "positions": [
+    {
+      "symbol": "NET",
+      "qty": "0.325167779"
+    }
+  ],
+  "open_orders": 0,
+  "last_owned_stop_status": "expired",
+  "manager_unit_state": "Result=success\nExecMainStatus=0\nId=alpaca-oct15-owned-manager.service\nActiveState=inactive\nSubState=dead\n\nNextElapseUSecRealtime=Sat 2026-10-17 06:30:00 UTC\nLastTriggerUSec=Sat 2026-10-17 06:25:00 UTC\nResult=success\nId=alpaca-oct15-owned-manager.timer\nActiveState=active\nSubState=waiting\n",
+  "source_pins_verified": 56,
+  "ledger_unchanged": true,
+  "entry_halt_sha256": "f650419b466d016ba0fe7201590714a71d2c274c5ecf1703c84e7ff0f150c115",
+  "broker_writes": 0,
+  "systemd_changes": 0,
+  "monday_rearm_observed": false,
+  "monday_forced_exit_configured": false,
+  "observation_scope": "Point-in-time GET capture. No regular-session protection or future re-arm proof. No current mark/PnL assertion."
+}

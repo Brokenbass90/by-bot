@@ -92,3 +92,17 @@ October17 independent review7800b72: logicalmonthly/dailyPASS, sizeUNKNOWN.
 - [ ] Claude confirms sizingproof +narrowwireencodingdiff, then fullstrategyPASS.
 - [ ] Existing operational DAYreadback/alert/protection-time gaps handled before
       financialactivation; not a newstrategy/statistical requirement.
+
+
+### October17 independent acceptance and operational follow-up
+
+- [x] Claude507f782 independently confirms sizing/wire delta; record ALPACA_STRATEGY_PARITY_PASS for d205f8f.
+- [x] Bound current NET observation: Saturday DAY expired/open0, existing manager successful; no new money action.
+- [x] Local DAY point-readback component and immutable offline replay,28new/152targetedPASS.
+- [ ] Wire recurring authenticated source capture, session-aware schedule, durable alert/reporting; no false continuous-gap minutes.
+- [ ] Exact disabled monthly financial activation packet / existing shared ownership, then separate owner decision.
+- [ ] Observe actual next regular-session DAY re-arm; never substitute Saturday source or tests for broker evidence.
+
+Ruling: independent strategy parity is accepted. Operational monitoring is a
+separate implementation requirement, not additional statistical/PAPER evidence.
+Current NET stays old owned maintenance; no assumed Monday liquidation/adoption.

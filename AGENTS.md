@@ -918,3 +918,21 @@ Existing NET/stop/manager unchanged; new entries HALTED, owner activation separa
 Next operationalwork: confirmed regular-session DAY readback/alert and UNKNOWN-
 aware protection-time reporting; no new observer activated in this sizing task.
 Then KITYbatch/privateWS ORDERSOFF, ElderHEDGE ORDERSOFF; no expiredpolicy reuse.
+
+## October17 independent monthly parity acceptance and DAY component
+
+Claude507f782 independently issued ALPACA_STRATEGY_PARITY_PASS for d205f8f;
+Git blob verified,32reviewedmonthlyfiles unchanged. Do not repeat baseline or
+re-ask monthly choice. Read ALPACA_PARITY_ACCEPTED_DAY_NEXT_2026_10_17.md.
+NET still open at06:28UTC GET; DAYexpired/open0 outsideRTH/Saturday, manager
+lastticksuccess/timeractive,56sourcepins/HALT/ledger unchanged. Never relabel
+that weekend observation as regular-session protected or Monday rearm proof.
+No configured forcedMondayclose; no sell/migration implied. Monthly candidate
+remains disabled without a monetarybinding; calendar entry nextOct30→Nov2.
+Local DAYobserver28new/152targetedPASS, no transport/order authority. Actual
+recurring capture/schedule/alert wiring PENDING, not deployed/activated. Gaps
+and continuous unprotected durations remainUNKNOWN, never synthetic0. Complete
+that operational wiring plus exact activation packet next, not new research,
+retuning or PAPER. Owner monetary activation separate; NETmaintenance independent.
+Then KITYbatch/privateWS ORDERSOFF (9051expired/noGOreuse), ElderHEDGE ORDERSOFF;
+standaloneElderKILL, sourcegateunchanged. PreserveClaude/ATT1/LIQ/allowlist/rootonly.

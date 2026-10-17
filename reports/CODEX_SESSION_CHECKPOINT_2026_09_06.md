@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 06:28UTC CURRENT: ALPACA_STRATEGY_PARITY_PASS independently received
+from Claude507f782 for recoveryd205f8f/monthly-daily identity8f6d1fd2…277c799.
+Exact review Git blob verified; all32 reviewed strategy source pins unchanged.
+Read ALPACA_PARITY_ACCEPTED_DAY_NEXT_2026_10_17.md and evidence/
+alpaca_day_protection_20261017/independent_parity_pass.json. This closes the prior
+size/wire-review pending state, NOT financial activation or a running monthly writer.
+Actual bounded GET at06:28:39.330UTC: NET0.325167779 still open, openorders0,
+ownedDAYstop expired; market closed/Saturday/calendar empty, nextopenOct19
+13:30UTC/16:30Cyprus. Existing manager timer active, lastticksuccess/exit0;
+56sourcepins/ledger/originalHALT unchanged,0brokerwrites/unit changes. Not a
+current protected claim or futureMonday rearm proof. No configured forced
+Monday close in current maintenance path; do not sell/migrate NET automatically.
+Local DAYreadback component28new/152targetedPASS: exact owned stop readback,
+regular-session critical missing/UNKNOWN, first-confirmation delay/gap metrics.
+No continuous unprotected-minute fabrication; gaps UNKNOWN. CLI saved replays
+explicitly labeled, receipts create-exclusive. Recurring source/schedule/alert
+wiring still PENDING, no newservice/timer/notification activated. MonthlyV3
+stays disabled/monetary_transport_bound=false; entryHALT retained. Finish the
+DAY operational wiring/activation packet before money; no extra PAPER/stat gate.
+Next monthly calendar opportunityOct30close→Nov2open16:30Cyprus, not Oct19
+replacement. Fresh sources/account/ownership and separate ownerGO still required.
+Then KITYbatch/privateWS ORDERSOFF (actual9/10, no10/10PASS;9051expired, noGOreuse),
+then frozen ElderHEDGE ORDERSOFF; standaloneElderKILL. Claude/ATT1/LIQ/allowlist
+unchanged; root-only review restriction remains.
+
 October17 06:00UTC CURRENT: ALPACA_MONTHLY_SIZING_PARITY_PASS, global strategyPASS
 still pending Claude confirmation of the serializer delta. Read
 ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md. Received exact7800b72 independent

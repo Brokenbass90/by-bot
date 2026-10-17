@@ -1,0 +1,29 @@
+{
+  "schema": "ALPACA_DAY_PROTECTION_COMPONENT_VERIFICATION_V1",
+  "status": "LOCAL_COMPONENT_READY_OPERATIONAL_WIRING_PENDING",
+  "targeted": "152 passed in 2.09s",
+  "new_observer_cases": 28,
+  "targeted_log_sha256": "523871571fa572c1e9f389ebc9d8e36dcc53057bcd41d55329ded2adf4103e47",
+  "source_code_sha256": {
+    "research_lab/alpaca_day_protection_v1.py": "e476a8d336a5afd351eb2a706e505e7154c1d72ce3640a5d5f6577b83b1c2245",
+    "scripts/audit_alpaca_day_protection_v1.py": "5aad5cab8b8dd25b08fcf6fb08ea471f35b360623450b3414db48f9c7f6e6ffe",
+    "tests/test_alpaca_day_protection_v1.py": "ee4758af14acea9e6fb173705d3c32badc0860409885efed68b575d5678d1750"
+  },
+  "reviewed_monthly_source_files_unchanged": 32,
+  "full_suite_rerun": false,
+  "red_green": [
+    "New audit module initially absent: import failed before implementation.",
+    "Whole-share existing GTC fixture failed before quantity-dependent TIF distinction; final suite passes."
+  ],
+  "actual_weekend_source_replay_status": "DAY_CLOSED_SESSION",
+  "actual_readback": "current_readback.json",
+  "recurring_monitoring_installed": false,
+  "recurring_monitoring_active": false,
+  "automatic_alerts_active": false,
+  "monetary_transport_bound": false,
+  "manager_changes": 0,
+  "broker_writes": 0,
+  "notifications_sent": 0,
+  "future_monday_rearm_observed": false,
+  "actual_unprotected_duration_known": false
+}

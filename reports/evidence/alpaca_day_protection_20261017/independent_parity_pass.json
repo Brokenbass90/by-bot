@@ -1,0 +1,14 @@
+{
+  "schema": "ALPACA_INDEPENDENT_PARITY_FINAL_REVIEW_V1",
+  "status": "ALPACA_STRATEGY_PARITY_PASS",
+  "source_commit": "507f7824f49b4f2b48c548d9a5165d50ae0546bc",
+  "source_path": "research_lab/ALPACA_REVYU_MONTHLY_CODEX_2026_10_17.md",
+  "source_sha256": "a7e78015a6f849d0a4af8f7de142965d50dde0e5a2454cd78f76d2afb67cd356",
+  "reviewed_recovery_commit": "d205f8f7495c49502a35cdcd94c7c8216486e8c8",
+  "strategy_id": "ALPACA_MONTHLY_BASELINE_8f6d1fd2a5f72cf88133cdc390eb3230ed2ab8fc6686e6bf808145223277c799",
+  "scope": "Monthly/daily selection, stop, ratchet, sizing and wire precision against reference981b62f. Independent review received and exact Git blob verified.",
+  "financial_activation": false,
+  "owner_money_go": false,
+  "entry_halt_preserved": true,
+  "day_monitoring_required_before_activation": true
+}

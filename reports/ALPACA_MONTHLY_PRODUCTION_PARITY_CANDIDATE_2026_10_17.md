@@ -1,5 +1,9 @@
 # Alpaca monthly production-binding candidate — October17
 
+UPDATE: independent Claude review507f782 accepts d205f8f with
+`ALPACA_STRATEGY_PARITY_PASS`. Financial activation remains separate. Read
+[accepted review and current DAY work](ALPACA_PARITY_ACCEPTED_DAY_NEXT_2026_10_17.md).
+
 Continuation supersedes the source version below:
 [sizing closeout and serializer correction/V3](ALPACA_MONTHLY_SIZING_CLOSEOUT_2026_10_17.md).
 Claude7800b72 accepted logic; sizing now64/64PASS. V2 stays immutable/disabled

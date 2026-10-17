@@ -1,5 +1,9 @@
 # Alpaca sizing closeout and wire correction — October17
 
+UPDATE: Claude507f782 independently confirmed d205f8f; ALPACA_STRATEGY_PARITY_PASS
+received. Earlier pending-review statements below are historical. See
+[accepted review and DAY next step](ALPACA_PARITY_ACCEPTED_DAY_NEXT_2026_10_17.md).
+
 CURRENT: **ALPACA_MONTHLY_SIZING_PARITY_PASS**.
 Claude's independent review7800b72 accepted b95550b's monthly/daily logic and
 requested sizing proof. That proof is now complete. A newly reproduced native
