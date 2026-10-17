@@ -106,7 +106,8 @@ def sobytie(parametry, dostup):
         abn.append(r_e - float(np.mean(ctrl)) - 0.0); raw.append(r_e - izd); kogda.append(int(ts[i]))
     rez = _itog(abn, kogda or [0])
     rez["metrika"].update(syroy_posle_izderzhek_bps=round(float(np.mean(raw)), 2) if raw else None, sobytiy_vzyato=len(abn),
-                          sobytiy_vsego=len(sob))
+                          sobytiy_vsego=len(sob),
+                          po_sobytiyam=[[int(k_), round(float(a_), 2), round(float(r_), 2)] for k_, a_, r_ in zip(kogda, abn, raw)])   # 17.10: для автопроверки концентрации
     return rez
 
 

@@ -103,6 +103,10 @@ def _prohod(put, reestr, processov, koren):
         if x.get("status") == "FAIL":
             try: avto_postmortem(x, reestr)
             except Exception: pass
+    try:                                              # 17.10: PASS → проверка концентрации → репликация/досье/статус для Codex
+        import importlib, avto_prodvizhenie; importlib.reload(avto_prodvizhenie); avto_prodvizhenie.prohod(put)
+    except Exception as e:
+        dopisat(dict(tip="oshibka_prodvizheniya", detal=str(e)[:300], kogda=int(time.time() * 1000)), put)
     try:
         obnovit_kartu()
     except Exception:

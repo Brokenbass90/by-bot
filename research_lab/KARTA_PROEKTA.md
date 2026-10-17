@@ -46,6 +46,8 @@ evidence, blocker, next action, дата/событие — research-ветку 
 2. ~~Манифест окон + проверка непересечения~~ — СДЕЛАНО 17.10 13:15: `factory_v3/okna_proverka.py`, `data/factory_v3/OKNA_MANIFEST.json` (2021H2–2022 vs 2023–2026Q3: OK), бары BTC 2021-04…2022-12 `data/h1/BTCUSDT_B21.npz` (15 360, без дыр).
 3. ~~Досье исполнения~~ — 17.10: `dosie/SHABLON_DOSIE_ISPOLNENIYA.md`, `dosie/DOSIE_ETF_PREMIYA_BTC_V1.md` (DRAFT; блокер Codex: источник закрытия IBIT в реальном времени).
 4. 31.10: сверка теневого месячного отбора Alpaca с эталоном.
+6. ~~Автопродвижение~~ — 17.10: `factory_v3/avto_prodvizhenie.py` в конвейере: PASS → концентрация → репликация (если задана в карте ДО результата) → черновик досье → строка для Codex (`data/factory_v3/DLYA_CODEX.jsonl`). ETF_PREMIYA_BTC: концентрация OK (топ-3 34.7 %, без топ-3 +60 bps; диагностика).
+7. ~~Контракт DATA-ONLY источника IBIT для Codex~~ — 17.10: `dosie/KONTRAKT_ISTOCHNIK_IBIT_DATA_ONLY_2026_10_17.md`.
 5. Резерв: STABLECOIN_EMISSIYA, ETF_PREMIYA_KROSS, ETF_OBEM_UCHASTIE, KITY_V2 — первым DEV на 2021H2–2022, где возможно.
 
 ## 4. Сорванные сроки (не удалять — учиться)
