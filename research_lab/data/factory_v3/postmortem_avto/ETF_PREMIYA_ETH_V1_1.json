@@ -1,0 +1,15 @@
+{
+ "id": "ETF_PREMIYA_ETH_V1_1",
+ "status": "FAIL",
+ "t": 0.8153945112758335,
+ "trebuemyy_t": 2.394,
+ "edge_bps": 63.39,
+ "polovinki_bps": [
+  120.87,
+  8.64
+ ],
+ "n": 41,
+ "obratnyy_znak_proshel_by": false,
+ "polovinki_soglasny": true,
+ "vyvod": "ни прямой, ни обратный знак не значимы — спасение только причинным вариантом, иначе KILL"
+}

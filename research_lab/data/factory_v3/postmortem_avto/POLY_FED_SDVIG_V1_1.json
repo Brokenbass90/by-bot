@@ -1,0 +1,15 @@
+{
+ "id": "POLY_FED_SDVIG_V1_1",
+ "status": "FAIL",
+ "t": -0.01997078088102717,
+ "trebuemyy_t": 2.394,
+ "edge_bps": -1.66,
+ "polovinki_bps": [
+  -61.32,
+  54.68
+ ],
+ "n": 35,
+ "obratnyy_znak_proshel_by": false,
+ "polovinki_soglasny": false,
+ "vyvod": "ни прямой, ни обратный знак не значимы — спасение только причинным вариантом, иначе KILL"
+}
