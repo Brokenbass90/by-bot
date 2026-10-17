@@ -174,6 +174,16 @@ def prohod():
         with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} etf_vpered: {json.dumps(e, ensure_ascii=False, default=str)[:400]}\n")
     except BaseException as e:
         with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} etf_vpered не прошёл: {e}\n")
+    try:                                                    # 17.10: общие хуки (fabrika/HUKI.json) — новые тени без рестарта сторожа
+        import importlib; sys.path.insert(0, str(LAB / "fabrika"))
+        for imya in json.loads((LAB / "fabrika" / "HUKI.json").read_text()):
+            try:
+                m = importlib.import_module(imya); importlib.reload(m); r = m.prohod()
+                with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} хук {imya}: {json.dumps(r, ensure_ascii=False, default=str)[:300]}\n")
+            except BaseException as e:
+                with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} хук {imya} не прошёл: {type(e).__name__}: {str(e)[:200]}\n")
+    except BaseException as e:
+        with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} хуки не прошли: {e}\n")
     try:                                                    # раз в 7 дней: известные ответы + калибровка фермы (factory_v3/kontrol_fermy)
         import kontrol_fermy
         if kontrol_fermy.pora():

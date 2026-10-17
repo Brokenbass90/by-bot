@@ -73,6 +73,21 @@ def vorota(sob, qa, polnota="UNKNOWN_NO_SEQUENCE_OR_BACKFILL"):
                 progrev_do_ms=EPOHA_START_MS + PROGREV, trebovaniya=VOROTA)
 
 
+def prohod(puti=None):
+    """Хук сторожа: пересчёт ворот по всем снимкам (дёшево; цены и исходы не читаются)."""
+    puti = puti or sorted(glob.glob(str(D / "normalized-*.jsonl")))
+    if not puti: return dict(status="NET_SNIMKOV")
+    zap, dubl, chuzhie = zagruzit(puti)
+    do_ms = max(z["t_available_ms"] for z in zap) if zap else EPOHA_START_MS
+    sob, qa = sobytiya(zap, do_ms); qa.update(dubley_svernuto=dubl, chuzhaya_epoha=chuzhie, snimkov=len(puti))
+    v = vorota(sob, qa); v["lenta_do_ms"] = do_ms
+    D.mkdir(parents=True, exist_ok=True)
+    (D / "VOROTA.json").write_text(json.dumps(v, ensure_ascii=False, indent=1))
+    with open(D / "sobytiya_BASE.jsonl", "w") as f:
+        for e in sob: f.write(json.dumps(e, ensure_ascii=False) + "\n")
+    return dict(status=v["status"], sobytiy=v["sobytiy_BASE"], sutok=v["sutok"], monet=v["monet"])
+
+
 if __name__ == "__main__":
     puti = sys.argv[1:] or sorted(glob.glob(str(D / "normalized-*.jsonl")))
     if not puti: print(json.dumps(dict(status="NET_SNIMKOV", put=str(D)), ensure_ascii=False)); sys.exit(0)
