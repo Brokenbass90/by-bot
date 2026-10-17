@@ -9,5 +9,13 @@
   "sobytiy": 32,
   "sha256": "8dfa6e77e5bb125f6022380a20a96b3775470092d249dea9ac84066835c8382c"
  },
- "kod_sha256": "57951925ee2ca4f4a050876b500b8c2e845f23f0aceb30197a811ff8ed7cfeee"
+ "kod_sha256": "57951925ee2ca4f4a050876b500b8c2e845f23f0aceb30197a811ff8ed7cfeee",
+ "cpi_pereakciya_v2_z2": {
+  "sobytiy": 9,
+  "sha256": "a37b06e870d8784bf1c8db285171e749cc0d2330b2b09c5c09356b8edaec4391"
+ },
+ "pre_fomc_v2_48ch": {
+  "sobytiy": 32,
+  "sha256": "b1a3ea7cac698b43526cb562a401428e5ff7940a3ce1bfe37335275af26b6cd2"
+ }
 }
