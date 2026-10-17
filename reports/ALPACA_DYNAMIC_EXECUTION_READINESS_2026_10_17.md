@@ -1,5 +1,10 @@
 # Alpaca Dynamic — restored scope and execution readiness, 17 October 2026
 
+**18:27UTC update:** continuous Dynamic59 source is now ACTIVE/DATA_READY,
+all59×200sessions actual rebuild PASS. See [new delivery](LIQ_RESEARCH_DELIVERY_2026_10_17.md).
+Earlier pending-source paragraphs below are the17:55 snapshot. Economic/lifecycle/
+financial-admission gates remain open; no LIVE permission.
+
 **Status: DATA/BROKER_ELIGIBILITY_PASS; event reselection is an isolated
 ORDERS_OFF research candidate, not an approved profitable strategy or LIVE runner.**
 Code: `469a9eddf27fd40d38f71ba2db783522fb38b25c`.

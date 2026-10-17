@@ -1,0 +1,16 @@
+[
+  {
+    "id": "liq-claude",
+    "kind": "heartbeat",
+    "name": "LIQ — ежедневная доставка данных Claude",
+    "status": "ACTIVE",
+    "schedule": "Daily03:40 Asia/Nicosia; catch up missing snapshots after sleep"
+  },
+  {
+    "id": "19-net-ibit",
+    "kind": "heartbeat",
+    "name": "19 октября — NET защита и первый IBIT",
+    "status": "ACTIVE",
+    "schedule": "2026-10-19 16:35 and23:35 Asia/Nicosia; two checks only"
+  }
+]

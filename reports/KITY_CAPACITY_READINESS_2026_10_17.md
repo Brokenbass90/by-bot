@@ -1,5 +1,10 @@
 # KITY — capacity root cause and future micro readiness, 17 October 2026
 
+**18:23UTC update:** one PUBLIC-only capacity probe now requires247.189680>215.
+See [new delivery/evidence](LIQ_RESEARCH_DELIVERY_2026_10_17.md). No new financial
+attempt/policy or account/CTS SEND readiness; old attempt remainsSPENT.
+The229.584550 below is the exact original failed financial capture.
+
 **NO_SEND / ONE ATTEMPT SPENT / CAPACITY_BLOCKED. Actual 10/10 execution remains
 NOT PROVEN. No repeated micro, policy renewal or broker mutation was performed.**
 Code `469a9eddf27fd40d38f71ba2db783522fb38b25c` is local, not deployed to the

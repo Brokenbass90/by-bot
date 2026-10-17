@@ -1135,3 +1135,41 @@ IBIT DATA-only seed/timer retained; MassiveQA pending. Foreignallowlist original
 SHA365ff7d6…cc2e0e preserved and excluded. Root-only finalreview restriction remains;
 allowance-exhausted brokerworker notretried/replaced, primary fixedGET recorded.
 No automatic LIVE, financialauthority change, secondmanager or newstrategyGO.
+
+
+## October17 LIQ delivery / continuous Dynamic59 actual gate
+
+Read checkpoint TOP and LIQ_RESEARCH_DELIVERY_2026_10_17.md. Owner explicitly
+adds daily DATA-only delivery to Claude while Alpaca/KITY P0 remains. Used
+existing ZAPROS_CODEX_LIQ_EKSPORT and b2cf5af dossier at published431cc92; no
+new LIQ signal/risk contract.01c85ca exporter wrapper/importer,1315582 disk/
+900s budget hardening; sourcekit3 app-v2 active under same newexport timer,
+daily00:10UTC. Preserve oldapp/unitarchive/rawsources and all immutable exports.
+Collector PID2095785/NRestarts0/epoch0688909d…e4847 unchanged; neverrestartit.
+Actual24863raw/all25 delivered as normalized-20261017+receipt+heartbeat+gapQA+
+seal to sibling research_lab/data/liq_v2_1; repeatimport SAMEHASH/alreadytrue.
+New own DATA files authorized; never alter sibling code/KARTA/VOROTA/strategy.
+No dedup/filter by Codex; no raw count=BASE/prospective. One observed10.149s gap,
+2event-time regressions retained; coverageUNKNOWN. At431cc92 research consumer
+ignores gap sidecars/zero-fills; Claude source-QA correction/confirmation OPEN.
+Fresh25minQty/qtyStep/minNotional/funding intervals + selectedaccount GET taker
+0.00055 recorded, not a trading-cost/PnL proof or change to frozen12bps model.
+Local heartbeat liq-claude daily03:40Cyprus/catchup afterMacsleep, quiet unless
+failure/action. Source budget preserves collector disk reserve; no autodeletion.
+
+P0a18c951 Dynamic59 continuous source actualPASS: new40-file isolated DATA-only
+kit/timer, all59×200sessions16Octclosed→19Oct, separate raw rebuild identical
+sourceIDaa97a013…843b94/spec668fa945…ff07ef. OldMonthly37/V3/NET/HALT/225pins/
+originalKITY/ATT1/LIQPIDs/cron preserved; no monetarybinding or strategy run.
+Do not repeat source implementation. Fixed-rule economic comparison, complete
+owned stop/ratchet/exit/reselection lifecycle and exact single-owner financial
+packet remain nextP0. Monthly retains independentacceptedparity/calendar.
+KITYonepublic20GET capture18:23UTC confirms minimum247.189680>215; capacity-only,
+not account/CTS readiness. New policy/attempt absent; original attempt SPENT.
+Never reuse/resetpolicy/launcher or raise cap; futurepacket after freshPASS only.
+NET19Oct actualDAYprotection OPEN; heartbeat19-net-ibit exactlytwo readonlychecks
+19Oct16:35/23:35local for NET/IBIT. Aftereveningpause, no date-transfer/fakePASS.
+IBIT MassivePENDING/historical81notprospective; deliver actual source decisions
+create-exclusive to sibling data/ibit_adapter_v1 only, no source/outcome edits.
+65LIQ +53source/native/reselection +1CLI focusedPASS; no broadgreen or independent
+financial/research review. Root-only restriction/foreignallowlist preserved.

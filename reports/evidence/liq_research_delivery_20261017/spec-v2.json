@@ -1,0 +1,11 @@
+{
+  "schema": "LIQ_RESEARCH_DELIVERY_PACKAGE_V2",
+  "code_commit": "131558261875d0905836e13ca5c9fd766c252c7f",
+  "files": {
+    "research_lab/liq_research_delivery_v1.py": "2922d921f5feb3f02de3d3e98df4f78ea289c98bd43d1ae07ca67073aad7dbc9",
+    "scripts/export_bybit_liquidation_v2_1.py": "bb8bee080e42ac9fbe33c46ef665bcf797b4d66b7bca0a9d3e7e0a3d9e21863d",
+    "scripts/run_liq_research_delivery_v1.py": "9841fa3b86b7a7329d27d87c9427f050b3e5fbe78bed0e86bed941d3b83ec5be"
+  },
+  "orders_allowed": false,
+  "financial_authority": false
+}

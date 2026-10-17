@@ -1,0 +1,77 @@
+{
+  "base_events": "NOT_COMPUTED",
+  "broker_writes": 0,
+  "claude_consumer_gap_guard": "PENDING_CLAUDE; current konveyer ignores heartbeat/gap sidecars, do not treat missing hours as zero",
+  "collector_restarted": false,
+  "coverage": "UNKNOWN_NO_SEQUENCE_OR_BACKFILL",
+  "delivery_sha256": "ffbb0f4d7999c586f97be4337672d1c3f89a0188f8a7c1c08b50d4ef9a3a4158",
+  "destination": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/../bybit-bot-clean-v28/research_lab/data/liq_v2_1",
+  "event_count": 24863,
+  "event_qa_flags": {
+    "EVENT_TIME_REGRESSION_RETAINED": 2
+  },
+  "files": {
+    "normalized-20261017.heartbeat.json": "ef4f4ac49f59ccf443b3d78b67a897e8b091429e180d7aa0dc81916330a17242",
+    "normalized-20261017.jsonl": "4680ea71264c993c2b7287d321ce66d196b1259f1796be5b79e62c69f789abf3",
+    "normalized-20261017.qa.json": "629fc06d50905946a72e491abd6341938d21502295bfb3bbb6d8a71e94147310",
+    "normalized-20261017.receipt.json": "950953193bf949a1c3f848a9fc81261e2927a72056c7950e13eda7fab357e2ca"
+  },
+  "gap_evidence": [
+    {
+      "capture_run_id": "1791966934223-6234d63a7ae345caa0dca9e1a5a2f697",
+      "capture_sequence": 17872,
+      "end_ms": 1792120302355,
+      "kind": "OBSERVATION_GAP",
+      "missing_event_count": null,
+      "prev_sha256": "922f8e6383ed7773a2eaabb15f3f6cc82756f26484dd00d34633ac8a6ac836d2",
+      "qa_flags": [
+        "DISCONNECT_UNOBSERVED_INTERVAL"
+      ],
+      "receive_ms": 1792120302355,
+      "record_sha256": "11a932e94d804c6f6311da12ed4f1f4653e8de5d1706b4585d94c80e313e2b0a",
+      "source_manifest_sha256": "46895caaef1e1689cd4224a544bb3e3287f41ef8a8a4ad702fd403cdcc2a4ddd",
+      "start_ms": 1792120292206
+    }
+  ],
+  "gap_records": 1,
+  "latency_ms": {
+    "max": 3254,
+    "negative_count": 0,
+    "p50": 359,
+    "p90": 566
+  },
+  "metadata_facts_sha256": "4b1957f829fbccd007b296e55951f302506b9b78e726db04f81df85784cc1ba7",
+  "normalized_bytes": 20575734,
+  "normalized_sha256": "4680ea71264c993c2b7287d321ce66d196b1259f1796be5b79e62c69f789abf3",
+  "orders_allowed": false,
+  "prospective_decisions": 0,
+  "schema": "ACTUAL_LIQ_RESEARCH_DELIVERY_RECEIPT_V1",
+  "source_gate_pass": false,
+  "symbol_event_counts": {
+    "1000PEPEUSDT": 379,
+    "ADAUSDT": 330,
+    "BATUSDT": 298,
+    "BTCUSDT": 4332,
+    "BTWUSDT": 846,
+    "DOGEUSDT": 666,
+    "ENAUSDT": 726,
+    "ETHUSDT": 3541,
+    "HYPEUSDT": 668,
+    "INJUSDT": 469,
+    "NEARUSDT": 1486,
+    "OGNUSDT": 74,
+    "ONDOUSDT": 475,
+    "OPUSDT": 413,
+    "PUMPFUNUSDT": 766,
+    "QNTUSDT": 456,
+    "SOLUSDT": 1764,
+    "STRKUSDT": 1968,
+    "SUIUSDT": 510,
+    "TIAUSDT": 932,
+    "TRUTHUSDT": 443,
+    "UNIUSDT": 225,
+    "WLDUSDT": 417,
+    "XRPUSDT": 1374,
+    "ZECUSDT": 1305
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "LIQ_DYNAMIC_SOURCE_VERIFICATION_V1",
+  "liq_code_commit": "01c85ca533c9d7e03ee14f5b56cd50b04bfaea31",
+  "dynamic_code_commit": "a18c951978c217a5c398afa5d632a568f5d8d258",
+  "research_commit": "431cc92817a7ba3b48549113c50c0c0e2d67e862",
+  "suites": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_liq_research_delivery_v1.py tests/test_pull_liq_research_v1.py tests/test_liquidation_v2_1_intake.py tests/test_bybit_liquidation_collector_v2.py tests/test_bybit_liquidation_universe_v2_1.py",
+      "passed": 65,
+      "log_sha256": "307db0378e65aa062ee6a6bd2c851ed13ce721019bb2a8154f9409c11933ae62"
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_alpaca_dynamic_source_ops_v1.py tests/test_alpaca_monthly_source_ops_v1.py tests/test_alpaca_dynamic_reselection_v1.py tests/test_alpaca_monthly_native_binding_v1.py",
+      "passed": 53,
+      "log_sha256": "8c207f5338ed5020f439d0dfa4f4485e27eab73afcc3ef79ad1db48b6bb89240",
+      "note": "before adding one CLI test; monthly source refactor and default Dynamic59 validation covered"
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_alpaca_dynamic_source_ops_v1.py::test_saved_source_cli_seals_own59_book_without_monthly_or_native_calls",
+      "passed": 1,
+      "log_sha256": "ec4fdff920797363d37818140a078e9a65d2a02f0b540cc07629a0c2a2c78118"
+    }
+  ],
+  "py_compile": "PASS",
+  "diff_check": "PASS",
+  "full_suite_rerun": false,
+  "last_full_suite": "historical5474PASS/60FAIL; NOT_GREEN",
+  "review": "ROOT_ONLY; no independent research/financial acceptance",
+  "orders_allowed": false,
+  "new_financial_authority": false,
+  "foreign_allowlist_sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e",
+  "liq_hardened_commit": "131558261875d0905836e13ca5c9fd766c252c7f"
+}

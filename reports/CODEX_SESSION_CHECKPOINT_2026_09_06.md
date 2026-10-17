@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+LATEST18:33UTC — LIQ_RESEARCH_DELIVERY_2026_10_17.md.
+Code01c85ca/a18c951/1315582; research origin431cc92 verified. Actual LIQ24863
+raw rows/all25 delivered into Claude data folder, immutable receipt/heartbeat/
+gapQA/seal, repeat import SAMEHASH/alreadytrue. NotBASE/prospective/PnL PASS.
+Daily00:10UTC export active; source epoch/PID2095785 unchanged. V2 disk reserve
+and900s budget, old app/snapshots retained. Mac import heartbeat daily03:40local,
+catch-up after sleep; no Claude code/KARTA/VOROTA/messages. Actual25 metadata+
+selected-account taker0.00055 GET delivered. Consumer431cc92 ignores gap sidecars:
+Claude gap/UNKNOWN handling remainsOPEN, do not turn absent hours into0.
+Dynamic59 CONTINUOUS SOURCE CLOSED: separate40file source/timer active,
+actual16Octclosed→19Oct200sessions×59 PASS; independent raw rebuild sameID.
+SourceIDaa97a013…843b94/spec668fa945…ff07ef.225oldfinancial/sourcepins/PIDs/
+cron preserved, no financialactivation. Fixed-rule economic comparison/full
+owned lifecycle/financial binding remainP0 OPEN; Monthly58/V3 separateunchanged.
+KITY ONE PUBLIC capacity-only capture18:23UTC:247.189680>215, no account/CTS
+SEND admission, newGO/attempt absent, oldpolicy SPENT. Do notpolluntilPASS.
+NET19Oct13:30UTC actualDAYgate remainsOPEN; read-only appchecks19Oct16:35+23:35
+local coverNET/firstIBIT. IBIT historical81 notprospective; MassiveQA PENDING.
+65LIQ+53source/native/reselection+1newCLI focusedPASS; fullsuite notrerun.
+Read the new delivery/board first; older source59-pending/229-only snapshots
+below are dated history. No new financialpermission, moneyunit or ownercommand.
+
 **LATEST17:55UTC — owner-priority Dynamic/KITY recovery:**
 [TRADING_OS_DYNAMIC_KITY_RECOVERY_2026_10_17.md](TRADING_OS_DYNAMIC_KITY_RECOVERY_2026_10_17.md).
 Code `469a9eddf27fd40d38f71ba2db783522fb38b25c`, research origin
