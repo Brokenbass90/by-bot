@@ -49,6 +49,7 @@ evidence, blocker, next action, дата/событие — research-ветку 
 4. 31.10: сверка теневого месячного отбора Alpaca с эталоном.
 6. ~~Автопродвижение~~ — 17.10: `factory_v3/avto_prodvizhenie.py` в конвейере: PASS → концентрация → репликация (если задана в карте ДО результата) → черновик досье → строка для Codex (`data/factory_v3/DLYA_CODEX.jsonl`). ETF_PREMIYA_BTC: концентрация OK (топ-3 34.7 %, без топ-3 +60 bps; диагностика).
 7. ~~Контракт DATA-ONLY источника IBIT для Codex~~ — 17.10: `dosie/KONTRAKT_ISTOCHNIK_IBIT_DATA_ONLY_2026_10_17.md`.
+4a. LIQ_OTSKOK_4H_V2: эпоха Codex V2.1 на 25 монетах идёт с 14.10; прогрев до 28.10 08:35 UTC; ворота ≥ 200 событий — не раньше 17.11; запрос Codex на ежесуточный экспорт (`ZAPROS_CODEX_LIQ_EKSPORT_2026_10_17.md`).
 5. Резерв: STABLECOIN_EMISSIYA, ETF_PREMIYA_KROSS, KITY_V2, ETF_OBEM_X_POTOK (только вперёд), OBEM_OSTATOK_VOL, STOP_HVOST (вперёд), DIVERSIFIKACIYA_RUKAVOV (повтор Brain после 31.10) — крипто-DEV только 2021H2–2022 или вперёд. ETF_OBEM_UCHASTIE — KILL 17.10 15:53 (t 0.22), окно 2023–26 исчерпано 20/20. ETF_OBEM_VOL_KONTEKST — FAIL 17.10 (vol до всплеска 1.63 > после 1.46). Размер по рыночным признакам (VOL_PERSISTENCE, DVOL, STRESS) — все FAIL 17.10: хвост не меняется; окно 2021–22: 10 попыток, поиски размера на нём прекращены.
 
 ## 4. Сорванные сроки (не удалять — учиться)
