@@ -1,0 +1,26 @@
+{
+  "authenticated_fields_included": false,
+  "schema": "PUBLIC_MARKET_GEOMETRY_ONLY",
+  "sources": {
+    "owner_attempt": {
+      "fixture_sha256": "02ac797885d6f758804495cfe2db9d6d91a56281386deaa9c1ff71bf6f322c90",
+      "private_capture_sha256": "f9e6562812ae9a652880a78d5d989537ec8cff826a64667dc895142872ba3ba2"
+    },
+    "prepare_0910": {
+      "fixture_sha256": "3989aacbc247e2a0c9c51959e306f12c8ebaa98a9c76ae94bf0cab36e808a263",
+      "private_capture_sha256": "2d949b4088f5e0d76d30fc83ebc6d5ae522ae6e9918df231edc9a40372f7642c"
+    }
+  },
+  "symbols": [
+    "BTWUSDT",
+    "XAUUSDT",
+    "LTCUSDT",
+    "VVVUSDT",
+    "BNBUSDT",
+    "XAUTUSDT",
+    "XPLUSDT",
+    "XAGUSDT",
+    "GRASSUSDT",
+    "SPCXUSDT"
+  ]
+}

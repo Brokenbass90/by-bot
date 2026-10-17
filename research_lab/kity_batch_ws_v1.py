@@ -44,6 +44,69 @@ def validate_batch_policy(policy):
     return policy
 
 
+# Diagnostic vocabulary only. Unknown/remote exception text is never persisted.
+_NO_SEND_CODES = frozenset({
+    'INTENT_REFERENCE_PLAN_BLOCKED', 'INTENT_REFERENCE_SOURCE_STALE',
+    'INTENT_WORST_REFERENCE_GROSS_EXCEEDS_215', 'INTENT_FRESH_GROSS_CAP_EXCEEDED',
+    'POST_GO_DISPATCH_DEADLINE', 'POLICY_GO_SESSION_CLOCK', 'CAPTURE_PRECEDES_GO',
+    'POST_GO_SOURCE_CUSTODY_CONFLICT', 'INTENT_FRESH_CUSTODY_OR_BOUNDS_CONFLICT',
+    'INTENT_ACCOUNT_NOT_FLAT_OR_PERMISSION_UNKNOWN', 'INTENT_FRESH_SOURCE_CLOCK',
+    'INTENT_COMMON_2S_SOURCE_UNKNOWN', 'INTENT_BALANCE_INSUFFICIENT',
+    'PLAN_PIN_CONFLICT', 'PLAN_BOUND_OR_GROSS_CONFLICT',
+    'BATCH_APPROVED_BOUNDS_REQUIRED', 'BATCH_EXACT_NATIVE_GUARD_REQUIRED',
+    'BATCH_LINKS_NOT_UNIQUE',
+})
+_NO_SEND_PLAN_CODES = frozenset({'GROSS_CAP_EXCEEDED'})
+
+
+def _no_send_diagnostic(exc, policy, fresh, stage, observed_ms):
+    """Bounded local evidence; never serialize raw capture or exception text.
+
+    Zero writes describes this capture/compile hook, which has no sender or
+    lifecycle journal. It does not assert external-account flatness or writes.
+    """
+    exception_type = type(exc).__name__
+    if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}', exception_type):
+        exception_type = 'EXCEPTION_TYPE_UNAVAILABLE'
+    exception_code = 'UNCLASSIFIED_FAILURE'
+    if type(exc) in (SourceError, ValueError) and len(exc.args) == 1:
+        candidate = exc.args[0]
+        if type(candidate) is str and candidate in _NO_SEND_CODES:
+            exception_code = candidate
+    out = dict(schema='KITY_BATCH_NO_SEND_DIAGNOSTIC_V1', status='NO_SEND',
+               reason=exception_type, exception_type=exception_type,
+               reason_code=exception_code, exception_reason_code=exception_code,
+               batch_policy_id=policy['batch_policy_id'], observed_ms=observed_ms,
+               stage=stage, broker_writes=0, broker_writes_scope='LOCAL_CAPTURE_COMPILE_HOOK_ONLY')
+    # Reuse existing validation, solely to decide which evidence is safe to
+    # report. It cannot change the plan, its blocked verdict, or its sizing.
+    try:
+        plan = fresh['plan']
+        rt.validate_plan(plan)
+        blocked = plan.get('blocked_reasons')
+        if not isinstance(blocked, list):
+            return out
+        source = {'blocked_reasons': sorted({code for code in blocked[:32]
+                                            if type(code) is str and code in _NO_SEND_PLAN_CODES})}
+        for key in ('reference_gross_usdt', 'planned_limit_gross_usdt'):
+            value = plan.get(key)
+            if type(value) is str and re.fullmatch(r'(?:0|[1-9][0-9]{0,17})(?:\.[0-9]{1,18})?', value):
+                source[key] = value
+        source['max_gross_usdt'] = policy['base_policy']['bounds']['max_gross_usdt']
+        for key in ('captured_source_sha256', 'source_dossier_sha256', 'plan_id'):
+            value = plan.get(key)
+            if type(value) is str and re.fullmatch(r'[0-9a-f]{64}', value):
+                source[key] = value
+        out['source_plan'] = source
+        if (exception_code == 'INTENT_REFERENCE_PLAN_BLOCKED'
+                and 'GROSS_CAP_EXCEEDED' in source['blocked_reasons']):
+            out['reason_code'] = 'GROSS_CAP_EXCEEDED'
+    except (KeyError, TypeError, ValueError, ArithmeticError):
+        # Malformed evidence must not replace or expose the original failure.
+        pass
+    return out
+
+
 def consume_batch_policy_once(store, policy, exact_go, go_ms, capture, *, clock):
     """Human-only integration hook, no CLI/automatic caller. One capture only."""
     validate_batch_policy(policy)
@@ -53,14 +116,20 @@ def consume_batch_policy_once(store, policy, exact_go, go_ms, capture, *, clock)
     store = Path(store)
     publish(store / 'batch-policy-claim.json', dict(batch_policy_id=policy['batch_policy_id'],
         exact_go=exact_go, go_ms=go_ms, accepted_ms=clock()))
+    fresh = None
+    stage = 'CAPTURE'
     try:
         fresh, caps = capture()
+        stage = 'COMPILE'
         dossier = compile_after_go(policy['base_policy'], fresh, caps, go_ms=go_ms, now_ms=clock())
+        stage = 'PAYLOAD_VALIDATION'
         payload(dossier['plan'])
+        stage = 'MATERIALIZED_PUBLICATION'
         publish(store / 'batch-materialized.json', dict(batch_policy=policy, dossier=dossier))
         return dossier
     except Exception as exc:
-        publish(store / 'batch-no-send.json', dict(status='NO_SEND', reason=type(exc).__name__, observed_ms=clock()))
+        publish(store / 'batch-no-send.json',
+                _no_send_diagnostic(exc, policy, fresh, stage, clock()))
         raise
 
 

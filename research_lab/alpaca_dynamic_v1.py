@@ -130,6 +130,11 @@ class DynamicBook:
         except BaseException:db.rollback();raise
         finally:db.close()
 
+    def _refresh_window_allowed(self,window,calendar):
+        week=day(window).isocalendar()[:2]
+        first=min(v['open_ms'] for v in calendar if day(v['open_ms']).isocalendar()[:2]==week)
+        return window==self.policy['first_window_ms'] or window==first
+
     def seal_ranking(self,ranking,calendar,now_ms):
         r=json.loads(canonical(ranking));p=self.policy;window=instant(r['window_ms'])
         source_check(p,calendar)
@@ -138,10 +143,8 @@ class DynamicBook:
             or now_ms>=window+300000 or instant(r['source_available_ms'])>now_ms
             or date.fromisoformat(r['signal_session'])>=day(window) or type(r['gate_ok']) is not bool):raise ValueError('INVALID_RANKING')
         current=session_at(calendar,now_ms)
-        week=day(window).isocalendar()[:2]
-        first=min(v['open_ms'] for v in calendar if day(v['open_ms']).isocalendar()[:2]==week)
         prior=[v for v in calendar if v['close_ms']<window]
-        if (not current or current['open_ms']!=window or (window!=p['first_window_ms'] and window!=first)
+        if (not current or current['open_ms']!=window or not self._refresh_window_allowed(window,calendar)
             or not prior or r['signal_session']!=prior[-1]['session'] or r['source_available_ms']<prior[-1]['close_ms']):raise ValueError('INVALID_REFRESH_WINDOW')
         pin(r['input_sha256']);seen=set()
         for pick in r['picks']:

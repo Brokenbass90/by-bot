@@ -401,3 +401,81 @@ def test_old_committed_ws_native_row_does_not_reexpand_stop_on_replay(tmp_path):
     j.append(event('NATIVE_PROTECTION_RESIZE',symbol=s,order_link_id=native['link'],order_id='sl-0',quantity='.5'))
     inbox.project(j)
     assert j.snapshot()['exits'][native['link']]['quantity']=='0.5'
+
+
+def test_no_send_names_validated_gross_cap_and_never_retries_or_sends(tmp_path, monkeypatch):
+    from test_kity_micro_post_go_pricing_v1 import policy, fresh
+    from research_lab.kity_micro_transport_v1 import SourceError
+    fresh_dossier, caps = fresh()
+    p = fresh_dossier['plan']
+    p['reference_gross_usdt'] = '229.584550'
+    p['blocked_reasons'] = ['GROSS_CAP_EXCEEDED', 'SECRET_REMOTE_PAYLOAD=hidden']
+    p['plan_id'] = digest({k: v for k, v in p.items() if k != 'plan_id'})
+    b = batch.make_batch_policy(policy()); captures = []
+    before = copy.deepcopy((b, fresh_dossier, caps))
+    def capture():
+        captures.append(1)
+        return fresh_dossier, caps
+    def forbidden(*args, **kwargs):
+        pytest.fail('diagnostic hook reached a journal or sender')
+    monkeypatch.setattr(batch, 'BatchJournal', forbidden)
+    monkeypatch.setattr(batch, 'BatchSignedPostOnce', forbidden)
+    monkeypatch.setattr(batch, 'dispatch_batch', forbidden)
+    with pytest.raises(SourceError, match='INTENT_REFERENCE_PLAN_BLOCKED'):
+        batch.consume_batch_policy_once(tmp_path, b, batch.GO_PREFIX + b['batch_policy_id'],
+                                        4999800, capture, clock=lambda: 5000001)
+    failure = json.loads((tmp_path / 'batch-no-send.json').read_text())
+    assert failure['reason_code'] == 'GROSS_CAP_EXCEEDED'
+    assert failure['exception_reason_code'] == 'INTENT_REFERENCE_PLAN_BLOCKED'
+    assert failure['exception_type'] == 'SourceError'
+    assert failure['batch_policy_id'] == b['batch_policy_id']
+    assert failure['broker_writes'] == 0
+    assert failure['source_plan']['blocked_reasons'] == ['GROSS_CAP_EXCEEDED']
+    assert failure['source_plan']['reference_gross_usdt'] == '229.584550'
+    assert failure['source_plan']['planned_limit_gross_usdt'] == p['planned_limit_gross_usdt']
+    assert failure['source_plan']['max_gross_usdt'] == '215'
+    assert failure['source_plan']['captured_source_sha256'] == p['captured_source_sha256']
+    assert not (tmp_path / 'batch-materialized.json').exists()
+    with pytest.raises(FileExistsError):
+        batch.consume_batch_policy_once(tmp_path, b, batch.GO_PREFIX + b['batch_policy_id'],
+                                        4999800, capture, clock=lambda: 5000001)
+    assert captures == [1]
+    assert (b, fresh_dossier, caps) == before
+    assert 'SECRET' not in (tmp_path / 'batch-no-send.json').read_text()
+    assert (tmp_path / 'batch-no-send.json').stat().st_size < 4096
+    assert sorted(x.name for x in tmp_path.iterdir()) == ['batch-no-send.json', 'batch-policy-claim.json']
+
+
+def test_no_send_external_exception_text_never_leaks(tmp_path):
+    from test_kity_micro_post_go_pricing_v1 import policy
+    b = batch.make_batch_policy(policy()); calls = []
+    def capture():
+        calls.append(1)
+        raise RuntimeError('SECRET_API_KEY=fixture-secret/raw-response/password')
+    with pytest.raises(RuntimeError):
+        batch.consume_batch_policy_once(tmp_path, b, batch.GO_PREFIX + b['batch_policy_id'],
+                                        4999800, capture, clock=lambda: 5000001)
+    failure = json.loads((tmp_path / 'batch-no-send.json').read_text())
+    assert failure['reason_code'] == 'UNCLASSIFIED_FAILURE'
+    assert failure['exception_type'] == 'RuntimeError'
+    assert failure['stage'] == 'CAPTURE'
+    assert failure['broker_writes'] == 0 and calls == [1]
+    assert 'source_plan' not in failure
+    assert 'SECRET' not in ''.join(x.read_text() for x in tmp_path.iterdir())
+    assert 'fixture-secret' not in ''.join(x.read_text() for x in tmp_path.iterdir())
+
+
+def test_no_send_does_not_trust_remote_code_or_unvalidated_plan(tmp_path, monkeypatch):
+    from test_kity_micro_post_go_pricing_v1 import policy, fresh
+    b = batch.make_batch_policy(policy()); d, caps = fresh()
+    d['plan']['reference_gross_usdt'] = 'SECRET-invalid-money'
+    def fail(*args, **kwargs):
+        raise RuntimeError('INTENT_REFERENCE_PLAN_BLOCKED')
+    monkeypatch.setattr(batch, 'compile_after_go', fail)
+    with pytest.raises(RuntimeError):
+        batch.consume_batch_policy_once(tmp_path, b, batch.GO_PREFIX + b['batch_policy_id'],
+                                        4999800, lambda: (d, caps), clock=lambda: 5000001)
+    failure = json.loads((tmp_path / 'batch-no-send.json').read_text())
+    assert failure['reason_code'] == 'UNCLASSIFIED_FAILURE'
+    assert 'source_plan' not in failure
+    assert 'SECRET' not in (tmp_path / 'batch-no-send.json').read_text()
