@@ -1,12 +1,14 @@
 # Trading OS — Codex master handoff, 17 October 2026
 
-**LATEST engineering delivery:** [TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md](TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md).
-Alpaca57+SPY actualDATA_READY; isolated37-file source/schedule activeORDERSOFF,
-actualVPSbootstrap operationalPASS. IBITv1.1 saved-source adapter39PASS; Brain
-read-only receiver32PASS/realchainsverified but no newV2decision. Money and OS
-lanes run concurrently; LIVE never waits for Brain. Final13:40UTC KITYflat/
-ORDERSOFF/unclaimedpolicy; NETstillopen/DAYexpired/HALT. No financial changes.
-This supersedes the source-pipeline/schedule/IBIT-not-implemented statuses below.
+**LATEST14:20UTC delivery:** [TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md](TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md).
+Code`efd85b6` follows prior5c8454b. Actual same-Mac Brain journals now contain
+13:52UTC Contextv2 +8 decisions/twoV2; full-chain import and unchanged8-row restart
+replay PASS. IBIT six-file GET-only source/timer ACTIVE, actual4-source probePASS,
+81-session historical bootstrap sealed; prospective0/MassiveQA0/no financial GO.
+Alpaca19Oct deterministicNO_SEND/month-end contract; next2Nov14:30UTC.
+Fresh14:20UTC KITYsamePID/ORDERSOFF/flat0/open0/oneunclaimedpolicy; NETstillopen/
+DAYexpired277.69/HALT, allpinsintact. Money and OS lanes remain parallel.
+Earlier dated snapshots below are history; this delivery/board takes precedence.
 
 **Current intake: 09:57:44 UTC / 12:57:44 Cyprus, 17 October.**
 Lead Production Engineer accepts the existing project. This is an evidence-backed
@@ -127,10 +129,10 @@ Actual crontab hash still equals the bound pin:
 |---|---|---|
 | KITY execution | single-owner batch/private WS binding, signed GET readiness, durable recovery/accounting components | actual10/10 fills, full native stops, timing, owned terminal and final accounting not proved |
 | KITY research | first C2 `C2_PASS_MATCH_ONLY`; research reports week1 C1 operational pass | original C1–C3 and second22 Oct event/entry evidence; micro does not validate strategy edge |
-| Alpaca Monthly | independent `ALPACA_STRATEGY_PARITY_PASS`, Claude507f782 for recoveryd205f8f; actual sizing/wire precision fixed | full57-ticker+SPY fresh-source service, monthly selection schedule, daily ratchet/native writer activation/ownership |
+| Alpaca Monthly | independent strategy parityPASS;57+SPY DATA_READY/active ordersOFFsource schedule; native57focusedPASS | physical monetary owner/activation/ownership, actual30Oct selection and next2Nov opening;19Oct forbidden |
 | Elder Hedge | frozen V1.1 source geometry/actual-fill adapter reconciled,24-file disabled VPS kit | real prospective parity≥30 events,97%/95%/latency/restart gates and original ETS2M900 judge; no money transport |
-| IBIT/BTC DATA-ONLY P1 | exact5a23fc3 contract verified; existing ETF calculation/shadow source mapped | raw close timestamp/feed, early-close parity and append-only deferred cross-check semantics need clarification; collector/recovery not implemented; no ten-session PASS |
-| Brain | causal shadow direction and source adapters exist; research says shadowv1.2 runs | production integration/quality not proved; old V1/V1.1 STOP verdicts remain closed |
+| IBIT/BTC DATA-ONLY P1 | v1.107438fc/6-file collector active, real4-source capture/81historical warmup,74testsPASS | first19Oct prospective receipt, Massive explicit key/QA, Claude parity and10sessions; no money authority |
+| Brain | actual13:52Contextv2→8decisions/twoV2→receiver8/restartPASS | per-feature availability, relationships/multi-sleeve policy utility and automatic server delivery; old STOP verdicts remain closed |
 | Factory | existing registry, prereg, QA, farm/judge/storozh components; active research ref | continuous autonomous discovery and end-to-end production promotion not established by module/process presence |
 | Risk | bounded per-lane contracts, original locks, recovery and entry HALT | a unified deployed portfolio allocator is not proved; retain current caps and one-writer ownership |
 | Health | KITY heartbeat and NET DAY timer operational | first actual next-session NET protection confirmation19 Oct; broader degradation/recovery integration |
@@ -177,12 +179,13 @@ launcher after an unclear response; reconcile its existing claim/journal first.
 |---|---|---|---|
 | P0-1 Codex + human: KITY actual micro | WAIT_PERSONAL_INITIATION; account flat, policy unclaimed; last price capture stale | preserve existing one policy/launcher; human initiation only; afterward GET/journal observation of this attempt | actual10/10 entries+native protection, owned terminal/flat, posted costs/finality; before policy expiry17 Oct21UTC, otherwise expire without retry |
 | P0-2 Codex: NET protection | scheduled, actual Monday transition UNKNOWN | existing observer and manager act in their own scopes; review broker stop identity/full qty/floor and monitor gaps |19 Oct13:30UTC /16:30Cyprus; actual broker re-arm/readback, source-bound alert if missing/unknown; no manual runner invocation |
-| P0-3 Codex: Monthly source readiness | engineering OPEN | reuse frozen hourly fetcher/aggregator; isolated orders-OFF source capture/coverage for all57+SPY; freeze hashes, closed-session calendar, missing-data rejection | prepare/check deployment before30 Oct; final selection consumes completed30 Oct session only |
-| P0-4 Codex: Monthly daily operations | engineering OPEN | concrete disabled install/activation packet for selection + daily close source/ratchet + opening DAY readback using existing modules/locks; source and ownership review | operational activation readiness by30 Oct; no new PAPER/statistical gate; actual closed-source/restart/idempotence/failure tests |
+| P0-3 Codex: Monthly source readiness | DATA_READY/source-service ORDERS_OFF operational PASS | existing37-file source timer/capture,57+SPY200-session coverage; do not rebuild | actual30Oct completed source/selection remains future;19Oct mid-month NO_SEND verified |
+| P0-4 Codex: Monthly daily operations | source daily/monthly schedule ACTIVE; native binding tested/disabled | next engineering: concrete disabled financial owner binding/activation packet reusing native primitives/original lock/HALT; no current NET adoption |57focusedPASS; actual monetary transport/owner readiness by30Oct; no new statistics gate |
 | P0-5 Codex/Claude/human: Monthly window | future closed-data and owner gates |30 Oct selection,31 Oct independent source/decision check,1 Nov exact owner GO,2 Nov legacy NET exit if still held then monthly native entry under exact ownership |2 Nov14:30–14:35UTC /16:30–16:35Cyprus; future separate activation, no late/backdated entry |
 | P1-1 Claude/Codex: KITY strategy | original prospective gates OPEN | second22 Oct source/C2 and frozen C1/C3 entry observations, then existing dossier | earliest dossier target23 Oct is conditional, not guaranteed tradable entry or new money authority |
-| P1-IBIT Codex/Claude: DATA-ONLY | contract intake complete, SOURCE_SEMANTICS_OPEN | resolve raw timestamp/official close and early-close parity against frozen shadow, then reuse source/calculation with immutable raw capture/session recovery; see intake delta | engineering fixtures/restart/half-day/no-order proof first; actual10-session contract acceptance separate; never block Money Lane P0 |
+| P1-IBIT Codex/Claude: DATA-ONLY | v1.1 collector+timer ACTIVE, actual4-source probe/81historical warmup PASS | first19Oct prospective SIP/BTC receipt; Massive explicit key missing/QA pending; exact Claude event/z parity and calendar-consecutive10sessions |74focusedPASS; history earns0prospective credit; no trading adapter/money authority |
 | P1-2 Claude/Codex: Elder Hedge | adapter source blockers CLOSED, prospective OPEN | validate newly available first-record geometry/source lineage, count eligible parity events without consuming sealed outcomes; retain original900 gate | evidence thresholds, no invented new weeks/calendar gate; own micro dossier/GO afterward |
+| P1-Brain Codex/Claude | actual8 receipts/twoV2/oneELDER sleeve, restart PASS | existing producer→server delivery and per-feature availability/relationship metadata; no second Brain | policy benefit needs unchanged-opportunity baseline; no outcome/judge run |
 | P1-3 Codex: shared reporting/accounting/health | integration OPEN | read existing journals into existing ReportEvent/OpportunityV2 with immutable source hashes/ownership, explicit mode and costs; nonblocking renderer/read-only view | reproducible actual-terminal replay; no duplicate trading journal/second writer/web credentials |
 | P2 Claude/Codex: Factory/AI/serverization | bounded backlog | reuse existing workers/contracts, data QA and proposal-only challengers; isolate versioned candidate/review/rollback | no automatic LIVE code/risk/policy promotion; follow P0 without waiting for full OS |
 
@@ -204,8 +207,9 @@ sleeves with one owner per account, correct execution/native protection,
 reconciliation, restart-safe recovery, actual net accounting and understandable
 health/reporting. Start with the existing Alpaca Monthly candidate and KITY's
 separate execution/strategy gates; Elder is the next portfolio hedge candidate.
-The end state adds context/Portfolio Brain, reusable Factory challengers,
-degradation control and advisory AI across markets. Earlier failed Brain
+Context/Portfolio Brain, shared journals/analytics and Factory develop in parallel
+with that money path; the current real shadow integration is one such step. The
+end state adds bounded allocation, degradation control and advisory AI across markets. Earlier failed Brain
 policies do not invalidate that architecture and do not acquire new authority.
 
 Fastest path: reuse current primitives, finish deterministic engineering now,

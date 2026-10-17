@@ -1,0 +1,32 @@
+{
+  "commands": [
+    ".venv/bin/python -m pytest -q tests/test_ibit_btc_collector_v1.py tests/test_ibit_btc_history_seed_v1.py tests/test_ibit_btc_data_only_v1.py tests/test_run_ibit_btc_source_ops_v1.py",
+    ".venv/bin/python -m pytest -q tests/test_alpaca_monthly_binding_v1.py tests/test_alpaca_monthly_native_binding_v1.py tests/test_alpaca_monthly_sizing_parity_v1.py tests/test_alpaca_monthly_source_ops_v1.py",
+    ".venv/bin/python -m pytest -q tests/test_brain_shadow_readonly_bridge_v1.py"
+  ],
+  "financial_authority_changed": false,
+  "focused_passes": 163,
+  "foreign_allowlist_sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e",
+  "full_suite_rerun": false,
+  "logs": {
+    "brain-pm-focused.log": {
+      "last_line": "32 passed in 0.31s",
+      "sha256": "3dede3490154fbc25b89a71c3133b94023b4c2dff4e65d1e09c523cd876ecc8a"
+    },
+    "ibit-collector-final.log": {
+      "last_line": "74 passed in 1.94s",
+      "sha256": "abf7d208c045ec623adf47343347f9555acc607a61c61ab2f4667e310b95aec8"
+    },
+    "ibit-warmup-red.log": {
+      "last_line": "11 failed in 0.30s",
+      "sha256": "ac4be5b1c2df9a3afca5dc58f7b88ae3ac16901123c8d8acb3e16a15e3bbf523"
+    },
+    "pm-money-focused.log": {
+      "last_line": "57 passed in 88.94s (0:01:28)",
+      "sha256": "5d35feeae56566b1dc5bc90d8cbffe34a62306e203552a7438a99e5ea8717252"
+    }
+  },
+  "prior_full_suite": "5474PASS/60FAIL_NOT_GREEN",
+  "review": "ROOT_ONLY_NO_NEW_INDEPENDENT_FINANCIAL_REVIEW",
+  "status": "FOCUSED_PASS"
+}

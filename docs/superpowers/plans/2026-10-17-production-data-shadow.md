@@ -64,3 +64,20 @@ metadata; producer UNKNOWN remains UNKNOWN and no frozen policy is repaired.
 Code: ab68e36 /9fcb4cb /9177b75. Receipt/document publication follows in the
 same bounded cycle. Actual Brain V2 event remains external/input pending, not
 fabricated by importing old history; IBIT collector/10 sessions remain separate.
+
+## Authorized continuation after Claude/PM actual-event report
+
+- [x] Recheck same producer journals after13:52UTC; actual8 events/twoV2 received,
+      full-chain validation and restart replay without duplicates. No outcomes.
+- [x] Deterministic Monthly Oct19 NO_SEND/month-end contract receipt; existing
+      nativeDAY/ratchet/restart/foreignNET/sizing checks,57PASS; conditional KITY
+      Oct22/23 dossier filled with exact proved/open gates, no money command.
+- [x] Fixed GET-only IBIT collector, immutable first network captures, delayedQA
+      provider→normalizedQA link, typed errors, disk limits, capture-only probe.
+- [x] Immutable historical81-session seed before forward decisions; real receipt
+      causality/raw lineage, no backfilled freshness/QA/prospective credit or
+      frozen rule change; avoid61new-session wait.74IBITfocusedPASS.
+- [x] Isolated six-file DATA-only VPS source package and timer; actual16Oct probe
+      four sourcesCAPTURED, errors0, decisions0,97financial/sourcepins preserved.
+- [x] Actual81historical network bootstrap, restart readback, final preservation
+      receipt and canonical publication; no future-event PASS.

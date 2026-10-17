@@ -1,0 +1,23 @@
+{
+  "capture_kind": "HISTORICAL_RETRIEVAL_NOT_PROSPECTIVE",
+  "decision": null,
+  "errors": {},
+  "orders_enabled": false,
+  "qa": null,
+  "source_health": {
+    "alpaca_sip": "CAPTURED",
+    "binance": "CAPTURED",
+    "bybit": "CAPTURED",
+    "calendar": "CAPTURED"
+  },
+  "status": "CAPTURE_ONLY",
+  "warmup": {
+    "full_window_prior_sessions": 80,
+    "historical_seed_sessions": 0,
+    "historical_seed_sha": null,
+    "minimum_total_sessions_for_z": 61,
+    "status": "WARMUP_INCOMPLETE",
+    "valid_forward_sessions": 0,
+    "valid_sessions": 0
+  }
+}

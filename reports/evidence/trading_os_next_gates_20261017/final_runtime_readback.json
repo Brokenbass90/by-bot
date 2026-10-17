@@ -1,0 +1,152 @@
+{
+  "alpaca": {
+    "account_lock_inode": 813893,
+    "entry_halt_present": true,
+    "monthly_files": 32,
+    "monthly_mismatches": [],
+    "monthly_transport_bound": false,
+    "open_orders_count": 0,
+    "positions": [
+      {
+        "qty": "0.325167779",
+        "side": "long",
+        "symbol": "NET"
+      }
+    ],
+    "source_pins_verified": 95,
+    "stop_price": "277.69",
+    "stop_status": "expired"
+  },
+  "broker_writes": 0,
+  "financial_units_changed": 0,
+  "ibit_source": {
+    "bootstrap": {
+      "QA_passes_claimed": 0,
+      "broker_calendar_sha256": "5bfc14f9db77b4e9dd5e838b54da051239ab3235a2155ec6778efab3692e9053",
+      "broker_writes": 0,
+      "capture_manifest_sha256": "827aace7298a0bae0a46229112320d350b47ec7cba89b45491b72757681c8c20",
+      "completed_at": "2026-10-17T14:19:20.430729+00:00",
+      "decision_rows": 0,
+      "first_session": "2026-06-24",
+      "historical_bundle_semantics": "AGGREGATE_OF_UNCHANGED_PER_SESSION_NETWORK_RESPONSES_WITH_ACTUAL_AVAILABILITY",
+      "last_session": "2026-10-16",
+      "max_historical_btc_basis": 0.0007521524640856647,
+      "orders_enabled": false,
+      "outcomes_evaluated": false,
+      "prospective_sessions": 0,
+      "schema": "IBIT_HISTORICAL_NETWORK_BOOTSTRAP_V1",
+      "seed_sha": "bbdc5ece9d50cb14e9f30a6a5b6d53aa33a7230094b6a50fa09ed1e129ab2694",
+      "sessions": 81,
+      "source_received_at": {
+        "alpaca_sip": "2026-10-17T14:19:17.811738+00:00",
+        "binance": "2026-10-17T14:19:18.650053+00:00",
+        "calendar": "2026-10-17T14:19:16.974139+00:00"
+      },
+      "source_sha": {
+        "alpaca_sip": "2c36315f9341c9002c9ab4f8f894ce18b44d1609c6962a79ea2f6e29d968c9cc",
+        "binance": "28f20340cbacafc8b60554f921a974ef2ecbdd0f0480393691574e3dad4ebd0a",
+        "calendar": "a7ed8fb69452cb72f44538c805db160ad4c952f1d8570b9b14d128318c73b6d6"
+      },
+      "started_at": "2026-10-17T14:15:51.641067+00:00",
+      "status": "HISTORICAL_WARMUP_READY"
+    },
+    "broker_writes": 0,
+    "decisions": 0,
+    "historical_seed": {
+      "orders_enabled": false,
+      "prospective_sessions": 0,
+      "seed_sha": "bbdc5ece9d50cb14e9f30a6a5b6d53aa33a7230094b6a50fa09ed1e129ab2694",
+      "sessions": 81,
+      "status": "HISTORICAL_WARMUP_ONLY"
+    },
+    "massive_explicit_profile_key_present": false,
+    "probe_captures": {
+      "alpaca_sip": {
+        "body_sha": "137464b9ba5dee7ece8e41bb46ead4aed9caba9aad3522c243ad3cf7d6e39301",
+        "http_status": 200,
+        "provider_canonical_raw_sha": "137464b9ba5dee7ece8e41bb46ead4aed9caba9aad3522c243ad3cf7d6e39301",
+        "received_at": "2026-10-17T14:14:47.397825+00:00",
+        "received_at_ms": 1792246487397,
+        "request_sha": "92005950a331b0ded1fae920f27dba6ba37b9ab4549e295bbdd7312280a292eb",
+        "session": "2026-10-16",
+        "source": "alpaca_sip"
+      },
+      "binance": {
+        "body_sha": "ff53e0cebb595c6a39ff11f3bb971d14e1638e2eaefdda054b28490783d767ec",
+        "http_status": 200,
+        "provider_canonical_raw_sha": "ff53e0cebb595c6a39ff11f3bb971d14e1638e2eaefdda054b28490783d767ec",
+        "received_at": "2026-10-17T14:14:47.715664+00:00",
+        "received_at_ms": 1792246487715,
+        "request_sha": "70eec4257af347d801ef65fcd589a3bb474629f991b43757df63aaad2efee44f",
+        "session": "2026-10-16",
+        "source": "binance"
+      },
+      "bybit": {
+        "body_sha": "f1cc429e2653793d80db824b48b7b1ab2ac32c5965b502dd0dcf12aca5d7bc1a",
+        "http_status": 200,
+        "provider_canonical_raw_sha": "6a89d2d160d1125a5926fa98445002d19b6b46188fa01203a4e0e0e8c0b52bbf",
+        "received_at": "2026-10-17T14:14:47.982020+00:00",
+        "received_at_ms": 1792246487982,
+        "request_sha": "d198b759d0a975f2601542ec655bb7d84d9646be32d0c29eb6193f97bfd33a0f",
+        "session": "2026-10-16",
+        "source": "bybit"
+      },
+      "calendar": {
+        "body_sha": "b8d62abef8d702851af447464e973d10d9dd8da4ecc1147576627880d648a7f0",
+        "http_status": 200,
+        "provider_canonical_raw_sha": "b8d62abef8d702851af447464e973d10d9dd8da4ecc1147576627880d648a7f0",
+        "received_at": "2026-10-17T14:14:46.998784+00:00",
+        "received_at_ms": 1792246486998,
+        "request_sha": "9d105556d6bee5db0ab5da5b6d2f59fc4aab3610065ca04140079e136fea468b",
+        "session": "2026-10-16",
+        "source": "calendar"
+      }
+    },
+    "qa_records": 0,
+    "source_files": 6,
+    "source_mismatches": [],
+    "spec_sha256": "d1a2b879de6e3944c6133202eaaa9959fdb44a60282b96d637a5c4d0e68e4ad0",
+    "units": "Result=success\nExecMainStatus=0\nId=ibit-btc-data-only.service\nActiveState=inactive\nSubState=dead\n\nNextElapseUSecRealtime=Mon 2026-10-19 17:16:00 UTC\nResult=success\nId=ibit-btc-data-only.timer\nActiveState=active\nSubState=waiting\n"
+  },
+  "kity": {
+    "account_lock_inode": 818853,
+    "guard_files": 155,
+    "guard_mismatches": [],
+    "heartbeat": {
+      "account_lock_inode": 818853,
+      "active_plan_id": null,
+      "at_ms": 1792246804545,
+      "error": null,
+      "execution_contract": "KITY_TEN_NATIVE_GUARDED_BATCH_V1",
+      "mode": "ORDERS_OFF",
+      "money_config_enabled": false,
+      "phase": "NO_ACTIVE_PLAN",
+      "pid": 2440673,
+      "private_authenticated": true,
+      "private_connected": true,
+      "private_last_receive_ms": 1792246800946,
+      "private_subscribed": true,
+      "schema": "kity_micro_owner_heartbeat_v1",
+      "state": null,
+      "trading_post_attempts": 34
+    },
+    "money_go": false,
+    "open_orders_count": 0,
+    "policy_claim_count": 0,
+    "policy_count": 1,
+    "positions": [],
+    "selected": false,
+    "source_files": 23,
+    "source_mismatches": [],
+    "wire_records": 34
+  },
+  "notifications_sent": 0,
+  "observed_utc": "2026-10-17T14:20:09.061000+00:00",
+  "private_raw_sha256": "cdc486e9042d484a9b2bc55c5602c22fd21bf878d7127654a102d2b48eb69304",
+  "source_ops": {
+    "source_files": 37,
+    "source_mismatches": [],
+    "spec_sha256": "73b37f25da947e16a905bac1c59ed86a2230a47fe467694246ae2c1dfa2b5154",
+    "units": "Result=success\nExecMainStatus=0\nId=alpaca-monthly-source-ops.service\nActiveState=inactive\nSubState=dead\n\nNextElapseUSecRealtime=Mon 2026-10-19 17:20:00 UTC\nResult=success\nId=alpaca-monthly-source-ops.timer\nActiveState=active\nSubState=waiting\n"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "Brain": {
+    "financial_executions": 0,
+    "financial_pnl": "NOT_APPLICABLE_SHADOW_ONLY",
+    "receipts": 8,
+    "sleeves": 1,
+    "v2_decisions": 2
+  },
+  "IBIT": {
+    "historical_sessions": 81,
+    "massive_qa": "PENDING_SVERKA_EXPLICIT_KEY_NOT_SUPPLIED",
+    "prospective_sessions": 0
+  },
+  "KITY": {
+    "actual_10_of_10": "OPEN",
+    "new_attempt_observed": false,
+    "open_orders": 0,
+    "positions": 0
+  },
+  "NET": {
+    "accepted_floor_reference": "277.69",
+    "active_broker_stop_confirmed": false,
+    "average_entry_price_usd": "311.222",
+    "broker_mark_usd": "296.3",
+    "broker_unrealized_pl_usd": "-4.852154",
+    "current_stop_status": "expired",
+    "effective_open_risk_including_gap": "UNKNOWN",
+    "fees": "UNKNOWN",
+    "funding": "UNKNOWN",
+    "mark_is_live_trade": false,
+    "qty": "0.325167779",
+    "realized_gross_pnl": "UNKNOWN",
+    "realized_net_pnl": "UNKNOWN",
+    "regular_session": false,
+    "symbol": "NET"
+  },
+  "financial_ledger_created": false,
+  "financial_source": "BROKER_GET_NOT_SHADOW_PROPOSALS",
+  "observed_utc": "2026-10-17T14:20:09.061000+00:00",
+  "orders_enabled": false,
+  "schema": "TRADING_OS_READONLY_OBSERVABILITY_RECEIPT_V1",
+  "source_runtime_sha256": "cdc486e9042d484a9b2bc55c5602c22fd21bf878d7127654a102d2b48eb69304"
+}

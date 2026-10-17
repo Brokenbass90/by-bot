@@ -1,0 +1,30 @@
+{
+  "QA_passes_claimed": 0,
+  "broker_calendar_sha256": "5bfc14f9db77b4e9dd5e838b54da051239ab3235a2155ec6778efab3692e9053",
+  "broker_writes": 0,
+  "capture_manifest_sha256": "827aace7298a0bae0a46229112320d350b47ec7cba89b45491b72757681c8c20",
+  "completed_at": "2026-10-17T14:19:20.430729+00:00",
+  "decision_rows": 0,
+  "first_session": "2026-06-24",
+  "historical_bundle_semantics": "AGGREGATE_OF_UNCHANGED_PER_SESSION_NETWORK_RESPONSES_WITH_ACTUAL_AVAILABILITY",
+  "last_session": "2026-10-16",
+  "max_historical_btc_basis": 0.0007521524640856647,
+  "orders_enabled": false,
+  "outcomes_evaluated": false,
+  "prospective_sessions": 0,
+  "schema": "IBIT_HISTORICAL_NETWORK_BOOTSTRAP_V1",
+  "seed_sha": "bbdc5ece9d50cb14e9f30a6a5b6d53aa33a7230094b6a50fa09ed1e129ab2694",
+  "sessions": 81,
+  "source_received_at": {
+    "alpaca_sip": "2026-10-17T14:19:17.811738+00:00",
+    "binance": "2026-10-17T14:19:18.650053+00:00",
+    "calendar": "2026-10-17T14:19:16.974139+00:00"
+  },
+  "source_sha": {
+    "alpaca_sip": "2c36315f9341c9002c9ab4f8f894ce18b44d1609c6962a79ea2f6e29d968c9cc",
+    "binance": "28f20340cbacafc8b60554f921a974ef2ecbdd0f0480393691574e3dad4ebd0a",
+    "calendar": "a7ed8fb69452cb72f44538c805db160ad4c952f1d8570b9b14d128318c73b6d6"
+  },
+  "started_at": "2026-10-17T14:15:51.641067+00:00",
+  "status": "HISTORICAL_WARMUP_READY"
+}

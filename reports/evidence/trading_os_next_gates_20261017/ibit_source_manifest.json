@@ -1,0 +1,12 @@
+{
+  "files": {
+    "research_lab/ibit_btc_collector_v1.py": "5be75eb0ecced69c50c56e9247c9559827bd363c8d240b6ebb32a46ec170ba37",
+    "research_lab/ibit_btc_data_only_v1.py": "43ae4fe8e8915f414d99e51046f36fb5e8179339cd022e01a886efd6a1c9e19a",
+    "research_lab/vendor/etf_premiya_20261017/etf_premiya_sobytiya.py": "48d57d4ca06dbfe634e22c2435f1d2c1ddff83d18f8ea9fe95858c1987c48906",
+    "scripts/collect_ibit_btc_data_only_v1.py": "a93e48a5945846e8d7d1bf379cbc78633d5e4020065deba3aeab46c455cf046d",
+    "scripts/run_ibit_btc_data_only_v1.py": "0d141b09c680aad867f9f57705ca8570e88c66197dbc240132b428df36f5e3a6",
+    "scripts/run_ibit_btc_source_ops_v1.py": "81c57c8407a63c527ebb02532284f9414ab40af1f55126ba35475ebf095844d9"
+  },
+  "orders_enabled": false,
+  "schema": "IBIT_DATA_ONLY_SOURCE_PACKAGE_V1"
+}

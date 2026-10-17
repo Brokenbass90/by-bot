@@ -1,3 +1,11 @@
+# Latest next-gates delivery — October17 14:20UTC
+
+Read [TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md](TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md),
+then [master board](TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md) and checkpoint TOP.
+Codeefd85b6; Brain actual8/twoV2/restartPASS; IBIT DATA-only timer/actual4source
+probe/81historical warmupPASS, prospective0/MassiveQA pending. Alpaca19Oct NO_SEND,
+next30Oct→2Nov; existing money/KITY/NET gates unchanged. Do not redo source pipeline.
+
 # Latest entrypoint — 17 October 2026
 
 Latest implementation: [data/shadow delivery](TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md).

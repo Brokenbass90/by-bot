@@ -1,0 +1,35 @@
+{
+  "broker_writes": 0,
+  "calendar_sha256": "5bfc14f9db77b4e9dd5e838b54da051239ab3235a2155ec6778efab3692e9053",
+  "entry_close_exclusive_ms": 1793630100000,
+  "entry_open_ms": 1793629800000,
+  "hypothetical_quote_used": false,
+  "live_selection_run": false,
+  "money_authority": false,
+  "next_entry_session": "2026-11-02",
+  "next_signal_session": "2026-10-30",
+  "observed_at": "2026-10-17T14:07:30.901108+00:00",
+  "oct19_counterfactual_time_only": true,
+  "oct19_existing_entry_gate": {
+    "live_deployed": false,
+    "money_authority": false,
+    "orders_allowed": false,
+    "reason": "STALE_SIGNAL_RESELECT_FAIL",
+    "schema": "ALPACA_BASELINE_PARITY_CANDIDATE_V1",
+    "status": "NO_SEND"
+  },
+  "orders_allowed": false,
+  "pending": [
+    "ACTUAL_OCT30_CLOSED_SOURCE_SELECTION",
+    "OCT31_INDEPENDENT_SOURCE_SELECTION_REVIEW",
+    "NOV01_OWNER_GO",
+    "NATIVE_CREDENTIAL_TRANSPORT_PHYSICAL_BINDING_UNDER_ORIGINAL_LOCK_HALT",
+    "LEGACY_NET_RECONCILED_NO_ADOPTION",
+    "FRESH_BROKER_NATIVE_READBACK_AND_RESTART_BEFORE_ENTRY"
+  ],
+  "schema": "MONTHLY_NEXT_MONETARY_WINDOW_READONLY_V1",
+  "signal_close_ms": 1793390400000,
+  "source_available_ms": 1792243721133,
+  "source_id": "d1f065d620226a484785c41af88a898561a1b9375765d2ce8de7e6a0d148a9b7",
+  "status": "OCT19_NO_SEND_FROZEN_CONTRACT"
+}

@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 14:20UTC NEXT-GATES DELIVERY: TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md.
+Codeefd85b6: IBIT GET-only collector/sourceops6-fileVPS/timerACTIVE;
+actualcalendar+SIP+Binancespot+BybitcapturePASS, historical81sessionssealed
+withrealavailability, no61new-sessionwait/0prospective/0QA. Exactruleunchanged.
+Specd1a2b879…e68e4ad0/seedbbdc5ece…29ab2694; Massiveexplicitkeynotpresent,
+QAremainsPENDING. Firstforward19Oct; no10session/strategy/monetaryPASS.
+Brain sameMacpath appended13:52UTC Contextv2/twoELDER+8decisions/twoV2;
+fullchain→commonreceiver8PASS/reopen8unchanged. Surfacecausalityonly,
+perfeatureavailabilityUNKNOWN, relationshipsUNKNOWN, nosecondBrain/outcomes.
+Alpaca19OctNO_SEND/STALE_SIGNAL_RESELECT_FAIL frozenmonthendcontract;
+next30Octselection→2Nov14:30UTC.57native/book/source/sizingPASS;
+financialbinding/activationpacket remainsnextP0engineering, noNETadoption.
+Final14:20KITYsamePID/lease/ORDERSOFF/flat0/open0/unclaimedpolicy1/34oldwire;
+NETstill.325167779/DAYexpired277.69/HALT/95pins/V3/37sourcekitintact.
+Actual19OctNETstopgateOPEN; personalKITYpolicyexpires17Oct21UTC.
+74IBIT+32Brain+57Monthly=163focusedPASS; fullsuite notrerun/last60FAIL remain.
+ForeignallowlistSHA365ff7d6…cc2e0e preserved. No financialunit/order/notify change.
+
 October17 13:40UTC IMPLEMENTATION: TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md.
 Alpaca full57+SPY DATA_READY/200sessions/16Octclosed, new37file isolatedsource
 timerACTIVE/actualVPSbootstrap ORDERSOFFoperationalPASS;95NETpins/V3/cron intact.

@@ -1,0 +1,16 @@
+{
+  "broker_writes": 0,
+  "financial_units_changed": 0,
+  "notifications_sent": 0,
+  "observed_ms": 1792246480399,
+  "protected_pins_preserved": 97,
+  "source_files": 6,
+  "source_readback": true,
+  "spec_sha256": "d1a2b879de6e3944c6133202eaaa9959fdb44a60282b96d637a5c4d0e68e4ad0",
+  "status": "IBIT_DATA_ONLY_SCHEDULE_ACTIVE",
+  "unit_sha256": {
+    "ibit-btc-data-only.service": "70ee5aa1b6cf31ddd7ed37daedb14dffef03db96faddc8dcd024487854200b37",
+    "ibit-btc-data-only.timer": "9a801f3b0d6fc2ad7f8af2c14dd86091a398659049a23d359761ea4ac8a2a745"
+  },
+  "unit_state": "Result=success\nExecMainStatus=0\nId=ibit-btc-data-only.service\nActiveState=inactive\nSubState=dead\n\nNextElapseUSecRealtime=Mon 2026-10-19 17:16:00 UTC\nResult=success\nId=ibit-btc-data-only.timer\nActiveState=active\nSubState=waiting\n"
+}

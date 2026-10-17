@@ -1,0 +1,156 @@
+{
+  "event_summary": [
+    {
+      "action": "UNKNOWN",
+      "context_sha256": "a62d690067d73bb6d4f55bbcbafe7dfe6887d6f4d12900fbb294c6f8b67e0282",
+      "context_version": "ContextRecord v2",
+      "opp_id": "bfb9a85885aad41dd4700c2bee892a34",
+      "opportunity_row_sha256": "d848ef82d49a437b09382063cbb09ace2708ad759441e7e50e7cd28645765ebc",
+      "policy": "BASELINE_V1",
+      "receipt_sha256": "8ed1559b924b8a3ed68232b63852a3c8d3136991d692cd834600e87d27c444d3",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "bf8fdd739904f031e3c82b71d36ae347a8e65bf180de9c12c9b8476513e19e21",
+      "ts": 1792245149228
+    },
+    {
+      "action": "UNKNOWN",
+      "context_sha256": "a62d690067d73bb6d4f55bbcbafe7dfe6887d6f4d12900fbb294c6f8b67e0282",
+      "context_version": "ContextRecord v2",
+      "opp_id": "bfb9a85885aad41dd4700c2bee892a34",
+      "opportunity_row_sha256": "d848ef82d49a437b09382063cbb09ace2708ad759441e7e50e7cd28645765ebc",
+      "policy": "BRAIN_V1",
+      "receipt_sha256": "e3a11b96af574d1887808921e0c064d8c246665f4596fe16dced8a07a8cb8b17",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "4a27161a55da9a4997d5a7b69fe1574fcfa9a04cc1bac562d2cf3e6801408517",
+      "ts": 1792245149228
+    },
+    {
+      "action": "UNKNOWN",
+      "context_sha256": "a62d690067d73bb6d4f55bbcbafe7dfe6887d6f4d12900fbb294c6f8b67e0282",
+      "context_version": "ContextRecord v2",
+      "opp_id": "bfb9a85885aad41dd4700c2bee892a34",
+      "opportunity_row_sha256": "d848ef82d49a437b09382063cbb09ace2708ad759441e7e50e7cd28645765ebc",
+      "policy": "HEDGE_V1",
+      "receipt_sha256": "f3907eb5b7510ddd095b699b2398cb8566b391538e2ba9c6b18ca584752bd100",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "956cc8b2ea3787a862054f46a2a406c1813870d83dcfa873f2ba0df8d2e1ab7e",
+      "ts": 1792245149228
+    },
+    {
+      "action": "HEDGE",
+      "context_sha256": "a62d690067d73bb6d4f55bbcbafe7dfe6887d6f4d12900fbb294c6f8b67e0282",
+      "context_version": "ContextRecord v2",
+      "opp_id": "bfb9a85885aad41dd4700c2bee892a34",
+      "opportunity_row_sha256": "d848ef82d49a437b09382063cbb09ace2708ad759441e7e50e7cd28645765ebc",
+      "policy": "BRAIN_V2_DET",
+      "receipt_sha256": "4309b5038976f875c6a922cdfa1b03113c2581200a630ce8a578d6d2bb815e3d",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "cdc90b52853d4b1883dac3dc93a17f1b62da691f0c8319cc8aa3413ea7440eb8",
+      "ts": 1792245149229
+    },
+    {
+      "action": "UNKNOWN",
+      "context_sha256": "3aa9520292af9a34c366bf65595cff24c3c1a21857cd5864ba30fc35ef8fb9bb",
+      "context_version": "ContextRecord v2",
+      "opp_id": "1ff69a9f06521950c58390e001912d76",
+      "opportunity_row_sha256": "fc0c3609ebfba7622d8fc206d6e80edcc00ce29507d4e3d6af2bfe2c449506c2",
+      "policy": "BASELINE_V1",
+      "receipt_sha256": "1a7acd6c195651d1fc7485ca79aa7b88819326abb60fd24324efcb19ad5a904c",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "55147b5093584cd44d0f59b7a891e1334551313dfbcee9768f55ea3e90ec36de",
+      "ts": 1792245149229
+    },
+    {
+      "action": "UNKNOWN",
+      "context_sha256": "3aa9520292af9a34c366bf65595cff24c3c1a21857cd5864ba30fc35ef8fb9bb",
+      "context_version": "ContextRecord v2",
+      "opp_id": "1ff69a9f06521950c58390e001912d76",
+      "opportunity_row_sha256": "fc0c3609ebfba7622d8fc206d6e80edcc00ce29507d4e3d6af2bfe2c449506c2",
+      "policy": "BRAIN_V1",
+      "receipt_sha256": "9a6942873eb0b5227bbc08c7ebff69c515b36709c3adca17ee0cee2e9d4398ad",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "238ad2e5d771b848651a5465b034d63940faf684a906f6723977f838b94db55a",
+      "ts": 1792245149229
+    },
+    {
+      "action": "UNKNOWN",
+      "context_sha256": "3aa9520292af9a34c366bf65595cff24c3c1a21857cd5864ba30fc35ef8fb9bb",
+      "context_version": "ContextRecord v2",
+      "opp_id": "1ff69a9f06521950c58390e001912d76",
+      "opportunity_row_sha256": "fc0c3609ebfba7622d8fc206d6e80edcc00ce29507d4e3d6af2bfe2c449506c2",
+      "policy": "HEDGE_V1",
+      "receipt_sha256": "e240e3c508b2ef175627ca61aee1f0e983783193be34949304f88f64bf2c50d6",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "3373aea58c839502b8064db8ad24e7c0799a69824a1c064d041a4a93a2c69f2c",
+      "ts": 1792245149229
+    },
+    {
+      "action": "UNKNOWN",
+      "context_sha256": "3aa9520292af9a34c366bf65595cff24c3c1a21857cd5864ba30fc35ef8fb9bb",
+      "context_version": "ContextRecord v2",
+      "opp_id": "1ff69a9f06521950c58390e001912d76",
+      "opportunity_row_sha256": "fc0c3609ebfba7622d8fc206d6e80edcc00ce29507d4e3d6af2bfe2c449506c2",
+      "policy": "BRAIN_V2_DET",
+      "receipt_sha256": "c37355813062ded513a0838cd93d3fcf92351343744c37d686edb6719d52b919",
+      "relationship": "UNKNOWN",
+      "sleeve": "ELDER",
+      "source_row_sha256": "2ce30e637dc56e36732233da2f151604ed03b8cfcd790cd7164c336d703c3b9c",
+      "ts": 1792245149229
+    }
+  ],
+  "events": 8,
+  "money_authority": false,
+  "multi_sleeve_cycle_proved": false,
+  "observed_at": "2026-10-17T14:05:06.044258+00:00",
+  "outcomes_read": false,
+  "policies": {
+    "BASELINE_V1": 2,
+    "BRAIN_V1": 2,
+    "BRAIN_V2_DET": 2,
+    "HEDGE_V1": 2
+  },
+  "registry_sha256": "e9667b59c42254488916226349cf1e0d74fc78d6ab335a470bd516c5096888e3",
+  "replay": {
+    "execution_authority": false,
+    "journal_bytes_unchanged": true,
+    "journal_rows": 8,
+    "journal_sha256": "49bbca6ac9ffbbabdf1d06e8be731d66923b5686916b055e3ff412517caab4a2",
+    "outcomes_read": false,
+    "returned_receipts": 8,
+    "status": "ACTUAL_RESTART_REPLAY_PASS"
+  },
+  "source": {
+    "decisions.jsonl": {
+      "bytes": 25516170,
+      "last_recorded_ms": 1792245149229,
+      "path": "Mac:bybit-bot-clean-v28/research_lab/data/brain_shadow_v1/decisions.jsonl",
+      "policies": {
+        "BASELINE_V1": 20916,
+        "BRAIN_V1": 20916,
+        "BRAIN_V2_DET": 2,
+        "HEDGE_V1": 20916
+      },
+      "post_intake_decisions": 8,
+      "rows": 62750,
+      "sha256": "700c2dac24034f9412cb3a816381e83d87c7555ab0d4fd8554009c25474022e5",
+      "tail_hash": "2ce30e637dc56e36732233da2f151604ed03b8cfcd790cd7164c336d703c3b9c"
+    },
+    "opportunities.jsonl": {
+      "bytes": 28544599,
+      "last_recorded_ms": 1792245149124,
+      "path": "Mac:bybit-bot-clean-v28/research_lab/data/brain_shadow_v1/opportunities.jsonl",
+      "rows": 20916,
+      "sha256": "f1338732595cf86309c82a25284694748d9f7cf423df274b7f44ee9d675dc3ae",
+      "tail_hash": "fc0c3609ebfba7622d8fc206d6e80edcc00ce29507d4e3d6af2bfe2c449506c2"
+    }
+  },
+  "source_availability_limit": "SOURCE_TIMESTAMPS_ONLY_NOT_PER_FEATURE",
+  "status": "ACTUAL_CAUSAL_SHADOW_IMPORT_PASS"
+}

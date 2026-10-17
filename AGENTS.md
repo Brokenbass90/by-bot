@@ -1078,3 +1078,24 @@ Before broad pytest, snapshot the foreign untracked allowlist log bytes. The
 suite has known append side effects. Archive own test mutations, verify the
 original prefix before restoring it, and never discard owner changes. The
 Oct17 run's four test rows were archived and original SHA365ff7d6…cc2e0e restored.
+
+
+## October17 next-gates / actual Brain and IBIT source delivery
+
+Read checkpointTOP and TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md. Supersedes
+AWAIT_V2_EVENT: sameMacproducer appended13:52UTC, actual8receiverreceipts/twoV2,
+oneELDERsleeve/reopenunchanged. SurfacecausalfieldschainPASS, no perfeature
+availability/relationship/multi-sleeve policyutility or financialPASS inferred.
+IBITefd85b6 six-file GET-only kit/timerACTIVE, actual4sourcesCAPTURED/errors0;
+historical81sessions June24-Oct16 sealed14:19UTC withactualreceipts. Seednever
+countsasprospective/freshness/QA and mustexistbeforeforwarddecisions, frozenrule
+unchanged. Specd1a2b879…e68e4ad0, seedbbdc5ece…29ab2694. Firstforward19Oct;
+Massiveexplicitprofilekeyabsent/QA PENDING, no credentialdiscovery/fallback.
+No61-new-sessionwait.74IBIT/32Brain/57MonthlyfocusedPASS; fullsuite notrerun.
+Monthly19Oct actualcalendardeterministic NO_SEND/STALE_SIGNAL_RESELECT_FAIL,
+next30Oct→2Nov14:30UTC. Nativefinancialbinding/ownerpacket remainsnextengineering;
+source37kit completedalready, currentNETnotadopted. Final14:20KITYORDERSOFF/
+flat0/open0/unclaimed1policy/old34wire; NET.325167779/DAYexpired277.69/HALT.
+Keeporiginal moneywriters/locks/95pins/V3/ATT1/LIQ/Claude/foreignallowlist intact.
+ExistingKITYpersonalpolicyexpires17Oct21UTC; neverrunownerlauncher ormintanother.
+No financialunitschanged/brokerwrites/notifications. OnlynewDATAunits activated.
