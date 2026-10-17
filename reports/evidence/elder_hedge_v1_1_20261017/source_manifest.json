@@ -1,0 +1,28 @@
+{
+  "actual_source_rows_consumed": 0,
+  "contract_path": "research_lab/ELDER_CRASH_HEDGE_V1_1_UTOCHNENIE_2026_10_17.md",
+  "contract_sha256": "a25e4af2239cfba738b1f9c88f522060fdca810efd97cbff856f85af3fea3a28",
+  "fixture": {
+    "assignment_sha256": "498d367870380163a7d3c0d3a35bbe2856c7b5d923a7cca5de4c817f5a3cb19c",
+    "origin": "ONLY geom AST assignment from pinned ten.py, synthetic inputs, no producer import",
+    "path": "tests/fixtures/elder_geom_first_record_v1_1.json",
+    "sha256": "0e0698ebf889924f12a7a10865f3cd831ff3c69da7b2a6d2f3c9e31d07990f8e"
+  },
+  "frozen_fill_function_sha256": "54a962ba22d4a9bf2490bf23874706dfefa3feacecff3b351d110c476d474946",
+  "frozen_fill_yadro_sha256": "b413a48f67158ccb4a69c769bb1114065468a9610eace7d367400555d4821b66",
+  "judge_runs": 0,
+  "old_records_backfilled": false,
+  "orders_allowed": false,
+  "outcomes_consumed": 0,
+  "producer_path": "research_lab/ten.py",
+  "producer_process_readonly": {
+    "in_memory_hash_proven": false,
+    "pid": 16945,
+    "restart_by_agent": false,
+    "start_cyprus": "2026-10-17 11:09:53"
+  },
+  "producer_sha256": "2eb740e6a3c0df0d72b1c40a92ab8a1b5cec920d1ae6200f70e66e4c6d988d6f",
+  "real_events_credited": 0,
+  "research_commit": "57a09dbd5e8d41814e053c18fb6cc617a8880ed2",
+  "status": "VERSIONED_SOURCE_CONTRACT_VERIFIED"
+}

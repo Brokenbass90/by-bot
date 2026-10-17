@@ -1,5 +1,12 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT Oct17 08:33UTC: checkpoint TOP → ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md.
+Research57a09db clarifiedCONTROLactualfill and firstgeom; both sourceblockers
+closed.39targetedPASS/new24-filedisabledkit/readbackPASS, no realrows/outcomes/
+moneyauthority. UseralreadyrestartedETS2S; no Codexrestart. KITY7351514 now
+sameunitbatch/WS ORDERSOFF/173PASS, notactual10/10PASS. No oldpolicy/70s reuse,
+NETclose/migration/HALTclear or Claudeproductionauthorization inferred.
+
 CURRENT Oct17 08:30UTC: checkpoint TOP → KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md.
 KITY sameowner unit now batch/privateWS, HEALTHY/ORDERSOFF,173targetedPASS.
 Real GET-only PREPARE207.953940/commonCTS2sPASS;0newpolicies/intents/POST.

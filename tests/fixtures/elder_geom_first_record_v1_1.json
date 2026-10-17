@@ -1,0 +1,26 @@
+{
+  "geom": {
+    "bar_ts_eref": 7200000,
+    "bar_ts_signal": 3600000,
+    "e_ref": 100.0,
+    "f1": 0.55,
+    "max_lev": 100,
+    "raw_sl": 102.0,
+    "raw_tps": [
+      96.0,
+      90.0
+    ],
+    "ref_close": 100.0,
+    "rr1": 0.5,
+    "rr2": 1.25,
+    "sl_w": 108.0,
+    "stop_dolya": 0.08,
+    "stop_x": 4.0,
+    "v": 1
+  },
+  "side": "short",
+  "sym": "BTCUSDT",
+  "ts": 3600000,
+  "vovremya": true,
+  "zapisano": 7200000
+}

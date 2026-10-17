@@ -1,5 +1,26 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 08:33UTC CURRENT: ELDER_HEDGE_V1_1_SOURCE_CONTRACT_RECONCILED_ORDERS_OFF.
+Read ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md. Claude research57a09db
+local/origin verified; contracta25e4af2…fea3a28, ten.py2eb740e6…88d6f.
+User restarted ETS2S PID16945/start11:09:53Cyprus; Codex did not restart it.
+Actualgeom first-record schema+zapisanoavailability now consumed; oldrecords
+withoutgeom stillBLOCK/no terminalbackfill. CONTROL stop/targets from actual
+fill, rawsp/k with diagnosticchecks, shortnativeSL floors/notfarther. Pure
+bind_actual_fill flags improved-fill monetaryrisk overshoot, neverexpandsrisk.
+39targetedPASS, syntheticfixture from exact producerASTassignment;0actualsource
+rows/outcomes/judge/creditedevents. New24-fileVPSkit disabledcandidate236629be…,
+spec2b5785ab…184e700c, independenthashreadbackPASS; no service/sender/moneypolicy.
+Oldtwo sourceblockers resolved, previoussourceBLOCKED below is dated history.
+Actualprospectiveparity/moneyreadiness NOTclaimed. Frozen30/97%/95%/latency/
+restart/ETS2M900 gates unchanged; validate newgeom events as they arrive, no
+inventedOct30 wait. StandaloneElderKILL. KITY7351514 sameunitbatch/WS bound
+HEALTHY/ORDERSOFF,173targetedPASS/actualPREPARE207.953940; no actual10/10PASS,
+newpolicy ormoneyGO. Do not redo binding or reuse9051/spentGO/70s. AlpacaDAY
+activeGETonly; V3disabled/HALT/currentNETmaintenance unchanged. ClaudeETFhooks/
+Farside/Nov2NETclose proposals are not money/productionauthority. Preserve
+Claudecheckout/processes/ATT1/LIQ/foreignallowlist; root-only finalreview.
+
 October17 08:30UTC CURRENT: KITY_BATCH_WS_PRODUCTION_BOUND_ORDERS_OFF.
 Read KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md. Same productionunit now
 selects23-file batch/WS service; PID2440673/NRestarts0/HEALTHY/ORDERSOFF,

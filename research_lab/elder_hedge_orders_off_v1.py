@@ -19,6 +19,7 @@ from research_lab.elder_hedge_frozen_fill_v1 import ispolnenie
 H = 3600000
 STRATEGY = 'ELDER_CRASH_HEDGE_V1'
 MAX_LEV = D('100')
+CONTRACT_SHA256='a25e4af2239cfba738b1f9c88f522060fdca810efd97cbff856f85af3fea3a28'
 HEX = re.compile(r'[0-9a-f]{64}\Z')
 
 
@@ -26,12 +27,18 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def number(value, zero=False):
+def finite(value):
     if isinstance(value, bool) or not isinstance(value, (str, int, float, D)):
         raise ValueError('INVALID_DECISION_NUMBER')
     v = D(str(value))
-    if not v.is_finite() or v < 0 or (not zero and not v):
+    if not v.is_finite():
         raise ValueError('INVALID_DECISION_NUMBER')
+    return v
+
+
+def number(value, zero=False):
+    v=finite(value)
+    if v<0 or (not zero and not v):raise ValueError('INVALID_DECISION_NUMBER')
     return v
 
 
@@ -49,6 +56,56 @@ def pin(value):
 
 def text(v):
     return format(v, 'f')
+
+
+def control_geometry(row):
+    """V1.1 first-record geom; rounded diagnostics never replace raw geometry."""
+    g=row.get('geom')
+    required={'v','ref_close','e_ref','raw_sl','raw_tps','stop_x','sl_w','stop_dolya',
+              'rr1','rr2','f1','max_lev','bar_ts_signal','bar_ts_eref'}
+    if not isinstance(g,dict) or not required<=set(g):return None
+    if (type(g['v']) is not int or g['v']!=1 or stamp(g['bar_ts_signal'])!=row['ts']
+            or stamp(g['bar_ts_eref'])!=row['ts']+H or g['bar_ts_eref']>row['zapisano']):
+        raise ValueError('FIRST_RECORD_GEOMETRY_CLOCK_OR_VERSION')
+    if row.get('vovremya') is not True:raise ValueError('FIRST_RECORD_NOT_OPERATIONALLY_TIMELY')
+    ref,anchor,raw_stop=(number(g[k]) for k in ('ref_close','e_ref','raw_sl'))
+    if number(g['stop_x'])!=4 or number(g['max_lev'])!=MAX_LEV or number(g['f1'])!=D('.55'):
+        raise ValueError('FROZEN_CONTROL_GEOMETRY_PARAMETERS')
+    if not isinstance(g['raw_tps'],list):raise ValueError('GEOMETRY_TARGETS_SCHEMA')
+    tps=[number(v) for v in g['raw_tps']]
+    distance=abs(raw_stop-anchor)*4
+    if not distance:raise ValueError('GEOMETRY_ZERO_RISK')
+    sp=distance/anchor
+    k=[abs(tps[i]-anchor)/distance if i<len(tps) else D('999') for i in range(2)]
+    if (abs(finite(g['sl_w'])-(anchor+(raw_stop-anchor)*4))>D('1e-9')
+            or abs(number(g['stop_dolya'])-sp)>D('.000000500001')
+            or any(abs(number(g['rr'+str(i+1)],zero=True)-k[i])>D('.000500001') for i in range(2))):
+        raise ValueError('FIRST_RECORD_GEOMETRY_DIAGNOSTIC_CONFLICT')
+    return ref,anchor,sp,k
+
+
+def control_levels(fill,sp,k,tick):
+    risk=fill*sp
+    stop=((fill+risk)/tick).to_integral_value(rounding=ROUND_FLOOR)*tick
+    if stop<=fill:raise ValueError('INSTRUMENT_TICK_CANNOT_PROTECT_CONTROL_STOP')
+    targets=[((fill-r* risk)/tick).to_integral_value(rounding=ROUND_FLOOR)*tick for r in k]
+    return stop,[text(v) if v>0 else None for v in targets],fill+risk
+
+
+def bind_actual_fill(intent,*,fill,filled_quantity):
+    """Pure post-fill level/risk receipt, no replace/send or risk expansion."""
+    fill,qty=number(fill),number(filled_quantity)
+    if (intent.get('source_contract')!='ELDER_CRASH_HEDGE_V1_1'
+            or fill<number(intent['limit_price']) or qty>number(intent['quantity'])):
+        raise ValueError('ACTUAL_SHORT_FILL_IDENTITY_OR_QUANTITY')
+    stop,targets,unrounded=control_levels(fill,number(intent['stop_fraction']),
+        [number(intent['source_k1'],zero=True),number(intent['source_k2'],zero=True)],number(intent['tick_size']))
+    risk=qty*(stop-fill)
+    return dict(status='ELDER_ACTUAL_FILL_LEVELS_ORDERS_OFF',intent_sha256=intent['intent_sha256'],
+        actual_fill=text(fill),filled_quantity=text(qty),stop_price=text(stop),targets=targets,
+        control_stop_unrounded=text(unrounded),risk_usdt=text(risk),orders_allowed=False,
+        risk_bound_status='WITHIN_BOUND' if risk<=number(intent['per_trade_risk_budget_usdt'])
+                          else 'FILL_RISK_REQUIRES_SCOPED_REDUCTION')
 
 
 def compile_intent(raw, *, source_ref, context, risk, instrument, now_ms):
@@ -88,29 +145,19 @@ def compile_intent(raw, *, source_ref, context, risk, instrument, now_ms):
         strategy=STRATEGY, research_evidence_eligible=False, counts_toward_C1_C2_C3=False)
     if regime == 'BULL_TREND':
         return dict(result, status='HEDGE_OFF_BULL', reason='NO_NEW_ENTRY_EXISTING_MANAGEMENT_UNCHANGED')
-    g = row.get('decision_geometry')
-    required = {'ref_close', 'e_ref', 'raw_sl', 'raw_tps', 'f1', 'available_ms'}
-    if not isinstance(g, dict) or not required <= set(g):
+    geometry=control_geometry(row)
+    if geometry is None:
         return dict(result, status='BLOCKED_SOURCE_DECISION_GEOMETRY',
                     reason='FIRST_RECORD_LACKS_CAUSAL_STOP_TARGETS_NO_TERMINAL_BACKFILL')
-    if not ts+H <= stamp(g['available_ms']) <= available:
-        raise ValueError('GEOMETRY_NOT_AVAILABLE_IN_FIRST_RECORD')
-    ref, anchor, raw_stop = (number(g[k]) for k in ('ref_close', 'e_ref', 'raw_sl'))
-    if number(g['f1']) != D('.55') or not isinstance(g['raw_tps'], list) or len(g['raw_tps']) != 2:
-        raise ValueError('FROZEN_CONTROL_TARGETS_REQUIRED')
-    tps = [number(v) for v in g['raw_tps']]
-    if raw_stop <= anchor or not 0 < tps[1] < tps[0] < anchor:
-        raise ValueError('FROZEN_SHORT_GEOMETRY_CONFLICT')
+    ref,anchor,sp,k=geometry
     if instrument.get('symbol') != symbol:
         raise ValueError('INSTRUMENT_SYMBOL_CONFLICT')
     pin(instrument['source_sha256'])
     tick, step = number(instrument['tickSize']), number(instrument['qtyStep'])
     limit = (ref * D('1.002') / tick).to_integral_value(rounding=ROUND_CEILING) * tick
-    stop = ((anchor + (raw_stop-anchor)*4) / tick).to_integral_value(rounding=ROUND_CEILING) * tick
-    if stop <= limit:
-        raise ValueError('NATIVE_SHORT_STOP_BELOW_LIMIT')
+    stop,targets,control_stop=control_levels(limit,sp,k,tick)
     distance = stop-limit
-    leverage = anchor/((raw_stop-anchor)*4)
+    leverage = 1/sp
     if leverage > MAX_LEV:
         return dict(result, status='BLOCKED_RISK_INFEASIBLE_STOP_LEV')
     pin(risk['source_sha256'])
@@ -130,13 +177,8 @@ def compile_intent(raw, *, source_ref, context, risk, instrument, now_ms):
     if (qty < number(instrument['minOrderQty']) or qty > number(instrument['maxOrderQty'])
             or qty*limit < number(instrument['minNotionalValue'])):
         return dict(result, status='BLOCKED_RISK_MINIMUM_LOT')
-    # Report both anchors explicitly. The terse frozen native-stop contract is
-    # absolute; the research exit engine scales stop_pct from actual fill.
-    # They must be reconciled by the research owner before financial binding.
-    sp = (raw_stop-anchor)*4/anchor
-    control_distance = limit*sp
-    k = [(anchor-target)/((raw_stop-anchor)*4) for target in tps]
-    targets = [text(((limit-r*control_distance)/tick).to_integral_value(rounding=ROUND_FLOOR)*tick) for r in k]
+    # Reference levels use the proposed limit. Actual fills MUST be rebound
+    # with bind_actual_fill; better Sell fills can increase monetary stop risk.
     result.update(status='ELDER_HEDGE_INTENT_ORDERS_OFF', limit_price=text(limit), stop_price=text(stop),
         quantity=text(qty), risk_usdt=text(qty*distance), per_trade_risk_budget_usdt=text(per_trade),
         sleeve_risk_budget_usdt=text(budget), risk_source_sha256=risk['source_sha256'],
@@ -148,9 +190,10 @@ def compile_intent(raw, *, source_ref, context, risk, instrument, now_ms):
             timeInForce='GTC',price=text(limit),qty=text(qty),positionIdx=0,reduceOnly=False,
             orderLinkId='EHG1-'+opp_id[:20]+'-E',stopLoss=text(stop),
             slOrderType='Market',slTriggerBy='LastPrice',tpslMode='Full'),
-        control_reference_stop=text(limit+control_distance),
-        control_stop_anchor_reconciled=(limit+control_distance == stop),
-        money_readiness='BLOCKED_CONTROL_STOP_ANCHOR_RECONCILIATION_REQUIRED',
+        control_reference_stop=text(control_stop),stop_fraction=text(sp),tick_size=text(tick),
+        source_contract='ELDER_CRASH_HEDGE_V1_1',contract_sha256=CONTRACT_SHA256,fill_binding_required=True,
+        control_stop_anchor_reconciled=True,native_stop_rounding='FLOOR_NOT_FARTHER',
+        money_readiness='ORDERS_OFF_PROSPECTIVE_GATES_AND_OWNER_GO_REQUIRED',
         control_source_ref_close=text(ref))
     result['intent_sha256'] = digest(result)
     return result

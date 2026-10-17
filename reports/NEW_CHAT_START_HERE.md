@@ -1,5 +1,15 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT Oct17 08:33UTC: checkpoint TOP →
+ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md →
+KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md.
+ElderV1.1two sourceblockers closed from57a09db: firstgeom/CONTROLactualfill,
+39targetedPASS/new24-filedisabledkit.0realrows/outcomes/eventscredited;
+prospectivegates and lateractualfillbinding/moneyGO remain, standaloneKILL.
+KITY7351514 productionbinding completed173PASS, ORDERSOFF/no newpolicy/orders.
+No need restart ETS2S (owner already did) or reimplement oldKITYbinding.
+NET/AlpacaHALT untouched; no Nov2close permission from pastedresearchproposal.
+
 CURRENT Oct17 08:30UTC: checkpoint TOP →
 KITY_BATCH_WS_PRODUCTION_BINDING_2026_10_17.md. Binding complete: SAME unit,
 original lock, PID2440673/HEALTHY/ORDERSOFF/privateauth+sub.173targetedPASS.

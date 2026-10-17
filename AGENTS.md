@@ -1013,3 +1013,21 @@ binding or use oldGO9051/spentlaunchers. Futureactivation/newdatedpolicy and
 PERSONALexactGO separate; agent never runs moneycontrol/ownerlauncher.
 Elder57a09db clarification received; no new research/NETexit permission inferred.
 Root-only finalreview; preserveClaude/ATT1/LIQ/foreignallowlist/AlpacaHALT.
+
+## October17 Elder V1.1 source-contract closure
+
+Read checkpoint TOP and ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md.
+Claude57a09db local/origin verified; firstgeom schema and authoritative CONTROL
+fill-scaled stop/targets integrated.39targetedPASS, rawgeometry/availability/
+diagnostics, native shortSL floor notfarther; actualfill risk overshoot flagged,
+not autoapproved. Oldgeomlessrecords reject/no backfill. New24-file disabled
+VPScandidate236629be…/spec2b5785ab… independentlyreadbackPASS. Oldsourcekit kept
+history; no unit/transport/policy activated.0actualsource rows/outcomes/judge/
+realcreditedevents. User's ETS2S restart16945 verifiedread-only, never repeat.
+Earlier BLOCKED_SOURCE_CONTRACT is superseded; actualprospectiveparity and
+futureactualfilltransport binding not claimed. Frozen30/97%/95%/latency/restart/
+ETS2M900 gates unchanged, standaloneKILL. No arbitraryOct30 datagate invented.
+KITY7351514 productionbinding completeORDERSOFF, no actual10/10moneyPASS.
+AlpacaDAY/V3/HALT/NET unchanged. PastedETFhooks/Farside/Nov2NETclose are only
+researchproposals, not ownerfinancial/productionGO. PreserveClaude/ATT1/LIQ/
+foreignallowlist; root-only finalreview restriction remains.

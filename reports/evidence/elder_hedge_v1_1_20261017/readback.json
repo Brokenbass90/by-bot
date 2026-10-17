@@ -1,0 +1,16 @@
+{
+  "adapter_sha256": "e624513aec3fd4a64c9d8e2a33d9343eed3337eb7c0e315d3a0f859390b10aff",
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "kity_unit_unchanged": true,
+  "live_rows_read": 0,
+  "monetary_transport_bound": false,
+  "observed_ms": 1792225988101,
+  "outcomes_read": 0,
+  "root": "/opt/bybot-research/elder-hedge-20261017/candidate-236629be14170f6c",
+  "service_registered": false,
+  "source_count": 24,
+  "source_pins_pass": true,
+  "spec_sha256": "2b5785abfa729286e05d328c29f89a8017b23f02878925f9aa2a0b8e184e700c",
+  "status": "ELDER_HEDGE_V1_1_DISABLED_READBACK_PASS"
+}

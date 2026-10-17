@@ -12,8 +12,9 @@ H=3600000
 
 
 def source():
-    row=dict(ts=H,sym='BTCUSDT',side='short',zapisano=2*H,
-        decision_geometry=dict(ref_close='100',e_ref='100',raw_sl='102',raw_tps=['96','90'],f1='0.55',available_ms=2*H))
+    row=dict(ts=H,sym='BTCUSDT',side='short',zapisano=2*H,vovremya=True,
+        geom=dict(v=1,ref_close=100.0,e_ref=100.0,raw_sl=102.0,raw_tps=[96.0,90.0],stop_x=4.0,
+                  sl_w=108.0,stop_dolya=.08,rr1=.5,rr2=1.25,f1=.55,max_lev=100,bar_ts_signal=H,bar_ts_eref=2*H))
     return json.dumps(row).encode()
 
 
@@ -39,7 +40,7 @@ def compile_(raw=None,ctx=None,budget=None,now=2*H):
 
 def test_frozen_short_geometry_budget_and_no_transport():
     x=compile_();assert x['status']=='ELDER_HEDGE_INTENT_ORDERS_OFF'
-    assert Decimal(x['limit_price'])==Decimal('100.20') and Decimal(x['stop_price'])==108
+    assert Decimal(x['limit_price'])==Decimal('100.20') and Decimal(x['stop_price'])==Decimal('108.21')
     assert Decimal(x['risk_usdt'])<=10 and len(x['targets'])==2
     assert not x['orders_allowed'] and x['mode']=='SHADOW'
     assert x['native_guard']['reduceOnly'] is True
@@ -104,15 +105,43 @@ def test_signal_decision_and_context_have_actual_availability():
 
 
 def test_later_geometry_cannot_be_backdated_into_first_record():
-    row=json.loads(source());row['decision_geometry']['available_ms']+=1
-    with pytest.raises(ValueError,match='FIRST_RECORD'):compile_(raw=json.dumps(row).encode())
+    row=json.loads(source());row['geom']['bar_ts_eref']=3*H
+    with pytest.raises(ValueError,match='GEOMETRY'):compile_(raw=json.dumps(row).encode())
 
 
-def test_control_anchor_discrepancy_is_explicit_not_silently_repaired():
+def test_control_anchor_clarification_and_no_farther_native_tick():
     x=compile_()
-    assert Decimal(x['stop_price'])==108 and Decimal(x['control_reference_stop'])==Decimal('108.216')
-    assert not x['control_stop_anchor_reconciled']
-    assert x['money_readiness']=='BLOCKED_CONTROL_STOP_ANCHOR_RECONCILIATION_REQUIRED'
+    assert Decimal(x['stop_price'])==Decimal('108.21') and Decimal(x['control_reference_stop'])==Decimal('108.216')
+    assert x['control_stop_anchor_reconciled']
+    assert x['money_readiness']=='ORDERS_OFF_PROSPECTIVE_GATES_AND_OWNER_GO_REQUIRED'
+    assert Decimal(x['stop_price'])<=Decimal(x['control_reference_stop'])
+
+
+def test_stop_and_targets_rebind_to_actual_fill_and_keep_risk_explicit():
+    x=compile_();bound=elder.bind_actual_fill(x,fill='101',filled_quantity=x['quantity'])
+    assert Decimal(bound['control_stop_unrounded'])==Decimal('109.08')
+    assert Decimal(bound['stop_price'])==Decimal('109.08')
+    assert Decimal(bound['targets'][0])==Decimal('96.96')
+    assert bound['risk_bound_status']=='FILL_RISK_REQUIRES_SCOPED_REDUCTION'
+    assert not bound['orders_allowed']
+
+
+@pytest.mark.parametrize('key,value',[('stop_x',3),('max_lev',101),('stop_dolya',.09),('rr1',.7),('v',True)])
+def test_geom_diagnostic_conflict_is_not_silently_accepted(key,value):
+    row=json.loads(source());row['geom'][key]=value
+    with pytest.raises(ValueError):compile_(raw=json.dumps(row).encode())
+
+
+def test_legacy_decision_geometry_is_not_a_new_first_record():
+    row=json.loads(source());row['decision_geometry']=row.pop('geom')
+    assert compile_(raw=json.dumps(row).encode())['status']=='BLOCKED_SOURCE_DECISION_GEOMETRY'
+
+
+def test_exact_pinned_producer_geom_schema_fixture_is_accepted():
+    raw=(Path(__file__).parent/'fixtures/elder_geom_first_record_v1_1.json').read_bytes()
+    x=compile_(raw=raw)
+    assert x['source_contract']=='ELDER_CRASH_HEDGE_V1_1' and x['control_stop_anchor_reconciled']
+    assert x['signal_available_ms']==2*H and not x['orders_allowed']
 
 
 def test_report_schema_has_no_invented_tax_or_money_fields():
