@@ -1,0 +1,619 @@
+{
+  "account_blocked": false,
+  "account_ids_and_balances_excluded": true,
+  "account_lock_inode": 813893,
+  "account_status": "ACTIVE",
+  "account_verified": true,
+  "assets": {
+    "AAPL": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038006,
+      "started_ms": 1792259037727,
+      "status": "active",
+      "symbol": "AAPL",
+      "tradable": true
+    },
+    "ABBV": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038011,
+      "started_ms": 1792259037727,
+      "status": "active",
+      "symbol": "ABBV",
+      "tradable": true
+    },
+    "ABNB": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038010,
+      "started_ms": 1792259037728,
+      "status": "active",
+      "symbol": "ABNB",
+      "tradable": true
+    },
+    "ADBE": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038290,
+      "started_ms": 1792259038006,
+      "status": "active",
+      "symbol": "ADBE",
+      "tradable": true
+    },
+    "ADSK": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038298,
+      "started_ms": 1792259038010,
+      "status": "active",
+      "symbol": "ADSK",
+      "tradable": true
+    },
+    "AMD": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038296,
+      "started_ms": 1792259038011,
+      "status": "active",
+      "symbol": "AMD",
+      "tradable": true
+    },
+    "AMZN": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038572,
+      "started_ms": 1792259038290,
+      "status": "active",
+      "symbol": "AMZN",
+      "tradable": true
+    },
+    "AVGO": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038583,
+      "started_ms": 1792259038296,
+      "status": "active",
+      "symbol": "AVGO",
+      "tradable": true
+    },
+    "BAC": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038575,
+      "started_ms": 1792259038298,
+      "status": "active",
+      "symbol": "BAC",
+      "tradable": true
+    },
+    "CAT": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038852,
+      "started_ms": 1792259038572,
+      "status": "active",
+      "symbol": "CAT",
+      "tradable": true
+    },
+    "COIN": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038863,
+      "started_ms": 1792259038575,
+      "status": "active",
+      "symbol": "COIN",
+      "tradable": true
+    },
+    "COST": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259038864,
+      "started_ms": 1792259038583,
+      "status": "active",
+      "symbol": "COST",
+      "tradable": true
+    },
+    "CRM": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039135,
+      "started_ms": 1792259038852,
+      "status": "active",
+      "symbol": "CRM",
+      "tradable": true
+    },
+    "CRWD": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039149,
+      "started_ms": 1792259038863,
+      "status": "active",
+      "symbol": "CRWD",
+      "tradable": true
+    },
+    "CVX": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039148,
+      "started_ms": 1792259038865,
+      "status": "active",
+      "symbol": "CVX",
+      "tradable": true
+    },
+    "DDOG": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039427,
+      "started_ms": 1792259039135,
+      "status": "active",
+      "symbol": "DDOG",
+      "tradable": true
+    },
+    "GE": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039436,
+      "started_ms": 1792259039148,
+      "status": "active",
+      "symbol": "GE",
+      "tradable": true
+    },
+    "GOOGL": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039431,
+      "started_ms": 1792259039151,
+      "status": "active",
+      "symbol": "GOOGL",
+      "tradable": true
+    },
+    "GS": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039708,
+      "started_ms": 1792259039427,
+      "status": "active",
+      "symbol": "GS",
+      "tradable": true
+    },
+    "HD": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039723,
+      "started_ms": 1792259039431,
+      "status": "active",
+      "symbol": "HD",
+      "tradable": true
+    },
+    "INTU": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039721,
+      "started_ms": 1792259039436,
+      "status": "active",
+      "symbol": "INTU",
+      "tradable": true
+    },
+    "ISRG": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259039987,
+      "started_ms": 1792259039708,
+      "status": "active",
+      "symbol": "ISRG",
+      "tradable": true
+    },
+    "JNJ": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040066,
+      "started_ms": 1792259039721,
+      "status": "active",
+      "symbol": "JNJ",
+      "tradable": true
+    },
+    "JPM": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040010,
+      "started_ms": 1792259039724,
+      "status": "active",
+      "symbol": "JPM",
+      "tradable": true
+    },
+    "KO": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040360,
+      "started_ms": 1792259039987,
+      "status": "active",
+      "symbol": "KO",
+      "tradable": true
+    },
+    "LLY": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040350,
+      "started_ms": 1792259040010,
+      "status": "active",
+      "symbol": "LLY",
+      "tradable": true
+    },
+    "LMT": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040359,
+      "started_ms": 1792259040066,
+      "status": "active",
+      "symbol": "LMT",
+      "tradable": true
+    },
+    "MA": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040630,
+      "started_ms": 1792259040350,
+      "status": "active",
+      "symbol": "MA",
+      "tradable": true
+    },
+    "MDB": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040647,
+      "started_ms": 1792259040359,
+      "status": "active",
+      "symbol": "MDB",
+      "tradable": true
+    },
+    "META": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040644,
+      "started_ms": 1792259040360,
+      "status": "active",
+      "symbol": "META",
+      "tradable": true
+    },
+    "MRK": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040916,
+      "started_ms": 1792259040630,
+      "status": "active",
+      "symbol": "MRK",
+      "tradable": true
+    },
+    "MSFT": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040927,
+      "started_ms": 1792259040644,
+      "status": "active",
+      "symbol": "MSFT",
+      "tradable": true
+    },
+    "NET": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259040930,
+      "started_ms": 1792259040647,
+      "status": "active",
+      "symbol": "NET",
+      "tradable": true
+    },
+    "NFLX": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041204,
+      "started_ms": 1792259040916,
+      "status": "active",
+      "symbol": "NFLX",
+      "tradable": true
+    },
+    "NKE": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041214,
+      "started_ms": 1792259040928,
+      "status": "active",
+      "symbol": "NKE",
+      "tradable": true
+    },
+    "NOW": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041215,
+      "started_ms": 1792259040930,
+      "status": "active",
+      "symbol": "NOW",
+      "tradable": true
+    },
+    "NVDA": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041491,
+      "started_ms": 1792259041204,
+      "status": "active",
+      "symbol": "NVDA",
+      "tradable": true
+    },
+    "ORCL": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041507,
+      "started_ms": 1792259041214,
+      "status": "active",
+      "symbol": "ORCL",
+      "tradable": true
+    },
+    "PANW": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041494,
+      "started_ms": 1792259041215,
+      "status": "active",
+      "symbol": "PANW",
+      "tradable": true
+    },
+    "PG": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041785,
+      "started_ms": 1792259041491,
+      "status": "active",
+      "symbol": "PG",
+      "tradable": true
+    },
+    "PLTR": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041781,
+      "started_ms": 1792259041494,
+      "status": "active",
+      "symbol": "PLTR",
+      "tradable": true
+    },
+    "QCOM": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259041798,
+      "started_ms": 1792259041507,
+      "status": "active",
+      "symbol": "QCOM",
+      "tradable": true
+    },
+    "QQQ": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042072,
+      "started_ms": 1792259041781,
+      "status": "active",
+      "symbol": "QQQ",
+      "tradable": true
+    },
+    "REGN": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042069,
+      "started_ms": 1792259041785,
+      "status": "active",
+      "symbol": "REGN",
+      "tradable": true
+    },
+    "SBUX": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042106,
+      "started_ms": 1792259041798,
+      "status": "active",
+      "symbol": "SBUX",
+      "tradable": true
+    },
+    "SCHW": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042350,
+      "started_ms": 1792259042069,
+      "status": "active",
+      "symbol": "SCHW",
+      "tradable": true
+    },
+    "SHOP": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042377,
+      "started_ms": 1792259042072,
+      "status": "active",
+      "symbol": "SHOP",
+      "tradable": true
+    },
+    "SNOW": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042392,
+      "started_ms": 1792259042106,
+      "status": "active",
+      "symbol": "SNOW",
+      "tradable": true
+    },
+    "SPY": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042636,
+      "started_ms": 1792259042350,
+      "status": "active",
+      "symbol": "SPY",
+      "tradable": true
+    },
+    "TSLA": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042658,
+      "started_ms": 1792259042377,
+      "status": "active",
+      "symbol": "TSLA",
+      "tradable": true
+    },
+    "TSM": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042677,
+      "started_ms": 1792259042392,
+      "status": "active",
+      "symbol": "TSM",
+      "tradable": true
+    },
+    "TXN": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042915,
+      "started_ms": 1792259042636,
+      "status": "active",
+      "symbol": "TXN",
+      "tradable": true
+    },
+    "UBER": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042940,
+      "started_ms": 1792259042658,
+      "status": "active",
+      "symbol": "UBER",
+      "tradable": true
+    },
+    "UNH": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259042985,
+      "started_ms": 1792259042677,
+      "status": "active",
+      "symbol": "UNH",
+      "tradable": true
+    },
+    "V": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259043209,
+      "started_ms": 1792259042915,
+      "status": "active",
+      "symbol": "V",
+      "tradable": true
+    },
+    "WFC": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259043255,
+      "started_ms": 1792259042940,
+      "status": "active",
+      "symbol": "WFC",
+      "tradable": true
+    },
+    "WMT": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259043272,
+      "started_ms": 1792259042985,
+      "status": "active",
+      "symbol": "WMT",
+      "tradable": true
+    },
+    "XOM": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259043496,
+      "started_ms": 1792259043209,
+      "status": "active",
+      "symbol": "XOM",
+      "tradable": true
+    },
+    "XYZ": {
+      "class": "us_equity",
+      "fractionable": true,
+      "received_ms": 1792259043535,
+      "started_ms": 1792259043255,
+      "status": "active",
+      "symbol": "XYZ",
+      "tradable": true
+    }
+  },
+  "broker_writes": 0,
+  "cash_and_full_owned_slot_admission": "NOT_PROVEN_BY_ASSET_READINESS",
+  "completed_ms": 1792259043565,
+  "currency": "USD",
+  "current_position_symbols": [
+    "NET"
+  ],
+  "eligible_symbols": [
+    "AAPL",
+    "ABBV",
+    "ABNB",
+    "ADBE",
+    "ADSK",
+    "AMD",
+    "AMZN",
+    "AVGO",
+    "BAC",
+    "CAT",
+    "COIN",
+    "COST",
+    "CRM",
+    "CRWD",
+    "CVX",
+    "DDOG",
+    "GE",
+    "GOOGL",
+    "GS",
+    "HD",
+    "INTU",
+    "ISRG",
+    "JNJ",
+    "JPM",
+    "KO",
+    "LLY",
+    "LMT",
+    "MA",
+    "MDB",
+    "META",
+    "MRK",
+    "MSFT",
+    "NET",
+    "NFLX",
+    "NKE",
+    "NOW",
+    "NVDA",
+    "ORCL",
+    "PANW",
+    "PG",
+    "PLTR",
+    "QCOM",
+    "QQQ",
+    "REGN",
+    "SBUX",
+    "SCHW",
+    "SHOP",
+    "SNOW",
+    "SPY",
+    "TSLA",
+    "TSM",
+    "TXN",
+    "UBER",
+    "UNH",
+    "V",
+    "WFC",
+    "WMT",
+    "XOM",
+    "XYZ"
+  ],
+  "entry_halt_present": true,
+  "errors_count": 0,
+  "financial_authority": false,
+  "ineligible_count": 0,
+  "open_orders_count": 0,
+  "orders_complete": true,
+  "schema": "ALPACA_DYNAMIC_59_GET_READINESS_V1",
+  "source_pins_verified": 95,
+  "started_ms": 1792259036877,
+  "status": "BROKER_ASSETS_PASS_ACTIVATION_NOT_AUTHORIZED",
+  "trading_blocked": false
+}

@@ -1,0 +1,26 @@
+{
+  "capacity_evidence_sha256": "f1f0dee1c47893c15fca710d58d3f1b16badf9a3faae86d9cc1cceb00d78e8e3",
+  "minimum_required_reference_gross": "229.584550",
+  "money_authority": false,
+  "new_policy_created": false,
+  "old_attempt_reusable": false,
+  "orders_allowed": false,
+  "owner_command": null,
+  "preserved_scope": {
+    "all_in_exit_trigger_usdt": "15",
+    "attempts": 1,
+    "collar_bps": "50",
+    "common_cts_max_ms": 2000,
+    "duration_ms": 1800000,
+    "entry_window_ms": 60000,
+    "gross_cap_usdt": "215"
+  },
+  "required_before_personal_execution": [
+    "NEW_EXPLICIT_OWNER_AUTHORIZATION",
+    "NEW_DATED_POLICY_AFTER_FRESH_FEASIBILITY_PASS",
+    "ORIGINAL_CUSTODY_ACCOUNT_WRITER_CHECKS",
+    "ONE_POST_GO_CAPTURE_AND_UNCHANGED_FINAL_GATES"
+  ],
+  "schema": "KITY_FUTURE_MICRO_OWNER_PROPOSAL_V1",
+  "status": "CAPACITY_BLOCKED_NO_GO_PACKET"
+}

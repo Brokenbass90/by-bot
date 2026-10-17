@@ -1099,3 +1099,39 @@ flat0/open0/unclaimed1policy/old34wire; NET.325167779/DAYexpired277.69/HALT.
 Keeporiginal moneywriters/locks/95pins/V3/ATT1/LIQ/Claude/foreignallowlist intact.
 ExistingKITYpersonalpolicyexpires17Oct21UTC; neverrunownerlauncher ormintanother.
 No financialunitschanged/brokerwrites/notifications. OnlynewDATAunits activated.
+
+
+## October17 owner-priority Dynamic/KITY recovery and spent attempt
+
+Read checkpoint TOP and TRADING_OS_DYNAMIC_KITY_RECOVERY_2026_10_17.md before
+any previous monetary instructions. Owner restores Dynamic P0, independently of
+Monthly. Original weekly candidate replacement was implemented; fresh rescan
+after every stop was not. Strict source TTL05d77bf makes later-day weekly reuse
+NO_SEND; do not silently revert it or represent Monthly as Dynamic. Code469a9ed
+adds isolated event-reselection research ORDERSOFF candidate using existing
+slots/cash/risk/cooldown/restart, refuses existing original books, no money path.
+Candidate semantics/economic proof/continuous Dynamic59/one-owner activation
+binding remain OPEN. Actual Dynamic59source inclQQQ/calendar and all59 broker
+assets verified; Monthly58 source identity unchanged. No V2/grid profit proxy.
+
+KITY personal1792247810399920355 is CLOSED_NO_SEND / ATTEMPT_SPENT, not10/10PASS.
+Exact single postGO capture commonCTS492ms passed, only GROSS_CAP_EXCEEDED:
+229.584550 minimum versus215. BTW min10 price jump raises common target.
+Saved-input capacity verifier and safe diagnostic delivered;79 focusedKITYPASS.
+Inert futurepacket CAPACITY_BLOCKED_NO_GO_PACKET/no command/no new policy.
+Never repeat/renew olda1c97e6b policy, resetclaim, runownerlauncher or raise cap.
+Human-selected activeconfigmoney_go=true with ORDERSOFF/noactiveplan is spent,
+not unusedpermission. All23/155pins/originallease/old34wire preserved; final
+paginatedGET positions/orders/executions/history/transactions zero sinceGO.
+Local code not deployed to financialwriter. Fresh pre-money feasibility must
+precede any future separate new dated OWNERGO; postGO onecapturegates remain.
+
+250focusedAlpacaPASS/329combined; no broad green claim or independent financial
+review. MonthlystrategyPASS/sourceops retained, financialtransport unbound,
+2Nov14:30UTC nextfixedentry. NET19Oct13:30UTC actualDAYgate OPEN; existing
+manager/monitor/HALT/95pins/sharedlock retained. Brainv1.3/LIQexport request at
+origin211ed64 queued; do not touch epochs/consume outcomes/duplicate Brain.
+IBIT DATA-only seed/timer retained; MassiveQA pending. Foreignallowlist original
+SHA365ff7d6…cc2e0e preserved and excluded. Root-only finalreview restriction remains;
+allowance-exhausted brokerworker notretried/replaced, primary fixedGET recorded.
+No automatic LIVE, financialauthority change, secondmanager or newstrategyGO.

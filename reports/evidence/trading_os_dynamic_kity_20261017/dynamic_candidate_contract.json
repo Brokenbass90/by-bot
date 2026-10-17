@@ -1,0 +1,12 @@
+{
+  "max_new_entries_per_session": 1,
+  "money_authority": false,
+  "orders_allowed": false,
+  "reentry_calendar_days": 21,
+  "schema": "ALPACA_DYNAMIC_EVENT_RESELECTION_V1_CANDIDATE",
+  "selection": "FRESH_PREVIOUS_COMPLETED_SESSION_AT_NEXT_RTH_OPEN",
+  "slot_risk_and_notional": "UNCHANGED_PARENT_DYNAMIC_POLICY",
+  "status": "CANDIDATE_RESEARCH_UNAPPROVED",
+  "trigger": "CONFIRMED_FULL_OWNED_EXIT_BEFORE_OPEN",
+  "window_ms": 300000
+}

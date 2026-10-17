@@ -1,5 +1,25 @@
 # Trading OS — Codex master handoff, 17 October 2026
 
+**LATEST17:55UTC — owner-priority Dynamic/KITY recovery:**
+[TRADING_OS_DYNAMIC_KITY_RECOVERY_2026_10_17.md](TRADING_OS_DYNAMIC_KITY_RECOVERY_2026_10_17.md).
+Code `469a9eddf27fd40d38f71ba2db783522fb38b25c`, research origin
+`211ed6442f3966f8731440cc1c5de4a49a493ccc`. KITY personal command
+1792247810399920355 is NO_SEND/SPENT: exact capture229.584550/215,
+CTS492ms observedPASS, final fully paginated broker zero. No retry/new policy;
+config money_go=true is the human-selected spent config, not fresh authority.
+Capacity verifier/real-input regression + safe diagnostic delivered locally.
+Dynamic is restored P0 separately from Monthly: original weekly replacement
+existed; strict TTL05d77bf blocks later-day reuse. New fresh next-open event
+reselection is an ORDERS_OFF research candidate, not approved LIVE/net edge.
+Actual Dynamic59 source (added QQQ) + broker59 eligibilityPASS; continuous59/
+account-slot admission/financialbinding and matched economic proof remainOPEN.
+Monthly accepted parity preserved, source58 active; financialbinding unbound,
+next2Nov14:30UTC. NET19Oct13:30UTC actual DAY protection gateOPEN; existing
+manager/GET monitor/HALT/sourcepins preserved.79KITY+250Alpaca=329focusedPASS;
+fullsuite notrerun/old60FAIL remain. No financialunits/authority changed.
+Read the new report's execution board first. Older unused-KITY/monthly-only
+priority paragraphs below are dated snapshots and are superseded here.
+
 **LATEST14:20UTC delivery:** [TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md](TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md).
 Code`efd85b6` follows prior5c8454b. Actual same-Mac Brain journals now contain
 13:52UTC Contextv2 +8 decisions/twoV2; full-chain import and unchanged8-row restart

@@ -1,0 +1,36 @@
+{
+  "broad_suite_rerun": false,
+  "code_commit": "469a9eddf27fd40d38f71ba2db783522fb38b25c",
+  "default_cli": "BOTH_NO_NETWORK_ORDERS_OFF",
+  "deployed_to_money_writer": false,
+  "diff_check": "PASS",
+  "focused_failed": 0,
+  "focused_passed": 329,
+  "foreign_allowlist_sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e",
+  "last_broad_suite_status": "5474 passed / 60 failed; historical NOT_GREEN",
+  "new_financial_authority": false,
+  "py_compile": "PASS",
+  "review": "ROOT_ONLY; no independent economic/financial approval",
+  "schema": "DYNAMIC_KITY_FOCUSED_VERIFICATION_V1",
+  "source_sha256": {
+    "research_lab/alpaca_dynamic_reselection_v1.py": "68c042be6e04def14ffd15c31981a4cd454881abe5d4f35c48a6d4cf7b135700",
+    "research_lab/alpaca_dynamic_v1.py": "948939d17b3a5a3d85d692c3e00297d2a0ae57bcb196838e1de45ae0407642f5",
+    "research_lab/kity_batch_ws_v1.py": "0d2cd1917878c374a17400e24695dab597ff2cb12819f3c76d5909e9173aa607",
+    "research_lab/kity_micro_feasibility_v1.py": "50d0e392fa798c9e7c0784960d6e6615b9906f8715c8530b35c0bde2c49ed96c",
+    "scripts/check_kity_micro_feasibility_v1.py": "067b0bd61d737dffe4980479551fef12843f8e6665efac244b9f6092a7b39d2d",
+    "scripts/run_alpaca_dynamic_reselection_v1.py": "9b0ebbcd2873d2e8051fa07ae2f0e958ec39be357d515a8e7af347ecefa94609"
+  },
+  "suites": [
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_kity_micro_feasibility_v1.py tests/test_kity_batch_ws_v1.py tests/test_kity_batch_service_v1.py tests/test_kity_micro_post_go_pricing_v1.py",
+      "passed": 79,
+      "private_log_sha256": "446ff8e8e8a75765e52e41adc434563b14e4057aba3f419ce61da0911fb61713"
+    },
+    {
+      "command": ".venv/bin/python -m pytest -q tests/test_alpaca_dynamic_reselection_v1.py tests/test_alpaca_dynamic_v1.py tests/test_alpaca_dynamic_live_runtime_v1.py tests/test_alpaca_dynamic_paper.py tests/test_alpaca_dynamic_live_intake_v1.py tests/test_alpaca_dynamic_first_intent_v1.py tests/test_alpaca_monthly_binding_v1.py tests/test_alpaca_monthly_native_binding_v1.py",
+      "passed": 250,
+      "private_log_sha256": "9b115e2de5fa99e8f49abd1e7d233220f7768caf5762dccb87cc3f2d4b2f69af"
+    }
+  ],
+  "worker_limit": "broker-readiness worker hit allowance before edits; not retried or replaced; primary performed fixed GET check"
+}

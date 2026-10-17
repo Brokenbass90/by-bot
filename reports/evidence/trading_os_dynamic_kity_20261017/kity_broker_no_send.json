@@ -1,0 +1,102 @@
+{
+  "broker_writes_by_this_check": 0,
+  "captures": {
+    "executions": {
+      "complete": true,
+      "count": 0,
+      "pages": [
+        {
+          "endpoint": "/v5/execution/list",
+          "http_status": 200,
+          "raw_sha256": "e03f6d38564701118205951cc2d13c5745b608b8ee2752a4b52d8fd87a3c87b4",
+          "receive_ms": 1792259244894,
+          "request_ms": 1792259244639
+        }
+      ]
+    },
+    "open_orders": {
+      "complete": true,
+      "count": 0,
+      "pages": [
+        {
+          "endpoint": "/v5/order/realtime",
+          "http_status": 200,
+          "raw_sha256": "bf82b8ab0de3d0a36fa2768a0ac66fc0d601938e3e92da9b45331c85f8180b40",
+          "receive_ms": 1792259244638,
+          "request_ms": 1792259244392
+        }
+      ]
+    },
+    "order_history": {
+      "complete": true,
+      "count": 0,
+      "pages": [
+        {
+          "endpoint": "/v5/order/history",
+          "http_status": 200,
+          "raw_sha256": "fd62a66c3cbeab1372ab34842a0d6173079d34740477ca0edf4d8e740f768c9f",
+          "receive_ms": 1792259245164,
+          "request_ms": 1792259244894
+        }
+      ]
+    },
+    "positions": {
+      "complete": true,
+      "count": 0,
+      "pages": [
+        {
+          "endpoint": "/v5/position/list",
+          "http_status": 200,
+          "raw_sha256": "79158529f0399b8a85708af75eed13f33162bbe875bd8d74bdb4c6f09be71a40",
+          "receive_ms": 1792259244392,
+          "request_ms": 1792259244134
+        }
+      ]
+    },
+    "transactions": {
+      "complete": true,
+      "count": 0,
+      "pages": [
+        {
+          "endpoint": "/v5/account/transaction-log",
+          "http_status": 200,
+          "raw_sha256": "7b73b6aab3fc2ff301c192447fc2643f937070bef5b6e41bd8b250484441465a",
+          "receive_ms": 1792259245407,
+          "request_ms": 1792259245165
+        }
+      ]
+    }
+  },
+  "command_id": "1792247810399920355",
+  "config_money_go": true,
+  "config_sha256": "3f107a63afd91d6db61f8cb0f2dfcb1807264e458827980f482ecb52b12e7960",
+  "execution_10_of_10_pass": false,
+  "go_ms": 1792247810399,
+  "guard_pins_match": true,
+  "heartbeat": {
+    "account_lock_inode": 818853,
+    "active_plan_id": null,
+    "at_ms": 1792259244445,
+    "error": null,
+    "execution_contract": "KITY_TEN_NATIVE_GUARDED_BATCH_V1",
+    "mode": "ORDERS_OFF",
+    "money_config_enabled": true,
+    "phase": "NO_ACTIVE_PLAN",
+    "pid": 2479217,
+    "private_authenticated": true,
+    "private_connected": true,
+    "private_last_receive_ms": 1792259237881,
+    "private_subscribed": true,
+    "schema": "kity_micro_owner_heartbeat_v1",
+    "state": null,
+    "trading_post_attempts": 34
+  },
+  "historical_wire_count": 34,
+  "new_namespace_wire_count": 0,
+  "observed_ms": 1792259245408,
+  "retry_authorized": false,
+  "schema": "KITY_PERSONAL_ATTEMPT_CLOSURE_V1",
+  "scope": "selected account linear USDT; executions/history/transactions since personal GO",
+  "source_pins_match": true,
+  "status": "NO_SEND_ATTEMPT_SPENT"
+}

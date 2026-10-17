@@ -1,0 +1,109 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "ibit_source": {
+    "files": 6,
+    "source_matches": true,
+    "spec_sha256": "d1a2b879de6e3944c6133202eaaa9959fdb44a60282b96d637a5c4d0e68e4ad0"
+  },
+  "kity": {
+    "account_lock_inode": 818853,
+    "config_sha256": "3f107a63afd91d6db61f8cb0f2dfcb1807264e458827980f482ecb52b12e7960",
+    "guard_files": 155,
+    "guard_matches": true,
+    "heartbeat": {
+      "account_lock_inode": 818853,
+      "active_plan_id": null,
+      "at_ms": 1792259709591,
+      "error": null,
+      "execution_contract": "KITY_TEN_NATIVE_GUARDED_BATCH_V1",
+      "mode": "ORDERS_OFF",
+      "money_config_enabled": true,
+      "phase": "NO_ACTIVE_PLAN",
+      "pid": 2479217,
+      "private_authenticated": true,
+      "private_connected": true,
+      "private_last_receive_ms": 1792259709491,
+      "private_subscribed": true,
+      "schema": "kity_micro_owner_heartbeat_v1",
+      "state": null,
+      "trading_post_attempts": 34
+    },
+    "money_go": true,
+    "source_files": 23,
+    "source_matches": true
+  },
+  "monthly_source": {
+    "files": 37,
+    "source_matches": true,
+    "spec_sha256": "73b37f25da947e16a905bac1c59ed86a2230a47fe467694246ae2c1dfa2b5154"
+  },
+  "monthly_v3": {
+    "files": 32,
+    "source_matches": true,
+    "spec_sha256": "14aea403bc8ccce376f438d766a4648bc1de03e333a9184e650eafcfd6776e3d"
+  },
+  "observed_ms": 1792259709889,
+  "schema": "DYNAMIC_KITY_POST_CODE_PRESERVATION_V1",
+  "units": {
+    "alpaca-monthly-source-ops.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Mon 2026-10-19 17:20:00 UTC",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    "alpaca-net-day-monitor.service": {
+      "ActiveState": "inactive",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "alpaca-net-day-monitor.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Mon 2026-10-19 13:30:00 UTC",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    "alpaca-oct15-owned-manager.service": {
+      "ActiveState": "inactive",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "alpaca-oct15-owned-manager.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-17 18:00:00 UTC",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    "att1-lifecycle-zero-risk-v2.service": {
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "MainPID": "1584802",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "bybit-liquidation-source-v2_1.service": {
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "MainPID": "2095785",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "ibit-btc-data-only.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Mon 2026-10-19 17:16:00 UTC",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    "kity-execution-micro-owner.service": {
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "MainPID": "2479217",
+      "Result": "success",
+      "SubState": "running"
+    }
+  }
+}

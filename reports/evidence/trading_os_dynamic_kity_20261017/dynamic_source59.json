@@ -1,0 +1,60 @@
+{
+  "QQQ_latest": "2026-10-16",
+  "QQQ_sha256": "6ed27e2130897abf5fd87edf4a4cc0af6572a6ba04053f363d08f615291e0fde",
+  "QQQ_verified_sessions": 200,
+  "available_by_this_ms": 1792259184814,
+  "calendar_sha256": "5bfc14f9db77b4e9dd5e838b54da051239ab3235a2155ec6778efab3692e9053",
+  "money_authority": false,
+  "monthly_source_id": "d1f065d620226a484785c41af88a898561a1b9375765d2ce8de7e6a0d148a9b7",
+  "orders_allowed": false,
+  "preview_is_money_admission": false,
+  "source_scope": "58 verified source names + same frozen hourly QQQ loader",
+  "status": "DYNAMIC59_CLOSED_SOURCE_READY_ORDERS_OFF",
+  "total_symbols": 59,
+  "unfiltered_selector_preview": {
+    "gate_ok": true,
+    "picks": [
+      {
+        "atr20": 8.172035980225,
+        "atr20_pct": 4.820975898207096,
+        "rawscore": 0.45707005809562573,
+        "score": 0.40650511474464096,
+        "signal_close": 169.5099945068,
+        "stop_price": 153.16592254635,
+        "symbol": "SHOP",
+        "weight": 0.40650511474464096
+      },
+      {
+        "atr20": 6.216703796390002,
+        "atr20_pct": 2.178395013674164,
+        "rawscore": 0.19485040862617017,
+        "score": 0.25780048258241106,
+        "signal_close": 285.3800048828,
+        "stop_price": 272.94659729002,
+        "symbol": "ABBV",
+        "weight": 0.25780048258241106
+      },
+      {
+        "atr20": 7.746525573725,
+        "atr20_pct": 3.2286607803103293,
+        "rawscore": 0.19748212698389808,
+        "score": 0.21461857612840093,
+        "signal_close": 239.9299926758,
+        "stop_price": 224.43694152835002,
+        "symbol": "ADSK",
+        "weight": 0.21461857612840093
+      },
+      {
+        "atr20": 12.382397460935,
+        "atr20_pct": 2.3409390632718723,
+        "rawscore": 0.09486407463767217,
+        "score": 0.12107582654454715,
+        "signal_close": 528.950012207,
+        "stop_price": 504.18521728512997,
+        "symbol": "MSFT",
+        "weight": 0.12107582654454715
+      }
+    ],
+    "reason": "ok"
+  }
+}
