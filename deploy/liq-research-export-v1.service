@@ -1,0 +1,22 @@
+[Unit]
+Description=Immutable LIQ V2.1 research snapshot (DATA ONLY)
+After=bybit-liquidation-source-v2_1.service
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/bybot-research/liq-research-export-20261017/app
+ExecStart=/usr/bin/python3 -B scripts/run_liq_research_delivery_v1.py --seal-root /opt/bybot-research/liquidation-source-v2-1-20261014/runtime
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONNOUSERSITE=1
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/bybot-research/liquidation-source-v2-1-20261014/runtime/exports
+RestrictAddressFamilies=AF_UNIX
+CapabilityBoundingSet=
+MemoryMax=256M
+CPUQuota=20%
+Nice=15
+IOSchedulingClass=idle
+TimeoutStartSec=180
