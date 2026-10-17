@@ -1,0 +1,1 @@
+{"komponent": "ETF_PREMIYA_BTC_V1", "gate": "DEV_PASS_PROVEREN", "evidence": "data/factory_v3/prodvizhenie/ETF_PREMIYA_BTC_V1_1.json", "blocker": "CONFIRM вперёд / репликация", "next": "Claude: досье → READY_FOR_ORDERS_OFF", "kogda": 1792237858047}

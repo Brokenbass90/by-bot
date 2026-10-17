@@ -1,0 +1,19 @@
+{
+ "id": "ETF_PREMIYA_BTC_V1_1",
+ "gipoteza": "ETF_PREMIYA_BTC_V1",
+ "t": 2.4974313743379883,
+ "n": 48,
+ "trebuemyy_t": 2.394,
+ "koncentraciya": {
+  "ok": true,
+  "dolya_top3": 0.347,
+  "srednee_bez_top3_bps": 60.17,
+  "n": 48,
+  "srednee_bps": 78.1,
+  "tolko_diagnostika": true
+ },
+ "status": "PROVEREN",
+ "pravilo_do_rezultata": false,
+ "replikaciya": "невозможна → CONFIRM вперёд",
+ "kogda": 1792237858047
+}

@@ -52,3 +52,8 @@ ETF_PREMIYA_KROSS_BTC_ETH, ETF_OBEM_UCHASTIE (от ETH). Бюджет окна K
 Лучшая следующая гипотеза: **MAKRO_SHOK_VSE** — тот же механизм на всех плановых релизах США (CPI+NFP+PPI+PCE) с первым
 DEV на независимом 2021H2–2022 → больше событий при том же правиле. Резерв +4: MAKRO_SHOK_VSE, FOMC_PRESS_KONFERENCIYA,
 POST_FOMC_TREND, DERIBIT_EKSPIRACIYA. Окно 2023–2026Q3: 18/20 — закрыто для новых механизмов.
+
+## MAKRO_SHOK_VSE (проход 11:50 UTC, окно 2021H2–2022)
+MAKRO_SHOK_VSE_V1_1: n 15, t 1.00 / треб. 2.13, edge +71.2 bps (после изд. +68.5), половины +160.6 / −7.1 → FAIL (1-й);
+одно событие 2022-09-13 (CPI) −552 bps. Вариант спасения по prereg (удержание 3 бара) подан. Автопродвижение отработало
+вживую: квитанция ETF_PREMIYA_BTC_V1_1 (концентрация OK, диагностика) + строка в DLYA_CODEX.jsonl.
