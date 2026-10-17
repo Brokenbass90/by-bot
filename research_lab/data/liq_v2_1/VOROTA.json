@@ -1,0 +1,24 @@
+{
+ "status": "NOT_YET",
+ "sobytiy_BASE": 0,
+ "sutok": 0,
+ "monet": 0,
+ "qa": {
+  "zapisey": 50,
+  "pozdnih": 0,
+  "unknown_chasy": 0,
+  "dolya_pozdnih": 0.0,
+  "dubley_svernuto": 0,
+  "chuzhaya_epoha": 0,
+  "snimkov": 1
+ },
+ "polnota_lenty": "UNKNOWN_NO_SEQUENCE_OR_BACKFILL",
+ "progrev_do_ms": 1793176534223,
+ "trebovaniya": {
+  "min_sobytiy": 200,
+  "min_sutok": 20,
+  "min_monet": 15,
+  "maks_dolya_pozdnih": 0.05
+ },
+ "lenta_do_ms": 1791967352397
+}
