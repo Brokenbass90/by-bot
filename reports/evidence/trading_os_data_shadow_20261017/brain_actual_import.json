@@ -1,0 +1,13 @@
+{
+  "activation_ms": 1792243205000,
+  "events": 0,
+  "execution_authority": false,
+  "money_authority": false,
+  "outcomes_read": false,
+  "policies": [],
+  "policy_registry_sha256": "e9667b59c42254488916226349cf1e0d74fc78d6ab335a470bd516c5096888e3",
+  "relationships": [],
+  "sleeves": [],
+  "source_revision": "0efbca7",
+  "status": "SOURCE_CHAINS_VERIFIED_AWAIT_POST_INTAKE_DECISION"
+}

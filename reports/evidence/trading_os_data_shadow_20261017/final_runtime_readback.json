@@ -1,0 +1,88 @@
+{
+  "alpaca": {
+    "entry_halt_present": true,
+    "monthly_files": 32,
+    "monthly_mismatches": [],
+    "monthly_transport_bound": false,
+    "open_orders_count": 0,
+    "positions": [
+      {
+        "qty": "0.325167779",
+        "side": "long",
+        "symbol": "NET"
+      }
+    ],
+    "source_pins_verified": 95,
+    "stop_price": "277.69",
+    "stop_status": "expired"
+  },
+  "broker_writes": 0,
+  "financial_units_changed": 0,
+  "kity": {
+    "account_lock_inode": 818853,
+    "guard_files": 155,
+    "guard_mismatches": [],
+    "heartbeat": {
+      "account_lock_inode": 818853,
+      "active_plan_id": null,
+      "at_ms": 1792244441703,
+      "error": null,
+      "execution_contract": "KITY_TEN_NATIVE_GUARDED_BATCH_V1",
+      "mode": "ORDERS_OFF",
+      "money_config_enabled": false,
+      "phase": "NO_ACTIVE_PLAN",
+      "pid": 2440673,
+      "private_authenticated": true,
+      "private_connected": true,
+      "private_last_receive_ms": 1792244441602,
+      "private_subscribed": true,
+      "schema": "kity_micro_owner_heartbeat_v1",
+      "state": null,
+      "trading_post_attempts": 34
+    },
+    "money_go": false,
+    "open_orders_count": 0,
+    "policy_claim_count": 0,
+    "policy_count": 1,
+    "positions": [],
+    "selected": false,
+    "source_files": 23,
+    "source_mismatches": [],
+    "wire_records": 34
+  },
+  "notifications_sent": 0,
+  "observed_utc": "2026-10-17T13:40:47.675000+00:00",
+  "private_raw_sha256": "73b510538d3c52b5957dc9246bf764601865a00cc5a18ce799ff9d2a56855607",
+  "source_ops": {
+    "bootstrap": {
+      "already_bound": false,
+      "broker_writes": 0,
+      "daily_status": "NO_OWNED_MONTHLY_POSITIONS",
+      "money_authority": false,
+      "next_schedule": {
+        "daily_due": false,
+        "entry_open_ms": 1792416600000,
+        "entry_session": "2026-10-19",
+        "money_authority": false,
+        "month_end": false,
+        "monthly_selection_due": false,
+        "next_source_run_ms": 1792441200000,
+        "orders_allowed": false,
+        "signal_session": "2026-10-16"
+      },
+      "orders_allowed": false,
+      "receipt_sha256": "a8db55aac51730be435cbd8509d37fed1f6af972fa1ef4b9ce64f1cd02990626",
+      "schema": "ALPACA_SOURCE_OPERATION_RECEIPT_V1",
+      "selection_id": null,
+      "signal_session": "2026-10-16",
+      "source_id": "a60d872215f4871c3408f1388cc734f904e90fd3e175b9aaf4c789668b8cbfb0",
+      "status": "ORDERS_OFF_OPERATIONAL_PASS"
+    },
+    "broker_writes": 0,
+    "files_in_latest_capture": 58,
+    "source_files": 37,
+    "source_mismatches": [],
+    "spec_sha256": "73b37f25da947e16a905bac1c59ed86a2230a47fe467694246ae2c1dfa2b5154",
+    "units": "Result=success\nExecMainStatus=0\nId=alpaca-monthly-source-ops.service\nActiveState=inactive\nSubState=dead\n\nNextElapseUSecRealtime=Mon 2026-10-19 17:20:00 UTC\nResult=success\nId=alpaca-monthly-source-ops.timer\nActiveState=active\nSubState=waiting\n"
+  }
+}

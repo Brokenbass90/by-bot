@@ -1,0 +1,19 @@
+{
+  "NET_monthly_guard_pins_preserved": 95,
+  "broker_writes": 0,
+  "cron_unchanged": true,
+  "financial_units_changed": 0,
+  "kity_unit_unchanged": true,
+  "notifications_sent": 0,
+  "observed_ms": 1792244106801,
+  "root": "/opt/bybot-research/alpaca-monthly-source-ops-20261017",
+  "source_files": 37,
+  "source_readback": true,
+  "spec_sha256": "73b37f25da947e16a905bac1c59ed86a2230a47fe467694246ae2c1dfa2b5154",
+  "status": "ALPACA_SOURCE_OPS_SCHEDULE_ACTIVE_ORDERS_OFF",
+  "unit_sha256": {
+    "alpaca-monthly-source-ops.service": "135c442e204e1cb9e8d40710bf50ef6f9c4f0c7a2ae57fc213e99f93c9efc6a7",
+    "alpaca-monthly-source-ops.timer": "585e3b6ad78839f4a81b945c7ccf46def0a725b56a807b1ef309c9eff0f5671c"
+  },
+  "unit_state": "Result=success\nExecMainStatus=0\nId=alpaca-monthly-source-ops.service\nActiveState=inactive\nSubState=dead\n\nNextElapseUSecRealtime=Mon 2026-10-19 17:20:00 UTC\nResult=success\nId=alpaca-monthly-source-ops.timer\nActiveState=active\nSubState=waiting\n"
+}

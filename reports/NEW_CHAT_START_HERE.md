@@ -1,5 +1,9 @@
 # Latest entrypoint — 17 October 2026
 
+Latest implementation: [data/shadow delivery](TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md).
+Alpaca full-universe/schedule now operational orders-OFF; IBIT adapter and Brain
+receiver delivered. RealV2 decision and KITY10/10 stillOPEN; NET19OctrearmP0.
+
 Read [Trading OS Codex master handoff](TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md)
 and its execution board first, then current checkpoint TOP. Fresh read-only
 follow-up12:37UTC: KITY ORDERS_OFF/flat, actual10/10 OPEN; NET remains open with

@@ -1,5 +1,13 @@
 # Trading OS — Codex master handoff, 17 October 2026
 
+**LATEST engineering delivery:** [TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md](TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md).
+Alpaca57+SPY actualDATA_READY; isolated37-file source/schedule activeORDERSOFF,
+actualVPSbootstrap operationalPASS. IBITv1.1 saved-source adapter39PASS; Brain
+read-only receiver32PASS/realchainsverified but no newV2decision. Money and OS
+lanes run concurrently; LIVE never waits for Brain. Final13:40UTC KITYflat/
+ORDERSOFF/unclaimedpolicy; NETstillopen/DAYexpired/HALT. No financial changes.
+This supersedes the source-pipeline/schedule/IBIT-not-implemented statuses below.
+
 **Current intake: 09:57:44 UTC / 12:57:44 Cyprus, 17 October.**
 Lead Production Engineer accepts the existing project. This is an evidence-backed
 handoff with **KITY actual 10/10 still OPEN**, not a declaration that the micro

@@ -1,5 +1,17 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 13:40UTC IMPLEMENTATION: TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md.
+Alpaca full57+SPY DATA_READY/200sessions/16Octclosed, new37file isolatedsource
+timerACTIVE/actualVPSbootstrap ORDERSOFFoperationalPASS;95NETpins/V3/cron intact.
+IBIT07438fc savedsourceadapter39PASS, networkcollector/10sessionPASSpending.
+Brain0efbca7 readonlyreceiver32PASS/realchainsverified; source last11:51UTC/
+threeoldpolicies/noV2 orpostintakeevent. No fakecyclePASS/outcomes/judge/restart.
+FinalKITYsameowner/ORDERSOFF/flat0/open0/unclaimed1policy; actual10/10pending
+personalowneractionbefore21UTC. NETstill.325167779/DAYexpired277.69/HALT;
+actual19OctrearmremainsP0. MoneyLane+OSLaneparallel; noLIVEwaitforBrain.
+Full5474PASS/60sameFAIL/0new; finaltargetedsource15+IBIT39+Brain32PASS.
+Ownfourtestappendstoallowlist archived, exactoriginalhash restored/foreignnotstaged.
+
 October17 12:37UTC FOLLOWUP: masterhandoff + IBIT_DATA_ONLY_CONTRACT_INTAKE_2026_10_17.md.
 FreshKITYsameowner/ORDERSOFF/flat0/open0/oneunclaimedpolicy; NETstillopen/DAYexpired.
 MonthlyV3installed defaultOFFverifyPASS +47targetedsource/book/nativePASS;

@@ -1,0 +1,8 @@
+{
+  "original_entries": 12,
+  "own_test_entries_removed": 4,
+  "private_side_effect_retained": true,
+  "sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e",
+  "status": "VERIFIED_ORIGINAL_PREFIX_RESTORED",
+  "test_entries_timestamp": "2026-10-17T13:31:41Z"
+}

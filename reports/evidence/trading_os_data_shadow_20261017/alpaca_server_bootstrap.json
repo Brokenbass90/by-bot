@@ -1,0 +1,24 @@
+{
+  "already_bound": false,
+  "broker_writes": 0,
+  "daily_status": "NO_OWNED_MONTHLY_POSITIONS",
+  "money_authority": false,
+  "next_schedule": {
+    "daily_due": false,
+    "entry_open_ms": 1792416600000,
+    "entry_session": "2026-10-19",
+    "money_authority": false,
+    "month_end": false,
+    "monthly_selection_due": false,
+    "next_source_run_ms": 1792441200000,
+    "orders_allowed": false,
+    "signal_session": "2026-10-16"
+  },
+  "orders_allowed": false,
+  "receipt_sha256": "a8db55aac51730be435cbd8509d37fed1f6af972fa1ef4b9ce64f1cd02990626",
+  "schema": "ALPACA_SOURCE_OPERATION_RECEIPT_V1",
+  "selection_id": null,
+  "signal_session": "2026-10-16",
+  "source_id": "a60d872215f4871c3408f1388cc734f904e90fd3e175b9aaf4c789668b8cbfb0",
+  "status": "ORDERS_OFF_OPERATIONAL_PASS"
+}

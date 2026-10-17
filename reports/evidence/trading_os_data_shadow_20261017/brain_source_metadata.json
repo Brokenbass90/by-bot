@@ -1,0 +1,12 @@
+{
+  "last_recorded_ms": 1792237861062,
+  "last_recorded_utc": "2026-10-17T11:51:01.062000+00:00",
+  "outcomes_read": false,
+  "policies": {
+    "BASELINE_V1": 20914,
+    "BRAIN_V1": 20914,
+    "HEDGE_V1": 20914
+  },
+  "post_intake_decisions": 0,
+  "source_bytes": 25512915
+}

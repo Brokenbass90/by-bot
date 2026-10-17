@@ -1,0 +1,22 @@
+{
+  "BASELINE_V1": {
+    "brain_version": "BASELINE_V1",
+    "policy_sha": "b530e492470616d194f5047cee35e25f4462cbbc531cd48ffa9c56f13db65220",
+    "source_revision": "0efbca7"
+  },
+  "BRAIN_V1": {
+    "brain_version": "BRAIN_V1",
+    "policy_sha": "b530e492470616d194f5047cee35e25f4462cbbc531cd48ffa9c56f13db65220",
+    "source_revision": "0efbca7"
+  },
+  "BRAIN_V2_DET": {
+    "brain_version": "BRAIN_V2_DET",
+    "policy_sha": "ca6dc42a4c306a7cc186d840eaa48a653017dbba32f0ab77d39c8b0f3267cf81",
+    "source_revision": "0efbca7"
+  },
+  "HEDGE_V1": {
+    "brain_version": "HEDGE_V1",
+    "policy_sha": "42b95a59b3752778dc7fc15e1f5dfa3101b0ff379704ea1f6e7644a9af27afb6",
+    "source_revision": "0efbca7"
+  }
+}

@@ -1062,3 +1062,19 @@ gross207.668760/staticreasons[], commonCTSSTALE becauseGRASS2862ms>2s
 Newpolicy stillunused/0POST. Do not claimfreshSENDPASS. Alreadyapproved
 pricefree PERSONALlauncher stillrequires its ONE newpostGOcapture/allCTSgates;
 NO_SEND consumesattempt iffails. No automaticretry or anotherpolicy.
+
+## October17 active engineering / parallel OS delivery
+
+Direct owner accepts handoff a10667a and authorizes Money Lane and OS Lane in
+parallel; LIVE must not wait for Brain. Read checkpoint TOP and
+TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md. Alpaca57+SPY actual DATA_READY;
+separate37-file source/schedule timer is active ORDERS_OFF and VPS bootstrap
+passed, not monetary V3 activation or current NET adoption. IBIT07438fc
+saved-source adapter39PASS; collector/10session acceptance pending. Brain0efbca7
+read-only receiver32PASS; real chains verified but no post-intake/V2 decision,
+so no actual V2 cycle PASS. Preserve policies, financial gates and source history.
+
+Before broad pytest, snapshot the foreign untracked allowlist log bytes. The
+suite has known append side effects. Archive own test mutations, verify the
+original prefix before restoring it, and never discard owner changes. The
+Oct17 run's four test rows were archived and original SHA365ff7d6…cc2e0e restored.

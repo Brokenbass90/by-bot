@@ -1,0 +1,302 @@
+{
+  "broker_writes": 0,
+  "calendar_sha256": "5bfc14f9db77b4e9dd5e838b54da051239ab3235a2155ec6778efab3692e9053",
+  "coverage": {
+    "AAPL": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "ABBV": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "ABNB": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "ADBE": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "ADSK": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "AMD": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "AMZN": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "AVGO": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "BAC": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "CAT": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "COIN": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "COST": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "CRM": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "CRWD": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "CVX": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "DDOG": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "GE": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "GOOGL": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "GS": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "HD": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "INTU": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "ISRG": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "JNJ": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "JPM": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "KO": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "LLY": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "LMT": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "MA": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "MDB": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "META": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "MRK": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "MSFT": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "NET": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "NFLX": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "NKE": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "NOW": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "NVDA": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "ORCL": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "PANW": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "PG": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "PLTR": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "QCOM": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "REGN": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "SBUX": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "SCHW": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "SHOP": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "SNOW": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "SPY": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "TSLA": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "TSM": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "TXN": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "UBER": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "UNH": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "V": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "WFC": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "WMT": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "XOM": {
+      "completed_sessions": 501,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    },
+    "XYZ": {
+      "completed_sessions": 438,
+      "fully_verified_sessions": 200,
+      "latest_session": "2026-10-16"
+    }
+  },
+  "latest": "2026-10-16",
+  "money_authority": false,
+  "orders_allowed": false,
+  "source_id": "d1f065d620226a484785c41af88a898561a1b9375765d2ce8de7e6a0d148a9b7",
+  "status": "DATA_READY",
+  "symbols": 58
+}

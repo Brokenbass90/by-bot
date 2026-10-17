@@ -1,5 +1,11 @@
 # IBIT/BTC DATA-ONLY — initial ORDERS_OFF contract check
 
+LATEST: published07438fc v1.1 resolves these intake questions. The saved-source
+adapter is implemented/39targetedPASS; see
+[data/shadow delivery](TRADING_OS_DATA_SHADOW_DELIVERY_2026_10_17.md).
+Actual network collector and10-session acceptance remain pending. The original
+intake findings below are retained as dated history, not current blockers.
+
 **Status: CONTRACT_INTAKE_COMPLETE / SOURCE_SEMANTICS_OPEN.** Independent P1,
 behind KITY execution and Alpaca operational readiness. No implementation,
 source daemon, financial transport, strategy/evaluator run or ten-session PASS
