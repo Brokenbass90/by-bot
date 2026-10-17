@@ -98,3 +98,10 @@ def test_default_cli_has_no_side_effects(monkeypatch,capsys):
     from scripts import run_liq_research_delivery_v1 as cli
     monkeypatch.setattr(cli,'seal_daily',lambda *a,**k:pytest.fail('default must not seal'))
     assert cli.main([])==0 and 'NO_NETWORK_DATA_ONLY' in capsys.readouterr().out
+
+
+def test_export_cannot_consume_collector_disk_reserve(source,monkeypatch):
+    from types import SimpleNamespace
+    monkeypatch.setattr(delivery.shutil,'disk_usage',lambda p:SimpleNamespace(free=0))
+    with pytest.raises(ValueError,match='DISK_BUDGET'):delivery.seal_daily(source,'20261017',now_ms=NOW)
+    assert not (source/'exports/normalized-20261017.jsonl').exists()

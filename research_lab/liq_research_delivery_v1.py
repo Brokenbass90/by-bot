@@ -6,7 +6,7 @@ all sidecars; repeat delivery preserves bytes. Collector locks/files are read on
 from collections import Counter
 from contextlib import contextmanager
 from datetime import datetime,timezone
-import fcntl,hashlib,json,math,os,re,time,uuid
+import fcntl,hashlib,json,math,os,re,shutil,time,uuid
 from pathlib import Path
 from scripts.export_bybit_liquidation_v2_1 import export,encoded,sha
 
@@ -157,6 +157,12 @@ def seal_daily(root,day,*,now_ms=None):
     directory=safe(root/'exports')
     with locked(directory):
         if (directory/last).exists():return {**verify_snapshot(directory,day),'already_sealed':True}
+        # A cumulative normalized export is bounded above by its raw journal.
+        # Preserve the collector's own free-space reserve; never delete evidence.
+        raw_bytes=sum(p.stat().st_size for p in root.glob('runs/*/frames.jsonl'))
+        reserve=manifest['min_free_bytes']
+        if type(reserve) is not int or reserve<0 or shutil.disk_usage(root).free<reserve+raw_bytes+8*1024**2:
+            raise ValueError('EXPORT_DISK_BUDGET_BLOCKED')
         target=directory/files[0];receipt_path=directory/files[1]
         if target.exists()!=receipt_path.exists():raise ValueError('PARTIAL_EXPORT_REQUIRES_READ_ONLY_RECONCILIATION')
         receipt=load(receipt_path) if target.exists() else export(root,target)
