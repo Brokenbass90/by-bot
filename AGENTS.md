@@ -936,3 +936,19 @@ that operational wiring plus exact activation packet next, not new research,
 retuning or PAPER. Owner monetary activation separate; NETmaintenance independent.
 Then KITYbatch/privateWS ORDERSOFF (9051expired/noGOreuse), ElderHEDGE ORDERSOFF;
 standaloneElderKILL, sourcegateunchanged. PreserveClaude/ATT1/LIQ/allowlist/rootonly.
+
+## October17 approved operational delivery queue
+
+Direct owner plan authorizes complete isolated NET DAY source/schedule/TG,
+then KITYbatch/privateWS ORDERSOFF, then frozen ElderHEDGE ORDERSOFF. No repeat
+monthly parity or new statistical/PAPER gate, no LIVE activation. DAY delivered:
+ALPACA_DAY_MONITOR_DELIVERY_2026_10_17.md, active GET-only timer/NewYorkRTH minute,
+nextOct19 13:30UTC, alert-only OnFailure. Actual successful boot/check Saturday
+DAY_CLOSED_SESSION, TG TEST15210 HTTP200; never claim Monday rearm from it.
+95 protected source/HALT pins incl32reviewedV3 and oldNET manager preserved;
+originalaccountlock inode unchanged, observer ownlock only,0brokerwrites.
+16new/168targetedPASS; broadsuite not rerun. No blanket protection/loss guarantee.
+Do not rerun install/testnotification; retain journal/deliveryclaims. CurrentNET
+and originalmoney manager remain independent. KITY9051expired/oldGO not reused;
+batch/WS engineering grants no writer/permit/newmoney policy. ElderstandaloneKILL,
+onlyHEDGEfromfrozencontract. Root-only reviewer restriction remains.

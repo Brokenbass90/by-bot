@@ -1,0 +1,46 @@
+{
+  "status": "DAY_MONITOR_POST_INSTALL_READBACK_PASS",
+  "observed_ms": 1792221369398,
+  "spec_sha256": "f695195bd30d3f68d42812d6765aeb43ecb67f9ec1521af2b355ae26efb87fbe",
+  "unit_state": "Result=success\nExecMainStatus=0\nId=alpaca-net-day-monitor.service\nActiveState=inactive\nSubState=dead\n\nNextElapseUSecRealtime=Mon 2026-10-19 13:30:00 UTC\nResult=success\nId=alpaca-net-day-monitor.timer\nActiveState=active\nSubState=waiting\n\nNextElapseUSecRealtime=Sat 2026-10-17 07:20:00 UTC\nResult=success\nId=alpaca-oct15-owned-manager.timer\nActiveState=active\nSubState=waiting\n",
+  "latest": {
+    "broker_writes": 0,
+    "journal": "2026-10-17-1792221341051-c516ae9e19cc49d9908cf64cc382cfe5.json",
+    "observation": {
+      "actual_unprotected_minutes": null,
+      "broker_writes": 0,
+      "coverage": [
+        {
+          "status": "OUTSIDE_RTH",
+          "symbol": "NET"
+        }
+      ],
+      "evidence_id": "f816131de45a1ede76eaaba640e25fca1fc13b9671c2e7a0f49b990915f4a04a",
+      "issues": [],
+      "money_authority": false,
+      "observed_ms": 1792221341051,
+      "orders_allowed": false,
+      "regular_session": false,
+      "regular_session_elapsed_minutes": 0,
+      "schema": "ALPACA_DAY_PROTECTION_OBSERVATION_V1",
+      "session": "2026-10-17",
+      "session_open_ms": null,
+      "source_sha256": "c2c296f19b191d3a603ba7c7ce22e9657deef373c120451480fd75e375ff7a04",
+      "status": "DAY_CLOSED_SESSION"
+    }
+  },
+  "notification_receipts": [
+    {
+      "delivered": true,
+      "http_status": 200,
+      "message_id": 15210,
+      "response_sha256": "f771610c141cea5e8b73a12506d93816d4c4625a2f6a7f4289975c6aa5b584dc",
+      "status": "DELIVERED"
+    }
+  ],
+  "journal_observations": 2,
+  "preserved_trading_source_pins": 95,
+  "reviewed_monthly_files_unchanged": 32,
+  "account_lock_inode_preserved": true,
+  "broker_writes": 0
+}

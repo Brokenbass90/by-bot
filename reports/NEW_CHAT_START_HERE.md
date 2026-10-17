@@ -1,5 +1,10 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT Oct17: DAY monitoring is now operational GET-only; see
+ALPACA_DAY_MONITOR_DELIVERY_2026_10_17.md and checkpoint TOP. Own timer next
+Oct19 13:30UTC, TG test15210 delivered; V3/HALT/NET manager unchanged.
+Next KITYbatch/privateWS ORDERSOFF, then ElderHEDGE ORDERSOFF.
+
 CURRENT October17: independent ALPACA_STRATEGY_PARITY_PASS received507f782.
 Read ALPACA_PARITY_ACCEPTED_DAY_NEXT_2026_10_17.md / checkpoint TOP. NET is
 not automatically closing Monday; monthly candidate remains disabled. DAY

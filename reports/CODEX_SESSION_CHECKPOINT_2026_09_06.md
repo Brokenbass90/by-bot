@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 07:16UTC CURRENT: ALPACA_NET_DAY_MONITOR_ACTIVE_GET_ONLY.
+Read ALPACA_DAY_MONITOR_DELIVERY_2026_10_17.md. Owner's explicitOct17plan approves
+isolated NET GET/schedule/TG wiring, then KITYbatch/privateWS ORDERSOFF, then
+ElderHEDGE ORDERSOFF. No LIVE activation/research retune/newGO implied.
+Separate observer root alpaca-net-day-monitor-20261017; timer enabled/active,
+independent nextOct19 13:30UTC/16:30Cyprus then minuteRTH/NewYorkcalendar.
+OnFailure alert-only hook. Actual service exit0 + boot/readback DAY_CLOSED_SESSION;
+NOT current stop protection or futureMondayrearm proof. Telegram TEST delivered
+HTTP200/oktrue/message15210, explicitly not alarm/protection. Immutable raw/journal,
+incident-before-notify, claim/no-blind-resend/recovery, ownlock/strictsystemdsandbox.
+16new/168targetedPASS, no fullsuite rerun.95 trading/source/HALT pins incl32V3
+unchanged; originalNET manager/lockinode/cron preserved,0brokerwrites. Monthly
+V3 stays disabled, independentALPACA_STRATEGY_PARITY_PASS retained. No NETclose,
+stopchange, migration or monetarymanager activation. Exact continuous outage
+duration UNKNOWN; samples/first-confirmation delay/gaps reported honestly.
+Previous DAYwiringPENDING statements below are historical; this integration is
+operational now. Next KITYbatch/WS preparation only, no9051/oldGO reuse.
+
 October17 06:28UTC CURRENT: ALPACA_STRATEGY_PARITY_PASS independently received
 from Claude507f782 for recoveryd205f8f/monthly-daily identity8f6d1fd2…277c799.
 Exact review Git blob verified; all32 reviewed strategy source pins unchanged.

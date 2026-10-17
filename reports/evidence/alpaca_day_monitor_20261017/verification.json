@@ -1,0 +1,19 @@
+{
+  "status": "DAY_MONITOR_ACTIVE_GET_ONLY",
+  "targeted": "168 passed",
+  "targeted_log_sha256": "f665068788c9fb4a1adb73a2b062278715f767dff2fcff4ce141d185579a6564",
+  "source_sha256": {
+    "research_lab/alpaca_day_protection_v1.py": "e476a8d336a5afd351eb2a706e505e7154c1d72ce3640a5d5f6577b83b1c2245",
+    "research_lab/alpaca_day_monitor_v1.py": "0b1f45da24f8b95e4a42a137fa6b762bbcb82537c27465e76a6f2c948431e914",
+    "research_lab/kity_oct15_deadline_v1.py": "aef82f0f413eea0b2da2937e75d3f972f6907845647dcbdd9f6b0d1f88d2a62b",
+    "scripts/run_alpaca_day_monitor_v1.py": "0f3b44013bd9672162103315a376abaa45a5f583cfc38b4ca789d43912dddb09"
+  },
+  "actual_telegram_message_id": 15210,
+  "actual_telegram_test_delivered": true,
+  "live_strategy_activated": false,
+  "broker_writes": 0,
+  "current_NET_manager_modified": false,
+  "actual_monday_rearm_observed": false,
+  "full_suite_rerun": false,
+  "duration_semantics": "Exact continuous unprotected minutes UNKNOWN; first confirmed-delay/sample/gap metrics only."
+}
