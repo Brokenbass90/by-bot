@@ -1,5 +1,18 @@
 # Trading OS — Codex master handoff, 17 October 2026
 
+**LATEST: [KITY_CAP300_OWNER_REVIEW_2026_10_17.md](KITY_CAP300_OWNER_REVIEW_2026_10_17.md),
+code7213522.** Owner approves calculation/proposal≤300, NOT money GO. Actual
+18:48:31UTC72GET: minimum246.149420/collar247.371930/headroom52.628070;
+CTS1043ms/flat0/orders0 datedPASS, original23/155pins/PIDs/lease/cron preserved.
+15USDT remains an exit trigger, no guaranteed final cap; sharedcross3x/10x.
+Costs0.286858 roundtripreference, margin35.1389reference, no margin/leveragechange.
+New inertpacket ba243eb8…2a81fd/155focusedPASS. Existingwriter remains215;
+cap300binding/newpolicy/freshgates/personalstart stillrequired, oldattemptSPENT.
+No financialGO/command/policy/deployment. Technicalmicro neednotwait23Oct;
+strategyresearchpermission unchanged. Read thispacket/executionboardfirst.
+Dynamic59sourcePASS retained; matchedproof/fullownedlifecycle nextP0. NET19Oct
+actualDAYgate OPEN/read-only16:35Cyprus retained; Monthly/LIQ/IBIT/Brain preserved.
+
 LATEST18:33UTC — LIQ_RESEARCH_DELIVERY_2026_10_17.md.
 Code01c85ca/a18c951/1315582; research origin431cc92 verified. Actual LIQ24863
 raw rows/all25 delivered into Claude data folder, immutable receipt/heartbeat/

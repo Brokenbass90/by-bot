@@ -1,5 +1,26 @@
 # Codex session checkpoint — 2026-09-06
 
+LATEST — KITY_CAP300_OWNER_REVIEW_2026_10_17.md / code7213522.
+Owner authorizes calculation up to300, explicitly NOT financial GO. One bounded
+72GET capture18:48:31UTC: exact minimum246.149420, collar high247.371930,
+headroom52.628070; same5+5/common-target/20.3% shortfall. CTS1043ms datedPASS,
+linearUSDT flat0/orders0, sufficient reference margin, originalpins/PIDs/lease/
+cron preserved. Fees vary bysymbol; roundtripfees+spread0.28685816075.
+Current3x/10x REGULAR_MARGIN unchanged; initialmargin35.1389 referenceonly.
+Loss15 remains IMMEDIATE ALL-IN EXIT TRIGGER, NOT hardfinalcap. Gap5% after
+trigger+50bpfriction atgross300 illustrativeloss31.5932325;10%46.684815;
+sharedcrosscollateral/no finite software guarantee, nativeprotectionnotyetLIVE.
+Newofflinecalculator/inertownerpacket/realmarketfixture155focusedPASS. Packet
+ba243eb8…2a81fd; no newfinancialpolicy/command, olda1c97e6b SPENT untouched.
+Existinglivevalidators remain215. Separatepinnedcap300binding/newdatedpolicy/
+freshpre-money+singlepostGOcapture+PERSONALstart required afterexplicitowner
+decision; no globalcapreplace, claimreset or launcherreuse. No23Octtechnicalwait.
+This supersedes older cap-change prohibitions ONLY for this calculation/proposal.
+AlpacaDynamic59continuoussourcePASS retained, matchedfixedrules/fullownedlifecycle/
+binding remainP0; Monthly separate. NET19Oct13:30UTC/16:30Cyprus actualDAYgate
+OPEN, existing16:35read-onlycheck retained. LIQ/IBIT/Brain priorreceipts/timers
+retained; MassivePENDING. Foreignallowlist unchanged, no fullsuite/financialreview.
+
 LATEST18:33UTC — LIQ_RESEARCH_DELIVERY_2026_10_17.md.
 Code01c85ca/a18c951/1315582; research origin431cc92 verified. Actual LIQ24863
 raw rows/all25 delivered into Claude data folder, immutable receipt/heartbeat/

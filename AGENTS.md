@@ -1173,3 +1173,20 @@ IBIT MassivePENDING/historical81notprospective; deliver actual source decisions
 create-exclusive to sibling data/ibit_adapter_v1 only, no source/outcome edits.
 65LIQ +53source/native/reselection +1CLI focusedPASS; no broadgreen or independent
 financial/research review. Root-only restriction/foreignallowlist preserved.
+
+## October17 owner cap300 calculation scope — NOT financial GO
+
+Latest direct owner message supersedes earlier blanket cap-change prohibition
+ONLY for a new calculation/proposal up to300USDT. Read
+reports/KITY_CAP300_OWNER_REVIEW_2026_10_17.md and checkpoint TOP. Do not change
+the active215 bounds, spentpolicy/claim, LIVE writer, account margin or leverage.
+Code7213522 adds isolated offline calculator/inert review packet; it cannot be
+submitted as a livepolicy. Exact18:48UTC min246.149420/collar247.371930, same
+5+5/common-target/rounding. Loss15 is EXIT TRIGGER not guaranteed finalcap;
+sharedcrosscollateral/overshoot explicitly exposed.155focusedPASS, oldcap validators
+stillreject300. No new financialpermission/policy/command issued. Future one-shot
+requires explicitownerdecision, separatetestedpinned300binding, freshpre-money
+feasibility/account/custody, new dated policy+namespace, single postGO capture
+and HUMANpersonalstart. Never run oldlauncher, resetclaim or polluntilPASS.
+Technicalmicro doesnotrequirewaiting23Oct; researchpromotiongates unchanged.
+AlpacaDynamic/NET19Oct remainparallelP0, previous DATA timers preserved.

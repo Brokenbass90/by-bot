@@ -1,0 +1,27 @@
+{
+  "broker_writes": 0,
+  "code_commit": "721352261c41b81f79fa7ff4dbdf1be1b33ea681",
+  "focused_test_command": ".venv/bin/python -m pytest -q tests/test_kity_cap300_proposal_v1.py tests/test_kity_micro_feasibility_v1.py tests/test_kity_micro_preflight_v1.py tests/test_kity_micro_pricing_intent_v2.py tests/test_kity_batch_ws_v1.py tests/test_kity_micro_native_protection_v1.py tests/test_kity_micro_runtime_v1.py tests/test_kity_batch_owner_handoff_v1.py",
+  "foreign_allowlist_sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e",
+  "full_suite_run": false,
+  "independent_financial_review": false,
+  "market_only_fixture_sha256": "6fcb1b0265a39dbffb451fa7db73fdd097ca5e27fe7196c779d1d628913731e5",
+  "new_policy_issued": false,
+  "old_policy_reused": false,
+  "private_capture_sha256": "0e8d5184edad454fd26bd7b2c8982d3d747f051f7e2f9e0b4f565e73b3830113",
+  "public_receipt_files": {
+    "calculation.json": "a7d380e63d5f35e0e1d28e22287c070c7c0abedd78bff25decdb73e0d5d17417",
+    "owner_review_packet.json": "eb8c1a3b0c402f6d92c9b3aeb4340b43e08bed312d66960176ae706e2e28a69c"
+  },
+  "red_phase": "new calculator import absent; later owner packet import absent before implementation",
+  "remote_financial_changes": 0,
+  "schema": "KITY_CAP300_PROPOSAL_VERIFICATION_V1",
+  "source_files": {
+    "configs/research/kity_execution_micro_owner_bounds_v3_20261015.json": "9d8c6e036fe9446de539c20b89164dd019c0d6012464ce66f25581fe572b80ad",
+    "research_lab/kity_cap300_proposal_v1.py": "aaabcb2ebc110fef10011f59e858adbd44f04a9e834388157902ff72403647dc",
+    "scripts/prepare_kity_cap300_proposal_v1.py": "928ac8ffc529a020be00edb1e74c1b912fe001831ccd175999e1365768a6345a",
+    "tests/test_kity_cap300_proposal_v1.py": "fe22dd4f6ba7881b6ea6526bac36656b8ff3373440804c465b5663a5c0db91c3"
+  },
+  "tests_failed": 0,
+  "tests_passed": 155
+}

@@ -1,4 +1,15 @@
-# START HERE — LIQ delivery and Dynamic59 source closed
+# START HERE — KITY300 calculation, no financial GO
+
+Read [KITY_CAP300_OWNER_REVIEW_2026_10_17.md](KITY_CAP300_OWNER_REVIEW_2026_10_17.md)
+and checkpoint TOP first. Owner authorizes cap300 calculation ONLY. Code7213522,
+fresh18:48UTC minimum246.149420/collar247.371930; loss15trigger NOT hardcap.
+155focusedPASS/inertpacket ba243eb8…2a81fd, no policy/command/financialdeployment.
+OldattemptSPENT, livevalidators remain215. Need explicitownerdecision, separate
+pinnedcap300binding, freshpre-money/newdatedpolicy+singlepostGOcapture and personal
+start. No claimreset/oldlauncherreuse. Current3x/10x sharedcross unchanged.
+AlpacaDynamic/NET19Oct remainP0; below is dated priorstate, not renewed authority.
+
+# Prior — LIQ delivery and Dynamic59 source closed
 
 LATEST18:33UTC — LIQ_RESEARCH_DELIVERY_2026_10_17.md.
 Code01c85ca/a18c951/1315582; research origin431cc92 verified. Actual LIQ24863
