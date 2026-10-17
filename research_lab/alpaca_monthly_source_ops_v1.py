@@ -73,22 +73,28 @@ def schedule(calendar,*,now_ms):
 
 def compile_source(directory,capture,calendar,*,now_ms):
     """Validate ALL names and closed calendar sessions before returning history."""
+    return _compile_source(directory,capture,calendar,now_ms=now_ms,symbols=required_symbols(),
+                           capture_schema=CAPTURE_SCHEMA,output_schema=SCHEMA)
+
+
+def _compile_source(directory,capture,calendar,*,now_ms,symbols,capture_schema,output_schema):
+    """Shared QA primitive; callers pin their independent universe/schema."""
     check_pins();directory=safe_path(directory);now=instant(now_ms)
     try:
         plan=schedule(calendar,now_ms=now)
         closed=[r for r in calendar if r['close_ms']<=now]
         if len(closed)<MIN_SESSIONS or not plan['entry_session']:raise SourceBlocked('CALENDAR_WARMUP_OR_NEXT_SESSION_MISSING')
         target=closed[-1];window=closed[-MIN_SESSIONS:]
-        if (capture['schema']!=CAPTURE_SCHEMA or capture['fetcher_sha256']!=SOURCE_PINS['scripts/fetch_equities_yfinance.py']
+        if (capture['schema']!=capture_schema or capture['fetcher_sha256']!=SOURCE_PINS['scripts/fetch_equities_yfinance.py']
           or capture['interval']!='1h' or capture['period']!='2y' or capture['prepost'] is not False
           or capture['auto_adjust'] is not False or capture['returncode']!=0
           or not target['close_ms']<=instant(capture['started_ms'])<=instant(capture['completed_ms'])<=now):
             raise SourceBlocked('CAPTURE_IDENTITY_OR_TIME')
-        names={s+'_M5.csv' for s in required_symbols()}
+        names={s+'_M5.csv' for s in symbols}
         if set(capture['files'])!=names:raise SourceBlocked('FULL_UNIVERSE_MANIFEST_COVERAGE')
         expected={r['session']:list(range(r['open_ms']//1000,r['close_ms']//1000,3600)) for r in window}
         history={};coverage={};issues=[];excluded=set()
-        for symbol in required_symbols():
+        for symbol in symbols:
             p=safe_path(directory/(symbol+'_M5.csv'))
             try:
                 if not p.is_file() or p.stat().st_size>8_000_000 or sha(p)!=capture['files'][p.name]:
@@ -118,7 +124,7 @@ def compile_source(directory,capture,calendar,*,now_ms):
             except (ValueError,KeyError,TypeError,OSError) as exc:
                 issues.append(symbol+':'+str(exc)[:250])
         if issues:raise SourceBlocked(issues)
-        out=dict(schema=SCHEMA,status='DATA_READY',history=history,calendar=calendar,
+        out=dict(schema=output_schema,status='DATA_READY',history=history,calendar=calendar,
           signal_session=target['session'],entry_session=plan['entry_session'],month_end=plan['month_end'],
           source_available_ms=capture['completed_ms'],cache_capture=capture,coverage=coverage,
           cache_root=str(directory),calendar_sha256=digest(calendar),source_code_sha256=source_pins(),
@@ -131,7 +137,11 @@ def compile_source(directory,capture,calendar,*,now_ms):
 
 def capture_full(directory,*,clock=lambda:time.time_ns()//1000000):
     """One new immutable public fetch, no retry and no pre-existing directory."""
-    check_pins();symbols=required_symbols();directory=safe_path(directory)
+    return _capture_full(directory,symbols=required_symbols(),capture_schema=CAPTURE_SCHEMA,clock=clock)
+
+
+def _capture_full(directory,*,symbols,capture_schema,clock):
+    check_pins();directory=safe_path(directory)
     directory.mkdir(mode=0o700)
     started=clock()
     args=[sys.executable,str(ROOT/'scripts/fetch_equities_yfinance.py'),'--tickers',','.join(symbols),
@@ -142,7 +152,7 @@ def capture_full(directory,*,clock=lambda:time.time_ns()//1000000):
     except subprocess.TimeoutExpired as exc:
         rc=124;stdout=exc.stdout or b'';stderr=exc.stderr or b''
     (directory/'fetch.stdout').write_bytes(stdout);(directory/'fetch.stderr').write_bytes(stderr)
-    capture=dict(schema=CAPTURE_SCHEMA,started_ms=started,completed_ms=clock(),
+    capture=dict(schema=capture_schema,started_ms=started,completed_ms=clock(),
       fetcher_sha256=SOURCE_PINS['scripts/fetch_equities_yfinance.py'],interval='1h',period='2y',
       prepost=False,auto_adjust=False,returncode=rc,
       files={p.name:sha(p) for p in directory.glob('*_M5.csv') if p.is_file() and not p.is_symlink()})

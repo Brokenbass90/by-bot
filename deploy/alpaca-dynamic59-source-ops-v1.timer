@@ -1,0 +1,10 @@
+[Unit]
+Description=Dynamic59 completed sessions, early and regular close, ORDERS OFF
+[Timer]
+OnCalendar=Mon..Fri *-*-* 13:30:00 America/New_York
+OnCalendar=Mon..Fri *-*-* 16:30:00 America/New_York
+AccuracySec=1s
+Persistent=true
+Unit=alpaca-dynamic59-source-ops-v1.service
+[Install]
+WantedBy=timers.target

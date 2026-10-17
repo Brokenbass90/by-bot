@@ -1,0 +1,22 @@
+[Unit]
+Description=Original Alpaca Dynamic59 closed-source capture (ORDERS OFF)
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/bybot-research/alpaca-dynamic59-source-ops-20261017/app
+ExecStart=/root/by-bot/.venv/bin/python -B scripts/run_alpaca_dynamic_source_ops_v1.py --runtime /opt/bybot-research/alpaca-dynamic59-source-ops-20261017/runtime --package-spec /opt/bybot-research/alpaca-dynamic59-source-ops-20261017/spec.json --package-spec-sha256 @PACKAGE_SPEC_SHA256@ --calendar-profile /root/by-bot/configs/alpaca_live_v38.env --capture --bootstrap
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONNOUSERSITE=1
+Environment=XDG_CACHE_HOME=/opt/bybot-research/alpaca-dynamic59-source-ops-20261017/runtime/cache
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/bybot-research/alpaca-dynamic59-source-ops-20261017/runtime
+MemoryMax=512M
+CPUQuota=30%
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=900

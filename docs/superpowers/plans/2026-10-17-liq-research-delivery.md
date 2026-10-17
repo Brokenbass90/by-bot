@@ -13,3 +13,9 @@
 - [ ] IBIT19Oct forward→Claude journal remains scheduled acceptance work, MassivePENDING. Preserve Alpaca/KITY P0 board, current financial units/pins/foreign allowlist. Publish tests, receipts, commits and concise delta.
 
 Review: partial writes cannot overwrite an old seal; cumulative snapshots must not double-count deliveries; raw duplicates stay; gap hours are UNKNOWN (the Claude consumer currently does not apply gap sidecars and must be repaired by Claude); historical rows never become prospective decisions. Root-only review restriction retained.
+
+## Parallel Money Lane gate: continuous Dynamic59 source
+
+- [ ] Reuse Monthly's full200-session QA/frozen fetch primitives with explicit independent schemas/universe; default Monthly58 behavior unchanged. Add isolated Dynamic59 source module/CLI and source-only immutable session receipts, no strategy or financial book.
+- [ ] Verify missing/partial QQQ fails closed, default no-network, restart/revision refusal and saved-source CLI; rerun original Monthly source tests after refactor.
+- [ ] Install new isolated39/40-file DATA-only package/timer with actual59 bootstrap and original broker calendar. Preserve deployed Monthly37/V3/NET/KITY sourcepins and all monetary units. This closes source continuity only; matched economic validation/slot ownership/financial activation stay OPEN.
