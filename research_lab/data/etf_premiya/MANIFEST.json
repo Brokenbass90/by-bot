@@ -34,5 +34,9 @@
   "sobytiy": 30,
   "plyus": 18,
   "sha256": "8a52fbe02e399dda978af57dfccf8574505a1524a2d0ad5dfbf13989844b9148"
+ },
+ "OBEM_v2_15": {
+  "sobytiy": 78,
+  "sha256": "2f2b3cfd5e85dcc4b6b86971c3d3521b295289def3bd1774d7aab327c2f66bc1"
  }
 }
