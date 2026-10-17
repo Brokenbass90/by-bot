@@ -17,5 +17,10 @@
  "pre_fomc_v2_48ch": {
   "sobytiy": 32,
   "sha256": "b1a3ea7cac698b43526cb562a401428e5ff7940a3ce1bfe37335275af26b6cd2"
+ },
+ "shok_vse_2021_22": {
+  "sobytiy": 15,
+  "sha256": "fa89508d306cda014eae971e96372a65ee05959bd0c6274155fe996f41609807",
+  "kalendar_v2_sha256": "cee6e62d73d2b1a34ca75b3bde6f9c3c3b9ec671f5ead0484519840ee931ee11"
  }
 }

@@ -267,3 +267,6 @@
 {"gipoteza": "PRE_FOMC_DREYF_V1", "iz": "SCREEN", "kogda": "2026-10-17T10:56:47+00:00", "owner_go": null, "prichina": "FAIL t 0.42 (24ч) + вариант FAIL t −0.54 (48ч)", "tip": "perehod", "v": "KILL"}
 {"kogda": "2026-10-17T10:56:47+00:00", "prichina": "гипотеза KILL; сильные реакции CPI положительны, но n=9 — мощности нет (см. карточку MAKRO_SHOK_VSE)", "semya": "MAKRO_RELIZ_PEREREAKCIYA", "tip": "semya_kill"}
 {"kogda": "2026-10-17T10:56:47+00:00", "prichina": "гипотеза KILL: дрейфа до FOMC в BTC нет ни за 24ч, ни за 48ч", "semya": "PRE_FOMC_DREYF", "tip": "semya_kill"}
+{"id": "MAKRO_SHOK_VSE", "istochnik": null, "kogda": "2026-10-17T10:59:15+00:00", "opisanie": "откат сильной первой реакции BTC на релизы США CPI+NFP+PPI (PREREG_MAKRO_SHOK_VSE_2026_10_17)", "status": "ACTIVE", "tip": "semya"}
+{"avtor": "claude", "id": "MAKRO_SHOK_VSE_V1", "istochniki_dannyh": ["makro_kalendar_v2", "binance_h1_2021"], "kogda": "2026-10-17T10:59:15+00:00", "mehanizm": "|z|≥2 час релиза 08:30 ET → против хода, 6 ч", "semya": "MAKRO_SHOK_VSE", "tip": "gipoteza"}
+{"gipoteza": "MAKRO_SHOK_VSE_V1", "iz": "NEW", "kogda": "2026-10-17T10:59:15+00:00", "owner_go": null, "prichina": "prereg 17.10", "tip": "perehod", "v": "SCREEN"}
