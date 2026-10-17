@@ -24,7 +24,7 @@ evidence, blocker, next action, дата/событие — research-ветку 
 | **Brain Shadow** | v1.2, причинные записи идут | Brain v2 prereg (контекст: ETF-премия, режим) | после первого CONFIRM | Claude |
 
 **Счёт стратегий (метрика PM):** прошли DEV: 1 (ETF_PREMIYA_BTC) · реплицированы: 0 · подтверждены вперёд: 0 · готовы
-к исполнению (досье): 0 · в LIVE с доказанной логикой: 1 (Alpaca monthly, с 02.11).
+к исполнению (досье): 0 (1 DRAFT) · в LIVE с доказанной логикой: 1 (Alpaca monthly, с 02.11).
 
 ## 2. Сделано (последние 2 дня, с коммитами)
 | дата | что | коммит |
@@ -44,7 +44,7 @@ evidence, blocker, next action, дата/событие — research-ветку 
 ## 3. Будет сделано (очередь Claude, по порядку)
 1. ~~Вердикты MAKRO~~ — 17.10 13:50: CPI и PRE_FOMC KILL (`ITOG_FABRIKA_2026_10_17_UTRO.md`).
 2. ~~Манифест окон + проверка непересечения~~ — СДЕЛАНО 17.10 13:15: `factory_v3/okna_proverka.py`, `data/factory_v3/OKNA_MANIFEST.json` (2021H2–2022 vs 2023–2026Q3: OK), бары BTC 2021-04…2022-12 `data/h1/BTCUSDT_B21.npz` (15 360, без дыр).
-3. Досье исполнения для Codex (шаблон) на примере ETF_PREMIYA_BTC.
+3. ~~Досье исполнения~~ — 17.10: `dosie/SHABLON_DOSIE_ISPOLNENIYA.md`, `dosie/DOSIE_ETF_PREMIYA_BTC_V1.md` (DRAFT; блокер Codex: источник закрытия IBIT в реальном времени).
 4. 31.10: сверка теневого месячного отбора Alpaca с эталоном.
 5. Резерв: STABLECOIN_EMISSIYA, ETF_PREMIYA_KROSS, ETF_OBEM_UCHASTIE, KITY_V2 — первым DEV на 2021H2–2022, где возможно.
 
