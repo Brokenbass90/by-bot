@@ -1,0 +1,14 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "components": [
+    {
+      "component": "elder-hedge",
+      "monetary_transport_bound": false,
+      "source_count": 24,
+      "source_pins_pass": true,
+      "spec_sha256": "f9f746feef289e3e5ee947b069ee37151cfa2c21b7d899a3e743e7d74d0115d8"
+    }
+  ],
+  "status": "READONLY_DEPLOYED_CANDIDATES_VERIFIED"
+}

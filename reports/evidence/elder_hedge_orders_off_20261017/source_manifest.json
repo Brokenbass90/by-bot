@@ -1,0 +1,20 @@
+{
+  "code_read_only": true,
+  "live_source_rows_read": 0,
+  "material_source_blockers": [
+    "FIRST_ETS2S_ROW_LACKS_DECISION_GEOMETRY",
+    "NATIVE_ABSOLUTE_STOP_VS_CONTROL_FILL_SCALED_STOP_NEEDS_CONTRACT_CLARIFICATION"
+  ],
+  "orders_allowed": false,
+  "outcomes_read": 0,
+  "pins": {
+    "research_lab/ELDER_CRASH_HEDGE_V1_KONTRAKT_2026_10_16.md": "b25d25b7a49b7bca2a1e67199ccbad77e64927bdd5dc5f8f20d4d96192b5e798",
+    "research_lab/research_machine.py": "95ca5322c1da54cf06cd213bdf8075eedc7eff68d3127594db3b3479d32e8572",
+    "research_lab/ten.py": "cec62e9e6836470f16bf60a620e245462edf52db6d401b6371376d1f1cb67b60",
+    "research_lab/yadro.py": "b413a48f67158ccb4a69c769bb1114065468a9610eace7d367400555d4821b66"
+  },
+  "research_ref": "5eadba0af6169b27580c58e6d6380e49763c3f7e",
+  "schema": "ELDER_HEDGE_SOURCE_CONTRACT_INTAKE_V1",
+  "strategy_runs": 0,
+  "writer_activated": false
+}

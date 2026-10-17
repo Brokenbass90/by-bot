@@ -971,3 +971,28 @@ nextengineering before a newdated policy and PERSONALmoneyGO. No9051/spentGO
 reuse/extension, no70s standingauthority, no newpolicy or accountlease/service
 activation. DAYmonitor f7d3145 active GETonly; monthlyV3/HALT/NET unchanged.
 ElderHEDGE ORDERSOFF delivery is next; preserve Claude/ATT1/LIQ/allowlist/rootonly.
+
+
+## October17 Elder Hedge adapter/source findings
+
+October17 Elder CURRENT: ELDER_HEDGE_ORDERS_OFF_ADAPTER_DELIVERED /
+BLOCKED_SOURCE_CONTRACT. Read ELDER_HEDGE_ORDERS_OFF_ADAPTER_2026_10_17.md.
+20new/31targetedPASS; pure ispolnenie copied unchanged from pinned yadro
+b413a48f…21b66/function54a962ba…4946. Short/regime/risk/lot/native intent,
+completed-H1 reference fill, durable ownshadowbook, OpportunityV2/ReportEvent
+TAX-A preparation.24-file VPSkit installed disabled, no unit/transport,
+specf9f746feef289e3e5ee947b069ee37151cfa2c21b7d899a3e743e7d74d0115d8;
+independent source readback PASS.0source rows/outcomes/judge/strategy runs.
+Two code-proven source/contract issues: first ten_ETS2S row lacks causal
+stop/targets (terminal rr/stop fields cannot backfill earlier decision);
+absolute native x4 stop differs from CONTROL fill-scaled risk. Exact example
+100ref/102sl →108absolute vs100.2fill→108.216CONTROL. Need Claude versioned
+first-decision geometry/availability and authoritative stop-anchor clarification;
+do not mutate his producer or invent parity/30events/moneyGO. StandaloneKILL,
+frozen>=30/97%/95%/latency/ETS2M900 gates unchanged.
+KITY d1a7992 delivered disabled batch/WS candidate,160targetedPASS; existing
+writer unchanged/sequential/ORDERSOFF. Next Codex engineering: reviewed
+single-owner service/control binding ordersOFF, not new research; no expired
+9051/oldGO/70s scope transfer. DAY f7d3145 active GETonly/nextMon13:30UTC,
+monthlyV3 independentstrategyPASS but disabled, HALT/NET manager unchanged.
+Do not repeat completed baseline/DAYinstall/TGtest or broad audits.

@@ -1,5 +1,12 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT Oct17 Elder: checkpointTOP → ELDER_HEDGE_ORDERS_OFF_ADAPTER_2026_10_17.md.
+31targetedPASS/20new, disabled24-filekit, no live rows/outcomes/money. Need
+first-record causal geometry and native/CONTROL stop-anchor clarification from
+Claude before realsource intake. StandaloneKILL. KITY d1a7992 candidate disabled;
+next single-owner batch service/control binding ordersOFF. DAY f7d3145 active,
+AlpacaV3/HALT/currentNET unchanged. No oldGO reuse or research retuning.
+
 CURRENT Oct17 batch/WS: checkpoint TOP → KITY_BATCH_WS_ORDERS_OFF_2026_10_17.md.
 160targetedPASS; actual privateWS auth/sub/pong + flatGET,0orders. Finalkit
 installed disabled; activewriter unchanged/sequential. Not10/10moneyREADY.
