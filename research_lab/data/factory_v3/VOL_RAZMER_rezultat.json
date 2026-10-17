@@ -1,0 +1,59 @@
+{
+ "n_sdelok": 548,
+ "sredniy_razmer_HAR": 0.9288,
+ "s": 1625155200000,
+ "po": 1672416000000,
+ "potoki": {
+  "LONG": {
+   "POSTOYANNYY": {
+    "chistyy_pnl": -9315.2,
+    "maks_prosadka": 15368.5,
+    "pnl_k_prosadke": -0.606,
+    "kapital_sredniy": 0.929,
+    "kapital_pik": 0.929,
+    "cvar5": -736.0,
+    "hudshaya": -1606.2
+   },
+   "HAR": {
+    "chistyy_pnl": -9347.9,
+    "maks_prosadka": 15000.5,
+    "pnl_k_prosadke": -0.623,
+    "kapital_sredniy": 0.929,
+    "kapital_pik": 1.418,
+    "cvar5": -747.0,
+    "hudshaya": -1498.0
+   },
+   "usloviya": {
+    "prosadka": false,
+    "cvar5": false,
+    "pnl": true
+   }
+  },
+  "SHORT": {
+   "POSTOYANNYY": {
+    "chistyy_pnl": -1882.4,
+    "maks_prosadka": 9539.4,
+    "pnl_k_prosadke": -0.197,
+    "kapital_sredniy": 0.929,
+    "kapital_pik": 0.929,
+    "cvar5": -700.6,
+    "hudshaya": -1202.5
+   },
+   "HAR": {
+    "chistyy_pnl": -1849.8,
+    "maks_prosadka": 9521.9,
+    "pnl_k_prosadke": -0.194,
+    "kapital_sredniy": 0.929,
+    "kapital_pik": 1.418,
+    "cvar5": -726.8,
+    "hudshaya": -1323.7
+   },
+   "usloviya": {
+    "prosadka": false,
+    "cvar5": false,
+    "pnl": true
+   }
+  }
+ },
+ "verdikt": "FAIL"
+}
