@@ -3,7 +3,7 @@ import copy
 import sqlite3
 import pytest
 from test_alpaca_dynamic_v1 import api, policy, calendar, snapshot, ranking, book, NOW
-from test_alpaca_expired_reservation_handoff import proof
+from test_alpaca_expired_reservation_handoff import proof,fresh_next_week
 from scripts import run_alpaca_dynamic_paper as cli
 
 
@@ -11,8 +11,7 @@ def next_attempt(book, snapshot, calendar, api, policy):
     old = book.propose(snapshot, calendar, NOW)
     later = NOW + 300000
     book.retire_undispatched(old['receipt_id'], proof(api, policy, old, later), later)
-    snapshot['observed_ms'] = NOW + 86400000
-    snapshot['quotes']['NET']['received_ms'] = snapshot['observed_ms']
+    fresh_next_week(book,snapshot,calendar)
     return old, book.propose(snapshot, calendar, snapshot['observed_ms'])
 
 

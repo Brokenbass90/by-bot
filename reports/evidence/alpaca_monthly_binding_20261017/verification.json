@@ -1,0 +1,56 @@
+{
+  "status": "ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE",
+  "targeted": "375 passed in 5.48s",
+  "full_suite": "60 failed, 5257 passed, 1 warning in 230.05s (0:03:50)",
+  "full_suite_exit_code": 1,
+  "full_suite_new_failure_names": [],
+  "full_suite_log_sha256": "e91b887df1c9c65b2b0dc8c28d2ebcb0b1c31e512dbe10410ac3e9e56657b478",
+  "targeted_log_sha256": "75e7a91d05d90d27f1e2814688e1a42ab723f74f45ce9d52ce9ad0708b95b7dc",
+  "strategy_identity": {
+    "strategy_id": "ALPACA_MONTHLY_BASELINE_7bf7cf6ae049345b13c80fb01f0f2bcb30ffc376ce10d875fc38df183be49ccc",
+    "material": {
+      "schema": "ALPACA_MONTHLY_STRATEGY_IDENTITY_V1",
+      "contract": {
+        "schema": "ALPACA_BASELINE_MONTHLY_DAILY_V1",
+        "enabled": false,
+        "orders_allowed": false,
+        "money_authority": false,
+        "owner_choice_date": "2026-10-16",
+        "reference_commit": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+        "reference_trades_core_sha16": "2347a7ec606cd845",
+        "selection": "MONTH_END_NEXT_OPEN",
+        "ratchet": "DAILY_CLOSE_NEXT_SESSION",
+        "initial_stop_anchor": "ACTUAL_FILL_MINUS_RAW_2ATR20",
+        "reentry_calendar_days": 21,
+        "capital_ceiling_usd": "487.42",
+        "gross_ceiling": ".70",
+        "maximum_weight": ".60",
+        "max_positions": 4
+      },
+      "reference_universe_sha256": "36da070b2e1fb6c7a10d3df99716c94e2afcabc7bae57d3ca172441736107172",
+      "reference_trades_core_sha16": "2347a7ec606cd845",
+      "files": {
+        "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+        "backtest/alpaca_exact_parity_contract.py": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+        "backtest/alpaca_bakeoff_v2_contract.py": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+        "strategies/alpaca_dynamic_v4_event.py": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a",
+        "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245",
+        "scripts/alpaca_adaptive_paper.py": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+        "research_lab/alpaca_dynamic_v1.py": "7ab36fd92c93103c648002eae16d775225d73c98fa765d470652a00d84c09622",
+        "research_lab/alpaca_strategy_parity_v1.py": "d87f5e07dc3353664f06661dc9a7ef2e16ce37342ad5df9c255a30f4f150efb8",
+        "research_lab/alpaca_monthly_binding_v1.py": "ec792083d0cec9b5220577f60679c6785f7a0ffbde11a7035db3e167ebaafb0e",
+        "research_lab/alpaca_monthly_native_binding_v1.py": "c38a8540b0c1a777330ca903b1fb7b41ab3a85a3de37b00372eedc5f8d609396",
+        "research_lab/alpaca_completed_session_source_v1.py": "4fb18217e9039ff3925f04f2373ad43181294f81bb2def9d36c2508147debdc2",
+        "scripts/equities_alpaca_paper_bridge.py": "62dc9419c81880731e55b962e6d59c945d87fb67c58cda69360a6dfe9d32d6c0"
+      }
+    }
+  },
+  "orders_allowed": false,
+  "money_authority": false,
+  "entry_halt_preserved": true,
+  "independent_review": "PENDING_CLAUDE_READ_ONLY",
+  "review_type": "ROOT_SELF_REVIEW_ONLY",
+  "full_suite_code_scope_note": "Final full-suite snapshot precedes mandatory original-HALT constructor argument only; final 375-test run and deployed 32-file verify cover the final source bytes.",
+  "broker_writes": 0,
+  "current_NET_migration": false
+}

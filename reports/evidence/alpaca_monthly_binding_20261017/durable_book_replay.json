@@ -1,0 +1,60 @@
+{
+  "status": "ALPACA_MONTHLY_DURABLE_BOOK_REPLAY_PASS",
+  "orders_allowed": false,
+  "money_authority": false,
+  "reference_trades_core_sha16": "2347a7ec606cd845",
+  "trades_compared": 64,
+  "checks": {
+    "selections": 24,
+    "initial_stops": 66,
+    "daily_closes": 637,
+    "stop_acks": 152,
+    "stop_exits": 56,
+    "rotations": 8,
+    "retained": 2,
+    "cooldown_decisions": 24,
+    "restarts": 486
+  },
+  "replay_code_sha256": {
+    "research_lab/alpaca_monthly_binding_v1.py": "ec792083d0cec9b5220577f60679c6785f7a0ffbde11a7035db3e167ebaafb0e",
+    "research_lab/alpaca_monthly_native_binding_v1.py": "c38a8540b0c1a777330ca903b1fb7b41ab3a85a3de37b00372eedc5f8d609396",
+    "scripts/equities_alpaca_paper_bridge.py": "62dc9419c81880731e55b962e6d59c945d87fb67c58cda69360a6dfe9d32d6c0",
+    "scripts/replay_alpaca_monthly_binding_v1.py": "31ad7357d575ee74bba04d3946a3ffb17a1154c7be70e7627f68a3fdfdeb4a81"
+  },
+  "universe_sha256": "36da070b2e1fb6c7a10d3df99716c94e2afcabc7bae57d3ca172441736107172",
+  "input_hashes": {
+    "claude-ETALON.json": "ea6e42d29fd536c86542e60b0b7642c2c7feac74d7843ef76677f9188606e24c",
+    "claude-sdelki.json": "316b7560b44f4e7e2acd19289dd778f9663b20b28480f3e4869a31513921284e",
+    "claude-resheniya.json": "e9dffb7df8741a38cc4103651a9b8905808f08645a7ca81ee50b1c6bb3b69a82"
+  },
+  "remaining": [
+    "BAC",
+    "SNOW"
+  ],
+  "final_close_without_future_calendar": [
+    {
+      "symbol": "BAC",
+      "session": "2026-07-10"
+    },
+    {
+      "symbol": "SNOW",
+      "session": "2026-07-10"
+    }
+  ],
+  "unclosed_fixture_sizes": [
+    {
+      "symbol": "SNOW",
+      "entry_session": "2026-07-01",
+      "qty": "fixture_not_size_proof"
+    },
+    {
+      "symbol": "BAC",
+      "entry_session": "2026-07-01",
+      "qty": "fixture_not_size_proof"
+    }
+  ],
+  "coverage": "Durable source/book + actual native-path tests separately. Archived entry quantities are inputs, not an independent sizing/accounting reconstruction.",
+  "calendar_scope": "Recorded baseline sessions; replay intraday clock is a fixture. Broker calendar normalization/DST/half-day verified separately.",
+  "backtest_simulator_calls": 0,
+  "broker_calls": 0
+}

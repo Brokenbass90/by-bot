@@ -1,0 +1,504 @@
+{
+  "status": "FULL_SUITE_REMAINS_RED",
+  "count": 60,
+  "groups": {
+    "ALPACA_RESEARCH_MATERIALIZATION_OR_HISTORICAL_RECEIPTS": 3,
+    "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME": 44,
+    "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT": 12,
+    "BRAIN_RESEARCH_SOURCE_PINS": 1
+  },
+  "failures": [
+    {
+      "test": "tests/test_alpaca_bakeoff_v2_preflight.py::test_preflight_freezes_future_window_but_stays_blocked_on_inputs",
+      "scope": "ALPACA_RESEARCH_MATERIALIZATION_OR_HISTORICAL_RECEIPTS",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_alpaca_exact_parity_materialization.py::test_materializer_records_real_blockers_without_performance_or_live_authority",
+      "scope": "ALPACA_RESEARCH_MATERIALIZATION_OR_HISTORICAL_RECEIPTS",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_ets2s_signal_shadow_contract.py::test_repository_contract_is_default_off_and_binds_att1_ets2s_fixed51",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_ets2s_signal_shadow_contract.py::test_runtime_paths_are_beneath_caller_root_and_reject_escape_and_symlink",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_ets2s_signal_shadow_contract.py::test_manifest_source_closure_is_hash_bound_to_config_and_required_paths",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_repository_config_pins_exact_fixed51_manifest_and_major8_money_universe",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_preflight_is_no_network_and_reports_evidence_money_separation",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_all_att1_environment_inputs_are_restored_after_cycle",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_observation_and_open_bar_changes_are_idempotent_but_closed_mutation_conflicts",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_next_closed_h1_creates_new_raw_event_per_symbol",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_events_are_raw_only_include_runtime_reason_hashes_and_diagnostic_regime",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_expected_hft_unavailable_is_explicit_but_unknown_gap_fails_partial",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_att1_fixed51_shadow.py::test_zero_success_is_raw_fail_closed",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_audit_alpaca_protection_challenger_v2.py::test_committed_alpaca_v2_receipt_passes_independent_audit",
+      "scope": "ALPACA_RESEARCH_MATERIALIZATION_OR_HISTORICAL_RECEIPTS",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_audit_att1_pivot_sequence_v1.py::test_committed_att1_pivot_sequence_receipt_passes",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_is_metadata_only_and_ready",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_audit_att1_sbr1_reserved_oos_v1.py::test_preexecution_audit_does_not_import_runner",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_audit_frequent_crypto_rehab_v2.py::test_receipt_is_research_only_and_evidence_backed",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_audit_inplay_causal_receipt.py::test_current_inplay_receipt_is_shadow_only_not_capital",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_brain_v2_v1_1_a7.py::test_verify_only_cannot_construct_outcome_inputs",
+      "scope": "BRAIN_RESEARCH_SOURCE_PINS",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_build_recovery_session_report.py::test_report_separates_scenarios_from_money_authority",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_collect_inplay_prospective_shadow.py::test_replay_records_signal_parity_diagnostics",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_crypto_core_v2_baselines.py::test_bounce_adapter_preserves_native_rejection_and_side",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_crypto_core_v2_baselines.py::test_bounce_consumes_only_the_exact_validated_source_rows",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_horizontal_breakout_long_72h_sealed_v1_runner.py::test_default_preflight_fails_before_any_market_row_is_opened",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_completed_immutable_job_is_a_noop_on_later_launchd_wakeup",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_changed_hashed_input_refuses_to_reuse_completed_receipt",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_crash_after_committed_stage_resumes_only_unfinished_stage",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_inherited_lock_survives_parent_crash_until_active_child_exits",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_failed_stage_persists_backoff_then_retries_within_attempt_limit",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_runner_strips_secrets_and_cli_rejects_arbitrary_command_input",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_caffeinate_process_is_released_when_stage_finishes",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_stage_heartbeat_updates_while_child_runs",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_mac_att1_research_job.py::test_os_sandbox_denies_network_and_local_credentials",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_preflight_event_expansion_retest_long_v1_phase1.py::test_current_phase1_identity_is_clean_but_performance_and_live_are_blocked",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_public_cashcarry_station_v1.py::test_one_cycle_is_per_symbol_durable_and_resume_reconciles_without_overwrite",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_public_cashcarry_station_v1.py::test_corrupt_state_and_adapter_identity_fail_closed",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_missing_authorization_never_opens_market_or_creates_claim",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[malformed]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_invalid_authorization_never_opens_market_or_creates_claim[drifted]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_claim_is_durable_before_scorer_callback",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_existing_claim_refuses_before_scorer_callback",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[hash]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[schema]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[window]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[gap]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[records_sha]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_market_input_drift_consumes_attempt_and_cannot_retry[infinite_ohlc]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_stale_output_refuses_before_claim",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_symlinked_output_refuses_before_claim",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_interrupt_after_claim_writes_terminal_receipt",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_success_receipt_has_exact_forensic_identity_and_inventory",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_semantic_reserved_failure_preserves_observed_rows_and_staged_accounting",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_bootstrap_parse_failure_keeps_consumed_claim_and_partial_forensics",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[extra]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_run_att1_sbr1_reserved_oos_v1.py::test_failure_receipt_observes_unexpected_or_symlinked_output_entry[symlink]",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_sbr1_fixed51_universe.py::test_preflight_rejects_fixed51_identity_or_provenance_drift",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_sbr1_zero_risk_shadow.py::test_repository_config_pins_verified_manifest_and_full_source_closure",
+      "scope": "ATT1_SBR1_LEGACY_OR_HOST_RUNTIME",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_strategy_env_prefix_isolation.py::test_legacy_asb1_prefix_remains_a_fallback",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    },
+    {
+      "test": "tests/test_strategy_promotion_queue.py::test_queue_fails_when_active_wip_exceeds_limit",
+      "scope": "OTHER_RESEARCH_FACTORY_OR_ENVIRONMENT",
+      "classification": "EXISTING_FAILURE_NAME_UNCHANGED",
+      "disposition": "RETAINED_OPEN_NOT_DELETED_NOT_CLAIMED_FIXED",
+      "material_monthly_execution_failure_reproduced": false,
+      "cause": "NOT_REDIAGNOSED_IN_THIS_P0"
+    }
+  ],
+  "baseline": "reports/evidence/alpaca_tuesday_preparation_20261012/live_intake_validation.json",
+  "new_failure_names": [],
+  "foreign_preserved": true,
+  "corrected_four": {
+    "reason": "Fixtures expected stale ranking reuse or omitted signal/ATR fields after the prior TTL repair.",
+    "files": [
+      "tests/test_alpaca_expired_reservation_handoff.py",
+      "tests/test_alpaca_paper_source_plan.py",
+      "tests/test_alpaca_first_entry_control_v1.py"
+    ],
+    "verification": "23 PASS; source TTL remains strict; explicit exact-GO stale-ranking rejection replaces the obsolete unsafe success expectation."
+  }
+}

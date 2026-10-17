@@ -8,6 +8,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import ssl
 import stat
 import sys
@@ -1161,6 +1162,7 @@ def _rotate_intended_monthly(
     *, client: Any, base_url: str, account_id: str, capital: float,
     state_path: Path, reentry_path: Path, selected_symbols: set[str],
     entry_session: str, now: datetime | None = None,
+    rotation_client_ids: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Under the account writer lock, settle owned month-turn exits before buys."""
     from zoneinfo import ZoneInfo
@@ -1193,10 +1195,18 @@ def _rotate_intended_monthly(
             or not math.isclose(_safe_float(entry.get("filled_qty")), float(record.get("entry_fill_qty", record["qty"])), rel_tol=1e-9)):
             raise IntendedPaperProtectionError(f"rotation_entry_identity_mismatch:{symbol}")
         identity = hashlib.sha256(f"{account_id}|{_INTENDED_PAPER_STRATEGY_ID}|{record['entry_order_id']}|{entry_session}|{symbol}".encode()).hexdigest()[:32]
-        expected = {"entry_session": entry_session, "client_order_id": "alp-rotate-" + identity, "qty": record["qty"]}
+        rotation_cid = "alp-rotate-" + identity
+        if rotation_client_ids is not None:
+            rotation_cid = rotation_client_ids.get(symbol, "")
+            if (record.get('entry_selection_policy')!='ALPACA_BASELINE_MONTHLY_DAILY_V1'
+                or not re.fullmatch(r'abr-[0-9a-f]{32}',rotation_cid)):
+                raise IntendedPaperProtectionError('monthly_rotation_source_identity_conflict')
+        expected = {"entry_session": entry_session, "client_order_id": rotation_cid, "qty": record["qty"]}
         if intent is not None and intent != expected:
             raise IntendedPaperProtectionError(f"rotation_intent_mismatch:{symbol}")
         existing = client.get_order_by_client_id(expected["client_order_id"])
+        if rotation_client_ids is not None and existing is None and record.get('rotation_dispatch_attempted'):
+            raise IntendedPaperProtectionError('uncertain_monthly_rotation_no_resend')
         positions = {p["symbol"]: p for p in client.list_positions()}
         orders = client.list_orders(status="open", limit=100)
         if len(orders) >= 100:
@@ -1243,6 +1253,9 @@ def _rotate_intended_monthly(
                 raise IntendedPaperProtectionError(f"rotation_position_changed_after_cancel:{symbol}")
             # Recheck exact LIVE approval immediately before the broker write.
             _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
+            if rotation_client_ids is not None:
+                record['rotation_dispatch_attempted']=True
+                _atomic_write_json(state_path,state)
             existing = client.submit_market_sell_qty(symbol, float(record["qty"]), client_order_id=expected["client_order_id"])
         if (existing.get("client_order_id") != expected["client_order_id"] or existing.get("symbol") != symbol
             or existing.get("side") != "sell" or existing.get("type") != "market" or not existing.get("id")
@@ -1716,7 +1729,16 @@ def _finish_intended_entry_intent(*, client: Any, base_url: str, account_id: str
         or not math.isclose(_safe_float(positions[0].get("qty")), qty, rel_tol=1e-9, abs_tol=1e-9)
         or not math.isclose(_safe_float(positions[0].get("avg_entry_price")), price, rel_tol=1e-9, abs_tol=1e-8)):
         raise IntendedPaperProtectionError("reserved_entry_position_mismatch")
-    floor = price - float(intent["risk_distance"])
+    if intent.get('baseline_contract')=='ALPACA_BASELINE_MONTHLY_DAILY_V1':
+        from research_lab.alpaca_strategy_parity_v1 import initial_stop
+        atr=intent['atr20']
+        if isinstance(atr,bool) or not math.isfinite(float(atr)) or float(atr)<=0:
+            raise IntendedPaperProtectionError('baseline_atr20_invalid')
+        if float(intent['risk_distance'])!=2.0*float(atr):
+            raise IntendedPaperProtectionError('baseline_raw_atr_distance_conflict')
+        floor=initial_stop(price,atr)
+    else:
+        floor = price - float(intent["risk_distance"])
     if not math.isfinite(floor) or not 0 < floor < price:
         raise IntendedPaperProtectionError("reserved_entry_floor_invalid")
     state, error = _load_protective_floor_state(state_path)
@@ -1729,20 +1751,39 @@ def _finish_intended_entry_intent(*, client: Any, base_url: str, account_id: str
         if record["entry_order_id"] != final["id"] or not math.isclose(float(record["qty"]), qty, rel_tol=1e-9):
             raise IntendedPaperProtectionError("reserved_entry_lifecycle_conflict")
         floor = max(floor, float(record["accepted_stop_floor"]))
-    stop_id = client_id.replace("alp-entry-", "alp-floor-", 1)
+    stop_id = ('abf-'+hashlib.sha256(client_id.encode()).hexdigest()[:32]
+               if intent.get('baseline_contract')=='ALPACA_BASELINE_MONTHLY_DAILY_V1'
+               else client_id.replace("alp-entry-", "alp-floor-", 1))
     stop = client.get_order_by_client_id(stop_id)
     open_orders = client.list_orders(status="open", limit=100)
     if len(open_orders) >= 100 or any(o.get("symbol") == symbol and o.get("id") != (stop or {}).get("id") for o in open_orders):
         raise IntendedPaperProtectionError("reserved_entry_unknown_open_order")
     if stop is None:
+        if (intent.get('baseline_contract')=='ALPACA_BASELINE_MONTHLY_DAILY_V1'
+            and intent.get('baseline_stop_dispatch_started')):
+            raise IntendedPaperProtectionError('uncertain_monthly_stop_no_resend')
         _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
-        stop = client.submit_stop_sell(symbol, qty=qty, stop_price=floor,
-            time_in_force=_persistent_exit_tif_for_qty("", qty), client_order_id=stop_id)
+        if intent.get('baseline_contract')=='ALPACA_BASELINE_MONTHLY_DAILY_V1':
+            intent['baseline_stop_dispatch_started']=True
+            _atomic_write_json(reentry_path,payload)
+        try:
+            stop = client.submit_stop_sell(symbol, qty=qty, stop_price=floor,
+                time_in_force=_persistent_exit_tif_for_qty("", qty), client_order_id=stop_id)
+        except AlpacaAPIError as exc:
+            if exc.status_code==422 and intent.get('baseline_contract')=='ALPACA_BASELINE_MONTHLY_DAILY_V1':
+                intent['baseline_stop_rejected_422']=True
+                _atomic_write_json(reentry_path,payload)
+            raise
     if stop.get("client_order_id") != stop_id:
         raise IntendedPaperProtectionError("reserved_stop_identity_mismatch")
     record = _complete_intended_paper_simple_stop(client=client, base_url=base_url, state_dir=state_dir,
         ledger_path=state_path, account_id=account_id, entry_order=final, stop_order=stop,
         symbol=symbol, requested_stop=floor, intended_live=_env_bool("ALPACA_INTENDED_LIVE", False), capital=capital)
+    if intent.get('baseline_contract')=='ALPACA_BASELINE_MONTHLY_DAILY_V1':
+        record.update(entry_selection_policy=intent['baseline_contract'],atr20=intent['atr20'],
+            signal_session=intent['signal_session'],baseline_selection_sha256=intent['baseline_selection_sha256'])
+        current=json.loads(state_path.read_text());current[symbol]=record
+        _atomic_write_json(state_path,current)
     intent.update(status="complete", entry_order_id=final["id"], stop_order_id=stop["id"])
     _atomic_write_json(reentry_path, payload)
     return record
@@ -1750,18 +1791,45 @@ def _finish_intended_entry_intent(*, client: Any, base_url: str, account_id: str
 
 def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: str,
     capital: float, reentry_path: Path, state_path: Path, state_dir: Path,
-    pick: Pick, notional: float, timeout_sec: float) -> dict[str, Any]:
+    pick: Pick, notional: float, timeout_sec: float,
+    baseline_atr20: float | None = None, baseline_signal_session: str | None = None,
+    baseline_selection_sha256: str | None = None,
+    baseline_entry_gate: dict[str, Any] | None = None) -> dict[str, Any]:
     _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
     if client.get_account().get("id") != account_id:
         raise IntendedPaperProtectionError("reserved_entry_account_mismatch")
     distance = float(pick.entry_price) - float(pick.stop_price)
+    baseline_fields={}
+    if any(v is not None for v in (baseline_atr20,baseline_signal_session,baseline_selection_sha256)):
+        if (isinstance(baseline_atr20,bool) or not isinstance(baseline_atr20,(int,float))
+            or not math.isfinite(baseline_atr20) or baseline_atr20<=0
+            or not isinstance(baseline_selection_sha256,str) or len(baseline_selection_sha256)!=64
+            or any(c not in '0123456789abcdef' for c in baseline_selection_sha256)
+            or not isinstance(baseline_signal_session,str)
+            or date.fromisoformat(baseline_signal_session)>=date.fromisoformat(pick.entry_day)):
+            raise IntendedPaperProtectionError('baseline_source_metadata_invalid')
+        distance=2.0*baseline_atr20
+        baseline_fields=dict(baseline_contract='ALPACA_BASELINE_MONTHLY_DAILY_V1',atr20=baseline_atr20,
+            signal_session=baseline_signal_session,baseline_selection_sha256=baseline_selection_sha256)
+        if baseline_entry_gate is not None:
+            from research_lab.alpaca_dynamic_v1 import digest
+            gate=baseline_entry_gate
+            if (gate.get('receipt_sha256')!=digest({k:v for k,v in gate.items() if k!='receipt_sha256'})
+                or gate['status']!='ENTRY_PARITY_CANDIDATE' or gate['symbol']!=pick.ticker
+                or gate['atr20']!=baseline_atr20 or gate['signal_session']!=baseline_signal_session
+                or gate['entry_session']!=pick.entry_day):
+                raise IntendedPaperProtectionError('baseline_entry_gate_conflict')
+            baseline_fields['baseline_entry_gate']=gate
     if not math.isfinite(distance) or distance <= 0 or not math.isfinite(notional) or notional <= 0:
         raise IntendedPaperProtectionError("reserved_entry_parameters_invalid")
     client_id = "alp-entry-" + hashlib.sha256(f"{account_id}|{_INTENDED_PAPER_STRATEGY_ID}|{pick.entry_day}|{pick.ticker}".encode()).hexdigest()[:32]
+    if baseline_fields:
+        from research_lab.alpaca_monthly_binding_v1 import entry_cid
+        client_id=entry_cid({'selection_id':baseline_selection_sha256},pick.ticker)
     payload = json.loads(reentry_path.read_text()) if reentry_path.exists() else {"symbols": {}}
     intent = {"account_id": account_id, "strategy_id": _INTENDED_PAPER_STRATEGY_ID,
         "symbol": pick.ticker, "entry_session": pick.entry_day, "notional": notional,
-        "risk_distance": distance, "status": "reserved"}
+        "risk_distance": distance, "status": "reserved",**baseline_fields}
     entries = payload.setdefault("entry_intents", {})
     if client_id in entries:
         if entries[client_id].get("status") != "reserved":

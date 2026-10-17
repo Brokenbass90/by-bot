@@ -1,5 +1,36 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 05:25UTC CURRENT: ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE,
+NOT ALPACA_STRATEGY_PARITY_PASS / not financial activation. Owner selected
+validated MONTHLY selection + DAILY close ratchet; old choice-pending text below
+is historical. Read ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE_2026_10_17.md and
+ALPACA_MONTHLY_CLAUDE_REVIEW_2026_10_17.md. Interrupted diff preserved/completed:
+durable monthly book, rawATR/actual-fill native entry, closed-source/calendar,
+next-session daily stop ACK, rotation/retention/cooldown and shared safety paths.
+No new64-trade baseline simulation: sealed-event book replay64/64,24selections,
+66initialstops,637closes,152ACKs,56stop exits,8rotations,486restarts. Archived
+entry quantities are inputs, not independent sizing/accounting proof; clocks
+are replay fixtures and2final future-stop publications remain unevaluated.
+375targetedPASS; full5257PASS/60FAIL/same60names/no new. Four stale-fixture
+failures corrected; remaining60 NOTfixed/deleted/waived, fullsuite staysred.
+Actual disabled32-file V2 installed05:21:48UTC at monthly-baseline-20261016/
+source-binding-v2/app; spec ca4b48681ab76ba19ffba7177a319ef740ff82b1abc5e5bff1a04b1babe5f6b5.
+59currentNET/source/unit/HALT pins unchanged,0brokerrequests/writes,
+0systemd/cron/profilechanges; no newservice registered/started or moneybinding.
+Current NET NOTmigrated or stopchanged; existing repaired manager preserved.
+Last full NETbrokerreadback stillOct16 16:55UTC, NOT a fresh Oct17 protection
+claim. OriginalHALT preserved. New sourceCLI has no apply/GO/credentialloader.
+NewMonthlyBinding requires explicit original sharedlock AND entryHALT path.
+Path-independent strategyID ends7bf7cf6a…be49ccc; fullpins in evidence manifest.
+Legacy weekly quarantined for future baseline entries; frozen oldreference/
+oldpicks consumers/currentNET dependencies retained. FractionalGTC unsupported
+byofficialAlpaca contract; do NOT replace currentfractionalDAYstop withGTC.
+NEXT: independent Claude read-only review → only then strategyPARITYPASS;
+HALT release/financialactivation separatelyowner. No newPAPER/statsgate.
+Aftercandidatehandoff: KITYbatch/privateWS ordersOFF, then ElderHEDGE ordersOFF.
+KITY9051 expiredOct16 21UTC; oldREADY is not freshGO. No policyreuse/extension/
+moneyattempt implied. Claude/ATT1/LIQ/unrelatedallowlist preserved, rootonly.
+
 October16 17:26UTC PARITY CURRENT: OFFLINE_BASELINE_COMPONENT_PARITY_PASS only,
 NOT ALPACA_STRATEGY_PARITY_PASS. Read ALPACA_BASELINE_PARITY_CANDIDATE_2026_10_16.md.
 Claude research981b62f confirmed actualorigin; exact reference2e68b1f/8code/

@@ -1,5 +1,12 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT October17: checkpoint TOP and
+ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE_2026_10_17.md supersede dated history.
+Monthly/daily production-binding candidate delivered/installed disabled;375
+targetedPASS, full5257PASS/60knownFAIL. IndependentClaude review stillpending,
+entryHALT remains; no monetaryactivation/currentNET migration. KITY9051 expired,
+neverreuse oldGO/launcher or date-transfer. Preserve oldNET repairedmaintenance.
+
 CURRENT October16: checkpointTOP and KITY_OCT16_EXECUTION_OWNER_PACKET.md.
 Actual owner-run agreement accepted/verified; KITY HEALTHY/ORDERS_OFF/flat
 linearUSDT, all10instrumentGETPASS. New Oct16 draft86b5349b…b1205 only, no moneyGO/

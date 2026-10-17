@@ -1,5 +1,9 @@
 # Alpaca exact baseline — offline candidate delivery, October16
 
+Superseded continuation: owner selected monthly/daily; see
+[October17 durable/native binding candidate](ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE_2026_10_17.md).
+This dated component receipt remains immutable history, not current activation.
+
 CURRENT **2026-10-16 17:26 UTC /20:26 Cyprus**:
 `OFFLINE_BASELINE_COMPONENT_PARITY_PASS`.
 **NOT `ALPACA_STRATEGY_PARITY_PASS`; not a deployed monetary runtime.**

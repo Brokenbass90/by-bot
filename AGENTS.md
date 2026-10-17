@@ -874,3 +874,28 @@ the history observation to chase PASS or lower current277.69 to the diagnostic
 277.67. Current maintenance remains exact repairedkit, entryHALT preserved.
 No ownerlauncher/money flag/managerstart/oldwriter rollback as agent. Preserve
 KITY/ATT1/LIQ/Claude and unrelated allowlist; rootonly review restriction remains.
+
+## October17 monthly baseline production-binding candidate
+
+Read checkpoint TOP and ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE_2026_10_17.md.
+Owner already chose validated monthly selection plus daily close ratchet; never
+ask again or silently restore Dynamic weekly as the reference. Interrupted work
+is delivered as a separate durable book, rawATR/native adapter and closed-source
+binding. No new64-trade baseline simulation was required. Sealed-event replay
+64/64 and375targetedPASS; full5257PASS/60oldFAIL, no newfailure names. Remaining
+60 are not fixed/deleted/waived. IndependentClaude read-only review pending;
+no ALPACA_STRATEGY_PARITY_PASS or financial activation from root self-review.
+32-fileV2 installed disabled in monthly-baseline-20261016/source-binding-v2/app;
+59currentNET/source/unit/HALT pins preserved. No broker requests/writes or new
+service/sender activation. Source-binding-v1 historical kit remains unchanged.
+Current NET retains exact existing repaired maintenance and is not migrated.
+New entryHALT and original sharedlock are explicit required binding inputs.
+Do not change current277.69stop or replace fractionalDAYwithunsupportedGTC.
+Frozen reference/defaults/oldpicks consumers are preserved; new monthly interface
+exposes rawATR only and uses a path-independent identity. Quarantine weekly from
+future baseline entry authority, not by deleting current NET dependencies.
+Next: Claude candidate review, then separate owner entryactivation decision.
+Next engineering: KITYbatch/privateWS ORDERSOFF, then ElderHEDGE ORDERSOFF.
+KITY9051 expiredOct16 21UTC; do not reuse/extend its policy/GO/launcher or restart
+oldwatcher. No new research/retuning/extraPAPER/strategycanary authority. Preserve
+Claudecheckout/ATT1/LIQ/unrelatedallowlist. Root-only reviewer restriction remains.

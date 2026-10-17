@@ -1,0 +1,43 @@
+{
+  "schema": "ALPACA_ENTRY_CONTRACT_REGISTRY_V1",
+  "future_entry_contract": {
+    "schema": "ALPACA_BASELINE_MONTHLY_DAILY_V1",
+    "enabled": false,
+    "orders_allowed": false,
+    "money_authority": false,
+    "owner_choice_date": "2026-10-16",
+    "reference_commit": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+    "reference_trades_core_sha16": "2347a7ec606cd845",
+    "selection": "MONTH_END_NEXT_OPEN",
+    "ratchet": "DAILY_CLOSE_NEXT_SESSION",
+    "initial_stop_anchor": "ACTUAL_FILL_MINUS_RAW_2ATR20",
+    "reentry_calendar_days": 21,
+    "capital_ceiling_usd": "487.42",
+    "gross_ceiling": ".70",
+    "maximum_weight": ".60",
+    "max_positions": 4
+  },
+  "future_strategy_id": "ALPACA_MONTHLY_BASELINE_7bf7cf6ae049345b13c80fb01f0f2bcb30ffc376ce10d875fc38df183be49ccc",
+  "future_entry_authority": "HALTED_DISABLED_PENDING_REVIEW_AND_SEPARATE_OWNER_DECISION",
+  "weekly_dynamic": {
+    "new_entry_authority": false,
+    "classification": "QUARANTINED_FOR_FUTURE_BASELINE_ENTRIES",
+    "original_owner_approval_date": "2026-10-06",
+    "reference_parity": "NOT_VALIDATED_MONTHLY_BASELINE",
+    "retained_reason": "Existing off-protocol NET maintenance and immutable historical evidence; no physical removal"
+  },
+  "current_NET": {
+    "migrate": false,
+    "change_stop": false,
+    "protection_owner": "EXISTING_REPAIRED_OCT15_MANAGER",
+    "current_broker_state": "NOT_REFRESHED_BY_THIS_SOURCE_ONLY_INSTALL",
+    "last_full_readback": "2026-10-16T16:55:21.662Z"
+  },
+  "legacy_compatibility": {
+    "stop_price_in_old_picks": "PRESERVED_ONLY_FOR_FROZEN_LEGACY_CONSUMERS",
+    "new_monthly_picks": "RAW_ATR20_NO_STOP_PRICE",
+    "legacy_initial_stop_anchor_default": "FROZEN_REFERENCE_UNCHANGED",
+    "new_contract_anchor": "ACTUAL_FILL_MINUS_RAW_2ATR20",
+    "old_path_dependent_id": "HISTORICAL_NOT_PARITY_PROOF"
+  }
+}

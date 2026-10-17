@@ -1,0 +1,28 @@
+{
+  "schema": "ALPACA_MONTHLY_SOURCE_PACKAGE_STAGED_V1",
+  "status": "MONTHLY_PARITY_CANDIDATE_INSTALLED_ORDERS_OFF",
+  "observed_ms": 1792214508278,
+  "root": "/opt/bybot-research/alpaca-monthly-baseline-20261016/source-binding-v2/app",
+  "source_files": 32,
+  "spec_sha256": "ca4b48681ab76ba19ffba7177a319ef740ff82b1abc5e5bff1a04b1babe5f6b5",
+  "contract_sha256": "a32aaec31e8bb31d6fab8274661ecc4e79ed1557192a689cd8461fb8983e402e",
+  "verification": {
+    "status": "MONTHLY_SOURCE_PACKAGE_VERIFIED_ORDERS_OFF",
+    "source_files": 32,
+    "contract_sha256": "a32aaec31e8bb31d6fab8274661ecc4e79ed1557192a689cd8461fb8983e402e",
+    "orders_allowed": false,
+    "money_authority": false,
+    "production_writer_installed": false,
+    "observed_ms": 1792214508226
+  },
+  "current_NET_source_pins_unchanged": 59,
+  "entry_halt_preserved": true,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "systemd_changes": 0,
+  "cron_changes": 0,
+  "profile_changes": 0,
+  "new_service_registered": false,
+  "new_service_started": false,
+  "monetary_transport_bound": false
+}

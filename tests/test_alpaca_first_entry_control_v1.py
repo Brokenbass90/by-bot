@@ -52,14 +52,14 @@ def test_isolated_deployed_control_bootstraps_app_before_no_go_boundary(control_
     assert not Path(s[4]['runtime']).exists()
 
 
-def test_post_go_whole_control_path_reserves_once_and_protects_once(control_spec,tmp_path,monkeypatch,capsys):
-    """Synthetic GO/broker in tmp only; no real permit or Alpaca transport."""
+def test_exact_go_cannot_make_old_weekly_ranking_valid_off_cycle(control_spec,tmp_path,monkeypatch,capsys):
+    """Old successful fixture was the stale weekly execution now prohibited."""
     from tests.test_alpaca_dynamic_live_runtime_v1 import NOW
     from research_lab.alpaca_dynamic_first_intent_v1 import prepare_first_intent
     from scripts import run_alpaca_dynamic_live_v1 as loader
     sp,s,gp=control_spec;_,broker,old_intake,policy,binding,_=s
-    ranking=dict(window_ms=NOW-2*86400000,gate_ok=True,
-        picks=[dict(symbol='NET',signal_close=100,stop_price=96)])
+    ranking=dict(window_ms=NOW-2*86400000,signal_session='2026-10-09',gate_ok=True,
+        picks=[dict(symbol='NET',signal_close=100,stop_price=96,atr20=2)])
     amd=next(x for x in policy['inherited_slots'] if x['symbol']=='AMD')
     with sqlite3.connect(binding['source_book']) as db:
         db.execute('DELETE FROM intents')
@@ -114,12 +114,11 @@ def test_post_go_whole_control_path_reserves_once_and_protects_once(control_spec
             broker.orders[row['id']].update(row)
         return row
     monkeypatch.setattr(broker,'_request',filled_at_dispatch)
-    assert control.main(['--spec',str(sp),'--entry','--owner-go',str(gp)])==0
+    assert control.main(['--spec',str(sp),'--entry','--owner-go',str(gp)])==2
     result=json.loads(capsys.readouterr().out)
-    assert result['status']=='OPENING_PATH_COMPLETED',result
-    assert result['execution']['status']=='LIVE_PROTECTED',result
-    assert [p.get('type') for p in broker.writes]==['limit','stop']
-    with sqlite3.connect(binding['source_book']) as db:assert db.execute('SELECT COUNT(*) FROM intents').fetchone()[0]==1
-    assert control.main(['--spec',str(sp),'--entry','--owner-go',str(gp)])==0
+    assert result['reason']=='STALE_SIGNAL_RESELECT_FAIL',result
+    assert broker.writes==[] and not Path(binding['runtime']).exists()
+    with sqlite3.connect(binding['source_book']) as db:assert db.execute('SELECT COUNT(*) FROM intents').fetchone()[0]==0
+    assert control.main(['--spec',str(sp),'--entry','--owner-go',str(gp)])==2
     assert json.loads(capsys.readouterr().out)==result
-    assert len(broker.writes)==2
+    assert broker.writes==[]

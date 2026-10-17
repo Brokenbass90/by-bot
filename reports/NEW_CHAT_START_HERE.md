@@ -1,5 +1,15 @@
 # Стартовый промпт нового Codex — production, edge, развитие
 
+CURRENT October17: canonical checkpoint TOP →
+ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE_2026_10_17.md →
+ALPACA_MONTHLY_CLAUDE_REVIEW_2026_10_17.md. Monthly/daily choice already made;
+375targetedPASS, sealed-event durable replay64/64, disabled32-fileV2 onVPS.
+NOTstrategyPASS/financialactivation: independentClaude review pending, entryHALT
+preserved. CurrentNET oldmanager untouched, no migration/stopchange. Do not
+rerun64-trade baseline or undo the delivered binding. KITY9051 expiredOct16:
+no oldlauncher/GO/policy reuse. Nextengineering KITYbatch/privateWS, then
+ElderHEDGE ORDERSOFF. Older dated CURRENT paragraphs below are history.
+
 CURRENT October16: checkpoint TOP → KITY_OCT16_EXECUTION_OWNER_PACKET.md.
 Owner personally accepted agreement, rawresponse/receipt verified HTTP200/code0.
 KITY HEALTHY/ORDERS_OFF/positions0/open0/original lock; all10instrumentGETPASS.

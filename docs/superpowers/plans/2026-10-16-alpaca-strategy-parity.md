@@ -32,7 +32,7 @@ sealed research outcomes. An unresolved reference mismatch can never become PASS
 - [x] TDD transport-free entry gate: Friday→Monday valid, missed entry blocked,
       no substitute ticker, wrong ATR date/invalid/future bars, quote source/CTS.
 - [x] Add source-bound raw ATR/selection/actual-fill stop receipt, orders-OFF only.
-- [ ] Bind strict monthly production preview/rotation/retention to these receipts;
+- [x] Bind strict monthly production preview/rotation/retention to these receipts;
       preserve old sealed intake compatibility and existing NET maintenance.
 - [x] Replay recorded Oct9 source and Oct15 intent: source identity and stale
       rejection; current stop is not recalculated/applied to the broker.
@@ -43,10 +43,40 @@ sealed research outcomes. An unresolved reference mismatch can never become PASS
       evidence and explicit audit coverage. No future outcome/judge consumption.
 - [x] Publish compact evidence/diffs/hashes for Claude read-only review. Keep
       global parity BLOCKED until every material comparison is actually resolved.
-- [ ] Owner contract choice monthly/daily vs weekly separate validation; no
-      activation follows automatically. Bind daily completed-close source and
+- [x] Owner explicitly selected monthly/daily baseline on October16; no
+      activation follows automatically.
+- [x] Bind daily completed-close source and
       durable next-session ratchet, not intraday market-price sampling.
 - [ ] Independent Claude review and final full production parity.
 
 After this P0: KITY batch/private-WS orders-OFF under unchanged owner bounds,
 then Elder HEDGE_V1 adapter. Separate deliverables; no automatic deployment/GO.
+
+## Approved monthly binding continuation
+
+Use the existing monthly calendar, selector, native rotation/ownership/recovery
+primitives. Keep all existing frozen source files and active NET installation
+unchanged. New versioned source/book/runner are orders-OFF.
+
+1. Freeze owner contract/caps and make a durable monthly book: source-bound
+   signal/selection, retained-name HWM/floor preservation, stale owned rotation
+   intentions, protective-only21day cooldown. Atomic restart/repeated-source
+   checks; no off-cycle entry and no new money authorization.
+2. Bind completed daily raw source/calendar/availability, daily-close state and
+   pending next-session stop intentions. No intraday marks as daily close; no
+   partial-day OHLC pretending to be a completed source. Missing source keeps
+   existing protection and blocks a new ratchet, never fabricates a close.
+3. Bridge raw ATR/fill to native protection in the candidate; reuse existing
+   native rotation and dispatch semantics, never dynamically patch active NET.
+4. TDD/replay saved real payloads and exact reference; construct disabled package
+   and explicit remaining production transport/authority matrix. No claim that
+   a source/planner-only worker is a finished monetary executor.
+
+October17 delivery: ALPACA_MONTHLY_PRODUCTION_PARITY_CANDIDATE. Durable/native
+candidate and disabled32-fileV2 installed, no livefinancialsender activated.
+375targetedPASS; final full5257PASS/60existingFAIL, no newfailure names. Sealed
+event replay64/64,24selections/66stops/637closes/152ACKs/56protective exits/
+8rotations/486restarts; no baseline simulator rerun. Entry quantities are supplied
+fills, not independent sizing/accounting proof. Root review found/fixed original
+HALT-path omission; finaltargeted + physicalpackage verification cover it.
+IndependentClaude review/final strategyPASS/ownerHALTrelease remain unchecked.

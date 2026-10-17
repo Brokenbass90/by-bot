@@ -1,6 +1,8 @@
 """Proven non-dispatch retirement is append-only; no strategy/risk changes."""
 import copy
+import json
 import sqlite3
+from datetime import datetime,timezone
 import pytest
 from test_alpaca_dynamic_v1 import api,policy,calendar,snapshot,ranking,book,NOW
 
@@ -17,6 +19,21 @@ def proof(api,policy,plan,observed):
       'broker_authenticated_by_this_validator':False}
 
 
+def fresh_next_week(book,snapshot,calendar):
+    """A retired reservation permits a fresh scheduled ranking, never stale reuse."""
+    row=next(r for r in calendar if r['open_ms']>NOW and
+        datetime.fromtimestamp(r['open_ms']/1000,timezone.utc).weekday()==0)
+    prior=[r for r in calendar if r['close_ms']<row['open_ms']][-1]
+    now=row['open_ms']+1000
+    with sqlite3.connect(book.path) as db:
+        ranking=json.loads(db.execute('SELECT payload FROM rankings ORDER BY window DESC LIMIT 1').fetchone()[0])
+    ranking.update(window_ms=row['open_ms'],signal_session=prior['session'],source_available_ms=now,
+        input_sha256='c'*64)
+    book.seal_ranking(ranking,calendar,now)
+    snapshot['observed_ms']=now;snapshot['quotes']['NET']['received_ms']=now
+    return now
+
+
 def test_retirement_keeps_original_and_frees_only_the_unfilled_lineage(book,snapshot,calendar,api,policy):
     plan=book.propose(snapshot,calendar,NOW);observed=NOW+300000
     before=book.path.read_bytes()
@@ -28,6 +45,8 @@ def test_retirement_keeps_original_and_frees_only_the_unfilled_lineage(book,snap
     assert book.intent_count()==1 and book.active_intents()==[] and before!=book.path.read_bytes()
     assert book.retire_undispatched(plan['receipt_id'],p,observed+1)==result
     snapshot['observed_ms']=NOW+86400000;snapshot['quotes']['NET']['received_ms']=snapshot['observed_ms']
+    assert book.propose(snapshot,calendar,snapshot['observed_ms'])['reason']=='STALE_SIGNAL_RESELECT_FAIL'
+    fresh_next_week(book,snapshot,calendar)
     second=book.propose(snapshot,calendar,snapshot['observed_ms'])
     assert second['status']=='RESERVED_ORDERS_OFF' and second['receipt_id']!=plan['receipt_id']
     assert second['slot_entry_order_id']==plan['slot_entry_order_id']

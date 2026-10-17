@@ -1,0 +1,15 @@
+{
+  "status": "ACTUAL_FROZEN_LOADER_SOURCE_BOUND",
+  "source": "ALPACA_FROZEN_HOURLY_REGULAR_SESSION_V1",
+  "session": "2026-10-15",
+  "source_sha256": "6bc20b40cf9fa5d9d30d483928b501af81a47f76909eeea1626b57ef2c0b9a67",
+  "cache_files": {
+    "NET_M5.csv": "1b05ccc3d9b4ca4b151e00a5df4f31d3ee53ffbc8f3ffd524e1a24626f8d25c3"
+  },
+  "completed_ms": 1792173429452,
+  "excluded_later_sessions": [
+    "2026-10-16"
+  ],
+  "broker_writes": 0,
+  "current_net_state_adopted": false
+}
