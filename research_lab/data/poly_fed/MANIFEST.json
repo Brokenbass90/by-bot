@@ -1,0 +1,17 @@
+{
+ "gotovo": true,
+ "pravila": {
+  "porog_bps": 5,
+  "zasedaniy": 2,
+  "do_zasedaniya_ch": 48,
+  "dedup_ch": 72,
+  "lag_ch": 1
+ },
+ "sobytiy": 39,
+ "smyagch": 13,
+ "uzhest": 26,
+ "pervoe": 1722729600000,
+ "poslednee": 1790186400000,
+ "kod_sha256": "3d67e112771591a4964346cb955fb7fe66a512bfd3fb66816ebb7fbb62cf9ef5",
+ "sobytiya_sha256": "7716f49f00f045368e767dafd911b55a2028d7a022ed6060f9b988e3755d3f8c"
+}

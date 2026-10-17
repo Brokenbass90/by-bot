@@ -32,3 +32,25 @@ class T(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TZnak(unittest.TestCase):
+    def test_sobytie_znak_sobytiya_17_10(self):
+        """Знак события: −1 переворачивает доход события и контролей; без поля поведение прежнее."""
+        import numpy as np
+        from types import SimpleNamespace
+        ts = (np.arange(400) * 3600_000).astype(np.int64); c = 100 * np.exp(np.cumsum(np.full(400, 0.001)))
+        o = np.concatenate([[100.0], c[:-1]]); bary = np.c_[ts, o, c, c, c]
+        orig = S._bary; S._bary = lambda s, d, sint=None: bary
+        try:
+            dost = SimpleNamespace(t0=0, t1=10**13)
+            sob = [dict(t_ms=int(ts[i]), simvol="X") for i in (60, 160, 260)]
+            base = dict(posle=5, znak=1, izderzhki_bps=0, kontrol_k=3, sobytiya=sob)
+            r1 = S.sobytie(base, dost)
+            r2 = S.sobytie(dict(base, sobytiya=[dict(e, znak=-1) for e in sob]), dost)
+            r0 = S.sobytie(dict(base, sobytiya=[dict(e, znak=1) for e in sob]), dost)
+            self.assertGreater(r1["metrika"]["syroy_posle_izderzhek_bps"], 0)
+            self.assertEqual(r1["metrika"]["syroy_posle_izderzhek_bps"], r0["metrika"]["syroy_posle_izderzhek_bps"])
+            self.assertEqual(r2["metrika"]["syroy_posle_izderzhek_bps"], -r1["metrika"]["syroy_posle_izderzhek_bps"])
+        finally:
+            S._bary = orig

@@ -1,0 +1,431 @@
+[
+{
+"t_ms": 1722729600000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 18.41,
+"E_bps": -67.04,
+"zasedaniya": [
+"September 2024",
+"November 2024"
+]
+},
+{
+"t_ms": 1723003200000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.98,
+"E_bps": -65.17,
+"zasedaniya": [
+"September 2024",
+"November 2024"
+]
+},
+{
+"t_ms": 1723647600000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.46,
+"E_bps": -56.56,
+"zasedaniya": [
+"September 2024",
+"November 2024"
+]
+},
+{
+"t_ms": 1724450400000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.15,
+"E_bps": -59.62,
+"zasedaniya": [
+"September 2024",
+"November 2024"
+]
+},
+{
+"t_ms": 1725469200000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.03,
+"E_bps": -66.34,
+"zasedaniya": [
+"September 2024",
+"November 2024"
+]
+},
+{
+"t_ms": 1725735600000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.68,
+"E_bps": -67.12,
+"zasedaniya": [
+"September 2024",
+"November 2024"
+]
+},
+{
+"t_ms": 1726081200000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.04,
+"E_bps": -63.8,
+"zasedaniya": [
+"September 2024",
+"November 2024"
+]
+},
+{
+"t_ms": 1726696800000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 7.23,
+"E_bps": -64.14,
+"zasedaniya": [
+"November 2024",
+"December 2024"
+]
+},
+{
+"t_ms": 1727240400000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -8.21,
+"E_bps": -78.68,
+"zasedaniya": [
+"November 2024",
+"December 2024"
+]
+},
+{
+"t_ms": 1728054000000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 13.64,
+"E_bps": -53.67,
+"zasedaniya": [
+"November 2024",
+"December 2024"
+]
+},
+{
+"t_ms": 1728313200000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 7.33,
+"E_bps": -49.6,
+"zasedaniya": [
+"November 2024",
+"December 2024"
+]
+},
+{
+"t_ms": 1730509200000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.05,
+"E_bps": -48.96,
+"zasedaniya": [
+"November 2024",
+"December 2024"
+]
+},
+{
+"t_ms": 1731114000000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 8.48,
+"E_bps": -35.41,
+"zasedaniya": [
+"December 2024",
+"January 2025"
+]
+},
+{
+"t_ms": 1731625200000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 8.02,
+"E_bps": -26.9,
+"zasedaniya": [
+"December 2024",
+"January 2025"
+]
+},
+{
+"t_ms": 1741658400000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.45,
+"E_bps": -16.32,
+"zasedaniya": [
+"March 2025",
+"May 2025"
+]
+},
+{
+"t_ms": 1743710400000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.01,
+"E_bps": -21.25,
+"zasedaniya": [
+"May 2025",
+"June 2025"
+]
+},
+{
+"t_ms": 1744016400000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.62,
+"E_bps": -29.44,
+"zasedaniya": [
+"May 2025",
+"June 2025"
+]
+},
+{
+"t_ms": 1744275600000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 15.13,
+"E_bps": -18.32,
+"zasedaniya": [
+"May 2025",
+"June 2025"
+]
+},
+{
+"t_ms": 1746234000000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.05,
+"E_bps": -9.04,
+"zasedaniya": [
+"May 2025",
+"June 2025"
+]
+},
+{
+"t_ms": 1750906800000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.43,
+"E_bps": -25.13,
+"zasedaniya": [
+"July 2025",
+"September 2025"
+]
+},
+{
+"t_ms": 1751554800000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.95,
+"E_bps": -18.05,
+"zasedaniya": [
+"July 2025",
+"September 2025"
+]
+},
+{
+"t_ms": 1753912800000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.68,
+"E_bps": -25.51,
+"zasedaniya": [
+"September 2025",
+"October 2025"
+]
+},
+{
+"t_ms": 1755223200000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.5,
+"E_bps": -36.0,
+"zasedaniya": [
+"September 2025",
+"October 2025"
+]
+},
+{
+"t_ms": 1755943200000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.14,
+"E_bps": -35.45,
+"zasedaniya": [
+"September 2025",
+"October 2025"
+]
+},
+{
+"t_ms": 1757088000000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.52,
+"E_bps": -46.27,
+"zasedaniya": [
+"September 2025",
+"October 2025"
+]
+},
+{
+"t_ms": 1757588400000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.0,
+"E_bps": -49.5,
+"zasedaniya": [
+"September 2025",
+"October 2025"
+]
+},
+{
+"t_ms": 1761771600000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 6.45,
+"E_bps": -32.3,
+"zasedaniya": [
+"December 2025",
+"January 2026"
+]
+},
+{
+"t_ms": 1763067600000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.08,
+"E_bps": -25.4,
+"zasedaniya": [
+"December 2025",
+"January 2026"
+]
+},
+{
+"t_ms": 1763622000000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.45,
+"E_bps": -21.95,
+"zasedaniya": [
+"December 2025",
+"January 2026"
+]
+},
+{
+"t_ms": 1770872400000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.11,
+"E_bps": -5.86,
+"zasedaniya": [
+"March 2026",
+"April 2026"
+]
+},
+{
+"t_ms": 1773878400000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.49,
+"E_bps": -2.94,
+"zasedaniya": [
+"April 2026",
+"June 2026"
+]
+},
+{
+"t_ms": 1781733600000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 9.92,
+"E_bps": 9.84,
+"zasedaniya": [
+"July 2026",
+"September 2026"
+]
+},
+{
+"t_ms": 1782471600000,
+"simvol": "BTCUSDT",
+"znak": 1,
+"dE_bps": -5.14,
+"E_bps": 7.55,
+"zasedaniya": [
+"July 2026",
+"September 2026"
+]
+},
+{
+"t_ms": 1783522800000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.09,
+"E_bps": 12.86,
+"zasedaniya": [
+"July 2026",
+"September 2026"
+]
+},
+{
+"t_ms": 1783969200000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.81,
+"E_bps": 19.39,
+"zasedaniya": [
+"July 2026",
+"September 2026"
+]
+},
+{
+"t_ms": 1787940000000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.72,
+"E_bps": 17.71,
+"zasedaniya": [
+"September 2026",
+"October 2026"
+]
+},
+{
+"t_ms": 1789146000000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.3,
+"E_bps": 28.5,
+"zasedaniya": [
+"September 2026",
+"October 2026"
+]
+},
+{
+"t_ms": 1789596000000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.69,
+"E_bps": 29.14,
+"zasedaniya": [
+"October 2026",
+"December 2026"
+]
+},
+{
+"t_ms": 1790186400000,
+"simvol": "BTCUSDT",
+"znak": -1,
+"dE_bps": 5.0,
+"E_bps": 35.08,
+"zasedaniya": [
+"October 2026",
+"December 2026"
+]
+}
+]

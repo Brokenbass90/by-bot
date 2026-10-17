@@ -228,3 +228,11 @@
 {"gipoteza": "ETF_POTOK_BTC_V1", "iz": "NEW", "kogda": "2026-10-16T13:45:26+00:00", "owner_go": null, "prichina": "prereg 16.10", "tip": "perehod", "v": "SCREEN"}
 {"avtor": "claude", "id": "ETF_POTOK_ETH_V1", "istochniki_dannyh": ["etf_potoki", "binance_kity"], "kogda": "2026-10-16T13:45:26+00:00", "mehanizm": "первая публикация притоков ETF → направление следующей недели", "semya": "ETF_POTOK", "tip": "gipoteza"}
 {"gipoteza": "ETF_POTOK_ETH_V1", "iz": "NEW", "kogda": "2026-10-16T13:45:26+00:00", "owner_go": null, "prichina": "prereg 16.10", "tip": "perehod", "v": "SCREEN"}
+{"id": "POLY_FED_SDVIG", "istochnik": null, "kogda": "2026-10-17T07:11:52+00:00", "opisanie": "скачок ожиданий ФРС на Polymarket → дрейф BTC (PREREG_POLY_FED_SDVIG_2026_10_17)", "status": "ACTIVE", "tip": "semya"}
+{"avtor": "claude", "id": "POLY_FED_SDVIG_V1", "istochniki_dannyh": ["poly_istoriya", "binance_h1"], "kogda": "2026-10-17T07:11:52+00:00", "mehanizm": "ΔE двух ближайших заседаний ≥5 bps → BTC 48 ч по знаку смягчения", "semya": "POLY_FED_SDVIG", "tip": "gipoteza"}
+{"gipoteza": "POLY_FED_SDVIG_V1", "iz": "NEW", "kogda": "2026-10-17T07:11:52+00:00", "owner_go": null, "prichina": "prereg 17.10", "tip": "perehod", "v": "SCREEN"}
+{"id": "ETF_PREMIYA", "istochnik": null, "kogda": "2026-10-17T07:13:43+00:00", "opisanie": "премия спотового ETF к монете → дрейф монеты (PREREG_ETF_PREMIYA_2026_10_17)", "status": "ACTIVE", "tip": "semya"}
+{"avtor": "claude", "id": "ETF_PREMIYA_BTC_V1", "istochniki_dannyh": ["akcii_grouped", "binance_h1"], "kogda": "2026-10-17T07:13:43+00:00", "mehanizm": "z премии IBIT ≥1.5 → BTC 24 ч по знаку премии", "semya": "ETF_PREMIYA", "tip": "gipoteza"}
+{"gipoteza": "ETF_PREMIYA_BTC_V1", "iz": "NEW", "kogda": "2026-10-17T07:13:43+00:00", "owner_go": null, "prichina": "prereg 17.10", "tip": "perehod", "v": "SCREEN"}
+{"avtor": "claude", "id": "ETF_PREMIYA_ETH_V1", "istochniki_dannyh": ["akcii_grouped", "binance_h1"], "kogda": "2026-10-17T07:13:43+00:00", "mehanizm": "z премии ETHA ≥1.5 → ETH 24 ч по знаку премии", "semya": "ETF_PREMIYA", "tip": "gipoteza"}
+{"gipoteza": "ETF_PREMIYA_ETH_V1", "iz": "NEW", "kogda": "2026-10-17T07:13:43+00:00", "owner_go": null, "prichina": "prereg 17.10", "tip": "perehod", "v": "SCREEN"}

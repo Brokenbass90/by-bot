@@ -1,0 +1,48 @@
+[
+ {
+  "tiker": "IBIT",
+  "sessiy": 503,
+  "s_premiey": 445,
+  "par_s_potokom": 445,
+  "I1_rho_t1": 0.466,
+  "I1_p": 1.5337186798181632e-28,
+  "I1": true,
+  "I2_median_dk_pct": 0.002,
+  "I2": true,
+  "I3_pokrytie": 1.0,
+  "I3": true,
+  "spravka_rho_t0": 0.511,
+  "period": [
+   "2024-10-29",
+   "2026-08-10"
+  ],
+  "premiya_bps_p10_50_90": [
+   -17.8,
+   -1.0,
+   11.2
+  ]
+ },
+ {
+  "tiker": "ETHA",
+  "sessiy": 503,
+  "s_premiey": 445,
+  "par_s_potokom": 445,
+  "I1_rho_t1": 0.407,
+  "I1_p": 7.422040645162806e-21,
+  "I1": true,
+  "I2_median_dk_pct": 0.0042,
+  "I2": true,
+  "I3_pokrytie": 1.0,
+  "I3": true,
+  "spravka_rho_t0": 0.396,
+  "period": [
+   "2024-10-29",
+   "2026-08-10"
+  ],
+  "premiya_bps_p10_50_90": [
+   -19.2,
+   -1.6,
+   15.8
+  ]
+ }
+]

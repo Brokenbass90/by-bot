@@ -1,0 +1,33 @@
+{
+ "gotovo": true,
+ "pravila": {
+  "porog_z": 1.5,
+  "okno": 60,
+  "min_ist": 40,
+  "lag_ch": 1
+ },
+ "IBIT": {
+  "sobytiy": 48,
+  "plyus": 12,
+  "minus": 36,
+  "po_godam": {
+   "2025": 26,
+   "2026": 22
+  },
+  "sha256": "19470d0165de509dec2cb58b1122ae8ea343e92a7e1ac62deb85b7976e251ce9"
+ },
+ "ETHA": {
+  "sobytiy": 41,
+  "plyus": 16,
+  "minus": 25,
+  "po_godam": {
+   "2025": 18,
+   "2026": 23
+  },
+  "sha256": "b240e4fd1d9e3e7d09616e5689440d973e728aaefa0654dade56e2e6ad31beb9"
+ },
+ "kod_sha256": {
+  "etf_premiya_sobytiya.py": "48d57d4ca06dbfe634e22c2435f1d2c1ddff83d18f8ea9fe95858c1987c48906",
+  "etf_premiya_izmereniya.py": "851a5be4d165504163097ec329d5e51e3964067d3fd48f3f938e7deddfea14ae"
+ }
+}

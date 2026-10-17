@@ -93,14 +93,16 @@ def sobytie(parametry, dostup):
         i = int(np.searchsorted(ts, int(e["t_ms"]), side="left"))          # первый бар, открывшийся не раньше момента события
         if i + posle > len(b) or (s in posl and i <= posl[s]): continue     # конец данных / перекрытие с прошлым событием монеты
         posl[s] = i + posle - 1
-        r_e = znak * (b[i + posle - 1, 4] / b[i, 1] - 1) * 1e4
+        zn = znak * int(e.get("znak", 1))                                    # 17.10: знак события (+1/−1), по умолчанию +1
+        if zn not in (1, -1): raise ValueError("znak события должен быть ±1")
+        r_e = zn * (b[i + posle - 1, 4] / b[i, 1] - 1) * 1e4
         zapret = np.zeros(len(b), bool)
         for z in sob:
             if z["simvol"] == s:
                 j = int(np.searchsorted(ts, int(z["t_ms"]))); zapret[max(0, j - posle):j + posle] = True
         pool = np.flatnonzero(~zapret[:len(b) - posle])
         if len(pool) < k: continue
-        ctrl = [znak * (b[j + posle - 1, 4] / b[j, 1] - 1) * 1e4 for j in rng.choice(pool, size=k, replace=False)]
+        ctrl = [zn * (b[j + posle - 1, 4] / b[j, 1] - 1) * 1e4 for j in rng.choice(pool, size=k, replace=False)]
         abn.append(r_e - float(np.mean(ctrl)) - 0.0); raw.append(r_e - izd); kogda.append(int(ts[i]))
     rez = _itog(abn, kogda or [0])
     rez["metrika"].update(syroy_posle_izderzhek_bps=round(float(np.mean(raw)), 2) if raw else None, sobytiy_vzyato=len(abn),
