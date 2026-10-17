@@ -26,10 +26,12 @@ def make_policy(*, created_ms, valid_until_ms, physical_config_sha256,
     if not 0 < valid_until_ms - created_ms <= 86400000:
         raise SourceError('POLICY_SESSION_CLOCK')
     bounds = _owner_bounds(bounds)
-    if bounds['schema'] != 'kity_execution_micro_owner_bounds_v3':
+    if bounds['schema'] not in ('kity_execution_micro_owner_bounds_v3','kity_execution_micro_owner_bounds_v4'):
         raise SourceError('POLICY_V3_BOUNDS_REQUIRED')
     if type(dispatch_window_ms) is not int or dispatch_window_ms not in (60000,70000):
         raise SourceError('POLICY_ENTRY_WINDOW_NOT_AUTHORIZED')
+    if bounds['schema']=='kity_execution_micro_owner_bounds_v4' and dispatch_window_ms!=60000:
+        raise SourceError('POLICY_CAP300_REQUIRES_ORIGINAL_60S')
     p = dict(schema=SCHEMA if dispatch_window_ms==60000 else SCHEMA_70S, purpose='EXECUTION_MICRO_LIVE',
         created_ms=created_ms, valid_until_ms=valid_until_ms,
         physical_config_sha256=_sha(physical_config_sha256),

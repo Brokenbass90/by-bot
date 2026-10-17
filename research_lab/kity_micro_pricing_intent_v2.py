@@ -66,13 +66,13 @@ def _bands(plan,instruments,bps):
     # Reference sizing must fit the cap even at every band's high end. This is
     # a preparation bound; exchange improvement/slippage is not a guarantee.
     if sum((numeric(r['quantity'])*numeric(r['max_price']) for r in out),D(0))>D(plan['bounds']['max_gross_usdt']):
-        raise SourceError('INTENT_WORST_REFERENCE_GROSS_EXCEEDS_215')
+        raise SourceError('INTENT_WORST_REFERENCE_GROSS_EXCEEDS_'+plan['bounds']['max_gross_usdt'])
     return out
 
 
 def make_intent(dossier,*,at_ms,collar_bps,ttl_ms,predecessor_plan_id):
     p=copy.deepcopy(dossier['plan']);validate_plan(p)
-    if p['bounds']['schema']!='kity_execution_micro_owner_bounds_v3' or p['blocked_reasons']:
+    if p['bounds']['schema'] not in ('kity_execution_micro_owner_bounds_v3','kity_execution_micro_owner_bounds_v4') or p['blocked_reasons']:
         raise SourceError('INTENT_REFERENCE_PLAN_BLOCKED')
     _clock(at_ms)
     if not 0<=at_ms-p['reference_source_ms']<=2000:raise SourceError('INTENT_REFERENCE_SOURCE_STALE')
@@ -171,7 +171,7 @@ def materialize(intent,fresh,captures,*,now_ms):
             rounding_shortfall_fraction=ref['rounding_shortfall_fraction'],request=req,
             exit_prefix=f'KXM2-{namespace}-X{n:02d}'))
     limit_gross=sum((numeric(l['quantity'])*numeric(l['request']['price']) for l in legs),D(0))
-    if max(gross,limit_gross)>D('215'):raise SourceError('INTENT_FRESH_GROSS_CAP_EXCEEDED')
+    if max(gross,limit_gross)>D(p['bounds']['max_gross_usdt']):raise SourceError('INTENT_FRESH_GROSS_CAP_EXCEEDED')
     if numeric(fresh['wallet_total_available_usd'],zero=True)<gross+fees+reserve:raise SourceError('INTENT_BALANCE_INSUFFICIENT')
     p.update(legs=legs,reference_gross_usdt=str(gross),planned_limit_gross_usdt=str(limit_gross),
         source_dossier_sha256=digest(fresh),pricing_intent=dict(intent_id=intent['intent_id'],

@@ -57,7 +57,8 @@ def integer(value):
 def _owner_bounds(bounds):
     b = copy.deepcopy(bounds)
     v3 = b.get('schema') == 'kity_execution_micro_owner_bounds_v3'
-    expected = {'max_gross_usdt': Decimal('215' if v3 else '210'), 'max_all_in_loss_usdt': Decimal('15'),
+    v4 = b.get('schema') == 'kity_execution_micro_owner_bounds_v4'
+    expected = {'max_gross_usdt': Decimal('300' if v4 else '215' if v3 else '210'), 'max_all_in_loss_usdt': Decimal('15'),
                 'max_rounding_shortfall_fraction': Decimal('.203')}
     if any(numeric(b.get(k)) != v for k, v in expected.items()):
         raise ValueError('OWNER_BOUND_CONFLICT')
@@ -75,7 +76,18 @@ def _owner_bounds(bounds):
         and b.get('source_reply_id') == 'call_6b8bf99c313243c1b85f5c3504a5c292'
         and b.get('source_owner_message') == '2026-10-15 GO KITY MICRO-LIVE EXECUTION INTEGRATION — ORDERS OFF'
         and b.get('supersedes_policy_sha256') == '49bf03e4733711d3c97c684ec2436fff988817e8fb6d9cef351b71708a882bb3')
-    if (not (legacy or amended or integrated)
+    cap300 = (v4 and b.get('hard_final_loss_cap_required') is False
+        and b.get('loss_policy') == 'IMMEDIATE_ALL_IN_EXIT_THRESHOLD'
+        and b.get('allow_execution_overshoot') is True
+        and type(b.get('source_owner_message')) is str
+        and hashlib.sha256(b['source_owner_message'].encode()).hexdigest()
+            == b.get('owner_approval_text_sha256')
+            == 'f76de24aa713fad07083c89f23c7a2fbf76cfe983113c7d08c3ae89bdf18379d'
+        and b.get('owner_review_packet_id') == 'ba243eb8df39041c98639931d538ce4e2f70f6a678b3eb98686586a6b92a81fd'
+        and b.get('supersedes_spent_policy_sha256') == 'a1c97e6b94e3d1a1c8927e7dba252cbd12a1c6f49012133587a85c27fb8845c8'
+        and b.get('source_reply_id') == 'call_6b8bf99c313243c1b85f5c3504a5c292'
+        and b.get('supersedes_policy_sha256') == '49bf03e4733711d3c97c684ec2436fff988817e8fb6d9cef351b71708a882bb3')
+    if (not (legacy or amended or integrated or cap300)
             or b.get('duration_ms') != 1800000 or type(b.get('duration_ms')) is not int
             or b.get('one_experiment_only') is not True or b.get('purpose') != 'EXECUTION_MICRO_LIVE'
             or b.get('owner_money_go') is not False

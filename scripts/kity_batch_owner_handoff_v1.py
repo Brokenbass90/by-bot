@@ -30,6 +30,13 @@ def rollback_safe(root):
                 or any((root/'wire').glob('send-*.json')))
 
 
+def approved_bounds(base):
+    from research_lab.kity_execution_micro_runtime_v1 import _owner_bounds
+    bounds=_owner_bounds(base['bounds'])
+    need(base['dispatch_window_ms']==60000 and bounds['schema'] in (
+        'kity_execution_micro_owner_bounds_v3','kity_execution_micro_owner_bounds_v4'), 'POLICY_BOUNDS_CONFLICT')
+
+
 def queue_command(new,manifest):
     """Personal-execution path only; module imports resolve from pinned app."""
     return subprocess.check_output([sys.executable,'-B','-m','research_lab.kity_batch_service_v1',
@@ -50,7 +57,7 @@ def load(path,pin):
     base=policy['base_policy'];session(base,time.time_ns()//1000000)
     config_delta(old,new,base['valid_until_ms'])
     need(base['physical_config_sha256']==sha(Path(m['new_config']).read_bytes()),'POLICY_CONFIG_CONFLICT')
-    need(base['dispatch_window_ms']==60000 and base['bounds']['max_gross_usdt']=='215','POLICY_BOUNDS_CONFLICT')
+    approved_bounds(base)
     need(sha(Path(m['unit_path']).read_bytes())==m['old_unit_sha256'],'CURRENT_UNIT_DRIFT_OR_ALREADY_ACTIVATED')
     root=Path(new['runtime_root']);need(rollback_safe(root),'POLICY_HISTORY_NOT_EMPTY')
     for p in (root/'commands').glob('*.json'):

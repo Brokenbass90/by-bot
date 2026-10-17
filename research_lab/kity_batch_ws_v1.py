@@ -48,6 +48,7 @@ def validate_batch_policy(policy):
 _NO_SEND_CODES = frozenset({
     'INTENT_REFERENCE_PLAN_BLOCKED', 'INTENT_REFERENCE_SOURCE_STALE',
     'INTENT_WORST_REFERENCE_GROSS_EXCEEDS_215', 'INTENT_FRESH_GROSS_CAP_EXCEEDED',
+    'INTENT_WORST_REFERENCE_GROSS_EXCEEDS_300',
     'POST_GO_DISPATCH_DEADLINE', 'POLICY_GO_SESSION_CLOCK', 'CAPTURE_PRECEDES_GO',
     'POST_GO_SOURCE_CUSTODY_CONFLICT', 'INTENT_FRESH_CUSTODY_OR_BOUNDS_CONFLICT',
     'INTENT_ACCOUNT_NOT_FLAT_OR_PERMISSION_UNKNOWN', 'INTENT_FRESH_SOURCE_CLOCK',
@@ -135,7 +136,7 @@ def consume_batch_policy_once(store, policy, exact_go, go_ms, capture, *, clock)
 
 def payload(plan):
     rt.validate_plan(plan)
-    if plan['bounds']['max_gross_usdt'] != '215' or plan['blocked_reasons']:
+    if plan['bounds']['schema'] not in ('kity_execution_micro_owner_bounds_v3','kity_execution_micro_owner_bounds_v4') or plan['blocked_reasons']:
         raise ValueError('BATCH_APPROVED_BOUNDS_REQUIRED')
     requests = []
     allowed = {'category', 'symbol', 'side', 'orderType', 'timeInForce', 'qty',
