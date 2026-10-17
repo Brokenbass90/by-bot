@@ -1,0 +1,74 @@
+{
+  "alpaca": {
+    "entry_halt_present": true,
+    "monthly_files": 32,
+    "monthly_mismatches": [],
+    "monthly_transport_bound": false,
+    "open_orders_count": 0,
+    "owned_stop_price": "277.69",
+    "owned_stop_qty": "0.325167779",
+    "owned_stop_status": "expired",
+    "positions": [
+      {
+        "qty": "0.325167779",
+        "side": "long",
+        "symbol": "NET"
+      }
+    ],
+    "source_pins_verified": 95
+  },
+  "broker_writes": 0,
+  "kity": {
+    "account_lock_inode": 818853,
+    "guard_files": 155,
+    "guard_mismatches": [],
+    "heartbeat": {
+      "account_lock_inode": 818853,
+      "active_plan_id": null,
+      "at_ms": 1792240637401,
+      "error": null,
+      "execution_contract": "KITY_TEN_NATIVE_GUARDED_BATCH_V1",
+      "mode": "ORDERS_OFF",
+      "money_config_enabled": false,
+      "phase": "NO_ACTIVE_PLAN",
+      "pid": 2440673,
+      "private_authenticated": true,
+      "private_connected": true,
+      "private_last_receive_ms": 1792240634056,
+      "private_subscribed": true,
+      "schema": "kity_micro_owner_heartbeat_v1",
+      "state": null,
+      "trading_post_attempts": 34
+    },
+    "money_go": false,
+    "open_orders_count": 0,
+    "pagination_complete": true,
+    "policy_claim_count": 0,
+    "policy_count": 1,
+    "positions": [],
+    "selected": false,
+    "source_files": 23,
+    "source_mismatches": [],
+    "wire_records": 34
+  },
+  "monthly_default_off_verification": {
+    "contract_sha256": "a32aaec31e8bb31d6fab8274661ecc4e79ed1557192a689cd8461fb8983e402e",
+    "money_authority": false,
+    "observed_ms": 1792240599512,
+    "orders_allowed": false,
+    "production_writer_installed": false,
+    "source_files": 32,
+    "status": "MONTHLY_SOURCE_PACKAGE_VERIFIED_ORDERS_OFF"
+  },
+  "monthly_tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_alpaca_completed_session_source_v1.py tests/test_alpaca_monthly_binding_v1.py tests/test_run_alpaca_monthly_binding_v1.py tests/test_alpaca_monthly_native_binding_v1.py",
+    "full_suite_rerun": false,
+    "log_sha256": "6477627f8d56ccd969814a03997e1f9a92416bda1f589012bba4deb4b5fc0e13",
+    "result": "...............................................                          [100%]\n47 passed in 0.78s"
+  },
+  "notifications_sent": 0,
+  "observed_utc": "2026-10-17T12:37:23.408000+00:00",
+  "raw_capture_sha256": "e1dccbc6f2a23b150826e03d7cd28ab115f0805120784e7d611789c1e8efa2bf",
+  "schema": "TRADING_OS_INTAKE_FOLLOWUP_V1",
+  "service_changes": 0
+}

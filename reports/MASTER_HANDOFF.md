@@ -1,5 +1,10 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT lead intake17 Oct09:57UTC: start with
+[TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md](TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md).
+Consolidated fresh runtime/permission ledger/execution board; KITY actual10/10
+still OPEN, NET DAY expired outsideRTH, MonthlyV3 disabled. No LIVE changes.
+
 CURRENT Oct17 ownerGO: checkpointTOP → OWNER_DECISIONS_KITY_NET_2026_10_17.md.
 KITY oneNEWa1c97e6b… policy/unspent/personalcommandready/54targetedPASS,
 currentunitstillORDERSOFF; no agentmoneyaction. ExpiresTODAY21UTC, noreuse.

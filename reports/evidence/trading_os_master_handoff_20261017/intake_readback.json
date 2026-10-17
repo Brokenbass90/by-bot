@@ -1,0 +1,198 @@
+{
+  "alpaca": {
+    "account_identity_verified": true,
+    "account_lock_inode": 813893,
+    "actual_unprotected_minutes": null,
+    "broker_writes": 0,
+    "entry_halt_present": true,
+    "ledger": {
+      "accepted_stop_floor": 277.69,
+      "entry_price": 311.222,
+      "hwm": 315.505,
+      "qty": 0.325167779
+    },
+    "ledger_sha256": "2474853f47d015c991c7b9e8b237686718e443b5c60c189965bf2667e7fd1391",
+    "ledger_unchanged": true,
+    "monthly_files": 32,
+    "monthly_mismatches": [],
+    "monthly_spec_sha256": "14aea403bc8ccce376f438d766a4648bc1de03e333a9184e650eafcfd6776e3d",
+    "monthly_transport_bound": false,
+    "observation_status": "DAY_CLOSED_SESSION",
+    "open_orders_count": 0,
+    "positions": [
+      {
+        "qty": "0.325167779",
+        "side": "long",
+        "symbol": "NET"
+      }
+    ],
+    "regular_session": false,
+    "source_pins_verified": 95,
+    "stop_readbacks": [
+      {
+        "filled_qty": "0",
+        "qty": "0.325167779",
+        "side": "sell",
+        "status": "expired",
+        "stop_price": "277.69",
+        "symbol": "NET",
+        "time_in_force": "day",
+        "type": "stop"
+      }
+    ]
+  },
+  "broker_writes": 0,
+  "cron_matches_bound_pin": true,
+  "cron_sha256": "f01f0d95e854dcf60edffc4b5b29bf152071b33dd0828443a6aced81dbb507cd",
+  "failed_units": [
+    "\u25cf att1-ets2s-signal-shadow.service    loaded failed failed ATT1+ETS2S public zero-risk signal shadow",
+    "\u25cf bybit-liquidation-source-v2.service loaded failed failed Bybit public liquidation source V2 (no strategy or money authority)",
+    "\u25cf bybot.service                       loaded failed failed Bybit Trading Bot (smart_pump_reversal_bot)",
+    "\u25cf sbr1-zero-risk-shadow.service       loaded failed failed SBR1 public zero-risk shadow (no orders, no private API)",
+    "\u25cf trading-journal-web.service         loaded failed failed Trading Journal Private Web"
+  ],
+  "github_research_ref_observed": "62d1fcbd757a877057f55ae4a4a8660a0d2627d6",
+  "judges_run": false,
+  "kity": {
+    "account_lock_inode": 818853,
+    "broker_writes": 0,
+    "config_matches_unit_pin": true,
+    "config_path": "/opt/bybot-research/kity-micro-owner-20261015/runtime/batch-ws-20261017-v1/config-batch-v1.json",
+    "config_sha256": "4fd3634a70676306349fc7233c25eda784d9ceedc2ffc84c227f9e4571fe459f",
+    "guard_files": 155,
+    "guard_mismatches": [],
+    "heartbeat": {
+      "account_lock_inode": 818853,
+      "active_plan_id": null,
+      "at_ms": 1792231060506,
+      "error": null,
+      "execution_contract": "KITY_TEN_NATIVE_GUARDED_BATCH_V1",
+      "mode": "ORDERS_OFF",
+      "money_config_enabled": false,
+      "phase": "NO_ACTIVE_PLAN",
+      "pid": 2440673,
+      "private_authenticated": true,
+      "private_connected": true,
+      "private_last_receive_ms": 1792231050819,
+      "private_subscribed": true,
+      "schema": "kity_micro_owner_heartbeat_v1",
+      "state": null,
+      "trading_post_attempts": 34
+    },
+    "heartbeat_age_ms": 1511,
+    "last_results": [
+      {
+        "command": "1792225500587902567",
+        "reason": null,
+        "status": "KITY_BATCH_WS_BOUND_ORDERS_OFF"
+      },
+      {
+        "command": "1792228229477683854",
+        "reason": null,
+        "status": "KITY_BATCH_WS_BOUND_ORDERS_OFF"
+      }
+    ],
+    "money_go": false,
+    "observed_ms": 1792231062017,
+    "open_orders_count": 0,
+    "pagination_complete": true,
+    "policy_claim_count": 0,
+    "policy_count": 1,
+    "positions": [],
+    "selected": false,
+    "source_files": 23,
+    "source_mismatches": [],
+    "wire_records": 34
+  },
+  "monthly_registered_units": [],
+  "notifications_sent": false,
+  "observed_utc": "2026-10-17T09:57:44.232000+00:00",
+  "private_capture_sha256": {
+    "os-private.json": "4b8fee53fff95c33bca69624134da43a1a12f9d912f1c3d688123f0b3ecfa02a",
+    "runtime-private.json": "b2c8160e23fd92f66a8301f341d2d1dd847a6fdd1f4089785e599ec0b8a31fe5"
+  },
+  "production_head_at_intake": "d5da0ed89a8e2ef657cc26b2e969920585e8a0cd",
+  "reader_source_sha256": "efc37c7ed018373772a4dd4d494d68ea2efcdd9d98f5e054fed61ccee5eae937",
+  "schema": "TRADING_OS_MASTER_INTAKE_PUBLIC_V1",
+  "sealed_outcomes_consumed": false,
+  "services_changed": false,
+  "units": {
+    "alpaca-net-day-monitor.service": {
+      "ActiveState": "inactive",
+      "ExecMainStatus": "0",
+      "LoadState": "loaded",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "alpaca-net-day-monitor.timer": {
+      "ActiveState": "active",
+      "LoadState": "loaded",
+      "NextElapseUSecRealtime": "Mon 2026-10-19 13:30:00 UTC",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    "alpaca-oct15-owned-manager.service": {
+      "ActiveState": "inactive",
+      "ExecMainStatus": "0",
+      "LoadState": "loaded",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "alpaca-oct15-owned-manager.timer": {
+      "ActiveState": "active",
+      "LoadState": "loaded",
+      "NextElapseUSecRealtime": "Sat 2026-10-17 10:00:00 UTC",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    "att1-lifecycle-zero-risk-v2.service": {
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "LoadState": "loaded",
+      "MainPID": "1584802",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "bybit-liquidation-source-v2_1.service": {
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "LoadState": "loaded",
+      "MainPID": "2095785",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "bybot.service": {
+      "ActiveState": "failed",
+      "ExecMainStatus": "9",
+      "LoadState": "loaded",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "signal",
+      "SubState": "failed"
+    },
+    "kity-execution-micro-owner.service": {
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "LoadState": "loaded",
+      "MainPID": "2440673",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "trading-journal-web.service": {
+      "ActiveState": "failed",
+      "ExecMainStatus": "9",
+      "LoadState": "loaded",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "signal",
+      "SubState": "failed"
+    }
+  }
+}

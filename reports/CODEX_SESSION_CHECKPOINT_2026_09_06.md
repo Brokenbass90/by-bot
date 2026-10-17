@@ -1,5 +1,19 @@
 # Codex session checkpoint — 2026-09-06
 
+October17 12:37UTC FOLLOWUP: masterhandoff + IBIT_DATA_ONLY_CONTRACT_INTAKE_2026_10_17.md.
+FreshKITYsameowner/ORDERSOFF/flat0/open0/oneunclaimedpolicy; NETstillopen/DAYexpired.
+MonthlyV3installed defaultOFFverifyPASS +47targetedsource/book/nativePASS;
+full57+SPYsource/schedules remainOPEN. OwneraddsIBIT/BTC DATAONLY P1at5a23fc3,
+exactcontractverified; source-timestamp/earlyclose/hash/deferredQAclarifications
+needed before faithfuladapter. No LIVE/strategy/authoritychanges or outcomes.
+
+October17 09:57UTC LEAD INTAKE: read TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md
+first for the consolidated execution board/permissions and fresh sanitized receipt.
+KITY samePID/ORDERSOFF/flat0/open0/unclaimed1policy; actual10/10 stillOPEN.
+NET .325167779/open0/exactDAYexpired277.69; HALT/95pins/32monthlyV3pins intact.
+No brokerwrites/services/notifications/judges. Monthly sources+daily scheduling
+remain nextengineering while personalKITYGO/Oct19actualrearm are pending.
+
 October17 09:10UTC latest KITYsource: ONE GET-only PREPARE1792228229477683854
 gross207.668760, quantity/eligibilityreasons[], BUT COMMON_BASKET_STALE.
 Samecapture offlineproof: GRASSengineageupper2862ms>2000; other9 462–850ms.

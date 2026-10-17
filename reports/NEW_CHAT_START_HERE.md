@@ -1,3 +1,11 @@
+# Latest entrypoint — 17 October 2026
+
+Read [Trading OS Codex master handoff](TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md)
+and its execution board first, then current checkpoint TOP. Fresh read-only
+follow-up12:37UTC: KITY ORDERS_OFF/flat, actual10/10 OPEN; NET remains open with
+expired DAY stop outsideRTH; monthlyV3 disabled/47targetedPASS. IBIT/BTC DATAONLY
+P1contract5a23fc3 intake checked; source semantics OPEN. No new money authority.
+
 # Стартовый промпт нового Codex — production, edge, развитие
 
 LATEST KITYpreGO:207.668760gross but GRASSCTS2862ms>2s, notfreshSENDready.
