@@ -25,6 +25,14 @@ class Test(unittest.TestCase):
         r = T.reshit("SOLUSDT", ts[lo:ib + 1], *[x[lo:ib + 1, k] for k in range(5)], 0, int(ts[ib]) + 4 * T.H)
         self.assertTrue(r["pozdno"])
 
+    def test_propushchennyy_bar(self):
+        """Дополнение 2: между проходами закрылось два бара — сигнал на предпоследнем не теряется."""
+        ts, x = self.ts, self.x
+        ib, s, a = A.signaly(ts, *[x[:, k] for k in range(5)])[7]; lo = ib - 400
+        r = T.reshit("SOLUSDT", ts[lo:ib + 2], *[x[lo:ib + 2, k] for k in range(5)], int(ts[ib - 1]),
+                     int(ts[ib + 1]) + T.H + 1000)
+        self.assertIsNotNone(r); self.assertEqual(r["bar_ms"], int(ts[ib])); self.assertFalse(r["pozdno"])
+
     def test_ishod(self):
         ts, x = self.ts, self.x
         ib, s, a = A.signaly(ts, *[x[:, k] for k in range(5)])[10]

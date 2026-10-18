@@ -26,9 +26,10 @@ def svechi(sym, start_ms=None, limit=400):
 
 
 def reshit(sym, ts, o, h, l, c, v, posl_ms, seychas_ms):
-    """Сигнал только на последнем закрытом баре, которого ещё не видели. → запись решения или None."""
+    """Сигнал на ПЕРВОМ закрытом баре, которого ещё не видели (дополнение 2: раньше проверялся только последний бар,
+    и бар, закрывшийся между двумя проходами сторожа, терялся). Опоздавшие пишутся с pozdno=True. → запись или None."""
     if len(ts) < A.LB + 60 or ts[-1] <= posl_ms: return None
-    sig = [x for x in A.signaly(ts, o, h, l, c, v) if x[0] == len(ts) - 1]
+    sig = [x for x in A.signaly(ts, o, h, l, c, v) if int(ts[x[0]]) > max(posl_ms, seychas_ms - 6 * H)][:1]
     if not sig: return None
     ib, s, a = sig[0]; t_vh = int(ts[ib]) + H
     vhod_isp = (seychas_ms // H + 1) * H                         # дополнение 1: первый полный бар после записи
