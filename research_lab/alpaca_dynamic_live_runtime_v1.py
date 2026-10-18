@@ -645,7 +645,11 @@ def run_once(*,intake,policy,binding,client,now_ms,apply=False,owner_go_path=Non
                     if cash-dec(intake['scope']['liability_reserve_usd'])<positive(intake['plan']['funding_limit_usd']):
                         raise ValueError('FRESH_LIABILITY_CASH_REJECT')
                     positions=client.list_positions();orders=client.list_orders(status='open',limit=500)
-                    if len(orders)>=500 or any(p['symbol']==intake['plan']['symbol'] for p in positions) or orders:
+                    if 'portfolio_bindings' in binding:
+                        from research_lab.alpaca_dynamic_portfolio_admission_v1 import check_owned_portfolio
+                        check_owned_portfolio(db,binding,policy,client,positions=positions,orders=orders,
+                            target_symbol=intake['plan']['symbol'],observed_ms=now_ms+int((time.monotonic()-started)*1000))
+                    elif len(orders)>=500 or any(p['symbol']==intake['plan']['symbol'] for p in positions) or orders:
                         raise ValueError('FOREIGN_POSITION_OR_ORDER')
                     if (len(positions)!=intake['scope']['positions_before']
                         or len(positions)>=policy['max_positions']):raise ValueError('FRESH_POSITION_CAP_CONFLICT')
