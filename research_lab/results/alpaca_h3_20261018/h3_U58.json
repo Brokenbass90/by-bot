@@ -1,0 +1,980 @@
+{
+ "prereg": "PREREG_ALPACA_H3_KESH_I_PONEDELNIK_2026_10_18",
+ "vselennaya": "U58",
+ "A": {
+  "20bps": {
+   "M": {
+    "cagr_pct": 8.515870077721189,
+    "maxDD_pct": 16.16723784912224,
+    "calmar": 0.5267362401168321,
+    "vosstanovlenie_max_sessiy": 776,
+    "itog": 2.3126804521490323,
+    "oborot_dol_kapitala": 0.0,
+    "sdelok_overleya": 0,
+    "svobodno_srednee": 0.7493314441606066,
+    "ekspoziciya_srednyaya": 0.2506685558393934,
+    "potrebnost_likvidnosti_max": 0.0,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 3.9226206887868154,
+      "maxDD_pct": 16.16723784912224,
+      "calmar": 0.24262775901449263,
+      "vosstanovlenie_max_sessiy": 188,
+      "itog": 1.1477324250155665
+     },
+     "P2": {
+      "cagr_pct": 15.138372169907077,
+      "maxDD_pct": 13.219923334179718,
+      "calmar": 1.145118000099688,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.5247523934961167
+     },
+     "P3": {
+      "cagr_pct": 8.257869993181298,
+      "maxDD_pct": 13.695255988383447,
+      "calmar": 0.6029730295064047,
+      "vosstanovlenie_max_sessiy": 353,
+      "itog": 1.3378954534246101
+     }
+    },
+    "dvizhok_godovyh_pct": 8.515870077721189
+   },
+   "M+SPY_G200": {
+    "cagr_pct": 9.41316492616895,
+    "maxDD_pct": 25.54997307914958,
+    "calmar": 0.3684217160232821,
+    "vosstanovlenie_max_sessiy": 752,
+    "itog": 2.5165418627466547,
+    "oborot_dol_kapitala": 154.15138816515818,
+    "sdelok_overleya": 365,
+    "svobodno_srednee": 0.18493824355845598,
+    "ekspoziciya_srednyaya": 0.815157059732585,
+    "potrebnost_likvidnosti_max": 1.0020980295540614,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 5.192291292982065,
+      "maxDD_pct": 20.73473678717097,
+      "calmar": 0.2504151051579612,
+      "vosstanovlenie_max_sessiy": 456,
+      "itog": 1.1987449540738633
+     },
+     "P2": {
+      "cagr_pct": 9.550175902025583,
+      "maxDD_pct": 22.84287540449508,
+      "calmar": 0.4180811624155808,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3138354845492912
+     },
+     "P3": {
+      "cagr_pct": 13.790829339675081,
+      "maxDD_pct": 17.69552957509778,
+      "calmar": 0.7793397355613686,
+      "vosstanovlenie_max_sessiy": 192,
+      "itog": 1.6063561482461688
+     }
+    }
+   },
+   "M+SPY_ALL": {
+    "cagr_pct": 14.41990111078284,
+    "maxDD_pct": 34.660463098139736,
+    "calmar": 0.4160331346397034,
+    "vosstanovlenie_max_sessiy": 580,
+    "itog": 3.9824617215301816,
+    "oborot_dol_kapitala": 87.44576630484049,
+    "sdelok_overleya": 323,
+    "svobodno_srednee": 0.016805349749470407,
+    "ekspoziciya_srednyaya": 0.983257462473747,
+    "potrebnost_likvidnosti_max": 0.7026252034052094,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 10.553399423069344,
+      "maxDD_pct": 23.935849453998348,
+      "calmar": 0.440903484263286,
+      "vosstanovlenie_max_sessiy": 167,
+      "itog": 1.43230806291238
+     },
+     "P2": {
+      "cagr_pct": 11.22962324269512,
+      "maxDD_pct": 34.660463098139736,
+      "calmar": 0.3239894173052127,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3750338846132883
+     },
+     "P3": {
+      "cagr_pct": 21.4723646581048,
+      "maxDD_pct": 20.259702076111573,
+      "calmar": 1.0598558941013794,
+      "vosstanovlenie_max_sessiy": 149,
+      "itog": 2.0413818372494843
+     }
+    }
+   },
+   "M+SPY_G200_R30": {
+    "cagr_pct": 7.724472923028891,
+    "maxDD_pct": 21.33603536066957,
+    "calmar": 0.3620388133246176,
+    "vosstanovlenie_max_sessiy": 773,
+    "itog": 2.145380738592442,
+    "oborot_dol_kapitala": 136.6294188774409,
+    "sdelok_overleya": 356,
+    "svobodno_srednee": 0.4232906795258121,
+    "ekspoziciya_srednyaya": 0.576709320474188,
+    "potrebnost_likvidnosti_max": 0.7047800168790501,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 2.947691740741143,
+      "maxDD_pct": 18.590129038780468,
+      "calmar": 0.15856219903541427,
+      "vosstanovlenie_max_sessiy": 456,
+      "itog": 1.109638370313539
+     },
+     "P2": {
+      "cagr_pct": 10.4632569101343,
+      "maxDD_pct": 18.188552760270483,
+      "calmar": 0.5752660504682562,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3468776321259457
+     },
+     "P3": {
+      "cagr_pct": 10.63108294639421,
+      "maxDD_pct": 16.549074258738994,
+      "calmar": 0.6423974404961234,
+      "vosstanovlenie_max_sessiy": 291,
+      "itog": 1.448681887171412
+     }
+    }
+   },
+   "SPY_BH": {
+    "cagr_pct": 13.529225663912836,
+    "maxDD_pct": 34.104746893243956,
+    "calmar": 0.3966962636099473,
+    "vosstanovlenie_max_sessiy": 512,
+    "itog": 3.6756537633647652
+   },
+   "krizisy": {
+    "2018_Q4": {
+     "M": {
+      "dohod_pct": -7.37775028182398,
+      "maxDD_pct": 7.37775028182398
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -20.406457679633284,
+      "maxDD_pct": 20.406457679633284
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -14.454038506004519,
+      "maxDD_pct": 25.733186947836085
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -16.628688283398663,
+      "maxDD_pct": 16.628688283398663
+     },
+     "SPY_BH": {
+      "dohod_pct": -7.777472950453623,
+      "maxDD_pct": 19.93691980342597
+     }
+    },
+    "2020_covid": {
+     "M": {
+      "dohod_pct": 0.0,
+      "maxDD_pct": -0.0
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -19.668347934025242,
+      "maxDD_pct": 20.297567029319495
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -9.746382116068874,
+      "maxDD_pct": 34.1047478908606
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -14.1367210985183,
+      "maxDD_pct": 14.608787349428065
+     },
+     "SPY_BH": {
+      "dohod_pct": -9.746345325230898,
+      "maxDD_pct": 34.104746893243956
+     }
+    },
+    "2022_bear": {
+     "M": {
+      "dohod_pct": -0.9374878133585285,
+      "maxDD_pct": 3.94606719913394
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -12.168440855943219,
+      "maxDD_pct": 12.85104386831135
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -13.582904911853365,
+      "maxDD_pct": 19.79653357946435
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -7.0134003478597995,
+      "maxDD_pct": 9.02031099954389
+     },
+     "SPY_BH": {
+      "dohod_pct": -19.86842974202121,
+      "maxDD_pct": 25.360573583036906
+     }
+    },
+    "2025_fevral": {
+     "M": {
+      "dohod_pct": -3.737748622698478,
+      "maxDD_pct": 3.737748622698478
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -11.382603983161331,
+      "maxDD_pct": 11.618712677966547
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -9.289143647121623,
+      "maxDD_pct": 19.956994521831874
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -8.425331886410714,
+      "maxDD_pct": 8.596260064459338
+     },
+     "SPY_BH": {
+      "dohod_pct": -8.203850511855205,
+      "maxDD_pct": 18.99890412950491
+     }
+    }
+   }
+  },
+  "10bps": {
+   "M": {
+    "cagr_pct": 9.47791599400649,
+    "maxDD_pct": 15.802529802288879,
+    "calmar": 0.5997720689401064,
+    "vosstanovlenie_max_sessiy": 422,
+    "itog": 2.5318620867334185,
+    "oborot_dol_kapitala": 0.0,
+    "sdelok_overleya": 0,
+    "svobodno_srednee": 0.7485180268436191,
+    "ekspoziciya_srednyaya": 0.2514819731563808,
+    "potrebnost_likvidnosti_max": 0.0,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 4.959930807558854,
+      "maxDD_pct": 15.802529802288879,
+      "calmar": 0.3138694164551074,
+      "vosstanovlenie_max_sessiy": 167,
+      "itog": 1.189289458488564
+     },
+     "P2": {
+      "cagr_pct": 15.419519312434392,
+      "maxDD_pct": 13.042001675095404,
+      "calmar": 1.1822969891101165,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.5359209975555053
+     },
+     "P3": {
+      "cagr_pct": 9.641080862376338,
+      "maxDD_pct": 13.256548492620624,
+      "calmar": 0.7272693090319197,
+      "vosstanovlenie_max_sessiy": 350,
+      "itog": 1.4016864582160613
+     }
+    },
+    "dvizhok_godovyh_pct": 9.47791599400649
+   },
+   "M+SPY_G200": {
+    "cagr_pct": 11.725465881612408,
+    "maxDD_pct": 22.876319575913428,
+    "calmar": 0.5125591047415774,
+    "vosstanovlenie_max_sessiy": 666,
+    "itog": 3.1187459979216743,
+    "oborot_dol_kapitala": 148.09471583159777,
+    "sdelok_overleya": 367,
+    "svobodno_srednee": 0.1840572837787502,
+    "ekspoziciya_srednyaya": 0.8159879500204573,
+    "potrebnost_likvidnosti_max": 1.0010479154981882,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 7.479100027245433,
+      "maxDD_pct": 18.556206548462328,
+      "calmar": 0.40305113050518365,
+      "vosstanovlenie_max_sessiy": 321,
+      "itog": 1.2947166379048585
+     },
+     "P2": {
+      "cagr_pct": 11.110220358367906,
+      "maxDD_pct": 21.589566880071153,
+      "calmar": 0.51461061817889,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3706215021047057
+     },
+     "P3": {
+      "cagr_pct": 16.725516834863228,
+      "maxDD_pct": 16.197055226211898,
+      "calmar": 1.03262701776778,
+      "vosstanovlenie_max_sessiy": 156,
+      "itog": 1.7636505489306724
+     }
+    }
+   },
+   "M+SPY_ALL": {
+    "cagr_pct": 16.021004768602467,
+    "maxDD_pct": 34.28276047225645,
+    "calmar": 0.4673195666833064,
+    "vosstanovlenie_max_sessiy": 422,
+    "itog": 4.592652462892406,
+    "oborot_dol_kapitala": 84.72516338084247,
+    "sdelok_overleya": 325,
+    "svobodno_srednee": 0.01629946560473794,
+    "ekspoziciya_srednyaya": 0.9837308684796103,
+    "potrebnost_likvidnosti_max": 0.7009972784632572,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 12.347178048755492,
+      "maxDD_pct": 23.794764192103766,
+      "calmar": 0.5189031481494097,
+      "vosstanovlenie_max_sessiy": 167,
+      "itog": 1.5172901102192102
+     },
+     "P2": {
+      "cagr_pct": 12.19388443684879,
+      "maxDD_pct": 34.28276047225645,
+      "calmar": 0.3556856060852151,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.4110140282146384
+     },
+     "P3": {
+      "cagr_pct": 23.388243401569575,
+      "maxDD_pct": 19.984020036164594,
+      "calmar": 1.1703472754352948,
+      "vosstanovlenie_max_sessiy": 139,
+      "itog": 2.1620112659667616
+     }
+    }
+   },
+   "M+SPY_G200_R30": {
+    "cagr_pct": 9.68498273698648,
+    "maxDD_pct": 18.741188792080553,
+    "calmar": 0.5167752614006564,
+    "vosstanovlenie_max_sessiy": 712,
+    "itog": 2.581421158697545,
+    "oborot_dol_kapitala": 136.54474916793305,
+    "sdelok_overleya": 365,
+    "svobodno_srednee": 0.4286474512447081,
+    "ekspoziciya_srednyaya": 0.5713525487552918,
+    "potrebnost_likvidnosti_max": 0.7042925926556034,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 5.08034052577111,
+      "maxDD_pct": 15.776977705739881,
+      "calmar": 0.3220097423299782,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.194182579851637
+     },
+     "P2": {
+      "cagr_pct": 11.516333046188866,
+      "maxDD_pct": 16.82783415830681,
+      "calmar": 0.6843621667440785,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3856674810469025
+     },
+     "P3": {
+      "cagr_pct": 13.120333525949679,
+      "maxDD_pct": 14.433159833724119,
+      "calmar": 0.9090409638015006,
+      "vosstanovlenie_max_sessiy": 200,
+      "itog": 1.5719030449290987
+     }
+    }
+   },
+   "SPY_BH": {
+    "cagr_pct": 13.540276227431193,
+    "maxDD_pct": 34.104746893243956,
+    "calmar": 0.3970202819512342,
+    "vosstanovlenie_max_sessiy": 512,
+    "itog": 3.679325745146349
+   },
+   "krizisy": {
+    "2018_Q4": {
+     "M": {
+      "dohod_pct": -7.320850028002523,
+      "maxDD_pct": 7.320850028002523
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -19.711410209018997,
+      "maxDD_pct": 19.711410209018997
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -14.315323997560247,
+      "maxDD_pct": 25.612761806938313
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -16.10617514176874,
+      "maxDD_pct": 16.10617514176874
+     },
+     "SPY_BH": {
+      "dohod_pct": -7.685342553800723,
+      "maxDD_pct": 19.85693670632648
+     }
+    },
+    "2020_covid": {
+     "M": {
+      "dohod_pct": 0.0,
+      "maxDD_pct": -0.0
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -19.097765485665917,
+      "maxDD_pct": 19.812115532622222
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -9.65601968835168,
+      "maxDD_pct": 34.104747076026364
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -13.711757609315821,
+      "maxDD_pct": 14.246381040987433
+     },
+     "SPY_BH": {
+      "dohod_pct": -9.656181834047295,
+      "maxDD_pct": 34.10474689324394
+     }
+    },
+    "2022_bear": {
+     "M": {
+      "dohod_pct": -0.497222088732896,
+      "maxDD_pct": 3.939263499097645
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -10.951401831200968,
+      "maxDD_pct": 12.46528046503177
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -12.726872194792104,
+      "maxDD_pct": 19.69379650732047
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -6.078999061557111,
+      "maxDD_pct": 8.773441381987979
+     },
+     "SPY_BH": {
+      "dohod_pct": -19.788378223281978,
+      "maxDD_pct": 25.360573583036906
+     }
+    },
+    "2025_fevral": {
+     "M": {
+      "dohod_pct": -3.6050911972035027,
+      "maxDD_pct": 3.6050911972035027
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -10.766819294932283,
+      "maxDD_pct": 11.093238543961137
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -8.933131741799706,
+      "maxDD_pct": 19.722913813193454
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -7.904195979515394,
+      "maxDD_pct": 8.140278663604795
+     },
+     "SPY_BH": {
+      "dohod_pct": -8.112146066812087,
+      "maxDD_pct": 18.99890412950491
+     }
+    }
+   }
+  },
+  "30bps": {
+   "M": {
+    "cagr_pct": 6.852413450674022,
+    "maxDD_pct": 16.278075163427243,
+    "calmar": 0.4209596885305996,
+    "vosstanovlenie_max_sessiy": 804,
+    "itog": 1.9737431745710727,
+    "oborot_dol_kapitala": 0.0,
+    "sdelok_overleya": 0,
+    "svobodno_srednee": 0.7525103350616343,
+    "ekspoziciya_srednyaya": 0.24748966493836563,
+    "potrebnost_likvidnosti_max": 0.0,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 2.6547579922214792,
+      "maxDD_pct": 16.278075163427243,
+      "calmar": 0.16308795515246516,
+      "vosstanovlenie_max_sessiy": 188,
+      "itog": 1.0983727160605814
+     },
+     "P2": {
+      "cagr_pct": 13.256625204709426,
+      "maxDD_pct": 13.387339473176175,
+      "calmar": 0.9902359786476874,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.4513889075770554
+     },
+     "P3": {
+      "cagr_pct": 6.3978964867348775,
+      "maxDD_pct": 14.132063498564019,
+      "calmar": 0.45272203081913537,
+      "vosstanovlenie_max_sessiy": 356,
+      "itog": 1.255479977886337
+     }
+    },
+    "dvizhok_godovyh_pct": 6.852413450674022
+   },
+   "M+SPY_G200": {
+    "cagr_pct": 6.136579430007583,
+    "maxDD_pct": 29.209841516545943,
+    "calmar": 0.21008602277186308,
+    "vosstanovlenie_max_sessiy": 814,
+    "itog": 1.8422258183034987,
+    "oborot_dol_kapitala": 162.78505371583267,
+    "sdelok_overleya": 369,
+    "svobodno_srednee": 0.18663636376489742,
+    "ekspoziciya_srednyaya": 0.8135167387410113,
+    "potrebnost_likvidnosti_max": 1.0031503490938445,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 2.452912553594633,
+      "maxDD_pct": 24.45370815739456,
+      "calmar": 0.10030840876183829,
+      "vosstanovlenie_max_sessiy": 456,
+      "itog": 1.0906582689163045
+     },
+     "P2": {
+      "cagr_pct": 6.979517390112555,
+      "maxDD_pct": 23.6890373667772,
+      "calmar": 0.29463068853532276,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.223717852725666
+     },
+     "P3": {
+      "cagr_pct": 9.401591496023132,
+      "maxDD_pct": 19.431748552981396,
+      "calmar": 0.48382632527326797,
+      "vosstanovlenie_max_sessiy": 295,
+      "itog": 1.390486606916502
+     }
+    }
+   },
+   "M+SPY_ALL": {
+    "cagr_pct": 12.148400436025852,
+    "maxDD_pct": 34.72950816137627,
+    "calmar": 0.3498005321462183,
+    "vosstanovlenie_max_sessiy": 583,
+    "itog": 3.242004749054563,
+    "oborot_dol_kapitala": 90.89692326162913,
+    "sdelok_overleya": 327,
+    "svobodno_srednee": 0.017448208605480756,
+    "ekspoziciya_srednyaya": 0.9826500059236459,
+    "potrebnost_likvidnosti_max": 0.7054403836198776,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 8.309084580781011,
+      "maxDD_pct": 24.588483633458047,
+      "calmar": 0.3379258641828027,
+      "vosstanovlenie_max_sessiy": 258,
+      "itog": 1.3308794725648392
+     },
+     "P2": {
+      "cagr_pct": 9.460866597167339,
+      "maxDD_pct": 34.72950816137627,
+      "calmar": 0.2724157956169691,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3106328912810723
+     },
+     "P3": {
+      "cagr_pct": 18.77318778562207,
+      "maxDD_pct": 20.548325948009605,
+      "calmar": 0.9136115434961025,
+      "vosstanovlenie_max_sessiy": 156,
+      "itog": 1.8798402291896852
+     }
+    }
+   },
+   "M+SPY_G200_R30": {
+    "cagr_pct": 4.935996201996384,
+    "maxDD_pct": 25.69459762511682,
+    "calmar": 0.19210249072635333,
+    "vosstanovlenie_max_sessiy": 814,
+    "itog": 1.6393007083545932,
+    "oborot_dol_kapitala": 138.04879679026578,
+    "sdelok_overleya": 358,
+    "svobodno_srednee": 0.41746855118977116,
+    "ekspoziciya_srednyaya": 0.5825314488102288,
+    "potrebnost_likvidnosti_max": 0.7052681162392658,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 0.39984833414827836,
+      "maxDD_pct": 22.134254411200228,
+      "calmar": 0.018064685022593296,
+      "vosstanovlenie_max_sessiy": 456,
+      "itog": 1.0143930495891058
+     },
+     "P2": {
+      "cagr_pct": 8.404561614990037,
+      "maxDD_pct": 19.37577875036989,
+      "calmar": 0.43376639067111517,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.273147719046022
+     },
+     "P3": {
+      "cagr_pct": 7.0366935663144,
+      "maxDD_pct": 18.97154761327173,
+      "calmar": 0.37090772507098013,
+      "vosstanovlenie_max_sessiy": 350,
+      "itog": 1.2833560245707554
+     }
+    }
+   },
+   "SPY_BH": {
+    "cagr_pct": 13.518187197314635,
+    "maxDD_pct": 34.104746893243956,
+    "calmar": 0.3963725999676762,
+    "vosstanovlenie_max_sessiy": 512,
+    "itog": 3.671989103580753
+   },
+   "krizisy": {
+    "2018_Q4": {
+     "M": {
+      "dohod_pct": -7.43454608831553,
+      "maxDD_pct": 7.43454608831553
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -21.09653742855785,
+      "maxDD_pct": 21.09653742855785
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -14.592523651927536,
+      "maxDD_pct": 25.853412967430355
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -17.148480364304632,
+      "maxDD_pct": 17.148480364304632
+     },
+     "SPY_BH": {
+      "dohod_pct": -7.869419637442188,
+      "maxDD_pct": 20.016743412794412
+     }
+    },
+    "2020_covid": {
+     "M": {
+      "dohod_pct": 0.0,
+      "maxDD_pct": -0.0
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -20.23612856374899,
+      "maxDD_pct": 20.780896326656062
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -9.836925846725386,
+      "maxDD_pct": 34.10474973993425
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -14.56005685525964,
+      "maxDD_pct": 14.970083476497498
+     },
+     "SPY_BH": {
+      "dohod_pct": -9.836329028794966,
+      "maxDD_pct": 34.10474689324394
+     }
+    },
+    "2022_bear": {
+     "M": {
+      "dohod_pct": -1.3639548259813505,
+      "maxDD_pct": 3.9991275024541584
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -13.357104668292596,
+      "maxDD_pct": 13.357104668292596
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -14.344495902984189,
+      "maxDD_pct": 20.018993123601426
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -7.926771247947128,
+      "maxDD_pct": 9.344404978967747
+     },
+     "SPY_BH": {
+      "dohod_pct": -19.948321636595466,
+      "maxDD_pct": 25.3635259041636
+     }
+    },
+    "2025_fevral": {
+     "M": {
+      "dohod_pct": -3.87014152690629,
+      "maxDD_pct": 3.87014152690629
+     },
+     "M+SPY_G200": {
+      "dohod_pct": -11.99587247368078,
+      "maxDD_pct": 12.142724007576222
+     },
+     "M+SPY_ALL": {
+      "dohod_pct": -9.645085232555662,
+      "maxDD_pct": 20.191480498658287
+     },
+     "M+SPY_G200_R30": {
+      "dohod_pct": -8.944369925557682,
+      "maxDD_pct": 9.05078367718961
+     },
+     "SPY_BH": {
+      "dohod_pct": -8.295372096589137,
+      "maxDD_pct": 18.9989041295049
+     }
+    }
+   }
+  }
+ },
+ "B": {
+  "20bps": {
+   "MONTHLY": {
+    "cagr_pct": 8.515870077721189,
+    "maxDD_pct": 16.16723784912224,
+    "calmar": 0.5267362401168321,
+    "vosstanovlenie_max_sessiy": 776,
+    "itog": 2.3126804521490323,
+    "sdelok": 318,
+    "ekspoziciya_pct": 25.066855583939336,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 3.9226206887868154,
+      "maxDD_pct": 16.16723784912224,
+      "calmar": 0.24262775901449263,
+      "vosstanovlenie_max_sessiy": 188,
+      "itog": 1.1477324250155665
+     },
+     "P2": {
+      "cagr_pct": 15.138372169907077,
+      "maxDD_pct": 13.219923334179718,
+      "calmar": 1.145118000099688,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.5247523934961167
+     },
+     "P3": {
+      "cagr_pct": 8.257869993181298,
+      "maxDD_pct": 13.695255988383447,
+      "calmar": 0.6029730295064047,
+      "vosstanovlenie_max_sessiy": 353,
+      "itog": 1.3378954534246101
+     }
+    }
+   },
+   "W_ROT": {
+    "cagr_pct": 1.1627240567082753,
+    "maxDD_pct": 33.25167516791374,
+    "calmar": 0.034967382871292085,
+    "vosstanovlenie_max_sessiy": 2299,
+    "itog": 1.1259110856453183,
+    "sdelok": 912,
+    "ekspoziciya_pct": 38.22821251207874,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": -1.9925524880657797,
+      "maxDD_pct": 32.26195704016632,
+      "calmar": -0.06176167445716453,
+      "vosstanovlenie_max_sessiy": 645,
+      "itog": 0.9304602177320734
+     },
+     "P2": {
+      "cagr_pct": -4.634537629329227,
+      "maxDD_pct": 19.641217797228073,
+      "calmar": -0.23595979012988136,
+      "vosstanovlenie_max_sessiy": 723,
+      "itog": 0.8676179378088585
+     },
+     "P3": {
+      "cagr_pct": 8.803711539467285,
+      "maxDD_pct": 14.498078086498445,
+      "calmar": 0.6072330061227822,
+      "vosstanovlenie_max_sessiy": 284,
+      "itog": 1.362810638504932
+     }
+    }
+   }
+  },
+  "10bps": {
+   "MONTHLY": {
+    "cagr_pct": 9.47791599400649,
+    "maxDD_pct": 15.802529802288879,
+    "calmar": 0.5997720689401064,
+    "vosstanovlenie_max_sessiy": 422,
+    "itog": 2.5318620867334185,
+    "sdelok": 318,
+    "ekspoziciya_pct": 25.148197315638082,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 4.959930807558854,
+      "maxDD_pct": 15.802529802288879,
+      "calmar": 0.3138694164551074,
+      "vosstanovlenie_max_sessiy": 167,
+      "itog": 1.189289458488564
+     },
+     "P2": {
+      "cagr_pct": 15.419519312434392,
+      "maxDD_pct": 13.042001675095404,
+      "calmar": 1.1822969891101165,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.5359209975555053
+     },
+     "P3": {
+      "cagr_pct": 9.641080862376338,
+      "maxDD_pct": 13.256548492620624,
+      "calmar": 0.7272693090319197,
+      "vosstanovlenie_max_sessiy": 350,
+      "itog": 1.4016864582160613
+     }
+    }
+   },
+   "W_ROT": {
+    "cagr_pct": 5.861337623941609,
+    "maxDD_pct": 22.871024690487516,
+    "calmar": 0.25627787575164696,
+    "vosstanovlenie_max_sessiy": 635,
+    "itog": 1.7937999089399712,
+    "sdelok": 915,
+    "ekspoziciya_pct": 38.43312804730974,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 4.64957742866694,
+      "maxDD_pct": 22.871024690487516,
+      "calmar": 0.20329554497839292,
+      "vosstanovlenie_max_sessiy": 635,
+      "itog": 1.1767441836193833
+     },
+     "P2": {
+      "cagr_pct": -0.9816926593850139,
+      "maxDD_pct": 15.828086656981299,
+      "calmar": -0.062022193879764896,
+      "vosstanovlenie_max_sessiy": 298,
+      "itog": 0.9709095045401727
+     },
+     "P3": {
+      "cagr_pct": 12.3730041340389,
+      "maxDD_pct": 12.304973135761266,
+      "calmar": 1.0055287400896407,
+      "vosstanovlenie_max_sessiy": 268,
+      "itog": 1.5341388337226423
+     }
+    }
+   }
+  },
+  "30bps": {
+   "MONTHLY": {
+    "cagr_pct": 6.852413450674022,
+    "maxDD_pct": 16.278075163427243,
+    "calmar": 0.4209596885305996,
+    "vosstanovlenie_max_sessiy": 804,
+    "itog": 1.9737431745710727,
+    "sdelok": 319,
+    "ekspoziciya_pct": 24.74896649383657,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 2.6547579922214792,
+      "maxDD_pct": 16.278075163427243,
+      "calmar": 0.16308795515246516,
+      "vosstanovlenie_max_sessiy": 188,
+      "itog": 1.0983727160605814
+     },
+     "P2": {
+      "cagr_pct": 13.256625204709426,
+      "maxDD_pct": 13.387339473176175,
+      "calmar": 0.9902359786476874,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.4513889075770554
+     },
+     "P3": {
+      "cagr_pct": 6.3978964867348775,
+      "maxDD_pct": 14.132063498564019,
+      "calmar": 0.45272203081913537,
+      "vosstanovlenie_max_sessiy": 356,
+      "itog": 1.255479977886337
+     }
+    }
+   },
+   "W_ROT": {
+    "cagr_pct": -1.567495322587098,
+    "maxDD_pct": 41.52909498255648,
+    "calmar": -0.037744509559996316,
+    "vosstanovlenie_max_sessiy": 2397,
+    "itog": 0.8503742798391365,
+    "sdelok": 914,
+    "ekspoziciya_pct": 37.97047210732745,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": -5.1396233335846535,
+      "maxDD_pct": 35.30058748767612,
+      "calmar": -0.14559597160752527,
+      "vosstanovlenie_max_sessiy": 719,
+      "itog": 0.8278246141279422
+     },
+     "P2": {
+      "cagr_pct": -6.631546908862973,
+      "maxDD_pct": 24.153444045309847,
+      "calmar": -0.27455906066326374,
+      "vosstanovlenie_max_sessiy": 723,
+      "itog": 0.8143757937302614
+     },
+     "P3": {
+      "cagr_pct": 5.865086885800985,
+      "maxDD_pct": 14.623944708617032,
+      "calmar": 0.40106052112909274,
+      "vosstanovlenie_max_sessiy": 592,
+      "itog": 1.2325681486447133
+     }
+    }
+   }
+  },
+  "gorizonty": {
+   "mesyachnye_daty": {
+    "5": {
+     "n": 344,
+     "prevyshenie_pct": 0.7042849565897182,
+     "t": 1.896665720454811,
+     "za_sessiyu_bps": 14.085699131794366
+    },
+    "10": {
+     "n": 344,
+     "prevyshenie_pct": 1.003189813950958,
+     "t": 2.1051377511723657,
+     "za_sessiyu_bps": 10.03189813950958
+    },
+    "21": {
+     "n": 344,
+     "prevyshenie_pct": 1.028058616348961,
+     "t": 1.5902901243401961,
+     "za_sessiyu_bps": 4.895517220709337
+    },
+    "42": {
+     "n": 340,
+     "prevyshenie_pct": 1.898636930177791,
+     "t": 2.031008202171234,
+     "za_sessiyu_bps": 4.520564119470931
+    }
+   },
+   "nedelnye_daty": {
+    "5": {
+     "n": 1461,
+     "prevyshenie_pct": 0.11395559964637464,
+     "t": 0.742262260499046,
+     "za_sessiyu_bps": 2.2791119929274926
+    },
+    "10": {
+     "n": 1457,
+     "prevyshenie_pct": 0.43274664976819593,
+     "t": 1.9997396404082755,
+     "za_sessiyu_bps": 4.327466497681959
+    },
+    "21": {
+     "n": 1446,
+     "prevyshenie_pct": 0.6551667408568564,
+     "t": 1.9485186444798217,
+     "za_sessiyu_bps": 3.1198416231278876
+    },
+    "42": {
+     "n": 1431,
+     "prevyshenie_pct": 1.378121460449534,
+     "t": 2.994242110401915,
+     "za_sessiyu_bps": 3.2812415724988906
+    }
+   }
+  }
+ }
+}
