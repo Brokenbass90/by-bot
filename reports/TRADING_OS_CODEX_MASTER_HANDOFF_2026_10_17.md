@@ -1,5 +1,8 @@
 # Trading OS — Codex master handoff, 17 October 2026
 
+CURRENT 18Oct: read [owner GO / Monday delivery](TRADING_OS_OWNER_GO_AND_MONDAY_DELIVERY_2026_10_18.md) and checkpoint TOP first. KITY300 direct GO accepted, personal start required before18Oct18UTC; Alpaca original Weekly next-entry staged for19Oct13:31UTC, personal arm before13:15UTC. Neither command run; no financialunit/HALT/broker changes byCodex. Older no-GO/cap215/source59-pending statements are dated history.
+
+
 **LATEST: [KITY_CAP300_OWNER_REVIEW_2026_10_17.md](KITY_CAP300_OWNER_REVIEW_2026_10_17.md),
 code7213522.** Owner approves calculation/proposal≤300, NOT money GO. Actual
 18:48:31UTC72GET: minimum246.149420/collar247.371930/headroom52.628070;

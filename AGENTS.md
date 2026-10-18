@@ -1190,3 +1190,36 @@ feasibility/account/custody, new dated policy+namespace, single postGO capture
 and HUMANpersonalstart. Never run oldlauncher, resetclaim or polluntilPASS.
 Technicalmicro doesnotrequirewaiting23Oct; researchpromotiongates unchanged.
 AlpacaDynamic/NET19Oct remainparallelP0, previous DATA timers preserved.
+
+
+## October18 actual owner GO / bounded Monday handoff amendment
+
+Read checkpoint TOP and TRADING_OS_OWNER_GO_AND_MONDAY_DELIVERY_2026_10_18.md/JSON.
+Direct owner now approves ONE new KITY300 technical micro; earlier calculation-only
+restriction superseded solely for newV4 packet. 29b1f90/3810890/01abb76, policy
+d848a130…f40a1 expires18Oct18UTC; 300gross/15exittrigger/30min/60s/CTS2s/50bps
+same5+5/rounding. Old215policy SPENT untouched. HUMANpersonalstart only; agents
+never execute/schedule monetary launcher/helper or reuse/resetspentclaims.
+Fresh18Oct04:49GET gross230.121200/CTS485ms/flat0/orders0, not execution10/10PASS.
+
+Alpaca originalWeekly next-entry kit50 staged; actualGETlineage/systemdsyntaxPASS.
+OneSHOP19Oct13:31UTC, inheritedAMDcaps113.61/9.07, policy fe72557b unchanged.
+No activeentrytimer/newmanager/HALTclear/sourcebook mutation byCodex. HUMAN
+personalarming before19Oct13:15UTC; proposedone-manager wrapper keeps oldNET
+maintenance first and newowned lifecycle second under same lock/timer. Scope
+4630ebe2…7bd1e, manifestd4fd22de…405e/controlb5a9c752…0b6a26. ExistingactualNET
+child is reconciled from broker/journal/native only; noPAPERadoption. Newentry
+requires exact fullNETstop current-session, fresh account/fees/quote/protocol/
+asset/clock/source/ownership/cash/gross and originalHALT gates. Oldnativebridge
+758ca619…38f4 reused;222tests with actualfrozenfilePASS/1293focusedPASS. No full
+suite/independentreview claim; exhaustedreviewbucket notretried/replaced.
+Do not present this as ongoing fresh event-reselection LIVE: originalWeekly
+contract stays distinct from ORDERSOFFcandidate/Monthly. Actual19OctNETstop/
+entry/fills/native/restart/cost proof remainsfuture. PersonalGO derivative
+is explicitly machine-generated from arm/scope, not a fabricated human quote.
+
+LIQ18Oct immutable27010raw/all25 delivered/hashes17+18verified, epoch unchanged;
+coverageUNKNOWN/sourcegatefalse/0prospective. Collector/export/Claude code/KARTA/
+VOROTA/outcomes untouched. IBITfirst19Octforward+MassivePENDING; same BrainShadow/
+Elder gates. Foreignallowlist365ff7d6…cc2e0e preserved/excluded. Next action is
+read-only reconciliation after HUMAN starts, never autonomous monetary activation.

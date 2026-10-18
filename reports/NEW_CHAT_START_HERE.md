@@ -1,5 +1,8 @@
 # START HERE — KITY300 calculation, no financial GO
 
+CURRENT 18Oct: read [owner GO / Monday delivery](TRADING_OS_OWNER_GO_AND_MONDAY_DELIVERY_2026_10_18.md) and checkpoint TOP first. KITY300 direct GO accepted, personal start required before18Oct18UTC; Alpaca original Weekly next-entry staged for19Oct13:31UTC, personal arm before13:15UTC. Neither command run; no financialunit/HALT/broker changes byCodex. Older no-GO/cap215/source59-pending statements are dated history.
+
+
 Read [KITY_CAP300_OWNER_REVIEW_2026_10_17.md](KITY_CAP300_OWNER_REVIEW_2026_10_17.md)
 and checkpoint TOP first. Owner authorizes cap300 calculation ONLY. Code7213522,
 fresh18:48UTC minimum246.149420/collar247.371930; loss15trigger NOT hardcap.

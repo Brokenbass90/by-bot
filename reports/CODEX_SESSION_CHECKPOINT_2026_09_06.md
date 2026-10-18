@@ -1,5 +1,42 @@
 # Codex session checkpoint — 2026-09-06
 
+LATEST 18Oct — TRADING_OS_OWNER_GO_AND_MONDAY_DELIVERY_2026_10_18.md/JSON.
+Direct human GO supersedes cap300-calculation-only state below for ONE new KITY
+technical micro. Code29b1f90/3810890/01abb76. New strictV4 cap300/trigger15,
+30min/60s/CTS2s/50bps/same5+5; old215policy remainsSPENT. Newpolicy d848a130…f40a1,
+manifest3fb44bc0…2ebaf1, HUMANpersonalstart only until18Oct18UTC/21Cyprus.
+Fresh18Oct04:49:22UTC GET: gross230.121200,CTS485ms,positions0/orders0,80GET/0POST;
+notdispatchfreshness/10of10PASS. Newpolicy unclaimed, noselection, no launcher run.
+Loss15 is trigger, NOT guaranteed finalcap; same sharedcross/overshoot caveat.
+
+Alpaca originalWeeklyDynamic next-entry kit50 staged /opt/bybot-research/
+alpaca-next-entry-20261019-v1, controlb5a9c752…0b6a26/manifestd4fd22de…405e.
+OneSHOP entry19Oct13:31UTC/16:31Cyprus, inheritedAMD113.61notional/9.07modeledrisk,
+originalcapital487.42/gross.70/1entry/calendar/cooldown/native. Source59/Friday
+rankingdraft actual, noearlyseal. RealGETlineagePASS,97oldpins/systemdverifyPASS;
+ACTIVATIONNOTDONE/HALTpresent/no personalarm. Personalarming before19Oct13:15UTC/
+16:15Cyprus; helper must be invoked only byHUMAN, not agent or automation.
+Fixes missingactualNETchild, first-onlyassembler/dispatcher and blanketopenorders
+block using exact known protectedLIVEownership; first-canarydefaults unchanged.
+Exactoldnativebridge758ca619…38f4 reused/222PASS, not newMonthlybridge. One existing
+manager wrapper preserves oldNETcommand first + nextownedmaintenance, same lock/
+timer; proposednewGETmonitorspec preserves actualpins. No sourcebook/financialunit/
+HALT/broker change byCodex. In arming newchilddata reconciled then exact historical
+HALT archived; laterHALT alwaysblocks. Fresh fullNET DAY protection19Oct precedes
+newentry; failedfreshgates NO_SEND, no retries/datecarry. Generic exactGO is a
+machine derivative of actual humanarm/scope, never falsely quotedhumantext.
+
+1293focusedPASS; fullsuite notrerun/historical60FAIL notwaived; root-onlyreview.
+Existing NET actual19OctDAYgate OPEN; nativefloor277.69/caps/oldsources retained.
+Monthly separate30Oct->2Nov14:30UTC/16:30Cyprus, not substituted forDynamic.
+LIQ18Oct27010raw/all25 immutableimport+17/18hashesPASS; epoch0688909d unchanged,
+coverageUNKNOWN/sourcegatefalse/0prospectivedecisions. NoClaude code/KARTA edits.
+IBITfirst19Octforward/MassivePENDING; Brainmultisleeve/elderprospective gates OPEN.
+Neither personalcommand was executed or scheduled. Read new report for exact
+commands/deadlines/authority/board. Earlier calculation-only/no-newpolicy entries
+are historical, not current scope. Foreignallowlist365ff7d6…cc2e0e preserved.
+
+
 LATEST — KITY_CAP300_OWNER_REVIEW_2026_10_17.md / code7213522.
 Owner authorizes calculation up to300, explicitly NOT financial GO. One bounded
 72GET capture18:48:31UTC: exact minimum246.149420, collar high247.371930,

@@ -21,20 +21,23 @@ never promotes the separate event-reselection research candidate silently.
 
 ## Tasks
 
-- [ ] Refresh bounded account/source/runtime custody for both lanes.
-- [ ] Tests first: explicit V4 cap300 accepted; old V3 cap300 rejected; all
+- [x] Refresh bounded account/source/runtime custody for both lanes.
+- [x] Tests first: explicit V4 cap300 accepted; old V3 cap300 rejected; all
   approval pins,15loss,one-shot,collar,expiry and financial-off checks retained.
-- [ ] Add V4 bounds and narrowly support them in existing compiler/batch and
+- [x] Add V4 bounds and narrowly support them in existing compiler/batch and
   personal-handoff validators. No global replacement of215 and no new sender.
-- [ ] Run existing relevant financial lifecycle tests and actual saved replay.
-- [ ] Stage separate KITY source kit/config/policy/launcher without selecting it
+- [x] Run existing relevant financial lifecycle tests and actual saved replay.
+- [x] Stage separate KITY source kit/config/policy/launcher without selecting it
   or invoking monetary controls; prove fresh pre-money feasibility and pins.
-- [ ] For Alpaca, reconcile original slot lineage and current NET ownership,
+- [x] For Alpaca, reconcile original slot lineage and current NET ownership,
   then complete original-contract Monday opening/manager schedule with existing
   admission gates. If a necessary factual gate fails, preserve live protection,
   finish safe readiness work and record the exact failed gate; no fake activation.
-- [ ] Verify installed bytes/readbacks, publish receipts and canonical board,
+- [x] Verify installed bytes/readbacks, publish receipts and canonical board,
   commit/push only scoped files, return personal KITY command and Alpaca status.
 
 Ruling: current direct GO supersedes prior no-new-financial-policy instructions
 for this new KITY300 packet only. It does not renew the spent215 experiment.
+
+
+Execution18Oct: code29b1f90/3810890/01abb76 delivered. Actual KITY GET230.121200/CTS485ms/flat; newpacket unclaimed. Actual Alpaca50file stagedGETpreflight+systemdverifyPASS, exactoldnative222PASS,1293focusedPASS. HUMANcommands prepared only. Monetary activation/actual19Octproof still pending, never marked executed. Both packets disjoint guards. Root-only finalreview; source drift fixed by exactoldnative reuse, not livecode replacement. Sourcebook accounting mutation deferred to personalarming. Publication/origin readback is recorded with final chat receipt.

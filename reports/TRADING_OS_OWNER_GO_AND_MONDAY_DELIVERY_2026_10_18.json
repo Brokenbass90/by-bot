@@ -1,0 +1,125 @@
+{
+  "alpaca": {
+    "automatic_continuous_reselection_live": false,
+    "broker_writes": 0,
+    "code_commit": "01abb769329ba7235b112b50781a016680ef9732",
+    "control_spec_sha256": "b5a9c752baae49853c42068b0b4c49925094d05eb6a6448023063ddc010b6a26",
+    "entry_timer_scheduled_utc": "2026-10-19T13:31:00Z",
+    "financial_units_installed": false,
+    "human_personal_start_required": true,
+    "inspection": {
+      "broker_requests": 0,
+      "broker_writes": 0,
+      "deadline_ms": 1792415700000,
+      "financial_units_changed": false,
+      "scope_sha256": "4630ebe2d63659ed98cf549c3adc8bf1d9cf330de7a7e165e5be051896a7bd1e",
+      "status": "ALPACA_NEXT_OWNER_PACKET_INSPECTION_PASS"
+    },
+    "manifest_sha256": "d4fd22de33e016c7a338af063a684362214be2fe2935b3f4764829d30b48405e",
+    "native_bridge_sha256": "758ca619ecb92d1d729b8ef4fb97e10d417a36e2c5ae5d54c4eaed55a8d038f4",
+    "observed_ms": 1792298843025,
+    "observed_utc": "2026-10-18T04:47:23.025000+00:00",
+    "original_pins_preserved": 97,
+    "original_policy_sha256": "fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d",
+    "personal_arm_deadline_utc": "2026-10-19T13:15:00Z",
+    "personal_arm_executed": false,
+    "preflight": {
+      "actual_opening_admission_proven": false,
+      "broker_writes": 0,
+      "end_ms": 1792416900000,
+      "halt_present": true,
+      "held_symbols": [
+        "NET"
+      ],
+      "max_notional_usd": "113.60999978874",
+      "max_risk_usd": "9.07098231494",
+      "observed_ms": 1792298842487,
+      "open_ms": 1792416600000,
+      "open_order_count": 0,
+      "personal_arm_present": false,
+      "source_book_writes": 0,
+      "source_lineage_status": "LIVE_LINEAGE_PREVIEW",
+      "status": "NEXT_SESSION_PREFLIGHT_ORDERS_OFF",
+      "symbol": "SHOP",
+      "target_session": "2026-10-19"
+    },
+    "scope_sha256": "4630ebe2d63659ed98cf549c3adc8bf1d9cf330de7a7e165e5be051896a7bd1e",
+    "source_bundle_id": "aa97a0132440068a1a9f0928bc989dcda8a6b56b66605c63202a1b9134843b94",
+    "source_count": 50,
+    "source_spec_sha256": "d33decac3fe3caff72de798510df6ae74734dd923c0f195d863a6219b67de8c7",
+    "status": "ALPACA_NEXT_PACKET_STAGED_NOT_ACTIVATED",
+    "systemd_verify_output": "",
+    "systemd_verify_returncode": 0
+  },
+  "broker_writes_by_codex": 0,
+  "code_commits": [
+    "29b1f90",
+    "3810890",
+    "01abb769329ba7235b112b50781a016680ef9732"
+  ],
+  "coupling": {
+    "alpaca_old_pins_include_kity_unit": false,
+    "kity_guard_intersection_with_alpaca_cutover": []
+  },
+  "date": "2026-10-18",
+  "financial_commands_executed_by_codex": false,
+  "financial_units_changed_by_codex": false,
+  "kity": {
+    "account_permissions_observed": true,
+    "blocked_reasons": [],
+    "broker_get_requests": 80,
+    "broker_writes": 0,
+    "capture_sha256": "94ad670483c8209e660d79a4d000b6be42e6f482c1775b1b2eb1fa285f94fdd3",
+    "common_clock": {
+      "common_observation_ms": 1792298962397,
+      "max_engine_age_upper_ms": 485,
+      "server_offset_interval_ms": [
+        -79,
+        166
+      ],
+      "status": "OBSERVED_COMMON_2S_PASS",
+      "valid_for_dispatch": false
+    },
+    "execution_10_of_10_proven": false,
+    "expires_ms": 1792346400000,
+    "fees": "0.24210761575",
+    "funding": "0E-10",
+    "gross": "230.121200",
+    "gross_cap_usdt": "300",
+    "guard_count": 159,
+    "hard_final_loss_cap_proven": false,
+    "human_personal_start_required": true,
+    "loss_exit_trigger_usdt": "15",
+    "manifest_sha256": "3fb44bc0563e1e1bfe1791a76d2e8358e432e8de60881db7e050172a272ebaf1",
+    "observed_ms": 1792298962397,
+    "observed_utc": "2026-10-18T04:49:22.397000+00:00",
+    "orders": 0,
+    "owner_command_executed": false,
+    "policy_claimed": false,
+    "policy_id": "d848a1300ae866bd5d6fcfd49b6dbb196cb6183a12aa71dbb4f8bf6ae77f40a1",
+    "positions": 0,
+    "source_count": 23,
+    "source_spec_sha256": "df24404d958e42a409dd6de31e6c02db909c9a4aa0b4f5746120cf5e4db8a684",
+    "status": "KITY_BOUNDED_FINAL_GET_READINESS"
+  },
+  "liq": {
+    "coverage": "UNKNOWN_NO_SEQUENCE_OR_BACKFILL",
+    "day_utc": "20261018",
+    "delivery_sha256": "34db1a86d7c77f14ef84ea9025df0f117b18ff40d5353d2463e8c2539fdfba99",
+    "epoch_id": "0688909d05884004b991bec76c6e4847",
+    "prospective_decisions": 0,
+    "raw_rows": 27010,
+    "source_gate_pass": false,
+    "status": "LOCAL_IMMUTABLE_IMPORT_VERIFIED",
+    "symbols": 25
+  },
+  "owner_approval_text_sha256": "f76de24aa713fad07083c89f23c7a2fbf76cfe983113c7d08c3ae89bdf18379d",
+  "schema": "TRADING_OS_OWNER_GO_MONDAY_DELIVERY_V1",
+  "tests": {
+    "actual_frozen_native": "222 PASS",
+    "focused": "1293 PASS; Alpaca selected + all KITY",
+    "full_repository_rerun": false,
+    "independent_financial_review": false
+  },
+  "unrelated_allowlist_sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e"
+}
