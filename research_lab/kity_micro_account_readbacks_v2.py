@@ -23,7 +23,7 @@ def account_tasks(first_send_ms):
 
 
 class AccountCycleSources(CycleSources):
-    def __init__(self,reader,state):
+    def __init__(self,reader,state,*,include_metadata=True):
         self.reader=reader;self.captures={};self.groups={};self.account_groups={}
         self.owned=list(state['entries'].values())+list(state['exits'].values())
         active=[]
@@ -32,8 +32,8 @@ class AccountCycleSources(CycleSources):
             if not o['terminal'] or Decimal(o['terminal_quantity'])!=Decimal(o['filled']) or unknown:active.append(o)
         self.tasks=account_tasks(state['first_send_ms']) if active else {}
         jobspec=[('pages',name,path,p) for name,(path,p) in self.tasks.items()]
-        metadata=[('/v5/account/fee-rate',dict(category='linear'))]
-        for symbol in state['entries']:
+        metadata=[('/v5/account/fee-rate',dict(category='linear'))] if include_metadata else []
+        for symbol in state['entries'] if include_metadata else ():
             metadata.extend((path,dict(category='linear',symbol=symbol)) for path in (
                 '/v5/market/tickers','/v5/market/instruments-info'))
         jobspec.extend(('get',digest(dict(path=path,params=p)),path,p) for path,p in metadata)
@@ -65,6 +65,33 @@ class AccountCycleSources(CycleSources):
 
 
 class AccountReadBridge(ParallelReadBridge):
+    def reconcile_positions(self):
+        # Account order/history and execution endpoints are not an atomic
+        # snapshot. A terminal cumulative quantity can arrive before its exact
+        # execution rows, while a subsequent position read already sees it.
+        # Catch up ONCE from fresh complete GET groups before custody checks;
+        # never infer fills from positions, clear a block or poll until success.
+        state=self.journal.snapshot()
+        pending=any(o['order_id'] and o['terminal']
+            and Decimal(o['terminal_quantity'])>Decimal(o['filled'])
+            for o in state['entries'].values())
+        if pending and state['phase']=='ENTERING' and not state['entry_blocked']:
+            self.journal.actions(self.clock())  # preserve the original deadline
+            state=self.journal.snapshot()
+            if not state['entry_blocked']:
+                if self.owner is None:raise SourceError('PHYSICAL_OWNER_UNBOUND')
+                self.owner.assert_exclusive(self.journal.plan)
+                original=self.reader
+                # The cycle's immutable account pages are precisely the stale
+                # source here. Retain them, but bypass that view for the barrier.
+                source=original.reader if isinstance(original,CycleSources) else original
+                self.reader=AccountCycleSources(source,state,include_metadata=False)
+                try:
+                    self.reconcile_orders()
+                    self.bind_native_protection()
+                finally:self.reader=original
+        return super().reconcile_positions()
+
     def _rows(self,path,params):
         group=self.reader.pages(path,params)
         if group.get('source_contract')!=CONTRACT:
