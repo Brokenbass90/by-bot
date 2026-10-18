@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """pereocenka.py — Factory, исправление №1 (FACTORY_SOSTOYANIE_AVTONOMNOSTI_2026_10_18): регулярная переоценка живых/теневых
 стратегий против их эталона. Хук сторожа; пересчёт раз в сутки; только отчёт data/storozh/PEREOCENKA.json, ничего не выключает.
-Паспорта (эталоны) заморожены здесь; изменение эталона = новая версия файла. Статусы: OK / DEGRADACIYA / MALO_DANNYH.
+Паспорта (эталоны) заморожены здесь; изменение эталона = новая версия файла. Статусы: EDGE_STATUS (EDGE_PROVEN / EDGE_NOT_PROVEN / EDGE_NEGATIVE) и DEGRADATION_STATUS отдельно; MALO_DANNYH.
 DEGRADACIYA: среднее последних n наблюдений ниже эталона больше чем на 2 стандартные ошибки (n ≥ min_n)."""
 import datetime as dt, json, time
 from pathlib import Path
@@ -39,8 +39,11 @@ def ocenit(imya, p):
     if p["etalon"] is None or len(x) < p["min_n"]:
         return dict(status="MALO_DANNYH" if p["etalon"] is not None else "NET_ETALONA", n=int(len(x)), edinica=p["edinica"])
     m = float(x.mean()); se = float(x.std(ddof=1) / np.sqrt(len(x)))
-    st = "DEGRADACIYA" if m < p["etalon"] - 2 * se else "OK"
-    return dict(status=st, n=int(len(x)), sredn=round(m, 4), se=round(se, 4), etalon=p["etalon"], edinica=p["edinica"], istochnik=p["istochnik"])
+    # два независимых показателя (замечание PM 18.10): «нет деградации» НЕ означает «прибыльна»
+    degr = "DEGRADATION_DETECTED" if m < p["etalon"] - 2 * se else "NO_DEGRADATION_DETECTED"
+    edge = "EDGE_PROVEN" if m - 2 * se > 0 else ("EDGE_NEGATIVE" if m + 2 * se < 0 else "EDGE_NOT_PROVEN")
+    return dict(status=f"{edge}/{degr}", edge_status=edge, degradation_status=degr, n=int(len(x)), sredn=round(m, 4),
+                se=round(se, 4), etalon=p["etalon"], edinica=p["edinica"], istochnik=p["istochnik"])
 
 
 def prohod():
