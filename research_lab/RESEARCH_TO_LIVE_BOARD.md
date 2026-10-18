@@ -1,11 +1,11 @@
 # RESEARCH-TO-LIVE BOARD (единая доска готовности; обновляется из подтверждённых receipts, не заменяет журналы)
-Обновлено: 2026-10-18 ~06:10 UTC, Claude. Исполнительские поля — по последним отчётам Codex (recovery `3293c25`).
+Обновлено: 2026-10-18 ~06:40 UTC, Claude. Исполнительские поля — по последним отчётам Codex (recovery `3293c25`).
 KARTA_PROEKTA.md — дорожная карта и сроки; эта доска — только состояние готовности стратегий.
 
 | Strategy | Version | Research | Execution | Brain A/B | Broker | Owner GO | Blocker | Next gate | Owner | Evidence |
 |---|---|---|---|---|---|---|---|---|---|---|
-| KITY M3 (смешанная вселенная, как сейчас) | policy `d848a130…` (SPENT) | ECONOMIC_INCONCLUSIVE (+23 bps, t 0.26 с 03.2026) | EXECUTION_PASS технический круг 10/10; удержание НЕ доказано; фикс `8500c97` LOCAL_VERIFIED / NOT_DEPLOYED | INCONCLUSIVE | Bybit | SPENT | CONTRACT_MISMATCH: 4/10 ног не-крипто | решение о версии | Claude+Codex | KITY_EKONOMICHESKAYA_IDENTICHNOST_2026_10_18.md; recovery KITY300_…_2026_10_18 |
-| KITY_M3_KRIPTO (предложение) | — | ECONOMIC_PASS умеренный на крипто-неделях (+63.4, t 2.19, 160 нед.) — пересчёт с явным фильтром НЕ сделан | фильтр symbolType — не сделан | INCONCLUSIVE | Bybit | нет | фильтр + пересчёт + деплой фикса | owner/PM: принять версию | Claude (пересчёт), Codex (фильтр) | то же |
+| KITY M3 (смешанная вселенная, как сейчас) | policy `d848a130…` (SPENT) | ECONOMIC_INCONCLUSIVE: вся история +57.6 t 2.06, но 2026 +47.6 t 0.54, последние 27 нед. +23 t 0.26 | EXECUTION_PASS технический круг 10/10; удержание НЕ доказано; фикс `8500c97` LOCAL_VERIFIED / NOT_DEPLOYED | INCONCLUSIVE | Bybit | SPENT | экономика 2026 не подтверждена (контракт правила исполнен верно) | тень KITY n = 30 недель | Claude+Codex | KITY_EKONOMICHESKAYA_IDENTICHNOST_2026_10_18.md; recovery KITY300_…_2026_10_18 |
+| KITY_M3_KRIPTO | `0757597` | **ECONOMIC_FAIL как улучшение**: +39.7 t 1.50 (хуже оригинала), 2026 −48.1 | не делать | — | — | — | — | закрыт | Claude | KITY_M3_KRIPTO_ITOG_2026_10_18.md |
 | Alpaca Weekly Dynamic | scope личного arming 18.10 | исследование v38 (Codex) | ARMED; NET защита 19.10; SHOP не подтверждён | — | Alpaca | GO (scope Codex) | NET DAY stop 19.10 | readback 19.10 | Codex | recovery KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18 |
 | Alpaca Monthly | V3 | PARITY_PASS (`507f782`) | исполнитель не активирован | — | Alpaca | нет | NET, привязка, отбор 30.10, GO | 30.10 отбор | Codex | ALPACA_REVYU_MONTHLY_CODEX_2026_10_17.md |
 | Elder Hedge v1.1 | `667cf61` | DEV PASS (история) | parity V1.1; исполнение не проверено | сравнение после 31.10 | Bybit | нет | ≥ 30 событий вперёд | события | Claude/Codex | ELDER_CRASH_HEDGE_V1_1_… |
