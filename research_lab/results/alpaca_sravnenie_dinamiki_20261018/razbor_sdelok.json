@@ -1,0 +1,356 @@
+{
+ "MONTHLY": {
+  "istochnik:reshenie": {
+   "n": 325,
+   "pnl_usd": 1371.9,
+   "sredn_pct": 1.66,
+   "dolya_plyus": 0.606,
+   "sredn_dney": 14.5,
+   "uderzh_ot_pika_med": 0.331,
+   "sredn_pik_pct": 7.8
+  },
+  "rezhim:SPY<SMA50/50>200": {
+   "n": 49,
+   "pnl_usd": -110.5,
+   "sredn_pct": 1.19,
+   "dolya_plyus": 0.592,
+   "sredn_dney": 14.5,
+   "uderzh_ot_pika_med": 0.206,
+   "sredn_pik_pct": 7.58
+  },
+  "rezhim:SPY>SMA50/50<200": {
+   "n": 35,
+   "pnl_usd": 550.4,
+   "sredn_pct": 4.27,
+   "dolya_plyus": 0.686,
+   "sredn_dney": 15.0,
+   "uderzh_ot_pika_med": 0.324,
+   "sredn_pik_pct": 10.15
+  },
+  "rezhim:SPY>SMA50/50>200": {
+   "n": 241,
+   "pnl_usd": 932.1,
+   "sredn_pct": 1.37,
+   "dolya_plyus": 0.598,
+   "sredn_dney": 14.4,
+   "uderzh_ot_pika_med": 0.341,
+   "sredn_pik_pct": 7.51
+  },
+  "shirota:shirota_niz": {
+   "n": 82,
+   "pnl_usd": -181.9,
+   "sredn_pct": 0.46,
+   "dolya_plyus": 0.537,
+   "sredn_dney": 14.4,
+   "uderzh_ot_pika_med": 0.331,
+   "sredn_pik_pct": 6.64
+  },
+  "shirota:shirota_sred": {
+   "n": 113,
+   "pnl_usd": 829.9,
+   "sredn_pct": 2.71,
+   "dolya_plyus": 0.699,
+   "sredn_dney": 14.5,
+   "uderzh_ot_pika_med": 0.368,
+   "sredn_pik_pct": 8.74
+  },
+  "shirota:shirota_verh": {
+   "n": 130,
+   "pnl_usd": 723.9,
+   "sredn_pct": 1.5,
+   "dolya_plyus": 0.569,
+   "sredn_dney": 14.5,
+   "uderzh_ot_pika_med": 0.249,
+   "sredn_pik_pct": 7.72
+  },
+  "vse": {
+   "n": 325,
+   "pnl_usd": 1371.9,
+   "sredn_pct": 1.66,
+   "dolya_plyus": 0.606,
+   "sredn_dney": 14.5,
+   "uderzh_ot_pika_med": 0.331,
+   "sredn_pik_pct": 7.8
+  },
+  "vyhod:rotaciya": {
+   "n": 54,
+   "pnl_usd": 829.5,
+   "sredn_pct": 4.79,
+   "dolya_plyus": 0.741,
+   "sredn_dney": 30.6,
+   "uderzh_ot_pika_med": 0.664,
+   "sredn_pik_pct": 7.79
+  },
+  "vyhod:stop_v_minus": {
+   "n": 114,
+   "pnl_usd": -2515.5,
+   "sredn_pct": -6.18,
+   "dolya_plyus": 0.0,
+   "sredn_dney": 8.8,
+   "uderzh_ot_pika_med": -2.306,
+   "sredn_pik_pct": 1.75
+  },
+  "vyhod:stop_v_plyus": {
+   "n": 157,
+   "pnl_usd": 3057.9,
+   "sredn_pct": 6.27,
+   "dolya_plyus": 1.0,
+   "sredn_dney": 13.0,
+   "uderzh_ot_pika_med": 0.424,
+   "sredn_pik_pct": 12.21
+  },
+  "itog": {
+   "return_pct": 138.4,
+   "dd": 16.17,
+   "ekspoz": 24.7
+  }
+ },
+ "EVENT": {
+  "istochnik:refill": {
+   "n": 664,
+   "pnl_usd": 338.9,
+   "sredn_pct": 0.28,
+   "dolya_plyus": 0.524,
+   "sredn_dney": 11.8,
+   "uderzh_ot_pika_med": 0.251,
+   "sredn_pik_pct": 5.7
+  },
+  "istochnik:reshenie": {
+   "n": 177,
+   "pnl_usd": 803.4,
+   "sredn_pct": 1.44,
+   "dolya_plyus": 0.616,
+   "sredn_dney": 14.8,
+   "uderzh_ot_pika_med": 0.338,
+   "sredn_pik_pct": 7.3
+  },
+  "refill_posle_stopa:<=5d": {
+   "n": 494,
+   "pnl_usd": -300.2,
+   "sredn_pct": -0.07,
+   "dolya_plyus": 0.508,
+   "sredn_dney": 11.1,
+   "uderzh_ot_pika_med": 0.2,
+   "sredn_pik_pct": 5.48
+  },
+  "refill_posle_stopa:>5d": {
+   "n": 170,
+   "pnl_usd": 639.1,
+   "sredn_pct": 1.3,
+   "dolya_plyus": 0.571,
+   "sredn_dney": 13.9,
+   "uderzh_ot_pika_med": 0.36,
+   "sredn_pik_pct": 6.36
+  },
+  "rezhim:SPY<SMA50/50>200": {
+   "n": 154,
+   "pnl_usd": -67.0,
+   "sredn_pct": -0.06,
+   "dolya_plyus": 0.5,
+   "sredn_dney": 11.1,
+   "uderzh_ot_pika_med": 0.148,
+   "sredn_pik_pct": 5.43
+  },
+  "rezhim:SPY>SMA50/50<200": {
+   "n": 74,
+   "pnl_usd": 465.2,
+   "sredn_pct": 2.3,
+   "dolya_plyus": 0.676,
+   "sredn_dney": 12.3,
+   "uderzh_ot_pika_med": 0.333,
+   "sredn_pik_pct": 7.22
+  },
+  "rezhim:SPY>SMA50/50>200": {
+   "n": 613,
+   "pnl_usd": 744.2,
+   "sredn_pct": 0.45,
+   "dolya_plyus": 0.538,
+   "sredn_dney": 12.8,
+   "uderzh_ot_pika_med": 0.271,
+   "sredn_pik_pct": 6.05
+  },
+  "shirota:shirota_niz": {
+   "n": 226,
+   "pnl_usd": 228.2,
+   "sredn_pct": 0.39,
+   "dolya_plyus": 0.527,
+   "sredn_dney": 12.2,
+   "uderzh_ot_pika_med": 0.234,
+   "sredn_pik_pct": 5.81
+  },
+  "shirota:shirota_sred": {
+   "n": 293,
+   "pnl_usd": 608.1,
+   "sredn_pct": 0.77,
+   "dolya_plyus": 0.549,
+   "sredn_dney": 12.8,
+   "uderzh_ot_pika_med": 0.285,
+   "sredn_pik_pct": 6.21
+  },
+  "shirota:shirota_verh": {
+   "n": 322,
+   "pnl_usd": 306.0,
+   "sredn_pct": 0.39,
+   "dolya_plyus": 0.55,
+   "sredn_dney": 12.3,
+   "uderzh_ot_pika_med": 0.256,
+   "sredn_pik_pct": 6.05
+  },
+  "vse": {
+   "n": 841,
+   "pnl_usd": 1142.3,
+   "sredn_pct": 0.52,
+   "dolya_plyus": 0.543,
+   "sredn_dney": 12.4,
+   "uderzh_ot_pika_med": 0.265,
+   "sredn_pik_pct": 6.04
+  },
+  "vyhod:rotaciya": {
+   "n": 268,
+   "pnl_usd": 1689.4,
+   "sredn_pct": 2.18,
+   "dolya_plyus": 0.631,
+   "sredn_dney": 17.2,
+   "uderzh_ot_pika_med": 0.482,
+   "sredn_pik_pct": 4.97
+  },
+  "vyhod:stop_v_minus": {
+   "n": 285,
+   "pnl_usd": -4965.8,
+   "sredn_pct": -6.13,
+   "dolya_plyus": 0.0,
+   "sredn_dney": 7.5,
+   "uderzh_ot_pika_med": -2.532,
+   "sredn_pik_pct": 1.68
+  },
+  "vyhod:stop_v_plyus": {
+   "n": 288,
+   "pnl_usd": 4418.7,
+   "sredn_pct": 5.56,
+   "dolya_plyus": 1.0,
+   "sredn_dney": 12.8,
+   "uderzh_ot_pika_med": 0.402,
+   "sredn_pik_pct": 11.35
+  },
+  "itog": {
+   "return_pct": 114.5,
+   "dd": 23.56,
+   "ekspoz": 48.3
+  }
+ },
+ "WEEKLY_DYN": {
+  "istochnik:refill": {
+   "n": 378,
+   "pnl_usd": 811.8,
+   "sredn_pct": 0.98,
+   "dolya_plyus": 0.577,
+   "sredn_dney": 16.8,
+   "uderzh_ot_pika_med": 0.223,
+   "sredn_pik_pct": 7.78
+  },
+  "refill_posle_stopa:<=5d": {
+   "n": 147,
+   "pnl_usd": 155.5,
+   "sredn_pct": 0.7,
+   "dolya_plyus": 0.531,
+   "sredn_dney": 16.1,
+   "uderzh_ot_pika_med": 0.229,
+   "sredn_pik_pct": 7.77
+  },
+  "refill_posle_stopa:>5d": {
+   "n": 231,
+   "pnl_usd": 656.2,
+   "sredn_pct": 1.16,
+   "dolya_plyus": 0.606,
+   "sredn_dney": 17.3,
+   "uderzh_ot_pika_med": 0.213,
+   "sredn_pik_pct": 7.78
+  },
+  "rezhim:SPY<SMA50/50>200": {
+   "n": 60,
+   "pnl_usd": 90.8,
+   "sredn_pct": 0.81,
+   "dolya_plyus": 0.533,
+   "sredn_dney": 16.2,
+   "uderzh_ot_pika_med": 0.092,
+   "sredn_pik_pct": 7.89
+  },
+  "rezhim:SPY>SMA50/50<200": {
+   "n": 27,
+   "pnl_usd": 7.5,
+   "sredn_pct": 0.35,
+   "dolya_plyus": 0.556,
+   "sredn_dney": 14.4,
+   "uderzh_ot_pika_med": 0.234,
+   "sredn_pik_pct": 7.4
+  },
+  "rezhim:SPY>SMA50/50>200": {
+   "n": 291,
+   "pnl_usd": 713.5,
+   "sredn_pct": 1.08,
+   "dolya_plyus": 0.588,
+   "sredn_dney": 17.2,
+   "uderzh_ot_pika_med": 0.255,
+   "sredn_pik_pct": 7.79
+  },
+  "shirota:shirota_niz": {
+   "n": 91,
+   "pnl_usd": 83.9,
+   "sredn_pct": 0.56,
+   "dolya_plyus": 0.527,
+   "sredn_dney": 16.5,
+   "uderzh_ot_pika_med": 0.104,
+   "sredn_pik_pct": 7.48
+  },
+  "shirota:shirota_sred": {
+   "n": 138,
+   "pnl_usd": 317.9,
+   "sredn_pct": 0.89,
+   "dolya_plyus": 0.587,
+   "sredn_dney": 17.7,
+   "uderzh_ot_pika_med": 0.235,
+   "sredn_pik_pct": 7.44
+  },
+  "shirota:shirota_verh": {
+   "n": 149,
+   "pnl_usd": 410.0,
+   "sredn_pct": 1.32,
+   "dolya_plyus": 0.597,
+   "sredn_dney": 16.1,
+   "uderzh_ot_pika_med": 0.3,
+   "sredn_pik_pct": 8.28
+  },
+  "vse": {
+   "n": 378,
+   "pnl_usd": 811.8,
+   "sredn_pct": 0.98,
+   "dolya_plyus": 0.577,
+   "sredn_dney": 16.8,
+   "uderzh_ot_pika_med": 0.223,
+   "sredn_pik_pct": 7.78
+  },
+  "vyhod:stop_v_minus": {
+   "n": 160,
+   "pnl_usd": -2474.5,
+   "sredn_pct": -6.2,
+   "dolya_plyus": 0.0,
+   "sredn_dney": 10.6,
+   "uderzh_ot_pika_med": -2.393,
+   "sredn_pik_pct": 1.98
+  },
+  "vyhod:stop_v_plyus": {
+   "n": 218,
+   "pnl_usd": 3286.3,
+   "sredn_pct": 6.25,
+   "dolya_plyus": 1.0,
+   "sredn_dney": 21.4,
+   "uderzh_ot_pika_med": 0.422,
+   "sredn_pik_pct": 12.03
+  },
+  "itog": {
+   "return_pct": 81.7,
+   "dd": 19.94,
+   "ekspoz": 30.4
+  }
+ }
+}
