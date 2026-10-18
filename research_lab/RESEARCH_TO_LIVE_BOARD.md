@@ -12,3 +12,4 @@ KARTA_PROEKTA.md — дорожная карта и сроки; эта доск�
 | ETF_PREMIYA_BTC | prereg 17.10 | DEV PASS (t 2.50), CONFIRM вперёд идёт | источник IBIT Codex есть; QA сверки — нет | — | Bybit/Binance | нет | проспективные наблюдения | 19.10 первая запись | Claude | PREREG_ETF_PREMIYA_2026_10_17.md |
 | LIQ_OTSKOK_4H_V2 | prereg + A1 | SOURCE gate NOT_YET (прогрев до 28.10) | заготовка досье | — | Bybit | нет | ворота ≥ 200 событий | ≥ 17.11 | Claude | dosie/ZAGOTOVKA_DOSIE_LIQ_OTSKOK_4H_V2.md |
 | ASM1_FIKS | prereg 17.10 | тень вперёд (1 решение к 18.10) | — | — | Bybit | нет | n сделок | 100 сделок / 31.12 | Claude | PREREG_ASM1_FIKS_VPERED_2026_10_17.md |
+| ATT1 (тень) | ten_ATT1 | **ECONOMIC_FAIL**: тень −0.0205R/сделку; против одновременного случайного входа −0.0006R (t −0.08) | — | — | Bybit | нет | нет информации в сигнале | остановить тень (владелец) | Claude | ATT1_VOSSTANOVLENIE_ISTORII_2026_10_18.md |

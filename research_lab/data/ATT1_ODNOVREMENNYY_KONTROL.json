@@ -1,0 +1,24 @@
+{
+ "resheniy_vsego": 2257,
+ "net_svechey_monety": 5,
+ "net_svechey_resheniy": 5,
+ "ne_pomestilos_336ch": 1052,
+ "n": 1200,
+ "svoy_sredn": -0.0158,
+ "kontrol_sredn": -0.0152,
+ "d_sredn": -0.0006,
+ "t_po_dnyam": -0.08,
+ "dney": 16,
+ "polovinki": [
+  0.0288,
+  -0.03
+ ],
+ "nedeli": [
+  0.0547,
+  -0.0397,
+  -0.046,
+  0.0589,
+  0.025
+ ],
+ "verdikt": "FAIL"
+}
