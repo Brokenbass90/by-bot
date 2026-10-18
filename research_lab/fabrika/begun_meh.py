@@ -18,7 +18,17 @@ import numpy as np
 DIR = Path(__file__).resolve().parent; LAB = DIR.parent
 sys.path.insert(0, str(DIR))
 from mehanizmy import MEHANIZMY, RYNKI  # noqa: E402
+import os  # noqa: E402
 import ispolnimost as ISP  # noqa: E402
+import ispolnimost_v21 as ISP21  # noqa: E402
+VOROTA = os.environ.get("FABRIKA_VOROTA", "V2")          # V2 (по умолчанию, как было) | V2_1 (PREREG_FABRIKA_VOROTA_V2_1)
+KAPITAL = float(os.environ.get("FABRIKA_KAPITAL", ISP21.KAPITAL))
+
+
+def _dopusk(sym, stop_pct, fee_bps, rynok):
+    if VOROTA == "V2_1":
+        return ISP21.dopusk(sym, stop_pct, fee_bps, rynok, kapital=KAPITAL)
+    return ISP.dopusk(sym, stop_pct, fee_bps, rynok.startswith("crypto"))
 
 DRAWS, PROGREV = 20, 250
 
@@ -109,7 +119,7 @@ def main():
             if i < PROGREV or i <= block or i >= len(ts) - 1 or not (atr_[i] > 0):
                 continue
             stop_pct = M["stop"] * atr_[i] / o[i + 1]
-            ok_isp, pr_isp, spred_R = ISP.dopusk(Path(fp).stem, stop_pct, RY["fee_bps"], p["rynok"].startswith("crypto"))   # V2: G1/G3
+            ok_isp, pr_isp, spred_R = _dopusk(Path(fp).stem, stop_pct, RY["fee_bps"], p["rynok"])   # V2 / V2.1
             if not ok_isp:
                 otkazy[pr_isp] = otkazy.get(pr_isp, 0) + 1; continue
             r = sim(o, h, l, c, i, short, stop_pct, M["rr1"], M["rr2"], M["f1"], M["hold"], RY["fee_bps"])
@@ -129,7 +139,7 @@ def main():
                                 ctrl[w][dr].append(rc - spred_R)
         if (k + 1) % 20 == 0:
             print(f"... {k+1}/{len(files)}", flush=True)
-    rez = {"param": p, "monet": len(files), "limit": a.limit, "otkazy_ispolnimosti": otkazy, "vorota": "V2_G1_G3",
+    rez = {"param": p, "monet": len(files), "limit": a.limit, "otkazy_ispolnimosti": otkazy, "vorota": "V2_G1_G3" if VOROTA == "V2" else f"V2_1_kapital{KAPITAL:.0f}",
            "okna": {w: okno_itog(real[w], ctrl[w]) for w in OKNA}}
     tmp = Path(a.vyhod + ".tmp"); tmp.write_text(json.dumps(rez, ensure_ascii=False, indent=1))
     tmp.replace(a.vyhod)
