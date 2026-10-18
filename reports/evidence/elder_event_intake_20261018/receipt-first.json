@@ -1,0 +1,21 @@
+{
+  "already_recorded": 15209,
+  "blockers": {
+    "FIRST_RECORD_GEOMETRY_INVALID": 540,
+    "FIRST_RECORD_GEOMETRY_MISSING": 14669
+  },
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "causal_context_candidates": 9381,
+  "context_joined": 9381,
+  "first_short_records": 15209,
+  "new_first_short_records": 0,
+  "observed_ms": 1792323693869,
+  "orders_allowed": false,
+  "producer_sha256": "2eb740e6a3c0df0d72b1c40a92ab8a1b5cec920d1ae6200f70e66e4c6d988d6f",
+  "prospective_events_credited": 0,
+  "source_prefix_bytes": 4428822,
+  "source_prefix_sha256": "688042bb2bf50d66dff67a2590dcba0d84acee7774dfd6c4717346b9f10b04d2",
+  "source_rows": 18813,
+  "status": "ELDER_EVENT_INTAKE_ORDERS_OFF"
+}

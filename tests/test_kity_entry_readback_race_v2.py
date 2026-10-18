@@ -128,3 +128,43 @@ def test_existing_entry_block_is_never_cleared_by_catchup(tmp_path):
     assert state['entry_blocked']
     assert len([p for path, p in reader.calls if path == '/v5/execution/list']) == 1
     journal.close()
+
+
+@pytest.mark.parametrize('fault', ['missing_executions', 'incomplete'])
+def test_supervisor_preserves_owned_fallback_when_complete_barrier_cannot_prove_exposure(tmp_path, monkeypatch, fault):
+    from types import SimpleNamespace
+    from research_lab import kity_micro_supervisor_v1 as supervisor
+    data, journal, reader, bridge = setup_trace(tmp_path, fault)
+    deadline = journal.snapshot()['deadline_ms']
+    # Exercise the production supervisor's error/fallback boundary without any
+    # controller constructor, credential loader or dispatch-capable object.
+    s = supervisor.Supervisor.__new__(supervisor.Supervisor)
+    s.journal, s.reader, s.owner = journal, reader, Owner(journal.plan)
+    s.owner._authorized = False
+    dispatched = []
+    def inspect_action(*args, **kwargs):
+        dispatched.append(journal.actions(data['clock_ms']))
+        return dict(status='ORDERS_OFF_INSPECTED')
+    s.bridge = SimpleNamespace(reader=reader, reconcile_orders=lambda: None,
+        bind_native_protection=lambda: None, reconcile_positions=bridge.reconcile_positions,
+        dispatch_next=inspect_action)
+    s.funding_and_risk = lambda: None
+    monkeypatch.setattr(supervisor, 'WarmReader', lambda raw, state: raw)
+    monkeypatch.setattr(supervisor, 'now_ms', lambda: data['clock_ms'])
+    errors = s.cycle()
+    state = journal.snapshot()
+    assert state['entry_blocked']
+    assert state['deadline_ms'] == deadline
+    assert dispatched
+    assert all(a['kind'] != 'ENTRY' for a in dispatched[0])
+    if fault == 'incomplete':
+        assert errors == ['POSITION_READBACK:SourceError']
+        assert state['phase'] == 'UNWINDING'
+        assert any(a['kind'] == 'EXIT' for a in dispatched[0])
+    else:
+        # Complete rows which still conflict with the owned execution journal
+        # cannot license a position-based invented fill or a blind exit.
+        assert state['ownership_conflict']
+        assert [a['kind'] for a in dispatched[0]] == ['OWNERSHIP_CONFLICT']
+    assert len([p for path, p in reader.calls if path == '/v5/execution/list']) == 2
+    journal.close()

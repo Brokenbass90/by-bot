@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT18Oct AFTER MONTHLY — [KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md](KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md).
+Monthly E2E1bd171f published. KITY48focused/40exactPASS16imports0fallback;24file
+safety candidate48020edd stagedUNSELECTED at/opt/bybot-research/kity-safety-20261018/,
+spec6ddc1e9b…f714a. Original159guards/PID2568196/lock818853/SPENTclaim unchanged;
+fresh2GET actualpositions0/orders0. No financialunit/controller/observer selected
+or restarted. Inert rollout183pins prepared, separate safe owner-selection decision
+before changing running owner; no new paidattempt/researchPASS. Same verified
+Telegram channel as delivered Monthlytest15223; no extra message or active newfaultobserver claim.
+ELDER actual prefix-only intake18813rows/15209firstshort/restart0duplicates;0prospective.
+540geom:440late,100timely f1=.50 vs frozen.55 => BLOCKED_RESEARCH_CONTRACT.
+72targetedPASS includes actualfixture. ExistingBrain hashchain/context used; noR/rr/PnL
+values/judge/futurefills, no producer/researchcode/KARTA/VOROTA/process edits.
+PID16945 remains since17Oct11:09:53Cyprus. Claude must version f1 reconciliation,
+never Codex retune/backfill; causal risk/instrument and originalparity gates follow.
+Statusdelta saved, no Claude message. NET19OctDAY/SHOPcancel/IBITMassivePENDING unchanged.
+
 CURRENT18Oct MONTHLY E2E CLOSED — [ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md](ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md).
 44file candidate29d61ad33238dac0 installed separately; spec43d59100…1e042.
 Frozen contract unchanged; technical identity14dfa09f…35b4a81. Same full58 source,

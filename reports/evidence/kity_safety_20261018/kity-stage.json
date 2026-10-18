@@ -1,0 +1,28 @@
+{
+  "account_lock_inode": 818853,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "financial_units_changed": 0,
+  "observed_ms": 1792323853630,
+  "original_guard_count": 159,
+  "original_guards_unchanged": true,
+  "owner_mode": "ORDERS_OFF",
+  "owner_phase": "TERMINAL",
+  "owner_pid": 2568196,
+  "prospective_guard_count": 183,
+  "root": "/opt/bybot-research/kity-safety-20261018/candidate-48020edd4b9d97a9",
+  "selected": false,
+  "services_registered": 0,
+  "services_restarted": 0,
+  "source_files": 24,
+  "source_material_sha256": "48020edd4b9d97a9cf6140bda66ef69f1ed6e8829d09aa5bd8248c5fbf246a1d",
+  "spec_sha256": "6ddc1e9bf517e9fa514564ac39d867361371501b36aa76d17a33dbce7bdf714a",
+  "spent_claim_unchanged": true,
+  "status": "KITY_SAFETY_INACTIVE_SOURCE_STAGED",
+  "verification": {
+    "broker_writes": 0,
+    "monetary_transport_bound": false,
+    "source_count": 24,
+    "status": "KITY_BATCH_SOURCE_PINS_PASS_ORDERS_OFF"
+  }
+}

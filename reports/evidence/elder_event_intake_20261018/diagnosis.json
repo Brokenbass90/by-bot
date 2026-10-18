@@ -1,0 +1,34 @@
+{
+  "actual_timely_f1": 0.5,
+  "context_matches": "9381 key-linked existing hash-chained opportunities; not prospective context/parity credit",
+  "first_short_intake_records": 15209,
+  "frozen_f1": 0.55,
+  "geometry_diagnostics": {
+    "FIRST_RECORD_NOT_OPERATIONALLY_TIMELY": 440,
+    "FROZEN_CONTROL_GEOMETRY_PARAMETERS": 100
+  },
+  "latest_first_record_available_utc": "2026-10-18T11:37:58.832000+00:00",
+  "old_geometry_free_first_records": 14669,
+  "outcome_judge_run": false,
+  "outcome_values_decoded": false,
+  "process": {
+    "in_memory_source_hash_proven": false,
+    "pid": 16945,
+    "restarted_by_codex": false,
+    "start_local_cyprus": "2026-10-17 11:09:53",
+    "state": "S"
+  },
+  "producer_disk_sha256": "2eb740e6a3c0df0d72b1c40a92ab8a1b5cec920d1ae6200f70e66e4c6d988d6f",
+  "prospective_events_credited": 0,
+  "required_research_action": "versioned reconciliation of f1=.50 producer vs frozen .55 contract; do not relax adapter or backfill geometry",
+  "schema": "ELDER_ACTUAL_FIRST_DECISION_DIAGNOSIS_V1",
+  "shadow_or_broker_fill_simulation_run": false,
+  "timely_geometry_parameters": [
+    {
+      "count": 100,
+      "f1": 0.5,
+      "max_lev": 100.0,
+      "stop_x": 4.0
+    }
+  ]
+}

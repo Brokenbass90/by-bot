@@ -1,0 +1,36 @@
+{
+  "decision_fields": {
+    "geom": {
+      "bar_ts_eref": 1792224000000,
+      "bar_ts_signal": 1792220400000,
+      "e_ref": 0.008597,
+      "f1": 0.5,
+      "max_lev": 100.0,
+      "raw_sl": 0.008976285714285714,
+      "raw_tps": [
+        0.008217714285714287,
+        0.007838428571428573
+      ],
+      "ref_close": 0.008597,
+      "rr1": 0.25,
+      "rr2": 0.5,
+      "sl_w": 0.010114142857142856,
+      "stop_dolya": 0.176474,
+      "stop_x": 4.0,
+      "v": 1
+    },
+    "side": "short",
+    "sym": "XAIUSDT",
+    "ts": 1792220400000,
+    "vovremya": true,
+    "zapisano": 1792224862917,
+    "zapozdanie_ch": 1.24
+  },
+  "decision_prefix_sha256": "46692194023cd2875a309b5080c907b9ab50bb7e236b0a18c8aae86e7bac62a2",
+  "outcome_fields_included": false,
+  "producer_sha256": "2eb740e6a3c0df0d72b1c40a92ab8a1b5cec920d1ae6200f70e66e4c6d988d6f",
+  "prospective_credit": 0,
+  "raw_first_row_sha256": "3282a274c1d8b47419995d680ba8db36d946ba6288508dcd19d42bb13b503aa4",
+  "schema": "ETS2S_ACTUAL_FIRST_DECISION_GEOMETRY_FIXTURE_V1",
+  "source_ref": "ten_ETS2S.jsonl:18175"
+}

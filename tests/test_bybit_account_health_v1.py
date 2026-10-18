@@ -91,3 +91,37 @@ def test_unknown_or_invalid_active_quantity_is_not_flat_or_healthy(value):
 def test_active_missing_lifecycle_is_unknown_instead_of_healthy():
     v = observation(); v['heartbeat']['mode'] = 'EXACT_GO_SCOPED_MANAGEMENT'
     assert assess(v, 110_000)['reason'] == 'OWNER_EXPOSURE_SOURCE_INCOMPLETE'
+
+
+def test_orders_off_with_observed_exposure_is_not_healthy():
+    v = active_observation(); v['heartbeat']['mode'] = 'ORDERS_OFF'
+    out = assess(v, 110_000)
+    assert out['reason'] == 'OWNER_ORDERS_OFF_WITH_EXPOSURE'
+    assert not out['orders_allowed'] and not out['restart_allowed']
+
+
+@pytest.mark.parametrize('mode', ['ORDERS_OFF', 'EXACT_GO_SCOPED_MANAGEMENT'])
+@pytest.mark.parametrize('kind', ['entries', 'exits'])
+def test_terminal_quantity_without_all_execution_rows_is_unknown_even_if_held_zero(mode, kind):
+    v = observation(); v['heartbeat']['mode'] = mode
+    v['heartbeat']['state'] = dict(ownership_conflict=False, held={'BTWUSDT': '0'},
+        entries={}, exits={})
+    v['heartbeat']['state'][kind]['BTWUSDT'] = dict(terminal=True,
+        terminal_quantity='10', filled='1', protected='1', stop_id='owned-native')
+    assert assess(v, 110_000)['reason'] == 'OWNER_EXECUTIONS_UNCONFIRMED'
+
+
+@pytest.mark.parametrize('value', ['NaN', None, True, '-1'])
+def test_terminal_unknown_execution_quantity_fails_closed(value):
+    v = active_observation()
+    v['heartbeat']['state']['entries']['BTWUSDT'].update(terminal=True,
+        terminal_quantity='10', filled=value)
+    assert assess(v, 110_000)['reason'] == 'OWNER_EXPOSURE_SOURCE_INCOMPLETE'
+
+
+def test_off_terminal_fully_reconciled_flat_history_is_healthy():
+    v = observation(); v['heartbeat']['state'] = dict(ownership_conflict=False,
+        held={'BTWUSDT': '0'},entries={'BTWUSDT': dict(terminal=True,
+        terminal_quantity='10', filled='10')},exits={'BTWUSDT': dict(terminal=True,
+        terminal_quantity='10', filled='10')})
+    assert assess(v, 110_000)['status'] == 'HEALTHY'

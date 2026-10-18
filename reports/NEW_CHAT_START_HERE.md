@@ -1,20 +1,17 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
-CURRENT18Oct MONTHLY ENGINEERING DELIVERY —
-[ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md](ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md).
-270targetedPASS;91exactcandidatePASS/22sourceimports/0checkoutfallback. Existing
-restricted LIVEclient now supports explicit Monthly wire; native fresh full-account
-admission and existing accountingfinalizer gate closed. V4 isolated33files installed
-DISABLED, spec351dbba7…5c278, strategy83a082b0…7873d4;77oldstaticpins unchanged.
-No financialunit/profile/cron change,0brokerrequests/writes. SHOP disabled/inactive;
-NETmanager/timer and19Oct13:30UTC DAYmonitor preserved, original lock813893.
-NOT LIVE_READY: nextP0 actual source→ownedbook→singlemanager wiring + alert/rollback/
-activation review ORDERSOFF, before30Oct. Exact new Monthly GO remainsrequired;
-no Monthly19Oct. Frozen30Octclose→2Nov14:30–14:35UTC conditionalwindow. LegacyNET
-notadopted/earlysold; priorpersonalNov2exit boundary unchanged. ATT1read-only
-index added(REPAIR), olderKARTA rows notcurrenttruth; no newjudge/outcome/probe.
-KITYfix8500c97/Health5820bac stillLOCAL/NOTDEPLOYED; spentmoneyGO notrenewed.
-See canonicalboard and inert activation_packet.json, not older activation prose.
+CURRENT18Oct — Monthly ORDERS_OFF E2E **CLOSED**, commit1bd171f.
+Read [Monthly completion/activation packet](ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md)
+and [KITY safety / actual Elder intake](KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md),
+then checkpoint TOP and [one execution board](../research_lab/RESEARCH_TO_LIVE_BOARD.md).
+Monthly44fileVPS candidate disabled;135exactPASS/0fallback, actualTelegram15223,
+fullsimulatedcycle+rollback. No financialGO/NETchange/SHOPrearm.30Oct actualsource
+and separate personalMonthlyGO precede2Nov14:30–14:35UTC conditionalopening.
+KITY24file safety48020edd stagedUNSELECTED; originalPID/lock159guards/SPENTpolicy
+preserved,freshflat0/orders0. Elder actual first-record intake/restart works;
+100timelygeom f1=.50 vs frozen.55 BLOCKED_RESEARCH_CONTRACT, no Codex retune.
+NET DAY19Oct13:30UTC/readback13:35; IBITMassivePENDING/LIQ unchanged.0newmoney.
+Older preparation/armedSHOP/pendingMonthly-wiring paragraphs are historical.
 
 LATEST18Oct RESEARCH/OWNER UPDATE — authoritative current board:
 [research_lab/RESEARCH_TO_LIVE_BOARD.md](../research_lab/RESEARCH_TO_LIVE_BOARD.md),

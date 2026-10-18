@@ -1,0 +1,32 @@
+{
+  "active_controller_replaced": false,
+  "active_health_replaced": false,
+  "checkout_fallback": 0,
+  "counts_overlap": true,
+  "custody_conflict_fallback": "sticky ownership conflict; no inferred fill or blind exit; owner diagnosis, native guards preserved",
+  "exact_candidate_tests": 40,
+  "exact_imported_sources": 16,
+  "final_combined_crypto_focused_failures": 0,
+  "final_combined_crypto_focused_tests": 120,
+  "final_combined_xml_sha256": "f102cc16fec0d8cfc124ad91debb88754dea890f2ef1b4888d2fac9f9183111b",
+  "focused_failures": 0,
+  "focused_tests": 48,
+  "full_repository_suite_run": false,
+  "initial_red_failures": 9,
+  "new_financial_authority": false,
+  "new_health_cases": 10,
+  "new_policy_issued": false,
+  "notification": "same configured token+destination as actual Monthly acknowledged test15223; no extra message sent; this is channel proof, not a deployed new fault observer",
+  "schema": "KITY_SAFETY_FAULT_ACCEPTANCE_V1",
+  "source_error_fallback": "existing UNWIND of proven owned positions; no deadline extension or entry retry",
+  "source_hashes": {
+    "scripts/bybit_account_health_v1.py": "679b0d89f15b82cbf9fe9d6ec105809b5bcfee289c5cbef479d1d3fa447f4124",
+    "tests/test_bybit_account_health_v1.py": "37290e56d37b59d1060279ab6777b9ed3247295ee82bf87f734ecfb21b40d0bf",
+    "tests/test_kity_entry_readback_race_v2.py": "9f576375c847cd28f35aa08c32ef4b88e3299199bea176ba3ad4b2eb5c7bd1fa"
+  },
+  "verification_hashes": {
+    "kity-exact-imports.json": "7fbb0b9ee8249e8a923857e647edf778783d0cd5098128a642ab90170dfcdbe0",
+    "kity-exact.xml": "b49272f4669e209ef5531b1aa749979a2b466397fa6dc5239bcec0d4c152518b",
+    "kity.xml": "036ee938526275246827aa719fbead86f2bfe2de67b726985bc5c6597724e72c"
+  }
+}

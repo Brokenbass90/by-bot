@@ -1,0 +1,24 @@
+{
+  "actual_restart_duplicate_records": 0,
+  "failures": 0,
+  "full_repository_suite_run": false,
+  "local_receipt_path_failure_after_committed_import_fixed": true,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "repair_or_source_truncation_attempted": false,
+  "schema": "ELDER_INTAKE_VERIFICATION_V1",
+  "scope": [
+    "new first-decision intake",
+    "existing Elder frozen adapter",
+    "existing Brain readonly bridge"
+  ],
+  "source_hashes": {
+    "research_lab/brain_shadow_readonly_bridge_v1.py": "7d17be0a5e6359038cfca815b816a59f2cb2ea086056a94102366a41c6cdc5ac",
+    "research_lab/elder_hedge_event_intake_v1.py": "c5c0a872f274ab6c7232fcf178ccc9ba1d0ca6dfd3df4dd27ce6358a594140b5",
+    "research_lab/elder_hedge_orders_off_v1.py": "e624513aec3fd4a64c9d8e2a33d9343eed3337eb7c0e315d3a0f859390b10aff",
+    "scripts/receive_elder_hedge_events_v1.py": "62b1c5128034e2b44a6a2a6a759b015794513a8c8226ac6d84e31d36e2fae789",
+    "tests/test_elder_hedge_event_intake_v1.py": "d397c49e17c7f6ed88bbd38f8dff3b781d13274991494faabad450e2f4494490"
+  },
+  "tests": 72,
+  "verification_xml_sha256": "208ade7f8bc72d3f50d20a4c2d06b705b8772b67d4c5f3b79ff7151be6059288"
+}

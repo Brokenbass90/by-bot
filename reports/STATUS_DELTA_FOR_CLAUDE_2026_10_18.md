@@ -1,3 +1,14 @@
+# Последняя дельта18Oct — после Monthly: KITY safety / Elder intake
+
+- Monthly P0 **ORDERS_OFF E2E закрыт**, опубликован `1bd171f`. Full58source→frozen selection→owned book→single manager API→simulated entry/native/restarts/ratchet/DAY→exit/cash/release.135exactPASS/34imports/0fallback. Actual Telegram15223, disabled4source/preview units, isolatedrollback acceptance; NET/SHOPcancel сохранены. Future30Octactualsource + отдельный personalMonthlyGO +2Nov fresh custody/cash/finality/handoff; неfinancialLIVE_READY.
+- KITY:48focused/40exactPASS16imports0fallback, новые unknown-execution/OFF-exposure health regressions.24file safety candidate48020edd stagedUNSELECTED,183prospectivepins; active159guards/PID/lock/SPENTclaim сохранены. Fresh actualflat0/orders0, sharedTelegramtarget verified by15223, нового сообщения не было. Владелец версию controller не выбирал; новая денежная попытка не разрешена, economicINCONCLUSIVE.
+- **Elder — конкретное действие для research:** реально принят first-decision prefix18813rows/15209firstshort; повтор без дублей.540firstgeom:440late; **все100timely stop_x4/maxlev100/f1=.50, frozenV1.1 требует.55**. Codex не исправлял ни producer, ни числа валидатора. Нужна versioned reconciliation источника/контракта. Actualdecision-only fixture и hashes приложены; позднюю геометрию/старые исходы не использовать для восстановления первой записи.
+- СуществующиеBrain context/hashchain связаны по ключам(9381), availability берётся t_recorded, не backdateddecision. Это неparityPASS; prospectivecredit0.72targetedPASS. Идемпотентный receiver/Shadow HedgeBook/ReportEvent есть, broker/judge/futurefill/outcome values не выполнялись. ETS2S16945 не перезапускался. После versioned clarification — causal context/risk/instrument в старый adapter и исходные≥30events/97%/95%/latency/restart/ETS2M900 gates, без новых недель ожидания.
+- Reports: `ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md`, `KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md`; executionboard обновлена. NET19Oct13:30UTC/readback13:35, IBITforward/MassivePENDING, LIQdelivery — прежние units. Claude code/KARTA/VOROTA не менялись, сообщение не отправлялось.
+
+---
+Предыдущие дельты — история:
+
 # Status delta для Claude — Monthly E2E18Oct
 
 - **Monthly ORDERS_OFF E2E завершён**, не новый research и не financial activation. Существующие full58source/frozen selector/ownedbook/native/accounting связаны одним manager API. VPS44files, material29d61ad3…45662/spec43d59100…1e042; численныйcontracta32aaec3 неизменен.

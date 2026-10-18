@@ -43,7 +43,7 @@ def assess(v, now_ms, max_age_ms=90_000):
             return fail('OWNER_MODE_UNKNOWN')
         if type(h['account_lock_inode']) is not int or h['account_lock_inode'] != v['lock_inode']:
             return fail('OWNER_LOCK_INODE_CONFLICT')
-        if h['mode'] == 'EXACT_GO_SCOPED_MANAGEMENT':
+        if h['mode'] == 'EXACT_GO_SCOPED_MANAGEMENT' or h.get('state') is not None:
             # A running process does not prove custody or native protection.
             # Report the observed uncertainty through the existing alert path;
             # do not invent a grace period, repair state, restart or trade.
@@ -65,6 +65,8 @@ def assess(v, now_ms, max_age_ms=90_000):
                 if not qty.is_finite() or qty < 0:
                     return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
                 if qty:
+                    if h['mode'] == 'ORDERS_OFF':
+                        return fail('OWNER_ORDERS_OFF_WITH_EXPOSURE')
                     entry = entries.get(symbol)
                     try:
                         raw_protected = entry.get('protected') if isinstance(entry, dict) else None
@@ -74,6 +76,25 @@ def assess(v, now_ms, max_age_ms=90_000):
                     if (protected is None or not protected.is_finite() or protected != qty
                             or not isinstance(entry.get('stop_id'), str) or not entry['stop_id']):
                         return fail('OWNER_NATIVE_PROTECTION_UNCONFIRMED')
+            for group in (entries, state.get('exits', {})):
+                if not isinstance(group, dict):
+                    return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+                for order in group.values():
+                    if not isinstance(order, dict):
+                        return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+                    if order.get('terminal') is True:
+                        quantities = []
+                        for key in ('terminal_quantity', 'filled'):
+                            raw = order.get(key)
+                            try:
+                                q = Decimal(raw) if isinstance(raw, str) else None
+                            except InvalidOperation:
+                                q = None
+                            if q is None or not q.is_finite() or q < 0:
+                                return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+                            quantities.append(q)
+                        if quantities[0] != quantities[1]:
+                            return fail('OWNER_EXECUTIONS_UNCONFIRMED')
         return dict(result, status='HEALTHY', reason='CURRENT_OWNER_HEALTHY',
                     owner='KITY_MICRO', pid=h['pid'], age_ms=now_ms-h['at_ms'])
     except (KeyError, TypeError, ValueError, OverflowError):
