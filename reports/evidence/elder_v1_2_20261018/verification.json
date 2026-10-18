@@ -18,6 +18,10 @@
   "producer_changed": false,
   "prospective_credit": 0,
   "red": "2 failures for original f1 rejection and intake blocker;6 negative guards already passed",
+  "red_evidence_normalization": {
+    "change": "Removed diagnostic line trailing whitespace only",
+    "original_raw_xml_sha256": "b773538e638ba5daa2e3850da36015f67c56fb8229d82e9c3a977de417f2b8fb"
+  },
   "research_contract_commit": "6a618d243112676fed4cc361fc63f309b4d97b58",
   "review": "ROOT_SCOPED_REVIEW_NO_NEW_INDEPENDENT_FINANCIAL_SIGNOFF",
   "runtime_deployed": false,
