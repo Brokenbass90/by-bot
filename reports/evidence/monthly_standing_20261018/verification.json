@@ -1,0 +1,47 @@
+{
+  "automatic_real_cost_finality_producer": false,
+  "base_commit": "f63bac61066d0380878b448d3721a9767bf94b54",
+  "counts_overlap": true,
+  "exact_candidate": {
+    "checkout_fallback": 0,
+    "code_files": 44,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "source_imports": 34,
+    "source_material_sha256": "348690be65466d3cfc34c7c31875b65907a43f338b189613e0fe888c61b14582",
+    "tests": 165
+  },
+  "financial_activation": false,
+  "full_repository_suite_run": false,
+  "independent_review_count": 1,
+  "production_applying_wrapper": false,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "red_to_green": {
+    "clock_only_fixture_failure": {
+      "errors": 0,
+      "failures": 1,
+      "skipped": 0,
+      "tests": 1
+    },
+    "dispatcher_missing_failures": "dispatcher-red.xml",
+    "initial_standing_schema_failures": "red.xml",
+    "review_failures": {
+      "errors": 0,
+      "failures": 6,
+      "skipped": 0,
+      "tests": 6
+    }
+  },
+  "schema": "MONTHLY_STANDING_VERIFICATION_V1",
+  "second_independent_review_after_fixes": false,
+  "standing_owner_GO_created": false,
+  "targeted_component": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 93
+  },
+  "vps_staging": "LOCAL_ONLY_AUTO_REVIEW_REJECTED_SOURCE_TRANSFER_BEFORE_EXECUTION"
+}

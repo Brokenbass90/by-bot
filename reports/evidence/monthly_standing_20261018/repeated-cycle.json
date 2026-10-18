@@ -1,0 +1,36 @@
+{
+  "accounting_final": true,
+  "broker_flat": true,
+  "capital_released": true,
+  "closed_roundtrips": 2,
+  "daily_close_ratchet": true,
+  "day_rearm": true,
+  "duplicate_entries": 0,
+  "executed_fixture_subset": [
+    "CVX"
+  ],
+  "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+  "full_native_stop": true,
+  "initial_floor": 184.04,
+  "money_authority": false,
+  "next_month_selection_ready": true,
+  "orders_allowed": false,
+  "raised_floor": 196.11,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "response_loss_recovered": true,
+  "restarts": 3,
+  "selected_symbols": [
+    "CVX"
+  ],
+  "selector_monkeypatched": false,
+  "simulated_entries": 2,
+  "source_ids": [
+    "a54ab7c0453bcb3c274d0acd4d35091cb7d8e42d0633e738c264f76783cdb8de",
+    "c8402b8644cc7c7d7b389a7bd7b93c2e64091220144eeb6c8700fede95860ee8",
+    "e830b2e2c50ae97b53e7e5959a2668056f144ada986701aa86ccc094f52b9308"
+  ],
+  "source_symbols": 58,
+  "standing_grant_count": 1,
+  "status": "MONTHLY_STANDING_ORDERS_OFF_REPEAT_PASS"
+}

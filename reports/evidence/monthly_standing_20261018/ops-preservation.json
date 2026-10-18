@@ -1,0 +1,15 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "observed_ms": 1792348137321,
+  "original_account_lock_inode": 813893,
+  "protected_static_files_unchanged": 77,
+  "remote_mutations": 0,
+  "schema": "MONTHLY_STANDING_READ_ONLY_OPERATIONS_V1",
+  "units": {
+    "alpaca-dynamic-next-entry-20261019.timer": "NextElapseUSecRealtime=\nActiveState=inactive\nUnitFileState=disabled",
+    "alpaca-monthly58-data-export.timer": "NextElapseUSecRealtime=Mon 2026-10-19 13:00:45 UTC\nActiveState=active\nUnitFileState=enabled",
+    "alpaca-net-day-monitor.timer": "NextElapseUSecRealtime=Mon 2026-10-19 13:30:00 UTC\nActiveState=active\nUnitFileState=enabled",
+    "alpaca-oct15-owned-manager.timer": "NextElapseUSecRealtime=Sun 2026-10-18 18:30:00 UTC\nActiveState=active\nUnitFileState=enabled"
+  }
+}

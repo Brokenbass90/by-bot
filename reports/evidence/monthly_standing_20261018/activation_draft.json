@@ -1,0 +1,38 @@
+{
+  "contains_actual_owner_GO": false,
+  "financial_rules": {
+    "ceiling_only": {
+      "capital_usd": "487.42",
+      "gross_fraction": "0.70",
+      "max_positions": 4,
+      "max_weight": "0.60"
+    },
+    "contract": "ALPACA_BASELINE_MONTHLY_DAILY_V1",
+    "fixture_loss_20_is_owner_limit": false,
+    "issued_budget": null,
+    "owned_manager": "existing MonthlyManager / original account lock",
+    "owner_loss_trigger_usd": null,
+    "selection": "frozen monthly close -> next permitted opening; no per-stop reselection",
+    "universe": "57 instruments + SPY; no QQQ",
+    "valid_from_ms": null,
+    "valid_until_ms": null
+  },
+  "money_authority": false,
+  "old_exact_GO_conversion": false,
+  "orders_allowed": false,
+  "prohibitions": [
+    "no broker mutations",
+    "no NET adoption or early exit",
+    "no SHOP rearm",
+    "no use of spent KITY policy"
+  ],
+  "remaining": [
+    "Accepted automatic broker/account-day cost-finality producer and immutable coverage/cash reconciliation, including multiple held positions and delayed fees",
+    "One disabled production applying wrapper/schedule and failure delivery, using this dispatcher; explicit original-manager ownership handoff and rollback acceptance",
+    "Concrete bounded actual-account standing scope / validity / revocation / loss terms and owner personal approval; no actual grant has been created",
+    "Actual 30 October closed source and selection; actual 2 November 14:30-14:35 UTC broker/custody/market gates; CASH and NO_SEND are valid"
+  ],
+  "schema": "MONTHLY_STANDING_ACTIVATION_REVIEW_DRAFT_V1",
+  "source_material_sha256": "348690be65466d3cfc34c7c31875b65907a43f338b189613e0fe888c61b14582",
+  "status": "INERT_NOT_ACTIVATABLE"
+}

@@ -8,6 +8,7 @@ The disabled source CLI cannot call the applying methods.
 from datetime import datetime,timezone
 import json
 import hashlib
+import os
 import sqlite3
 import time
 from pathlib import Path
@@ -21,6 +22,43 @@ from research_lab.alpaca_live_readiness_v1 import execution_identity_v1
 from research_lab import alpaca_dynamic_live_runtime_v1 as lifecycle
 from research_lab.alpaca_monthly_binding_v1 import CONTRACT,entry_cid,result,monthly_picks,strategy_identity
 from scripts import equities_alpaca_paper_bridge as native
+
+ROOT=Path(__file__).resolve().parents[1]
+STANDING_SCHEMA='ALPACA_MONTHLY_STANDING_OWNER_SCOPE_V1'
+
+
+def monthly_universe():
+    from research_lab.alpaca_monthly_source_ops_v1 import required_symbols
+    return required_symbols()
+
+
+def standing_source_pins():
+    """Same AST import-closure approach as existing readiness packaging, no imports run."""
+    import ast
+    names=set(baseline.source_pins())|{
+        'research_lab/alpaca_monthly_native_binding_v1.py',
+        'research_lab/alpaca_monthly_cycle_v1.py',
+        'research_lab/alpaca_monthly_notifications_v1.py',
+        'research_lab/alpaca_monthly_source_ops_v1.py',
+        'scripts/run_alpaca_monthly_cycle_v1.py',
+        'scripts/fetch_equities_yfinance.py'}
+    queue=sorted(names)
+    while queue:
+        name=queue.pop()
+        if not name.endswith('.py'):continue
+        modules={'scripts.equities_earnings_filter'}
+        for node in ast.walk(ast.parse((ROOT/name).read_bytes())):
+            if isinstance(node,ast.Import):modules.update(a.name for a in node.names)
+            elif isinstance(node,ast.ImportFrom) and not node.level:
+                modules.add(node.module or '')
+                modules.update((node.module+'.'+a.name) for a in node.names if node.module)
+        for module in modules:
+            target=module.replace('.','/')
+            deps={target+'.py',target+'/__init__.py'}|{str(p/'__init__.py') for p in Path(target).parents}
+            for dep in sorted(deps-names):
+                if (ROOT/dep).is_file():names.add(dep);queue.append(dep)
+    return {n:hashlib.sha256(lifecycle.safe_path(str(ROOT/n),exists=True).read_bytes()).hexdigest()
+            for n in sorted(names)}
 
 
 class MonthlyNativeBinding:
@@ -66,16 +104,19 @@ class MonthlyNativeBinding:
         if hashlib.sha256(raw).hexdigest()!=self.live_scope_sha256:
             raise ValueError('MONTHLY_LIVE_SCOPE_PIN')
         scope=json.loads(raw)
-        expected=dict(schema='ALPACA_MONTHLY_OWNER_SCOPE_V1',endpoint=self.base_url,
+        standing=scope.get('schema')==STANDING_SCHEMA
+        expected=dict(schema=STANDING_SCHEMA if standing else 'ALPACA_MONTHLY_OWNER_SCOPE_V1',endpoint=self.base_url,
             account_id=self.account,contract_sha256=digest(CONTRACT),
             strategy_identity=strategy_identity(),
             capital_usd=str(dec(self.capital)),liability_reserve_usd=str(self.liability),
             book=str(self.book.path),runtime=str(self.runtime),lock_path=str(self.lock_path),
-            entry_halt_path=str(self.halt),legacy_NET_adoption=False,legacy_entry_authority=False,
-            max_new_entries_per_session=1)
+            entry_halt_path=str(self.halt),legacy_NET_adoption=False,legacy_entry_authority=False)
         if (any(scope.get(k)!=v for k,v in expected.items())
             or getattr(self.client,'order_contract',None)!=CONTRACT['schema']):
             raise ValueError('MONTHLY_LIVE_SCOPE_CONFLICT')
+        count=scope.get('max_new_entries_per_session')
+        if type(count) is not int or not 1<=count<=(4 if standing else 1):
+            raise ValueError('MONTHLY_SESSION_ENTRY_LIMIT')
         if not 0<positive(scope['max_entry_notional_usd'])<=dec(self.capital)*dec('.70')*dec('.60'):
             raise ValueError('MONTHLY_LIVE_SCOPE_NOTIONAL_CAP')
         lock=lifecycle.safe_path(str(self.lock_path),exists=True).stat()
@@ -89,15 +130,73 @@ class MonthlyNativeBinding:
         required={str(Path(m.__file__).resolve()) for m in (lifecycle,native)}|{str(Path(__file__).resolve())}
         if not required.issubset({r['path'] for r in scope['source_files']}):
             raise ValueError('MONTHLY_LIVE_IMPLEMENTATION_UNBOUND')
+        if standing:
+            actual={r['path']:r['sha256'] for r in scope['source_files']}
+            expected_files={str(ROOT/n):h for n,h in standing_source_pins().items()}
+            if (len(actual)!=len(scope['source_files']) or actual!=expected_files
+                or scope.get('universe_sha256')!=digest(list(monthly_universe()))
+                or scope.get('selection_policy')!='EXISTING_SEALED_FROZEN_MONTHLY_ONLY'
+                or scope.get('legacy_NET_adoption') is not False
+                or scope.get('legacy_entry_authority') is not False
+                or any(k in scope for k in ('selection_id','symbol'))):
+                raise ValueError('MONTHLY_STANDING_SOURCE_OR_POLICY_CONFLICT')
+            start,end=scope.get('valid_from_ms'),scope.get('valid_until_ms')
+            if (type(start) is not int or type(end) is not int or not 0<start<end
+                or not 0<positive(scope['max_cumulative_net_loss_usd'])<=dec(self.capital)):
+                raise ValueError('MONTHLY_STANDING_BOUNDS')
+            revoke=self._revocation_path(scope)
+            if revoke in {path,self.lock_path,self.halt,self.book.path,self.ledger,self.reentry,
+                          Path(self.owner_go_path)}:raise ValueError('MONTHLY_STANDING_REVOKE_PATH')
         go=lifecycle.read_json(self.owner_go_path)
-        if go!=dict(schema='ALPACA_MONTHLY_EXACT_OWNER_GO_V1',scope_sha256=self.live_scope_sha256,
-                    owner_go_text='GO ALPACA_MONTHLY '+self.live_scope_sha256):
+        if go!=dict(schema='ALPACA_MONTHLY_STANDING_OWNER_GO_V1' if standing else 'ALPACA_MONTHLY_EXACT_OWNER_GO_V1',
+                    scope_sha256=self.live_scope_sha256,
+                    owner_go_text=('GO ALPACA_MONTHLY_STANDING ' if standing else 'GO ALPACA_MONTHLY ')+self.live_scope_sha256):
             raise ValueError('MONTHLY_SEPARATE_OWNER_GO_REQUIRED')
+        return scope
+
+    @staticmethod
+    def _revocation_path(scope):
+        # The leaf is a stop-new-entry marker, never a custody/source file.
+        # A directory or dangling symlink at that leaf must revoke, not disable
+        # protection of positions already owned by this unchanged manager.
+        path=Path(scope['revocation_path'])
+        if not path.is_absolute() or '..' in path.parts or any(p.is_symlink() for p in path.parents):
+            raise ValueError('MONTHLY_STANDING_REVOKE_PATH')
+        return path
+
+    @staticmethod
+    def _standing_entry_state(scope,now):
+        # Entry-only. Existing custody/recovery/protection never consults expiry.
+        if not scope['valid_from_ms']<=now<scope['valid_until_ms']:
+            raise ValueError('MONTHLY_STANDING_NOT_CURRENT')
+        path=MonthlyNativeBinding._revocation_path(scope)
+        if not path.parent.is_dir():raise ValueError('MONTHLY_STANDING_REVOKE_PARENT_UNKNOWN')
+        os.stat(path.parent)  # inaccessible/missing parent is not proof of no marker
+        if os.path.lexists(path):
+            raise ValueError('MONTHLY_STANDING_REVOKED')
+
+    def _entry_authority(self,ticket,now,*,reserved=False):
+        scope=self._live_custody();selection=self._selection(ticket['selection_id'])
+        if scope['schema']==STANDING_SCHEMA:
+            self._standing_entry_state(scope,now)
+            if (selection['source_code_sha256']!=baseline.source_pins()
+                or ticket['symbol'] not in set(monthly_universe())-{'SPY'}
+                or ticket['symbol'] not in {p['symbol'] for p in selection['picks']}):
+                raise ValueError('MONTHLY_STANDING_SELECTION_REQUIRED')
+        elif ticket['selection_id']!=scope.get('selection_id') or ticket['symbol']!=scope.get('symbol'):
+            raise ValueError('MONTHLY_APPROVED_SELECTION_REQUIRED')
+        if positive(ticket['notional'])>positive(scope['max_entry_notional_usd']):
+            raise ValueError('MONTHLY_APPROVED_SELECTION_REQUIRED')
+        entries=json.loads(self.reentry.read_bytes()).get('entry_intents',{}) if self.reentry.exists() else {}
+        used=sum(1 for cid,i in entries.items() if i.get('entry_session')==selection['entry_session']
+                 and not (reserved and cid==ticket['client_order_id']))
+        if used>=scope['max_new_entries_per_session']:
+            raise ValueError('MONTHLY_SESSION_ENTRY_ALREADY_CONSUMED')
         return scope
 
     def _admit_new_entry(self,ticket,now):
         """GET-only complete account check under the original writer lock."""
-        self._require_exit_accounting()
+        realized=self._accounting_net()
         account=self.client.get_account();clock=self.client.get_clock()
         stamp=native._parse_iso_utc(clock.get('timestamp',''))
         if (account.get('id')!=self.account or account.get('trading_blocked') is not False
@@ -105,13 +204,8 @@ class MonthlyNativeBinding:
             or stamp is None or abs(int(stamp.timestamp()*1000)-now)>5000):
             raise ValueError('MONTHLY_FRESH_ACCOUNT_CLOCK_REQUIRED')
         if self.base_url==lifecycle.LIVE:
-            scope=self._live_custody()
-            if (ticket['selection_id']!=scope.get('selection_id') or ticket['symbol']!=scope.get('symbol')
-                or positive(ticket['notional'])>positive(scope['max_entry_notional_usd'])):
-                raise ValueError('MONTHLY_APPROVED_SELECTION_REQUIRED')
-            entries=json.loads(self.reentry.read_text()).get('entry_intents',{}) if self.reentry.exists() else {}
-            if any(i.get('entry_session')==self._selection(ticket['selection_id'])['entry_session'] for i in entries.values()):
-                raise ValueError('MONTHLY_SESSION_ENTRY_ALREADY_CONSUMED')
+            scope=self._entry_authority(ticket,now)
+        else:scope=None
         state=self._state();owned={p['symbol']:p for p in self.book.rows('positions')}
         positions=self.client.list_positions();orders=self.client.list_orders(status='open',limit=500)
         if (len(orders)>=500 or len({p['symbol'] for p in positions})!=len(positions)
@@ -140,6 +234,8 @@ class MonthlyNativeBinding:
             stop_ids.add(stop['id'])
         if {o['id'] for o in orders}!=stop_ids or len(orders)!=len(stop_ids):
             raise ValueError('MONTHLY_FOREIGN_OR_UNRECONCILED_ORDER')
+        if scope and scope['schema']==STANDING_SCHEMA:
+            self._check_standing_loss(scope,realized,positions)
         notional=positive(ticket['notional']);equity=min(positive(account['equity']),dec(self.capital))
         cash=min(dec(account['cash']),dec(account['non_marginable_buying_power']))
         gross=sum((abs(dec(p['market_value'])) for p in positions),dec(0))
@@ -157,7 +253,18 @@ class MonthlyNativeBinding:
             raise ValueError('MONTHLY_FRESH_ASSET_OR_QUOTE_REQUIRED')
         positive(quote['ap'])
 
+    @staticmethod
+    def _check_standing_loss(scope,realized,positions):
+        floating=sum((positive(p['qty'])*(positive(p['current_price'])-positive(p['avg_entry_price']))
+                      for p in positions),dec(0))
+        if realized+floating<=-positive(scope['max_cumulative_net_loss_usd']):
+            raise ValueError('MONTHLY_STANDING_LOSS_ADMISSION_STOP')
+
     def _require_exit_accounting(self):
+        self._accounting_net()
+
+    def _accounting_net(self):
+        realized=dec(0)
         for exited in self.book.rows('exits'):
             identity=digest(dict(schema=CONTRACT['schema'],entry_id=exited['entry_id']))
             path=self.runtime/'safety'/identity/'live.sqlite'
@@ -175,6 +282,8 @@ class MonthlyNativeBinding:
                 p=lifecycle.safe_path(row['path'],exists=True)
                 if hashlib.sha256(p.read_bytes()).hexdigest()!=row['sha256']:
                     raise ValueError('MONTHLY_ACCOUNTING_SOURCE_CHANGED')
+            realized+=dec(item['cost_finality']['net_usd_exact'])
+        return realized
 
     def finalize_exit(self,entry_id,cost_source_path,*,now_ms):
         """Reuse the existing broker/account cost finalizer; no orders or new GO."""
@@ -294,6 +403,11 @@ class MonthlyNativeBinding:
                 pick=SimpleNamespace(ticker=ticket['symbol'],entry_day=s['entry_session'],
                     entry_price=gate['signal_close'],stop_price=gate['signal_close']-2.*gate['atr20'])
                 def final_dispatch():
+                    # Code/source checks may be slow. Re-read time, expiry and
+                    # revocation AFTER them, immediately before the native POST.
+                    scope=None
+                    if self.base_url==lifecycle.LIVE:
+                        scope=self._entry_authority(ticket,now+int((time.monotonic()-started)*1000),reserved=True)
                     clock=self.client.get_clock();stamp=native._parse_iso_utc(clock.get('timestamp',''))
                     effective=now+int((time.monotonic()-started)*1000)
                     if (clock.get('is_open') is not True or stamp is None
@@ -302,6 +416,8 @@ class MonthlyNativeBinding:
                         raise ValueError('MONTHLY_FINAL_DISPATCH_WINDOW_OR_CLOCK')
                     if self.halt.exists() or native.paper_entry_halted(base_url=self.base_url,state_dir=args['state_dir']):
                         raise ValueError('ENTRY_HALT_PRESERVED')
+                    if scope and scope['schema']==STANDING_SCHEMA:
+                        self._standing_entry_state(scope,effective)
                 try:
                     native._submit_intended_reserved_entry(**args,pick=pick,notional=ticket['notional'],timeout_sec=0,
                         baseline_atr20=gate['atr20'],baseline_signal_session=s['signal_session'],
@@ -351,7 +467,7 @@ class MonthlyNativeBinding:
                     open_order_ids=[o['id'] for o in orders if o['symbol']==action['symbol']])
             return self.book.monthly_actions(selection_id,now_ms=now_ms)
 
-    def _recover_rotation_receipts(self,*,now_ms):
+    def _recover_rotation_receipts(self,*,now_ms,known_only=False):
         """Close the second journal after a crash between native/book commits."""
         if not self.reentry.exists():return
         native_state=json.loads(self.ledger.read_text()) if self.ledger.exists() else {}
@@ -361,6 +477,7 @@ class MonthlyNativeBinding:
             actions=[r for r in self.book.rows('rotations') if r['entry_id']==p['entry_id']]
             matched=[r for r in receipts.values() if r.get('entry_order_id')==p['entry_id']
                 and any(a['client_order_id']==r['exit_order'].get('client_order_id') for a in actions)]
+            if not matched and known_only:continue  # safety exits have their own recovery
             if len(matched)!=1:raise ValueError('MONTHLY_ROTATION_RECOVERY_SOURCE_REQUIRED')
             stored=matched[0]['exit_order'];current=self.client.get_order(stored['id'])
             execution_identity_v1(stored,current)

@@ -1,5 +1,23 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT18Oct MONTHLY STANDING COMPONENTS CLOSED —
+[ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md](ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md).
+Existing native custody/one dispatcher extended ORDERS_OFF: separate bounded
+standing scope, all-selection/rotation crash recovery before maintenance, final
+clock/expiry/revocation after expensive checks, elapsed time between symbols,
+existing book/accounting/Monitor.165exactPASS/34imports/0fallback;93targeted overlap.
+Two synthetic monthly round trips/one fixture grant/three restarts; separate four
+native-entry timing regression. Frozen helperd205f8f preserved in44file348690be.
+One verified astra/high review:3Important fixed/regressed; no second review/signoff.
+LOCAL_ONLY: auto-review rejected VPS source transfer before execution; no staging,
+active unit/pointer/GO changes or broker requests. Automatic real cost-finality
+producer and production applying wrapper/handoff remain next ENGINEERING gates;
+this is NOT deployed autonomy/LIVE_READY.20USD loss onlyfixture,487.42/.70/.60/4
+ceilings notissuedcapital. Actual30Octsource/2Nov freshgates remain future.
+Read-only77pins+originalNETlock813893 preserved; NETDAY19Oct13:30UTC active,
+SHOPdisabled/OWNER_CANCELLED. KITYsafetyUNSELECTED/SPENT and Elderlocal gates remain.
+Earlier NOT_IMPLEMENTED paragraphs below describe the preceding component state.
+
 CURRENT18Oct ELDER V1.2 CLOSED / MONTHLY AUTONOMY P0 —
 [ELDER_V1_2_AND_MONTHLY_AUTONOMY_2026_10_18.md](ELDER_V1_2_AND_MONTHLY_AUTONOMY_2026_10_18.md).
 Origin4b1af40 contains6a618d2: earlierPENDING_PUBLICATION superseded. LocalElder

@@ -1,0 +1,39 @@
+{
+  "agent_path": "/root/monthly_standing_review",
+  "financial_signoff": false,
+  "findings": [
+    {
+      "fix": "Recover matching immutable rotation receipts before maintenance; safety exits keep their separate recovery",
+      "id": "R1",
+      "regression": "test_dispatcher_recovers_rotation_crash_before_maintenance",
+      "root_cause": "Dispatcher could not reconcile native rotation committed before Monthly book retirement",
+      "severity": "IMPORTANT"
+    },
+    {
+      "fix": "Full authority checks precede final broker clock and cheap expiry/revocation/HALT/window checks",
+      "id": "R2",
+      "regression": "test_slow_final_authority_check_cannot_cross_entry_cutoff[expiry/window]",
+      "root_cause": "Expensive final authority verification could finish after expiry or opening cutoff",
+      "severity": "IMPORTANT"
+    },
+    {
+      "fix": "Monotonic elapsed time propagated through recovery, rotation and every native entry",
+      "id": "R3",
+      "regression": "test_multisymbol_opening_refreshes_elapsed_time_between_real_native_entries",
+      "root_cause": "Opening reused the initial timestamp for later symbols",
+      "severity": "IMPORTANT"
+    }
+  ],
+  "review_count": 1,
+  "root_additional_fix": {
+    "fix": "Marker leaf revokes new risk without being treated as a source/custody file",
+    "issue": "Revocation directory/dangling symlink prevented maintenance",
+    "regression": "test_any_revocation_marker_blocks_buy_without_disabling_maintenance"
+  },
+  "runtime_effort": "high",
+  "runtime_model": "gpt-6-astra",
+  "runtime_thread_id": "01a1502d-cf73-7c11-9853-7223c61e4114",
+  "schema": "MONTHLY_STANDING_INDEPENDENT_REVIEW_V1",
+  "second_review_after_fixes": false,
+  "verified_from": "session_meta.agent_path and both turn_context.model/effort"
+}

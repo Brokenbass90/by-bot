@@ -8,13 +8,15 @@ from contextlib import contextmanager
 import fcntl
 import json
 import os
+import time
 from pathlib import Path
 import uuid
 
 from research_lab import alpaca_monthly_source_ops_v1 as ops
 from research_lab.alpaca_monthly_binding_v1 import MonthlyBook,CONTRACT
-from research_lab.alpaca_monthly_native_binding_v1 import MonthlyNativeBinding
+from research_lab.alpaca_monthly_native_binding_v1 import MonthlyNativeBinding,STANDING_SCHEMA
 from research_lab.alpaca_dynamic_v1 import digest,positive
+from research_lab.alpaca_dynamic_live_runtime_v1 import account_lock
 from research_lab.kity_oct15_deadline_v1 import publish_once
 
 SCHEMA='ALPACA_MONTHLY_OWNED_CYCLE_V1'
@@ -42,8 +44,9 @@ class MonthlyManager:
         (self.root/'tickets').mkdir(exist_ok=True,mode=0o700)
 
     @contextmanager
-    def guard(self):
-        fd=os.open(self.root/'cycle.lock',os.O_CREAT|os.O_RDWR|os.O_NOFOLLOW,0o600)
+    def guard(self,name='cycle.lock'):
+        if name not in {'cycle.lock','dispatch.lock'}:raise ValueError('CYCLE_LOCK_NAME')
+        fd=os.open(self.root/name,os.O_CREAT|os.O_RDWR|os.O_NOFOLLOW,0o600)
         try:
             fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB);yield
         finally:os.close(fd)
@@ -95,6 +98,7 @@ class MonthlyManager:
     def opening(self,native,history,selection_id,*,quotes,now_ms,apply=False,symbols=None):
         if type(apply) is not bool:raise ValueError('CYCLE_EXPLICIT_BOOLEAN_REQUIRED')
         self._custody(native)
+        started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
         with self.guard():
             selected=next(s for s in self.book.rows('selections') if s['selection_id']==selection_id)
             allowed={p['symbol'] for p in selected['picks']}
@@ -102,8 +106,13 @@ class MonthlyManager:
                 if not isinstance(symbols,list) or len(set(symbols))!=len(symbols) or not set(symbols)<=allowed:
                     raise ValueError('CYCLE_SELECTED_SCOPE_REQUIRED')
                 allowed=set(symbols)
+            entry_block=None;scope=None
             if apply and native.base_url=='https://api.alpaca.markets':
-                allowed&={native._live_custody()['symbol']}
+                scope=native._live_custody()
+                if scope['schema']==STANDING_SCHEMA:
+                    try:native._standing_entry_state(scope,clock())
+                    except ValueError as exc:allowed.clear();entry_block=str(exc)
+                else:allowed&={scope['symbol']}
             entries=json.loads(native.reentry.read_bytes()).get('entry_intents',{}) if native.reentry.exists() else {}
             recovered=[];handled=set()
             # Reconcile the exact pre-dispatch ticket BEFORE rotation validates
@@ -114,15 +123,20 @@ class MonthlyManager:
                 saved=json.loads(ops.safe_path(path).read_bytes())
                 if (saved['selection_id']==selection_id
                     and (saved['symbol'] in allowed or saved['client_order_id'] in entries)):
-                    recovered.append(native.enter(saved,now_ms=now_ms,apply=apply))
+                    recovered.append(native.enter(saved,now_ms=clock(),apply=apply))
                     handled.add(saved['symbol'])
-            plan=native.rotate(selection_id,now_ms=now_ms,apply=apply)
-            actions=self.book.monthly_actions(selection_id,now_ms=now_ms)
+            plan=native.rotate(selection_id,now_ms=clock(),apply=apply)
+            actions=self.book.monthly_actions(selection_id,now_ms=clock())
             tickets=[];results=list(recovered)
             for symbol in actions.get('new_symbols',[]):
                 if symbol not in allowed or symbol in handled:continue
+                if scope:
+                    entries=json.loads(native.reentry.read_bytes()).get('entry_intents',{}) if native.reentry.exists() else {}
+                    used=sum(1 for i in entries.values() if i.get('entry_session')==selected['entry_session'])
+                    if used>=scope['max_new_entries_per_session']:
+                        entry_block='MONTHLY_SESSION_ENTRY_ALREADY_CONSUMED';break
                 account=native.client.get_account()
-                ticket=native.prepare_entry(history,selection_id,symbol,quote=quotes[symbol],now_ms=now_ms,
+                ticket=native.prepare_entry(history,selection_id,symbol,quote=quotes[symbol],now_ms=clock(),
                     cash=account['cash'],open_equity=account['equity'])
                 tickets.append(ticket)
                 if ticket['status']=='MONTHLY_NATIVE_ENTRY_PREPARED_ORDERS_OFF':
@@ -130,10 +144,11 @@ class MonthlyManager:
                     if path.exists():
                         if json.loads(path.read_bytes())!=ticket:raise ValueError('CYCLE_TICKET_REVISION')
                     elif apply:publish(path,ticket)
-                    results.append(native.enter(ticket,now_ms=now_ms,apply=apply))
+                    results.append(native.enter(ticket,now_ms=clock(),apply=apply))
                 else:results.append(ticket)
             return self._record('OPENING',dict(status='MONTHLY_OPENING_CYCLE',rotation=plan,
-                tickets=tickets,results=results,orders_allowed=False,money_authority=False),now_ms)
+                tickets=tickets,results=results,entry_block=entry_block,
+                orders_allowed=False,money_authority=False),clock())
 
     def maintain(self,native,*,now_ms,apply=False):
         self._custody(native)
@@ -142,3 +157,96 @@ class MonthlyManager:
     def finalize(self,native,entry_id,cost_source,*,now_ms):
         self._custody(native)
         with self.guard():return self._record('ACCOUNTING',native.finalize_exit(entry_id,cost_source,now_ms=now_ms),now_ms)
+
+    def recover(self,native,*,now_ms,apply=False):
+        """Only durable dispatched CIDs, across ALL selections; never resend a buy."""
+        self._custody(native)
+        if type(apply) is not bool:raise ValueError('CYCLE_EXPLICIT_BOOLEAN_REQUIRED')
+        if not apply:return []
+        started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
+        with self.guard():
+            # Reconcile a native rotation committed before the Monthly journal.
+            # Never hold the account lock around enter(), which takes it itself.
+            with account_lock(dict(lock_path=str(native.lock_path))):
+                native._native_authority()
+                native._recover_rotation_receipts(now_ms=clock(),known_only=True)
+            entries=json.loads(ops.safe_path(native.reentry).read_bytes()).get('entry_intents',{}) if native.reentry.exists() else {}
+            ledger=json.loads(ops.safe_path(native.ledger).read_bytes()) if native.ledger.exists() else {}
+            owned={r['entry_id'] for r in self.book.rows('positions')};out=[]
+            for cid,item in entries.items():
+                missing=any(r.get('entry_order_id')==item.get('entry_order_id') for r in ledger.values()) and item.get('entry_order_id') not in owned
+                if item.get('status')=='complete' and not missing:continue
+                path=ops.safe_path(self.root/'tickets'/(cid+'.json'))
+                if not path.is_file():raise ValueError('CYCLE_PENDING_TICKET_MISSING')
+                saved=json.loads(path.read_bytes())
+                if saved['client_order_id']!=cid:raise ValueError('CYCLE_RECOVERY_TICKET_IDENTITY')
+                out.append(native.enter(saved,now_ms=clock(),apply=True))
+            return out
+
+    def tick(self,native,*,now_ms,source_loader=None,quotes=None,cost_sources=None,
+             apply=False,notifications=None,sender=None):
+        """One existing owner: recover, protect, reconcile, source, monthly entry.
+
+        Cost sources are accepted external immutable reconciliation files, never
+        inferred from empty activities or flatness. Default does no broker I/O.
+        """
+        if type(apply) is not bool:raise ValueError('CYCLE_EXPLICIT_BOOLEAN_REQUIRED')
+        self._custody(native)
+        if not apply:return self.preview(now_ms=now_ms)
+        started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
+        out=dict(status='MONTHLY_STANDING_DISPATCH_TICK',recovered=[],maintenance=None,
+            source=None,accounting=[],opening=None,issues=[],entry_status='NO_SOURCE',
+            orders_allowed=False,money_authority=False)
+        def attempt(phase,fn):
+            try:return fn()
+            except Exception as exc:
+                out['issues'].append(dict(phase=phase,code=type(exc).__name__,reason=str(exc)))
+                return None
+        with self.guard('dispatch.lock'):
+            out['recovered']=attempt('RECOVERY',lambda:self.recover(native,now_ms=clock(),apply=True)) or []
+            out['maintenance']=attempt('MAINTENANCE',lambda:self.maintain(native,now_ms=clock(),apply=True))
+            def finality():
+                import sqlite3
+                sources=cost_sources(self.book.rows('exits')) if callable(cost_sources) else cost_sources or {}
+                for exited in self.book.rows('exits'):
+                    eid=exited['entry_id'];identity=digest(dict(schema=CONTRACT['schema'],entry_id=eid))
+                    p=native.runtime/'safety'/identity/'live.sqlite';done=False
+                    if p.is_file():
+                        with sqlite3.connect(ops.safe_path(p).as_uri()+'?mode=ro',uri=True) as db:
+                            row=db.execute('SELECT payload FROM intents WHERE id=?',(identity,)).fetchone()
+                        done=bool(row and json.loads(row[0]).get('cost_finality'))
+                    if not done and eid in sources:
+                        out['accounting'].append(self.finalize(native,eid,sources[eid],now_ms=clock()))
+                native._require_exit_accounting()
+            attempt('ACCOUNTING',finality)
+            bundle=attempt('SOURCE',source_loader) if source_loader else None
+            if bundle is not None:
+                out['source']=attempt('SOURCE_BIND',lambda:self.source(bundle,now_ms=clock()))
+            if not out['issues'] and bundle is not None and out['source'] is not None:
+                selections=[s for s in self.book.rows('selections') if any(
+                    r['session']==s['entry_session'] and r['open_ms']<=clock()<r['open_ms']+300000 for r in s['calendar'])]
+                if len(selections)>1:out['issues'].append(dict(phase='OPENING',code='AMBIGUOUS_SELECTION'))
+                elif selections:
+                    selection=selections[0]
+                    def opening():
+                        from scripts.run_alpaca_dynamic_v1_orders_off import load_history
+                        from scripts.equities_alpaca_paper_bridge import _parse_iso_utc
+                        q=quotes
+                        if q is None:
+                            q={}
+                            for pick in selection['picks']:
+                                actual=native.client.latest_quote(pick['symbol']);stamp=_parse_iso_utc(actual['t'])
+                                if stamp is None:raise ValueError('CYCLE_QUOTE_CLOCK')
+                                q[pick['symbol']]=dict(ask=float(positive(actual['ap'])),
+                                    quote_ts=int(stamp.timestamp()*1000),received_ms=clock(),source='ALPACA_IEX_LATEST_QUOTE')
+                        return self.opening(native,load_history(bundle['history']),selection['selection_id'],
+                            quotes=q,now_ms=clock(),apply=True)
+                    out['opening']=attempt('OPENING',opening)
+                    out['entry_status']='OPENING_PROCESSED' if out['opening'] else 'BLOCKED'
+                else:out['entry_status']='OUTSIDE_MONTHLY_WINDOW'
+            if out['issues']:out['entry_status']='BLOCKED'
+            if notifications:
+                from research_lab.alpaca_monthly_notifications_v1 import cycle_delivery
+                out['notifications']=attempt('NOTIFICATION',lambda:cycle_delivery(notifications,native,
+                    now_ms=clock(),failure=bool(out['issues']),sender=sender))
+            return self._record('DISPATCH_TICK',out,clock())

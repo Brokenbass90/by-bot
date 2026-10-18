@@ -199,10 +199,16 @@ def telegram(config,event):
             if config.get('scope_label') else 'Alpaca DAY monitor: проверка доставки.\nЭто НЕ тревога и НЕ подтверждение стопа.\nНаблюдатель только GET; NET, manager, V3 и HALT не изменены.')
     elif event['kind']=='RECOVERED':
         text='Alpaca NET: readback восстановлен.\n'+event['status']+'\nEvidence '+event['evidence_id']
+    elif event['kind'] in {'MONTHLY_ENTRY','MONTHLY_EXIT','MONTHLY_COST_FINAL'}:
+        text='Alpaca Monthly '+event['kind']+' '+event['symbol']+'\n'
+        if event['kind']=='MONTHLY_ENTRY':text+='Количество '+str(event['quantity'])+', цена '+str(event['price'])+'\n'
+        elif event['kind']=='MONTHLY_EXIT':text+='Выход: '+event['reason']+'. Сверка расходов сообщается отдельно.\n'
+        else:text+='Итог после расходов: '+str(event['net_usd_exact'])+' USD\n'
+        text+='Entry '+event['entry_order_id']+'\nEvidence '+event['evidence_id']
     else:
         codes=', '.join(r['code'] for r in event['issues'])
         text='Alpaca NET CRITICAL\n'+codes+'\nСессия '+event['session']+'\nПодтверждение защиты отсутствует или источник UNKNOWN.\nНаблюдатель ордеров не отправляет. Evidence '+event['first_evidence_id']
-    if config.get('scope_label') and event['kind']!='DELIVERY_TEST':
+    if config.get('scope_label') and event['kind'] not in {'DELIVERY_TEST','MONTHLY_ENTRY','MONTHLY_EXIT','MONTHLY_COST_FINAL'}:
         text=config['scope_label']+' '+event['kind']+'\n'+(', '.join(r['code'] for r in event.get('issues',[])))+'\nEvidence '+str(event.get('first_evidence_id',event.get('evidence_id','UNKNOWN')))+'\nРеальные ордера из этого наблюдателя не отправляются.'
     captured={};original=module.urllib.request.urlopen
     def send(req,*args,**kwargs):

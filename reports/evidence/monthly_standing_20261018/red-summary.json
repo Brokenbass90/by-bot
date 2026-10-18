@@ -1,0 +1,63 @@
+{
+  "raw_artifacts_preserved_privately": true,
+  "review_initial_multisymbol_case_had_fixture_setup_conflict": true,
+  "runs": [
+    {
+      "failed_cases": [
+        "test_standing_grant_enters_through_existing_native_wire",
+        "test_standing_invalid_grants_never_send[expired]",
+        "test_standing_invalid_grants_never_send[future]",
+        "test_standing_invalid_grants_never_send[revoked]",
+        "test_standing_invalid_grants_never_send[wrong_go]",
+        "test_standing_invalid_grants_never_send[universe]",
+        "test_standing_invalid_grants_never_send[closure]",
+        "test_standing_invalid_grants_never_send[bad_limit]",
+        "test_standing_invalid_grants_never_send[bad_loss]",
+        "test_standing_expiry_or_revocation_keeps_owned_maintenance[expired]",
+        "test_standing_expiry_or_revocation_keeps_owned_maintenance[revoked]",
+        "test_session_attempt_ceiling_survives_failed_reservation_and_new_grant",
+        "test_standing_final_validator_sees_revocation_after_reservation"
+      ],
+      "failures": 13,
+      "raw_private_artifact": "red.xml",
+      "sha256": "fc02ddf0199ad0b9886437114938e165bda67fe03e20ba237c70396e5dc46247",
+      "tests": 14
+    },
+    {
+      "failed_cases": [
+        "test_dispatcher_recovers_previous_selection_before_maintenance",
+        "test_dispatcher_source_failure_still_maintains_owned_protection",
+        "test_dispatcher_never_submits_a_saved_ticket_without_reservation"
+      ],
+      "failures": 3,
+      "raw_private_artifact": "dispatcher-red.xml",
+      "sha256": "e858e1dc58af18c9ac0a2cd3ea054502f10aea9bf518508cb2b904a1fc632b09",
+      "tests": 3
+    },
+    {
+      "failed_cases": [
+        "test_slow_final_authority_check_cannot_cross_entry_cutoff[expiry]",
+        "test_slow_final_authority_check_cannot_cross_entry_cutoff[window]",
+        "test_any_revocation_marker_blocks_buy_without_disabling_maintenance[directory]",
+        "test_any_revocation_marker_blocks_buy_without_disabling_maintenance[dangling_symlink]",
+        "test_dispatcher_recovers_rotation_crash_before_maintenance",
+        "test_multisymbol_opening_refreshes_elapsed_time_between_real_native_entries"
+      ],
+      "failures": 6,
+      "raw_private_artifact": "review-red.xml",
+      "sha256": "55aad877181a7679ebffdefb661e42301a4634ead5c173dc8eff5c2ae038c1fc",
+      "tests": 6
+    },
+    {
+      "failed_cases": [
+        "test_multisymbol_opening_refreshes_elapsed_time_between_real_native_entries"
+      ],
+      "failures": 1,
+      "raw_private_artifact": "multisymbol-red.xml",
+      "sha256": "bd2dcbf3f8d6e22759d0976d54ebe851db1f0ab8fe9b3046e0b029984bfd8aa0",
+      "tests": 1
+    }
+  ],
+  "schema": "MONTHLY_STANDING_RED_REGRESSION_SUMMARY_V1",
+  "separate_multisymbol_red_reproduces_actual_clock_conflict": true
+}

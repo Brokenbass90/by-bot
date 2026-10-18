@@ -1347,3 +1347,23 @@ hedge.55 stays, oldgeomguards+rawrecords preserved.79targetedPASSinclBrainreadon
 actualfixtureaccepted/badstoprejected, NOTDEPLOYED/0prospective/0broker/newauthority.
 Oldintakereceipts notrewritten, producer/900/outcomes untouched. Earlier publication
 blocker superseded; nextcausalcontext/risk/instrument andprospective/parity gates.
+
+
+## October18 standing Monthly components — latest engineering state
+
+Read checkpoint TOP and ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md. Existing
+standing custody and one dispatcher now IMPLEMENTED ORDERS_OFF; older component
+NOT_IMPLEMENTED state is superseded, not a deployed autonomy claim.165exactPASS/
+34imports/0fallback,93targeted overlap,2fixturecycles/1grant/3restarts;4native-entry
+clock test explicitfixtureselector/equity.44file348690be preserves frozenhelper
+d205f8f. Verifiedastra/high review3Important fixed/regressed, no secondsignoff.
+LOCAL_ONLY: automaticreview rejected source transfer toVPS before execution;
+do not bypass. No newstagedcandidate/financialunit/pointer/GO/broker requests.
+Next real engineering gate: actual automatic broker cost-finality producer,
+then one disabled applying wrapper/ownership handoff/rollback. Missingfees never
+become zero or capital release; sourcefailure still calls protection.20loss is
+fixtureonly, existing487.42/.70/.60/4 ceilings notnewbudget. No actualstandingGO.
+NET77pins/lock813893 andDAY19Oct13:30UTC active; SHOP stayscancelled. Future30Oct
+source/2Novfreshbrokerwindow remain. KITYsafetyUNSELECTED/SPENT, Elderlocal gates,
+existingDATAautomations/research/Claude files unchanged. Continue local engineering
+rather than waiting calendar or interpreting simulated repeat as real income.

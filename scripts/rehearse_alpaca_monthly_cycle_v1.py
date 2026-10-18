@@ -16,6 +16,7 @@ import math
 import os
 from pathlib import Path
 import sys
+import time
 from urllib.parse import urlsplit,parse_qs
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -34,8 +35,11 @@ def iso(ms):return datetime.fromtimestamp(ms/1000,timezone.utc).isoformat().repl
 
 class MemoryBroker(native.AlpacaClient):
     """Only _request below is used; there is no HTTP implementation here."""
-    def __init__(self,path,calendar):
+    def __init__(self,path,calendar,*,standing=False):
         super().__init__(native._PAPER_API_URL,'NON_FINANCIAL_FIXTURE','NON_FINANCIAL_FIXTURE')
+        if standing:self.base_url='https://api.alpaca.markets'
+        self.standing=standing;self.clock_started=time.monotonic()
+        self.order_contract=CONTRACT['schema']
         self.path=Path(path);self.calendar=calendar;self.permit=None
         self.lose_buy=False;self.lose_stop=False
         self.state=json.loads(self.path.read_bytes()) if self.path.exists() else dict(
@@ -45,11 +49,15 @@ class MemoryBroker(native.AlpacaClient):
     def save(self):native._atomic_write_json(self.path,self.state)
     def permit_write(self,method,path,payload=None):self.permit=(method,path,canonical(payload))
     def set_clock(self,now):
+        self.clock_started=time.monotonic()
         self.state['clock_ms']=now
         day=iso(now)[:10]
         for o in self.state['orders'].values():
             if o['status']=='new' and o['time_in_force']=='day' and o['submitted_at'][:10]!=day:o['status']='expired'
         self.save()
+    def get_clock(self):
+        now=self.state['clock_ms']+(int((time.monotonic()-self.clock_started)*1000) if self.standing else 0)
+        return dict(timestamp=iso(now),is_open=any(r['open_ms']<=now<r['close_ms'] for r in self.calendar))
     def get_asset(self,symbol):return dict(symbol=symbol,status='active',tradable=True,fractionable=True)
     def latest_quote(self,symbol):return dict(ap=str(self.price(symbol)),t=iso(self.state['clock_ms']))
     def price(self,symbol):return D(self.state.get('quotes',{}).get(symbol,'100'))
@@ -144,14 +152,49 @@ def fixture_source(root,calendar,session,overrides=None):
 def paper_mode():
     saved={k:os.environ.get(k) for k in ('ALPACA_INTENDED_PAPER','ALPACA_INTENDED_LIVE')}
     os.environ.update(ALPACA_INTENDED_PAPER='1',ALPACA_INTENDED_LIVE='0')
-    try:yield
+    try:yield {}
     finally:
         for k,v in saved.items():
             if v is None:os.environ.pop(k,None)
             else:os.environ[k]=v
 
 
-def run(directory):
+@contextmanager
+def standing_mode(root,manager,now):
+    """Fixture-only fake-account grant. Never an actual owner permission."""
+    from research_lab import alpaca_monthly_native_binding_v1 as binding
+    from research_lab.alpaca_monthly_binding_v1 import strategy_identity
+    manager.lock.touch();stat=manager.lock.stat()
+    scope=dict(schema=binding.STANDING_SCHEMA,endpoint='https://api.alpaca.markets',
+        account_id=manager.account,contract_sha256=digest(CONTRACT),strategy_identity=strategy_identity(),
+        capital_usd='487.42',liability_reserve_usd='0',book=str(manager.book.path),
+        runtime=str(manager.root/'native'),lock_path=str(manager.lock),entry_halt_path=str(manager.halt),
+        legacy_NET_adoption=False,legacy_entry_authority=False,original_lock_identity=[stat.st_dev,stat.st_ino],
+        max_new_entries_per_session=1,max_entry_notional_usd='204.7164',max_cumulative_net_loss_usd='20',
+        valid_from_ms=now-86400000,valid_until_ms=now+90*86400000,
+        revocation_path=str(root/'fixture-revocation.json'),
+        universe_sha256=digest(list(binding.monthly_universe())),
+        selection_policy='EXISTING_SEALED_FROZEN_MONTHLY_ONLY',
+        source_files=[dict(path=str(binding.ROOT/n),sha256=h) for n,h in binding.standing_source_pins().items()])
+    path=root/'FIXTURE-NOT-AUTHORITY-standing-scope.json';publish(path,scope);pin=ops.sha(path)
+    go=root/'FIXTURE-NOT-AUTHORITY-standing-go.json'
+    publish(go,dict(schema='ALPACA_MONTHLY_STANDING_OWNER_GO_V1',scope_sha256=pin,
+        owner_go_text='GO ALPACA_MONTHLY_STANDING '+pin))
+    live=root/'fixture-native-binding.json'
+    publish(live,dict(schema_version=1,endpoint=scope['endpoint'],strategy_id=native._INTENDED_PAPER_STRATEGY_ID,
+        account_id=manager.account,enabled=True,capital_usd=487.42,max_positions=4,gross_exposure=.70,maximum_weight=.60))
+    values=dict(ALPACA_INTENDED_PAPER='0',ALPACA_INTENDED_LIVE='1',ALPACA_INTENDED_LIVE_BINDING_PATH=str(live),
+        ALPACA_INTENDED_LIVE_ACK='INTENDED_LIVE_CANARY',ALPACA_LIVE_ACCOUNT_ROLE='monthly_v38',
+        ALPACA_LIVE_CONFIRM='MONTHLY_V38_LIVE',ALPACA_LIVE_MAX_CAPITAL_USD='487.42')
+    saved={k:os.environ.get(k) for k in values};os.environ.update(values)
+    try:yield dict(live_scope_path=path,live_scope_sha256=pin,owner_go_path=str(go))
+    finally:
+        for k,v in saved.items():
+            if v is None:os.environ.pop(k,None)
+            else:os.environ[k]=v
+
+
+def run(directory,*,standing_grant=False):
     root=ops.safe_path(directory);root.mkdir(mode=0o700)  # never reuse/adopt an existing runtime
     calendar=fixture_calendar();bundle,now,prices=fixture_source(root/'source-oct30',calendar,'2026-10-30')
     args=dict(account_id='MONTHLY_REHEARSAL_ONLY',capital='487.42',account_lock_path=root/'fixture-account.lock',
@@ -160,14 +203,14 @@ def run(directory):
     selection=m.book.rows('selections')[0]
     if not selection['picks']:raise ValueError('REHEARSAL_FIXTURE_MUST_EXERCISE_REAL_SELECTOR_ENTRY')
     symbol=selection['picks'][0]['symbol'];opening=next(r['open_ms'] for r in calendar if r['session']=='2026-11-02')
-    broker_path=root/'broker.json';broker=MemoryBroker(broker_path,calendar);broker.mark(prices);broker.set_clock(opening+1000)
+    broker_path=root/'broker.json';broker=MemoryBroker(broker_path,calendar,standing=standing_grant);broker.mark(prices);broker.set_clock(opening+1000)
     history=load_history(bundle['history']);quotes={symbol:dict(ask=prices[symbol],quote_ts=opening,
         received_ms=opening,source='SYNTHETIC_ORDERS_OFF_FIXTURE')}
-    with paper_mode():
+    with (standing_mode(root,m,opening) if standing_grant else paper_mode()) as authority:
         for lost in ('buy','stop',None):
-            m=MonthlyManager(root/'cycle',**args);broker=MemoryBroker(broker_path,calendar)
+            m=MonthlyManager(root/'cycle',**args);broker=MemoryBroker(broker_path,calendar,standing=standing_grant)
             broker.lose_buy=lost=='buy';broker.lose_stop=lost=='stop'
-            native_binding=m.native(broker,base_url=native._PAPER_API_URL)
+            native_binding=m.native(broker,base_url=broker.base_url,**authority)
             try:m.opening(native_binding,history,selection['selection_id'],quotes=quotes,now_ms=opening+1000,apply=True,symbols=[symbol])
             except TimeoutError:
                 if lost is None:raise
@@ -202,15 +245,48 @@ def run(directory):
         cost_path=root/'simulated-cost-finality.json';publish(cost_path,cost)
         final=m.finalize(native_binding,entry['id'],cost_path,now_ms=new_open+1000)
         native_binding._require_exit_accounting()
-        future,future_time,_=fixture_source(root/'source-nov30',calendar,'2026-11-30',override)
+        future,future_time,future_prices=fixture_source(root/'source-nov30',calendar,'2026-11-30',override)
         next_bound=m.source(future,now_ms=future_time)
         dec_open=next(r['open_ms'] for r in calendar if r['session']=='2026-12-01')
         next_plan=m.book.monthly_actions(next_bound['selection_id'],now_ms=dec_open)
         assert next_plan['status']=='MONTHLY_PLAN_ORDERS_OFF' and next_plan['new_symbols']
-    out=dict(status='MONTHLY_ORDERS_OFF_END_TO_END_PASS',source_symbols=len(bundle['history']),
+        if standing_grant:
+            broker.get_account=account;cash_before_second=broker.state['cash']
+            broker.mark(future_prices);broker.set_clock(dec_open+1000)
+            m=MonthlyManager(root/'cycle',**args);native_binding=m.native(broker,base_url=broker.base_url,**authority)
+            next_quotes={s:dict(ask=px,quote_ts=dec_open,received_ms=dec_open,source='SYNTHETIC_ORDERS_OFF_FIXTURE')
+                         for s,px in future_prices.items()}
+            tick=m.tick(native_binding,now_ms=dec_open+1000,source_loader=lambda:future,quotes=next_quotes,apply=True)
+            if tick['issues']:raise ValueError('REPEAT_CYCLE_FAILED:'+str(tick['issues']))
+            assert len(m.book.rows('positions'))==1
+            assert len([w for w in broker.state['writes'] if (w['payload'] or {}).get('side')=='buy'])==2
+            held_second=m.book.rows('positions')[0]
+            broker.set_clock(dec_open+60000);broker.hit_stop(held_second['native_stop_id'])
+            m.tick(native_binding,now_ms=dec_open+60000,apply=True)
+            second=next(x for x in m.book.rows('exits') if x['entry_id']==held_second['entry_id'])
+            evidence_second=root/'simulated-second-activity.json';publish(evidence_second,broker.state)
+            source_second=[dict(path=str(evidence_second),sha256=ops.sha(evidence_second))]
+            orders_second=[broker.get_order(o['id']) for o in second['orders']]
+            gross_second=sum((D(o['filled_qty'])*(D(o['filled_avg_price'])-D(held_second['raw_entry']['filled_avg_price']))
+                              for o in orders_second),D(0))
+            finality_second=dict(cost,intake_sha256=digest(dict(schema=CONTRACT['schema'],entry_id=second['entry_id'])),
+                exit_orders_sha256=digest(orders_second),gross_before_fees=str(gross_second),
+                observed_ms=dec_open+60000,coverage_end_ms=dec_open+60000,source_files=source_second,
+                source_manifest_sha256=digest(source_second),cash_before_entry=cash_before_second,
+                cash_after_exit=str(D(broker.state['cash']).quantize(D('.01'),rounding=ROUND_HALF_UP)))
+            second_path=root/'simulated-second-cost-finality.json';publish(second_path,finality_second)
+            broker.get_account=lambda:dict(account(),cash=finality_second['cash_after_exit'])
+            reconciled=m.tick(native_binding,now_ms=dec_open+60000,cost_sources={second['entry_id']:second_path},apply=True)
+            if reconciled['issues']:raise ValueError('REPEAT_FINALITY_FAILED:'+str(reconciled['issues']))
+            native_binding._require_exit_accounting()
+            assert not broker.list_positions() and not broker.list_orders(status='open')
+    out=dict(status='MONTHLY_STANDING_ORDERS_OFF_REPEAT_PASS' if standing_grant else 'MONTHLY_ORDERS_OFF_END_TO_END_PASS',source_symbols=len(bundle['history']),
         selector_monkeypatched=False,selected_symbols=[p['symbol'] for p in selection['picks']],
-        executed_fixture_subset=[symbol],simulated_entries=1,duplicate_entries=0,full_native_stop=True,
-        day_rearm=True,daily_close_ratchet=True,response_loss_recovered=True,restarts=2,broker_flat=True,
+        executed_fixture_subset=[symbol],simulated_entries=2 if standing_grant else 1,
+        closed_roundtrips=2 if standing_grant else 1,standing_grant_count=1 if standing_grant else 0,
+        duplicate_entries=0,full_native_stop=True,
+        day_rearm=True,daily_close_ratchet=True,response_loss_recovered=True,restarts=3 if standing_grant else 2,
+        broker_flat=not broker.list_positions(),
         accounting_final=final['status']=='LIVE_TERMINAL_COST_FINALITY',capital_released=True,
         next_month_selection_ready=bool(next_plan['new_symbols']),initial_floor=initial,raised_floor=held['native_floor'],
         source_ids=[bundle['source_id'],daily['source_id'],future['source_id']],
