@@ -27,16 +27,22 @@ def bez_stopa(resh):
                                   for c in d.picks), d.reason) for d in resh]
 
 
-RUKI = {"M": (POL_M, False), "M_BEZ_TREYLA": (POL_BEZ_TREYLA, False), "M_BEZ_STOPOV": (POL_BEZ_STOPOV, True)}
+RUKI = {"M": (POL_M, False), "M_BEZ_TREYLA": (POL_BEZ_TREYLA, False), "M_BEZ_STOPOV": (POL_BEZ_STOPOV, True),
+        "M_TREYL_ATR": (POL_M, False)}   # дополнение 1: штатный выключатель B движка
 
 
 def progon(U, okno, resh, bp, ruka):
     pol, bs = RUKI[ruka]
     z = dvizhok_x(U.p, okno, bez_stopa(resh) if bs else resh, initial_capital=1000.0, target_gross_exposure=0.70,
-                  cost_bps_per_side=bp, policy=pol, mest=4)
+                  cost_bps_per_side=bp, policy=pol, mest=4, treyl_atr=(ruka == "M_TREYL_ATR"))
     eqd = {x["session"]: x["equity"] for x in z["daily_equity"]}
     ds = sorted(eqd); daty = [date.fromisoformat(x) for x in ds]; eq = [eqd[x] for x in ds]
     m = metriki(daty, eq, 1000.0)
+    pik, pd, best = eq[0], daty[0], (0.0, None, None)
+    for d_, x in zip(daty, eq):
+        if x > pik: pik, pd = x, d_
+        if x / pik - 1 < best[0]: best = (x / pik - 1, pd, d_)
+    m["hudshaya_prosadka"] = {"pik": str(best[1]), "dno": str(best[2]), "glubina_pct": -best[0] * 100}
     tr = z["trades"]
     m.update(sdelok=len(tr), ekspoziciya_pct=z["average_gross_exposure_pct"], hudshiy_mesyac_pct=z["worst_month_pct"],
              dolya_stopov=sum(t["reason"].startswith(("protective_stop", "entry_gap")) for t in tr) / max(1, len(tr)),

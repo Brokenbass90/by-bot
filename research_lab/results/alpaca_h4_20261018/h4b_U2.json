@@ -1,0 +1,578 @@
+{
+ "prereg": "PREREG_ALPACA_H4_ZASHCHITA_2026_10_18",
+ "vselennaya": "U2",
+ "polnoe": {
+  "20bps": {
+   "M": {
+    "cagr_pct": 11.66454242936279,
+    "maxDD_pct": 19.296184496572543,
+    "calmar": 0.6044999430553064,
+    "vosstanovlenie_max_sessiy": 589,
+    "itog": 3.1013435739376245,
+    "hudshaya_prosadka": {
+     "pik": "2018-07-06",
+     "dno": "2020-06-09",
+     "glubina_pct": 19.296184496572543
+    },
+    "sdelok": 360,
+    "ekspoziciya_pct": 18.00633126575266,
+    "hudshiy_mesyac_pct": -8.447059502944432,
+    "dolya_stopov": 0.925,
+    "hudshaya_sdelka_pct": -23.509524060623377,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 1.0640596123736579,
+      "maxDD_pct": 16.52667697483202,
+      "calmar": 0.0643843655923137,
+      "vosstanovlenie_max_sessiy": 374,
+      "itog": 1.0386313416564392
+     },
+     "P2": {
+      "cagr_pct": 20.107743110781673,
+      "maxDD_pct": 9.948402051466921,
+      "calmar": 2.0212033054913303,
+      "vosstanovlenie_max_sessiy": 335,
+      "itog": 1.7302701757483845
+     },
+     "P3": {
+      "cagr_pct": 16.252643811150303,
+      "maxDD_pct": 15.055212216630453,
+      "calmar": 1.0795360156529132,
+      "vosstanovlenie_max_sessiy": 157,
+      "itog": 1.7375795826662146
+     }
+    },
+    "dvizhok_godovyh_pct": 11.66454242936279
+   },
+   "M_BEZ_TREYLA": {
+    "cagr_pct": 19.18779112931519,
+    "maxDD_pct": 33.89852889667617,
+    "calmar": 0.5660361010886404,
+    "vosstanovlenie_max_sessiy": 646,
+    "itog": 6.053979162923321,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-13",
+     "dno": "2020-06-11",
+     "glubina_pct": 33.89852889667617
+    },
+    "sdelok": 341,
+    "ekspoziciya_pct": 41.96192132797619,
+    "hudshiy_mesyac_pct": -15.846409402071648,
+    "dolya_stopov": 0.436950146627566,
+    "hudshaya_sdelka_pct": -23.509524060623377,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 0.45415640450368056,
+      "maxDD_pct": 23.464038758023932,
+      "calmar": 0.019355423385855684,
+      "vosstanovlenie_max_sessiy": 390,
+      "itog": 1.0163593879598276
+     },
+     "P2": {
+      "cagr_pct": 15.910734751704435,
+      "maxDD_pct": 23.69144206253563,
+      "calmar": 0.6715815233917236,
+      "vosstanovlenie_max_sessiy": 477,
+      "itog": 1.5555650738756492
+     },
+     "P3": {
+      "cagr_pct": 44.29847510436995,
+      "maxDD_pct": 31.72029276115942,
+      "calmar": 1.3965342450625848,
+      "vosstanovlenie_max_sessiy": 205,
+      "itog": 3.8396067415379695
+     }
+    },
+    "dvizhok_godovyh_pct": 19.18779112931519
+   },
+   "M_BEZ_STOPOV": {
+    "cagr_pct": 25.013803334542306,
+    "maxDD_pct": 39.29091426386162,
+    "calmar": 0.6366307275661719,
+    "vosstanovlenie_max_sessiy": 646,
+    "itog": 9.877915689106654,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-13",
+     "dno": "2020-06-11",
+     "glubina_pct": 39.29091426386162
+    },
+    "sdelok": 333,
+    "ekspoziciya_pct": 55.55653589883238,
+    "hudshiy_mesyac_pct": -22.32509493212652,
+    "dolya_stopov": 0.0,
+    "hudshaya_sdelka_pct": -44.59876651785704,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 0.1836660487610775,
+      "maxDD_pct": 30.50038692882222,
+      "calmar": 0.006021761271084629,
+      "vosstanovlenie_max_sessiy": 390,
+      "itog": 1.0065928863813494
+     },
+     "P2": {
+      "cagr_pct": 18.225791912798407,
+      "maxDD_pct": 27.09200158733517,
+      "calmar": 0.6727370015111216,
+      "vosstanovlenie_max_sessiy": 287,
+      "itog": 1.6504000886546246
+     },
+     "P3": {
+      "cagr_pct": 62.4861309306787,
+      "maxDD_pct": 29.275328192006167,
+      "calmar": 2.1344297328062396,
+      "vosstanovlenie_max_sessiy": 139,
+      "itog": 5.935071818206136
+     }
+    },
+    "dvizhok_godovyh_pct": 25.013803334542306
+   },
+   "M_TREYL_ATR": {
+    "cagr_pct": 11.875681334220012,
+    "maxDD_pct": 26.154679793090907,
+    "calmar": 0.45405569588954114,
+    "vosstanovlenie_max_sessiy": 650,
+    "itog": 3.162031318375646,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-06",
+     "dno": "2020-06-09",
+     "glubina_pct": 26.154679793090907
+    },
+    "sdelok": 352,
+    "ekspoziciya_pct": 25.79177417026919,
+    "hudshiy_mesyac_pct": -9.015837953524786,
+    "dolya_stopov": 0.84375,
+    "hudshaya_sdelka_pct": -23.509524060623377,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": -0.45724023789287527,
+      "maxDD_pct": 22.337057656741564,
+      "calmar": -0.020470029890211402,
+      "vosstanovlenie_max_sessiy": 395,
+      "itog": 0.9837221202687545
+     },
+     "P2": {
+      "cagr_pct": 15.407527899963934,
+      "maxDD_pct": 12.306930226612767,
+      "calmar": 1.2519391608027783,
+      "vosstanovlenie_max_sessiy": 287,
+      "itog": 1.5354435288150485
+     },
+     "P3": {
+      "cagr_pct": 22.465309295434068,
+      "maxDD_pct": 19.37545296057186,
+      "calmar": 1.159472727742155,
+      "vosstanovlenie_max_sessiy": 175,
+      "itog": 2.103271636226613
+     }
+    },
+    "dvizhok_godovyh_pct": 11.875681334220012
+   }
+  },
+  "10bps": {
+   "M": {
+    "cagr_pct": 13.205040258621326,
+    "maxDD_pct": 18.34611990328665,
+    "calmar": 0.7197729181011013,
+    "vosstanovlenie_max_sessiy": 537,
+    "itog": 3.5693912682813345,
+    "hudshaya_prosadka": {
+     "pik": "2018-09-14",
+     "dno": "2020-06-09",
+     "glubina_pct": 18.34611990328665
+    },
+    "sdelok": 359,
+    "ekspoziciya_pct": 17.6883834767512,
+    "hudshiy_mesyac_pct": -8.36143704952953,
+    "dolya_stopov": 0.924791086350975,
+    "hudshaya_sdelka_pct": -23.35638966808329,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 1.8199065005289894,
+      "maxDD_pct": 15.919867462341353,
+      "calmar": 0.11431668667053926,
+      "vosstanovlenie_max_sessiy": 325,
+      "itog": 1.0667182597495561
+     },
+     "P2": {
+      "cagr_pct": 22.829123978753273,
+      "maxDD_pct": 9.841561025045209,
+      "calmar": 2.31966493127023,
+      "vosstanovlenie_max_sessiy": 265,
+      "itog": 1.8502555068787252
+     },
+     "P3": {
+      "cagr_pct": 17.71580667581285,
+      "maxDD_pct": 14.877000607835278,
+      "calmar": 1.1908184413518446,
+      "vosstanovlenie_max_sessiy": 157,
+      "itog": 1.8191687592907126
+     }
+    },
+    "dvizhok_godovyh_pct": 13.205040258621326
+   },
+   "M_BEZ_TREYLA": {
+    "cagr_pct": 20.792219077663532,
+    "maxDD_pct": 31.128125202581693,
+    "calmar": 0.6679560346904244,
+    "vosstanovlenie_max_sessiy": 645,
+    "itog": 6.9440890809712466,
+    "hudshaya_prosadka": {
+     "pik": "2025-11-10",
+     "dno": "2026-08-06",
+     "glubina_pct": 31.128125202581693
+    },
+    "sdelok": 340,
+    "ekspoziciya_pct": 42.1036544248816,
+    "hudshiy_mesyac_pct": -15.766800213670395,
+    "dolya_stopov": 0.4294117647058823,
+    "hudshaya_sdelka_pct": -28.49830202530693,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 2.2708412551957657,
+      "maxDD_pct": 19.918269484872187,
+      "calmar": 0.11400795922158082,
+      "vosstanovlenie_max_sessiy": 390,
+      "itog": 1.0837331514511965
+     },
+     "P2": {
+      "cagr_pct": 16.69185043014487,
+      "maxDD_pct": 24.013453037713628,
+      "calmar": 0.6951041320017564,
+      "vosstanovlenie_max_sessiy": 477,
+      "itog": 1.587145806280436
+     },
+     "P3": {
+      "cagr_pct": 46.33376836586272,
+      "maxDD_pct": 31.128125202581693,
+      "calmar": 1.48848567217983,
+      "vosstanovlenie_max_sessiy": 205,
+      "itog": 4.042061256398241
+     }
+    },
+    "dvizhok_godovyh_pct": 20.792219077663532
+   },
+   "M_BEZ_STOPOV": {
+    "cagr_pct": 26.478838399059423,
+    "maxDD_pct": 37.97993999779942,
+    "calmar": 0.6971795742856262,
+    "vosstanovlenie_max_sessiy": 645,
+    "itog": 11.132006465672353,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-13",
+     "dno": "2020-06-11",
+     "glubina_pct": 37.97993999779942
+    },
+    "sdelok": 333,
+    "ekspoziciya_pct": 55.56855271135287,
+    "hudshiy_mesyac_pct": -22.278876443068572,
+    "dolya_stopov": 0.0,
+    "hudshaya_sdelka_pct": -44.48785291546314,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 1.2555257078472382,
+      "maxDD_pct": 29.37017740865938,
+      "calmar": 0.042748318826193545,
+      "vosstanovlenie_max_sessiy": 390,
+      "itog": 1.0456950974832124
+     },
+     "P2": {
+      "cagr_pct": 19.45641302473109,
+      "maxDD_pct": 26.90348155740073,
+      "calmar": 0.723193129603664,
+      "vosstanovlenie_max_sessiy": 287,
+      "itog": 1.7023430910510908
+     },
+     "P3": {
+      "cagr_pct": 64.64977632783186,
+      "maxDD_pct": 29.23365111215378,
+      "calmar": 2.2114848425810885,
+      "vosstanovlenie_max_sessiy": 139,
+      "itog": 6.2302032640593366
+     }
+    },
+    "dvizhok_godovyh_pct": 26.478838399059423
+   },
+   "M_TREYL_ATR": {
+    "cagr_pct": 12.904100410170404,
+    "maxDD_pct": 24.743969449786807,
+    "calmar": 0.5215048634923685,
+    "vosstanovlenie_max_sessiy": 638,
+    "itog": 3.473238198102382,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-06",
+     "dno": "2020-06-09",
+     "glubina_pct": 24.743969449786807
+    },
+    "sdelok": 351,
+    "ekspoziciya_pct": 25.695112443131645,
+    "hudshiy_mesyac_pct": -8.949045639401831,
+    "dolya_stopov": 0.8461538461538461,
+    "hudshaya_sdelka_pct": -23.35638966808329,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 0.41470926890736504,
+      "maxDD_pct": 21.149280162670426,
+      "calmar": 0.01960867063642896,
+      "vosstanovlenie_max_sessiy": 395,
+      "itog": 1.014930848371427
+     },
+     "P2": {
+      "cagr_pct": 16.306332199013983,
+      "maxDD_pct": 12.027221481607953,
+      "calmar": 1.3557854758016765,
+      "vosstanovlenie_max_sessiy": 287,
+      "itog": 1.5715063742371813
+     },
+     "P3": {
+      "cagr_pct": 23.756487444081074,
+      "maxDD_pct": 18.971511647597772,
+      "calmar": 1.252219005283598,
+      "vosstanovlenie_max_sessiy": 174,
+      "itog": 2.185777665617497
+     }
+    },
+    "dvizhok_godovyh_pct": 12.904100410170404
+   }
+  },
+  "30bps": {
+   "M": {
+    "cagr_pct": 10.625289287163465,
+    "maxDD_pct": 21.643768708169976,
+    "calmar": 0.4909167821199589,
+    "vosstanovlenie_max_sessiy": 611,
+    "itog": 2.8176724905685706,
+    "hudshaya_prosadka": {
+     "pik": "2018-07-06",
+     "dno": "2020-06-09",
+     "glubina_pct": 21.643768708169976
+    },
+    "sdelok": 360,
+    "ekspoziciya_pct": 18.189308529758268,
+    "hudshiy_mesyac_pct": -8.531863011094087,
+    "dolya_stopov": 0.9222222222222223,
+    "hudshaya_sdelka_pct": -23.66235310043654,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": -0.04993435183613393,
+      "maxDD_pct": 18.597582951588453,
+      "calmar": -0.0026849914833620325,
+      "vosstanovlenie_max_sessiy": 374,
+      "itog": 0.9982129485860962
+     },
+     "P2": {
+      "cagr_pct": 19.64881912798544,
+      "maxDD_pct": 10.060351279507973,
+      "calmar": 1.953094736165755,
+      "vosstanovlenie_max_sessiy": 335,
+      "itog": 1.7105614119023183
+     },
+     "P3": {
+      "cagr_pct": 14.871961694503199,
+      "maxDD_pct": 15.23241875832394,
+      "calmar": 0.9763361899682699,
+      "vosstanovlenie_max_sessiy": 157,
+      "itog": 1.6630620279771262
+     }
+    },
+    "dvizhok_godovyh_pct": 10.625289287163465
+   },
+   "M_BEZ_TREYLA": {
+    "cagr_pct": 17.885410973026026,
+    "maxDD_pct": 35.98586251125697,
+    "calmar": 0.4970121521314426,
+    "vosstanovlenie_max_sessiy": 646,
+    "itog": 5.40865473633106,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-13",
+     "dno": "2020-06-11",
+     "glubina_pct": 35.98586251125697
+    },
+    "sdelok": 341,
+    "ekspoziciya_pct": 41.81938177101448,
+    "hudshiy_mesyac_pct": -15.925263615645735,
+    "dolya_stopov": 0.4398826979472141,
+    "hudshaya_sdelka_pct": -23.66235310043654,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": -0.8460593215071088,
+      "maxDD_pct": 25.568578482485005,
+      "calmar": -0.033089806775401166,
+      "vosstanovlenie_max_sessiy": 390,
+      "itog": 0.9700310444242892
+     },
+     "P2": {
+      "cagr_pct": 14.901626441891235,
+      "maxDD_pct": 24.02858329842369,
+      "calmar": 0.6201625063292351,
+      "vosstanovlenie_max_sessiy": 477,
+      "itog": 1.5153896873457415
+     },
+     "P3": {
+      "cagr_pct": 42.796438751013845,
+      "maxDD_pct": 32.31322170747954,
+      "calmar": 1.324425002818823,
+      "vosstanovlenie_max_sessiy": 205,
+      "itog": 3.6950025478593846
+     }
+    },
+    "dvizhok_godovyh_pct": 17.885410973026026
+   },
+   "M_BEZ_STOPOV": {
+    "cagr_pct": 23.566526912088914,
+    "maxDD_pct": 40.57349012090447,
+    "calmar": 0.5808355860406216,
+    "vosstanovlenie_max_sessiy": 646,
+    "itog": 8.76568016890127,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-13",
+     "dno": "2020-06-11",
+     "glubina_pct": 40.57349012090447
+    },
+    "sdelok": 333,
+    "ekspoziciya_pct": 55.54453116723338,
+    "hudshiy_mesyac_pct": -22.37124409225142,
+    "dolya_stopov": 0.0,
+    "hudshaya_sdelka_pct": -44.70945895653726,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": -0.8762341811404117,
+      "maxDD_pct": 31.611885726142685,
+      "calmar": -0.02771850400609843,
+      "vosstanovlenie_max_sessiy": 390,
+      "itog": 0.9689743051249518
+     },
+     "P2": {
+      "cagr_pct": 17.008501275691334,
+      "maxDD_pct": 27.279924996484894,
+      "calmar": 0.6234804999604263,
+      "vosstanovlenie_max_sessiy": 287,
+      "itog": 1.6000687188236293
+     },
+     "P3": {
+      "cagr_pct": 60.35206645338158,
+      "maxDD_pct": 29.31694353145421,
+      "calmar": 2.058607043692318,
+      "vosstanovlenie_max_sessiy": 139,
+      "itog": 5.6540696597821745
+     }
+    },
+    "dvizhok_godovyh_pct": 23.566526912088914
+   },
+   "M_TREYL_ATR": {
+    "cagr_pct": 10.949820370264973,
+    "maxDD_pct": 27.81976185746907,
+    "calmar": 0.393598637772852,
+    "vosstanovlenie_max_sessiy": 651,
+    "itog": 2.9036315091907494,
+    "hudshaya_prosadka": {
+     "pik": "2018-06-06",
+     "dno": "2020-06-09",
+     "glubina_pct": 27.81976185746907
+    },
+    "sdelok": 352,
+    "ekspoziciya_pct": 25.94361057658566,
+    "hudshiy_mesyac_pct": -9.08188421769458,
+    "dolya_stopov": 0.8380681818181818,
+    "hudshaya_sdelka_pct": -23.66235310043654,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": -1.5553836330156612,
+      "maxDD_pct": 23.808030784552713,
+      "calmar": -0.06533020925127649,
+      "vosstanovlenie_max_sessiy": 395,
+      "itog": 0.9454089445457948
+     },
+     "P2": {
+      "cagr_pct": 15.16507249325758,
+      "maxDD_pct": 12.599329995152297,
+      "calmar": 1.2036411856100662,
+      "vosstanovlenie_max_sessiy": 287,
+      "itog": 1.5258107354825186
+     },
+     "P3": {
+      "cagr_pct": 21.19391650309266,
+      "maxDD_pct": 19.810692250770103,
+      "calmar": 1.0698221059018664,
+      "vosstanovlenie_max_sessiy": 179,
+      "itog": 2.0242668351861264
+     }
+    },
+    "dvizhok_godovyh_pct": 10.949820370264973
+   }
+  }
+ },
+ "krizisy": {
+  "2018_Q4": {
+   "M": {
+    "dohod_pct": -5.426940343068132,
+    "maxDD_pct": 5.426940343068132
+   },
+   "M_BEZ_TREYLA": {
+    "dohod_pct": -5.426940343068132,
+    "maxDD_pct": 5.426940343068132
+   },
+   "M_BEZ_STOPOV": {
+    "dohod_pct": -13.466416463141806,
+    "maxDD_pct": 16.080370820545
+   },
+   "M_TREYL_ATR": {
+    "dohod_pct": -5.426940343068132,
+    "maxDD_pct": 5.426940343068132
+   }
+  },
+  "2020_covid": {
+   "M": {
+    "dohod_pct": 0.0,
+    "maxDD_pct": -0.0
+   },
+   "M_BEZ_TREYLA": {
+    "dohod_pct": 0.0,
+    "maxDD_pct": -0.0
+   },
+   "M_BEZ_STOPOV": {
+    "dohod_pct": 0.0,
+    "maxDD_pct": -0.0
+   },
+   "M_TREYL_ATR": {
+    "dohod_pct": 0.0,
+    "maxDD_pct": -0.0
+   }
+  },
+  "2022_bear": {
+   "M": {
+    "dohod_pct": -2.0811907221015225,
+    "maxDD_pct": 4.664890210259864
+   },
+   "M_BEZ_TREYLA": {
+    "dohod_pct": 3.0217487624631723,
+    "maxDD_pct": 7.6565664849068344
+   },
+   "M_BEZ_STOPOV": {
+    "dohod_pct": -2.930331140530107,
+    "maxDD_pct": 11.285541451133241
+   },
+   "M_TREYL_ATR": {
+    "dohod_pct": -1.6320064292360992,
+    "maxDD_pct": 4.870052202515662
+   }
+  },
+  "2025_fevral": {
+   "M": {
+    "dohod_pct": -6.644000449508914,
+    "maxDD_pct": 6.644000449508914
+   },
+   "M_BEZ_TREYLA": {
+    "dohod_pct": -6.644000449508914,
+    "maxDD_pct": 6.644000449508914
+   },
+   "M_BEZ_STOPOV": {
+    "dohod_pct": -11.70479318850457,
+    "maxDD_pct": 12.736734889794866
+   },
+   "M_TREYL_ATR": {
+    "dohod_pct": -6.644000449508914,
+    "maxDD_pct": 6.644000449508914
+   }
+  }
+ }
+}
