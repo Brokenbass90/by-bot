@@ -6,6 +6,7 @@ heartbeat PID, source errors, clock and account-lock inode are checked instead.
 After a complete rollback, legacy health is observed without restart authority.
 """
 import argparse
+from decimal import Decimal, InvalidOperation
 import fcntl
 import hashlib
 import json
@@ -42,6 +43,37 @@ def assess(v, now_ms, max_age_ms=90_000):
             return fail('OWNER_MODE_UNKNOWN')
         if type(h['account_lock_inode']) is not int or h['account_lock_inode'] != v['lock_inode']:
             return fail('OWNER_LOCK_INODE_CONFLICT')
+        if h['mode'] == 'EXACT_GO_SCOPED_MANAGEMENT':
+            # A running process does not prove custody or native protection.
+            # Report the observed uncertainty through the existing alert path;
+            # do not invent a grace period, repair state, restart or trade.
+            state = h.get('state')
+            if not isinstance(state, dict) or type(state.get('ownership_conflict')) is not bool:
+                return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+            if state['ownership_conflict']:
+                return fail('OWNER_CUSTODY_CONFLICT')
+            held, entries = state.get('held'), state.get('entries')
+            if not isinstance(held, dict) or not isinstance(entries, dict):
+                return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+            for symbol, raw_qty in held.items():
+                if not isinstance(raw_qty, str):
+                    return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+                try:
+                    qty = Decimal(raw_qty)
+                except InvalidOperation:
+                    return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+                if not qty.is_finite() or qty < 0:
+                    return fail('OWNER_EXPOSURE_SOURCE_INCOMPLETE')
+                if qty:
+                    entry = entries.get(symbol)
+                    try:
+                        raw_protected = entry.get('protected') if isinstance(entry, dict) else None
+                        protected = Decimal(raw_protected) if isinstance(raw_protected, str) else None
+                    except (KeyError, TypeError, ValueError, InvalidOperation):
+                        protected = None
+                    if (protected is None or not protected.is_finite() or protected != qty
+                            or not isinstance(entry.get('stop_id'), str) or not entry['stop_id']):
+                        return fail('OWNER_NATIVE_PROTECTION_UNCONFIRMED')
         return dict(result, status='HEALTHY', reason='CURRENT_OWNER_HEALTHY',
                     owner='KITY_MICRO', pid=h['pid'], age_ms=now_ms-h['at_ms'])
     except (KeyError, TypeError, ValueError, OverflowError):

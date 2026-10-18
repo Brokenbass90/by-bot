@@ -1,3 +1,4 @@
+import pytest
 from scripts.bybit_account_health_v1 import assess
 
 
@@ -44,9 +45,49 @@ def test_unknown_or_corrupt_new_heartbeat_is_not_zero_or_healthy():
 
 def test_active_micro_management_has_same_health_rules():
     v = observation(); v['heartbeat']['mode'] = 'EXACT_GO_SCOPED_MANAGEMENT'
+    v['heartbeat']['state'] = dict(ownership_conflict=False, held={}, entries={})
     assert assess(v, 110_000)['status'] == 'HEALTHY'
 
 
 def test_missing_new_owner_never_invokes_old_owner():
     v = observation(); v['owner']['ActiveState'] = 'inactive'
     assert assess(v, 110_000)['reason'] == 'OWNER_NOT_RUNNING'
+
+
+def active_observation():
+    v = observation(); v['heartbeat']['mode'] = 'EXACT_GO_SCOPED_MANAGEMENT'
+    v['heartbeat']['state'] = dict(ownership_conflict=False, held={'BTWUSDT': '10'},
+        entries={'BTWUSDT': dict(protected='10', stop_id='owned-native')})
+    return v
+
+
+def test_active_owned_native_protection_can_be_healthy():
+    assert assess(active_observation(), 110_000)['status'] == 'HEALTHY'
+
+
+def test_actual_incident_conflict_is_not_hidden_by_a_fresh_process_heartbeat():
+    v = active_observation(); v['heartbeat']['state']['ownership_conflict'] = True
+    out = assess(v, 110_000)
+    assert out['status'] == 'UNHEALTHY' and out['reason'] == 'OWNER_CUSTODY_CONFLICT'
+    assert out['orders_allowed'] is False and out['restart_allowed'] is False
+
+
+@pytest.mark.parametrize('entry', [dict(protected='0', stop_id=None),
+    dict(protected='9', stop_id='owned-native'), dict(protected='10', stop_id=None), None])
+def test_unconfirmed_native_guard_uses_existing_alert_path_without_money_actions(entry):
+    v = active_observation(); v['heartbeat']['state']['entries']['BTWUSDT'] = entry
+    out = assess(v, 110_000)
+    assert out['reason'] == 'OWNER_NATIVE_PROTECTION_UNCONFIRMED'
+    assert out['status'] == 'UNHEALTHY'
+    assert not out['orders_allowed'] and not out['restart_allowed']
+
+
+@pytest.mark.parametrize('value', ['NaN', 'Infinity', '-1', True, None])
+def test_unknown_or_invalid_active_quantity_is_not_flat_or_healthy(value):
+    v = active_observation(); v['heartbeat']['state']['held']['BTWUSDT'] = value
+    assert assess(v, 110_000)['reason'] == 'OWNER_EXPOSURE_SOURCE_INCOMPLETE'
+
+
+def test_active_missing_lifecycle_is_unknown_instead_of_healthy():
+    v = observation(); v['heartbeat']['mode'] = 'EXACT_GO_SCOPED_MANAGEMENT'
+    assert assess(v, 110_000)['reason'] == 'OWNER_EXPOSURE_SOURCE_INCOMPLETE'
