@@ -1,0 +1,2023 @@
+{
+ "prereg": "PREREG_ALPACA_U2_NEZAVISIMAYA_VSELENNAYA_2026_10_18",
+ "vselennaya": "U2",
+ "ruki": {
+  "20bps": {
+   "MONTHLY": {
+    "godovyh_pct": 11.66454242936279,
+    "dohod_pct": 210.13435739376246,
+    "maxDD_pct": 19.296184496572543,
+    "sdelok": 360,
+    "krasnyh": 36,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 18.00633126575266,
+    "dozapolneno": 0,
+    "sekund": 0.7,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": 1.0640596123736579,
+      "maxDD_pct": 16.52667697483202
+     },
+     "P2": {
+      "godovyh_pct": 20.107743110781673,
+      "maxDD_pct": 9.948402051466921
+     },
+     "P3": {
+      "godovyh_pct": 16.252643811150303,
+      "maxDD_pct": 15.055212216630453
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 275,
+      "pnl": 1509.5842605662997
+     },
+     "protective_stop_gap_open": {
+      "n": 58,
+      "pnl": 343.4883866141557
+     },
+     "monthly_rotation_next_open": {
+      "n": 27,
+      "pnl": 287.0314931263616
+     }
+    }
+   },
+   "M_H2": {
+    "godovyh_pct": 8.597326969737274,
+    "dohod_pct": 133.05516371076828,
+    "maxDD_pct": 19.313796287805708,
+    "sdelok": 303,
+    "krasnyh": 31,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 15.165446908240293,
+    "dozapolneno": 0,
+    "sekund": 0.6,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -1.3785338405981284,
+      "maxDD_pct": 16.544893148745043
+     },
+     "P2": {
+      "godovyh_pct": 9.660156331029835,
+      "maxDD_pct": 9.964415150130257
+     },
+     "P3": {
+      "godovyh_pct": 18.6280466015744,
+      "maxDD_pct": 14.311678702837938
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 232,
+      "pnl": 1141.6915705765648
+     },
+     "protective_stop_gap_open": {
+      "n": 45,
+      "pnl": -38.57526925275519
+     },
+     "monthly_rotation_next_open": {
+      "n": 26,
+      "pnl": 256.56255089350225
+     }
+    }
+   },
+   "EVENT": {
+    "godovyh_pct": -1.069631957507089,
+    "dohod_pct": -10.445400542993665,
+    "maxDD_pct": 52.18513144543818,
+    "sdelok": 1029,
+    "krasnyh": 54,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 46.29363396524872,
+    "dozapolneno": 838,
+    "sekund": 71.6,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -9.974240707073644,
+      "maxDD_pct": 40.958908716308514
+     },
+     "P2": {
+      "godovyh_pct": -2.1400785096604813,
+      "maxDD_pct": 39.621908658367744
+     },
+     "P3": {
+      "godovyh_pct": 9.21810762092532,
+      "maxDD_pct": 30.151561515148995
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_gap_open": {
+      "n": 126,
+      "pnl": -481.81564619050727
+     },
+     "protective_stop_intraday": {
+      "n": 664,
+      "pnl": -205.92710011381544
+     },
+     "monthly_rotation_next_open": {
+      "n": 239,
+      "pnl": 592.2053022839684
+     }
+    }
+   },
+   "E_H1": {
+    "godovyh_pct": 8.439000634177551,
+    "dohod_pct": 129.59292555010973,
+    "maxDD_pct": 27.316952495835356,
+    "sdelok": 570,
+    "krasnyh": 47,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 26.33175110215139,
+    "dozapolneno": 306,
+    "sekund": 25.7,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -2.2933933302164977,
+      "maxDD_pct": 22.56906708490316
+     },
+     "P2": {
+      "godovyh_pct": 16.297414501846564,
+      "maxDD_pct": 9.067586022702233
+     },
+     "P3": {
+      "godovyh_pct": 13.169712243897358,
+      "maxDD_pct": 20.80139548287686
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_gap_open": {
+      "n": 68,
+      "pnl": -97.70171166663643
+     },
+     "protective_stop_intraday": {
+      "n": 394,
+      "pnl": 1097.9792459820749
+     },
+     "monthly_rotation_next_open": {
+      "n": 108,
+      "pnl": 318.65875890369995
+     }
+    }
+   },
+   "WEEKLY_DYN": {
+    "godovyh_pct": -0.3045911790911404,
+    "dohod_pct": -3.0810246434441524,
+    "maxDD_pct": 26.041405383551485,
+    "sdelok": 400,
+    "krasnyh": 56,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 21.335920923894314,
+    "dozapolneno": 400,
+    "sekund": 30.8,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -2.1942010286641778,
+      "maxDD_pct": 15.299366468251641
+     },
+     "P2": {
+      "godovyh_pct": -2.2275025872396603,
+      "maxDD_pct": 10.534485305526353
+     },
+     "P3": {
+      "godovyh_pct": 3.1699613239123847,
+      "maxDD_pct": 26.041405383551485
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 344,
+      "pnl": 251.64875049046447
+     },
+     "protective_stop_gap_open": {
+      "n": 56,
+      "pnl": -282.4589969249049
+     }
+    }
+   },
+   "W_MR": {
+    "godovyh_pct": 6.736770870851316,
+    "dohod_pct": 95.19388479789093,
+    "maxDD_pct": 29.63496351714815,
+    "sdelok": 600,
+    "krasnyh": 51,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 27.79650824324374,
+    "dozapolneno": 331,
+    "sekund": 29.5,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -1.358799311984693,
+      "maxDD_pct": 15.216099981067588
+     },
+     "P2": {
+      "godovyh_pct": 12.36003934958767,
+      "maxDD_pct": 13.881159497920093
+     },
+     "P3": {
+      "godovyh_pct": 10.24608793793449,
+      "maxDD_pct": 29.63496351714815
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 419,
+      "pnl": 816.066459554142
+     },
+     "monthly_rotation_next_open": {
+      "n": 96,
+      "pnl": 254.21420818973036
+     },
+     "protective_stop_gap_open": {
+      "n": 85,
+      "pnl": -98.8558794750229
+     }
+    }
+   }
+  },
+  "10bps": {
+   "MONTHLY": {
+    "godovyh_pct": 13.205040258621326,
+    "dohod_pct": 256.93912682813345,
+    "maxDD_pct": 18.34611990328665,
+    "sdelok": 359,
+    "krasnyh": 36,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 17.6883834767512,
+    "dozapolneno": 0,
+    "sekund": 0.6,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": 1.8199065005289894,
+      "maxDD_pct": 15.919867462341353
+     },
+     "P2": {
+      "godovyh_pct": 22.829123978753273,
+      "maxDD_pct": 9.841561025045209
+     },
+     "P3": {
+      "godovyh_pct": 17.71580667581285,
+      "maxDD_pct": 14.877000607835278
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 274,
+      "pnl": 1822.7330809219645
+     },
+     "protective_stop_gap_open": {
+      "n": 58,
+      "pnl": 485.11754754713826
+     },
+     "monthly_rotation_next_open": {
+      "n": 27,
+      "pnl": 321.07328059973423
+     }
+    }
+   },
+   "M_H2": {
+    "godovyh_pct": 9.724694716179005,
+    "dohod_pct": 159.10252155929018,
+    "maxDD_pct": 18.637880876135384,
+    "sdelok": 302,
+    "krasnyh": 31,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 14.790841782369254,
+    "dozapolneno": 0,
+    "sekund": 0.6,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -0.800081004367581,
+      "maxDD_pct": 16.220297781603353
+     },
+     "P2": {
+      "godovyh_pct": 11.312748157170716,
+      "maxDD_pct": 9.090241537229726
+     },
+     "P3": {
+      "godovyh_pct": 19.905679147691323,
+      "maxDD_pct": 13.806079276081263
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 232,
+      "pnl": 1329.842707270629
+     },
+     "protective_stop_gap_open": {
+      "n": 45,
+      "pnl": 44.84545456049193
+     },
+     "monthly_rotation_next_open": {
+      "n": 25,
+      "pnl": 259.55186599096237
+     }
+    }
+   },
+   "EVENT": {
+    "godovyh_pct": 1.820314412431534,
+    "dohod_pct": 20.32927954580963,
+    "maxDD_pct": 45.8513604113996,
+    "sdelok": 1044,
+    "krasnyh": 51,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 46.3338019271362,
+    "dozapolneno": 856,
+    "sekund": 72.8,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -8.470042527014376,
+      "maxDD_pct": 37.90904797603388
+     },
+     "P2": {
+      "godovyh_pct": 6.286390092341354,
+      "maxDD_pct": 36.540774507468434
+     },
+     "P3": {
+      "godovyh_pct": 8.86087947084253,
+      "maxDD_pct": 29.395032822334944
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_gap_open": {
+      "n": 125,
+      "pnl": -280.3780280325193
+     },
+     "protective_stop_intraday": {
+      "n": 674,
+      "pnl": -93.19067708364747
+     },
+     "monthly_rotation_next_open": {
+      "n": 245,
+      "pnl": 594.2582889952771
+     }
+    }
+   },
+   "E_H1": {
+    "godovyh_pct": 10.2575165599877,
+    "dohod_pct": 172.30411588037376,
+    "maxDD_pct": 24.70890114687643,
+    "sdelok": 569,
+    "krasnyh": 45,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 26.343318351234675,
+    "dozapolneno": 305,
+    "sekund": 26.9,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -0.7278411403018326,
+      "maxDD_pct": 21.920350328078786
+     },
+     "P2": {
+      "godovyh_pct": 17.616619206157914,
+      "maxDD_pct": 8.864498492042816
+     },
+     "P3": {
+      "godovyh_pct": 15.69146158835617,
+      "maxDD_pct": 20.50517257266984
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_gap_open": {
+      "n": 69,
+      "pnl": -79.87341382299282
+     },
+     "protective_stop_intraday": {
+      "n": 390,
+      "pnl": 1475.180948892027
+     },
+     "monthly_rotation_next_open": {
+      "n": 110,
+      "pnl": 367.36252283780124
+     }
+    }
+   },
+   "WEEKLY_DYN": {
+    "godovyh_pct": 0.7810035030893614,
+    "dohod_pct": 8.308100495294513,
+    "maxDD_pct": 25.51609650369744,
+    "sdelok": 400,
+    "krasnyh": 51,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 21.130911438642933,
+    "dozapolneno": 400,
+    "sekund": 33.4,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -1.89333472197728,
+      "maxDD_pct": 13.949309291224488
+     },
+     "P2": {
+      "godovyh_pct": -1.1362734258355767,
+      "maxDD_pct": 10.216641333955955
+     },
+     "P3": {
+      "godovyh_pct": 5.068300455087327,
+      "maxDD_pct": 25.51609650369744
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 347,
+      "pnl": 346.6333477877096
+     },
+     "protective_stop_gap_open": {
+      "n": 53,
+      "pnl": -263.5523428347648
+     }
+    }
+   },
+   "W_MR": {
+    "godovyh_pct": 9.37757644271715,
+    "dohod_pct": 150.81572372298976,
+    "maxDD_pct": 26.317104929783508,
+    "sdelok": 601,
+    "krasnyh": 50,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 27.590267192229618,
+    "dozapolneno": 332,
+    "sekund": 28.9,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": 0.09132611924171918,
+      "maxDD_pct": 13.52382118913875
+     },
+     "P2": {
+      "godovyh_pct": 15.601132624844528,
+      "maxDD_pct": 11.423445816174072
+     },
+     "P3": {
+      "godovyh_pct": 13.678632610248087,
+      "maxDD_pct": 26.317104929783508
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 423,
+      "pnl": 1145.3105218344513
+     },
+     "monthly_rotation_next_open": {
+      "n": 97,
+      "pnl": 298.5033064393452
+     },
+     "protective_stop_gap_open": {
+      "n": 81,
+      "pnl": 100.71419367067239
+     }
+    }
+   }
+  },
+  "30bps": {
+   "MONTHLY": {
+    "godovyh_pct": 10.625289287163465,
+    "dohod_pct": 181.76724905685705,
+    "maxDD_pct": 21.643768708169976,
+    "sdelok": 360,
+    "krasnyh": 36,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 18.189308529758268,
+    "dozapolneno": 0,
+    "sekund": 0.7,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -0.04993435183613393,
+      "maxDD_pct": 18.597582951588453
+     },
+     "P2": {
+      "godovyh_pct": 19.64881912798544,
+      "maxDD_pct": 10.060351279507973
+     },
+     "P3": {
+      "godovyh_pct": 14.871961694503199,
+      "maxDD_pct": 15.23241875832394
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 274,
+      "pnl": 1335.5355153725957
+     },
+     "protective_stop_gap_open": {
+      "n": 58,
+      "pnl": 228.0979709270282
+     },
+     "monthly_rotation_next_open": {
+      "n": 28,
+      "pnl": 291.12472546762825
+     }
+    }
+   },
+   "M_H2": {
+    "godovyh_pct": 7.732316812628071,
+    "dohod_pct": 114.69838412672377,
+    "maxDD_pct": 21.37116831036553,
+    "sdelok": 303,
+    "krasnyh": 31,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 15.250430929776856,
+    "dozapolneno": 0,
+    "sekund": 0.8,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -2.435056397192592,
+      "maxDD_pct": 18.314384909725057
+     },
+     "P2": {
+      "godovyh_pct": 9.468744829181052,
+      "maxDD_pct": 9.558605580065771
+     },
+     "P3": {
+      "godovyh_pct": 17.428099964773548,
+      "maxDD_pct": 14.80302707784954
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 232,
+      "pnl": 952.9229977643978
+     },
+     "protective_stop_gap_open": {
+      "n": 44,
+      "pnl": -35.48454854514222
+     },
+     "monthly_rotation_next_open": {
+      "n": 27,
+      "pnl": 257.803624479829
+     }
+    }
+   },
+   "EVENT": {
+    "godovyh_pct": -4.931824910216309,
+    "dohod_pct": -40.47921121733539,
+    "maxDD_pct": 65.61746846857038,
+    "sdelok": 1040,
+    "krasnyh": 59,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 45.87951777493899,
+    "dozapolneno": 851,
+    "sekund": 74.2,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -14.191312191667116,
+      "maxDD_pct": 49.70244461976423
+     },
+     "P2": {
+      "godovyh_pct": -5.244841724664462,
+      "maxDD_pct": 42.87537739083723
+     },
+     "P3": {
+      "godovyh_pct": 5.1473373094649055,
+      "maxDD_pct": 32.40214641981966
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_gap_open": {
+      "n": 129,
+      "pnl": -416.81120755985455
+     },
+     "protective_stop_intraday": {
+      "n": 676,
+      "pnl": -372.21772228043704
+     },
+     "monthly_rotation_next_open": {
+      "n": 235,
+      "pnl": 390.3532726253526
+     }
+    }
+   },
+   "E_H1": {
+    "godovyh_pct": 5.715246297808485,
+    "dohod_pct": 76.85661673780719,
+    "maxDD_pct": 29.41971103802652,
+    "sdelok": 569,
+    "krasnyh": 50,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 26.078580772401306,
+    "dozapolneno": 303,
+    "sekund": 26.0,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -5.0601313516082875,
+      "maxDD_pct": 23.49390091548007
+     },
+     "P2": {
+      "godovyh_pct": 15.378699927127482,
+      "maxDD_pct": 9.984202504151618
+     },
+     "P3": {
+      "godovyh_pct": 9.121245631389051,
+      "maxDD_pct": 21.15649446753799
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_gap_open": {
+      "n": 71,
+      "pnl": -166.4937628798417
+     },
+     "protective_stop_intraday": {
+      "n": 391,
+      "pnl": 725.7753928153627
+     },
+     "monthly_rotation_next_open": {
+      "n": 107,
+      "pnl": 227.57299031749454
+     }
+    }
+   },
+   "WEEKLY_DYN": {
+    "godovyh_pct": -1.0212159727775783,
+    "dohod_pct": -9.994765821676577,
+    "maxDD_pct": 27.267858062144978,
+    "sdelok": 400,
+    "krasnyh": 56,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 21.25610440123551,
+    "dozapolneno": 400,
+    "sekund": 32.7,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -3.082957991075408,
+      "maxDD_pct": 17.39741694098178
+     },
+     "P2": {
+      "godovyh_pct": -2.045911079083218,
+      "maxDD_pct": 12.323024501179336
+     },
+     "P3": {
+      "godovyh_pct": 1.860300143154614,
+      "maxDD_pct": 27.267858062144978
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 344,
+      "pnl": 168.7390931741498
+     },
+     "protective_stop_gap_open": {
+      "n": 56,
+      "pnl": -268.68675139091744
+     }
+    }
+   },
+   "W_MR": {
+    "godovyh_pct": 5.072143481319635,
+    "dohod_pct": 66.12513160541833,
+    "maxDD_pct": 31.191687968664937,
+    "sdelok": 601,
+    "krasnyh": 50,
+    "mesyacev": 124,
+    "ekspoziciya_pct": 27.820968522903595,
+    "dozapolneno": 331,
+    "sekund": 30.9,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": -2.9407153765047434,
+      "maxDD_pct": 17.995122081067493
+     },
+     "P2": {
+      "godovyh_pct": 11.249448486753133,
+      "maxDD_pct": 14.333032511039745
+     },
+     "P3": {
+      "godovyh_pct": 8.081439082876884,
+      "maxDD_pct": 31.191687968664937
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 419,
+      "pnl": 592.8289826598144
+     },
+     "monthly_rotation_next_open": {
+      "n": 96,
+      "pnl": 247.62370017708264
+     },
+     "protective_stop_gap_open": {
+      "n": 86,
+      "pnl": -162.09107642623292
+     }
+    }
+   }
+  }
+ },
+ "kontroli": {
+  "R1": {
+   "godovyh": [
+    0.7647808295551339,
+    3.7202404126945865,
+    -1.099540695249479,
+    1.1791614557500107,
+    0.25856427982635655,
+    3.9878455197656093,
+    3.8228421540519752,
+    0.512448306447788,
+    1.5020664468216038,
+    -1.9006781315746624,
+    0.6569015135488687,
+    2.8500026457182415,
+    -1.4467860355356077,
+    -1.3262518023092196,
+    4.457845480989242,
+    6.229136682224112,
+    1.988709396445687,
+    -1.3028661778620942,
+    2.005405100735924,
+    4.291454866586331,
+    6.278789947182473,
+    3.403385038039475,
+    -0.541865402047681,
+    0.2712329880772968,
+    3.2267408897238337,
+    2.26439657312163,
+    4.697391294368591,
+    1.2758735383521236,
+    2.373843111210472,
+    0.7190608008318167,
+    -0.17567326353751245,
+    -1.7036392463504302,
+    2.225362248760221,
+    3.272117944400854,
+    6.780731334912549,
+    2.279759258199743,
+    0.13016596175552397,
+    2.4209633735497116,
+    4.008800022081549,
+    1.7797521127874472,
+    2.9023494842648656,
+    0.460654194110921,
+    0.6008684480055981,
+    -0.5982342943175789,
+    4.842787665368697,
+    5.328107332816079,
+    1.239446528540955,
+    -0.9207465617944166,
+    1.759857305831125,
+    1.0729188919774035,
+    3.8003646632546184,
+    0.013505837720417802,
+    3.29615641370844,
+    3.0256940930770915,
+    4.235554180065981,
+    2.145770209805442,
+    4.438705644867036,
+    5.834572772067936,
+    1.3021327105831482,
+    -1.138997545867071,
+    3.9073796766863955,
+    -1.5718731801282027,
+    4.334337343926453,
+    1.8333161751088234,
+    1.409874102958053,
+    5.103813348879882,
+    2.385781529188691,
+    -0.002754711204044913,
+    6.115880759203929,
+    5.981235133244134,
+    3.283669306811965,
+    2.5680294700030526,
+    -0.19263165259515436,
+    4.94160667983512,
+    3.5117488362859772,
+    3.797981680927842,
+    -0.1711495910724059,
+    1.3442659523821066,
+    -2.140158118893154,
+    -0.20638597436211104,
+    0.5759166115453684,
+    4.052637756713029,
+    4.723369751915785,
+    -2.6720027012236636,
+    0.9284293433169388,
+    3.557546684056967,
+    6.186856826396148,
+    -2.1222790658403268,
+    3.1502035866025624,
+    0.03859587936283493,
+    1.4256256149445035,
+    5.702899114638638,
+    1.3973242143199283,
+    3.9416405666349297,
+    -0.9564253390419553,
+    -2.22600637130006,
+    5.119971634850473,
+    2.5524076140295504,
+    3.239107943322983,
+    -1.2431190840048956
+   ],
+   "maxDD": [
+    17.192712623216323,
+    23.036877982677662,
+    23.928483706405512,
+    30.77788532947374,
+    25.426601901426636,
+    29.928911533639834,
+    16.977247090252302,
+    22.309837210773065,
+    30.796600095208447,
+    30.11803513349436,
+    15.470566915420147,
+    18.133100625980838,
+    27.948269933650238,
+    29.81317379494728,
+    20.842729099672972,
+    19.23232190227718,
+    14.66176359273067,
+    27.836843004578792,
+    25.10389188113087,
+    22.298911144751266,
+    10.330255606296724,
+    24.247992112419205,
+    30.90511139400264,
+    29.451524215745415,
+    18.022510555436387,
+    24.517244000540128,
+    14.837871397729174,
+    21.675142542183657,
+    19.64961830735781,
+    16.220700427259736,
+    29.549645215064714,
+    37.45705973840645,
+    13.89514437196132,
+    12.866404487488802,
+    23.698077460947598,
+    24.648386213512275,
+    23.86044074613486,
+    24.301605782295166,
+    20.936509517066803,
+    16.033462461477555,
+    22.505964923833954,
+    32.6529228193166,
+    27.673146004062577,
+    26.344650425876893,
+    16.852834432032182,
+    18.460876092444767,
+    26.245491432331658,
+    31.66676168251894,
+    23.433498854854808,
+    19.2227325981851,
+    14.231969251798704,
+    35.64753442361431,
+    23.25805288218401,
+    27.41342882618779,
+    16.747356488707254,
+    28.129247266906532,
+    18.282423189813933,
+    11.714364413482514,
+    21.604849074188913,
+    32.53257994432608,
+    22.14360727064323,
+    26.82793179696217,
+    28.436190194205746,
+    16.493671705882218,
+    21.287977584564022,
+    14.301147209765464,
+    20.464697043132794,
+    19.605962795161048,
+    21.399955637097513,
+    16.131694278592658,
+    17.642985801016597,
+    22.574662826821502,
+    20.165265544130595,
+    17.641728978998238,
+    18.069289742212614,
+    18.488078189403456,
+    24.3094898050373,
+    17.806985517725394,
+    32.51571454945593,
+    24.56811822892273,
+    17.668618174261784,
+    15.494737729734009,
+    13.553499834052229,
+    36.30174343130239,
+    18.87547681837799,
+    14.884601694375855,
+    13.987299369669326,
+    30.160266442068504,
+    23.090451864792616,
+    29.08310973308833,
+    23.73330272690347,
+    19.148889349354224,
+    16.447893888658307,
+    22.713523588933292,
+    22.993443867030294,
+    32.86964817259385,
+    19.43278487570802,
+    19.919689663333916,
+    20.695724686702157,
+    32.833642603292056
+   ]
+  }
+ },
+ "simvolov": 905,
+ "isklyucheno": {
+  "vselennaya58": 56,
+  "karantin": 0,
+  "ne_CS": 0,
+  "pusto": 0
+ },
+ "dopustimyh_srednee": 486.26612903225805,
+ "spy_bh_godovyh_pct": 13.49065172402366,
+ "mesyachnye_resheniya": [
+  {
+   "sig": "2016-05-31",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2016-06-30",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2016-07-29",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2016-08-31",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2016-09-30",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2016-10-31",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2016-11-30",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2016-12-30",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2017-01-31",
+   "picks": [
+    "CSX",
+    "STM",
+    "FCX",
+    "CF"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-02-28",
+   "picks": [
+    "ALNY",
+    "STM",
+    "MASI",
+    "COHR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-03-31",
+   "picks": [
+    "AAOI",
+    "VRTX",
+    "MU",
+    "JAZZ"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-04-28",
+   "picks": [
+    "EXAS",
+    "VRTX",
+    "NBIX",
+    "LRCX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-05-31",
+   "picks": [
+    "AAOI",
+    "W",
+    "TTWO",
+    "VEEV"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-06-30",
+   "picks": [
+    "WTW",
+    "W",
+    "ETSY",
+    "FSLR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-07-31",
+   "picks": [
+    "AAOI",
+    "NRG",
+    "FOLD",
+    "BA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-08-31",
+   "picks": [
+    "WTW",
+    "RACE",
+    "BA",
+    "ATI"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-09-29",
+   "picks": [
+    "PBF",
+    "CF",
+    "AA",
+    "FOLD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-10-31",
+   "picks": [
+    "TEAM",
+    "STM",
+    "EXAS",
+    "OSK"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-11-30",
+   "picks": [
+    "NTAP",
+    "ANET",
+    "NTNX",
+    "MRVL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-12-29",
+   "picks": [
+    "CF",
+    "XPO",
+    "GWW",
+    "AKAM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-01-31",
+   "picks": [
+    "WTW",
+    "STX",
+    "MELI",
+    "BA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-02-28",
+   "picks": [
+    "ETSY",
+    "PSTG",
+    "THC",
+    "HPE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-03-29",
+   "picks": [
+    "DXCM",
+    "NTNX",
+    "ETSY",
+    "THC"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-04-30",
+   "picks": [
+    "VLO",
+    "OKTA",
+    "WTW",
+    "DXCM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-05-31",
+   "picks": [
+    "MDGL",
+    "THC",
+    "TWLO",
+    "PBF"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-06-29",
+   "picks": [
+    "ETSY",
+    "FIVE",
+    "WTW",
+    "AAOI"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-07-31",
+   "picks": [
+    "CLF",
+    "HCA",
+    "NSC",
+    "IDXX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-08-31",
+   "picks": [
+    "TEAM",
+    "IAC",
+    "MOH",
+    "TWLO"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-09-28",
+   "picks": [
+    "CLF",
+    "W",
+    "FIVE",
+    "TTD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-10-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2018-11-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2018-12-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2019-01-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2019-02-28",
+   "picks": [
+    "TTD",
+    "FLEX",
+    "IONS",
+    "KEYS"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-03-29",
+   "picks": [
+    "CVNA",
+    "ZS",
+    "TTD",
+    "SNAP"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-04-30",
+   "picks": [
+    "MRVL",
+    "CVNA",
+    "LITE",
+    "VEEV"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-05-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2019-06-28",
+   "picks": [
+    "SNAP",
+    "PODD",
+    "BX",
+    "VEEV"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-07-31",
+   "picks": [
+    "MANH",
+    "RGEN",
+    "FICO",
+    "HAS"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-08-30",
+   "picks": [
+    "PODD",
+    "TGT",
+    "MKTX",
+    "AU"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-09-30",
+   "picks": [
+    "SNX",
+    "KLAC",
+    "TER",
+    "FND"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-10-31",
+   "picks": [
+    "ROKU",
+    "BIIB",
+    "GNRC",
+    "LAD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-11-29",
+   "picks": [
+    "ALNY",
+    "THC",
+    "ROKU",
+    "STM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-12-31",
+   "picks": [
+    "AXSM",
+    "SWKS",
+    "THC",
+    "LITE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-01-31",
+   "picks": [
+    "PCG",
+    "APLS",
+    "DXCM",
+    "CPRT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-02-28",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2020-03-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2020-04-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2020-05-29",
+   "picks": [
+    "TWLO",
+    "PAAS",
+    "ETSY",
+    "SFM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-06-30",
+   "picks": [
+    "ZM",
+    "SPOT",
+    "ZS",
+    "SNAP"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-07-31",
+   "picks": [
+    "LAD",
+    "AG",
+    "CVNA",
+    "MELI"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-08-31",
+   "picks": [
+    "EAT",
+    "PINS",
+    "CVNA",
+    "FDX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-09-30",
+   "picks": [
+    "ZM",
+    "DKS",
+    "GH",
+    "FDX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-10-30",
+   "picks": [
+    "SNAP",
+    "TPR",
+    "FSLR",
+    "FLEX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-11-30",
+   "picks": [
+    "WCC",
+    "TPR",
+    "BBIO",
+    "NTRA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-12-31",
+   "picks": [
+    "RIOT",
+    "MSTR",
+    "CELH",
+    "BE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-01-29",
+   "picks": [
+    "MSTR",
+    "EXPI",
+    "AG",
+    "MRNA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-02-26",
+   "picks": [
+    "PBF",
+    "SNBR",
+    "OVV",
+    "LYFT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-03-31",
+   "picks": [
+    "WSM",
+    "NUE",
+    "MARA",
+    "SNBR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-04-30",
+   "picks": [
+    "MRNA",
+    "AA",
+    "STX",
+    "MTZ"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-05-28",
+   "picks": [
+    "AR",
+    "NUE",
+    "IT",
+    "DVN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-06-30",
+   "picks": [
+    "SAVA",
+    "MRNA",
+    "LC",
+    "NTNX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-07-30",
+   "picks": [
+    "MRNA",
+    "ALB",
+    "LC",
+    "DXCM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-08-31",
+   "picks": [
+    "LC",
+    "DKS",
+    "S",
+    "ALB"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-09-30",
+   "picks": [
+    "AR",
+    "DT",
+    "TEAM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-10-29",
+   "picks": [
+    "LC",
+    "MARA",
+    "DVN",
+    "BX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-11-30",
+   "picks": [
+    "ON",
+    "DLTR",
+    "SITM",
+    "BLDR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-12-31",
+   "picks": [
+    "CIEN",
+    "CF",
+    "MRVL",
+    "STX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-01-31",
+   "picks": [
+    "HAL",
+    "CVS",
+    "CNQ"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-02-28",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-03-31",
+   "picks": [
+    "CLF",
+    "EQT",
+    "CF",
+    "OXY"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-04-29",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-05-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-06-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-07-29",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-08-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-09-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-10-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-11-30",
+   "picks": [
+    "AXSM",
+    "AXON",
+    "ELF",
+    "CPRX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-12-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2023-01-31",
+   "picks": [
+    "W",
+    "MKTX",
+    "EXAS",
+    "SCCO"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-02-28",
+   "picks": [
+    "WST",
+    "BLDR",
+    "FTI",
+    "SPOT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-03-31",
+   "picks": [
+    "ONON",
+    "LNTH",
+    "ELF",
+    "IOT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-04-28",
+   "picks": [
+    "APLS",
+    "ELF",
+    "DKNG",
+    "APP"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-05-31",
+   "picks": [
+    "SMCI",
+    "APP",
+    "VRT",
+    "CELH"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-06-30",
+   "picks": [
+    "W",
+    "U",
+    "SMCI",
+    "PSTG"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-07-31",
+   "picks": [
+    "BBIO",
+    "RIOT",
+    "SMCI",
+    "SAIA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-08-31",
+   "picks": [
+    "ONTO",
+    "FN",
+    "XPO",
+    "CVNA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-09-29",
+   "picks": [
+    "PBF",
+    "CLS",
+    "VST",
+    "DELL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-10-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2023-11-30",
+   "picks": [
+    "AFRM",
+    "SNAP",
+    "VSCO",
+    "ZS"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-12-29",
+   "picks": [
+    "AFRM",
+    "S",
+    "SNAP",
+    "DOCN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-01-31",
+   "picks": [
+    "SMCI",
+    "NTNX",
+    "VRT",
+    "ACLX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-02-29",
+   "picks": [
+    "MSTR",
+    "CVNA",
+    "MOD",
+    "NTRA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-03-28",
+   "picks": [
+    "CVNA",
+    "HIMS",
+    "VST",
+    "MU"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-04-30",
+   "picks": [
+    "SMTC",
+    "AR",
+    "CPNG",
+    "CMG"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-05-31",
+   "picks": [
+    "INSM",
+    "HIMS",
+    "FSLR",
+    "VST"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-06-28",
+   "picks": [
+    "INSM",
+    "ASTS",
+    "ALNY",
+    "CRDO"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-07-31",
+   "picks": [
+    "ASTS",
+    "CRS",
+    "COLB",
+    "ZETA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-08-30",
+   "picks": [
+    "AFRM",
+    "CAVA",
+    "TLN",
+    "CRDO"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-09-30",
+   "picks": [
+    "APP",
+    "TLN",
+    "ACLX",
+    "ZETA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-10-31",
+   "picks": [
+    "MSTR",
+    "UAL",
+    "CVNA",
+    "SOFI"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-11-29",
+   "picks": [
+    "BE",
+    "RKLB",
+    "IONQ",
+    "AAOI"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-12-31",
+   "picks": [
+    "RKLB",
+    "GTLS",
+    "EAT",
+    "CLS"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-01-31",
+   "picks": [
+    "GH",
+    "HIMS",
+    "HOOD",
+    "EAT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-02-28",
+   "picks": [
+    "AXSM",
+    "BROS",
+    "SPOT",
+    "TPR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-03-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2025-04-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2025-05-30",
+   "picks": [
+    "ELF",
+    "AGX",
+    "NRG",
+    "STRL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-06-30",
+   "picks": [
+    "IREN",
+    "CRDO",
+    "ELF",
+    "CCJ"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-07-31",
+   "picks": [
+    "MP",
+    "ALAB",
+    "HIMS",
+    "CLS"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-08-29",
+   "picks": [
+    "BE",
+    "IREN",
+    "ALAB",
+    "RDDT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-09-30",
+   "picks": [
+    "SNDK",
+    "SATS",
+    "IREN",
+    "BE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-10-31",
+   "picks": [
+    "SNDK",
+    "BE",
+    "CLS",
+    "INSM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-11-28",
+   "picks": [
+    "GH",
+    "WDC",
+    "WULF",
+    "CIEN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-12-31",
+   "picks": [
+    "AXTI",
+    "VSCO",
+    "LITE",
+    "AA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-01-30",
+   "picks": [
+    "MU",
+    "VICR",
+    "VIAV",
+    "MKSI"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-02-27",
+   "picks": [
+    "AZN",
+    "LITE",
+    "AXTI",
+    "VICR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-03-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2026-04-30",
+   "picks": [
+    "BE",
+    "MRVL",
+    "AAOI",
+    "VICR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-05-29",
+   "picks": [
+    "DELL",
+    "VSH",
+    "ALAB",
+    "FLEX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-06-30",
+   "picks": [
+    "KLAC",
+    "DELL",
+    "ALAB",
+    "SNDK"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-07-31",
+   "picks": [
+    "PBF",
+    "AVTR",
+    "CAKE",
+    "GH"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-08-31",
+   "picks": [
+    "TEAM",
+    "MANH",
+    "VEEV",
+    "FROG"
+   ],
+   "reason": "ok"
+  }
+ ],
+ "V5": {
+  "n": 374,
+  "srednee_prevyshenie_pct": 2.4755004277016,
+  "t": 2.8413381337015378,
+  "dolya_luchshe": 0.5481283422459893,
+  "po_spy200": {
+   "True": 2.4755004277016
+  }
+ }
+}

@@ -1,0 +1,1233 @@
+{
+ "prereg": "PREREG_ALPACA_U2_NEZAVISIMAYA_VSELENNAYA_2026_10_18",
+ "vselennaya": "U58",
+ "ruki": {
+  "20bps": {
+   "MONTHLY": {
+    "godovyh_pct": 8.484032161217714,
+    "dohod_pct": 138.3611106679281,
+    "maxDD_pct": 16.167237849122216,
+    "sdelok": 325,
+    "krasnyh": 42,
+    "mesyacev": 129,
+    "ekspoziciya_pct": 24.72790718364094,
+    "dozapolneno": 0,
+    "sekund": 0.1,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": 3.9226206887868154,
+      "maxDD_pct": 16.167237849122216
+     },
+     "P2": {
+      "godovyh_pct": 15.138372169907054,
+      "maxDD_pct": 13.219923334179729
+     },
+     "P3": {
+      "godovyh_pct": 8.257869993181256,
+      "maxDD_pct": 13.695255988383492
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 220,
+      "pnl": 665.0653378889572
+     },
+     "protective_stop_gap_open": {
+      "n": 51,
+      "pnl": -122.66809672629583
+     },
+     "monthly_rotation_next_open": {
+      "n": 54,
+      "pnl": 829.5041254406659
+     }
+    }
+   },
+   "WEEKLY_DYN": {
+    "godovyh_pct": 5.759252419502436,
+    "dohod_pct": 81.71717254105934,
+    "maxDD_pct": 19.939327209243828,
+    "sdelok": 378,
+    "krasnyh": 52,
+    "mesyacev": 129,
+    "ekspoziciya_pct": 30.44503722536521,
+    "dozapolneno": 379,
+    "sekund": 4.1,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": 4.122928055609898,
+      "maxDD_pct": 19.939327209243828
+     },
+     "P2": {
+      "godovyh_pct": 6.734405840983948,
+      "maxDD_pct": 10.853140292981255
+     },
+     "P3": {
+      "godovyh_pct": 4.634484717575971,
+      "maxDD_pct": 14.583464535183166
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_intraday": {
+      "n": 312,
+      "pnl": 445.90572726716925
+     },
+     "protective_stop_gap_open": {
+      "n": 66,
+      "pnl": 365.84979098410787
+     }
+    }
+   },
+   "EVENT": {
+    "godovyh_pct": 7.416155524583545,
+    "dohod_pct": 114.49102120034836,
+    "maxDD_pct": 23.56330636058217,
+    "sdelok": 841,
+    "krasnyh": 49,
+    "mesyacev": 129,
+    "ekspoziciya_pct": 48.2927835914617,
+    "dozapolneno": 666,
+    "sekund": 10.2,
+    "podperiody": {
+     "P1": {
+      "godovyh_pct": 4.261281696001773,
+      "maxDD_pct": 18.669003099005764
+     },
+     "P2": {
+      "godovyh_pct": 11.258174179329616,
+      "maxDD_pct": 15.519131493639593
+     },
+     "P3": {
+      "godovyh_pct": 5.4746054576470415,
+      "maxDD_pct": 23.56330636058217
+     }
+    },
+    "sdelki_po_prichine": {
+     "protective_stop_gap_open": {
+      "n": 96,
+      "pnl": -433.3986259099948
+     },
+     "protective_stop_intraday": {
+      "n": 477,
+      "pnl": -113.65858534439815
+     },
+     "monthly_rotation_next_open": {
+      "n": 268,
+      "pnl": 1689.374953153961
+     }
+    }
+   }
+  }
+ },
+ "kontroli": {},
+ "simvolov": 58,
+ "isklyucheno": {},
+ "dopustimyh_srednee": 53.64341085271318,
+ "spy_bh_godovyh_pct": 13.42005894579481,
+ "mesyachnye_resheniya": [
+  {
+   "sig": "2015-12-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2016-01-29",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2016-02-29",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2016-03-31",
+   "picks": [
+    "XYZ",
+    "AMD",
+    "ORCL",
+    "UNH"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-04-29",
+   "picks": [
+    "AMZN",
+    "SHOP",
+    "AMD",
+    "CVX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-05-31",
+   "picks": [
+    "AMD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-06-30",
+   "picks": [
+    "AMD",
+    "SHOP"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-07-29",
+   "picks": [
+    "AMD",
+    "META",
+    "CAT",
+    "ISRG"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-08-31",
+   "picks": [
+    "SHOP",
+    "AMD",
+    "MRK",
+    "ADSK"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-09-30",
+   "picks": [
+    "QCOM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-10-31",
+   "picks": [
+    "NFLX",
+    "NOW",
+    "NVDA",
+    "BAC"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-11-30",
+   "picks": [
+    "AMD",
+    "SCHW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2016-12-30",
+   "picks": [
+    "AMD",
+    "TSLA",
+    "GS",
+    "COST"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-01-31",
+   "picks": [
+    "SHOP",
+    "TSLA",
+    "NOW",
+    "AVGO"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-02-28",
+   "picks": [
+    "AMD",
+    "SHOP",
+    "NKE",
+    "GS"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-03-31",
+   "picks": [
+    "XYZ"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-04-28",
+   "picks": [
+    "SHOP",
+    "NOW",
+    "AMZN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-05-31",
+   "picks": [
+    "NVDA",
+    "XYZ",
+    "ADSK"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-06-30",
+   "picks": [
+    "ORCL",
+    "ABBV",
+    "TSLA",
+    "PANW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-07-31",
+   "picks": [
+    "NFLX",
+    "XYZ",
+    "V"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-08-31",
+   "picks": [],
+   "reason": "no_qualifying_names"
+  },
+  {
+   "sig": "2017-09-29",
+   "picks": [
+    "ABBV",
+    "SHOP",
+    "NVDA",
+    "MA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-10-31",
+   "picks": [
+    "MSFT",
+    "WMT",
+    "NOW",
+    "CAT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-11-30",
+   "picks": [
+    "QCOM",
+    "AMZN",
+    "SCHW",
+    "WMT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2017-12-29",
+   "picks": [
+    "WFC",
+    "COST"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-01-31",
+   "picks": [
+    "NFLX",
+    "SHOP",
+    "ADBE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-02-28",
+   "picks": [
+    "NFLX",
+    "SHOP",
+    "PANW",
+    "NOW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-03-29",
+   "picks": [
+    "MDB",
+    "ADBE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-04-30",
+   "picks": [
+    "UNH"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-05-31",
+   "picks": [
+    "AMD",
+    "SHOP",
+    "AAPL",
+    "PANW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-06-29",
+   "picks": [
+    "NFLX",
+    "NKE",
+    "XYZ"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-07-31",
+   "picks": [
+    "AMD",
+    "REGN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-08-31",
+   "picks": [
+    "AMD",
+    "MDB",
+    "REGN",
+    "NKE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-09-28",
+   "picks": [
+    "AMD",
+    "MDB",
+    "REGN",
+    "AMZN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2018-10-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2018-11-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2018-12-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2019-01-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2019-02-28",
+   "picks": [
+    "MDB",
+    "INTU",
+    "SBUX",
+    "NFLX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-03-29",
+   "picks": [
+    "MDB",
+    "NVDA",
+    "LLY"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-04-30",
+   "picks": [
+    "QCOM",
+    "SHOP",
+    "META"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-05-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2019-06-28",
+   "picks": [
+    "WMT",
+    "MSFT",
+    "GE",
+    "AMD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-07-31",
+   "picks": [
+    "SBUX",
+    "TXN",
+    "XYZ",
+    "AAPL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-08-30",
+   "picks": [
+    "SHOP",
+    "SBUX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-09-30",
+   "picks": [
+    "WFC",
+    "ISRG",
+    "TSLA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-10-31",
+   "picks": [
+    "TSLA",
+    "NVDA",
+    "CAT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-11-29",
+   "picks": [
+    "SCHW",
+    "AMD",
+    "TSLA",
+    "GE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2019-12-31",
+   "picks": [
+    "TSLA",
+    "LLY",
+    "AMD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-01-31",
+   "picks": [
+    "MDB",
+    "SHOP",
+    "CRM",
+    "AMZN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-02-28",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2020-03-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2020-04-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2020-05-29",
+   "picks": [
+    "DDOG",
+    "NOW",
+    "SHOP",
+    "UNH"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-06-30",
+   "picks": [
+    "NET",
+    "XYZ",
+    "REGN",
+    "NVDA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-07-31",
+   "picks": [
+    "AMD",
+    "XYZ",
+    "ISRG",
+    "NET"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-08-31",
+   "picks": [
+    "CRM",
+    "AMD",
+    "MA",
+    "SHOP"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-09-30",
+   "picks": [
+    "DDOG",
+    "NKE",
+    "CRM",
+    "NVDA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-10-30",
+   "picks": [
+    "GE",
+    "GOOGL",
+    "QCOM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-11-30",
+   "picks": [
+    "UBER",
+    "NET",
+    "GE",
+    "TSLA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2020-12-31",
+   "picks": [
+    "CRWD",
+    "TSLA",
+    "NKE",
+    "GE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-01-29",
+   "picks": [
+    "LLY",
+    "TSM",
+    "TSLA",
+    "GOOGL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-02-26",
+   "picks": [
+    "XOM",
+    "CAT",
+    "GS"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-03-31",
+   "picks": [
+    "UNH",
+    "BAC",
+    "ORCL",
+    "SBUX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-04-30",
+   "picks": [
+    "ISRG",
+    "WFC",
+    "GOOGL",
+    "HD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-05-28",
+   "picks": [
+    "BAC",
+    "META",
+    "GE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-06-30",
+   "picks": [
+    "NET",
+    "SHOP",
+    "NOW",
+    "REGN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-07-30",
+   "picks": [
+    "NET",
+    "GOOGL",
+    "LLY",
+    "ADBE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-08-31",
+   "picks": [
+    "NVDA",
+    "MDB"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-09-30",
+   "picks": [
+    "PANW",
+    "TSLA",
+    "ABNB"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-10-29",
+   "picks": [
+    "COIN",
+    "AMD",
+    "SCHW",
+    "PANW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-11-30",
+   "picks": [
+    "NVDA",
+    "TSLA",
+    "COST",
+    "PANW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2021-12-31",
+   "picks": [
+    "AVGO",
+    "LLY",
+    "AAPL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-01-31",
+   "picks": [
+    "LMT",
+    "CVX",
+    "WFC"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-02-28",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-03-31",
+   "picks": [
+    "CRWD",
+    "TSLA",
+    "LLY",
+    "CAT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-04-29",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-05-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-06-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-07-29",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-08-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-09-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-10-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2022-11-30",
+   "picks": [
+    "GE",
+    "NFLX",
+    "REGN",
+    "XOM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2022-12-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2023-01-31",
+   "picks": [
+    "SHOP",
+    "GE",
+    "TSM",
+    "XOM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-02-28",
+   "picks": [
+    "NVDA",
+    "PANW",
+    "META"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-03-31",
+   "picks": [
+    "AMD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-04-28",
+   "picks": [
+    "GE",
+    "ORCL",
+    "MDB",
+    "SHOP"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-05-31",
+   "picks": [
+    "PLTR",
+    "DDOG",
+    "AMD",
+    "NOW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-06-30",
+   "picks": [
+    "TSLA",
+    "MDB",
+    "NVDA",
+    "NFLX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-07-31",
+   "picks": [
+    "ABNB",
+    "SCHW",
+    "MDB",
+    "NVDA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-08-31",
+   "picks": [
+    "NVDA",
+    "CAT",
+    "CRWD",
+    "AMZN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-09-29",
+   "picks": [
+    "CRWD",
+    "XOM",
+    "ABNB"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-10-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2023-11-30",
+   "picks": [
+    "COIN",
+    "DDOG",
+    "ADBE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2023-12-29",
+   "picks": [
+    "COIN",
+    "AMD",
+    "CRWD",
+    "SCHW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-01-31",
+   "picks": [
+    "NVDA",
+    "ISRG",
+    "NFLX",
+    "CRWD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-02-29",
+   "picks": [
+    "COIN",
+    "NVDA",
+    "CRWD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-03-28",
+   "picks": [
+    "COIN",
+    "NVDA",
+    "GE",
+    "NFLX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-04-30",
+   "picks": [
+    "GE",
+    "GOOGL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-05-31",
+   "picks": [
+    "NVDA",
+    "JPM",
+    "GOOGL",
+    "NFLX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-06-28",
+   "picks": [
+    "ORCL",
+    "TSM",
+    "AAPL",
+    "COST"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-07-31",
+   "picks": [
+    "GS",
+    "KO",
+    "PLTR",
+    "AAPL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-08-30",
+   "picks": [
+    "SBUX",
+    "PLTR",
+    "PANW",
+    "REGN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-09-30",
+   "picks": [
+    "ORCL",
+    "PLTR",
+    "CAT",
+    "SBUX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-10-31",
+   "picks": [
+    "WFC",
+    "XYZ",
+    "ABBV",
+    "CRM"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-11-29",
+   "picks": [
+    "TSLA",
+    "SNOW",
+    "XYZ",
+    "NFLX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2024-12-31",
+   "picks": [
+    "AVGO",
+    "PLTR",
+    "GOOGL"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-01-31",
+   "picks": [
+    "NET",
+    "META",
+    "V",
+    "PLTR"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-02-28",
+   "picks": [
+    "COST",
+    "GE"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-03-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2025-04-30",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2025-05-30",
+   "picks": [
+    "SNOW",
+    "NVDA"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-06-30",
+   "picks": [
+    "ORCL",
+    "COIN",
+    "AMD"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-07-31",
+   "picks": [
+    "AMD",
+    "ORCL",
+    "XYZ",
+    "NET"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-08-29",
+   "picks": [
+    "MDB",
+    "SHOP"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-09-30",
+   "picks": [
+    "MDB",
+    "TSM",
+    "PLTR",
+    "CAT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-10-31",
+   "picks": [
+    "AMD",
+    "CAT",
+    "GOOGL",
+    "DDOG"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-11-28",
+   "picks": [
+    "LLY",
+    "GOOGL",
+    "GS",
+    "CAT"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2025-12-31",
+   "picks": [
+    "ABNB",
+    "MDB",
+    "WFC",
+    "MRK"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-01-30",
+   "picks": [
+    "LMT",
+    "TXN",
+    "MRK",
+    "SCHW"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-02-27",
+   "picks": [
+    "CAT",
+    "XOM",
+    "WMT",
+    "REGN"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-03-31",
+   "picks": [],
+   "reason": "spy200_gate_cash"
+  },
+  {
+   "sig": "2026-04-30",
+   "picks": [
+    "TXN",
+    "AMZN",
+    "SBUX"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-05-29",
+   "picks": [
+    "QCOM",
+    "NET",
+    "AMZN",
+    "UNH"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-06-30",
+   "picks": [
+    "SNOW",
+    "GE",
+    "ABBV",
+    "BAC"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-07-31",
+   "picks": [
+    "SNOW",
+    "MA",
+    "XYZ",
+    "ABNB"
+   ],
+   "reason": "ok"
+  },
+  {
+   "sig": "2026-08-31",
+   "picks": [
+    "CRM",
+    "MDB",
+    "ABNB",
+    "SHOP"
+   ],
+   "reason": "ok"
+  }
+ ]
+}
