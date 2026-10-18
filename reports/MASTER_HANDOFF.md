@@ -1,5 +1,19 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT18Oct after HUMAN personal commands: read
+[KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md](KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md),
+then NEW_CHAT_START_HERE and checkpoint TOP. KITY actual10entries/10nativeguards/
+10ownedexits, brokerflat0/orders0, net-0.22198250USDT, policyd848a130…f40a1 SPENT/
+TERMINAL/ORDERS_OFF. Earlyunwind readback race fixed locally8500c97/859KITYPASS,
+NOTdeployed; ordinary hold/researchpromotion notproven. Never repeat launchers.
+Alpaca originalWeekly personallyARMED oneSHOP19Oct13:31UTC/16:31Cyprus; actual
+timer/pins/one-manager automatic tick PASS. FullNET DAYrearm19Oct13:30UTC remains
+required before entry, floor277.69. Existing16:35Cyprus read-onlycheck includes
+actualentry/native/ownership;23:35IBIT thenpause. No new agentfinancialauthority.
+Older unspent/no10of10/unarmed snapshots below are history, not current state.
+
+## Historical intake snapshots
+
 CURRENT lead intake17 Oct09:57UTC: start with
 [TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md](TRADING_OS_CODEX_MASTER_HANDOFF_2026_10_17.md).
 Consolidated fresh runtime/permission ledger/execution board; KITY actual10/10
