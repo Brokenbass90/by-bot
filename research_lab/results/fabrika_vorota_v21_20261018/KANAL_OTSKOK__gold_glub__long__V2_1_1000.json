@@ -1,0 +1,32 @@
+{
+ "param": {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold_glub",
+  "side": "long"
+ },
+ "monet": 1,
+ "limit": 0,
+ "otkazy_ispolnimosti": {},
+ "vorota": "V2_1_kapital1000",
+ "okna": {
+  "O2": {
+   "n": 9,
+   "kontrol_sobran": false
+  },
+  "O1": {
+   "n": 25,
+   "kontrol_sobran": true,
+   "mean": 0.04069397552542377,
+   "ctrl": -0.08686097730360731,
+   "ctrl_sd": 0.2651138478314139,
+   "edge": 0.12755495282903107,
+   "se": 0.3511568224921446,
+   "z": 0.3632421318879102,
+   "summa_R": 1.0173493881355942
+  },
+  "O3": {
+   "n": 13,
+   "kontrol_sobran": false
+  }
+ }
+}

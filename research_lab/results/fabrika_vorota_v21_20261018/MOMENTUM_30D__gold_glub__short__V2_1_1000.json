@@ -1,0 +1,32 @@
+{
+ "param": {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold_glub",
+  "side": "short"
+ },
+ "monet": 1,
+ "limit": 0,
+ "otkazy_ispolnimosti": {},
+ "vorota": "V2_1_kapital1000",
+ "okna": {
+  "O2": {
+   "n": 14,
+   "kontrol_sobran": false
+  },
+  "O1": {
+   "n": 21,
+   "kontrol_sobran": true,
+   "mean": -0.3617729492837894,
+   "ctrl": -0.02233127112438884,
+   "ctrl_sd": 0.4175774736901478,
+   "edge": -0.3394416781594006,
+   "se": 0.5157058198049284,
+   "z": -0.6582079649358975,
+   "summa_R": -7.597231934959577
+  },
+  "O3": {
+   "n": 12,
+   "kontrol_sobran": false
+  }
+ }
+}

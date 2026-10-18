@@ -1,0 +1,7812 @@
+[
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 0,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 1,
+  "otkazy": {
+   "infeasible_stop_lev": 1345
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 917,
+  "otkazy": {
+   "cost_dominated": 4
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=0.40)",
+  "okna": {
+   "O2": {
+    "n": 314,
+    "srednee_R": -0.03068433415897303,
+    "edge": 0.1083333177913127,
+    "z": 1.214429450122683
+   },
+   "O1": {
+    "n": 387,
+    "srednee_R": 0.05572225276688977,
+    "edge": 0.1401950657860948,
+    "z": 1.8755236337963417
+   },
+   "O3": {
+    "n": 216,
+    "srednee_R": -0.039880797966205424,
+    "edge": 0.023228695561961034,
+    "z": 0.24189526183107865
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 791,
+  "otkazy": {
+   "cost_dominated": 214
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-0.42)",
+  "okna": {
+   "O2": {
+    "n": 272,
+    "srednee_R": -0.08166573552336487,
+    "edge": 0.045056493114267515,
+    "z": 0.5077830518131745
+   },
+   "O1": {
+    "n": 327,
+    "srednee_R": 0.032474817270366906,
+    "edge": 0.14589741742461587,
+    "z": 1.6817908678371696
+   },
+   "O3": {
+    "n": 192,
+    "srednee_R": -0.04963926519184245,
+    "edge": 0.01431683540620679,
+    "z": 0.1339212439051989
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 2,
+  "otkazy": {
+   "infeasible_stop_lev": 395
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 238,
+  "otkazy": {
+   "cost_dominated": 1
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.68)",
+  "okna": {
+   "O2": {
+    "n": 134,
+    "srednee_R": -0.2838587040605787,
+    "edge": -0.1557407680297382,
+    "z": -1.163726542109406
+   },
+   "O1": {
+    "n": 65,
+    "srednee_R": -0.2592081765501843,
+    "edge": -0.18749603762659733,
+    "z": -1.0809905029293734
+   },
+   "O3": {
+    "n": 39,
+    "srednee_R": -0.37735916270538855,
+    "edge": -0.25493699061945074,
+    "z": -1.1112969573313298
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 207,
+  "otkazy": {
+   "cost_dominated": 64
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.95)",
+  "okna": {
+   "O2": {
+    "n": 112,
+    "srednee_R": -0.27300469055731597,
+    "edge": -0.17050168011977826,
+    "z": -1.3180116921234022
+   },
+   "O1": {
+    "n": 57,
+    "srednee_R": -0.1908830208033885,
+    "edge": -0.17340339536128285,
+    "z": -0.9489059224439832
+   },
+   "O3": {
+    "n": 38,
+    "srednee_R": -0.41579397010714203,
+    "edge": -0.2550156185789036,
+    "z": -1.1315264907294413
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 1,
+  "otkazy": {
+   "infeasible_stop_lev": 86
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 60,
+  "otkazy": {
+   "cost_dominated": 7
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 18,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 20,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 22,
+    "srednee_R": -0.14700261737209003,
+    "edge": -0.023649354628949765,
+    "z": -0.06982866355659088
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 67,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 21,
+    "srednee_R": -0.14905460053767605,
+    "edge": -0.06452941127677632,
+    "z": -0.17600498551815905
+   },
+   "O1": {
+    "n": 24,
+    "srednee_R": -0.16854914701984494,
+    "edge": -0.17901141292165754,
+    "z": -0.5037559197853133
+   },
+   "O3": {
+    "n": 22,
+    "srednee_R": -0.02043356465685888,
+    "edge": 0.0012027202744124624,
+    "z": 0.0037092501991887344
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 2,
+  "otkazy": {
+   "infeasible_stop_lev": 107
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 74,
+  "otkazy": {
+   "cost_dominated": 13
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 25,
+    "srednee_R": 0.09615293236337695,
+    "edge": 0.3159005275118137,
+    "z": 0.9478103170153858
+   },
+   "O1": {
+    "n": 29,
+    "srednee_R": -0.1436364495043972,
+    "edge": -0.023194929797147643,
+    "z": -0.08963256691662824
+   },
+   "O3": {
+    "n": 20,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 86,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 37,
+    "srednee_R": 0.06866479854182377,
+    "edge": 0.1835648099886652,
+    "z": 0.7832808135112058
+   },
+   "O1": {
+    "n": 29,
+    "srednee_R": -0.03516616921922417,
+    "edge": -0.04432394701766544,
+    "z": -0.1574273266945389
+   },
+   "O3": {
+    "n": 20,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 754,
+  "otkazy": {
+   "atlas_net": 9610,
+   "infeasible_stop_lev": 820
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.22)",
+  "okna": {
+   "O1": {
+    "n": 405,
+    "srednee_R": -0.08420877365012798,
+    "edge": -0.0467192353751149,
+    "z": -0.5399001408312086
+   },
+   "O2": {
+    "n": 105,
+    "srednee_R": 0.28773858226491594,
+    "edge": 0.2548140784253167,
+    "z": 1.7983080558763893
+   },
+   "O3": {
+    "n": 244,
+    "srednee_R": -0.11481343644914553,
+    "edge": 0.032275434907364384,
+    "z": 0.3592221417227862
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1191,
+  "otkazy": {
+   "depth_lt_order": 9315,
+   "cost_dominated": 93,
+   "atlas_net": 274
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.09)",
+  "okna": {
+   "O1": {
+    "n": 635,
+    "srednee_R": -0.08524401473407148,
+    "edge": -0.04319884131310369,
+    "z": -0.8275910060505431
+   },
+   "O2": {
+    "n": 174,
+    "srednee_R": 0.11766140386230993,
+    "edge": 0.13810113095308685,
+    "z": 1.2058381137254235
+   },
+   "O3": {
+    "n": 382,
+    "srednee_R": -0.019640948742634418,
+    "edge": 0.09313280392602089,
+    "z": 1.1165027394783766
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 2629,
+  "otkazy": {
+   "depth_lt_order": 6702,
+   "cost_dominated": 96,
+   "atlas_net": 274
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.95)",
+  "okna": {
+   "O1": {
+    "n": 1340,
+    "srednee_R": -0.07841799736029027,
+    "edge": -0.027164879402294242,
+    "z": -0.5531492306314296
+   },
+   "O2": {
+    "n": 409,
+    "srednee_R": 0.037210710618523046,
+    "edge": 0.055828721346472855,
+    "z": 0.6932784561606833
+   },
+   "O3": {
+    "n": 880,
+    "srednee_R": 0.015412754997608732,
+    "edge": 0.1127670153279632,
+    "z": 1.8402500720248802
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 899,
+  "otkazy": {
+   "depth_lt_order": 9847,
+   "cost_dominated": 87,
+   "atlas_net": 274
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.85)",
+  "okna": {
+   "O1": {
+    "n": 462,
+    "srednee_R": -0.10797985679308117,
+    "edge": -0.048778773823664814,
+    "z": -0.6073108962240089
+   },
+   "O2": {
+    "n": 162,
+    "srednee_R": 0.1666593900784322,
+    "edge": 0.18762427311547158,
+    "z": 1.6265552302297235
+   },
+   "O3": {
+    "n": 275,
+    "srednee_R": -0.0884455581729403,
+    "edge": 0.05642199625569848,
+    "z": 0.6529139885651047
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 743,
+  "otkazy": {
+   "atlas_net": 10482,
+   "infeasible_stop_lev": 1190
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.34)",
+  "okna": {
+   "O1": {
+    "n": 375,
+    "srednee_R": -0.1429511143164698,
+    "edge": -0.13081667860739668,
+    "z": -1.4107825060728174
+   },
+   "O2": {
+    "n": 74,
+    "srednee_R": -0.2962654209442339,
+    "edge": -0.20786926010640303,
+    "z": -1.0721129569705012
+   },
+   "O3": {
+    "n": 294,
+    "srednee_R": -0.10307578972883466,
+    "edge": -0.16967453281174621,
+    "z": -1.909420761997791
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1188,
+  "otkazy": {
+   "depth_lt_order": 10449,
+   "cost_dominated": 76,
+   "atlas_net": 320
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.73)",
+  "okna": {
+   "O1": {
+    "n": 566,
+    "srednee_R": -0.15019947898078684,
+    "edge": -0.1270676248158779,
+    "z": -1.962790781315008
+   },
+   "O2": {
+    "n": 145,
+    "srednee_R": -0.3299611935588047,
+    "edge": -0.21076833165724757,
+    "z": -1.9420587694261937
+   },
+   "O3": {
+    "n": 477,
+    "srednee_R": -0.11631622203919806,
+    "edge": -0.13116364771455788,
+    "z": -1.7648780340360595
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 2548,
+  "otkazy": {
+   "depth_lt_order": 8006,
+   "cost_dominated": 86,
+   "atlas_net": 320
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.75)",
+  "okna": {
+   "O1": {
+    "n": 1197,
+    "srednee_R": -0.10762578952949137,
+    "edge": -0.08132477197802604,
+    "z": -1.7178907071229568
+   },
+   "O2": {
+    "n": 349,
+    "srednee_R": -0.2092340693287442,
+    "edge": -0.1590210687337303,
+    "z": -2.1467947828609777
+   },
+   "O3": {
+    "n": 1002,
+    "srednee_R": -0.1183202249935059,
+    "edge": -0.1296324844223454,
+    "z": -2.779684927422419
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 929,
+  "otkazy": {
+   "depth_lt_order": 10948,
+   "cost_dominated": 67,
+   "atlas_net": 320
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.83)",
+  "okna": {
+   "O1": {
+    "n": 418,
+    "srednee_R": -0.13983411914618007,
+    "edge": -0.08126088016273124,
+    "z": -0.9506661850908286
+   },
+   "O2": {
+    "n": 129,
+    "srednee_R": -0.28688422823954207,
+    "edge": -0.13215549113583114,
+    "z": -1.04587705007393
+   },
+   "O3": {
+    "n": 382,
+    "srednee_R": -0.1496034691078364,
+    "edge": -0.17883817174910174,
+    "z": -2.433172492073861
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 158
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 76,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 28,
+    "srednee_R": 0.08343098097075329,
+    "edge": 0.11966620460305416,
+    "z": 0.4243643480464179
+   },
+   "O1": {
+    "n": 11,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 37,
+    "srednee_R": -0.34266041545062725,
+    "edge": -0.3514113617215351,
+    "z": -1.458352468222221
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 75,
+  "otkazy": {
+   "cost_dominated": 3
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 28,
+    "srednee_R": 0.08672578913832137,
+    "edge": 0.13564300385663178,
+    "z": 0.4388376665236856
+   },
+   "O1": {
+    "n": 10,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 37,
+    "srednee_R": -0.34475959726812866,
+    "edge": -0.3644434806444798,
+    "z": -1.3761752145295016
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 7,
+  "otkazy": {
+   "infeasible_stop_lev": 150
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 71,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 25,
+    "srednee_R": 0.22541662157601697,
+    "edge": 0.1504909639056009,
+    "z": 0.5613999348231122
+   },
+   "O1": {
+    "n": 11,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 35,
+    "srednee_R": -0.013132698866837354,
+    "edge": 0.06700425051844994,
+    "z": 0.2501453100583967
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 70,
+  "otkazy": {
+   "cost_dominated": 2
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 24,
+    "srednee_R": 0.24225858116335153,
+    "edge": 0.17817974630130004,
+    "z": 0.6168088533815451
+   },
+   "O1": {
+    "n": 11,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 35,
+    "srednee_R": -0.009282628407671769,
+    "edge": -0.009880919181552948,
+    "z": -0.03950279506678809
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 1,
+  "otkazy": {
+   "infeasible_stop_lev": 124
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 47,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 9,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 25,
+    "srednee_R": 0.04069397552542377,
+    "edge": 0.12755495282903107,
+    "z": 0.3632421318879102
+   },
+   "O3": {
+    "n": 13,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 47,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 9,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 25,
+    "srednee_R": 0.13962665045900832,
+    "edge": 0.1275549528290311,
+    "z": 0.36376389903802775
+   },
+   "O3": {
+    "n": 13,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 3,
+  "otkazy": {
+   "infeasible_stop_lev": 155
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 3,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 66,
+  "otkazy": {
+   "cost_dominated": 1
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 5,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 33,
+    "srednee_R": 0.18177877768727616,
+    "edge": 0.2175898298187326,
+    "z": 0.8791279023726322
+   },
+   "O3": {
+    "n": 28,
+    "srednee_R": -0.007163001095501863,
+    "edge": 0.16951763909371279,
+    "z": 0.6243206447636896
+   }
+  }
+ },
+ {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 66,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 5,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 33,
+    "srednee_R": 0.288758793918036,
+    "edge": 0.21758982981873248,
+    "z": 0.8802841848401965
+   },
+   "O3": {
+    "n": 28,
+    "srednee_R": 0.12412860220790307,
+    "edge": 0.16951763909371276,
+    "z": 0.6263741256945672
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 213,
+  "otkazy": {
+   "atlas_net": 1766,
+   "infeasible_stop_lev": 370
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 82,
+    "srednee_R": 0.07549913123464609,
+    "edge": 0.17000399727564267,
+    "z": 0.8306568499500132
+   },
+   "O2": {
+    "n": 45,
+    "srednee_R": -0.24975591125688656,
+    "edge": -0.07147329884619147,
+    "z": -0.28261759206054965
+   },
+   "O3": {
+    "n": 86,
+    "srednee_R": -0.1900208759944894,
+    "edge": 0.0633774286576888,
+    "z": 0.31794034466102983
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 410,
+  "otkazy": {
+   "depth_lt_order": 1763,
+   "cost_dominated": 73,
+   "atlas_net": 53,
+   "lev_instr": 44
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.62)",
+  "okna": {
+   "O1": {
+    "n": 146,
+    "srednee_R": -0.02159478987889032,
+    "edge": 0.07953462215539575,
+    "z": 0.6174983963482809
+   },
+   "O2": {
+    "n": 88,
+    "srednee_R": -0.1079803928868114,
+    "edge": -0.03114801182768155,
+    "z": -0.1443651847021101
+   },
+   "O3": {
+    "n": 176,
+    "srednee_R": 0.10554872115733312,
+    "edge": 0.31559110397377965,
+    "z": 2.5444810352869256
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 920,
+  "otkazy": {
+   "depth_lt_order": 1224,
+   "cost_dominated": 98,
+   "atlas_net": 53,
+   "lev_instr": 44
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.84)",
+  "okna": {
+   "O1": {
+    "n": 331,
+    "srednee_R": -0.07823978896032381,
+    "edge": 0.02833423204988607,
+    "z": 0.3031274580866166
+   },
+   "O2": {
+    "n": 227,
+    "srednee_R": -0.1290629899503567,
+    "edge": -0.0778548892155311,
+    "z": -0.611884608965239
+   },
+   "O3": {
+    "n": 362,
+    "srednee_R": 0.07659758618594631,
+    "edge": 0.25032214607546266,
+    "z": 2.488675357895799
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 274,
+  "otkazy": {
+   "depth_lt_order": 1945,
+   "cost_dominated": 28,
+   "atlas_net": 53,
+   "lev_instr": 44
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.89)",
+  "okna": {
+   "O1": {
+    "n": 95,
+    "srednee_R": 0.08637722137034222,
+    "edge": 0.17673115956344615,
+    "z": 0.8066816181139548
+   },
+   "O2": {
+    "n": 67,
+    "srednee_R": -0.30860612856677666,
+    "edge": -0.20794135208749642,
+    "z": -0.8074020151535135
+   },
+   "O3": {
+    "n": 112,
+    "srednee_R": 0.09859584622727693,
+    "edge": 0.3494566531227731,
+    "z": 2.095466634361692
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 113,
+  "otkazy": {
+   "atlas_net": 1472,
+   "infeasible_stop_lev": 327
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 37,
+    "srednee_R": -0.199084544716319,
+    "edge": -0.1432538094774774,
+    "z": -0.5212720419078223
+   },
+   "O2": {
+    "n": 27,
+    "srednee_R": -0.3535047775473075,
+    "edge": -0.15100613418535117,
+    "z": -0.4042927612558977
+   },
+   "O3": {
+    "n": 49,
+    "srednee_R": 0.3536614323441447,
+    "edge": 0.30606229527597995,
+    "z": 1.0312335604456697
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 231,
+  "otkazy": {
+   "depth_lt_order": 1517,
+   "cost_dominated": 55,
+   "atlas_net": 47,
+   "lev_instr": 60
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.60)",
+  "okna": {
+   "O1": {
+    "n": 66,
+    "srednee_R": -0.06409989305859129,
+    "edge": 0.05535847223134466,
+    "z": 0.25093190214980904
+   },
+   "O2": {
+    "n": 63,
+    "srednee_R": -0.3263499699291409,
+    "edge": -0.11182025862838604,
+    "z": -0.49792980257842856
+   },
+   "O3": {
+    "n": 102,
+    "srednee_R": 0.29217723471030943,
+    "edge": 0.3134117295896483,
+    "z": 1.652020955613217
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 537,
+  "otkazy": {
+   "depth_lt_order": 1189,
+   "cost_dominated": 70,
+   "atlas_net": 47,
+   "lev_instr": 60
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.03)",
+  "okna": {
+   "O1": {
+    "n": 172,
+    "srednee_R": -0.0068121344381296195,
+    "edge": 0.08561087588984045,
+    "z": 0.6207550476997339
+   },
+   "O2": {
+    "n": 114,
+    "srednee_R": -0.19867050965772698,
+    "edge": -0.023501664247788462,
+    "z": -0.13434777182511448
+   },
+   "O3": {
+    "n": 251,
+    "srednee_R": 0.20035842755343386,
+    "edge": 0.25346617690906104,
+    "z": 2.246699004111534
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 158,
+  "otkazy": {
+   "depth_lt_order": 1622,
+   "cost_dominated": 25,
+   "atlas_net": 47,
+   "lev_instr": 60
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 44,
+    "srednee_R": -0.07482712970808132,
+    "edge": -0.0016138317691658938,
+    "z": -0.004460493299406096
+   },
+   "O2": {
+    "n": 52,
+    "srednee_R": -0.30200925526770966,
+    "edge": -0.12037146633621992,
+    "z": -0.4920909396367356
+   },
+   "O3": {
+    "n": 62,
+    "srednee_R": 0.3197618081347334,
+    "edge": 0.3706592940705839,
+    "z": 1.4791731187526904
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 1,
+  "otkazy": {
+   "infeasible_stop_lev": 208
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 108,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 36,
+    "srednee_R": 0.037371489771053354,
+    "edge": 0.18090189112803418,
+    "z": 0.5285084324508439
+   },
+   "O1": {
+    "n": 30,
+    "srednee_R": 0.19700714359717372,
+    "edge": 0.27991554568386084,
+    "z": 0.9181448668903678
+   },
+   "O3": {
+    "n": 42,
+    "srednee_R": -0.2639275001549411,
+    "edge": -0.28980453659804395,
+    "z": -0.9929680630913538
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 106,
+  "otkazy": {
+   "cost_dominated": 3
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 35,
+    "srednee_R": 0.010189953732343078,
+    "edge": 0.13612324676269988,
+    "z": 0.3983341702228137
+   },
+   "O1": {
+    "n": 30,
+    "srednee_R": 0.2267373790841896,
+    "edge": 0.24989789980799185,
+    "z": 0.6985583508853234
+   },
+   "O3": {
+    "n": 41,
+    "srednee_R": -0.21649730047447258,
+    "edge": -0.21898529764513114,
+    "z": -0.660778921170321
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 200
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 127,
+  "otkazy": {
+   "cost_dominated": 2
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 50,
+    "srednee_R": 0.39429749855063717,
+    "edge": 0.5470850439455807,
+    "z": 1.8730091113612888
+   },
+   "O1": {
+    "n": 33,
+    "srednee_R": -0.38972624887003854,
+    "edge": -0.25257800876423814,
+    "z": -0.839306152742145
+   },
+   "O3": {
+    "n": 44,
+    "srednee_R": 0.001139723792747657,
+    "edge": 0.09601433198255158,
+    "z": 0.32790943111761595
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 125,
+  "otkazy": {
+   "cost_dominated": 5
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 49,
+    "srednee_R": 0.49097638354761114,
+    "edge": 0.6123420293428746,
+    "z": 2.070624179989047
+   },
+   "O1": {
+    "n": 33,
+    "srednee_R": -0.3584147188730021,
+    "edge": -0.26977581171821075,
+    "z": -0.9964643757234185
+   },
+   "O3": {
+    "n": 43,
+    "srednee_R": 0.039126662570203634,
+    "edge": 0.18751949760111744,
+    "z": 0.6840656021493883
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 44
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 27,
+  "otkazy": {
+   "cost_dominated": 5
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 8,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 9,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 10,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 30,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 10,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 9,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 11,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 43
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 27,
+  "otkazy": {
+   "cost_dominated": 3
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 11,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 10,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 27,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 11,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 10,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 2386,
+  "otkazy": {
+   "atlas_net": 47781,
+   "infeasible_stop_lev": 7256
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.73)",
+  "okna": {
+   "O1": {
+    "n": 1311,
+    "srednee_R": -0.10851669039481583,
+    "edge": -0.034850484035801196,
+    "z": -0.8483647390852126
+   },
+   "O2": {
+    "n": 269,
+    "srednee_R": -0.12127370875115243,
+    "edge": -0.0829906662419244,
+    "z": -0.8811185918839223
+   },
+   "O3": {
+    "n": 806,
+    "srednee_R": -0.1532196493044161,
+    "edge": -0.030248056006996316,
+    "z": -0.502245438395765
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 3988,
+  "otkazy": {
+   "depth_lt_order": 48603,
+   "cost_dominated": 935,
+   "atlas_net": 1564,
+   "lev_instr": 385
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-6.27)",
+  "okna": {
+   "O1": {
+    "n": 2057,
+    "srednee_R": -0.13602307618387488,
+    "edge": -0.05170255658558669,
+    "z": -1.4391878244092688
+   },
+   "O2": {
+    "n": 577,
+    "srednee_R": -0.17028985860869797,
+    "edge": -0.11425605465190578,
+    "z": -1.8854835371958067
+   },
+   "O3": {
+    "n": 1354,
+    "srednee_R": -0.13630261552190864,
+    "edge": -0.009845860548066465,
+    "z": -0.24548403933449253
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 9145,
+  "otkazy": {
+   "depth_lt_order": 36993,
+   "cost_dominated": 1049,
+   "atlas_net": 1564,
+   "lev_instr": 385
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-8.31)",
+  "okna": {
+   "O1": {
+    "n": 4573,
+    "srednee_R": -0.11494286952012737,
+    "edge": -0.044198828190773864,
+    "z": -1.6920868682071732
+   },
+   "O2": {
+    "n": 1347,
+    "srednee_R": -0.1633016659136581,
+    "edge": -0.12718128041787874,
+    "z": -2.880954889531208
+   },
+   "O3": {
+    "n": 3225,
+    "srednee_R": -0.12295091754802578,
+    "edge": -0.028507554155197568,
+    "z": -1.0967688298749585
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 2990,
+  "otkazy": {
+   "depth_lt_order": 51122,
+   "cost_dominated": 660,
+   "atlas_net": 1564,
+   "lev_instr": 385
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.53)",
+  "okna": {
+   "O1": {
+    "n": 1534,
+    "srednee_R": -0.1154681112090847,
+    "edge": -0.02165280997040489,
+    "z": -0.6473828707573206
+   },
+   "O2": {
+    "n": 481,
+    "srednee_R": -0.13633791946824936,
+    "edge": -0.0590654694675366,
+    "z": -0.7849286932478565
+   },
+   "O3": {
+    "n": 975,
+    "srednee_R": -0.16786232846149543,
+    "edge": -0.02513343466005996,
+    "z": -0.4049690534113566
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 2301,
+  "otkazy": {
+   "atlas_net": 51205,
+   "infeasible_stop_lev": 5564
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-1.28)",
+  "okna": {
+   "O1": {
+    "n": 1186,
+    "srednee_R": -0.02957390327350981,
+    "edge": 0.03867659971254435,
+    "z": 0.8911645254055786
+   },
+   "O2": {
+    "n": 235,
+    "srednee_R": -0.08603455972679235,
+    "edge": 0.02119349639026713,
+    "z": 0.19110610215061818
+   },
+   "O3": {
+    "n": 880,
+    "srednee_R": -0.0185618349834304,
+    "edge": -0.036547557704084646,
+    "z": -0.6660111429259509
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 3919,
+  "otkazy": {
+   "depth_lt_order": 50617,
+   "cost_dominated": 677,
+   "atlas_net": 1605,
+   "lev_instr": 216
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.86)",
+  "okna": {
+   "O1": {
+    "n": 1922,
+    "srednee_R": -0.08570748442167815,
+    "edge": -0.010063776062210802,
+    "z": -0.3099809203113244
+   },
+   "O2": {
+    "n": 478,
+    "srednee_R": -0.09740512679639245,
+    "edge": 0.044640562643855033,
+    "z": 0.5915700581474678
+   },
+   "O3": {
+    "n": 1519,
+    "srednee_R": -0.02501637745607276,
+    "edge": -0.00925952344520764,
+    "z": -0.2155181127214476
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 9309,
+  "otkazy": {
+   "depth_lt_order": 38335,
+   "cost_dominated": 748,
+   "atlas_net": 1605,
+   "lev_instr": 216
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.53)",
+  "okna": {
+   "O1": {
+    "n": 4555,
+    "srednee_R": -0.062217975323267206,
+    "edge": -0.0015026131846843024,
+    "z": -0.06239128583989837
+   },
+   "O2": {
+    "n": 1233,
+    "srednee_R": -0.0793271913402571,
+    "edge": 0.014654651639545976,
+    "z": 0.32650706525945533
+   },
+   "O3": {
+    "n": 3521,
+    "srednee_R": -0.04666418571611831,
+    "edge": -0.03210781059282876,
+    "z": -1.28616737745228
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 2832,
+  "otkazy": {
+   "depth_lt_order": 53320,
+   "cost_dominated": 486,
+   "atlas_net": 1605,
+   "lev_instr": 216
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-2.83)",
+  "okna": {
+   "O1": {
+    "n": 1375,
+    "srednee_R": -0.06609553950283381,
+    "edge": 0.0171194363948462,
+    "z": 0.44442206670463175
+   },
+   "O2": {
+    "n": 398,
+    "srednee_R": -0.11573329730543735,
+    "edge": 0.018948154400503403,
+    "z": 0.21724449075295532
+   },
+   "O3": {
+    "n": 1059,
+    "srednee_R": -0.02319463653387567,
+    "edge": -0.010879629715153624,
+    "z": -0.2237665521356317
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 4,
+  "otkazy": {
+   "infeasible_stop_lev": 14438
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 3,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 4102,
+  "otkazy": {
+   "cost_dominated": 80
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-6.19)",
+  "okna": {
+   "O2": {
+    "n": 1500,
+    "srednee_R": -0.11909856377945338,
+    "edge": -0.00411704688310785,
+    "z": -0.10012145971052828
+   },
+   "O1": {
+    "n": 1686,
+    "srednee_R": -0.1450358182360443,
+    "edge": -0.055263151153308585,
+    "z": -1.2841929522450792
+   },
+   "O3": {
+    "n": 916,
+    "srednee_R": -0.08809547874340591,
+    "edge": -0.010782427030044076,
+    "z": -0.20254858673181256
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 4127,
+  "otkazy": {
+   "cost_dominated": 1
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.31)",
+  "okna": {
+   "O2": {
+    "n": 1522,
+    "srednee_R": -0.07237760012548174,
+    "edge": 0.0019112444320982663,
+    "z": 0.04235598940751049
+   },
+   "O1": {
+    "n": 1689,
+    "srednee_R": -0.10994299854076423,
+    "edge": -0.05492328227960166,
+    "z": -1.590050047574624
+   },
+   "O3": {
+    "n": 916,
+    "srednee_R": -0.05920886975922241,
+    "edge": -0.008846405023647662,
+    "z": -0.16372321572064108
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 2,
+  "otkazy": {
+   "infeasible_stop_lev": 13631
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 3983,
+  "otkazy": {
+   "cost_dominated": 51
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-5.15)",
+  "okna": {
+   "O2": {
+    "n": 1533,
+    "srednee_R": -0.08751215765749586,
+    "edge": 0.015486234559932449,
+    "z": 0.3488603126144474
+   },
+   "O1": {
+    "n": 1527,
+    "srednee_R": -0.13992845754257716,
+    "edge": -0.03628207683322174,
+    "z": -0.9179973268916547
+   },
+   "O3": {
+    "n": 923,
+    "srednee_R": -0.08392996496136983,
+    "edge": 0.00841738855426448,
+    "z": 0.14304285196441593
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 4001,
+  "otkazy": {
+   "cost_dominated": 4
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.22)",
+  "okna": {
+   "O2": {
+    "n": 1550,
+    "srednee_R": -0.042491323407329945,
+    "edge": 0.023062267411476323,
+    "z": 0.5406761451003191
+   },
+   "O1": {
+    "n": 1528,
+    "srednee_R": -0.09909849207304366,
+    "edge": -0.04003046833518427,
+    "z": -0.967473195655995
+   },
+   "O3": {
+    "n": 923,
+    "srednee_R": -0.05652672967102483,
+    "edge": 0.010934697951389336,
+    "z": 0.21672996819895507
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 7,
+  "otkazy": {
+   "infeasible_stop_lev": 2116
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 7,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 525,
+  "otkazy": {
+   "cost_dominated": 283
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.74)",
+  "okna": {
+   "O2": {
+    "n": 141,
+    "srednee_R": -0.11233062740790363,
+    "edge": 0.08231621382712205,
+    "z": 0.5513924501646931
+   },
+   "O1": {
+    "n": 213,
+    "srednee_R": -0.11649613184571794,
+    "edge": -0.00865838687249143,
+    "z": -0.07771850292145782
+   },
+   "O3": {
+    "n": 171,
+    "srednee_R": -0.32940794060185463,
+    "edge": -0.17749863824073675,
+    "z": -1.3152097949981825
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 634,
+  "otkazy": {},
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=0.91)",
+  "okna": {
+   "O2": {
+    "n": 232,
+    "srednee_R": 0.03181242363362386,
+    "edge": 0.02804015689569537,
+    "z": 0.24544988326562717
+   },
+   "O1": {
+    "n": 228,
+    "srednee_R": 0.07597002721897823,
+    "edge": 0.03950071206232841,
+    "z": 0.35551850717570593
+   },
+   "O3": {
+    "n": 174,
+    "srednee_R": -0.18790429318605953,
+    "edge": -0.19032564226083684,
+    "z": -1.4352738212505491
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 5,
+  "otkazy": {
+   "infeasible_stop_lev": 1727
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 465,
+  "otkazy": {
+   "cost_dominated": 286
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.48)",
+  "okna": {
+   "O2": {
+    "n": 126,
+    "srednee_R": -0.17247960641920793,
+    "edge": -0.05483077689911252,
+    "z": -0.40523462282562167
+   },
+   "O1": {
+    "n": 169,
+    "srednee_R": -0.05222808636248874,
+    "edge": 0.11997870248657289,
+    "z": 0.8696555280841963
+   },
+   "O3": {
+    "n": 170,
+    "srednee_R": -0.056302778002768526,
+    "edge": 0.11146334533255706,
+    "z": 0.8878303674204415
+   }
+  }
+ },
+ {
+  "meh": "LONDON_PROBOY",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 572,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=0.60)",
+  "okna": {
+   "O2": {
+    "n": 211,
+    "srednee_R": -0.03393163492412639,
+    "edge": -0.07549034003496799,
+    "z": -0.6186861605537572
+   },
+   "O1": {
+    "n": 180,
+    "srednee_R": 0.13364724497109837,
+    "edge": 0.16836653506087923,
+    "z": 1.2016780759248065
+   },
+   "O3": {
+    "n": 181,
+    "srednee_R": 0.09917295469845097,
+    "edge": 0.10446331179357957,
+    "z": 0.8583505512778108
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 355,
+  "otkazy": {
+   "atlas_net": 7117,
+   "infeasible_stop_lev": 842
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 168,
+    "srednee_R": -0.09807256145311156,
+    "edge": -0.23431341772118897,
+    "z": -1.2183429946843265
+   },
+   "O2": {
+    "n": 46,
+    "srednee_R": -0.08215602983383884,
+    "edge": -0.11406345855766044,
+    "z": -0.3370579468844581
+   },
+   "O3": {
+    "n": 141,
+    "srednee_R": -0.04155146418220021,
+    "edge": -0.11264618113430507,
+    "z": -0.5140207361167602
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 753,
+  "otkazy": {
+   "depth_lt_order": 6183,
+   "atlas_net": 193,
+   "cost_dominated": 180,
+   "lev_instr": 360
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.37)",
+  "okna": {
+   "O1": {
+    "n": 354,
+    "srednee_R": -0.011235735461225992,
+    "edge": -0.13780944817565488,
+    "z": -1.0914881339912512
+   },
+   "O2": {
+    "n": 90,
+    "srednee_R": -0.09728322842450333,
+    "edge": -0.215889082531327,
+    "z": -0.8957760446724846
+   },
+   "O3": {
+    "n": 309,
+    "srednee_R": 0.03529569301825947,
+    "edge": 0.002862471475802257,
+    "z": 0.025104871359625157
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 1650,
+  "otkazy": {
+   "depth_lt_order": 3568,
+   "atlas_net": 193,
+   "cost_dominated": 263,
+   "lev_instr": 360
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.15)",
+  "okna": {
+   "O1": {
+    "n": 731,
+    "srednee_R": -0.05383503280631078,
+    "edge": -0.10834857760730324,
+    "z": -1.3218217354463186
+   },
+   "O2": {
+    "n": 227,
+    "srednee_R": -0.08471367251958851,
+    "edge": -0.12587272241500036,
+    "z": -0.8006534455987679
+   },
+   "O3": {
+    "n": 692,
+    "srednee_R": -0.03152599992266364,
+    "edge": -0.09870290414551326,
+    "z": -1.3241359832796118
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 409,
+  "otkazy": {
+   "depth_lt_order": 7260,
+   "atlas_net": 193,
+   "cost_dominated": 25,
+   "lev_instr": 360
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.29)",
+  "okna": {
+   "O1": {
+    "n": 192,
+    "srednee_R": -0.055950799791739614,
+    "edge": -0.13394942545577088,
+    "z": -0.7607222216507606
+   },
+   "O2": {
+    "n": 57,
+    "srednee_R": 0.06127152025821902,
+    "edge": -0.03393042775900571,
+    "z": -0.10354759006655713
+   },
+   "O3": {
+    "n": 160,
+    "srednee_R": -0.0600188545615681,
+    "edge": -0.1538986793654716,
+    "z": -0.968098746110096
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 365,
+  "otkazy": {
+   "atlas_net": 7255,
+   "infeasible_stop_lev": 883
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O1": {
+    "n": 169,
+    "srednee_R": 0.12947453646088425,
+    "edge": 0.2039771976752332,
+    "z": 1.1685658485427781
+   },
+   "O2": {
+    "n": 49,
+    "srednee_R": 0.06222899836886012,
+    "edge": 0.14565070221405724,
+    "z": 0.485300036836007
+   },
+   "O3": {
+    "n": 147,
+    "srednee_R": 0.3844411018791944,
+    "edge": -0.015031504689612452,
+    "z": -0.07296932342727482
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 757,
+  "otkazy": {
+   "depth_lt_order": 6355,
+   "atlas_net": 222,
+   "cost_dominated": 140,
+   "lev_instr": 376
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=0.86)",
+  "okna": {
+   "O1": {
+    "n": 364,
+    "srednee_R": 0.09572553844072086,
+    "edge": 0.04203955387103858,
+    "z": 0.3966105091633597
+   },
+   "O2": {
+    "n": 84,
+    "srednee_R": -0.05411860125022119,
+    "edge": -0.02991222325143424,
+    "z": -0.14918763112455993
+   },
+   "O3": {
+    "n": 309,
+    "srednee_R": 0.18578756527794238,
+    "edge": -0.1451668302723098,
+    "z": -1.0943199074780472
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 1671,
+  "otkazy": {
+   "depth_lt_order": 3698,
+   "atlas_net": 222,
+   "cost_dominated": 247,
+   "lev_instr": 376
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=0.38)",
+  "okna": {
+   "O1": {
+    "n": 779,
+    "srednee_R": 0.06667815146967546,
+    "edge": 0.05149890781957764,
+    "z": 0.6008014360584867
+   },
+   "O2": {
+    "n": 220,
+    "srednee_R": -0.1260213375189319,
+    "edge": -0.14483891404761937,
+    "z": -1.1107308251808845
+   },
+   "O3": {
+    "n": 672,
+    "srednee_R": 0.1821501949035893,
+    "edge": -0.02979918054855668,
+    "z": -0.3463785799282931
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 426,
+  "otkazy": {
+   "depth_lt_order": 7350,
+   "atlas_net": 222,
+   "cost_dominated": 22,
+   "lev_instr": 377
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=0.51)",
+  "okna": {
+   "O1": {
+    "n": 197,
+    "srednee_R": 0.02732771264138584,
+    "edge": 0.05803044217393136,
+    "z": 0.38217003111095066
+   },
+   "O2": {
+    "n": 55,
+    "srednee_R": 0.16087816784492073,
+    "edge": 0.12655245419902464,
+    "z": 0.40813172460217934
+   },
+   "O3": {
+    "n": 174,
+    "srednee_R": 0.31149022495858086,
+    "edge": -0.04398349386174916,
+    "z": -0.23747740152515892
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 7,
+  "otkazy": {
+   "infeasible_stop_lev": 1179
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 3,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 3,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 290,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.97)",
+  "okna": {
+   "O2": {
+    "n": 103,
+    "srednee_R": -0.16715184047541481,
+    "edge": -0.0859904970892365,
+    "z": -0.3677960732988855
+   },
+   "O1": {
+    "n": 124,
+    "srednee_R": -0.036856433200964815,
+    "edge": 0.006631774351639606,
+    "z": 0.03493235734058305
+   },
+   "O3": {
+    "n": 63,
+    "srednee_R": 0.12695228298922892,
+    "edge": 0.04668919260289128,
+    "z": 0.15978684851554162
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 290,
+  "otkazy": {
+   "cost_dominated": 2
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.91)",
+  "okna": {
+   "O2": {
+    "n": 103,
+    "srednee_R": -0.1644539393380588,
+    "edge": -0.10055360388535281,
+    "z": -0.429908281427004
+   },
+   "O1": {
+    "n": 124,
+    "srednee_R": -0.027312843368679993,
+    "edge": 0.006631774351639599,
+    "z": 0.03490758537033226
+   },
+   "O3": {
+    "n": 63,
+    "srednee_R": 0.134519268045097,
+    "edge": 0.04668919260289131,
+    "z": 0.15970890981849892
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 4,
+  "otkazy": {
+   "infeasible_stop_lev": 1259
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 303,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=1.09)",
+  "okna": {
+   "O2": {
+    "n": 117,
+    "srednee_R": 0.059589703198676854,
+    "edge": -0.057204811184807934,
+    "z": -0.24335217127205272
+   },
+   "O1": {
+    "n": 121,
+    "srednee_R": 0.19931159818030816,
+    "edge": 0.011723323543610165,
+    "z": 0.0539181309022071
+   },
+   "O3": {
+    "n": 65,
+    "srednee_R": 0.303226308936467,
+    "edge": 0.13948563212853185,
+    "z": 0.523598286282957
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 303,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=1.21)",
+  "okna": {
+   "O2": {
+    "n": 117,
+    "srednee_R": 0.07606689574436225,
+    "edge": -0.05720481118480798,
+    "z": -0.24309786392521754
+   },
+   "O1": {
+    "n": 121,
+    "srednee_R": 0.20912726771889376,
+    "edge": 0.011723323543610248,
+    "z": 0.05387748969835032
+   },
+   "O3": {
+    "n": 65,
+    "srednee_R": 0.3107904024546568,
+    "edge": 0.13948563212853188,
+    "z": 0.5233547663460963
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 6,
+  "otkazy": {
+   "infeasible_stop_lev": 168
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 48,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 19,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 22,
+    "srednee_R": 0.20702725270501254,
+    "edge": 0.3413889258680804,
+    "z": 0.6410379811711892
+   },
+   "O3": {
+    "n": 7,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 48,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 19,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 22,
+    "srednee_R": 0.2821784423326807,
+    "edge": 0.3413889258680805,
+    "z": 0.6420813118261297
+   },
+   "O3": {
+    "n": 7,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 8,
+  "otkazy": {
+   "infeasible_stop_lev": 164
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 8,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 47,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 14,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 21,
+    "srednee_R": -0.3617729492837894,
+    "edge": -0.3394416781594006,
+    "z": -0.6582079649358975
+   },
+   "O3": {
+    "n": 12,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "MOMENTUM_30D",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 47,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 14,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 21,
+    "srednee_R": -0.2954133583748384,
+    "edge": -0.33944167815940046,
+    "z": -0.6573419314488546
+   },
+   "O3": {
+    "n": 12,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 8644,
+  "otkazy": {
+   "atlas_net": 71520,
+   "infeasible_stop_lev": 6263
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-2.17)",
+  "okna": {
+   "O1": {
+    "n": 4266,
+    "srednee_R": -0.026549206158029363,
+    "edge": 0.04512694302289459,
+    "z": 2.157344673782898
+   },
+   "O2": {
+    "n": 1184,
+    "srednee_R": -0.01258914655195821,
+    "edge": 0.03571158643127283,
+    "z": 1.1964722856450747
+   },
+   "O3": {
+    "n": 3194,
+    "srednee_R": -0.13602775481009804,
+    "edge": -0.019879176291008605,
+    "z": -0.9021710028393491
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 15712,
+  "otkazy": {
+   "depth_lt_order": 67104,
+   "cost_dominated": 624,
+   "atlas_net": 1865,
+   "lev_instr": 1122
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-2.42)",
+  "okna": {
+   "O1": {
+    "n": 7660,
+    "srednee_R": -0.02243006376339058,
+    "edge": 0.04343317235177908,
+    "z": 3.305322322905191
+   },
+   "O2": {
+    "n": 2092,
+    "srednee_R": -0.009444664764477542,
+    "edge": 0.04667064364421571,
+    "z": 1.77089071298232
+   },
+   "O3": {
+    "n": 5960,
+    "srednee_R": -0.11988108352792497,
+    "edge": -0.01617283599871104,
+    "z": -1.0983573036316292
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 36062,
+  "otkazy": {
+   "depth_lt_order": 46592,
+   "cost_dominated": 786,
+   "atlas_net": 1865,
+   "lev_instr": 1122
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-4.54)",
+  "okna": {
+   "O1": {
+    "n": 16907,
+    "srednee_R": -0.028778115299531597,
+    "edge": 0.030749162925470603,
+    "z": 3.4688873745675015
+   },
+   "O2": {
+    "n": 5662,
+    "srednee_R": -0.011123766265308891,
+    "edge": 0.0448456726513377,
+    "z": 2.922664260195518
+   },
+   "O3": {
+    "n": 13493,
+    "srednee_R": -0.11501078864709813,
+    "edge": -0.02995198253478311,
+    "z": -3.3166976349314554
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 10190,
+  "otkazy": {
+   "depth_lt_order": 72919,
+   "cost_dominated": 331,
+   "atlas_net": 1865,
+   "lev_instr": 1122
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-3.72)",
+  "okna": {
+   "O1": {
+    "n": 4815,
+    "srednee_R": -0.037527911529861895,
+    "edge": 0.03475085460068198,
+    "z": 2.223179399052495
+   },
+   "O2": {
+    "n": 1637,
+    "srednee_R": -0.036195232866788905,
+    "edge": 0.0412555524867206,
+    "z": 1.391692107831439
+   },
+   "O3": {
+    "n": 3738,
+    "srednee_R": -0.15246904354581953,
+    "edge": -0.02328019711511667,
+    "z": -1.2583474001225121
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 8644,
+  "otkazy": {
+   "atlas_net": 71520,
+   "infeasible_stop_lev": 6263
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-10.33)",
+  "okna": {
+   "O1": {
+    "n": 4266,
+    "srednee_R": -0.08977565442834572,
+    "edge": -0.0376131379354927,
+    "z": -1.7527552449721677
+   },
+   "O2": {
+    "n": 1184,
+    "srednee_R": -0.16245280357038894,
+    "edge": -0.05187757135638435,
+    "z": -1.8784636159107007
+   },
+   "O3": {
+    "n": 3194,
+    "srednee_R": 0.00046135042576696565,
+    "edge": 0.02636910024529256,
+    "z": 1.2459340838187931
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 15712,
+  "otkazy": {
+   "depth_lt_order": 67104,
+   "cost_dominated": 624,
+   "atlas_net": 1865,
+   "lev_instr": 1122
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-14.77)",
+  "okna": {
+   "O1": {
+    "n": 7660,
+    "srednee_R": -0.09743477330346692,
+    "edge": -0.03886478433826623,
+    "z": -2.8520884312204076
+   },
+   "O2": {
+    "n": 2092,
+    "srednee_R": -0.17812727077471965,
+    "edge": -0.05975230311549379,
+    "z": -2.596806920268862
+   },
+   "O3": {
+    "n": 5960,
+    "srednee_R": -0.01800888485256779,
+    "edge": 0.018252137189287754,
+    "z": 1.199545099170113
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 36062,
+  "otkazy": {
+   "depth_lt_order": 46592,
+   "cost_dominated": 786,
+   "atlas_net": 1865,
+   "lev_instr": 1122
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-17.16)",
+  "okna": {
+   "O1": {
+    "n": 16907,
+    "srednee_R": -0.071931120746977,
+    "edge": -0.024193014689178956,
+    "z": -2.664670878923397
+   },
+   "O2": {
+    "n": 5662,
+    "srednee_R": -0.1355963246853527,
+    "edge": -0.05733305264274527,
+    "z": -4.129578966054455
+   },
+   "O3": {
+    "n": 13493,
+    "srednee_R": -0.01143116499809224,
+    "edge": 0.02788347111283517,
+    "z": 3.016133921074886
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 10190,
+  "otkazy": {
+   "depth_lt_order": 72919,
+   "cost_dominated": 331,
+   "atlas_net": 1865,
+   "lev_instr": 1122
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-12.77)",
+  "okna": {
+   "O1": {
+    "n": 4815,
+    "srednee_R": -0.1036448124437924,
+    "edge": -0.03075617548581927,
+    "z": -1.9543068891998867
+   },
+   "O2": {
+    "n": 1637,
+    "srednee_R": -0.1795797076725931,
+    "edge": -0.05140651291238135,
+    "z": -1.8726693085705313
+   },
+   "O3": {
+    "n": 3738,
+    "srednee_R": -0.008342849522872179,
+    "edge": 0.03180934704832872,
+    "z": 1.7915979215410462
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 38,
+  "otkazy": {
+   "infeasible_stop_lev": 12363
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 31,
+    "srednee_R": 0.16114422064749578,
+    "edge": 0.17311420589450946,
+    "z": 0.8008163094485413
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 7,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 8021,
+  "otkazy": {
+   "cost_dominated": 7
+  },
+  "verdikt": "POSITIVE_LEAD",
+  "dengi": "MONEY_FAIL(t=-0.98)",
+  "okna": {
+   "O2": {
+    "n": 3100,
+    "srednee_R": -0.035956351338889164,
+    "edge": 0.05156417926289532,
+    "z": 2.6796854855264622
+   },
+   "O1": {
+    "n": 3122,
+    "srednee_R": 0.01715456435558825,
+    "edge": 0.09218879528874285,
+    "z": 5.039399000267411
+   },
+   "O3": {
+    "n": 1799,
+    "srednee_R": 0.021910527696236314,
+    "edge": 0.07191249439102841,
+    "z": 2.49445402783583
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 7276,
+  "otkazy": {
+   "cost_dominated": 1416
+  },
+  "verdikt": "POSITIVE_LEAD",
+  "dengi": "MONEY_FAIL(t=-1.60)",
+  "okna": {
+   "O2": {
+    "n": 2747,
+    "srednee_R": -0.03961522598991218,
+    "edge": 0.05438599622905516,
+    "z": 2.8320886334938726
+   },
+   "O1": {
+    "n": 2801,
+    "srednee_R": 0.007685592921712864,
+    "edge": 0.0886435635783433,
+    "z": 3.9935736986458092
+   },
+   "O3": {
+    "n": 1728,
+    "srednee_R": 0.004839045203559738,
+    "edge": 0.06573135107871203,
+    "z": 2.7023956071484627
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 38,
+  "otkazy": {
+   "infeasible_stop_lev": 12363
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 31,
+    "srednee_R": -0.11723273268859202,
+    "edge": -0.09341359259445686,
+    "z": -0.41669576515894974
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 7,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 8021,
+  "otkazy": {
+   "cost_dominated": 7
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-16.03)",
+  "okna": {
+   "O2": {
+    "n": 3100,
+    "srednee_R": -0.13485253270077618,
+    "edge": -0.04739980672172964,
+    "z": -2.4958037543922305
+   },
+   "O1": {
+    "n": 3122,
+    "srednee_R": -0.167399586170882,
+    "edge": -0.08906587556768522,
+    "z": -4.9140271115700465
+   },
+   "O3": {
+    "n": 1799,
+    "srednee_R": -0.1418755747236064,
+    "edge": -0.07421173907089232,
+    "z": -2.5442142677696467
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 7276,
+  "otkazy": {
+   "cost_dominated": 1416
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-15.67)",
+  "okna": {
+   "O2": {
+    "n": 2747,
+    "srednee_R": -0.1389700690424011,
+    "edge": -0.05160958062402066,
+    "z": -2.708538207572259
+   },
+   "O1": {
+    "n": 2801,
+    "srednee_R": -0.1697042844212018,
+    "edge": -0.08828635396543844,
+    "z": -4.213249315521203
+   },
+   "O3": {
+    "n": 1728,
+    "srednee_R": -0.1540307437377489,
+    "edge": -0.06746820839008155,
+    "z": -2.6511961333087246
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 10,
+  "otkazy": {
+   "infeasible_stop_lev": 612
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 450,
+  "otkazy": {
+   "cost_dominated": 6
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-1.80)",
+  "okna": {
+   "O2": {
+    "n": 150,
+    "srednee_R": -0.06581580392199222,
+    "edge": 0.09705788393859184,
+    "z": 0.9836083865769585
+   },
+   "O1": {
+    "n": 168,
+    "srednee_R": -0.08630756704572383,
+    "edge": 0.013657799794711448,
+    "z": 0.14714923965510115
+   },
+   "O3": {
+    "n": 132,
+    "srednee_R": 0.006135810140548166,
+    "edge": 0.056298311861998,
+    "z": 0.6673887278904332
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 456,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=1.29)",
+  "okna": {
+   "O2": {
+    "n": 156,
+    "srednee_R": 0.09893805618572385,
+    "edge": 0.10783944972021947,
+    "z": 1.126560922922867
+   },
+   "O1": {
+    "n": 168,
+    "srednee_R": 0.012217253371730111,
+    "edge": -0.004457145276127101,
+    "z": -0.05188413151706885
+   },
+   "O3": {
+    "n": 132,
+    "srednee_R": 0.10904773652419322,
+    "edge": 0.07179460054027459,
+    "z": 0.9232391420823497
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 10,
+  "otkazy": {
+   "infeasible_stop_lev": 612
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 450,
+  "otkazy": {
+   "cost_dominated": 6
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-5.46)",
+  "okna": {
+   "O2": {
+    "n": 150,
+    "srednee_R": -0.2884989017197965,
+    "edge": -0.10391000005619175,
+    "z": -1.0867143420748633
+   },
+   "O1": {
+    "n": 168,
+    "srednee_R": -0.1628517250341093,
+    "edge": -0.04512468868332825,
+    "z": -0.5096049537353108
+   },
+   "O3": {
+    "n": 132,
+    "srednee_R": -0.25647519138405955,
+    "edge": -0.05824805300288963,
+    "z": -0.6565039459744018
+   }
+  }
+ },
+ {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 456,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.66)",
+  "okna": {
+   "O2": {
+    "n": 156,
+    "srednee_R": -0.15427159967683352,
+    "edge": -0.1060166628551008,
+    "z": -1.137246565403865
+   },
+   "O1": {
+    "n": 168,
+    "srednee_R": -0.06432690461665533,
+    "edge": -0.021724313840990342,
+    "z": -0.2637974665369088
+   },
+   "O3": {
+    "n": 132,
+    "srednee_R": -0.15356326500041445,
+    "edge": -0.07661764209779835,
+    "z": -1.0072276271340919
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 907,
+  "otkazy": {
+   "atlas_net": 12308,
+   "infeasible_stop_lev": 2964
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.90)",
+  "okna": {
+   "O1": {
+    "n": 376,
+    "srednee_R": -0.17449239876984235,
+    "edge": -0.12746711163293684,
+    "z": -1.3093951956136283
+   },
+   "O2": {
+    "n": 138,
+    "srednee_R": 0.06279501828065766,
+    "edge": 0.056798824423164834,
+    "z": 0.30553737660465796
+   },
+   "O3": {
+    "n": 393,
+    "srednee_R": -0.12826174520198932,
+    "edge": 0.018302301201307963,
+    "z": 0.17090271903887774
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1581,
+  "otkazy": {
+   "depth_lt_order": 12789,
+   "cost_dominated": 241,
+   "atlas_net": 342,
+   "lev_instr": 944
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.46)",
+  "okna": {
+   "O1": {
+    "n": 645,
+    "srednee_R": -0.09859337307588184,
+    "edge": -0.060553066558322634,
+    "z": -0.7650518826561503
+   },
+   "O2": {
+    "n": 278,
+    "srednee_R": 0.20673395612909337,
+    "edge": 0.22127755325684226,
+    "z": 1.9267316007744655
+   },
+   "O3": {
+    "n": 658,
+    "srednee_R": -0.1472354879676203,
+    "edge": -0.021546256981857664,
+    "z": -0.2884449740817923
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 3598,
+  "otkazy": {
+   "depth_lt_order": 9927,
+   "cost_dominated": 322,
+   "atlas_net": 342,
+   "lev_instr": 944
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-0.02)",
+  "okna": {
+   "O1": {
+    "n": 1532,
+    "srednee_R": -0.020377524752765143,
+    "edge": 0.033161330771119046,
+    "z": 0.5973156333032652
+   },
+   "O2": {
+    "n": 652,
+    "srednee_R": 0.048619279617333956,
+    "edge": 0.07649534899320466,
+    "z": 0.8471297988129959
+   },
+   "O3": {
+    "n": 1414,
+    "srednee_R": -0.1155470177695505,
+    "edge": -0.04761282521545111,
+    "z": -0.8120342962260506
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1179,
+  "otkazy": {
+   "depth_lt_order": 13526,
+   "cost_dominated": 85,
+   "atlas_net": 342,
+   "lev_instr": 944
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.99)",
+  "okna": {
+   "O1": {
+    "n": 454,
+    "srednee_R": -0.13916679961877462,
+    "edge": -0.09809230979359579,
+    "z": -0.9484317514790254
+   },
+   "O2": {
+    "n": 234,
+    "srednee_R": 0.14936466560502085,
+    "edge": 0.19551104656305424,
+    "z": 1.3432048983505458
+   },
+   "O3": {
+    "n": 491,
+    "srednee_R": -0.1721160727423519,
+    "edge": -0.020308599313387715,
+    "z": -0.22783041257836048
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 907,
+  "otkazy": {
+   "atlas_net": 12588,
+   "infeasible_stop_lev": 2942
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.85)",
+  "okna": {
+   "O1": {
+    "n": 380,
+    "srednee_R": 0.025566769814882165,
+    "edge": 0.041265493657069635,
+    "z": 0.4558587340337736
+   },
+   "O2": {
+    "n": 114,
+    "srednee_R": -0.29837076984579625,
+    "edge": -0.18173778686082503,
+    "z": -1.01509703107914
+   },
+   "O3": {
+    "n": 413,
+    "srednee_R": 0.08235996138274031,
+    "edge": 0.06257148774555732,
+    "z": 0.570468913762628
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1619,
+  "otkazy": {
+   "depth_lt_order": 12922,
+   "cost_dominated": 212,
+   "atlas_net": 435,
+   "lev_instr": 983
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.10)",
+  "okna": {
+   "O1": {
+    "n": 649,
+    "srednee_R": -0.037781155924636434,
+    "edge": -0.03216740697492451,
+    "z": -0.36691676947902735
+   },
+   "O2": {
+    "n": 249,
+    "srednee_R": -0.2631278176767528,
+    "edge": -0.09793438505877,
+    "z": -0.8106495555985346
+   },
+   "O3": {
+    "n": 721,
+    "srednee_R": 0.07832783108962049,
+    "edge": 0.10666053339981264,
+    "z": 1.330138540450146
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 3733,
+  "otkazy": {
+   "depth_lt_order": 10095,
+   "cost_dominated": 258,
+   "atlas_net": 435,
+   "lev_instr": 983
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.31)",
+  "okna": {
+   "O1": {
+    "n": 1503,
+    "srednee_R": -0.016226140067126457,
+    "edge": -0.006286528251157865,
+    "z": -0.10585265578850471
+   },
+   "O2": {
+    "n": 576,
+    "srednee_R": -0.2885487490054962,
+    "edge": -0.20102050096965987,
+    "z": -2.408375281752521
+   },
+   "O3": {
+    "n": 1654,
+    "srednee_R": 0.033948167941362885,
+    "edge": 0.05779327183851446,
+    "z": 1.1012862339767175
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1174,
+  "otkazy": {
+   "depth_lt_order": 13683,
+   "cost_dominated": 75,
+   "atlas_net": 435,
+   "lev_instr": 983
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.98)",
+  "okna": {
+   "O1": {
+    "n": 448,
+    "srednee_R": -0.044396203969092905,
+    "edge": 0.009655299071200829,
+    "z": 0.0964006727277574
+   },
+   "O2": {
+    "n": 217,
+    "srednee_R": -0.24779133413549448,
+    "edge": -0.0727442645944712,
+    "z": -0.5145697456266942
+   },
+   "O3": {
+    "n": 509,
+    "srednee_R": 0.07522452740251902,
+    "edge": 0.09284866817300344,
+    "z": 0.9156118687332866
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 194
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 104,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 38,
+    "srednee_R": -0.3307916678504345,
+    "edge": -0.09014190244347806,
+    "z": -0.32198653226773616
+   },
+   "O1": {
+    "n": 46,
+    "srednee_R": 0.30492812723131896,
+    "edge": 0.39825813970874857,
+    "z": 1.287817673140196
+   },
+   "O3": {
+    "n": 20,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 103,
+  "otkazy": {
+   "cost_dominated": 2
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 38,
+    "srednee_R": -0.27641200167761776,
+    "edge": -0.10105244092577947,
+    "z": -0.35963489059001796
+   },
+   "O1": {
+    "n": 45,
+    "srednee_R": 0.28121529719132793,
+    "edge": 0.42304275740062114,
+    "z": 1.4454672441627576
+   },
+   "O3": {
+    "n": 20,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 208
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 111,
+  "otkazy": {
+   "cost_dominated": 1
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 41,
+    "srednee_R": 0.2909724992826081,
+    "edge": 0.3563273780903592,
+    "z": 0.9979164971304622
+   },
+   "O1": {
+    "n": 46,
+    "srednee_R": 0.19991601143356577,
+    "edge": 0.29220057081894324,
+    "z": 0.8465617900933465
+   },
+   "O3": {
+    "n": 24,
+    "srednee_R": -0.08065892049205936,
+    "edge": 0.0006952894666659298,
+    "z": 0.0014211699443431652
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 111,
+  "otkazy": {
+   "cost_dominated": 3
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 42,
+    "srednee_R": 0.3928466120842735,
+    "edge": 0.32776025800717346,
+    "z": 1.0606481007409898
+   },
+   "O1": {
+    "n": 45,
+    "srednee_R": 0.24232902729867878,
+    "edge": 0.22814006348232901,
+    "z": 0.7750712609914128
+   },
+   "O3": {
+    "n": 24,
+    "srednee_R": -0.05359647182189542,
+    "edge": 0.04837323180706292,
+    "z": 0.09670840040405976
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 21
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 8,
+  "otkazy": {
+   "cost_dominated": 6
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 3,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 9,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 29
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 10,
+  "otkazy": {
+   "cost_dominated": 6
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 11,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 5,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 506,
+  "otkazy": {
+   "atlas_net": 4826,
+   "infeasible_stop_lev": 485
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.69)",
+  "okna": {
+   "O1": {
+    "n": 278,
+    "srednee_R": -0.26639377321694063,
+    "edge": -0.2960692845096582,
+    "z": -2.754409748904319
+   },
+   "O2": {
+    "n": 93,
+    "srednee_R": -0.1037904393060622,
+    "edge": -0.18365423722152163,
+    "z": -1.0067806026540258
+   },
+   "O3": {
+    "n": 135,
+    "srednee_R": -0.43620318585608114,
+    "edge": -0.3501070042108654,
+    "z": -2.3484154650830704
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 922,
+  "otkazy": {
+   "depth_lt_order": 4459,
+   "atlas_net": 130,
+   "cost_dominated": 70,
+   "lev_instr": 34
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.80)",
+  "okna": {
+   "O1": {
+    "n": 477,
+    "srednee_R": -0.17812475047244503,
+    "edge": -0.24513293188862859,
+    "z": -3.289290166590684
+   },
+   "O2": {
+    "n": 161,
+    "srednee_R": 0.029092574335510716,
+    "edge": -0.047359964306699504,
+    "z": -0.3367961745857059
+   },
+   "O3": {
+    "n": 284,
+    "srednee_R": -0.2873130086211744,
+    "edge": -0.30156921531565395,
+    "z": -2.8092094952235924
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 1977,
+  "otkazy": {
+   "depth_lt_order": 2929,
+   "atlas_net": 130,
+   "cost_dominated": 75,
+   "lev_instr": 34
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.34)",
+  "okna": {
+   "O1": {
+    "n": 982,
+    "srednee_R": -0.15133413133900084,
+    "edge": -0.18677397799920206,
+    "z": -3.1105660953891703
+   },
+   "O2": {
+    "n": 368,
+    "srednee_R": -0.006264962160536557,
+    "edge": -0.08843780316608958,
+    "z": -0.7821796328987148
+   },
+   "O3": {
+    "n": 627,
+    "srednee_R": -0.1700526571833904,
+    "edge": -0.17287851741112809,
+    "z": -2.297500467968111
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 614,
+  "otkazy": {
+   "depth_lt_order": 4954,
+   "atlas_net": 130,
+   "cost_dominated": 39,
+   "lev_instr": 34
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.44)",
+  "okna": {
+   "O1": {
+    "n": 314,
+    "srednee_R": -0.23776808968863203,
+    "edge": -0.26900608531473963,
+    "z": -2.479395742896891
+   },
+   "O2": {
+    "n": 123,
+    "srednee_R": -0.08923774816199258,
+    "edge": -0.16162071116344878,
+    "z": -0.9432576284730617
+   },
+   "O3": {
+    "n": 177,
+    "srednee_R": -0.3307162393419699,
+    "edge": -0.20870967472411212,
+    "z": -1.5013196399826763
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 666,
+  "otkazy": {
+   "atlas_net": 8795,
+   "infeasible_stop_lev": 530
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.69)",
+  "okna": {
+   "O1": {
+    "n": 302,
+    "srednee_R": 0.01858127057783001,
+    "edge": -0.009789627249505984,
+    "z": -0.08644666673116501
+   },
+   "O2": {
+    "n": 54,
+    "srednee_R": -0.6844140025669122,
+    "edge": -0.6605238880360661,
+    "z": -3.4567587183125497
+   },
+   "O3": {
+    "n": 310,
+    "srednee_R": -0.13052994368968196,
+    "edge": -0.20966548566314713,
+    "z": -2.372364668005202
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1165,
+  "otkazy": {
+   "depth_lt_order": 8262,
+   "cost_dominated": 54,
+   "atlas_net": 249,
+   "lev_instr": 33
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.90)",
+  "okna": {
+   "O1": {
+    "n": 508,
+    "srednee_R": 0.026263936243909863,
+    "edge": -0.04575694577760986,
+    "z": -0.5694005218359641
+   },
+   "O2": {
+    "n": 100,
+    "srednee_R": -0.3651177833555054,
+    "edge": -0.32190407994405,
+    "z": -1.5221533057556702
+   },
+   "O3": {
+    "n": 557,
+    "srednee_R": -0.08637070660638392,
+    "edge": -0.14566083037740765,
+    "z": -1.8655401058527814
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 2716,
+  "otkazy": {
+   "depth_lt_order": 6010,
+   "cost_dominated": 67,
+   "atlas_net": 249,
+   "lev_instr": 33
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.22)",
+  "okna": {
+   "O1": {
+    "n": 1190,
+    "srednee_R": -0.017347499096317217,
+    "edge": -0.08620372452403154,
+    "z": -1.493749496550627
+   },
+   "O2": {
+    "n": 322,
+    "srednee_R": -0.2608027169832535,
+    "edge": -0.30670151496670367,
+    "z": -3.1893435887247152
+   },
+   "O3": {
+    "n": 1204,
+    "srednee_R": -0.021467389089312516,
+    "edge": -0.06798562194503552,
+    "z": -1.256452447832845
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 750,
+  "otkazy": {
+   "depth_lt_order": 8886,
+   "cost_dominated": 33,
+   "atlas_net": 249,
+   "lev_instr": 33
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.66)",
+  "okna": {
+   "O1": {
+    "n": 326,
+    "srednee_R": 0.012777310956335698,
+    "edge": -0.0006594564256733985,
+    "z": -0.005909055089451824
+   },
+   "O2": {
+    "n": 82,
+    "srednee_R": -0.45825676113438246,
+    "edge": -0.4524704108528494,
+    "z": -2.1018136210425418
+   },
+   "O3": {
+    "n": 342,
+    "srednee_R": -0.07300969370820967,
+    "edge": -0.1199397424096151,
+    "z": -1.2694509030694148
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 1404
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 606,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.71)",
+  "okna": {
+   "O2": {
+    "n": 219,
+    "srednee_R": -0.24073399596596823,
+    "edge": -0.18490152272003188,
+    "z": -1.654426680301022
+   },
+   "O1": {
+    "n": 245,
+    "srednee_R": -0.08748943924074672,
+    "edge": -0.08001107748327455,
+    "z": -0.6630669674191045
+   },
+   "O3": {
+    "n": 142,
+    "srednee_R": -0.009144884472878381,
+    "edge": -0.06823366678880867,
+    "z": -0.4269142239745938
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 604,
+  "otkazy": {
+   "cost_dominated": 12
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.28)",
+  "okna": {
+   "O2": {
+    "n": 218,
+    "srednee_R": -0.216046836724098,
+    "edge": -0.21000434691218028,
+    "z": -1.6909352141576994
+   },
+   "O1": {
+    "n": 244,
+    "srednee_R": -0.06060598101217183,
+    "edge": -0.0861137833260664,
+    "z": -0.6937389414333582
+   },
+   "O3": {
+    "n": 142,
+    "srednee_R": 0.00599864334844827,
+    "edge": -0.11283344758206972,
+    "z": -0.6940155808322975
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 9,
+  "otkazy": {
+   "infeasible_stop_lev": 1418
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 8,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 618,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.51)",
+  "okna": {
+   "O2": {
+    "n": 243,
+    "srednee_R": -0.20619873889979073,
+    "edge": -0.27201251868853726,
+    "z": -2.18320355708094
+   },
+   "O1": {
+    "n": 219,
+    "srednee_R": -0.08930964253363276,
+    "edge": -0.07117152570543236,
+    "z": -0.552326456481518
+   },
+   "O3": {
+    "n": 156,
+    "srednee_R": -0.04916754600488929,
+    "edge": -0.019270181451367312,
+    "z": -0.1132167239473006
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 613,
+  "otkazy": {
+   "cost_dominated": 24
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.98)",
+  "okna": {
+   "O2": {
+    "n": 240,
+    "srednee_R": -0.18479837337568547,
+    "edge": -0.29700307565434114,
+    "z": -2.5100131765068086
+   },
+   "O1": {
+    "n": 217,
+    "srednee_R": -0.04602779176553697,
+    "edge": -0.04998953233386226,
+    "z": -0.391280446865913
+   },
+   "O3": {
+    "n": 156,
+    "srednee_R": -0.0349202621620701,
+    "edge": -0.0030334941198304696,
+    "z": -0.019246301731774076
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 9,
+  "otkazy": {
+   "infeasible_stop_lev": 210
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 6,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 99,
+  "otkazy": {
+   "cost_dominated": 5
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 35,
+    "srednee_R": -0.028390706616079134,
+    "edge": -0.0028028596948615828,
+    "z": -0.009803849805796792
+   },
+   "O1": {
+    "n": 40,
+    "srednee_R": -0.37597093544995375,
+    "edge": -0.486323838698455,
+    "z": -1.7254693830639718
+   },
+   "O3": {
+    "n": 24,
+    "srednee_R": 0.7386485095256097,
+    "edge": 0.8106761283897272,
+    "z": 2.069235988221185
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 101,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 37,
+    "srednee_R": 0.13639573183150358,
+    "edge": 0.0035409445748837143,
+    "z": 0.012227555718300661
+   },
+   "O1": {
+    "n": 40,
+    "srednee_R": -0.27646070590468014,
+    "edge": -0.40008763659155183,
+    "z": -1.323694300492739
+   },
+   "O3": {
+    "n": 24,
+    "srednee_R": 0.8335959661601735,
+    "edge": 0.6039058509871968,
+    "z": 1.7023178558574008
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 1,
+  "otkazy": {
+   "infeasible_stop_lev": 168
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 87,
+  "otkazy": {
+   "cost_dominated": 1
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 28,
+    "srednee_R": -0.42967327905678776,
+    "edge": -0.3405947400249408,
+    "z": -1.1069091445931585
+   },
+   "O1": {
+    "n": 30,
+    "srednee_R": -0.6267830156001847,
+    "edge": -0.6820524688074316,
+    "z": -2.258783569421948
+   },
+   "O3": {
+    "n": 29,
+    "srednee_R": -0.29155502665280725,
+    "edge": -0.3436363487100215,
+    "z": -0.8514032040924244
+   }
+  }
+ },
+ {
+  "meh": "OTKAT_V_TRENDE",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 87,
+  "otkazy": {},
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 28,
+    "srednee_R": -0.29039904359321234,
+    "edge": -0.34059474002494083,
+    "z": -1.108424264124113
+   },
+   "O1": {
+    "n": 30,
+    "srednee_R": -0.522471501380578,
+    "edge": -0.6820524688074316,
+    "z": -2.2575997227405633
+   },
+   "O3": {
+    "n": 29,
+    "srednee_R": -0.18368612841628343,
+    "edge": -0.3436363487100216,
+    "z": -0.8507419984425244
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 1637,
+  "otkazy": {
+   "atlas_net": 42791,
+   "infeasible_stop_lev": 3885
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.24)",
+  "okna": {
+   "O1": {
+    "n": 836,
+    "srednee_R": -0.06275207320660632,
+    "edge": -0.10755514611380301,
+    "z": -1.3627921087524668
+   },
+   "O2": {
+    "n": 244,
+    "srednee_R": 0.196489970542295,
+    "edge": 0.06383782178210151,
+    "z": 0.3808200108230077
+   },
+   "O3": {
+    "n": 557,
+    "srednee_R": -0.2474553619027074,
+    "edge": -0.17481846809516838,
+    "z": -2.0457209723663383
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 2962,
+  "otkazy": {
+   "depth_lt_order": 39944,
+   "cost_dominated": 440,
+   "atlas_net": 1549,
+   "lev_instr": 170
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.52)",
+  "okna": {
+   "O1": {
+    "n": 1480,
+    "srednee_R": -0.0292011578160404,
+    "edge": -0.07706358769646354,
+    "z": -1.3481068542682206
+   },
+   "O2": {
+    "n": 416,
+    "srednee_R": 0.01844939072120101,
+    "edge": -0.12400374932375473,
+    "z": -1.2000867775097086
+   },
+   "O3": {
+    "n": 1066,
+    "srednee_R": -0.12954054234594123,
+    "edge": -0.11649814208435974,
+    "z": -1.7561084005009076
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 6822,
+  "otkazy": {
+   "depth_lt_order": 27068,
+   "cost_dominated": 484,
+   "atlas_net": 1549,
+   "lev_instr": 170
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.65)",
+  "okna": {
+   "O1": {
+    "n": 3282,
+    "srednee_R": -0.0571157411957367,
+    "edge": -0.08655109960654817,
+    "z": -2.3756624964236464
+   },
+   "O2": {
+    "n": 1143,
+    "srednee_R": 0.014833194005324696,
+    "edge": -0.05339485056619267,
+    "z": -0.7887549911156992
+   },
+   "O3": {
+    "n": 2397,
+    "srednee_R": -0.1335716203980046,
+    "edge": -0.12314817588220764,
+    "z": -2.601479289527291
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1899,
+  "otkazy": {
+   "depth_lt_order": 43633,
+   "cost_dominated": 259,
+   "atlas_net": 1549,
+   "lev_instr": 170
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.39)",
+  "okna": {
+   "O1": {
+    "n": 926,
+    "srednee_R": -0.03142636708033887,
+    "edge": -0.07408340407845038,
+    "z": -1.001553043524547
+   },
+   "O2": {
+    "n": 321,
+    "srednee_R": 0.023483816104273046,
+    "edge": -0.043394263408701415,
+    "z": -0.3767386946978382
+   },
+   "O3": {
+    "n": 652,
+    "srednee_R": -0.19300379212055263,
+    "edge": -0.14865429946158926,
+    "z": -1.874728194890887
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 1717,
+  "otkazy": {
+   "atlas_net": 45574,
+   "infeasible_stop_lev": 2404
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.36)",
+  "okna": {
+   "O1": {
+    "n": 821,
+    "srednee_R": 0.04222129455502933,
+    "edge": 0.004228978443770008,
+    "z": 0.047213548501224396
+   },
+   "O2": {
+    "n": 208,
+    "srednee_R": -0.3642744589014943,
+    "edge": -0.2585823925541699,
+    "z": -1.8497908930888272
+   },
+   "O3": {
+    "n": 688,
+    "srednee_R": 0.11952390227752376,
+    "edge": -0.13072725088688858,
+    "z": -1.47257937461188
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 3227,
+  "otkazy": {
+   "depth_lt_order": 41286,
+   "cost_dominated": 206,
+   "atlas_net": 1717,
+   "lev_instr": 128
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.57)",
+  "okna": {
+   "O1": {
+    "n": 1567,
+    "srednee_R": 0.04508025479829043,
+    "edge": 0.010550511057031094,
+    "z": 0.17796818484186475
+   },
+   "O2": {
+    "n": 342,
+    "srednee_R": -0.25098183002227104,
+    "edge": -0.17960144017624402,
+    "z": -1.8282751050296742
+   },
+   "O3": {
+    "n": 1318,
+    "srednee_R": 0.07895209469600063,
+    "edge": -0.1220998502051031,
+    "z": -2.220170063936427
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 7368,
+  "otkazy": {
+   "depth_lt_order": 27992,
+   "cost_dominated": 232,
+   "atlas_net": 1717,
+   "lev_instr": 128
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=1.26)",
+  "okna": {
+   "O1": {
+    "n": 3488,
+    "srednee_R": 0.09524234654627335,
+    "edge": 0.04128668908708725,
+    "z": 1.2200990444179922
+   },
+   "O2": {
+    "n": 969,
+    "srednee_R": -0.15441258949025916,
+    "edge": -0.17236371830773853,
+    "z": -2.5112353526846376
+   },
+   "O3": {
+    "n": 2911,
+    "srednee_R": 0.07226926180910738,
+    "edge": -0.09600902036966595,
+    "z": -2.4662822384742795
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1953,
+  "otkazy": {
+   "depth_lt_order": 45316,
+   "cost_dominated": 111,
+   "atlas_net": 1717,
+   "lev_instr": 128
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.22)",
+  "okna": {
+   "O1": {
+    "n": 902,
+    "srednee_R": 0.037791340816909276,
+    "edge": 0.03292711707236161,
+    "z": 0.500342363196333
+   },
+   "O2": {
+    "n": 253,
+    "srednee_R": -0.3036122943399136,
+    "edge": -0.17811994849867482,
+    "z": -1.311787880846292
+   },
+   "O3": {
+    "n": 798,
+    "srednee_R": 0.053599583911886226,
+    "edge": -0.17148267315127885,
+    "z": -2.2836315546976027
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 12,
+  "otkazy": {
+   "infeasible_stop_lev": 10313
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 8,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1646,
+  "otkazy": {
+   "cost_dominated": 2
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.88)",
+  "okna": {
+   "O2": {
+    "n": 608,
+    "srednee_R": -0.009068709304568682,
+    "edge": -0.006956032414271784,
+    "z": -0.09218436788265218
+   },
+   "O1": {
+    "n": 653,
+    "srednee_R": -0.06630065605060767,
+    "edge": -0.12722571085275036,
+    "z": -1.5693524147074291
+   },
+   "O3": {
+    "n": 385,
+    "srednee_R": -0.16869930288414464,
+    "edge": -0.18785902726573797,
+    "z": -1.6592837694719755
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 1645,
+  "otkazy": {
+   "cost_dominated": 29
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.51)",
+  "okna": {
+   "O2": {
+    "n": 608,
+    "srednee_R": -0.00047854749018187633,
+    "edge": -0.031177551650813838,
+    "z": -0.3682870002816104
+   },
+   "O1": {
+    "n": 652,
+    "srednee_R": -0.042953261694851655,
+    "edge": -0.12125402270487713,
+    "z": -1.4635778956902563
+   },
+   "O3": {
+    "n": 385,
+    "srednee_R": -0.1512611556728662,
+    "edge": -0.18046124359358895,
+    "z": -1.5583256299338715
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 11,
+  "otkazy": {
+   "infeasible_stop_lev": 9592
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 8,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 3,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1630,
+  "otkazy": {
+   "cost_dominated": 1
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.45)",
+  "okna": {
+   "O2": {
+    "n": 629,
+    "srednee_R": 0.04240056374313522,
+    "edge": -0.025302241266678058,
+    "z": -0.25468887483808195
+   },
+   "O1": {
+    "n": 636,
+    "srednee_R": -0.15251967458355364,
+    "edge": -0.19424392223504666,
+    "z": -2.328114785598851
+   },
+   "O3": {
+    "n": 365,
+    "srednee_R": -0.23127607774720377,
+    "edge": -0.19035510415974294,
+    "z": -2.035224738676796
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 1625,
+  "otkazy": {
+   "cost_dominated": 43
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.81)",
+  "okna": {
+   "O2": {
+    "n": 624,
+    "srednee_R": 0.07956658035549058,
+    "edge": 0.018091679702564797,
+    "z": 0.16990421431715413
+   },
+   "O1": {
+    "n": 636,
+    "srednee_R": -0.1296641289023264,
+    "edge": -0.18762023679543158,
+    "z": -2.1269432478642103
+   },
+   "O3": {
+    "n": 365,
+    "srednee_R": -0.21890905077454528,
+    "edge": -0.18120217837801283,
+    "z": -1.8654389988126348
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 4,
+  "otkazy": {
+   "infeasible_stop_lev": 1686
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 280,
+  "otkazy": {
+   "cost_dominated": 13
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.30)",
+  "okna": {
+   "O2": {
+    "n": 93,
+    "srednee_R": -0.13621700284353194,
+    "edge": -0.010752712866546554,
+    "z": -0.04619267315912342
+   },
+   "O1": {
+    "n": 107,
+    "srednee_R": -0.14353427808780478,
+    "edge": -0.18432301809862958,
+    "z": -0.9502528935526865
+   },
+   "O3": {
+    "n": 80,
+    "srednee_R": 0.00556119571375191,
+    "edge": -0.004067231478105438,
+    "z": -0.01727739621151368
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 282,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=0.16)",
+  "okna": {
+   "O2": {
+    "n": 95,
+    "srednee_R": 0.07346617878726373,
+    "edge": 0.03605260740432826,
+    "z": 0.1569859299629711
+   },
+   "O1": {
+    "n": 107,
+    "srednee_R": -0.027300221735366163,
+    "edge": -0.24665387012212223,
+    "z": -1.1460851226953161
+   },
+   "O3": {
+    "n": 80,
+    "srednee_R": 0.11460318846940823,
+    "edge": -0.0036878730040386665,
+    "z": -0.013883628339240875
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 14,
+  "otkazy": {
+   "infeasible_stop_lev": 1000
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 12,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 240,
+  "otkazy": {
+   "cost_dominated": 9
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.59)",
+  "okna": {
+   "O2": {
+    "n": 86,
+    "srednee_R": -0.381946618089475,
+    "edge": -0.2938669026620142,
+    "z": -1.303646777800679
+   },
+   "O1": {
+    "n": 81,
+    "srednee_R": -0.19396615937179734,
+    "edge": -0.1445722349239107,
+    "z": -0.4938340319847372
+   },
+   "O3": {
+    "n": 73,
+    "srednee_R": -0.09508303282900123,
+    "edge": -0.1011798415450693,
+    "z": -0.39131237650460876
+   }
+  }
+ },
+ {
+  "meh": "PROBOY_55",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 244,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.75)",
+  "okna": {
+   "O2": {
+    "n": 90,
+    "srednee_R": -0.27255988626061534,
+    "edge": -0.25803753405340174,
+    "z": -1.2585270541298337
+   },
+   "O1": {
+    "n": 81,
+    "srednee_R": -0.09975358224521474,
+    "edge": -0.1383503106730265,
+    "z": -0.5801034614834096
+   },
+   "O3": {
+    "n": 73,
+    "srednee_R": 0.011758008146773255,
+    "edge": -0.10140017121050883,
+    "z": -0.43572627299540956
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 2772,
+  "otkazy": {
+   "atlas_net": 63935,
+   "infeasible_stop_lev": 20659
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.08)",
+  "okna": {
+   "O1": {
+    "n": 1585,
+    "srednee_R": -0.14974466437852454,
+    "edge": -0.031029689039952804,
+    "z": -0.6146373099671869
+   },
+   "O2": {
+    "n": 190,
+    "srednee_R": 0.09260723000760729,
+    "edge": 0.1388443582990525,
+    "z": 0.9027488921580666
+   },
+   "O3": {
+    "n": 997,
+    "srednee_R": -0.26751128674023733,
+    "edge": -0.03602708699539767,
+    "z": -0.6609873454105297
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 5083,
+  "otkazy": {
+   "depth_lt_order": 76237,
+   "cost_dominated": 1887,
+   "atlas_net": 1748,
+   "lev_instr": 279
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-3.77)",
+  "okna": {
+   "O1": {
+    "n": 2568,
+    "srednee_R": -0.123321917207985,
+    "edge": 0.01173277236525061,
+    "z": 0.359402879240679
+   },
+   "O2": {
+    "n": 568,
+    "srednee_R": 0.08253775015590072,
+    "edge": 0.1866069304894558,
+    "z": 2.431328630775031
+   },
+   "O3": {
+    "n": 1947,
+    "srednee_R": -0.22561687938107783,
+    "edge": -0.00029649024981309724,
+    "z": -0.00705219444531793
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 11333,
+  "otkazy": {
+   "depth_lt_order": 63850,
+   "cost_dominated": 2172,
+   "atlas_net": 1748,
+   "lev_instr": 279
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-4.89)",
+  "okna": {
+   "O1": {
+    "n": 5784,
+    "srednee_R": -0.1078518993581456,
+    "edge": 0.005740890558106795,
+    "z": 0.2475409007652987
+   },
+   "O2": {
+    "n": 1178,
+    "srednee_R": 0.0810887012265433,
+    "edge": 0.16037144498720524,
+    "z": 2.7564517447228805
+   },
+   "O3": {
+    "n": 4371,
+    "srednee_R": -0.16564472031825414,
+    "edge": 0.025134841071825287,
+    "z": 0.9405477913388505
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 4092,
+  "otkazy": {
+   "depth_lt_order": 78737,
+   "cost_dominated": 1287,
+   "atlas_net": 1748,
+   "lev_instr": 279
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.13)",
+  "okna": {
+   "O1": {
+    "n": 2016,
+    "srednee_R": -0.15174317915763827,
+    "edge": -0.013227226845652446,
+    "z": -0.31167485767494324
+   },
+   "O2": {
+    "n": 516,
+    "srednee_R": 0.08351745189891382,
+    "edge": 0.2241991828703349,
+    "z": 2.669735887414552
+   },
+   "O3": {
+    "n": 1560,
+    "srednee_R": -0.26865128936380905,
+    "edge": -0.03689860896930733,
+    "z": -0.813722339444443
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 2499,
+  "otkazy": {
+   "atlas_net": 60158,
+   "infeasible_stop_lev": 22827
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-2.00)",
+  "okna": {
+   "O1": {
+    "n": 1467,
+    "srednee_R": -0.053285928636830744,
+    "edge": 0.041752717445604735,
+    "z": 0.7338942806889335
+   },
+   "O2": {
+    "n": 220,
+    "srednee_R": -0.1435513223848061,
+    "edge": 0.015119016068796648,
+    "z": 0.13214417366488007
+   },
+   "O3": {
+    "n": 812,
+    "srednee_R": -0.02451245786075368,
+    "edge": 0.010474285812972866,
+    "z": 0.15773953836051793
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 4834,
+  "otkazy": {
+   "depth_lt_order": 74277,
+   "cost_dominated": 2254,
+   "atlas_net": 1586,
+   "lev_instr": 324
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-5.20)",
+  "okna": {
+   "O1": {
+    "n": 2517,
+    "srednee_R": -0.11562052398001972,
+    "edge": -0.004372788522649551,
+    "z": -0.11719361575436918
+   },
+   "O2": {
+    "n": 668,
+    "srednee_R": -0.15107995519368386,
+    "edge": 0.04609073599992489,
+    "z": 0.6568941058335214
+   },
+   "O3": {
+    "n": 1649,
+    "srednee_R": -0.06586499395603644,
+    "edge": 0.01757622216621428,
+    "z": 0.3624045817942373
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 10881,
+  "otkazy": {
+   "depth_lt_order": 62191,
+   "cost_dominated": 2582,
+   "atlas_net": 1586,
+   "lev_instr": 324
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-7.05)",
+  "okna": {
+   "O1": {
+    "n": 5559,
+    "srednee_R": -0.10785441011507557,
+    "edge": -0.012332493075485118,
+    "z": -0.5150954727277774
+   },
+   "O2": {
+    "n": 1441,
+    "srednee_R": -0.12744748030223024,
+    "edge": 0.04275030555250392,
+    "z": 0.7880019959158346
+   },
+   "O3": {
+    "n": 3881,
+    "srednee_R": -0.07753837747970571,
+    "edge": 0.010319563703186166,
+    "z": 0.3059342498227217
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 3953,
+  "otkazy": {
+   "depth_lt_order": 76676,
+   "cost_dominated": 1549,
+   "atlas_net": 1586,
+   "lev_instr": 324
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-4.64)",
+  "okna": {
+   "O1": {
+    "n": 2070,
+    "srednee_R": -0.1053016956608566,
+    "edge": 0.00674979618853469,
+    "z": 0.17871438480452023
+   },
+   "O2": {
+    "n": 588,
+    "srednee_R": -0.17440686652819037,
+    "edge": 0.03746585058546836,
+    "z": 0.4633008190623565
+   },
+   "O3": {
+    "n": 1295,
+    "srednee_R": -0.07590097913555519,
+    "edge": 0.028643285569089072,
+    "z": 0.5458002702307828
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 6,
+  "otkazy": {
+   "infeasible_stop_lev": 16013
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 5,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 4950,
+  "otkazy": {
+   "cost_dominated": 1260,
+   "lev_instr": 4
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-9.86)",
+  "okna": {
+   "O2": {
+    "n": 1777,
+    "srednee_R": -0.22479372420823812,
+    "edge": 0.001715844960722579,
+    "z": 0.0402117373657871
+   },
+   "O1": {
+    "n": 2028,
+    "srednee_R": -0.2022501689727529,
+    "edge": -0.01543804655100342,
+    "z": -0.4243983759735967
+   },
+   "O3": {
+    "n": 1145,
+    "srednee_R": -0.06883022895840651,
+    "edge": 0.0948926499107706,
+    "z": 1.7636846681232556
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "fx7_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 5112,
+  "otkazy": {
+   "cost_dominated": 717,
+   "lev_instr": 4
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-7.94)",
+  "okna": {
+   "O2": {
+    "n": 1931,
+    "srednee_R": -0.18644506239241104,
+    "edge": -0.006719907401536773,
+    "z": -0.17072672462051058
+   },
+   "O1": {
+    "n": 2052,
+    "srednee_R": -0.1511811479356585,
+    "edge": 0.009297330967886958,
+    "z": 0.2200177949773307
+   },
+   "O3": {
+    "n": 1129,
+    "srednee_R": -0.048412759595613704,
+    "edge": 0.08635685798550996,
+    "z": 1.7199520025044326
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 2,
+  "otkazy": {
+   "infeasible_stop_lev": 17283
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 5158,
+  "otkazy": {
+   "cost_dominated": 1352,
+   "lev_instr": 8
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-7.35)",
+  "okna": {
+   "O2": {
+    "n": 1810,
+    "srednee_R": -0.1968117658445242,
+    "edge": -0.01807938271066223,
+    "z": -0.43838233853165454
+   },
+   "O1": {
+    "n": 2076,
+    "srednee_R": -0.126753122714617,
+    "edge": 0.07562797729139845,
+    "z": 1.8166504421028489
+   },
+   "O3": {
+    "n": 1272,
+    "srednee_R": -0.15720604597484622,
+    "edge": 0.025457278532494076,
+    "z": 0.5291338402645672
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "fx7_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 5398,
+  "otkazy": {
+   "cost_dominated": 627,
+   "lev_instr": 8
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-5.87)",
+  "okna": {
+   "O2": {
+    "n": 2005,
+    "srednee_R": -0.14743784013955175,
+    "edge": 0.010138236181199883,
+    "z": 0.26087796976769145
+   },
+   "O1": {
+    "n": 2128,
+    "srednee_R": -0.1020467522574143,
+    "edge": 0.049832420602735406,
+    "z": 1.3609602375129009
+   },
+   "O3": {
+    "n": 1265,
+    "srednee_R": -0.1187329426134349,
+    "edge": 0.027495859755035018,
+    "z": 0.5006088249664693
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 4,
+  "otkazy": {
+   "infeasible_stop_lev": 2384
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 4,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 404,
+  "otkazy": {
+   "cost_dominated": 1255
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 48,
+    "srednee_R": -0.3131147986481393,
+    "edge": -0.11086963341696912,
+    "z": -0.398920045317675
+   },
+   "O1": {
+    "n": 196,
+    "srednee_R": -0.19450929389466423,
+    "edge": -0.0036373498662190806,
+    "z": -0.028328865895608315
+   },
+   "O3": {
+    "n": 160,
+    "srednee_R": -0.1700415355491495,
+    "edge": 0.11061925282187277,
+    "z": 0.8165209612576586
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "gold_glub_utc",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 875,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.53)",
+  "okna": {
+   "O2": {
+    "n": 303,
+    "srednee_R": -0.07899397031408253,
+    "edge": 0.012628165416263756,
+    "z": 0.1226868345071615
+   },
+   "O1": {
+    "n": 307,
+    "srednee_R": -0.08578296107444222,
+    "edge": -0.05680217666320748,
+    "z": -0.5474068241139575
+   },
+   "O3": {
+    "n": 265,
+    "srednee_R": -0.057428032256113204,
+    "edge": 0.02007220326299128,
+    "z": 0.17492940092330755
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 2498
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 369,
+  "otkazy": {
+   "cost_dominated": 1475
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.19)",
+  "okna": {
+   "O2": {
+    "n": 54,
+    "srednee_R": -0.11548848898073868,
+    "edge": 0.23105006346058152,
+    "z": 0.955100064881239
+   },
+   "O1": {
+    "n": 185,
+    "srednee_R": -0.3026265145615231,
+    "edge": -0.07225434522724516,
+    "z": -0.5404255863101383
+   },
+   "O3": {
+    "n": 130,
+    "srednee_R": -0.19081494285769546,
+    "edge": -0.026105377740781643,
+    "z": -0.16287053370395643
+   }
+  }
+ },
+ {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "gold_glub_utc",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 908,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.47)",
+  "okna": {
+   "O2": {
+    "n": 321,
+    "srednee_R": -0.01191772776702768,
+    "edge": 0.0823098556570778,
+    "z": 0.6747642345244493
+   },
+   "O1": {
+    "n": 348,
+    "srednee_R": -0.13125555885029802,
+    "edge": -0.04310529355773016,
+    "z": -0.3962677474536264
+   },
+   "O3": {
+    "n": 239,
+    "srednee_R": -0.02722377887426047,
+    "edge": 0.015658929685938103,
+    "z": 0.12425958630106132
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 720,
+  "otkazy": {
+   "atlas_net": 15165,
+   "infeasible_stop_lev": 4301
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.93)",
+  "okna": {
+   "O1": {
+    "n": 414,
+    "srednee_R": -0.14195356313198684,
+    "edge": -0.05935829730603037,
+    "z": -0.6163992323882369
+   },
+   "O2": {
+    "n": 50,
+    "srednee_R": 0.08560008599727525,
+    "edge": 0.14184698900872478,
+    "z": 0.47644167748053606
+   },
+   "O3": {
+    "n": 256,
+    "srednee_R": -0.03980026590698897,
+    "edge": 0.10894869069306075,
+    "z": 0.9453861095008077
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1310,
+  "otkazy": {
+   "depth_lt_order": 17309,
+   "cost_dominated": 510,
+   "atlas_net": 420,
+   "lev_instr": 192
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.69)",
+  "okna": {
+   "O1": {
+    "n": 680,
+    "srednee_R": -0.1917178118522743,
+    "edge": -0.06587837927622495,
+    "z": -1.0255884721467199
+   },
+   "O2": {
+    "n": 176,
+    "srednee_R": -0.07605659130818644,
+    "edge": 0.06983597803518864,
+    "z": 0.42659161696697956
+   },
+   "O3": {
+    "n": 454,
+    "srednee_R": -0.0065794649899943245,
+    "edge": 0.1928418876523534,
+    "z": 2.2737815817207125
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 3053,
+  "otkazy": {
+   "depth_lt_order": 14339,
+   "cost_dominated": 634,
+   "atlas_net": 420,
+   "lev_instr": 192
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.01)",
+  "okna": {
+   "O1": {
+    "n": 1597,
+    "srednee_R": -0.10516222134100699,
+    "edge": -0.009162759811870314,
+    "z": -0.21241358968555304
+   },
+   "O2": {
+    "n": 369,
+    "srednee_R": -0.03245699451567326,
+    "edge": 0.09838227036161083,
+    "z": 0.8579948626356587
+   },
+   "O3": {
+    "n": 1087,
+    "srednee_R": -0.03255630504017589,
+    "edge": 0.14641597222272143,
+    "z": 2.9051964198840117
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1056,
+  "otkazy": {
+   "depth_lt_order": 17779,
+   "cost_dominated": 435,
+   "atlas_net": 420,
+   "lev_instr": 192
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.73)",
+  "okna": {
+   "O1": {
+    "n": 549,
+    "srednee_R": -0.16747922926073777,
+    "edge": -0.0631863274049892,
+    "z": -0.8129972273679694
+   },
+   "O2": {
+    "n": 155,
+    "srednee_R": -0.03012660187665133,
+    "edge": 0.10088993462237994,
+    "z": 0.673296044450811
+   },
+   "O3": {
+    "n": 352,
+    "srednee_R": 0.006198014320153555,
+    "edge": 0.2072286729866436,
+    "z": 2.1487594133208763
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 865,
+  "otkazy": {
+   "atlas_net": 17304,
+   "infeasible_stop_lev": 3956
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.05)",
+  "okna": {
+   "O1": {
+    "n": 510,
+    "srednee_R": -0.07928013377538742,
+    "edge": -0.04499867044950641,
+    "z": -0.5004000328404506
+   },
+   "O2": {
+    "n": 74,
+    "srednee_R": 0.08761175582585874,
+    "edge": 0.17302379488066183,
+    "z": 0.8191606772483504
+   },
+   "O3": {
+    "n": 281,
+    "srednee_R": 0.09817688833253287,
+    "edge": 0.01610817815399755,
+    "z": 0.1293424716593612
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1460,
+  "otkazy": {
+   "depth_lt_order": 19115,
+   "cost_dominated": 430,
+   "atlas_net": 540,
+   "lev_instr": 146
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.66)",
+  "okna": {
+   "O1": {
+    "n": 799,
+    "srednee_R": -0.05514438240001928,
+    "edge": 0.004370425713969346,
+    "z": 0.06650786604190222
+   },
+   "O2": {
+    "n": 193,
+    "srednee_R": -0.13933255432548539,
+    "edge": -0.020278211485780323,
+    "z": -0.15097385474645708
+   },
+   "O3": {
+    "n": 468,
+    "srednee_R": 0.0434567456835539,
+    "edge": 0.05523721737502528,
+    "z": 0.6151441117614103
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 3432,
+  "otkazy": {
+   "depth_lt_order": 15817,
+   "cost_dominated": 532,
+   "atlas_net": 540,
+   "lev_instr": 146
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.00)",
+  "okna": {
+   "O1": {
+    "n": 1777,
+    "srednee_R": -0.04820507732154729,
+    "edge": -0.00882184990176653,
+    "z": -0.19266211619023346
+   },
+   "O2": {
+    "n": 430,
+    "srednee_R": 0.05493116612210644,
+    "edge": 0.13530355753747858,
+    "z": 1.40345643371151
+   },
+   "O3": {
+    "n": 1225,
+    "srednee_R": 0.003109320262337552,
+    "edge": 0.0016836078170286248,
+    "z": 0.0331886490194057
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1169,
+  "otkazy": {
+   "depth_lt_order": 19665,
+   "cost_dominated": 350,
+   "atlas_net": 540,
+   "lev_instr": 146
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.72)",
+  "okna": {
+   "O1": {
+    "n": 623,
+    "srednee_R": -0.07097308242157324,
+    "edge": 0.0036194010731732257,
+    "z": 0.04919478852599113
+   },
+   "O2": {
+    "n": 177,
+    "srednee_R": -0.1253911507050288,
+    "edge": -0.012161697308211414,
+    "z": -0.09644131310702769
+   },
+   "O3": {
+    "n": 369,
+    "srednee_R": 0.09229594100211577,
+    "edge": 0.08363203696120829,
+    "z": 0.8257011727545863
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 3753
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1465,
+  "otkazy": {
+   "cost_dominated": 64
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-2.46)",
+  "okna": {
+   "O2": {
+    "n": 512,
+    "srednee_R": -0.10790205337040386,
+    "edge": 0.004626015221509502,
+    "z": 0.0574791733900347
+   },
+   "O1": {
+    "n": 583,
+    "srednee_R": -0.09964503908745148,
+    "edge": 0.04060796106233838,
+    "z": 0.49220393473443386
+   },
+   "O3": {
+    "n": 370,
+    "srednee_R": -0.13704506792557217,
+    "edge": -0.08312587154491351,
+    "z": -0.8068263076680502
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 1474,
+  "otkazy": {
+   "cost_dominated": 27
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-1.52)",
+  "okna": {
+   "O2": {
+    "n": 520,
+    "srednee_R": -0.06563054162836032,
+    "edge": 0.024557351037139685,
+    "z": 0.29932873593507886
+   },
+   "O1": {
+    "n": 585,
+    "srednee_R": -0.06220608067603103,
+    "edge": 0.04622826299817696,
+    "z": 0.5717747367922024
+   },
+   "O3": {
+    "n": 369,
+    "srednee_R": -0.11057466941398336,
+    "edge": -0.050953528628730094,
+    "z": -0.5604320571382717
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 3692
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1483,
+  "otkazy": {
+   "cost_dominated": 57
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.14)",
+  "okna": {
+   "O2": {
+    "n": 543,
+    "srednee_R": -0.198939511893901,
+    "edge": -0.06750843362340841,
+    "z": -0.7646502682796792
+   },
+   "O1": {
+    "n": 580,
+    "srednee_R": -0.13524887715063977,
+    "edge": -0.05617474426028071,
+    "z": -0.7965158493213993
+   },
+   "O3": {
+    "n": 360,
+    "srednee_R": -0.24912195010512525,
+    "edge": -0.11285846349885462,
+    "z": -1.2000756812019007
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 1485,
+  "otkazy": {
+   "cost_dominated": 62
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.35)",
+  "okna": {
+   "O2": {
+    "n": 552,
+    "srednee_R": -0.16894088241949332,
+    "edge": -0.0935245284655341,
+    "z": -1.3508728789106197
+   },
+   "O1": {
+    "n": 575,
+    "srednee_R": -0.1002520576468613,
+    "edge": -0.03515010910961157,
+    "z": -0.44072157680877133
+   },
+   "O3": {
+    "n": 358,
+    "srednee_R": -0.2100557627166498,
+    "edge": -0.10881717850837044,
+    "z": -1.1636911416659355
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 538
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 181,
+  "otkazy": {
+   "cost_dominated": 140
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 42,
+    "srednee_R": -0.46769810919327337,
+    "edge": -0.22660556278655924,
+    "z": -0.7838371052178622
+   },
+   "O1": {
+    "n": 74,
+    "srednee_R": -0.2798897228514662,
+    "edge": -0.14383856047410395,
+    "z": -0.5911889456473342
+   },
+   "O3": {
+    "n": 65,
+    "srednee_R": -0.2800624121196005,
+    "edge": -0.11167615020615695,
+    "z": -0.5082833237821883
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 239,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.05)",
+  "okna": {
+   "O2": {
+    "n": 83,
+    "srednee_R": -0.2253687814733865,
+    "edge": -0.23087176167592233,
+    "z": -1.0981710243970204
+   },
+   "O1": {
+    "n": 86,
+    "srednee_R": 0.025460692130379513,
+    "edge": 0.021706393114637627,
+    "z": 0.09731723953727003
+   },
+   "O3": {
+    "n": 70,
+    "srednee_R": -0.11034017312014141,
+    "edge": -0.06660250894604222,
+    "z": -0.2745071351688951
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 517
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 166,
+  "otkazy": {
+   "cost_dominated": 146
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 34,
+    "srednee_R": -0.3634356064560673,
+    "edge": -0.1374990893172185,
+    "z": -0.4413409285370223
+   },
+   "O1": {
+    "n": 68,
+    "srednee_R": -0.02552360561540364,
+    "edge": 0.11147798751105235,
+    "z": 0.5167184574893497
+   },
+   "O3": {
+    "n": 64,
+    "srednee_R": -0.3451380915659028,
+    "edge": -0.22643269992303325,
+    "z": -0.8876826628452895
+   }
+  }
+ },
+ {
+  "meh": "SZHATIE_BB",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 228,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-0.63)",
+  "okna": {
+   "O2": {
+    "n": 82,
+    "srednee_R": -0.17042122482351388,
+    "edge": -0.13743745841351568,
+    "z": -0.7871143130813598
+   },
+   "O1": {
+    "n": 76,
+    "srednee_R": 0.06791111691620207,
+    "edge": 0.14521700587955466,
+    "z": 0.630637244552107
+   },
+   "O3": {
+    "n": 70,
+    "srednee_R": -0.1497306775783475,
+    "edge": -0.21478560120360068,
+    "z": -0.840902104888666
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 947,
+  "otkazy": {
+   "atlas_net": 15441,
+   "infeasible_stop_lev": 2543
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-2.63)",
+  "okna": {
+   "O1": {
+    "n": 469,
+    "srednee_R": -0.12900259772470357,
+    "edge": 0.0067303659522101045,
+    "z": 0.10680157582593162
+   },
+   "O2": {
+    "n": 121,
+    "srednee_R": -0.07839900422095508,
+    "edge": 0.010229117319864742,
+    "z": 0.08405346577848445
+   },
+   "O3": {
+    "n": 357,
+    "srednee_R": -0.191681414251365,
+    "edge": 0.027056924354979167,
+    "z": 0.32464011484454114
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1610,
+  "otkazy": {
+   "depth_lt_order": 15523,
+   "cost_dominated": 306,
+   "atlas_net": 489,
+   "lev_instr": 198
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.02)",
+  "okna": {
+   "O1": {
+    "n": 758,
+    "srednee_R": -0.08336156750145411,
+    "edge": 0.031696430646719814,
+    "z": 0.635956180670423
+   },
+   "O2": {
+    "n": 230,
+    "srednee_R": -0.17603667780648816,
+    "edge": -0.05329830024647693,
+    "z": -0.4819865884753077
+   },
+   "O3": {
+    "n": 622,
+    "srednee_R": -0.1973054673632042,
+    "edge": 0.01677655012446605,
+    "z": 0.3024920141374711
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_300",
+  "dopushcheno": 3347,
+  "otkazy": {
+   "depth_lt_order": 11794,
+   "cost_dominated": 357,
+   "atlas_net": 489,
+   "lev_instr": 198
+  },
+  "verdikt": "PLUS_NO_CONFIDENCE",
+  "dengi": "MONEY_FAIL(t=-3.43)",
+  "okna": {
+   "O1": {
+    "n": 1528,
+    "srednee_R": -0.07324471048118904,
+    "edge": 0.047204466877400986,
+    "z": 1.3809874394768287
+   },
+   "O2": {
+    "n": 530,
+    "srednee_R": -0.10797606751689529,
+    "edge": 0.02559994119891476,
+    "z": 0.3858497313860496
+   },
+   "O3": {
+    "n": 1289,
+    "srednee_R": -0.13601788812160262,
+    "edge": 0.0472365821381496,
+    "z": 1.2455586445019695
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "long",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1219,
+  "otkazy": {
+   "depth_lt_order": 16536,
+   "cost_dominated": 129,
+   "atlas_net": 489,
+   "lev_instr": 198
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.41)",
+  "okna": {
+   "O1": {
+    "n": 557,
+    "srednee_R": -0.10625013784442187,
+    "edge": 0.00040282804440505693,
+    "z": 0.00631956629930648
+   },
+   "O2": {
+    "n": 205,
+    "srednee_R": -0.20975191832404017,
+    "edge": -0.04200240584227766,
+    "z": -0.4396489611026976
+   },
+   "O3": {
+    "n": 457,
+    "srednee_R": -0.20472539769285475,
+    "edge": 0.007619946206511075,
+    "z": 0.11566693408974264
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 951,
+  "otkazy": {
+   "atlas_net": 19670,
+   "infeasible_stop_lev": 2758
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.20)",
+  "okna": {
+   "O1": {
+    "n": 476,
+    "srednee_R": -0.1197808980572522,
+    "edge": -0.050796670467715674,
+    "z": -0.6842379274790149
+   },
+   "O2": {
+    "n": 151,
+    "srednee_R": -0.19912300598130786,
+    "edge": -0.03812348785316971,
+    "z": -0.3272007663258728
+   },
+   "O3": {
+    "n": 324,
+    "srednee_R": -0.09017474594801161,
+    "edge": -0.004246498928299619,
+    "z": -0.05219093133592689
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 1607,
+  "otkazy": {
+   "depth_lt_order": 19803,
+   "cost_dominated": 377,
+   "atlas_net": 436,
+   "lev_instr": 207
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-5.66)",
+  "okna": {
+   "O1": {
+    "n": 763,
+    "srednee_R": -0.13550397203754902,
+    "edge": -0.05012060729591744,
+    "z": -0.8537376398265285
+   },
+   "O2": {
+    "n": 295,
+    "srednee_R": -0.3107334884956148,
+    "edge": -0.11858730938441808,
+    "z": -1.5645649654722933
+   },
+   "O3": {
+    "n": 549,
+    "srednee_R": -0.09514020168444919,
+    "edge": -0.00996909149884638,
+    "z": -0.17801864129080552
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_300",
+  "dopushcheno": 3714,
+  "otkazy": {
+   "depth_lt_order": 14895,
+   "cost_dominated": 444,
+   "atlas_net": 436,
+   "lev_instr": 207
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-6.04)",
+  "okna": {
+   "O1": {
+    "n": 1678,
+    "srednee_R": -0.11516925189957535,
+    "edge": -0.029253875386931166,
+    "z": -0.8172809248191241
+   },
+   "O2": {
+    "n": 683,
+    "srednee_R": -0.18142350035022786,
+    "edge": -0.03828524748294382,
+    "z": -0.807189913590623
+   },
+   "O3": {
+    "n": 1353,
+    "srednee_R": -0.09746440015314144,
+    "edge": -0.005391194198280824,
+    "z": -0.12259963316242672
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "crypto137",
+  "side": "short",
+  "vorota": "V2_1_3000",
+  "dopushcheno": 1188,
+  "otkazy": {
+   "depth_lt_order": 20985,
+   "cost_dominated": 202,
+   "atlas_net": 436,
+   "lev_instr": 207
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-5.34)",
+  "okna": {
+   "O1": {
+    "n": 545,
+    "srednee_R": -0.14663775538535745,
+    "edge": -0.03223900923076094,
+    "z": -0.48186125005804414
+   },
+   "O2": {
+    "n": 244,
+    "srednee_R": -0.3260554846841309,
+    "edge": -0.15531070919229842,
+    "z": -1.6115052770164298
+   },
+   "O3": {
+    "n": 399,
+    "srednee_R": -0.10139652178667749,
+    "edge": 0.009638491484212197,
+    "z": 0.12408898969669181
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 3,
+  "otkazy": {
+   "infeasible_stop_lev": 3023
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 1,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 830,
+  "otkazy": {
+   "cost_dominated": 17
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-4.01)",
+  "okna": {
+   "O2": {
+    "n": 338,
+    "srednee_R": -0.25437894400296374,
+    "edge": -0.06696063501540306,
+    "z": -0.8397463181075353
+   },
+   "O1": {
+    "n": 316,
+    "srednee_R": -0.07100940108092392,
+    "edge": 0.08277797327456422,
+    "z": 1.0409562004903838
+   },
+   "O3": {
+    "n": 176,
+    "srednee_R": -0.14505717048510042,
+    "edge": -0.04989002752734022,
+    "z": -0.41355588908717006
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "fx7_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 827,
+  "otkazy": {
+   "cost_dominated": 23
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-3.23)",
+  "okna": {
+   "O2": {
+    "n": 335,
+    "srednee_R": -0.22556938474021007,
+    "edge": -0.0863218051437647,
+    "z": -1.0545435229595401
+   },
+   "O1": {
+    "n": 316,
+    "srednee_R": -0.03379247317263135,
+    "edge": 0.08081876398210044,
+    "z": 0.9057809178521657
+   },
+   "O3": {
+    "n": 176,
+    "srednee_R": -0.12591969341168385,
+    "edge": -0.05914132809514751,
+    "z": -0.4882105989349567
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 2893
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 810,
+  "otkazy": {
+   "cost_dominated": 10
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.78)",
+  "okna": {
+   "O2": {
+    "n": 289,
+    "srednee_R": -0.17662650253472525,
+    "edge": -0.03401408207359494,
+    "z": -0.3981205352064504
+   },
+   "O1": {
+    "n": 317,
+    "srednee_R": -0.07684612647352247,
+    "edge": 0.08913119800664705,
+    "z": 1.1470944166528296
+   },
+   "O3": {
+    "n": 204,
+    "srednee_R": -0.16088026496288751,
+    "edge": -0.02220640772915697,
+    "z": -0.21118537099094678
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "fx7_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 805,
+  "otkazy": {
+   "cost_dominated": 28
+  },
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.37)",
+  "okna": {
+   "O2": {
+    "n": 287,
+    "srednee_R": -0.17511542774956082,
+    "edge": -0.04811834862094841,
+    "z": -0.4671721937990125
+   },
+   "O1": {
+    "n": 314,
+    "srednee_R": -0.04200092025845364,
+    "edge": 0.07353765048862598,
+    "z": 0.9091194552340766
+   },
+   "O3": {
+    "n": 204,
+    "srednee_R": -0.12321337661780295,
+    "edge": -0.021643635509403028,
+    "z": -0.20832478034054586
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2",
+  "dopushcheno": 2,
+  "otkazy": {
+   "infeasible_stop_lev": 461
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 2,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 131,
+  "otkazy": {
+   "cost_dominated": 47
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 37,
+    "srednee_R": -0.34826070482191346,
+    "edge": -0.03318220351998563,
+    "z": -0.13489136747404235
+   },
+   "O1": {
+    "n": 59,
+    "srednee_R": -0.35870064483385306,
+    "edge": -0.17620113309661187,
+    "z": -0.8060327085971861
+   },
+   "O3": {
+    "n": 35,
+    "srednee_R": -0.3078601060863758,
+    "edge": -0.11391059462452593,
+    "z": -0.4103245650197179
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "gold_glub",
+  "side": "long",
+  "vorota": "V2_2",
+  "dopushcheno": 149,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-1.86)",
+  "okna": {
+   "O2": {
+    "n": 54,
+    "srednee_R": -0.14248864944799478,
+    "edge": -0.09081562226455361,
+    "z": -0.51904317782584
+   },
+   "O1": {
+    "n": 59,
+    "srednee_R": -0.23125669880472416,
+    "edge": -0.19762665436708698,
+    "z": -0.9567275182442031
+   },
+   "O3": {
+    "n": 36,
+    "srednee_R": -0.11425498984313294,
+    "edge": -0.07805942548432182,
+    "z": -0.34868368528480953
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2",
+  "dopushcheno": 0,
+  "otkazy": {
+   "infeasible_stop_lev": 540
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O1": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   },
+   "O3": {
+    "n": 0,
+    "srednee_R": null,
+    "edge": null,
+    "z": null
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_1_1000",
+  "dopushcheno": 142,
+  "otkazy": {
+   "cost_dominated": 43
+  },
+  "verdikt": "INCONCLUSIVE_LOW_N",
+  "dengi": "MONEY_LOW_N",
+  "okna": {
+   "O2": {
+    "n": 41,
+    "srednee_R": -0.3862520382231259,
+    "edge": -0.07293158711508874,
+    "z": -0.3187013586416134
+   },
+   "O1": {
+    "n": 53,
+    "srednee_R": -0.40764212701447666,
+    "edge": -0.14710956767447447,
+    "z": -0.7260038540032501
+   },
+   "O3": {
+    "n": 48,
+    "srednee_R": -0.03689283564649681,
+    "edge": 0.21917274359800187,
+    "z": 1.085187948305254
+   }
+  }
+ },
+ {
+  "meh": "VOZVRAT_K_SREDNEY",
+  "rynok": "gold_glub",
+  "side": "short",
+  "vorota": "V2_2",
+  "dopushcheno": 153,
+  "otkazy": {},
+  "verdikt": "NEGATIVE",
+  "dengi": "MONEY_FAIL(t=-2.34)",
+  "okna": {
+   "O2": {
+    "n": 51,
+    "srednee_R": -0.1766588169610997,
+    "edge": -0.10086734454553274,
+    "z": -0.49002506154562797
+   },
+   "O1": {
+    "n": 54,
+    "srednee_R": -0.30078996580639744,
+    "edge": -0.14315158429791255,
+    "z": -0.7297966021346282
+   },
+   "O3": {
+    "n": 48,
+    "srednee_R": 0.09794894536372682,
+    "edge": 0.18546300911065589,
+    "z": 0.8840727214117577
+   }
+  }
+ }
+]

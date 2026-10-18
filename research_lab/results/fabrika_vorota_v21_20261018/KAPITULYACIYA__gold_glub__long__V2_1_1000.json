@@ -1,0 +1,27 @@
+{
+ "param": {
+  "meh": "KAPITULYACIYA",
+  "rynok": "gold_glub",
+  "side": "long"
+ },
+ "monet": 1,
+ "limit": 0,
+ "otkazy_ispolnimosti": {
+  "cost_dominated": 5
+ },
+ "vorota": "V2_1_kapital1000",
+ "okna": {
+  "O2": {
+   "n": 8,
+   "kontrol_sobran": false
+  },
+  "O1": {
+   "n": 9,
+   "kontrol_sobran": false
+  },
+  "O3": {
+   "n": 10,
+   "kontrol_sobran": false
+  }
+ }
+}

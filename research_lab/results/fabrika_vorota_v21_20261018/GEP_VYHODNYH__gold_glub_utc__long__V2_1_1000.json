@@ -1,0 +1,34 @@
+{
+ "param": {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "gold_glub_utc",
+  "side": "long"
+ },
+ "monet": 1,
+ "limit": 0,
+ "otkazy_ispolnimosti": {
+  "cost_dominated": 7
+ },
+ "vorota": "V2_1_kapital1000",
+ "okna": {
+  "O2": {
+   "n": 18,
+   "kontrol_sobran": false
+  },
+  "O1": {
+   "n": 20,
+   "kontrol_sobran": false
+  },
+  "O3": {
+   "n": 22,
+   "kontrol_sobran": true,
+   "mean": -0.14700261737209003,
+   "ctrl": -0.12335326274314026,
+   "ctrl_sd": 0.2493556363736425,
+   "edge": -0.023649354628949765,
+   "se": 0.3386768903257577,
+   "z": -0.06982866355659088,
+   "summa_R": -3.2340575821859807
+  }
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "param": {
+  "meh": "SVIP_UROVNYA",
+  "rynok": "fx7_glub_utc",
+  "side": "short"
+ },
+ "monet": 7,
+ "limit": 0,
+ "otkazy_ispolnimosti": {
+  "infeasible_stop_lev": 17283
+ },
+ "vorota": "V2_G1_G3",
+ "okna": {
+  "O2": {
+   "n": 1,
+   "kontrol_sobran": false
+  },
+  "O1": {
+   "n": 0,
+   "kontrol_sobran": false
+  },
+  "O3": {
+   "n": 1,
+   "kontrol_sobran": false
+  }
+ }
+}

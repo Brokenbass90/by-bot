@@ -1,0 +1,25 @@
+{
+ "param": {
+  "meh": "OBEM_IMPULS",
+  "rynok": "gold_glub",
+  "side": "long"
+ },
+ "monet": 1,
+ "limit": 0,
+ "otkazy_ispolnimosti": {},
+ "vorota": "V2_2_kapital1000",
+ "okna": {
+  "O2": {
+   "n": 4,
+   "kontrol_sobran": false
+  },
+  "O1": {
+   "n": 4,
+   "kontrol_sobran": false
+  },
+  "O3": {
+   "n": 1,
+   "kontrol_sobran": false
+  }
+ }
+}

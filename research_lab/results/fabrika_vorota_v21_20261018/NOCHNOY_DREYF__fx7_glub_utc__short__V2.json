@@ -1,0 +1,34 @@
+{
+ "param": {
+  "meh": "NOCHNOY_DREYF",
+  "rynok": "fx7_glub_utc",
+  "side": "short"
+ },
+ "monet": 7,
+ "limit": 0,
+ "otkazy_ispolnimosti": {
+  "infeasible_stop_lev": 12363
+ },
+ "vorota": "V2_G1_G3",
+ "okna": {
+  "O2": {
+   "n": 31,
+   "kontrol_sobran": true,
+   "mean": -0.11723273268859202,
+   "ctrl": -0.023819140094135157,
+   "ctrl_sd": 0.15945219352924167,
+   "edge": -0.09341359259445686,
+   "se": 0.2241769665185438,
+   "z": -0.41669576515894974,
+   "summa_R": -3.6342147133463527
+  },
+  "O1": {
+   "n": 0,
+   "kontrol_sobran": false
+  },
+  "O3": {
+   "n": 7,
+   "kontrol_sobran": false
+  }
+ }
+}

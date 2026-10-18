@@ -1,0 +1,25 @@
+{
+ "param": {
+  "meh": "GEP_VYHODNYH",
+  "rynok": "crypto137",
+  "side": "long"
+ },
+ "monet": 138,
+ "limit": 0,
+ "otkazy_ispolnimosti": {},
+ "vorota": "V2_1_kapital300",
+ "okna": {
+  "O1": {
+   "n": 0,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 0,
+   "kontrol_sobran": false
+  },
+  "O3": {
+   "n": 0,
+   "kontrol_sobran": false
+  }
+ }
+}
