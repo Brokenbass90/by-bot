@@ -1,0 +1,28 @@
+{
+ "param": {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7",
+  "side": "short"
+ },
+ "monet": 7,
+ "limit": 0,
+ "otkazy_ispolnimosti": {},
+ "vorota": "V2_G1_G3",
+ "okna": {
+  "O1": {
+   "n": 21,
+   "kontrol_sobran": true,
+   "mean": 0.18588716717788153,
+   "ctrl": 0.09383801276795538,
+   "ctrl_sd": 0.22025260790299292,
+   "edge": 0.09204915440992616,
+   "se": 0.33049154128393593,
+   "z": 0.27852196777055716,
+   "summa_R": 3.9036305107355123
+  },
+  "O2": {
+   "n": 4,
+   "kontrol_sobran": false
+  }
+ }
+}

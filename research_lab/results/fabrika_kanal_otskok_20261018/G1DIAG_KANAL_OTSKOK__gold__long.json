@@ -1,0 +1,21 @@
+{
+ "param": {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold",
+  "side": "long"
+ },
+ "monet": 1,
+ "limit": 0,
+ "otkazy_ispolnimosti": {},
+ "vorota": "V2_G1_G3",
+ "okna": {
+  "O1": {
+   "n": 20,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 10,
+   "kontrol_sobran": false
+  }
+ }
+}

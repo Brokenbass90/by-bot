@@ -1,0 +1,23 @@
+{
+ "param": {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "gold",
+  "side": "short"
+ },
+ "monet": 1,
+ "limit": 0,
+ "otkazy_ispolnimosti": {
+  "infeasible_stop_lev": 155
+ },
+ "vorota": "V2_G1_G3",
+ "okna": {
+  "O1": {
+   "n": 0,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 0,
+   "kontrol_sobran": false
+  }
+ }
+}

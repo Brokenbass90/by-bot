@@ -1,0 +1,21 @@
+{
+ "param": {
+  "meh": "KANAL_OTSKOK",
+  "rynok": "fx7",
+  "side": "long"
+ },
+ "monet": 7,
+ "limit": 0,
+ "otkazy_ispolnimosti": {},
+ "vorota": "V2_G1_G3",
+ "okna": {
+  "O1": {
+   "n": 16,
+   "kontrol_sobran": false
+  },
+  "O2": {
+   "n": 7,
+   "kontrol_sobran": false
+  }
+ }
+}
