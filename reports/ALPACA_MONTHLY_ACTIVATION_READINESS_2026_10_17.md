@@ -1,5 +1,10 @@
 # Alpaca Monthly — separate activation readiness, 17 October 2026
 
+UPDATE18Oct: Monthly is now the owner-priority monetary candidate; SHOP cancelled.
+The new disabled account/transport/accounting candidate supersedes the source-only
+readiness below: [current delivery](ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md).
+Financial manager/source wiring and separate activation GO remain OPEN.
+
 **Status: independently accepted strategy parity + actual DATA_READY + isolated
 ORDERS_OFF source/schedule operation. Financial activation remains incomplete.**
 Monthly is not the replacement for owner-priority Dynamic.

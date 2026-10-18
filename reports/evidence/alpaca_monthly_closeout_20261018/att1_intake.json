@@ -1,0 +1,43 @@
+{
+  "dated_public_snapshot": {
+    "clean_filled_terminal": 1,
+    "clean_simulated_net_R": "-1284979741/1225000000",
+    "date": "2026-10-09",
+    "gaps": 18,
+    "held": 0,
+    "not_current_runtime_count": true,
+    "sessions": 26
+  },
+  "economic_status": "CURRENT_EDGE_NOT_REESTABLISHED",
+  "execution_status": "REPAIR_BLOCKED_DATA_NOT_LIVE_READY",
+  "local_evidence": [
+    {
+      "path": "reports/ATT1_EXECUTION_SHADOWS_TERMINAL_2026_10_06.md",
+      "sha256": "434f1f23db3baf64971de2deb1b4c9fdf14f3d8f4de6a1de215c94c08d92b3e6"
+    },
+    {
+      "path": "reports/MONEY_MORNING_2026_10_09.md",
+      "sha256": "2d3ff5032ffab926908b11b878557d9c8eba84aa5316c1c53e05f5945899e8eb"
+    },
+    {
+      "path": "reports/ATT1_FRESH_HANDOFF_READINESS_2026_10_03.json",
+      "sha256": "50afb33b483ab1f66dcbd052dc444f3fea8c5075a2d0e8e76134844df8f1d8fb"
+    }
+  ],
+  "new_judge_runs": 0,
+  "new_sealed_outcomes": 0,
+  "next": "Claude current economic review on a versioned prereg; Codex existing CTS observation/replay candidate, no probe restart, judge rerun or threshold relaxation.",
+  "old_positive_registry_not_current_LIVE_PASS": true,
+  "preserved_gates": [
+    "CTS<=2s; no ts fallback",
+    "original admission/risk/hold/fee contract",
+    "2-3 clean prospective filled terminals/net-R",
+    "fresh actual-account custody/mode/cost dossier",
+    "separate OWNER GO"
+  ],
+  "proven_transport_issue": "Received REST ts can look fresh while CTS is stale; quiet/disconnect are UNKNOWN.",
+  "read_only": true,
+  "research_KARTA_notes": "Published KARTA ATT1 rows are dated October2 context; not runtime truth for October18.",
+  "research_ref": "0be44eca1f86929986b48ee77662d91b51a40255",
+  "schema": "ATT1_EXISTING_EVIDENCE_INTAKE_V1"
+}

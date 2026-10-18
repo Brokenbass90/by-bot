@@ -25,6 +25,11 @@ def setup(tmp_path,monkeypatch):
     s=book.seal_selection({},calendar,signal_session='2026-10-30',entry_session='2026-11-02',
         source_available_ms=ms('2026-10-30T21:01:00'),source_sha256='a'*64,now_ms=ms('2026-10-30T21:02:00'))
     io=Broker(); now=ms('2026-11-02T14:30:00')
+    io.get_account=lambda:dict(id='fixture',cash='487.42',non_marginable_buying_power='487.42',
+        equity='487.42',trading_blocked=False,account_blocked=False)
+    io.get_clock=lambda:dict(is_open=True,timestamp='2026-11-02T14:30:00Z')
+    io.get_asset=lambda symbol:dict(symbol=symbol,status='active',tradable=True,fractionable=True)
+    io.latest_quote=lambda symbol:dict(ap='311',t='2026-11-02T14:30:00Z')
     adapter=binding.MonthlyNativeBinding(book,client=io,base_url=binding.native._PAPER_API_URL,
         account_id='fixture',capital=487.42,runtime=tmp_path/'native',lock_path=tmp_path/'shared.lock',
         entry_halt_path=tmp_path/'original-entry-halt.json')

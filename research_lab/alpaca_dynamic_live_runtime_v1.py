@@ -41,8 +41,11 @@ class DynamicLiveClient(native.AlpacaClient):
     Even a writes-enabled client needs a one-use exact payload permit from the
     source/GO/lock-validated runtime *after* its durable dispatch commit.
     """
-    def __init__(self,key,secret,*,writes_enabled=False):
+    def __init__(self,key,secret,*,writes_enabled=False,order_contract=SCHEMA):
+        if order_contract not in {SCHEMA,'ALPACA_BASELINE_MONTHLY_DAILY_V1'}:
+            raise ValueError('LIVE_ORDER_CONTRACT_UNKNOWN')
         super().__init__(LIVE,key,secret)
+        self.order_contract=order_contract
         self.writes_enabled=writes_enabled
         self.write_permit=None
         self.opener=request.build_opener(request.ProxyHandler({}),NoRedirect(),
@@ -70,12 +73,39 @@ class DynamicLiveClient(native.AlpacaClient):
                 or not ((method=='POST' and route=='/v2/orders') or (method in {'PATCH','DELETE'} and order))):
                 raise ValueError('LIVE_EXACT_WRITE_PERMIT_REQUIRED')
             if method=='POST':
-                if (not isinstance(payload,dict) or payload.get('notional') is not None
+                if self.order_contract=='ALPACA_BASELINE_MONTHLY_DAILY_V1':
+                    self._monthly_payload(payload)
+                elif (not isinstance(payload,dict) or payload.get('notional') is not None
                     or (payload.get('side'),payload.get('type')) not in {('buy','limit'),('sell','stop'),('sell','market')}
                     or not str(payload.get('client_order_id','')).startswith(('dyl-','dyf-','dyr-','dyx-'))):
                     raise ValueError('LIVE_QUANTITY_OWNED_ROUTE_REQUIRED')
             if method=='PATCH' and set(payload)!={'stop_price'}:raise ValueError('STOP_PRICE_ONLY_REPLACEMENT')
         return self._http(LIVE+path,method,payload)
+
+    @staticmethod
+    def _monthly_payload(payload):
+        """Same restricted transport, separate exact frozen Monthly wire shape."""
+        if not isinstance(payload,dict):raise ValueError('MONTHLY_WIRE_PAYLOAD_REQUIRED')
+        shared={'symbol','side','type','time_in_force','client_order_id'}
+        kind=(payload.get('side'),payload.get('type'))
+        cid=str(payload.get('client_order_id',''))
+        if not re.fullmatch('[A-Z0-9.]{1,16}',str(payload.get('symbol',''))):
+            raise ValueError('MONTHLY_WIRE_SYMBOL')
+        if kind==('buy','market'):
+            if (set(payload)!=shared|{'notional'} or payload['time_in_force']!='day'
+                or not re.fullmatch(r'abm-[0-9a-f]{32}',cid)
+                or not re.fullmatch(r'[0-9]+\.[0-9]{9}',str(payload['notional']))):
+                raise ValueError('MONTHLY_NOTIONAL_MARKET_WIRE_REQUIRED')
+            positive(payload['notional'])
+        elif kind in {('sell','stop'),('sell','market')}:
+            extra={'qty','stop_price'} if kind[1]=='stop' else {'qty'}
+            prefixes='(?:abf|dyr)' if kind[1]=='stop' else '(?:abr|dyx)'
+            if (set(payload)!=shared|extra or not re.fullmatch(prefixes+r'-[0-9a-f]{32}',cid)
+                or payload['time_in_force'] not in ({'day','gtc'} if kind[1]=='stop' else {'day'})):
+                raise ValueError('MONTHLY_OWNED_EXIT_WIRE_REQUIRED')
+            positive(payload['qty'])
+            if kind[1]=='stop':positive(payload['stop_price'])
+        else:raise ValueError('MONTHLY_ORDER_TYPE_REFUSED')
 
     def _http(self,url,method,payload=None):
         body=canonical(payload) if payload is not None else None

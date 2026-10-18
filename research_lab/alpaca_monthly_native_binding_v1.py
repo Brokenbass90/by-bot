@@ -7,6 +7,7 @@ The disabled source CLI cannot call the applying methods.
 """
 from datetime import datetime,timezone
 import json
+import hashlib
 import sqlite3
 import time
 from pathlib import Path
@@ -18,12 +19,13 @@ from research_lab.alpaca_dynamic_v1 import dec,digest,instant,positive
 from research_lab.alpaca_dynamic_live_runtime_v1 import account_lock,permit_write
 from research_lab.alpaca_live_readiness_v1 import execution_identity_v1
 from research_lab import alpaca_dynamic_live_runtime_v1 as lifecycle
-from research_lab.alpaca_monthly_binding_v1 import CONTRACT,entry_cid,result,monthly_picks
+from research_lab.alpaca_monthly_binding_v1 import CONTRACT,entry_cid,result,monthly_picks,strategy_identity
 from scripts import equities_alpaca_paper_bridge as native
 
 
 class MonthlyNativeBinding:
-    def __init__(self,book,*,client,base_url,account_id,capital,runtime,lock_path,entry_halt_path):
+    def __init__(self,book,*,client,base_url,account_id,capital,runtime,lock_path,entry_halt_path,
+                 liability_reserve_usd='0',live_scope_path=None,live_scope_sha256=None,owner_go_path=None):
         if book.contract!=CONTRACT:raise ValueError('MONTHLY_CONTRACT_CONFLICT')
         self.book=book;self.client=client;self.base_url=base_url;self.account=account_id
         self.capital=float(positive(capital))
@@ -33,6 +35,10 @@ class MonthlyNativeBinding:
             raise ValueError('MONTHLY_NATIVE_PATH')
         self.ledger=self.runtime/'native-floor.json';self.reentry=self.runtime/'native-intents.json'
         self.halt=lifecycle.safe_path(str(Path(entry_halt_path).absolute()))
+        self.liability=dec(liability_reserve_usd)
+        if self.liability<0:raise ValueError('MONTHLY_LIABILITY_RESERVE_INVALID')
+        self.live_scope_path=live_scope_path;self.live_scope_sha256=live_scope_sha256
+        self.owner_go_path=owner_go_path
         if self.halt==self.ledger or self.halt==self.reentry or self.halt==self.lock_path:
             raise ValueError('MONTHLY_HALT_PATH_CONFLICT')
 
@@ -42,11 +48,160 @@ class MonthlyNativeBinding:
         return found
 
     def _native_authority(self):
+        if getattr(self.client,'base_url',self.base_url)!=self.base_url:
+            raise ValueError('MONTHLY_TRANSPORT_ENDPOINT_CONFLICT')
+        if self.base_url==lifecycle.LIVE:self._live_custody()
         if not native._intended_lifecycle_enabled(self.base_url,account_id=self.account,
             capital=self.capital,require_enabled=True):
             raise native.IntendedPaperProtectionError('monthly_native_mode_not_enabled')
         if self.client.get_account().get('id')!=self.account:
             raise ValueError('MONTHLY_NATIVE_ACCOUNT_CONFLICT')
+
+    def _live_custody(self):
+        """Legacy Dynamic approval alone can never activate this Monthly owner."""
+        if not self.live_scope_path or not self.owner_go_path:
+            raise ValueError('MONTHLY_SEPARATE_OWNER_SCOPE_REQUIRED')
+        path=lifecycle.safe_path(str(self.live_scope_path),exists=True)
+        raw=path.read_bytes()
+        if hashlib.sha256(raw).hexdigest()!=self.live_scope_sha256:
+            raise ValueError('MONTHLY_LIVE_SCOPE_PIN')
+        scope=json.loads(raw)
+        expected=dict(schema='ALPACA_MONTHLY_OWNER_SCOPE_V1',endpoint=self.base_url,
+            account_id=self.account,contract_sha256=digest(CONTRACT),
+            strategy_identity=strategy_identity(),
+            capital_usd=str(dec(self.capital)),liability_reserve_usd=str(self.liability),
+            book=str(self.book.path),runtime=str(self.runtime),lock_path=str(self.lock_path),
+            entry_halt_path=str(self.halt),legacy_NET_adoption=False,legacy_entry_authority=False,
+            max_new_entries_per_session=1)
+        if (any(scope.get(k)!=v for k,v in expected.items())
+            or getattr(self.client,'order_contract',None)!=CONTRACT['schema']):
+            raise ValueError('MONTHLY_LIVE_SCOPE_CONFLICT')
+        if not 0<positive(scope['max_entry_notional_usd'])<=dec(self.capital)*dec('.70')*dec('.60'):
+            raise ValueError('MONTHLY_LIVE_SCOPE_NOTIONAL_CAP')
+        lock=lifecycle.safe_path(str(self.lock_path),exists=True).stat()
+        if [lock.st_dev,lock.st_ino]!=scope.get('original_lock_identity'):
+            raise ValueError('MONTHLY_ORIGINAL_ACCOUNT_LOCK_CHANGED')
+        if not scope.get('source_files'):raise ValueError('MONTHLY_LIVE_SOURCE_UNBOUND')
+        for row in scope['source_files']:
+            source=lifecycle.safe_path(row['path'],exists=True)
+            if hashlib.sha256(source.read_bytes()).hexdigest()!=row['sha256']:
+                raise ValueError('MONTHLY_LIVE_SOURCE_CHANGED')
+        required={str(Path(m.__file__).resolve()) for m in (lifecycle,native)}|{str(Path(__file__).resolve())}
+        if not required.issubset({r['path'] for r in scope['source_files']}):
+            raise ValueError('MONTHLY_LIVE_IMPLEMENTATION_UNBOUND')
+        go=lifecycle.read_json(self.owner_go_path)
+        if go!=dict(schema='ALPACA_MONTHLY_EXACT_OWNER_GO_V1',scope_sha256=self.live_scope_sha256,
+                    owner_go_text='GO ALPACA_MONTHLY '+self.live_scope_sha256):
+            raise ValueError('MONTHLY_SEPARATE_OWNER_GO_REQUIRED')
+        return scope
+
+    def _admit_new_entry(self,ticket,now):
+        """GET-only complete account check under the original writer lock."""
+        self._require_exit_accounting()
+        account=self.client.get_account();clock=self.client.get_clock()
+        stamp=native._parse_iso_utc(clock.get('timestamp',''))
+        if (account.get('id')!=self.account or account.get('trading_blocked') is not False
+            or account.get('account_blocked') is not False or clock.get('is_open') is not True
+            or stamp is None or abs(int(stamp.timestamp()*1000)-now)>5000):
+            raise ValueError('MONTHLY_FRESH_ACCOUNT_CLOCK_REQUIRED')
+        if self.base_url==lifecycle.LIVE:
+            scope=self._live_custody()
+            if (ticket['selection_id']!=scope.get('selection_id') or ticket['symbol']!=scope.get('symbol')
+                or positive(ticket['notional'])>positive(scope['max_entry_notional_usd'])):
+                raise ValueError('MONTHLY_APPROVED_SELECTION_REQUIRED')
+            entries=json.loads(self.reentry.read_text()).get('entry_intents',{}) if self.reentry.exists() else {}
+            if any(i.get('entry_session')==self._selection(ticket['selection_id'])['entry_session'] for i in entries.values()):
+                raise ValueError('MONTHLY_SESSION_ENTRY_ALREADY_CONSUMED')
+        state=self._state();owned={p['symbol']:p for p in self.book.rows('positions')}
+        positions=self.client.list_positions();orders=self.client.list_orders(status='open',limit=500)
+        if (len(orders)>=500 or len({p['symbol'] for p in positions})!=len(positions)
+            or set(state)!=set(owned) or {p['symbol'] for p in positions}!=set(owned)
+            or ticket['symbol'] in owned):raise ValueError('MONTHLY_FOREIGN_OR_UNRECONCILED_POSITION')
+        stop_ids=set()
+        for actual in positions:
+            p=owned[actual['symbol']];record=state[p['symbol']]
+            if (p.get('protection_pending') or actual.get('side')!='long'
+                or positive(actual['qty'])!=positive(p['qty'])
+                or positive(actual['avg_entry_price'])!=positive(p['raw_entry']['filled_avg_price'])):
+                raise ValueError('MONTHLY_PARTIAL_OR_UNPROTECTED_POSITION')
+            execution_identity_v1(p['raw_entry'],self.client.get_order(p['entry_id']))
+            stop=self.client.get_order(p['native_stop_id'])
+            if (record['accepted_order_id']!=stop['id'] or record['entry_order_id']!=p['entry_id']
+                or stop['status'] not in {'new','accepted'} or dec(stop.get('filled_qty','0'))!=0):
+                raise ValueError('MONTHLY_FULL_NATIVE_STOP_REQUIRED')
+            native._confirmed_intended_stop(self.client,stop,symbol=p['symbol'],
+                qty=float(positive(p['qty'])),requested_stop=float(p['native_floor']))
+            if stop['time_in_force']=='day':
+                sent=native._parse_iso_utc(stop.get('submitted_at') or stop.get('created_at',''))
+                if sent is None or sent.date()!=stamp.date() or sent>stamp:
+                    raise ValueError('MONTHLY_DAY_STOP_NOT_CURRENT_SESSION')
+            if positive(actual['current_price'])<=positive(p['native_floor']):
+                raise ValueError('MONTHLY_STOP_ALREADY_BREACHED')
+            stop_ids.add(stop['id'])
+        if {o['id'] for o in orders}!=stop_ids or len(orders)!=len(stop_ids):
+            raise ValueError('MONTHLY_FOREIGN_OR_UNRECONCILED_ORDER')
+        notional=positive(ticket['notional']);equity=min(positive(account['equity']),dec(self.capital))
+        cash=min(dec(account['cash']),dec(account['non_marginable_buying_power']))
+        gross=sum((abs(dec(p['market_value'])) for p in positions),dec(0))
+        if (len(positions)>=CONTRACT['max_positions'] or cash-self.liability<notional
+            or gross+notional>equity*dec(CONTRACT['gross_ceiling'])):
+            raise ValueError('MONTHLY_FRESH_CASH_GROSS_OR_POSITION_CAP')
+        asset=self.client.get_asset(ticket['symbol']);quote=self.client.latest_quote(ticket['symbol'])
+        quoted=native._parse_iso_utc(quote.get('t',''))
+        if (asset.get('symbol')!=ticket['symbol'] or asset.get('status')!='active'
+            or asset.get('tradable') is not True or asset.get('fractionable') is not True
+            or quoted is None or not 0<=now-int(quoted.timestamp()*1000)<=300000):
+            raise ValueError('MONTHLY_FRESH_ASSET_OR_QUOTE_REQUIRED')
+        positive(quote['ap'])
+
+    def _require_exit_accounting(self):
+        for exited in self.book.rows('exits'):
+            identity=digest(dict(schema=CONTRACT['schema'],entry_id=exited['entry_id']))
+            path=self.runtime/'safety'/identity/'live.sqlite'
+            if not path.is_file():raise ValueError('MONTHLY_ACCOUNTING_PENDING')
+            with sqlite3.connect(lifecycle.safe_path(str(path),exists=True).as_uri()+'?mode=ro',uri=True) as db:
+                row=db.execute('SELECT payload FROM intents WHERE id=?',(identity,)).fetchone()
+            item=json.loads(row[0]) if row else {}
+            if (not item.get('cost_finality') or item.get('account')!=self.account
+                or item['cost_finality'].get('status')!='LIVE_TERMINAL_COST_FINALITY'):
+                raise ValueError('MONTHLY_ACCOUNTING_PENDING')
+            source=lifecycle.safe_path(item['monthly_cost_source_path'],exists=True)
+            if hashlib.sha256(source.read_bytes()).hexdigest()!=item['cost_finality_sha256']:
+                raise ValueError('MONTHLY_ACCOUNTING_SOURCE_CHANGED')
+            for row in lifecycle.read_json(str(source))['source_files']:
+                p=lifecycle.safe_path(row['path'],exists=True)
+                if hashlib.sha256(p.read_bytes()).hexdigest()!=row['sha256']:
+                    raise ValueError('MONTHLY_ACCOUNTING_SOURCE_CHANGED')
+
+    def finalize_exit(self,entry_id,cost_source_path,*,now_ms):
+        """Reuse the existing broker/account cost finalizer; no orders or new GO."""
+        exited=next((r for r in self.book.rows('exits') if r['entry_id']==entry_id),None)
+        if exited is None:raise ValueError('MONTHLY_EXIT_UNKNOWN')
+        p=exited['retired_position'];now=instant(now_ms)
+        identity=digest(dict(schema=CONTRACT['schema'],entry_id=entry_id))
+        source=lifecycle.safe_path(str(cost_source_path),exists=True)
+        with account_lock(dict(lock_path=str(self.lock_path))):
+            execution_identity_v1(p['raw_entry'],self.client.get_order(entry_id))
+            orders=[self.client.get_order(o['id']) for o in exited['orders']]
+            for old,current in zip(exited['orders'],orders):execution_identity_v1(old,current)
+            active=self.client.list_orders(status='open',limit=500)
+            if (len(active)>=500 or any(o['symbol']==p['symbol'] for o in active)
+                or any(r['symbol']==p['symbol'] for r in self.client.list_positions())):
+                raise ValueError('MONTHLY_ACCOUNTING_EXIT_NOT_FLAT')
+            gross=sum((positive(o['filled_qty'])*(positive(o['filled_avg_price'])
+                       -positive(p['raw_entry']['filled_avg_price'])) for o in orders),dec(0))
+            terminal=dict(exit_orders=orders,gross_before_fees=str(gross),exit_kind=exited['reason'])
+            with lifecycle.store(self.runtime/'safety'/identity) as db:
+                row=db.execute('SELECT payload FROM intents WHERE id=?',(identity,)).fetchone()
+                item=json.loads(row[0]) if row else dict(id=identity,account=self.account,entry=p['raw_entry'],
+                    intake=dict(plan=dict(slot_entry_order_id=entry_id,session=p['daily_state']['entry_session'])),
+                    initial_full_protection_proven=not bool(p.get('protection_pending')))
+                if item.get('account')!=self.account or item.get('entry')!=p['raw_entry']:
+                    raise ValueError('MONTHLY_ACCOUNTING_OWNER_CONFLICT')
+                item['observed_ms']=now
+                out=lifecycle.finalize_costs(db,item,self.client,terminal,source)
+                item['monthly_cost_source_path']=str(source);lifecycle.save(db,item)
+                return out
 
     def _state(self):
         state=json.loads(self.ledger.read_text()) if self.ledger.exists() else {}
@@ -91,6 +246,7 @@ class MonthlyNativeBinding:
         return out
 
     def enter(self,ticket,*,now_ms,apply=False):
+        started=time.monotonic()
         if type(apply) is not bool:raise ValueError('EXPLICIT_BOOLEAN_OPERATION_REQUIRED')
         if ticket.get('ticket_sha256')!=digest({k:v for k,v in ticket.items() if k!='ticket_sha256'}):
             raise ValueError('MONTHLY_TICKET_HASH_CONFLICT')
@@ -125,6 +281,13 @@ class MonthlyNativeBinding:
                     or gate['causal_history_sha256']!=s['causal_history_sha256']
                     or not 0<positive(ticket['notional'])<=dec(self.capital*.70*selected['weight'])):
                     raise ValueError('MONTHLY_TICKET_SOURCE_OR_CAP_CONFLICT')
+                self._admit_new_entry(ticket,now+int((time.monotonic()-started)*1000))
+                final_clock=self.client.get_clock();stamp=native._parse_iso_utc(final_clock.get('timestamp',''))
+                effective=now+int((time.monotonic()-started)*1000)
+                if (final_clock.get('is_open') is not True or stamp is None
+                    or abs(int(stamp.timestamp()*1000)-effective)>5000
+                    or not window['open_ms']<=effective<window['open_ms']+300000):
+                    raise ValueError('MONTHLY_FINAL_DISPATCH_WINDOW_OR_CLOCK')
                 pick=SimpleNamespace(ticker=ticket['symbol'],entry_day=s['entry_session'],
                     entry_price=gate['signal_close'],stop_price=gate['signal_close']-2.*gate['atr20'])
                 try:
@@ -146,6 +309,7 @@ class MonthlyNativeBinding:
                 stop_order_id=stop['id'],stop_price=record['accepted_stop_floor'])
 
     def rotate(self,selection_id,*,now_ms,apply=False):
+        if type(apply) is not bool:raise ValueError('EXPLICIT_BOOLEAN_OPERATION_REQUIRED')
         s=self._selection(selection_id);plan=self.book.monthly_actions(selection_id,now_ms=now_ms)
         if not apply:return plan
         with account_lock(dict(lock_path=str(self.lock_path))):
@@ -255,6 +419,10 @@ class MonthlyNativeBinding:
                             raise ValueError('UNCERTAIN_STOP_NO_RESEND')
                         native._intended_lifecycle_enabled(self.base_url,account_id=self.account,
                             capital=self.capital,require_enabled=True)
+                        permit_write(self.client,'POST','/v2/orders',dict(symbol=symbol,
+                            qty=native._format_qty(float(positive(p['qty']))),side='sell',type='stop',
+                            stop_price=native._format_price(float(target)),
+                            time_in_force=payload['time_in_force'],client_order_id=payload['client_order_id']))
                         stop=self.client.submit_stop_sell(symbol,qty=float(positive(p['qty'])),stop_price=float(target),
                             time_in_force=payload['time_in_force'],client_order_id=payload['client_order_id'])
                 stop=native._confirmed_intended_stop(self.client,stop,symbol=symbol,qty=float(positive(p['qty'])),

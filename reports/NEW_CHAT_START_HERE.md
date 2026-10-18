@@ -1,4 +1,20 @@
-# START HERE — KITY actual 10/10 / Alpaca personally armed
+# START HERE — Monthly P0 / SHOP cancelled / NET preserved
+
+CURRENT18Oct MONTHLY ENGINEERING DELIVERY —
+[ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md](ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md).
+270targetedPASS;91exactcandidatePASS/22sourceimports/0checkoutfallback. Existing
+restricted LIVEclient now supports explicit Monthly wire; native fresh full-account
+admission and existing accountingfinalizer gate closed. V4 isolated33files installed
+DISABLED, spec351dbba7…5c278, strategy83a082b0…7873d4;77oldstaticpins unchanged.
+No financialunit/profile/cron change,0brokerrequests/writes. SHOP disabled/inactive;
+NETmanager/timer and19Oct13:30UTC DAYmonitor preserved, original lock813893.
+NOT LIVE_READY: nextP0 actual source→ownedbook→singlemanager wiring + alert/rollback/
+activation review ORDERSOFF, before30Oct. Exact new Monthly GO remainsrequired;
+no Monthly19Oct. Frozen30Octclose→2Nov14:30–14:35UTC conditionalwindow. LegacyNET
+notadopted/earlysold; priorpersonalNov2exit boundary unchanged. ATT1read-only
+index added(REPAIR), olderKARTA rows notcurrenttruth; no newjudge/outcome/probe.
+KITYfix8500c97/Health5820bac stillLOCAL/NOTDEPLOYED; spentmoneyGO notrenewed.
+See canonicalboard and inert activation_packet.json, not older activation prose.
 
 LATEST18Oct RESEARCH/OWNER UPDATE — authoritative current board:
 [research_lab/RESEARCH_TO_LIVE_BOARD.md](../research_lab/RESEARCH_TO_LIVE_BOARD.md),

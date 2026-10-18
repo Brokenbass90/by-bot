@@ -1243,6 +1243,8 @@ def _rotate_intended_monthly(
             if (stop.get("symbol") != symbol or stop.get("side") != "sell" or stop.get("type") != "stop"):
                 raise IntendedPaperProtectionError(f"rotation_stop_identity_mismatch:{symbol}")
             if stop.get("status") not in _TERMINAL_ORDER_STATUSES:
+                if rotation_client_ids is not None and hasattr(client,'permit_write'):
+                    client.permit_write('DELETE','/v2/orders/'+stop_id,None)
                 client.cancel_order(stop_id)
                 stop = client.get_order(stop_id)
             if stop.get("status") not in _TERMINAL_ORDER_STATUSES:
@@ -1259,6 +1261,10 @@ def _rotate_intended_monthly(
             if rotation_client_ids is not None:
                 record['rotation_dispatch_attempted']=True
                 _atomic_write_json(state_path,state)
+                if hasattr(client,'permit_write'):
+                    client.permit_write('POST','/v2/orders',dict(symbol=symbol,
+                        qty=_format_qty(float(record['qty'])),side='sell',type='market',
+                        time_in_force='day',client_order_id=expected['client_order_id']))
             existing = client.submit_market_sell_qty(symbol, float(record["qty"]), client_order_id=expected["client_order_id"])
         if (existing.get("client_order_id") != expected["client_order_id"] or existing.get("symbol") != symbol
             or existing.get("side") != "sell" or existing.get("type") != "market" or not existing.get("id")
@@ -1781,6 +1787,10 @@ def _finish_intended_entry_intent(*, client: Any, base_url: str, account_id: str
         if intent.get('baseline_contract')=='ALPACA_BASELINE_MONTHLY_DAILY_V1':
             intent['baseline_stop_dispatch_started']=True
             _atomic_write_json(reentry_path,payload)
+            if hasattr(client,'permit_write'):
+                client.permit_write('POST','/v2/orders',dict(symbol=symbol,qty=_format_qty(qty),
+                    side='sell',type='stop',time_in_force=_persistent_exit_tif_for_qty('',qty),
+                    stop_price=_format_price(floor),client_order_id=stop_id))
         try:
             stop = client.submit_stop_sell(symbol, qty=qty, stop_price=floor,
                 time_in_force=_persistent_exit_tif_for_qty("", qty), client_order_id=stop_id)
@@ -1860,6 +1870,10 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
     entry = client.get_order_by_client_id(client_id)
     if entry is None:
         if baseline_fields:
+            if hasattr(client,'permit_write'):
+                client.permit_write('POST','/v2/orders',dict(symbol=pick.ticker,
+                    notional=_monthly_notional_wire(notional),side='buy',type='market',
+                    time_in_force='day',client_order_id=client_id))
             entry=client.submit_market_buy(pick.ticker,notional,client_order_id=client_id,notional_precision=9)
         else:
             entry = client.submit_market_buy(pick.ticker, notional, client_order_id=client_id)

@@ -1,0 +1,30 @@
+{
+  "Claude_code_changed": false,
+  "KITY_new_policy": false,
+  "NET_opening_protection": "NOT_PROVEN_BEFORE_ACTUAL_OCT19_REGULAR_SESSION",
+  "SHOP": "OWNER_CANCELLED_DISABLED_INACTIVE",
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "financial_units_changed": 0,
+  "last_manager": [
+    {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"status\": \"LIVE_WAITING_REGULAR_SESSION\", \"ready_for_live_go\": false, \"protection_present\": false}\n"
+    },
+    {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"broker_writes\": 0, \"status\": \"NO_NEXT_OWNED_INTENT\"}\n"
+    }
+  ],
+  "lock_inode": 813893,
+  "observed_ms": 1792306761089,
+  "schema": "TRADING_OS_PRESERVATION_READBACK_V1",
+  "selected_unit_pins_pass": true,
+  "units": {
+    "alpaca-dynamic-next-entry-20261019.timer": "NextElapseUSecRealtime=\nActiveState=inactive\nUnitFileState=disabled",
+    "alpaca-net-day-monitor.timer": "NextElapseUSecRealtime=Mon 2026-10-19 13:30:00 UTC\nActiveState=active\nUnitFileState=enabled",
+    "alpaca-oct15-owned-manager.timer": "NextElapseUSecRealtime=Sun 2026-10-18 07:05:00 UTC\nActiveState=active\nUnitFileState=enabled"
+  }
+}

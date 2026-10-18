@@ -1273,3 +1273,21 @@ existing execution/healthfixes LOCAL/NOT_DEPLOYED. Keep research/Factory/Brain
 moving without promoting2–3crypto strategies solely to satisfy a count.
 Researchworkingtree/KARTA/VOROTA/code untouched. Researchboard→pointer proposal
 is pendingClaude; do not claim already onephysicalfile. Foreignallowlist retained.
+
+
+## October18 Monthly account/transport closeout — latest engineering state
+
+Continue ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md and canonicalboard. New
+restricted Monthly wire mode, fresh account/custody/cash/gross admission and reuse
+of existing accountingfinalizer delivered.270targetedPASS/91exactcandidatePASS,
+22sourceimports/0fallback. V4 separate33files stageddisabled;351dbba7…5c278,
+strategy83a082b0…7873d4. No activefinancialfile/unit/cron/profile changes;77oldpins
+preserved. Old accepted Monthly numericalcontract unchanged. V4 retains original
+Dynamic helper7ab36fd9 fromd205f8f, not laterEventReselection helper. New Monthly
+source/owner scope required, oldDynamicGO cannot activate; firstfuture scope
+one selected symbol/one newentry/session, no automaticweight expansion. No actual
+GO created/financialmanager installed/realbrokeracceptance. SourceCLI isverify-only.
+NextP0 source→ownedbook→singlemanager wiring/realalertdelivery/rollback/activation
+review ORDERSOFF; do not defer to30Oct. Research/NET/cost/event/owner gates remain.
+ATT1datedevidence indexed only, no currentcount/edge or newjudge/probeclaim. KITY
+fixes remainLOCAL/NOTDEPLOYED. SHOP remainsOWNER_CANCELLED, NET19OctDAY preserved.
