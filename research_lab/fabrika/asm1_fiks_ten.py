@@ -31,8 +31,10 @@ def reshit(sym, ts, o, h, l, c, v, posl_ms, seychas_ms):
     sig = [x for x in A.signaly(ts, o, h, l, c, v) if x[0] == len(ts) - 1]
     if not sig: return None
     ib, s, a = sig[0]; t_vh = int(ts[ib]) + H
-    return dict(symbol=sym, bar_ms=int(ts[ib]), storona=int(s), atr=a, vhod_ms=t_vh, zapisano_ms=seychas_ms,
-                pozdno=bool(seychas_ms >= t_vh), stop_atr=K, uderzhanie_ch=HOLD, prereg="PREREG_ASM1_FIKS_VPERED_2026_10_17")
+    vhod_isp = (seychas_ms // H + 1) * H                         # дополнение 1: первый полный бар после записи
+    return dict(symbol=sym, bar_ms=int(ts[ib]), storona=int(s), atr=a, vhod_ms=vhod_isp, vhod_signal_ms=t_vh,
+                zapisano_ms=seychas_ms, pozdno=bool(seychas_ms - t_vh > 2 * H), stop_atr=K, uderzhanie_ch=HOLD,
+                prereg="PREREG_ASM1_FIKS_VPERED_2026_10_17 + дополнение 1")
 
 
 def ishod(r, ts, o, h, l, c):

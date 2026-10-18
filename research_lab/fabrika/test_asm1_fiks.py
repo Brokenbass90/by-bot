@@ -22,7 +22,7 @@ class Test(unittest.TestCase):
     def test_pozdno(self):
         ts, x = self.ts, self.x
         ib = A.signaly(ts, *[x[:, k] for k in range(5)])[5][0]; lo = ib - 400
-        r = T.reshit("SOLUSDT", ts[lo:ib + 1], *[x[lo:ib + 1, k] for k in range(5)], 0, int(ts[ib]) + 2 * T.H)
+        r = T.reshit("SOLUSDT", ts[lo:ib + 1], *[x[lo:ib + 1, k] for k in range(5)], 0, int(ts[ib]) + 4 * T.H)
         self.assertTrue(r["pozdno"])
 
     def test_ishod(self):
