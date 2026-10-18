@@ -195,12 +195,15 @@ def telegram(config,event):
     loader=importlib.util.spec_from_file_location('day_report_helper',helper)
     module=importlib.util.module_from_spec(loader);loader.loader.exec_module(module)
     if event['kind']=='DELIVERY_TEST':
-        text='Alpaca DAY monitor: проверка доставки.\nЭто НЕ тревога и НЕ подтверждение стопа.\nНаблюдатель только GET; NET, manager, V3 и HALT не изменены.'
+        text=(config['scope_label']+': безопасная проверка доставки.\nORDERS_OFF, реальных ордеров нет.\nNET, SHOP, manager, риск и финансовые разрешения не изменены.'
+            if config.get('scope_label') else 'Alpaca DAY monitor: проверка доставки.\nЭто НЕ тревога и НЕ подтверждение стопа.\nНаблюдатель только GET; NET, manager, V3 и HALT не изменены.')
     elif event['kind']=='RECOVERED':
         text='Alpaca NET: readback восстановлен.\n'+event['status']+'\nEvidence '+event['evidence_id']
     else:
         codes=', '.join(r['code'] for r in event['issues'])
         text='Alpaca NET CRITICAL\n'+codes+'\nСессия '+event['session']+'\nПодтверждение защиты отсутствует или источник UNKNOWN.\nНаблюдатель ордеров не отправляет. Evidence '+event['first_evidence_id']
+    if config.get('scope_label') and event['kind']!='DELIVERY_TEST':
+        text=config['scope_label']+' '+event['kind']+'\n'+(', '.join(r['code'] for r in event.get('issues',[])))+'\nEvidence '+str(event.get('first_evidence_id',event.get('evidence_id','UNKNOWN')))+'\nРеальные ордера из этого наблюдателя не отправляются.'
     captured={};original=module.urllib.request.urlopen
     def send(req,*args,**kwargs):
         if req.full_url!='https://api.telegram.org/bot'+env['TG_TOKEN']+'/sendMessage' or req.get_method()!='POST':

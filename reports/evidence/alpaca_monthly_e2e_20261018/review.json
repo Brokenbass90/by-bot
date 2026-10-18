@@ -1,0 +1,20 @@
+{
+  "agent_path": "/root/monthly_independent_review",
+  "all_five_fixed_with_regressions": true,
+  "critical_findings": 0,
+  "financial_signoff": false,
+  "findings": [
+    "fresh equity weight cap",
+    "final dispatch clock/HALT after last network GET",
+    "source/manager incident separation",
+    "full native manager custody",
+    "symbol filter before saved ticket replay"
+  ],
+  "fix_verification": "targeted tests plus 135 exact final candidate tests",
+  "important_findings": 5,
+  "independent_second_review_after_fixes": false,
+  "reviewer_thread": "01a14eb0-11a6-7ad3-b89b-58a01b948489",
+  "runtime_verified_effort": "high",
+  "runtime_verified_model": "gpt-6-astra",
+  "schema": "MONTHLY_INDEPENDENT_REVIEW_V1"
+}

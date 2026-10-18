@@ -1,0 +1,36 @@
+{
+  "accepted_base_commit": "54afc18055506e9bf4bfb835171e8b43697bfb29",
+  "exact_candidate": {
+    "checkout_fallback": 0,
+    "errors": 0,
+    "exit_code": 0,
+    "failures": 0,
+    "source_imports": 34,
+    "source_material_sha256": "29d61ad33238dac0c4df7153d18691dbed9800732c853e0cc9010b7c84945662",
+    "tests": 135
+  },
+  "focused": {
+    "errors": 0,
+    "failures": 0,
+    "scope": "23 targeted files; followed by one rollback-native regression and exact final run",
+    "tests": 316
+  },
+  "full_repository_suite_run": false,
+  "regression_classes": [
+    "fresh_equity_frozen_weight",
+    "late_final_GET_window_and_HALT",
+    "lost_entry_and_stop_replies_restart",
+    "full_manager_custody",
+    "symbol_filter_before_ticket_replay",
+    "cancelled_stop_not_protection",
+    "source_manager_incident_generation",
+    "rollback_includes_native_ledger"
+  ],
+  "schema": "MONTHLY_E2E_VERIFICATION_V1",
+  "verification_artifact_sha256": {
+    "exact-final.log": "ca2270a2a9ea84eb4e3bc78e40417d2897c6067c6046aee5bd0fab43f37fabea",
+    "exact-imports.json": "f773158a54071e55ebedca13c51f57c000629171230443c83c73c619ef410489",
+    "exact.xml": "a5ee8d09a23fb2b559208ef8820109e4b04076e28cbd98c2c73b0bc2c7ae4efc",
+    "focused.xml": "a9c815e10b2aa77bfb99ad78c7f5934e27121615a1c69ec99490b43565e37c02"
+  }
+}

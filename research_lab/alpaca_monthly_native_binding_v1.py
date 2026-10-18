@@ -143,8 +143,11 @@ class MonthlyNativeBinding:
         notional=positive(ticket['notional']);equity=min(positive(account['equity']),dec(self.capital))
         cash=min(dec(account['cash']),dec(account['non_marginable_buying_power']))
         gross=sum((abs(dec(p['market_value'])) for p in positions),dec(0))
+        weight=positive(ticket['entry_gate']['weight'])
+        fresh_size=dec(float(equity)*.70*float(weight))
         if (len(positions)>=CONTRACT['max_positions'] or cash-self.liability<notional
-            or gross+notional>equity*dec(CONTRACT['gross_ceiling'])):
+            or gross+notional>equity*dec(CONTRACT['gross_ceiling'])
+            or notional>fresh_size+dec('.000000001')):
             raise ValueError('MONTHLY_FRESH_CASH_GROSS_OR_POSITION_CAP')
         asset=self.client.get_asset(ticket['symbol']);quote=self.client.latest_quote(ticket['symbol'])
         quoted=native._parse_iso_utc(quote.get('t',''))
@@ -290,10 +293,20 @@ class MonthlyNativeBinding:
                     raise ValueError('MONTHLY_FINAL_DISPATCH_WINDOW_OR_CLOCK')
                 pick=SimpleNamespace(ticker=ticket['symbol'],entry_day=s['entry_session'],
                     entry_price=gate['signal_close'],stop_price=gate['signal_close']-2.*gate['atr20'])
+                def final_dispatch():
+                    clock=self.client.get_clock();stamp=native._parse_iso_utc(clock.get('timestamp',''))
+                    effective=now+int((time.monotonic()-started)*1000)
+                    if (clock.get('is_open') is not True or stamp is None
+                        or abs(int(stamp.timestamp()*1000)-effective)>5000
+                        or not window['open_ms']<=effective<window['open_ms']+300000):
+                        raise ValueError('MONTHLY_FINAL_DISPATCH_WINDOW_OR_CLOCK')
+                    if self.halt.exists() or native.paper_entry_halted(base_url=self.base_url,state_dir=args['state_dir']):
+                        raise ValueError('ENTRY_HALT_PRESERVED')
                 try:
                     native._submit_intended_reserved_entry(**args,pick=pick,notional=ticket['notional'],timeout_sec=0,
                         baseline_atr20=gate['atr20'],baseline_signal_session=s['signal_session'],
-                        baseline_selection_sha256=s['selection_id'],baseline_entry_gate=gate)
+                        baseline_selection_sha256=s['selection_id'],baseline_entry_gate=gate,
+                        baseline_dispatch_validator=final_dispatch)
                 except native.AlpacaAPIError as exc:
                     saved=json.loads(self.reentry.read_text())['entry_intents'][cid]
                     if exc.status_code!=422 or not saved.get('baseline_stop_rejected_422'):raise
@@ -304,6 +317,8 @@ class MonthlyNativeBinding:
             state=self._state();record=state.get(ticket['symbol'])
             if not record:return result('NO_SEND',reason='NATIVE_RESERVATION_UNFILLED_OR_NOT_SUBMITTED')
             entry=self.client.get_order(record['entry_order_id']);stop=self.client.get_order(record['accepted_order_id'])
+            native._confirmed_intended_stop(self.client,stop,symbol=ticket['symbol'],
+                qty=float(positive(entry['filled_qty'])),requested_stop=float(record['accepted_stop_floor']))
             self.book.bind_fill(s['selection_id'],entry,stop)
             return result('MONTHLY_NATIVE_PROTECTED',symbol=ticket['symbol'],entry_order_id=entry['id'],
                 stop_order_id=stop['id'],stop_price=record['accepted_stop_floor'])

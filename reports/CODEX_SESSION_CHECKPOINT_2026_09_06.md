@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT18Oct MONTHLY E2E CLOSED — [ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md](ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md).
+44file candidate29d61ad33238dac0 installed separately; spec43d59100…1e042.
+Frozen contract unchanged; technical identity14dfa09f…35b4a81. Same full58 source,
+owned book, original lock813893 and one scoped manager API. Full simulated cycle
+PASS on VPS, two lost-response restarts, native stop/ratchet/DAY/exit/cash/release,
+no duplicate buy; actual Telegram test DELIVERED message15223. Four source/preview
+units registered DISABLED/inactive; no financial CLI switch/activation. Isolated
+rollback PASS/repeat idempotent; exposure/unknown blocks rollback. Independent
+astra/high review actualmetadata verified,5Important fixed/regressed;135exactfinal
+PASS/34imports/0fallback,316earlier targetedPASS(overlap).77oldpins preserved,
+NETmanager/timer and19Oct13:30UTC DAY monitor unchanged; SHOPdisabled.0brokerAPI.
+Remaining: actual30Octclosed selection/size, separate exact Monthly personalGO,
+Nov2 freshaccount/costs/NETflat+singlemanager handoff. CASH/NO_SEND valid; no datecarry.
+Not financialLIVE_READY. Nextavailable: KITYsafety/Elderactualeventintake; no calendaridle.
+The account/transport-only pending-engineering paragraph below is HISTORICAL.
+
 CURRENT18Oct MONTHLY ENGINEERING DELIVERY —
 [ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md](ALPACA_MONTHLY_ACCOUNT_TRANSPORT_2026_10_18.md).
 270targetedPASS;91exactcandidatePASS/22sourceimports/0checkoutfallback. Existing

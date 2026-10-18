@@ -1819,7 +1819,8 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
     pick: Pick, notional: float, timeout_sec: float,
     baseline_atr20: float | None = None, baseline_signal_session: str | None = None,
     baseline_selection_sha256: str | None = None,
-    baseline_entry_gate: dict[str, Any] | None = None) -> dict[str, Any]:
+    baseline_entry_gate: dict[str, Any] | None = None,
+    baseline_dispatch_validator: Any = None) -> dict[str, Any]:
     _intended_lifecycle_enabled(base_url, account_id=account_id, capital=capital, require_enabled=True)
     if client.get_account().get("id") != account_id:
         raise IntendedPaperProtectionError("reserved_entry_account_mismatch")
@@ -1870,6 +1871,8 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
     entry = client.get_order_by_client_id(client_id)
     if entry is None:
         if baseline_fields:
+            if baseline_dispatch_validator is not None:
+                baseline_dispatch_validator()  # after final account/position/CID GET, before permit/POST
             if hasattr(client,'permit_write'):
                 client.permit_write('POST','/v2/orders',dict(symbol=pick.ticker,
                     notional=_monthly_notional_wire(notional),side='buy',type='market',

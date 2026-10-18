@@ -36,7 +36,7 @@ def test_existing_transport_can_explicitly_select_monthly_wire_without_relaxing_
 
 
 @pytest.mark.parametrize('kind', ['foreign_position', 'foreign_order', 'blocked', 'low_cash',
-                                  'wrong_account', 'closed', 'stale_clock', 'gross', 'stale_quote'])
+                                  'wrong_account', 'closed', 'stale_clock', 'gross', 'stale_quote', 'fresh_weight'])
 def test_new_monthly_buy_requires_fresh_full_account_admission(setup, kind):
     book, selection, adapter, io, now = setup
     prepared = ticket(setup)
@@ -57,6 +57,7 @@ def test_new_monthly_buy_requires_fresh_full_account_admission(setup, kind):
     if kind == 'closed': clock['is_open'] = False
     if kind == 'stale_clock': clock['timestamp'] = '2026-11-02T14:29:00Z'
     if kind == 'gross': account['equity'] = '100'
+    if kind == 'fresh_weight': account['equity'] = '400'
     if kind == 'stale_quote': io.latest_quote = lambda symbol: dict(ap='311', t='2026-11-02T14:00:00Z')
     with pytest.raises(ValueError):
         adapter.enter(prepared, now_ms=now, apply=True)
@@ -262,3 +263,30 @@ def test_monthly_live_custody_scope_cannot_be_reused_or_changed(setup,monkeypatc
         prepared['ticket_sha256']=digest({k:v for k,v in prepared.items() if k!='ticket_sha256'})
     with pytest.raises(ValueError):adapter.enter(prepared,now_ms=now,apply=True)
     assert writes==[] and not adapter.reentry.exists()
+
+
+@pytest.mark.parametrize('late_change',['window','halt'])
+def test_final_native_lookup_cannot_cross_deadline_or_ignore_new_halt(setup,monkeypatch,late_change):
+    from research_lab import alpaca_monthly_native_binding_v1 as mod
+    book,selection,adapter,io,now=setup;prepared=ticket(setup)
+    elapsed=[0.];monkeypatch.setattr(mod.time,'monotonic',lambda:elapsed[0])
+    io.get_clock=lambda:dict(is_open=True,timestamp='2026-11-02T14:34:59Z')
+    lookup=io.get_order_by_client_id
+    def last_read(cid):
+        if adapter.reentry.exists():
+            if late_change=='window':elapsed[0]+=2.
+            else:adapter.halt.write_text('{}')
+        return lookup(cid)
+    io.get_order_by_client_id=last_read
+    with pytest.raises(ValueError):adapter.enter(prepared,now_ms=now+299000,apply=True)
+    assert io.sent==[]
+    assert adapter.reentry.exists()  # reserved, never guessed safe to resend
+
+
+def test_duplicate_entry_cannot_claim_protection_after_native_stop_cancelled(setup):
+    book,selection,adapter,io,now=setup;prepared=ticket(setup)
+    adapter.enter(prepared,now_ms=now,apply=True)
+    io.orders['stop']['status']='canceled'
+    from scripts.equities_alpaca_paper_bridge import IntendedPaperProtectionError
+    with pytest.raises(IntendedPaperProtectionError):adapter.enter(prepared,now_ms=now+1000,apply=True)
+    assert io.sent==['buy','stop']

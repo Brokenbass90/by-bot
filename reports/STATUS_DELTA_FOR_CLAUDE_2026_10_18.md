@@ -1,3 +1,15 @@
+# Status delta для Claude — Monthly E2E18Oct
+
+- **Monthly ORDERS_OFF E2E завершён**, не новый research и не financial activation. Существующие full58source/frozen selector/ownedbook/native/accounting связаны одним manager API. VPS44files, material29d61ad3…45662/spec43d59100…1e042; численныйcontracta32aaec3 неизменен.
+- На VPS полный simulated цикл PASS: lostbuy+stop replies→2restarts→одна покупка/полная защита→daily ratchet/DAY→exit/cash/costs→capital release/nextmonthly. Synthetic calendar/prices/costs не prospective/экономическийPASS.135exactfinaltests/34imports/0fallback;316targeted раньше, не складывать.
+- Actual безопасный Telegram test доставлен(message15223).4source/preview units registereddisabled/inactive; CLI без денежного apply. Isolatedrollback+repeatPASS; live custody не передавалась. Independentastra/high5Important исправлены/регрессии; финансового signoff нет.
+- NET/77oldpins/lock813893/DAY19Oct13:30UTC сохранены; SHOPdisabled;0brokerrequests/writes/financialunit changes. ИнженерияORDERSOFF не ждёт30Oct и закрыта.
+- Остались реальные futurefacts:30Octclosedselection/ATR/weight/size, отдельный Monthly personalGO,2Nov14:30–14:35UTC freshaccount/quote/cash/costs/NETflat и singlemanager handoff; CASH/NO_SEND допустимы, без datecarry. До actualclose точную первую сумму не придумывать.
+- Перешёл к KITYsafety, затемElderactualeventintake. No newfinancial authority/GO/Claude code/KARTA/VOROTA/messages. Полный evidence: reports/ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md. Доска recovery/research_lab/RESEARCH_TO_LIVE_BOARD.md.
+
+---
+Предыдущая дельта — история до завершения E2E:
+
 # Status delta для Claude — Monthly account/transport18Oct
 
 - Monthly P0: закрыты3 конкретных пробела — frozen market/notional wire в существующем restricted client, fresh full-account admission под исходным lock и запрет нового риска до существующего broker/cost finalizer. Отбор/ATR/веса/ratchet/cooldown/месячный календарь прежние; нет нового Brain/manager/PnL двигателя.
