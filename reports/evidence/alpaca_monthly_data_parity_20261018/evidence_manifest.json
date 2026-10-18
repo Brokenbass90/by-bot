@@ -1,0 +1,26 @@
+{
+  "files": {
+    "2026-10-16.delivery.json": "b156a436edb5d6a34517d387c69e2bb68813bc5d6194376226b30f7cdf2ed794",
+    "2026-10-16.diagnostic.json": "61d913c1a2ba510a952bb77fefcdc938f66537b7f08af109c0dbd9c546da8f72",
+    "2026-10-16.diagnostic.md": "94f0e5f31085309d48f2903ef56411579714b8a3a26dcf5074f40b9d40ed7b1a",
+    "automation.json": "e9b587e82f04f81c2b2bb7503fe7a47fde7bdf33d75af3b4e5b1eba6c8cdd93a",
+    "deployment.json": "a17ab2aa61039af61b7b8353aea371a3f409396c62d144eb02f5c4e171358267",
+    "exact_imports.json": "4fbaad0a905232f542c8de7d3bd0a55434137872d92920e5554258182db435dd",
+    "exact_tests.xml": "3f3105fe419b04ea963b062f25e990c2310c2b9f1ac43e60b2c7279e3d49a9dc",
+    "final_runtime_readback.json": "da54256394a7d89b44dd70e26fd16f9e68f98c2accfd302c8f2e68b10b6effe7",
+    "first_import.json": "244b14ef11a52be6ea86b6ed0ff363a15c6f94c025bfcdbbe1c882cfc4170544",
+    "first_import_observation.json": "c4b78e763d8b617ce41f4c7dcb1d2013f417a546372ce9f4bd5311ea71b52ff6",
+    "import_replay_verification.json": "5a58b7390f4fc47a829d8a67e0c9d35ef9fa8036bc8c49e0d5190d3ff2c3bec3",
+    "repeat_import.json": "4f81af8af7a884af8305c88cf1e80717d3e84f292b7b50d72458b9c3e1cd7991",
+    "reproduction.json": "1b3213e8a69d4a92bebd0a61a2f1010f7a979b9b4a441172aa46c4b9a24a30a8",
+    "research_publication_gate.json": "2386d02c42d658f72fc7e419eca70af3a3c03fe27ceb675b174e7780513ef7ec",
+    "review.json": "b0bbbfc595b4b82a3cf46632f1fefdc8ba48ebf90597261bf351f6db709b25b2",
+    "review_fix_tests.xml": "164abc32c933fa3764352163ce9c6b24675a473018edb7f5fa72aeaaa70f52a4",
+    "source_manifest.json": "9cb28d9d3707e04acd5806434aaf1dafaf1825d8e51031bf241daaeb5e2d1ff8",
+    "source_provenance.json": "d5e39c8cab28f7bc487a76f325cdb767b5bd6bbe2c94634875d7e9b2481eb8d6",
+    "targeted_tests.xml": "f93ea086b38c2683d386e302080d0a72a22efd9f9cb66f0b7390f50fe0513b7c",
+    "vendor_semantics.json": "a5b53ec02aae2ea3069f4eea66fbef63a9b03298c7e8aedf8f5c15a466847801",
+    "verification.json": "6e50a78c8e9b30b7c8273d2a09f1260ecade0cb3d1c88129b1e8cf4bd9551cba"
+  },
+  "schema": "TASK_EVIDENCE_MANIFEST_V1"
+}

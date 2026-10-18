@@ -1310,3 +1310,25 @@ Elder actualprefix-only intake18813rows/15209firstshort/0duplicate/0prospective.
 belongs to Claude via versioned research, never Codex retune/backfill;72testsPASS.
 No outcome values/judge/producer restart/researchcode/KARTA/VOROTA/messages.
 NET DAY19Oct13:30UTC/readback13:35/SHOPcancel and IBITMassivePENDING unchanged.
+
+
+## October18 actual Monthly58 parity delivery — latest data gate
+
+Read checkpoint TOP and ALPACA_MONTHLY_DATA_PARITY_2026_10_18.md. Exact57+SPY/noQQQ,
+accepted existing Yahoohourlycapture/aggregator/sourcebookseal reused, noSIPmix.
+260exported/latest200complete;3olderpartialsessionflags retained/min257complete,
+neverclaim260fullorfill/rebase. Samefrozenselection/ranking; recomputedfloatmetrics
+explicit1e-12 only, exactbars/hashes/symbolorder/decisions. VersionatcaptureUNKNOWN.
+47fileDATAONLYcandidate50690ccc VPS ACTIVE, specb736b443…701a5, IPdeniedfileworker;
+actual16OctdataSCPdeliveredClaude/repeatidempotent/hash+mtimeunchanged.19exactPASS/
+25imports/0fallback; same19targetednotadditive. Oneverifiedastra/highreview4Important
+fixed/regressed, nosecondreview/financialsignoff.77oldpins/NETlock813893/SHOPcancel
+preserved,0brokerrequests/writes/financialchanges. Daily23:40Cyprusheartbeat
+monthly58-daily-data-delivery alreadyACTIVE; do notduplicate/reinstall units.
+CatchupafterMacsleep, verifyhashes, no overwrite; actual19Octreportstillfuture,
+neverrename16to19/backdateprospective. Existing19-net-ibit/NET19Oct13:30/13:35UTC
+unchanged. ATT1published1c595cf ECONOMIC_FAIL/outofmoneyqueue; researchboard4129fed
+isnowpointertoexecutionboard. Elderlocal6a618d2 read/notpublished(origin31ccd113),
+PENDING_PUBLICATION; nof1patchuntiloriginconfirmed, no producer/outcome/judgework.
+KITYsafety48020eddUNSELECTED/SPENT/no paidretry. MonthlyE2Edisabled/newpersonalGO
+and original30Oct→2Novcalendarremain; no financialactivationfor DATA_ONLY work.

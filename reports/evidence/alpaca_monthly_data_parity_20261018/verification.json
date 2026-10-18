@@ -1,0 +1,31 @@
+{
+  "actual_19Oct_post_close_report": "PENDING_REAL_MARKET_CLOSE_AND_EXACT_SOURCE_CAPTURE",
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "checkout_fallback": 0,
+  "core200_complete": true,
+  "data_sha256": "e165f362866d739e5be0d8fb2e8b0aa185538e759358cb8b3419b360a4b7bc7e",
+  "exact_imports": 25,
+  "exact_tests": {
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "19",
+    "time": "87.928"
+  },
+  "exported_sessions": 260,
+  "financial_units_changed": 0,
+  "first_import_ms": 1792340704862,
+  "full_repo_suite_run": false,
+  "min_fully_checked_sessions": 257,
+  "monthly_money": "NOT_ACTIVATED_SEPARATE_OWNER_GO_AND_CALENDAR_REQUIRED",
+  "observed_utc": "2026-10-18T16:30:56.610672+00:00",
+  "original_account_lock_inode": 813893,
+  "protected_static_files_unchanged": 77,
+  "reproduction": "reproduction.json",
+  "source_available_is_not_claude_import_time": true,
+  "source_files": 47,
+  "status": "MONTHLY58_DATA_ONLY_DELIVERED_AND_REPLAY_VERIFIED",
+  "targeted_tests": "19 passed in84.16s; overlap with same19 exact tests, not38",
+  "universe_sha256": "d88f7598819afa8b2cc2fabec197f45a7bcd9dfb8f50d30c1bf2698d671295fa"
+}

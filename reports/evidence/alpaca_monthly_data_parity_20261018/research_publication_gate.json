@@ -1,0 +1,14 @@
+{
+  "att1": "ECONOMIC_FAIL_OUT_OF_MONEY_QUEUE",
+  "claude_code_or_outcomes_changed": false,
+  "contract_f1": ".55",
+  "local_elder_contract_sha": "6a618d243112676fed4cc361fc63f309b4d97b58",
+  "observed_utc": "2026-10-18T16:30:56.610672+00:00",
+  "origin_sha": "31ccd113c62c83d1fc3d100126ab7354ffc099d0",
+  "producer_f1": ".50",
+  "published_att1_sha": "1c595cf259e6d455cb17ce18c5485238435764bd",
+  "ref": "refs/heads/research/fabrika-v1",
+  "remote": "origin",
+  "research_board_pointer_sha": "4129fed",
+  "status": "PENDING_PUBLICATION_NOT_IMPLEMENTED"
+}

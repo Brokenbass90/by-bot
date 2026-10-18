@@ -1,7 +1,8 @@
 # Trading OS — единая доска доведения до первой версии
 
 18 октября 2026. Производственные receipts — в этой recovery-ветке; research
-Claude сверено с опубликованным `0be44eca1f86929986b48ee77662d91b51a40255`.
+Claude сверено с опубликованным `31ccd113c62c83d1fc3d100126ab7354ffc099d0`
+(включая прежний Alpaca result0be44ec).
 Это производная доска: разрешения задаются owner packets, деньги — broker/journal/
 native ledger, исследовательские выводы — замороженными research receipts.
 Ни одна строка доски не создаёт финансовых полномочий.
@@ -43,15 +44,25 @@ Brain A/B для перечисленных денежных версий: **INC
 
 | Strategy / версия | Research status | Execution status | Broker / Owner GO | Конкретный блокер и следующий gate | Ответственный / evidence |
 |---|---|---|---|---|---|
-| ATT1 / existing frozen production candidate | Старый registry не current edge; экономический review уClaude, NO_CURRENT_PROMOTION | REPAIR/BLOCKED_DATA: dated9Oct26sessions/18gaps/1cleanADA; это не свежий count18Oct | NEW ORDERS_OFF/old retirement preserved; отдельного GO нет | Существующий CTS-aware observation/replay и actualaccount/mode/cost gaps;2–3clean terminals unchanged. Не перезапускать завершённые probes/не менять2s | Codex + Claude; [evidence intake](../reports/evidence/alpaca_monthly_closeout_20261018/att1_intake.json) |
+| ATT1 / existing frozen candidate | **ECONOMIC_FAIL**, published1c595cf: contemporaneous control n1200/16days, diff−0.0006R/t−0.08; no promotion | Dated engineering/source evidence preserved; no probe restart | ORDERS_OFF, no financial GO | **Убран из денежной очереди**. Не чинить денежный binding под FAIL и не пересчитывать judge для спасения; новая исследовательская версия требует отдельного основания | Claude research; Codex preservation. [publication receipt](../reports/evidence/alpaca_monthly_data_parity_20261018/research_publication_gate.json) |
 | KITY_BYBIT / frozen cb47f0e, spent micro V4, safety48020edd | **ECONOMIC_INCONCLUSIVE**;2026dataexists/crypto-filterwithdrawn | 10entry/10native/10exit cash reconciled; normal hold NOT_PROVEN. Fresh flat0/orders0. Safety fault/health48PASS,40exact/0fallback;24fileVPS candidate UNSELECTED | Bybit; d848a130…f40a1 **SPENT**, activeowner TERMINAL/ORDERS_OFF unchanged | Inert rollout proposal/183pins готово; separate owner version-selection decision+freshflat/finality/lock before any cutover. Новый денежный повтор не назначать; frozen research gates retained | Codex + Claude; [safety/source receipt](../reports/KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md) |
 | Alpaca Weekly Dynamic / fe72557b…f400d | **ECONOMIC_FAIL по prereg правилу замены Monthly**:5.76%годовых/DD19.94% при20bps/side, исследованная известная история | Source59/owned lineage/один manager подтверждены; SHOP не запускался | Alpaca; владелец **ОТМЕНИЛ один SHOP18Oct**, entry timer disabled/inactive; NET сопровождение действует | Не расширять и не включать заново.19Oct только full NET DAY stop / readback; отсутствие SHOP — OWNER_CANCELLED, не execution FAIL | Codex; [new verdict/cancel receipt](../reports/evidence/trading_os_research_intake_20261018/receipt.json) |
 | Alpaca EventReselection / separate ORDERS_OFF contract | **ECONOMIC_FAIL по правилу замены Monthly**:7.42%годовых/DD23.56%,1из7срезов/0из4кризисов | Существующий ORDERS_OFF candidate/restart tests сохранены | Alpaca; денежного GO нет | Убрать из денежного P0; не дорабатывать финансовый binding ради частоты. Новая гипотеза — отдельная prereg, без ретюнинга текущей истории | Claude: research; Codex: preservation. [intake](../reports/evidence/trading_os_research_intake_20261018/receipt.json) |
-| Alpaca Monthly / V4 E2E candidate14dfa09f…35b4a81 | Предпочтительна по0be44ec:8.48%годовых/DD16.17%/PF1.537 при20bps/side; известная история, не unseenPASS | **ORDERS_OFF E2E PASS**: source→ownedbook→single manager→entry/native/restart→exit/cash/release.44file VPS candidate;135exactPASS/0fallback; actualTelegram15223; disabledschedule/rollback PASS | Новый Monthly financial GO не выдан; NET сохранён; SHOP отменён | Инженерия закрыта.30Oct actual closedsource/selection/risk→точный личный GO→2Nov14:30–14:35UTC при fresh custody/cash/finality/single-manager handoff. CASH допустим; NO_SEND без datecarry | Codex; [завершённый candidate/activation packet](../reports/ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md) |
-| ELDER_CRASH_HEDGE_V1.1 / SHAa25e4af2…fea3a28 | DEV_PASS regime hedge; standalone KILL; ETS2M900 OPEN | **Actual DATA_ONLY intake/restart PASS**,18813rows/15209firstshort; prospectivecredit0.100timelygeom f1=.50 vs frozen.55 BLOCKED;440late | Bybit preparation; ORDERS_OFF/no financial GO | Claude versioned producer/contract reconciliation, no Codex parameter repair/backfill. Then causal context/risk/instrument into existing adapter and original≥30events/parity/latency/restart gates | Codex: source; Claude: frozen semantics/900. [actual intake/fixture](../reports/KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md) |
+| Alpaca Monthly / V4 E2E candidate14dfa09f…35b4a81 | Предпочтительна по0be44ec:8.48%годовых/DD16.17%/PF1.537 при20bps/side; известная история, не unseenPASS | **ORDERS_OFF E2E PASS**: source→ownedbook→single manager→entry/native/restart→exit/cash/release.44file VPS candidate;135exactPASS/0fallback; actualTelegram15223; disabledschedule/rollback PASS | Новый Monthly financial GO не выдан; NET сохранён; SHOP отменён | Инженерия закрыта; actual Monthly58 same-source data/parity/Claude delivery PASS,19Oct report PENDING.30Oct actual closedsource/selection/risk→точный личный GO→2Nov14:30–14:35UTC при fresh custody/cash/finality/single-manager handoff. CASH допустим; NO_SEND без datecarry | Codex; [E2E/activation](../reports/ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md), [actual data/parity](../reports/ALPACA_MONTHLY_DATA_PARITY_2026_10_18.md) |
+| ELDER_CRASH_HEDGE_V1.1 / SHAa25e4af2…fea3a28 | DEV_PASS regime hedge; standalone KILL; ETS2M900 OPEN | **Actual DATA_ONLY intake/restart PASS**,18813rows/15209firstshort; prospectivecredit0.100timelygeom f1=.50 vs frozen.55 BLOCKED;440late | Bybit preparation; ORDERS_OFF/no financial GO | Локальный6a618d2 уточняет contract f1=.55 / producer informational. **PENDING_PUBLICATION**: origin31ccd113 не содержит его; не применять до публикации. Then causal context/risk/instrument into existing adapter and original≥30events/parity/latency/restart gates | Codex: source; Claude: frozen semantics/900. [actual intake/fixture](../reports/KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md) |
 | ETF_PREMIYA_BTC / DATA-only contract v1.1 | DEV candidate; prospective/Massive QA не завершены | Уже установлен существующий IBIT/BTC collector/adapter; historical81 не forward | DATA_ONLY, ORDERS_OFF | Первый actual19Oct decision/QA/hash delivery; Massive=PENDING до настоящей сверки | Codex: source; Claude: research. [existing delivery](../reports/TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md) |
 | LIQ_OTSKOK_4H_V2 / source V2.1 | Raw records не edge; source coverage UNKNOWN | Immutable17/18Oct delivery,25coins; действующий collector/epoch сохранён | DATA_ONLY, ORDERS_OFF | Ежедневная доставка; gap/UNKNOWN handling, warmup и events по замороженному контракту.27010raw18Oct не27010prospective сигналов | Codex: delivery; Claude: source/research. [delivery](../reports/LIQ_RESEARCH_DELIVERY_2026_10_17.md) |
 | Brain V2 / existing Shadow | Added value INCONCLUSIVE | Общие context/journal interfaces уже существуют; money authority нет | SHADOW only | Paired BASELINE/Brain на одних возможностях; реальные execution joins. Не создавать второй Brain и не блокировать им допустимый самостоятельный LIVE | Claude + Codex; [existing delivery](../reports/TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md) |
+
+## 18Oct — закрыт source-parity delivery gate
+
+Строго57+SPY/noQQQ: actual16Oct capture → та же existing hourly aggregation →
+260daily view/полныеcore200 → frozen selection/ranking → immutableVPSseal → Claude.
+Неполныестарые3сессии сохранены/отмечены; не260полных.19exactPASS/25imports/0fallback,
+same19targeted не складываются. Новые DATAONLY server timer и ежедневная23:40Cyprus
+доставка ACTIVE; повторный SCP не перезаписал seal. Будущий19Oct report PENDING.
+[Receipt/QA/все57ranks](../reports/ALPACA_MONTHLY_DATA_PARITY_2026_10_18.md).
+Никаких финансовых запросов/изменений;77oldpins/NET/SHOPcancel сохранены.
 
 ## Проверенное сравнение Alpaca — новое основание приоритета
 
@@ -119,9 +130,9 @@ KITY: source membership/C2 уже MATCH, расходы/rounding/horizon — о�
 gross; эти значения нельзя молча заменить точными равными весами или нулевыми расходами.
 
 Research owner получает [файловый status delta](../reports/STATUS_DELTA_FOR_CLAUDE_2026_10_18.md).
-Его KARTA/VOROTA/код не редактировались, сообщения не отправлялись. Research-копия
-RESEARCH_TO_LIVE_BOARD.md пока физически существует на0be44ec: Claude предложил
-заменить её ссылкой сюда, но это ещё не выполнено. Не заявлять устранение дубля. Старые execution
+Его KARTA/VOROTA/код не редактировались, сообщения не отправлялись. Published4129fed
+уже заменил research-копию доски указателем на эту execution board; один источник
+текущего статуса подтверждён наorigin31ccd113. Старые execution
 tables в датированных reports — исторические snapshots; эта доска — текущий индекс
 следующих gates, без собственной финансовой истины. Full repository suite и новый
 independent financial review не заявлены.

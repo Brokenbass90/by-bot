@@ -1,3 +1,19 @@
+# Status delta для Claude — actual Monthly58 data delivery18Oct
+
+- DONE: same accepted Monthly hourly capture → existing daily aggregator → immutable daily view → реальные файлы в `research_lab/data/alpaca_monthly58_daily_v1/` sibling research checkout. Строго57+SPY/noQQQ, Yahoo hourly auto_adjust=False; no SIP/extra split/dividend rebasing. Calendar/raw timestamps/source receipt/source code pins/universe SHA/coverage в manifest. Source16Oct получен17Oct13:37UTC; Claude получил18Oct16:25UTC, не backdatedprospective.
+- Core200 полные;260exported, older partial28Nov/24Dec2025(all58) и9Oct2025(REGN) flagged/preserved. Не считать260полными; будущему эксперименту на этих днях нужна явнаяQA policy. Fullhistory vs260 ranking/selection PASS; cross-runtime1e-12 толькоrecomputedmetrics, exactbars/order/decisions/hashes.
+- Диагностика16Oct: SHOP/ABBV/ADSK/MSFT, SPY200true, Monthlycalendarfalse. Все57ranks/accepted/rejected/filters вdiagnosticJSON/MD. Weeklycommon58selector-only, max1hypotheticalnewentry; не полныйDynamic59портфельныйreplay. SHOPреальноOWNER_CANCELLED.
+- VPS47fileDATAONLYexporter ACTIVE сdenyIP; source seal independentlyrecompiled originalpinnedworker. ActualSCP/repeatPASS/samehash/mtime; no code/KARTA/VOROTA/messages. Newdaily23:40Cyprusheartbeat/catchup; actual19Oct report PENDINGuntilclose+20/source seal. No16→19relabel.
+- Tests:19targetedPASS, теже19exactPASS/25imports/0fallback. Oneastra/high runtimeverifiedreview/4Importantfixedwithregressions; nosecondreview/financialsignoff. 77oldpins/NET/SHOPcancel preserved;0brokerrequests/writes/financialunitchanges.
+- ATT1 published1c595cf contemporaneousFAIL отражён вexecutionboard, outofmoneyqueue/evidencepreserved. Researchpointer4129fed подтверждён: однадоска.
+- Elder6a618d2 прочитанлокально; origin31ccd113 покаего не содержит. PENDING_PUBLICATION, f1информационныйpatch не применяется доoriginconfirmation. Frozen.55/producer.50/900/producerremainunchanged. KITYsafetyUNSELECTED/SPENT, no paidretry.
+- Nextrealgates:19OctNET13:30UTC/readback13:35; actual19Oct data/IBITMassivePENDING. Monthly30Octselection/separatepersonalGO/2Novconditionalopening; no calendar rewrite.
+
+[Полный report/evidence](ALPACA_MONTHLY_DATA_PARITY_2026_10_18.md).
+
+---
+Предыдущие дельты — история:
+
 # Последняя дельта18Oct — после Monthly: KITY safety / Elder intake
 
 - Monthly P0 **ORDERS_OFF E2E закрыт**, опубликован `1bd171f`. Full58source→frozen selection→owned book→single manager API→simulated entry/native/restarts/ratchet/DAY→exit/cash/release.135exactPASS/34imports/0fallback. Actual Telegram15223, disabled4source/preview units, isolatedrollback acceptance; NET/SHOPcancel сохранены. Future30Octactualsource + отдельный personalMonthlyGO +2Nov fresh custody/cash/finality/handoff; неfinancialLIVE_READY.

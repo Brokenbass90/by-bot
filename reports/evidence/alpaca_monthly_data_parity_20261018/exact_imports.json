@@ -1,0 +1,31 @@
+{
+  "rc": 0,
+  "imports": {
+    "research_lab/alpaca_dynamic_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_dynamic_v1.py",
+    "backtest/__init__.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/backtest/__init__.py",
+    "backtest/alpaca_exact_parity_contract.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/backtest/alpaca_exact_parity_contract.py",
+    "backtest/alpaca_honest_portfolio.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/backtest/alpaca_honest_portfolio.py",
+    "scripts/alpaca_adaptive_paper.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/scripts/alpaca_adaptive_paper.py",
+    "research_lab/alpaca_strategy_parity_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_strategy_parity_v1.py",
+    "forex/__init__.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/forex/__init__.py",
+    "forex/types.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/forex/types.py",
+    "forex/data.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/forex/data.py",
+    "scripts/build_equities_monthly_live_cycle.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/scripts/build_equities_monthly_live_cycle.py",
+    "research_lab/alpaca_completed_session_source_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_completed_session_source_v1.py",
+    "research_lab/alpaca_live_readiness_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_live_readiness_v1.py",
+    "research_lab/alpaca_dynamic_paper.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_dynamic_paper.py",
+    "scripts/equities_alpaca_paper_bridge.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/scripts/equities_alpaca_paper_bridge.py",
+    "research_lab/alpaca_dynamic_live_intake_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_dynamic_live_intake_v1.py",
+    "research_lab/alpaca_monthly_binding_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_monthly_binding_v1.py",
+    "scripts/run_alpaca_dynamic_v1_orders_off.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/scripts/run_alpaca_dynamic_v1_orders_off.py",
+    "research_lab/alpaca_monthly_source_ops_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_monthly_source_ops_v1.py",
+    "research_lab/kity_oct15_deadline_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/kity_oct15_deadline_v1.py",
+    "strategies/__init__.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/strategies/__init__.py",
+    "strategies/alpaca_dynamic_v4_event.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/strategies/alpaca_dynamic_v4_event.py",
+    "research_lab/alpaca_monthly_data_parity_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/research_lab/alpaca_monthly_data_parity_v1.py",
+    "backtest/alpaca_bakeoff_v2_contract.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/backtest/alpaca_bakeoff_v2_contract.py",
+    "scripts/run_alpaca_monthly_source_ops_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/scripts/run_alpaca_monthly_source_ops_v1.py",
+    "scripts/export_alpaca_monthly58_daily_v1.py": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_data_parity_20261018/exact/app/scripts/export_alpaca_monthly58_daily_v1.py"
+  },
+  "fallback": []
+}

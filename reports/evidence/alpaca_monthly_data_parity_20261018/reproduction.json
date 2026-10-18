@@ -1,0 +1,16 @@
+{
+  "exact_command": ".venv/bin/python -B .private/alpaca_data_parity_20261018/exact_tests.py > .private/alpaca_data_parity_20261018/exact.log 2>&1",
+  "exact_method": "Copy the47 hash-verified source files, both named test modules and real gzip fixture to an isolated app. Remove original checkout from sys.path, chdir to app, pytest with app as root/confcutdir, inspect every imported manifest module path. This is the already executed method; XML/import receipts contain the result.",
+  "fallback": 0,
+  "historical_source": {
+    "research_lab/alpaca_dynamic_v1.py": "d205f8f7495c49502a35cdcd94c7c8216486e8c8"
+  },
+  "module_count": 25,
+  "source_reproduction": "Use the task delivery commit for matching paths; only research_lab/alpaca_dynamic_v1.py comes from the frozen historical commit below. Verify every file against source_manifest before running tests.",
+  "targeted_command": ".venv/bin/python -m pytest -q tests/test_alpaca_monthly_data_parity_v1.py --junitxml=<private-output>/tests-final.xml",
+  "tests": {
+    "tests/fixtures/alpaca_monthly58_20261016.json.gz": "7da490a84bed5ef9eeb075311270d9e18875da6585add13ea51e26137ddf8202",
+    "tests/test_alpaca_monthly_data_parity_v1.py": "e289784588eabf14769b0a8c9e4162ba2383b59e472a52357e7e352b1b6707aa",
+    "tests/test_alpaca_monthly_source_ops_v1.py": "baf3e070a1ab84cedfc16dd7f7ea7fe064ac38dbcb4ce855d9747ed69e2d59fb"
+  }
+}

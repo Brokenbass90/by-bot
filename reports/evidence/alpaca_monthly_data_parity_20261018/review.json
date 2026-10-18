@@ -1,0 +1,21 @@
+{
+  "actual_effort": "high",
+  "actual_model": "gpt-6-astra",
+  "agent_path": "/root/alpaca_data_parity_review",
+  "critical_findings": 0,
+  "financial_signoff": false,
+  "findings": [
+    "Critical: none found. Four Important findings:\n\n1. **Cross-runtime verification fails on the unchanged real fixture.** `research_lab/alpaca_monthly_data_parity_v1.py:114–118` compares floating-point results exactly. Under local Python **3.9.6**, Oct16 selection matches, but CRM health is `0.6508623940160382` versus sealed `0.6508623940160384`; `verify_delivery(real_view)` raises `READER_SELECTION_PARITY`. Thus the pull can reject genuine VPS exports. Pin and verify a compatible calculation runtime; do not silently weaken frozen-selector parity.\n\n2. **An unfinished newest capture blocks discovery of completed captures.** `scripts/export_alpaca_monthly58_daily_v1.py:20–23,32–38` reads the newest numeric directory without checking completion, and aborts on its first error. The existing producer creates that directory before fetching and writes `calendar.json` afterward. A crashed capture lacking that file permanently blocks retries until another capture supersedes it—even when an older completed capture matches the requested session. Enumerate completed captures and handle unfinished directories explicitly.\n\n3. **Historical recovery fails after the next session closes.** `scripts/export_alpaca_monthly58_daily_v1.py:38–40` compiles each candidate using current wall time. The frozen compiler selects the latest session closed at that time. Reproduced: compiling the actual Oct16 capture at `2026-10-19T20:25Z` raises `CAPTURE_IDENTITY_OR_TIME`. Consequently `--session 2026-10-16` cannot recover an unsealed export then; the same affects Oct19 recovery after Oct20 close. Derive each candidate at its recorded completion time while separately enforcing completion ≤ actual now and exact target identity.\n\n4. **Reader verification does not establish the advertised provenance/coverage consistency.** `research_lab/alpaca_monthly_data_parity_v1.py:99–118` accepts impossible clocks and removed historical-hole flags after recomputing the outer digest. With parity values first recomputed for local Python solely to isolate this issue, all these changes passed:\n   - `source_started_ms = source_available_ms + 1 hour`;\n   - clearing every `incomplete_older_sessions` list and claiming 260 complete sessions;\n   - increasing the first AAPL daily OHLC row by 1%, leaving raw-source provenance unchanged.\n\n   Bind clock fields to `source_capture`, validate declared aggregate coverage, and distinguish trusted sealed source evidence from selector equivalence: unchanged selection cannot prove unchanged history.\n\nLimits: bounded read-only code review and in-memory reproductions; no edits, network, VPS, credentials, financial actions, or deployment verification. Existing builder checks protect the core200 and preserve old partial sessions; the Oct19 waiting test correctly prevents Oct16 relabeling. **No financial signoff.**"
+  ],
+  "fixes": [
+    "Explicit 1e-12 recomputed metric comparison; exact bar/file hashes, ordered symbols and decisions",
+    "Skip newest unfinished or partial-JSON capture directories",
+    "Historical compiler as-of own completed_ms with <= real-now and exact session identity",
+    "Bind clocks/capture/coverage/history proof; independently recompile original source against accepted production source seal"
+  ],
+  "important_findings": 4,
+  "independent_second_review_after_fixes": false,
+  "regression_evidence": "review_fix_tests.xml, targeted_tests.xml, exact_tests.xml",
+  "runtime_metadata_verified": true,
+  "runtime_thread_id": "01a14fcb-64b0-7300-b901-79480ace8a09"
+}

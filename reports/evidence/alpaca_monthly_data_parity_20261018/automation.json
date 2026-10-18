@@ -1,0 +1,15 @@
+{
+  "existing_net_ibit_automation_unchanged": "19-net-ibit",
+  "id": "monthly58-daily-data-delivery",
+  "kind": "heartbeat",
+  "local_time": "23:40",
+  "mac_sleep": "catch up missing immutable sessions after wake; timely delivery not guaranteed while Mac asleep",
+  "purpose": "DATA_ONLY delivery/catchup; first actual19Oct report once; quiet on routine unchanged state",
+  "requires_original_source_receipt": true,
+  "server_every_minutes": 5,
+  "server_hours_utc": "13..23",
+  "server_timer": "alpaca-monthly58-data-export.timer",
+  "server_weekdays": "MON_FRI",
+  "status": "ACTIVE",
+  "timezone": "Asia/Nicosia"
+}

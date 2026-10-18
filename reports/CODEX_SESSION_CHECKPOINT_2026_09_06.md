@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT18Oct DATA PARITY DELIVERED — [ALPACA_MONTHLY_DATA_PARITY_2026_10_18.md](ALPACA_MONTHLY_DATA_PARITY_2026_10_18.md).
+Actual16Oct Monthly58(noQQQ) dailyview доставлен Claude; accepted production source
+seal независимо сверён originalcompiler.260exported/core200complete, старые3partial
+sessions flagged/no fill; min257complete, не260. Exact19PASS/25imports/0fallback;
+same19targeted overlap.47fileVPS DATAONLYcandidate50690ccc/specb736b443…701a5,
+newdataexport timerACTIVE; daily23:40Cyprus heartbeatmonthly58-daily-data-delivery
+ACTIVE/catchupafterMacsleep. RepeatSCPsamehash/mtime/replayPASS.0brokerrequests/
+financialchanges;77oldpins/NETlock813893/SHOPcancel preserved. Actual19Oct close
+reportstillPENDING; neverrename16to19. MonthlyE2E1bd171f remainsdisabled/no moneyGO;
+30Octclosedselection→separatepersonalGO→2Nov14:30–14:35UTC conditionalwindow.
+ATT1published1c595cf ECONOMIC_FAIL/outofmoneyqueue. Researchboard4129fed already
+pointertooneexecutionboard; earlierpendingpointerlines HISTORICAL. Elderlocal6a618d2
+clarificationread but originstill31ccd113: PENDING_PUBLICATION, notimplemented.
+Frozenf1.55/producer.50 mismatchremains; no retune/producerrestart/outcomes. KITY
+safety48020edd stagedUNSELECTED/SPENT/no retry. NETDAY19Oct13:30UTC/readback13:35,
+SHOPdisabled; IBITMassivePENDING/existing19-net-ibitunchanged.
+Older dated runtime facts below remain snapshots, not fresh financial authority.
+
 CURRENT18Oct AFTER MONTHLY — [KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md](KITY_SAFETY_AND_ELDER_EVENT_INTAKE_2026_10_18.md).
 Monthly E2E1bd171f published. KITY48focused/40exactPASS16imports0fallback;24file
 safety candidate48020edd stagedUNSELECTED at/opt/bybot-research/kity-safety-20261018/,

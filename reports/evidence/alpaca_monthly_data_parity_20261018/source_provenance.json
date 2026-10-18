@@ -1,0 +1,1004 @@
+{
+  "adjustment_policy": {
+    "aggregation": "EXISTING_UTC_DAY_FIRST_OPEN_MAX_HIGH_MIN_LOW_LAST_CLOSE_SUM_VOLUME",
+    "auto_adjust": false,
+    "close": "LAST_RTH_HOURLY_BAR_CLOSE_NOT_SIP_OFFICIAL_AUCTION",
+    "consumer_dividend_total_return_adjustment": false,
+    "consumer_price_factor": "NONE",
+    "corporate_action_point_in_time_reconstruction": "NOT_PROVEN_NOT_REQUIRED_FOR_SAME_CAPTURE_PARITY",
+    "provider_price_basis": "YAHOO_OHLC_AS_CAPTURED",
+    "split_policy": "PRESERVE_VENDOR_HISTORY_NO_REBASE_OR_SECOND_SPLIT_FACTOR",
+    "yfinance_adj_close_ratio_applied": false
+  },
+  "coverage": {
+    "by_symbol": {
+      "AAPL": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ABBV": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ABNB": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ADBE": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ADSK": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "AMD": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "AMZN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "AVGO": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "BAC": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CAT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "COIN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "COST": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CRM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CRWD": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CVX": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "DDOG": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "GE": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "GOOGL": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "GS": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "HD": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "INTU": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ISRG": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "JNJ": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "JPM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "KO": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "LLY": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "LMT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MA": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MDB": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "META": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MRK": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MSFT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NET": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NFLX": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NKE": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NOW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NVDA": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ORCL": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "PANW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "PG": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "PLTR": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "QCOM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "REGN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 257,
+        "incomplete_older_sessions": [
+          "2025-10-09",
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SBUX": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SCHW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SHOP": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SNOW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SPY": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "TSLA": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "TSM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "TXN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "UBER": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "UNH": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "V": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "WFC": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "WMT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "XOM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "XYZ": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      }
+    },
+    "core200_complete": true,
+    "earlier_warmup_policy": "PRESERVE_AND_FLAG_NEVER_FILL_OR_REBASE",
+    "exported_sessions": 260,
+    "first_session": "2025-10-06",
+    "fully_checked_sessions": 257,
+    "last_session": "2026-10-16",
+    "observed_hourly_rows": 105095,
+    "symbols": 58
+  },
+  "data_sha256": "e165f362866d739e5be0d8fb2e8b0aa185538e759358cb8b3419b360a4b7bc7e",
+  "entry_session": "2026-10-19",
+  "historical_warmup_prospective_credit": 0,
+  "money_authority": false,
+  "orders_allowed": false,
+  "parity": {
+    "numeric_comparison": {
+      "abs_tol": 1e-12,
+      "rel_tol": 1e-12,
+      "scope": "RECOMPUTED_METRICS_ONLY_EXACT_BAR_HASHES_AND_SYMBOL_ORDER"
+    },
+    "ranking": [
+      {
+        "health_score": 0.6566913325356795,
+        "symbol": "PLTR"
+      },
+      {
+        "health_score": 0.6508623940160384,
+        "symbol": "CRM"
+      },
+      {
+        "health_score": 0.6046953063859015,
+        "symbol": "SHOP"
+      },
+      {
+        "health_score": 0.584983800690853,
+        "symbol": "NOW"
+      },
+      {
+        "health_score": 0.5474424157652104,
+        "symbol": "MSFT"
+      },
+      {
+        "health_score": 0.4546318758614657,
+        "symbol": "CVX"
+      },
+      {
+        "health_score": 0.45190522984606385,
+        "symbol": "XOM"
+      },
+      {
+        "health_score": 0.35831692159945405,
+        "symbol": "MA"
+      },
+      {
+        "health_score": 0.3156541690583504,
+        "symbol": "V"
+      },
+      {
+        "health_score": 0.2966829988497188,
+        "symbol": "ABBV"
+      },
+      {
+        "health_score": 0.26944227366790363,
+        "symbol": "REGN"
+      },
+      {
+        "health_score": 0.24228701309777048,
+        "symbol": "KO"
+      },
+      {
+        "health_score": 0.238161939044881,
+        "symbol": "META"
+      },
+      {
+        "health_score": 0.20901384612023016,
+        "symbol": "ADSK"
+      },
+      {
+        "health_score": 0.20724079300749637,
+        "symbol": "AAPL"
+      },
+      {
+        "health_score": 0.2014388247499571,
+        "symbol": "INTU"
+      },
+      {
+        "health_score": 0.18166373551953344,
+        "symbol": "MRK"
+      },
+      {
+        "health_score": 0.16495385242212646,
+        "symbol": "SNOW"
+      },
+      {
+        "health_score": 0.16059629705981032,
+        "symbol": "ABNB"
+      },
+      {
+        "health_score": 0.15324498908505935,
+        "symbol": "LLY"
+      },
+      {
+        "health_score": 0.135833751777728,
+        "symbol": "CRWD"
+      },
+      {
+        "health_score": 0.11724116303229087,
+        "symbol": "ADBE"
+      },
+      {
+        "health_score": 0.09546668508115462,
+        "symbol": "NET"
+      },
+      {
+        "health_score": 0.09495758476006005,
+        "symbol": "PG"
+      },
+      {
+        "health_score": 0.06524246798106108,
+        "symbol": "LMT"
+      },
+      {
+        "health_score": 0.041716271192015875,
+        "symbol": "ISRG"
+      },
+      {
+        "health_score": 0.0410647021306303,
+        "symbol": "COST"
+      },
+      {
+        "health_score": 0.007960492153992763,
+        "symbol": "WMT"
+      },
+      {
+        "health_score": -0.05632546306956127,
+        "symbol": "JNJ"
+      },
+      {
+        "health_score": -0.06997978801083703,
+        "symbol": "JPM"
+      },
+      {
+        "health_score": -0.08125437899325015,
+        "symbol": "COIN"
+      },
+      {
+        "health_score": -0.08514917129163826,
+        "symbol": "PANW"
+      },
+      {
+        "health_score": -0.09342328480948142,
+        "symbol": "NVDA"
+      },
+      {
+        "health_score": -0.09502506687882052,
+        "symbol": "AMZN"
+      },
+      {
+        "health_score": -0.10145904745056049,
+        "symbol": "XYZ"
+      },
+      {
+        "health_score": -0.11536930108631155,
+        "symbol": "WFC"
+      },
+      {
+        "health_score": -0.1295472870186236,
+        "symbol": "UNH"
+      },
+      {
+        "health_score": -0.14189409603947606,
+        "symbol": "DDOG"
+      },
+      {
+        "health_score": -0.17812188464651407,
+        "symbol": "GOOGL"
+      },
+      {
+        "health_score": -0.21132265793632204,
+        "symbol": "SBUX"
+      },
+      {
+        "health_score": -0.2325038584270478,
+        "symbol": "NFLX"
+      },
+      {
+        "health_score": -0.2511776346777355,
+        "symbol": "UBER"
+      },
+      {
+        "health_score": -0.2705271896071735,
+        "symbol": "HD"
+      },
+      {
+        "health_score": -0.2717880080122272,
+        "symbol": "SCHW"
+      },
+      {
+        "health_score": -0.28712758793775744,
+        "symbol": "TXN"
+      },
+      {
+        "health_score": -0.2880918641031305,
+        "symbol": "MDB"
+      },
+      {
+        "health_score": -0.30580015108133096,
+        "symbol": "AMD"
+      },
+      {
+        "health_score": -0.32367225795398713,
+        "symbol": "TSLA"
+      },
+      {
+        "health_score": -0.33121463685537783,
+        "symbol": "TSM"
+      },
+      {
+        "health_score": -0.343345743861705,
+        "symbol": "NKE"
+      },
+      {
+        "health_score": -0.42322647975837274,
+        "symbol": "GE"
+      },
+      {
+        "health_score": -0.45115520033170164,
+        "symbol": "BAC"
+      },
+      {
+        "health_score": -0.459564214675399,
+        "symbol": "QCOM"
+      },
+      {
+        "health_score": -0.5318916128280057,
+        "symbol": "AVGO"
+      },
+      {
+        "health_score": -0.5554626301755541,
+        "symbol": "GS"
+      },
+      {
+        "health_score": -0.6237196664747457,
+        "symbol": "ORCL"
+      },
+      {
+        "health_score": -0.7790076719653124,
+        "symbol": "CAT"
+      }
+    ],
+    "ranking_equal": true,
+    "ranking_sha256": "efb7a650a8bab0f2fb86ebcff8deb992b3fb1ac3a0d76edc5190ea0e77df5229",
+    "selection": {
+      "gate_ok": true,
+      "picks": [
+        {
+          "atr20": 8.172035980225,
+          "atr20_pct": 4.820975898207096,
+          "rawscore": 0.45707005809562573,
+          "score": 0.40650511474464096,
+          "signal_close": 169.5099945068,
+          "stop_price": 153.16592254635,
+          "symbol": "SHOP",
+          "weight": 0.40650511474464096
+        },
+        {
+          "atr20": 6.216703796390002,
+          "atr20_pct": 2.178395013674164,
+          "rawscore": 0.19485040862617017,
+          "score": 0.25780048258241106,
+          "signal_close": 285.3800048828,
+          "stop_price": 272.94659729002,
+          "symbol": "ABBV",
+          "weight": 0.25780048258241106
+        },
+        {
+          "atr20": 7.746525573725,
+          "atr20_pct": 3.2286607803103293,
+          "rawscore": 0.19748212698389808,
+          "score": 0.21461857612840093,
+          "signal_close": 239.9299926758,
+          "stop_price": 224.43694152835002,
+          "symbol": "ADSK",
+          "weight": 0.21461857612840093
+        },
+        {
+          "atr20": 12.382397460935,
+          "atr20_pct": 2.3409390632718723,
+          "rawscore": 0.09486407463767217,
+          "score": 0.12107582654454715,
+          "signal_close": 528.950012207,
+          "stop_price": 504.18521728512997,
+          "symbol": "MSFT",
+          "weight": 0.12107582654454715
+        }
+      ],
+      "reason": "ok"
+    },
+    "selection_equal": true,
+    "selection_sha256": "5a23eb8f7fca9864fd8bb808d1597bdb2c21d3a769773c7848390d1f5efbaf44"
+  },
+  "production_source_seal": {
+    "calendar_sha256": "5bfc14f9db77b4e9dd5e838b54da051239ab3235a2155ec6778efab3692e9053",
+    "history_sha256": "0928e5ae1b86a6919166f8ba7d7db71776d36437c7fe6f8bb27d89da6e162b45",
+    "receipt_sha256": "1673941f0d48401986f36258755400aff577f5a30bce36499c244a5cf8412e5a",
+    "source_id": "a60d872215f4871c3408f1388cc734f904e90fd3e175b9aaf4c789668b8cbfb0"
+  },
+  "provider": "YAHOO_HOURLY",
+  "raw_source_files": {
+    "AAPL_M5.csv": "97081678ed640b612815dece9f955ea89c5775e8109c0bae13b402e2906ac31c",
+    "ABBV_M5.csv": "2428cdd0ddeddc18decf362a2bc96933002e1bf2356590575614b4e7188fc969",
+    "ABNB_M5.csv": "7b31a39abf904713581eb9908c94e7eb8f028d08e88d9680e6b6edab322627ae",
+    "ADBE_M5.csv": "4374cea6e61a525cc722551d8338900e77e9c088d423a7012a6bb11ecd73f97b",
+    "ADSK_M5.csv": "79851d1795e6201a9a27f96248152f42f60904c61e0754b98e3ee121ae9c41c1",
+    "AMD_M5.csv": "ce607b7c8a4a03b96e477cc1a73f8fe141463f59640ca5719587861d37702773",
+    "AMZN_M5.csv": "d1e86c8471ba2187f8f4ebbcf0ff52761b52cb24a706cf622cea1f36adff281e",
+    "AVGO_M5.csv": "2595cd661d0e1c844bd5cf47db7beaf6eb8484d418be78ef714215756d44d86b",
+    "BAC_M5.csv": "372aabbda009554752ddfb54bae9046954035d18b975cd4984d90afcc1905b8c",
+    "CAT_M5.csv": "b63bc4c068f04913fe2a07ab95877c5584d556513b7a70e62671c1efbf453b8b",
+    "COIN_M5.csv": "ef2d546b6061fd86b346c69932992fd14d3b04a0b1fe104ae5a524f5f7eb65c2",
+    "COST_M5.csv": "20d1dfcd56af3ac18daa3ef0fddb5be5e7136de1bb5e1dc95e9f4857694ca1c8",
+    "CRM_M5.csv": "e20973241ba6721892181761ae1807483641dc2df82b150b66288c3f28772e2e",
+    "CRWD_M5.csv": "a6ddcce2d65bc0bacb8ec121b5ad3037bcff5dac96e2b001bdbe6aaaf780e878",
+    "CVX_M5.csv": "b82daabf4bd52aeab23496e38df056280d72ec1693bc77b9705bcb93b8708e3f",
+    "DDOG_M5.csv": "42f0392ae6f6aeff9d3fdc651278b145e8d682c3c9b446e9fc180852088b66aa",
+    "GE_M5.csv": "236818825df9e22f50de5662be2ae4e02e8393673757f1f5544450ce78474f67",
+    "GOOGL_M5.csv": "e17f587834db6431d1c85caf540767f02c05b5dc4ff05a4717c796e10610f63a",
+    "GS_M5.csv": "cdefa54d53ff4e3bc0cfdff85d9010838e767fed14727bd84a2677da6c503b9a",
+    "HD_M5.csv": "d7f981f97a3c880f573989630691173b24a2a7b908a09c42670d2631e9f06d07",
+    "INTU_M5.csv": "6c425863d0fecbcbe7548810939ea29c2f457a027047a39e72f3c2c5f787c2bd",
+    "ISRG_M5.csv": "7d719b3374ee939c641ba883e37fb39696c019204de38868d32e0c09a11fcac5",
+    "JNJ_M5.csv": "b38d4236b5c97e6747bec47cb1a51f5ed6a17b4f14329631ea5c88f47f4e338e",
+    "JPM_M5.csv": "5f77988678cfc6d3abc493a3fb4f1c7685005594a523592cc14161a0b7427a43",
+    "KO_M5.csv": "9a1c6dbbfd1098b67e7a0f84239f337036ce76f9e9cdeba3efaaf8637ecf817d",
+    "LLY_M5.csv": "afbd0d95337ff436a429b5ba5eb80868e670783ce59db47e7476a4a3dc80a7a2",
+    "LMT_M5.csv": "fcd61be340cb42f8b7cad916ce0ca99b58851f12e6f64f4529e2bf4f2f81108e",
+    "MA_M5.csv": "fc8396d7c3be870dbcafb3e5333b76e11b25d527d897450ff2dfcd921440bad5",
+    "MDB_M5.csv": "d92e8d8f56bdcbd0d9a05de03be5e80435ad62e53d02eeed83dfa5f46f73e741",
+    "META_M5.csv": "33eb1f750051bbe5feb9505d848ce46f4f9763acae4cabb2eeedc9fe6ca95a95",
+    "MRK_M5.csv": "3c904303bd4433de820f44cbfc908ce253a2ceeca0f7dd1914de30c02d95087a",
+    "MSFT_M5.csv": "777ec3c130fec94d8a129fc55a1bde2172aa56fec1498e32a4898b1df120dc15",
+    "NET_M5.csv": "bfca40de84d7edff1ae0fea8ee0bf6ece3507ca869d1fc265d050175f0d057e9",
+    "NFLX_M5.csv": "fb8bb99b7ac735b8cf6f9e0de5b1bce340bf332a1a679d364c62018c05fa1a99",
+    "NKE_M5.csv": "19eb76d9c6f8b856f52b2c12d8409cb7702925e96bb1b39adbc92a1b400ea206",
+    "NOW_M5.csv": "181c219f0bf34c58c63f52591635c28985635731ff04b426633da7dd7770e956",
+    "NVDA_M5.csv": "df6a7ccdc6ec80dab494b254a3b679cc9a8ee07dba4bc101b3ad051d4c4c9bc0",
+    "ORCL_M5.csv": "9a2c6e9f0dc1c4d659e0f9ae6de12cf878c62815286634467b345cdcf28b3b58",
+    "PANW_M5.csv": "ab79365e81b3dc1d78c349b0fd03cc3d968fa9cdc40d5ffe76952317591f6920",
+    "PG_M5.csv": "2a8c011e4b3a959e6413d10ca2ae86156fb026fc47e985bd3ac39390a790e508",
+    "PLTR_M5.csv": "274b6032581c42682e53a390cf719c84598a3cd7aa1ba7e341e7b1ce45cf5ea4",
+    "QCOM_M5.csv": "6c89487af9a511c2683d0a6d9c8d7bc7f7cb538cc1dfc836d5c9f7320f837ac2",
+    "REGN_M5.csv": "99567c478e8478bfe68e3191e3fb542775589aba58d964fda3dd614ddf0e53da",
+    "SBUX_M5.csv": "a7d88d89d09f516db3a75c30d09bfda34da653a704900f549156481f6f0b292e",
+    "SCHW_M5.csv": "c2c0859d43697a01cae291b3b4f9efe0785913d6d6c5782a3fe87b39aa105571",
+    "SHOP_M5.csv": "a1abbe854017a73251a06c591aa047a586dab8861cc92e259c1fc9087b22cab2",
+    "SNOW_M5.csv": "f84f23c27d46a7892be9b16f3941e112fff628e763fefae60787d70a1def2fec",
+    "SPY_M5.csv": "a50397215d86df74b235f8499e1704e6f28206c435fbda1e501bc585786df477",
+    "TSLA_M5.csv": "f76c79ec432ba3a2ca40188ffcb9dabf43bd7c45ccd7fe68aa871f5127f39ae9",
+    "TSM_M5.csv": "555d84f214faf1510a192d3d737f3ee2d7f86d2860b3dafdb5b4a3bcf0ecc6f4",
+    "TXN_M5.csv": "fc217364888bf69fb4e930051ec8f5a081ceb4b81d6ec2112b834a6becfc37c5",
+    "UBER_M5.csv": "c72f2134011db0aa13c1c64b7a5977f121a35f2f72a8af658071148f86c25c04",
+    "UNH_M5.csv": "7bc4b9b533e1073582391e1169b88d990e4d6025b04d985d89264f68e92db186",
+    "V_M5.csv": "d92d30bbfb7c27dc69e5e943a04a5af3c2dcdf3b5b8013fe49677dd6dd8a34df",
+    "WFC_M5.csv": "b92f0fc920f3cb3c98b37c4067afbfa77ac150e5c39e7cef0d76eed2a27e8552",
+    "WMT_M5.csv": "093ec509e49455828fb94a993654f10febae359bce792f2f0c5a8671eec8c72a",
+    "XOM_M5.csv": "8ce780e1726369e81758097d6161702834dcf60dddbee5df6cc90cd7eb41fc1c",
+    "XYZ_M5.csv": "4ae15744a61ad3035c6455c6e7746a1a66423fae8e11c1bd1a4cadc73954f3ae"
+  },
+  "schema": "ALPACA_MONTHLY58_DAILY_PARITY_V1",
+  "session_date": "2026-10-16",
+  "source_available_ms": 1792244237337,
+  "source_capture": {
+    "auto_adjust": false,
+    "completed_ms": 1792244237337,
+    "fetcher_sha256": "44444e2244441c4dca84301727c9d37f30ff6921fa42a7fd3fb9d4676ef5adbd",
+    "files": {
+      "AAPL_M5.csv": "97081678ed640b612815dece9f955ea89c5775e8109c0bae13b402e2906ac31c",
+      "ABBV_M5.csv": "2428cdd0ddeddc18decf362a2bc96933002e1bf2356590575614b4e7188fc969",
+      "ABNB_M5.csv": "7b31a39abf904713581eb9908c94e7eb8f028d08e88d9680e6b6edab322627ae",
+      "ADBE_M5.csv": "4374cea6e61a525cc722551d8338900e77e9c088d423a7012a6bb11ecd73f97b",
+      "ADSK_M5.csv": "79851d1795e6201a9a27f96248152f42f60904c61e0754b98e3ee121ae9c41c1",
+      "AMD_M5.csv": "ce607b7c8a4a03b96e477cc1a73f8fe141463f59640ca5719587861d37702773",
+      "AMZN_M5.csv": "d1e86c8471ba2187f8f4ebbcf0ff52761b52cb24a706cf622cea1f36adff281e",
+      "AVGO_M5.csv": "2595cd661d0e1c844bd5cf47db7beaf6eb8484d418be78ef714215756d44d86b",
+      "BAC_M5.csv": "372aabbda009554752ddfb54bae9046954035d18b975cd4984d90afcc1905b8c",
+      "CAT_M5.csv": "b63bc4c068f04913fe2a07ab95877c5584d556513b7a70e62671c1efbf453b8b",
+      "COIN_M5.csv": "ef2d546b6061fd86b346c69932992fd14d3b04a0b1fe104ae5a524f5f7eb65c2",
+      "COST_M5.csv": "20d1dfcd56af3ac18daa3ef0fddb5be5e7136de1bb5e1dc95e9f4857694ca1c8",
+      "CRM_M5.csv": "e20973241ba6721892181761ae1807483641dc2df82b150b66288c3f28772e2e",
+      "CRWD_M5.csv": "a6ddcce2d65bc0bacb8ec121b5ad3037bcff5dac96e2b001bdbe6aaaf780e878",
+      "CVX_M5.csv": "b82daabf4bd52aeab23496e38df056280d72ec1693bc77b9705bcb93b8708e3f",
+      "DDOG_M5.csv": "42f0392ae6f6aeff9d3fdc651278b145e8d682c3c9b446e9fc180852088b66aa",
+      "GE_M5.csv": "236818825df9e22f50de5662be2ae4e02e8393673757f1f5544450ce78474f67",
+      "GOOGL_M5.csv": "e17f587834db6431d1c85caf540767f02c05b5dc4ff05a4717c796e10610f63a",
+      "GS_M5.csv": "cdefa54d53ff4e3bc0cfdff85d9010838e767fed14727bd84a2677da6c503b9a",
+      "HD_M5.csv": "d7f981f97a3c880f573989630691173b24a2a7b908a09c42670d2631e9f06d07",
+      "INTU_M5.csv": "6c425863d0fecbcbe7548810939ea29c2f457a027047a39e72f3c2c5f787c2bd",
+      "ISRG_M5.csv": "7d719b3374ee939c641ba883e37fb39696c019204de38868d32e0c09a11fcac5",
+      "JNJ_M5.csv": "b38d4236b5c97e6747bec47cb1a51f5ed6a17b4f14329631ea5c88f47f4e338e",
+      "JPM_M5.csv": "5f77988678cfc6d3abc493a3fb4f1c7685005594a523592cc14161a0b7427a43",
+      "KO_M5.csv": "9a1c6dbbfd1098b67e7a0f84239f337036ce76f9e9cdeba3efaaf8637ecf817d",
+      "LLY_M5.csv": "afbd0d95337ff436a429b5ba5eb80868e670783ce59db47e7476a4a3dc80a7a2",
+      "LMT_M5.csv": "fcd61be340cb42f8b7cad916ce0ca99b58851f12e6f64f4529e2bf4f2f81108e",
+      "MA_M5.csv": "fc8396d7c3be870dbcafb3e5333b76e11b25d527d897450ff2dfcd921440bad5",
+      "MDB_M5.csv": "d92e8d8f56bdcbd0d9a05de03be5e80435ad62e53d02eeed83dfa5f46f73e741",
+      "META_M5.csv": "33eb1f750051bbe5feb9505d848ce46f4f9763acae4cabb2eeedc9fe6ca95a95",
+      "MRK_M5.csv": "3c904303bd4433de820f44cbfc908ce253a2ceeca0f7dd1914de30c02d95087a",
+      "MSFT_M5.csv": "777ec3c130fec94d8a129fc55a1bde2172aa56fec1498e32a4898b1df120dc15",
+      "NET_M5.csv": "bfca40de84d7edff1ae0fea8ee0bf6ece3507ca869d1fc265d050175f0d057e9",
+      "NFLX_M5.csv": "fb8bb99b7ac735b8cf6f9e0de5b1bce340bf332a1a679d364c62018c05fa1a99",
+      "NKE_M5.csv": "19eb76d9c6f8b856f52b2c12d8409cb7702925e96bb1b39adbc92a1b400ea206",
+      "NOW_M5.csv": "181c219f0bf34c58c63f52591635c28985635731ff04b426633da7dd7770e956",
+      "NVDA_M5.csv": "df6a7ccdc6ec80dab494b254a3b679cc9a8ee07dba4bc101b3ad051d4c4c9bc0",
+      "ORCL_M5.csv": "9a2c6e9f0dc1c4d659e0f9ae6de12cf878c62815286634467b345cdcf28b3b58",
+      "PANW_M5.csv": "ab79365e81b3dc1d78c349b0fd03cc3d968fa9cdc40d5ffe76952317591f6920",
+      "PG_M5.csv": "2a8c011e4b3a959e6413d10ca2ae86156fb026fc47e985bd3ac39390a790e508",
+      "PLTR_M5.csv": "274b6032581c42682e53a390cf719c84598a3cd7aa1ba7e341e7b1ce45cf5ea4",
+      "QCOM_M5.csv": "6c89487af9a511c2683d0a6d9c8d7bc7f7cb538cc1dfc836d5c9f7320f837ac2",
+      "REGN_M5.csv": "99567c478e8478bfe68e3191e3fb542775589aba58d964fda3dd614ddf0e53da",
+      "SBUX_M5.csv": "a7d88d89d09f516db3a75c30d09bfda34da653a704900f549156481f6f0b292e",
+      "SCHW_M5.csv": "c2c0859d43697a01cae291b3b4f9efe0785913d6d6c5782a3fe87b39aa105571",
+      "SHOP_M5.csv": "a1abbe854017a73251a06c591aa047a586dab8861cc92e259c1fc9087b22cab2",
+      "SNOW_M5.csv": "f84f23c27d46a7892be9b16f3941e112fff628e763fefae60787d70a1def2fec",
+      "SPY_M5.csv": "a50397215d86df74b235f8499e1704e6f28206c435fbda1e501bc585786df477",
+      "TSLA_M5.csv": "f76c79ec432ba3a2ca40188ffcb9dabf43bd7c45ccd7fe68aa871f5127f39ae9",
+      "TSM_M5.csv": "555d84f214faf1510a192d3d737f3ee2d7f86d2860b3dafdb5b4a3bcf0ecc6f4",
+      "TXN_M5.csv": "fc217364888bf69fb4e930051ec8f5a081ceb4b81d6ec2112b834a6becfc37c5",
+      "UBER_M5.csv": "c72f2134011db0aa13c1c64b7a5977f121a35f2f72a8af658071148f86c25c04",
+      "UNH_M5.csv": "7bc4b9b533e1073582391e1169b88d990e4d6025b04d985d89264f68e92db186",
+      "V_M5.csv": "d92d30bbfb7c27dc69e5e943a04a5af3c2dcdf3b5b8013fe49677dd6dd8a34df",
+      "WFC_M5.csv": "b92f0fc920f3cb3c98b37c4067afbfa77ac150e5c39e7cef0d76eed2a27e8552",
+      "WMT_M5.csv": "093ec509e49455828fb94a993654f10febae359bce792f2f0c5a8671eec8c72a",
+      "XOM_M5.csv": "8ce780e1726369e81758097d6161702834dcf60dddbee5df6cc90cd7eb41fc1c",
+      "XYZ_M5.csv": "4ae15744a61ad3035c6455c6e7746a1a66423fae8e11c1bd1a4cadc73954f3ae"
+    },
+    "interval": "1h",
+    "period": "2y",
+    "prepost": false,
+    "returncode": 0,
+    "schema": "ALPACA_MONTHLY_FULL_UNIVERSE_CAPTURE_V1",
+    "started_ms": 1792244186304
+  },
+  "source_code_sha256": {
+    "backtest/alpaca_bakeoff_v2_contract.py": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+    "backtest/alpaca_exact_parity_contract.py": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+    "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+    "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245",
+    "research_lab/alpaca_dynamic_v1.py": "7ab36fd92c93103c648002eae16d775225d73c98fa765d470652a00d84c09622",
+    "research_lab/alpaca_strategy_parity_v1.py": "d87f5e07dc3353664f06661dc9a7ef2e16ce37342ad5df9c255a30f4f150efb8",
+    "scripts/alpaca_adaptive_paper.py": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+    "strategies/alpaca_dynamic_v4_event.py": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a"
+  },
+  "source_content_sha256": "e46a026a80df94ad3ab1806ab4ffd9cca0b1645b474bddd2adbb5fba1537b6d5",
+  "source_last_bar_open_ms": 1792179000000,
+  "source_session_close_ms": 1792180800000,
+  "source_started_ms": 1792244186304,
+  "source_view_proof": {
+    "calendar_sha256": "5bfc14f9db77b4e9dd5e838b54da051239ab3235a2155ec6778efab3692e9053",
+    "capture_sha256": "4d696940a79b07250ff97cf101a6c38d9d8328bed3d31ab105c65cb904fc200a",
+    "coverage_sha256": "f97309cb90dbc537e340875954b723e112872725727aacc2eb719de6daf9720d",
+    "history_sha256": "3844d303ea5df9b530c3c029ab733fabac5703d07b7c4a2634a1ab11ecc68dc8"
+  },
+  "universe": [
+    "AAPL",
+    "ABBV",
+    "ABNB",
+    "ADBE",
+    "ADSK",
+    "AMD",
+    "AMZN",
+    "AVGO",
+    "BAC",
+    "CAT",
+    "COIN",
+    "COST",
+    "CRM",
+    "CRWD",
+    "CVX",
+    "DDOG",
+    "GE",
+    "GOOGL",
+    "GS",
+    "HD",
+    "INTU",
+    "ISRG",
+    "JNJ",
+    "JPM",
+    "KO",
+    "LLY",
+    "LMT",
+    "MA",
+    "MDB",
+    "META",
+    "MRK",
+    "MSFT",
+    "NET",
+    "NFLX",
+    "NKE",
+    "NOW",
+    "NVDA",
+    "ORCL",
+    "PANW",
+    "PG",
+    "PLTR",
+    "QCOM",
+    "REGN",
+    "SBUX",
+    "SCHW",
+    "SHOP",
+    "SNOW",
+    "SPY",
+    "TSLA",
+    "TSM",
+    "TXN",
+    "UBER",
+    "UNH",
+    "V",
+    "WFC",
+    "WMT",
+    "XOM",
+    "XYZ"
+  ],
+  "universe_sha256": "d88f7598819afa8b2cc2fabec197f45a7bcd9dfb8f50d30c1bf2698d671295fa"
+}
