@@ -1332,3 +1332,18 @@ isnowpointertoexecutionboard. Elderlocal6a618d2 read/notpublished(origin31ccd113
 PENDING_PUBLICATION; nof1patchuntiloriginconfirmed, no producer/outcome/judgework.
 KITYsafety48020eddUNSELECTED/SPENT/no paidretry. MonthlyE2Edisabled/newpersonalGO
 and original30Oct→2Novcalendarremain; no financialactivationfor DATA_ONLY work.
+
+
+## October18 standing Monthly target and published Elder clarification
+
+Read checkpoint TOP and ELDER_V1_2_AND_MONTHLY_AUTONOMY_2026_10_18.md. Owner
+requests one bounded standingMonthlyapproval and unattendedlifecycle; financialGO
+notgranted. Existing single-scopeE2E staysaccepted; recurringauthority/dispatcher
+NOTIMPLEMENTED. OldexactMonthly/Dynamic/KITYGO cannotconvert. Useexistingoneowned
+manager/book/calendar/accounting/notifications, no architecture reset; do notwait
+30Oct toimplement. Frozenstrategy/risk/NETownership andactualfuturegatespreserved.
+Origin4b1af40 includes6a618d2. LocalElder f1patch delivered: informationalsource.50,
+hedge.55 stays, oldgeomguards+rawrecords preserved.79targetedPASSinclBrainreadonly,
+actualfixtureaccepted/badstoprejected, NOTDEPLOYED/0prospective/0broker/newauthority.
+Oldintakereceipts notrewritten, producer/900/outcomes untouched. Earlier publication
+blocker superseded; nextcausalcontext/risk/instrument andprospective/parity gates.

@@ -1,0 +1,27 @@
+{
+  "ancestor_verified": true,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "clarification_sha256": "be98b1aa842d293889123334833e109eb87aa272b8fbb5c1b00cf732ad7df091",
+  "command": ".venv/bin/python -m pytest -q tests/test_elder_hedge_orders_off_v1.py tests/test_elder_hedge_event_intake_v1.py tests/test_brain_shadow_readonly_bridge_v1.py",
+  "failures": 0,
+  "files": {
+    "research_lab/elder_hedge_event_intake_v1.py": "7e685cee55071abee284d803fff854408ef27d6679d51d020f97093a62f92c32",
+    "research_lab/elder_hedge_orders_off_v1.py": "39c4ff7fb79f9771c88d6e892615b1b5ef0fb694b043c04ed87108dc500e7a81",
+    "tests/test_elder_hedge_event_intake_v1.py": "8df0b672c49d9271a0945951dea49f92b9a217a9f6a8223a4f0840f056e6e7a7"
+  },
+  "financial_authority_created": false,
+  "frozen_v1_1_geometry_contract_sha256": "a25e4af2239cfba738b1f9c88f522060fdca810efd97cbff856f85af3fea3a28",
+  "full_repository_suite_run": false,
+  "observed_ms": 1792345471136,
+  "old_records_rewritten": false,
+  "producer_changed": false,
+  "prospective_credit": 0,
+  "red": "2 failures for original f1 rejection and intake blocker;6 negative guards already passed",
+  "research_contract_commit": "6a618d243112676fed4cc361fc63f309b4d97b58",
+  "review": "ROOT_SCOPED_REVIEW_NO_NEW_INDEPENDENT_FINANCIAL_SIGNOFF",
+  "runtime_deployed": false,
+  "status": "ELDER_V1_2_LOCAL_ORDERS_OFF_ACCEPTANCE_PASS",
+  "tests": 79,
+  "verified_origin_sha": "4b1af408f7c75a8a95257633a197f11fce145b1d"
+}

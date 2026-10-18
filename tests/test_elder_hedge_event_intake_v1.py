@@ -96,13 +96,49 @@ def test_context_first_decision_hash_conflict_does_not_compile_a_signal(tmp_path
     assert out['prospective_events_credited']==0
 
 
-def test_actual_timely_ets2s_half_fraction_cannot_pass_frozen_point55_contract():
+def test_actual_timely_ets2s_half_fraction_keeps_frozen_point55_contract():
     from research_lab.elder_hedge_orders_off_v1 import compile_intent
     p=Path(__file__).parents[1]/'reports/evidence/elder_event_intake_20261018/actual_f1_conflict.json'
     f=json.loads(p.read_bytes())['decision_fields'];ts=f['ts'];available=f['zapisano']
     assert f['vovremya'] is True and f['geom']['f1']==.5
     ctx=dict(signal_bar_open_ms=ts,observed_ms=ts+H,available_ms=available,
         source_sha256='a'*64,rezhim_v1='BEAR_TREND')
+    budget=dict(risk(),available_ms=available,valid_until_ms=available+H)
+    asset=dict(instrument(),symbol=f['sym'],tickSize='.000001',qtyStep='1',
+        minOrderQty='1',maxOrderQty='10000000')
+    out=compile_intent(json.dumps(f).encode(),source_ref='ACTUAL_DECISION_FIELDS_FIXTURE',
+        context=ctx,risk=budget,instrument=asset,now_ms=available)
+    assert out['status']=='ELDER_HEDGE_INTENT_ORDERS_OFF'
+    assert out['f1_istochnika']==.5 and out['target_fraction_1']=='0.55'
+    assert out['f1_status']=='F1_SOURCE_MISMATCH_INFO'
+    assert out['f1_clarification_sha256']==intake.F1_CLARIFICATION_SHA256
+    assert not out['orders_allowed'] and not out['research_evidence_eligible']
+    f['geom']['stop_x']=3
     with pytest.raises(ValueError,match='FROZEN_CONTROL_GEOMETRY_PARAMETERS'):
-        compile_intent(json.dumps(f).encode(),source_ref='ACTUAL_DECISION_FIELDS_FIXTURE',
-            context=ctx,risk={},instrument={},now_ms=available)
+        compile_intent(json.dumps(f).encode(),source_ref='ACTUAL_DECISION_FIELDS_FIXTURE_BAD_STOP',
+            context=ctx,risk=budget,instrument=asset,now_ms=available)
+
+
+@pytest.mark.parametrize('field,value',[('stop_x',3),('max_lev',101),('stop_dolya',.09),
+    ('rr1',.7),('rr2',.8),('bar_ts_eref',3*H)])
+def test_f1_clarification_never_relaxes_other_geometry(field,value):
+    from test_elder_hedge_orders_off_v1 import compile_
+    row=json.loads(source());row['geom'].update(f1=.5,**{field:value})
+    with pytest.raises(ValueError):compile_(raw=json.dumps(row).encode())
+
+
+def test_intake_keeps_informational_f1_and_still_requires_risk_without_rewriting_source(tmp_path):
+    row=json.loads(source());row['geom']['f1']=.5;raw=json.dumps(row).encode()
+    producer,journal=files(tmp_path,raw)
+    out=run(tmp_path,contexts={'BTCUSDT:3600000':context()})
+    assert out['blockers']=={'RISK_AND_INSTRUMENT_SNAPSHOT_REQUIRED':1}
+    assert out['prospective_events_credited']==0
+    from research_lab.elder_hedge_orders_off_v1 import HedgeBook
+    book=HedgeBook(tmp_path/'intake.sqlite')
+    try:
+        records=[json.loads(r[0]) for r in book.db.execute('SELECT body FROM elder_intents')]
+        item=next(r for r in records if r.get('receipt_kind')=='FIRST_DECISION')
+        assert item['f1_istochnika']==.5 and item['f1_status']=='F1_SOURCE_MISMATCH_INFO'
+    finally:book.close()
+    assert journal.read_bytes()==raw+b'\n'
+    assert run(tmp_path,now=3*H)['already_recorded']==1

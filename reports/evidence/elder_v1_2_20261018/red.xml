@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="8" time="0.181" timestamp="2026-10-18T20:41:01.343603+03:00" hostname="NB-BULGAKOV-71956"><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_actual_timely_ets2s_half_fraction_keeps_frozen_point55_contract" time="0.001"><failure message="ValueError: FROZEN_CONTROL_GEOMETRY_PARAMETERS">def test_actual_timely_ets2s_half_fraction_keeps_frozen_point55_contract():
+        from research_lab.elder_hedge_orders_off_v1 import compile_intent
+        p=Path(__file__).parents[1]/'reports/evidence/elder_event_intake_20261018/actual_f1_conflict.json'
+        f=json.loads(p.read_bytes())['decision_fields'];ts=f['ts'];available=f['zapisano']
+        assert f['vovremya'] is True and f['geom']['f1']==.5
+        ctx=dict(signal_bar_open_ms=ts,observed_ms=ts+H,available_ms=available,
+            source_sha256='a'*64,rezhim_v1='BEAR_TREND')
+        budget=dict(risk(),available_ms=available,valid_until_ms=available+H)
+        asset=dict(instrument(),symbol=f['sym'],tickSize='.000001',qtyStep='1',
+            minOrderQty='1',maxOrderQty='10000000')
+&gt;       out=compile_intent(json.dumps(f).encode(),source_ref='ACTUAL_DECISION_FIELDS_FIXTURE',
+            context=ctx,risk=budget,instrument=asset,now_ms=available)
+
+tests/test_elder_hedge_event_intake_v1.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+research_lab/elder_hedge_orders_off_v1.py:148: in compile_intent
+    geometry=control_geometry(row)
+             ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+row = {'geom': {'bar_ts_eref': 1792224000000, 'bar_ts_signal': 1792220400000, 'e_ref': 0.008597, 'f1': 0.5, ...}, 'side': 'short', 'sym': 'XAIUSDT', 'ts': 1792220400000, ...}
+
+    def control_geometry(row):
+        """V1.1 first-record geom; rounded diagnostics never replace raw geometry."""
+        g=row.get('geom')
+        required={'v','ref_close','e_ref','raw_sl','raw_tps','stop_x','sl_w','stop_dolya',
+                  'rr1','rr2','f1','max_lev','bar_ts_signal','bar_ts_eref'}
+        if not isinstance(g,dict) or not required&lt;=set(g):return None
+        if (type(g['v']) is not int or g['v']!=1 or stamp(g['bar_ts_signal'])!=row['ts']
+                or stamp(g['bar_ts_eref'])!=row['ts']+H or g['bar_ts_eref']&gt;row['zapisano']):
+            raise ValueError('FIRST_RECORD_GEOMETRY_CLOCK_OR_VERSION')
+        if row.get('vovremya') is not True:raise ValueError('FIRST_RECORD_NOT_OPERATIONALLY_TIMELY')
+        ref,anchor,raw_stop=(number(g[k]) for k in ('ref_close','e_ref','raw_sl'))
+        if number(g['stop_x'])!=4 or number(g['max_lev'])!=MAX_LEV or number(g['f1'])!=D('.55'):
+&gt;           raise ValueError('FROZEN_CONTROL_GEOMETRY_PARAMETERS')
+E           ValueError: FROZEN_CONTROL_GEOMETRY_PARAMETERS
+
+research_lab/elder_hedge_orders_off_v1.py:73: ValueError</failure></testcase><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_f1_clarification_never_relaxes_other_geometry[stop_x-3]" time="0.001" /><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_f1_clarification_never_relaxes_other_geometry[max_lev-101]" time="0.000" /><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_f1_clarification_never_relaxes_other_geometry[stop_dolya-0.09]" time="0.000" /><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_f1_clarification_never_relaxes_other_geometry[rr1-0.7]" time="0.000" /><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_f1_clarification_never_relaxes_other_geometry[rr2-0.8]" time="0.000" /><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_f1_clarification_never_relaxes_other_geometry[bar_ts_eref-10800000]" time="0.000" /><testcase classname="tests.test_elder_hedge_event_intake_v1" name="test_intake_keeps_informational_f1_and_still_requires_risk_without_rewriting_source" time="0.014"><failure message="AssertionError: assert {'FIRST_RECOR...Y_INVALID': 1} == {'RISK_AND_IN..._REQUIRED': 1}&#10;  &#10;  Left contains 1 more item:&#10;  {'FIRST_RECORD_GEOMETRY_INVALID': 1}&#10;  Right contains 1 more item:&#10;  {'RISK_AND_INSTRUMENT_SNAPSHOT_REQUIRED': 1}&#10;  Use -v to get more diff">tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-421/test_intake_keeps_informationa0')
+
+    def test_intake_keeps_informational_f1_and_still_requires_risk_without_rewriting_source(tmp_path):
+        row=json.loads(source());row['geom']['f1']=.5;raw=json.dumps(row).encode()
+        producer,journal=files(tmp_path,raw)
+        out=run(tmp_path,contexts={'BTCUSDT:3600000':context()})
+&gt;       assert out['blockers']=={'RISK_AND_INSTRUMENT_SNAPSHOT_REQUIRED':1}
+E       AssertionError: assert {'FIRST_RECOR...Y_INVALID': 1} == {'RISK_AND_IN..._REQUIRED': 1}
+E         
+E         Left contains 1 more item:
+E         {'FIRST_RECORD_GEOMETRY_INVALID': 1}
+E         Right contains 1 more item:
+E         {'RISK_AND_INSTRUMENT_SNAPSHOT_REQUIRED': 1}
+E         Use -v to get more diff
+
+tests/test_elder_hedge_event_intake_v1.py:130: AssertionError</failure></testcase></testsuite></testsuites>

@@ -11,7 +11,8 @@ import os
 from pathlib import Path
 import stat
 
-from research_lab.elder_hedge_orders_off_v1 import HedgeBook, sha, H, control_geometry, report_event
+from research_lab.elder_hedge_orders_off_v1 import (HedgeBook, sha, H, control_geometry,
+    control_fraction_metadata, F1_CLARIFICATION_SHA256, report_event)
 
 PRODUCER_SHA256='2eb740e6a3c0df0d72b1c40a92ab8a1b5cec920d1ae6200f70e66e4c6d988d6f'
 FIELDS={'ts','sym','side','zapisano','zapozdanie_ch','vovremya','geom'}
@@ -141,6 +142,7 @@ def receive(source,*,producer,producer_sha256,book,contexts,now_ms):
                     producer_sha256=producer_sha256,context=ctx,decided_ms=now_ms,reason=reason,
                     symbol=fields['sym'],status='DATA_ONLY_INTAKE_NOT_PARITY_OR_MONEY_PASS',mode='SHADOW',orders_allowed=False,
                     research_evidence_eligible=False,prospective_events_credited=0)
+                if geometry is not None:record.update(control_fraction_metadata(fields))
                 record['report_event']=report_event(record)
                 store.record(record);new+=1
             counts[record['reason']]+=1

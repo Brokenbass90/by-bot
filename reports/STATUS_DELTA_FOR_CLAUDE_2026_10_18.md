@@ -1,3 +1,13 @@
+# Status delta — Elder V1.2 / Monthly standing autonomy
+
+- Published6a618d2 verified inorigin4b1af40. f1blocker CLOSED locally: source.50 stored informational/F1_SOURCE_MISMATCH_INFO, hedgefraction.55 unchanged. ActualXAIdecisionfixture accepted; samefixturestop_x3 rejected; othergeom checks retained.79targetedPASSinclBrainreadonly. NoVPSdeployment/producerrestart/oldrecordrewrite/outcomes/judge/prospectivecredit or moneyGO.
+- Originalfixture/source/pins/history kept. Oldreceipts do notgain acceptance retrospectively; context/risk/instrument remain explicit nextgate. Receipt f1_clarification_sha256=be98b1aa…7df091.
+- Owner now asks one bounded standingapproval for autonomousMonthly. Existing single-scopeE2E remainsclosed; exactsymbol/selectionGO +preview-onlyCLI do notprovide permanent autonomous execution. NextP0 recurringauthority and existingone-managerdispatcher, defaultOFF; no newframework/riskchange/financialactivation. No needwait30Oct forcode. NET19OctDAY/SHOPcancel/sourceautomations preserved.
+- Report/evidence: ELDER_V1_2_AND_MONTHLY_AUTONOMY_2026_10_18.md; executionboard updated. No Claude message/KARTA/VOROTA/code edits.
+
+---
+Previous deltas are history:
+
 # Status delta для Claude — actual Monthly58 data delivery18Oct
 
 - DONE: same accepted Monthly hourly capture → existing daily aggregator → immutable daily view → реальные файлы в `research_lab/data/alpaca_monthly58_daily_v1/` sibling research checkout. Строго57+SPY/noQQQ, Yahoo hourly auto_adjust=False; no SIP/extra split/dividend rebasing. Calendar/raw timestamps/source receipt/source code pins/universe SHA/coverage в manifest. Source16Oct получен17Oct13:37UTC; Claude получил18Oct16:25UTC, не backdatedprospective.

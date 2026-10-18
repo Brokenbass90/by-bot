@@ -20,6 +20,7 @@ H = 3600000
 STRATEGY = 'ELDER_CRASH_HEDGE_V1'
 MAX_LEV = D('100')
 CONTRACT_SHA256='a25e4af2239cfba738b1f9c88f522060fdca810efd97cbff856f85af3fea3a28'
+F1_CLARIFICATION_SHA256='be98b1aa842d293889123334833e109eb87aa272b8fbb5c1b00cf732ad7df091'
 HEX = re.compile(r'[0-9a-f]{64}\Z')
 
 
@@ -58,6 +59,14 @@ def text(v):
     return format(v, 'f')
 
 
+def control_fraction_metadata(row):
+    """Published V1.2: source fraction is diagnostic; hedge stays at 0.55."""
+    value=row['geom']['f1']
+    return dict(f1_istochnika=copy.deepcopy(value),
+        f1_status='F1_SOURCE_MATCH' if finite(value)==D('.55') else 'F1_SOURCE_MISMATCH_INFO',
+        f1_clarification_sha256=F1_CLARIFICATION_SHA256)
+
+
 def control_geometry(row):
     """V1.1 first-record geom; rounded diagnostics never replace raw geometry."""
     g=row.get('geom')
@@ -69,7 +78,8 @@ def control_geometry(row):
         raise ValueError('FIRST_RECORD_GEOMETRY_CLOCK_OR_VERSION')
     if row.get('vovremya') is not True:raise ValueError('FIRST_RECORD_NOT_OPERATIONALLY_TIMELY')
     ref,anchor,raw_stop=(number(g[k]) for k in ('ref_close','e_ref','raw_sl'))
-    if number(g['stop_x'])!=4 or number(g['max_lev'])!=MAX_LEV or number(g['f1'])!=D('.55'):
+    control_fraction_metadata(row)  # Validate numeric provenance, never adopt its fraction.
+    if number(g['stop_x'])!=4 or number(g['max_lev'])!=MAX_LEV:
         raise ValueError('FROZEN_CONTROL_GEOMETRY_PARAMETERS')
     if not isinstance(g['raw_tps'],list):raise ValueError('GEOMETRY_TARGETS_SCHEMA')
     tps=[number(v) for v in g['raw_tps']]
@@ -150,6 +160,7 @@ def compile_intent(raw, *, source_ref, context, risk, instrument, now_ms):
         return dict(result, status='BLOCKED_SOURCE_DECISION_GEOMETRY',
                     reason='FIRST_RECORD_LACKS_CAUSAL_STOP_TARGETS_NO_TERMINAL_BACKFILL')
     ref,anchor,sp,k=geometry
+    result.update(control_fraction_metadata(row))
     if instrument.get('symbol') != symbol:
         raise ValueError('INSTRUMENT_SYMBOL_CONFLICT')
     pin(instrument['source_sha256'])
