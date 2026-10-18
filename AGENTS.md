@@ -1223,3 +1223,32 @@ coverageUNKNOWN/sourcegatefalse/0prospective. Collector/export/Claude code/KARTA
 VOROTA/outcomes untouched. IBITfirst19Octforward+MassivePENDING; same BrainShadow/
 Elder gates. Foreignallowlist365ff7d6…cc2e0e preserved/excluded. Next action is
 read-only reconciliation after HUMAN starts, never autonomous monetary activation.
+
+
+## October18 personally executed KITY / armed Alpaca amendment
+
+Read checkpoint TOP and KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md/JSON.
+The HUMAN personally ran both launchers. This supersedes the earlier unclaimed/
+not-armed preparation state; agents must NEVER repeat those personal commands.
+KITYd848a130…f40a1 SPENT/TERMINAL/ORDERS_OFF: actual10entries/10nativeguards/
+10ownedexits,flat0/orders0,25exec=25cashrows,net-0.22198250USDT. Earlyexit caused
+non-atomic terminal/execution/position readbacks, not risk15/cap/freshness. The
+sticky block correctly caused exit; full ordinary hold is NOTproven. Localfix
+8500c97 adds ONE fresh complete owned GET barrier before positioncustody;859KITY
+PASS/8newcases, NOTdeployed. Existingdeployedadapter8500b50d…bc128d unchanged.
+No newmoneyauthority/attempt/researchpromotion or C1/C2/C3 credit. Separatebounded
+OWNERGO required for another micro, keep spentclaims/privateevidence intact.
+
+Alpaca originalWeekly HUMANpersonallyARMED oneSHOP19Oct13:31UTC/16:31Cyprus,
+oldAMDcaps113.61/9.07,scope4630ebe2…7bd1e. Human selected4unitfiles, archivedexact
+oldHALT, registered1actualNETchild; lock813893/timer preserved. Pins/timeractual
+PASS; automatic05:20manager oldNET WAITING_REGULAR_SESSION + NO_NEXT_OWNED_INTENT
+bothrc0. No duplicate manager. FreshfullNET DAYstop19Oct13:30UTC mandatory before
+entry; no Sundayprotection/actualopening/fillPASS claim. NewHALT/ownership/source/
+market/admissionfailure NO_SEND, no retry/datecarry. Future checks onlyread-only;
+never invoke runtime/controller/journal constructors that mutate state. Existing
+19-net-ibit heartbeat now alsochecks actualentry/broker/native16:35Cyprus;
+23:35IBIT, thenpause; no duplicateautomation. No agentbrokerwrites/VPSmutations.
+Weekly/per-exitfreshresearch/Monthly remain distinct. ExistingLIQ/IBIT/Brain/Elder
+gates/epochs unchanged. Privateevidenceexcluded/rootreviewonly/foreignallowlist
+365ff7d6…cc2e0e retained. Nextwork: fixrolloutdossier, actualMondayNET/SHOPreadback.

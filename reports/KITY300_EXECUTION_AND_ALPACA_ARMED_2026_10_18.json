@@ -1,0 +1,248 @@
+{
+  "agent_broker_writes": 0,
+  "agent_remote_writes": 0,
+  "alpaca": {
+    "account_lock_inode": 813893,
+    "actual_opening_pass": false,
+    "archived_halt_sha256": "f650419b466d016ba0fe7201590714a71d2c274c5ecf1703c84e7ff0f150c115",
+    "broker_observed_ms": 1792300706430,
+    "control_spec_sha256": "b5a9c752baae49853c42068b0b4c49925094d05eb6a6448023063ddc010b6a26",
+    "current_session_net_stop_verdict": "FUTURE_19OCT_REARM_REQUIRED_SUNDAY_DAY_STOP_EXPIRED",
+    "entry_executed": false,
+    "entry_time_cyprus": "2026-10-19T16:31:00+03:00",
+    "entry_time_utc": "2026-10-19T13:31:00Z",
+    "financial_units_personally_selected": 4,
+    "halt_present": false,
+    "held_positions": [
+      {
+        "qty": "0.325167779",
+        "symbol": "NET"
+      }
+    ],
+    "manager_automatic_tick_ms": 1792300800000,
+    "manager_results": [
+      {
+        "result": {
+          "protection_present": false,
+          "ready_for_live_go": false,
+          "status": "LIVE_WAITING_REGULAR_SESSION"
+        },
+        "returncode": 0
+      },
+      {
+        "result": {
+          "broker_writes": 0,
+          "status": "NO_NEXT_OWNED_INTENT"
+        },
+        "returncode": 0
+      }
+    ],
+    "manifest_sha256": "d4fd22de33e016c7a338af063a684362214be2fe2935b3f4764829d30b48405e",
+    "market_open": false,
+    "max_modeled_stop_risk_usd": "9.07098231494",
+    "max_notional_usd": "113.60999978874",
+    "net_native_floor_usd": "277.69",
+    "open_order_count": 0,
+    "personal_arm_observed_ms": 1792300566059,
+    "scope_sha256": "4630ebe2d63659ed98cf549c3adc8bf1d9cf330de7a7e165e5be051896a7bd1e",
+    "selected_unit_pins_pass": true,
+    "source_lineage_registered_children": 1,
+    "status": "MONDAY_PERSONALLY_ARMED_PENDING_FRESH_OPENING",
+    "symbol": "SHOP",
+    "target_session": "2026-10-19",
+    "unit_observed_ms": 1792300961247,
+    "units": {
+      "alpaca-dynamic-next-entry-20261019.service": "MainPID=0\nResult=success\nExecMainStatus=0\nActiveState=inactive\nSubState=dead",
+      "alpaca-dynamic-next-entry-20261019.timer": "NextElapseUSecRealtime=Mon 2026-10-19 13:31:00 UTC\nLastTriggerUSec=\nResult=success\nActiveState=active\nSubState=waiting",
+      "alpaca-net-day-monitor.service": "MainPID=0\nResult=success\nExecMainStatus=0\nActiveState=inactive\nSubState=dead",
+      "alpaca-net-day-monitor.timer": "NextElapseUSecRealtime=Mon 2026-10-19 13:30:00 UTC\nLastTriggerUSec=Sat 2026-10-17 07:15:38 UTC\nResult=success\nActiveState=active\nSubState=waiting",
+      "alpaca-oct15-owned-manager.service": "MainPID=0\nResult=success\nExecMainStatus=0\nActiveState=inactive\nSubState=dead",
+      "alpaca-oct15-owned-manager.timer": "NextElapseUSecRealtime=Sun 2026-10-18 05:25:00 UTC\nLastTriggerUSec=Sun 2026-10-18 05:20:00 UTC\nResult=success\nActiveState=active\nSubState=waiting"
+    }
+  },
+  "automation": {
+    "checks_cyprus": [
+      "2026-10-19T16:35:00+03:00",
+      "2026-10-19T23:35:00+03:00"
+    ],
+    "existing_heartbeat_updated": true,
+    "id": "19-net-ibit",
+    "no_new_automation": true,
+    "read_only": true,
+    "status": "ACTIVE"
+  },
+  "broker_get_requests": 12,
+  "financial_implementation_base_commit": "01abb769329ba7235b112b50781a016680ef9732",
+  "implementation_commit": "8500c97d32a2ae965c2edcd481cc1541627d8364",
+  "kity": {
+    "account_lock_inode": 818853,
+    "actual_entry_gross_usdt": "232.03638",
+    "actual_fees_usdt": "0.24429250",
+    "automatic_new_paid_attempt_scheduled": false,
+    "broker_flat_observed_ms": 1792300691534,
+    "cash_transaction_rows": 25,
+    "command_id": "1792300557626855584",
+    "continuous_hold_verdict": "NOT_PROVEN_EARLY_UNWIND",
+    "controller_pid": 2568196,
+    "counts_toward_C1_C2_C3": false,
+    "cts_upper_ms": 1422,
+    "deployed_account_adapter_sha256": "8500b50d89e19fa3435e60ad78da9fb19fdc6995a4c6679d2518213f38bc128d",
+    "early_unwind_root_cause": "NON_ATOMIC_ACCOUNT_READBACK_TERMINAL_10_JOURNALED_FILL_1_BROKER_POSITION_10_UNKNOWN_NATIVE_9_STICKY_ENTRY_BLOCK",
+    "entry_execution_rows": 14,
+    "entry_filled_legs": 10,
+    "error": null,
+    "event_counts": {
+      "BATCH_ENTRY_INTENT": 1,
+      "BROKER_SNAPSHOT": 14,
+      "ENTRY_ACK": 48,
+      "ENTRY_FILL": 27,
+      "ENTRY_TERMINAL": 38,
+      "EXIT_ACK": 110,
+      "EXIT_FILL": 18,
+      "EXIT_INTENT": 10,
+      "EXIT_TERMINAL": 44,
+      "FINALITY": 1,
+      "NATIVE_PROTECTION_BIND": 10,
+      "RISK_OBSERVATION": 11
+    },
+    "execution_rows": 25,
+    "execution_verdict": "TEN_ENTRIES_NATIVE_GUARDS_OWNED_EXIT_AND_CASH_RECONCILIATION_PASS_WITH_EARLY_UNWIND",
+    "exit_completed_legs": 10,
+    "exit_execution_rows": 11,
+    "finality_observed_ms": 1792300643490,
+    "first_complete_owned_snapshot_ms": 1792300583489,
+    "first_conflict_ms": 1792300577858,
+    "first_exit_intent_ms": 1792300585623,
+    "first_send_ms": 1792300574802,
+    "first_send_to_finality_ms": 68688,
+    "full_native_protected_legs": 10,
+    "funding_cash_usdt": "0",
+    "last_broker_execution_ms": 1792300640490,
+    "last_fill_projected_ms": 1792300641635,
+    "legs": [
+      {
+        "actual_fees_usdt": "0.02694957",
+        "entry_vwap": "2.44993",
+        "exit_vwap": "2.44999",
+        "quantity": "10",
+        "side": "Buy",
+        "symbol": "BTWUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.01146510",
+        "entry_vwap": "4169.13",
+        "exit_vwap": "4169.12",
+        "quantity": "0.005",
+        "side": "Buy",
+        "symbol": "XAUUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.02593580",
+        "entry_vwap": "58.95",
+        "exit_vwap": "58.94",
+        "quantity": "0.4",
+        "side": "Buy",
+        "symbol": "LTCUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.05355149",
+        "entry_vwap": "22.538",
+        "exit_vwap": "22.539",
+        "quantity": "1.08",
+        "side": "Buy",
+        "symbol": "VVVUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.02377717",
+        "entry_vwap": "720.31",
+        "exit_vwap": "720.73",
+        "quantity": "0.03",
+        "side": "Buy",
+        "symbol": "BNBUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.02285677",
+        "entry_vwap": "4155.77",
+        "exit_vwap": "4155.78",
+        "quantity": "0.005",
+        "side": "Sell",
+        "symbol": "XAUTUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.02691205",
+        "entry_vwap": "0.07842",
+        "exit_vwap": "0.07841",
+        "quantity": "312",
+        "side": "Sell",
+        "symbol": "XPLUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.01347394",
+        "entry_vwap": "57.1",
+        "exit_vwap": "57.11",
+        "quantity": "0.429",
+        "side": "Sell",
+        "symbol": "XAGUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.02658728",
+        "entry_vwap": "0.6199",
+        "exit_vwap": "0.6196",
+        "quantity": "39",
+        "side": "Sell",
+        "symbol": "GRASSUSDT"
+      },
+      {
+        "actual_fees_usdt": "0.01278333",
+        "entry_vwap": "145.27",
+        "exit_vwap": "145.26",
+        "quantity": "0.16",
+        "side": "Sell",
+        "symbol": "SPCXUSDT"
+      }
+    ],
+    "local_fix_deployed": false,
+    "local_fixed_account_adapter_sha256": "bcc72d6d53aef674ecbc899033dd46e1bd994046fa3b5c7ef0a7d16afe604906",
+    "max_gross_usdt": "300",
+    "mode": "ORDERS_OFF",
+    "native_bound_before_first_exit": true,
+    "open_orders": 0,
+    "phase": "TERMINAL",
+    "plan_id": "8698042d7cf48fc884f7c3cacec8d38b86d1874d7ea15a98f85b2c487107479c",
+    "policy_id": "d848a1300ae866bd5d6fcfd49b6dbb196cb6183a12aa71dbb4f8bf6ae77f40a1",
+    "policy_status": "SPENT",
+    "positions": 0,
+    "reference_gross_usdt": "232.066580",
+    "research_evidence_eligible": false,
+    "risk_threshold_triggered": false,
+    "rollout_status": "LOCAL_VERIFIED_NOT_DEPLOYED",
+    "terminal_net_usdt": "-0.22198250",
+    "terminal_verdict": "REPLAY_FINALITY_COMPLETE",
+    "trade_cash_usdt": "0.02231"
+  },
+  "next_gates": [
+    "KITY: preserve spent/flat state; separate guarded rollout candidate and personal handoff; another paid micro is optional and requires separate bounded OWNER GO",
+    "19Oct13:30UTC: actual full DAY protection of NET, preserved floor and ownership",
+    "19Oct13:31UTC: one personally armed original Weekly SHOP attempt only if fresh gates pass",
+    "19Oct13:35UTC: independent GET broker/journal/native readback; no replay of failed attempt",
+    "19Oct20:35UTC: first prospective IBIT delivery/QA, Massive remains PENDING"
+  ],
+  "preserved_foreign_allowlist_sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e",
+  "private_evidence_sha256": {
+    "alpaca-post-arm-broker-private.json": "fed12750c19b066ce896714d72139f94f0a0613a1a4b18ebd7565c70dba0b9af",
+    "kity-personal-broker-private.json": "ea9a3620dfdb2d310250bc289963d1cae6cfc5f0496d2395690690c43f0030a0",
+    "post-personal-status-latest-private.json": "ca3e4e53ba0e6fc3ccd8aa9d54b5a111e77ce6a2bc53a8de7eef57f273ec9398"
+  },
+  "schema": "KITY300_EXECUTION_AND_ALPACA_ARMED_V1",
+  "tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_kity*.py",
+    "duration_seconds": "26.39",
+    "failed": 0,
+    "full_repository_suite_run": false,
+    "new_incident_cases": 8,
+    "passed": 859,
+    "red_before_fix": "1 failed, 6 passed; measured late execution case fails custody",
+    "review": "ROOT_ONLY_NO_INDEPENDENT_FINANCIAL_SIGNOFF"
+  },
+  "verification_actor": "CODEX_GET_ONLY_AFTER_HUMAN_PERSONAL_COMMANDS"
+}

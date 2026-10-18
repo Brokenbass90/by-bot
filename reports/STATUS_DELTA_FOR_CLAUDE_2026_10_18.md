@@ -1,3 +1,15 @@
+# Status delta для Claude — после личных команд 18Oct
+
+- KITY actual:10/10 full entries,10/10 native guards до первого owned выхода,10/10 exits; независимый broker flat0/orders0.25exec=25cashrows. Trade+0.02231−fees0.24429250+funding0=**−0.22198250USDT**. Policyd848a130…f40a1 SPENT/TERMINAL/ORDERS_OFF; не перезапускать.
+- Выход ранний: account readback10terminal/1journaledfill против10positions/9ещёнесвязанныхnative IDs установил sticky entryblock. Истинная причина подтверждена replay; risktrigger15 не срабатывал. Технический10/10 roundtripPASS, штатное удержание НЕдоказано; research/C1/C2/C3 не засчитывать.
+- Fix **8500c97d32a2ae965c2edcd481cc1541627d8364**, только локально: один свежий exact-order/execution GET barrier до custody; нет adoption/reset/retry/riskchange.8новыхregressions/**859KITYPASS**. VPSfinancialcode не менялся, новогоmoneyGO нет.
+- Alpaca HUMANpersonallyARMED:19Oct13:31UTC/**16:31Cyprus**, один originalWeekly SHOP≤113.61USD/risk≤9.07 изAMDslot.4unitfiles выбраны владельцем/HALTархивирован/1realNETchild зарегистрирован. SelectedpinsPASS/таймерactive. Автоматический05:20manager rc0/0; sharedownership/старыйNETcommand сохранены. Это ещё не фактический entryPASS.
+- NETqty0.325167779; Sundayopenorders0/DAYexpired ожидаемо; floor277.69 сохранён.19Oct13:30UTC fullDAYrearm обязателен до SHOP; иначеNO_SEND, без переноса/повтора. Existingread-onlyheartbeat16:35 проверяет также фактическийentry/fill/native/ownership;23:35IBIT, затемpause.
+- LIQ18Oct27010raw/all25 ужедоставлены; coverageUNKNOWN/sourcegatefalse/0prospective. IBITfirst19Octforward/MassivePENDING. Brain одинShadow/Elderprospectivegates сохранены; новых research/PnL выводов нет.
+- Receipt/board: **KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md/.json**. Дальше: KITYfixrolloutdossier + отдельный OWNERGO для новой micro;19OctNET→SHOP→readback. Rootreviewonly, не financialsignoff. Сообщения/измененияClaudeKARTA/VOROTA не делались.
+
+## Предыдущий статус до личных команд — история
+
 # Status delta для Claude — 18Oct
 
 - Codex `29b1f90` / `3810890` / `01abb76`: KITY300 V4, actual LIVE slot lineage, bounded originalWeekly next-entry/owned-portfolio guards. Master receipt: TRADING_OS_OWNER_GO_AND_MONDAY_DELIVERY_2026_10_18.md/JSON.

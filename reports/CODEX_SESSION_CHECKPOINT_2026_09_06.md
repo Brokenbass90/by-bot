@@ -1,6 +1,12 @@
 # Codex session checkpoint — 2026-09-06
 
-LATEST 18Oct — TRADING_OS_OWNER_GO_AND_MONDAY_DELIVERY_2026_10_18.md/JSON.
+CURRENT 18Oct — [KITY actual execution / Alpaca armed](KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md), JSON alongside. Human personally ran both commands. KITY policy d848a130…f40a1 SPENT: actual10/10 entries,10native guards,10owned exits; broker flat0/orders0; 25executions=25cashrows, net-0.22198250USDT (trade+0.02231,fees0.24429250,funding0). TERMINAL/ORDERS_OFF, same lock818853/PID2568196. Early unwind caused non-atomic account readback:10terminal/1journaledfill vs10positions/9unboundnative IDs; sticky entryblock. All riskobservationsMONITOR; normal hold NOTPROVEN. Localfix8500c97d32a2ae965c2edcd481cc1541627d8364 adds ONE fresh exact-execution GET barrier;859KITYtestsPASS,8newcases. NOTdeployed/no newGO/no reuse of either spent policy.
+
+Alpaca originalWeekly is PERSONALLYARMED:19Oct13:31UTC/16:31Cyprus oneSHOP≤113.61USD/risk≤9.07, scope4630ebe2…7bd1e/controlb5a9c752…0b6a26/manifestd4fd22de…405e. Human selected4unitfiles, archived exactoldHALT, registered1actualNETchild; sharedlock813893 preserved. Actual selectedpinsPASS; timeractive/waiting. Automatic05:20UTC one-manager tick rc0/0: originalNET WAITING_REGULAR_SESSION + NO_NEXT_OWNED_INTENT. GETNETqty0.325167779/openorders0/Sundaymarketclosed; floor277.69 retained, expiredDAY is NOTcurrentprotection.19Oct13:30UTC fullNETstop is mandatory before entry; actualopening/fill/native acceptance stillFUTURE. Fresh failure=>NO_SEND/no retry/datecarry. Existing appheartbeat19-net-ibit expanded to actualentry GETreadback16:35Cyprus;23:35IBIT and thenpause. No agent moneycommands/brokerwrites/VPS changes. OriginalWeekly≠per-exitfreshresearchcandidate≠Monthly.
+
+NextP0: KITY localfix rollout dossier/new bounded OWNERGO if another micro; actual19OctNETrearm→oneSHOPattempt→independentcash/native/ownership readback. LIQ18Octdelivery/epochunchanged; IBITfirstforward19Oct/MassivePENDING; oneBrainShadow/Elderprospective gates preserved. No profitability/researchpromotion claim; root-onlyreview, fullrepo suite notrun. Privatecaptures remainprivate; foreignallowlist365ff7d6…cc2e0e preserved. The preparation/no-personalstart state below is historical and must not trigger launcher reuse.
+
+PRIOR before personal commands — TRADING_OS_OWNER_GO_AND_MONDAY_DELIVERY_2026_10_18.md/JSON.
 Direct human GO supersedes cap300-calculation-only state below for ONE new KITY
 technical micro. Code29b1f90/3810890/01abb76. New strictV4 cap300/trigger15,
 30min/60s/CTS2s/50bps/same5+5; old215policy remainsSPENT. Newpolicy d848a130…f40a1,
