@@ -213,6 +213,35 @@ def nochnoy_dreyf(o, h, l, c, v, ts):
 
 
 # stop — в ATR, rr1/rr2 — цели в R, f1 — доля на первой цели, hold — часов
+
+# ── пакет «каналы» (18.10.2026, PREREG_FABRIKA_KANAL_OTSKOK_2026_10_18.md): торговля ПО каналу, а не против ──
+def kanal_otskok(o, h, l, c, v):
+    """Канал регрессии закрытий за 72 бара ДО бара i (бары i-72..i-1), R² ≥ 0.5, ширина 2–20 % цены.
+    Восходящий или плоский канал: бар i касается нижней линии (low ≤ линия + 0.1 ATR), закрывается выше неё и выше
+    открытия → лонг. Нисходящий или плоский — зеркально у верхней линии → шорт. «Плоский» = |наклон| < 0.05 % в бар."""
+    a, _ = atr(h, l, c, 20); n = len(c); LB = 72
+    L = np.zeros(n, bool); S = np.zeros(n, bool)
+    if n <= LB + 1:
+        return L, S, a
+    X = np.arange(LB, dtype=float); xm = X.mean(); den = ((X - xm) ** 2).sum()
+    W = swv(c[:-1], LB)                                   # окно j = бары j..j+LB-1, решение на баре i = j+LB
+    ym = W.mean(1); m = ((W - ym[:, None]) * (X - xm)).sum(1) / den; b = ym - m * xm
+    line = b[:, None] + m[:, None] * X
+    up_off = (swv(h[:-1], LB) - line).max(1); lo_off = (swv(l[:-1], LB) - line).min(1)
+    ss_tot = ((W - ym[:, None]) ** 2).sum(1); ss_res = ((W - line) ** 2).sum(1)
+    r2 = np.where(ss_tot > 1e-12, 1 - ss_res / np.maximum(ss_tot, 1e-12), 0.0)
+    i = np.arange(LB, n)
+    mid_i = b + m * LB; up_i = mid_i + up_off; lo_i = mid_i + lo_off
+    width = (up_i - lo_i) / np.maximum(c[i], 1e-12)
+    nakl = m / np.maximum(ym, 1e-12)                       # доля цены за бар
+    ok = (r2 >= 0.5) & (width >= 0.02) & (width <= 0.20) & np.isfinite(a[i]) & (a[i] > 0)
+    ploskiy = np.abs(nakl) < 0.0005
+    vverh = (nakl >= 0.0005) | ploskiy; vniz = (nakl <= -0.0005) | ploskiy
+    dl = ok & vverh & (l[i] <= lo_i + 0.1 * a[i]) & (c[i] > lo_i) & (c[i] > o[i])
+    ds = ok & vniz & (h[i] >= up_i - 0.1 * a[i]) & (c[i] < up_i) & (c[i] < o[i])
+    L[i] = dl; S[i] = ds
+    return L, S, a
+
 MEHANIZMY = {
     "PROBOY_55":        dict(fn=proboy_55, semya="breakout", stop=2.0, rr1=2.0, rr2=4.0, f1=0.5, hold=168,
                              opisanie="закрытие выше/ниже экстремума 55 баров (черепахи)"),
@@ -238,6 +267,8 @@ MEHANIZMY = {
     "GEP_VYHODNYH":     dict(fn=gep_vyhodnyh, semya="gep_pereocenka", stop=1.5, rr1=1.0, rr2=2.0, f1=0.5, hold=48,
                              nuzhen_ts=True,
                              opisanie="разрыв после перерыва больше 12 часов, вход против разрыва"),
+    "KANAL_OTSKOK":     dict(fn=kanal_otskok, semya="kanal_otskok", stop=1.5, rr1=1.0, rr2=2.0, f1=0.5, hold=48,
+                             opisanie="касание границы канала регрессии 72 бара по направлению канала (вверх/флет — лонг от низа)"),
     "NOCHNOY_DREYF":    dict(fn=nochnoy_dreyf, semya="premiya_za_chas", stop=2.0, rr1=1.0, rr2=2.0, f1=0.5, hold=10,
                              nuzhen_ts=True,
                              opisanie="безусловный вход в 21:00 UTC, держать 10 часов — премия за время суток"),
