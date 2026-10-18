@@ -1252,3 +1252,24 @@ never invoke runtime/controller/journal constructors that mutate state. Existing
 Weekly/per-exitfreshresearch/Monthly remain distinct. ExistingLIQ/IBIT/Brain/Elder
 gates/epochs unchanged. Privateevidenceexcluded/rootreviewonly/foreignallowlist
 365ff7d6…cc2e0e retained. Nextwork: fixrolloutdossier, actualMondayNET/SHOPreadback.
+
+
+## October18 new research and explicit SHOP cancellation — latest authority
+
+Read current research_lab/RESEARCH_TO_LIVE_BOARD.md and research-intake receipt.
+Origin0be44ec verified: paired2016–2026 comparison failed Weekly/Event/A+G2+gov
+replacement rule; Monthly preferred, not independentunseen economicproof.
+OWNER explicitly approved «Да, отменить только SHOP; NET сопровождать».
+DONE: only alpaca-dynamic-next-entry-20261019.timer disabled/stopped; service not
+started, NET manager/timer+DAY monitor preserved, selectedunitpinsPASS,0brokerAPI
+requests/writes. Never re-enable based on old personalarm/receipt; no claimreset,
+HALTclear, datecarry or automaticscopeconversion. No Monthlybuy19Oct. Existing
+NET protection/management/Nov2personalexit boundaries remain unchanged.
+Monthly operationalbinding/packet is now moneyP0, original30Oct→2Novcalendar and
+separatefinancialGO. Existing19-net-ibit heartbeat expects cancelledSHOP, verifies
+NET16:35Cyprus andIBIT23:35, thenpause; schedule unchanged. KITY2026 dataexists but
+edgeINCONCLUSIVE; crypto-filterrecommendation withdrawn. No KITYmoneyrepeats;
+existing execution/healthfixes LOCAL/NOT_DEPLOYED. Keep research/Factory/Brain
+moving without promoting2–3crypto strategies solely to satisfy a count.
+Researchworkingtree/KARTA/VOROTA/code untouched. Researchboard→pointer proposal
+is pendingClaude; do not claim already onephysicalfile. Foreignallowlist retained.

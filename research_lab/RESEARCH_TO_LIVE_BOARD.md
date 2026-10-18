@@ -1,7 +1,7 @@
 # Trading OS — единая доска доведения до первой версии
 
 18 октября 2026. Производственные receipts — в этой recovery-ветке; research
-Claude сверено с опубликованным `3856bbba94ef141aac88be54c8e73b17bf78aa0e`.
+Claude сверено с опубликованным `0be44eca1f86929986b48ee77662d91b51a40255`.
 Это производная доска: разрешения задаются owner packets, деньги — broker/journal/
 native ledger, исследовательские выводы — замороженными research receipts.
 Ни одна строка доски не создаёт финансовых полномочий.
@@ -14,16 +14,23 @@ native ledger, исследовательские выводы — заморо�
 Рестарт/дубликат не создают повторную заявку; неизвестное состояние блокирует
 новый риск и становится видимым владельцу. Один manager и одна финансовая истина.
 
-Для пользовательского требования Dynamic нужен законченный повторный отбор
-после подтверждённого выхода. Существующий event-reselection кандидат делает его
-к следующему допустимому regular opening по предыдущей закрытой сессии; мгновенная
-внутридневная повторная покупка этим контрактом не разрешена. Сначала фиксированное
-сравнение с Weekly, затем принятие версии и ограниченный owner scope.
+Новый фиксированный сравнительный прогон Claude0be44ec закрыл прежний пробел:
+Weekly, EventReselection и A+G2+gov не прошли prereg правило замены Monthly.
+Поэтому основной кандидат первой денежной версии — **Monthly**, с её собственным
+календарём повторного отбора. Свободный капитал не требует немедленной покупки.
+Новые разработки динамичных вариантов для денег не входят в P0 без новой
+исследовательской версии и самостоятельного основания.
 
-**Один SHOP по таймеру — приёмка одного входа, а не готовый автономный повторяемый
-денежный контур.** Первая версия не требует одновременного LIVE всех стратегий
-или доказанной полезности Brain. Прибыль не является гарантируемым критерием
-приёмки; соответствие исследованной модели, исполнение и реальные расходы — являются.
+**Владелец18Oct явно отменил только SHOP:** future entry timer отключён;
+NET manager/его timer/DAY-monitor сохранены. Старый personal-arm receipt —
+исторический факт, не разрешение включать timer снова. Новый входSHOP19Oct отменён.
+[Research/cancel receipt](../reports/evidence/trading_os_research_intake_20261018/receipt.json).
+
+Первая версия не требует одновременного LIVE всех стратегий или доказанной
+полезности Brain. Прибыль не является гарантируемым критерием приёмки;
+соответствие исследованной модели, исполнение и реальные расходы — являются.
+Цель2–3 крипторукавов сохранена как последовательное развитие после собственных
+экономических/execution gates; количество стратегий не создаёт денежного допуска.
 
 До закрытия этого цикла новые frameworks, broker adapters, managers, альтернативные
 финансовые журналы и массовая очистка репозитория не входят в v1. Brain/Factory/
@@ -36,38 +43,42 @@ Brain A/B для перечисленных денежных версий: **INC
 
 | Strategy / версия | Research status | Execution status | Broker / Owner GO | Конкретный блокер и следующий gate | Ответственный / evidence |
 |---|---|---|---|---|---|
-| KITY_BYBIT / frozen cb47f0e, micro V4, fix8500c97 | C2/source membership MATCH; экономическая переносимость расходов/округлений и семидневного удержания не подтверждена этим micro | 10входов/10native/10выходов и cash LIVE_RECONCILED; ранний unwind. Исправленный code-only candidate проверен на точных исходниках; NORMAL_HOLD_NOT_PROVEN | Bybit; d848a130…f40a1 **SPENT**, ORDERS_OFF | Проверка incomplete/unknown fallback и alert delivery; безопасный guarded rollout. Claude: экономическая идентичность исполняемой версии. Дополнительный платный micro не назначен | Codex + Claude; [actual cycle](../reports/KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md), [candidate receipt](../reports/evidence/kity_20261018/fix_exact_dependency_acceptance.json) |
-| Alpaca Weekly Dynamic / fe72557b…f400d | Нет найденного подтверждённого like-for-like NET backtest точного Weekly. Это явный пробел, не перенос Monthly PASS | Source59/owned lineage/один manager и timer подтверждены; фактический19Oct entry ещё FUTURE | Alpaca; лично ARMED **один SHOP19Oct13:31UTC**, ≤113.61USD/risk≤9.07 |19Oct13:30UTC actual full NET DAY stop →13:31SHOP admission/fill/native →13:35 GET readback. Новый цикл/расширение scope не подразумеваются | Codex: actual lifecycle; Claude: фиксированное экономическое сравнение. [arm receipt](../reports/KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.json) |
-| Alpaca EventReselection / separate ORDERS_OFF contract | ECONOMIC_INCONCLUSIVE: сопоставимое сравнение с Weekly и Monthly отсутствует | Существующий candidate и restart/slot/cash тесты есть; финансового binding нет | Alpaca; нового денежного GO нет | Принять точную семантику после выхода и сравнить фиксированные версии на одинаковых допустимых данных/расходах, без ретюнинга. Затем end-to-end выход→капитал→новый causal ranking→следующий вход | Claude: research verdict; Codex: existing adapter integration. [contract](../reports/evidence/trading_os_dynamic_kity_20261017/dynamic_candidate_contract.json), [readiness](../reports/ALPACA_DYNAMIC_EXECUTION_READINESS_2026_10_17.md) |
-| Alpaca Monthly / 8f6d1fd2…277c799 | Исторический baseline воспроизведён; независимый implementation parity507f782. Новая forward доходность не доказана | Source58/selection/schedule/ratchet ORDERS_OFF; отдельный disabled binding | Alpaca; financial activation не выдана | Сохранить самостоятельную ветвь:30Oct close selection →2Nov14:30UTC условное окно. Не заменять ею Weekly и не требовать этого календаря для Dynamic | Codex; [parity](../reports/ALPACA_PARITY_ACCEPTED_DAY_NEXT_2026_10_17.md), [readiness](../reports/ALPACA_MONTHLY_ACTIVATION_READINESS_2026_10_17.md) |
+| KITY_BYBIT / frozen cb47f0e, micro V4, fix8500c97 | **ECONOMIC_INCONCLUSIVE**:2026 данные есть,+47.6bps/нед,t0.54; последние27нед+23,t0.26. Crypto-only улучшение отозвано | 10входов/10native/10выходов/cash LIVE_RECONCILED; ранний unwind. Candidate на точных исходниках проверен, NORMAL_HOLD_NOT_PROVEN | Bybit; d848a130…f40a1 **SPENT**, ORDERS_OFF | Денежные повторы не назначать. Закрывать общие fallback/alert/rollout условия без денег; исходный frozen forward gate сохраняется и не блокирует Alpaca v1 | Codex + Claude; [actual cycle](../reports/KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md), [candidate](../reports/evidence/kity_20261018/fix_exact_dependency_acceptance.json), [new research intake](../reports/evidence/trading_os_research_intake_20261018/receipt.json) |
+| Alpaca Weekly Dynamic / fe72557b…f400d | **ECONOMIC_FAIL по prereg правилу замены Monthly**:5.76%годовых/DD19.94% при20bps/side, исследованная известная история | Source59/owned lineage/один manager подтверждены; SHOP не запускался | Alpaca; владелец **ОТМЕНИЛ один SHOP18Oct**, entry timer disabled/inactive; NET сопровождение действует | Не расширять и не включать заново.19Oct только full NET DAY stop / readback; отсутствие SHOP — OWNER_CANCELLED, не execution FAIL | Codex; [new verdict/cancel receipt](../reports/evidence/trading_os_research_intake_20261018/receipt.json) |
+| Alpaca EventReselection / separate ORDERS_OFF contract | **ECONOMIC_FAIL по правилу замены Monthly**:7.42%годовых/DD23.56%,1из7срезов/0из4кризисов | Существующий ORDERS_OFF candidate/restart tests сохранены | Alpaca; денежного GO нет | Убрать из денежного P0; не дорабатывать финансовый binding ради частоты. Новая гипотеза — отдельная prereg, без ретюнинга текущей истории | Claude: research; Codex: preservation. [intake](../reports/evidence/trading_os_research_intake_20261018/receipt.json) |
+| Alpaca Monthly / 8f6d1fd2…277c799 | Выбранный кандидат по правилу0be44ec:8.48%годовых/DD16.17%/PF1.537/325сделок при20bps/side. Известная история и survivorship bias, не independent unseen PASS | Strategy parity507f782; source58/schedule/ratchet и separate disabled binding | Alpaca; новый financial activation GO **не выдан** | P0: закончить single-owner monetary binding/stop/restart/alert/rollback packet ORDERS_OFF до30Oct.30Oct closed selection→2Nov14:30UTC условное окно, отдельный OWNER GO; NET не мигрировать молча | Codex; [activation readiness](../reports/ALPACA_MONTHLY_ACTIVATION_READINESS_2026_10_17.md), [research intake](../reports/evidence/trading_os_research_intake_20261018/receipt.json) |
 | ELDER_CRASH_HEDGE_V1.1 / contract SHAa25e4af2…fea3a28 | DEV_PASS режимного hedge с тонким запасом; standalone KILL; исходная ETS2M900 проверка OPEN | Source geometry/fill anchor reconciled; disabled adapter. Последний receipt:0 real events credited, не утверждение об отсутствии новых сигналов сейчас | Bybit preparation; ORDERS_OFF/no financial GO | Подключить реальные first-decision/context records к существующему adapter/journal, получить ≥30 events и frozen P1–P5, actual-fill protection/recovery. Никаких новых «двух недель» ожидания | Codex: source/execution; Claude: source/parity/900. [v1.1](../reports/ELDER_HEDGE_V1_1_SOURCE_PARITY_2026_10_17.md) |
 | ETF_PREMIYA_BTC / DATA-only contract v1.1 | DEV candidate; prospective/Massive QA не завершены | Уже установлен существующий IBIT/BTC collector/adapter; historical81 не forward | DATA_ONLY, ORDERS_OFF | Первый actual19Oct decision/QA/hash delivery; Massive=PENDING до настоящей сверки | Codex: source; Claude: research. [existing delivery](../reports/TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md) |
 | LIQ_OTSKOK_4H_V2 / source V2.1 | Raw records не edge; source coverage UNKNOWN | Immutable17/18Oct delivery,25coins; действующий collector/epoch сохранён | DATA_ONLY, ORDERS_OFF | Ежедневная доставка; gap/UNKNOWN handling, warmup и events по замороженному контракту.27010raw18Oct не27010prospective сигналов | Codex: delivery; Claude: source/research. [delivery](../reports/LIQ_RESEARCH_DELIVERY_2026_10_17.md) |
 | Brain V2 / existing Shadow | Added value INCONCLUSIVE | Общие context/journal interfaces уже существуют; money authority нет | SHADOW only | Paired BASELINE/Brain на одних возможностях; реальные execution joins. Не создавать второй Brain и не блокировать им допустимый самостоятельный LIVE | Claude + Codex; [existing delivery](../reports/TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md) |
 
-## Что именно показывают бэктесты Alpaca
+## Проверенное сравнение Alpaca — новое основание приоритета
 
-Проверен существующий [пинованный reference manifest](../reports/evidence/alpaca_parity_repair_20261016/etalon_reference_manifest.json),
-research981b62f / runner `simulate_live_protection_daily_proxy` /
-trade core`2347a7ec606cd845`. Новый прогон или sealed judge не запускался.
+Prereg7198e1b — предок результата0be44ec в Git. Codex прочитал опубликованный
+JSON и пересчитал четыре условия решения; **не запускал backtest/judge**.
+Период2016-01-04…2026-09-04,58акций/ETF+SPY, daily proxy,20bps **на сторону**.
 
-| Метрика baseline Monthly/daily | Сохранённый воспроизведённый результат |
-|---|---:|
-| Период |2024-08-01…2026-07-11, правая граница исключена |
-| Начальный / конечный модельный капитал |1000 /1299.710379 USD |
-| Доходность за весь период |+29.971038% |
-| MaxDD по дневной equity |7.569155% |
-| Profit factor реализованных сделок |1.810942 |
-| Закрытые сделки |64 |
-| Отрицательные месяцы |9 из24 |
-| Худший месяц |−4.244579% |
-| Средняя gross exposure |26.134854% |
-| Модельные расходы |10bps на сторону; параметры отдельно фиксируют market_gap10bps |
+| Версия | Годовых | MaxDD | PF | Сделок | По правилу замены Monthly |
+|---|---:|---:|---:|---:|---|
+| Monthly |8.484%|16.167%|1.537|325|Контроль/выбранный кандидат |
+| Weekly Dynamic |5.759%|19.939%|1.328|378|FAIL:0из4условий |
+| EventReselection |7.416%|23.563%|1.209|841|FAIL:0из4условий |
+| A+G2+gov |10.014%|18.743%|1.348|709|FAIL:1из4условий |
 
-Это daily proxy с заданной моделью исполнения, не гарантия внутридневного
-drawdown, будущего результата или точной экономической эквивалентности Weekly.
-Два воспроизведения одной истории не образуют два независимых экономических
-эксперимента. Для Weekly и EventReselection новые числа не выдуманы.
+Monthly не имеет самой высокой годовой доходности: A+G2+gov выше, но нарушает
+ограничение DD+2п.п. и критерии срезов/кризисов. Weekly имеет положительный модельный
+результат, но **не прошла правило выбора денежного кандидата**, что не тождественно
+доказанной убыточности каждой будущей сделки.
+
+Ни одна рука не получила здесь независимого unseen экономического подтверждения:
+история уже использовалась, universe выбран по современной ликвидности.
+Пререгистрация этого сравнения не делает старые данные новыми. Старый baseline
++29.971%/DD7.569%/64сделки относится к другому короткому окну; он сохранён в
+[reference manifest](../reports/evidence/alpaca_parity_repair_20261016/etalon_reference_manifest.json),
+не заменяет и не опровергает приведённое длинное сравнение.
+
+Источники: [прогон/все варианты](https://github.com/Brokenbass90/by-bot/blob/0be44eca1f86929986b48ee77662d91b51a40255/research_lab/ALPACA_SRAVNENIE_DINAMIKI_ITOG_2026_10_18.md),
+[prereg](https://github.com/Brokenbass90/by-bot/blob/7198e1b6c3bb240ef21e3451dd2b7b394e3858a7/research_lab/prereg/PREREG_ALPACA_SRAVNENIE_DINAMIKI_2026_10_18.md).
 
 ## Уже закрыто / что делаем до и после ближайшего рынка
 
@@ -84,19 +95,19 @@ Source uncertainty не становится нулевой позицией.12�
 не заявляется. Локальный commit5820bac, **NOT_DEPLOYED**. Нет новых таймаутов,
 денежных действий, restart authority или второго монитора.
 
-До рынка: KITY fallback/alert и rollout acceptance; fixed-version comparison
-handoff Claude; causal source intake Elder. Это работы без ожидания торговой даты.
+До рынка: Monthly binding/activation packet; общие KITY fallback/alert acceptance
+без денежных повторов; causal source intake Elder. Это работы без ожидания торговой даты.
 Недостающая численная safety policy не выводится из одного инцидента5.631s;
 paid retry не используется как замена fault injection и code review.
 
-19Oct:13:30UTC NET full DAY protection;13:31UTC лично разрешённый SHOP;
-13:35UTC independent actual readback. Existing heartbeat16:35Cyprus также проверяет
-SHOP,23:35Cyprus — первый IBIT; затем pause. Серверный timer не зависит от Mac,
+19Oct:13:30UTC NET full DAY protection;13:35UTC independent actual readback.
+**SHOP13:31UTC отменён владельцем.** Existing heartbeat16:35Cyprus проверяет NET
+и сохранение отмены SHOP,23:35Cyprus — первый IBIT; затем pause. Серверный timer не зависит от Mac,
 локальный heartbeat при сне Mac может сообщить позже; своевременный отчёт не выдумывать.
 
-После фактического входа: полное сопровождение разрешённого lifecycle и cash
-reconciliation. Для непрерывного повторного отбора сначала экономическая приёмка
-точной версии и отдельный bounded owner envelope; текущий one-shot не продлевать.
+Следующий денежный кандидат — Monthly, по исходному календарю и после конкретного
+нового owner packet. Поддержание NET продолжается независимо от новых входов.
+Запрет новых Weekly/Event money scopes не означает выключение действующего NET.
 
 Новые paid attempts, две предложенные PM попытки, новые бюджеты и постоянная
 автономия этим документом не разрешены. Корзина micro не доказывает семидневную
@@ -105,7 +116,9 @@ KITY: source membership/C2 уже MATCH, расходы/rounding/horizon — о�
 gross; эти значения нельзя молча заменить точными равными весами или нулевыми расходами.
 
 Research owner получает [файловый status delta](../reports/STATUS_DELTA_FOR_CLAUDE_2026_10_18.md).
-Его KARTA/VOROTA/код не редактировались, сообщения не отправлялись. Старые execution
+Его KARTA/VOROTA/код не редактировались, сообщения не отправлялись. Research-копия
+RESEARCH_TO_LIVE_BOARD.md пока физически существует на0be44ec: Claude предложил
+заменить её ссылкой сюда, но это ещё не выполнено. Не заявлять устранение дубля. Старые execution
 tables в датированных reports — исторические snapshots; эта доска — текущий индекс
 следующих gates, без собственной финансовой истины. Full repository suite и новый
 independent financial review не заявлены.

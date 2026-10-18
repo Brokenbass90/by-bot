@@ -1,18 +1,25 @@
 # Trading OS — Codex master handoff, 17 October 2026
 
-LATEST18Oct directive intake: current derived execution board is
-[research_lab/RESEARCH_TO_LIVE_BOARD.md](../research_lab/RESEARCH_TO_LIVE_BOARD.md).
-Read it before historical tables. KITY code-onlycandidate23files/onefix verified
-against actualVPS23source+159guards;95exact-candidate tests,0localmodulefallback.
-Health5820bac fixes process-HEALTHY hiding activecustody/native uncertainty;
-20health+8incidentPASS. Both LOCAL/NOT_DEPLOYED/no newpolicy/moneyattempt.
-AlpacaMonthly baseline+29.971%/dailyDD7.569%/64trades is NOT exactWeekly or new
-EventReselection economicproof. CurrentoneSHOP19Octscope staysunchanged. V1target
-is full signal/protection/exit/cash/nextselection cycle; Brain/Elder are not
-mandatorydependencies. Research origin3856bbb verified; Claudehandoff is file-only.
-Candidate receipt reports/evidence/kity_20261018/fix_exact_dependency_acceptance.json;
-no statisticaltimeout/safetybudget/actualalertdelivery/independentfinancialPASS
-invented. Previous actualmoneycycle/armed receipts below remain valid dated facts.
+LATEST18Oct RESEARCH/OWNER UPDATE — authoritative current board:
+[research_lab/RESEARCH_TO_LIVE_BOARD.md](../research_lab/RESEARCH_TO_LIVE_BOARD.md),
+receipt reports/evidence/trading_os_research_intake_20261018/receipt.json.
+Research origin0be44eca1f86929986b48ee77662d91b51a40255 verified; no push needed.
+Matched2016–2026 comparison: Monthly preferred by prereg rule; Weekly/Event/
+A+G2+gov fail replacement criteria. Known history/survivorship bias, not unseenPASS.
+OWNER explicitly said «Да, отменить только SHOP; NET сопровождать».
+DONE: ONLY alpaca-dynamic-next-entry-20261019.timer disabled/inactive, entry not
+started. Independentreadback/staticunitpinsPASS. NETmanager+timer/DAYmonitor
+preserved; HALT/claims/unitfilebytes unchanged;0brokerrequests/0brokerwrites.
+Never re-enable/re-arm SHOP from old personal-arm receipt.19Oct13:30UTC NETstop,
+13:35GETreadback;23:35Cyprus IBIT. Existingheartbeatupdated/no schedulechange.
+Monthly P0 financialbinding/ownerpacket ORDERS_OFF before30Oct, new moneyGO still
+required; firstcontractwindow2Nov14:30UTC. No new Monthly purchase19Oct.
+KITY2026 DATA EXISTS:original+47.6bps/t0.54,last27wk+23/t0.26=>INCONCLUSIVE;
+crypto-onlyproposal withdrawn/FAIL. PolicySPENT, no newpaidattempts. Technical
+candidate/Health5820bac remain LOCAL/NOT_DEPLOYED. Elder/ETF/LIQ are preparation
+queue for2–3futurecrypto sleeves, not liveauthority. Canonicalboard is recovery;
+Claude researchcopy stillpresent, pointerconversion pending his update.
+Earlier ARMED/SHOP launch statements below are historical and superseded here.
 
 CURRENT 18Oct — [KITY actual execution / Alpaca armed](KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md), JSON alongside. Human personally ran both commands. KITY policy d848a130…f40a1 SPENT: actual10/10 entries,10native guards,10owned exits; broker flat0/orders0; 25executions=25cashrows, net-0.22198250USDT (trade+0.02231,fees0.24429250,funding0). TERMINAL/ORDERS_OFF, same lock818853/PID2568196. Early unwind caused non-atomic account readback:10terminal/1journaledfill vs10positions/9unboundnative IDs; sticky entryblock. All riskobservationsMONITOR; normal hold NOTPROVEN. Localfix8500c97d32a2ae965c2edcd481cc1541627d8364 adds ONE fresh exact-execution GET barrier;859KITYtestsPASS,8newcases. NOTdeployed/no newGO/no reuse of either spent policy.
 

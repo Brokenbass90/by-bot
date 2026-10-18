@@ -1,0 +1,203 @@
+{
+  "alpaca_current": {
+    "arm_claims_reset": false,
+    "broker_requests": 0,
+    "broker_writes": 0,
+    "cancel_observed_ms": 1792305163114,
+    "cancel_timer_after": {
+      "ActiveState": "inactive",
+      "LastTriggerUSec": "",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "command_executed": true,
+    "entry_service_after": {
+      "ActiveState": "inactive",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "halt_changed": false,
+    "independent_readback_ms": 1792305198220,
+    "independent_timer_readback": "NextElapseUSecRealtime=\nLastTriggerUSec=\nResult=success\nActiveState=inactive\nSubState=dead",
+    "independent_unit_pins_pass": true,
+    "net_manager_and_monitor_preserved": true,
+    "net_manager_timer_after": "NextElapseUSecRealtime=Sun 2026-10-18 06:35:00 UTC\nLastTriggerUSec=Sun 2026-10-18 06:30:00 UTC\nResult=success\nActiveState=active\nSubState=waiting",
+    "net_monitor_timer_after": "NextElapseUSecRealtime=Mon 2026-10-19 13:30:00 UTC\nLastTriggerUSec=Sat 2026-10-17 07:15:38 UTC\nResult=success\nActiveState=active\nSubState=waiting",
+    "observed_ms": 1792304968919,
+    "owner_approval_text": "\u0414\u0430, \u043e\u0442\u043c\u0435\u043d\u0438\u0442\u044c \u0442\u043e\u043b\u044c\u043a\u043e SHOP; NET \u0441\u043e\u043f\u0440\u043e\u0432\u043e\u0436\u0434\u0430\u0442\u044c",
+    "owner_approval_text_sha256": "bd3f05cfc815b75bb28a89a80b6b42ec34a2f4026d80693b4944216c92833008",
+    "owner_choice": "CANCEL_ONLY_SHOP_PRESERVE_NET",
+    "preserved_units_sha256": {
+      "alpaca-net-day-monitor.service": "08e66161d72d3ee5b3cd354f2ac4aef492d44b78e5636b81f8459d058471ae47",
+      "alpaca-net-day-monitor.timer": "43670a7a68f16f996858b56bc17ed94db90c608f7c10f237df915320096ba013",
+      "alpaca-oct15-owned-manager.service": "e84815e8a3e05d4b80d879153ab962d56e8c56f23b29945b30b4da83a1981473",
+      "alpaca-oct15-owned-manager.timer": "634ef2372f8fe8e702f873288d93b60a74e8e6d0992e31f1f07310a9946e81d1"
+    },
+    "proposed_command": [
+      "systemctl",
+      "disable",
+      "--now",
+      "alpaca-dynamic-next-entry-20261019.timer"
+    ],
+    "recommended_action": "DISABLE_ONLY_SHOP_ENTRY_TIMER_PRESERVE_NET_MANAGER_AND_DAY_MONITOR",
+    "remote_mutations": [
+      "disable_and_stop_only_alpaca-dynamic-next-entry-20261019.timer"
+    ],
+    "remote_writes": 1,
+    "scope_status": "OWNER_CANCELLED_NO_REARM_AUTHORITY",
+    "selected_unit_pins_pass": true,
+    "shop_service": "MainPID=0\nResult=success\nExecMainStatus=0\nActiveState=inactive\nSubState=dead",
+    "shop_timer": "NextElapseUSecRealtime=Mon 2026-10-19 13:31:00 UTC\nLastTriggerUSec=\nResult=success\nActiveState=active\nSubState=waiting",
+    "unit_files_changed": 0
+  },
+  "automation": {
+    "id": "19-net-ibit",
+    "purpose": "NET readback plus expected SHOP cancellation; evening IBIT; no auto-rearm",
+    "schedule_changed": false,
+    "status": "ACTIVE"
+  },
+  "board": {
+    "canonical": "research_lab/RESEARCH_TO_LIVE_BOARD.md on codex/recovery-20260824",
+    "research_copy_link_conversion_by_claude_pending": true,
+    "research_copy_still_present": true
+  },
+  "cost_bps_per_side": 20,
+  "decision_rule_recalculation": {
+    "A+G2+gov": {
+      "crisis_wins": 0,
+      "criteria": {
+        "annual_return_higher": true,
+        "at_least_3_of_4_crises": false,
+        "at_least_5_of_7_slices": false,
+        "drawdown_increase_no_more_than_2pp": false
+      },
+      "slice_wins": 1,
+      "verdict": "ECONOMIC_FAIL_FOR_REPLACING_MONTHLY"
+    },
+    "EVENT": {
+      "crisis_wins": 0,
+      "criteria": {
+        "annual_return_higher": false,
+        "at_least_3_of_4_crises": false,
+        "at_least_5_of_7_slices": false,
+        "drawdown_increase_no_more_than_2pp": false
+      },
+      "slice_wins": 1,
+      "verdict": "ECONOMIC_FAIL_FOR_REPLACING_MONTHLY"
+    },
+    "WEEKLY_DYN": {
+      "crisis_wins": 2,
+      "criteria": {
+        "annual_return_higher": false,
+        "at_least_3_of_4_crises": false,
+        "at_least_5_of_7_slices": false,
+        "drawdown_increase_no_more_than_2pp": false
+      },
+      "slice_wins": 2,
+      "verdict": "ECONOMIC_FAIL_FOR_REPLACING_MONTHLY"
+    }
+  },
+  "financial_authority_change": "EXPLICIT_OWNER_REVOCATION_OF_ONE_FUTURE_SHOP_ONLY",
+  "financial_authority_changed": true,
+  "financial_authority_expanded": false,
+  "full_window_20bps": {
+    "A+G2+gov": {
+      "dohod_pct": 176.7530577407178,
+      "dozapolneno": 510,
+      "ekspoziciya_pct": 43.259960944531855,
+      "godovyh_pct": 10.013546471658241,
+      "krasnyh": 45,
+      "maxDD_pct": 18.743257431234937,
+      "mesyacev": 129,
+      "pf": 1.3477065470094123,
+      "sdelok": 709,
+      "sekund": 16.0,
+      "sessiy": 2684
+    },
+    "EVENT": {
+      "dohod_pct": 114.49102120034836,
+      "dozapolneno": 666,
+      "ekspoziciya_pct": 48.29278359146179,
+      "godovyh_pct": 7.416155524583545,
+      "krasnyh": 49,
+      "maxDD_pct": 23.56330636058217,
+      "mesyacev": 129,
+      "pf": 1.2088050821067549,
+      "sdelok": 841,
+      "sekund": 13.8,
+      "sessiy": 2684
+    },
+    "MONTHLY": {
+      "dohod_pct": 138.36111066792847,
+      "dozapolneno": 0,
+      "ekspoziciya_pct": 24.727907183640934,
+      "godovyh_pct": 8.484032161217737,
+      "krasnyh": 42,
+      "maxDD_pct": 16.16723784912225,
+      "mesyacev": 129,
+      "pf": 1.5372120293954288,
+      "sdelok": 325,
+      "sekund": 0.0,
+      "sessiy": 2684
+    },
+    "WEEKLY_DYN": {
+      "dohod_pct": 81.71717254105934,
+      "dozapolneno": 379,
+      "ekspoziciya_pct": 30.44503722536521,
+      "godovyh_pct": 5.759252419502436,
+      "krasnyh": 52,
+      "maxDD_pct": 19.939327209243828,
+      "mesyacev": 129,
+      "pf": 1.3280459144887942,
+      "sdelok": 378,
+      "sekund": 5.3,
+      "sessiy": 2684
+    }
+  },
+  "independent_unseen_test": false,
+  "kity": {
+    "corrected_additional_break_even_cost_bps_per_leg_roundtrip": "57.6",
+    "crypto_only_improvement_verdict": "ECONOMIC_FAIL",
+    "crypto_only_recommendation_withdrawn": true,
+    "crypto_only_year2026_mean_net_bps_per_week": "-48.1",
+    "data_2026_present": true,
+    "money_authority": "SPENT_NO_NEW_GO",
+    "original_economic_verdict": "ECONOMIC_INCONCLUSIVE",
+    "original_year2026_mean_net_bps_per_week": "47.6",
+    "original_year2026_newey_west_t": "0.54",
+    "recent27weeks_mean_net_bps_per_week": "23.0",
+    "recent27weeks_newey_west_t": "0.26"
+  },
+  "new_outcomes_computed_by_codex": 0,
+  "old_data_reused": true,
+  "prereg_commit": "7198e1b6c3bb240ef21e3451dd2b7b394e3858a7",
+  "prereg_is_git_ancestor": true,
+  "private_evidence_sha256": {
+    "post-shop-cancel-readback-private.json": "77f5ce8902081c1becdfe86462a2ec772be0d62bef00212ab53df1ab97564cf8",
+    "shop-owner-cancel-receipt-private.json": "ca9bafc413d795d1de0f66255bc83b91d20205f97ac861b278196cb76e4115a1"
+  },
+  "research_commit": "0be44eca1f86929986b48ee77662d91b51a40255",
+  "research_judge_runs_by_codex": 0,
+  "schema": "TRADING_OS_RESEARCH_UPDATE_INTAKE_V1",
+  "source_sha256": {
+    "research_lab/ALPACA_SRAVNENIE_DINAMIKI_ITOG_2026_10_18.md": "a8c1f7900ab66c0ca59cc46d26bd0114f2873a5923547c08ea15a037d35e832a",
+    "research_lab/KITY_EKONOMICHESKAYA_IDENTICHNOST_2026_10_18.md": "c7780e610d54e85b5149d3dff0968089facfb64de01b917cc89ceaf2deb9ad6d",
+    "research_lab/KITY_M3_KRIPTO_ITOG_2026_10_18.md": "3db66c90aaa9c260a7f08aa5e03d596adeec57af034109ac25593ef2ac9a7d43",
+    "research_lab/RESEARCH_TO_LIVE_BOARD.md": "3bb83acf2867cb1d47acf82d58a8dec94efc65ed39ef94d0def00293866fd2b2",
+    "research_lab/alpaca_sravnenie_dinamiki.py": "bcad5bf67930477b3ea5ba796b127f11ea841d7f6f04ce4017f8a6bef145e464",
+    "research_lab/prereg/PREREG_ALPACA_SRAVNENIE_DINAMIKI_2026_10_18.md": "1e640f40b8e7c42985d67853e71ba22c1918bbb5fff5681370adedfa6f895f7b",
+    "research_lab/results/alpaca_sravnenie_dinamiki_20261018/sravnenie.json": "7d9c1518c0880a6de544357c68f2b35b1ce949c66a85ade22a9b48539970f795"
+  },
+  "survivorship_bias_acknowledged": true,
+  "tests": "Existing result arithmetic and decision rule replay only; no strategy/backtest/judge rerun",
+  "verified_origin_commit": "0be44eca1f86929986b48ee77662d91b51a40255",
+  "window": [
+    "2016-01-04",
+    "2026-09-04"
+  ]
+}
