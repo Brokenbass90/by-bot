@@ -24,6 +24,8 @@ from pathlib import Path
 
 PUT_PO_UMOLCHANIYU = Path(__file__).resolve().parents[1] / "data" / "factory_v3" / "reestr_v1.jsonl"
 STADII = ["NEW", "SCREEN", "TEST", "SHADOW", "CANARY", "MONEY"]
+EKONOMIKA = ("ECONOMIC_PASS", "ECONOMIC_FAIL", "ECONOMIC_INCONCLUSIVE", "NET_DANNYH")
+ISPOLNENIE = ("EXECUTION_PASS", "EXECUTION_FAIL", "NE_PROVERENO", "LIVE_RECONCILED", "HALT")
 TERMINAL = "KILL"
 ROLI_OKON = {"DEV": "SCREEN", "CONFIRM": "TEST"}          # роль окна → единственная стадия, которой оно доступно
 ALPHA = 0.05
@@ -75,7 +77,7 @@ class Reestr:
 
     # ---------- состояние ----------
     def sostoyanie(self):
-        S = dict(semi={}, gipotezy={}, okna={}, popytki={})
+        S = dict(semi={}, gipotezy={}, okna={}, popytki={}, pasporta={})
         for e in self._sobytiya():
             t = e["tip"]
             if t == "semya":
@@ -105,6 +107,8 @@ class Reestr:
                 S["gipotezy"][e["gipoteza"]].setdefault("kvitancii", []).append(e)
             elif t == "semya_kill":
                 S["semi"][e["semya"]]["status"] = TERMINAL; S["semi"][e["semya"]]["prichina_kill"] = e["prichina"]
+            elif t == "pasport":                                    # 18.10: паспорт стратегии, версии не перезаписываются
+                S["pasporta"].setdefault(e["id"], []).append(e)
             elif t == "semya_otkryt":
                 sm = S["semi"][e["semya"]]; sm.setdefault("otkrytiya", []).append(e)
                 sm.update(status=REOPENED, byudzhet_gipotez=int(e["byudzhet_gipotez"]), gipotez_posle_otkrytiya=0)
@@ -204,6 +208,14 @@ class Reestr:
                 b = osnovy(star)
                 if b and len(a & b) / max(1, len(a | b)) >= POROG_NOVIZNY:
                     raise OshibkaReestra("причина слишком похожа на прежнюю (причину KILL или прошлое переоткрытие) — нужна новая")
+        elif t == "pasport":
+            nado = ("id", "versiya", "rynok", "ekonomika", "ispolnenie", "owner_go", "dokazatelstva", "parametry")
+            net = [k for k in nado if e.get(k) in (None, "", [], {})]
+            if net: raise OshibkaReestra(f"паспорт: не заполнены {net}")
+            if e["ekonomika"] not in EKONOMIKA or e["ispolnenie"] not in ISPOLNENIE:
+                raise OshibkaReestra(f"паспорт: ekonomika ∈ {EKONOMIKA}, ispolnenie ∈ {ISPOLNENIE}")
+            if any(v["versiya"] == e["versiya"] for v in S["pasporta"].get(e["id"], [])) and not e.get("obnovlenie_statusa"):
+                raise OshibkaReestra("эта версия паспорта уже есть — новая версия или obnovlenie_statusa=True")
         else:
             raise OshibkaReestra(f"неизвестный тип события {t}")
 
@@ -263,6 +275,14 @@ class Reestr:
         """Операционная/измерительная квитанция судьи (C1, C2, OTSENKA, PROGRESS…). Не вердикт по edge; идемпотентна по sha256."""
         return self._zapisat(dict(tip="kvitanciya", gipoteza=gipoteza, vid=vid, status=status, dokument=dokument,
                                   sha256=sha256, detali=detali))
+
+    def pasport(self, id, versiya, rynok, ekonomika, ispolnenie, owner_go, dokazatelstva, parametry,
+                sha=None, posledniy_vpered=None, obnovlenie_statusa=False, primechanie=None):
+        """Паспорт стратегии (единый, в этом реестре): каждое число привязано к версии и доказательству."""
+        return self._zapisat(dict(tip="pasport", id=id, versiya=versiya, sha=sha, rynok=rynok, ekonomika=ekonomika,
+                                  ispolnenie=ispolnenie, owner_go=owner_go, dokazatelstva=list(dokazatelstva),
+                                  parametry=parametry, posledniy_vpered=posledniy_vpered,
+                                  obnovlenie_statusa=obnovlenie_statusa, primechanie=primechanie))
 
     def zakryt_semyu(self, semya, prichina):
         return self._zapisat(dict(tip="semya_kill", semya=semya, prichina=prichina))
