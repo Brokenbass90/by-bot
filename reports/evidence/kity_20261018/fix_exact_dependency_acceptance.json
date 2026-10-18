@@ -1,0 +1,119 @@
+{
+  "admission": {
+    "automatic_additional_paid_attempt": false,
+    "financial_authority_expanded": false,
+    "owner_go_status": "SPENT",
+    "production_fallback_and_notification_acceptance": false,
+    "source_fee_holding_economic_signoff": false
+  },
+  "agent_broker_writes": 0,
+  "candidate": {
+    "changed_files": [
+      "research_lab/kity_micro_account_readbacks_v2.py"
+    ],
+    "deployed": false,
+    "files": {
+      "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+      "bot/kity_m3_orders_off.py": "cc6521b85f3d90899851e9cfe539985ca4a97c17734bc23130f4e5a01254c802",
+      "configs/research/kity_execution_micro_owner_bounds_v4_20261017.json": "511be573293cff7089105785ebaf36bb50da04961fdfd0632f52d7a018d5290b",
+      "reports/evidence/kity_bybit_c2_actual_20261015/c2_public_receipt.json": "b93d0994e74e3ac61df676410e74771a3230e8e23a81e052665994e686c6e903",
+      "reports/evidence/kity_micro_live_20261015/build_readonly_dossier.py": "73f4870d8a6c24cb14180f5157fcbdaee2a5756a75a14839bb9f8d473276ef5c",
+      "research_lab/kity_batch_service_v1.py": "542e8c181a04bf479fae5d0ac6833472166705dbcad88458cbae6a5f744a8be2",
+      "research_lab/kity_batch_ws_v1.py": "1be1e8a4c6bbf55ae9e8768171eba099d9e8b5af8857a54492e6b90175a010b2",
+      "research_lab/kity_execution_micro_bybit_v1.py": "2ba72fc372253d157e55ab5ec82051c083d9f0bccb2584c6a9807329cd1bb0ac",
+      "research_lab/kity_execution_micro_runtime_v1.py": "58299a4d0bb91212b38a353d34206e941134b87fbdf407270cfbbbc83c824888",
+      "research_lab/kity_execution_micro_v1.py": "bd7a8c5903b67129185404e4db6b761d37185e6e450d6624d83ee56a71860b74",
+      "research_lab/kity_micro_account_bridge_v1.py": "14ae88b9df55614736c9194ba1a2689391ee2d3677bdddb2091e103cb2a079ee",
+      "research_lab/kity_micro_account_readbacks_v2.py": "bcc72d6d53aef674ecbc899033dd46e1bd994046fa3b5c7ef0a7d16afe604906",
+      "research_lab/kity_micro_bounded_owner_v2.py": "24fb4b82954085153806beaf8a196f5417ebaca053b46afd30dfd9592483efd8",
+      "research_lab/kity_micro_handoff_v1.py": "d85439dd2b25e36b51868ccd6946ae22a900e2fc30a963d76b0a901eb3315b09",
+      "research_lab/kity_micro_low_latency_v1.py": "3679eb33c8853e951e55defa72071f3a435e935673827f90eac29567ff92d26b",
+      "research_lab/kity_micro_physical_owner_v1.py": "35a6fdb7e6f10b67e4b770444d45812e02ff22be38dcab5cf32a0482d5af78c2",
+      "research_lab/kity_micro_post_go_owner_v1.py": "ae3e4ee16c952e0a93a19917ea7d0a1a39786ce2f64999e6e878db8967fe3fe6",
+      "research_lab/kity_micro_post_go_pricing_v1.py": "c7dc8d7a42cea0a140a584ff5dcb26b88ce44435bd07fb08653b76096ea75cde",
+      "research_lab/kity_micro_preflight_v1.py": "e16055dc5db88255ff129f046c63f7851647eb63da0f01c23b8f13a54ad44acc",
+      "research_lab/kity_micro_pricing_intent_v2.py": "1b3bad19f6eb5363c41cd897d189916892324a154a0f05c4efee5addc3338725",
+      "research_lab/kity_micro_supervisor_v1.py": "3b094dfc333543888e3c5a3b7c90fb158e75ec4a3a2ba0b2dfe0ebd78ad89864",
+      "research_lab/kity_micro_transport_v1.py": "562c8a9b5ffd1b24b7742bfed02320bf0c19407de7727c2b304c2823167f5294",
+      "scripts/verify_kity_batch_ws_orders_off_v1.py": "ca3185a389b47b81c5ecaf9508a74633128c5b691989723093cb4132873a7a5a"
+    },
+    "local_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/kity_fix_candidate_20261018",
+    "monetary_transport_bound": false,
+    "new_policy_issued": false,
+    "old_go_reused": false,
+    "schema": "TRADING_OS_DISABLED_CANDIDATE_V1",
+    "source_count": 23,
+    "spec_sha256": "d4d5e19a235c15fbf2e9dde629fc076fa8266a00de1ff4922a3f78f1c699afeb"
+  },
+  "code_commits": {
+    "execution_fix": "8500c97d32a2ae965c2edcd481cc1541627d8364",
+    "health_fix": "5820bacafdad86e82c15138728e7b69bc3d777f5"
+  },
+  "controller": {
+    "error": null,
+    "lock_inode": 818853,
+    "mode": "ORDERS_OFF",
+    "phase": "TERMINAL",
+    "pid": 2568196
+  },
+  "deployed_config_sha256": "ff249e081eb9e07d7e482615c440786e550332ff17c2de5b35572af89c2047ef",
+  "deployed_guard_count": 159,
+  "deployed_guards_match": true,
+  "deployed_source_count": 23,
+  "deployed_sources_match": true,
+  "directive_attachment_sha256": "fa6a41d9b02f0e0c971a4a9f2861d44216c4a9b6d4323c1b2ebf6ce623d35476",
+  "health": {
+    "active_lifecycle_unknown_or_native_incomplete": "UNHEALTHY",
+    "broker_mutations_allowed": false,
+    "candidate_sha256": "f67cc9518c27d85199d2096df7ac3196ffafc200700eed6b282e75a353fff54f",
+    "corrected_assessment": "UNHEALTHY_OWNER_CUSTODY_CONFLICT",
+    "local_only": true,
+    "new_timeout_added": false,
+    "notification_delivery_tested": false,
+    "notification_sent": false,
+    "prior_actual_incident_replay_assessment": "HEALTHY",
+    "restart_allowed": false,
+    "source_file": "scripts/bybit_account_health_v1.py"
+  },
+  "observed_execution_pattern": {
+    "actual_roundtrip_fees_bps_of_entry_gross": "10.52819820753969700785712999",
+    "economic_parity_claim": false,
+    "entry_fill_clock_spread_ms": 0,
+    "entry_rows": 14,
+    "long_entry_gross_usdt": "114.87529",
+    "measured_bad_to_complete_snapshot_ms": 5631,
+    "micro_max_horizon": "30 minutes",
+    "research_horizon": "7 days",
+    "sample_basket_count": 1,
+    "short_entry_gross_usdt": "117.16109",
+    "signal_to_fill_slippage_bps": null,
+    "signed_gross_imbalance_pct": "-0.9851041461688033574735134206",
+    "signed_gross_imbalance_usdt": "-2.28580",
+    "statistical_timeout_established": false,
+    "uncertain_exposure_safety_budget_established": false
+  },
+  "remaining_conditions": [
+    "Economic identity/cost/rounding evaluation of the executable seven-day KITY by research owner; existing source membership/C2 are already proven",
+    "Certify incomplete/unknown exposure fallback and actual existing notification channel under pinned production dependencies; no arbitrary timing constant or unproven P95",
+    "Prepare separate safe disabled rollout and source-guard/personal selection binding; never overwrite active source or reuse spent journal/claim",
+    "Only if another paid experiment is needed: separate bounded owner packet, no automatic two-attempt allowance"
+  ],
+  "remote_writes": 0,
+  "research_origin_verified": "3856bbba94ef141aac88be54c8e73b17bf78aa0e",
+  "schema": "KITY_FIX_EXACT_DEPENDENCY_ACCEPTANCE_V1",
+  "status": "LOCAL_EXACT_SOURCE_TESTED_NOT_LIVE_CERTIFIED",
+  "tests": {
+    "exact_candidate_imported_modules": 16,
+    "exact_candidate_log_sha256": "b8206e4879bc4584e7f986af0d6f3fadb6e4d3f9786a934edc22067811f5daae",
+    "exact_candidate_passed": 95,
+    "full_repo_suite_run": false,
+    "health_and_incident_log_sha256": "21c537bab289b2ce7d4b1ff762ff8117f3d6999692d53410e250756bbf103e80",
+    "health_and_incident_passed": 28,
+    "health_cases": 20,
+    "health_red_failures": 11,
+    "previous_kity_full_scope_passed": 859,
+    "review": "ROOT_ONLY_NO_INDEPENDENT_FINANCIAL_SIGNOFF",
+    "source_fallbacks": 0
+  },
+  "vps_observed_ms": 1792303064590
+}

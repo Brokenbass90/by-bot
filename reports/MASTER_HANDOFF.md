@@ -1,5 +1,19 @@
 # MASTER HANDOFF — 2026-10-05
 
+LATEST18Oct directive intake: current derived execution board is
+[research_lab/RESEARCH_TO_LIVE_BOARD.md](../research_lab/RESEARCH_TO_LIVE_BOARD.md).
+Read it before historical tables. KITY code-onlycandidate23files/onefix verified
+against actualVPS23source+159guards;95exact-candidate tests,0localmodulefallback.
+Health5820bac fixes process-HEALTHY hiding activecustody/native uncertainty;
+20health+8incidentPASS. Both LOCAL/NOT_DEPLOYED/no newpolicy/moneyattempt.
+AlpacaMonthly baseline+29.971%/dailyDD7.569%/64trades is NOT exactWeekly or new
+EventReselection economicproof. CurrentoneSHOP19Octscope staysunchanged. V1target
+is full signal/protection/exit/cash/nextselection cycle; Brain/Elder are not
+mandatorydependencies. Research origin3856bbb verified; Claudehandoff is file-only.
+Candidate receipt reports/evidence/kity_20261018/fix_exact_dependency_acceptance.json;
+no statisticaltimeout/safetybudget/actualalertdelivery/independentfinancialPASS
+invented. Previous actualmoneycycle/armed receipts below remain valid dated facts.
+
 CURRENT18Oct after HUMAN personal commands: read
 [KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md](KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md),
 then NEW_CHAT_START_HERE and checkpoint TOP. KITY actual10entries/10nativeguards/

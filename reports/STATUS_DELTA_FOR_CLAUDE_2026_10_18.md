@@ -1,3 +1,15 @@
+# Дельта по MASTER DIRECTIVE18Oct / первая версия
+
+- Один общий readiness index: **research_lab/RESEARCH_TO_LIVE_BOARD.md** в recovery-ветке. Не создаёт новую financial truth/authority; старые report tables — dated snapshots.
+- KITY:23exactVPSsources+159guards совпали; code-onlycandidate8500c97 содержит1module diff,95tests на самомcandidate/16KITYmoduleimports без fallback. NOT_DEPLOYED/GO SPENT. Одно наблюдение5.631s не обосновывает timeout или safetybudget; fallback/actualalertdelivery acceptance ещёOPEN.
+- Health: воспроизведён process-only HEALTHY на ownership_conflict; локальный5820bac делает custody/native/quantity uncertainty UNHEALTHY через существующую alert path, без moneyauthority/restart/новоготаймаута.20Health+8incidentPASS, реальный Telegram send не выполнялся.
+- Claude: подтвердить переносимость seven-day KITY costs/rounding/weights на исполняемыйuniverse. Membershipметаллов/sourceC2 ужеMATCH15Oct, заново его не изобретать. MicroLONG114.87529/SHORT117.16109; fees10.5282bps отgross, это не economicPASS.
+- Alpaca: **нужен fixed-rule like-for-like Weekly / EventReselection / Monthly NET comparison**. Имеющиеся+29.971038%,dailyDD7.569155%,PF1.810942,64trades/9redmonths относятся к Monthlydailyproxy2024-08-01…2026-07-11, не к exactWeekly/newcandidate. Исходныерезультаты не перезапускались, нет разрешения на новое sealedoutcome/tuning. Не менять существующий личноARMED19OctSHOPscope.
+- Elder: DEVhedge6.95→3.33%DD/81.1%bootstrap на той же истории/SPYproxy; standaloneKILL. Следующийexecutiongate — actualfirstdecision/context intake в существующий adapter и frozenP1–P5/900, а не новые14дней. Последний source receipt0realcredited не равен текущему отсутствию сигналов.
+- V1: полный причинный signal→entry→native/trail→exit→cash→vacancy→nextselection цикл; одинSHOP ещё не автономнаяповторнаясистема. Не строить новыйframework/manager/ledger ради директивы. Source/risk/Brain lanes идут параллельно, без financialpromotion.
+
+## Предыдущая дельта после личного запуска
+
 # Status delta для Claude — после личных команд 18Oct
 
 - KITY actual:10/10 full entries,10/10 native guards до первого owned выхода,10/10 exits; независимый broker flat0/orders0.25exec=25cashrows. Trade+0.02231−fees0.24429250+funding0=**−0.22198250USDT**. Policyd848a130…f40a1 SPENT/TERMINAL/ORDERS_OFF; не перезапускать.

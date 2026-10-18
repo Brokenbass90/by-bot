@@ -1,5 +1,19 @@
 # START HERE — KITY actual 10/10 / Alpaca personally armed
 
+LATEST18Oct directive intake: current derived execution board is
+[research_lab/RESEARCH_TO_LIVE_BOARD.md](../research_lab/RESEARCH_TO_LIVE_BOARD.md).
+Read it before historical tables. KITY code-onlycandidate23files/onefix verified
+against actualVPS23source+159guards;95exact-candidate tests,0localmodulefallback.
+Health5820bac fixes process-HEALTHY hiding activecustody/native uncertainty;
+20health+8incidentPASS. Both LOCAL/NOT_DEPLOYED/no newpolicy/moneyattempt.
+AlpacaMonthly baseline+29.971%/dailyDD7.569%/64trades is NOT exactWeekly or new
+EventReselection economicproof. CurrentoneSHOP19Octscope staysunchanged. V1target
+is full signal/protection/exit/cash/nextselection cycle; Brain/Elder are not
+mandatorydependencies. Research origin3856bbb verified; Claudehandoff is file-only.
+Candidate receipt reports/evidence/kity_20261018/fix_exact_dependency_acceptance.json;
+no statisticaltimeout/safetybudget/actualalertdelivery/independentfinancialPASS
+invented. Previous actualmoneycycle/armed receipts below remain valid dated facts.
+
 CURRENT 18Oct — [KITY actual execution / Alpaca armed](KITY300_EXECUTION_AND_ALPACA_ARMED_2026_10_18.md), JSON alongside. Human personally ran both commands. KITY policy d848a130…f40a1 SPENT: actual10/10 entries,10native guards,10owned exits; broker flat0/orders0; 25executions=25cashrows, net-0.22198250USDT (trade+0.02231,fees0.24429250,funding0). TERMINAL/ORDERS_OFF, same lock818853/PID2568196. Early unwind caused non-atomic account readback:10terminal/1journaledfill vs10positions/9unboundnative IDs; sticky entryblock. All riskobservationsMONITOR; normal hold NOTPROVEN. Localfix8500c97d32a2ae965c2edcd481cc1541627d8364 adds ONE fresh exact-execution GET barrier;859KITYtestsPASS,8newcases. NOTdeployed/no newGO/no reuse of either spent policy.
 
 Alpaca originalWeekly is PERSONALLYARMED:19Oct13:31UTC/16:31Cyprus oneSHOP≤113.61USD/risk≤9.07, scope4630ebe2…7bd1e/controlb5a9c752…0b6a26/manifestd4fd22de…405e. Human selected4unitfiles, archived exactoldHALT, registered1actualNETchild; sharedlock813893 preserved. Actual selectedpinsPASS; timeractive/waiting. Automatic05:20UTC one-manager tick rc0/0: originalNET WAITING_REGULAR_SESSION + NO_NEXT_OWNED_INTENT. GETNETqty0.325167779/openorders0/Sundaymarketclosed; floor277.69 retained, expiredDAY is NOTcurrentprotection.19Oct13:30UTC fullNETstop is mandatory before entry; actualopening/fill/native acceptance stillFUTURE. Fresh failure=>NO_SEND/no retry/datecarry. Existing appheartbeat19-net-ibit expanded to actualentry GETreadback16:35Cyprus;23:35IBIT and thenpause. No agent moneycommands/brokerwrites/VPS changes. OriginalWeekly≠per-exitfreshresearchcandidate≠Monthly.
