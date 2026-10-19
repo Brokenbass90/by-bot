@@ -257,6 +257,54 @@ m3_perp, spot, spot_minus_perp, m3_vsplesk, vyhodnye. Других атомов,
 istochniki_dannyh — из: "binance_klines_d1", "binance_spot_taker" (по атомам формулы)."""
 
 
+OKNO_II = "KRIPTO_D1_2021H2_2022"
+
+
+def menyu(S, okno=OKNO_II):
+    """Все ещё не проверенные формулы глубины 1 из атомов, у которых есть данные на начало окна:
+    plus/proizv(a,b) и minus(a,b) с a<b (minus(b,a) — та же гипотеза с обратным знаком, поэтому не дублируется)."""
+    import itertools
+    o = S["okna"][okno]; at = sorted(a for a, v in ATOMY.items() if v[0] <= o["nachalo"])
+    bylo = set(proverennye_formuly()) | {(g.get("otlichie") or "").split(": ")[-1] for g in S["gipotezy"].values()}
+    out = []
+    for a, b in itertools.combinations(at, 2):
+        for op in ("minus", "plus", "proizv"):
+            f = [op, a, b]
+            if kanon(f) not in bylo and kanon(["minus", b, a]) not in bylo:
+                out.append(f)
+    return out
+
+
+def iz_otveta_menyu(obj, men, okno=OKNO_II):
+    """Ответ модели в режиме меню → полное предложение. Модель выбирает номер формулы, знак и пишет механизм;
+    служебные поля (окно, вселенная, контроль, фальсификация, издержки) — фиксированные, их модель не задаёт."""
+    try:
+        f = men[int(obj.get("nomer")) - 1]
+    except Exception:
+        return None
+    zn = obj.get("znak"); zn = 1 if zn in (1, "1", "+1", "+") else (-1 if zn in (-1, "-1", "-") else None)
+    ist = sorted({ATOMY[a][1] for a in atomy(f)})
+    imya = "AI_" + "_".join(x.upper()[:8] for x in f[1:]) + "_" + f[0].upper()[:3] + ("_P" if zn == 1 else "_M")
+    return {"id": imya[:41], "semya": SEMYA, "mehanizm": str(obj.get("mehanizm", "")),
+            "pochemu_ne_arbitrazhirovano": str(obj.get("pochemu_ne_arbitrazhirovano", "")),
+            "istochniki_dannyh": ist, "priznak": f"{kanon(f)} (z внутри недели)",
+            "vremya_izvestnosti": "закрытие дня d-1, вход закрытием дня d", "napravlenie": "+" if zn == 1 else "-",
+            "gorizont": "1w", "vselennaya": "PIT топ-50 по OI Binance", "kontrol": "одиночные атомы формулы и случайная перестановка",
+            "falsifikaciya": "спред со знаком гипотезы ≤ 0 или |t| ниже порога окна", "ozhidaemaya_chastota_v_mesyac": 4,
+            "izderzhki_ocenka_bps": 30, "formula": f, "znak": zn, "normirovka": "xs_z", "okno": okno}
+
+
+def prompt_menyu(men):
+    sl = {k: v[2] for k, v in ATOMY.items()}
+    spisok = "\n".join(f"{i + 1}. {kanon(f)}  — {f[0]}: «{sl[f[1]]}» и «{sl[f[2]]}»" for i, f in enumerate(men))
+    return ("Ты — исследователь крипторынка. Еженедельно все монеты топ-50 ранжируются по формуле; знак 1 — покупать верх и "
+            "продавать низ, −1 — наоборот. Выбери ОДНУ формулу из списка, у которой есть реальная экономическая причина "
+            "(кто вынужден торговать, почему цена временно отклоняется), и объясни её.\n"
+            "Атомы: " + json.dumps(sl, ensure_ascii=False) + "\nСписок:\n" + spisok +
+            "\nОтветь строго JSON: {\"nomer\": число из списка, \"znak\": 1 или -1, \"mehanizm\": \"2–4 предложения, "
+            "не короче 60 знаков\", \"pochemu_ne_arbitrazhirovano\": \"1–2 предложения\"}")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--proverit"); ap.add_argument("--prereg"); ap.add_argument("--zapustit")
     ap.add_argument("--prompt", action="store_true"); a = ap.parse_args()

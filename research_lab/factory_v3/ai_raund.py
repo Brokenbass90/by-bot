@@ -80,28 +80,32 @@ def zamok():
 
 
 def raund_formula(a, r, klient=None):
-    """Формула для ai_formula_v1: модель → JSON → проверка по НАСТОЯЩЕМУ реестру → (--zapisat) файл предложения.
-    Прогон делает хук сторожа ai_formula_cikl (prereg-коммит до прогона). Модель статусы и пороги не трогает."""
+    """Формула для ai_formula_v1 в режиме МЕНЮ (19.10: модель 4B копировала шаблон и выдумывала атомы): модель выбирает
+    номер ещё не проверенной формулы из списка, знак и пишет механизм; служебные поля фиксированы. Проверка — по
+    НАСТОЯЩЕМУ реестру, прогон делает хук сторожа ai_formula_cikl (prereg-коммит до прогона). Пороги модель не трогает."""
     import ai_formula_v1 as F
-    S = Reestr().sostoyanie()
-    kladb = ", ".join(sorted(s for s, v in S["semi"].items() if v.get("status") == "KILL"))[:800]
-    sistema = F.PROMPT_FORMULA.replace("{kladbische}", kladb) + "\nУже проверенные формулы (не повторять): " + ", ".join(sorted(F.proverennye_formuly()))
-    kl = klient or A.klient_ollama(a.model, a.host, opcii=dict(num_predict=900), timeout_s=TIMEOUT_S)
+    S = Reestr().sostoyanie(); men = F.menyu(S)
+    if not men:
+        return [dict(status="MENYU_PUSTO", detal="все формулы окна проверены")]
+    kl = klient or A.klient_ollama(a.model, a.host, opcii=dict(num_predict=600), timeout_s=TIMEOUT_S)
     out = []
     for _ in range(a.n):
-        try: obj = kl(sistema, a.zapros)
+        try: otv = kl(F.prompt_menyu(men), a.zapros)
         except Exception as e:
             out.append(dict(status="OSHIBKA_MODELI", detal=str(e)[:200])); continue
-        obj.setdefault("semya", F.SEMYA); obj.setdefault("okno", "KRIPTO_D1_2021H2_2022"); obj["avtor"] = f"ai:{getattr(kl, 'model', 'neizvestno')}"
+        obj = F.iz_otveta_menyu(otv, men)
+        if obj is None:
+            out.append(dict(status="OTKLONENO", oshibki=[f"номер вне списка 1..{len(men)}: {otv.get('nomer')}"])); continue
+        obj["avtor"] = f"ai:{getattr(kl, 'model', 'neizvestno')} (выбор из меню {len(men)} формул)"
         err = F.proverit(obj, S, F.popytok_segodnya())
         if err:
             out.append(dict(status="OTKLONENO", id=obj.get("id"), oshibki=err)); continue
         if a.zapisat:
             put = HERE.parent / "data" / "factory_v3" / "ai_predlozheniya" / f"{obj['id']}.json"
             put.parent.mkdir(parents=True, exist_ok=True); put.write_text(json.dumps(obj, ensure_ascii=False, indent=1))
-            out.append(dict(status="V_OCHEREDI_HUKA", id=obj["id"], formula=F.kanon(obj["formula"])))
+            out.append(dict(status="V_OCHEREDI_HUKA", id=obj["id"], formula=F.kanon(obj["formula"]), znak=obj["znak"]))
         else:
-            out.append(dict(status="PROSHLO_PROVERKU_SUHO", id=obj["id"], formula=F.kanon(obj["formula"])))
+            out.append(dict(status="PROSHLO_PROVERKU_SUHO", id=obj["id"], formula=F.kanon(obj["formula"]), znak=obj["znak"]))
     return out
 
 
