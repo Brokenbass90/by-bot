@@ -28,7 +28,7 @@ def fond(put: Path):
     return {datetime.fromtimestamp(r["t"] / 1000, NY).date(): Bar(float(r["o"]), float(r["c"])) for r in d["records"]}
 
 
-def overlay_fond(rows, rot, stop, F, bp):
+def overlay_fond(rows, rot, stop, F, bp, vorota=None, polosa=0.0):
     P = 0.0; u = 0.0; eq, daty, v_fonde, oborot, sdelok, potr, prodazh = [], [], [], 0.0, 0, 0.0, 0
     prev = None; po_godam = {}
     for r in rows:
@@ -46,7 +46,11 @@ def overlay_fond(rows, rot, stop, F, bp):
             po_godam[d.year] = po_godam.get(d.year, 0.0) + dp
         vsego_open = posval_open + svob_open + P
         cel = max(0.0, svob_open + P)
+        if vorota is not None and not vorota.get(d, False):
+            cel = 0.0
         diff = cel - u * b.open
+        if diff > 0 and diff <= polosa * vsego_open:
+            diff = 0.0
         if abs(diff) > 1e-9:
             c = abs(diff) * bp / 1e4; P -= c; po_godam[d.year] = po_godam.get(d.year, 0.0) - c
             oborot += abs(diff) / max(vsego_open, 1e-9)
@@ -56,7 +60,7 @@ def overlay_fond(rows, rot, stop, F, bp):
                 potr = max(potr, -diff / max(vsego_open, 1e-9))
                 if -diff > 0.001 * vsego_open:
                     prodazh += 1
-            u = cel / b.open
+            u = (u * b.open + diff) / b.open
         dc = u * (b.close - b.open); P += dc; po_godam[d.year] = po_godam.get(d.year, 0.0) + dc
         vsego = r["equity"] + P
         eq.append(vsego); daty.append(d); v_fonde.append(u * b.close / vsego if vsego > 0 else 0.0)
@@ -68,6 +72,14 @@ def overlay_fond(rows, rot, stop, F, bp):
     return m, daty, eq
 
 
+def vorota_stavki(B, prag=0.01, n=63):
+    """H5b: фонд разрешён на t, если доход BIL_all за n сессий по закрытие t−1, ×252/n, ≥ prag."""
+    ks = sorted(B); out = {}
+    for i, d in enumerate(ks):
+        out[d] = i - 1 - n >= 0 and (B[ks[i - 1]].close / B[ks[i - 1 - n]].close - 1) * 252 / n >= prag
+    return out
+
+
 def tr_fonda(F, d0, d1):
     ks = sorted(k for k in F if d0 <= k <= d1)
     return (F[ks[-1]].close / F[ks[0]].open - 1) * 100 if ks else None
@@ -77,7 +89,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--u2"); ap.add_argument("--sprav"); ap.add_argument("--dannye", default="data_cache/equities_daily_10y")
     ap.add_argument("--vselennaya", default="U2"); ap.add_argument("--fondy", required=True); ap.add_argument("--vyvod", required=True)
-    ap.add_argument("--bps", default="20,10,30")
+    ap.add_argument("--bps", default="20,10,30"); ap.add_argument("--h5b", action="store_true")
     a = ap.parse_args()
     cfg = json.loads(Path("configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json").read_text())
     clusters = [{str(x) for x in g} for g in cfg["clusters"]]
@@ -88,10 +100,14 @@ def main():
     fd = Path(a.fondy)
     BIL, SGOV = fond(fd / "all" / "BIL.json"), fond(fd / "all" / "SGOV.json")
     BILs, SGOVs = fond(fd / "split" / "BIL.json"), fond(fd / "split" / "SGOV.json")
+    KW = dict(vorota=vorota_stavki(BIL), polosa=0.05) if a.h5b else {}
+    if a.h5b:
+        _ov = overlay_fond
+        globals()["overlay_fond"] = lambda rw, ro, st, F, fb: _ov(rw, ro, st, F, fb, **KW)
     o0, o1 = date.fromisoformat(U2M.OKNO[0]), date.fromisoformat(U2M.OKNO[1])
     okno = [s for s in U.sessii if o0 <= s <= o1]
     oknoS = [s for s in okno if s >= date.fromisoformat(SGOV_START)]
-    out = {"prereg": "PREREG_ALPACA_H5_KESH_V_BIL_2026_10_19", "commit_prereg": "62cae66", "vselennaya": a.vselennaya,
+    out = {"prereg": "PREREG_ALPACA_H5B_BIL_VOROTA_STAVKI_2026_10_19" if a.h5b else "PREREG_ALPACA_H5_KESH_V_BIL_2026_10_19", "commit_prereg": "69ff412" if a.h5b else "62cae66", "vselennaya": a.vselennaya,
            "fond_tr_pct": {"BIL_all": tr_fonda(BIL, okno[0], okno[-1]), "BIL_split": tr_fonda(BILs, okno[0], okno[-1]),
                            "SGOV_all": tr_fonda(SGOV, oknoS[0], oknoS[-1]), "SGOV_split": tr_fonda(SGOVs, oknoS[0], oknoS[-1])},
            "A": {}}
