@@ -19,7 +19,7 @@
     .venv/bin/python research_lab/factory_v3/ai_raund.py --proverka     # только проверки ресурсов, модель НЕ грузится
     .venv/bin/python research_lab/factory_v3/ai_raund.py                # 1 предложение, сухо
 """
-import argparse, datetime as dt, fcntl, json, os, re, shutil, signal, subprocess, sys, tempfile, urllib.request
+import argparse, datetime as dt, fcntl, json, os, re, shutil, signal, subprocess, sys, tempfile, time, urllib.request
 from pathlib import Path
 HERE = Path(__file__).resolve().parent; sys.path.insert(0, str(HERE))
 from reestr_v1 import Reestr, PUT_PO_UMOLCHANIYU
@@ -47,6 +47,23 @@ def svobodno_gb():
     return (v("Pages free") + v("Pages inactive") + v("Pages speculative")) * ps / 2**30
 
 
+def nagruzka():
+    """macOS: давление памяти (sysctl kern.memorystatus_vm_pressure_level: 1 норма, 2 предупреждение, 4 критично),
+    swap (vm.swapusage), загрузка CPU (loadavg за 1 мин / число ядер). Не измерено → davlenie None (fail-closed)."""
+    def sc(k):
+        try: return subprocess.run(["sysctl", "-n", k], capture_output=True, text=True, timeout=5).stdout.strip()
+        except Exception: return ""
+    d = sc("kern.memorystatus_vm_pressure_level"); sw = sc("vm.swapusage")
+    mb = lambda key: float(re.search(rf"{key} = ([\d.]+)M", sw).group(1)) if re.search(rf"{key} = ([\d.]+)M", sw) else None
+    try: l1 = os.getloadavg()[0]
+    except Exception: l1 = None
+    return dict(davlenie=int(d) if d.isdigit() else None, swap_used_mb=mb("used"), swap_total_mb=mb("total"),
+                load1=round(l1, 2) if l1 is not None else None, yader=os.cpu_count())
+
+
+MAKS_ZAGRUZKA_CPU = 0.75     # loadavg/ядра выше — Мак занят работой владельца, ИИ пропускает раунд
+
+
 def vygruzit(host, model):
     try:
         body = json.dumps(dict(model=model, prompt="", keep_alive=0)).encode()
@@ -55,7 +72,7 @@ def vygruzit(host, model):
         pass
 
 
-def proverki(host, model, pamyat_fn=svobodno_gb):
+def proverki(host, model, pamyat_fn=svobodno_gb, nagruzka_fn=nagruzka):
     """Возвращает dict ресурсов или бросает Otkaz. Модель не загружает."""
     if model not in MODELI: raise Otkaz(f"модель {model} не в списке разрешённых {MODELI}")
     tags = {m["name"]: m for m in _get(host, "/api/tags").get("models", [])}
@@ -68,7 +85,12 @@ def proverki(host, model, pamyat_fn=svobodno_gb):
     if sv is None: raise Otkaz("не удалось измерить свободную память — отказ (fail-closed)")
     zapas = max(ZAPAS_MIN_GB, 0.5 * gb)
     if sv < gb + zapas: raise Otkaz(f"свободно {sv:.1f} ГБ < модель {gb:.1f} + запас {zapas:.1f} ГБ")
-    return dict(model=model, model_gb=round(gb, 2), svobodno_gb=round(sv, 1))
+    n = nagruzka_fn()
+    if n.get("davlenie") is None: raise Otkaz("не удалось измерить давление памяти macOS — отказ (fail-closed)")
+    if n["davlenie"] > 1: raise Otkaz(f"давление памяти macOS = {n['davlenie']} (не норма) — Мак занят, раунд пропущен")
+    if n.get("load1") is not None and n.get("yader") and n["load1"] / n["yader"] > MAKS_ZAGRUZKA_CPU:
+        raise Otkaz(f"CPU занят: loadavg {n['load1']} на {n['yader']} ядер > {MAKS_ZAGRUZKA_CPU:.0%} — раунд пропущен")
+    return dict(model=model, model_gb=round(gb, 2), svobodno_gb=round(sv, 1), **n)
 
 
 def zamok():
@@ -109,7 +131,7 @@ def raund_formula(a, r, klient=None):
     return out
 
 
-def main(argv=None, pamyat_fn=svobodno_gb):
+def main(argv=None, pamyat_fn=svobodno_gb, nagruzka_fn=nagruzka):
     ap = argparse.ArgumentParser(); ap.add_argument("--n", type=int, default=1); ap.add_argument("--model", default="qwen3:8b")
     ap.add_argument("--host", default="http://localhost:11434"); ap.add_argument("--zapisat", action="store_true")
     ap.add_argument("--proverka", action="store_true")
@@ -118,7 +140,7 @@ def main(argv=None, pamyat_fn=svobodno_gb):
     a = ap.parse_args(argv)
     if not 1 <= a.n <= N_MAX: print(f"n ∈ [1, {N_MAX}]"); return 2
     try:
-        fd = zamok(); res = proverki(a.host, a.model, pamyat_fn)
+        fd = zamok(); res = proverki(a.host, a.model, pamyat_fn, nagruzka_fn); t0 = time.time()
     except Otkaz as e:
         print("ОТКАЗ:", e); return 2
     except Exception as e:
@@ -145,7 +167,9 @@ def main(argv=None, pamyat_fn=svobodno_gb):
     if a.zapisat:
         log = HERE.parent / "data" / "factory_v3" / "ai_raundy.jsonl"
         with open(log, "a") as f:
-            f.write(json.dumps(dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), resursy=res, itogi=rez), ensure_ascii=False) + "\n")
+            posle = dict(svobodno_gb=(lambda v: round(v, 1) if v is not None else None)(pamyat_fn()), **nagruzka_fn())
+            f.write(json.dumps(dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), resursy=res,
+                                    resursy_posle=posle, sekund=round(time.time() - t0, 1), itogi=rez), ensure_ascii=False) + "\n")
     print(f"модель {a.model}, {'ЗАПИСЬ в реестр' if a.zapisat else 'сухой прогон (в проект ничего не записано)'}")
     for x in rez: print(" ", json.dumps(x, ensure_ascii=False)[:400])
     return 0

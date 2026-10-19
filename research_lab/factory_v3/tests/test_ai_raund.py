@@ -40,8 +40,17 @@ class TestAIRaund(unittest.TestCase):
         d = Path(tempfile.mkdtemp()); R.LOCKS = d / "locks"
         self.reestr = d / "reestr.jsonl"; self.reestr.write_text(""); R.PUT_PO_UMOLCHANIYU = self.reestr
 
-    def run_(self, *args, pamyat=24.0):
-        return R.main(["--host", self.host, *args], pamyat_fn=lambda: pamyat)
+    NORMA = dict(davlenie=1, swap_used_mb=0.0, swap_total_mb=0.0, load1=1.0, yader=8)
+
+    def run_(self, *args, pamyat=24.0, nagr=None):
+        return R.main(["--host", self.host, *args], pamyat_fn=lambda: pamyat, nagruzka_fn=lambda: dict(nagr or self.NORMA))
+
+    def test_otkaz_po_nagruzke(self):
+        """19.10 PM: давление памяти не «норма», CPU занят или давление не измерено → пропуск без инференса."""
+        self.assertEqual(self.run_(nagr=dict(self.NORMA, davlenie=2)), 2)
+        self.assertEqual(self.run_(nagr=dict(self.NORMA, davlenie=None)), 2)
+        self.assertEqual(self.run_(nagr=dict(self.NORMA, load1=7.0)), 2)
+        self.assertEqual(self.gen(), [])
 
     def gen(self): return [z for z in Fake.sost["zaprosy"] if z.get("prompt") != ""]
 
