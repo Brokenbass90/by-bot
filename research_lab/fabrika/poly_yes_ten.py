@@ -64,20 +64,67 @@ def poslednie_snimki(fayly):
     return out
 
 
-def stakan_no(cid, gamma_fn=rynok_gamma, book_fn=lambda t: get(CLOB, "/book", token_id=t)):
+NOTIONAL_USD, STAROST_MS, PROTIVORECHIE = 10.0, 5 * 60_000, 0.05
+
+
+def razobrat_stakan_no(b, no_token, cid, seychas_ms, bid_yes=None):
+    """CLOB-снимок стакана NO → цена исполнения покупки на NOTIONAL_USD. Порядок уровней в ответе не важен:
+    asks сортируются по цене возрастанию, bids — убыванию. size — в токенах (shares), доллары = price × size.
+    Возвращает (dict, None) или (None, причина пропуска). Подмены формулой 1 − YES нет."""
+    import hashlib
+    raw = json.dumps(b, sort_keys=True).encode()
+    meta = dict(no_token=no_token, book_sha256=hashlib.sha256(raw).hexdigest(), book_ts=b.get("timestamp"),
+                book_market=b.get("market"), book_asset=b.get("asset_id"), tick_size=b.get("tick_size"),
+                min_order_size=b.get("min_order_size"))
+    if b.get("asset_id") and str(b["asset_id"]) != str(no_token):
+        return None, "TOKEN_NE_SOVPAL"
+    if b.get("market") and str(b["market"]).lower() != str(cid).lower():
+        return None, "RYNOK_NE_SOVPAL"
+    try:
+        ts = int(b.get("timestamp")) if b.get("timestamp") else None
+    except ValueError:
+        ts = None
+    if ts is None or seychas_ms - ts > STAROST_MS:
+        return None, "STAKAN_USTAREL"
+    asks = sorted((float(a["price"]), float(a["size"])) for a in b.get("asks") or [] if float(a["size"]) > 0)
+    bids = sorted(((float(x["price"]), float(x["size"])) for x in b.get("bids") or [] if float(x["size"]) > 0), reverse=True)
+    if not asks:
+        return None, "NO_LIQUIDITY"
+    if bids and bids[0][0] >= asks[0][0]:
+        return None, "STAKAN_PERESECHEN"
+    if bid_yes is not None and abs(asks[0][0] - (1 - bid_yes)) > PROTIVORECHIE:
+        return None, "PROTIVORECHIE_YES_NO"
+    nado, kupleno, potr = NOTIONAL_USD, 0.0, 0.0
+    for p, sz in asks:
+        voz = min(sz, (nado - potr) / p)
+        kupleno += voz; potr += voz * p
+        if potr >= nado - 1e-9:
+            break
+    if potr < nado - 1e-9:
+        return None, "NO_LIQUIDITY"
+    mos = float(b.get("min_order_size") or 0)
+    if kupleno < mos:
+        return None, "MENSHE_MIN_ORDERA"
+    meta.update(best_ask_no=asks[0][0], razmer_best_ask_tokenov=asks[0][1], razmer_best_ask_usd=round(asks[0][0] * asks[0][1], 2),
+                vwap_no_10usd=round(potr / kupleno, 6), tokenov_na_10usd=round(kupleno, 4), urovney_ask=len(asks),
+                best_bid_no=bids[0][0] if bids else None, asks_top5=asks[:5])
+    return meta, None
+
+
+def stakan_no(cid, gamma_fn=rynok_gamma, book_fn=lambda t: get(CLOB, "/book", token_id=t), seychas_ms=None, bid_yes=None):
     m = gamma_fn(cid)
     if not m:
         return None, "NET_RYNKA"
     toks, outc = js(m.get("clobTokenIds")) or [], js(m.get("outcomes")) or []
     no = next((t for t, o in zip(toks, outc) if str(o).lower() == "no"), None)
-    if not no:
+    if not no or len(toks) != 2:
         return None, "NET_TOKENA_NO"
     b = book_fn(no) or {}
-    asks = [(float(a["price"]), float(a["size"])) for a in b.get("asks") or []]
-    if not asks:
-        return None, "NO_LIQUIDITY"
-    p, sz = min(asks)
-    return dict(no_token=no, ask_no=p, razmer_ask=sz, uroven_ask=len(asks)), None
+    st, osh = razobrat_stakan_no(b, no, cid, seychas_ms or int(time.time() * 1000), bid_yes)
+    if st:
+        st["gamma_indikativno"] = dict(outcomePrices=m.get("outcomePrices"), endDate=m.get("endDate"),
+                                       feesEnabled=m.get("feesEnabled"), takerBaseFee=m.get("takerBaseFee"))
+    return st, osh
 
 
 def resheniya(est, snimki, seychas_ms, stakan_fn=stakan_no):
@@ -99,15 +146,25 @@ def resheniya(est, snimki, seychas_ms, stakan_fn=stakan_no):
         if mid is None or not 0.05 <= mid <= 0.95:
             zap["status"] = "VNE_DIAPAZONA"; out.append(zap); continue
         try:
-            st, osh = stakan_fn(cid)
+            st, osh = stakan_fn(cid, seychas_ms=seychas_ms, bid_yes=bb)
         except Exception as e:
             st, osh = None, f"NET_STAKANA: {type(e).__name__}"
         if st is None:
-            zap["status"] = osh if osh.startswith(("NO_LIQ", "NET")) else osh
-        elif st["ask_no"] * st["razmer_ask"] < MIN_USD:
-            zap.update(st, status="NO_LIQUIDITY")
+            zap["status"] = osh
         else:
-            zap.update(st, status="VHOD", cena_no=st["ask_no"], mid_yes=round(mid, 4), zerkalo_no=round(1 - bb, 4) if bb else None)
+            g = st.get("gamma_indikativno") or {}
+            ed = g.get("endDate")
+            try:
+                ed_ms = int(dt.datetime.fromisoformat(ed.replace("Z", "+00:00")).timestamp() * 1000) if ed else None
+            except ValueError:
+                ed_ms = None
+            fee = float(g.get("takerBaseFee") or 0) / 1e4 if g.get("feesEnabled") else 0.0
+            if ed_ms is not None and abs(ed_ms - r) > 3600_000:
+                zap.update(st, status="VREMYA_RASHODITSYA", endDate_ms=ed_ms)
+            else:
+                cena = st["vwap_no_10usd"] * (1 + fee)
+                zap.update(st, status="VHOD", cena_no=round(cena, 6), komissiya_dolya=fee, mid_yes=round(mid, 4),
+                           zerkalo_no_tolko_sravnenie=round(1 - bb, 4) if bb is not None else None)
         out.append(zap)
     return out
 
@@ -129,6 +186,7 @@ def ishody(Z, seychas_ms, gamma_fn=rynok_gamma):
             continue                                       # ещё не разрешён однозначно
         no_vyigral = next((p for p, o in zip(pr, outc) if str(o).lower() == "no"), 0.0) >= 0.99
         out.append(dict(tip="ishod", conditionId=z["conditionId"], status="OK", istochnik="polymarket_resolution",
+                        umaResolutionStatus=m.get("umaResolutionStatus"), outcomePrices=m.get("outcomePrices"),
                         no_vyigral=no_vyigral, dohod=((1 if no_vyigral else 0) - z["cena_no"]) / z["cena_no"],
                         dohod_stress=((1 if no_vyigral else 0) - (z["cena_no"] + 0.01)) / (z["cena_no"] + 0.01),
                         sverka_bybit=sverka(z), zapisano_utc=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")))
@@ -171,5 +229,11 @@ if __name__ == "__main__":
         cid = next(iter(sn), None); print("рынок:", sn[cid]["vopros"] if cid else None)
         if cid:
             print("NO-стакан:", stakan_no(cid)); m = rynok_gamma(cid); print("gamma closed/outcomePrices:", m and (m.get("closed"), m.get("outcomePrices")))
+        # пример решения на рынке в диапазоне (как его записала бы тень), без записи в журнал
+        for cid, z in sn.items():
+            bids = [b for b in z.get("bids") or [] if b[1] > 0]; asks = [a for a in z.get("asks") or [] if a[1] > 0]
+            if bids and asks and 0.05 <= (max(bids)[0] + min(asks)[0]) / 2 <= 0.95:
+                print("рынок в диапазоне:", z["vopros"], "| YES bid/ask", max(bids)[0], min(asks)[0])
+                print(json.dumps(stakan_no(cid, bid_yes=max(bids)[0]), ensure_ascii=False, indent=1)); break
     else:
         print(json.dumps(prohod(), ensure_ascii=False))
