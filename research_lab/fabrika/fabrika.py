@@ -49,6 +49,11 @@ PREDL = DIR / "predlozheniya"
 PREREG_KATALOG_V2 = "research_lab/fabrika/PREREG_KATALOG_V2_2026_09_21.md"
 SUDYA_PORTFEL = {"porog_t": 2.5, "min_neff": 20, "min_pokrytie": 0.8}
 SUDYA_PODTV = {"porog_t": 2.0, "min_neff": 10}
+# Ворота исполнимости по умолчанию для прогонщиков сделок (PREREG_FABRIKA_VOROTA_V2_1_2026_10_18, 604cae3 + доп. 1 3abb7ac;
+# решение PM 19.10 «сделать Factory корректной по умолчанию»). Старые вердикты (V2) не переписываются.
+VOROTA_PO_UMOLCHANIYU = "V2_2"
+BEGUNY_S_VOROTAMI = {"meh", "h1"}
+from sudya_dengi import sudya_dengi  # noqa: E402  денежный судья: средний ЧИСТЫЙ R, а не эдж к контролю
 PREREG_KATALOG = "research_lab/fabrika/PREREG_KATALOG_V1_2026_09_21.md"
 SUDYA_KATALOG = {"porog_z": 3.1, "min_n": 50, "min_n_o3": 30}
 LIMIT_ZHVACHKI = 3
@@ -60,7 +65,7 @@ KONEC = {"NEGATIVE", "POSITIVE_LEAD", "PLUS_NO_CONFIDENCE", "INCONCLUSIVE_LOW_N"
          "LEAD_BLOCKED_DATA", "PARITY_PASS", "CONFIRMED", "FAILED_CONFIRMATION",
          "CONFIRMATION_INCONCLUSIVE", "BLOCKED_DATA", "DIAGNOSTIC",
          "SHADOW_WAITING", "SHADOW_RUNNING", "SHADOW_FAILED", "READY_FOR_BUILD",
-         "DEFERRED"}   # отложено решением: не бежит, не ждёт данных, вернётся только новой предрегистрацией
+         "DEFERRED", "LEAD_NO_MONEY", "CONFIRMED_NO_MONEY"}   # отложено решением: не бежит, не ждёт данных, вернётся только новой предрегистрацией
 
 # ПОТОЛОК. Дальше этого фабрика не идёт НИКОГДА и ни при каких результатах.
 # Привязка к брокеру, деньги и LIVE — только Codex и письменное решение владельца.
@@ -205,14 +210,24 @@ def sudit(item, rez):
     if item["tip"] == "paritet":
         return sudya_paritet(rez, item["etalon"])
     if item.get("param", {}).get("etap") == "confirmation":
-        return sudya_podtv(rez, item.get("sudya", SUDYA_PODTV))
+        v, poch = sudya_podtv(rez, item.get("sudya", SUDYA_PODTV))
+        if v == "CONFIRMED" and item["begun"] in BEGUNY_S_VOROTAMI:
+            o3 = rez["okna"].get("O3") or rez["okna"].get("VSE") or {}
+            if not (o3.get("mean", 0.0) > 0):
+                return "CONFIRMED_NO_MONEY", f"{poch}; но средний чистый R {o3.get('mean', float('nan')):+.4f} ≤ 0 — эдж есть, денег нет"
+        return v, poch
     if item["begun"] == "sensor":
         return sudya_sensor(rez, item.get("sudya", SUDYA_SENSOR))
     if item["begun"] in ("portfel", "xsec"):
         return sudya_portfel(rez, item.get("sudya", SUDYA_PORTFEL))
     v, poch = sudya(rez, item["sudya"])
     if item.get("param", {}).get("etap") == "discovery" and v == "LEAD_BLOCKED_DATA":
-        return "POSITIVE_LEAD", poch.replace("окна O3 нет — нужны свежие данные", "окно подтверждения спрятано")
+        v, poch = "POSITIVE_LEAD", poch.replace("окна O3 нет — нужны свежие данные", "окно подтверждения спрятано")
+    if v in ("POSITIVE_LEAD", "LEAD_BLOCKED_DATA") and item["begun"] in BEGUNY_S_VOROTAMI:
+        dg = sudya_dengi(rez)
+        if not dg.startswith("MONEY_PASS"):
+            return "LEAD_NO_MONEY", f"{poch}; деньги: {dg}"
+        poch = f"{poch}; деньги: {dg}"
     return v, poch
 
 
@@ -396,7 +411,8 @@ def kod_otpechatok():
     """Отпечаток кода фабрики. 30.09 демон, запущенный 28.09 в 09:35, крутил код
     ДО исправления 10:04 (Python не перечитывает модуль) и вынес 8 вердиктов по
     старой логике. Демон обязан замечать, что его код сменился, и останавливаться."""
-    fayly = [Path(__file__).resolve(), DIR / "mehanizmy.py", *BEGUNY.values()]
+    fayly = [Path(__file__).resolve(), DIR / "mehanizmy.py", *BEGUNY.values(),
+             DIR / "ispolnimost.py", DIR / "ispolnimost_v21.py", DIR / "ispolnimost_v22.py", DIR / "sudya_dengi.py"]
     return "|".join(sha(f) for f in fayly)
 
 
@@ -508,6 +524,9 @@ def heshi(item):
             h[f] = sha(ROOT / f)
     else:
         h["mehanizmy"] = sha(DIR / "mehanizmy.py")
+    if item["begun"] in BEGUNY_S_VOROTAMI:
+        for f in ("ispolnimost.py", "ispolnimost_v21.py", "ispolnimost_v22.py", "sudya_dengi.py"):
+            h[f] = sha(DIR / f)
     if item.get("prereg"):
         h["prereg"] = sha(ROOT / item["prereg"])
     return h
@@ -534,7 +553,10 @@ def progon(item):
         out.unlink()
     cmd = [sys.executable, str(BEGUNY[item["begun"]]), "--param",
            json.dumps(item["param"], ensure_ascii=False), "--vyhod", str(out)]
-    t0 = time.time(); r = subprocess.run(cmd, cwd=str(DIR))
+    env = dict(os.environ)
+    if item.get("begun") in BEGUNY_S_VOROTAMI:
+        env["FABRIKA_VOROTA"] = item.get("vorota") or VOROTA_PO_UMOLCHANIYU
+    t0 = time.time(); r = subprocess.run(cmd, cwd=str(DIR), env=env)
     if r.returncode != 0 or not out.exists():
         return None, round(time.time() - t0)
     return json.loads(out.read_text()), round(time.time() - t0)
@@ -575,7 +597,9 @@ def odin_shag():
             it["sostoyanie"] = verd; it.pop("pid", None); it.pop("zhdyot_verdikt_posle", None); cur = it
     zap = {"id": sled["id"], "verdikt": verd, "pochemu": pochemu, "kogda": seychas().isoformat(timespec="seconds"),
            "sekund": sek, "heshi": heshi(sled), "okna": (rez or {}).get("okna"), "rezultat_kratko": ({k: v for k, v in rez.items() if k != "okna" and not isinstance(v, (list, dict)) or k in ("simvoly",)} if rez else None), "param": sled.get("param"),
-           "rynok": sled.get("rynok"), "semya": sled.get("semya"), "dannye": otpechatok_dannyh(sled.get("rynok"))}
+           "rynok": sled.get("rynok"), "semya": sled.get("semya"), "dannye": otpechatok_dannyh(sled.get("rynok")),
+           "vorota": (rez or {}).get("vorota"),
+           "dengi": (sudya_dengi(rez) if rez and sled.get("begun") in BEGUNY_S_VOROTAMI and "okna" in rez else None)}
     V[sled["id"]] = zap
     if verd == "NEGATIVE":
         zap["posmertno"] = posmertno(cur, rez, d, V)
@@ -988,6 +1012,23 @@ def samoproverka():
         okb = False
     bad += not okb
     print(f"  {'PASS' if okb else 'FAIL'}  {'результат без okna → запись вердикта':<34}{'ok' if okb else 'ошибка'}")
+    # ── денежный судья по умолчанию (19.10): эдж к контролю без денег не идёт в подтверждение ──
+    def okm(n, e, m, se=0.02, csd=0.01): return {"n": n, "kontrol_sobran": True, "edge": e, "se": se, "z": e / se, "mean": m, "ctrl_sd": csd}
+    it_m = {"id": "M", "tip": "gipoteza", "begun": "meh", "sudya": S, "param": {}}
+    for name, rez, want in [("лидер, деньги < 0", {"okna": {"O1": okm(900, .06, -.02), "O2": okm(300, .06, -.01), "O3": okm(100, .01, -.01)}}, "LEAD_NO_MONEY"),
+                            ("лидер, деньги > 0", {"okna": {"O1": okm(900, .06, .05), "O2": okm(300, .06, .05), "O3": okm(100, .01, .02)}}, "POSITIVE_LEAD"),
+                            ("лидер, деньги, O3 < 0", {"okna": {"O1": okm(900, .06, .05), "O2": okm(300, .06, .05), "O3": okm(100, .01, -.02)}}, "LEAD_NO_MONEY")]:
+        got = sudit(it_m, rez)[0]; bad += got != want
+        print(f"  {'PASS' if got == want else 'FAIL'}  {name:<34}{got}")
+    it_c = {"id": "M__PODTV", "tip": "gipoteza", "begun": "meh", "sudya": SC, "param": {"etap": "confirmation"}}
+    for name, rez, want in [("подтв. эдж, денег нет", {"okna": {"O3": {"n": 100, "n_eff": 100, "edge": .05, "t": 3.0, "mean": -.01}}}, "CONFIRMED_NO_MONEY"),
+                            ("подтв. эдж и деньги", {"okna": {"O3": {"n": 100, "n_eff": 100, "edge": .05, "t": 3.0, "mean": .02}}}, "CONFIRMED")]:
+        got = sudit(it_c, rez)[0]; bad += got != want
+        print(f"  {'PASS' if got == want else 'FAIL'}  {name:<34}{got}")
+    okv = VOROTA_PO_UMOLCHANIYU == "V2_2" and "LEAD_NO_MONEY" in KONEC and "CONFIRMED_NO_MONEY" in KONEC
+    bad += not okv
+    print(f"  {'PASS' if okv else 'FAIL'}  {'ворота по умолчанию V2_2':<34}{VOROTA_PO_UMOLCHANIYU}")
+
     # ── потолок автоматизации и запрет двигать планку ─────────────────
     okp = POTOLOK == "READY_FOR_BUILD" and not any(
         x in KONEC for x in ("LIVE", "TINY_LIVE", "PRODUCTION", "BROKER_BOUND"))

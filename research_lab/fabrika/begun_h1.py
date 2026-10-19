@@ -28,6 +28,11 @@ sys.path.insert(0, str(LAB)); sys.path.insert(0, str(ROOT))
 from random_control import sim_geo, ema, FLAT, LOOKBACK, DRAWS  # noqa: E402
 from research_machine import Store, pervyy_dlya, zapisat_sboy  # noqa: E402
 import ispolnimost as ISP  # noqa: E402
+import os  # noqa: E402
+VOROTA = os.environ.get("FABRIKA_VOROTA", "V2")          # V2 | V2_1 | V2_2 (крипта: V2_2 = V2_1)
+if VOROTA in ("V2_1", "V2_2"):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import ispolnimost_v21 as ISP21  # noqa: E402
 
 OKNA = {"O1": (1709251200000, 1759276800000),
         "O2": (1672531200000, 1709251200000),
@@ -139,7 +144,8 @@ def main():
             if risk <= 0 or len(tps) < 2:
                 continue
             stop_pct = risk / entry0
-            ok_isp, pr_isp, spred_R = ISP.dopusk(Path(fp).stem, stop_pct, 6.0, True)   # Фабрика V2: G1/G3
+            ok_isp, pr_isp, spred_R = (ISP21.dopusk(Path(fp).stem, stop_pct, 6.0, "crypto137") if VOROTA in ("V2_1", "V2_2")
+                                       else ISP.dopusk(Path(fp).stem, stop_pct, 6.0, True))   # V2 / V2.1 (G1', GL, G3)
             if not ok_isp:
                 otkazy[pr_isp] = otkazy.get(pr_isp, 0) + 1; continue
             rr1 = abs(tps[0] - entry0) / risk; rr2 = abs(tps[1] - entry0) / risk
@@ -160,7 +166,7 @@ def main():
                                 ctrl[w][dr].append(rc - spred_R)
         if (k + 1) % 20 == 0:
             print(f"... {k+1}/{len(files)}", flush=True)
-    rez = {"param": p, "monet": len(files), "limit": a.limit, "sboev": sboev, "otkazy_ispolnimosti": otkazy, "vorota": "V2_G1_G3",
+    rez = {"param": p, "monet": len(files), "limit": a.limit, "sboev": sboev, "otkazy_ispolnimosti": otkazy, "vorota": "V2_G1_G3" if VOROTA == "V2" else f"{VOROTA}_kapital{ISP21.KAPITAL:.0f}",
            "okna": {w: okno_itog(real[w], ctrl[w]) for w in OKNA}}
     Path(a.vyhod).write_text(json.dumps(rez, ensure_ascii=False, indent=1))
     print("готово, сделок по окнам:", {w: v["n"] for w, v in rez["okna"].items()})
