@@ -141,3 +141,30 @@ cost component6ab5d4b published,239exactPASS; actualcash/BP394.91/1x measured,
 minimalfee admission CR next; .02illustration is not futurebound/reserveGO.
 IBIT: tonight23:35Cyprus stillPENDING/MassivePENDING. No research verdict or
 financial authority changes, no message to Claude was sent.
+
+## Intake предложения раннего трейлинга19Oct
+
+Read-only source check: опубликованный research origin`d914fd2`, H4 correction
+`60530b9`/blob`68181b0` подтверждены. H4 исследовал отключение трейла/стопов и ATR
+трейл; проверенные варианты FAIL, последующая настройка на2016–2026 FROZEN.
+Ранние1.5/2/2.5 этим экспериментом не проверялись. Предложение принято в backlog
+канонического roadmap после Monthly, без новой приоритетной ветки исследований.
+
+Pure-code diagnostic существующего ratchet на **сохранённом17:15UTC** capture:
+
+| Activation | Trail / min lock | Trigger price | Действие по сохранённому HWM315.505 |
+|---|---|---|---|
+|3.5%|3.5% /0.5%|322.114770|hold / trail_not_armed |
+|1.5%|3.5% /0.5%|315.890330|hold / trail_not_armed |
+|2.0%|3.5% /0.5%|317.446440|hold / trail_not_armed |
+|2.5%|3.5% /0.5%|319.002550|hold / trail_not_armed |
+
+Это четыре воспроизводимые проверки текущей функции, **не сравнение доходности**.
+Новые котировки/исторические пути не получались, broker/runtime не менялись;
+сохранённый manager HWM не доказывает полный непрерывный рыночный high.
+[Receipt](evidence/net_trailing_intake_20261019/receipt.json).
+Legacy quote-HWM/5min и Monthly completed-close/next-session должны проверяться
+раздельно. Вариант activation2/trail2.5 меняет два параметра и требует отдельной
+гипотезы. Нужны prereg и действительно новые/forward данные; intraday PnL, MaxDD,
+premature exits и missed continuation пока UNKNOWN. Остальные параметры и правила
+освобождённого капитала фиксировать, сопоставлять полный портфель с baseline.

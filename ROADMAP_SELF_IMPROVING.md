@@ -104,6 +104,22 @@ assistant не входят в первую monetary v1. KITY остаётся S
 Elder сохраняет отдельные prospective/parity gates; количество2–3crypto strategies
 и желаемая доходность не заменяют допуск.
 
+**NET trailing — принятый research intake19Oct, BACKLOG после Monthly P0.**
+Originresearch`d914fd2` подтверждён; H4 correction`60530b9` — его предок.
+Проверенные варианты защиты Monthly имеют FAIL; дополнительная настройка на уже
+использованной2016–2026 FROZEN. Ранние activation1.5/2/2.5 этим H4 не проверялись,
+но новый подбор на той же истории не создаст независимого подтверждения.
+Следующий research gate — prereg на действительно неиспользованных либо будущих
+данных, без задержки Money Lane. Legacy NET5min quote-HWM и Monthly closed-daily/
+next-session stop — отдельные модели. В activation-only сравнении trail3.5/minlock.5
+постоянны;2%/2.5% — отдельная двухпараметрическая гипотеза, не изолированный эффект
+активации. Точность stop fills/внутрибарного пути без данных UNKNOWN; оценивать весь
+портфель/одинаковые входы/издержки и упущенное продолжение, не только закрытые winners.
+[Диагностический receipt](reports/evidence/net_trailing_intake_20261019/receipt.json):
+на сохранённом17:15UTC HWM315.505 **ни один** из четырёх порогов не активировался;
+самый ранний требует315.89033. Это4pure-code checks, не backtest/economic/forwardPASS.
+Новый эксперимент/AI-stop controller не запущен, frozen Monthly и LIVE неизменны.
+
 ### Рабочие сроки первой Monthly, без смены стратегии
 
 | Дата / окно | Проверяемый результат | Граница обещания |

@@ -1,5 +1,19 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT19Oct NET TRAILING INTAKE / MONTHLY PRIORITY PRESERVED —
+PM research-only proposal accepted as BACKLOG afterMonthlyP0, notnewLIVEterms.
+Verified originresearchd914fd2;60530b9 ancestor, H4blob68181b0. Existing H4 tested
+no-trail/no-stops/ATR:testedvariantsFAIL, used2016–2026 tuningFROZEN. Earlyactivation
+1.5/2/2.5 nottestedbyH4; requireprereg/newunconsumed-or-forwarddata, notnewgridrescue.
+Legacy5minquoteHWM vsMonthlydailyclose/nextsession separatemodels. Trail3.5/minlock.5
+fixedforactivation-onlycomparison;2/2.5compoundvariant separatehypothesis.
+4purecode assertions onsaved17:15capture ALLhold: HWM315.505 belowearliest315.89033.
+Notbacktest/currentquote/economicPASS; unknownintradaypath/PnL notinvented.
+Read NETincidentreport appendedtable and evidence/net_trailing_intake_20261019.
+Roadmapupdatedinplace; noresearch/KARTA/judge/producer, broker/VPS/financial edits.
+MainMonthlypendingfee-admission minimalCR→runner/serverORDERSOFF/handoff/rollback
+continues; existing23Octlocal/26–29server/30close/2Novfreshconditionaltargets unchanged.
+
 CURRENT19Oct17:15UTC NET OBSERVER REPAIRED / CANCELLED SHOP COMPANION RETIRED —
 Read ALPACA_NET_DAY_INCIDENT_2026_10_19.md and evidence/net_day_incident_20261019.
 Alerta24fe646 was FileNotFoundError beforeGET: immutable observer pin on LIVE entry

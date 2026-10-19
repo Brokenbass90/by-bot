@@ -1,0 +1,57 @@
+{
+  "compound_variant": "Activation2/trail2.5 changes two variables; separate hypothesis, not activation-only effect",
+  "historical_h4_status": "TESTED_VARIANTS_FAIL_FURTHER_TUNING_FROZEN_ON_USED_2016_2026",
+  "intraday_complete_market_high_unknown": true,
+  "live_or_financial_changes": false,
+  "market_historical_paths_replayed": 0,
+  "next_research_gate": "Preregister separate Legacy intraday and Monthly daily-close hypotheses on genuinely unconsumed/new or future data; freeze comparator/metrics before outcomes; no winner selection on reused history",
+  "not_forward_evidence": true,
+  "not_net_pnl_backtest": true,
+  "orders_submitted": 0,
+  "published_h4_correction": "60530b9a4647a25dde6859d252afe58b112836fb",
+  "published_research_origin": "d914fd2f0ca0b1e612464bcef291a92b1ab8041c",
+  "research_h4_report_blob": "68181b0f86a4457e6b927ae45036157577f2e7cf",
+  "rows": [
+    {
+      "action": "hold",
+      "activation_pct": "3.5",
+      "activation_price": "322.114770",
+      "minimum_lock_pct": "0.5",
+      "reason": "trail_not_armed",
+      "saved_manager_hwm": "315.505",
+      "trail_pct": "3.5"
+    },
+    {
+      "action": "hold",
+      "activation_pct": "1.5",
+      "activation_price": "315.890330",
+      "minimum_lock_pct": "0.5",
+      "reason": "trail_not_armed",
+      "saved_manager_hwm": "315.505",
+      "trail_pct": "3.5"
+    },
+    {
+      "action": "hold",
+      "activation_pct": "2.0",
+      "activation_price": "317.44644",
+      "minimum_lock_pct": "0.5",
+      "reason": "trail_not_armed",
+      "saved_manager_hwm": "315.505",
+      "trail_pct": "3.5"
+    },
+    {
+      "action": "hold",
+      "activation_pct": "2.5",
+      "activation_price": "319.002550",
+      "minimum_lock_pct": "0.5",
+      "reason": "trail_not_armed",
+      "saved_manager_hwm": "315.505",
+      "trail_pct": "3.5"
+    }
+  ],
+  "saved_manager_hwm_gain_pct": "1.376188058684797347231236900",
+  "schema": "NET_TRAILING_RESEARCH_INTAKE_DIAGNOSTIC_V1",
+  "source_is_snapshot_not_current_quote": true,
+  "source_observed_ms": 1792430102869,
+  "source_private_sha256": "6509eef3587685677b0b996e6aa5295535982fa643c7b31e48b187ca13f4bb8c"
+}
