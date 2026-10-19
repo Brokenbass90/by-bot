@@ -1,5 +1,22 @@
 # MASTER HANDOFF — 2026-10-05
 
+CURRENT19Oct RESEARCH SOURCE DELIVERY —
+[RESEARCH_SOURCE_DELIVERY_2026_10_19.md](RESEARCH_SOURCE_DELIVERY_2026_10_19.md).
+BIL/SGOV actualSIP all+split deliveredseparately:2713/1606bars each,16Octend,
+calendar afterfirstcomplete/noadjtimestampmismatch;16immutablefiles/replayPASS.
+Polymarket sourceaccessible:40-market AVAILABILITY sample/80tokens/20752points,
+62nonempty/18emptyUNKNOWN. Criticalparameterfinding: interval=max returnedempty,
+explicitstart/end retrievedoldhourly.40markets/last14days areNOTfullcensus/lifetime;
+screen_ready=false, historicalspread/fee/settlementtime/groups NOTPROVEN.1126files
+actualdelivered/replayPASS.27targetedPASS,oneverifiedastra/highreview Important
+inventoryfix/regression; laterwindow/copychanges rootreviewed, nosecondsignoff.
+Noeconomicrun/researchcode/KARTA/VOROTA/financial/VPSchanges/Claud messages.
+SECrequestrecordedbutnotfetched thiscycle. MainMonthly realcostproducer/applying
+runner/handoff remainP0;3d66f86 acceptedORDERSOFF. PriorVPSsource-staging denial
+notretried, no approvalinferred. NET19Oct13:30UTC/readback13:35 remainsfutureplan,
+SHOPcancel preserved. ExistingDATAautomations unchanged. Earlier snapshot facts
+below are historical unless separately refreshed.
+
 CURRENT18Oct MONTHLY STANDING COMPONENTS CLOSED —
 [ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md](ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md).
 Existing native custody/one dispatcher extended ORDERS_OFF: separate bounded

@@ -1,0 +1,55 @@
+{
+  "acquired_ms": 1792391421104,
+  "broker_writes": 0,
+  "delivery_sha256": "e6dae44c3516fb063ef81fadbf01e83ebb3cfa0454275bcc7fdb15a9bd32166c",
+  "money_authority": false,
+  "monthly_strategy_changed": false,
+  "not_risk_free_cash": true,
+  "orders_allowed": false,
+  "performance_or_overlay_run": false,
+  "qa": {
+    "BIL": {
+      "adjustment_timestamps_match": true,
+      "adjustments": "all and split are separate provider snapshots; no second transformation",
+      "bars_all": 2713,
+      "bars_split": 2713,
+      "first_observation": "2016-01-04",
+      "historical_adjustment_vintage": "NOT_PROVEN",
+      "last_observation": "2026-10-16",
+      "missing_sessions_after_first": [],
+      "pre_first_observation_sessions_count": 0,
+      "pre_listing_history_fabricated": false
+    },
+    "SGOV": {
+      "adjustment_timestamps_match": true,
+      "adjustments": "all and split are separate provider snapshots; no second transformation",
+      "bars_all": 1606,
+      "bars_split": 1606,
+      "first_observation": "2020-05-28",
+      "historical_adjustment_vintage": "NOT_PROVEN",
+      "last_observation": "2026-10-16",
+      "missing_sessions_after_first": [],
+      "pre_first_observation_sessions_count": 1107,
+      "pre_listing_history_fabricated": false
+    }
+  },
+  "request": {
+    "adjustments": [
+      "all",
+      "split"
+    ],
+    "asof": "-",
+    "end": "2026-10-16",
+    "feed": "sip",
+    "schema": "BIL_SGOV_SIP_REQUEST_V1",
+    "start": "2016-01-01",
+    "symbols": [
+      "BIL",
+      "SGOV"
+    ]
+  },
+  "schema": "BIL_SGOV_DATA_ONLY_DELIVERY_V1",
+  "sip_yahoo_parity_proven": false,
+  "source_received_ms": 1792391421059,
+  "status": "DATA_ACQUIRED_QA_PASS_NOT_STRATEGY_PASS"
+}

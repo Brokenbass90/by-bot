@@ -1,0 +1,24 @@
+{
+  "broker_writes": 0,
+  "financial_constructors": 0,
+  "full_repository_suite_run": false,
+  "independent_review_count": 1,
+  "raw_capture_response_headers_or_credentials_persisted": false,
+  "real_orders": 0,
+  "red_artifacts": {
+    "explicit-red.xml": "f9c8641dbdae18a06cc6333593e21f24cc7fb853ef1c18d2896e19a5ff764cc3",
+    "import-red.xml": "67c6671092db77408c2ce94ca019db07406b5a218f2a694a4889893c6f61e7d3",
+    "red.xml": "075c639fdf4da5e5e948fd2a2848f4992632f4cbc4a00a52c792fca4e33298c6",
+    "review-red.xml": "744fb80700a327af7438372f7db1561255f9e5bb95ff66664bbc557fad7c42c2"
+  },
+  "research_prereg_or_judge_run": false,
+  "schema": "RESEARCH_SOURCE_DELIVERY_VERIFICATION_V1",
+  "second_independent_final_review": false,
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 27
+  },
+  "vps_mutations": 0
+}

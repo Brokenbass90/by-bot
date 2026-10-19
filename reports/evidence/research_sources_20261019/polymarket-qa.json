@@ -1,0 +1,34 @@
+{
+  "by_planned_end_year": {
+    "2023": {
+      "markets": 10,
+      "points": 646,
+      "tokens_with_history": 2
+    },
+    "2024": {
+      "markets": 10,
+      "points": 6718,
+      "tokens_with_history": 20
+    },
+    "2025": {
+      "markets": 10,
+      "points": 6720,
+      "tokens_with_history": 20
+    },
+    "2026": {
+      "markets": 10,
+      "points": 6668,
+      "tokens_with_history": 20
+    }
+  },
+  "explicit_windows_have_20752_points": true,
+  "http_failures": {
+    "clob-market:404": 9,
+    "fee-rate:404": 18,
+    "spread:404": 80,
+    "tick-size:404": 18
+  },
+  "interval_max_returned_empty_for_all_80": true,
+  "missing_history_is_not_zero": true,
+  "screen_or_pnl_run": false
+}

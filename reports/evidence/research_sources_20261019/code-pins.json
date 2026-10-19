@@ -1,0 +1,7 @@
+{
+  "research_lab/kity_oct15_deadline_v1.py": "aef82f0f413eea0b2da2937e75d3f972f6907845647dcbdd9f6b0d1f88d2a62b",
+  "research_lab/research_source_delivery_v1.py": "6ffaf7fda53fa3bae1e504e9b1f2b3820208f201c2e4bac012447eb8b87e5b74",
+  "scripts/deliver_research_sources_v1.py": "dd69eea375221bbf0694af7c86c36d428e62e512827fa87477fbe7673848dd67",
+  "scripts/extend_equity_history_readonly.py": "ed980ed8b65e03bfe3e2cb172d28d4612a8a852a98c717cca00c0d7ad9c7cce0",
+  "scripts/materialize_alpaca_pit_daily.py": "187dc3474bf283a76f64883996bdaad1db2870d17acd89a32506803a3dc5296a"
+}

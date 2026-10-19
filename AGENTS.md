@@ -1367,3 +1367,19 @@ NET77pins/lock813893 andDAY19Oct13:30UTC active; SHOP stayscancelled. Future30Oc
 source/2Novfreshbrokerwindow remain. KITYsafetyUNSELECTED/SPENT, Elderlocal gates,
 existingDATAautomations/research/Claude files unchanged. Continue local engineering
 rather than waiting calendar or interpreting simulated repeat as real income.
+
+
+## October19 independent research DATA intake
+
+Continue checkpoint TOP / RESEARCH_SOURCE_DELIVERY_2026_10_19.md. Publishedresearch
+7a80470 verified. BIL/SGOV actual SIP all/split delivered separately,2713/1606bars
+through16Oct, calendar/adjustmenttimestamps PASS,16files/replay samehash+mtime.
+Polymarket40market/80token pilot delivered,20752points/62nonempty;18emptyUNKNOWN.
+interval=max returnedempty; explicit historical windows work. Pilot is last14days
+NOTfullcensus/lifetime or screenready. Currentfee/spread nothistorical, settlement
+availability/PITmetadata/exhaustivegroups NOTPROVEN. Nojudge/PnL/researchcode edits.
+27targetedPASS. Verifiedastra/highreview1Importantinventoryfixed/regressed; later
+window/copychanges rootreviewonly, nosecondindependentreview. Useexisting immutable
+archives/helpers ratherthanredownload/overwrite. Sources and code remainlocal;
+previousVPSsource-transferdenial notpermission or retryauthority. Monthly realcost
+producer+singleapplyingrunner remainP0. NET19Octplan/SHOPcancel unchanged.

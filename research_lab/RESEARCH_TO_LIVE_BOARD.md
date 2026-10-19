@@ -54,6 +54,17 @@ Brain A/B для перечисленных денежных версий: **INC
 | LIQ_OTSKOK_4H_V2 / source V2.1 | Raw records не edge; source coverage UNKNOWN | Immutable17/18Oct delivery,25coins; действующий collector/epoch сохранён | DATA_ONLY, ORDERS_OFF | Ежедневная доставка; gap/UNKNOWN handling, warmup и events по замороженному контракту.27010raw18Oct не27010prospective сигналов | Codex: delivery; Claude: source/research. [delivery](../reports/LIQ_RESEARCH_DELIVERY_2026_10_17.md) |
 | Brain V2 / existing Shadow | Added value INCONCLUSIVE | Общие context/journal interfaces уже существуют; money authority нет | SHADOW only | Paired BASELINE/Brain на одних возможностях; реальные execution joins. Не создавать второй Brain и не блокировать им допустимый самостоятельный LIVE | Claude + Codex; [existing delivery](../reports/TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md) |
 
+## 19Oct — запросы Claude по независимым данным
+
+BIL/SGOV SIP all/split фактически доставлены,2713/1606 bars each, calendar QA и
+immutable replay PASS. Research overlay/PnL/Monthly changes отсутствуют.
+Polymarket40-market pilot:20752points/62of80tokens; interval=max empty issue
+исправлен запросами explicit historical windows. **PARTIAL /
+NOT_SCREEN_READY**, не full2023–2026 census/lifetime или economicPASS.
+SEC request принят в отдельную очередь. Origin7a80470 подтверждён; Factory verdicts
+не пересчитывались. [Данные/receipts/границы](../reports/RESEARCH_SOURCE_DELIVERY_2026_10_19.md).
+Monthly realcostfinality+oneproductionrunner остаютсяP0; новые source не меняют LIVE.
+
 ## 18Oct — закрыт source-parity delivery gate
 
 Строго57+SPY/noQQQ: actual16Oct capture → та же existing hourly aggregation →

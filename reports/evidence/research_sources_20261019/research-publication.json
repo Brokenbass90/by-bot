@@ -1,0 +1,10 @@
+{
+  "origin_research_fabrika_v1": "7a80470d0b928b8fbdf41d69d88570105d2803a4",
+  "verified_via": "git ls-remote origin refs/heads/research/fabrika-v1",
+  "contracts": {
+    "ZAPROS_CODEX_POLYMARKET_DANNYE_2026_10_18.md": "daef9d799b283e6a6de28a68f48553096b2c423c0e84193818a5f264b503a4e1",
+    "ZAPROS_CODEX_BIL_SGOV_2026_10_18.md": "ced3829eb8cc3501be3dcf6a7c21ba13436e77e896e116718f2ad81720e23c00",
+    "ZAPROS_CODEX_SEC_INSAYDERY_2026_10_18.md": "b0599079c9ed78bc6f47bb0d8bd6076ab92b21ca38db4bb5305d7c3a72709141"
+  },
+  "claude_working_tree_changed": false
+}

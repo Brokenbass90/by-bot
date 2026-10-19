@@ -1,0 +1,50 @@
+{
+  "bil-sgov": {
+    "destination": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/alpaca_bil_sgov_20261019",
+    "first": {
+      "already_imported": false,
+      "delivery_sha256": "e6dae44c3516fb063ef81fadbf01e83ebb3cfa0454275bcc7fdb15a9bd32166c",
+      "first_local_seal_mtime_ns": 1792391818025803356,
+      "immutable_files": 16,
+      "import_observed_ms": 1792391818034,
+      "money_authority": false,
+      "orders_allowed": false,
+      "source_received_ms": 1792391421059
+    },
+    "repeated": {
+      "already_imported": true,
+      "delivery_sha256": "e6dae44c3516fb063ef81fadbf01e83ebb3cfa0454275bcc7fdb15a9bd32166c",
+      "first_local_seal_mtime_ns": 1792391818025803356,
+      "immutable_files": 16,
+      "import_observed_ms": 1792391818052,
+      "money_authority": false,
+      "orders_allowed": false,
+      "source_received_ms": 1792391421059
+    },
+    "status": "DATA_ACQUIRED_QA_PASS_NOT_STRATEGY_PASS"
+  },
+  "polymarket-explicit": {
+    "destination": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/polymarket_source_20261019",
+    "first": {
+      "already_imported": false,
+      "delivery_sha256": "74164c7903a207776243b60e87a9fa0bbc8c8adfc40b2a628df88725960b4b5b",
+      "first_local_seal_mtime_ns": 1792391820212418200,
+      "immutable_files": 1126,
+      "import_observed_ms": 1792391820732,
+      "money_authority": false,
+      "orders_allowed": false,
+      "source_received_ms": 1792391671894
+    },
+    "repeated": {
+      "already_imported": true,
+      "delivery_sha256": "74164c7903a207776243b60e87a9fa0bbc8c8adfc40b2a628df88725960b4b5b",
+      "first_local_seal_mtime_ns": 1792391820212418200,
+      "immutable_files": 1126,
+      "import_observed_ms": 1792391821481,
+      "money_authority": false,
+      "orders_allowed": false,
+      "source_received_ms": 1792391671894
+    },
+    "status": "PARTIAL_AVAILABILITY_AUDIT_NOT_SCREEN_READY"
+  }
+}

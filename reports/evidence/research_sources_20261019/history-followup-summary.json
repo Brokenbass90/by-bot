@@ -1,0 +1,190 @@
+[
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "history"
+    ],
+    "market_id": "240401",
+    "mode": "clob-explicit-hourly",
+    "points": 0,
+    "received_ms": 1792391543369,
+    "request_ms": 1792391543159,
+    "sha256": "7f8b497c3d718d756d8c2130e657c4c414d5da9bed777aa29bc3221fdbcf0dc5",
+    "url": "https://clob.polymarket.com/prices-history?market=93218259544906323509869368003727731311636043314762509700595000438899350261157&startTs=1672242728&endTs=1673452328&fidelity=60",
+    "year": "2023"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "240401",
+    "mode": "v2-hourly",
+    "points": 0,
+    "received_ms": 1792391543653,
+    "request_ms": 1792391543370,
+    "sha256": "118d74471c29d75ab24c7f28da6a4b9739d5cff85f32c6a359d9a7315d063e0a",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=93218259544906323509869368003727731311636043314762509700595000438899350261157&start=1672242728&end=1673452328&bucket_seconds=3600&limit=2500",
+    "year": "2023"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "240401",
+    "mode": "v2-three-hour-max",
+    "points": 0,
+    "received_ms": 1792391544216,
+    "request_ms": 1792391543653,
+    "sha256": "118d74471c29d75ab24c7f28da6a4b9739d5cff85f32c6a359d9a7315d063e0a",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=93218259544906323509869368003727731311636043314762509700595000438899350261157&interval=max&bucket_seconds=10800&limit=2500",
+    "year": "2023"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "history"
+    ],
+    "market_id": "240379",
+    "mode": "clob-explicit-hourly",
+    "points": 336,
+    "received_ms": 1792391544384,
+    "request_ms": 1792391544217,
+    "sha256": "cbb35ee7c477b8e6110848ac6f1c0a39bcd10f6cd2c4c9b3e034777e9c85b964",
+    "url": "https://clob.polymarket.com/prices-history?market=10715043962341292242163832255523703116280692082153281340642602592290195499485&startTs=1720051837&endTs=1721261437&fidelity=60",
+    "year": "2024"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "240379",
+    "mode": "v2-hourly",
+    "points": 0,
+    "received_ms": 1792391544653,
+    "request_ms": 1792391544385,
+    "sha256": "118d74471c29d75ab24c7f28da6a4b9739d5cff85f32c6a359d9a7315d063e0a",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=10715043962341292242163832255523703116280692082153281340642602592290195499485&start=1720051837&end=1721261437&bucket_seconds=3600&limit=2500",
+    "year": "2024"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "240379",
+    "mode": "v2-three-hour-max",
+    "points": 1136,
+    "received_ms": 1792391545009,
+    "request_ms": 1792391544654,
+    "sha256": "5b73a0fc5bc03c96af9bd0b656a32c64dfc2bda79bc9d8973f53085008ad470e",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=10715043962341292242163832255523703116280692082153281340642602592290195499485&interval=max&bucket_seconds=10800&limit=2500",
+    "year": "2024"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "history"
+    ],
+    "market_id": "253858",
+    "mode": "clob-explicit-hourly",
+    "points": 336,
+    "received_ms": 1792391545151,
+    "request_ms": 1792391545010,
+    "sha256": "3632f28d6adf0e60b8d5be5a5625c8122ab77e5bb06a3302140557e6ca9a6105",
+    "url": "https://clob.polymarket.com/prices-history?market=38800456697763297130479339855820439548713919346301130688802017237582222978897&startTs=1735324074&endTs=1736533674&fidelity=60",
+    "year": "2025"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "253858",
+    "mode": "v2-hourly",
+    "points": 0,
+    "received_ms": 1792391545441,
+    "request_ms": 1792391545152,
+    "sha256": "118d74471c29d75ab24c7f28da6a4b9739d5cff85f32c6a359d9a7315d063e0a",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=38800456697763297130479339855820439548713919346301130688802017237582222978897&start=1735324074&end=1736533674&bucket_seconds=3600&limit=2500",
+    "year": "2025"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "253858",
+    "mode": "v2-three-hour-max",
+    "points": 721,
+    "received_ms": 1792391545811,
+    "request_ms": 1792391545442,
+    "sha256": "02eb34329b7c283a9d9ae43d425044c856746e09b19611551fac461e3fa07e00",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=38800456697763297130479339855820439548713919346301130688802017237582222978897&interval=max&bucket_seconds=10800&limit=2500",
+    "year": "2025"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "history"
+    ],
+    "market_id": "516710",
+    "mode": "clob-explicit-hourly",
+    "points": 334,
+    "received_ms": 1792391545955,
+    "request_ms": 1792391545812,
+    "sha256": "51b28dd4cf1285fafb5383be21734bfb89c93c06e07552b9cd0420173ad552be",
+    "url": "https://clob.polymarket.com/prices-history?market=104173557214744537570424345347209544585775842950109756851652855913015295701992&startTs=1766049805&endTs=1767259405&fidelity=60",
+    "year": "2026"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "516710",
+    "mode": "v2-hourly",
+    "points": 0,
+    "received_ms": 1792391546237,
+    "request_ms": 1792391545956,
+    "sha256": "118d74471c29d75ab24c7f28da6a4b9739d5cff85f32c6a359d9a7315d063e0a",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=104173557214744537570424345347209544585775842950109756851652855913015295701992&start=1766049805&end=1767259405&bucket_seconds=3600&limit=2500",
+    "year": "2026"
+  },
+  {
+    "error": null,
+    "http": 200,
+    "keys": [
+      "data",
+      "pagination"
+    ],
+    "market_id": "516710",
+    "mode": "v2-three-hour-max",
+    "points": 716,
+    "received_ms": 1792391546672,
+    "request_ms": 1792391546238,
+    "sha256": "c4e9a927c4dfbbc111eb17a44980a17e33891459e8c1a3da192ecefac16d3cc9",
+    "url": "https://data-api.polymarket.com/v2/prices-history?token_id=104173557214744537570424345347209544585775842950109756851652855913015295701992&interval=max&bucket_seconds=10800&limit=2500",
+    "year": "2026"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "agent_path": "/root/research_data_delivery_review",
+  "effort": "high",
+  "financial_signoff": false,
+  "findings": [
+    {
+      "final_regression_pass": true,
+      "fix": "Exact inventory excluding seal; symlinks rejected before replay acceptance",
+      "issue": "Verify only checked listed hashes; an added unlisted file remained accepted",
+      "red_failures": 1,
+      "regression": "test_delivery_replay_rejects_unlisted_data_after_seal",
+      "severity": "IMPORTANT"
+    }
+  ],
+  "later_changes_reviewed_by_root_only": [
+    "explicit 14-day history windows and overlap consistency",
+    "local create-exclusive delivery and repeat/partial/conflict checks"
+  ],
+  "model": "gpt-6-astra",
+  "review_count": 1,
+  "runtime_thread_id": "01a152db-162f-7870-93e0-5c2ad68146f3",
+  "schema": "RESEARCH_SOURCE_REVIEW_V1",
+  "second_independent_final_review": false,
+  "verified_from": "session_meta.agent_path and turn_context model/effort"
+}
