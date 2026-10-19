@@ -65,6 +65,9 @@ def poslednie_snimki(fayly):
 
 
 NOTIONAL_USD, STAROST_MS, PROTIVORECHIE = 10.0, 5 * 60_000, 0.05
+# комиссия тейкера Polymarket (docs.polymarket.com/trading/fees): fee = shares × feeRate × p × (1 − p); крипто feeRate 0.07.
+# Стресс: feeRate 0.10 (поле Gamma takerBaseFee = 1000 толкуется как 1000 bps) + 1 ¢.
+FEE_RATE, FEE_RATE_STRESS = 0.07, 0.10
 
 
 def razobrat_stakan_no(b, no_token, cid, seychas_ms, bid_yes=None):
@@ -158,13 +161,14 @@ def resheniya(est, snimki, seychas_ms, stakan_fn=stakan_no):
                 ed_ms = int(dt.datetime.fromisoformat(ed.replace("Z", "+00:00")).timestamp() * 1000) if ed else None
             except ValueError:
                 ed_ms = None
-            fee = float(g.get("takerBaseFee") or 0) / 1e4 if g.get("feesEnabled") else 0.0
             if ed_ms is not None and abs(ed_ms - r) > 3600_000:
                 zap.update(st, status="VREMYA_RASHODITSYA", endDate_ms=ed_ms)
             else:
-                cena = st["vwap_no_10usd"] * (1 + fee)
-                zap.update(st, status="VHOD", cena_no=round(cena, 6), komissiya_dolya=fee, mid_yes=round(mid, 4),
-                           zerkalo_no_tolko_sravnenie=round(1 - bb, 4) if bb is not None else None)
+                p = st["vwap_no_10usd"]; fe = g.get("feesEnabled") is not False      # неизвестно → считаем, что комиссия есть
+                cena = p + (FEE_RATE * p * (1 - p) if fe else 0.0)
+                cena_s = p + (FEE_RATE_STRESS * p * (1 - p) if fe else 0.0) + 0.01
+                zap.update(st, status="VHOD", cena_no=round(cena, 6), cena_no_stress=round(cena_s, 6), komissiya_vklyuchena=fe,
+                           mid_yes=round(mid, 4), zerkalo_no_tolko_sravnenie=round(1 - bb, 4) if bb is not None else None)
         out.append(zap)
     return out
 
@@ -188,7 +192,7 @@ def ishody(Z, seychas_ms, gamma_fn=rynok_gamma):
         out.append(dict(tip="ishod", conditionId=z["conditionId"], status="OK", istochnik="polymarket_resolution",
                         umaResolutionStatus=m.get("umaResolutionStatus"), outcomePrices=m.get("outcomePrices"),
                         no_vyigral=no_vyigral, dohod=((1 if no_vyigral else 0) - z["cena_no"]) / z["cena_no"],
-                        dohod_stress=((1 if no_vyigral else 0) - (z["cena_no"] + 0.01)) / (z["cena_no"] + 0.01),
+                        dohod_stress=((1 if no_vyigral else 0) - z.get("cena_no_stress", z["cena_no"] + 0.01)) / z.get("cena_no_stress", z["cena_no"] + 0.01),
                         sverka_bybit=sverka(z), zapisano_utc=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")))
     return out
 
