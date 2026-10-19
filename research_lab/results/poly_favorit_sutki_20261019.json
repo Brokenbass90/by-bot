@@ -1,0 +1,66 @@
+{
+ "prereg": "PREREG_POLY_FAVORIT_SUTKI_2026_10_19",
+ "commit_prereg": "14c12bd",
+ "rynkov_razobrano": 3404,
+ "kandidatov": 631,
+ "qa": {
+  "close@ts": {
+   "sravneno": 415,
+   "sovpalo": 413,
+   "dolya": 0.9951807228915662
+  },
+  "open@ts": {
+   "sravneno": 421,
+   "sovpalo": 417,
+   "dolya": 0.9904988123515439
+  }
+ },
+ "konvenciya_vremeni_h1": "close@ts",
+ "srednee": -0.024335342818620837,
+ "t": -1.5204825185222477,
+ "sobytiy": 416,
+ "sdelok": 600,
+ "polovina1": -0.03754654709423807,
+ "polovina2": -0.01112413854300361,
+ "srednee_stress": -0.03506570999642856,
+ "isklyucheno": {
+  "net_ishoda": 31
+ },
+ "istochniki": {
+  "h1": 544,
+  "pin": 56
+ },
+ "kalibrovka": {
+  "0.05-0.10": {
+   "n": 149,
+   "cena_yes": 0.0735771812080537,
+   "dolya_yes": 0.06040268456375839
+  },
+  "0.10-0.15": {
+   "n": 107,
+   "cena_yes": 0.1221588785046729,
+   "dolya_yes": 0.09345794392523364
+  },
+  "0.15-0.20": {
+   "n": 69,
+   "cena_yes": 0.17528260869565218,
+   "dolya_yes": 0.057971014492753624
+  },
+  "0.80-0.85": {
+   "n": 60,
+   "cena_yes": 0.8250333333333333,
+   "dolya_yes": 0.7333333333333333
+  },
+  "0.85-0.90": {
+   "n": 73,
+   "cena_yes": 0.8780684931506848,
+   "dolya_yes": 0.7945205479452054
+  },
+  "0.90-0.95": {
+   "n": 154,
+   "cena_yes": 0.9272499999999999,
+   "dolya_yes": 0.8961038961038961
+  }
+ },
+ "verdikt": "NEGATIVE"
+}
