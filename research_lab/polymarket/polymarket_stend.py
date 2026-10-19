@@ -17,7 +17,7 @@
 """
 from __future__ import annotations
 
-import bisect, json, math
+import bisect, json, math, re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,7 +30,10 @@ def _ts(x) -> int | None:
         return None
     if isinstance(x, (int, float)):
         return int(x / 1000) if x > 1e11 else int(x)
-    s = str(x).replace("Z", "+00:00")
+    s = str(x).strip().replace("Z", "+00:00").replace(" ", "T", 1)
+    if re.search(r"[+-]\d\d$", s):                     # «+00» → «+00:00» (формат closedTime Gamma API)
+        s += ":00"
+    s = re.sub(r"\.(\d{1,6})(?=[+-]|$)", lambda m: "." + m.group(1).ljust(6, "0"), s)   # «.24» → «.240000»
     try:
         d = datetime.fromisoformat(s)
     except ValueError:

@@ -63,5 +63,15 @@ class T(unittest.TestCase):
         self.assertEqual(sum(x["n"] for x in b), 2)          # A и B; C неоднозначен
 
 
+class TestTsFormaty(unittest.TestCase):
+    def test_ts_formaty_gamma(self):
+        """19.10: closedTime «2023-01-02 22:46:33+00» и дробные секунды «.24Z» раньше давали None → рынок терялся
+        или фактическое закрытие подменялось плановым."""
+        assert S._ts("2023-01-02 22:46:33+00") == 1672699593
+        assert S._ts("2022-03-01T01:30:36.24Z") == 1646098236
+        assert S._ts("2023-01-01T00:00:00Z") == 1672531200
+        assert S._ts(1672531200000) == 1672531200
+
+
 if __name__ == "__main__":
     unittest.main()
