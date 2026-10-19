@@ -31,14 +31,14 @@
 | Паспорта стратегий | одна правда о статусе стратегии | **IMPLEMENTED** (research-часть) | Claude | `factory_v3` + `harvest_passports.py` | `test_pasport` PASS | сверка доски 4129fed (без конфликтов статусов) | — | — |
 | Brain: режимы | помогать всем стратегиям | **PARTIAL**: метки есть, денег не добавляют | Claude | `fabrika/brain_rezhimy.py`, `begun_meh_sdelki.py` | тест обрезки (причинность) | `results/brain_rezhimy_20261018/` (a2b64a2): лучше момент входа, MONEY_PASS 0 | — | — |
 | Brain: портфельная ценность | распределение лучше фиксированного | **BLOCKED_ECONOMICS** | Claude | — | — | — | экономически подтверждённый рукав один (Monthly); распределять нечего | ≥ 2 подтверждённых независимых рукава → A/B против равных весов |
-| BIL/SGOV для свободного капитала | работа свободных денег без рисков SPY | **MISSING** (данные есть) | Claude | будет `alpaca_bil_sgov.py` | — | данные: `data/alpaca_bil_sgov_20261019/` (Codex 92dd3f2, QA PASS) | — | prereg закоммичен до чтения доходностей; вердикт по правилу prereg; формулировка без «безрисковый» |
+| BIL/SGOV для свободного капитала | работа свободных денег без рисков SPY | **PARTIAL**: H5 FAIL → H5b DEV_PASS (DEV, та же история) | Claude (research), Codex (CR) | `alpaca_h5_bil.py` | тест тождества (фонд 0 % → капитал = M) | `results/alpaca_h5_bil_20261019/`, итог `ALPACA_H5_KESH_V_BIL_ITOG_2026_10_19.md` (40a3e05): +1.14 / +1.18 п.п. CAGR, MaxDD ниже | тип счёта (T+1), процент Alpaca на кэш — UNKNOWN | ответы Codex по `ZAPROS_CODEX_CR_KESH_BIL_2026_10_19.md` → forward-тень → GO владельца |
 | Polymarket | отдельный рынок со своей экономикой | **PARTIAL** | Claude (стенд), Codex (данные) | `polymarket/polymarket_stend.py` (766b043) | тесты стенда PASS | пилот 40 рынков / 20 752 точки, NOT_SCREEN_READY | полный реестр рынков и история не выгружены; исторические издержки | полный census → проверка изоляции будущего на всём реестре → затем prereg экрана |
 | Умный отбор акций (SEC Form 4, AI ranking, стабильность рейтинга) | лучше выбирать внутри Monthly | **MISSING** | Claude (гипотезы), Codex (SEC после Money Lane) | — | — | Monthly SELECTION_PASS против случайных (a212281 / 2f10c5a) | SEC: данные; AI ranking: Ollama «знает» историю известных акций → исторический тест невалиден, только forward-тень | ≤ 3 гипотезы одним prereg с общей поправкой; сравнение с Monthly, momentum, random-within-setup, SPY при одинаковых издержках |
 | Золото / FX | искать и там | **FAIL** на каталоге (0 MONEY_PASS) | Claude | `fabrika/mehanizmy.py`, `begun_h1.py` | samoproverka | `ITOG_FABRIKA_VOROTA_V2_1_V2_2_2026_10_18.md` | ценовые механизмы на H1 съедаются спредом | новые данные CFTC COT (позиционирование) — независимый от цены источник |
 
 ## Активные задачи Claude (P0 + один P1)
 - P0: не трогать live (NET/SHOP, разрешения, защиту, production managers). Из research — ничего в execution.
-- P1 (один): BIL/SGOV overlay — prereg, затем вердикт.
+- P1 (один): BIL/SGOV — сделан (H5b DEV_PASS, CR у Codex). Следующий P1: ≤ 3 гипотезы умного отбора акций одним prereg (стабильность дневного рейтинга 21/42 сессии — на имеющихся данных; SEC Form 4 и AI ranking — с forward-тенью).
 Остальное — очередь, не в работе одновременно.
 
 ## Сознательно отложено
