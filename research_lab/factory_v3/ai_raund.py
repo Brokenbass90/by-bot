@@ -76,10 +76,37 @@ def zamok():
     return fd
 
 
+def raund_formula(a, r, klient=None):
+    """Формула для ai_formula_v1: модель → JSON → проверка по НАСТОЯЩЕМУ реестру → (--zapisat) файл предложения.
+    Прогон делает хук сторожа ai_formula_cikl (prereg-коммит до прогона). Модель статусы и пороги не трогает."""
+    import ai_formula_v1 as F
+    S = Reestr().sostoyanie()
+    kladb = ", ".join(sorted(s for s, v in S["semi"].items() if v.get("status") == "KILL"))[:800]
+    sistema = F.PROMPT_FORMULA.replace("{kladbische}", kladb) + "\nУже проверенные формулы (не повторять): " + ", ".join(sorted(F.proverennye_formuly()))
+    kl = klient or A.klient_ollama(a.model, a.host, opcii=dict(num_predict=900), timeout_s=TIMEOUT_S)
+    out = []
+    for _ in range(a.n):
+        try: obj = kl(sistema, a.zapros)
+        except Exception as e:
+            out.append(dict(status="OSHIBKA_MODELI", detal=str(e)[:200])); continue
+        obj.setdefault("semya", F.SEMYA); obj.setdefault("okno", "KRIPTO_D1_2021H2_2022"); obj["avtor"] = f"ai:{getattr(kl, 'model', 'neizvestno')}"
+        err = F.proverit(obj, S, F.popytok_segodnya())
+        if err:
+            out.append(dict(status="OTKLONENO", id=obj.get("id"), oshibki=err)); continue
+        if a.zapisat:
+            put = HERE.parent / "data" / "factory_v3" / "ai_predlozheniya" / f"{obj['id']}.json"
+            put.parent.mkdir(parents=True, exist_ok=True); put.write_text(json.dumps(obj, ensure_ascii=False, indent=1))
+            out.append(dict(status="V_OCHEREDI_HUKA", id=obj["id"], formula=F.kanon(obj["formula"])))
+        else:
+            out.append(dict(status="PROSHLO_PROVERKU_SUHO", id=obj["id"], formula=F.kanon(obj["formula"])))
+    return out
+
+
 def main(argv=None, pamyat_fn=svobodno_gb):
     ap = argparse.ArgumentParser(); ap.add_argument("--n", type=int, default=1); ap.add_argument("--model", default="qwen3:8b")
     ap.add_argument("--host", default="http://localhost:11434"); ap.add_argument("--zapisat", action="store_true")
     ap.add_argument("--proverka", action="store_true")
+    ap.add_argument("--formula", action="store_true", help="19.10: предложение-формула для ai_formula_v1 → data/factory_v3/ai_predlozheniya/")
     ap.add_argument("--zapros", default="Предложи механизм, независимый от уже убитых, на данных из каталога.")
     a = ap.parse_args(argv)
     if not 1 <= a.n <= N_MAX: print(f"n ∈ [1, {N_MAX}]"); return 2
@@ -102,7 +129,10 @@ def main(argv=None, pamyat_fn=svobodno_gb):
         if PUT_PO_UMOLCHANIYU.exists(): shutil.copy(PUT_PO_UMOLCHANIYU, tmp)
         r = Reestr(tmp)
     try:
-        rez = A.raund(r, A.klient_ollama(a.model, a.host, timeout_s=TIMEOUT_S), a.zapros, a.n)
+        if a.formula:
+            rez = raund_formula(a, r)
+        else:
+            rez = A.raund(r, A.klient_ollama(a.model, a.host, timeout_s=TIMEOUT_S), a.zapros, a.n)
     finally:
         signal.alarm(0); vygruzit(a.host, a.model)
     if a.zapisat:
