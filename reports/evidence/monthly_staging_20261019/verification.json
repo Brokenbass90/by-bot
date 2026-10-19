@@ -1,0 +1,26 @@
+{
+  "automatic_real_cost_finality_producer": false,
+  "checkout_fallback": 0,
+  "code_changed": false,
+  "exact_candidate_source_imports": 34,
+  "financial_activation": false,
+  "full_repository_suite_run": false,
+  "production_applying_wrapper": false,
+  "schema": "MONTHLY_STAGING_AND_BRAIN_VERIFICATION_V1",
+  "server_runtime_rehearsal_run": false,
+  "source_material_sha256": "348690be65466d3cfc34c7c31875b65907a43f338b189613e0fe888c61b14582",
+  "test_suites": {
+    "brain_elder_targeted": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 51
+    },
+    "monthly_exact": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 165
+    }
+  }
+}

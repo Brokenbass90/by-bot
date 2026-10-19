@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT19Oct07:30UTC AUTHORIZED MONTHLY STAGING / BRAIN SOURCE —
+Read MONTHLY_STAGING_AND_BRAIN_CONTEXT_2026_10_19.md. Owner explicitly approved
+code-only upload to64.226.73.119;44file348690be now CODE_ONLY_UNSELECTED at original
+monthly-e2e root/candidate-348690be65466d3c/app. Independent hashes/43AST PASS,
+imports/codeexecution0,77protectedpins/lock813893/NETactive/SHOPcancel preserved.
+165exactPASS/34imports/0fallback rerun;51Brain/Elder targetedPASS, not monetary
+evidence. Previous LOCAL_ONLY transfer blocker CLOSED; no active financial units,
+GO/standing authority/broker requests. Cost producer/applying runner remainP0.
+Existing Brain source hashchains read-only:22448opps/68878decisions/V2=1534,
+last19Oct07:13:51UTC. V2 currentrows warmup until31Oct14UTC, not economicPASS.
+Full receiver catchup BLOCKED receiver_capacity beforeappend:6136projected receipts
+vs4096/28.2MBvs8MiB. Old8bytes/hash/inode/mtime intact. CurrentP1 fix safe continuity
+in existingjournal with restart/replay/source pins; no producer/Claude changes,
+no outcomes/newdecisions/secondBrain. RANGE_MRFAIL/KANAL_OTSKOKnegative/LIQforward
+gates preserved. Today NET13:30UTC/13:35readback stillfuture, not protectionPASS.
+
 CURRENT19Oct07:14UTC PUBLISHED RESEARCH / FIRST-WINDOW TARGETS —
 Originresearch1407fbf freshly verified via git ls-remote;3a349a3/82193fe/3e8f779
 are ancestors. Previous NOT_CONFIRMED_ORIGIN publication blocker CLOSED; no merge,

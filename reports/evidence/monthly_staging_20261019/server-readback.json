@@ -1,0 +1,14 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "code_files": 44,
+  "extra_files": 0,
+  "financial_activation": false,
+  "imports_executed": 0,
+  "observed_ms": 1792395030777,
+  "python_ast_parsed": 43,
+  "remote_mutations": 0,
+  "schema": "MONTHLY_STANDING_SERVER_READBACK_V1",
+  "source_material_sha256": "348690be65466d3cfc34c7c31875b65907a43f338b189613e0fe888c61b14582",
+  "status": "EXACT_CODE_ONLY_UNSELECTED"
+}

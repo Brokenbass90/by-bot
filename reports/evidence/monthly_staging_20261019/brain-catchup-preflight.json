@@ -1,0 +1,29 @@
+{
+  "capacity": {
+    "current_bytes": 35704,
+    "current_receipts": 8,
+    "free_bytes": 57212620800,
+    "largest_input_bytes": 4326,
+    "largest_receipt_bytes": 4674,
+    "max_bytes": 8388608,
+    "max_receipts": 4096,
+    "max_record_bytes": 2097152,
+    "projected_bytes": 28196655,
+    "projected_receipts": 6136,
+    "required_free_bytes": 565031863
+  },
+  "money_authority": false,
+  "new_decisions_created": 0,
+  "observed_ms": 1792394965481,
+  "original_receiver_rows": 8,
+  "outcomes_read": false,
+  "producer_writes": 0,
+  "reason": "receiver_capacity",
+  "receiver_bytes_unchanged": true,
+  "receiver_mtime_unchanged": true,
+  "receiver_sha256": "49bbca6ac9ffbbabdf1d06e8be731d66923b5686916b055e3ff412517caab4a2",
+  "schema": "BRAIN_EXISTING_RECEIVER_CATCHUP_PREFLIGHT_V1",
+  "since_ms": 1792245149228,
+  "source_id": "CLAUDE_BRAIN_SHADOW_V1",
+  "status": "BLOCKED"
+}

@@ -53,7 +53,7 @@ Files: scripts/rehearse_alpaca_monthly_cycle_v1.py; tests/test_alpaca_monthly_st
 
 - [x] Run appropriate existing Monthly tests and exact isolated candidate import/fallback checks; no full mutating repository suite.
 - [x] One bounded astra/high review; verify actual runtime model/effort, fix and regress material findings.
-- [ ] VPS code-only staging BLOCKED: auto-review rejected source transfer before execution. No workaround or active changes; local exact44 package is complete and pin-verified.
+- [x]19Oct owner explicitly approved code-only upload after prior auto-review rejection. Exact44 package348690be staged UNSELECTED; independent server hashes/43AST PASS,77protectedpins/lock/NET/SHOP preserved. Full server runtime/financial activation not implied. See reports/MONTHLY_STAGING_AND_BRAIN_CONTEXT_2026_10_19.md.
 - [x] Publish receipts, remaining real producer/accounting/activation dependencies, canonical board and commits. Owner approval is the final financial step after a concrete reviewable packet, not an implementation permission question.
 
 

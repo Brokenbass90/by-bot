@@ -1,0 +1,31 @@
+{
+  "new_decisions_created": 0,
+  "observed_ms": 1792394874607,
+  "outcomes_read": false,
+  "producer_writes": 0,
+  "schema": "BRAIN_EXISTING_SOURCE_READBACK_V1",
+  "source": {
+    "decisions.jsonl": {
+      "chain_validated": true,
+      "last_recorded_ms": 1792394031529,
+      "last_recorded_utc": "2026-10-19T07:13:51.529000+00:00",
+      "policies": {
+        "BASELINE_V1": 22448,
+        "BRAIN_V1": 22448,
+        "BRAIN_V2_DET": 1534,
+        "HEDGE_V1": 22448
+      },
+      "rows": 68878,
+      "sha256": "b04bad9ea8cb1fac60f90236282f675f1edbe9b7796b80ae427171e06750eae2",
+      "tail_hash": "4b086dafb7d92bd9e2f7ab872bbbc7af3deacb38c86339e20ab31765fb59b9be"
+    },
+    "opportunities.jsonl": {
+      "chain_validated": true,
+      "last_recorded_ms": 1792394031241,
+      "last_recorded_utc": "2026-10-19T07:13:51.241000+00:00",
+      "rows": 22448,
+      "sha256": "5d2defc1de9ba3a991c77d3320c4c5264f83cc6ab4dc87b7e359cde7764e37fe",
+      "tail_hash": "9cfd4f288b002a4dc09a3ce7291f1ce302e50c64483a0ca44459dd8620728fe2"
+    }
+  }
+}

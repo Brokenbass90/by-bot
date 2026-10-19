@@ -90,7 +90,7 @@ Git ref. Локальный документ без публикации — pub
 |---|---|---|
 | **P0 Preserve — Codex** | NET сопровождение; SHOP OWNER_CANCELLED; существующие locks/GO/защита без изменений ради roadmap |19Oct13:30UTC actual DAY protection и13:35UTC independent broker readback; до события **PENDING**, после только фактический receipt. На Кипре16:30/16:35 |
 | **P0 Money — Codex** | Один пакет Monthly autonomy: actual cost-finality → one applying runner/NET handoff/rollback → concrete standing packet | Автоматическая непротиворечивая net/cash finality на actual sources, затем полный ORDERS_OFF producer→runner trace; financial GO отдельный.30Oct closed selection /2Nov14:30–14:35UTC fresh gates — будущие факты, не повод откладывать код |
-| **P1 Codex** | Поддерживать существующие DATA_ONLY доставки/QA, без нового framework и массового backfill | Hash/source conflict становится видимым; immutable replay/catchup; следующий actual19Oct close source отдельно от16Oct. Polymarket global census не отнимает slot MoneyP0 |
+| **P1 Codex** | Существующие DATA_ONLY/journal доставки/QA; следующий bounded fix — Brain receiver capacity, без нового framework |19Oct source22448opps/68878decisions, V2=1534; catchup6136receipts/28.2MB превышает4096/8MiB, BLOCKED до append, старые8 сохранены. Нужна controlled continuity/restart/replay в существующем journal. Existing DATA timers поддерживаются; Polymarket global census не отнимает MoneyP0 |
 | **P0 Research — Claude** | Один пакет Factory continuity: V2.2/default money judge + bounded AI proposal cycle + independent windows | Publication3a349a3/82193fe/3e8f779 CLOSED в1407fbf; следующий gate — единый causal automated trace с pins/budget/terminal verdict и независимый review; generator ещё manual/daemon stale не выдавать за полную автономию |
 | **P1 Claude** | BIL/SGOV: одна preregistered overlay-проверка на доставленных данных | Prereg до результата, одинаковый Monthly baseline/capital/costs, корректный total return/liquidity; verdict не создаёт money permission |
 
@@ -109,7 +109,7 @@ Elder сохраняет отдельные prospective/parity gates; колич
 | Дата / окно | Проверяемый результат | Граница обещания |
 |---|---|---|
 | До23Oct — инженерная цель | Законченный локальный ORDERS_OFF кандидат: automatic actual-cost producer → один applying runner → restart/lost-response/handoff/rollback evidence → конкретный standing packet | Срок разработки, не факт готовности или financial GO. Если actual fee source недоступен, назвать точный blocker вместо синтетического PASS |
-| 26–29Oct — целевое окно приёмки | После разрешённой выкладки — точный серверный кандидат, disabled schedule, independent acceptance и решение владельца по bounded standing terms | Предыдущая source-transfer выкладка отклонена auto-review; разрешение не получено, LOCAL_ONLY сохраняется. Этот план не разрешает повторную передачу/активацию |
+| 26–29Oct — целевое окно приёмки | Точный серверный кандидат, disabled schedule, independent acceptance и решение владельца по bounded standing terms |19Oct owner разрешил code-only upload;44file348690be теперь VPS UNSELECTED, GET/hash/43AST PASS. Full applying runtime и activation ещё не приняты; финансового GO нет |
 | 30Oct после actual close | Причинный закрытый снимок57+SPY и frozen Monthly selection | Закрытие по календарю —20:00UTC/22:00Кипр; сигнал/покупка не гарантируются |
 | 2Nov14:30–14:35UTC /16:30–16:35Кипр | Ближайшее первоначально предусмотренное окно нового Monthly входа, если все actual gates и owner GO пройдены | CASH/NO_SEND допустимы; нет переноса даты, позднего входа или нового отбора по усмотрению инженера |
 
@@ -163,6 +163,12 @@ forward candidates, unresolved incidents и confirmed net PnL; не тоннаж
   NOT_CONFIRMED выше описывает предыдущую проверку. KARTA pointer ещё не подтверждён.
   Добавлены инженерные целевые даты/условное первое окно и NET same-window blocker;
   финансовые разрешения, strategy contracts и LIVE не изменены.
+- Follow-up19Oct07:30UTC: owner разрешил неактивную передачу Monthly348690be;
+  [code staging/readback DONE](reports/MONTHLY_STAGING_AND_BRAIN_CONTEXT_2026_10_19.md),
+  прежний LOCAL_ONLY transfer blocker закрыт.165exact/51Brain-Elder targeted PASS;
+  full server runtime не заявлен. Brain источник свежий19Oct07:13UTC, но existing
+  receiver6136projected/28.2MB BLOCKED_CAPACITY;8oldreceipts неизменны. Continuity
+  fix выбран текущим P1 без отвлечения от Monthly cost producer/runner P0.
 
 ---
 
