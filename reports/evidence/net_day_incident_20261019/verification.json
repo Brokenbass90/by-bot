@@ -1,0 +1,36 @@
+{
+  "exact_candidate_tests": {
+    "checkout_fallback": 0,
+    "duration_seconds": "384.54",
+    "failed": 0,
+    "imports": 38,
+    "network": "DENIED",
+    "passed": 239,
+    "test_timeout_seconds": 300,
+    "xml_sha256": "8aad16f5b0af48d489bbb2419a3f46a4f32b92e4eced92671274dd99f1009afd"
+  },
+  "financial_order_commands_executed": false,
+  "first_repeat": {
+    "complete_xml_produced": false,
+    "result": "TIMED_OUT",
+    "stack": "Frozen58 source daily aggregation; no changed financial code",
+    "test": "test_two_monthly_cycles_use_one_standing_grant_and_one_book",
+    "test_timeout_seconds": 120,
+    "timeout_log_sha256": "20bb22dc0cce5660c0136a2107c1d68eb13a747dedba627574aa80754fc95aa5"
+  },
+  "new_regressions": 4,
+  "production_material": "1f02fc49566831af16cc244320a72d45dccfebccbec3e983894bdbff5f49d416",
+  "production_material_unchanged": true,
+  "rerun": {
+    "production_code_changed": false,
+    "reason": "Existing two-cycle fixture took128.236s on rerun, exceeding repository120s per-test default. Repeated complete package with explicit300s TEST budget; no production gate/timeouts changed",
+    "test_code_changed": false
+  },
+  "review": "review.json",
+  "schema": "NET_MONITOR_REPAIR_VERIFICATION_V1",
+  "targeted_monitor_day": {
+    "overlaps_exact": true,
+    "passed": 48
+  },
+  "wrapper_tests": "wrapper-tests.json"
+}

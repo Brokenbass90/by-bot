@@ -1,5 +1,40 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT19Oct17:15UTC NET OBSERVER REPAIRED / CANCELLED SHOP COMPANION RETIRED —
+Read ALPACA_NET_DAY_INCIDENT_2026_10_19.md and evidence/net_day_incident_20261019.
+Alerta24fe646 was FileNotFoundError beforeGET: immutable observer pin on LIVE entry
+HALT with PAPER pathname, legitimately archived by PERSONAL OWNER ARM18Oct;
+archivef650419b...c115 intact. Explicit owner approved observer-only repair:
+exactlyone pin removed/94retained; new specd6abec21...b5ba, observerunitdc59842b...79db.
+Production17:04UTC DAY_PROTECTION_CONFIRMED, RECOVERED Telegram200/message15236.
+NET qty.325167779 fullycovered sell DAYSTOP277.69/new until20UTC; primarymanager
+LIVE_PROTECTED. Snapshot299.62 vsentry311.222 meansunrealized−3.772597,
+intraday+1.079557; HWM315.505<ratchettrigger322.11477(3.5%). Not Monthly adoption.
+13:35UTC independentreadback MISSED, firstdirect16:56UTC; no retroactivePASS or
+continuouscoverage claim. SHOPdisabled/inactive/service neverran/no positionorder.
+Postfix found cancelledSHOP companion pinnedoldobserverunit, NEXT_SELECTED_UNIT_DRIFT;
+NETfirstchild remainedPROTECTED. Separateexplicitowner approved removalONLYsecond
+command in combinedwrapper:0403e2b9...a8688→8bce21a9...c6846 installed17:13UTC.
+NETcommand/restASTidentical,6units/specs/HALT/lock813893 unchanged. DoNOTmanuallyrun
+financialmanager; nextEXISTING17:15UTCtimer PASS:1NET child LIVE_PROTECTED/0,
+serviceexit0; independentobserverfresh PROTECTION_CONFIRMED. Latest300.93,
+unrealized−3.346627/intraday+1.505527; qty/stopunchanged. CancelledSHOPspec stays
+frozen/pinsoldwrapper; reactivation is notpermitted. Oldpreservation08e66161 observer
+unit hash isnowHISTORY; do not restore it overowner-approvedrepair.
+239exactPASS/38imports/0fallback/networkdenied, same1f02fc49 productionmaterial;
+firstrepeat120stesttimeout retained; fullrerun300stestbudget took384.54s, no
+productiontimeouts changed.48monitor/DAYtargetedPASS overlap;3wrapperfixturesPASS.
+One astra/highreviewpernewslice, runtimeverified; nosecondsignoffclaimed.
+Monthly cost component6ab5d4bd46560256dac2a920050163b0061cf9ea pushed/originverified.
+Read ALPACA_MONTHLY_MINIMAL_ROTATION_MEASUREMENTS_2026_10_19.md:394.91cash/BP/1x;
+settledcash/type notexplicitAPIfields; currentpublishedCAT/SEC/TAF modelmatches.
+Conditionalknownfees example.02USD isNOTfuturebound/$4approval. Preciseblockingguard
+MONTHLY_ACCOUNTING_PENDING precedesadmission; ownership/protection/cash guardsseparate.
+Next minimalpendingfee CR inexistingliability/admission, noframework/GOissued;
+delay1/2/3/5sensitivity andserverrunner/handoff/rollback stillREMAINING.
+IBIT23:35Cyprus remainsfuture;19-net-ibit ACTIVE until evening thenpause perprompt.
+No KITYnewattempt, newmoneypermission, Claude messages/research/outcomes changes.
+
 CURRENT19Oct12:40UTC MONTHLY COST SOURCE / OWNED FINALITY COMPONENT CLOSED LOCALLY —
 Read MONTHLY_COST_FINALITY_AND_BRAIN_INTEGRITY_2026_10_19.md and its verification.
 Automatic raw GET/creation-time pagination→full-day fees→durable pre-entry cash

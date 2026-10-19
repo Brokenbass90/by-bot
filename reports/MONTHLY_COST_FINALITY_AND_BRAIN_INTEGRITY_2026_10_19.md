@@ -3,7 +3,11 @@
 **Завершён локальный ORDERS_OFF компонент автоматического cost-finality.**
 Реальные broker GET/fees/cash проверены отдельно от моделируемого Monthly цикла.
 Новая денежная версия не активирована; financial standing GO отсутствует.
-Следующий P0 — один production runner, серверная репетиция и NET handoff/rollback.
+Следующий P0 — минимальная поправка pending-fee admission, production runner,
+серверная репетиция и NET handoff/rollback. Обновление17:15UTC: actual NET protection
+и исправление observer подтверждены отдельно в
+[incident closure](ALPACA_NET_DAY_INCIDENT_2026_10_19.md); будущие формулировки
+о сегодняшнем открытии ниже — историческое состояние12:40UTC.
 
 ## DONE / TESTED
 

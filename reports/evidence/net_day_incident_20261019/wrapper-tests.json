@@ -1,0 +1,31 @@
+{
+  "schema": "CANCELLED_SHOP_WRAPPER_RETIREMENT_FIXTURE_TESTS_V1",
+  "cases": [
+    {
+      "case": "protected",
+      "pass_": true,
+      "command_count": 1,
+      "exit_code": 0,
+      "real_subprocesses": 0,
+      "real_broker_requests": 0
+    },
+    {
+      "case": "blocked",
+      "pass_": true,
+      "command_count": 1,
+      "exit_code": 2,
+      "real_subprocesses": 0,
+      "real_broker_requests": 0
+    },
+    {
+      "case": "lost_response",
+      "pass_": true,
+      "command_count": 1,
+      "exit_code": 2,
+      "real_subprocesses": 0,
+      "real_broker_requests": 0
+    }
+  ],
+  "passed": 3,
+  "real_manager_executed": false
+}

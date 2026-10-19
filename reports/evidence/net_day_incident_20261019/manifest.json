@@ -1,0 +1,15 @@
+{
+  "all_secrets_checks_passed": true,
+  "files": {
+    "exact-tests.xml": "8aad16f5b0af48d489bbb2419a3f46a4f32b92e4eced92671274dd99f1009afd",
+    "manager-wrapper-retirement.diff": "cc225011a8252d8810615786cd15d9b31fc19456ad3fa7fad73351f3541b9d3c",
+    "monthly-minimal-measurements.json": "a069d1993f944e58bf7e8d1bffc20839737a2366b480baf32053fe5d09112168",
+    "observer-unit.diff": "d70b728d4fe444648d133728c65096bedd11f49286420fe3653bedb0d6a9f493",
+    "receipt.json": "791d2a0b26c0c034c0d226ccb093b4fb3aefefd4121785b1aeab6986d8087608",
+    "review.json": "cf8070838185ca56ed3a6e69c9dbcf93ae5e431e2505cf89a4696ea2364ab23c",
+    "verification.json": "2fcaf5ea17d6060e621c4dce35ef2b31e79a5b067a1aaf3c6770d3c23a0526f0",
+    "wrapper-tests.json": "c9c9d62561c6bacfb9722e7b8c69cd7975f94b64c91c95cb09b1f24000f85e6a"
+  },
+  "private_credentials_committed": false,
+  "schema": "NET_INCIDENT_PUBLIC_EVIDENCE_MANIFEST_V1"
+}

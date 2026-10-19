@@ -1,0 +1,11 @@
+--- manager-wrapper.py.original
++++ manager-wrapper.py.NET-only
+@@ -3,7 +3,7 @@
+ from pathlib import Path
+ kit=Path('/opt/bybot-research/alpaca-next-entry-20261019-v1')
+ pin=json.loads((kit/'control-spec-pin.json').read_bytes())['sha256']
+-commands=[['/root/by-bot/.venv/bin/python', '-B', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/control-v1.py', '--spec', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/spec.json', '--maintenance', '--owner-go', '/opt/bybot-research/alpaca-dynamic-live-20261013/control/oct15-first-entry-v1-1/session/owner-go.json'], ['/root/by-bot/.venv/bin/python','-B',str(kit/'app/scripts/alpaca_next_entry_control_v1.py'),'--spec',str(kit/'control-spec.json'),'--spec-sha256',pin,'--maintenance']]
++commands=[['/root/by-bot/.venv/bin/python', '-B', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/control-v1.py', '--spec', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/spec.json', '--maintenance', '--owner-go', '/opt/bybot-research/alpaca-dynamic-live-20261013/control/oct15-first-entry-v1-1/session/owner-go.json']]
+ results=[]
+ for command in commands:
+  try:

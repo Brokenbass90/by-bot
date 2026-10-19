@@ -160,3 +160,57 @@ def test_real_collector_only_uses_whitelisted_gets_and_never_opens_account_lock(
     assert monitor.evaluate(out,now_ms=s['completed_ms'])['status']=='DAY_PROTECTION_CONFIRMED'
     assert len(calls)==7 and all(p.startswith('/v2/') for p in calls)
     assert before=={p:p.read_bytes() for p in before}
+
+
+def _halt_pin_fixture(tmp_path, monkeypatch):
+    """An entry HALT may move while owned NET maintenance remains legitimate."""
+    import hashlib
+    s=source();profile=tmp_path/'profile.env';binding=tmp_path/'binding.json'
+    ledger=tmp_path/'ledger.json';lock=tmp_path/'account.lock';halt=tmp_path/'entry-halt.json'
+    profile.write_text('ALPACA_BASE_URL=https://api.alpaca.markets\nALPACA_API_KEY_ID=fixture-key\nALPACA_API_SECRET_KEY=fixture-secret\n')
+    ledger.write_text(json.dumps(s['expected']));lock.write_text('account-custody')
+    binding.write_text(json.dumps(dict(account_id='fixture-account',ledger_path=str(ledger),lock_path=str(lock),halt_path=str(halt))))
+    config=dict(binding_path=str(binding),live_profile=str(profile),initial_expected=s['expected'],symbols=['NET'],
+        account_lock_inode=lock.stat().st_ino,
+        read_only_pins={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in (profile,binding)})
+    calls=[]
+    class FakeGetReader:
+        def __init__(self,*args):pass
+        def get(self,path):
+            calls.append(path)
+            if path=='/v2/clock':return s['clock']
+            if path.startswith('/v2/calendar?'):return s['calendar']
+            return {'/v2/account':dict(id='fixture-account'),'/v2/positions':s['positions'],
+                '/v2/orders?status=open&limit=500':s['open_orders'],'/v2/orders/owned-stop':s['stop_readbacks'][0]}[path]
+    monkeypatch.setattr(monitor,'GetReader',FakeGetReader)
+    monkeypatch.setattr(monitor.time,'time_ns',lambda:s['completed_ms']*1000000)
+    return config,calls,halt,binding,ledger,lock,s
+
+
+def test_archived_entry_halt_in_source_pins_reproduces_capture_failure_before_get(tmp_path,monkeypatch):
+    import hashlib
+    config,calls,halt,*_= _halt_pin_fixture(tmp_path,monkeypatch)
+    config['read_only_pins'][str(halt)]=hashlib.sha256(b'old archived HALT').hexdigest()
+    with pytest.raises(FileNotFoundError):monitor.collect(config)
+    assert not calls and not halt.exists()
+
+
+@pytest.mark.parametrize('new_halt_present',[False,True])
+def test_owned_stop_capture_ignores_entry_halt_state_without_mutating_it(tmp_path,monkeypatch,new_halt_present):
+    config,calls,halt,binding,ledger,lock,s=_halt_pin_fixture(tmp_path,monkeypatch)
+    if new_halt_present:halt.write_bytes(b'new entry remains HALTED')
+    paths=[binding,ledger,lock,*([halt] if halt.exists() else [])]
+    before={p:(p.read_bytes(),p.stat().st_ino,p.stat().st_mtime_ns) for p in paths}
+    out=monitor.collect(config)
+    observation=monitor.evaluate(out,now_ms=s['completed_ms'])
+    assert observation['status']=='DAY_PROTECTION_CONFIRMED'
+    assert observation['orders_allowed'] is False and observation['money_authority'] is False
+    assert len(calls)==7 and halt.exists() is new_halt_present
+    assert before=={p:(p.read_bytes(),p.stat().st_ino,p.stat().st_mtime_ns) for p in paths}
+
+
+def test_removing_mutable_halt_pin_does_not_weaken_binding_pin(tmp_path,monkeypatch):
+    config,calls,halt,binding,*_=_halt_pin_fixture(tmp_path,monkeypatch)
+    binding.write_bytes(binding.read_bytes()+b'\n')
+    with pytest.raises(ValueError,match='READ_ONLY_SOURCE_PIN_DRIFT'):monitor.collect(config)
+    assert not calls and not halt.exists()

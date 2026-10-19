@@ -1,0 +1,281 @@
+{
+  "agent_broker_writes": 0,
+  "agent_get_requests_before_apply": 15,
+  "archive_provenance": "PERSONAL_OWNER_ARM_2026_10_18",
+  "archive_sha256": "f650419b466d016ba0fe7201590714a71d2c274c5ecf1703c84e7ff0f150c115",
+  "cancelled_shop_retirement": {
+    "broker_writes": 0,
+    "financial_authority_expanded": false,
+    "financial_specs_unchanged": true,
+    "manager_executed_by_agent": false,
+    "net_command_ast_unchanged": true,
+    "new_wrapper_sha256": "8bce21a9de184b3a10120ada636820ec63e5769c066cddd66e184751e39c6846",
+    "next_existing_timer": "NextElapseUSecRealtime=Mon 2026-10-19 17:15:00 UTC\nActiveState=active",
+    "observed_ms": 1792430006338,
+    "observer_config_unchanged": true,
+    "old_wrapper_sha256": "0403e2b9d63dc3c7a96cfc9ea7a0aa07dc74232259144e33920b86aef91a8688",
+    "original_account_lock_inode": 813893,
+    "other_wrapper_ast_unchanged": true,
+    "removed_companion_calls": 1,
+    "schema": "OWNER_AUTHORIZED_CANCELLED_SHOP_COMPANION_RETIREMENT_V1",
+    "shop_cancel_preserved": true,
+    "shop_compatibility_go_absent": true,
+    "shop_intake_absent": true,
+    "shop_service_never_ran": true,
+    "units_unchanged": 6,
+    "wrapper_mode_preserved": true,
+    "wrapper_owner_preserved": true
+  },
+  "candidate_get_requests": 7,
+  "candidate_production_switched": false,
+  "captured_ms": 1792429487528,
+  "collector_ast_sha256": {
+    "GetReader": "3637ce00f40c20625654034f09308eda545e5cb6166de2abdbda4854ba2f3fb7",
+    "collect": "e20aeb06ba5b450a374ecb0d70dd98a7995caf22e1a3548df1722756350124b5",
+    "pin_files": "cadfa6bbff38d860f81a31b584afa95bc7599b7282898a2d2a3e3e245210ef2b"
+  },
+  "financial_authority_expanded": false,
+  "halt_is_live_entry_guard_despite_paper_path": true,
+  "net": {
+    "current_price": "299.62",
+    "entry_order_id": "705a1b5b-1d45-4ba1-97cf-9c646033d78d",
+    "entry_price": "311.222",
+    "existing_legacy_dynamic_intent_not_monthly_adoption": true,
+    "hwm": "315.505",
+    "hwm_gain_pct": "1.376188058684797347231236900",
+    "native_order_type": "stop",
+    "native_trailing_order": false,
+    "qty": "0.325167779",
+    "ratchet_activation_gain_pct": "3.5",
+    "ratchet_activation_price": "322.114770",
+    "ratchet_armed": false,
+    "stop_created_at": "2026-10-19T13:30:04.264290453Z",
+    "stop_expires_at": "2026-10-19T20:00:00Z",
+    "stop_id": "62edc8cd-abef-4525-8073-f06b32a0fdfd",
+    "stop_price": "277.69",
+    "stop_qty": "0.325167779",
+    "stop_status": "new",
+    "symbol": "NET",
+    "unrealized_intraday_pl": "1.079557",
+    "unrealized_intraday_plpc": "0.0112",
+    "unrealized_pl": "-3.772597"
+  },
+  "net_gate": {
+    "continuous_protection_duration": "UNKNOWN",
+    "first_current_direct_readback_ms": 1792429002237,
+    "independent_1335_utc_readback": "MISSED_NOT_RETROACTIVE_PASS",
+    "manager_created_stop_at": "2026-10-19T13:30:04.264290453Z"
+  },
+  "next_existing_timer_acceptance": "PASS_2026_10_19_1715_UTC",
+  "old_failure_broker_get_requests": 0,
+  "old_failure_reproduced_before_get": "REPRODUCED_MISSING_HALT_PIN_BEFORE_ANY_GET",
+  "original_alert_evidence_id": "a24fe6465773b1b56d0ee469e7931be5fb8cc17ebf39dfb0648898e9d310a489",
+  "original_pin_count": 95,
+  "pin_mismatch": {
+    "/root/by-bot/runtime/locks/alpaca_bridge_0d0c322aef55c952.paper-kill/.paper-entry-halt.json": {
+      "actual": "FileNotFoundError",
+      "expected": "f650419b466d016ba0fe7201590714a71d2c274c5ecf1703c84e7ff0f150c115",
+      "match": false
+    }
+  },
+  "post_observer_repair_dependency_failure": {
+    "broker_requests": 0,
+    "broker_writes": 0,
+    "manager_results": [
+      {
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "{\"status\": \"LIVE_PROTECTED\", \"ready_for_live_go\": false, \"stop_order_id\": \"62edc8cd-abef-4525-8073-f06b32a0fdfd\", \"net_pnl_status\": \"NOT_PROVEN\"}\n"
+      },
+      {
+        "returncode": 2,
+        "stderr": "",
+        "stdout": "{\"broker_writes\": 0, \"no_blind_retry\": true, \"orders_allowed\": false, \"reason\": \"NEXT_SELECTED_UNIT_DRIFT\", \"status\": \"BLOCKED_DATA\"}\n"
+      }
+    ],
+    "net_manager_service": "ExecMainStartTimestamp=Mon 2026-10-19 17:05:00 UTC\nExecMainExitTimestamp=Mon 2026-10-19 17:05:07 UTC\nExecMainStatus=2\n",
+    "observed_ms": 1792429658937,
+    "path": "/opt/bybot-research/alpaca-next-entry-20261019-v1/runtime/manager-observations/1792429507156466232-4bf26d02320449a694a3efb01a8daa88.json",
+    "remote_writes": 0,
+    "shop_service": "ExecMainStartTimestamp=\nExecMainStatus=0\n"
+  },
+  "post_repair": {
+    "capture_sha256": "72438b63aa5e0a73ae1ec873035f54b8e4209367d9a455abf019c5b718501794",
+    "journal_sha256": "3eec18bdd335ba4768ede0e515333358bab3ad73c36151884edd457fd8673d85",
+    "observation": {
+      "actual_unprotected_minutes": null,
+      "broker_writes": 0,
+      "coverage": [
+        {
+          "status": "PROTECTED",
+          "symbol": "NET"
+        }
+      ],
+      "evidence_id": "b9eb7762b9c732270f020e50ad3f96e392469c46c30e81a8bcc55a14e87117fa",
+      "issues": [],
+      "money_authority": false,
+      "observed_ms": 1792429457691,
+      "orders_allowed": false,
+      "regular_session": true,
+      "regular_session_elapsed_minutes": 214.29353333333333,
+      "schema": "ALPACA_DAY_PROTECTION_OBSERVATION_V1",
+      "session": "2026-10-19",
+      "session_close_ms": 1792440000000,
+      "session_open_ms": 1792416600000,
+      "source_sha256": "acaf80af88bd5d64be2d7b7242ee5366b6da3f0ab5b79b565715fe25f3ae0b50",
+      "status": "DAY_PROTECTION_CONFIRMED"
+    },
+    "recovery_notification": {
+      "event": {
+        "evidence_id": "b9eb7762b9c732270f020e50ad3f96e392469c46c30e81a8bcc55a14e87117fa",
+        "incident_id": "ce73fd5aca6e7573557396881f62ab37a6a157da13c9ce35890de96dc6513496",
+        "kind": "RECOVERED",
+        "session": "2026-10-19",
+        "status": "DAY_PROTECTION_CONFIRMED"
+      },
+      "receipt": {
+        "delivered": true,
+        "http_status": 200,
+        "message_id": 15236,
+        "response_sha256": "4bfb5a09bb8bc32eb8c999ffe2261b27b556cccd9ea116606a038b863e504be2",
+        "status": "DELIVERED"
+      },
+      "receipt_sha256": "479cd46f02bc500e3af0ada9cb79a0a9b2c4b148eaec5abae48d02cb61212f8f"
+    }
+  },
+  "post_retirement_natural_cycle": {
+    "agent_started_manager": false,
+    "capture_sha256": "0f19da1659d2eed6ee6805b5285237ae073397399f5c7a5384c585b854175c79",
+    "journal_sha256": "3f530273ac7303857d76f819cd9df4ae181051814452bd8dd82cd29c76aaf866",
+    "manager": {
+      "broker_requests": 0,
+      "broker_writes": 0,
+      "manager_results": [
+        {
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "{\"status\": \"LIVE_PROTECTED\", \"ready_for_live_go\": false, \"stop_order_id\": \"62edc8cd-abef-4525-8073-f06b32a0fdfd\", \"net_pnl_status\": \"NOT_PROVEN\"}\n"
+        }
+      ],
+      "net_manager_service": "ExecMainStartTimestamp=Mon 2026-10-19 17:15:00 UTC\nExecMainExitTimestamp=Mon 2026-10-19 17:15:03 UTC\nExecMainStatus=0\n",
+      "observed_ms": 1792430131390,
+      "path": "/opt/bybot-research/alpaca-next-entry-20261019-v1/runtime/manager-observations/1792430103472707109-a8eeeecc8b3b4e3f8dc61807aa9ee9d0.json",
+      "remote_writes": 0,
+      "shop_service": "ExecMainStartTimestamp=\nExecMainStatus=0\n"
+    },
+    "observer": {
+      "actual_unprotected_minutes": null,
+      "broker_writes": 0,
+      "coverage": [
+        {
+          "status": "PROTECTED",
+          "symbol": "NET"
+        }
+      ],
+      "evidence_id": "cc070c2a42e58f6969bb2354fbd01a07e91c106340cf8226c8ba333398aa1fb8",
+      "issues": [],
+      "money_authority": false,
+      "observed_ms": 1792430102869,
+      "orders_allowed": false,
+      "regular_session": true,
+      "regular_session_elapsed_minutes": 225.04713333333333,
+      "schema": "ALPACA_DAY_PROTECTION_OBSERVATION_V1",
+      "session": "2026-10-19",
+      "session_close_ms": 1792440000000,
+      "session_open_ms": 1792416600000,
+      "source_sha256": "70145ca76ce8659daa84f594017de390201a874ac6dfdbbf8e0ee6a1f52d9b11",
+      "status": "DAY_PROTECTION_CONFIRMED"
+    },
+    "positions": [
+      {
+        "current_price": "300.93",
+        "qty": "0.325167779",
+        "symbol": "NET",
+        "unrealized_intraday_pl": "1.505527",
+        "unrealized_pl": "-3.346627"
+      }
+    ]
+  },
+  "private_evidence_sha256": {
+    "alpaca-net-day-monitor.service.candidate": "dc59842b320e144fdbf8530178bfe763991fd7f32198303485673f83ad5479db",
+    "apply_observer_only.py": "b5af4eb080d7f94fd8032ff4c055d58fa1929aa081f06b73a209bf7e5b8ad47b",
+    "apply_retirement_only.py": "d94e147f638952efedb7fd1c6ad5f0029ed6b96c90eaf39657c02781299bcbce",
+    "candidate-capture.json": "c083b47aa73f246ab1fa0a3451887125cf7ca5805224d497266085f89ed8b03c",
+    "candidate_read_only.py": "bf43cc56c64b80d8bebda8b8797a49306fb8f101bba99b1d5231beb396eecf91",
+    "capture.json": "360cbfd4558897eb565cbac42ea676f5cfbd92dbd861c9701277c31aeaa292be",
+    "context.json": "c9025bff9b7ff9848ac17a29ddf4348ab829c6090a4c577219c59b38b589e394",
+    "day-monitor-spec-net-only-v2.json": "d6abec21a8debe9d33e44134cbce354fad394e5fce4068797a8694b0cb64b5ba",
+    "deployment-receipt.json": "532651ccf200da8580f2486f0ca83e5ff42ec346e444ffd265d14d918eac2026",
+    "details.json": "de1d6753e47851a80d3b22f7782ce2d4fd6de5c08d2093258ac49c1f1fbd4400",
+    "manager-after.json": "12c45f7b5774ba89a1af7dce5e9e2291704260800b03e43baf803598c20742a6",
+    "manager-wrapper-net-only.candidate.py": "8bce21a9de184b3a10120ada636820ec63e5769c066cddd66e184751e39c6846",
+    "manager-wrapper-net-only.diff": "cc225011a8252d8810615786cd15d9b31fc19456ad3fa7fad73351f3541b9d3c",
+    "natural-cycle.jsonl": "a50d64b4362515e4c20e87a972e16906276c883f2a146329e93213eda9f934db",
+    "natural-manager-after.json": "994e9313bf830afce1ce0297a510e86ed4491f72e65cca29d3c8286cfdabc760",
+    "natural-observer-after.json": "6509eef3587685677b0b996e6aa5295535982fa643c7b31e48b187ca13f4bb8c",
+    "post-repair.json": "fc0288baa5bf2d8e551f6235a4173fe749723664238a236a546acf2a4134e288",
+    "read_after.py": "5421f78b3b499332b8b46dfbc89048ebcb54c14188ca1c72c1c823b3451c7ab8",
+    "read_context.py": "b19314019bbe1486644455cce3a2bcbe74cb4df2fb48f3c540f9d97e4321db9b",
+    "read_details.py": "d0d016d53759f3ad39b86ee1e99b4655e24d8d88150e9276fe941686210a79cf",
+    "read_natural_cycle.py": "cce6712f10bf7527a6c7bc5d97936f7b1aaaf0240f22d53fc0e510f4209dbc74",
+    "read_only.py": "415e5d7e250647ac216e0a2aef22b74323dfe6fc773a1b65968e9f1e60dc8dcf",
+    "retirement-receipt.json": "674a9e78fca9deab3266dd7d00a994d431a27ba9e5998440c12c2c08e1f1bc23",
+    "retirement-scope.json": "5167d2a22f4329d79f94b096ed171a85d69dd994e154edbe002826f3010a0967",
+    "test_wrapper_retirement.py": "5d1b6ce62428abe49c20f0c558c6fd88df3358f7653f78705366a68ad854383a",
+    "wrapper-tests.json": "c9c9d62561c6bacfb9722e7b8c69cd7975f94b64c91c95cb09b1f24000f85e6a"
+  },
+  "production_repair": {
+    "active_incident": false,
+    "agent_broker_writes": 0,
+    "archived_halt_unchanged": true,
+    "financial_authority_expanded": false,
+    "financial_unit_changes": 0,
+    "fresh_observation": true,
+    "manager_timer_unchanged": true,
+    "new_spec_sha256": "d6abec21a8debe9d33e44134cbce354fad394e5fce4068797a8694b0cb64b5ba",
+    "new_unit_sha256": "dc59842b320e144fdbf8530178bfe763991fd7f32198303485673f83ad5479db",
+    "observation": {
+      "actual_unprotected_minutes": null,
+      "broker_writes": 0,
+      "coverage": [
+        {
+          "status": "PROTECTED",
+          "symbol": "NET"
+        }
+      ],
+      "evidence_id": "b9eb7762b9c732270f020e50ad3f96e392469c46c30e81a8bcc55a14e87117fa",
+      "issues": [],
+      "money_authority": false,
+      "observed_ms": 1792429457691,
+      "orders_allowed": false,
+      "regular_session": true,
+      "regular_session_elapsed_minutes": 214.29353333333333,
+      "schema": "ALPACA_DAY_PROTECTION_OBSERVATION_V1",
+      "session": "2026-10-19",
+      "session_close_ms": 1792440000000,
+      "session_open_ms": 1792416600000,
+      "source_sha256": "acaf80af88bd5d64be2d7b7242ee5366b6da3f0ab5b79b565715fe25f3ae0b50",
+      "status": "DAY_PROTECTION_CONFIRMED"
+    },
+    "observed_ms": 1792429458292,
+    "observer_files_verified": 4,
+    "observer_timer_unchanged": true,
+    "observer_unit_changes": 1,
+    "old_spec_sha256": "1cde0601abb6370f2dc1346b238cb9d753b1400a50c91efbf28f6a561c823f6e",
+    "old_spec_unchanged": true,
+    "old_unit_sha256": "08e66161d72d3ee5b3cd354f2ac4aef492d44b78e5636b81f8459d058471ae47",
+    "original_account_lock_inode": 813893,
+    "retained_pins_verified": 94,
+    "schema": "NET_OBSERVER_OWNER_AUTHORIZED_CONFIG_REPAIR_V1",
+    "shop_cancel_unchanged": true
+  },
+  "retained_pin_count": 94,
+  "root_cause": "STALE_IMMUTABLE_PIN_ON_OWNER_ARCHIVED_ENTRY_HALT",
+  "schema": "ALPACA_NET_DAY_OBSERVER_INCIDENT_CLOSURE_V1",
+  "shop": {
+    "broker_position_or_open_order": false,
+    "entry_service_exec_main_start_timestamp": "",
+    "owner_cancel_preserved": true,
+    "timer": "DISABLED_INACTIVE"
+  }
+}

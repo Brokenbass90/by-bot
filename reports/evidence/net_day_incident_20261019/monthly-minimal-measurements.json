@@ -1,0 +1,97 @@
+{
+  "account": {
+    "account_blocked": false,
+    "accrued_fees": "0",
+    "buying_power": "394.91",
+    "cash": "394.91",
+    "effective_buying_power": "394.91",
+    "equity": "492.21",
+    "initial_margin": "97.3",
+    "maintenance_margin": "29.19",
+    "multiplier": "1",
+    "non_marginable_buying_power": "394.91",
+    "pending_reg_taf_fees": "0",
+    "regt_buying_power": "394.91",
+    "shorting_enabled": false,
+    "trading_blocked": false
+  },
+  "conditional_full_rotation_illustration": {
+    "assumed_minimum_execution_price": "37.1300010681",
+    "assumed_sell_value_max": "341.1940",
+    "capital": "487.42",
+    "execution_days": 1,
+    "fee_components": {
+      "CAT": "0.01",
+      "SEC": "0.01"
+    },
+    "gross_one_side": "341.1940",
+    "historical_minimum_symbol": "NKE",
+    "known_retail_fees_total": "0.02",
+    "not_a_future_fee_bound": true,
+    "not_an_issued_reserve": true,
+    "sell_plus_buy_qty_bound": "18.37834582197923047519482708",
+    "snapshot_session": "2026-10-16",
+    "snapshot_sha256": "0cd0aeca2098d7030fbdd868630a7cd5a60c763e5945c34299ba454e9ac3d3f7",
+    "universe_sha256": "d88f7598819afa8b2cc2fabec197f45a7bcd9dfb8f50d30c1bf2698d671295fa"
+  },
+  "current_net_exit_price_illustration": {
+    "fees": {
+      "CAT": "0.01",
+      "SEC": "0.01"
+    },
+    "not_a_future_loss_bound": true,
+    "not_an_exit_order": true,
+    "price": "299.62",
+    "qty": "0.325167779",
+    "total": "0.02"
+  },
+  "explicit_account_type_field": null,
+  "financial_code_changed": false,
+  "fresh_account_liabilities_visible": "0",
+  "legal_account_type": "NOT_EXPLICIT_IN_ACCOUNT_GET",
+  "margin_documentation": "https://docs.alpaca.markets/us/docs/account-plans",
+  "minimal_proposal": "Use confirmed exit fills and fresh account before calculating pending published fee reserve in existing liability/admission code; keep bookkeeping finality PENDING and conservative net-loss bound; do not waive ownership or protection",
+  "observed_ms": 1792429002237,
+  "operational_margin": "1X_CASH_BP_NO_BORROWED_BUYING_POWER_OBSERVED",
+  "owner_go_issued": false,
+  "precise_guards": [
+    {
+      "condition": "Any exited Monthly lifecycle lacks accepted existing finality proof; runs before account admission",
+      "error": "MONTHLY_ACCOUNTING_PENDING",
+      "function": "_accounting_net"
+    },
+    {
+      "condition": "Broker positions differ from Monthly owned book; current legacy NET is not adopted",
+      "error": "MONTHLY_FOREIGN_OR_UNRECONCILED_POSITION",
+      "function": "_admit_new_entry"
+    },
+    {
+      "condition": "Any owned open position lacks exact full confirmed stop",
+      "error": "MONTHLY_FULL_NATIVE_STOP_REQUIRED",
+      "function": "_admit_new_entry"
+    },
+    {
+      "condition": "min(cash,non_marginable_BP)-liability, full account gross and slot caps",
+      "error": "MONTHLY_FRESH_CASH_GROSS_OR_POSITION_CAP",
+      "function": "_admit_new_entry"
+    }
+  ],
+  "prior_actual_reconciled_fee_total": "0.06",
+  "reserve_issued": false,
+  "retail_fee_document": {
+    "download_sha256": "814767d3dbd44d89bfbf5448eb5eac85a894740bf1974db2294aae448a6fed94",
+    "prior_download_sha256": "0700d871c54af72e1355d97376fffbe3f55848dda00649676e3c60eb0949cb7f",
+    "rate_model_unchanged_for_CAT_SEC_TAF": true,
+    "revision": "2026-10-12",
+    "url": "https://files.alpaca.markets/disclosures/library/BrokFeeSched.pdf"
+  },
+  "schema": "MONTHLY_ROTATION_MINIMAL_MEASUREMENTS_V1",
+  "settled_cash_field": null,
+  "unknowns": [
+    "Future actual exit notional/filled quantities until filled",
+    "Future per-day trade count and applicable schedule/account classification",
+    "ADR/corporate action/other unrelated obligations require separate actual sources",
+    "Actual settled cash is not returned in this account payload",
+    "Delay1/2/3/5 historical sensitivity not performed"
+  ]
+}

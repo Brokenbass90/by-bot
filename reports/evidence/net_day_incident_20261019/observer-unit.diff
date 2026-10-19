@@ -1,0 +1,11 @@
+--- alpaca-net-day-monitor.service.original
++++ alpaca-net-day-monitor.service.owner-approved
+@@ -6,7 +6,7 @@
+ [Service]
+ Type=oneshot
+ TimeoutStartSec=50
+-ExecStart=/root/by-bot/.venv/bin/python -B /opt/bybot-research/alpaca-net-day-monitor-20261017/app/scripts/run_alpaca_day_monitor_v1.py --spec /opt/bybot-research/alpaca-next-entry-20261019-v1/owner-packet/day-monitor-spec.json --spec-sha256 1cde0601abb6370f2dc1346b238cb9d753b1400a50c91efbf28f6a561c823f6e
++ExecStart=/root/by-bot/.venv/bin/python -B /opt/bybot-research/alpaca-net-day-monitor-20261017/app/scripts/run_alpaca_day_monitor_v1.py --spec /opt/bybot-research/alpaca-net-day-monitor-20261017/day-monitor-spec-net-only-v2.json --spec-sha256 d6abec21a8debe9d33e44134cbce354fad394e5fce4068797a8694b0cb64b5ba
+ User=root
+ Environment=PYTHONDONTWRITEBYTECODE=1
+ Environment=PYTHONPATH=/opt/bybot-research/alpaca-net-day-monitor-20261017/app

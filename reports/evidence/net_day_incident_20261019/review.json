@@ -1,0 +1,28 @@
+{
+  "critical": 0,
+  "effort": "high",
+  "findings": [
+    {
+      "issue": "HALT has LIVE guard semantics despite PAPER path",
+      "resolution": "binding link and personal owner archive/hash proved; actual guard preserved unchanged"
+    },
+    {
+      "issue": "Local whole monitor module differs from deployment",
+      "resolution": "Exact deployed collect/GetReader/pin_files AST match verified; actual pinned deployed seven-GET run passed"
+    }
+  ],
+  "important": 2,
+  "model": "gpt-6-astra",
+  "runtime_turn_contexts_verified": 2,
+  "schema": "NET_OBSERVER_CONFIG_REPAIR_REVIEW_V1",
+  "second_independent_signoff": false,
+  "second_slice": {
+    "component": "Remove cancelled SHOP companion call only",
+    "critical": 0,
+    "important": 1,
+    "important_dependency": "Preserve cancelled kit control-spec-pin.json and manager-observations directory still used by NET wrapper",
+    "owner_authorized": true,
+    "resolution": "Dependencies retained without financial spec or unit changes",
+    "second_signoff": false
+  }
+}

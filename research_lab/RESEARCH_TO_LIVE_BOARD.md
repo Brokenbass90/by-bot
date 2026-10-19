@@ -34,6 +34,20 @@ NET manager/его timer/DAY-monitor сохранены. Старый personal-a
 исторический факт, не разрешение включать timer снова. Новый входSHOP19Oct отменён.
 [Research/cancel receipt](../reports/evidence/trading_os_research_intake_20261018/receipt.json).
 
+**19Oct NET safety delta:**13:35 independent window пропущено;16:56 direct GET
+подтвердил full native DAY STOP277.69/.325167779. Observer падал на pin уже штатно
+архивированного entry HALT; owner отдельно разрешил config-only repair, production
+17:04UTC PROTECTION_CONFIRMED/TelegramRECOVERED. После отдельного owner разрешения
+убран только пустой вызов cancelled SHOP из wrapper; первый штатный17:15UTC цикл
+PASS:1NET child LIVE_PROTECTED/exit0 и отдельный свежийPROTECTION_CONFIRMED.
+NET command/6units/financial specs/HALT/lock сохранены.
+[Incident/receipt](../reports/ALPACA_NET_DAY_INCIDENT_2026_10_19.md).
+Monthly component6ab5d4b опубликован;239exactPASS после4monitor regressions,
+тот же1f02fc49 production material. Cash/BP394.91/1x, условный .02fee пример не
+утверждённый резерв. Точный blocker `_accounting_net→MONTHLY_ACCOUNTING_PENDING`;
+минимальный CR в существующем admission, server runner/handoff/rollback остаются
+следующими; нового framework или финансового GO нет.
+
 Первая версия не требует одновременного LIVE всех стратегий или доказанной
 полезности Brain. Прибыль не является гарантируемым критерием приёмки;
 соответствие исследованной модели, исполнение и реальные расходы — являются.
