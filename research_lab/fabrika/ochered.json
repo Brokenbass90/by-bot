@@ -2105,10 +2105,10 @@
    "id": "P_AKC_OSTATOCHNYY_MOMENT",
    "tip": "gipoteza",
    "begun": "portfel",
-   "rynok": "akcii_pit",
+   "rynok": "akcii_pit_v2",
    "semya": "ostatochnyy_moment",
    "slot": "akcii",
-   "sostoyanie": "BLOCKED_DATA",
+   "sostoyanie": "NEGATIVE",
    "blocker": "НАБОР ДАННЫХ НЕ ДОПУЩЕН. Архив не обновлялся: 501 бар, 2024-08-12…2026-08-11, status.json от 12 августа; глубокой истории нет. Сверх того в «чистом» подмножестве из 962 тикеров остались склейки разных компаний под одним тикером: SPCX — скачок +632% 12.06.2026 (21.98 → 160.95) без делистинга, диапазон 21.71…201.80; XTKG — диапазон 0.59…1440.00, делистинг 02.04.2026. Оба НЕ в карантине. Фильтр ликвидности их не спасает: через 11 дней после скачка медиана оборота SPCX 4.8 млрд, фильтр пройден, а 20-дневное окно доходности ещё содержит фальшивый +632%. Механизм ранжирует по 20-дневной доходности, поэтому такая бумага гарантированно окажется в лонг-корзине. Вдобавок скачок лежит ПОСЛЕ даты раздела, то есть отравил бы окно подтверждения, которое заменить нечем. В membership_intervals.json: source_archive_integrity_pass=false, promotion_authorized=false. Задание: research_lab/ZADANIE_CODEX_ISTORIYA_AKCIY_2026_09_23.md",
    "prereg": "research_lab/fabrika/PREREG_AKC_OSTATOCHNYY_MOMENT_2026_09_24.md",
    "param": {
@@ -2123,8 +2123,11 @@
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T15:39:31+00:00",
    "proveryal": "2026-09-28T09:20:41+00:00",
-   "otpechatok_pri_postanovke": "1000:44993239",
-   "trebuet_priyomki": true
+   "otpechatok_pri_postanovke": "963:201130783",
+   "trebuet_priyomki": true,
+   "dannye_prishli": "2026-10-19T08:07:39+00:00",
+   "blocker_snyat": "19.10: глубокий архив 2016–2026 (Codex 25.09) + очищенное членство v2 (SPCX нет файла; разрыв тождества ×4 → 61 сессия; XTKG покрыт правилом); приёмка владельцем 2026-10-19T08:07:39+00:00",
+   "start": "2026-10-19T08:08:01+00:00"
   },
   {
    "id": "LONDON_PROBOY__fx7__long",
@@ -2489,8 +2492,8 @@
    "prereg": "research_lab/PREREG_TEN_SILA_2026_09_23.md",
    "avtor": "Claude",
    "porozhdeno": "2026-09-24T07:01:24+00:00",
-   "ten_molchit_chasov": 3.3,
-   "ten_resheniy": 0
+   "ten_molchit_chasov": 7.9,
+   "ten_resheniy": 17
   },
   {
    "id": "GEP_VYHODNYH__fx7_glub__short",

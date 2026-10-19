@@ -18,5 +18,12 @@
   "otpechatok": "7:14587916",
   "kogda": "2026-10-01T09:23:31+00:00",
   "kto": "владелец, ручной запуск --prinyat"
+ },
+ "akcii_pit_v2": {
+  "otpechatok": "963:201130783",
+  "kogda": "2026-10-19T08:07:39+00:00",
+  "kto": "владелец, письменное GO в чате 19.10.2026 11:05 (Asia/Nicosia) «Если какие то апрувы от меня нужны то все го» на запрос приёмки набора aa51618c; записал Claude",
+  "nabor": "data/alpaca_pit_daily_deep_20260925/bars + data/alpaca_pit_akc_v2_20261019/membership_v2.json (SHA256 aa51618ced7508d46bd7f1a945171f8bfe17b6b5ab708f52de656892b7851b3e)",
+  "dossier": "research_lab/ALPACA_SMART_SELECTION_V1_VALIDACIYA_2026_10_19.md"
  }
 }

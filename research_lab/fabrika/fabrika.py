@@ -76,7 +76,7 @@ MOLCHIT_CHASOV = 18          # тень, не писавшая столько ч
 PRIYOMKA = DIR / "priyomka.json"   # приёмка данных человеком: рынок → принятый отпечаток
 # Рынки, где смена данных НЕ даёт права на прогон без человека: у золота и FX
 # окна надо переобъявить, у акций вселенная может быть списком выживших.
-RYNKI_S_PRIYOMKOY = {"gold", "fx7", "akcii_pit", "gold_glub", "fx7_glub", "gold_glub_utc", "fx7_glub_utc"}
+RYNKI_S_PRIYOMKOY = {"gold", "fx7", "akcii_pit", "akcii_pit_v2", "gold_glub", "fx7_glub", "gold_glub_utc", "fx7_glub_utc"}
 _PRIYOMKA_TEST = None        # подмена файла приёмки в самопроверке
 
 
@@ -376,7 +376,7 @@ def vybrat(d, V, krome=None):
 
 # ── служебное ─────────────────────────────────────────────────────────
 def otpechatok_dannyh(rynok):
-    papki = {"kripto_pit": ["data/pit_daily"], "kripto_pit50": ["data/pit_daily", "data/basis"], "xsec": ["data/pit_daily", "data/basis"], "kripto_pit50_poly": ["data/pit_daily", "data/basis", "data/poly/istoriya"], "akcii_pit": ["data/alpaca_pit_daily_v1/bars"],
+    papki = {"kripto_pit": ["data/pit_daily"], "kripto_pit50": ["data/pit_daily", "data/basis"], "xsec": ["data/pit_daily", "data/basis"], "kripto_pit50_poly": ["data/pit_daily", "data/basis", "data/poly/istoriya"], "akcii_pit": ["data/alpaca_pit_daily_v1/bars"], "akcii_pit_v2": ["data/alpaca_pit_daily_deep_20260925/bars", "data/alpaca_pit_akc_v2_20261019"],
              "crypto137": ["data/h1"], "gold": ["data/zoloto_h1"], "fx7": ["data/fx_h1"], "gold_glub": ["data/zoloto_h1"], "fx7_glub": ["data/fx_h1"], "gold_glub_utc": ["data/zoloto_h1"], "fx7_glub_utc": ["data/fx_h1"], "crypto137_m5": ["data/m5_posle"]}.get(rynok, [])
     n = sz = 0
     for pp in papki:

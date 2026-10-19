@@ -42,6 +42,32 @@ def zagruzit_akcii():
                 razdel=_ms("2026-01-01"), opisanie="Alpaca PIT, 962 тикера (262 делистинга)")
 
 
+def zagruzit_akcii_v2():
+    """Глубокий архив Alpaca PIT 2016–2026 (data/alpaca_pit_daily_deep_20260925, бары без изменений) с очищенным
+    членством data/alpaca_pit_akc_v2_20261019/membership_v2.json (SHA aa51618c…, fabrika/akc_v2_ochistka.py):
+    бар существует, дата не позже делистинга и не внутри окна разрыва тождества (скачок ×4 → 61 сессия).
+    Остальное — как zagruzit_akcii (фильтр ликвидности считается в сигнале по прошлому)."""
+    m = json.load(open(DATA / "alpaca_pit_akc_v2_20261019/membership_v2.json"))
+    iv = {x["symbol"]: x for x in m["intervaly"]}
+    ser = {}
+    for s, x in iv.items():
+        p = DATA / f"alpaca_pit_daily_deep_20260925/bars/{s}.json"
+        if not p.exists():
+            continue
+        dl = _ms(x["delisted_utc"]) if x.get("delisted_utc") else None
+        okna = x.get("okna_isklyucheniya_ms") or []
+        ser[s] = {r["t"] // DEN * DEN: (r["c"], r["v"] * r.get("vw", r["c"])) for r in json.load(open(p))["records"]
+                  if (dl is None or r["t"] <= dl) and not any(a <= r["t"] <= b for a, b in okna)}
+    dates = np.array(sorted({t for v in ser.values() for t in v}), dtype=np.int64)
+    S = sorted(ser); di = {t: i for i, t in enumerate(dates)}
+    C = np.full((len(dates), len(S)), np.nan); DV = np.full_like(C, np.nan)
+    for j, s in enumerate(S):
+        for t, (c, dv) in ser[s].items():
+            C[di[t], j] = c; DV[di[t], j] = dv
+    return dict(dates=dates, simvoly=S, C=C, DV=DV, M=~np.isnan(C), F=None, fee_bps=5.0,
+                razdel=_ms("2026-01-01"), opisanie="Alpaca PIT глубокий 2016–2026, 961 тикер, очищенное членство v2")
+
+
 def zagruzit_kripto_pit(fayl="basis/vselennaya_pit.json", razdel="2025-10-01", vse_chleny=None):
     """Топ-20 по открытому интересу, известному строго до даты (basis/vselennaya_pit.json).
     Цены: data/pit_daily/*.json (скачиваются dannye_pit_kripto.py), иначе из data/h1.
@@ -111,7 +137,7 @@ def zagruzit_kripto_poly():
     return R
 
 
-RYNKI_P = {"akcii_pit": zagruzit_akcii, "kripto_pit": zagruzit_kripto_pit, "kripto_pit50_poly": zagruzit_kripto_poly,
+RYNKI_P = {"akcii_pit": zagruzit_akcii, "akcii_pit_v2": zagruzit_akcii_v2, "kripto_pit": zagruzit_kripto_pit, "kripto_pit50_poly": zagruzit_kripto_poly,
            "kripto_pit50": lambda: zagruzit_kripto_pit("basis/vselennaya_pit_usd50.json")}
 
 
@@ -674,6 +700,6 @@ SIGNALY = {
                                semya="asimmetriya_vol", ctx=True, prereg=P6_ASI, slot="rost"),
     "KR_OSTATOCHNYY_MOMENT": dict(fn=ostatochnyy_moment, rynok="kripto_pit50", napr="long", kv=0.2, H=5,
                                   semya="ostatochnyy_moment", ctx=True, prereg=P6_OST, slot="rost"),
-    "AKC_OSTATOCHNYY_MOMENT": dict(fn=akc_ostatochnyy_moment, rynok="akcii_pit", napr="long", kv=0.2, H=5,
+    "AKC_OSTATOCHNYY_MOMENT": dict(fn=akc_ostatochnyy_moment, rynok="akcii_pit_v2", napr="long", kv=0.2, H=5,
                                    semya="ostatochnyy_moment", ctx=True, prereg=P7, slot="akcii"),
 }

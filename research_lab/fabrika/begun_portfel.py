@@ -30,7 +30,7 @@ sys.path.insert(0, str(DIR))
 from portfeli import RYNKI_P, SIGNALY  # noqa: E402
 
 DRAWS = 50
-PROGREV = {"akcii_pit": 130, "kripto_pit": 50, "kripto_pit50": 50, "kripto_pit50_poly": 50}
+PROGREV = {"akcii_pit": 130, "akcii_pit_v2": 130, "kripto_pit": 50, "kripto_pit50": 50, "kripto_pit50_poly": 50}
 
 
 def vyhod_cena(C, t, H, j):
