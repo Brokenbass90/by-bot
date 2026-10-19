@@ -20,9 +20,9 @@ MAKS_POPYTOK_DEN, MAKS_V_NEDELYU, OTSROCHKA_CH = 4, 5, (1, 2, 4, 8)
 
 def _sostoyanie_reestra():
     sys.path.insert(0, str(LAB / "factory_v3"))
-    import ai_formula_v1 as F
-    from reestr_v1 import Reestr
-    S = Reestr().sostoyanie(); o = S["okna"][F.OKNO_II]
+    import importlib, ai_formula_v1 as F, reestr_v1
+    importlib.reload(reestr_v1); importlib.reload(F)    # сторож живёт часами: без reload виден старый модуль (10:35 UTC: нет OKNO_II)
+    S = reestr_v1.Reestr().sostoyanie(); o = S["okna"][F.OKNO_II]
     ostalos = int(o.get("byudzhet") or 0) - sum(1 for p in S["popytki"].values() if p["okno"] == F.OKNO_II)
     return dict(segodnya=F.popytok_segodnya(), sutochnyy=F.MAKS_POPYTOK_V_SUTKI, ostalos=ostalos, rezerv=F.REZERV_OKNA,
                 menyu=len(F.menyu(S)))
