@@ -1,5 +1,18 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT19Oct CANONICAL ROADMAP / WRITER OWNERSHIP —
+[ROADMAP_SELF_IMPROVING.md](../ROADMAP_SELF_IMPROVING.md) обновлён на месте.
+Codex — soleintegratingwriter общего roadmap/активнойочереди, executionboard и
+checkpoint; Claude — research KARTA/passports/verdicts и published statusdelta;
+PM — priorities/CR, owner — financialscope/GO. Board теперь derivative, не второй
+план. Старыефазы/PF/«production» сохраненывhistoricalsection, неcurrentclaims.
+ОднаP0Moneyзадача+однаP1наисполнителя; Safety/NETgateсохранён. Audit19–23Oct,
+последующиеunknownнепродлеваютauditиMoneyP0неждётего. Originresearch7a80470;
+local3a349a3/82193fe/3e8f779 прочитаны,NOT_CONFIRMED_ORIGIN, runtimeUNKNOWN.
+Factory2reportedAI-FAILнеalphaPASS, manualproposal/staledaemon/spent20of20
+не скрыты. Claudeack/KARTAlinkupdate pending, сообщение неотправлялось; Codex
+неправилсоседнююветку. Ниbroker/runtime/units/risk/researchoutcomesнеизменялись.
+
 CURRENT19Oct RESEARCH SOURCE DELIVERY —
 [RESEARCH_SOURCE_DELIVERY_2026_10_19.md](RESEARCH_SOURCE_DELIVERY_2026_10_19.md).
 BIL/SGOV actualSIP all+split deliveredseparately:2713/1606bars each,16Octend,

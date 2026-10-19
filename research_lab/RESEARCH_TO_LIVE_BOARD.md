@@ -1,11 +1,16 @@
 # Trading OS — единая доска доведения до первой версии
 
-18 октября 2026. Производственные receipts — в этой recovery-ветке; research
-Claude сверено с опубликованным `4b1af408f7c75a8a95257633a197f11fce145b1d`
-(включая прежний Alpaca result0be44ec).
-Это производная доска: разрешения задаются owner packets, деньги — broker/journal/
-native ledger, исследовательские выводы — замороженными research receipts.
-Ни одна строка доски не создаёт финансовых полномочий.
+19 октября 2026. **Единственный общий roadmap и активная очередь:**
+[ROADMAP_SELF_IMPROVING.md](../ROADMAP_SELF_IMPROVING.md).
+Интегрирующий writer общего roadmap/этой доски — **Codex**; research statuses,
+KARTA и passports ведёт **Claude**. Здесь только производные gates стратегий,
+не вторая очередь приоритетов и не финансовое разрешение.
+
+Execution receipts подтверждены через92dd3f2. Published research7a80470 проверен;
+local3a349a3/82193fe/3e8f779 **NOT_CONFIRMED_ORIGIN**, Factory runtime UNKNOWN.
+Политика/GO определяются owner packets, финансовые факты — broker/journal/native,
+research verdicts — замороженными receipts. Свежесть каждой runtime проверки
+задаётся её датой. Старые датированные разделы ниже — история, не новая команда.
 
 ## Что считаем первой версией
 

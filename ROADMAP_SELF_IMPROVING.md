@@ -1,3 +1,143 @@
+# Roadmap: Self-Improving Algobot / Trading OS
+
+**ORIGINAL GOAL:** безопасная автономная мультистратегийная Trading OS: данные →
+проверяемые гипотезы → независимое исследование → допуск → ограниченное исполнение →
+защита → выход → сверка → диагностика и следующий разрешённый цикл. Factory ищет
+экономические преимущества, Brain проверяет портфельную пользу. AI не получает
+самостоятельного права менять LIVE, риск, судью или финансовые разрешения.
+
+**Создан:**10.04.2026. **Актуализирован:**19.10.2026 по PM CANONICAL ROADMAP RECOVERY.
+**CURRENT STATUS: PARTIAL.** Проверенные компоненты и репетиции существуют;
+непрерывная автономная Factory и автономный денежный Monthly ещё не доказаны.
+Это обновление исходного документа, не новый roadmap и не новый financial GO.
+
+## Единственный roadmap и кто обновляет что
+
+Каноническая версия — **этот путь в ветке `codex/recovery-20260824` репозитория
+Brokenbass90/by-bot**. Старый файл в research-ветке не является отдельным актуальным
+планом. Git-ветки и исторические документы не создают новых источников приоритетов.
+
+| Документ / решение | Ответственный writer | Что обновляет | Когда |
+|---|---|---|---|
+| `ROADMAP_SELF_IMPROVING.md` | **Codex — maintainer и единственный интегрирующий writer** | Общие фазы, актуальные приоритеты, ownership, зависимости и acceptance; обе линии по evidence | После существенного PASS/FAIL/blocker/решения PM; research-изменения после проверки публикации и receipts |
+| `research_lab/KARTA_PROEKTA.md`, research passports/registry | **Claude** | Исследовательские факты, prereg, попытки/данные, economic/forward verdicts; ссылки на общий roadmap | После существенного исследовательского результата; не дублирует финансовые разрешения и общую очередь |
+| `research_lab/RESEARCH_TO_LIVE_BOARD.md` в recovery | **Codex** | Производная таблица research/execution/owner gates каждой стратегии | Вместе с соответствующей строкой roadmap; отдельную очередь приоритетов не создаёт |
+| Checkpoint / START / MASTER в recovery | **Codex** | Короткий continuity pointer и фактическая дельта | После законченного инженерного блока |
+| Приоритеты, change requests | **PM** | Причина смены порядка/направления, архитектурные ограничения | Явное решение с причиной; не автоматическая реакция на последние сделки |
+| Финансовые пределы и активация | **Владелец** | Явный bounded GO по проверенному конкретному пакету | После technical acceptance; документ/исследовательский PASS не заменяет разрешение |
+
+Claude сохраняет status delta в своей research-ветке: компонент → статус → SHA →
+code/test/runtime evidence → blocker → next gate. Codex читает опубликованный ref,
+проверяет delta и сам интегрирует общий roadmap/board. Пользователь не должен
+переписывать сводки вручную. Нельзя одновременно править общий roadmap из двух
+сессий; research code/KARTA/VOROTA Codex не редактирует. При расхождении источников
+помечается UNKNOWN и фиксируется конкретное различие, а не выбирается удобная версия.
+
+Распределение задано PM/владельцем в этой сессии. Отдельное подтверждение Claude
+не получено; этот документ не выдаёт назначение за его acknowledgement. Для Claude:
+старую формулировку KARTA «единый источник правды всего проекта» сузить до research
+карты, добавить ссылку сюда; старые финансовые строки заменить ссылкой на execution
+board. Изменение своей KARTA выполняет Claude, без переписывания истории.
+
+## Реальная исходная точка и предел аудита
+
+- Execution origin: `92dd3f21bfed88bd505e29f3cbb919b34b0394fc` подтверждён.
+- Research origin на проверке19Oct: `7a80470d0b928b8fbdf41d69d88570105d2803a4`.
+- Локальный research ref содержит `3a349a3`, `82193fe`, `3e8f779`. Тексты/пути
+  прочитаны через Git, **публикация и независимый runtime acceptance не подтверждены**.
+  Эти изменения не объединялись с production.
+- Базовое сопоставление фаз выполнено19Oct. Аудит ограничен19–23Oct включительно
+  (пять рабочих дней). Непроверенное к23Oct получает UNKNOWN с owner/следующим
+  доказательством; автоматического продления и ожидания аудита для Money Lane нет.
+
+Статусы: **IMPLEMENTED** — в явно указанной границе есть code + test + runtime
+receipt; **PARTIAL** — одно звено или end-to-end применение не доказано;
+**MISSING** — известная необходимая функция отсутствует; **OBSOLETE** — исторический
+план больше не принят; **UNKNOWN** — фактическое подтверждение отсутствует.
+Количество файлов/коммитов и наличие модуля не доказывают работающую систему.
+Runtime receipt всегда датирован: вчерашняя проверка не является сегодняшним broker readback.
+
+## Исходные фазы → фактическое состояние
+
+| Фаза / ORIGINAL GOAL | CURRENT STATUS | Ответственный | Существующий code / test / runtime evidence | Blocker → следующий acceptance criterion | Настоящая зависимость |
+|---|---|---|---|---|---|
+| 1. Инфраструктура, здоровье, наблюдаемость | **PARTIAL**, прежнее общее «завершена» историческое | Codex | `research_lab/alpaca_monthly_notifications_v1.py`, `alpaca_day_monitor_v1.py`; notification tests; фактическая Telegram квитанция15223 в [Monthly E2E](reports/ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md) | Общая поставка execution/Health/reporting ещё не принята как единый актуальный runtime → симптомы и восстановление проходят через существующие journal/Monitor без второго ledger | Реальное ownership/данные существующего manager; не новый Brain |
+| 2. Безопасный денежный цикл, сначала Monthly | **PARTIAL**; standing-компоненты реализованы ORDERS_OFF | Codex | `research_lab/alpaca_monthly_cycle_v1.py`, `alpaca_monthly_native_binding_v1.py`;165exact tests,2fixturecycles/1grant; [standing receipt](reports/ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md). Actual money runtime отсутствует | Автоматический actual broker cost-finality producer **MISSING**; applying runner/handoff **MISSING** → confirmed exit/net/cash release и следующий разрешённый цикл без ручного source файла, restart/lost-response/rollback PASS | Actual cash/fees coverage, единый manager, bounded owner GO; не полезность Factory/Brain |
+| 3. Контролируемое улучшение, change control | **PARTIAL**; бесконтрольное auto-apply **OBSOLETE** | Codex + Claude | Существующие prereg/passports/source pins, execution receipts и versioned GO. Непрерывная автоматическая degradation→repair→review→release цепь **UNKNOWN** | Одна версия ухудшилась → воспроизводимый диагноз/CR/сравнение/rollback; никаких автоматических LIVE изменений по короткой серии PnL | Независимый review и owner-approved release; короткий PF сам по себе не причина повышать риск |
+| 4. Factory: корректная автоматическая очередь | **PARTIAL** | Claude | Research `fabrika/fabrika.py`, `begun_h1.py`, `sudya_dengi.py`; published314f9ae/7a80470. Default V2.2 + обязательный judge и sandbox queue test описаны в локальном3a349a3 | Опубликовать3a349a3 и проверить реальную автоматическую очередь; текущий daemon runtime **UNKNOWN**, по отчёту Claude не работает с01Oct → trace одного штатного цикла с нужными gates и точным terminal verdict | Существующая очередь/реестр и валидные данные; не новый framework/повтор старых verdicts |
+| 4. AI proposer → prereg → evaluator → passport | **PARTIAL**;2reportedFAIL — технические примеры, не alphaPASS | Claude | Local82193fe/3e8f779: `factory_v3/ai_formula_v1.py`, `ai_raund.py`, `fabrika/ai_formula_cikl.py`, `storozh.py`; Claude сообщает115factory tests, Codex их не запускал; локальный `research:3e8f779:research_lab/FACTORY_AUDIT_AUTONOMNOGO_POISKA_2026_10_19.md` не подтверждён в origin | Publication + непрерывность и ресурсный бюджет **UNKNOWN**; предложение ещё запускается вручную, автоматическая forward-постановка **MISSING** → новый proposal проходит весь gate с immutable evaluator/prereg и единственной разрешённой попыткой | Независимые окна/attempt budget; исчерпанное20/20 окно не становится новым из-за новой формулы |
+| 4. Strategy passports и независимость | **PARTIAL** для непрерывного полного цикла | Claude | `factory_v3/reestr_v1.py`, `okna_proverka.py`, `avto_prodvizhenie.py`, `data/factory_v3/reestr_v1.jsonl`; component tests в research; полный актуальныйruntime **UNKNOWN** | Code+prereg+window+budget+judge pins связаны в одном проверяемом trace; автор не может менять судью после результата. Auto-prereg не доказывает неиспользованность данных | Протокол независимых данных и достаточная выборка; без повторного запуска spent judge |
+| 5. Brain как проверяемый portfolio allocator | **PARTIAL**; added net value **INCONCLUSIVE** | Claude research; Codex read-only integration | Published7a80470:72pairs/6timing confirmations/0money; `fabrika/brain_rezhimy.py`; execution `brain_shadow_readonly_bridge_v1.py` и tests; [интеграция](reports/TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md) | Нет доказанного incremental portfolio net value → paired fixed/equal-capital baseline, расходы/корреляция/кризисы; при недостатке независимых economic sleeves **BLOCKED_ECONOMICS** | Несколько допущенных независимых рукавов/проспективные decisions; режимный классификатор не заменяет экономику |
+| 5. Multi-market масштабирование | **MISSING / DEFERRED**, исходная цель сохранена | PM + Claude + Codex | Отдельные существующие Alpaca/Bybit источники и frozen стратегии; общего разрешённого money allocator runtime нет | Закрыть первый reproducible net-accounted cycle и доказать второй sleeve до расширения капитала/бирж | Собственные economic/execution gates каждого sleeve, owner caps |
+| Сквозные источники для новых исследований | **IMPLEMENTED** в узкой границе BIL/SGOV delivery; **PARTIAL** Polymarket/forward sources | Codex source; Claude QA/research | [92dd3f2:27tests+actualcopy](reports/RESEARCH_SOURCE_DELIVERY_2026_10_19.md); BIL2713/SGOV1606 all+split; Polymarket40markets/20752points; существующие LIQ/IBIT data workers | BIL: prereg overlay; Polymarket: полный согласованный census/lifetime/QA, не pilotPASS; IBIT Massive PENDING, raw LIQ не prospective event | Причинные timestamps, coverage/identity/cost contracts; не новые финансовые полномочия |
+| Accounting / Reporting / Tax | **PARTIAL** financial accounting; полный tax assistant **MISSING / DEFERRED** | Codex accounting; Claude design | Existing `alpaca_dynamic_live_runtime_v1.py::finalize_costs`, Monthly book/Monitor; finality tests; [налоговый design](https://github.com/Brokenbass90/by-bot/blob/7a80470d0b928b8fbdf41d69d88570105d2803a4/research_lab/TAX_ACCOUNTING_OS_ROADMAP.md). Единого tax runtime нет | Сначала raw execution/cash/fees reconciliation и reporting из существующего журнала; полный налоговый продукт позже | Actual broker facts и классификация; не создавать второй источник финансовой истины |
+
+Research пути в таблице относятся к sibling `bybit-bot-clean-v28` и соответствующему
+Git ref. Локальный документ без публикации — publication blocker, не evidence PASS. Runtime Factory выше не проверялся запуском judge/демона.
+
+## Одна короткая активная очередь
+
+Нумерация здесь операционная: сохранение действующего выше delivery, затем один
+главный пакет на исполнителя и максимум один независимый P1. Это не отменяет PM
+порядок; аудит документа не блокирует реализацию.
+
+| Slot / владелец | Работа сейчас | Закрывающий acceptance / следующее событие |
+|---|---|---|
+| **P0 Preserve — Codex** | NET сопровождение; SHOP OWNER_CANCELLED; существующие locks/GO/защита без изменений ради roadmap |19Oct13:30UTC actual DAY protection и13:35UTC independent broker readback; до события **PENDING**, после только фактический receipt. На Кипре16:30/16:35 |
+| **P0 Money — Codex** | Один пакет Monthly autonomy: actual cost-finality → one applying runner/NET handoff/rollback → concrete standing packet | Автоматическая непротиворечивая net/cash finality на actual sources, затем полный ORDERS_OFF producer→runner trace; financial GO отдельный.30Oct closed selection /2Nov14:30–14:35UTC fresh gates — будущие факты, не повод откладывать код |
+| **P1 Codex** | Поддерживать существующие DATA_ONLY доставки/QA, без нового framework и массового backfill | Hash/source conflict становится видимым; immutable replay/catchup; следующий actual19Oct close source отдельно от16Oct. Polymarket global census не отнимает slot MoneyP0 |
+| **P0 Research — Claude** | Один пакет Factory continuity: V2.2/default money judge + bounded AI proposal cycle + independent windows | Опубликовать3a349a3/82193fe/3e8f779, единый causal automated trace с pins/budget/terminal verdict; generator ещё manual/daemon stale не выдавать за полную автономию |
+| **P1 Claude** | BIL/SGOV: одна preregistered overlay-проверка на доставленных данных | Prereg до результата, одинаковый Monthly baseline/capital/costs, корректный total return/liquidity; verdict не создаёт money permission |
+
+**Сознательно отложено:** новый Polymarket bulk/global screen до dataset/prereg QA;
+SEC/COT source после закрытия MoneyP0 и освобождения Codex P1; максимум три smart
+selection гипотезы (SEC, AI top-8 ranking, daily ranking stability21/42) после
+освобождения Claude P1. Сравнения — Monthly/momentum/random-within-setup/SPY на
+одинаковых ограничениях, с зависимостью по акциям/времени и multiplicity.
+Масштабирование, новые frameworks, массовая уборка, multi-account и полный tax
+assistant не входят в первую monetary v1. KITY остаётся SPENT/ORDERS_OFF,
+Elder сохраняет отдельные prospective/parity gates; количество2–3crypto strategies
+и желаемая доходность не заменяют допуск.
+
+## Gate гипотез и change control
+
+Новая AI hypothesis содержит экономическую причину/кто платит, причинную формулу,
+метрику, MDE, sample plan, независимое окно, costs/control, лимит попыток и falsifier.
+Один автор не меняет evaluator после исхода; pins и read-only outcome access
+фиксируются до теста. Комбинации атомов и выбор гипотез также расходуют бюджет;
+отсутствие числовых параметров не устраняет overfitting.
+
+Любое изменение LIVE: причина/CR → прежняя и новая версия → сравнение economic и
+execution поведения → независимый review → точные owner terms → rollback criterion
+и receipt. Bounded standing permission допускает только заранее согласованные
+действия; это не право AI на произвольные live patches или расширение риска.
+
+Research ориентиры12–15% для Alpaca и30–40% для активных sleeves сохранены как
+целевые вопросы исследований, не promises, acceptance thresholds или разрешение
+добавить плечо. KPI — completed reconciled cycles, independent economic verdicts,
+forward candidates, unresolved incidents и confirmed net PnL; не тоннаж кода.
+
+## Changelog управления —19Oct2026
+
+- Обновлён исходный roadmap: единственный интегрирующий writer Codex; Claude research
+  owner; PM priorities, owner financial authority. Board/KARTA роли разведены.
+- Фазы1–5 сохранены, текущие статусы основаны на code/test/dated runtime receipts.
+  Прежние «production/WF-22/phase complete» не переносятся на нынешнюю систему.
+- Monthly получает MoneyP0 независимо от Factory/Brain. Published92dd3f2 принят;
+  local3a349a3/82193fe/3e8f779 отмечены NOT_CONFIRMED_ORIGIN, не выданы за deployedPASS.
+- Отдельно отмечены исчерпанное20/20 окно, manual AI proposals, stale catalog daemon,
+  автоматический prereg без гарантии независимости и неизвестный portfolio edge.
+- До23Oct закрыть доступные evidence gaps; остальные UNKNOWN, не бесконечный аудит.
+  Следующие изменения добавляются сюда с причиной; исходная цель не заменяется.
+
+---
+
+## Историческая редакция до24Aug2026 — не текущие статусы и не полномочия
+
+Ниже сохранён прежний текст без удаления истории. SHA256 исходных12003bytes: `fde91178a71ae84d7c2b6ccd80c2dbc6ee035c18bb2b792e770c0e65df8d1537`. Его «ЗАВЕРШЕНА», «Продакшн»,
+«запущено», PF/доходность/планы и старые приоритеты являются историческими записями,
+не подтверждением текущего LIVE. Старые процессы/стратегии по этому тексту не запускать.
+
 # Roadmap: Self-Improving Algobot
 
 **Цель:** Контролируемая самообучающаяся система, которая сама обнаруживает

@@ -1383,3 +1383,19 @@ window/copychanges rootreviewonly, nosecondindependentreview. Useexisting immuta
 archives/helpers ratherthanredownload/overwrite. Sources and code remainlocal;
 previousVPSsource-transferdenial notpermission or retryauthority. Monthly realcost
 producer+singleapplyingrunner remainP0. NET19Octplan/SHOPcancel unchanged.
+
+
+## October19 canonical roadmap ownership — latest coordination rule
+
+Existing ROADMAP_SELF_IMPROVING.md is the one shared governance/active queue,
+canonical version on codex/recovery-20260824. Codex is sole integrating writer;
+Claude owns research KARTA/passports/verdicts and supplies published SHA/evidence
+statusdelta. Codex verifies then updates roadmap+derivative executionboard+checkpoint.
+No second priority queue in board/KARTA, no concurrent roadmap writers or edits
+to Claude dirty checkout. PM priorities/change requests, human financial authority.
+Research local3a349a3/82193fe/3e8f779 notconfirmed origin7a80470; do not merge or
+claim deployed autonomy. Claude acknowledgement/KARTA pointer pending, no message
+was sent.19–23Oct bounded evidence audit, unknowns labelled, no automatic extension
+and no wait for MoneyP0. Preserve original roadmap bytes under historical banner;
+old production/PF/complete labels are not current financial facts. One main work
+package and at most one independent P1 per implementer; NET safety invariant stays.
