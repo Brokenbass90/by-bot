@@ -15,10 +15,12 @@ def snimok(bid=0.90, ask=0.92, t=None):
 
 class T_(unittest.TestCase):
     def test_vhod_po_ask_no(self):
-        r = P.resheniya(set(), snimok(), T, stakan_fn=lambda c, **k: (dict(no_token="n", vwap_no_10usd=0.11, gamma_indikativno={}), None))
+        r = P.resheniya(set(), snimok(), T, stakan_fn=lambda c, **k: (dict(no_token="n", vwap_no_10usd=0.11, tokenov_na_10usd=10 / 0.11, gamma_indikativno={}), None))
         self.assertEqual(r[0]["status"], "VHOD"); self.assertEqual(r[0]["zerkalo_no_tolko_sravnenie"], 0.1)
         self.assertAlmostEqual(r[0]["cena_no"], 0.11 + 0.07 * 0.11 * 0.89, places=6)          # комиссия Polymarket по формуле
         self.assertAlmostEqual(r[0]["cena_no_stress"], 0.11 + 0.10 * 0.11 * 0.89 + 0.01, places=6)
+        b = r[0]["byudzhet"]; self.assertAlmostEqual(b["tokeny_usd"], 10.0, places=3)
+        self.assertAlmostEqual(b["vsego_usd"], 10.0 + b["komissiya_usd"], places=3)              # комиссия сверху и учтена в доходе
 
     def test_vne_okna_i_diapazona(self):
         self.assertEqual(P.resheniya(set(), snimok(), T + 2 * 3600_000, stakan_fn=None), [])

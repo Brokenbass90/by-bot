@@ -167,7 +167,11 @@ def resheniya(est, snimki, seychas_ms, stakan_fn=stakan_no):
                 p = st["vwap_no_10usd"]; fe = g.get("feesEnabled") is not False      # неизвестно → считаем, что комиссия есть
                 cena = p + (FEE_RATE * p * (1 - p) if fe else 0.0)
                 cena_s = p + (FEE_RATE_STRESS * p * (1 - p) if fe else 0.0) + 0.01
+                tok = st["tokenov_na_10usd"]
                 zap.update(st, status="VHOD", cena_no=round(cena, 6), cena_no_stress=round(cena_s, 6), komissiya_vklyuchena=fe,
+                           byudzhet=dict(pravilo="10 $ — стоимость токенов; комиссия сверху; доход считается на ВСЕ потраченные $",
+                                         tokeny_usd=round(tok * p, 4), komissiya_usd=round(tok * (cena - p), 4), vsego_usd=round(tok * cena, 4),
+                                         bezubytochnaya_veroyatnost_no=round(cena, 4)),
                            mid_yes=round(mid, 4), zerkalo_no_tolko_sravnenie=round(1 - bb, 4) if bb is not None else None)
         out.append(zap)
     return out
