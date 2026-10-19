@@ -2,8 +2,41 @@
 
 18 октября 2026. **DONE / DATA_ONLY**: действующий Monthly source → его же daily
 view → frozen ranking/selection → immutable VPS export → фактический импорт Claude.
-19 октября после закрытия — отдельный будущий снимок, пока **PENDING**, не PASS.
+Обновление19Oct: отдельный снимок после закрытия **доставлен23:40Asia/Nicosia**;
+проверки hashes/coverage/selector parity PASS в DATA_ONLY границе, см. ниже.
 Финансовая активация Monthly не выполнена; NET и отмена SHOP сохранены.
+
+## Фактическая доставка закрытия19 октября
+
+[Receipt](evidence/alpaca_monthly_data_parity_20261018/delivery-20261019.json).
+Это отдельные `2026-10-19.json`, `.diagnostic.json`, `.diagnostic.md`, `.delivery.json`
+в том же research data каталоге. Source available19Oct20:21:01.382UTC, после
+actual close20:00UTC+20min. Первый local seal —20:40:01.792UTC /
+**23:40:01.792Asia/Nicosia**. Actual verification time отдельно записано в receipt.
+Снимок16Oct сохранён: все четыре hashes, inode и mtime неизменны; оба local seals
+сверены с VPS, `verify_files` независимо воспроизвёл derivation обоих snapshots.
+
+Universe57+SPY, безQQQ; тот же universeSHA`d88f7598…1295fa`, источник/adjustment
+policy не менялись.260sessions/105095hourlyrows, **core200complete=true** по58.
+Минимум fully_checked257: старые warmup gaps28Nov/24Dec2025 у всех58 и9Oct2025
+уREGN сохранены; история не заполнена и не засчитана prospective.
+
+| Гипотетический Monthly19Oct pick | Вес | Close snapshot |
+|---|---:|---:|
+| SHOP |42.92%|171.02 |
+| ABBV |20.91%|282.70 |
+| ADSK |19.88%|240.70 |
+| MSFT |16.30%|533.61 |
+
+SPY200gateTRUE (close766.539978 > SMA200725.403725); **monthly_calendar_dueFALSE**.
+Это диагностический отбор вне monthly schedule; существующий SHOP cancellation
+сохранён, financial GO/entry не следуют из таблицы. Account/cash не читались.
+Historical warmup credit0; prospective research decisions/judge не выполнялись.
+DataSHA`ff87a6485cdd77181549b870d7e388f99959d829f9f3ab1af699a130909c6b00`;
+sealSHA`7771caf091df5029775d7092c9871fac26fe6d15ba8c6d01ba332152ddc6f90a`.
+Серверный exporter/источник/units/NET/SHOP/risk не менялись; broker writes0.
+Ни сообщения Claude, ни правки research code/KARTA/VOROTA/outcomes не выполнялись.
+Датированные PENDING19Oct формулировки ниже описывают исходное состояние18Oct.
 
 ## Что доставлено
 

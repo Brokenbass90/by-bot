@@ -1,0 +1,140 @@
+{
+  "account_cash": "UNKNOWN_NOT_READ_DATA_ONLY",
+  "actual_verification_ms": 1792442439877,
+  "actual_verification_utc": "2026-10-19T20:40:39.877000+00:00",
+  "adjustment_policy": {
+    "aggregation": "EXISTING_UTC_DAY_FIRST_OPEN_MAX_HIGH_MIN_LOW_LAST_CLOSE_SUM_VOLUME",
+    "auto_adjust": false,
+    "close": "LAST_RTH_HOURLY_BAR_CLOSE_NOT_SIP_OFFICIAL_AUCTION",
+    "consumer_dividend_total_return_adjustment": false,
+    "consumer_price_factor": "NONE",
+    "corporate_action_point_in_time_reconstruction": "NOT_PROVEN_NOT_REQUIRED_FOR_SAME_CAPTURE_PARITY",
+    "provider_price_basis": "YAHOO_OHLC_AS_CAPTURED",
+    "split_policy": "PRESERVE_VENDOR_HISTORY_NO_REBASE_OR_SECOND_SPLIT_FACTOR",
+    "yfinance_adj_close_ratio_applied": false
+  },
+  "all_imported_sessions_verified": [
+    "2026-10-16",
+    "2026-10-19"
+  ],
+  "already_imported": false,
+  "broker_writes": 0,
+  "coverage": {
+    "core200_complete": true,
+    "earlier_warmup_policy": "PRESERVE_AND_FLAG_NEVER_FILL_OR_REBASE",
+    "exported_sessions": 260,
+    "first_session": "2025-10-07",
+    "fully_checked_sessions": 257,
+    "last_session": "2026-10-19",
+    "observed_hourly_rows": 105095,
+    "symbols": 58
+  },
+  "coverage_by_symbol_sha256": "4dcdfcffaec51c2d5e5f79771d526a07f661fc03f4429e5d06b9dc9673f8834c",
+  "data_sha256": "ff87a6485cdd77181549b870d7e388f99959d829f9f3ab1af699a130909c6b00",
+  "destination": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/alpaca_monthly58_daily_v1",
+  "files": {
+    "2026-10-19.diagnostic.json": "ce099ee6bc06d8ff6e03c1c84b435dad66c45f70efdf76ff4c57a5871fa712f2",
+    "2026-10-19.diagnostic.md": "8551a09f4ded0b46b03c5d59cbe8df5c1f530dda5e6703a8f091e660d6c1dc4f",
+    "2026-10-19.json": "d1571ed0696ff0a121230e420b8e1d165d87f571dc470dc292ca42ed25313063"
+  },
+  "first_local_seal_mtime_ms": 1792442401792,
+  "first_local_seal_nicosia": "2026-10-19T23:40:01.792000+03:00",
+  "first_local_seal_utc": "2026-10-19T20:40:01.792000+00:00",
+  "historical_warmup_prospective_credit": 0,
+  "hypothetical_monthly": {
+    "gate_ok": true,
+    "hypothetical_out_of_schedule": true,
+    "picks": [
+      {
+        "atr20": 7.83253631592,
+        "atr20_pct": 4.579894819462048,
+        "rawscore": 0.44065201102848134,
+        "score": 0.429171394401759,
+        "signal_close": 171.0200042725,
+        "stop_price": 155.35493164066,
+        "symbol": "SHOP",
+        "weight": 0.429171394401759
+      },
+      {
+        "atr20": 6.215209960934999,
+        "atr20_pct": 2.198517754708856,
+        "rawscore": 0.14872904575366755,
+        "score": 0.20907088890523873,
+        "signal_close": 282.700012207,
+        "stop_price": 270.26959228513,
+        "symbol": "ABBV",
+        "weight": 0.20907088890523873
+      },
+      {
+        "atr20": 7.6705253601050005,
+        "atr20_pct": 3.1867575643367125,
+        "rawscore": 0.1702397379446389,
+        "score": 0.1987692468932463,
+        "signal_close": 240.6999969482,
+        "stop_price": 225.35894622799,
+        "symbol": "ADSK",
+        "weight": 0.1987692468932463
+      },
+      {
+        "atr20": 12.196818542479999,
+        "atr20_pct": 2.2857178233730795,
+        "rawscore": 0.11822393951308759,
+        "score": 0.16298846979975595,
+        "signal_close": 533.6099853516,
+        "stop_price": 509.21634826664,
+        "symbol": "MSFT",
+        "weight": 0.16298846979975595
+      }
+    ],
+    "reason": "ok"
+  },
+  "hypothetical_out_of_schedule": true,
+  "hypothetical_weekly_first": "SHOP",
+  "money_authority": false,
+  "monthly_calendar_due": false,
+  "net_shop_units_risk_unchanged": true,
+  "older_import_files_hash_mtime_inode_unchanged": true,
+  "older_warmup_flags": {
+    "REGN_additional": [
+      "2025-10-09"
+    ],
+    "all_58_symbols": [
+      "2025-11-28",
+      "2025-12-24"
+    ]
+  },
+  "orders_allowed": false,
+  "private_import_receipt_sha256": "e55b54895c99d6193be4ae21019ceab19a1c21a477d0272119d043d8e2cddaf3",
+  "prospective_research_credit": "NOT_ASSESSED_NO_JUDGE_RUN",
+  "provider": "YAHOO_HOURLY",
+  "remote_seal_listing_sha256": "524f629bb30410738dc1162534daa2c1d96d65c32310477ea1d8d94713c4503e",
+  "remote_writes": 0,
+  "schema": "ALPACA_MONTHLY58_DAILY_IMPORT_RECEIPT_V1",
+  "seal_sha256": "7771caf091df5029775d7092c9871fac26fe6d15ba8c6d01ba332152ddc6f90a",
+  "session_date": "2026-10-19",
+  "source_available_ms": 1792441261382,
+  "source_available_utc": "2026-10-19T20:21:01.382000+00:00",
+  "source_code_sha256": {
+    "backtest/alpaca_bakeoff_v2_contract.py": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+    "backtest/alpaca_exact_parity_contract.py": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+    "backtest/alpaca_honest_portfolio.py": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8",
+    "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245",
+    "research_lab/alpaca_dynamic_v1.py": "7ab36fd92c93103c648002eae16d775225d73c98fa765d470652a00d84c09622",
+    "research_lab/alpaca_strategy_parity_v1.py": "d87f5e07dc3353664f06661dc9a7ef2e16ce37342ad5df9c255a30f4f150efb8",
+    "scripts/alpaca_adaptive_paper.py": "2b06658d692edadb929d128f47a026a02cb953d393434e05517ea75708795b9c",
+    "strategies/alpaca_dynamic_v4_event.py": "ca3ca15faf6cc7ca5f1804a24fd4ff5c088064d1cfaced5a37751ab387b8179a"
+  },
+  "source_content_sha256": "56280959bea7286d04aa7b01e39ce7f964bb111d24eabb7cbbcc63841d8ec539",
+  "source_last_bar_open_ms": 1792438200000,
+  "source_session_close_ms": 1792440000000,
+  "source_started_ms": 1792441202187,
+  "spy_gate": {
+    "close": 766.5399780273,
+    "extra_regime_veto": "NONE_IN_FROZEN_MONTHLY",
+    "gate_ok": true,
+    "sma200": 725.403725280761,
+    "sma50_observation_only": 768.3525036621081
+  },
+  "universe_sha256": "d88f7598819afa8b2cc2fabec197f45a7bcd9dfb8f50d30c1bf2698d671295fa",
+  "warmup_flags_preserved": true
+}

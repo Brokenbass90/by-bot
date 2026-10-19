@@ -1,5 +1,22 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT19Oct23:40CY MONTHLY58 POST-CLOSE DATA DELIVERY —
+Existing DATA_ONLY exporter seal19Oct found bySSHGET/list and delivered through
+existingpull into sibling research_lab/data/alpaca_monthly58_daily_v1. Sourceactual
+20:21:01.382UTC afterclose20UTC+20min, firstlocalseal20:40:01.792UTC/23:40Cyprus;
+actualverifytime separate. Strict57+SPY/noQQQ, universeSHA d88f7598...1295fa;
+260sessions/105095hourlyrows/core200complete58, minfullychecked257; olderwarmup
+gaps retained, nofill/rebase/SIPmix. Both16/19seals+files/selector derivationverified;
+old16hashes/inode/mtime unchanged. DataSHAff87a648...09c6b00, seal7771caf0...6f90a.
+Hypothetical19picks SHOP42.92/ABBV20.91/ADSK19.88/MSFT16.30percent; SPY200TRUE,
+monthlycalendarFALSE, noactualbuy/SHOPreenable/financialGO/accountread implied.
+Read ALPACA_MONTHLY_DATA_PARITY_2026_10_18.md updatedsection and
+evidence/alpaca_monthly_data_parity_20261018/delivery-20261019.json.
+Historicalwarmupcredit0, prospectivejudge notrun. Researchcode/KARTA/VOROTA,
+broker/NET/SHOP/units/risk/financialconstructors untouched; no Claude messages.
+ExistingDATAexporter/heartbeat and19-net-ibit unchanged; IBIT resultnotchecked
+bythisMonthly-onlyrun. MoneyP0pendingfee-admission/runner remains unchanged.
+
 CURRENT19Oct NET TRAILING INTAKE / MONTHLY PRIORITY PRESERVED —
 PM research-only proposal accepted as BACKLOG afterMonthlyP0, notnewLIVEterms.
 Verified originresearchd914fd2;60530b9 ancestor, H4blob68181b0. Existing H4 tested
