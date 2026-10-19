@@ -4,8 +4,8 @@ factory_v3/ai_raund.py --formula --n 1 --zapisat --model qwen3:4b). Дальше
 ai_formula_cikl (prereg-коммит до прогона → прогон → вердикт). Только исследование, ордеров нет.
 
 Ничего не делает, если: сегодня уже была успешная генерация; суточный или оконный бюджет ИИ исчерпан; меню пусто.
-Ресурсы проверяет сам ai_raund (модель ≤ 8B, /api/ps пуст, свободная память ≥ модель + max(2 ГБ, модель), замок,
-таймаут 120 с, дедлайн 300 с) — при нехватке памяти отказ, повтор на следующем часовом проходе."""
+Ресурсы проверяет сам ai_raund (модель ≤ 8B, /api/ps пуст, свободная память ≥ модель + max(1.5 ГБ, ½ модели), замок,
+таймаут 300 с, дедлайн 600 с, 2 потока) — при нехватке памяти отказ, повтор на следующем часовом проходе."""
 import datetime as dt, json, subprocess, sys
 from pathlib import Path
 LAB = Path(__file__).resolve().parents[1]; ROOT = LAB.parent
@@ -31,7 +31,7 @@ def prohod():
     if not F.menyu(S):
         return {"status": "menyu_pusto"}
     r = subprocess.run([sys.executable, str(LAB / "factory_v3" / "ai_raund.py"), "--formula", "--n", "1", "--zapisat",
-                        "--model", MODEL], cwd=str(ROOT), capture_output=True, text=True, timeout=330)
+                        "--model", MODEL], cwd=str(ROOT), capture_output=True, text=True, timeout=660)
     vyvod = (r.stdout + r.stderr).strip()[-600:]
     ok = "V_OCHEREDI_HUKA" in vyvod
     s.update(posledniy=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), vyvod=vyvod)

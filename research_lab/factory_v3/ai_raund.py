@@ -8,7 +8,7 @@
   • разрешённые модели — только список MODELI (≤ 8B), размер по /api/tags ≤ MAX_GB;
   • /api/ps должен быть ПУСТ (никакой второй модели/агента в памяти) — иначе отказ;
   • свободная память macOS (vm_stat: free+inactive+speculative) ≥ размер модели + запас — иначе отказ;
-    запас = max(ZAPAS_MIN_GB, размер модели) (19.10: фиксированные 4 ГБ не пускали даже 4B-модель на рабочем Маке
+    запас = max(1.5 ГБ, ½ размера модели) (19.10: фиксированные 4 ГБ не пускали даже 4B-модель на рабочем Маке
     с открытыми браузером и IDE; лимиты вывода/контекста/выгрузки V2 остаются — они и закрыли зависание 13.10);
   • один раунд одновременно (flock data/locks/ai_raund.lock), никаких фоновых циклов, n ≤ 3 (по умолчанию 1);
   • вызов: num_ctx 2048, num_predict 512, num_thread 4, think=false, keep_alive=0 (выгрузка сразу), таймаут 120 с;
@@ -26,7 +26,7 @@ from reestr_v1 import Reestr, PUT_PO_UMOLCHANIYU
 import ai_kontrakt_v1 as A
 
 MODELI = ("qwen3:4b", "qwen3:8b", "qwen2.5:7b", "deepseek-r1:7b", "deepseek-r1:8b")
-MAX_GB, ZAPAS_MIN_GB, N_MAX, TIMEOUT_S, DEDLAYN_S = 6.0, 2.0, 3, 120, 300
+MAX_GB, ZAPAS_MIN_GB, N_MAX, TIMEOUT_S, DEDLAYN_S = 6.0, 1.5, 3, 300, 600
 LOCKS = HERE.parent / "data" / "locks"
 
 
@@ -66,7 +66,7 @@ def proverki(host, model, pamyat_fn=svobodno_gb):
     if zagr: raise Otkaz(f"в памяти уже есть модели {zagr} — второй инференс запрещён")
     sv = pamyat_fn()
     if sv is None: raise Otkaz("не удалось измерить свободную память — отказ (fail-closed)")
-    zapas = max(ZAPAS_MIN_GB, gb)
+    zapas = max(ZAPAS_MIN_GB, 0.5 * gb)
     if sv < gb + zapas: raise Otkaz(f"свободно {sv:.1f} ГБ < модель {gb:.1f} + запас {zapas:.1f} ГБ")
     return dict(model=model, model_gb=round(gb, 2), svobodno_gb=round(sv, 1))
 
@@ -87,7 +87,7 @@ def raund_formula(a, r, klient=None):
     S = Reestr().sostoyanie(); men = F.menyu(S)
     if not men:
         return [dict(status="MENYU_PUSTO", detal="все формулы окна проверены")]
-    kl = klient or A.klient_ollama(a.model, a.host, opcii=dict(num_predict=600), timeout_s=TIMEOUT_S)
+    kl = klient or A.klient_ollama(a.model, a.host, opcii=dict(num_predict=600, num_thread=2), timeout_s=TIMEOUT_S)  # 2 потока: медленнее, Мак не душит
     out = []
     for _ in range(a.n):
         try: otv = kl(F.prompt_menyu(men), a.zapros)
