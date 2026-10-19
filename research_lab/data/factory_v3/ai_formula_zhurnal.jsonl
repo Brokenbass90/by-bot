@@ -1,0 +1,2 @@
+{"kogda": "2026-10-19T06:40:32+00:00", "shag": "prereg", "id": "AI_PLECHEVOY_PEREKOS", "put": "research_lab/prereg/ai/PREREG_AI_PLECHEVOY_PEREKOS.md"}
+{"kogda": "2026-10-19T06:41:02+00:00", "shag": "zapusk", "id": "AI_PLECHEVOY_PEREKOS", "formula": "minus(m3_vsplesk,spot_minus_perp)", "znak": -1, "avtor": "Claude (сессия CRO) в роли ИИ-генератора; формула из закрытого словаря, без кода", "okno": "KRIPTO_D1_2021H2_2022", "itog": [{"id": "AI_PLECHEVOY_PEREKOS__SCREEN", "status": "FAIL", "t": -1.92, "n": 57, "trebuemyy_t": 2.362}]}

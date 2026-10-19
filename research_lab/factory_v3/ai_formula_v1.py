@@ -48,10 +48,12 @@ ATOMY = {
 }
 OPERACII = {"minus": 2, "plus": 2, "proizv": 2, "neg": 1, "abs": 1}
 MAKS_GLUBINA, MAKS_ATOMOV = 3, 3
+SDVIG_PONEDELNIK = 4          # сетка KITY начинается в четверг 2021-07-01; атом vyhodnye осмыслен только при входе в понедельник
 SEMYA = "AI_FORMULA_XS"
 SHABLON = "ferma_shablony:xs_nedelya_binance"
 KRITERII = {"min_n": 30, "znak": "+"}            # t считается уже со знаком предложения: «+» = сторона, которую назвал ИИ
 MAKS_POPYTOK_V_SUTKI = 3                         # бюджет ИИ-попыток (все окна) в сутки UTC
+REZERV_OKNA = 5                                  # последние 5 попыток любого DEV-окна ИИ не тратит — они для человека
 PREREG_PAPKA = LAB / "prereg" / "ai"
 ZHURNAL = LAB / "data" / "factory_v3" / "ai_formula_zhurnal.jsonl"
 
@@ -108,9 +110,18 @@ def funkciya(f, D, priznak):
     return g
 
 
+def vychislit(f, znacheniya):
+    """Формула на готовых значениях атомов (v2: z-оценки атомов внутри недели)."""
+    if isinstance(f, str): return znacheniya[f]
+    v = [vychislit(x, znacheniya) for x in f[1:]]
+    return {"minus": lambda: v[0] - v[1], "plus": lambda: v[0] + v[1], "proizv": lambda: v[0] * v[1],
+            "neg": lambda: -v[0], "abs": lambda: abs(v[0])}[f[0]]()
+
+
 # ---------------------------------------------------------------- предложение
 def proverit(pr, S=None, segodnya_popytok=0, okno=None):
-    err = A.proverit({k: v for k, v in pr.items() if k not in ("formula", "znak", "okno")})
+    err = A.proverit({k: v for k, v in pr.items() if k not in ("formula", "znak", "okno", "normirovka", "avtor")})
+    if pr.get("normirovka", "xs_z") not in ("xs_z", "net"): err.append("normirovka ∈ xs_z (по умолчанию), net")
     if pr.get("semya") != SEMYA: err.append(f"semya = {SEMYA}")
     if not str(pr.get("id", "")).startswith("AI_"): err.append("id начинается с AI_")
     if pr.get("znak") not in (1, -1): err.append("znak ∈ {1, -1}: 1 — лонг верхнего дециля формулы, −1 — шорт верхнего")
@@ -122,6 +133,8 @@ def proverit(pr, S=None, segodnya_popytok=0, okno=None):
         if not o: err.append(f"нет окна {okno or pr.get('okno')}")
         else:
             if o["rol"] != "DEV": err.append("ИИ-скрининг — только DEV-окно")
+            ostalos = int(o.get("byudzhet") or 0) - sum(1 for p in S["popytki"].values() if p["okno"] == o["id"])
+            if ostalos <= REZERV_OKNA: err.append(f"на окне {o['id']} осталось {ostalos} попыток — резерв {REZERV_OKNA} не для ИИ")
             if f is not None and not proverit_formulu(f):
                 pozdno = [a for a in atomy(f) if ATOMY[a][0] > o["nachalo"]]
                 if pozdno: err.append(f"атомы без данных на начало окна {o['nachalo']}: {pozdno}")
@@ -136,7 +149,9 @@ def proverit(pr, S=None, segodnya_popytok=0, okno=None):
 
 def spec(pr):
     return {"id": f"{pr['id']}__SCREEN", "gipoteza": pr["id"], "okno": pr["okno"], "eksperiment": SHABLON,
-            "parametry": {"priznak": "formula", "formula": pr["formula"], "znak": int(pr["znak"])}, "kriterii": KRITERII}
+            "parametry": {"priznak": "formula", "formula": pr["formula"], "znak": int(pr["znak"]),
+                          **({"normirovka": "xs_z"} if pr.get("normirovka", "xs_z") == "xs_z" else {}),
+                          **({"sdvig_dney": SDVIG_PONEDELNIK} if "vyhodnye" in atomy(pr["formula"]) else {})}, "kriterii": KRITERII}
 
 
 def prereg_put(pr):
@@ -161,6 +176,8 @@ def prereg_tekst(pr, S):
 
 ## Исполняемое определение (без чисел)
 Формула: `{kanon(pr['formula'])}` · знак {pr['znak']:+d} (1 — лонг верхнего дециля, шорт нижнего; −1 — наоборот).
+Неделя: {'вход закрытием понедельника (атом vyhodnye: d−1 = воскресенье)' if 'vyhodnye' in atomy(pr['formula']) else 'вход закрытием четверга (сетка KITY)'}.
+Нормировка: {'атомы z-нормируются по монетам внутри каждой недели, затем формула (v2)' if pr.get('normirovka', 'xs_z') == 'xs_z' else 'сырые значения атомов (v1)'}.
 Атомы: {', '.join(f'{a} — {ATOMY[a][2]}' for a in sorted(set(atomy(pr['formula']))))}.
 Шаблон `{SHABLON}`: недельная кросс-секция PIT топ-50 по OI Binance, вход закрытием d, удержание 7 дней, децили,
 издержки и фандинг — замороженный `kity_sudya.sdelka`, t Ньюи–Уэста лаг 1 (`discovery_paket1.itog`).
@@ -211,6 +228,8 @@ def zapustit(pr, reestr=None, processov=1):
                otlichie=f"формула {kanon(pr['formula'])}")
     r.perehod(pr["id"], "SCREEN", f"ИИ-цикл ai_formula_v1, prereg {put.relative_to(ROOT)}")
     itog = ferma_v1.zapustit([spec(pr)], reestr=r, processov=processov)
+    if itog and itog[0].get("status") in ("FAIL", "OSHIBKA_EKSPERIMENTA"):
+        r.perehod(pr["id"], "KILL", f"SCREEN {itog[0]['status']} (t {itog[0].get('t')}, требуемый {itog[0].get('trebuemyy_t')}); формула не повторяется")
     z = dict(kogda=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), shag="zapusk", id=pr["id"],
              formula=kanon(pr["formula"]), znak=pr["znak"], avtor=pr.get("avtor"), okno=pr["okno"], itog=itog)
     _zhurnal(z)

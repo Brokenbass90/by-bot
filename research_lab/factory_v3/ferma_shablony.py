@@ -175,7 +175,13 @@ def xs_nedelya_binance(parametry, dostup):
     if parametry["priznak"] == "formula":                  # 19.10: формула ИИ из закрытого словаря атомов (ai_formula_v1)
         import ai_formula_v1 as AF
         if AF.proverit_formulu(parametry["formula"]): raise KeyError(f"формула не прошла проверку: {AF.proverit_formulu(parametry['formula'])}")
-        pr = AF.funkciya(parametry["formula"], D, _priznak)
+        if parametry.get("normirovka") == "xs_z":           # v2: атомы сначала z-нормируются внутри недели, потом формула
+            spisok = sorted(set(AF.atomy(parametry["formula"]))); fa = [_priznak(x, D) for x in spisok]
+            def pr(s, vch):
+                v = [f_(s, vch) for f_ in fa]
+                return None if any(x is None for x in v) else tuple(float(x) for x in v)
+        else:
+            pr = AF.funkciya(parametry["formula"], D, _priznak)
     else:
         pr = _priznak(parametry["priznak"], D)
     a = dt.datetime.fromtimestamp(dostup.t0 / 1000, dt.timezone.utc).date()
@@ -199,6 +205,12 @@ def xs_nedelya_binance(parametry, dostup):
         elif parametry["priznak"] == "glubina_ort":
             y = _z([v[0] for v, _, _ in rows]); X = np.c_[_z([v[1] for v, _, _ in rows]), _z([v[2] for v, _, _ in rows])]
             zz = y - X @ np.linalg.lstsq(X, y, rcond=None)[0]   # перекос, не объяснённый потоком и ценой дня
+        if parametry["priznak"] == "formula" and parametry.get("normirovka") == "xs_z":
+            import ai_formula_v1 as AF
+            spisok = sorted(set(AF.atomy(parametry["formula"])))
+            Z = {a_: _z([v[j] for v, _, _ in rows]) for j, a_ in enumerate(spisok)}
+            zz = [AF.vychislit(parametry["formula"], {a_: float(Z[a_][k]) for a_ in spisok}) for k in range(len(rows))]
+            rows = [(float(z), s, i) for z, (_, s, i) in zip(zz, rows)]
         if parametry["priznak"] in SOSTAVNYE:
             rows = [(float(z), s, i) for z, (_, s, i) in zip(zz, rows)]
         rows.sort(); k = len(rows) // 10 if "dolya" not in parametry else max(1, int(round(len(rows) * float(parametry["dolya"]), 9)))
