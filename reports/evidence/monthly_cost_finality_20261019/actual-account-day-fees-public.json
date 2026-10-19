@@ -1,0 +1,76 @@
+{
+  "actual_get_requests": 4,
+  "assets_sha256": "0520e477e8a9f4bf9f0abff7ff61c6e847ddb5021255da1e60f5afba6c4454dc",
+  "calendar_sha256": "122d30f079fd0ff45c197555880346aad2c6f0f35f63c7dfa1f5805bd42a4081",
+  "capital_released": false,
+  "cash_reconciled": false,
+  "commission_usd": "0",
+  "creation_time_coverage_only": true,
+  "days": [
+    {
+      "expected": {
+        "CAT": "0.01",
+        "SEC": "0.00"
+      },
+      "fee_activity_count": 1,
+      "fill_count": 3,
+      "posted": {
+        "CAT": "0.01",
+        "SEC": "0"
+      },
+      "session": "2026-10-01"
+    },
+    {
+      "expected": {
+        "CAT": "0.01",
+        "SEC": "0.01"
+      },
+      "fee_activity_count": 2,
+      "fill_count": 1,
+      "posted": {
+        "CAT": "0.01",
+        "SEC": "0.01"
+      },
+      "session": "2026-10-05"
+    },
+    {
+      "expected": {
+        "CAT": "0.01",
+        "SEC": "0.01"
+      },
+      "fee_activity_count": 2,
+      "fill_count": 2,
+      "posted": {
+        "CAT": "0.01",
+        "SEC": "0.01"
+      },
+      "session": "2026-10-07"
+    },
+    {
+      "expected": {
+        "CAT": "0.01",
+        "SEC": "0.00"
+      },
+      "fee_activity_count": 1,
+      "fill_count": 1,
+      "posted": {
+        "CAT": "0.01",
+        "SEC": "0"
+      },
+      "session": "2026-10-15"
+    }
+  ],
+  "late_adjustments_possible": true,
+  "money_authority": false,
+  "observed_ms": 1792412243335,
+  "position_cost_allocation_produced": false,
+  "protocol_sha256": "0591a9adb7a50295c37aa06051eae3e08e36e1a45ebfcf9c0495a2fb7257c9ef",
+  "regulatory_fees_usd": "0.06",
+  "replay_get_requests": 0,
+  "schema": "ALPACA_ACCOUNT_DAY_POSTED_FEE_SOURCE_V1",
+  "source_module_sha256": "855db92a77c0585a07b5043846946eb4efd5645c1416efb4c852df91e24413a6",
+  "source_sha256": "665411277f2620e3df5fdc0a7f8c40e749e1d289e109d8a319af54b43815f299",
+  "status": "ACCOUNT_DAY_FEE_SOURCE_PASS",
+  "terminal_cost_finality_proven": false,
+  "uncovered_fee_activity_ids": []
+}

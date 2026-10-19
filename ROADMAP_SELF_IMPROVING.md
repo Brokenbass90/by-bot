@@ -67,7 +67,7 @@ Runtime receipt всегда датирован: вчерашняя провер
 | Фаза / ORIGINAL GOAL | CURRENT STATUS | Ответственный | Существующий code / test / runtime evidence | Blocker → следующий acceptance criterion | Настоящая зависимость |
 |---|---|---|---|---|---|
 | 1. Инфраструктура, здоровье, наблюдаемость | **PARTIAL**, прежнее общее «завершена» историческое | Codex | `research_lab/alpaca_monthly_notifications_v1.py`, `alpaca_day_monitor_v1.py`; notification tests; фактическая Telegram квитанция15223 в [Monthly E2E](reports/ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md) | Общая поставка execution/Health/reporting ещё не принята как единый актуальный runtime → симптомы и восстановление проходят через существующие journal/Monitor без второго ledger | Реальное ownership/данные существующего manager; не новый Brain |
-| 2. Безопасный денежный цикл, сначала Monthly | **PARTIAL**; standing-компоненты реализованы ORDERS_OFF | Codex | `research_lab/alpaca_monthly_cycle_v1.py`, `alpaca_monthly_native_binding_v1.py`;165exact tests,2fixturecycles/1grant; [standing receipt](reports/ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md). Actual money runtime отсутствует | Автоматический actual broker cost-finality producer **MISSING**; applying runner/handoff **MISSING** → confirmed exit/net/cash release и следующий разрешённый цикл без ручного source файла, restart/lost-response/rollback PASS | Actual cash/fees coverage, единый manager, bounded owner GO; не полезность Factory/Brain |
+| 2. Безопасный денежный цикл, сначала Monthly | **PARTIAL**; standing-компоненты реализованы ORDERS_OFF | Codex | `research_lab/alpaca_monthly_cycle_v1.py`, `alpaca_monthly_native_binding_v1.py`;165exact tests,2fixturecycles/1grant; [standing receipt](reports/ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md). Actual money runtime отсутствует | Автоматический cost-source/owned-book producer реализован локально ORDERS_OFF, actual GET/fees/cash evidence получено19Oct; полный серверный acceptance ещё не закрыт. Applying runner/handoff **MISSING** → confirmed exit/net/cash release и следующий разрешённый цикл без ручного source файла, restart/lost-response/rollback PASS | Actual cash/fees coverage, единый manager, bounded owner GO; не полезность Factory/Brain |
 | 3. Контролируемое улучшение, change control | **PARTIAL**; бесконтрольное auto-apply **OBSOLETE** | Codex + Claude | Существующие prereg/passports/source pins, execution receipts и versioned GO. Непрерывная автоматическая degradation→repair→review→release цепь **UNKNOWN** | Одна версия ухудшилась → воспроизводимый диагноз/CR/сравнение/rollback; никаких автоматических LIVE изменений по короткой серии PnL | Независимый review и owner-approved release; короткий PF сам по себе не причина повышать риск |
 | 4. Factory: корректная автоматическая очередь | **PARTIAL**; default V2.2/денежный judge IMPLEMENTED в sandbox-границе research receipt | Claude | Published3a349a3 в origin1407fbf: `fabrika/fabrika.py`, `begun_h1.py`, `sudya_dengi.py`, `results/fabrika_v2_2_integ_20261019/integ_verdikty.jsonl`; research tests не запускались Codex | Publication CLOSED. Каталог простаивает с01Oct по опубликованному отчёту; непрерывный runtime **UNKNOWN** → штатный causal trace с нужными gates и точным terminal verdict | Существующая очередь/реестр и валидные данные; не новый framework/повтор старых verdicts |
 | 4. AI proposer → prereg → evaluator → passport | **PARTIAL**;2reportedFAIL — технические примеры, не alphaPASS | Claude | Published82193fe/3e8f779 в origin1407fbf: `factory_v3/ai_formula_v1.py`, `ai_raund.py`, `fabrika/ai_formula_cikl.py`, `storozh.py`; Claude сообщает115factory tests, Codex их не запускал | Обе формулы составил Claude, не Ollama; hook в storozh.log не наблюдался; proposer/evaluator одного автора. Нужны actual Ollama proposal→verdict/hook trace и независимый review evaluator/registry; publication сам по себе этого не доказывает | Независимые окна/attempt budget; исчерпанное20/20 окно не становится новым из-за новой формулы |
@@ -90,9 +90,9 @@ Git ref. Локальный документ без публикации — pub
 |---|---|---|
 | **P0 Preserve — Codex** | NET сопровождение; SHOP OWNER_CANCELLED; существующие locks/GO/защита без изменений ради roadmap |19Oct13:30UTC actual DAY protection и13:35UTC independent broker readback; до события **PENDING**, после только фактический receipt. На Кипре16:30/16:35 |
 | **P0 Money — Codex** | Один пакет Monthly autonomy: actual cost-finality → one applying runner/NET handoff/rollback → concrete standing packet | Автоматическая непротиворечивая net/cash finality на actual sources, затем полный ORDERS_OFF producer→runner trace; financial GO отдельный.30Oct closed selection /2Nov14:30–14:35UTC fresh gates — будущие факты, не повод откладывать код |
-| **P1 Codex** | Существующие DATA_ONLY/journal доставки/QA; следующий bounded fix — Brain receiver capacity, без нового framework |19Oct source22448opps/68878decisions, V2=1534; catchup6136receipts/28.2MB превышает4096/8MiB, BLOCKED до append, старые8 сохранены. Нужна controlled continuity/restart/replay в существующем journal. Existing DATA timers поддерживаются; Polymarket global census не отнимает MoneyP0 |
+| **P1 Codex** | Существующие DATA_ONLY/journal доставки/QA; следующий bounded fix — Brain receiver capacity, без нового framework |19Oct source22448opps/68878decisions, V2=1534; catchup6136receipts/28.2MB превышает4096/8MiB, BLOCKED до append, старые8 сохранены. Независимый chain/prefix/key audit PASS в узкой границе предоставленных файлов; полный market census/feature PIT UNKNOWN. Нужна controlled continuity/restart/replay в существующем journal. Existing DATA timers поддерживаются; Polymarket global census не отнимает MoneyP0 |
 | **P0 Research — Claude** | Один пакет Factory continuity: V2.2/default money judge + bounded AI proposal cycle + independent windows | Publication3a349a3/82193fe/3e8f779 CLOSED в1407fbf; следующий gate — единый causal automated trace с pins/budget/terminal verdict и независимый review; generator ещё manual/daemon stale не выдавать за полную автономию |
-| **P1 Claude** | BIL/SGOV: одна preregistered overlay-проверка на доставленных данных | Prereg до результата, одинаковый Monthly baseline/capital/costs, корректный total return/liquidity; verdict не создаёт money permission |
+| **P1 Claude / Codex CR** | BIL/SGOV: опубликованный H5B_DEV_PASS и versioned change request | Research4587a34 входит в подтверждённый origin6826315. Нужны account type/settled cash/interest/actual costs и integration в одном account book; current Monthly отвергает чужой fund sleeve. Никакого GO из DEV_PASS |
 
 **Сознательно отложено:** новый Polymarket bulk/global screen до dataset/prereg QA;
 SEC/COT source после закрытия MoneyP0 и освобождения Codex P1; максимум три smart
@@ -119,6 +119,14 @@ fees/cash finality и единственное ownership до нового вх�
 может заблокировать именно это окно. Не закрывать NET раньше, не ослаблять
 cost-finality и не обещать2Nov сделку ради даты; варианты изменения финансовых
 условий выносятся только отдельным конкретным owner packet.
+
+**Дополнение cost-source19Oct:** тот же конфликт применяется к обычной Monthly
+rotation: продажа и замена в одном5min окне не совместимы с обязательной full-day
+posted-fee finality перед любым новым entry. Next owner packet должен дать конкретный
+versioned admission CR (возможный bounded pending-cost reserve, conservative loss
+admission, unknown-cost stop) либо сохранить NO_SEND. Сейчас никакой резерв/GO/новый
+лимит не выдан; net PnL остаётся PENDING до реальных assessments. Менять frozen
+календарь или незаметно объявлять неизвестные расходы нулём нельзя.
 
 **Крипто-checkpoint22–23Oct, не LIVE deadline:** KITY остаётся
 ECONOMIC_INCONCLUSIVE/SPENT; crypto-only rescue — FAIL. Два weekly canary entry
@@ -169,6 +177,26 @@ forward candidates, unresolved incidents и confirmed net PnL; не тоннаж
   full server runtime не заявлен. Brain источник свежий19Oct07:13UTC, но existing
   receiver6136projected/28.2MB BLOCKED_CAPACITY;8oldreceipts неизменны. Continuity
   fix выбран текущим P1 без отвлечения от Monthly cost producer/runner P0.
+
+- Follow-up19Oct cost-source cycle: actual new GET collector /7FILL/6FEE/$0.06,
+  четыре account-day сверены; записывается pre-entry cash anchor; автоматический
+  producer связан с existing finalizer, неизвестные/новые liabilities блокируют
+  release. [Evidence и границы](reports/MONTHLY_COST_FINALITY_AND_BRAIN_INTEGRITY_2026_10_19.md).
+  Это локальная ORDERS_OFF инженерная приёмка, не Monthly LIVE execution.
+  Следующий P0 — один server applying runner, exact package rehearsal/handoff/rollback.
+  Cleanup START HERE отложен; навигация восстановлена без массовых изменений.
+- Published origin6826315 подтверждён19Oct12:15UTC,4587a34 — ancestor. U2 H2b:
+  ежедневный1Day SIP/split источник пока DATA_BLOCKED, U58 Yahoo Monthly58 отдельный;
+  первый16Oct снимок BACKFILLED_DIAGNOSTIC. Это P1 data queue, не условие запуска
+  исходной Monthly и не подмена источника SIP/Yahoo. H2b economic assessment только
+  по своему prereg; Codex не добавляет новые статистические gates.
+- BIL/SGOV CR принят без финансового разрешения: дополнительный sleeve сейчас
+  конфликтует с foreign-position admission Monthly. Account type/interest/SGOV
+  execution costs не доказаны; отсутствующий INT не считается нулевым процентом.
+  Polymarket QA документ опубликован (5 reported tests; subsequent commits report9),
+  Codex tests не запускал. Favourite study NEGATIVE; новый NO shadow не LIVE/edge PASS.
+  Actual Ollama cycle reported FAIL и stale-module fix7364443 опубликованы;
+  непрерывная Factory/Brain полезность для net PnL по-прежнему не доказана.
 
 ---
 

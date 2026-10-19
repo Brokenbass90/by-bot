@@ -196,8 +196,10 @@ class MonthlyNativeBinding:
 
     def _admit_new_entry(self,ticket,now):
         """GET-only complete account check under the original writer lock."""
+        started=time.monotonic()
         realized=self._accounting_net()
-        account=self.client.get_account();clock=self.client.get_clock()
+        account=self.client.get_account();account_observed=now+int((time.monotonic()-started)*1000)
+        clock=self.client.get_clock()
         stamp=native._parse_iso_utc(clock.get('timestamp',''))
         if (account.get('id')!=self.account or account.get('trading_blocked') is not False
             or account.get('account_blocked') is not False or clock.get('is_open') is not True
@@ -252,6 +254,8 @@ class MonthlyNativeBinding:
             or quoted is None or not 0<=now-int(quoted.timestamp()*1000)<=300000):
             raise ValueError('MONTHLY_FRESH_ASSET_OR_QUOTE_REQUIRED')
         positive(quote['ap'])
+        return dict(schema='ALPACA_MONTHLY_CASH_ANCHOR_V1',account_id=self.account,
+            client_order_id=ticket['client_order_id'],observed_ms=account_observed,account=account)
 
     @staticmethod
     def _check_standing_loss(scope,realized,positions):
@@ -393,7 +397,13 @@ class MonthlyNativeBinding:
                     or gate['causal_history_sha256']!=s['causal_history_sha256']
                     or not 0<positive(ticket['notional'])<=dec(self.capital*.70*selected['weight'])):
                     raise ValueError('MONTHLY_TICKET_SOURCE_OR_CAP_CONFLICT')
-                self._admit_new_entry(ticket,now+int((time.monotonic()-started)*1000))
+                anchor=self._admit_new_entry(ticket,now+int((time.monotonic()-started)*1000))
+                from research_lab.kity_oct15_deadline_v1 import publish_once
+                anchor_dir=self.runtime/'cash-anchors';anchor_dir.mkdir(parents=True,exist_ok=True,mode=0o700)
+                # Immutable source evidence before the native durable reservation
+                # and POST. A crash here consumes no authority but cannot silently
+                # replace the accounting baseline on an uncertain later retry.
+                publish_once(anchor_dir/(cid+'.json'),lifecycle.canonical(anchor))
                 final_clock=self.client.get_clock();stamp=native._parse_iso_utc(final_clock.get('timestamp',''))
                 effective=now+int((time.monotonic()-started)*1000)
                 if (final_clock.get('is_open') is not True or stamp is None

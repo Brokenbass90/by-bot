@@ -114,6 +114,99 @@ class MemoryBroker(native.AlpacaClient):
         o=self.state['orders'][order_id];self._sell(o,D(o['stop_price']));self.save()
 
 
+class AccountingMemoryBroker(MemoryBroker):
+    """Separate deterministic fee-publication fixture; never any HTTP/socket."""
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs);self.state.setdefault('activities',[]);self.save()
+
+    def get_account(self):
+        return dict(super().get_account(),currency='USD',accrued_fees='0',pending_reg_taf_fees='0')
+
+    def _fill(self,o):
+        key='fill-'+o['id']
+        if not any(a['id']==key for a in self.state['activities']):
+            self.state['activities'].append(dict(id=key,activity_type='FILL',order_id=o['id'],
+                symbol=o['symbol'],side=o['side'],qty=o['filled_qty'],price=o['filled_avg_price'],transaction_time=o['filled_at']))
+
+    def _request(self,method,path,payload=None):
+        if method=='POST' and payload.get('side')=='buy':
+            # Distinct source-receipt and exchange-execution timestamps, as in
+            # actual HTTP. Do not make the pre-entry cash anchor simultaneous.
+            self.state['clock_ms']+=1000
+        before=D(self.state['cash']);old=set(self.state['orders'])
+        try:return super()._request(method,path,payload)
+        finally:
+            # Accepted buy response may be lost; its activity still exists.
+            for key in set(self.state['orders'])-old:
+                o=self.state['orders'][key]
+                if o['side']=='buy' and o['status']=='filled':
+                    self.state['cash']=str(before-(D(o['filled_qty'])*D(o['filled_avg_price'])).quantize(D('.01'),rounding=ROUND_HALF_UP))
+                    self._fill(o);self.save()
+
+    def _sell(self,o,price):
+        before=D(self.state['cash']);super()._sell(o,price)
+        self.state['cash']=str(before+(D(o['filled_qty'])*D(o['filled_avg_price'])).quantize(D('.01'),rounding=ROUND_HALF_UP))
+        self._fill(o)
+
+    def publish_fees(self):
+        from collections import defaultdict
+        from decimal import ROUND_CEILING
+        from zoneinfo import ZoneInfo
+        values=defaultdict(lambda:dict(qty=D(0),sells=D(0)))
+        for a in self.state['activities']:
+            if a['activity_type']!='FILL':continue
+            day=datetime.fromisoformat(a['transaction_time'].replace('Z','+00:00')).astimezone(ZoneInfo('America/New_York')).date().isoformat()
+            values[day]['qty']+=D(a['qty'])
+            if a['side']=='sell':values[day]['sells']+=D(a['qty'])*D(a['price'])
+        for day,v in values.items():
+            close=next(r['close_ms'] for r in self.calendar if r['session']==day)
+            for kind,value in (('CAT',v['qty']*D('.000003')),('REG',v['sells']*D('.0000206'))):
+                amount=(value/D('.01')).to_integral_value(rounding=ROUND_CEILING)*D('.01')
+                key='fee-'+day+'-'+kind
+                if amount and not any(a['id']==key for a in self.state['activities']):
+                    self.state['activities'].append(dict(id=key,activity_type='FEE',activity_sub_type=kind,
+                        date=day,created_at=iso(close+4*3600000),currency='USD',status='executed',net_amount=str(-amount)))
+                    self.state['cash']=str(D(self.state['cash'])-amount)
+        self.save()
+
+    def cost_get(self,route,params):
+        now=self.state['clock_ms'];stamp=lambda s:int(datetime.fromisoformat(s.replace('Z','+00:00')).timestamp()*1000)
+        if route=='/v2/clock':body=dict(timestamp=iso(now))
+        elif route=='/v2/account':body=self.get_account()
+        else:
+            assert route=='/v2/account/activities'
+            rows=sorted(self.state['activities'],key=lambda a:(a.get('created_at',a.get('transaction_time')),a['id']))
+            rows=[a for a in rows if stamp(params['after'])<stamp(a.get('created_at',a.get('transaction_time')))<=stamp(params['until'])]
+            if params.get('page_token'):rows=rows[next(i for i,a in enumerate(rows) if a['id']==params['page_token'])+1:]
+            body=rows[:params['page_size']]
+        return dict(http_status=200,raw=json.dumps(body),started_ms=now+10,received_ms=now+10)
+
+
+def automatic_fixture_finality(root,m,binding,broker,calendar):
+    from research_lab.alpaca_monthly_cost_source_v1 import capture_and_produce_cost_sources
+    protocol=dict(schema='ALPACA_PROTOCOL_SOURCE_CONTRACT_V1',account_id=m.account,commission_rate='0',
+        owner_attestation={'api_commission_null_is_not_proof':True},
+        regulatory_model=dict(cat_nms_executed_share_rate='.000003',sec_sell_value_rate='.0000206',taf_per_share_rate='0',
+            rounding='each fee type aggregated daily per account then ceiling to USD0.01; exact fractional executed quantities'),
+        fixture_only=True)
+    values=dict(protocol=protocol,calendar=calendar,
+        assets=[dict(id=s,symbol=s,asset_class='us_equity',exchange='NASDAQ') for s in ops.required_symbols()])
+    paths={}
+    for name,value in values.items():
+        path=root/('automatic-'+name+'.json');publish(path,value);paths[name+'_path']=path
+    now=next(r['open_ms'] for r in calendar if r['session']=='2026-11-04')-3600000
+    broker.set_clock(now)
+    def costs(exits):
+        return capture_and_produce_cost_sources(binding,after='2026-10-30T00:00:00Z',now_ms=now+1000,**paths)
+    pending=m.tick(binding,now_ms=now+2000,cost_sources=costs,apply=True)
+    assert any(i['phase']=='ACCOUNTING' and 'POSTING_PENDING_OR_CONFLICT' in i.get('reason','') for i in pending['issues'])
+    broker.publish_fees()
+    completed=m.tick(binding,now_ms=now+2000,cost_sources=costs,apply=True)
+    assert not completed['issues'] and len(completed['accounting'])==1, completed['issues']
+    assert not m.tick(binding,now_ms=now+2000,cost_sources=costs,apply=True)['accounting']
+    return completed['accounting'][0]
+
+
 def fixture_calendar():
     days=[];d=date(2026,10,30)
     while len(days)<200:
@@ -194,7 +287,8 @@ def standing_mode(root,manager,now):
             else:os.environ[k]=v
 
 
-def run(directory,*,standing_grant=False):
+def run(directory,*,standing_grant=False,automatic_costs=False):
+    if standing_grant and automatic_costs:raise ValueError('AUTOMATIC_REHEARSAL_SINGLE_CYCLE_ONLY')
     root=ops.safe_path(directory);root.mkdir(mode=0o700)  # never reuse/adopt an existing runtime
     calendar=fixture_calendar();bundle,now,prices=fixture_source(root/'source-oct30',calendar,'2026-10-30')
     args=dict(account_id='MONTHLY_REHEARSAL_ONLY',capital='487.42',account_lock_path=root/'fixture-account.lock',
@@ -203,12 +297,13 @@ def run(directory,*,standing_grant=False):
     selection=m.book.rows('selections')[0]
     if not selection['picks']:raise ValueError('REHEARSAL_FIXTURE_MUST_EXERCISE_REAL_SELECTOR_ENTRY')
     symbol=selection['picks'][0]['symbol'];opening=next(r['open_ms'] for r in calendar if r['session']=='2026-11-02')
-    broker_path=root/'broker.json';broker=MemoryBroker(broker_path,calendar,standing=standing_grant);broker.mark(prices);broker.set_clock(opening+1000)
+    broker_type=AccountingMemoryBroker if automatic_costs else MemoryBroker
+    broker_path=root/'broker.json';broker=broker_type(broker_path,calendar,standing=standing_grant);broker.mark(prices);broker.set_clock(opening+1000)
     history=load_history(bundle['history']);quotes={symbol:dict(ask=prices[symbol],quote_ts=opening,
         received_ms=opening,source='SYNTHETIC_ORDERS_OFF_FIXTURE')}
     with (standing_mode(root,m,opening) if standing_grant else paper_mode()) as authority:
         for lost in ('buy','stop',None):
-            m=MonthlyManager(root/'cycle',**args);broker=MemoryBroker(broker_path,calendar,standing=standing_grant)
+            m=MonthlyManager(root/'cycle',**args);broker=broker_type(broker_path,calendar,standing=standing_grant)
             broker.lose_buy=lost=='buy';broker.lose_stop=lost=='stop'
             native_binding=m.native(broker,base_url=broker.base_url,**authority)
             try:m.opening(native_binding,history,selection['selection_id'],quotes=quotes,now_ms=opening+1000,apply=True,symbols=[symbol])
@@ -228,22 +323,25 @@ def run(directory,*,standing_grant=False):
         try:native_binding._require_exit_accounting()
         except ValueError:pass
         else:raise AssertionError('EXIT_MUST_WAIT_FOR_ACCOUNTING')
-        evidence=root/'simulated-activity.json';publish(evidence,broker.state)
-        source_files=[dict(path=str(evidence),sha256=hashlib.sha256(evidence.read_bytes()).hexdigest())]
-        orders=[broker.get_order(o['id']) for o in exited['orders']]
-        gross=sum((D(o['filled_qty'])*(D(o['filled_avg_price'])-D(entry['filled_avg_price'])) for o in orders),D(0))
-        cost=dict(schema='ALPACA_DYNAMIC_BROKER_COST_FINALITY_V1',account_id=args['account_id'],
-            intake_sha256=digest(dict(schema=CONTRACT['schema'],entry_id=entry['id'])),
-            closure_status='ACCOUNT_DAY_FEES_RECONCILED',exit_orders_sha256=digest(orders),gross_before_fees=str(gross),
-            observed_ms=new_open+1000,source_files=source_files,source_manifest_sha256=digest(source_files),
-            coverage_end_ms=new_open+1000,commission_usd='.02',regulatory_fees_usd='0',unresolved_liability_usd='0',
-            cash_before_entry='487.42',cash_after_exit=str(D(broker.state['cash']).quantize(D('.01'),rounding=ROUND_HALF_UP)),
-            other_cash_net_usd='0')
-        # Existing finalizer compares the broker's posted (cent) cash, as in LIVE.
-        account=broker.get_account
-        broker.get_account=lambda:dict(account(),cash=cost['cash_after_exit'])
-        cost_path=root/'simulated-cost-finality.json';publish(cost_path,cost)
-        final=m.finalize(native_binding,entry['id'],cost_path,now_ms=new_open+1000)
+        if automatic_costs:
+            final=automatic_fixture_finality(root,m,native_binding,broker,calendar)
+        else:
+            evidence=root/'simulated-activity.json';publish(evidence,broker.state)
+            source_files=[dict(path=str(evidence),sha256=hashlib.sha256(evidence.read_bytes()).hexdigest())]
+            orders=[broker.get_order(o['id']) for o in exited['orders']]
+            gross=sum((D(o['filled_qty'])*(D(o['filled_avg_price'])-D(entry['filled_avg_price'])) for o in orders),D(0))
+            cost=dict(schema='ALPACA_DYNAMIC_BROKER_COST_FINALITY_V1',account_id=args['account_id'],
+                intake_sha256=digest(dict(schema=CONTRACT['schema'],entry_id=entry['id'])),
+                closure_status='ACCOUNT_DAY_FEES_RECONCILED',exit_orders_sha256=digest(orders),gross_before_fees=str(gross),
+                observed_ms=new_open+1000,source_files=source_files,source_manifest_sha256=digest(source_files),
+                coverage_end_ms=new_open+1000,commission_usd='.02',regulatory_fees_usd='0',unresolved_liability_usd='0',
+                cash_before_entry='487.42',cash_after_exit=str(D(broker.state['cash']).quantize(D('.01'),rounding=ROUND_HALF_UP)),
+                other_cash_net_usd='0')
+            # Existing finalizer compares the broker's posted (cent) cash, as in LIVE.
+            account=broker.get_account
+            broker.get_account=lambda:dict(account(),cash=cost['cash_after_exit'])
+            cost_path=root/'simulated-cost-finality.json';publish(cost_path,cost)
+            final=m.finalize(native_binding,entry['id'],cost_path,now_ms=new_open+1000)
         native_binding._require_exit_accounting()
         future,future_time,future_prices=fixture_source(root/'source-nov30',calendar,'2026-11-30',override)
         next_bound=m.source(future,now_ms=future_time)
@@ -280,7 +378,8 @@ def run(directory,*,standing_grant=False):
             if reconciled['issues']:raise ValueError('REPEAT_FINALITY_FAILED:'+str(reconciled['issues']))
             native_binding._require_exit_accounting()
             assert not broker.list_positions() and not broker.list_orders(status='open')
-    out=dict(status='MONTHLY_STANDING_ORDERS_OFF_REPEAT_PASS' if standing_grant else 'MONTHLY_ORDERS_OFF_END_TO_END_PASS',source_symbols=len(bundle['history']),
+    out=dict(status='MONTHLY_AUTOMATIC_COST_ORDERS_OFF_E2E_PASS' if automatic_costs else 'MONTHLY_STANDING_ORDERS_OFF_REPEAT_PASS' if standing_grant else 'MONTHLY_ORDERS_OFF_END_TO_END_PASS',source_symbols=len(bundle['history']),
+        automatic_cost_source=automatic_costs,late_fee_block_proven=automatic_costs,
         selector_monkeypatched=False,selected_symbols=[p['symbol'] for p in selection['picks']],
         executed_fixture_subset=[symbol],simulated_entries=2 if standing_grant else 1,
         closed_roundtrips=2 if standing_grant else 1,standing_grant_count=1 if standing_grant else 0,

@@ -1,0 +1,61 @@
+{
+  "credentials_read": false,
+  "financial_actions": 0,
+  "findings": [
+    {
+      "detail": "The initial clock GET/status check/JSON parsing occur before the CostSourceCaptureError handler. A 503 clock response or malformed clock JSON therefore escapes as a bare exception and never reaches immutable failed-capture publication, discarding received raw evidence on this new transport boundary. Reproduced a clock503 with a bounded raw JSON body: no files were created and the exception had no captures.",
+      "end": 268,
+      "file": "research_lab/alpaca_monthly_cost_source_v1.py",
+      "priority": 2,
+      "reproduction": {
+        "error": "MONTHLY_COST_CLOCK_GET_FAILED",
+        "exception_carries_raw": false,
+        "saved_files": []
+      },
+      "requested_fix": "Capture and persist the clock response on both success and failure, including its status/times/raw and a deterministic source identity; attach it to collection failures and reject malformed clocks after preserving evidence. Keep all routes GET-only and files immutable.",
+      "severity": "Important",
+      "start": 262,
+      "title": "Persist the initial clock failure before raising"
+    },
+    {
+      "detail": "The raw transport decodes with strict UTF-8 before returning its evidence envelope. A non-UTF8 error body, or a multibyte sequence cut by the byte bound, raises UnicodeDecodeError before status/timestamps/raw are returned. The collector can then record only COST_SOURCE_GET_EXCEPTION with no failing-response bytes. This contradicts the new surface's purpose of retaining unsuccessful HTTP evidence. Reproduced a503 bounded response containing invalid UTF8; caller receives no HTTP evidence.",
+      "end": 147,
+      "file": "research_lab/alpaca_dynamic_live_runtime_v1.py",
+      "priority": 2,
+      "reproduction": {
+        "error_type": "UnicodeDecodeError",
+        "raw_response_available_to_caller": false,
+        "returned_http_metadata": false
+      },
+      "requested_fix": "Preserve the bounded original byte payload losslessly (with length/hash/truncation and decode status), then fail closed on invalid text without losing status/timestamps or the bytes. Do not silently replacement-decode and call that exact raw evidence.",
+      "severity": "Important",
+      "start": 140,
+      "title": "Do not discard bounded HTTP bytes when UTF-8 decoding fails"
+    }
+  ],
+  "implementation_changes": 0,
+  "limitations": [
+    "Fake opener and in-memory callback only; no actual transport/network/deployment verification.",
+    "Review did not revisit collector/day/producer financial semantics or prior fixes."
+  ],
+  "network_requests": 0,
+  "reviewed_files_sha256": {
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "971836faf12051a61b8c5133ac818115393b2b92e38eb3031564ce9f4ef7e107",
+    "research_lab/alpaca_monthly_cost_source_v1.py": "ec8d91fbb2357584e1a0df0ea8d4f0d6746421187462b8c6481f3800c2b07678",
+    "tests/test_alpaca_cost_raw_transport_v1.py": "413df59c9dc5f04c488be6d43d93a8521cfb6bfbc88a804807f9df49bff5a6ca"
+  },
+  "schema": "MONTHLY_RAW_COST_TRANSPORT_REVIEW_V1",
+  "scope": "NEW DynamicLiveClient.cost_get and capture_and_produce_cost_sources only; no re-review of collector/day/owned-producer fixes.",
+  "security_observations": [
+    "Exact LIVE origin and three GET routes only; activity query keys restricted and URL encoded.",
+    "Existing NoRedirect and disabled proxies retained; no arbitrary hostname or monetary route permitted.",
+    "No write permit creation or consumption in cost_get.",
+    "Successful artifacts use dedicated runtime directories and atomic no-overwrite publication; no unsafe overwrite reproduced.",
+    "Stored captures contain response bodies and request route/query, not credential headers."
+  ],
+  "tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_alpaca_cost_raw_transport_v1.py tests/test_alpaca_monthly_cost_source_v1.py",
+    "result": "22 passed in 0.58s"
+  },
+  "verdict": "CHANGES_REQUESTED_2_IMPORTANT_0_CRITICAL"
+}

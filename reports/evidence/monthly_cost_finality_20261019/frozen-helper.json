@@ -1,0 +1,11 @@
+{
+  "comparison": "Independent raw file hashes, not a self-comparison",
+  "equal": true,
+  "git_source": "d205f8f:research_lab/alpaca_dynamic_v1.py",
+  "new_material": "1f02fc49566831af16cc244320a72d45dccfebccbec3e983894bdbff5f49d416",
+  "new_sha256": "7ab36fd92c93103c648002eae16d775225d73c98fa765d470652a00d84c09622",
+  "old_sha256": "7ab36fd92c93103c648002eae16d775225d73c98fa765d470652a00d84c09622",
+  "path": "research_lab/alpaca_dynamic_v1.py",
+  "previous_material": "348690be65466d3cfc34c7c31875b65907a43f338b189613e0fe888c61b14582",
+  "schema": "MONTHLY_COST_FROZEN_HELPER_PRESERVATION_V1"
+}

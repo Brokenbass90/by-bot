@@ -1,0 +1,81 @@
+{
+  "actual_broker": {
+    "additional_asset_gets": 4,
+    "additional_calendar_gets": 1,
+    "broker_writes": 0,
+    "new_exact_getter_and_collector_gets": 4,
+    "prior_discovery_gets": 6,
+    "terminal_monthly_live_cycle": false,
+    "total_gets_this_cycle": 15
+  },
+  "checkout_fallback": 0,
+  "code_files": 50,
+  "code_sha256": {
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "7a07aadb6a18b6549a660b21212345ab31556837caafd503c36bf86e1cda32c8",
+    "research_lab/alpaca_fee_to_live_closure_v1.py": "855db92a77c0585a07b5043846946eb4efd5645c1416efb4c852df91e24413a6",
+    "research_lab/alpaca_monthly_cost_source_v1.py": "ad8598bdb11550962e2b9021ba8a58c0d626d028b2ac3a43406745252e96a9d4",
+    "research_lab/alpaca_monthly_native_binding_v1.py": "76d0646a7c3e16cef4364d55bfeb3b947bf6d026ea41eb714a9c84e01fe945a3",
+    "scripts/rehearse_alpaca_monthly_cycle_v1.py": "d7e331b2340dfdcd20255f6b71b28f83e9043d9a32dc8c5e9b88e50058b321ca",
+    "tests/test_alpaca_cost_activity_source_v1.py": "37d765d6bf2dc3a718a60f61efa31209cfbc1d97fe2bd7858489d80d25346964",
+    "tests/test_alpaca_cost_raw_transport_v1.py": "ccad3eab876d79e49b770a6fe5c8016d85a1bc43f76ed946cbfd706e48e472de",
+    "tests/test_alpaca_monthly_cost_source_v1.py": "ac2669f54b6d5ef45e0eef3f0307d1110197a8799b00c70fe4ffaa8142892943",
+    "tests/test_alpaca_monthly_e2e_rehearsal_v1.py": "f0741ae13e4c5a47acf9bca4b6c1ae87a092569256fdc2ec6b9012523107d6d4",
+    "tests/test_alpaca_monthly_native_binding_v1.py": "42534d777a5f4b34096462a67a784b7c738343e48fef11052d17785e3303198a"
+  },
+  "commands": {
+    "brain_integrity": "python3 .private/brain_integrity_20261019/verify_integrity.py",
+    "exact": "env PYTHONPATH= .venv/bin/python -B .private/monthly_cost_source_20261019/exact_tests.py",
+    "frozen_source_e2e": ".venv/bin/python -B -m pytest -q tests/test_alpaca_monthly_e2e_rehearsal_v1.py",
+    "root_full": ".venv/bin/python -B -m pytest -q tests/test_alpaca_cost_activity_source_v1.py tests/test_alpaca_fee_to_live_closure_v1.py tests/test_alpaca_cost_raw_transport_v1.py tests/test_alpaca_monthly_cost_source_v1.py tests/test_alpaca_dynamic_live_runtime_v1.py tests/test_alpaca_monthly_native_binding_v1.py tests/test_alpaca_monthly_account_transport_v1.py tests/test_alpaca_monthly_cycle_v1.py tests/test_alpaca_monthly_cycle_custody_v1.py tests/test_alpaca_monthly_standing_v1.py tests/test_alpaca_monthly_notifications_v1.py tests/test_alpaca_monthly_e2e_rehearsal_v1.py",
+    "source": ".venv/bin/python -B -m pytest -q tests/test_alpaca_cost_activity_source_v1.py tests/test_alpaca_fee_to_live_closure_v1.py tests/test_alpaca_cost_raw_transport_v1.py tests/test_alpaca_monthly_cost_source_v1.py"
+  },
+  "counts_overlap_do_not_add": true,
+  "current_blockers": [
+    "Applying runner/exact server rehearsal/handoff/rollback not completed",
+    "Source-pinned displayed-average precision UNKNOWN for differing real execution averages",
+    "ADMISSION_CONTRACT_SAME_WINDOW_CONFLICT for NET handoff and ordinary monthly rotation; no reserve GO issued"
+  ],
+  "exact_candidate_imports": 38,
+  "exact_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 235
+  },
+  "final_source_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 80
+  },
+  "financial_units_changed": 0,
+  "independent_review": {
+    "effort": "high",
+    "financial_signoff": false,
+    "important_findings": 8,
+    "new_slices": 4,
+    "root_regressions_fixed": true,
+    "runtime_model": "gpt-6-astra",
+    "second_review_after_fixes": false
+  },
+  "money_authority": false,
+  "network_forbidden_in_exact_runner": true,
+  "owner_go_created": 0,
+  "root_full_last_change_note": "Full244 passed before final asset-class/asset-id guard. Final focused80 and exact235 exercise the final code.",
+  "root_full_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 244
+  },
+  "schema": "MONTHLY_COST_FINALITY_ORDERS_OFF_VERIFICATION_V1",
+  "server_status": {
+    "applying_runner_ready": false,
+    "new_cost_candidate": "50file1f02fc49 LOCAL_ONLY",
+    "new_server_rehearsal_run": false,
+    "previous_staging": "44file348690be CODE_ONLY_UNSELECTED",
+    "standing_financial_GO": false
+  },
+  "source_material_sha256": "1f02fc49566831af16cc244320a72d45dccfebccbec3e983894bdbff5f49d416",
+  "status": "LOCAL_SIM_AND_ACTUAL_SOURCE_PASS"
+}

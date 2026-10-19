@@ -1,0 +1,15 @@
+{
+  "effort": "high",
+  "financial_signoff": false,
+  "model": "gpt-6-astra",
+  "review_slices": [
+    "collector",
+    "account_day",
+    "owned_producer",
+    "raw_transport"
+  ],
+  "schema": "MONTHLY_COST_REVIEW_RUNTIME_V1",
+  "second_review_after_fixes": false,
+  "thread_id": "01a15320-4ff6-72c2-9063-39b58886ce15",
+  "verified_turn_contexts": 5
+}

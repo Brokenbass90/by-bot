@@ -1,0 +1,53 @@
+{
+  "BIL_SGOV": {
+    "SGOV_actual_execution_costs": "UNKNOWN_NO_FUND_FILLS_IN_CAPTURE",
+    "account_type": "UNKNOWN_NOT_INFERRED_FROM_MULTIPLIER",
+    "blob": "6cd12cf82b18563314f90747f2e205637f2eb0e6",
+    "cash_interest": "UNKNOWN_NO_INT_IS_NOT_ZERO",
+    "contract": "research_lab/ZAPROS_CODEX_CR_KESH_BIL_2026_10_19.md",
+    "current_code_blockers": [
+      "Monthly foreign-position admission rejects fund sleeve",
+      "account-wide gross includes fund exposure",
+      "cash/non-marginable buying power and settlement cannot be assumed",
+      "fund must not be adopted by NET or Monthly stop/ratchet"
+    ],
+    "next_gate": "Versioned ownership/settlement/risk/rollback design in existing account book; source facts; read-only shadow; separate owner financial GO",
+    "old_version": "Monthly idle cash",
+    "proposal": "SGOV primary / BIL backup sleeve, no Monthly selection change",
+    "status": "RECEIVED_DEV_PASS_IS_NOT_MONEY_GO"
+  },
+  "Polymarket": {
+    "QA_document_published": true,
+    "QA_reported_tests": 5,
+    "codex_tests_run": false,
+    "later_commits_reported_tests": 9,
+    "live_authority": false
+  },
+  "U2_H2b": {
+    "Monthly_v1_waits_for_H2b": false,
+    "U58_source": "Separate existing Yahoo Monthly58",
+    "backfill_is_forward": false,
+    "blob": "255090c8e9d0a207d115db329860fe1f608af550",
+    "contract": "research_lab/prereg/PREREG_ALPACA_H2B_STAB_FORWARD_2026_10_19.md",
+    "required": [
+      "frozen universe SHA",
+      "raw timestamps/session/adjustment policy",
+      "coverage/gaps/immutable manifest",
+      "actual delivery time and idempotent hash verification"
+    ],
+    "source": "1Day SIP / split / deep archive format",
+    "status": "DATA_BLOCKED_ACCEPTED_P1",
+    "universe_rule_commit": "a212281"
+  },
+  "claude_message_sent": false,
+  "financial_authority_changed": false,
+  "origin_sha": "6826315c314326f9570894540087260876678b5a",
+  "prior_4587a34_is_published_ancestor": true,
+  "roadmap": {
+    "canonical": "ROADMAP_SELF_IMPROVING.md",
+    "new_parallel_roadmap_created": false,
+    "research_owner": "Claude",
+    "sole_integrating_writer": "Codex"
+  },
+  "schema": "RESEARCH_REQUEST_INTAKE_20261019_V1"
+}

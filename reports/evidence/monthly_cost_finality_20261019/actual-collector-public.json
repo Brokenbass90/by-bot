@@ -1,0 +1,19 @@
+{
+  "account_cash_stable": true,
+  "activity_counts": {
+    "FEE": 6,
+    "FILL": 7
+  },
+  "actual_get_requests": 4,
+  "broker_writes": 0,
+  "capture_sha256": "560a8bc00a73eb3a8c8424d7a5f254e2f94bb72e05ad0d35e892545e6a62f500",
+  "code_execution": "EXACT_EXTRACTED_STDLIB_FUNCTIONS_NO_FINANCIAL_CONTROLLER",
+  "money_authority": false,
+  "observed_ms": 1792412243335,
+  "page_count": 1,
+  "remote_writes": 0,
+  "schema": "ALPACA_ACTUAL_NEW_COST_COLLECTOR_V1",
+  "source_sha256": "665411277f2620e3df5fdc0a7f8c40e749e1d289e109d8a319af54b43815f299",
+  "status": "ACTUAL_GET_AND_OFFLINE_REPLAY_PASS",
+  "terminal_cost_finality_proven": false
+}

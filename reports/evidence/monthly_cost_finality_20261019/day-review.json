@@ -1,0 +1,68 @@
+{
+  "actual_private_replay": {
+    "all_cash_position_finality_capital_money_flags_false": true,
+    "calendar_sha256": "122d30f079fd0ff45c197555880346aad2c6f0f35f63c7dfa1f5805bd42a4081",
+    "days": [
+      "2026-10-01",
+      "2026-10-05",
+      "2026-10-07",
+      "2026-10-15"
+    ],
+    "fee_activities": 6,
+    "fees_usd": "0.06",
+    "fills": 7,
+    "network_or_credentials_used": false,
+    "protocol_sha256": "0591a9adb7a50295c37aa06051eae3e08e36e1a45ebfcf9c0495a2fb7257c9ef",
+    "source_sha256": "c612cbb2ae9380934ffa1e2b85129698ce63bd51d4175673b1cbec4a81ba9f95"
+  },
+  "findings": [
+    {
+      "detail": "Whole-account daily aggregation accepts coverage.until immediately after the regular calendar close. A creation-time query ending at 16:10 New York omits later same-day activity, including after-hours executions; exact penny-rounded fee matching on the retained subset cannot establish a complete account-day denominator. Post-close executed assessments do not prove the remaining day has no fills or adjustments. The code returns unqualified ACCOUNT_DAY_FEE_SOURCE_PASS for this truncated interval.",
+      "end": 319,
+      "file": "research_lab/alpaca_fee_to_live_closure_v1.py",
+      "priority": 1,
+      "reproduction": {
+        "assessment_created_at": "2026-10-01T20:05:00Z",
+        "calendar_close_utc": "2026-10-01T20:00:00Z",
+        "fees_usd": "0.02",
+        "local_account_day_end_utc": "2026-10-02T04:00:00Z",
+        "query_until": "2026-10-01T20:10:00Z",
+        "returned_status": "ACCOUNT_DAY_FEE_SOURCE_PASS"
+      },
+      "requested_fix": "Require complete account trade-day coverage with explicit delayed-creation limits, or validate a source-pinned regular-session-only scope; otherwise label provisional observed components instead of whole-day PASS.",
+      "severity": "Important",
+      "start": 315,
+      "title": "Require full account-day coverage or a proven regular-session-only scope"
+    },
+    {
+      "detail": "Every FILL is treated as NMS shares and qty*price as USD sell value without asset-class/currency applicability checks. Capture-verified rows explicitly marked asset_class=crypto and symbol=BTC/USD still produce ACCOUNT_DAY_FEE_SOURCE_PASS when retained penny fee totals match. A pinned NMS-share/SEC-equity protocol does not extend to arbitrary account instruments. Mixed/unsupported activity can therefore produce false model reconciliation even while finality flags stay false.",
+      "end": 325,
+      "file": "research_lab/alpaca_fee_to_live_closure_v1.py",
+      "priority": 1,
+      "reproduction": {
+        "fees_usd": "0.02",
+        "fill_asset_class": "crypto",
+        "fill_symbol": "BTC/USD",
+        "returned_status": "ACCOUNT_DAY_FEE_SOURCE_PASS"
+      },
+      "requested_fix": "Validate source-pinned supported asset/currency scope for every fill; reject explicit unsupported/conflicting instruments and keep unresolved days outside equity-model PASS.",
+      "severity": "Important",
+      "start": 310,
+      "title": "Validate instrument and currency applicability before applying the NMS/SEC fee model"
+    }
+  ],
+  "implementation_changes": 0,
+  "network_broker_or_financial_actions": 0,
+  "public_raw_or_account_ids_in_report": false,
+  "reviewed_files_sha256": {
+    "research_lab/alpaca_fee_to_live_closure_v1.py": "9daecc4c457bdf6082cd447b38e529f40e14011d4890895e7bd5ec646ebf78b3",
+    "tests/test_alpaca_cost_activity_source_v1.py": "8d08ed246679f7ada2ce6ceb77704f0b8c10173bf9e50805d576b184409d2b73"
+  },
+  "schema": "MONTHLY_ACCOUNT_DAY_NEW_LOGIC_REVIEW_V1",
+  "scope": "Only reconcile_account_day_fees and new fee-day tests; collector R1/R2 fixes not reviewed again.",
+  "tests": {
+    "command": ".venv/bin/python -m pytest -q tests/test_alpaca_cost_activity_source_v1.py tests/test_alpaca_fee_to_live_closure_v1.py",
+    "result": "45 passed in 3.54s"
+  },
+  "verdict": "CHANGES_REQUESTED_2_IMPORTANT_0_CRITICAL"
+}

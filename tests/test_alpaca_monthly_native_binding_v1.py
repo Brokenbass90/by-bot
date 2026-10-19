@@ -60,6 +60,22 @@ def test_actual_native_entry_path_binds_atr_quote_stop_and_no_duplicate_on_resta
     assert io.sent==['buy','stop']
 
 
+def test_cash_anchor_is_durable_before_first_buy_and_not_replaced_on_recovery(setup):
+    b,s,a,io,now=setup;t=ticket(setup);submit=io.submit_market_buy
+    anchor=a.runtime/'cash-anchors'/(t['client_order_id']+'.json')
+    def checked(*args,**kwargs):
+        data=json.loads(anchor.read_bytes())
+        assert data['account']['cash']=='487.42'
+        assert data['client_order_id']==t['client_order_id']
+        return submit(*args,**kwargs)
+    io.submit_market_buy=checked;io.lose_once=True
+    with pytest.raises(OSError):a.enter(t,now_ms=now,apply=True)
+    before=anchor.read_bytes();stamp=anchor.stat().st_mtime_ns
+    a.enter(t,now_ms=now+1000,apply=True)
+    assert anchor.read_bytes()==before and anchor.stat().st_mtime_ns==stamp
+    assert io.sent==['buy','stop']
+
+
 def test_missed_session_and_halt_block_before_dispatch(setup):
     b,s,a,io,now=setup;t=ticket(setup)
     with pytest.raises(ValueError,match='STALE_SIGNAL'):

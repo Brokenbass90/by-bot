@@ -1,0 +1,372 @@
+{
+  "all_source_receiver_registry_and_input_hashes_unchanged": true,
+  "all_source_receiver_registry_and_input_metadata_unchanged": true,
+  "brain_or_judges_run": false,
+  "causal_limits": {
+    "all_opportunity_timestamps": {
+      "t_available_ms": {
+        "max": 1792394020758,
+        "max_utc": "2026-10-19T07:13:40.758000+00:00",
+        "min": 1788437840450,
+        "min_utc": "2026-09-03T12:17:20.450000+00:00"
+      },
+      "t_decision_ms": {
+        "max": 1792394020758,
+        "max_utc": "2026-10-19T07:13:40.758000+00:00",
+        "min": 1788437840450,
+        "min_utc": "2026-09-03T12:17:20.450000+00:00"
+      },
+      "t_observation_ms": {
+        "max": 1792393200000,
+        "max_utc": "2026-10-19T07:00:00+00:00",
+        "min": 1788433200000,
+        "min_utc": "2026-09-03T11:00:00+00:00"
+      },
+      "t_recorded_ms": {
+        "max": 1792394031241,
+        "max_utc": "2026-10-19T07:13:51.241000+00:00",
+        "min": 1792080090016,
+        "min_utc": "2026-10-15T16:01:30.016000+00:00"
+      }
+    },
+    "all_real_market_events_captured": "UNKNOWN",
+    "clock_scope": "Timestamp ordering is internal consistency, not external clock or point-in-time feature availability proof. Hash chains prove linked byte consistency and archived-prefix preservation, not continuous daemon uptime or external feed completeness.",
+    "context_bar_ts_after_observation": 0,
+    "context_bar_ts_unknown_or_absent": 6542,
+    "context_explicit_availability_timestamp_rows": 0,
+    "context_schema_counts": {
+      "ContextRecord v1": 20914,
+      "ContextRecord v2": 1534
+    },
+    "source_availability": "SOURCE_TIMESTAMPS_ONLY_NOT_PER_FEATURE",
+    "source_id_scope": "Producer rows do not store source_id; receiver namespace is operator supplied. Uniqueness verified within the two supplied producer files only.",
+    "v2_feature_vovremya_counts": {
+      "False": 1385,
+      "True": 149
+    },
+    "v2_late_flag_counts": {
+      "False": 1521,
+      "True": 13
+    },
+    "version_scope": "policy_sha pins verified; producer lacks explicit brain_version, receiver maps version from supplied registry. Registry mapping is not current code identity proof."
+  },
+  "checks": {
+    "dangling_decisions": 0,
+    "decision_opp_policy_duplicates": 0,
+    "decision_opp_policy_version_duplicates": 0,
+    "decision_timestamp_order_failures": 0,
+    "explicit_decision_brain_version_absent": 68878,
+    "opportunity_id_duplicates": 0,
+    "opportunity_source_ref_version_duplicates": 9,
+    "opportunity_source_ref_version_symbol_side_duplicates": 0,
+    "opportunity_timestamp_order_failures": 0,
+    "policy_hash_conflicts_for_same_opp_policy": 0,
+    "source_id_absent_in_producer_rows": 91326
+  },
+  "delivery": {
+    "all_selected_opportunities_have_complete_four_policy_set": true,
+    "all_selected_use_current_registry": true,
+    "capacity_limit_provenance": {
+      "commit": "29b4156905b3353aec11cbec257149c6d90c6441",
+      "design": "docs/superpowers/plans/2026-10-07-os2-shadow-bridge.md:25",
+      "file": "research_lab/os2_shadow_journal.py",
+      "inherited_by_brain_bridge_commit": "9177b7522fe1510f2d6a69f30f4d9d0d4e90e637",
+      "lines": [
+        21,
+        22
+      ],
+      "purpose": "Bounded startup replay and in-memory identity/receipt retention; no continuous delivery rotation contract in inherited journal."
+    },
+    "capacity_status": "BLOCKED_BEFORE_APPEND",
+    "delivered": 8,
+    "eligible_decisions": 6136,
+    "existing_capacity_receipt": {
+      "current_bytes": 35704,
+      "current_receipts": 8,
+      "free_bytes": 57212620800,
+      "largest_input_bytes": 4326,
+      "largest_receipt_bytes": 4674,
+      "max_bytes": 8388608,
+      "max_receipts": 4096,
+      "max_record_bytes": 2097152,
+      "projected_bytes": 28196655,
+      "projected_receipts": 6136,
+      "required_free_bytes": 565031863
+    },
+    "independent_pure_projection": {
+      "largest_input_bytes": 4326,
+      "largest_receipt_bytes": 4674,
+      "matches_archived_preflight": true,
+      "projected_bytes": 28196655,
+      "projected_receipts": 6136
+    },
+    "prior_capacity_receipt_source_snapshot_still_matches": true,
+    "selected_opportunity_ids_equal_v2_subset": true,
+    "since_ms": 1792245149228,
+    "since_utc": "2026-10-17T13:52:29.228000+00:00",
+    "undelivered_decisions": 6128
+  },
+  "delivery_verdict": "BLOCKED_CAPACITY_6128_UNDELIVERED",
+  "external_market_capture_verdict": "UNKNOWN",
+  "integrity_verdict": "PASS_BYTES_CHAINS_PREFIXES_KEYS_AND_PAIRED_SUBSET",
+  "observed_ms": 1792396840731,
+  "observed_utc": "2026-10-19T08:00:40.731000+00:00",
+  "outcome_files_read": false,
+  "policy_versions": [
+    {
+      "matches_current_registry": false,
+      "policy": "BASELINE_V1",
+      "policy_sha": "4437ab427a53a77893d386b4259e09efb7934466fa7570e2f6c5790baa92c227",
+      "recorded": {
+        "max": 1792080092801,
+        "max_utc": "2026-10-15T16:01:32.801000+00:00",
+        "min": 1792080091037,
+        "min_utc": "2026-10-15T16:01:31.037000+00:00"
+      },
+      "rows": 6053
+    },
+    {
+      "matches_current_registry": true,
+      "policy": "BASELINE_V1",
+      "policy_sha": "b530e492470616d194f5047cee35e25f4462cbbc531cd48ffa9c56f13db65220",
+      "recorded": {
+        "max": 1792394031529,
+        "max_utc": "2026-10-19T07:13:51.529000+00:00",
+        "min": 1792083866877,
+        "min_utc": "2026-10-15T17:04:26.877000+00:00"
+      },
+      "rows": 16395
+    },
+    {
+      "matches_current_registry": false,
+      "policy": "BRAIN_V1",
+      "policy_sha": "4437ab427a53a77893d386b4259e09efb7934466fa7570e2f6c5790baa92c227",
+      "recorded": {
+        "max": 1792080092801,
+        "max_utc": "2026-10-15T16:01:32.801000+00:00",
+        "min": 1792080091038,
+        "min_utc": "2026-10-15T16:01:31.038000+00:00"
+      },
+      "rows": 6053
+    },
+    {
+      "matches_current_registry": true,
+      "policy": "BRAIN_V1",
+      "policy_sha": "b530e492470616d194f5047cee35e25f4462cbbc531cd48ffa9c56f13db65220",
+      "recorded": {
+        "max": 1792394031529,
+        "max_utc": "2026-10-19T07:13:51.529000+00:00",
+        "min": 1792083866877,
+        "min_utc": "2026-10-15T17:04:26.877000+00:00"
+      },
+      "rows": 16395
+    },
+    {
+      "matches_current_registry": true,
+      "policy": "BRAIN_V2_DET",
+      "policy_sha": "ca6dc42a4c306a7cc186d840eaa48a653017dbba32f0ab77d39c8b0f3267cf81",
+      "recorded": {
+        "max": 1792394031529,
+        "max_utc": "2026-10-19T07:13:51.529000+00:00",
+        "min": 1792245149229,
+        "min_utc": "2026-10-17T13:52:29.229000+00:00"
+      },
+      "rows": 1534
+    },
+    {
+      "matches_current_registry": true,
+      "policy": "HEDGE_V1",
+      "policy_sha": "42b95a59b3752778dc7fc15e1f5dfa3101b0ff379704ea1f6e7644a9af27afb6",
+      "recorded": {
+        "max": 1792394031529,
+        "max_utc": "2026-10-19T07:13:51.529000+00:00",
+        "min": 1792083866877,
+        "min_utc": "2026-10-15T17:04:26.877000+00:00"
+      },
+      "rows": 16395
+    },
+    {
+      "matches_current_registry": false,
+      "policy": "HEDGE_V1",
+      "policy_sha": "fff87748ea19f567fee3107b44416ffe416ba349ca6990c8453ca8a1a7ac05c0",
+      "recorded": {
+        "max": 1792080092801,
+        "max_utc": "2026-10-15T16:01:32.801000+00:00",
+        "min": 1792080091038,
+        "min_utc": "2026-10-15T16:01:31.038000+00:00"
+      },
+      "rows": 6053
+    }
+  ],
+  "producer_receiver_registry_writes": 0,
+  "prospective_assessment_starts_utc": "2026-10-31T14:00:00+00:00",
+  "prospective_credit": 0,
+  "receiver": {
+    "bytes": 35704,
+    "exact_source_link_failure_rows": [],
+    "identity_duplicates": 0,
+    "oct17_full_file_matches": true,
+    "receipt_hashes_match_oct17_summary": true,
+    "receipt_integrity_failure_rows": [],
+    "registry_oct17_matches": true,
+    "registry_sha256": "e9667b59c42254488916226349cf1e0d74fc78d6ab335a470bd516c5096888e3",
+    "rows": 8,
+    "sha256": "49bbca6ac9ffbbabdf1d06e8be731d66923b5686916b055e3ff412517caab4a2",
+    "source_ids": [
+      "CLAUDE_BRAIN_SHADOW_V1"
+    ],
+    "source_matched_decision_hashes_sha256": "ed1487942cbc5c0d64a7d4cf11abc33be32e85ffd5cf3ae99e2a51fbb13b1e34"
+  },
+  "schema": "BRAIN_INDEPENDENT_SOURCE_INTEGRITY_V1",
+  "shared_upstream_source_groups": [
+    {
+      "ordinal_ranges_1_based": [
+        [
+          5049,
+          5058
+        ]
+      ],
+      "rows": 10,
+      "source_ref": "data/kity_bybit_ten/2026-10-15/signal.json",
+      "unique_opp_ids": 10,
+      "unique_source_hashes": 1,
+      "unique_symbols": 10,
+      "version": "ten_v1"
+    }
+  ],
+  "sources": {
+    "decisions.jsonl": {
+      "bytes": 28014297,
+      "chain_failure_rows": [],
+      "chain_validated": true,
+      "oct17_prefix": {
+        "bytes": 25516170,
+        "ends_newline": true,
+        "row_count_matches": true,
+        "rows": 62750,
+        "sha256": "700c2dac24034f9412cb3a816381e83d87c7555ab0d4fd8554009c25474022e5",
+        "sha_matches": true,
+        "tail_hash_matches": true
+      },
+      "oct19_prior_snapshot_matches": true,
+      "record_hash_duplicates": 0,
+      "recorded_timestamp_regressions": 0,
+      "rows": 68878,
+      "sha256": "b04bad9ea8cb1fac60f90236282f675f1edbe9b7796b80ae427171e06750eae2",
+      "tail_hash": "4b086dafb7d92bd9e2f7ab872bbbc7af3deacb38c86339e20ab31765fb59b9be",
+      "timestamp": {
+        "t_recorded_ms": {
+          "max": 1792394031529,
+          "max_utc": "2026-10-19T07:13:51.529000+00:00",
+          "min": 1792080091037,
+          "min_utc": "2026-10-15T16:01:31.037000+00:00"
+        }
+      }
+    },
+    "opportunities.jsonl": {
+      "bytes": 31114651,
+      "chain_failure_rows": [],
+      "chain_validated": true,
+      "oct17_prefix": {
+        "bytes": 28544599,
+        "ends_newline": true,
+        "row_count_matches": true,
+        "rows": 20916,
+        "sha256": "f1338732595cf86309c82a25284694748d9f7cf423df274b7f44ee9d675dc3ae",
+        "sha_matches": true,
+        "tail_hash_matches": true
+      },
+      "oct19_prior_snapshot_matches": true,
+      "record_hash_duplicates": 0,
+      "recorded_timestamp_regressions": 0,
+      "rows": 22448,
+      "sha256": "5d2defc1de9ba3a991c77d3320c4c5264f83cc6ab4dc87b7e359cde7764e37fe",
+      "tail_hash": "9cfd4f288b002a4dc09a3ce7291f1ce302e50c64483a0ca44459dd8620728fe2",
+      "timestamp": {
+        "t_recorded_ms": {
+          "max": 1792394031241,
+          "max_utc": "2026-10-19T07:13:51.241000+00:00",
+          "min": 1792080090016,
+          "min_utc": "2026-10-15T16:01:30.016000+00:00"
+        }
+      }
+    }
+  },
+  "v2_subset": {
+    "decision_timestamps": {
+      "t_recorded_ms": {
+        "max": 1792394031529,
+        "max_utc": "2026-10-19T07:13:51.529000+00:00",
+        "min": 1792245149228,
+        "min_utc": "2026-10-17T13:52:29.228000+00:00"
+      }
+    },
+    "first": {
+      "opp_id": "bfb9a85885aad41dd4700c2bee892a34",
+      "record_hash": "d848ef82d49a437b09382063cbb09ace2708ad759441e7e50e7cd28645765ebc",
+      "source_ref": "data/ten_ETS2S.jsonl#PUMPFUNUSDT:1792234800000"
+    },
+    "incomplete_or_extra_policy_sets": 0,
+    "last": {
+      "opp_id": "b2024877c7e836ea719fe3c6a6803859",
+      "record_hash": "9cfd4f288b002a4dc09a3ce7291f1ce302e50c64483a0ca44459dd8620728fe2",
+      "source_ref": "data/ten_ETS2S.jsonl#PANWUSDT:1791932400000"
+    },
+    "opportunities": 1534,
+    "opportunity_timestamps": {
+      "t_available_ms": {
+        "max": 1792394020758,
+        "max_utc": "2026-10-19T07:13:40.758000+00:00",
+        "min": 1792241096880,
+        "min_utc": "2026-10-17T12:44:56.880000+00:00"
+      },
+      "t_decision_ms": {
+        "max": 1792394020758,
+        "max_utc": "2026-10-19T07:13:40.758000+00:00",
+        "min": 1792241096880,
+        "min_utc": "2026-10-17T12:44:56.880000+00:00"
+      },
+      "t_observation_ms": {
+        "max": 1792393200000,
+        "max_utc": "2026-10-19T07:00:00+00:00",
+        "min": 1791248400000,
+        "min_utc": "2026-10-06T01:00:00+00:00"
+      },
+      "t_recorded_ms": {
+        "max": 1792394031241,
+        "max_utc": "2026-10-19T07:13:51.241000+00:00",
+        "min": 1792245149124,
+        "min_utc": "2026-10-17T13:52:29.124000+00:00"
+      }
+    },
+    "ordered_opp_ids_sha256": "4a8fe8ba9411cbe8d1327c464c5a5a337d4e165cbd9fb1a37d2cf73a5eb611fa",
+    "outside_subset_policies": {
+      "BASELINE_V1": 20914,
+      "BRAIN_V1": 20914,
+      "HEDGE_V1": 20914
+    },
+    "paired_decision_rows": 6136,
+    "policies": {
+      "BASELINE_V1": 1534,
+      "BRAIN_V1": 1534,
+      "BRAIN_V2_DET": 1534,
+      "HEDGE_V1": 1534
+    },
+    "producer_opportunity_ordinal_ranges_1_based": [
+      [
+        20915,
+        22448
+      ]
+    ],
+    "registry_mismatches": 0,
+    "sleeves": {
+      "ELDER": 1534
+    },
+    "source_files": {
+      "data/ten_ETS2S.jsonl": 1534
+    },
+    "versions": {
+      "ETS2S_live": 1534
+    }
+  }
+}

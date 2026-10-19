@@ -1,5 +1,34 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT19Oct12:40UTC MONTHLY COST SOURCE / OWNED FINALITY COMPONENT CLOSED LOCALLY —
+Read MONTHLY_COST_FINALITY_AND_BRAIN_INTEGRITY_2026_10_19.md and its verification.
+Automatic raw GET/creation-time pagination→full-day fees→durable pre-entry cash
+anchor→owned book→EXISTING finalizer implemented ORDERS_OFF; no second money ledger.
+Actual new getter/collector4GET12:17UTC/7FILL/6FEE,4fee-days/$0.06 replayPASS;
+real legacy cash496.12−101.20−.01=394.91, not terminal Monthly trade/adoption.
+15actualGET totalinclprior discovery/metadata;0broker/remote writes,0GO/units changed.
+Final50file1f02fc49566831af material LOCAL_ONLY; exact235PASS/38imports/0fallback,
+network denied. Root244PASS before final asset-conflict guard; focused80PASS after,
+counts overlap. Frozen dynamic helperd205f8f preserved. One verifiedastra/high reviewer,
+4new slices/8Important fixed viaRED/GREEN; no second signoff. Full frozen58 selector→
+stop/ratchet/restart→automatic delayed-cost finality→nextselection localE2E PASS.
+Prior44file348690be server CODE_ONLY_UNSELECTED unchanged; new server rehearsal and
+one applying runner/handoff/rollback NOTDONE. No actual Monthly LIVE/standing GO.
+Critical nextpacket issue ADMISSION_CONTRACT_SAME_WINDOW_CONFLICT: NET2Nov exit AND
+ordinary futuremonthlyrotation cannot wait full-day postedfees and buy within same
+5min window. Prepare concrete bounded pending-cost admission CR with conservative
+loss/cash/ownership terms; current strictguard unchanged, no reserve/GO/calendar waiver.
+Real differing-average precision source stillUNKNOWN; fixturepinned contracttested,
+actual unsupportedcase failsclosed. Cleanup START HERE deferred/restored, no mass edits.
+NET19Oct13:30UTC/13:35brokerreadback remain FUTURE/PENDING. GET12:25UTC77pins/lock813893
+preserved, NETtimersactive/SHOPdisabled. Existing automations unchanged.
+Brain independentchains/prefixes/keys/1534four-policy pairedsubset PASS;6128 delivery
+backlog, fullmarket/PIT/outcome/source-code truthUNKNOWN,0economicforwardcredit.
+Published researchorigin6826315 (4587a34ancestor): U2/H2b1DaySIP/split DATA_BLOCKED
+acceptedP1, separateU58Yahoo continues; BIL/SGOV DEV→CR/noGO, foreignfund/gross conflict;
+QA Polymarketpublished5reportedtests/later9claims notrerun. Roadmap/board updated,
+Claude/research/outcomes/producers/receiver notedited, no Claude message.
+
 CURRENT19Oct07:30UTC AUTHORIZED MONTHLY STAGING / BRAIN SOURCE —
 Read MONTHLY_STAGING_AND_BRAIN_CONTEXT_2026_10_19.md. Owner explicitly approved
 code-only upload to64.226.73.119;44file348690be now CODE_ONLY_UNSELECTED at original

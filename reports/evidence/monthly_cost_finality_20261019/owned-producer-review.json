@@ -1,0 +1,75 @@
+{
+  "account_ids_or_public_raw": false,
+  "broker_actions": 0,
+  "findings": [
+    {
+      "detail": "The generated source proves accrued_fees/pending_reg_taf_fees=0 only at its captured observation time. finalize_costs re-reads the account, but validates only identity/cash and ignores fresh fee-liability fields. A newly visible pending charge can leave cash unchanged and still yield LIVE_TERMINAL_COST_FINALITY, after which Monthly _require_exit_accounting permits progression. This is a concrete integration gap for the new automatic producer, not a demand to predict future fee postings. Reproduced through the existing real restricted transport/finalizer test with fresh pending_reg_taf_fees=0.50: both initial finalization and restart returned finality and the accounting gate passed.",
+      "end": 421,
+      "file": "research_lab/alpaca_dynamic_live_runtime_v1.py",
+      "priority": 1,
+      "reproduction_key": "verification.isolated_reproductions.fresh_liability_finalizer",
+      "requested_fix": "For generated Monthly sources, require the fresh finalization account to have finite present accrued_fees and pending_reg_taf_fees both zero; fail closed on absent/nonzero/conflicting fields before saving finality. Preserve legacy source behavior as needed and add a source-zero/current-nonzero regression.",
+      "severity": "Important",
+      "start": 419,
+      "title": "Recheck current broker fee liabilities before accepting generated Monthly finality"
+    },
+    {
+      "detail": "The producer requires exact equality between the activity-weighted fill average and broker order filled_avg_price. Different-price fractional fills can have more precision than the broker-reported average (or a recurring weighted average), so correct fully posted activity/cash evidence is rejected indefinitely. The current partial-fill tests use equal execution prices and do not cover this. Reproduced activity average 10.666666667 versus displayed 10.666667 with cash-consistent per-fill settlements: MONTHLY_COST_ORDER_PRICE_CONFLICT. The later broker_cash_rounding_usd path explicitly claims to preserve displayed-average effects, but this equality prevents reaching it.",
+      "end": 109,
+      "file": "research_lab/alpaca_monthly_cost_source_v1.py",
+      "priority": 2,
+      "reproduction_key": "verification.isolated_reproductions.partial_fill_average",
+      "requested_fix": "Define and verify source-supported broker average representation/precision, retain exact activity economics and the displayed-average delta separately, reject changes beyond that explicit contract, and test unequal-price partial fills. Do not introduce a blanket epsilon or silently fit cash.",
+      "severity": "Important",
+      "start": 107,
+      "title": "Handle documented displayed-average precision for real partial fills"
+    }
+  ],
+  "implementation_changes": 0,
+  "limitations": [
+    "Only local deterministic fixture transport was exercised; no live broker execution, scheduler, full server runner or deployment acceptance.",
+    "Allocation conservation and immutable restart paths passed the focused suite; real per-fill cash-rounding and displayed-average conventions still need source-backed acceptance.",
+    "Explicit accounting fee allocation is not broker per-order fee attribution.",
+    "No claim of future late-adjustment impossibility; fresh visible liabilities must still block current finalization."
+  ],
+  "network_requests": 0,
+  "reviewed_files_sha256": {
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "c08fa24de0fabadc7306cfaed8140829a1e2765d4496390dc022e6f6b6bc37b9",
+    "research_lab/alpaca_monthly_cost_source_v1.py": "e35dfa9f3332809062598a04bb0d0113dd75a31e1eaf49e20a62a8e9928438b8",
+    "research_lab/alpaca_monthly_native_binding_v1.py": "76d0646a7c3e16cef4364d55bfeb3b947bf6d026ea41eb714a9c84e01fe945a3",
+    "tests/test_alpaca_monthly_cost_source_v1.py": "8abf07b2cfa3d9dec10c3bf11eab15a3d49880b1fea46a2cffceeef426889231",
+    "tests/test_alpaca_monthly_native_binding_v1.py": "42534d777a5f4b34096462a67a784b7c738343e48fef11052d17785e3303198a"
+  },
+  "schema": "MONTHLY_OWNED_COST_PRODUCER_CRITICAL_REVIEW_V1",
+  "scope": "First review of new owned-book cost producer, cash-anchor addition and finalizer rounding integration only. No re-review of collector/day fixes.",
+  "verdict": "CHANGES_REQUESTED_2_IMPORTANT_0_CRITICAL",
+  "verification": {
+    "command": ".venv/bin/python -m pytest -q tests/test_alpaca_monthly_cost_source_v1.py tests/test_alpaca_monthly_native_binding_v1.py tests/test_alpaca_dynamic_live_runtime_v1.py",
+    "isolated_reproductions": {
+      "accounting_gate_after_fresh_pending_fee": "PASSED_EXISTING_TEST_ASSERTION",
+      "fresh_liability_finalizer": [
+        {
+          "broker_cash_after": "477.13",
+          "fresh_pending_reg_taf_fees": "0.50",
+          "net_usd_exact": "-10.2866",
+          "status": "LIVE_TERMINAL_COST_FINALITY"
+        },
+        {
+          "broker_cash_after": "477.13",
+          "fresh_pending_reg_taf_fees": "0.50",
+          "net_usd_exact": "-10.2866",
+          "status": "LIVE_TERMINAL_COST_FINALITY"
+        }
+      ],
+      "network": false,
+      "partial_fill_average": {
+        "broker_displayed_average": "10.666667",
+        "cash_consistent": "61.31",
+        "result": "MONTHLY_COST_ORDER_PRICE_CONFLICT",
+        "weighted_execution_average": "10.666666667"
+      }
+    },
+    "producer_subset": "12 passed in 0.28s",
+    "result": "90 passed in 1.74s"
+  }
+}

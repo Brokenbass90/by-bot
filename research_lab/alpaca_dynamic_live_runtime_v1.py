@@ -117,6 +117,40 @@ class DynamicLiveClient(native.AlpacaClient):
         except error.HTTPError as exc:
             raise native.AlpacaAPIError(exc.code,'ALPACA_HTTP_'+str(exc.code)) from exc
 
+    def cost_get(self,route,params):
+        """Bounded raw GET evidence, retaining fee rows and unsuccessful bodies.
+
+        Separate read-only surface; does not widen order routes, permits, or
+        ordinary _request. No activity-type/date filter may hide later charges.
+        """
+        if self.base_url!=LIVE or route not in {'/v2/clock','/v2/account','/v2/account/activities'} or not isinstance(params,dict):
+            raise ValueError('COST_RAW_READ_ROUTE')
+        if route=='/v2/account/activities':
+            if (set(params) not in ({'after','until','direction','page_size'}, {'after','until','direction','page_size','page_token'})
+                or params['direction']!='asc' or type(params['page_size']) is not int
+                or not 1<=params['page_size']<=100
+                or any(not isinstance(params[k],str) or not params[k] for k in ('after','until'))
+                or ('page_token' in params and (not isinstance(params['page_token'],str) or not params['page_token']))):
+                raise ValueError('COST_RAW_COMPLETE_QUERY_REQUIRED')
+        elif params:raise ValueError('COST_RAW_QUERY_REFUSED')
+        from urllib.parse import urlencode
+        path=route+('?' + urlencode(params) if params else '')
+        req=request.Request(LIVE+path,headers=self._headers(),method='GET')
+        started=time.time_ns()//1000000
+        try:
+            with self.opener.open(req,timeout=10) as response:
+                raw=response.read(5_000_001);status=response.status
+        except error.HTTPError as exc:
+            with exc:raw=exc.read(5_000_001);status=exc.code
+        import base64
+        truncated=len(raw)>5_000_000;received=len(raw);raw=raw[:5_000_000]
+        result=dict(http_status=status,started_ms=started,received_ms=time.time_ns()//1000000,
+            sha256=hashlib.sha256(raw).hexdigest(),raw_truncated=truncated,received_bytes_at_least=received)
+        try:result.update(raw=raw.decode('utf-8'),raw_decode_status='UTF8')
+        except UnicodeDecodeError:
+            result.update(raw=None,raw_base64=base64.b64encode(raw).decode('ascii'),raw_decode_status='INVALID_UTF8')
+        return result
+
     def get_asset(self,symbol):
         return self._request('GET','/v2/assets/'+symbol)
 
@@ -410,8 +444,20 @@ def finalize_costs(db,item,client,terminal,path):
     commission,regulatory,unresolved=(dec(source[k]) for k in ('commission_usd','regulatory_fees_usd','unresolved_liability_usd'))
     if min(commission,regulatory,unresolved)<0 or unresolved!=0:raise ValueError('COST_LIABILITY_PENDING')
     net=dec(terminal['gross_before_fees'])-commission-regulatory
-    cash=(dec(source['cash_before_entry'])+net+dec(source['other_cash_net_usd'])).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
+    rounding=dec(source.get('broker_cash_rounding_usd','0'))
+    if source.get('allocation_policy'):
+        from research_lab.alpaca_monthly_cost_source_v1 import verify_generated_source
+        verify_generated_source(source)
+        net=dec(source['activity_gross_before_fees'])-commission-regulatory
+    elif rounding!=0:raise ValueError('UNVERIFIED_BROKER_CASH_ROUNDING')
+    cash=(dec(source['cash_before_entry'])+net+dec(source['other_cash_net_usd'])+rounding).quantize(Decimal('.01'),rounding=ROUND_HALF_UP)
     account=client.get_account()
+    if source.get('allocation_policy'):
+        try:
+            if (account.get('currency')!='USD'
+                or any(dec(account[k])!=0 for k in ('accrued_fees','pending_reg_taf_fees'))):
+                raise ValueError('TERMINAL_LIABILITY_PENDING')
+        except (KeyError,TypeError,ArithmeticError,ValueError):raise ValueError('TERMINAL_LIABILITY_PENDING') from None
     if (account['id']!=item['account'] or cash!=dec(source['cash_after_exit'])
         or dec(account['cash'])!=cash):raise ValueError('TERMINAL_CASH_RECONCILIATION_CONFLICT')
     out=result('LIVE_TERMINAL_COST_FINALITY',net_usd_exact=str(net),broker_cash_after=str(cash),
