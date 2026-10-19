@@ -6,8 +6,10 @@
 KARTA и passports ведёт **Claude**. Здесь только производные gates стратегий,
 не вторая очередь приоритетов и не финансовое разрешение.
 
-Execution receipts подтверждены через92dd3f2. Published research7a80470 проверен;
-local3a349a3/82193fe/3e8f779 **NOT_CONFIRMED_ORIGIN**, Factory runtime UNKNOWN.
+Execution receipts подтверждены через92dd3f2, roadmap —451ae69. Research origin
+1407fbf подтверждён19Oct07:14UTC;3a349a3/82193fe/3e8f779 опубликованы как его предки.
+Claude подтвердил ownership roadmap в опубликованной status delta; изменение
+KARTA pointer ещё не подтверждено. Непрерывный Factory runtime UNKNOWN.
 Политика/GO определяются owner packets, финансовые факты — broker/journal/native,
 research verdicts — замороженными receipts. Свежесть каждой runtime проверки
 задаётся её датой. Старые датированные разделы ниже — история, не новая команда.

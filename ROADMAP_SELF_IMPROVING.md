@@ -33,19 +33,24 @@ code/test/runtime evidence → blocker → next gate. Codex читает опу�
 сессий; research code/KARTA/VOROTA Codex не редактирует. При расхождении источников
 помечается UNKNOWN и фиксируется конкретное различие, а не выбирается удобная версия.
 
-Распределение задано PM/владельцем в этой сессии. Отдельное подтверждение Claude
-не получено; этот документ не выдаёт назначение за его acknowledgement. Для Claude:
+Распределение задано PM/владельцем в этой сессии. Claude подтвердил его в опубликованном
+`research_lab/ROADMAP_VKLAD_RESEARCH_2026_10_19.md`, ref `1407fbf`:
+Codex держит общий roadmap, research-копия OBSOLETE. Изменение самой KARTA ещё
+не подтверждено. Для Claude:
 старую формулировку KARTA «единый источник правды всего проекта» сузить до research
 карты, добавить ссылку сюда; старые финансовые строки заменить ссылкой на execution
 board. Изменение своей KARTA выполняет Claude, без переписывания истории.
 
 ## Реальная исходная точка и предел аудита
 
-- Execution origin: `92dd3f21bfed88bd505e29f3cbb919b34b0394fc` подтверждён.
-- Research origin на проверке19Oct: `7a80470d0b928b8fbdf41d69d88570105d2803a4`.
-- Локальный research ref содержит `3a349a3`, `82193fe`, `3e8f779`. Тексты/пути
-  прочитаны через Git, **публикация и независимый runtime acceptance не подтверждены**.
-  Эти изменения не объединялись с production.
+- Execution roadmap опубликован в `451ae69ace07335374d03ed99702ef3fb9c7f335`;
+  инженерные receipts ниже сохраняют собственные SHA.
+- Research origin на проверке19Oct07:14UTC:
+  `1407fbf64178d92f2d121e1f2a114665c1b1c4e0` (`git ls-remote`).
+- `3a349a3`, `82193fe`, `3e8f779` подтверждены предками опубликованного ref.
+  **Publication blocker CLOSED; независимый непрерывный runtime acceptance не
+  подтверждён.** Более новые локальные изменения не считаются опубликованными.
+  Research не объединялся с production; judges/daemon не запускались Codex.
 - Базовое сопоставление фаз выполнено19Oct. Аудит ограничен19–23Oct включительно
   (пять рабочих дней). Непроверенное к23Oct получает UNKNOWN с owner/следующим
   доказательством; автоматического продления и ожидания аудита для Money Lane нет.
@@ -64,8 +69,8 @@ Runtime receipt всегда датирован: вчерашняя провер
 | 1. Инфраструктура, здоровье, наблюдаемость | **PARTIAL**, прежнее общее «завершена» историческое | Codex | `research_lab/alpaca_monthly_notifications_v1.py`, `alpaca_day_monitor_v1.py`; notification tests; фактическая Telegram квитанция15223 в [Monthly E2E](reports/ALPACA_MONTHLY_E2E_COMPLETION_2026_10_18.md) | Общая поставка execution/Health/reporting ещё не принята как единый актуальный runtime → симптомы и восстановление проходят через существующие journal/Monitor без второго ledger | Реальное ownership/данные существующего manager; не новый Brain |
 | 2. Безопасный денежный цикл, сначала Monthly | **PARTIAL**; standing-компоненты реализованы ORDERS_OFF | Codex | `research_lab/alpaca_monthly_cycle_v1.py`, `alpaca_monthly_native_binding_v1.py`;165exact tests,2fixturecycles/1grant; [standing receipt](reports/ALPACA_MONTHLY_STANDING_AUTONOMY_2026_10_18.md). Actual money runtime отсутствует | Автоматический actual broker cost-finality producer **MISSING**; applying runner/handoff **MISSING** → confirmed exit/net/cash release и следующий разрешённый цикл без ручного source файла, restart/lost-response/rollback PASS | Actual cash/fees coverage, единый manager, bounded owner GO; не полезность Factory/Brain |
 | 3. Контролируемое улучшение, change control | **PARTIAL**; бесконтрольное auto-apply **OBSOLETE** | Codex + Claude | Существующие prereg/passports/source pins, execution receipts и versioned GO. Непрерывная автоматическая degradation→repair→review→release цепь **UNKNOWN** | Одна версия ухудшилась → воспроизводимый диагноз/CR/сравнение/rollback; никаких автоматических LIVE изменений по короткой серии PnL | Независимый review и owner-approved release; короткий PF сам по себе не причина повышать риск |
-| 4. Factory: корректная автоматическая очередь | **PARTIAL** | Claude | Research `fabrika/fabrika.py`, `begun_h1.py`, `sudya_dengi.py`; published314f9ae/7a80470. Default V2.2 + обязательный judge и sandbox queue test описаны в локальном3a349a3 | Опубликовать3a349a3 и проверить реальную автоматическую очередь; текущий daemon runtime **UNKNOWN**, по отчёту Claude не работает с01Oct → trace одного штатного цикла с нужными gates и точным terminal verdict | Существующая очередь/реестр и валидные данные; не новый framework/повтор старых verdicts |
-| 4. AI proposer → prereg → evaluator → passport | **PARTIAL**;2reportedFAIL — технические примеры, не alphaPASS | Claude | Local82193fe/3e8f779: `factory_v3/ai_formula_v1.py`, `ai_raund.py`, `fabrika/ai_formula_cikl.py`, `storozh.py`; Claude сообщает115factory tests, Codex их не запускал; локальный `research:3e8f779:research_lab/FACTORY_AUDIT_AUTONOMNOGO_POISKA_2026_10_19.md` не подтверждён в origin | Publication + непрерывность и ресурсный бюджет **UNKNOWN**; предложение ещё запускается вручную, автоматическая forward-постановка **MISSING** → новый proposal проходит весь gate с immutable evaluator/prereg и единственной разрешённой попыткой | Независимые окна/attempt budget; исчерпанное20/20 окно не становится новым из-за новой формулы |
+| 4. Factory: корректная автоматическая очередь | **PARTIAL**; default V2.2/денежный judge IMPLEMENTED в sandbox-границе research receipt | Claude | Published3a349a3 в origin1407fbf: `fabrika/fabrika.py`, `begun_h1.py`, `sudya_dengi.py`, `results/fabrika_v2_2_integ_20261019/integ_verdikty.jsonl`; research tests не запускались Codex | Publication CLOSED. Каталог простаивает с01Oct по опубликованному отчёту; непрерывный runtime **UNKNOWN** → штатный causal trace с нужными gates и точным terminal verdict | Существующая очередь/реестр и валидные данные; не новый framework/повтор старых verdicts |
+| 4. AI proposer → prereg → evaluator → passport | **PARTIAL**;2reportedFAIL — технические примеры, не alphaPASS | Claude | Published82193fe/3e8f779 в origin1407fbf: `factory_v3/ai_formula_v1.py`, `ai_raund.py`, `fabrika/ai_formula_cikl.py`, `storozh.py`; Claude сообщает115factory tests, Codex их не запускал | Обе формулы составил Claude, не Ollama; hook в storozh.log не наблюдался; proposer/evaluator одного автора. Нужны actual Ollama proposal→verdict/hook trace и независимый review evaluator/registry; publication сам по себе этого не доказывает | Независимые окна/attempt budget; исчерпанное20/20 окно не становится новым из-за новой формулы |
 | 4. Strategy passports и независимость | **PARTIAL** для непрерывного полного цикла | Claude | `factory_v3/reestr_v1.py`, `okna_proverka.py`, `avto_prodvizhenie.py`, `data/factory_v3/reestr_v1.jsonl`; component tests в research; полный актуальныйruntime **UNKNOWN** | Code+prereg+window+budget+judge pins связаны в одном проверяемом trace; автор не может менять судью после результата. Auto-prereg не доказывает неиспользованность данных | Протокол независимых данных и достаточная выборка; без повторного запуска spent judge |
 | 5. Brain как проверяемый portfolio allocator | **PARTIAL**; added net value **INCONCLUSIVE** | Claude research; Codex read-only integration | Published7a80470:72pairs/6timing confirmations/0money; `fabrika/brain_rezhimy.py`; execution `brain_shadow_readonly_bridge_v1.py` и tests; [интеграция](reports/TRADING_OS_NEXT_GATES_DELIVERY_2026_10_17.md) | Нет доказанного incremental portfolio net value → paired fixed/equal-capital baseline, расходы/корреляция/кризисы; при недостатке независимых economic sleeves **BLOCKED_ECONOMICS** | Несколько допущенных независимых рукавов/проспективные decisions; режимный классификатор не заменяет экономику |
 | 5. Multi-market масштабирование | **MISSING / DEFERRED**, исходная цель сохранена | PM + Claude + Codex | Отдельные существующие Alpaca/Bybit источники и frozen стратегии; общего разрешённого money allocator runtime нет | Закрыть первый reproducible net-accounted cycle и доказать второй sleeve до расширения капитала/бирж | Собственные economic/execution gates каждого sleeve, owner caps |
@@ -86,7 +91,7 @@ Git ref. Локальный документ без публикации — pub
 | **P0 Preserve — Codex** | NET сопровождение; SHOP OWNER_CANCELLED; существующие locks/GO/защита без изменений ради roadmap |19Oct13:30UTC actual DAY protection и13:35UTC independent broker readback; до события **PENDING**, после только фактический receipt. На Кипре16:30/16:35 |
 | **P0 Money — Codex** | Один пакет Monthly autonomy: actual cost-finality → one applying runner/NET handoff/rollback → concrete standing packet | Автоматическая непротиворечивая net/cash finality на actual sources, затем полный ORDERS_OFF producer→runner trace; financial GO отдельный.30Oct closed selection /2Nov14:30–14:35UTC fresh gates — будущие факты, не повод откладывать код |
 | **P1 Codex** | Поддерживать существующие DATA_ONLY доставки/QA, без нового framework и массового backfill | Hash/source conflict становится видимым; immutable replay/catchup; следующий actual19Oct close source отдельно от16Oct. Polymarket global census не отнимает slot MoneyP0 |
-| **P0 Research — Claude** | Один пакет Factory continuity: V2.2/default money judge + bounded AI proposal cycle + independent windows | Опубликовать3a349a3/82193fe/3e8f779, единый causal automated trace с pins/budget/terminal verdict; generator ещё manual/daemon stale не выдавать за полную автономию |
+| **P0 Research — Claude** | Один пакет Factory continuity: V2.2/default money judge + bounded AI proposal cycle + independent windows | Publication3a349a3/82193fe/3e8f779 CLOSED в1407fbf; следующий gate — единый causal automated trace с pins/budget/terminal verdict и независимый review; generator ещё manual/daemon stale не выдавать за полную автономию |
 | **P1 Claude** | BIL/SGOV: одна preregistered overlay-проверка на доставленных данных | Prereg до результата, одинаковый Monthly baseline/capital/costs, корректный total return/liquidity; verdict не создаёт money permission |
 
 **Сознательно отложено:** новый Polymarket bulk/global screen до dataset/prereg QA;
@@ -98,6 +103,30 @@ selection гипотезы (SEC, AI top-8 ranking, daily ranking stability21/42)
 assistant не входят в первую monetary v1. KITY остаётся SPENT/ORDERS_OFF,
 Elder сохраняет отдельные prospective/parity gates; количество2–3crypto strategies
 и желаемая доходность не заменяют допуск.
+
+### Рабочие сроки первой Monthly, без смены стратегии
+
+| Дата / окно | Проверяемый результат | Граница обещания |
+|---|---|---|
+| До23Oct — инженерная цель | Законченный локальный ORDERS_OFF кандидат: automatic actual-cost producer → один applying runner → restart/lost-response/handoff/rollback evidence → конкретный standing packet | Срок разработки, не факт готовности или financial GO. Если actual fee source недоступен, назвать точный blocker вместо синтетического PASS |
+| 26–29Oct — целевое окно приёмки | После разрешённой выкладки — точный серверный кандидат, disabled schedule, independent acceptance и решение владельца по bounded standing terms | Предыдущая source-transfer выкладка отклонена auto-review; разрешение не получено, LOCAL_ONLY сохраняется. Этот план не разрешает повторную передачу/активацию |
+| 30Oct после actual close | Причинный закрытый снимок57+SPY и frozen Monthly selection | Закрытие по календарю —20:00UTC/22:00Кипр; сигнал/покупка не гарантируются |
+| 2Nov14:30–14:35UTC /16:30–16:35Кипр | Ближайшее первоначально предусмотренное окно нового Monthly входа, если все actual gates и owner GO пройдены | CASH/NO_SEND допустимы; нет переноса даты, позднего входа или нового отбора по усмотрению инженера |
+
+**Критическая зависимость до23Oct:** личное окно legacy NET exit2Nov14:30–14:35UTC
+совпадает с первым окном Monthly. Должны быть доказаны actual exit/flat/orders,
+fees/cash finality и единственное ownership до нового входа. Поздняя комиссия
+может заблокировать именно это окно. Не закрывать NET раньше, не ослаблять
+cost-finality и не обещать2Nov сделку ради даты; варианты изменения финансовых
+условий выносятся только отдельным конкретным owner packet.
+
+**Крипто-checkpoint22–23Oct, не LIVE deadline:** KITY остаётся
+ECONOMIC_INCONCLUSIVE/SPENT; crypto-only rescue — FAIL. Два weekly canary entry
+receipts/C2 parity/C3 guard формируют исследовательский dossier, а не новый money
+GO. Elder — hedge-only, ≥30 prospective hedge events и frozen parity/delay/restart
+gates; текущая запись0prospective не является свежим пересчётом. При отсутствии
+достаточных событий честная дата TINY неизвестна. Размер TINY не отменяет
+экономический допуск; после PASS не добавлять произвольные недели ожидания.
 
 ## Gate гипотез и change control
 
@@ -129,6 +158,11 @@ forward candidates, unresolved incidents и confirmed net PnL; не тоннаж
   автоматический prereg без гарантии независимости и неизвестный portfolio edge.
 - До23Oct закрыть доступные evidence gaps; остальные UNKNOWN, не бесконечный аудит.
   Следующие изменения добавляются сюда с причиной; исходная цель не заменяется.
+- Follow-up19Oct07:14UTC: origin1407fbf подтверждён, publication blocker трёх
+  research-коммитов CLOSED и acknowledgement Claude принят. Историческая запись
+  NOT_CONFIRMED выше описывает предыдущую проверку. KARTA pointer ещё не подтверждён.
+  Добавлены инженерные целевые даты/условное первое окно и NET same-window blocker;
+  финансовые разрешения, strategy contracts и LIVE не изменены.
 
 ---
 

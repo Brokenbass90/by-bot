@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT19Oct07:14UTC PUBLISHED RESEARCH / FIRST-WINDOW TARGETS —
+Originresearch1407fbf freshly verified via git ls-remote;3a349a3/82193fe/3e8f779
+are ancestors. Previous NOT_CONFIRMED_ORIGIN publication blocker CLOSED; no merge,
+judge rerun or continuous runtime PASS. Published ROADMAP_VKLAD accepts Codex sole
+roadmap writer/research copyOBSOLETE; actual KARTA pointer still unconfirmed.
+Canonicalroadmap/board updated; one main Monthly package unchanged.23Oct is local
+candidate engineering target,26–29Oct conditional server acceptance; source transfer
+still LOCAL_ONLY after prior auto-review rejection, no approval inferred.30Octclose
+20UTC/22Cyprus source;2Nov14:30–14:35UTC/16:30–16:35Cyprus first conditional entry.
+Critical blocker: existing personal NETexit window coincides; actual flat/orders/
+costs/cash finality/singleowner must precede Monthly entry or NO_SEND. No early NET
+exit/new authority/late entry. Crypto22–23Oct checkpoint is not money GO: KITY
+INCONCLUSIVE/SPENT, crypto-onlyFAIL; Elder≥30prospective+frozenparity/delay/restart.
+No current event count or broker/runtime refresh implied; today NET13:30/13:35UTC
+still pending. No code/runtime/units/risk changes or Claude messages this block.
+
 CURRENT19Oct CANONICAL ROADMAP / WRITER OWNERSHIP —
 [ROADMAP_SELF_IMPROVING.md](../ROADMAP_SELF_IMPROVING.md) обновлён на месте.
 Codex — soleintegratingwriter общего roadmap/активнойочереди, executionboard и
