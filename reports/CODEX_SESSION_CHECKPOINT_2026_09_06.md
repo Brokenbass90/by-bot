@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT20Oct02:37CY IBIT FIRST DATA RECORD DELIVERED / ONE-SHOT PAUSED —
+Read IBIT_FIRST_FORWARD_DELIVERY_2026_10_20.md and evidence/ibit_first_forward_20261020.
+19Oct23:35Cypruscheck MISSED: heartbeatarrived23:35UTC/20Oct02:35Cyprus;
+actualROcapture02:37Cyprus/localimport02:39, notbackdated orrescheduled.
+Serverdecision19Oct20:16:06UTC retained:1FRESH row, latency963.53s, IBIT46.30,
+BTC81880.82/81842.10 divergence.047288percent, savedz−1.474497/eventfalse/NO_SEND.
+4networkbody/metadata/requestidentities+6deployedpins/rawtimestamps/rowSHAabeebfb7...
+d4d99a5/qaSHA1f6e3e67...4094385 verified. MassivePENDING_SVERKA/0completecrosschecks;
+10sessionOPEN, dataeligible isnotfinancialPASS. Historical81seedcredit0, history82
+doesnotmean82forward. No rule/outcome/judge rerun. Completednewlinesonly;0tails
+observed, noAdapter/Collector constructors or production_read/decisions/qa methods.
+19createexclusivefiles delivered to sibling research_lab/data/ibit_adapter_v1;
+repeat0newfiles/allhash+inode+mtime unchanged. Consumerproduceringestion UNKNOWN.
+NET/SHOP boundedGETreadback savedPRIVATEONLY in
+.private/ibit_first_cycle_20261020/full-operational-report-private.md and
+full-control-receipt-private.json. Currentposition/order/financialunitstate excluded
+frompublicdelta. No financial mutations; previous dates were not backdated.
+19-net-ibit PAUSED viaofficialtool+configreadback; dates/prompt/rrule preserved,
+serverIBITcollector/timer active, otherautomations unchangedbythisagent.
+No brokerwrites,serverwrites,financialunits/risk/HALT/locks/GO/research/Claudmessages.
+Monthlypendingfee-admission/runner remainsMoneyP0, no prioritieschanged.
+
 CURRENT19Oct23:40CY MONTHLY58 POST-CLOSE DATA DELIVERY —
 Existing DATA_ONLY exporter seal19Oct found bySSHGET/list and delivered through
 existingpull into sibling research_lab/data/alpaca_monthly58_daily_v1. Sourceactual
