@@ -81,6 +81,8 @@ def prohod(maks=5):
                    entry_session=d.get("entry_session"),
                    mesyachnyy_signal=bool(d.get("entry_session") and d["entry_session"][:7] != ses[:7]),
                    pozdno=bool(avail and dt.datetime.now(dt.timezone.utc).timestamp() * 1000 - avail > 36 * 3600 * 1000),
+                   klass=("BACKFILLED_DIAGNOSTIC" if (avail and dt.datetime.now(dt.timezone.utc).timestamp() * 1000 - avail > 36 * 3600 * 1000)
+                          else "FORWARD"),
                    sessiy_v_stab=n, kod={"alpaca_honest_portfolio": _sha(HP_PUT), "h2b_zhurnal": _sha(Path(__file__))},
                    bumagi=rows)
         novye.append(zap)
@@ -88,7 +90,18 @@ def prohod(maks=5):
         with ZH.open("a") as fz:
             for z in novye:
                 fz.write(json.dumps(z, ensure_ascii=False) + "\n")
-    return {"novyh": len(novye), "sessii": [z["session"] for z in novye], "oshibok": sum(1 for z in novye if "oshibka" in z)}
+    return {"novyh": len(novye), "sessii": [z["session"] for z in novye], "oshibok": sum(1 for z in novye if "oshibka" in z),
+            "propuski": propuski()}
+
+
+def propuski():
+    """Торговые сессии (по календарю последней поставки) между первой записанной и последней доступной, которых нет в журнале."""
+    est = uzhe(); fs = sorted(SRC.glob("20??-??-??.json"))
+    if not est or not fs:
+        return []
+    kal = [c["session"] for c in json.loads(fs[-1].read_text()).get("calendar", [])]
+    a, b = min(est), fs[-1].stem
+    return [x for x in kal if a <= x <= b and x not in est]
 
 
 if __name__ == "__main__":
