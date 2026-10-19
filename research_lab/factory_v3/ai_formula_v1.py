@@ -240,7 +240,18 @@ PROMPT_FORMULA = A.PROMPT_SISTEMA + """
 Дополнительно верни поля "formula" и "znak" и "okno". formula — JSON-дерево БЕЗ ЧИСЕЛ: атом — строка из словаря
 """ + json.dumps({k: v[2] for k, v in ATOMY.items()}, ensure_ascii=False) + """; узел — ["minus"|"plus"|"proizv", a, b] или ["neg"|"abs", a];
 глубина ≤ 3, атомов ≤ 3; одиночный атом не принимается. znak: 1 — покупать монеты с наибольшим значением формулы и продавать
-с наименьшим, −1 — наоборот. semya = "AI_FORMULA_XS", id начинается с "AI_". okno — DEV-окно реестра, на начало которого у всех атомов есть данные."""
+с наименьшим, −1 — наоборот. semya = "AI_FORMULA_XS", id начинается с "AI_". okno — DEV-окно реестра, на начало которого у всех атомов есть данные.
+СЕЙЧАС бюджет есть только у окна "KRIPTO_D1_2021H2_2022" (начало 2021-07-01): для него допустимы ТОЛЬКО атомы
+m3_perp, spot, spot_minus_perp, m3_vsplesk, vyhodnye. Других атомов, операций, источников и окон не существует.
+Верни РОВНО такую форму (значения — свои, поля и типы — как здесь; числа только в ozhidaemaya_chastota_v_mesyac и izderzhki_ocenka_bps):
+{"id": "AI_КОРОТКОЕ_ИМЯ", "semya": "AI_FORMULA_XS", "mehanizm": "2–4 предложения (не короче 60 знаков): кто вынужден торговать и почему цена отклоняется",
+ "pochemu_ne_arbitrazhirovano": "почему этим не пользуются крупные игроки", "istochniki_dannyh": ["binance_klines_d1"],
+ "priznak": "словами, что измеряет формула", "vremya_izvestnosti": "закрытие дня d-1, вход закрытием дня d",
+ "napravlenie": "+", "gorizont": "1w", "vselennaya": "PIT топ-50 по OI Binance",
+ "kontrol": "одиночные атомы формулы и случайная перестановка", "falsifikaciya": "спред со знаком гипотезы ≤ 0 или |t| ниже порога окна",
+ "ozhidaemaya_chastota_v_mesyac": 4, "izderzhki_ocenka_bps": 30,
+ "formula": ["minus", "АТОМ_1", "АТОМ_2"], "znak": 1, "normirovka": "xs_z", "okno": "KRIPTO_D1_2021H2_2022"}
+istochniki_dannyh — из: "binance_klines_d1", "binance_spot_taker" (по атомам формулы)."""
 
 
 if __name__ == "__main__":
