@@ -171,7 +171,13 @@ def _z(a): a = np.asarray(a, float); sd = a.std(); return (a - a.mean()) / sd if
 
 def xs_nedelya_binance(parametry, dostup):
     import discovery_paket1 as P
-    D = _dannye(); K, M = D["K"], D["M"]; pr = _priznak(parametry["priznak"], D); znak = int(parametry.get("znak", 1))
+    D = _dannye(); K, M = D["K"], D["M"]; znak = int(parametry.get("znak", 1))
+    if parametry["priznak"] == "formula":                  # 19.10: формула ИИ из закрытого словаря атомов (ai_formula_v1)
+        import ai_formula_v1 as AF
+        if AF.proverit_formulu(parametry["formula"]): raise KeyError(f"формула не прошла проверку: {AF.proverit_formulu(parametry['formula'])}")
+        pr = AF.funkciya(parametry["formula"], D, _priznak)
+    else:
+        pr = _priznak(parametry["priznak"], D)
     a = dt.datetime.fromtimestamp(dostup.t0 / 1000, dt.timezone.utc).date()
     b = dt.datetime.fromtimestamp(dostup.t1 / 1000, dt.timezone.utc).date()
     def ts(d): return int(dt.datetime(d.year, d.month, d.day, tzinfo=dt.timezone.utc).timestamp() * 1000)

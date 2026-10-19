@@ -10,7 +10,9 @@ PAPKA = LAB / "data/factory_v3/gotovye_zayavki"
 
 def v_gite(put):
     try:
-        return subprocess.run(["git", "cat-file", "-e", f"HEAD:research_lab/{put}"], cwd=LAB.parent, capture_output=True).returncode == 0
+        # 19.10: исследовательская ветка — research/fabrika-v1; рабочее дерево может стоять на ветке Codex (HEAD ≠ наша ветка)
+        return any(subprocess.run(["git", "cat-file", "-e", f"{ref}:research_lab/{put}"], cwd=LAB.parent, capture_output=True).returncode == 0
+                   for ref in ("research/fabrika-v1", "HEAD"))
     except Exception:
         return False
 
