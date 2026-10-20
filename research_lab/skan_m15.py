@@ -81,6 +81,10 @@ def progon(K, B, budget):
 
 def main():
     rez = json.loads(OUT.read_text()) if OUT.exists() else {}
+    if CHAST < 0:
+        for c in (0, 1):
+            p = Path(f"skan_m15_rez_{c}.json")
+            if p.exists(): rez.update(json.loads(p.read_text()))
     B = bary(); print("символов", len(B), flush=True)
     for j, mod in enumerate(MODULI):
         if mod in rez or (CHAST >= 0 and j % 2 != CHAST): continue
