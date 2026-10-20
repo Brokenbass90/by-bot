@@ -62,6 +62,19 @@ def proverki(seychas=None):
     else:
         v = vozrast_ch(snimki[-1], seychas)
         rez["istochnik/liq_v2_1"] = dict(status="OK" if v <= 30 else "STALE", vozrast_ch=v, snimkov=len(snimki))
+    # 20.10 (PM P0): дневки Binance для крипто-исследований. Архив binance_kity — разовый снимок (до 30.09), живого
+    # обновления не было, поэтому контроль его не видел. Теперь проверяется продолжение binance_d1_vpered:
+    # последний закрытый день BTCUSDT (перп и спот) должен быть не старше вчерашнего UTC (+ запас 6 ч).
+    for vid in ("taker", "spot_taker"):
+        p = D / "binance_d1_vpered" / vid / "BTCUSDT.json"
+        if not p.exists():
+            rez[f"dannye/binance_d1/{vid}"] = dict(status="NET_FAYLA"); continue
+        try:
+            posl = json.loads(p.read_text())[-1][0] / 1000
+        except Exception:
+            rez[f"dannye/binance_d1/{vid}"] = dict(status="OSHIBKA_CHTENIYA"); continue
+        vozr = (seychas - (posl + 86400)) / H              # часов с закрытия последнего записанного дня
+        rez[f"dannye/binance_d1/{vid}"] = dict(status="OK" if vozr <= 30 else "STALE", posl_den_zakryt_ch_nazad=round(vozr, 2))
     return rez
 
 
