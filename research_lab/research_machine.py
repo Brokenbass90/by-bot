@@ -59,17 +59,201 @@ REGIMES = (
     (lambda d: d >= FLAT,           "тренд+"),
 )
 FEE_BPS_SIDE = 6.0
+
+# ЕДИНЫЙ ПОТОЛОК ЗАТРАТ И ЕДИНОЕ ЧИСЛО РОЗЫГРЫШЕЙ. Заведены 1 сентября.
+#
+# ДЕФЕКТ, найденный первым же прогоном конвейера: perebor_korzina.py
+# держал MAX_LEV = 400 с комментарием «тот же потолок 0.12R при спреде
+# 1.5 bps», а simulate всё равно берёт FEE_BPS_SIDE = 6. Значит сделка
+# с плечом 400 стоила 0.48R и всё равно попадала в выборку, тогда как
+# osi.py такие сделки отбрасывала на 100. Две наши собственные ступени
+# мерили разные вселенные сделок: у PUMP4 вышло 2.15σ на ступени 2 и
+# 3.39σ на ступени 3 при одинаковой конфигурации.
+#
+# Потолок считается ОТ ФАКТИЧЕСКОЙ комиссии, а не от желаемой:
+#     затраты = lev * 2 * FEE_BPS_SIDE / 1e4 <= 0.12R  ->  lev <= 100
+MAX_LEV = 0.12 / (2 * FEE_BPS_SIDE / 1e4)     # = 100.0
+ROZYGRYSHEY = 20                              # розыгрышей контроля
 LOOKBACK = 120
 SIGMA_R = 1.03    # исторический разброс одной сделки при стопе ×1, только для справки
 
 
+def pervyy_argument(Klass) -> str:
+    """Что стратегия ждёт первым аргументом maybe_signal: склад или символ.
+
+    ДЕФЕКТ, найден 1 сентября. Лаборатория ВСЕМ стратегиям передавала
+    Store. Но четыре из корпуса — вся семья pump_fade, включая нашего
+    ведущего кандидата PUMP4 — объявляют `maybe_signal(self, symbol: str,
+    ...)`. Им уезжал объект Store вместо строки символа.
+
+    Пока список разрешённых монет был пуст, это ничего не портило:
+    символ используется только для проверки allow/deny и для подписи
+    сигнала, сама логика входа от него не зависит. Но стоило поставить
+    ПРАВИЛЬНЫЙ префикс переменных — и стратегия отвергла 2800 баров
+    подряд с причиной ALLOWLIST_REJECT, то есть выглядела бы «молчащей».
+    Ровно так 31 августа мы чуть не похоронили живые ноги.
+
+    И это же прямой случай расхождения тестов с живым кодом: живой бот
+    зовёт `maybe_signal(symbol, ...)`, а лаборатория звала
+    `maybe_signal(store, ...)`.
+    """
+    import inspect
+    try:
+        p = list(inspect.signature(Klass.maybe_signal).parameters)
+    except (TypeError, ValueError):
+        return "store"
+    return "symbol" if len(p) > 1 and p[1] == "symbol" else "store"
+
+
+def _tf_v_minutah(tf) -> int | None:
+    """'240' / 240 / '4h' / 'H1' -> минуты. Не понял — None."""
+    if tf is None:
+        return None
+    t = str(tf).strip().lower()
+    if t.isdigit():
+        return int(t)
+    edinicy = {"m": 1, "h": 60, "d": 1440, "w": 10080}
+    if t and t[0] in edinicy and t[1:].isdigit():          # h1, d1, m5
+        return edinicy[t[0]] * int(t[1:])
+    if t and t[-1] in edinicy and t[:-1].isdigit():        # 4h, 15m
+        return edinicy[t[-1]] * int(t[:-1])
+    return None
+
+
+SBOI = {}          # {имя стратегии: сколько раз упала внутри}
+
+
+def pervyy_dlya(Klass, st, simvol):
+    """ЧТО передать стратегии первым аргументом. Один ответ на всю лабораторию.
+
+    2 сентября выяснилось, что я починил три файла из тринадцати.
+    Остальные десять — включая random_control.py, который у нас записан
+    как КАНОНИЧЕСКИЙ контроль, и read_sealed.py, который читает
+    запечатанный период — продолжали звать по старому контракту.
+    Дублированная реализация плодит один и тот же баг столько раз,
+    сколько у неё копий. Поэтому ответ теперь ровно один и здесь.
+    """
+    return simvol if pervyy_argument(Klass) == "symbol" else st
+
+
+def zapisat_sboy(imya, e):
+    """Исключение внутри стратегии — НЕ «нет сигнала».
+
+    Раньше `except Exception: continue` превращал падение стратегии в
+    молчание, и молчание читалось как «ей нечего сказать». Теперь сбои
+    считаются и их видно.
+    """
+    k = f"{imya}:{type(e).__name__}"
+    SBOI[k] = SBOI.get(k, 0) + 1
+
+
+# Порог, выше которого результат прогона считается НЕДЕЙСТВИТЕЛЬНЫМ.
+# Если стратегия падала чаще, чем на каждом сотом решении, её выборка
+# сформирована не правилом входа, а исключениями, и мерить там нечего.
+DOLYA_SBOEV_PREDEL = 0.01
+
+
+def otchet_sboev(resheniy: int = 0) -> bool:
+    """Печатает сбои и отвечает, можно ли верить прогону.
+
+    Возвращает False, если сбоев больше порога. Это «fail closed»:
+    молчание больше не выдаётся за отсутствие сигнала.
+    """
+    vsego = sum(SBOI.values())
+    if not vsego:
+        print("  СБОЕВ СТРАТЕГИЙ: 0")
+        return True
+    print(f"  СБОЕВ СТРАТЕГИЙ: {vsego}")
+    for k, v in sorted(SBOI.items(), key=lambda x: -x[1])[:8]:
+        print(f"    {v:>7}  {k}")
+    if resheniy > 0:
+        d = vsego / resheniy
+        print(f"    доля от всех решений: {d:.4%} (предел {DOLYA_SBOEV_PREDEL:.2%})")
+        if d > DOLYA_SBOEV_PREDEL:
+            print("    ПРОГОН НЕДЕЙСТВИТЕЛЕН: выборку сформировали падения,")
+            print("    а не правило входа. Чинить стратегию, потом мерить.")
+            return False
+    return True
+
+
 class Store:
-    def __init__(self, sym):
+    """Склад баров для стратегий.
+
+    УСТАРЕЛ 4 сентября. Замена — `research_ohlcv_store.ResearchKlineStore`
+    Кодекса в каноническом дереве: он ловит дыру в данных, кривую
+    геометрию бара, бар не на сетке UTC и обрезанную первую корзину —
+    ничего из этого здесь нет. Этот класс живёт до слияния и НЕ
+    чинится: две реализации склада — это ровно та болезнь, из которой
+    проект выбирается. Подробности и контракт: DLYA_KODEKSA_2026_09_04_STORE.md
+
+    ДЕФЕКТ, найденный 1 сентября и самый дорогой за всё время.
+    Раньше здесь было:
+
+        def fetch_klines(self, sym, tf, n):
+            return self.rows[-n:]
+
+    Аргумент `tf` ИГНОРИРОВАЛСЯ. Стратегия просила четырёхчасовые бары —
+    получала часовые. Просила пятнадцатиминутные — получала те же часовые.
+
+    В корпусе 30 стратегий из 95 запрашивают РАЗНЫЕ таймфреймы. Все
+    тридцать мерились сломанным прибором. Elder Triple Screen — метод,
+    весь смысл которого в согласии трёх таймфреймов — у нас сравнивал
+    часовик сам с собой и, разумеется, попадал ровно в случайность.
+
+    Теперь:
+      * базовый таймфрейм определяется по самим данным;
+      * больший таймфрейм СОБИРАЕТСЯ из базового по календарным границам;
+      * меньший таймфрейм отдать неоткуда — возвращаем пусто И СЧИТАЕМ
+        отказы. Молча подсовывать не тот масштаб больше нельзя.
+    """
+
+    def __init__(self, sym, bazovyy_tf: int | None = None):
         self.symbol = sym
         self.rows = []
+        self._baza = bazovyy_tf
+        self.otkazy = {}          # {минуты: сколько раз не смогли отдать}
+
+    def baza(self) -> int:
+        """Базовый таймфрейм в минутах, по расстоянию между барами."""
+        if self._baza:
+            return self._baza
+        if len(self.rows) < 3:
+            return 60
+        d = [self.rows[i + 1][0] - self.rows[i][0] for i in range(min(50, len(self.rows) - 1))]
+        d = [x for x in d if x > 0]
+        if not d:
+            return 60
+        d.sort()
+        self._baza = max(1, int(round(d[len(d) // 2] / 60000)))
+        return self._baza
 
     def fetch_klines(self, sym, tf, n):
-        return self.rows[-n:]
+        m = _tf_v_minutah(tf)
+        b = self.baza()
+        if m is None or m == b:
+            return self.rows[-n:]
+        if m < b or m % b:
+            self.otkazy[m] = self.otkazy.get(m, 0) + 1
+            return []
+        k = m // b
+        hvost = self.rows[-(int(n) + 2) * k:]
+        shag = m * 60000
+        svechi, tek, klyuch = [], None, None
+        for r in hvost:
+            kl = int(r[0]) // shag
+            if kl != klyuch:
+                if tek is not None:
+                    svechi.append(tek)
+                tek = [kl * shag, r[1], r[2], r[3], r[4], r[5]]
+                klyuch = kl
+            else:
+                tek[2] = max(tek[2], r[2])
+                tek[3] = min(tek[3], r[3])
+                tek[4] = r[4]
+                tek[5] += r[5]
+        if tek is not None:
+            svechi.append(tek)
+        return svechi[-int(n):]
 
 
 def ema(x, n):
@@ -207,14 +391,17 @@ def main():
             if len(ts) < LOOKBACK + 300:
                 continue
             bars = [[int(ts[x]), o[x, 0], o[x, 1], o[x, 2], o[x, 3], o[x, 4]] for x in range(len(ts))]
-            st = Store(Path(fp).stem); strat = Strategy()
+            st = Store(Path(fp).stem)
+            strat = Strategy()
+            pervyy = pervyy_dlya(Strategy, st, Path(fp).stem)
             sigs = []
             for i in range(LOOKBACK, len(bars)):
                 st.rows = bars[: i + 1]
                 b = bars[i]
                 try:
-                    s = strat.maybe_signal(st, b[0], b[1], b[2], b[3], b[4], b[5])
-                except Exception:
+                    s = strat.maybe_signal(pervyy, b[0], b[1], b[2], b[3], b[4], b[5])
+                except Exception as _e:
+                    zapisat_sboy('research_machine', _e)
                     continue
                 if s is None or b[0] < sta:
                     continue

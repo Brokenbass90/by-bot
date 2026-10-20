@@ -1,0 +1,2297 @@
+{
+ "kod": {
+  "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+  "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c",
+  "research_lab/research_machine.py": "95ca5322c1da54cf06cd213bdf8075eedc7eff68d3127594db3b3479d32e8572",
+  "research_lab/random_control.py": "a00ed059e4f1c45337011b8cd3434153b831ec128fd5ca9b07a4f6b99cf32aa3",
+  "research_lab/pump4_pereschet.py": "0a1a8d11f7c785f44ac93d6f38e5983d2b9d82df6d2fbd8b53d99de48ce5635c",
+  "research_lab/ten_pump4.py": "fc0240935a643eae15be033732a75c61439cc01e01776451cb0a48155c102426",
+  "research_lab/pump4_fixtures.py": "462db11a53df10a1aed99548259faf956925f9ad09f151f7881b41aa4b815fad"
+ },
+ "fixtures": [
+  {
+   "sym": "1000PEPEUSDT",
+   "signal_bar_open_ms": 1790121600000,
+   "side": "short",
+   "reason": "pump 25.2%/60m fade",
+   "signal": {
+    "entry": 0.004916,
+    "sl": 0.0050300378000000005,
+    "tps": [
+     0.0048133659799999996,
+     0.00471073196,
+     0.0045738865999999994
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.004916,
+    "stop_x4": 0.005372151200000001,
+    "tp1": 0.0048133659799999996,
+    "tp2": 0.00471073196,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.347067,
+    "R_v_verdikte": 0.3471
+   },
+   "bary_sha256": "080d93f69fd68eff7560e79e0849107ddf26a6ba08308f574bac54ef4a43ca96",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "AAVEUSDT",
+   "signal_bar_open_ms": 1790776800000,
+   "side": "short",
+   "reason": "pump 20.2%/60m fade",
+   "signal": {
+    "entry": 159.33,
+    "sl": 166.37894400000002,
+    "tps": [
+     152.9859504,
+     146.6419008,
+     138.183168
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 159.33,
+    "stop_x4": 187.52577600000004,
+    "tp1": 152.9859504,
+    "tp2": 146.6419008,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -1.006781,
+    "R_v_verdikte": -1.0068
+   },
+   "bary_sha256": "b1cd8948da00340653d700bd18d344785d50d1b65e717ced85b5fdaedfcf2c67",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ACEUSDT",
+   "signal_bar_open_ms": 1790240400000,
+   "side": "short",
+   "reason": "pump 25.5%/60m fade",
+   "signal": {
+    "entry": 0.18314,
+    "sl": 0.190903008,
+    "tps": [
+     0.17615329279999997,
+     0.16916658559999997,
+     0.15985097599999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.18314,
+    "stop_x4": 0.21419203200000006,
+    "tp1": 0.17615329279999997,
+    "tp2": 0.16916658559999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.517077,
+    "R_v_verdikte": -0.5171
+   },
+   "bary_sha256": "f36380e06a00f041fcb0645f4598de7d9009a2d4f65e7eff444c738e4c64de99",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ACEUSDT",
+   "signal_bar_open_ms": 1790499600000,
+   "side": "short",
+   "reason": "pump 25.3%/60m fade",
+   "signal": {
+    "entry": 0.20096,
+    "sl": 0.212241348,
+    "tps": [
+     0.19080678680000002,
+     0.1806535736,
+     0.167115956
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.20096,
+    "stop_x4": 0.246085392,
+    "tp1": 0.19080678680000002,
+    "tp2": 0.1806535736,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354656,
+    "R_v_verdikte": 0.3547
+   },
+   "bary_sha256": "39ede63f878342a5265fe39914349fd75488f305075d963a97f5b7e5d2d1cfda",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ACTUSDT",
+   "signal_bar_open_ms": 1791763200000,
+   "side": "short",
+   "reason": "pump 21.5%/60m fade",
+   "signal": {
+    "entry": 0.010843,
+    "sl": 0.0111770826,
+    "tps": [
+     0.010542325659999999,
+     0.01024165132,
+     0.009840752199999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.010843,
+    "stop_x4": 0.012179330400000002,
+    "tp1": 0.010542325659999999,
+    "tp2": 0.01024165132,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.350263,
+    "R_v_verdikte": 0.3503
+   },
+   "bary_sha256": "ec0aeaa8a8d9671934ff712a94bb7c15aefc1cb5111b941ee544ff49aedbd5b4",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "AEROUSDT",
+   "signal_bar_open_ms": 1790283600000,
+   "side": "short",
+   "reason": "pump 10.5%/60m fade",
+   "signal": {
+    "entry": 0.6943,
+    "sl": 0.72740698,
+    "tps": [
+     0.664503718,
+     0.634707436,
+     0.59497906
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.6943,
+    "stop_x4": 0.8267279200000001,
+    "tp1": 0.664503718,
+    "tp2": 0.634707436,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -1.006291,
+    "R_v_verdikte": -1.0063
+   },
+   "bary_sha256": "ef515a65631a71b442ed1bd841c68f5d6f2f7c19d0b76b2284d472bd02d43480",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "AEROUSDT",
+   "signal_bar_open_ms": 1791734400000,
+   "side": "short",
+   "reason": "pump 21.5%/60m fade",
+   "signal": {
+    "entry": 0.9612,
+    "sl": 0.99358524,
+    "tps": [
+     0.9320532840000001,
+     0.9029065680000001,
+     0.8640442800000001
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.9612,
+    "stop_x4": 1.09074096,
+    "tp1": 0.9320532840000001,
+    "tp2": 0.9029065680000001,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.351096,
+    "R_v_verdikte": 0.3511
+   },
+   "bary_sha256": "d70734335ffff906d681614e9675cb6b5a40d4df216599b12eccd3861575434d",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "AKEUSDT",
+   "signal_bar_open_ms": 1790848800000,
+   "side": "short",
+   "reason": "pump 27.6%/60m fade",
+   "signal": {
+    "entry": 0.03193,
+    "sl": 0.0336083864,
+    "tps": [
+     0.03041945224,
+     0.028908904479999997,
+     0.026894840799999993
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.03193,
+    "stop_x4": 0.03864354560000001,
+    "tp1": 0.03041945224,
+    "tp2": 0.028908904479999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354293,
+    "R_v_verdikte": 0.3543
+   },
+   "bary_sha256": "b61e4546236349f7b32b088c2e355d04eb2557609568d314b32a9b3ea70c19a6",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "AKEUSDT",
+   "signal_bar_open_ms": 1791540000000,
+   "side": "short",
+   "reason": "pump 23.7%/60m fade",
+   "signal": {
+    "entry": 0.027238,
+    "sl": 0.0285392784,
+    "tps": [
+     0.026066849439999998,
+     0.024895698879999997,
+     0.023334164799999994
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.027238,
+    "stop_x4": 0.032443113600000004,
+    "tp1": 0.026066849439999998,
+    "tp2": 0.024895698879999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.35372,
+    "R_v_verdikte": 0.3537
+   },
+   "bary_sha256": "e72d63a2daaee28c50ee645de9c41b1f6fb8d1d7bb2eac649fc72abb2648bc71",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ALGOUSDT",
+   "signal_bar_open_ms": 1790006400000,
+   "side": "short",
+   "reason": "pump 15.4%/60m fade",
+   "signal": {
+    "entry": 0.11174,
+    "sl": 0.118042094,
+    "tps": [
+     0.10606811540000001,
+     0.10039623080000001,
+     0.09283371800000002
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.11174,
+    "stop_x4": 0.13694837599999998,
+    "tp1": 0.10606811540000001,
+    "tp2": 0.10039623080000001,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.515319,
+    "R_v_verdikte": -0.5153
+   },
+   "bary_sha256": "82b7f5e93db6527351b93deeb8ce77b24c5c0ac5a25b203be081ef7c29b1d169",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ALGOUSDT",
+   "signal_bar_open_ms": 1791532800000,
+   "side": "short",
+   "reason": "pump 21.4%/60m fade",
+   "signal": {
+    "entry": 0.11843,
+    "sl": 0.12087718800000001,
+    "tps": [
+     0.11622753079999998,
+     0.11402506159999996,
+     0.11108843599999994
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.11843,
+    "stop_x4": 0.12821875200000005,
+    "tp1": 0.11622753079999998,
+    "tp2": 0.11402506159999996,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.345482,
+    "R_v_verdikte": 0.3455
+   },
+   "bary_sha256": "75b7bbf0801a70d71be8a4ed298b8378989a929df33c50f9394dd153131a2812",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ALLOUSDT",
+   "signal_bar_open_ms": 1790071200000,
+   "side": "short",
+   "reason": "pump 15.0%/60m fade",
+   "signal": {
+    "entry": 0.2597,
+    "sl": 0.27028564,
+    "tps": [
+     0.25017292399999996,
+     0.24064584799999997,
+     0.22794307999999996
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.2597,
+    "stop_x4": 0.30204256,
+    "tp1": 0.25017292399999996,
+    "tp2": 0.24064584799999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -1.00736,
+    "R_v_verdikte": -1.0074
+   },
+   "bary_sha256": "a82cff0b9efeb5521937f3ebbd15e9cff0564ccc748f83b2389f6089baedcb3f",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ALLOUSDT",
+   "signal_bar_open_ms": 1790254800000,
+   "side": "short",
+   "reason": "pump 17.0%/60m fade",
+   "signal": {
+    "entry": 0.2888,
+    "sl": 0.30394612,
+    "tps": [
+     0.27516849200000004,
+     0.26153698400000003,
+     0.24336164000000005
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.2888,
+    "stop_x4": 0.34938447999999994,
+    "tp1": 0.27516849200000004,
+    "tp2": 0.26153698400000003,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.149643,
+    "R_v_verdikte": 0.1496
+   },
+   "bary_sha256": "7bb7a54978d3c7fdf03d627b3bacee23999ff1c53e98defedd1c56413f244108",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "APTUSDT",
+   "signal_bar_open_ms": 1789858800000,
+   "side": "short",
+   "reason": "pump 15.2%/60m fade",
+   "signal": {
+    "entry": 0.7245,
+    "sl": 0.75255216,
+    "tps": [
+     0.6992530560000001,
+     0.674006112,
+     0.64034352
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.7245,
+    "stop_x4": 0.83670864,
+    "tp1": 0.6992530560000001,
+    "tp2": 0.674006112,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -1.007748,
+    "R_v_verdikte": -1.0077
+   },
+   "bary_sha256": "21c4ee39327cd8613f85f7e62b8e270705e127b6f243b9773b218a03049db396",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ASTERUSDT",
+   "ts": 1788696000000,
+   "status": "NET_SVECHEY_V_KESHE"
+  },
+  {
+   "sym": "BLESSUSDT",
+   "signal_bar_open_ms": 1788667200000,
+   "side": "short",
+   "reason": "pump 16.1%/60m fade",
+   "signal": {
+    "entry": 0.009345,
+    "sl": 0.009612271,
+    "tps": [
+     0.009104456099999998,
+     0.008863912199999997,
+     0.008543186999999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.009345,
+    "stop_x4": 0.010414084000000004,
+    "tp1": 0.009104456099999998,
+    "tp2": 0.008863912199999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.349511,
+    "R_v_verdikte": 0.3495
+   },
+   "bary_sha256": "fefe29ff6a7fe0ca0842fbd1a068b9747ba3e819852263e8d16aadb0aed02fbb",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "BOMEUSDT",
+   "signal_bar_open_ms": 1790010000000,
+   "side": "short",
+   "reason": "pump 19.1%/60m fade",
+   "signal": {
+    "entry": 0.0010376,
+    "sl": 0.00109366506,
+    "tps": [
+     0.0009871414460000001,
+     0.0009366828920000003,
+     0.0008694048200000005
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.0010376,
+    "stop_x4": 0.0012618602399999995,
+    "tp1": 0.0009871414460000001,
+    "tp2": 0.0009366828920000003,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.2118,
+    "R_v_verdikte": 0.2118
+   },
+   "bary_sha256": "13b1076e2937a0b10a6e2b18bb70883cf7defa712c7766bb80f22c1f295e93e9",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "BROCCOLIUSDT",
+   "signal_bar_open_ms": 1790035200000,
+   "side": "short",
+   "reason": "pump 18.2%/60m fade",
+   "signal": {
+    "entry": 0.020386,
+    "sl": 0.021428502,
+    "tps": [
+     0.019447748200000003,
+     0.018509496400000006,
+     0.01725849400000001
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.020386,
+    "stop_x4": 0.02455600799999999,
+    "tp1": 0.019447748200000003,
+    "tp2": 0.018509496400000006,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -1.005866,
+    "R_v_verdikte": -1.0059
+   },
+   "bary_sha256": "19bbc7a32a7d45288199d59cfac3c817ca2bcb7e895c2df3c6b708a2e78ca764",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "CCUSDT",
+   "signal_bar_open_ms": 1790445600000,
+   "side": "short",
+   "reason": "pump 20.4%/60m fade",
+   "signal": {
+    "entry": 0.13353,
+    "sl": 0.14075290000000001,
+    "tps": [
+     0.12702939000000002,
+     0.12052878,
+     0.1118613
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.13353,
+    "stop_x4": 0.16242160000000003,
+    "tp1": 0.12702939000000002,
+    "tp2": 0.12052878,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354454,
+    "R_v_verdikte": 0.3545
+   },
+   "bary_sha256": "45c56d3d966e31850e09bcbd85c9f512b991d16101f84b14306a0cba1572bb6b",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "COAIUSDT",
+   "signal_bar_open_ms": 1788498000000,
+   "side": "short",
+   "reason": "pump 18.3%/60m fade",
+   "signal": {
+    "entry": 0.3172,
+    "sl": 0.33049382000000005,
+    "tps": [
+     0.3052355619999999,
+     0.2932711239999999,
+     0.2773185399999998
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.3172,
+    "stop_x4": 0.37037528000000025,
+    "tp1": 0.3052355619999999,
+    "tp2": 0.2932711239999999,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352842,
+    "R_v_verdikte": 0.3528
+   },
+   "bary_sha256": "50a5354655fc0f76306dbe3f7530564ecdffc0314a5a856622b324b2c45f5e96",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "COAIUSDT",
+   "signal_bar_open_ms": 1791136800000,
+   "side": "short",
+   "reason": "pump 19.1%/60m fade",
+   "signal": {
+    "entry": 0.3365,
+    "sl": 0.355639,
+    "tps": [
+     0.31927490000000003,
+     0.3020498000000001,
+     0.27908300000000014
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.3365,
+    "stop_x4": 0.41305599999999987,
+    "tp1": 0.31927490000000003,
+    "tp2": 0.3020498000000001,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354725,
+    "R_v_verdikte": 0.3547
+   },
+   "bary_sha256": "f21ccf654b31f8b231ee88c900012d011300553d1fd14088efb82cf9671c11f9",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ENAUSDT",
+   "signal_bar_open_ms": 1788714000000,
+   "side": "short",
+   "reason": "pump 15.9%/60m fade",
+   "signal": {
+    "entry": 0.17342,
+    "sl": 0.17821020199999998,
+    "tps": [
+     0.1691088182,
+     0.1647976364,
+     0.159049394
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.17342,
+    "stop_x4": 0.19258080799999996,
+    "tp1": 0.1691088182,
+    "tp2": 0.1647976364,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.349139,
+    "R_v_verdikte": 0.3491
+   },
+   "bary_sha256": "91f2ea36bbe9fcdd82520ae4f3a25cfab87cc28c593809b9c4f31c64fc6cfc5c",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ESPORTSUSDT",
+   "signal_bar_open_ms": 1790316000000,
+   "side": "short",
+   "reason": "pump 15.1%/60m fade",
+   "signal": {
+    "entry": 0.0106,
+    "sl": 0.011230178,
+    "tps": [
+     0.0100328398,
+     0.009465679599999999,
+     0.008709465999999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.0106,
+    "stop_x4": 0.013120712000000001,
+    "tp1": 0.0100328398,
+    "tp2": 0.009465679599999999,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.515046,
+    "R_v_verdikte": -0.515
+   },
+   "bary_sha256": "685f637ec788ab9943292f09a1f6dba013ea76ce0361ed2f2d1ad1a26a746329",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ESPUSDT",
+   "signal_bar_open_ms": 1789848000000,
+   "side": "short",
+   "reason": "pump 35.2%/60m fade",
+   "signal": {
+    "entry": 0.09438,
+    "sl": 0.09757532000000001,
+    "tps": [
+     0.091504212,
+     0.088628424,
+     0.08479404
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.09438,
+    "stop_x4": 0.10716128000000001,
+    "tp1": 0.091504212,
+    "tp2": 0.088628424,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.392992,
+    "R_v_verdikte": -0.393
+   },
+   "bary_sha256": "0eeff288c65d361decfcf749de83bfa099785852a8316f31b78028515fac7006",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ESPUSDT",
+   "signal_bar_open_ms": 1790856000000,
+   "side": "short",
+   "reason": "pump 16.5%/60m fade",
+   "signal": {
+    "entry": 0.10725,
+    "sl": 0.113584084,
+    "tps": [
+     0.1015493244,
+     0.09584864879999999,
+     0.08824774799999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.10725,
+    "stop_x4": 0.13258633600000003,
+    "tp1": 0.1015493244,
+    "tp2": 0.09584864879999999,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.016244,
+    "R_v_verdikte": 0.0162
+   },
+   "bary_sha256": "1cca4f69b715a7b0458f24934167c294ec6c956292569ea0968b182a57abf1c2",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "FARTCOINUSDT",
+   "signal_bar_open_ms": 1790085600000,
+   "side": "short",
+   "reason": "pump 23.7%/60m fade",
+   "signal": {
+    "entry": 0.19927,
+    "sl": 0.20794362600000002,
+    "tps": [
+     0.1914637366,
+     0.18365747319999998,
+     0.17324912199999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.19927,
+    "stop_x4": 0.23396450400000007,
+    "tp1": 0.1914637366,
+    "tp2": 0.18365747319999998,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.353108,
+    "R_v_verdikte": 0.3531
+   },
+   "bary_sha256": "cdeafc954abeeba7bf7aba1ad54d52db8de7b767710eb01e10960b90583e34c7",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "FILUSDT",
+   "signal_bar_open_ms": 1792170000000,
+   "side": "short",
+   "reason": "pump 16.7%/60m fade",
+   "signal": {
+    "entry": 1.1423,
+    "sl": 1.18993804,
+    "tps": [
+     1.0994257640000002,
+     1.0565515280000004,
+     0.9993858800000006
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 1.1423,
+    "stop_x4": 1.3328521599999994,
+    "tp1": 1.0994257640000002,
+    "tp2": 1.0565515280000004,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352806,
+    "R_v_verdikte": 0.3528
+   },
+   "bary_sha256": "7acb209fac3d63d941a679ef0be1ad1f5a996e5b9b237d4c154ab3db55e09f7a",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "GALAUSDT",
+   "signal_bar_open_ms": 1790042400000,
+   "side": "short",
+   "reason": "pump 15.9%/60m fade",
+   "signal": {
+    "entry": 0.00208,
+    "sl": 0.0021508646,
+    "tps": [
+     0.0020162218599999995,
+     0.0019524437199999996,
+     0.0018674061999999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.00208,
+    "stop_x4": 0.0023634584000000003,
+    "tp1": 0.0020162218599999995,
+    "tp2": 0.0019524437199999996,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.351194,
+    "R_v_verdikte": 0.3512
+   },
+   "bary_sha256": "cfbb800ded9d27efaec14cce147a69851043e2d9143637f75ee429d592f8a8eb",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "GRASSUSDT",
+   "signal_bar_open_ms": 1791244800000,
+   "side": "short",
+   "reason": "pump 10.7%/60m fade",
+   "signal": {
+    "entry": 0.7414,
+    "sl": 0.7788995,
+    "tps": [
+     0.7076504499999999,
+     0.6739008999999999,
+     0.6289014999999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.7414,
+    "stop_x4": 0.891398,
+    "tp1": 0.7076504499999999,
+    "tp2": 0.6739008999999999,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354069,
+    "R_v_verdikte": 0.3541
+   },
+   "bary_sha256": "c09cf55624a238521df04a926b81e1682b13471351a5f23ba6559ca24680254a",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "GWEIUSDT",
+   "signal_bar_open_ms": 1791648000000,
+   "side": "short",
+   "reason": "pump 17.9%/60m fade",
+   "signal": {
+    "entry": 0.02045,
+    "sl": 0.021178052,
+    "tps": [
+     0.0197947532,
+     0.0191395064,
+     0.018265844
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.02045,
+    "stop_x4": 0.023362208,
+    "tp1": 0.0197947532,
+    "tp2": 0.0191395064,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.351573,
+    "R_v_verdikte": 0.3516
+   },
+   "bary_sha256": "f8cb9bba5d519b6b2290fe8f5c426b9c9f2cce88798cba1e51f89c4122f3f6d5",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "HEIUSDT",
+   "signal_bar_open_ms": 1790528400000,
+   "side": "short",
+   "reason": "pump 16.5%/60m fade",
+   "signal": {
+    "entry": 0.14764,
+    "sl": 0.153315472,
+    "tps": [
+     0.14253207519999997,
+     0.13742415039999997,
+     0.13061358399999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.14764,
+    "stop_x4": 0.17034188800000005,
+    "tp1": 0.14253207519999997,
+    "tp2": 0.13742415039999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352196,
+    "R_v_verdikte": 0.3522
+   },
+   "bary_sha256": "c807dc579228f2ee5ea317c493665aab609909969a4c7fa28fc9fc9f3de536d5",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "HEIUSDT",
+   "signal_bar_open_ms": 1790913600000,
+   "side": "short",
+   "reason": "pump 15.3%/60m fade",
+   "signal": {
+    "entry": 0.14808,
+    "sl": 0.153996696,
+    "tps": [
+     0.1427549736,
+     0.13742994719999999,
+     0.130329912
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.14808,
+    "stop_x4": 0.17174678399999999,
+    "tp1": 0.1427549736,
+    "tp2": 0.13742994719999999,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352492,
+    "R_v_verdikte": 0.3525
+   },
+   "bary_sha256": "fcacec4837f24b485d90d5da08502b0a0f7f100d6af4fac452b617d61584554f",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ICPUSDT",
+   "signal_bar_open_ms": 1788836400000,
+   "side": "short",
+   "reason": "pump 16.8%/60m fade",
+   "signal": {
+    "entry": 2.998,
+    "sl": 3.1296232,
+    "tps": [
+     2.8795391200000005,
+     2.7610782400000002,
+     2.6031304000000004
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 2.998,
+    "stop_x4": 3.5244928,
+    "tp1": 2.8795391200000005,
+    "tp2": 2.7610782400000002,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.353167,
+    "R_v_verdikte": 0.3532
+   },
+   "bary_sha256": "6a475e88040fb2196ccbcca77dbe174ceeefe6451d909a49d02ee08bb253b6fc",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ICPUSDT",
+   "signal_bar_open_ms": 1790733600000,
+   "side": "short",
+   "reason": "pump 21.5%/60m fade",
+   "signal": {
+    "entry": 3.365,
+    "sl": 3.5593954,
+    "tps": [
+     3.1900441400000004,
+     3.0150882800000005,
+     2.7818138000000006
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 3.365,
+    "stop_x4": 4.1425816,
+    "tp1": 3.1900441400000004,
+    "tp2": 3.0150882800000005,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.182031,
+    "R_v_verdikte": 0.182
+   },
+   "bary_sha256": "92bbc64d6800b93a4d3250424f32609d181d450666f1737208aea4e09d137e54",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ICPUSDT",
+   "signal_bar_open_ms": 1791806400000,
+   "side": "short",
+   "reason": "pump 15.7%/60m fade",
+   "signal": {
+    "entry": 3.4,
+    "sl": 3.5463720000000003,
+    "tps": [
+     3.2682651999999996,
+     3.1365303999999994,
+     2.9608839999999987
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 3.4,
+    "stop_x4": 3.9854880000000015,
+    "tp1": 3.2682651999999996,
+    "tp2": 3.1365303999999994,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.353031,
+    "R_v_verdikte": 0.353
+   },
+   "bary_sha256": "509b0d0f7dca8e255759c20dd2581c1b9b7f85cf32166e160aff513802953ea2",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "INJUSDT",
+   "signal_bar_open_ms": 1791702000000,
+   "side": "short",
+   "reason": "pump 15.5%/60m fade",
+   "signal": {
+    "entry": 7.604,
+    "sl": 7.9132182,
+    "tps": [
+     7.32570362,
+     7.04740724,
+     6.6763454
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 7.604,
+    "stop_x4": 8.8408728,
+    "tp1": 7.32570362,
+    "tp2": 7.04740724,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352623,
+    "R_v_verdikte": 0.3526
+   },
+   "bary_sha256": "6dcc4061ad6193b35f761254d33540f49e48fc149ccdf2a2193ba02d8d477a66",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "INJUSDT",
+   "signal_bar_open_ms": 1791972000000,
+   "side": "short",
+   "reason": "pump 15.2%/60m fade",
+   "signal": {
+    "entry": 7.949,
+    "sl": 8.4071056,
+    "tps": [
+     7.53670496,
+     7.124409920000001,
+     6.574683200000001
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 7.949,
+    "stop_x4": 9.781422399999999,
+    "tp1": 7.53670496,
+    "tp2": 7.124409920000001,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354794,
+    "R_v_verdikte": 0.3548
+   },
+   "bary_sha256": "0502ff0cdc8a8283d80e06160d4eace6b6835f5e1c9cf440fcec1e60d297ff4d",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "JTOUSDT",
+   "signal_bar_open_ms": 1790488800000,
+   "side": "short",
+   "reason": "pump 17.7%/60m fade",
+   "signal": {
+    "entry": 0.6136,
+    "sl": 0.6456601,
+    "tps": [
+     0.5847459100000001,
+     0.5558918200000001,
+     0.5174197000000003
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.6136,
+    "stop_x4": 0.7418403999999997,
+    "tp1": 0.5847459100000001,
+    "tp2": 0.5558918200000001,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354258,
+    "R_v_verdikte": 0.3543
+   },
+   "bary_sha256": "6692467619d61e5de152a8726cd850a56998b1ab953e21228f058690c1bc120e",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "KAITOUSDT",
+   "signal_bar_open_ms": 1789790400000,
+   "side": "short",
+   "reason": "pump 15.1%/60m fade",
+   "signal": {
+    "entry": 0.3349,
+    "sl": 0.34191434,
+    "tps": [
+     0.32858709399999997,
+     0.32227418799999996,
+     0.31385697999999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.3349,
+    "stop_x4": 0.36295736,
+    "tp1": 0.32858709399999997,
+    "tp2": 0.32227418799999996,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.345676,
+    "R_v_verdikte": 0.3457
+   },
+   "bary_sha256": "185569929884675d9fe15f128aa249496f3a1a60ded0de980bdca940f6f3813a",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "LDOUSDT",
+   "signal_bar_open_ms": 1790442000000,
+   "side": "short",
+   "reason": "pump 16.6%/60m fade",
+   "signal": {
+    "entry": 0.4893,
+    "sl": 0.50370504,
+    "tps": [
+     0.476335464,
+     0.46337092799999996,
+     0.4460848799999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.4893,
+    "stop_x4": 0.5469201600000002,
+    "tp1": 0.476335464,
+    "tp2": 0.46337092799999996,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.34981,
+    "R_v_verdikte": 0.3498
+   },
+   "bary_sha256": "05bbce0836a948ca5e5ea18eef91aeb5a1a12aa3dcb70c61f6b357bf989f7e12",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "MEUSDT",
+   "signal_bar_open_ms": 1791010800000,
+   "side": "short",
+   "reason": "pump 10.1%/60m fade",
+   "signal": {
+    "entry": 0.07903,
+    "sl": 0.08307927400000001,
+    "tps": [
+     0.0753856534,
+     0.07174130679999999,
+     0.06688217799999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.07903,
+    "stop_x4": 0.09522709600000002,
+    "tp1": 0.0753856534,
+    "tp2": 0.07174130679999999,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354145,
+    "R_v_verdikte": 0.3541
+   },
+   "bary_sha256": "00f21d009d5cb685dc27056754a7a60e173b2df9ea94ce51b7b8e9ba829167b5",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "MMTUSDT",
+   "signal_bar_open_ms": 1789797600000,
+   "side": "short",
+   "reason": "pump 18.6%/60m fade",
+   "signal": {
+    "entry": 0.1559,
+    "sl": 0.16359394,
+    "tps": [
+     0.14897545400000003,
+     0.14205090800000003,
+     0.13281818000000006
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.1559,
+    "stop_x4": 0.18667575999999994,
+    "tp1": 0.14897545400000003,
+    "tp2": 0.14205090800000003,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.538966,
+    "R_v_verdikte": -0.539
+   },
+   "bary_sha256": "3e7e0aa4177293d12077c8987cdde9d1959f2805088404960c54ce76e16e064c",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "MSTRUSDT",
+   "signal_bar_open_ms": 1788512400000,
+   "side": "short",
+   "reason": "pump 18.0%/60m fade",
+   "signal": {
+    "entry": 141.64,
+    "sl": 144.639884,
+    "tps": [
+     138.94010439999997,
+     136.24020879999998,
+     132.64034799999996
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 141.64,
+    "stop_x4": 153.63953600000002,
+    "tp1": 138.94010439999997,
+    "tp2": 136.24020879999998,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.345835,
+    "R_v_verdikte": 0.3458
+   },
+   "bary_sha256": "0c8ac0bdeb84c861f07f5c9ca8eaed622cebeadc9b9e1abbf81a7310ccb7dbf8",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "MUBARAKUSDT",
+   "signal_bar_open_ms": 1788742800000,
+   "side": "short",
+   "reason": "pump 18.2%/60m fade",
+   "signal": {
+    "entry": 0.03077,
+    "sl": 0.0320746306,
+    "tps": [
+     0.029595832459999995,
+     0.028421664919999996,
+     0.026856108199999992
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.03077,
+    "stop_x4": 0.03598852240000001,
+    "tp1": 0.029595832459999995,
+    "tp2": 0.028421664919999996,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352924,
+    "R_v_verdikte": 0.3529
+   },
+   "bary_sha256": "b9c3163cd8eb82a5f5b0c35b2f4143cef71fadd5ca84370b5910564b39a85b5b",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "MUBARAKUSDT",
+   "signal_bar_open_ms": 1791907200000,
+   "side": "short",
+   "reason": "pump 18.4%/60m fade",
+   "signal": {
+    "entry": 0.070071,
+    "sl": 0.072795797,
+    "tps": [
+     0.06761868269999999,
+     0.0651663654,
+     0.06189660899999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.070071,
+    "stop_x4": 0.080970188,
+    "tp1": 0.06761868269999999,
+    "tp2": 0.0651663654,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352285,
+    "R_v_verdikte": 0.3523
+   },
+   "bary_sha256": "3cd8bfacee6dd3de6a39bd485940e2266336d869839dcafe72206be5a532ecee",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "NILUSDT",
+   "signal_bar_open_ms": 1790834400000,
+   "side": "short",
+   "reason": "pump 19.8%/60m fade",
+   "signal": {
+    "entry": 0.08581,
+    "sl": 0.090692954,
+    "tps": [
+     0.0814153414,
+     0.07702068279999998,
+     0.07116113799999997
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.08581,
+    "stop_x4": 0.10534181600000003,
+    "tp1": 0.0814153414,
+    "tp2": 0.07702068279999998,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354728,
+    "R_v_verdikte": 0.3547
+   },
+   "bary_sha256": "a0635c4799aa78e2d3c4d5e52b8a7a9700120e6248c0878eb889ef3731f199a6",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "NILUSDT",
+   "signal_bar_open_ms": 1791734400000,
+   "side": "short",
+   "reason": "pump 12.2%/60m fade",
+   "signal": {
+    "entry": 0.09284,
+    "sl": 0.09817640000000001,
+    "tps": [
+     0.08803724,
+     0.08323448,
+     0.07683079999999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.09284,
+    "stop_x4": 0.11418560000000003,
+    "tp1": 0.08803724,
+    "tp2": 0.08323448,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354781,
+    "R_v_verdikte": 0.3548
+   },
+   "bary_sha256": "228b235c41c8a5df18a2a197c6feb385fe7dadbda42b88f50acc80d92334ce68",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "OPUSDT",
+   "signal_bar_open_ms": 1789848000000,
+   "side": "short",
+   "reason": "pump 16.6%/60m fade",
+   "signal": {
+    "entry": 0.12144,
+    "sl": 0.126387088,
+    "tps": [
+     0.1169876208,
+     0.1125352416,
+     0.106598736
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.12144,
+    "stop_x4": 0.141228352,
+    "tp1": 0.1169876208,
+    "tp2": 0.1125352416,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -1.007364,
+    "R_v_verdikte": -1.0074
+   },
+   "bary_sha256": "b91971788a95ba583379bcc4f08d56c59813cda66db466dd06bf8fd0570e8984",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ORDIUSDT",
+   "signal_bar_open_ms": 1788516000000,
+   "side": "short",
+   "reason": "pump 15.5%/60m fade",
+   "signal": {
+    "entry": 4.075,
+    "sl": 4.2105654,
+    "tps": [
+     3.9529911400000004,
+     3.83098228,
+     3.6683038000000003
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 4.075,
+    "stop_x4": 4.6172616,
+    "tp1": 3.9529911400000004,
+    "tp2": 3.83098228,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.222611,
+    "R_v_verdikte": 0.2226
+   },
+   "bary_sha256": "724e37af28e82ae992dce800b60daaad54cada55e023a9b8e4f50baaac6ba8a3",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "PUMPFUNUSDT",
+   "signal_bar_open_ms": 1791108000000,
+   "side": "short",
+   "reason": "pump 22.7%/60m fade",
+   "signal": {
+    "entry": 0.006297,
+    "sl": 0.0066188926000000006,
+    "tps": [
+     0.006007296659999999,
+     0.005717593319999998,
+     0.005331322199999997
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.006297,
+    "stop_x4": 0.007584570400000003,
+    "tp1": 0.006007296659999999,
+    "tp2": 0.005717593319999998,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354131,
+    "R_v_verdikte": 0.3541
+   },
+   "bary_sha256": "2fbb72b38d392910009cde53e1cd9bd72f080cf5852cc9d5d4490c82678aac57",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "RENDERUSDT",
+   "signal_bar_open_ms": 1790056800000,
+   "side": "short",
+   "reason": "pump 15.4%/60m fade",
+   "signal": {
+    "entry": 1.802,
+    "sl": 1.9094308,
+    "tps": [
+     1.70531228,
+     1.6086245600000002,
+     1.4797076000000002
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 1.802,
+    "stop_x4": 2.2317232,
+    "tp1": 1.70531228,
+    "tp2": 1.6086245600000002,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.081186,
+    "R_v_verdikte": -0.0812
+   },
+   "bary_sha256": "2bc52882df32db6d00a74eb34dfbd2421f6b2d42673cdb94345348854f2ccf8e",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "SEIUSDT",
+   "signal_bar_open_ms": 1790442000000,
+   "side": "short",
+   "reason": "pump 22.4%/60m fade",
+   "signal": {
+    "entry": 0.07301,
+    "sl": 0.074974712,
+    "tps": [
+     0.0712417592,
+     0.06947351840000002,
+     0.06711586400000003
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.07301,
+    "stop_x4": 0.08086884799999998,
+    "tp1": 0.0712417592,
+    "tp2": 0.06947351840000002,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.521148,
+    "R_v_verdikte": -0.5211
+   },
+   "bary_sha256": "fd2abc2eb6732521fe982f281f2061c505c9e94cd1747d7d3c0f8461b71d1532",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "TAOUSDT",
+   "signal_bar_open_ms": 1790089200000,
+   "side": "short",
+   "reason": "pump 22.3%/60m fade",
+   "signal": {
+    "entry": 312.34,
+    "sl": 327.368204,
+    "tps": [
+     298.8146164,
+     285.2892327999999,
+     267.2553879999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 312.34,
+    "stop_x4": 372.45281600000004,
+    "tp1": 298.8146164,
+    "tp2": 285.2892327999999,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.353765,
+    "R_v_verdikte": 0.3538
+   },
+   "bary_sha256": "31a0b99fe4d49db32218fc5feced142f9672a0133f80e913df9812c3b5649b20",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "TRUMPUSDT",
+   "signal_bar_open_ms": 1788505200000,
+   "side": "short",
+   "reason": "pump 15.5%/60m fade",
+   "signal": {
+    "entry": 2.354,
+    "sl": 2.4524064,
+    "tps": [
+     2.2654342400000003,
+     2.17686848,
+     2.0587808
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 2.354,
+    "stop_x4": 2.7476256,
+    "tp1": 2.2654342400000003,
+    "tp2": 2.17686848,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.352824,
+    "R_v_verdikte": 0.3528
+   },
+   "bary_sha256": "9b19a0bf106ea8c48057967fd09db05c03e94e177d7d9ef4c18af3ef692c70a0",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "TUTUSDT",
+   "signal_bar_open_ms": 1788728400000,
+   "side": "short",
+   "reason": "pump 15.5%/60m fade",
+   "signal": {
+    "entry": 0.025681,
+    "sl": 0.0269243768,
+    "tps": [
+     0.024561960879999997,
+     0.023442921759999995,
+     0.021950869599999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.025681,
+    "stop_x4": 0.030654507200000004,
+    "tp1": 0.024561960879999997,
+    "tp2": 0.023442921759999995,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.353804,
+    "R_v_verdikte": 0.3538
+   },
+   "bary_sha256": "571c8ae4f5f1bb72f2619b2734d4e7e50dba22437de7c9cba294ec218d931e08",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "UBUSDT",
+   "signal_bar_open_ms": 1790085600000,
+   "side": "short",
+   "reason": "pump 16.0%/60m fade",
+   "signal": {
+    "entry": 0.1457,
+    "sl": 0.151191656,
+    "tps": [
+     0.1407575096,
+     0.13581501919999997,
+     0.12922503199999996
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.1457,
+    "stop_x4": 0.16766662400000004,
+    "tp1": 0.1407575096,
+    "tp2": 0.13581501919999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.083483,
+    "R_v_verdikte": -0.0835
+   },
+   "bary_sha256": "a76a70f579fd98147f5035147f1d64dec794db5dcadfab1df5a55c8af9542d52",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "UNIUSDT",
+   "signal_bar_open_ms": 1789812000000,
+   "side": "short",
+   "reason": "pump 24.0%/60m fade",
+   "signal": {
+    "entry": 9.032,
+    "sl": 9.492055,
+    "tps": [
+     8.6179505,
+     8.203900999999998,
+     7.651834999999998
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 9.032,
+    "stop_x4": 10.872220000000002,
+    "tp1": 8.6179505,
+    "tp2": 8.203900999999998,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.51589,
+    "R_v_verdikte": -0.5159
+   },
+   "bary_sha256": "db5e22063bf5f782636465f0bf201eeb33e4ac1abf536fe49815bad6ed84e44e",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "UNIUSDT",
+   "signal_bar_open_ms": 1790226000000,
+   "side": "short",
+   "reason": "pump 19.8%/60m fade",
+   "signal": {
+    "entry": 9.258,
+    "sl": 9.4700154,
+    "tps": [
+     9.067186139999999,
+     8.876372279999998,
+     8.621953799999998
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 9.258,
+    "stop_x4": 10.1060616,
+    "tp1": 9.067186139999999,
+    "tp2": 8.876372279999998,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.3469,
+    "R_v_verdikte": 0.3469
+   },
+   "bary_sha256": "fe08944a94400dcb9f92d5e8e2f90d4c3a7413dc0c55f479f2dfc65e6251d8f2",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "VIRTUALUSDT",
+   "signal_bar_open_ms": 1790042400000,
+   "side": "short",
+   "reason": "pump 15.4%/60m fade",
+   "signal": {
+    "entry": 0.7157,
+    "sl": 0.74193308,
+    "tps": [
+     0.692090228,
+     0.668480456,
+     0.6370007599999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.7157,
+    "stop_x4": 0.8206323200000001,
+    "tp1": 0.692090228,
+    "tp2": 0.668480456,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.518185,
+    "R_v_verdikte": -0.5182
+   },
+   "bary_sha256": "d8a43ffd6a1fe117ac310f09568da37600117dbf2bc309d56d625893097c2cd5",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "WIFUSDT",
+   "signal_bar_open_ms": 1789794000000,
+   "side": "short",
+   "reason": "pump 16.1%/60m fade",
+   "signal": {
+    "entry": 0.2056,
+    "sl": 0.2168897,
+    "tps": [
+     0.19543927000000003,
+     0.18527854000000002,
+     0.17173090000000005
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.2056,
+    "stop_x4": 0.25075879999999995,
+    "tp1": 0.19543927000000003,
+    "tp2": 0.18527854000000002,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.515463,
+    "R_v_verdikte": -0.5155
+   },
+   "bary_sha256": "aa77f78c7c04bfed36cf062422433c7eeba2951e8d70a6be0295fa8e80ba0ae9",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "WLDUSDT",
+   "signal_bar_open_ms": 1791666000000,
+   "side": "short",
+   "reason": "pump 16.0%/60m fade",
+   "signal": {
+    "entry": 0.5568,
+    "sl": 0.5689222199999999,
+    "tps": [
+     0.545890002,
+     0.534980004,
+     0.5204333400000001
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.5568,
+    "stop_x4": 0.6052888799999998,
+    "tp1": 0.545890002,
+    "tp2": 0.534980004,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.34622,
+    "R_v_verdikte": 0.3462
+   },
+   "bary_sha256": "f354e49050c7d83abe645e5436a4cf89f23cae62c052672e3e24060aba0f0753",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "XPLUSDT",
+   "signal_bar_open_ms": 1790067600000,
+   "side": "short",
+   "reason": "pump 17.2%/60m fade",
+   "signal": {
+    "entry": 0.09501,
+    "sl": 0.09982937,
+    "tps": [
+     0.090672567,
+     0.086335134,
+     0.08055188999999999
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 0.09501,
+    "stop_x4": 0.11428748000000001,
+    "tp1": 0.090672567,
+    "tp2": 0.086335134,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354086,
+    "R_v_verdikte": 0.3541
+   },
+   "bary_sha256": "a32d65314d8ac4e1095a34fc1f6ee15cbbadf3f1a8de8475ca148e5de77fdb77",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ZECUSDT",
+   "signal_bar_open_ms": 1788786000000,
+   "side": "short",
+   "reason": "pump 18.6%/60m fade",
+   "signal": {
+    "entry": 1184.32,
+    "sl": 1225.281544,
+    "tps": [
+     1147.4546103999999,
+     1110.5892208,
+     1061.435368
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 1184.32,
+    "stop_x4": 1348.166176,
+    "tp1": 1147.4546103999999,
+    "tp2": 1110.5892208,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.351326,
+    "R_v_verdikte": 0.3513
+   },
+   "bary_sha256": "7d25c4028325fb9a46a7d1db78522dd19ecae1440b8e1d459e670576d3d1a455",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ZROUSDT",
+   "signal_bar_open_ms": 1788498000000,
+   "side": "short",
+   "reason": "pump 15.3%/60m fade",
+   "signal": {
+    "entry": 1.1091,
+    "sl": 1.1604851200000001,
+    "tps": [
+     1.0628533919999998,
+     1.0166067839999997,
+     0.9549446399999995
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 1.1091,
+    "stop_x4": 1.3146404800000007,
+    "tp1": 1.0628533919999998,
+    "tp2": 1.0166067839999997,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.353525,
+    "R_v_verdikte": 0.3535
+   },
+   "bary_sha256": "97945a46aedb8d188bd8333f636f313e82fc483bf87456c3d677c2670fe784f3",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ZROUSDT",
+   "signal_bar_open_ms": 1791118800000,
+   "side": "short",
+   "reason": "pump 21.0%/60m fade",
+   "signal": {
+    "entry": 1.9701,
+    "sl": 2.0733252799999997,
+    "tps": [
+     1.877197248,
+     1.7842944960000005,
+     1.6604241600000007
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 1.9701,
+    "stop_x4": 2.383001119999999,
+    "tp1": 1.877197248,
+    "tp2": 1.7842944960000005,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": -0.210133,
+    "R_v_verdikte": -0.2101
+   },
+   "bary_sha256": "1430ff0893ffe34378d67224ed8ea892cc57ad7916277984ae731db72c47325b",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  },
+  {
+   "sym": "ZROUSDT",
+   "signal_bar_open_ms": 1792159200000,
+   "side": "short",
+   "reason": "pump 22.3%/60m fade",
+   "signal": {
+    "entry": 2.1646,
+    "sl": 2.28380346,
+    "tps": [
+     2.057316886,
+     1.950033772,
+     1.80698962
+    ],
+    "tp_fracs": [
+     0.4,
+     0.3,
+     0.3
+    ]
+   },
+   "ispolnenie_V1": {
+    "vhod_ref": "open бара ts+1h",
+    "vhod": 2.1646,
+    "stop_x4": 2.6414138400000002,
+    "tp1": 2.057316886,
+    "tp2": 1.950033772,
+    "dolya_tp1": 0.4,
+    "ostatok_na_tp2": 0.6,
+    "uderzhanie_barov": 168,
+    "R_pri_6bps": 0.354552,
+    "R_v_verdikte": 0.3546
+   },
+   "bary_sha256": "31158b2e424520c2b791a9fc047a6479d4237b34f828a0e549f32d890e8ae608",
+   "barov_v_okne": 1001,
+   "status": "OK"
+  }
+ ],
+ "itogo": {
+  "NET_SVECHEY_V_KESHE": 1,
+  "OK": 65
+ }
+}

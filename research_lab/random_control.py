@@ -23,6 +23,7 @@ from __future__ import annotations
 import glob, importlib, math, os, sys
 from pathlib import Path
 import numpy as np
+from research_machine import Store, pervyy_dlya, zapisat_sboy  # единый склад и контракт
 
 ROOT = str(Path(__file__).resolve().parents[1])
 DATA = f"{ROOT}/research_lab/data/h1"
@@ -30,15 +31,6 @@ WINDOWS = {"2024-03..2025-09": (1709251200000, 1759276800000),
            "2023-01..2024-02": (1672531200000, 1709251200000)}
 FEE_BPS_SIDE, LOOKBACK, FLAT = 6.0, 120, 0.02
 DRAWS = 20
-
-
-class Store:
-    def __init__(self, s):
-        self.symbol = s
-        self.rows = []
-
-    def fetch_klines(self, sym, tf, n):
-        return self.rows[-n:]
 
 
 def ema(x, n):
@@ -77,6 +69,134 @@ def sim_geo(bars, i, short, stop_pct, rr1, rr2, f1, hold):
     px = float(bars[j][4])
     gross += rem * ((entry - px) if short else (px - entry)) / risk
     return gross - cost
+
+
+def sim_zatuh(bars, i, short, stop_pct, rr1, rr2, f1, hold, zatuh=0, fiks=0):
+    """То же, что sim_geo, плюс ДВА способа выйти раньше срока.
+
+    zatuh = K: выходим, если за последние K баров цена НЕ обновила
+              максимум в нашу сторону. Это и есть «движение затухает».
+    fiks  = N: выходим ровно через N баров, что бы ни происходило.
+
+    Зачем fiks. Если ранний выход улучшает результат при ЛЮБОМ правиле,
+    значит помогает не распознавание затухания, а просто «меньше времени
+    в рынке». fiks — контроль именно на это: он выходит так же рано, но
+    ничего не распознаёт. Затухание обязано бить его, а не только базу.
+
+    Порядок в баре, объявлен заранее: сначала стоп, потом цели, и только
+    потом ранние выходы. Стоп имеет приоритет всегда.
+
+    Одна и та же функция считает и реальную сделку, и контроль случайным
+    входом — тогда между ними физически не может разъехаться геометрия.
+    """
+    e = i + 1
+    if e >= len(bars):
+        return None
+    entry = float(bars[e][1])
+    risk = entry * stop_pct
+    if risk <= 0:
+        return None
+    sl = entry + risk if short else entry - risk
+    tp1 = entry - rr1 * risk if short else entry + rr1 * risk
+    tp2 = entry - rr2 * risk if short else entry + rr2 * risk
+    lev = entry / risk
+    cost = lev * 2 * FEE_BPS_SIDE / 1e4
+    stop, rem, gross, done = sl, 1.0, 0.0, False
+    ekstremum = entry
+    bez_novogo = 0
+
+    for j in range(e, min(e + hold, len(bars))):
+        h, l = float(bars[j][2]), float(bars[j][3])
+        if (h >= stop) if short else (l <= stop):
+            gross += rem * ((entry - stop) if short else (stop - entry)) / risk
+            return gross - cost, j - e
+        if not done and ((l <= tp1) if short else (h >= tp1)):
+            gross += f1 * rr1; rem -= f1; done = True
+        if rem > 1e-9 and ((l <= tp2) if short else (h >= tp2)):
+            gross += rem * rr2
+            return gross - cost, j - e
+
+        novyy = l if short else h
+        luchshe = (novyy < ekstremum) if short else (novyy > ekstremum)
+        if luchshe:
+            ekstremum = novyy
+            bez_novogo = 0
+        else:
+            bez_novogo += 1
+
+        rano = (zatuh and bez_novogo >= zatuh) or (fiks and (j - e + 1) >= fiks)
+        if rano:
+            px = float(bars[j][4])
+            gross += rem * ((entry - px) if short else (px - entry)) / risk
+            return gross - cost, j - e
+
+    j = min(e + hold, len(bars)) - 1
+    px = float(bars[j][4])
+    gross += rem * ((entry - px) if short else (px - entry)) / risk
+    return gross - cost, j - e
+
+
+def sim_limit(bars, i, short, stop_pct, rr1, rr2, f1, hold,
+              otstup, zhdat, fee_vhod=1.5, fee_vyhod=5.5):
+    """ЧЕСТНЫЙ ЛИМИТНЫЙ ВХОД. Возвращает (R, баров, исполнился) или None.
+
+    Прогон при комиссии 1.5 bps 2 сентября считал, что КАЖДЫЙ лимит
+    исполнился. Это верхняя граница, а не оценка: лимит на откате
+    исполняется только если цена вернулась. Здесь это моделируется.
+
+    Правило, объявленное до прогонов:
+      * ордер ставится на `otstup` (доля цены) ПРОТИВ движения от
+        закрытия сигнального бара: лонг ниже, шорт выше;
+      * ордер живёт `zhdat` баров;
+      * коснулись — вход ПО ЦЕНЕ ЛИМИТА (не хуже, это и есть смысл лимита);
+      * не коснулись — СДЕЛКИ НЕТ, возвращаем None. Не «вошли по рынку»,
+        а именно нет сделки. Так же обязан считаться и контроль.
+
+    Комиссия РАЗНАЯ на вход и выход, и это принципиально:
+      вход  лимитом  -> мейкер (дёшево)
+      выход по стопу -> тейкер (дорого)
+    Считать обе стороны мейкерскими — то же самое вранье, что считать
+    витрину прибылью.
+    """
+    ref = float(bars[i][4])
+    if ref <= 0 or otstup < 0:
+        return None
+    limit = ref * (1.0 + otstup) if short else ref * (1.0 - otstup)
+
+    e = None
+    for j in range(i + 1, min(i + 1 + max(1, zhdat), len(bars))):
+        h, l = float(bars[j][2]), float(bars[j][3])
+        if (h >= limit) if short else (l <= limit):
+            e = j
+            break
+    if e is None:
+        return None                      # цена не вернулась — сделки нет
+
+    entry = limit
+    risk = entry * stop_pct
+    if risk <= 0:
+        return None
+    sl = entry + risk if short else entry - risk
+    tp1 = entry - rr1 * risk if short else entry + rr1 * risk
+    tp2 = entry - rr2 * risk if short else entry + rr2 * risk
+    lev = entry / risk
+    cost = lev * (fee_vhod + fee_vyhod) / 1e4
+    stop, rem, gross, done = sl, 1.0, 0.0, False
+
+    for j in range(e, min(e + hold, len(bars))):
+        h, l = float(bars[j][2]), float(bars[j][3])
+        if (h >= stop) if short else (l <= stop):
+            gross += rem * ((entry - stop) if short else (stop - entry)) / risk
+            return gross - cost, j - e, True
+        if not done and ((l <= tp1) if short else (h >= tp1)):
+            gross += f1 * rr1; rem -= f1; done = True
+        if rem > 1e-9 and ((l <= tp2) if short else (h >= tp2)):
+            gross += rem * rr2
+            return gross - cost, j - e, True
+    j = min(e + hold, len(bars)) - 1
+    px = float(bars[j][4])
+    gross += rem * ((entry - px) if short else (px - entry)) / risk
+    return gross - cost, j - e, True
 
 
 def main():
@@ -126,13 +246,16 @@ def main():
         bars = [[int(ts[x]), o[x, 0], o[x, 1], o[x, 2], o[x, 3], o[x, 4]]
                 for x in range(len(ts))]
         month = (ts // (30 * 86400000)).astype(np.int64)
-        st = Store(Path(fp).stem); strat = S()
+        st = Store(Path(fp).stem)
+        strat = S()
+        pervyy = pervyy_dlya(S, st, Path(fp).stem)
         block = -1
         for i in range(LOOKBACK, len(bars) - 1):
             st.rows = bars[: i + 1]; b = bars[i]
             try:
-                s = strat.maybe_signal(st, b[0], b[1], b[2], b[3], b[4], b[5])
-            except Exception:
+                s = strat.maybe_signal(pervyy, b[0], b[1], b[2], b[3], b[4], b[5])
+            except Exception as _e:
+                zapisat_sboy('random_control', _e)
                 continue
             if s is None or s.side != side_want or i <= block or not reg_ok(b[0]):
                 continue
