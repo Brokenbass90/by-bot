@@ -22,7 +22,7 @@ from research_machine import Store, simulate, pervyy_argument          # noqa: E
 from random_control import sim_geo                                      # noqa: E402
 
 ZHURNAL = Path("research_lab/data/ten_pump4.jsonl")
-VYVOD = Path("research_lab/results/pump4_pereschet_20261020.json")
+VYVOD = Path(os.environ.get("PUMP4_VYVOD") or time.strftime("research_lab/results/pump4_pereschet_%Y%m%dT%H%MZ.json", time.gmtime()))   # вердиктный файл 20261020 не перезаписывается
 MODUL, KLASS, PFX = "pump_fade_v4r", "PumpFadeV4RStrategy", "PUMP4"
 STOP_MULT, HOLD, F1, MAX_LEV, DRAWS, SEED = 4.0, 168, 0.55, 100.0, 10, 20261020
 CHAS = 3_600_000
@@ -43,6 +43,21 @@ def svechi_okno(sym, start_ms, end_ms):
         s = part[-1][0] + CHAS
         time.sleep(0.15)
     return out
+
+
+V2_FUNDING_S = 1792454400000          # 2026-10-20 00:00 UTC: фандинг для V2 наблюдается только у решений после этого момента
+
+
+def funding_pered(sym, ts):
+    """Последняя ставка фандинга Bybit до момента решения (наблюдение для PUMP4 V2, на V1 не влияет)."""
+    u = f"https://api.bybit.com/v5/market/funding/history?category=linear&symbol={sym}&endTime={ts}&limit=1"
+    try:
+        r = urllib.request.Request(u, headers={"User-Agent": "pereschet/1.0"})
+        with urllib.request.urlopen(r, timeout=20) as f:
+            lst = ((json.loads(f.read().decode()).get("result") or {}).get("list") or [])
+        return (float(lst[0]["fundingRate"]), int(lst[0]["fundingRateTimestamp"])) if lst else None
+    except Exception:
+        return None
 
 
 def _py(o):
@@ -96,6 +111,8 @@ def main():
             if r is None or r.get("lev", 0) > MAX_LEV:
                 zap_r["status"] = "NE_ISPOLNIMO"; rez.append(zap_r); continue
             if not zaversheno(b, i, r):
+                if z["ts"] >= V2_FUNDING_S:
+                    zap_r["v2_funding"] = funding_pered(sym, z["ts"])
                 zap_r["status"] = "OTKRYTA"; rez.append(zap_r); continue
             e = b[i + 1][1]; risk = abs(e - (e + (s.sl - e) * STOP_MULT))
             rr = [abs(q - e) / risk for q in (s.tps or [])] if risk > 0 else []
@@ -103,6 +120,8 @@ def main():
             c = [sim_geo(b, int(rng.choice(pool)), s.side == "short", 1.0 / r["lev"], k1, k2, (s.tp_fracs or [F1])[0], HOLD)
                  for _ in range(DRAWS)] if pool else []
             c = [x for x in c if x is not None]
+            if z["ts"] >= V2_FUNDING_S:
+                zap_r["v2_funding"] = funding_pered(sym, z["ts"])
             zap_r.update(status="ZAKRYTA", R=round(r["R"], 4), ctrl=round(float(np.mean(c)), 4) if c else None, barov=r["bars"])
             rez.append(zap_r)
 
