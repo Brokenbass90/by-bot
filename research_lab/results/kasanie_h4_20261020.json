@@ -1,0 +1,122 @@
+{
+ "vse": {
+  "n": 96808,
+  "dolya": 0.4182,
+  "etalon": 0.4416,
+  "izbytok_pp": -2.35,
+  "z": -15.93
+ },
+ "kasanie": {
+  "1": {
+   "n": 65085,
+   "dolya": 0.4159,
+   "etalon": 0.4394,
+   "izbytok_pp": -2.35,
+   "z": -13.07
+  },
+  "2": {
+   "n": 20346,
+   "dolya": 0.4138,
+   "etalon": 0.4422,
+   "izbytok_pp": -2.84,
+   "z": -8.81
+  },
+  "3": {
+   "n": 11377,
+   "dolya": 0.439,
+   "etalon": 0.4536,
+   "izbytok_pp": -1.47,
+   "z": -3.42
+  }
+ },
+ "k12": {
+  "n": 85431,
+  "dolya": 0.4154,
+  "etalon": 0.44,
+  "izbytok_pp": -2.46,
+  "z": -15.7
+ },
+ "k12_po_godam": {
+  "2023": {
+   "n": 10962,
+   "dolya": 0.4595,
+   "etalon": 0.4585,
+   "izbytok_pp": 0.1,
+   "z": 0.24
+  },
+  "2024": {
+   "n": 17528,
+   "dolya": 0.4015,
+   "etalon": 0.4436,
+   "izbytok_pp": -4.2,
+   "z": -12.16
+  },
+  "2025": {
+   "n": 31376,
+   "dolya": 0.3985,
+   "etalon": 0.4298,
+   "izbytok_pp": -3.14,
+   "z": -12.1
+  },
+  "2026": {
+   "n": 25565,
+   "dolya": 0.4268,
+   "etalon": 0.4423,
+   "izbytok_pp": -1.54,
+   "z": -5.37
+  }
+ },
+ "k12_spok": {
+  "spokoynye": {
+   "n": 46772,
+   "dolya": 0.4116,
+   "etalon": 0.4422,
+   "izbytok_pp": -3.06,
+   "z": -14.53
+  },
+  "volatilnye": {
+   "n": 38659,
+   "dolya": 0.42,
+   "etalon": 0.4374,
+   "izbytok_pp": -1.74,
+   "z": -7.41
+  }
+ },
+ "k12_obem": {
+  "nizkiy": {
+   "n": 10564,
+   "dolya": 0.4357,
+   "etalon": 0.4586,
+   "izbytok_pp": -2.29,
+   "z": -4.89
+  },
+  "vysokiy": {
+   "n": 74867,
+   "dolya": 0.4125,
+   "etalon": 0.4374,
+   "izbytok_pp": -2.49,
+   "z": -14.95
+  }
+ },
+ "k12_storona": {
+  "podderzhka": {
+   "n": 44905,
+   "dolya": 0.406,
+   "etalon": 0.4414,
+   "izbytok_pp": -3.53,
+   "z": -16.28
+  },
+  "soprotivlenie": {
+   "n": 40526,
+   "dolya": 0.4258,
+   "etalon": 0.4386,
+   "izbytok_pp": -1.28,
+   "z": -5.63
+  }
+ },
+ "zakol_sredi_otskokov": {
+  ">0.1ATR": 0.405,
+  ">0.25ATR": 0.243
+ },
+ "mehanizm_viden": false
+}
