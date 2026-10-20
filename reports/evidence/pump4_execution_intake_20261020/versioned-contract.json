@@ -1,0 +1,56 @@
+{
+  "both_commits_verified_ancestors": true,
+  "breakeven": false,
+  "contract_commit": "b1387354e5b64de205e7f933b0537a2f6f37c123",
+  "effective_first_fraction": ".40",
+  "execution_parity": "NOT_RUN",
+  "files": {
+    "research_lab/PUMP4_V1_EXECUTION_CONTRACT_V1_2026_10_20.md": {
+      "git_blob": "9fe12fcf22b765885d8c284f2ba0adadfcef86c4",
+      "sha256": "a850deb7a004bc368dd3fbb44c6340d239dd1c7521d5b9b929e5bee446a86f1c"
+    },
+    "research_lab/pump4_fixtures.py": {
+      "git_blob": "ff70fb063df694e26414981ff62692a681687af7",
+      "sha256": "462db11a53df10a1aed99548259faf956925f9ad09f151f7881b41aa4b815fad"
+    },
+    "research_lab/random_control.py": {
+      "git_blob": "6cc580c75f807f20da72ca31afaa57ddeb8acea2",
+      "sha256": "a00ed059e4f1c45337011b8cd3434153b831ec128fd5ca9b07a4f6b99cf32aa3"
+    },
+    "research_lab/research_machine.py": {
+      "git_blob": "4898bd777244f4592abd29f7b906a8421431525c",
+      "sha256": "95ca5322c1da54cf06cd213bdf8075eedc7eff68d3127594db3b3479d32e8572"
+    },
+    "research_lab/results/pump4_fixtures_v1_20261020.json": {
+      "git_blob": "864c48838b7c349893cddbe206a4f5252022c9c5",
+      "sha256": "f6badf311e888fab05a3d4131559f98152f8589d49b35c7b034e306617726ca4"
+    },
+    "research_lab/ten_pump4.py": {
+      "git_blob": "7f39a47a6998aa3583aeb2377053fd470c47f148",
+      "sha256": "fc0240935a643eae15be033732a75c61439cc01e01776451cb0a48155c102426"
+    },
+    "strategies/pump_fade_v4r.py": {
+      "git_blob": "30d2f06f0a4ffd9eb88fe753970d165234cea530",
+      "sha256": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a"
+    },
+    "strategies/signals.py": {
+      "git_blob": "c1317ec259e9b3de88351efe7136f79daf0f3c79",
+      "sha256": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+    }
+  },
+  "fixture_summary": {
+    "NET_SVECHEY_V_KESHE": 1,
+    "OK": 65
+  },
+  "hold_bars": 168,
+  "missing_helper_published": true,
+  "money_authority": false,
+  "orders_allowed": false,
+  "published_origin": "7e1ab0bed7796cbc46821e3d0f5f37beb279a2e9",
+  "remaining_at_tp2": ".60",
+  "request_commit": "7b0a961863cdb2749f247f95d17535656ac582c3",
+  "schema": "PUMP4_VERSIONED_SOURCE_CONTRACT_V1_INTAKE",
+  "shadow_producer_published": true,
+  "static_stop_multiplier": 4,
+  "trailing": false
+}

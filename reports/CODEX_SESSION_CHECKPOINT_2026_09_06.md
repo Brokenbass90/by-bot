@@ -1,5 +1,20 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT20Oct EVENING PUMP4 VERSIONED CONTRACT ACCEPTED —
+Researchb138735 + request7b0a961 verified published ancestors of origin7e1ab0b.
+Actual mapping40/60/staticstopx4/168H1bars/137current;65OKfixtures+1ASTERunavailable.
+Old88f42ac universe/helper/mapping blockers superseded; source-only18assertion
+review is historical, not current FAIL or executionPASS. Read
+PUMP4_V1_EXECUTION_CONTRACT_REVIEW_2026_10_20.md/versioned-contract.json. Nextadapter
+needs exact continuous/restart65fixture replay and actualbroker/riskfeasibility;
+sevenreportedcooldowncases/outcomes independentlyUNKNOWN. No judge/returns or
+researchcode/KARTA/producer/financial changes. PUMP4 followsMonthly, notKITYresearch.
+Monthly entrypoint remains current uncommitted engineering task: local exact29PASS,
+52sources/13testhelpers, material8a48663fbd195491705fa2aa127fb4b1962e7cddb9aa84cd5ff3fd9ef0e5659b;
+VPS isolated code-only candidate staged UNSELECTED; exact OFF suite IN_PROGRESS,
+receipt .private/monthly_production_20261020; do not claim serverPASS untilGET.
+NET20 scheduled GET completed timely/private-only, one-shot paused; no money edits.
+
 CURRENT20Oct MONTHLY PENDING-FEE COMPONENT/SERVER CLOSED / PUMP4 NEXT —
 Read ALPACA_MONTHLY_PENDING_FEE_ADMISSION_2026_10_20.md and
 reports/evidence/monthly_pending_fee_20261020/{local,server}-acceptance.json.
