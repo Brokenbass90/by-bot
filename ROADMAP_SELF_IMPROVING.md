@@ -152,6 +152,32 @@ gates; текущая запись0prospective не является свежи�
 достаточных событий честная дата TINY неизвестна. Размер TINY не отменяет
 экономический допуск; после PASS не добавлять произвольные недели ожидания.
 
+## Уточнение20Oct: сроки исследований и существующие data blockers
+
+Origin research `52094dd356cd0fd54c8e03b1201e420ef9606e3e` проверен через
+`git ls-remote`; документы прочитаны из этого ref, research tests/judges Codex
+не запускал. Очередь Monthly P0 → существующий независимый DATA_ONLY P1 сохранена.
+
+- **H2b не является улучшением к ноябрьскому запуску.** Действующий prereg требует
+  минимум18 **месячных** сигнальных дат с завершённым42-session исходом; ежедневные
+  snapshots не увеличивают число независимых наблюдений. Более ранняя формулировка
+  итогового отчёта про ежедневные даты не заменяет этот prereg. Monthly не ждёт H2b.
+- **H6 trailing остаётся исследованием.** Identity318/318 и360/360 и разложение
+  исторической отдачи — evidence о симуляторе/механике, не PASS ранней активации.
+  Forward-когорты/22-session outcomes и их зависимость нельзя заменить числом
+  дневных записей. Legacy NET и Monthly protection сохраняют свои frozen правила.
+- **IBIT: серверный capture не равен своевременной доставке в лабораторию.**
+  `19-net-ibit` был one-shot и PAUSED после фактической передачи. Запрос Claude
+  `ZAPROS_CODEX_IBIT_EZHEDNEVNO_2026_10_20.md` принят как существующая DATA_ONLY
+  зависимость: ежедневная доставка с actual availability/import timestamps и
+  cross-source/adjustment parity. Ежедневная local delivery/предел60min пока
+  NOT_PROVEN; один server latency963s не доказывает этот SLA. Massive остаётся PENDING.
+- **Binance forward продолжение:** research сообщает213/335 perp series и паритет
+  на10 рядах. Это ограниченный проход, не полное DATA_READY335. До использования
+  конкретной гипотезой нужны её coverage/freshness и manifest, без изменения архива.
+
+Это уточнение evidence/сроков, не новый roadmap, prereg, strategy change или LIVE GO.
+
 ## Gate гипотез и change control
 
 Новая AI hypothesis содержит экономическую причину/кто платит, причинную формулу,
