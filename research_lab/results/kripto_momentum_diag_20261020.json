@@ -1,0 +1,68 @@
+{
+ "nedel": 56,
+ "pit_priznak_iz_zakrytyh": "2780/2780",
+ "net": {
+  "sred_bps": -78.3,
+  "t": -1.07,
+  "di95": [
+   -221.7,
+   65.1
+  ]
+ },
+ "long_noga_gross": {
+  "sred_bps": -302.5,
+  "t": -1.62,
+  "di95": [
+   -669.2,
+   64.3
+  ]
+ },
+ "short_noga_gross": {
+  "sred_bps": 200.7,
+  "t": 1.01,
+  "di95": [
+   -190.5,
+   591.9
+  ]
+ },
+ "fanding_sred_bps": 15.4,
+ "komissiya_bps": 12.0,
+ "bez_2_hudshih_i_2_luchshih": -87.5,
+ "korr_net_btc": -0.23,
+ "btc_nedelya_vverh": [
+  24,
+  -190.3
+ ],
+ "btc_nedelya_vniz": [
+  32,
+  5.7
+ ],
+ "chashche_vsego_v_nogah": [
+  [
+   "NEARUSDT",
+   20
+  ],
+  [
+   "GALAUSDT",
+   19
+  ],
+  [
+   "FTMUSDT",
+   15
+  ],
+  [
+   "CRVUSDT",
+   15
+  ],
+  [
+   "WAVESUSDT",
+   15
+  ],
+  [
+   "DYDXUSDT",
+   14
+  ]
+ ],
+ "MDE_bps_pri_t2": 146.4,
+ "nedel_dlya_MDE_20bps": 2999
+}
