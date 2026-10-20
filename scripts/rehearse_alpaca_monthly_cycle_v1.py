@@ -394,9 +394,105 @@ def run(directory,*,standing_grant=False,automatic_costs=False):
     publish(root/'receipt.json',out);return out
 
 
+def run_pending_rotation(directory):
+    """Frozen58 selector, sell→selected buy before fees post, memory broker only."""
+    from research_lab.alpaca_monthly_cost_source_v1 import capture_and_produce_cost_sources
+    root=ops.safe_path(directory);root.mkdir(mode=0o700)
+    calendar=fixture_calendar();bundle,available,prices=fixture_source(root/'oct30',calendar,'2026-10-30')
+    args=dict(account_id='MONTHLY_REHEARSAL_ONLY',capital='487.42',
+        account_lock_path=root/'fixture-account.lock',entry_halt_path=root/'fixture-HALT')
+    m=MonthlyManager(root/'cycle',**args);m.source(bundle,now_ms=available)
+    first=m.book.rows('selections')[0];old=first['picks'][0]['symbol']
+    opening=next(r['open_ms'] for r in calendar if r['session']=='2026-11-02')
+    broker=AccountingMemoryBroker(root/'broker.json',calendar);broker.mark(prices);broker.set_clock(opening+1000)
+    protocol=dict(schema='ALPACA_PROTOCOL_SOURCE_CONTRACT_V1',account_id=m.account,commission_rate='0',
+        owner_attestation={'api_commission_null_is_not_proof':True},fixture_only=True,
+        regulatory_model=dict(cat_nms_executed_share_rate='.000003',sec_sell_value_rate='.0000206',
+            taf_per_share_rate='0',rounding='each fee type aggregated daily per account then ceiling to USD0.01; exact fractional executed quantities'))
+    paths={}
+    for name,value in dict(protocol=protocol,calendar=calendar,
+        assets=[dict(id=s,symbol=s,asset_class='us_equity',exchange='NASDAQ') for s in ops.required_symbols()]).items():
+        path=root/(name+'.json');publish(path,value);paths[name+'_path']=path
+    elapsed=[0.];context={};original=time.monotonic
+    time.monotonic=lambda:elapsed[0]/1000
+    try:
+        with paper_mode():
+            binding=m.native(broker,base_url=broker.base_url,liability_reserve_usd='.03',pending_fee_admission=True)
+            m.opening(binding,load_history(bundle['history']),first['selection_id'],
+                quotes={old:dict(ask=prices[old],quote_ts=opening,received_ms=opening,source='FIXTURE')},
+                now_ms=opening+1000,apply=True,symbols=[old])
+            held=m.book.rows('positions')[0];entry=held['raw_entry']
+            broker.set_clock(next(r['close_ms'] for r in calendar if r['session']=='2026-11-04')+3600000)
+            broker.publish_fees()  # The old buy-day penny is posted before next month.
+            # Keep this fixture holding flat while other synthetic stocks trend;
+            # it then leaves the frozen ranking, without a stop exit or retuning.
+            px=float(entry['filled_avg_price'])
+            overrides={(old,r['session']):px for r in calendar if '2026-11-02'<=r['session']<='2026-11-30'}
+            overrides[(old,'2026-11-30')]=px*.995
+            future,available,marks=fixture_source(root/'nov30',calendar,'2026-11-30',
+                overrides)
+            for row in calendar:
+                if not '2026-11-02'<=row['session']<'2026-11-30':continue
+                close=overrides[(old,row['session'])]
+                raw=[dict(symbol=old,session=row['session'],open=close*.999,high=close*1.005,low=close*.995,close=close)]
+                at=row['close_ms']+1200000
+                m.book.observe_close(dict(schema='ALPACA_COMPLETED_SESSION_SOURCE_V1',
+                    source='RECORDED_REGULAR_SESSION_OHLC',raw=raw,raw_sha256=digest(raw),
+                    calendar=calendar,available_ms=at,completed_ms=at),now_ms=at)
+            future_bound=m.source(future,now_ms=available)
+            second=next(s for s in m.book.rows('selections') if s['selection_id']==future_bound['selection_id'])
+            assert old not in {p['symbol'] for p in second['picks']}
+            dec=next(r['open_ms'] for r in calendar if r['session']=='2026-12-01')
+            marks[old]=float(entry['filled_avg_price'])*1.001
+            broker.mark(marks);broker.set_clock(dec+1000);lost=[False]
+            quotes={s:dict(ask=px,quote_ts=dec,received_ms=dec,source='FIXTURE') for s,px in marks.items()}
+            def costs(exits):
+                if not exits:return {}
+                if not lost[0]:broker.lose_stop=True;lost[0]=True
+                now=broker.state['clock_ms']+1000
+                current=context['now']+elapsed[0]-context['start']
+                elapsed[0]+=max(0,now-current)
+                return capture_and_produce_cost_sources(binding,after='2026-10-30T00:00:00Z',
+                    now_ms=now,allow_pending=True,**paths)
+            def tick(source=False):
+                context.update(now=broker.state['clock_ms']+1000,start=elapsed[0])
+                return m.tick(binding,now_ms=context['now'],cost_sources=costs,apply=True,
+                    source_loader=(lambda:future) if source else None,quotes=quotes)
+            first_attempt=tick(True)
+            assert any(i['phase']=='OPENING' and i['code']=='TimeoutError' for i in first_attempt['issues']),first_attempt
+            m=MonthlyManager(root/'cycle',**args)
+            binding=m.native(broker,base_url=broker.base_url,liability_reserve_usd='.03',pending_fee_admission=True)
+            completed=tick(True)
+            assert not completed['issues'],completed['issues']
+            selected_count=len(second['picks'])
+            assert len(m.book.rows('positions'))==selected_count
+            exits=m.book.rows('exits');assert len(exits)==1 and exits[0]['reason']=='monthly_rotation_next_open'
+            with_pending=False
+            try:binding._require_exit_accounting()
+            except ValueError as exc:with_pending=str(exc)=='MONTHLY_ACCOUNTING_PENDING'
+            assert with_pending
+            buys=lambda:len([w for w in broker.state['writes'] if (w['payload'] or {}).get('side')=='buy'])
+            assert buys()==1+selected_count
+            assert not tick(True)['issues'] and buys()==1+selected_count
+            broker.set_clock(next(r['close_ms'] for r in calendar if r['session']=='2026-12-02')+3600000)
+            broker.publish_fees();final=tick()
+            assert not final['issues'],final['issues']
+            binding._require_exit_accounting()
+            out=dict(status='MONTHLY_PENDING_FEE_ROTATION_ORDERS_OFF_E2E_PASS',source_symbols=58,
+                selector_monkeypatched=False,rotation_exits=1,simulated_entries=buys(),owned_positions=selected_count,
+                response_loss_recovered=True,old_exit_pending_during_new_entries=with_pending,
+                old_exit_finalized_after_posting=True,duplicate_entries=0,fixture_liability_reserve_usd='.03',
+                fixture_calendar='WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE',
+                real_broker_requests=0,real_broker_writes=0,money_authority=False,orders_allowed=False)
+            publish(root/'receipt.json',out);return out
+    finally:time.monotonic=original
+
+
 def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--runtime',required=True,type=Path)
-    args=p.parse_args(argv);print(json.dumps(run(args.runtime),sort_keys=True));return 0
+    p.add_argument('--pending-rotation',action='store_true')
+    args=p.parse_args(argv)
+    print(json.dumps(run_pending_rotation(args.runtime) if args.pending_rotation else run(args.runtime),sort_keys=True));return 0
 
 
 if __name__=='__main__':raise SystemExit(main())

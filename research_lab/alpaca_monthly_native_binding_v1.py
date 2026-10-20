@@ -25,6 +25,7 @@ from scripts import equities_alpaca_paper_bridge as native
 
 ROOT=Path(__file__).resolve().parents[1]
 STANDING_SCHEMA='ALPACA_MONTHLY_STANDING_OWNER_SCOPE_V1'
+PENDING_FEE_POLICY='SOURCE_CLASSIFIED_WITHIN_EXISTING_RESERVE_V1'
 
 
 def monthly_universe():
@@ -63,7 +64,8 @@ def standing_source_pins():
 
 class MonthlyNativeBinding:
     def __init__(self,book,*,client,base_url,account_id,capital,runtime,lock_path,entry_halt_path,
-                 liability_reserve_usd='0',live_scope_path=None,live_scope_sha256=None,owner_go_path=None):
+                 liability_reserve_usd='0',live_scope_path=None,live_scope_sha256=None,owner_go_path=None,
+                 pending_fee_admission=False):
         if book.contract!=CONTRACT:raise ValueError('MONTHLY_CONTRACT_CONFLICT')
         self.book=book;self.client=client;self.base_url=base_url;self.account=account_id
         self.capital=float(positive(capital))
@@ -75,6 +77,9 @@ class MonthlyNativeBinding:
         self.halt=lifecycle.safe_path(str(Path(entry_halt_path).absolute()))
         self.liability=dec(liability_reserve_usd)
         if self.liability<0:raise ValueError('MONTHLY_LIABILITY_RESERVE_INVALID')
+        if type(pending_fee_admission) is not bool or (pending_fee_admission and self.liability<=0):
+            raise ValueError('MONTHLY_PENDING_FEE_POSITIVE_RESERVE_REQUIRED')
+        self.pending_fee_admission=pending_fee_admission;self.pending_fee_sources={}
         self.live_scope_path=live_scope_path;self.live_scope_sha256=live_scope_sha256
         self.owner_go_path=owner_go_path
         if self.halt==self.ledger or self.halt==self.reentry or self.halt==self.lock_path:
@@ -114,6 +119,12 @@ class MonthlyNativeBinding:
         if (any(scope.get(k)!=v for k,v in expected.items())
             or getattr(self.client,'order_contract',None)!=CONTRACT['schema']):
             raise ValueError('MONTHLY_LIVE_SCOPE_CONFLICT')
+        if self.pending_fee_admission and scope.get('pending_fee_admission')!=PENDING_FEE_POLICY:
+            raise ValueError('MONTHLY_PENDING_FEE_SCOPE_REQUIRED')
+        if self.pending_fee_admission:
+            pin=scope.get('pending_fee_protocol_sha256')
+            if not isinstance(pin,str) or len(pin)!=64 or any(c not in '0123456789abcdef' for c in pin):
+                raise ValueError('MONTHLY_PENDING_FEE_PROTOCOL_REQUIRED')
         count=scope.get('max_new_entries_per_session')
         if type(count) is not int or not 1<=count<=(4 if standing else 1):
             raise ValueError('MONTHLY_SESSION_ENTRY_LIMIT')
@@ -197,7 +208,7 @@ class MonthlyNativeBinding:
     def _admit_new_entry(self,ticket,now):
         """GET-only complete account check under the original writer lock."""
         started=time.monotonic()
-        realized=self._accounting_net()
+        realized=None if self.pending_fee_admission else self._accounting_net()
         account=self.client.get_account();account_observed=now+int((time.monotonic()-started)*1000)
         clock=self.client.get_clock()
         stamp=native._parse_iso_utc(clock.get('timestamp',''))
@@ -208,6 +219,9 @@ class MonthlyNativeBinding:
         if self.base_url==lifecycle.LIVE:
             scope=self._entry_authority(ticket,now)
         else:scope=None
+        admission=None
+        if self.pending_fee_admission:
+            realized,admission=self._accounting_for_admission(account=account,now_ms=now)
         state=self._state();owned={p['symbol']:p for p in self.book.rows('positions')}
         positions=self.client.list_positions();orders=self.client.list_orders(status='open',limit=500)
         if (len(orders)>=500 or len({p['symbol'] for p in positions})!=len(positions)
@@ -254,8 +268,10 @@ class MonthlyNativeBinding:
             or quoted is None or not 0<=now-int(quoted.timestamp()*1000)<=300000):
             raise ValueError('MONTHLY_FRESH_ASSET_OR_QUOTE_REQUIRED')
         positive(quote['ap'])
-        return dict(schema='ALPACA_MONTHLY_CASH_ANCHOR_V1',account_id=self.account,
+        anchor=dict(schema='ALPACA_MONTHLY_CASH_ANCHOR_V1',account_id=self.account,
             client_order_id=ticket['client_order_id'],observed_ms=account_observed,account=account)
+        if admission:anchor['pending_fee_admission']=admission
+        return anchor
 
     @staticmethod
     def _check_standing_loss(scope,realized,positions):
@@ -267,17 +283,49 @@ class MonthlyNativeBinding:
     def _require_exit_accounting(self):
         self._accounting_net()
 
-    def _accounting_net(self):
-        realized=dec(0)
+    def _accounting_for_admission(self,*,account,now_ms):
+        liabilities=[]
+        if self.pending_fee_admission:
+            try:liabilities=[dec(account[k]) for k in ('accrued_fees','pending_reg_taf_fees')]
+            except (KeyError,ValueError,TypeError,ArithmeticError):
+                raise ValueError('MONTHLY_PENDING_FEE_LIABILITY_UNKNOWN') from None
+            if (account.get('id')!=self.account or account.get('currency')!='USD'
+                or any(v<0 for v in liabilities)):
+                raise ValueError('MONTHLY_PENDING_FEE_LIABILITY_UNKNOWN')
+        try:
+            realized=self._accounting_net()
+            if any(liabilities):raise ValueError('MONTHLY_PENDING_FEE_LIABILITY_UNCLASSIFIED')
+            return realized,None
+        except ValueError as exc:
+            if str(exc)!='MONTHLY_ACCOUNTING_PENDING' or not self.pending_fee_admission:raise
+        scope=self._live_custody() if self.base_url==lifecycle.LIVE else None
+        from research_lab.alpaca_monthly_cost_source_v1 import pending_admission_net
+        return pending_admission_net(self,account=account,now_ms=now_ms,owner_scope=scope)
+
+    @staticmethod
+    def _pending_dispatch_fresh(proof,now_ms):
+        if proof and any(not 0<=now_ms-proof[k]<=5000 for k in ('source_observed_ms','source_coverage_end_ms')):
+            raise ValueError('MONTHLY_PENDING_FEE_STALE_SOURCE')
+
+    def _require_admission_accounting(self,*,now_ms):
+        if not self.pending_fee_admission:return self._require_exit_accounting()
+        return self._accounting_for_admission(account=self.client.get_account(),now_ms=now_ms)
+
+    def _accounting_net(self,*,pending=None):
+        realized=dec(0);used=set()
         for exited in self.book.rows('exits'):
             identity=digest(dict(schema=CONTRACT['schema'],entry_id=exited['entry_id']))
             path=self.runtime/'safety'/identity/'live.sqlite'
-            if not path.is_file():raise ValueError('MONTHLY_ACCOUNTING_PENDING')
-            with sqlite3.connect(lifecycle.safe_path(str(path),exists=True).as_uri()+'?mode=ro',uri=True) as db:
-                row=db.execute('SELECT payload FROM intents WHERE id=?',(identity,)).fetchone()
+            row=None
+            if path.is_file():
+                with sqlite3.connect(lifecycle.safe_path(str(path),exists=True).as_uri()+'?mode=ro',uri=True) as db:
+                    row=db.execute('SELECT payload FROM intents WHERE id=?',(identity,)).fetchone()
             item=json.loads(row[0]) if row else {}
-            if (not item.get('cost_finality') or item.get('account')!=self.account
+            if item and item.get('account')!=self.account:raise ValueError('MONTHLY_ACCOUNTING_OWNER_CONFLICT')
+            if (not item.get('cost_finality')
                 or item['cost_finality'].get('status')!='LIVE_TERMINAL_COST_FINALITY'):
+                if pending is not None and exited['entry_id'] in pending:
+                    used.add(exited['entry_id']);realized+=dec(pending[exited['entry_id']]);continue
                 raise ValueError('MONTHLY_ACCOUNTING_PENDING')
             source=lifecycle.safe_path(item['monthly_cost_source_path'],exists=True)
             if hashlib.sha256(source.read_bytes()).hexdigest()!=item['cost_finality_sha256']:
@@ -287,6 +335,7 @@ class MonthlyNativeBinding:
                 if hashlib.sha256(p.read_bytes()).hexdigest()!=row['sha256']:
                     raise ValueError('MONTHLY_ACCOUNTING_SOURCE_CHANGED')
             realized+=dec(item['cost_finality']['net_usd_exact'])
+        if pending is not None and set(pending)!=used:raise ValueError('MONTHLY_PENDING_FEE_BOOK_CONFLICT')
         return realized
 
     def finalize_exit(self,entry_id,cost_source_path,*,now_ms):
@@ -415,11 +464,15 @@ class MonthlyNativeBinding:
                 def final_dispatch():
                     # Code/source checks may be slow. Re-read time, expiry and
                     # revocation AFTER them, immediately before the native POST.
-                    scope=None
+                    scope=None;pending_proof=None
                     if self.base_url==lifecycle.LIVE:
                         scope=self._entry_authority(ticket,now+int((time.monotonic()-started)*1000),reserved=True)
+                    if self.pending_fee_admission:
+                        _,pending_proof=self._accounting_for_admission(account=self.client.get_account(),
+                            now_ms=now+int((time.monotonic()-started)*1000))
                     clock=self.client.get_clock();stamp=native._parse_iso_utc(clock.get('timestamp',''))
                     effective=now+int((time.monotonic()-started)*1000)
+                    self._pending_dispatch_fresh(pending_proof,effective)
                     if (clock.get('is_open') is not True or stamp is None
                         or abs(int(stamp.timestamp()*1000)-effective)>5000
                         or not window['open_ms']<=effective<window['open_ms']+300000):

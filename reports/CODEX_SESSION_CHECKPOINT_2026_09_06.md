@@ -1,5 +1,36 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT20Oct MONTHLY PENDING-FEE COMPONENT/SERVER CLOSED / PUMP4 NEXT —
+Read ALPACA_MONTHLY_PENDING_FEE_ADMISSION_2026_10_20.md and
+reports/evidence/monthly_pending_fee_20261020/{local,server}-acceptance.json.
+Base543c137 continuation, materialbd267c75380f9bc8ad1f82175d89e963043ec6c4d561bb02a7e63f3d7bd74faa:
+51sources/18tests,274localPASS283.65s +274VPSPASS277.80s,39imports/0fallback,
+networkdenied;4complete fixture E2E receipts incl frozen58 rotation→knownpending
+fees→replacement→native stop replyloss→restart/no duplicate→late actualposting
+finality.93nonsecret staticpins unchanged by independent GET, candidate UNSELECTED.
+No orders,financialprofiles/units/NET/SHOP/HALT/GO/risk changes. .03fixture reserve
+isNOTapproved; real existingreserve unchanged. Strict finality default retained;
+explicit pending policy requires new owner scope+exactprotocolSHA; proof fresh
+through finaldispatch, unknowncash/liabilities/fees/ownership/tariff reject.
+One astra/high whole-change review found4defects, allfixed +independent narrow34PASS;
+newfullE2E excludedfrom narrowreview thenpassedroot local+server exactsuites.
+Reviewer/runtime evidence saved; not claiming independent fullserver/code rereview.
+NEXT P0: existing manager applying tick/automaticcallback→one productionentrypoint
+(currentCLI stillsource/preview)→NET handoff/rollback→concrete standing packet.
+Future30Octsource/2Novfreshactualgates remain; no calendarwait for engineering.
+NET20Oct13:35UTC/16:35CY one-shot net20-opening-broker-protection-readback ACTIVE,
+future/PENDING untilactualreceipt; recent morning GET/private safetyreview doNOT
+prove todaysRTH protection. Existing Telegram deliveryUNKNOWN/no-retry defect
+recorded; inspectactual incident/delivery independently. No financialrunner call.
+PUMP4 is NEXT MONEY afterMonthly perlatestowner; read PUMP4_V1_EXECUTION_INTAKE_2026_10_20.md.
+Researchorigin88f42ac verified;7source/result hashes pinned, frozenstrategy matches
+2ea8d1f. FormalresearchPASS66=12FORWARD+54OOS_REPLAY/6weeklyclusters; notmoneyGO.
+Contract137 vs138trackedNPZ: needversioned explicituniverse. Sevenrepeats attributed
+byClaude tocooldown reset; independentrestart parity NOT_RUN/outcomesUNKNOWN.
+A1–A6/actualcost+instrument/riskbudget remain, ORDERS_OFF; no InPlay/V2filters.
+No research/KARTA/judge edits or Claude messages. Unrelateduntracked
+configs/allowlist_change_log.json preservedsha365ff7d6...decc2e0e, doNOTstage.
+
 CURRENT20Oct10:49CY CONTEXT REVIEW / RESEARCH CLOCKS CLARIFIED —
 Fresh bounded NET broker GET and existing timer readback saved PRIVATEONLY in
 .private/context_review_20261020/net-readback.json; no orders/units/runtime writes.

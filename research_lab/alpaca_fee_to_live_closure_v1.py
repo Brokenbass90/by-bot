@@ -242,7 +242,8 @@ def collect_account_cost_source(get, *, account_id, after, until, now_ms=None,
 
 
 def reconcile_account_day_fees(source, *, protocol, protocol_sha256,
-                               calendar, calendar_sha256, assets, assets_sha256):
+                               calendar, calendar_sha256, assets, assets_sha256,
+                               pending=False):
     """Confirm posted account-day components under an explicit pinned protocol.
 
     Aggregate executions, including partial fills, over the whole account day.
@@ -258,6 +259,7 @@ def reconcile_account_day_fees(source, *, protocol, protocol_sha256,
 
     def fail(reason):
         raise ValueError('COST_FEE_' + reason)
+    if type(pending) is not bool:fail('EXPLICIT_ESTIMATE_MODE_REQUIRED')
     try:
         recorded = iter(source['captures'])
         def replay(route, query):
@@ -345,7 +347,8 @@ def reconcile_account_day_fees(source, *, protocol, protocol_sha256,
         session = sessions.get(day)
         midnight = datetime.fromisoformat(day).replace(tzinfo=ZoneInfo('America/New_York'))
         if (session is None or start > midnight.timestamp() * 1000
-            or end < (midnight + timedelta(days=1)).timestamp() * 1000
+            or (not pending and end < (midnight + timedelta(days=1)).timestamp() * 1000)
+            or at.timestamp()*1000 > end
             or not session['open_ms'] <= at.timestamp() * 1000 <= session['close_ms']):
             fail('DAY_COVERAGE_OR_SESSION_NOT_CLOSED')
         qty, price = number(row.get('qty'), positive=True), number(row.get('price'), positive=True)
@@ -374,22 +377,25 @@ def reconcile_account_day_fees(source, *, protocol, protocol_sha256,
             fail('ASSESSMENT_NOT_EXECUTED_USD')
         at = timestamp(row.get('created_at')).timestamp() * 1000
         amount = number(row.get('net_amount'))
-        if not sessions[day]['close_ms'] <= at <= end or amount > 0:
+        if ((not pending and at < sessions[day]['close_ms']) or at > end or amount > 0
+            or (pending and amount % Decimal('.01') != 0)):
             fail('ASSESSMENT_TIMING_OR_AMOUNT')
         posted[day][kind] -= amount
         ids[day].append(row['id'])
     ceil = lambda value: (value / Decimal('.01')).to_integral_value(rounding=ROUND_CEILING) * Decimal('.01')
-    result = []; total = Decimal(0)
+    result = []; total = Decimal(0); unposted = Decimal(0)
     for day, values in sorted(days.items()):
         expected = dict(CAT=ceil(values['qty'] * cat), SEC=ceil(values['sells'] * sec))
-        if posted[day] != expected:
+        if (any(posted[day][k] > expected[k] for k in expected)
+            or (not pending and posted[day] != expected)):
             fail('POSTING_PENDING_OR_CONFLICT')
+        unposted += sum((expected[k]-posted[day][k] for k in expected),Decimal(0))
         total += sum(posted[day].values(), Decimal(0))
         result.append(dict(session=day, fill_count=len(values['fills']),
             fee_activity_count=len(ids[day]), fill_activity_ids=values['fills'],
             fee_activity_ids=ids[day], expected={k: str(v) for k, v in expected.items()},
             posted={k: str(v) for k, v in posted[day].items()}))
-    return dict(schema='ALPACA_ACCOUNT_DAY_POSTED_FEE_SOURCE_V1',
+    out=dict(schema='ALPACA_ACCOUNT_DAY_POSTED_FEE_SOURCE_V1',
         status='ACCOUNT_DAY_FEE_SOURCE_PASS', account_id=source['account_id'],
         source_sha256=digest(source), protocol_sha256=protocol_sha256,
         calendar_sha256=calendar_sha256, assets_sha256=assets_sha256,
@@ -398,3 +404,6 @@ def reconcile_account_day_fees(source, *, protocol, protocol_sha256,
         creation_time_coverage_only=True, late_adjustments_possible=True,
         cash_reconciled=False, position_cost_allocation_produced=False,
         terminal_cost_finality_proven=False, capital_released=False, money_authority=False)
+    if pending:
+        out.update(status='ACCOUNT_DAY_FEE_ESTIMATE_ONLY',unposted_account_fees_usd=str(unposted))
+    return out

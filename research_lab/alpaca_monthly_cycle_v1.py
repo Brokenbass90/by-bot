@@ -95,7 +95,7 @@ class MonthlyManager:
                 source_and_financial_book=str(book.path),entry_halt_present=self.halt.exists())
             return self._record('PREVIEW',out,now_ms)
 
-    def opening(self,native,history,selection_id,*,quotes,now_ms,apply=False,symbols=None):
+    def opening(self,native,history,selection_id,*,quotes,now_ms,apply=False,symbols=None,before_entry=None):
         if type(apply) is not bool:raise ValueError('CYCLE_EXPLICIT_BOOLEAN_REQUIRED')
         self._custody(native)
         started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
@@ -135,6 +135,7 @@ class MonthlyManager:
                     used=sum(1 for i in entries.values() if i.get('entry_session')==selected['entry_session'])
                     if used>=scope['max_new_entries_per_session']:
                         entry_block='MONTHLY_SESSION_ENTRY_ALREADY_CONSUMED';break
+                if apply and before_entry:before_entry()
                 account=native.client.get_account()
                 ticket=native.prepare_entry(history,selection_id,symbol,quote=quotes[symbol],now_ms=clock(),
                     cash=account['cash'],open_equity=account['equity'])
@@ -205,9 +206,10 @@ class MonthlyManager:
         with self.guard('dispatch.lock'):
             out['recovered']=attempt('RECOVERY',lambda:self.recover(native,now_ms=clock(),apply=True)) or []
             out['maintenance']=attempt('MAINTENANCE',lambda:self.maintain(native,now_ms=clock(),apply=True))
-            def finality():
+            def finality(*,guarded=False):
                 import sqlite3
                 sources=cost_sources(self.book.rows('exits')) if callable(cost_sources) else cost_sources or {}
+                native.pending_fee_sources={}
                 for exited in self.book.rows('exits'):
                     eid=exited['entry_id'];identity=digest(dict(schema=CONTRACT['schema'],entry_id=eid))
                     p=native.runtime/'safety'/identity/'live.sqlite';done=False
@@ -216,8 +218,15 @@ class MonthlyManager:
                             row=db.execute('SELECT payload FROM intents WHERE id=?',(identity,)).fetchone()
                         done=bool(row and json.loads(row[0]).get('cost_finality'))
                     if not done and eid in sources:
-                        out['accounting'].append(self.finalize(native,eid,sources[eid],now_ms=clock()))
-                native._require_exit_accounting()
+                        document=json.loads(ops.safe_path(sources[eid]).read_bytes())
+                        if document.get('schema')=='ALPACA_MONTHLY_PENDING_FEE_ESTIMATE_V1':
+                            native.pending_fee_sources[eid]=sources[eid]
+                        else:
+                            # opening() already holds cycle.lock. The native
+                            # finalizer still takes the original account lock.
+                            out['accounting'].append(native.finalize_exit(eid,sources[eid],now_ms=clock())
+                                if guarded else self.finalize(native,eid,sources[eid],now_ms=clock()))
+                native._require_admission_accounting(now_ms=clock())
             attempt('ACCOUNTING',finality)
             bundle=attempt('SOURCE',source_loader) if source_loader else None
             if bundle is not None:
@@ -240,7 +249,7 @@ class MonthlyManager:
                                 q[pick['symbol']]=dict(ask=float(positive(actual['ap'])),
                                     quote_ts=int(stamp.timestamp()*1000),received_ms=clock(),source='ALPACA_IEX_LATEST_QUOTE')
                         return self.opening(native,load_history(bundle['history']),selection['selection_id'],
-                            quotes=q,now_ms=clock(),apply=True)
+                            quotes=q,now_ms=clock(),apply=True,before_entry=lambda:finality(guarded=True))
                     out['opening']=attempt('OPENING',opening)
                     out['entry_status']='OPENING_PROCESSED' if out['opening'] else 'BLOCKED'
                 else:out['entry_status']='OUTSIDE_MONTHLY_WINDOW'

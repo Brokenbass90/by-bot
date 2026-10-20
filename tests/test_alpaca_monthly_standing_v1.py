@@ -182,10 +182,13 @@ def test_multisymbol_opening_refreshes_elapsed_time_between_real_native_entries(
             out=original(*args,**kw);elapsed[0]+=6.;return out
         n.enter=delayed
         quotes={p['symbol']:dict(ask=100.,quote_ts=now,received_ms=now,source='FIXTURE') for p in picks}
-        out=m.opening(n,{},later['selection_id'],quotes=quotes,now_ms=now,apply=True)
+        refresh_counts=[]
+        out=m.opening(n,{},later['selection_id'],quotes=quotes,now_ms=now,apply=True,
+            before_entry=lambda:refresh_counts.append(len(m.book.rows('positions'))))
     assert len([r for r in out['results'] if r['status']=='MONTHLY_NATIVE_PROTECTED'])==4
     assert len(broker.state['positions'])==4
     assert len([w for w in broker.state['writes'] if w['payload'].get('side')=='buy'])==4
+    assert refresh_counts==[0,1,2,3]
 
 
 def test_legacy_exact_scope_cannot_use_standing_go(setup,monkeypatch):

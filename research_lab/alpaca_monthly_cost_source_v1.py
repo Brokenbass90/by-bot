@@ -7,6 +7,8 @@ Late revisions or an unexplained cash cent block new risk; protection continues.
 from collections import defaultdict
 from datetime import datetime
 from decimal import Decimal, ROUND_DOWN, ROUND_HALF_UP
+import hashlib
+import time
 from zoneinfo import ZoneInfo
 
 from research_lab.alpaca_dynamic_v1 import dec, digest
@@ -39,7 +41,7 @@ def _allocate(total, weights):
 
 
 def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
-                           positions, exits, entry_id):
+                           positions, exits, entry_id, pending=False):
     """Derive one external finality document; caller pins/persists every input.
 
     Full raw source replay and the pinned retail protocol precede allocation.
@@ -47,11 +49,16 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
     current cash. This function cannot release a slot, submit or enable anything.
     """
     proof = reconcile_account_day_fees(source, protocol=protocol, protocol_sha256=digest(protocol),
-        calendar=calendar, calendar_sha256=digest(calendar), assets=assets, assets_sha256=digest(assets))
+        calendar=calendar, calendar_sha256=digest(calendar), assets=assets, assets_sha256=digest(assets),
+        pending=pending)
     def require(ok, reason):
         if not ok: raise ValueError('MONTHLY_COST_'+reason)
     account = source['account_after']
-    require(all(dec(account[k]) == 0 for k in ('accrued_fees', 'pending_reg_taf_fees')), 'LIABILITY_PENDING')
+    liabilities=[dec(account[k]) for k in ('accrued_fees','pending_reg_taf_fees')]
+    if pending:
+        require(all(v>=0 for v in liabilities)
+            and sum(liabilities,dec(0))<=dec(proof['unposted_account_fees_usd']), 'LIABILITY_UNCLASSIFIED')
+    else:require(all(v==0 for v in liabilities), 'LIABILITY_PENDING')
     require(anchor.get('schema') == 'ALPACA_MONTHLY_CASH_ANCHOR_V1'
         and anchor.get('account_id') == source['account_id'] == anchor['account']['id']
         and anchor['account'].get('currency') == 'USD'
@@ -138,7 +145,7 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
     # to the observed ending balance or supplied as a balancing adjustment.
     other = sum((r[1] for r in moves if r[2] not in owned_ids), dec(0)) + allocated
     require(allocated >= 0, 'FEE_ALLOCATION_TIMING')
-    return dict(schema='ALPACA_DYNAMIC_BROKER_COST_FINALITY_V1', account_id=source['account_id'],
+    out=dict(schema='ALPACA_DYNAMIC_BROKER_COST_FINALITY_V1', account_id=source['account_id'],
         monthly_entry_id=entry_id,
         intake_sha256=digest(dict(schema=CONTRACT['schema'], entry_id=entry_id)),
         closure_status='ACCOUNT_DAY_FEES_RECONCILED', exit_orders_sha256=digest(target['orders']),
@@ -152,9 +159,15 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
         account_day_allocations=allocations, broker_per_order_fee_attribution=False,
         source_sha256=digest(source), cash_anchor_sha256=digest(anchor), fee_day_proof_sha256=digest(proof),
         money_authority=False, orders_allowed=False)
+    if pending:
+        out.update(schema='ALPACA_MONTHLY_PENDING_FEE_ESTIMATE_V1',closure_status='PENDING_NOT_FINAL',
+            unposted_account_fees_usd=proof['unposted_account_fees_usd'],
+            known_net_before_pending_account_fees_usd=str(activity_gross-allocated),
+            terminal_cost_finality_proven=False)
+    return out
 
 
-def _document(inputs, entry_id):
+def _document(inputs, entry_id, *, pending=False):
     from research_lab.alpaca_dynamic_live_runtime_v1 import read_json
     from research_lab.alpaca_fee_to_live_closure_v1 import pin, check_rows
     check_rows(inputs.values())
@@ -163,7 +176,8 @@ def _document(inputs, entry_id):
     if (snapshot['schema'] != 'ALPACA_MONTHLY_COST_BOOK_SNAPSHOT_V1'
         or snapshot['account_id'] != values['source']['account_id']):
         raise ValueError('MONTHLY_COST_BOOK_ACCOUNT')
-    derived = derive_owned_exit_cost(**values, positions=snapshot['positions'], exits=snapshot['exits'], entry_id=entry_id)
+    derived = derive_owned_exit_cost(**values, positions=snapshot['positions'], exits=snapshot['exits'],
+        entry_id=entry_id,pending=pending)
     from research_lab import alpaca_fee_to_live_closure_v1, alpaca_monthly_native_binding_v1, alpaca_dynamic_live_runtime_v1
     from research_lab import alpaca_monthly_binding_v1, alpaca_dynamic_v1, alpaca_live_readiness_v1
     code = [pin(p) for p in (__file__, alpaca_fee_to_live_closure_v1.__file__,
@@ -179,7 +193,67 @@ def verify_generated_source(document):
         raise ValueError('MONTHLY_COST_PRODUCER_REPLAY_CONFLICT')
 
 
-def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, assets_path, now_ms):
+def pending_admission_net(native, *, account, now_ms, owner_scope=None):
+    """Replay existing immutable evidence; reserve once, without finalizing PnL."""
+    from research_lab.alpaca_dynamic_live_runtime_v1 import read_json,safe_path
+    def require(ok,reason):
+        if not ok:raise ValueError('MONTHLY_PENDING_FEE_'+reason)
+    started=time.monotonic()
+    from research_lab.alpaca_live_readiness_v1 import execution_identity_v1
+    def same_positions(retained,observed):
+        require(len(retained)==len(observed),'BOOK_CONFLICT')
+        for old,new in zip(retained,observed):
+            execution_identity_v1(old['raw_entry'],new['raw_entry'])
+            normalized=dict(new,raw_entry=old['raw_entry'])
+            require(digest(normalized)==digest(old),'BOOK_CONFLICT')
+    def same_book(snapshot):
+        same_positions(native.book.rows('positions'),snapshot['positions'])
+        retained=native.book.rows('exits');require(len(retained)==len(snapshot['exits']),'BOOK_CONFLICT')
+        for old,new in zip(retained,snapshot['exits']):
+            same_positions([old['retired_position']],[new['retired_position']])
+            require(len(old['orders'])==len(new['orders']),'BOOK_CONFLICT')
+            for before,after in zip(old['orders'],new['orders']):execution_identity_v1(before,after)
+            normalized=dict(new,retired_position=old['retired_position'],orders=old['orders'])
+            require(digest(normalized)==digest(old),'BOOK_CONFLICT')
+    require(native.pending_fee_sources and type(now_ms) is int,'SOURCE_REQUIRED')
+    known={};common=None;bound=None;pins={}
+    for eid,path in sorted(native.pending_fee_sources.items()):
+        p=safe_path(str(path),exists=True);doc=read_json(str(p))
+        require(doc.get('schema')=='ALPACA_MONTHLY_PENDING_FEE_ESTIMATE_V1'
+            and doc.get('monthly_entry_id')==eid,'ESTIMATE_REQUIRED')
+        require(_document(doc['replay_inputs'],eid,pending=True)==doc,'REPLAY_CONFLICT')
+        if native.base_url=='https://api.alpaca.markets':
+            require(owner_scope is not None and doc['replay_inputs']['protocol']['sha256']==
+                owner_scope.get('pending_fee_protocol_sha256'),'PROTOCOL_SCOPE_CONFLICT')
+        snapshot=read_json(doc['replay_inputs']['book_snapshot']['path'])
+        same_book(snapshot)
+        source=read_json(doc['replay_inputs']['source']['path']);after=source['account_after']
+        require(doc['account_id']==native.account==account.get('id')==after.get('id')
+            and account.get('currency')==after.get('currency')=='USD','ACCOUNT_CONFLICT')
+        require(all(dec(account[k])==dec(after[k]) for k in ('cash','accrued_fees','pending_reg_taf_fees')),
+            'CASH_OR_LIABILITY_CHANGED')
+        require(0<=now_ms-source['observed_ms']<=5000
+            and 0<=now_ms-_ms(source['coverage']['until'])<=5000,'STALE_SOURCE')
+        identity=(doc['source_sha256'],doc['replay_inputs']['book_snapshot']['sha256'])
+        require(common is None or identity==common,'MIXED_SOURCES');common=identity
+        amount=dec(doc['unposted_account_fees_usd'])
+        require(amount>=0 and (bound is None or amount==bound),'BOUND_CONFLICT');bound=amount
+        known[eid]=doc['known_net_before_pending_account_fees_usd']
+        pins[eid]=dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+    require(bound<=native.liability,'RESERVE_EXCEEDED')
+    lower=native._accounting_net(pending=known)-bound
+    effective=now_ms+int((time.monotonic()-started)*1000)
+    require(0<=effective-source['observed_ms']<=5000
+        and 0<=effective-_ms(source['coverage']['until'])<=5000,'STALE_SOURCE')
+    return lower,dict(policy='SOURCE_CLASSIFIED_WITHIN_EXISTING_RESERVE_V1',
+        unposted_account_fees_usd=str(bound),cash_reserve_usd=str(native.liability),
+        conservative_realized_net_usd=str(lower),sources=pins,
+        source_observed_ms=source['observed_ms'],source_coverage_end_ms=_ms(source['coverage']['until']),
+        terminal_cost_finality_proven=False)
+
+
+def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, assets_path, now_ms,
+                         allow_pending=False):
     """Existing tick cost_sources callback: only order GETs + immutable evidence.
 
     Does not construct a controller/journal, load credentials, submit or invoke a
@@ -199,6 +273,7 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
             if safe_path(str(path), exists=True).read_bytes() != raw:
                 raise ValueError('MONTHLY_COST_IMMUTABLE_CONFLICT')
         else: publish_once(path, raw)
+    if type(allow_pending) is not bool:raise ValueError('MONTHLY_COST_EXPLICIT_MODE_REQUIRED')
     paths = dict(source=source_path, protocol=protocol_path, calendar=calendar_path, assets=assets_path)
     inputs = {name: pin(path) for name,path in paths.items()}
     source = read_json(inputs['source']['path'])
@@ -225,7 +300,11 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
             if cid != entry_cid(e['retired_position'], e['symbol']): raise ValueError('MONTHLY_COST_ANCHOR_OWNER')
             anchor_path = safe_path(str(native.runtime/'cash-anchors'/(cid+'.json')), exists=True)
             selected = dict(inputs, anchor=pin(anchor_path))
-            document = _document(selected, eid)
+            try:document = _document(selected, eid)
+            except ValueError as exc:
+                if not allow_pending or str(exc) not in {
+                    'COST_FEE_DAY_COVERAGE_OR_SESSION_NOT_CLOSED','COST_FEE_POSTING_PENDING_OR_CONFLICT'}:raise
+                document=_document(selected,eid,pending=True)
             # A later as-of capture may reveal a correction. Never overwrite a
             # previously finalized allocation or silently keep stale net PnL.
             identity = digest(dict(schema=CONTRACT['schema'], entry_id=eid))
@@ -246,7 +325,8 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
         return out
 
 
-def capture_and_produce_cost_sources(native, *, after, protocol_path, calendar_path, assets_path, now_ms=None):
+def capture_and_produce_cost_sources(native, *, after, protocol_path, calendar_path, assets_path, now_ms=None,
+                                    allow_pending=False):
     """Automatic read-only source callback for the one existing dispatcher.
 
     No exits means no accounting capture. Immutable raw source is kept even when
@@ -285,4 +365,5 @@ def capture_and_produce_cost_sources(native, *, after, protocol_path, calendar_p
     # first clock receipt, and never replace its timestamps on replay.
     if not clock_path.exists():publish_once(clock_path,canonical(raw_clock))
     return produce_cost_sources(native,source_path=path,protocol_path=protocol_path,
-        calendar_path=calendar_path,assets_path=assets_path,now_ms=source['observed_ms'] if now_ms is None else now_ms)
+        calendar_path=calendar_path,assets_path=assets_path,now_ms=source['observed_ms'] if now_ms is None else now_ms,
+        allow_pending=allow_pending)
