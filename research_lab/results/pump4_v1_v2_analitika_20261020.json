@@ -1,0 +1,83 @@
+{
+ "vosproizvedeno": 65,
+ "v1_sverka_s_vedeniem": 65,
+ "v1_sred_R": 0.0707678263344055,
+ "v1_lev_med": 5.74356099744212,
+ "vklyucheno_v_R": "комиссия+проскальзывание 6.0 bps на сторону (×плечо в R); фандинг НЕ включён; вход без задержки open следующего часа",
+ "bezubytok_dop_bps_na_storonu": 56.33901722607987,
+ "chuvstvitelnost_v1": {
+  "dop_5bps": {
+   "n": 65,
+   "sred_R": 0.0645
+  },
+  "dop_10bps": {
+   "n": 65,
+   "sred_R": 0.0582
+  },
+  "dop_20bps": {
+   "n": 65,
+   "sred_R": 0.0456
+  },
+  "zaderzhka_1ch": {
+   "n": 65,
+   "sred_R": 0.0576
+  },
+  "zaderzhka_2ch": {
+   "n": 64,
+   "sred_R": 0.0575
+  }
+ },
+ "P_0.7R_pri_0.45R": {
+  "dostigli": 26,
+  "BU_ranshe": 12,
+  "ne_doshli": 4,
+  "iz": 42
+ },
+ "P_0.9R_pri_0.45R": {
+  "dostigli": 17,
+  "BU_ranshe": 16,
+  "ne_doshli": 9,
+  "iz": 42
+ },
+ "v2_vs_v1_put": {
+  "n": 64,
+  "sred_raznica_R": 0.020209713141603282,
+  "sd": 0.29640419600260487,
+  "t": 0.5454636179691781,
+  "n_dlya_t2": 861,
+  "v1_sred": 0.0707678263344055,
+  "v2_sred": 0.08657068708898764,
+  "vyhody_v2": {
+   "tp2": 12,
+   "stop": 6,
+   "BU/stop": 39,
+   "vremya": 7
+  }
+ },
+ "brain_gruppy": {
+  "<5": {
+   "n": 30,
+   "sred_R": 0.1387,
+   "summa_R": 4.16
+  },
+  ">=5": {
+   "n": 35,
+   "sred_R": 0.0125,
+   "summa_R": 0.44
+  }
+ },
+ "cap5": {
+  "propushcheno": 23,
+  "propushcheno_plyusovyh": 15,
+  "summa_propushchennyh_R": 0.2,
+  "hudshaya_nedelya_R": -2.23,
+  "max_otkrytyy_risk_R": 5
+ },
+ "cap8": {
+  "propushcheno": 9,
+  "propushcheno_plyusovyh": 4,
+  "summa_propushchennyh_R": -0.8,
+  "hudshaya_nedelya_R": -3.63,
+  "max_otkrytyy_risk_R": 8
+ }
+}
