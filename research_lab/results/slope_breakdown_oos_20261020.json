@@ -1,0 +1,24 @@
+{
+ "A": {
+  "n": 1307,
+  "sredniy_R": -0.0547,
+  "kontrol": -0.0992,
+  "edzh": 0.0446,
+  "sigma": 1.63,
+  "vinreyt": 0.532,
+  "monet_v_pluse": 65,
+  "monet": 136,
+  "OOS_PASS": false
+ },
+ "B": {
+  "n": 349,
+  "sredniy_R": -0.126,
+  "kontrol": -0.1128,
+  "edzh": -0.0132,
+  "sigma": -0.27,
+  "vinreyt": 0.547,
+  "monet_v_pluse": 62,
+  "monet": 130,
+  "OOS_PASS": false
+ }
+}
