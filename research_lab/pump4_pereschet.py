@@ -45,6 +45,11 @@ def svechi_okno(sym, start_ms, end_ms):
     return out
 
 
+def _py(o):
+    """numpy-скаляры → обычные числа для JSON."""
+    return o.item() if hasattr(o, "item") else str(o)
+
+
 def zaversheno(b, i, r):
     e = i + 1
     if e + HOLD <= len(b):
@@ -109,7 +114,7 @@ def main():
         ps = {}
         for x in g: ps.setdefault(x["sym"], []).append(x["R"])
         return dict(n=len(g), sred_R=float(R.mean()), itog_R=float(R.sum()), edzh=float(d.mean()),
-                    t_edzh=float(d.mean() / (d.std(ddof=1) / math.sqrt(len(d)))), monet_v_pluse=sum(np.mean(v) > 0 for v in ps.values()),
+                    t_edzh=float(d.mean() / (d.std(ddof=1) / math.sqrt(len(d)))), monet_v_pluse=int(sum(np.mean(v) > 0 for v in ps.values())),
                     monet=len(ps))
     out = dict(prereg="PREREG_PUMP4_PLATO_2026_08_31 + дополнение 2", kogda_utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                statusy={k: sum(1 for x in rez if x["status"] == k) for k in sorted({x["status"] for x in rez})},
@@ -121,8 +126,8 @@ def main():
         out["verdikt"] = "PODTVERZHDENA" if ok else ("OPROVERGNUTA" if v["edzh"] <= 0 else "NE_HVATILO_DANNYH")
     else:
         out["verdikt"] = f"NE_HVATILO_DANNYH (закрыто {v.get('n', 0)} из 50)"
-    VYVOD.parent.mkdir(parents=True, exist_ok=True); VYVOD.write_text(json.dumps(out, ensure_ascii=False, indent=1))
-    print(json.dumps({k: out[k] for k in ("statusy", "vse", "FORWARD", "OOS_REPLAY", "verdikt")}, ensure_ascii=False, indent=1))
+    VYVOD.parent.mkdir(parents=True, exist_ok=True); VYVOD.write_text(json.dumps(out, ensure_ascii=False, indent=1, default=_py))
+    print(json.dumps({k: out[k] for k in ("statusy", "vse", "FORWARD", "OOS_REPLAY", "verdikt")}, ensure_ascii=False, indent=1, default=_py))
 
 
 if __name__ == "__main__":
