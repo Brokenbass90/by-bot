@@ -22,7 +22,9 @@ def nedelya(d, lookback):
     leg = [r for r in leg if r is not None]
     return float(np.mean(leg)) if leg else None
 R = Reestr(); out = {}
-for gid, lb, sem in (("MOM30_XS", 30, "MOMENTUM_30D"), ("IMP7_XS", 7, "IMPULS_7D")):
+if "XS_MOMENTUM_KRIPTO" not in R.sostoyanie().get("semi", {}):
+    R.semya("XS_MOMENTUM_KRIPTO", "кросс-секционный моментум крипты (лонг сильных/шорт слабых), недельный; закрытые MOMENTUM_30D/IMPULS_7D — time-series, не XS", istochnik="PREREG_KRIPTO_MOMENTUM_XS_2026_10_20")
+for gid, lb, sem in (("MOM30_XS", 30, "XS_MOMENTUM_KRIPTO"), ("IMP7_XS", 7, "XS_MOMENTUM_KRIPTO")):
     spec = dict(gipoteza=gid, lookback_dney=lb, decil=0.1, hold=7, vselennaya="PIT top50 OI Binance", okno=OKNO, prereg="PREREG_KRIPTO_MOMENTUM_XS_2026_10_20")
     S = R.sostoyanie()
     if gid not in S["gipotezy"]:
