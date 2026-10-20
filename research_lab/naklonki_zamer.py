@@ -64,5 +64,6 @@ for t in ("kasanie", "proboy"):
     g = [e for e in ev if e["tip"] == t]
     out[t] = dict(vse=d(g), po_storone={kk: d([e for e in g if e["kind"] == kk]) for kk in ("sup", "res")},
                   po_godam={y: d([e for e in g if e["god"] == y]) for y in (2023, 2024, 2025, 2026)})
+    out[t]["sup_po_godam"] = {y: d([e for e in g if e["kind"] == "sup" and e["god"] == y]) for y in (2023, 2024, 2025, 2026)}
     x = out[t]["vse"]; out[t]["mehanizm_viden"] = bool(x["n"] and x["izbytok_pp"] >= 5 and x["z"] >= 3 and all(y.get("izbytok_pp", -1) >= 0 for y in out[t]["po_godam"].values() if y.get("n")))
 (LAB / "results" / "naklonki_20261020.json").write_text(json.dumps(out, ensure_ascii=False, indent=1)); print(json.dumps(out, ensure_ascii=False, indent=1))
