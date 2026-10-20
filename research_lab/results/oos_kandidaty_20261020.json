@@ -1,0 +1,46 @@
+{
+ "prereg": "PREREG_OOS_KANDIDATY_2026_07_10_2026_10_20",
+ "simvolov": 136,
+ "bary_sha256": "172d95eea9621d4f8656bc7fa2ac2e3bffcf814ff73db0fdf7d5deb0c167348a",
+ "rez": {
+  "pump_momentum_v1": {
+   "n": 782,
+   "sredniy_R": 0.3272814964093183,
+   "kontrol": 0.2558479566692344,
+   "edzh": 0.07143353974008393,
+   "sigma": 0.5349722471673835,
+   "vinreyt": 0.4092071611253197,
+   "itog_R": 255.9341301920869,
+   "monet_v_pluse": 69,
+   "monet": 125,
+   "verdikt": "OOS_FAIL",
+   "sekund": 3.8
+  },
+  "smart_grid": {
+   "n": 1763,
+   "sredniy_R": -0.029657715766214517,
+   "kontrol": -0.017938789467627593,
+   "edzh": -0.011718926298586924,
+   "sigma": -0.8362361710214784,
+   "vinreyt": 0.8366420873511061,
+   "itog_R": -52.286552895836195,
+   "monet_v_pluse": 59,
+   "monet": 133,
+   "verdikt": "OOS_FAIL",
+   "sekund": 268.3
+  },
+  "pump_fade_simple": {
+   "n": 67,
+   "sredniy_R": -0.11050765233493993,
+   "kontrol": -0.11113025994405086,
+   "edzh": 0.0006226076091109256,
+   "sigma": 0.0038731535458731417,
+   "vinreyt": 0.417910447761194,
+   "itog_R": -7.404012706440976,
+   "monet_v_pluse": 23,
+   "monet": 53,
+   "verdikt": "OOS_FAIL",
+   "sekund": 3.3
+  }
+ }
+}
