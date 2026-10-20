@@ -34,7 +34,7 @@ for f in sorted(glob.glob(str(LAB / "data" / "h1" / "*.npz"))):
                     start = -dist                                    # уже прошли за линию (в ATR)
                     ish = "NEYASNO"
                     for q in range(i + 1, i + 97):
-                        lv = X[p1] + slope * float((ts[q] // H4) - k[gr[p1]])
+                        lv = lvl                                              # доп.1: уровень заморожен в момент события
                         dal = -sgn * ((l[q] if sgn == 1 else h[q]) - lv) / A; nazad = sgn * ((h[q] if sgn == 1 else l[q]) - lv) / A
                         if dal >= start + 1 and nazad >= 0.5: break
                         if dal >= start + 1: ish = "DA"; break
@@ -48,7 +48,7 @@ for f in sorted(glob.glob(str(LAB / "data" / "h1" / "*.npz"))):
                     if not (-0.5 < start < 1): continue
                     ish = "NEYASNO"
                     for q in range(i + 1, i + 97):
-                        lv = X[p1] + slope * float((ts[q] // H4) - k[gr[p1]])
+                        lv = lvl                                              # доп.1: уровень заморожен в момент события
                         up = sgn * ((h[q] if sgn == 1 else l[q]) - lv) / A; dn = -sgn * ((l[q] if sgn == 1 else h[q]) - lv) / A
                         if up >= 1 and dn >= 0.5: break
                         if up >= 1: ish = "DA"; break
