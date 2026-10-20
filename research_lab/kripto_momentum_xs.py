@@ -30,6 +30,8 @@ for gid, lb, sem in (("MOM30_XS", 30, "XS_MOMENTUM_KRIPTO"), ("IMP7_XS", 7, "XS_
     if gid not in S["gipotezy"]:
         R.gipoteza(gid, sem, f"кросс-секционный моментум {lb} дн., лонг верхний/шорт нижний дециль, 7 дн.", ["binance_klines_d1", "binance_metrics_oi"],
                    otlichie="классический XS-моментум по доходности; не поток тейкеров, не толпа, не тренд мажоров")
+    if R.sostoyanie()["gipotezy"][gid]["status"] == "NEW":
+        R.perehod(gid, "SCREEN", "prereg research_lab/prereg/PREREG_KRIPTO_MOMENTUM_XS_2026_10_20.md (1f64961, ced91b1), до прогона")
     pid = f"{gid}__SCREEN"
     R.zaregistrirovat_popytku(pid, gid, OKNO, "SCREEN", spec, {"min_n": 30, "znak": "+"})
     sob = [(ts(d), r, None) for d in K.SETKA if A <= d <= B_ for r in [nedelya(d, lb)] if r is not None]

@@ -1,0 +1,34 @@
+{
+ "MOM30_XS": {
+  "itog": {
+   "n": 56,
+   "dney": 56,
+   "edge_bps": -76.7,
+   "t": -1.21,
+   "polovinki_bps": [
+    -5.3,
+    -148.1
+   ],
+   "syroy_bps": -76.7,
+   "verdikt": "KILLED",
+   "prichina": "эдж ≤ 0"
+  },
+  "verdikt_reestra": "FAIL"
+ },
+ "IMP7_XS": {
+  "itog": {
+   "n": 57,
+   "dney": 57,
+   "edge_bps": 5.4,
+   "t": 0.08,
+   "polovinki_bps": [
+    24.1,
+    -12.7
+   ],
+   "syroy_bps": 5.4,
+   "verdikt": "KILLED",
+   "prichina": "t=0.08 < 2"
+  },
+  "verdikt_reestra": "FAIL"
+ }
+}
