@@ -33,21 +33,26 @@ for f in sorted(glob.glob(str(LAB / "data" / "h1" / "*.npz"))):
                 if ushla and kas:
                     nomer += 1; ushla = False
                     ish, prokol = "NEYASNO", 0.0
-                    for q in range(i, i + 96):
+                    # дополнение 1: гонка с СЛЕДУЮЩЕГО бара; эталон — разорение игрока от фактического close бара касания
+                    start = sgn * (c[i] - L) / A
+                    if not (-0.5 < start < 1): i += 1; continue
+                    p_rw = (start + 0.5) / 1.5
+                    for q in range(i + 1, i + 97):
                         mn = (L - l[q]) / A if sgn == 1 else (h[q] - L) / A; mx = (h[q] - L) / A if sgn == 1 else (L - l[q]) / A
                         prokol = max(prokol, mn)
                         if mn >= 0.5 and mx >= 1: break
                         if mn >= 0.5: ish = "PROBOY"; break
                         if mx >= 1: ish = "OTSKOK"; break
                     ev.append(dict(god=dt.datetime.utcfromtimestamp(ts[i] / 1000).year, nomer=min(nomer, 3), kind=kind, spok=bool(spok),
-                                   obem=bool(v[i] < vol20[i]), ish=ish, prokol=round(float(prokol), 3)))
+                                   obem=bool(v[i] < vol20[i]), ish=ish, prokol=round(float(prokol), 3), p_rw=float(p_rw)))
                     if ish == "PROBOY": break
                 i += 1
 def d(g):
     r = [e for e in g if e["ish"] != "NEYASNO"]; n = len(r)
     if not n: return dict(n=0)
-    p = sum(e["ish"] == "OTSKOK" for e in r) / n
-    return dict(n=n, dolya=round(p, 4), z=round((p - 1 / 3) / math.sqrt((1 / 3) * (2 / 3) / n), 2))
+    p = sum(e["ish"] == "OTSKOK" for e in r) / n; e0 = sum(e["p_rw"] for e in r) / n
+    var = sum(e["p_rw"] * (1 - e["p_rw"]) for e in r) / n
+    return dict(n=n, dolya=round(p, 4), etalon=round(e0, 4), izbytok_pp=round((p - e0) * 100, 2), z=round((p - e0) / math.sqrt(var / n), 2))
 out = {"vse": d(ev), "kasanie": {n: d([e for e in ev if e["nomer"] == n]) for n in (1, 2, 3)}}
 k12 = [e for e in ev if e["nomer"] <= 2]
 out["k12"] = d(k12); out["k12_po_godam"] = {y: d([e for e in k12 if e["god"] == y]) for y in (2023, 2024, 2025, 2026)}
@@ -56,5 +61,5 @@ out["k12_obem"] = {"nizkiy": d([e for e in k12 if e["obem"]]), "vysokiy": d([e f
 out["k12_storona"] = {"podderzhka": d([e for e in k12 if e["kind"] == "sup"]), "soprotivlenie": d([e for e in k12 if e["kind"] == "res"])}
 ot = [e for e in k12 if e["ish"] == "OTSKOK"]
 out["zakol_sredi_otskokov"] = {">0.1ATR": round(sum(e["prokol"] > 0.1 for e in ot) / max(1, len(ot)), 3), ">0.25ATR": round(sum(e["prokol"] > 0.25 for e in ot) / max(1, len(ot)), 3)}
-k = out["k12"]; out["mehanizm_viden"] = bool(k["n"] and k["dolya"] >= 1 / 3 + 0.05 and k["z"] >= 3 and all(x.get("dolya", 0) >= 1 / 3 for x in out["k12_po_godam"].values() if x.get("n")))
+k = out["k12"]; out["mehanizm_viden"] = bool(k["n"] and k["izbytok_pp"] >= 5 and k["z"] >= 3 and all(x.get("izbytok_pp", -1) >= 0 for x in out["k12_po_godam"].values() if x.get("n")))
 (LAB / "results" / "kasanie_h4_20261020.json").write_text(json.dumps(out, ensure_ascii=False, indent=1)); print(json.dumps(out, ensure_ascii=False, indent=1))
