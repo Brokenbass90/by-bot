@@ -1,0 +1,797 @@
+{
+ "alpaca_adaptive_v1": {
+  "_sek": 0.2
+ },
+ "alpaca_dynamic_v3_event": {
+  "_sek": 1.5
+ },
+ "alpaca_dynamic_v4_event": {
+  "_sek": 0.7
+ },
+ "alt_bear_regime_continuation_v1": {
+  "AltBearRegimeContinuationV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.5
+ },
+ "alt_channel_bounce_v1": {
+  "AltChannelBounceV1Strategy": {
+   "signalov": 216,
+   "storony": {
+    "long": 104,
+    "short": 112
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 4.2
+ },
+ "alt_elder_revived_v1": {
+  "AltElderRevivedV1": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 11397
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "alt_horizontal_break_v1": {
+  "AltHorizontalBreakV1Strategy": {
+   "signalov": 64,
+   "storony": {
+    "short": 64
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.8
+ },
+ "alt_inplay_breakdown_v1": {
+  "AltInplayBreakdownV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 18995,
+   "otkazy": {},
+   "pervaya_oshibka": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\nTypeError: AltInplayBreakdownV1Strategy.maybe_signal() takes 4 positional arguments but 8 were given\n"
+  },
+  "_sek": 0.4
+ },
+ "alt_inplay_breakdown_v2": {
+  "AltInplayBreakdownV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 237
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.7
+ },
+ "alt_liquidity_sweep_reversal_v2": {
+  "_sek": 0.1
+ },
+ "alt_momentum_breakout_v1": {
+  "_sek": 0.1
+ },
+ "alt_pullback_continuation_v1": {
+  "_sek": 0.1
+ },
+ "alt_range_reclaim_v1": {
+  "AltRangeReclaimV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.6
+ },
+ "alt_range_scalp_v1": {
+  "AltRangeScalpV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "alt_resistance_fade_v1": {
+  "AltResistanceFadeV1Strategy": {
+   "signalov": 36,
+   "storony": {
+    "short": 36
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.0
+ },
+ "alt_resistance_fade_v2": {
+  "AltResistanceFadeV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 4.7
+ },
+ "alt_slope_break_v1": {
+  "AltSlopeBreakV1Strategy": {
+   "signalov": 85,
+   "storony": {
+    "short": 41,
+    "long": 44
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 3.2
+ },
+ "alt_sloped_channel_v1": {
+  "AltSlopedChannelV1Strategy": {
+   "signalov": 10,
+   "storony": {
+    "short": 5,
+    "long": 5
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.7
+ },
+ "alt_sloped_momentum_v1": {
+  "AltSlopedMomentumV1Strategy": {
+   "signalov": 19,
+   "storony": {
+    "long": 12,
+    "short": 7
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.0
+ },
+ "alt_squeeze_breakout_v1": {
+  "_sek": 0.1
+ },
+ "alt_support_bounce_v1": {
+  "AltSupportBounceV1Strategy": {
+   "signalov": 51,
+   "storony": {
+    "long": 51
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.8
+ },
+ "alt_support_bounce_v2": {
+  "AltSupportBounceV2Strategy": {
+   "signalov": 311,
+   "storony": {
+    "long": 311
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 5.7
+ },
+ "alt_support_reclaim_v1": {
+  "AltSupportReclaimV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "alt_trendline_touch_v1": {
+  "AltTrendlineTouchV1Strategy": {
+   "signalov": 116,
+   "storony": {
+    "long": 75,
+    "short": 41
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 3.2
+ },
+ "alt_trendline_touch_v2": {
+  "AltTrendlineTouchV2Strategy": {
+   "signalov": 114,
+   "storony": {
+    "long": 68,
+    "short": 46
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.5
+ },
+ "alt_volume_spike_momentum_v1": {
+  "AltVolumeSpikeV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "asb1_live": {
+  "_sek": 0.2
+ },
+ "asm1_live": {
+  "_sek": 0.1
+ },
+ "att1_live": {
+  "_sek": 0.2
+ },
+ "att1_v2_live": {
+  "_sek": 0.1
+ },
+ "basis_arb_v1": {
+  "_sek": 0.1
+ },
+ "bounce1_live": {
+  "_sek": 0.1
+ },
+ "breakdown_live": {
+  "_sek": 0.2
+ },
+ "breakdown_retest_v3": {
+  "BreakdownRetestV3Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.9
+ },
+ "btc_cycle_continuation_v1": {
+  "BTCCycleContinuationV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.1
+ },
+ "btc_cycle_level_target_v2": {
+  "BTCCycleLevelTargetV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.1
+ },
+ "btc_cycle_pullback_v1": {
+  "BTCCyclePullbackV1Strategy": {
+   "signalov": 3,
+   "storony": {
+    "long": 3
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.8
+ },
+ "btc_eth_midterm_pullback": {
+  "BTCETHMidtermPullbackStrategy": {
+   "signalov": 24,
+   "storony": {
+    "long": 10,
+    "short": 14
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.9
+ },
+ "btc_eth_midterm_short_v1": {
+  "BTCETHMidtermShortV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 5.0
+ },
+ "btc_eth_midterm_short_v2": {
+  "BTCETHMidtermShortV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 4.5
+ },
+ "btc_eth_midterm_v3": {
+  "BTCETHMidtermV3Strategy": {
+   "signalov": 20,
+   "storony": {
+    "long": 15,
+    "short": 5
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.6
+ },
+ "btc_regime_flip_continuation_v1": {
+  "BTCRegimeFlipContinuationV1Strategy": {
+   "signalov": 1,
+   "storony": {
+    "long": 1
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.8
+ },
+ "btc_regime_retest_v1": {
+  "BTCRegimeRetestV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.8
+ },
+ "btc_sloped_reclaim_v1": {
+  "BTCSlopedReclaimV1Strategy": {
+   "signalov": 1,
+   "storony": {
+    "long": 1
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.8
+ },
+ "elder_crypto_v1": {
+  "ElderCryptoV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 11397
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 3.0
+ },
+ "elder_triple_screen_v2": {
+  "ElderTripleScreenV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.1
+ },
+ "elder_triple_screen_v3": {
+  "ElderTripleScreenV3Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 7598
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.9
+ },
+ "equities_swing_active_v1": {
+  "_sek": 0.2
+ },
+ "event_expansion_retest_long_mtf_v1": {
+  "_sek": 0.2
+ },
+ "event_expansion_retest_long_v1": {
+  "_sek": 0.1
+ },
+ "flat_resistance_fade_live": {
+  "_sek": 0.2
+ },
+ "funding_hold_v1": {
+  "_sek": 0.2
+ },
+ "funding_rate_reversion_v1": {
+  "FundingRateReversionV1": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "grid_smart_v1": {
+  "GridSmartV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "gs1_live": {
+  "_sek": 0.1
+ },
+ "hzbo1_live": {
+  "_sek": 0.1
+ },
+ "impulse_volume_breakout_v1": {
+  "ImpulseVolumeBreakoutV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.9
+ },
+ "inplay_breakout": {
+  "InPlayBreakoutWrapper": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 18995,
+   "otkazy": {},
+   "pervaya_oshibka": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\nTypeError: InPlayBreakoutWrapper.maybe_signal() takes 4 positional arguments but 8 were given\n"
+  },
+  "_sek": 0.4
+ },
+ "inplay_retest_v3": {
+  "InplayRetestV3Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.0
+ },
+ "inplay_retest_v4": {
+  "InplayRetestV4Strategy": {
+   "signalov": 703,
+   "storony": {
+    "long": 362,
+    "short": 341
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 4.1
+ },
+ "inplay_wrapper": {
+  "_sek": 0.2
+ },
+ "liquidation_cascade_entry_v1": {
+  "LiquidationCascadeEntryV1": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.6
+ },
+ "live_kline_utils": {
+  "_sek": 0.1
+ },
+ "micro_scalper_breakout_v1": {
+  "MicroScalperBreakoutV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 11870
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "micro_scalper_live": {
+  "_sek": 0.1
+ },
+ "micro_scalper_v1": {
+  "MicroScalperV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 11870
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "pair_arb_executor_v1": {
+  "_sek": 0.1
+ },
+ "pair_stat_arb_v1": {
+  "_sek": 0.1
+ },
+ "pfs1_live": {
+  "_sek": 0.1
+ },
+ "pump_exhaustion_unwind_short_v1": {
+  "PumpExhaustionUnwindShortV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.5
+ },
+ "pump_fade_simple": {
+  "PumpFadeSimpleStrategy": {
+   "signalov": 3,
+   "storony": {
+    "short": 3
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "pump_fade_smart_v1": {
+  "PumpFadeSmartV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 11397
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "pump_fade_v2": {
+  "PumpFadeV2Strategy": {
+   "signalov": 88,
+   "storony": {
+    "long": 31,
+    "short": 57
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.5
+ },
+ "pump_fade_v4r": {
+  "PumpFadeV4RStrategy": {
+   "signalov": 1,
+   "storony": {
+    "short": 1
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.5
+ },
+ "pump_momentum_v1": {
+  "PumpMomentumV1Strategy": {
+   "signalov": 18,
+   "storony": {
+    "long": 18
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "range_mean_reversion_v1": {
+  "_sek": 0.1
+ },
+ "sbr1_live": {
+  "_sek": 0.2
+ },
+ "sc1_live": {
+  "_sek": 0.2
+ },
+ "scalper_bounce_v2": {
+  "ScalperBounceV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 11397
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "scalper_breakout_v2": {
+  "ScalperBreakoutV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 11397
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "scalper_classic_v1": {
+  "ScalperClassicV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 11397,
+    "15": 11397
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "scalper_sweep_v2": {
+  "ScalperSweepV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 11397
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 0.4
+ },
+ "session_open_breakout_v1": {
+  "SessionOpenBreakoutV1": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 18995,
+   "otkazy": {},
+   "pervaya_oshibka": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\nTypeError: SessionOpenBreakoutV1.maybe_signal() takes 4 positional arguments but 8 were given\n"
+  },
+  "_sek": 0.4
+ },
+ "sloped_break_retest_v1": {
+  "SlopedBreakRetestV1Strategy": {
+   "signalov": 49,
+   "storony": {
+    "short": 24,
+    "long": 25
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.2
+ },
+ "sloped_break_retest_v2": {
+  "SlopedBreakRetestV2Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.8
+ },
+ "sloped_break_retest_v3": {
+  "SlopedBreakRetestV3Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.7
+ },
+ "sloped_channel_live": {
+  "_sek": 0.1
+ },
+ "sloped_resistance_choch_v1": {
+  "SlopedResistanceChochV1Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "5": 12
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 1.2
+ },
+ "smart_grid": {
+  "SmartGridStrategy": {
+   "signalov": 197,
+   "storony": {
+    "long": 86,
+    "short": 111
+   },
+   "oshibok": 0,
+   "otkazy": {},
+   "pervaya_oshibka": null
+  },
+  "_sek": 13.1
+ },
+ "smart_grid_v1": {
+  "_sek": 0.2
+ },
+ "spike_fade_v3": {
+  "SpikeFadeV3Strategy": {
+   "signalov": 0,
+   "storony": {},
+   "oshibok": 0,
+   "otkazy": {
+    "15": 18995
+   },
+   "pervaya_oshibka": null
+  },
+  "_sek": 2.3
+ },
+ "support_reclaim_live": {
+  "_sek": 0.2
+ },
+ "trend_pullback_v1": {
+  "_sek": 0.1
+ }
+}
