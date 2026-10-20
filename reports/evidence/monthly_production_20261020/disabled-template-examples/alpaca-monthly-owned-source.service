@@ -1,0 +1,10 @@
+[Unit]
+Description=Monthly isolated ORDERS_OFF source
+After=network-online.target
+[Service]
+Type=oneshot
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ExecStart=/opt/monthly/python -B /opt/monthly/candidate/app/scripts/run_alpaca_monthly_cycle_v1.py --spec /opt/monthly/DISABLED-source-spec.json --spec-sha256 0000000000000000000000000000000000000000000000000000000000000000 --source
+TimeoutStartSec=600

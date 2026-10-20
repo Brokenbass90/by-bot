@@ -1,0 +1,27 @@
+{
+  "broker_requests": 0,
+  "candidate_not_selected_by_checked_financial_or_observer_units": true,
+  "money_authority": false,
+  "observed_ms": 1792520944642,
+  "orders_allowed": false,
+  "protected_static_pin_count": 93,
+  "protected_static_pins_unchanged": true,
+  "receipt_hashes_match": true,
+  "remote_writes": 0,
+  "source_files": 52,
+  "source_hashes_match": true,
+  "stage": {
+    "files": 68,
+    "financial_units_changed": 0,
+    "money_authority": false,
+    "observed_ms": 1792520484379,
+    "orders_allowed": false,
+    "protected_static_pins": 93,
+    "real_broker_requests": 0,
+    "real_broker_writes": 0,
+    "source_material_sha256": "8a48663fbd195491705fa2aa127fb4b1962e7cddb9aa84cd5ff3fd9ef0e5659b",
+    "status": "INERT_CODE_ONLY_STAGED"
+  },
+  "test_files": 13,
+  "test_hashes_match": true
+}

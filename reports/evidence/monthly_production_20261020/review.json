@@ -1,0 +1,29 @@
+{
+  "allowance_interruption": true,
+  "financial_authority": false,
+  "model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "resumed_same_reviewer_after_official_limit_check": true,
+  "reviewed_full_server_acceptance": false,
+  "reviewer_boundary_tests": {
+    "deselected": 47,
+    "passed": 13
+  },
+  "reviewer_targeted_tests": {
+    "deselected": 1,
+    "includes_full_cli_e2e": false,
+    "passed": 15
+  },
+  "rollout_id": "01a15998-7ad3-7631-a359-d1d26258d201",
+  "runtime_files_sha256": {
+    "research_lab/alpaca_monthly_release_v1.py": "b36c3c3a4e925423107e2b1884a0470128e2b69555e3ab3d88d7623b61c12e57",
+    "scripts/rehearse_alpaca_monthly_cycle_v1.py": "de7bff9172027e2d76baa3ad5b5fcddc7a67608f5d9d8fb471d85bb046589c3e",
+    "scripts/run_alpaca_dynamic_live_v1.py": "c90d120a43044d00c0a47e101e428eb0aef75474b321c192b5514addeecb3522",
+    "scripts/run_alpaca_monthly_cycle_v1.py": "967f55921ad64c271481d32744887bdc6ef0b671d72ae82332290fcb35ac0fcc"
+  },
+  "runtime_verified": true,
+  "schema": "MONTHLY_PRODUCTION_BOUNDED_REVIEW_V1",
+  "scope": "Production entrypoint component; full NET/legacy scheduler handoff remains OPEN",
+  "unresolved_critical_important": 0,
+  "verified_turns": 2
+}

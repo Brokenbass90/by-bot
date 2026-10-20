@@ -1,0 +1,9 @@
+[Unit]
+Description=Disabled Monthly ORDERS_OFF manager
+[Timer]
+OnCalendar=*-*-* *:00/5:30 UTC
+AccuracySec=1s
+Persistent=false
+Unit=alpaca-monthly-owned-manager.service
+[Install]
+WantedBy=timers.target

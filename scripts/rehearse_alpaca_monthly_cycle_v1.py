@@ -132,7 +132,7 @@ class AccountingMemoryBroker(MemoryBroker):
         if method=='POST' and payload.get('side')=='buy':
             # Distinct source-receipt and exchange-execution timestamps, as in
             # actual HTTP. Do not make the pre-entry cash anchor simultaneous.
-            self.state['clock_ms']+=1000
+            self.state['clock_ms']+=getattr(self,'execution_latency_ms',1000)
         before=D(self.state['cash']);old=set(self.state['orders'])
         try:return super()._request(method,path,payload)
         finally:
@@ -213,7 +213,7 @@ def fixture_calendar():
         if d.weekday()<5:days.append(d)
         d-=timedelta(days=1)
     days=list(reversed(days));d=date(2026,11,2)
-    while d<=date(2026,12,2):
+    while d<=date(2026,12,3):
         if d.weekday()<5:days.append(d)
         d+=timedelta(days=1)
     return ops.normalize_calendar([dict(date=str(d),open='09:30',close='16:00') for d in days])
@@ -394,17 +394,28 @@ def run(directory,*,standing_grant=False,automatic_costs=False):
     publish(root/'receipt.json',out);return out
 
 
-def run_pending_rotation(directory):
+def run_pending_rotation(directory,*,production_entrypoint=False):
     """Frozen58 selector, sell→selected buy before fees post, memory broker only."""
     from research_lab.alpaca_monthly_cost_source_v1 import capture_and_produce_cost_sources
     root=ops.safe_path(directory);root.mkdir(mode=0o700)
-    calendar=fixture_calendar();bundle,available,prices=fixture_source(root/'oct30',calendar,'2026-10-30')
+    calendar=fixture_calendar();captures=root/'source-captures';captures.mkdir()
+    def source_fixture(session,overrides=None):
+        row=next(r for r in calendar if r['session']==session)
+        folder=captures/str(row['close_ms']+1260000)
+        bundle,available,prices=fixture_source(folder,calendar,session,overrides)
+        publish(folder/'calendar.json',dict(schema='BROKER_CALENDAR_GET_CAPTURE_V1',method='GET',
+            endpoint='/v2/calendar?start=2026-01-01&end=2026-12-03',
+            started_ms=row['close_ms']+600000,completed_ms=row['close_ms']+660000,
+            fixture_only=True,body=[dict(date=r['session'],open='09:30',close='16:00') for r in calendar]))
+        return bundle,available,prices
+    bundle,available,prices=source_fixture('2026-10-30')
     args=dict(account_id='MONTHLY_REHEARSAL_ONLY',capital='487.42',
         account_lock_path=root/'fixture-account.lock',entry_halt_path=root/'fixture-HALT')
     m=MonthlyManager(root/'cycle',**args);m.source(bundle,now_ms=available)
     first=m.book.rows('selections')[0];old=first['picks'][0]['symbol']
     opening=next(r['open_ms'] for r in calendar if r['session']=='2026-11-02')
-    broker=AccountingMemoryBroker(root/'broker.json',calendar);broker.mark(prices);broker.set_clock(opening+1000)
+    broker=AccountingMemoryBroker(root/'broker.json',calendar,standing=production_entrypoint)
+    broker.mark(prices);broker.set_clock(opening+1000)
     protocol=dict(schema='ALPACA_PROTOCOL_SOURCE_CONTRACT_V1',account_id=m.account,commission_rate='0',
         owner_attestation={'api_commission_null_is_not_proof':True},fixture_only=True,
         regulatory_model=dict(cat_nms_executed_share_rate='.000003',sec_sell_value_rate='.0000206',
@@ -413,14 +424,62 @@ def run_pending_rotation(directory):
     for name,value in dict(protocol=protocol,calendar=calendar,
         assets=[dict(id=s,symbol=s,asset_class='us_equity',exchange='NASDAQ') for s in ops.required_symbols()]).items():
         path=root/(name+'.json');publish(path,value);paths[name+'_path']=path
-    elapsed=[0.];context={};original=time.monotonic
+    elapsed=[0.];context={};original=time.monotonic;original_ns=time.time_ns;cli_calls=[0]
     time.monotonic=lambda:elapsed[0]/1000
+    if production_entrypoint:
+        # The runner's pre-entry account snapshot is one second after the
+        # fixture venue clock. Execution must be later, not simultaneous.
+        broker.execution_latency_ms=2000
+        broker.clock_started=time.monotonic()
+        time.time_ns=lambda:int((context.get('now',broker.state['clock_ms']+1000)
+            +elapsed[0]-context.get('start',elapsed[0]))*1000000)
+        original_cost_get=broker.cost_get
+        def cost_get(route,params):
+            current=context['now']+elapsed[0]-context['start']
+            elapsed[0]+=max(0,broker.state['clock_ms']+1000-current)
+            return original_cost_get(route,params)
+        broker.cost_get=cost_get
     try:
-        with paper_mode():
-            binding=m.native(broker,base_url=broker.base_url,liability_reserve_usd='.03',pending_fee_admission=True)
-            m.opening(binding,load_history(bundle['history']),first['selection_id'],
-                quotes={old:dict(ask=prices[old],quote_ts=opening,received_ms=opening,source='FIXTURE')},
-                now_ms=opening+1000,apply=True,symbols=[old])
+        with (standing_mode(root,m,opening) if production_entrypoint else paper_mode()) as authority:
+            if production_entrypoint:
+                from scripts import run_alpaca_monthly_cycle_v1 as cli
+                import io,contextlib
+                from research_lab.alpaca_monthly_native_binding_v1 import standing_source_pins,PENDING_FEE_POLICY
+                nb=root/'fixture-native-binding.json'
+                spec=dict(schema=cli.RUNNER_SCHEMA,enabled=True,orders_allowed=True,money_authority=True,
+                    files=standing_source_pins(),manager=dict(root=str(m.root),**{k:str(v) for k,v in args.items()}),
+                    source_captures=str(captures),broker_root=str(root),
+                    profile=dict(path=str(root/'FIXTURE-NO-REAL-PROFILE'),sha256='0'*64),
+                    native_binding=dict(path=str(nb),sha256=ops.sha(nb)),
+                    native=dict(liability_reserve_usd='.03',pending_fee_admission=True),notifications=None,
+                    costs=dict(after='2026-10-30T00:00:00Z',**{n:dict(path=str(p),sha256=ops.sha(p))
+                        for n,p in ((n,paths[n+'_path']) for n in ('protocol','calendar','assets'))}))
+                scope=json.loads(Path(authority['live_scope_path']).read_bytes())
+                scope.update(liability_reserve_usd='0.03',pending_fee_admission=PENDING_FEE_POLICY,
+                    pending_fee_protocol_sha256=ops.sha(paths['protocol_path']),runner_config_sha256=cli.runner_config_sha256(spec))
+                sp=root/'FIXTURE-NOT-AUTHORITY-production-scope.json';publish(sp,scope);go=root/'FIXTURE-NOT-AUTHORITY-production-go.json'
+                publish(go,dict(schema='ALPACA_MONTHLY_STANDING_OWNER_GO_V1',scope_sha256=ops.sha(sp),
+                    owner_go_text='GO ALPACA_MONTHLY_STANDING '+ops.sha(sp)))
+                authority=dict(live_scope_path=sp,live_scope_sha256=ops.sha(sp),owner_go_path=str(go))
+                spec['authority']=dict(scope_path=str(sp),scope_sha256=ops.sha(sp),owner_go_path=str(go))
+                spec_path=root/'FIXTURE-production-spec.json';publish(spec_path,spec)
+                def production_tick():
+                    context.update(now=broker.state['clock_ms']+1000,start=elapsed[0]);stream=io.StringIO();cli_calls[0]+=1
+                    with contextlib.redirect_stdout(stream):
+                        rc=cli.main(['--spec',str(spec_path),'--spec-sha256',ops.sha(spec_path),'--dispatch'],
+                            client_factory=lambda _:broker,now_ms=context['now'])
+                    out=json.loads(stream.getvalue());assert rc in (0,2),out
+                    return out
+                broker.lose_buy=True;lost_buy=production_tick()
+                assert any(i['code']=='TimeoutError' for i in lost_buy['issues']),lost_buy
+                broker.lose_stop=True;lost_stop=production_tick()
+                assert any(i['code']=='TimeoutError' for i in lost_stop['issues']),lost_stop
+                recovered=production_tick();assert not recovered['issues'],recovered
+            binding=m.native(broker,base_url=broker.base_url,liability_reserve_usd='.03',pending_fee_admission=True,**authority)
+            if not production_entrypoint:
+                m.opening(binding,load_history(bundle['history']),first['selection_id'],
+                    quotes={old:dict(ask=prices[old],quote_ts=opening,received_ms=opening,source='FIXTURE')},
+                    now_ms=opening+1000,apply=True,symbols=[old])
             held=m.book.rows('positions')[0];entry=held['raw_entry']
             broker.set_clock(next(r['close_ms'] for r in calendar if r['session']=='2026-11-04')+3600000)
             broker.publish_fees()  # The old buy-day penny is posted before next month.
@@ -429,8 +488,7 @@ def run_pending_rotation(directory):
             px=float(entry['filled_avg_price'])
             overrides={(old,r['session']):px for r in calendar if '2026-11-02'<=r['session']<='2026-11-30'}
             overrides[(old,'2026-11-30')]=px*.995
-            future,available,marks=fixture_source(root/'nov30',calendar,'2026-11-30',
-                overrides)
+            future,available,marks=source_fixture('2026-11-30',overrides)
             for row in calendar:
                 if not '2026-11-02'<=row['session']<'2026-11-30':continue
                 close=overrides[(old,row['session'])]
@@ -445,6 +503,14 @@ def run_pending_rotation(directory):
             dec=next(r['open_ms'] for r in calendar if r['session']=='2026-12-01')
             marks[old]=float(entry['filled_avg_price'])*1.001
             broker.mark(marks);broker.set_clock(dec+1000);lost=[False]
+            if production_entrypoint:
+                request=broker._request;new_symbols={p['symbol'] for p in second['picks']}
+                def lose_new_stop(method,path,payload=None):
+                    if (method=='POST' and (payload or {}).get('type')=='stop'
+                        and payload['symbol'] in new_symbols and not lost[0]):
+                        broker.lose_stop=True;lost[0]=True
+                    return request(method,path,payload)
+                broker._request=lose_new_stop
             quotes={s:dict(ask=px,quote_ts=dec,received_ms=dec,source='FIXTURE') for s,px in marks.items()}
             def costs(exits):
                 if not exits:return {}
@@ -455,13 +521,14 @@ def run_pending_rotation(directory):
                 return capture_and_produce_cost_sources(binding,after='2026-10-30T00:00:00Z',
                     now_ms=now,allow_pending=True,**paths)
             def tick(source=False):
+                if production_entrypoint:return production_tick()
                 context.update(now=broker.state['clock_ms']+1000,start=elapsed[0])
                 return m.tick(binding,now_ms=context['now'],cost_sources=costs,apply=True,
                     source_loader=(lambda:future) if source else None,quotes=quotes)
             first_attempt=tick(True)
             assert any(i['phase']=='OPENING' and i['code']=='TimeoutError' for i in first_attempt['issues']),first_attempt
             m=MonthlyManager(root/'cycle',**args)
-            binding=m.native(broker,base_url=broker.base_url,liability_reserve_usd='.03',pending_fee_admission=True)
+            binding=m.native(broker,base_url=broker.base_url,liability_reserve_usd='.03',pending_fee_admission=True,**authority)
             completed=tick(True)
             assert not completed['issues'],completed['issues']
             selected_count=len(second['picks'])
@@ -474,18 +541,27 @@ def run_pending_rotation(directory):
             buys=lambda:len([w for w in broker.state['writes'] if (w['payload'] or {}).get('side')=='buy'])
             assert buys()==1+selected_count
             assert not tick(True)['issues'] and buys()==1+selected_count
+            if production_entrypoint:
+                source_fixture('2026-12-01',overrides)
+                broker.set_clock(next(r['close_ms'] for r in calendar if r['session']=='2026-12-01')+1260000)
+                daily=tick();assert not daily['issues'],daily
+                source_fixture('2026-12-02',overrides)
             broker.set_clock(next(r['close_ms'] for r in calendar if r['session']=='2026-12-02')+3600000)
             broker.publish_fees();final=tick()
             assert not final['issues'],final['issues']
             binding._require_exit_accounting()
-            out=dict(status='MONTHLY_PENDING_FEE_ROTATION_ORDERS_OFF_E2E_PASS',source_symbols=58,
+            out=dict(status='MONTHLY_PRODUCTION_ENTRYPOINT_ORDERS_OFF_E2E_PASS' if production_entrypoint
+                else 'MONTHLY_PENDING_FEE_ROTATION_ORDERS_OFF_E2E_PASS',source_symbols=58,
                 selector_monkeypatched=False,rotation_exits=1,simulated_entries=buys(),owned_positions=selected_count,
                 response_loss_recovered=True,old_exit_pending_during_new_entries=with_pending,
                 old_exit_finalized_after_posting=True,duplicate_entries=0,fixture_liability_reserve_usd='.03',
                 fixture_calendar='WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE',
                 real_broker_requests=0,real_broker_writes=0,money_authority=False,orders_allowed=False)
+            if production_entrypoint:out.update(production_entrypoint=True,production_cli_calls=cli_calls[0],
+                source_loader_injected=False,first_entry_buy_and_stop_response_loss_recovered=True,
+                clock='DETERMINISTIC_FIXTURE_NOT_LATENCY_SLO')
             publish(root/'receipt.json',out);return out
-    finally:time.monotonic=original
+    finally:time.monotonic=original;time.time_ns=original_ns
 
 
 def main(argv=None):

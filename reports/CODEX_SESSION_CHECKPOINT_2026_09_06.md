@@ -1,5 +1,34 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT20Oct EVENING MONTHLY PRODUCTION ENTRYPOINT COMPONENT CLOSED —
+Read ALPACA_MONTHLY_PRODUCTION_ENTRYPOINT_2026_10_20.md and evidence/monthly_production_20261020.
+Local29PASS545.54s / VPSsame29PASS375.76s;52sources/13testhelpers/39imports/0fallback,
+5syntheticE2E receipts. Material8a48663fbd195491705fa2aa127fb4b1962e7cddb9aa84cd5ff3fd9ef0e5659b.
+Newfullpath8actualCLI/main calls usesdefaultsource loader/frozen58selector, pending
+fees, firstbuy+stopreplyloss, restart/rotation/replacement/dailyclose/latefinality.
+Networkforbidden; VPSenv-i/unshare--net/nice15; source/test/5receipt hashes verified
+byindependentGET;93nonsecretstaticpins unchanged, candidateUNSELECTED.
+Onebounded astra/high componentreview verified actual2turncontexts; quota interruption
+resumedSAMEworker. Falsezero-afterwrite/diskfailure fixed/regressed; root invalid-GO
+notification authority fixed/regressed. Reviewer15+13targetedoverlap notadditive;
+fullfinal local/VPS E2E executedbyroot, notindependentsecondreview.
+Explicit --dispatch requiresnewexact standing+operationalconfigSHA beforeprofile;
+default/source unchangedORDERSOFF, shared originalprofile/host/lock guards retained.
+No realGO/financialunit/pointer/NET/SHOP/HALT/risk changes. .03ONLYfixture, noreserveincrease.
+NEXT P0 ENGINEERING: bind freshread-only legacywriter/timer retirement check into
+new-entry finalvalidator; unknown/active blocksBUY but never ownedmaintenance or
+recovery. Then exactNETflat/identity/orders/costs handoff+rollback+concretestanding
+packet. Existinglock/foreign-exposure rejects areNOTproof schedulerretired. Actual
+handoffnotperformed. Privatefreshpreflight18:24UTC savedunder.private/monthly_production_20261020.
+DoNOTre-runaccepted274/29without relevantchange. Resume byreading reportREMAINING
+and `rg -n 'def _entry_authority|def final_dispatch' research_lab/alpaca_monthly_native_binding_v1.py`;
+nextRED: legacytimeractive/UNKNOWN mustblocknewentrywhileownedstoprecoverycontinues.
+30Octcompletedsource/2Novfreshmarket/brokergates remainfuture; no engineeringcalendarwait.
+AfterMonthlyhandoff/packet, PUMP4b138735/7b0a961 directly, no InPlay/V2dependency.
+PUMP4intakecommittedd0c72c7, old137/helper/TPblockerssuperseded; adapter/replayNOT_RUN.
+NETscheduled13:35:23UTC controlcompleted/privateevidence; one-shotPAUSED, no mutation.
+configs/allowlist_change_log.json foreign/untrackedsha365ff7d6...decc2e0e untouched.
+
 CURRENT20Oct EVENING PUMP4 VERSIONED CONTRACT ACCEPTED —
 Researchb138735 + request7b0a961 verified published ancestors of origin7e1ab0b.
 Actual mapping40/60/staticstopx4/168H1bars/137current;65OKfixtures+1ASTERunavailable.

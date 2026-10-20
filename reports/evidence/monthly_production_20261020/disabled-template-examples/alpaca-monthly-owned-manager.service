@@ -1,0 +1,10 @@
+[Unit]
+Description=Monthly isolated ORDERS_OFF manager
+After=network-online.target
+[Service]
+Type=oneshot
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ExecStart=/opt/monthly/python -B /opt/monthly/candidate/app/scripts/run_alpaca_monthly_cycle_v1.py --spec /opt/monthly/UNAPPROVED-standing-runner.json --spec-sha256 0000000000000000000000000000000000000000000000000000000000000000 --dispatch
+TimeoutStartSec=600

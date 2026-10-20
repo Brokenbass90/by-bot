@@ -8,14 +8,19 @@ from research_lab.alpaca_monthly_cycle_v1 import publish
 from research_lab.alpaca_monthly_source_ops_v1 import safe_path
 
 
-def unit_templates(app,python,spec,pin):
-    for p in (app,python,spec):
+def unit_templates(app,python,spec,pin,*,dispatch_spec=None,dispatch_sha256=None):
+    if (dispatch_spec is None)!=(dispatch_sha256 is None):raise ValueError('UNIT_DISPATCH_PAIR')
+    for p in (app,python,spec,*([dispatch_spec] if dispatch_spec else [])):
         if not re.fullmatch(r'/[A-Za-z0-9_./-]+',p) or '..' in Path(p).parts:raise ValueError('UNIT_PATH')
     if not re.fullmatch('[0-9a-f]{64}',pin):raise ValueError('UNIT_SPEC_PIN')
+    if dispatch_sha256 is not None and not re.fullmatch('[0-9a-f]{64}',dispatch_sha256):raise ValueError('UNIT_DISPATCH_PIN')
     base=python+' -B '+app+'/scripts/run_alpaca_monthly_cycle_v1.py --spec '+spec+' --spec-sha256 '+pin
     out={}
     for mode,flag in [('source',' --source'),('manager','')]:
         name='alpaca-monthly-owned-'+mode
+        command=base+flag
+        if mode=='manager' and dispatch_spec:
+            command=python+' -B '+app+'/scripts/run_alpaca_monthly_cycle_v1.py --spec '+dispatch_spec+' --spec-sha256 '+dispatch_sha256+' --dispatch'
         out[name+'.service']='''[Unit]
 Description=Monthly isolated ORDERS_OFF '''+mode+'''
 After=network-online.target
@@ -24,7 +29,7 @@ Type=oneshot
 UMask=0077
 NoNewPrivileges=true
 PrivateTmp=true
-ExecStart='''+base+flag+'''
+ExecStart='''+command+'''
 TimeoutStartSec=600
 '''
         out[name+'.timer']='''[Unit]

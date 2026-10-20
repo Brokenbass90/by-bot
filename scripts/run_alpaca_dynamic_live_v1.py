@@ -23,7 +23,7 @@ from research_lab.alpaca_dynamic_v1 import digest
 POLICY_PIN='fe72557bd7c7437eda328047e81980ee762ec794ac240494ec47d3de4f6f400d'
 
 
-def load_client(profile,binding,*,apply):
+def load_client(profile,binding,*,apply,order_contract=None):
     from dotenv import dotenv_values
     p=safe_path(str(profile),exists=True)
     if p.parent!=Path(binding['broker_root'])/'configs':raise ValueError('ORIGINAL_LIVE_PROFILE_REQUIRED')
@@ -34,7 +34,9 @@ def load_client(profile,binding,*,apply):
     lock=configured or str(Path(binding['broker_root'])/'runtime/locks'/(
         'alpaca_bridge_'+hashlib.sha256((LIVE+'|'+env['ALPACA_API_KEY_ID']).encode()).hexdigest()[:16]+'.lock'))
     if lock!=binding['lock_path']:raise ValueError('ORIGINAL_PROFILE_LOCK_CONFLICT')
-    return DynamicLiveClient(env['ALPACA_API_KEY_ID'],env['ALPACA_API_SECRET_KEY'],writes_enabled=apply)
+    options=dict(writes_enabled=apply)
+    if order_contract is not None:options['order_contract']=order_contract
+    return DynamicLiveClient(env['ALPACA_API_KEY_ID'],env['ALPACA_API_SECRET_KEY'],**options)
 
 
 def main(argv=None):

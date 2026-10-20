@@ -1,0 +1,1 @@
+Illustrative disabled templates only. Placeholder paths/zero hashes are not an activation packet. No units were installed or enabled. Source remains verify/source-only; exactly one manager uses the separately pinned dispatch spec after future owner approval.
