@@ -1,0 +1,18 @@
+{
+  "component": "PUMP4_REFERENCE_PLAN_ONLY",
+  "findings": [],
+  "implementation_sha256": "57b4923d5209385d09243c07ee2a243063dc74ac95a2ee9c44c5d73825cc9eb4",
+  "money_authority": false,
+  "orders_allowed": false,
+  "parity_review": "Verifier inspection and existing receipt hashes/counts; root ran actual65producer/adapterparity",
+  "reviewer_effort": "high",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_session_id": "01a15e84-d2df-7230-ae30-c25b25cf7e54",
+  "runtime_metadata_verified": true,
+  "schema": "BOUNDED_COMPONENT_REVIEW_RECEIPT_V1",
+  "scope_limit": "No causal intake, cooldown/restart, quantity, funding or broker execution review/signoff",
+  "tests": {
+    "overlap_root_acceptance": true,
+    "passed": 12
+  }
+}

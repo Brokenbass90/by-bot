@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT21Oct EVENING NEXT MONEY COMPONENT — PUMP4 REFERENCE PLAN PASS —
+Monthly financialclassifier committed3374260:241local/same241VPS exactPASS;
+source527a9f0489bb11c3d9dcb88ab6ef6f7b2a2d704cb9b7b865699ea384f3788ea5,
+53sources/17helpers/40imports/0fallback,2fullE2E,93staticpins unchanged. FullMonthly
+activation still BLOCKED actualNEThandoff/finalscopeconfig/ownerauthority/marketfacts.
+Read PUMP4_REFERENCE_PLAN_ADAPTER_2026_10_21.md. Newpure callablebuild_plan uses
+frozenb138735/7b0a961, exactnextopen/staticx4/40-60/168/stopfirst/noBE-trail-tp3.
+12localPASS +actualproducer→callableplan65uniquefixturematches/1ASTERunavailable,
+bar/fixture/sourcehashes checkedbefore/after, socketdenied, researchunchanged.
+Oneboundedactualastra/highreview12overlapPASS/nofindings; reviewercheckedreceipt/
+verifier butdidNOTrerun65caseparity. No R/judge/outcomerecalculation or broker.
+ThisisREFERENCEGEOMETRYonly: causalintake/cursor/cooldownrestart/quantity/rounding/
+funding/nativeBybitexecution/TINY stillNOT_RUN/NOT_PERFORMED. No newfinancialGO.
+NEXTIMPLEMENTATION: closedH1durablecursor/cooldown (ZRO/BLESS), no repeatedcall/
+changedduplicate/missingbar; then existingBybittransport/native stop/reconcile/
+40-60partialexits/replyloss andrisk/cost feasibility. DoNOTwaitNov2/Brain/InPlay/V2.
+PreparefinalMonthlyownerreview/signing/cutover inputs before26Oct; PUMPexecutor
+acceptanceorpreciseBLOCKED28Oct. No2NovBUYguarantee/KITYretry/authorityconversion.
+MoneyLIVE/NET/SHOP/HALT/units/profile/locks/claims unchanged. Foreignallowlist
+365ff7d6…cc2e0e preserved/untracked. Privatecurrentresume ledger
+.private/monthly_legacy_pending_20261021/progress.md. Priorblocksbelowhistory.
+
 CURRENT21Oct MONTHLY LEGACY PENDING CLASSIFIER EXACT COMPONENT PASS —
 Read ALPACA_MONTHLY_LEGACY_PENDING_ACCEPTANCE_2026_10_21.md. Base622d27a;
 material527a9f0489bb11c3d9dcb88ab6ef6f7b2a2d704cb9b7b865699ea384f3788ea5.
