@@ -1,0 +1,38 @@
+{
+ "vse_do_rashodov": {
+  "n": 193,
+  "R": 0.137
+ },
+ "dolya_proshla_limit": 0.9,
+ "do_rashodov_tolko_proshedshie": 0.123,
+ "optimistichnyy": {
+  "n": 193,
+  "R": 0.081,
+  "t": 0.91,
+  "na_10usd": 0.81,
+  "za_god_10usd": 207.0
+ },
+ "bazovyy": {
+  "n": 174,
+  "R": 0.044,
+  "t": 0.46,
+  "na_10usd": 0.44,
+  "za_god_10usd": 101.0
+ },
+ "stressovyy": {
+  "n": 193,
+  "R": 0.013,
+  "t": 0.13,
+  "na_10usd": 0.13,
+  "za_god_10usd": 32.0
+ },
+ "kak_v_DEV_8bps": {
+  "n": 193,
+  "R": 0.032,
+  "t": 0.34,
+  "na_10usd": 0.32,
+  "za_god_10usd": 82.0
+ },
+ "srednyaya_dolya_ceny_v_riske": 3.87,
+ "bezubytochnyy_krug_bps": 20.9
+}
