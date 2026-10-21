@@ -1,0 +1,86 @@
+{
+ "v4_vhody": {
+  "n": 143,
+  "bez_fiksacii": {
+   "R": 0.005,
+   "t": 0.04,
+   "itog": 0.7,
+   "maxDD_R": 21.9
+  },
+  "V2_s_fiksaciey": {
+   "R": 0.0,
+   "t": 0.0,
+   "itog": 0.0,
+   "maxDD_R": 20.2,
+   "drugie9": 9.8,
+   "drugie_n": 56
+  },
+  "MFE_R": {
+   "p25": 0.26,
+   "med": 0.89,
+   "p75": 1.81
+  },
+  "MAE_R": {
+   "p25": 0.23,
+   "med": 0.55,
+   "p75": 1.0
+  },
+  "uderzhanie_ch": {
+   "p25": 4,
+   "med": 10,
+   "p75": 17
+  },
+  "s_urovnem": 102,
+  "doshli_do_urovnya": 53,
+  "rasst_do_urovnya_R": {
+   "p25": 0.65,
+   "med": 0.95,
+   "p75": 1.29
+  },
+  "doshli_1R": 0.44,
+  "doshli_2R": 0.24,
+  "rashody_R_na_sdelku": 0
+ },
+ "V1_vhody": {
+  "n": 81,
+  "bez_fiksacii": {
+   "R": -0.064,
+   "t": -0.44,
+   "itog": -5.2,
+   "maxDD_R": 16.5
+  },
+  "V2_s_fiksaciey": {
+   "R": -0.084,
+   "t": -0.61,
+   "itog": -6.8,
+   "maxDD_R": 15.3,
+   "drugie9": 0.6,
+   "drugie_n": 46
+  },
+  "MFE_R": {
+   "p25": 0.25,
+   "med": 0.52,
+   "p75": 1.55
+  },
+  "MAE_R": {
+   "p25": 0.41,
+   "med": 0.78,
+   "p75": 1.0
+  },
+  "uderzhanie_ch": {
+   "p25": 2,
+   "med": 8,
+   "p75": 15
+  },
+  "s_urovnem": 32,
+  "doshli_do_urovnya": 10,
+  "rasst_do_urovnya_R": {
+   "p25": 0.6,
+   "med": 0.86,
+   "p75": 1.24
+  },
+  "doshli_1R": 0.37,
+  "doshli_2R": 0.2,
+  "rashody_R_na_sdelku": 0
+ }
+}
