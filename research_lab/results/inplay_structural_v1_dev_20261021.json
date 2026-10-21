@@ -1,0 +1,62 @@
+{
+ "naklonnaya=OFF brain=OFF": {
+  "n": 81,
+  "R_sdelka": -0.064,
+  "t": -0.44,
+  "itog_R": -5.2,
+  "maxDD_R": 18.9,
+  "vin": 0.33,
+  "S7_R": -5.7,
+  "drugie_R": 0.5,
+  "drugie_n": 46,
+  "long_R": -3.1,
+  "short_R": -2.1,
+  "kontrol_R": -0.3,
+  "kontrol_n": 289
+ },
+ "naklonnaya=OFF brain=ON": {
+  "n": 77,
+  "R_sdelka": -0.099,
+  "t": -0.65,
+  "itog_R": -7.6,
+  "maxDD_R": 20.2,
+  "vin": 0.31,
+  "S7_R": -8.3,
+  "drugie_R": 0.7,
+  "drugie_n": 44,
+  "long_R": -4.0,
+  "short_R": -3.6,
+  "kontrol_R": -0.29,
+  "kontrol_n": 258
+ },
+ "naklonnaya=ON brain=OFF": {
+  "n": 91,
+  "R_sdelka": -0.091,
+  "t": -0.65,
+  "itog_R": -8.3,
+  "maxDD_R": 22.0,
+  "vin": 0.31,
+  "S7_R": -4.7,
+  "drugie_R": -3.6,
+  "drugie_n": 51,
+  "long_R": -7.1,
+  "short_R": -1.2,
+  "kontrol_R": -0.036,
+  "kontrol_n": 325
+ },
+ "naklonnaya=ON brain=ON": {
+  "n": 87,
+  "R_sdelka": -0.123,
+  "t": -0.84,
+  "itog_R": -10.7,
+  "maxDD_R": 23.4,
+  "vin": 0.29,
+  "S7_R": -7.4,
+  "drugie_R": -3.3,
+  "drugie_n": 49,
+  "long_R": -8.1,
+  "short_R": -2.6,
+  "kontrol_R": -0.448,
+  "kontrol_n": 309
+ }
+}
