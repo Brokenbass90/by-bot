@@ -105,12 +105,16 @@ def range_state(
     # 3-measure range vote (reuse forex.regime exactly; fallback = neutral)
     ci = vp = adx = float("nan")
     votes = 0
+    degraded = None
     if _HAVE_FOREX:
-        cnds = _rows_to_candles(rows)
-        i = len(cnds) - 1
-        ci = _chop(cnds, i, 14)
-        vp = _volp(cnds, i, atr_period, 100)
-        adx = _adx(cnds, i, 14)
+        try:   # 21.10.2026 (DEV, ревью №8): мера упала -> честная деградация с флагом, а не падение всего гейта
+            cnds = _rows_to_candles(rows)
+            i = len(cnds) - 1
+            ci = _chop(cnds, i, 14)
+            vp = _volp(cnds, i, atr_period, 100)
+            adx = _adx(cnds, i, 14)
+        except Exception as e:  # noqa: BLE001
+            ci = vp = adx = float("nan"); degraded = "measures_failed:" + type(e).__name__
         sub = []
         if ci == ci:
             sub.append(ci > ci_threshold)
@@ -126,7 +130,7 @@ def range_state(
         else:
             range_vote = votes >= 2
     else:  # no forex.regime -> rely on slope classifier only
-        range_vote = (regime == "flat")
+        range_vote = (regime == "flat"); degraded = "forex_regime_missing"
 
     regime_ok = (regime == "flat") or (allow_sloped and regime in ("ascending", "descending"))
     is_range = bool(range_vote and regime_ok)
@@ -166,5 +170,10 @@ def range_state(
         width_atr=ch.get("width_atr", float("nan")), nearest_support=nsup,
         nearest_resistance=nres, ci=ci, vp=vp, adx=adx, votes=votes, reason=reason,
         extra={"upper_r2": ch.get("upper_r2"), "lower_r2": ch.get("lower_r2"),
-               "slope_atr": ch.get("slope_atr"), "require_all": require_all},
+               "slope_atr": ch.get("slope_atr"), "require_all": require_all,
+               # 21.10.2026 (DEV, ревью №7): горизонтальный флэт и наклонный канал раздельно. `is_range` сохранён для
+               # совместимости (по умолчанию включает наклонные каналы); новым потребителям — эти два поля.
+               "is_flat_range": bool(range_vote and regime == "flat"),
+               "is_sloped_channel": bool(range_vote and regime in ("ascending", "descending")),
+               "degraded": degraded},
     )

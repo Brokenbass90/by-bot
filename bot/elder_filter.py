@@ -2,8 +2,9 @@
 
 Elder's triple screen works best as a *confluence gate* on top of other legs:
 screen-1 (the "tide": higher-timeframe trend via EMA fast/slow + MACD histogram)
-tells you which side is allowed; screen-2 (the "wave": Force Index / RSI) confirms
-timing. ETS as a standalone crypto strategy underperformed (see elder_crypto_v1
+tells you which side is allowed; screen-2 (the "wave": Force Index) is reported and,
+only with `require_wave=True`, must agree with the tide (21.10.2026: earlier docstring claimed the
+wave always confirmed — it never did; default behaviour stays tide-only and is now documented). ETS as a standalone crypto strategy underperformed (see elder_crypto_v1
 notes) -> here it only ANDs with a leg's own signal.
 
 Used so legs stay one-directional and trade *with* (or at least not against) the
@@ -104,6 +105,7 @@ def elder_bias(
     rsi_period: int = 14,
     require_with_tide: bool = False,
     min_tide_sep_frac: float = 0.0005,   # |EMA_fast-EMA_slow|/price >= this to count as a tide
+    require_wave: bool = False,          # 21.10: True -> bias/permission only when Force Index wave agrees with tide
 ) -> ElderBias:
     """Compute Elder tide+wave confluence and long/short permission gates."""
     blank = ElderBias(
@@ -114,9 +116,11 @@ def elder_bias(
     )
     s1 = htf_rows if htf_rows is not None else rows
     closes1 = _col(s1, CLOSE)
-    # need enough for the slow EMA + macd; degrade gracefully with a shorter slow
-    eff_slow = ema_slow if len(closes1) >= ema_slow else max(ema_fast + 1, len(closes1) // 2)
-    if len(closes1) < max(ema_fast + 1, macd_slow + macd_signal):
+    # 21.10.2026 (DEV, ревью №10): без полной истории медленной EMA тренд не определяется — честный ok=False,
+    # а не тихая подмена EMA200 на ~EMA51 (почти равные EMA давали «флэт» или случайный «тренд»)
+    eff_slow = ema_slow
+    if len(closes1) < max(ema_slow, ema_fast + 1, macd_slow + macd_signal):
+        blank.reason = "insufficient_data_for_slow_ema"
         return blank
 
     ef_series = _ema_series(closes1, ema_fast)
@@ -127,9 +131,10 @@ def elder_bias(
 
     # screen 1: tide (require a MEANINGFUL EMA separation; float-safe vs ~equal EMAs)
     sep = (ef - es) / price1 if price1 else 0.0
-    if sep >= min_tide_sep_frac and (mh != mh or mh >= 0) and price1 >= ef:
+    # 21.10.2026 (DEV, ревью №10): MACD без значения (NaN) больше не засчитывается как подтверждение
+    if sep >= min_tide_sep_frac and mh == mh and mh >= 0 and price1 >= ef:
         tide = "up"
-    elif sep <= -min_tide_sep_frac and (mh != mh or mh <= 0) and price1 <= ef:
+    elif sep <= -min_tide_sep_frac and mh == mh and mh <= 0 and price1 <= ef:
         tide = "down"
     else:
         tide = "flat"
@@ -154,7 +159,13 @@ def elder_bias(
     else:
         bias = "neutral"
 
-    if require_with_tide:
+    if require_wave and wave != tide:      # 21.10: волна не подтвердила прилив -> без направления
+        bias = "neutral"
+        if require_with_tide:
+            allow_long = allow_short = False
+        else:
+            allow_long = (tide != "down"); allow_short = (tide != "up")
+    elif require_with_tide:
         allow_long = (tide == "up")
         allow_short = (tide == "down")
     else:
@@ -166,5 +177,6 @@ def elder_bias(
         ok=True, tide=tide, wave=wave, bias=bias, allow_long=bool(allow_long),
         allow_short=bool(allow_short), ema_fast=ef, ema_slow=es, macd_hist=mh,
         force_index=fi, rsi=rsi, reason=reason,
-        extra={"require_with_tide": require_with_tide, "eff_slow": eff_slow},
+        extra={"require_with_tide": require_with_tide, "eff_slow": eff_slow, "require_wave": require_wave,
+               "wave_agrees": wave == tide},
     )

@@ -26,14 +26,18 @@ def adaptive_params(atr_pct: float, regime: str) -> dict[str, Any]:
 
     atr_pct = ATR as % of price. regime in {flat, ascending, descending, unknown}.
     """
+    # 21.10.2026 (DEV, ревью №3): неизвестная волатильность — осторожные параметры, а не «нормальная волатильность»
+    if not (atr_pct == atr_pct) or atr_pct <= 0:
+        return {"tol_atr": 0.45, "min_touches": 3, "pivot_left": 3, "pivot_right": 3,
+                "max_age_bars": 30}
+    # high volatility FIRST: widen tolerance + pivots so we don't shred into noise levels (флэт с большой волатильностью тоже)
+    if atr_pct >= 5.0:
+        return {"tol_atr": 0.55, "min_touches": 2, "pivot_left": 3, "pivot_right": 3,
+                "max_age_bars": 40}
     # chop/flat: tighter levels, demand more touches (cleaner ranges)
     if regime == "flat":
         return {"tol_atr": 0.30, "min_touches": 3, "pivot_left": 2, "pivot_right": 2,
                 "max_age_bars": 60}
-    # high volatility: widen tolerance + pivots so we don't shred into noise levels
-    if atr_pct >= 5.0:
-        return {"tol_atr": 0.55, "min_touches": 2, "pivot_left": 3, "pivot_right": 3,
-                "max_age_bars": 40}
     # trending (normal vol): medium sensitivity, fresher levels matter more
     if regime in ("ascending", "descending"):
         return {"tol_atr": 0.40, "min_touches": 2, "pivot_left": 2, "pivot_right": 2,

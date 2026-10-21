@@ -97,6 +97,9 @@ class Hranilishche:
         self.ids = {z["opp_id"] for z in self.opp.zapisi}
         self.resheno = {(z["opp_id"], z["policy"]) for z in self.dec.zapisi}
         self.ishody = {z["opp_id"]: z for z in self.join.zapisi if z["kind"] == "outcome"}
+        self.korrekcii = {}                                                       # 21.10: opp_id → последняя коррекция исхода
+        for z in self.join.zapisi:
+            if z["kind"] == "outcome_correction": self.korrekcii[z["opp_id"]] = z
 
     def dobavit_vozmozhnost(self, v, t_recorded_ms=None):
         if v["opp_id"] in self.ids: return None                                  # дубль — молча не пишем повторно
@@ -120,6 +123,22 @@ class Hranilishche:
         z = self.join.dobavit(dict(kind="outcome", opp_id=opp_id_, t_outcome_ms=int(t_outcome_ms), realized_net_bps=net,
                                    source_ref=source_ref, source_sha256=source_sha256), t_recorded_ms)
         self.ishody[opp_id_] = z; return z
+
+    def ispravit_ishod(self, opp_id_, realized_net_bps, prichina, source_ref, source_sha256, t_recorded_ms=None):
+        """21.10.2026: исправление ошибочного исхода ОТДЕЛЬНЫМ событием (append-only). Исходная запись не меняется и остаётся
+        в цепочке; коррекция ссылается на хеш исправляемой записи и обязана иметь причину. Расчёты берут ishod_aktualnyy()."""
+        if opp_id_ not in self.ishody: raise OshibkaV2("коррекция без исходного исхода")
+        if not str(prichina or "").strip(): raise OshibkaV2("коррекция без причины не принимается")
+        net = _num_or_unknown(realized_net_bps, "realized_net_bps")
+        pred = self.korrekcii.get(opp_id_) or self.ishody[opp_id_]
+        if pred["realized_net_bps"] == net: return None                          # ничего не меняет — не пишем
+        z = self.join.dobavit(dict(kind="outcome_correction", opp_id=opp_id_, realized_net_bps=net, corrects=pred["record_hash"],
+                                   prichina=str(prichina), source_ref=source_ref, source_sha256=source_sha256), t_recorded_ms)
+        self.korrekcii[opp_id_] = z; return z
+
+    def ishod_aktualnyy(self, opp_id_):
+        """Последняя версия исхода: коррекция, если есть, иначе исходная запись; None — исхода нет."""
+        return self.korrekcii.get(opp_id_) or self.ishody.get(opp_id_)
 
     def prikrepit_ispolnenie(self, opp_id_, execution_owner_id, detali, t_recorded_ms=None):
         if opp_id_ not in self.ids: raise OshibkaV2("исполнение без возможности")

@@ -181,14 +181,21 @@ def sloped_level(
     min_slope_atr: float = 0.0,
     require_unbroken: bool = False,
     atr_value: Optional[float] = None,
+    last_pivots: Optional[int] = None,
 ) -> Optional[dict]:
     """Fit a trendline through recent swing highs (resistance) / lows (support).
+
+    21.10.2026: ``last_pivots=k`` fits the line only through the last k swing points (as a trader draws it); default None
+    keeps the old behaviour (regression through ALL pivots in the window — on real H1 data such a line is almost never
+    "valid", see BRAIN_DEV_FIXES_2026_10_21.md).
 
     Returns dict: slope, intercept, r2, level_now, pivots, valid (line not breached
     by a close beyond it). ``min_slope_atr`` rejects near-flat lines. ``require_unbroken``
     drops already-broken lines. ``None`` if not enough colinear pivots / fails a filter.
     """
     pivots = pivot_highs(rows, left, right) if side == "resistance" else pivot_lows(rows, left, right)
+    if last_pivots is not None and int(last_pivots) >= 2:
+        pivots = pivots[-int(last_pivots):]
     if len(pivots) < int(min_pivots):
         return None
     pts = [(float(p["idx"]), float(p["price"])) for p in pivots]
@@ -199,7 +206,9 @@ def sloped_level(
         if abs(m) / atr_value < float(min_slope_atr):
             return None
     valid = True
-    for i in range(len(rows)):
+    # 21.10.2026 (DEV, ревью DeepSeek №11): линия существует только с первого пивота — бары до него не могут её «пробить»
+    first_idx = int(min(p["idx"] for p in pivots))
+    for i in range(first_idx, len(rows)):
         line_val = m * i + b
         c = _f(rows[i], CLOSE)
         if side == "resistance" and c > line_val:
