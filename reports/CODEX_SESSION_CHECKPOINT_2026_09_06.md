@@ -1,5 +1,17 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT21Oct19:16:34UTC NET URGENT READ-ONLY CONTROL —
+6authenticatedbrokerGET confirmoriginalNETownedqty/fullactive nativeDAYstop,
+expectedidentity/floor;price/PnL/account/order details PRIVATE in
+.private/net_check_20261021_2115/receipt-private.json and summary.md.
+DAYexpires21Oct20UTC/23Cyprus; noovernightprotectionclaim. Existingmanager19:15UTC
+LIVE_PROTECTED/exit0,oneNETcommand;SHOPtimerdisabled/inactive. Selectedruntime/
+overlaystaticpins agreeactivate3.5/trail3.5/minlock.5/minraise10bps;HWMbelowtrigger.
+LegacyNET !=newMonthly. No brokerwrites/remotechanges/newtrailing/sale/authority.
+Standalonechange mayconflictwithownedstop/manager/exithandoff; nochangeauthorized.
+Nextnormalday rearm needsfreshconfirmation. MoneyqueueMonthly3374260→PUMP397ed4d
+unchanged; priorcurrentblocksbelowhistory. No strategyresearch/tuningstarted.
+
 CURRENT21Oct EVENING NEXT MONEY COMPONENT — PUMP4 REFERENCE PLAN PASS —
 Monthly financialclassifier committed3374260:241local/same241VPS exactPASS;
 source527a9f0489bb11c3d9dcb88ab6ef6f7b2a2d704cb9b7b865699ea384f3788ea5,
