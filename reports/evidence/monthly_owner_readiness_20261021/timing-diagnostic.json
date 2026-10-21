@@ -1,0 +1,344 @@
+{
+  "actual_guard_ms": 36.702557,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "count": 20,
+  "cpu_count": 2,
+  "load_average": [
+    0.15380859375,
+    0.486328125,
+    0.982421875
+  ],
+  "maximum_ms": 85.018213,
+  "observed_ms": 1792568684411,
+  "p50_ms": 60.436748,
+  "p95_ms": 67.904595,
+  "production_retirement_performed": false,
+  "remote_writes": 0,
+  "samples": [
+    {
+      "index": 0,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 5.025991,
+        "physical_after_ms": 1.926296,
+        "physical_before_ms": 8.749298,
+        "ps_ms": 13.091857,
+        "systemctl_show_ms": 36.620839
+      },
+      "total_full_read_path_ms": 66.832707
+    },
+    {
+      "index": 1,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 3.783703,
+        "physical_after_ms": 1.799776,
+        "physical_before_ms": 1.744126,
+        "ps_ms": 13.402018,
+        "systemctl_show_ms": 32.522936
+      },
+      "total_full_read_path_ms": 54.866392
+    },
+    {
+      "index": 2,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 2.392706,
+        "physical_after_ms": 2.149894,
+        "physical_before_ms": 1.697261,
+        "ps_ms": 12.397401,
+        "systemctl_show_ms": 38.73491
+      },
+      "total_full_read_path_ms": 58.514737
+    },
+    {
+      "index": 3,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 4.297959,
+        "physical_after_ms": 1.761292,
+        "physical_before_ms": 1.690339,
+        "ps_ms": 13.649057,
+        "systemctl_show_ms": 39.098688
+      },
+      "total_full_read_path_ms": 62.228356
+    },
+    {
+      "index": 4,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 3.48389,
+        "physical_after_ms": 2.422545,
+        "physical_before_ms": 1.737749,
+        "ps_ms": 16.043533,
+        "systemctl_show_ms": 36.829839
+      },
+      "total_full_read_path_ms": 62.222954
+    },
+    {
+      "index": 5,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 6.990149,
+        "physical_after_ms": 2.157305,
+        "physical_before_ms": 1.824952,
+        "ps_ms": 15.190464,
+        "systemctl_show_ms": 40.487765
+      },
+      "total_full_read_path_ms": 67.904595
+    },
+    {
+      "index": 6,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 4.753069,
+        "physical_after_ms": 1.91198,
+        "physical_before_ms": 1.70656,
+        "ps_ms": 15.330523,
+        "systemctl_show_ms": 35.637338
+      },
+      "total_full_read_path_ms": 60.792657
+    },
+    {
+      "index": 7,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 2.784843,
+        "physical_after_ms": 1.727238,
+        "physical_before_ms": 1.632398,
+        "ps_ms": 12.690137,
+        "systemctl_show_ms": 36.878881
+      },
+      "total_full_read_path_ms": 57.224226
+    },
+    {
+      "index": 8,
+      "load_average": [
+        0.080078125,
+        0.4775390625,
+        0.98193359375
+      ],
+      "segments": {
+        "cron_ms": 2.893626,
+        "physical_after_ms": 1.714567,
+        "physical_before_ms": 1.642075,
+        "ps_ms": 12.690139,
+        "systemctl_show_ms": 34.562134
+      },
+      "total_full_read_path_ms": 55.202062
+    },
+    {
+      "index": 9,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 4.078631,
+        "physical_after_ms": 2.32639,
+        "physical_before_ms": 1.6023,
+        "ps_ms": 13.459159,
+        "systemctl_show_ms": 36.362681
+      },
+      "total_full_read_path_ms": 60.134168
+    },
+    {
+      "index": 10,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 6.748249,
+        "physical_after_ms": 1.769461,
+        "physical_before_ms": 2.113063,
+        "ps_ms": 12.930024,
+        "systemctl_show_ms": 59.952952
+      },
+      "total_full_read_path_ms": 85.018213
+    },
+    {
+      "index": 11,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 2.630892,
+        "physical_after_ms": 1.974303,
+        "physical_before_ms": 1.953819,
+        "ps_ms": 11.974029,
+        "systemctl_show_ms": 38.373187
+      },
+      "total_full_read_path_ms": 58.290258
+    },
+    {
+      "index": 12,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 6.133795,
+        "physical_after_ms": 2.132851,
+        "physical_before_ms": 1.695232,
+        "ps_ms": 14.793713,
+        "systemctl_show_ms": 38.936729
+      },
+      "total_full_read_path_ms": 65.720129
+    },
+    {
+      "index": 13,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 4.726226,
+        "physical_after_ms": 1.73058,
+        "physical_before_ms": 1.85225,
+        "ps_ms": 20.270105,
+        "systemctl_show_ms": 37.472155
+      },
+      "total_full_read_path_ms": 67.593855
+    },
+    {
+      "index": 14,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 3.676241,
+        "physical_after_ms": 2.078138,
+        "physical_before_ms": 1.681926,
+        "ps_ms": 13.319077,
+        "systemctl_show_ms": 37.333512
+      },
+      "total_full_read_path_ms": 59.586827
+    },
+    {
+      "index": 15,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 2.811741,
+        "physical_after_ms": 1.864985,
+        "physical_before_ms": 1.789967,
+        "ps_ms": 14.584535,
+        "systemctl_show_ms": 37.654631
+      },
+      "total_full_read_path_ms": 60.739328
+    },
+    {
+      "index": 16,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 2.979047,
+        "physical_after_ms": 1.678943,
+        "physical_before_ms": 1.716241,
+        "ps_ms": 12.921417,
+        "systemctl_show_ms": 34.818399
+      },
+      "total_full_read_path_ms": 55.642158
+    },
+    {
+      "index": 17,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 3.42319,
+        "physical_after_ms": 1.866482,
+        "physical_before_ms": 1.600871,
+        "ps_ms": 13.591389,
+        "systemctl_show_ms": 36.272
+      },
+      "total_full_read_path_ms": 58.147669
+    },
+    {
+      "index": 18,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 3.380397,
+        "physical_after_ms": 2.211158,
+        "physical_before_ms": 1.625843,
+        "ps_ms": 12.556468,
+        "systemctl_show_ms": 37.059807
+      },
+      "total_full_read_path_ms": 58.22594
+    },
+    {
+      "index": 19,
+      "load_average": [
+        0.15380859375,
+        0.486328125,
+        0.982421875
+      ],
+      "segments": {
+        "cron_ms": 6.167576,
+        "physical_after_ms": 3.032086,
+        "physical_before_ms": 1.886552,
+        "ps_ms": 16.358257,
+        "systemctl_show_ms": 35.789049
+      },
+      "total_full_read_path_ms": 64.929056
+    }
+  ],
+  "schema": "MONTHLY_LEGACY_READ_PATH_TIMING_DIAGNOSTIC_V1",
+  "scope": "full real read path at observed natural load; successful retirement parser path/peak-load worst case and broker dispatch not proven",
+  "synthetic_retired_state_used": false,
+  "unit_changes": 0
+}

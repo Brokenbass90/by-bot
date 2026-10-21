@@ -1,0 +1,13 @@
+{
+  "schema": "MONTHLY_LEGACY_COST_TRANSITION_REPRO_V1",
+  "status": "REPRODUCED_BLOCKER",
+  "baseline_owned_cost_case": "PASS",
+  "legacy_exit_precedes_new_monthly_anchor": true,
+  "legacy_fee_posts_after_anchor": true,
+  "observed_rejection": "MONTHLY_COST_FOREIGN_FILL",
+  "legacy_trade_adopted": false,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "fixture_only": true,
+  "outcomes_recomputed": false
+}

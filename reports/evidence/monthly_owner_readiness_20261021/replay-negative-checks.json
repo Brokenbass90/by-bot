@@ -1,0 +1,14 @@
+[
+  {
+    "case": "ambient_pf",
+    "status": "REJECTED_BEFORE_REPLAY",
+    "expected_reason": "AMBIENT_PF_CONFIG_REFUSED",
+    "output_created": false
+  },
+  {
+    "case": "fixture_drift",
+    "status": "REJECTED_BEFORE_REPLAY",
+    "expected_reason": "FIXTURE_DRIFT",
+    "output_created": false
+  }
+]

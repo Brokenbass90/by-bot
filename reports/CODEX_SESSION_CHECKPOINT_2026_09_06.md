@@ -1,5 +1,33 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT21Oct OWNER LAUNCH INTENT CONFIRMED / MONTHLY PACKET + PUMP4 REPLAY —
+Basea41df12. Read MONTHLY_OWNER_READINESS_AND_PUMP4_REPLAY_2026_10_21.md.
+Owner direct GO intent/current account ceiling supersedes pasted older example;
+privateproposal .private/monthly_owner_packet_20261021/OWNER_REVIEW.md contains
+actual8GET broker/NET reconciliation, budget/reserve/loss/validity arithmetic.
+DoNOTask general launchintentagain. Proposed reserve/loss/attempt/validity areNOTissuedterms;
+contract487.42/.70/.60 remains unchanged, larger1000–1500notauthorized.
+No brokerwrites/financialunits/HALT/lock/GO/claimchanges. Currentbroker andunit
+facts private; no currentDAYprotectionPASS inferred outsideRTH.
+ACTUAL blocker reproduced: latelegacyfee/account-day source afternewanchor gives
+MONTHLY_COST_FOREIGN_FILL. ExistingownedcostbaselinePASS. Nextcode: explicitpinned
+legacy cost transition without NET adoption or weakeningforeignfillguard; then
+freezeactualoperationalscope/configandonefinalownerpacket. DoNOTfilter fees/markzero.
+OldNov2personalexitmanifest d6fe…1b58 now1of9sourcepinsstale followingapproved19Oct
+managerrepair. Privateone-pinrepinreviewproposal prepared; otherfields/plan/date/
+qty preserved, originalwrapper/manifestunmodified/notrun. DoNOTofferoldcommandasREADY.
+Realfull-readpath20samples median60.44/p9567.90/max85.02ms atnatural2CPUload;
+NOTsuccessfulretirement/peakstress/brokerlatency.2s/5sunchanged. Measurementreceiptpublicsanitized.
+PUMP4publishedb138735/7b0a961 ancestorsorigin98cc87a confirmed: SOURCE_REPLAY65/65
+signal+geometryPASS,1ASTERunavailable;2negativechecksPASS, no R/judge/fundingcalc.
+Executionadapter/continuousrestartparityNOT_RUN, no LIVEauthorization. Nextdurable
+cursor/cooldown+existingBybitadapter; doNOTclaim producerreplaycloses28Octexecutorgate.
+Deadlines26OctpacketREADY/BLOCKED;28OctPUMPexec65parity/BLOCKED;30OctMonthlytechnical
+andactualsource;2Novoriginalmarketwindowconditional. No waitforcalendarinengineering.
+All rawbrokerfinancial/unit/profilefacts remainprivate; researchcode/KARTA untouched;
+Claude notmessaged; foreignallowlist365ff7d6…cc2e0e unchanged. No full135rerunbecause
+productioncodeunchanged. Continuefromprivateprogress, notoldroadmapinventory.
+
 CURRENT21Oct MORNING MONTHLY LEGACY HANDOFF ADMISSION COMPONENT CLOSED —
 Read ALPACA_MONTHLY_LEGACY_HANDOFF_2026_10_21.md and evidence/monthly_handoff_20261021.
 Base0fa7429; material1c3ff09eedee1cac615ae230921e0bef3522ef9f889ebc52211f8d8fdc6507db.
