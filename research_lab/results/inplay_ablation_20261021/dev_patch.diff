@@ -1,0 +1,37 @@
+332a333,337
+>         _vm = os.getenv("IRV4_RETEST_VOL_MODE", "strong").strip().lower()   # DEV 21.10: weak = слабый объём на ретесте (замысел владельца)
+>         if _vm == "weak":
+>             vol_ok = (avg_v <= 0) or (vols[-1] <= float(os.getenv("IRV4_RETEST_VOL_MAX", "1.0")) * avg_v)
+>         elif _vm == "any":
+>             vol_ok = True
+333a339,350
+>         # DEV 21.10 (ablation C): механизм по причине — флэт → только отскок A; тренд → только пробой-ретест B по направлению канала
+>         self._mA = self._mB = self._mL = self._mS = True
+>         if os.getenv("IRV4_MECH_BY_REGIME", "0") == "1":
+>             _rs = _range_state(rows, require_all=False, allow_sloped=False)
+>             if _rs.ok and _rs.is_range:
+>                 self._mB = False
+>             elif _rs.ok:
+>                 self._mA = False
+>                 if _rs.regime == "ascending": self._mS = False
+>                 elif _rs.regime == "descending": self._mL = False
+>             else:
+>                 self._no("regime_unknown"); return None
+336c353
+<         if cfg.allow_long:
+---
+>         if cfg.allow_long and self._mA and self._mL:
+370c387
+<         if cfg.allow_short:
+---
+>         if cfg.allow_short and self._mA and self._mS:
+405,406c422,423
+<         if cfg.enable_setup_b and vol_ok:
+<             if cfg.allow_long:
+---
+>         if cfg.enable_setup_b and vol_ok and self._mB:
+>             if cfg.allow_long and self._mL:
+433c450
+<             if cfg.allow_short:
+---
+>             if cfg.allow_short and self._mS:
