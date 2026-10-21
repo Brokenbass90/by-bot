@@ -1,5 +1,39 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT21Oct OWNER BUDGET CONFIRMED / POSTED LEGACY COST + DURABLE LOSS COMPONENT PASS —
+Read ALPACA_MONTHLY_LEGACY_COST_AND_LOSS_LATCH_2026_10_21.md. Base1096957;
+material7628c2a9bd798c9366c9e6e80fca163a431fa99972ac3c185785694300b3ba9e.
+LOCAL209PASS542.949s + sameVPS209PASS488.363s;53source/16helpers/40imports/0fallback,
+2fullsynthetic E2E receipts. Network denied;0realbrokerrequests/writes;93priorstatic
+pins unchanged by independent GET; code candidate UNSELECTED. One actualastra/high
+componentreview + targetedfixes,27independent overlappingPASS. WAL/diskfailure,
+restart/markrecovery/custody + finalsealpin mutation tested. Known stop-response
+recovery gap now rejected before WAL, not permanently latched. No automaticreset.
+Latest direct owner budget/loss/reserve/max4/no-borrow terms supersede previous
+approximately490/341.19 proposal; exactterms PRIVATE in
+.private/monthly_owner_packet_20261021/OWNER_REVIEW.md. DoNOTask generalGOagain.
+PostedlegacyNETcost bridge PASS, separateowner-pinned terminalseal boundtocashanchor/
+scope/config and rechecked afterfinalclockGET. No NETadoption or foreignfillwaiver.
+ACTUAL NEXT P0: pending legacy-cost classifier. Mixedlegacy pending fees now
+LEGACY_ATTRIBUTION_UNRESOLVED BEFORE MonthlyPnL/WAL (prevents falsepermanentlosslatch).
+Firstentry legacy liabilities withoutMonthlyexits still LIABILITY_UNCLASSIFIED.
+DoNOTclaim complete costhandoff/READY or zero fees. Need source-backed classification
+retainingALLaccountcash/reserve and onlyMonthlycosts inMonthlyloss; no calendarwait.
+FreshpersonalNETexitmanifest/unit comparison + independentreview exactonepinproposal;
+plan/date/entry/qty/otherfields same, nothinginstalled/armed/run. Originalexitpacket
+stillnotreadytouse. Finalscope/confignotfrozen, no executablefinancialGO.
+c80712c published ancestororigin3ed9b64 verified; boundeddependencycheck NO_IMPACT
+forMonthly/frozenPUMP4/KITY/selectedNET (actual40sourceAST,staticpinsvalid). Generic
+FX/structural callers affected; pump_exhaustion_unwind_short_v1 != frozenPUMP4.
+All11immutable reviewlinks in BRAIN_PRODUCTION_DEPENDENCY_CHECK_2026_10_21.md.
+No researchmerge/code/KARTA/judge/Claude messaging, no NET/SHOP/HALT/lock/profile/
+financialunits/ownerclaim changes. No new broker protection verdict from thiswork.
+PUMP4actualexecutor/continuousrestart/BybitTINY still NOT_RUN, source65only; nextmoney
+executor followscurrentfinancialfix, not2Nov/InPlay/newresearch.26Octpacket,
+28OctPUMPexecutor,30Octsource/technical deadlines unchanged,2Novwindow conditional.
+Private resumption ledger .private/monthly_transition_20261021/progress.md.
+Foreignallowlist365ff7d6…cc2e0e preserved/untracked. Priorcurrent blocks below history.
+
 CURRENT21Oct OWNER LAUNCH INTENT CONFIRMED / MONTHLY PACKET + PUMP4 REPLAY —
 Basea41df12. Read MONTHLY_OWNER_READINESS_AND_PUMP4_REPLAY_2026_10_21.md.
 Owner direct GO intent/current account ceiling supersedes pasted older example;

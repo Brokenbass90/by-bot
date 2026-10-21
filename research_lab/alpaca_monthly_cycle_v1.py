@@ -228,6 +228,7 @@ class MonthlyManager:
                                 if guarded else self.finalize(native,eid,sources[eid],now_ms=clock()))
                 native._require_admission_accounting(now_ms=clock())
             attempt('ACCOUNTING',finality)
+            attempt('LOSS_ADMISSION',lambda:native.observe_standing_loss(now_ms=clock()))
             bundle=attempt('SOURCE',source_loader) if source_loader else None
             if bundle is not None:
                 out['source']=attempt('SOURCE_BIND',lambda:self.source(bundle,now_ms=clock()))

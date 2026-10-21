@@ -176,8 +176,15 @@ class MonthlyNativeBinding:
             raise ValueError('MONTHLY_STANDING_REVOKE_PATH')
         return path
 
-    @staticmethod
-    def _standing_entry_state(scope,now):
+    def _loss_latch_guard(self):
+        # Every existing leaf, including corrupt data/directory/dangling link,
+        # blocks BUY. Never repair or unlink it during restart or grant renewal.
+        for name in ('standing-loss-stop.json','standing-loss-observation.json'):
+            path=self.runtime/name
+            if os.path.lexists(path):raise ValueError('MONTHLY_STANDING_LOSS_LATCHED')
+            lifecycle.safe_path(str(path))
+
+    def _standing_entry_state(self,scope,now):
         # Entry-only. Existing custody/recovery/protection never consults expiry.
         if not scope['valid_from_ms']<=now<scope['valid_until_ms']:
             raise ValueError('MONTHLY_STANDING_NOT_CURRENT')
@@ -186,10 +193,12 @@ class MonthlyNativeBinding:
         os.stat(path.parent)  # inaccessible/missing parent is not proof of no marker
         if os.path.lexists(path):
             raise ValueError('MONTHLY_STANDING_REVOKED')
+        self._loss_latch_guard()
 
     def _entry_authority(self,ticket,now,*,reserved=False):
         started=time.monotonic()
         scope=self._live_custody();selection=self._selection(ticket['selection_id'])
+        self._loss_latch_guard()
         if scope['schema']==STANDING_SCHEMA:
             self._standing_entry_state(scope,now)
             if (selection['source_code_sha256']!=baseline.source_pins()
@@ -205,6 +214,9 @@ class MonthlyNativeBinding:
                  and not (reserved and cid==ticket['client_order_id']))
         if used>=scope['max_new_entries_per_session']:
             raise ValueError('MONTHLY_SESSION_ENTRY_ALREADY_CONSUMED')
+        if scope.get('legacy_cost_transition') is not None:
+            from research_lab.alpaca_monthly_cost_source_v1 import read_legacy_transition
+            read_legacy_transition(scope['legacy_cost_transition'],account_id=self.account,before_ms=now)
         from research_lab.alpaca_monthly_handoff_v1 import capture_retirement
         self._entry_handoff_proof=capture_retirement(scope.get('legacy_handoff'),ticket['client_order_id'],
             now_ms=now+int((time.monotonic()-started)*1000))
@@ -256,7 +268,7 @@ class MonthlyNativeBinding:
         if {o['id'] for o in orders}!=stop_ids or len(orders)!=len(stop_ids):
             raise ValueError('MONTHLY_FOREIGN_OR_UNRECONCILED_ORDER')
         if scope and scope['schema']==STANDING_SCHEMA:
-            self._check_standing_loss(scope,realized,positions)
+            self._observe_loss_locked(scope,now_ms=now)
         notional=positive(ticket['notional']);equity=min(positive(account['equity']),dec(self.capital))
         cash=min(dec(account['cash']),dec(account['non_marginable_buying_power']))
         gross=sum((abs(dec(p['market_value'])) for p in positions),dec(0))
@@ -275,6 +287,11 @@ class MonthlyNativeBinding:
         positive(quote['ap'])
         anchor=dict(schema='ALPACA_MONTHLY_CASH_ANCHOR_V1',account_id=self.account,
             client_order_id=ticket['client_order_id'],observed_ms=account_observed,account=account)
+        if scope and scope.get('legacy_cost_transition') is not None:
+            from research_lab.alpaca_monthly_cost_source_v1 import read_legacy_transition
+            transition=read_legacy_transition(scope['legacy_cost_transition'],account_id=self.account,
+                before_ms=account_observed)
+            anchor['legacy_transition_sha256']=digest(transition)
         if admission:anchor['pending_fee_admission']=admission
         return anchor
 
@@ -284,6 +301,90 @@ class MonthlyNativeBinding:
                       for p in positions),dec(0))
         if realized+floating<=-positive(scope['max_cumulative_net_loss_usd']):
             raise ValueError('MONTHLY_STANDING_LOSS_ADMISSION_STOP')
+
+    def _begin_loss_observation(self,scope,*,now_ms):
+        self._loss_latch_guard()
+        from research_lab.kity_oct15_deadline_v1 import publish_once
+        import uuid
+        path=self.runtime/'standing-loss-observation.json'
+        raw=lifecycle.canonical(dict(schema='ALPACA_MONTHLY_LOSS_OBSERVATION_V1',
+            account_id=self.account,book=str(self.book.path),scope_sha256=self.live_scope_sha256,
+            observed_ms=now_ms,token=uuid.uuid4().hex))
+        publish_once(path,raw)
+        return path,raw
+
+    def _latch_standing_loss(self,scope,realized,positions,*,now_ms,observation=None):
+        # Production always begins before GETing the loss inputs. Direct pure
+        # callers also reserve before evaluating the values passed to this method.
+        proof=observation or self._begin_loss_observation(scope,now_ms=now_ms)
+        path,raw=proof
+        if (path!=self.runtime/'standing-loss-observation.json'
+            or lifecycle.safe_path(str(path),exists=True).read_bytes()!=raw
+            or json.loads(raw)['account_id']!=self.account or json.loads(raw)['book']!=str(self.book.path)
+            or json.loads(raw)['scope_sha256']!=self.live_scope_sha256):
+            raise ValueError('MONTHLY_LOSS_OBSERVATION_CONFLICT')
+        if os.path.lexists(self.runtime/'standing-loss-stop.json'):
+            raise ValueError('MONTHLY_STANDING_LOSS_LATCHED')
+        try:self._check_standing_loss(scope,realized,positions)
+        except ValueError as exc:
+            if str(exc)!='MONTHLY_STANDING_LOSS_ADMISSION_STOP':raise
+            from research_lab.kity_oct15_deadline_v1 import publish_once
+            floating=sum((positive(p['qty'])*(positive(p['current_price'])-positive(p['avg_entry_price']))
+                for p in positions),dec(0))
+            proof=dict(schema='ALPACA_MONTHLY_STANDING_LOSS_LATCH_V1',account_id=self.account,
+                book=str(self.book.path),scope_sha256=self.live_scope_sha256,observed_ms=now_ms,
+                realized_net_usd=str(realized),unrealized_usd=str(floating),
+                trigger_usd=scope['max_cumulative_net_loss_usd'],new_buys_allowed=False,
+                custody_continues=True,reset_authority='SEPARATE_OWNER_GO_REQUIRED')
+            try:publish_once(self.runtime/'standing-loss-stop.json',lifecycle.canonical(proof))
+            except FileExistsError:raise ValueError('MONTHLY_STANDING_LOSS_LATCHED') from None
+            raise
+        # Only a validated SAFE result clears its own write-ahead observation.
+        # No finally/except repair: crash, unknown ownership, or failed stop
+        # publication retains it and blocks future BUY across process restarts.
+        path.unlink()
+        from research_lab.kity_oct15_deadline_v1 import fsync_dir
+        fsync_dir(path.parent)
+
+    def _loss_owned_positions(self):
+        positions=self.client.list_positions()
+        owned={p['symbol']:p for p in self.book.rows('positions')}
+        if (len({p['symbol'] for p in positions})!=len(positions)
+            or {p['symbol'] for p in positions}!=set(owned)):
+            raise ValueError('MONTHLY_LOSS_FOREIGN_OR_UNRECONCILED_POSITION')
+        for p in positions:
+            saved=owned[p['symbol']]
+            if (p.get('side')!='long' or positive(p['qty'])!=positive(saved['qty'])
+                or positive(p['avg_entry_price'])!=positive(saved['raw_entry']['filled_avg_price'])):
+                raise ValueError('MONTHLY_LOSS_OWNERSHIP_CONFLICT')
+        return positions
+
+    def _observe_loss_locked(self,scope,*,now_ms):
+        # Known incomplete recovery/accounting is an ordinary admission wait,
+        # not a new uncertain PnL observation requiring owner intervention.
+        account=self.client.get_account()
+        if account.get('id')!=self.account:raise ValueError('MONTHLY_LOSS_ACCOUNT_CONFLICT')
+        self._accounting_for_admission(account=account,now_ms=now_ms)
+        self._loss_owned_positions()
+        proof=self._begin_loss_observation(scope,now_ms=now_ms)
+        account=self.client.get_account();positions=self._loss_owned_positions()
+        if account.get('id')!=self.account:raise ValueError('MONTHLY_LOSS_ACCOUNT_CONFLICT')
+        realized,_=self._accounting_for_admission(account=account,now_ms=now_ms)
+        self._latch_standing_loss(scope,realized,positions,now_ms=now_ms,observation=proof)
+
+    def observe_standing_loss(self,*,now_ms):
+        """Tick observation independent of a new signal; protects through latching.
+
+        Called AFTER recovery, native custody and cost reconciliation. Unknown
+        accounting/ownership blocks new risk; no uncertainty is turned into PnL.
+        No reset or forced-sale path exists here.
+        """
+        if self.base_url!=lifecycle.LIVE:return
+        scope=self._live_custody()
+        if scope['schema']!=STANDING_SCHEMA:return
+        with account_lock(dict(lock_path=str(self.lock_path))):
+            self._native_authority()
+            self._observe_loss_locked(scope,now_ms=now_ms)
 
     def _require_exit_accounting(self):
         self._accounting_net()
@@ -479,6 +580,10 @@ class MonthlyNativeBinding:
                         _,pending_proof=self._accounting_for_admission(account=self.client.get_account(),
                             now_ms=now+int((time.monotonic()-started)*1000))
                     clock=self.client.get_clock();stamp=native._parse_iso_utc(clock.get('timestamp',''))
+                    if scope and scope.get('legacy_cost_transition') is not None:
+                        from research_lab.alpaca_monthly_cost_source_v1 import read_legacy_transition
+                        read_legacy_transition(scope['legacy_cost_transition'],account_id=self.account,
+                            before_ms=now+int((time.monotonic()-started)*1000))
                     effective=now+int((time.monotonic()-started)*1000)
                     self._pending_dispatch_fresh(pending_proof,effective)
                     if (clock.get('is_open') is not True or stamp is None
@@ -490,6 +595,7 @@ class MonthlyNativeBinding:
                     if scope and scope['schema']==STANDING_SCHEMA:
                         self._standing_entry_state(scope,effective)
                     if scope:
+                        self._loss_latch_guard()
                         from research_lab.alpaca_monthly_handoff_v1 import require_fresh
                         require_fresh(self._entry_handoff_proof,scope['legacy_handoff'],cid,now_ms=effective)
                 try:

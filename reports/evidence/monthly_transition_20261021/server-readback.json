@@ -1,0 +1,18 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "candidate_selected": false,
+  "financial_units_changed": 0,
+  "protected_pins_unchanged": true,
+  "protected_static_pins": 93,
+  "receipt_files": {
+    "server-acceptance.json": "02f433811c433d9bffea43b62ecc9641352b103aa35e5a9e4f32ef8f22f33923",
+    "server-imports.json": "2b5f547b92ca13fca88f03064d6b043779c5d13636eec0ba1bf412b4622ef0d9",
+    "server-rehearsal-receipts.json": "afc576ac4bf1ec4f306dc0709821bd22f8add9fb1b8f482f0f68f38fa984fa4e",
+    "server-tests.xml": "1617b5c1d771a0786edadea571e77c25ce25a123404369d5fa11c1e4cb449988"
+  },
+  "schema": "ALPACA_MONTHLY_TRANSITION_INDEPENDENT_GET_V1",
+  "source_hashes_valid": true,
+  "status": "PASS",
+  "test_hashes_valid": true
+}

@@ -1,0 +1,42 @@
+{
+  "counts_overlap": true,
+  "financial_approval": false,
+  "financial_envelope_review": {
+    "armed": false,
+    "changed_values": 1,
+    "files_read": 2,
+    "installed": false,
+    "other_fields_unchanged": true,
+    "status": "PASS"
+  },
+  "findings": [
+    {
+      "issue": "loss latch publication failure could be forgotten",
+      "resolution": "durable pre-read observation, retained on error/restart",
+      "severity": "Important",
+      "status": "CLOSED"
+    },
+    {
+      "issue": "foreign pending NET fee could be mislabelled Monthly PnL and falsely latch",
+      "resolution": "explicit LEGACY_ATTRIBUTION_UNRESOLVED rejection before loss observation; full pending classifier remains OPEN",
+      "severity": "Important",
+      "status": "SAFE_REJECTION_IMPLEMENTED"
+    }
+  ],
+  "full_server_e2e_independently_reviewed": false,
+  "independent_targeted_tests": 27,
+  "review_runtime": {
+    "actual_turn_contexts": 4,
+    "effort": "high",
+    "model": "gpt-6-astra",
+    "verified": true
+  },
+  "root_e2e_regression": {
+    "issue": "known stop-response recovery gap produced permanent observation",
+    "resolution": "prevalidate known ownership before WAL and re-read after WAL",
+    "status": "CLOSED_EXACT_LOCAL_AND_VPS_209_PASS"
+  },
+  "schema": "BOUNDED_MONTHLY_TRANSITION_REVIEW_V1",
+  "targeted_fix_checks": true,
+  "whole_component_review_count": 1
+}

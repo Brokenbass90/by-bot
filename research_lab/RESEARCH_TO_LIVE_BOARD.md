@@ -1,5 +1,7 @@
 # Trading OS — единая доска доведения до первой версии
 
+21Oct execution delta: [posted legacy-cost bridge + durable loss latch](../reports/ALPACA_MONTHLY_LEGACY_COST_AND_LOSS_LATCH_2026_10_21.md),209local/same209VPS PASS. Monthly remains BLOCKED on explicit legacy pending-cost classification; final financial activation not issued. PUMP4 actual executor remains next, source65/65 is not execution PASS. [c80712c dependency check / external review links](../reports/BRAIN_PRODUCTION_DEPENDENCY_CHECK_2026_10_21.md): checked money closures NO_IMPACT, no research promotion. This is a derived delta, not a second roadmap.
+
 20 октября 2026. **Единственный общий roadmap и активная очередь:**
 [ROADMAP_SELF_IMPROVING.md](../ROADMAP_SELF_IMPROVING.md).
 Интегрирующий writer общего roadmap/этой доски — **Codex**; research statuses,

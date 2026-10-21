@@ -72,6 +72,8 @@ def runner_authority(spec):
     from research_lab.alpaca_monthly_handoff_v1 import validate_policy
     validate_policy(spec.get('legacy_handoff'))
     if scope.get('legacy_handoff')!=spec['legacy_handoff']:raise ValueError('RUNNER_HANDOFF_OWNER_POLICY_CONFLICT')
+    if scope.get('legacy_cost_transition')!=(spec.get('costs') or {}).get('legacy_transition'):
+        raise ValueError('RUNNER_LEGACY_COST_OWNER_POLICY_CONFLICT')
     if (scope.get('schema')!=STANDING_SCHEMA
         or scope.get('runner_config_sha256')!=runner_config_sha256(spec)):
         raise ValueError('RUNNER_SEPARATE_CONFIG_AUTHORITY_REQUIRED')
@@ -136,7 +138,7 @@ def dispatch_cycle(spec,*,client_factory=None,now_ms=None,bundle_loader=None):
             config=spec['costs']
             paths={name+'_path':pinned_input(config[name]) for name in ('protocol','calendar','assets')}
             return capture_and_produce_cost_sources(bound,after=config['after'],
-                allow_pending=bound.pending_fee_admission,**paths)
+                allow_pending=bound.pending_fee_admission,legacy_transition=config.get('legacy_transition'),**paths)
         out=m.tick(bound,now_ms=clock(),apply=True,source_loader=lambda:load(spec['source_captures'],clock()),
             cost_sources=costs,notifications=spec.get('notifications'))
         out['production_entrypoint']=True

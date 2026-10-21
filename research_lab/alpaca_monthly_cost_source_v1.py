@@ -40,8 +40,51 @@ def _allocate(total, weights):
     return out
 
 
+def legacy_transition_orders(transition, *, account_id, before_ms):
+    """Owner-pinned terminal legacy inventory; no adoption or cash adjustment.
+
+    This is a one-time activation input sealed after NET is completely closed.
+    Unknown/later/partial orders cannot become an account-day fee allowlist.
+    """
+    def require(ok):
+        if not ok:raise ValueError('MONTHLY_COST_LEGACY_TRANSITION_INVALID')
+    require(isinstance(transition,dict) and set(transition)=={
+        'schema','account_id','classification','sealed_ms','entry','exits'})
+    require(transition['schema']=='ALPACA_MONTHLY_LEGACY_TERMINAL_COST_TRANSITION_V1'
+        and transition['account_id']==account_id and transition['classification']=='OFF_PROTOCOL'
+        and type(transition['sealed_ms']) is int and 0<transition['sealed_ms']<=before_ms)
+    entry=transition['entry'];exits=transition['exits']
+    require(isinstance(entry,dict) and isinstance(exits,list) and bool(exits))
+    require(entry['symbol']=='NET' and entry['side']=='buy' and entry['status']=='filled'
+        and isinstance(entry.get('id'),str) and bool(entry['id']) and bool(entry.get('client_order_id'))
+        and dec(entry['qty'])==dec(entry['filled_qty'])>0 and dec(entry['filled_avg_price'])>0)
+    seen={entry['id']};quantity=dec(0)
+    for order in exits:
+        require(isinstance(order,dict) and isinstance(order.get('id'),str) and bool(order['id'])
+            and order['id'] not in seen and order['side']=='sell' and order['symbol']=='NET'
+            and order['status']=='filled' and bool(order.get('client_order_id'))
+            and dec(order['qty'])==dec(order['filled_qty'])>0 and dec(order['filled_avg_price'])>0
+            and _ms(entry['filled_at'])<=_ms(order['filled_at'])<=transition['sealed_ms'])
+        seen.add(order['id']);quantity+=dec(order['filled_qty'])
+    require(quantity==dec(entry['filled_qty']))
+    return exits
+
+
+def read_legacy_transition(pin, *, account_id, before_ms):
+    from research_lab.alpaca_dynamic_live_runtime_v1 import safe_path
+    if not isinstance(pin,dict) or set(pin)!={'path','sha256'}:
+        raise ValueError('MONTHLY_COST_LEGACY_TRANSITION_PIN')
+    raw=safe_path(pin['path'],exists=True).read_bytes()
+    if hashlib.sha256(raw).hexdigest()!=pin['sha256']:
+        raise ValueError('MONTHLY_COST_LEGACY_TRANSITION_PIN')
+    import json
+    value=json.loads(raw)
+    legacy_transition_orders(value,account_id=account_id,before_ms=before_ms)
+    return value
+
+
 def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
-                           positions, exits, entry_id, pending=False):
+                           positions, exits, entry_id, pending=False,legacy_transition=None):
     """Derive one external finality document; caller pins/persists every input.
 
     Full raw source replay and the pinned retail protocol precede allocation.
@@ -82,6 +125,18 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             require(order['id'] not in orders and order['side'] == 'sell'
                 and order['symbol'] == r['retired_position']['symbol'], 'OWNERSHIP')
             orders[order['id']] = order; owner[order['id']] = r['entry_id']
+    legacy_owner=None
+    if legacy_transition is not None:
+        require(anchor.get('legacy_transition_sha256')==digest(legacy_transition),'LEGACY_TRANSITION_UNBOUND')
+        legacy_orders=legacy_transition_orders(legacy_transition,account_id=source['account_id'],
+            before_ms=anchor['observed_ms'])
+        require(legacy_transition['entry']['id'] not in orders,'LEGACY_TRANSITION_OWNER_CONFLICT')
+        legacy_owner='LEGACY:'+legacy_transition['entry']['id']
+        require(legacy_owner not in owner.values(),'LEGACY_TRANSITION_OWNER_CONFLICT')
+        for order in legacy_orders:
+            require(order['id'] not in orders,'LEGACY_TRANSITION_OWNER_CONFLICT')
+            orders[order['id']]=order;owner[order['id']]=legacy_owner
+    else:require('legacy_transition_sha256' not in anchor,'LEGACY_TRANSITION_REQUIRED')
     trades = defaultdict(list); basis = defaultdict(lambda: defaultdict(lambda: defaultdict(Decimal)))
     cash_moves = []; entry_times = []
     for row in source['activities']:
@@ -91,6 +146,9 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             order = orders[oid]; at = _ms(row['transaction_time'])
             require(row['side'] == order['side'] and row['symbol'] == order['symbol']
                 and at <= _ms(order['filled_at']), 'ORDER_FILL_CONFLICT')
+            if owner[oid]==legacy_owner:require(_ms(legacy_transition['entry']['filled_at'])<=at
+                <=legacy_transition['sealed_ms']<=anchor['observed_ms'],
+                'LEGACY_TRANSITION_AFTER_ANCHOR')
             qty, price = dec(row['qty']), dec(row['price'])
             trades[oid].append(row)
             day = datetime.fromisoformat(row['transaction_time'].replace('Z', '+00:00')).astimezone(ZoneInfo('America/New_York')).date().isoformat()
@@ -164,6 +222,9 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             unposted_account_fees_usd=proof['unposted_account_fees_usd'],
             known_net_before_pending_account_fees_usd=str(activity_gross-allocated),
             terminal_cost_finality_proven=False)
+    if legacy_transition is not None:
+        out.update(legacy_transition_sha256=digest(legacy_transition),
+            legacy_regulatory_fees_usd=str(charge[legacy_owner]),legacy_classification='OFF_PROTOCOL')
     return out
 
 
@@ -222,6 +283,12 @@ def pending_admission_net(native, *, account, now_ms, owner_scope=None):
         require(doc.get('schema')=='ALPACA_MONTHLY_PENDING_FEE_ESTIMATE_V1'
             and doc.get('monthly_entry_id')==eid,'ESTIMATE_REQUIRED')
         require(_document(doc['replay_inputs'],eid,pending=True)==doc,'REPLAY_CONFLICT')
+        # Account reserve remains comprehensive, but unallocated legacy costs
+        # must never be mislabelled Monthly PnL and trip its durable loss latch.
+        # Posted-only legacy closure is supported; mixed pending attribution is
+        # explicitly blocked until its source-backed classifier is accepted.
+        require(not (doc.get('legacy_transition_sha256')
+            and dec(doc['unposted_account_fees_usd'])>0),'LEGACY_ATTRIBUTION_UNRESOLVED')
         if native.base_url=='https://api.alpaca.markets':
             require(owner_scope is not None and doc['replay_inputs']['protocol']['sha256']==
                 owner_scope.get('pending_fee_protocol_sha256'),'PROTOCOL_SCOPE_CONFLICT')
@@ -253,7 +320,7 @@ def pending_admission_net(native, *, account, now_ms, owner_scope=None):
 
 
 def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, assets_path, now_ms,
-                         allow_pending=False):
+                         allow_pending=False,legacy_transition=None):
     """Existing tick cost_sources callback: only order GETs + immutable evidence.
 
     Does not construct a controller/journal, load credentials, submit or invoke a
@@ -276,6 +343,9 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
     if type(allow_pending) is not bool:raise ValueError('MONTHLY_COST_EXPLICIT_MODE_REQUIRED')
     paths = dict(source=source_path, protocol=protocol_path, calendar=calendar_path, assets=assets_path)
     inputs = {name: pin(path) for name,path in paths.items()}
+    if legacy_transition is not None:
+        read_legacy_transition(legacy_transition,account_id=native.account,before_ms=now_ms)
+        inputs['legacy_transition']=dict(legacy_transition)
     source = read_json(inputs['source']['path'])
     if (source['account_id'] != native.account or type(now_ms) is not int
         or not source['observed_ms'] <= now_ms): raise ValueError('MONTHLY_COST_SOURCE_ACCOUNT_OR_TIME')
@@ -326,7 +396,7 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
 
 
 def capture_and_produce_cost_sources(native, *, after, protocol_path, calendar_path, assets_path, now_ms=None,
-                                    allow_pending=False):
+                                    allow_pending=False,legacy_transition=None):
     """Automatic read-only source callback for the one existing dispatcher.
 
     No exits means no accounting capture. Immutable raw source is kept even when
@@ -366,4 +436,4 @@ def capture_and_produce_cost_sources(native, *, after, protocol_path, calendar_p
     if not clock_path.exists():publish_once(clock_path,canonical(raw_clock))
     return produce_cost_sources(native,source_path=path,protocol_path=protocol_path,
         calendar_path=calendar_path,assets_path=assets_path,now_ms=source['observed_ms'] if now_ms is None else now_ms,
-        allow_pending=allow_pending)
+        allow_pending=allow_pending,legacy_transition=legacy_transition)

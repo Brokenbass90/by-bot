@@ -1,0 +1,33 @@
+{
+  "broker_requests": 0,
+  "components": {
+    "kity": {
+      "batch_ast_sources": 18,
+      "manifest_sources": 24,
+      "micro_ast_sources": 5,
+      "status": "NO_IMPACT"
+    },
+    "monthly": {
+      "manifest_sources": 53,
+      "runner_ast_sources": 43,
+      "status": "NO_IMPACT"
+    },
+    "pump4_frozen": {
+      "ast_sources": 3,
+      "status": "NO_IMPACT"
+    },
+    "selected_net_manager": {
+      "ast_sources": 40,
+      "static_pins_valid": true,
+      "status": "NO_IMPACT"
+    }
+  },
+  "imports_changed_modules": [],
+  "observed_origin": "3ed9b64969886583f7a51119962d6d9b5f4baf89",
+  "published_ancestor": true,
+  "remote_writes": 0,
+  "research_commit": "c80712ca824fe6bd1b3534ab4030a85811ddc3bd",
+  "research_merged": false,
+  "schema": "BRAIN_BOUNDED_DEPENDENCY_CHECK_V1",
+  "whole_live_inventory_audited": false
+}
