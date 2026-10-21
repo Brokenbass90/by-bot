@@ -1,0 +1,3 @@
+strategy,symbol,side,entry_ts,exit_ts,entry_price,exit_price,qty,pnl,pnl_pct_equity,fees,outcome,reason
+inplay_retest_v4,SUIUSDT,short,1781103600000,1781104800000,0.75434779,0.75329202,39.76150042,0.00601123,0.000060,0.03596761,sl,irv4A_short lvl=0.755033 rr=3.0 quality=0.69:retest_ok range_off elder_off level_entry limit=0.754499 valid=2+TRAIL_SL
+inplay_retest_v4,ADAUSDT,short,1781114400000,1781117400000,0.16189285,0.16351365,185.27068635,-0.33645887,-0.003364,0.03617297,sl,irv4A_short lvl=0.162067 rr=3.0 quality=0.74:retest_ok range_off elder_off level_entry limit=0.161925 valid=2+SL

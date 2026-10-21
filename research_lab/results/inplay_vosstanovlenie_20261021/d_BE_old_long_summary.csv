@@ -1,0 +1,2 @@
+tag,days,end_date_utc,symbols,strategies,starting_equity,ending_equity,trades,net_pnl,profit_factor,winrate,avg_win,avg_loss,max_drawdown,news_blocked_signals,entry_execution,fee_bps_per_side,slippage_bps_per_side
+d_BE_old_long,690,2025-06-01,BTCUSDT;ETHUSDT,inplay_retest_v4,100.00,96.50,35,-3.50,0.408,0.343,0.2014,-0.2572,4.7994,0,next_open,6.0000,2.0000

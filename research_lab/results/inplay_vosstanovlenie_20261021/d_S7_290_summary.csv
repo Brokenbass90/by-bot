@@ -1,0 +1,2 @@
+tag,days,end_date_utc,symbols,strategies,starting_equity,ending_equity,trades,net_pnl,profit_factor,winrate,avg_win,avg_loss,max_drawdown,news_blocked_signals,entry_execution,fee_bps_per_side,slippage_bps_per_side
+d_S7_290,290,2026-03-31,ADAUSDT;DOGEUSDT;SUIUSDT;DOTUSDT;LTCUSDT;LINKUSDT;SOLUSDT,inplay_retest_v4,100.00,104.77,74,4.77,1.621,0.635,0.2647,-0.2843,1.5422,0,next_open,6.0000,2.0000

@@ -1,0 +1,2 @@
+tag,days,end_date_utc,symbols,strategies,starting_equity,ending_equity,trades,net_pnl,profit_factor,winrate,avg_win,avg_loss,max_drawdown,news_blocked_signals,entry_execution,fee_bps_per_side,slippage_bps_per_side
+d_O9_290,290,2026-03-31,XRPUSDT;AVAXUSDT;BNBUSDT;BCHUSDT;XLMUSDT;ONDOUSDT;ATOMUSDT;BTCUSDT;ETHUSDT,inplay_retest_v4,100.00,99.05,64,-0.95,0.900,0.516,0.2615,-0.3091,2.4880,0,next_open,6.0000,2.0000

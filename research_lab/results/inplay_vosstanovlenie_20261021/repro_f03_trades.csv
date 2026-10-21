@@ -1,0 +1,4 @@
+strategy,symbol,side,entry_ts,exit_ts,entry_price,exit_price,qty,pnl,pnl_pct_equity,fees,outcome,reason
+inplay_retest_v4,ADAUSDT,short,1774980000000,1774980900000,0.23939997,0.24116965,125.28823752,-0.25784658,-0.002578,0.03612583,sl,irv4B_short flip=0.239600 quality=0.55:retest_ok breakout_off elder_off level_entry limit=0.239448 valid=4+SL
+inplay_retest_v4,DOTUSDT,short,1775962800000,1775967900000,1.24585792,1.23271296,24.07497635,0.28066166,0.002814,0.03580292,sl,irv4B_short flip=1.246900 quality=0.64:retest_ok breakout_off elder_off level_entry limit=1.246107 valid=4+TP1+TRAIL_SL
+inplay_retest_v4,DOTUSDT,short,1775970000000,1775986500000,1.22890750,1.21695715,24.40704442,0.25585490,0.002558,0.03581780,sl,irv4B_short flip=1.229933 quality=0.57:retest_ok breakout_off elder_off level_entry limit=1.229153 valid=4+TP1+TRAIL_SL
