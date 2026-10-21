@@ -1,5 +1,7 @@
 # Trading OS — единая доска доведения до первой версии
 
+21Oct evening execution delta: [legacy pending classifier](../reports/ALPACA_MONTHLY_LEGACY_PENDING_ACCEPTANCE_2026_10_21.md) **241local/same241VPS exactPASS**, first BUY without own exits + late/mixed fees/restart; prior software blocker CLOSED. Engineering candidate READY_FOR_OWNER_REVIEW; executable activation BLOCKED on actual NET terminal/handoff, final config/scope/owner actions and scheduled market facts. Full account reserve retained; only Monthly costs enter loss. No LIVE/NET/SHOP/unit changes. Next PUMP4 executor, without calendar wait. Earlier21Oct deltas below are historical. This is derived from the canonical roadmap, not a new queue.
+
 21Oct execution delta: [posted legacy-cost bridge + durable loss latch](../reports/ALPACA_MONTHLY_LEGACY_COST_AND_LOSS_LATCH_2026_10_21.md),209local/same209VPS PASS. Monthly remains BLOCKED on explicit legacy pending-cost classification; final financial activation not issued. PUMP4 actual executor remains next, source65/65 is not execution PASS. [c80712c dependency check / external review links](../reports/BRAIN_PRODUCTION_DEPENDENCY_CHECK_2026_10_21.md): checked money closures NO_IMPACT, no research promotion. This is a derived delta, not a second roadmap.
 
 20 октября 2026. **Единственный общий roadmap и активная очередь:**

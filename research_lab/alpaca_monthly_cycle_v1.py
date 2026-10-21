@@ -208,8 +208,9 @@ class MonthlyManager:
             out['maintenance']=attempt('MAINTENANCE',lambda:self.maintain(native,now_ms=clock(),apply=True))
             def finality(*,guarded=False):
                 import sqlite3
-                sources=cost_sources(self.book.rows('exits')) if callable(cost_sources) else cost_sources or {}
+                native.pending_account_fee_source=None
                 native.pending_fee_sources={}
+                sources=cost_sources(self.book.rows('exits')) if callable(cost_sources) else cost_sources or {}
                 for exited in self.book.rows('exits'):
                     eid=exited['entry_id'];identity=digest(dict(schema=CONTRACT['schema'],entry_id=eid))
                     p=native.runtime/'safety'/identity/'live.sqlite';done=False

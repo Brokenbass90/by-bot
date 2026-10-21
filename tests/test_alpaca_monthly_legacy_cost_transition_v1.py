@@ -122,6 +122,9 @@ def test_unattributed_legacy_pending_fee_never_becomes_monthly_loss_pnl(case,tmp
     pin=dict(path=str(path),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
     native.pending_fee_sources=costs.produce_cost_sources(native,**paths,legacy_transition=pin,
         now_ms=c['observed'],allow_pending=True)
+    # A target estimate alone is insufficient. The new classifier's complete
+    # same-account context must also be replayed before admitting pending costs.
+    native.pending_account_fee_source=None
     with pytest.raises(ValueError,match='LEGACY_ATTRIBUTION_UNRESOLVED'):
         native._accounting_for_admission(account=source['account_after'],now_ms=c['observed'])
     assert not (native.runtime/'standing-loss-observation.json').exists()

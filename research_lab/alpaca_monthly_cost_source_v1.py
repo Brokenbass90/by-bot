@@ -83,14 +83,9 @@ def read_legacy_transition(pin, *, account_id, before_ms):
     return value
 
 
-def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
-                           positions, exits, entry_id, pending=False,legacy_transition=None):
-    """Derive one external finality document; caller pins/persists every input.
-
-    Full raw source replay and the pinned retail protocol precede allocation.
-    The native finalizer independently re-reads entry/exit orders, flatness and
-    current cash. This function cannot release a slot, submit or enable anything.
-    """
+def _account_day_context(*,source,protocol,calendar,assets,positions,exits,
+                         legacy_transition=None,anchor=None,pending=False):
+    """One source/ownership/allocation implementation for exit and initial admission."""
     proof = reconcile_account_day_fees(source, protocol=protocol, protocol_sha256=digest(protocol),
         calendar=calendar, calendar_sha256=digest(calendar), assets=assets, assets_sha256=digest(assets),
         pending=pending)
@@ -102,15 +97,6 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
         require(all(v>=0 for v in liabilities)
             and sum(liabilities,dec(0))<=dec(proof['unposted_account_fees_usd']), 'LIABILITY_UNCLASSIFIED')
     else:require(all(v==0 for v in liabilities), 'LIABILITY_PENDING')
-    require(anchor.get('schema') == 'ALPACA_MONTHLY_CASH_ANCHOR_V1'
-        and anchor.get('account_id') == source['account_id'] == anchor['account']['id']
-        and anchor['account'].get('currency') == 'USD'
-        and type(anchor.get('observed_ms')) is int
-        and _ms(source['coverage']['after']) <= anchor['observed_ms'] < source['observed_ms'], 'ANCHOR_UNKNOWN')
-    found = [r for r in exits if r['entry_id'] == entry_id]
-    require(len(found) == 1, 'OWNED_EXIT_REQUIRED')
-    target = found[0]; retired = target['retired_position']; entry = retired['raw_entry']
-    require(anchor.get('client_order_id') == entry.get('client_order_id'), 'ANCHOR_OWNER')
     orders = {}; owner = {}
     for p in positions + [r['retired_position'] for r in exits]:
         order = p['raw_entry']; oid = p['entry_id']
@@ -127,18 +113,18 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             orders[order['id']] = order; owner[order['id']] = r['entry_id']
     legacy_owner=None
     if legacy_transition is not None:
-        require(anchor.get('legacy_transition_sha256')==digest(legacy_transition),'LEGACY_TRANSITION_UNBOUND')
+        if anchor is not None:require(anchor.get('legacy_transition_sha256')==digest(legacy_transition),'LEGACY_TRANSITION_UNBOUND')
         legacy_orders=legacy_transition_orders(legacy_transition,account_id=source['account_id'],
-            before_ms=anchor['observed_ms'])
+            before_ms=anchor['observed_ms'] if anchor is not None else _ms(source['coverage']['until']))
         require(legacy_transition['entry']['id'] not in orders,'LEGACY_TRANSITION_OWNER_CONFLICT')
         legacy_owner='LEGACY:'+legacy_transition['entry']['id']
         require(legacy_owner not in owner.values(),'LEGACY_TRANSITION_OWNER_CONFLICT')
         for order in legacy_orders:
             require(order['id'] not in orders,'LEGACY_TRANSITION_OWNER_CONFLICT')
             orders[order['id']]=order;owner[order['id']]=legacy_owner
-    else:require('legacy_transition_sha256' not in anchor,'LEGACY_TRANSITION_REQUIRED')
+    elif anchor is not None:require('legacy_transition_sha256' not in anchor,'LEGACY_TRANSITION_REQUIRED')
     trades = defaultdict(list); basis = defaultdict(lambda: defaultdict(lambda: defaultdict(Decimal)))
-    cash_moves = []; entry_times = []
+    cash_moves = []; entry_times = defaultdict(list)
     for row in source['activities']:
         kind = row['activity_type']
         if kind == 'FILL':
@@ -147,7 +133,7 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             require(row['side'] == order['side'] and row['symbol'] == order['symbol']
                 and at <= _ms(order['filled_at']), 'ORDER_FILL_CONFLICT')
             if owner[oid]==legacy_owner:require(_ms(legacy_transition['entry']['filled_at'])<=at
-                <=legacy_transition['sealed_ms']<=anchor['observed_ms'],
+                <=legacy_transition['sealed_ms'],
                 'LEGACY_TRANSITION_AFTER_ANCHOR')
             qty, price = dec(row['qty']), dec(row['price'])
             trades[oid].append(row)
@@ -156,7 +142,7 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             if row['side'] == 'sell': basis[day]['SEC'][oid] += qty*price
             exact = qty*price*(1 if row['side'] == 'sell' else -1)
             cash_moves.append((at, exact.quantize(CENT, rounding=ROUND_HALF_UP), oid, exact))
-            if oid == entry_id: entry_times.append(at)
+            if owner[oid] == oid: entry_times[oid].append(at)
         elif kind == 'FEE':
             require(row.get('status') == 'executed' and row.get('currency') == 'USD'
                 and row['id'] not in proof['uncovered_fee_activity_ids'], 'UNCOVERED_FEE')
@@ -165,7 +151,6 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             require(kind in {'DIV', 'INT', 'JNLC'} and row.get('status') == 'executed'
                 and row.get('currency') == 'USD' and row.get('created_at'), 'UNCLASSIFIED_CASH_ACTIVITY')
             cash_moves.append((_ms(row['created_at']), dec(row['net_amount']), None, dec(row['net_amount'])))
-    require(entry_times and anchor['observed_ms'] < min(entry_times), 'ANCHOR_AFTER_ENTRY')
     for oid, order in orders.items():
         rows = trades[oid]; qty = sum((dec(r['qty']) for r in rows), dec(0))
         require(qty > 0 and qty == dec(order['filled_qty']), 'ORDER_QUANTITY_CONFLICT')
@@ -189,6 +174,52 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             parts = _allocate(dec(day['posted'][kind]), basis[day['session']][kind])
             allocations[day['session']][kind] = {k: str(v) for k,v in sorted(parts.items())}
             for oid, amount in parts.items(): charge[owner[oid]] += amount
+    expected_charge=defaultdict(Decimal)
+    for day in proof['days']:
+        for kind in ('CAT','SEC'):
+            for oid,amount in _allocate(dec(day['expected'][kind]),basis[day['session']][kind]).items():
+                expected_charge[owner[oid]]+=amount
+    monthly_expected=sum((v for k,v in expected_charge.items() if k!=legacy_owner),dec(0))
+    monthly_posted=sum((v for k,v in charge.items() if k!=legacy_owner),dec(0))
+    # Largest remainder may reassign a posted penny when the final total grows.
+    # These are owner-specific conservative upper bounds, not an additive cash
+    # partition: never credit an unposted allocation revision as strategy profit.
+    classification=dict(unposted_account_fees_usd=proof.get('unposted_account_fees_usd','0'),
+        monthly_unposted_fee_upper_bound_usd=str(max(dec(0),monthly_expected-monthly_posted)),
+        legacy_unposted_fee_upper_bound_usd=str(max(dec(0),expected_charge[legacy_owner]-charge[legacy_owner]))
+            if legacy_owner is not None else '0',
+        posted_monthly_fees_usd=str(monthly_posted),
+        posted_open_monthly_fees_usd=str(sum((charge[p['entry_id']] for p in positions),dec(0))),
+        posted_legacy_fees_usd=str(charge[legacy_owner]) if legacy_owner is not None else '0')
+    return dict(proof=proof,cash_moves=cash_moves,entry_times=entry_times,allocations=allocations,
+        charge=charge,legacy_owner=legacy_owner,classification=classification)
+
+
+def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
+                           positions, exits, entry_id, pending=False,legacy_transition=None):
+    """Derive one external finality document; caller pins/persists every input.
+
+    Full raw source replay and the pinned retail protocol precede allocation.
+    The native finalizer independently re-reads entry/exit orders, flatness and
+    current cash. This function cannot release a slot, submit or enable anything.
+    """
+    def require(ok,reason):
+        if not ok:raise ValueError('MONTHLY_COST_'+reason)
+    require(anchor.get('schema') == 'ALPACA_MONTHLY_CASH_ANCHOR_V1'
+        and anchor.get('account_id') == source['account_id'] == anchor['account']['id']
+        and anchor['account'].get('currency') == 'USD'
+        and type(anchor.get('observed_ms')) is int
+        and _ms(source['coverage']['after']) <= anchor['observed_ms'] < source['observed_ms'], 'ANCHOR_UNKNOWN')
+    found = [r for r in exits if r['entry_id'] == entry_id]
+    require(len(found) == 1, 'OWNED_EXIT_REQUIRED')
+    target = found[0]; retired = target['retired_position']; entry = retired['raw_entry']
+    require(anchor.get('client_order_id') == entry.get('client_order_id'), 'ANCHOR_OWNER')
+    context=_account_day_context(source=source,protocol=protocol,calendar=calendar,assets=assets,
+        positions=positions,exits=exits,legacy_transition=legacy_transition,anchor=anchor,pending=pending)
+    proof=context['proof'];account=source['account_after']
+    cash_moves=context['cash_moves'];entry_times=context['entry_times'][entry_id]
+    require(entry_times and anchor['observed_ms']<min(entry_times),'ANCHOR_AFTER_ENTRY')
+    allocations=context['allocations'];charge=context['charge'];legacy_owner=context['legacy_owner']
     moves = [r for r in cash_moves if anchor['observed_ms'] < r[0] <= source['observed_ms']]
     before = dec(anchor['account']['cash']); after = dec(account['cash'])
     require(before + sum((r[1] for r in moves), dec(0)) == after, 'ACCOUNT_CASH_CONFLICT')
@@ -223,6 +254,7 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             known_net_before_pending_account_fees_usd=str(activity_gross-allocated),
             terminal_cost_finality_proven=False)
     if legacy_transition is not None:
+        if pending:out.update(context['classification'])
         out.update(legacy_transition_sha256=digest(legacy_transition),
             legacy_regulatory_fees_usd=str(charge[legacy_owner]),legacy_classification='OFF_PROTOCOL')
     return out
@@ -239,6 +271,33 @@ def _document(inputs, entry_id, *, pending=False):
         raise ValueError('MONTHLY_COST_BOOK_ACCOUNT')
     derived = derive_owned_exit_cost(**values, positions=snapshot['positions'], exits=snapshot['exits'],
         entry_id=entry_id,pending=pending)
+    return _seal_document(derived,inputs)
+
+
+def _account_document(inputs):
+    """Same source and allocation replay, including the first Monthly BUY."""
+    from research_lab.alpaca_dynamic_live_runtime_v1 import read_json
+    from research_lab.alpaca_fee_to_live_closure_v1 import check_rows
+    check_rows(inputs.values())
+    values={name:read_json(row['path']) for name,row in inputs.items()}
+    snapshot=values.pop('book_snapshot')
+    if (snapshot['schema']!='ALPACA_MONTHLY_COST_BOOK_SNAPSHOT_V1'
+        or snapshot['account_id']!=values['source']['account_id']
+        or 'legacy_transition' not in values):raise ValueError('MONTHLY_COST_BOOK_ACCOUNT')
+    context=_account_day_context(**values,positions=snapshot['positions'],exits=snapshot['exits'],pending=True)
+    source=values['source']
+    derived=dict(schema='ALPACA_MONTHLY_ACCOUNT_FEE_ADMISSION_V1',account_id=source['account_id'],
+        source_sha256=digest(source),observed_ms=source['observed_ms'],
+        coverage_end_ms=_ms(source['coverage']['until']),allocation_policy=ALLOCATION_POLICY,
+        account_day_allocations=context['allocations'],fee_day_proof_sha256=digest(context['proof']),
+        legacy_transition_sha256=digest(values['legacy_transition']),
+        **context['classification'],terminal_cost_finality_proven=False,
+        broker_per_order_fee_attribution=False,money_authority=False,orders_allowed=False)
+    return _seal_document(derived,inputs)
+
+
+def _seal_document(derived,inputs):
+    from research_lab.alpaca_fee_to_live_closure_v1 import pin
     from research_lab import alpaca_fee_to_live_closure_v1, alpaca_monthly_native_binding_v1, alpaca_dynamic_live_runtime_v1
     from research_lab import alpaca_monthly_binding_v1, alpaca_dynamic_v1, alpaca_live_readiness_v1
     code = [pin(p) for p in (__file__, alpaca_fee_to_live_closure_v1.__file__,
@@ -276,24 +335,23 @@ def pending_admission_net(native, *, account, now_ms, owner_scope=None):
             for before,after in zip(old['orders'],new['orders']):execution_identity_v1(before,after)
             normalized=dict(new,retired_position=old['retired_position'],orders=old['orders'])
             require(digest(normalized)==digest(old),'BOOK_CONFLICT')
-    require(native.pending_fee_sources and type(now_ms) is int,'SOURCE_REQUIRED')
-    known={};common=None;bound=None;pins={}
-    for eid,path in sorted(native.pending_fee_sources.items()):
-        p=safe_path(str(path),exists=True);doc=read_json(str(p))
-        require(doc.get('schema')=='ALPACA_MONTHLY_PENDING_FEE_ESTIMATE_V1'
-            and doc.get('monthly_entry_id')==eid,'ESTIMATE_REQUIRED')
-        require(_document(doc['replay_inputs'],eid,pending=True)==doc,'REPLAY_CONFLICT')
-        # Account reserve remains comprehensive, but unallocated legacy costs
-        # must never be mislabelled Monthly PnL and trip its durable loss latch.
-        # Posted-only legacy closure is supported; mixed pending attribution is
-        # explicitly blocked until its source-backed classifier is accepted.
-        require(not (doc.get('legacy_transition_sha256')
-            and dec(doc['unposted_account_fees_usd'])>0),'LEGACY_ATTRIBUTION_UNRESOLVED')
+    context_path=getattr(native,'pending_account_fee_source',None)
+    if native.base_url=='https://api.alpaca.markets' and owner_scope and owner_scope.get('legacy_cost_transition'):
+        require(context_path is not None,'ACCOUNT_CONTEXT_REQUIRED')
+    require((native.pending_fee_sources or context_path) and type(now_ms) is int,'SOURCE_REQUIRED')
+    known={};common=None;bound=None;pins={};monthly_bound=None;account_doc=None
+    def checked(doc):
+        nonlocal common,bound
         if native.base_url=='https://api.alpaca.markets':
             require(owner_scope is not None and doc['replay_inputs']['protocol']['sha256']==
                 owner_scope.get('pending_fee_protocol_sha256'),'PROTOCOL_SCOPE_CONFLICT')
-        snapshot=read_json(doc['replay_inputs']['book_snapshot']['path'])
-        same_book(snapshot)
+            if doc.get('legacy_transition_sha256'):
+                require(doc['replay_inputs'].get('legacy_transition')==owner_scope.get('legacy_cost_transition'),
+                    'LEGACY_SCOPE_CONFLICT')
+                expected=dict(after=read_json(doc['replay_inputs']['source']['path'])['coverage']['after'],
+                    **{k:doc['replay_inputs'][k] for k in ('protocol','calendar','assets')})
+                require(owner_scope.get('legacy_pending_cost_inputs')==expected,'LEGACY_SOURCE_POLICY_CONFLICT')
+        snapshot=read_json(doc['replay_inputs']['book_snapshot']['path']);same_book(snapshot)
         source=read_json(doc['replay_inputs']['source']['path']);after=source['account_after']
         require(doc['account_id']==native.account==account.get('id')==after.get('id')
             and account.get('currency')==after.get('currency')=='USD','ACCOUNT_CONFLICT')
@@ -305,18 +363,44 @@ def pending_admission_net(native, *, account, now_ms, owner_scope=None):
         require(common is None or identity==common,'MIXED_SOURCES');common=identity
         amount=dec(doc['unposted_account_fees_usd'])
         require(amount>=0 and (bound is None or amount==bound),'BOUND_CONFLICT');bound=amount
+        return source
+    if context_path:
+        p=safe_path(str(context_path),exists=True);account_doc=read_json(str(p))
+        require(account_doc.get('schema')=='ALPACA_MONTHLY_ACCOUNT_FEE_ADMISSION_V1'
+            and _account_document(account_doc['replay_inputs'])==account_doc,'ACCOUNT_CONTEXT_REPLAY_CONFLICT')
+        source=checked(account_doc)
+        monthly_bound=dec(account_doc['monthly_unposted_fee_upper_bound_usd'])
+        require(monthly_bound>=0,'BOUND_CONFLICT')
+        context_pin=dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+    for eid,path in sorted(native.pending_fee_sources.items()):
+        p=safe_path(str(path),exists=True);doc=read_json(str(p))
+        require(doc.get('schema')=='ALPACA_MONTHLY_PENDING_FEE_ESTIMATE_V1'
+            and doc.get('monthly_entry_id')==eid,'ESTIMATE_REQUIRED')
+        require(_document(doc['replay_inputs'],eid,pending=True)==doc,'REPLAY_CONFLICT')
+        if doc.get('legacy_transition_sha256'):require(account_doc is not None,'LEGACY_ATTRIBUTION_UNRESOLVED')
+        source=checked(doc)
         known[eid]=doc['known_net_before_pending_account_fees_usd']
         pins[eid]=dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())
     require(bound<=native.liability,'RESERVE_EXCEEDED')
-    lower=native._accounting_net(pending=known)-bound
+    # Cash admission reserves the ENTIRE account bound. Only the Monthly-owned
+    # allocation enters the strategy loss metric; never credit a modelled refund.
+    posted_open=dec(account_doc['posted_open_monthly_fees_usd']) if account_doc else dec(0)
+    require(posted_open>=0,'BOUND_CONFLICT')
+    lower=native._accounting_net(pending=known)-(bound if monthly_bound is None else monthly_bound)-posted_open
     effective=now_ms+int((time.monotonic()-started)*1000)
     require(0<=effective-source['observed_ms']<=5000
         and 0<=effective-_ms(source['coverage']['until'])<=5000,'STALE_SOURCE')
-    return lower,dict(policy='SOURCE_CLASSIFIED_WITHIN_EXISTING_RESERVE_V1',
+    out=dict(policy='SOURCE_CLASSIFIED_WITHIN_EXISTING_RESERVE_V1',
         unposted_account_fees_usd=str(bound),cash_reserve_usd=str(native.liability),
         conservative_realized_net_usd=str(lower),sources=pins,
         source_observed_ms=source['observed_ms'],source_coverage_end_ms=_ms(source['coverage']['until']),
         terminal_cost_finality_proven=False)
+    if account_doc:
+        out.update(monthly_unposted_fee_upper_bound_usd=str(monthly_bound),
+            posted_open_monthly_fees_usd=str(posted_open),
+            legacy_unposted_fee_upper_bound_usd=account_doc['legacy_unposted_fee_upper_bound_usd'],
+            account_context_source=context_pin)
+    return lower,out
 
 
 def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, assets_path, now_ms,
@@ -351,7 +435,7 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
         or not source['observed_ms'] <= now_ms): raise ValueError('MONTHLY_COST_SOURCE_ACCOUNT_OR_TIME')
     with account_lock(dict(lock_path=str(native.lock_path))):
         positions = deepcopy(native.book.rows('positions')); exits = deepcopy(native.book.rows('exits'))
-        if not exits: return {}
+        if not exits and legacy_transition is None: return {}
         for p in positions + [e['retired_position'] for e in exits]:
             current = native.client.get_order(p['entry_id'])
             execution_identity_v1(p['raw_entry'], current); p['raw_entry'] = current
@@ -392,6 +476,10 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
             path = root/(eid+'.json')
             if Path(eid).name != eid or eid in {'', '.', '..'}: raise ValueError('MONTHLY_COST_ORDER_ID')
             publish(path, document); out[eid] = str(path)
+        if legacy_transition is not None:
+            document=_account_document(inputs)
+            path=root/'account-admission.json';publish(path,document)
+            native.pending_account_fee_source=str(path)
         return out
 
 
@@ -399,7 +487,8 @@ def capture_and_produce_cost_sources(native, *, after, protocol_path, calendar_p
                                     allow_pending=False,legacy_transition=None):
     """Automatic read-only source callback for the one existing dispatcher.
 
-    No exits means no accounting capture. Immutable raw source is kept even when
+    A legacy transition also requires capture before the first Monthly exit.
+    Immutable raw source is kept even when
     fees are pending; a later tick may collect newly posted assessments without
     submitting a trade or overwriting prior evidence. Metadata inputs remain pinned.
     """
@@ -408,7 +497,7 @@ def capture_and_produce_cost_sources(native, *, after, protocol_path, calendar_p
     from research_lab.alpaca_fee_to_live_closure_v1 import collect_account_cost_source, CostSourceCaptureError
     from research_lab.alpaca_monthly_source_ops_v1 import safe_path
     from research_lab.kity_oct15_deadline_v1 import publish_once
-    if not native.book.rows('exits'):return {}
+    if not native.book.rows('exits') and legacy_transition is None:return {}
     raw_clock=None
     try:
         raw_clock=native.client.cost_get('/v2/clock',{})

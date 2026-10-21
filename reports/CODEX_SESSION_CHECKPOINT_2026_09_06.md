@@ -1,5 +1,32 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT21Oct MONTHLY LEGACY PENDING CLASSIFIER EXACT COMPONENT PASS —
+Read ALPACA_MONTHLY_LEGACY_PENDING_ACCEPTANCE_2026_10_21.md. Base622d27a;
+material527a9f0489bb11c3d9dcb88ab6ef6f7b2a2d704cb9b7b865699ea384f3788ea5.
+LOCAL241PASS361.881s + sameVPS241PASS252.853s;53source/17helpers,
+40imports/0fallback,2synthetic fullE2E receipts. Sockets denied;VPSenv-i/unshare--net/
+nice15;0realbrokerrequests/writes. IndependentGETsource/test/receipt hashes valid,
+93priorstaticpins unchanged, candidateUNSELECTED. Initial233PASS2FAIL retained:
+repeatedAST scans expiredpendingproof; importnames-only exactbytecache fixesCPU
+waste, source/hash/path/dependencyexistence/authority/2s/5s checks remain fresh.
+One actualastra/highfinancialreview2P1fixed(openMonthlypostedfees,mandatorylegacy
+context); sameworker4financial +8cache/firstBUY targetedPASS overlap final suite.
+FirstBUY noMonthlyexits, mixeddays/latefees/reimport/restart/stopreplyloss PASS.
+Entireaccountbound reserved; onlyMonthlyposted/pendingfees enterloss. NETremains
+OFF_PROTOCOL; missingcontext/unknownfill/liability/stale source reject; no finality
+fromzeroAPIfee. Old legacyclassifierBLOCKED paragraphs below are now history.
+ENGINEERINGCANDIDATE READY_FOR_OWNER_REVIEW; executableactivation still BLOCKED:
+actualoriginalNETterminalseal/quantity/orders, retirement/singlemanager/rollback,
+finalactualconfig/scope hashes + preciseownerauthority,30Octsource/2Novbroker facts.
+Budget400/280/40/max4/loss8/no-newborrowing confirmedPRIVATE; no generalGOquestion
+again. No executableGO, financialunit/pointer/NET/SHOP/HALT/profile/lock/claims
+changes; currentNETprotection NOT checkedbycodeacceptance. Oldexitrepinproposal
+reviewed/unapplied, never run oldwrapper. NextmoneyPUMP4executor withoutNovember/
+Brain/InPlaywait;65sourceonly isnotBybitexecution. KITYSPENT/ORDERS_OFF unchanged.
+26Octpacket/28OctPUMPacceptance/30Octsource checkpoints remain;2Nov14:30–14:35UTC
+window conditional. Privateprogress .private/monthly_legacy_pending_20261021/progress.md.
+Foreignallowlist365ff7d6…cc2e0e preserved/untracked. Prior current blocks below history.
+
 CURRENT21Oct OWNER BUDGET CONFIRMED / POSTED LEGACY COST + DURABLE LOSS COMPONENT PASS —
 Read ALPACA_MONTHLY_LEGACY_COST_AND_LOSS_LATCH_2026_10_21.md. Base1096957;
 material7628c2a9bd798c9366c9e6e80fca163a431fa99972ac3c185785694300b3ba9e.

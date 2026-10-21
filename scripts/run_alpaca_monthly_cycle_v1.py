@@ -74,6 +74,9 @@ def runner_authority(spec):
     if scope.get('legacy_handoff')!=spec['legacy_handoff']:raise ValueError('RUNNER_HANDOFF_OWNER_POLICY_CONFLICT')
     if scope.get('legacy_cost_transition')!=(spec.get('costs') or {}).get('legacy_transition'):
         raise ValueError('RUNNER_LEGACY_COST_OWNER_POLICY_CONFLICT')
+    if (scope.get('legacy_cost_transition') is not None and
+        scope.get('legacy_pending_cost_inputs')!={k:spec['costs'][k] for k in ('after','protocol','calendar','assets')}):
+        raise ValueError('RUNNER_LEGACY_PENDING_SOURCE_POLICY_CONFLICT')
     if (scope.get('schema')!=STANDING_SCHEMA
         or scope.get('runner_config_sha256')!=runner_config_sha256(spec)):
         raise ValueError('RUNNER_SEPARATE_CONFIG_AUTHORITY_REQUIRED')
@@ -134,8 +137,8 @@ def dispatch_cycle(spec,*,client_factory=None,now_ms=None,bundle_loader=None):
         client=(client_factory or production_client)(spec)
         bound=m.native(client,base_url=LIVE,**options)
         def costs(exits):
-            if not exits:return {}
             config=spec['costs']
+            if not exits and config.get('legacy_transition') is None:return {}
             paths={name+'_path':pinned_input(config[name]) for name in ('protocol','calendar','assets')}
             return capture_and_produce_cost_sources(bound,after=config['after'],
                 allow_pending=bound.pending_fee_admission,legacy_transition=config.get('legacy_transition'),**paths)

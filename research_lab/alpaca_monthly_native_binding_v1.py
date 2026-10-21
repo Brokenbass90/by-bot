@@ -6,6 +6,7 @@ pass the native LIVE binding/approval checks and supply its explicit client.
 The disabled source CLI cannot call the applying methods.
 """
 from datetime import datetime,timezone
+from functools import lru_cache
 import json
 import hashlib
 import os
@@ -33,9 +34,21 @@ def monthly_universe():
     return required_symbols()
 
 
-def standing_source_pins():
-    """Same AST import-closure approach as existing readiness packaging, no imports run."""
+@lru_cache(maxsize=128)
+def _source_imports(raw):
+    """Cache parsing of exact bytes only, never paths, hashes or authority."""
     import ast
+    modules={'scripts.equities_earnings_filter'}
+    for node in ast.walk(ast.parse(raw)):
+        if isinstance(node,ast.Import):modules.update(a.name for a in node.names)
+        elif isinstance(node,ast.ImportFrom) and not node.level:
+            modules.add(node.module or '')
+            modules.update((node.module+'.'+a.name) for a in node.names if node.module)
+    return frozenset(modules)
+
+
+def standing_source_pins():
+    """Fresh hashes/existence/path checks; identical bytes reuse AST extraction."""
     names=set(baseline.source_pins())|{
         'research_lab/alpaca_monthly_native_binding_v1.py',
         'research_lab/alpaca_monthly_cycle_v1.py',
@@ -47,13 +60,8 @@ def standing_source_pins():
     while queue:
         name=queue.pop()
         if not name.endswith('.py'):continue
-        modules={'scripts.equities_earnings_filter'}
-        for node in ast.walk(ast.parse((ROOT/name).read_bytes())):
-            if isinstance(node,ast.Import):modules.update(a.name for a in node.names)
-            elif isinstance(node,ast.ImportFrom) and not node.level:
-                modules.add(node.module or '')
-                modules.update((node.module+'.'+a.name) for a in node.names if node.module)
-        for module in modules:
+        raw=lifecycle.safe_path(str(ROOT/name),exists=True).read_bytes()
+        for module in _source_imports(raw):
             target=module.replace('.','/')
             deps={target+'.py',target+'/__init__.py'}|{str(p/'__init__.py') for p in Path(target).parents}
             for dep in sorted(deps-names):
@@ -80,6 +88,7 @@ class MonthlyNativeBinding:
         if type(pending_fee_admission) is not bool or (pending_fee_admission and self.liability<=0):
             raise ValueError('MONTHLY_PENDING_FEE_POSITIVE_RESERVE_REQUIRED')
         self.pending_fee_admission=pending_fee_admission;self.pending_fee_sources={}
+        self.pending_account_fee_source=None
         self.live_scope_path=live_scope_path;self.live_scope_sha256=live_scope_sha256
         self.owner_go_path=owner_go_path
         if self.halt==self.ledger or self.halt==self.reentry or self.halt==self.lock_path:
@@ -398,13 +407,17 @@ class MonthlyNativeBinding:
             if (account.get('id')!=self.account or account.get('currency')!='USD'
                 or any(v<0 for v in liabilities)):
                 raise ValueError('MONTHLY_PENDING_FEE_LIABILITY_UNKNOWN')
+        scope=self._live_custody() if self.pending_fee_admission and self.base_url==lifecycle.LIVE else None
+        if self.pending_fee_admission and (self.pending_account_fee_source is not None
+            or (scope and scope.get('legacy_cost_transition') is not None)):
+            from research_lab.alpaca_monthly_cost_source_v1 import pending_admission_net
+            return pending_admission_net(self,account=account,now_ms=now_ms,owner_scope=scope)
         try:
             realized=self._accounting_net()
             if any(liabilities):raise ValueError('MONTHLY_PENDING_FEE_LIABILITY_UNCLASSIFIED')
             return realized,None
         except ValueError as exc:
             if str(exc)!='MONTHLY_ACCOUNTING_PENDING' or not self.pending_fee_admission:raise
-        scope=self._live_custody() if self.base_url==lifecycle.LIVE else None
         from research_lab.alpaca_monthly_cost_source_v1 import pending_admission_net
         return pending_admission_net(self,account=account,now_ms=now_ms,owner_scope=scope)
 

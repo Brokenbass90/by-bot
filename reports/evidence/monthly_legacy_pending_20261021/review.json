@@ -1,0 +1,41 @@
+{
+  "additional_root_cause": "Repeated AST import extraction caused source freshness expiry before final BUY on VPS; exact-byte parse-only LRU added; hashes, dependency existence, authority and 2s/5s checks remain fresh",
+  "component": "MONTHLY_LEGACY_PENDING_CLASSIFIER",
+  "findings": [
+    {
+      "defect": "Posted fees on open Monthly positions omitted from loss admission",
+      "priority": "P1",
+      "regression": "test_posted_fee_on_open_monthly_position_counts_once_at_loss_boundary",
+      "status": "CLOSED"
+    },
+    {
+      "defect": "LIVE legacy owner scope accepted owned-only estimate without mandatory account context",
+      "priority": "P1",
+      "regression": "test_live_legacy_owner_scope_cannot_accept_owned_only_estimate",
+      "status": "CLOSED"
+    }
+  ],
+  "implementation_sha256": "17e3a5be7f75b8a19ff59608f4f0149db4e22257e0e0e4a245e01c908e4cc995",
+  "money_authority": false,
+  "native_binding_sha256": "66c5d8db7c3d8ab16f166c204d8bc2de594b86a287f0dccdf4b5019c2217ecab",
+  "orders_allowed": false,
+  "reviewer_effort": "high",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_session_id": "01a15e84-d2df-7230-ae30-c25b25cf7e54",
+  "runtime_metadata_verified": true,
+  "schema": "BOUNDED_COMPONENT_REVIEW_RECEIPT_V1",
+  "scope_limit": "One bounded review and same-worker targeted fix-check, no real broker test or financial signoff",
+  "targeted_ast_fix_check": {
+    "cache_drift_cases": 6,
+    "first_buy_restart_cases": 2,
+    "overlap_final_exact": true,
+    "passed": 8
+  },
+  "tests": {
+    "initial_deselected": 1,
+    "initial_targeted_passed": 84,
+    "overlap_root_acceptance": true,
+    "targeted_fix_deselected": 16,
+    "targeted_fix_passed": 4
+  }
+}

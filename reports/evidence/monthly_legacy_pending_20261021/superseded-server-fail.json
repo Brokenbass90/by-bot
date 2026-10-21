@@ -1,0 +1,23 @@
+{
+  "checkout_fallback": [],
+  "counts": {
+    "errors": 0,
+    "failures": 2,
+    "skipped": 0,
+    "tests": 235
+  },
+  "elapsed_seconds": 525.287,
+  "money_authority": false,
+  "network_denied": true,
+  "orders_allowed": false,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "receipt_count": 2,
+  "schema": "ALPACA_MONTHLY_LEGACY_PENDING_EXACT_ACCEPTANCE_V1",
+  "source_file_count": 53,
+  "source_import_count": 40,
+  "source_material_sha256": "6657bb005d21c9e3beef164112898d0303f45792cc80a5cfa113536cfbf0247f",
+  "status": "FAIL",
+  "test_file_count": 17,
+  "whole_live_handoff": "OPEN"
+}
