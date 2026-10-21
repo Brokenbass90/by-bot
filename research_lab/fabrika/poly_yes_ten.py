@@ -33,10 +33,16 @@ def js(x):
     return json.loads(x) if isinstance(x, str) else x
 
 
-def rynok_gamma(cid):
-    r = get(GAMMA, "/markets", condition_ids=cid)
-    r = r if isinstance(r, list) else (r or {}).get("data", [])
-    return r[0] if r else None
+def rynok_gamma(cid, get_fn=None):
+    """21.10: Gamma /markets по умолчанию может не отдавать ЗАКРЫТЫЕ рынки — за ночь ни один исход 20.10 не записался.
+    Если без фильтра пусто — тот же запрос с closed=true. Правило исхода (официальное разрешение ≥ 0.99) не меняется."""
+    g = get_fn or get
+    for q in ({}, {"closed": "true"}):
+        r = g(GAMMA, "/markets", condition_ids=cid, **q)
+        r = r if isinstance(r, list) else (r or {}).get("data", [])
+        if r:
+            return r[0]
+    return None
 
 
 def raschet_ms(mes, den, t_ms):

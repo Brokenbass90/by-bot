@@ -73,5 +73,16 @@ class TestStakan(unittest.TestCase):
         self.assertEqual(P.razobrat_stakan_no(self.kniga([(0.90, 1000)], mos="50"), "n", "c1", T)[1], "MENSHE_MIN_ORDERA")
 
 
+
+class TestGammaZakrytye(unittest.TestCase):
+    def test_zakrytyy_rynok_ishchetsya_s_closed_true(self):
+        vyzovy = []
+        def fake(base, path, **q):
+            vyzovy.append(q)
+            return [{"closed": True, "conditionId": q["condition_ids"]}] if q.get("closed") == "true" else []
+        m = P.rynok_gamma("0xabc", get_fn=fake)
+        self.assertTrue(m["closed"]); self.assertEqual(len(vyzovy), 2)
+
+
 if __name__ == "__main__":
     unittest.main()
