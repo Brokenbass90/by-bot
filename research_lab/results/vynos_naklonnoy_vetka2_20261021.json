@@ -1,0 +1,64 @@
+{
+ "Z1": {
+  "sobytiy": 1518,
+  "nedel_s_sobytiyami": 40,
+  "v_nedelyu_mediana": 38,
+  "dolya_sobytiy_v_obshchiy_chas_s_drugoy_monetoy": 0.478
+ },
+ "Z2": {
+  "uderzhanie_3_zakrytiya": 1
+ },
+ "Z3": {
+  "vse": {
+   "n": 1415,
+   "dolya_pobed": 0.38,
+   "etalon": 0.4,
+   "kontrol": 0.391,
+   "prevyshenie_nad_kontrolem": -0.01,
+   "t_klaster_nedeli": -0.58
+  },
+  "shorty": {
+   "n": 647,
+   "dolya_pobed": 0.414,
+   "etalon": 0.4,
+   "kontrol": 0.419,
+   "prevyshenie_nad_kontrolem": -0.005,
+   "t_klaster_nedeli": -0.16
+  },
+  "longi": {
+   "n": 768,
+   "dolya_pobed": 0.352,
+   "etalon": 0.4,
+   "kontrol": 0.367,
+   "prevyshenie_nad_kontrolem": -0.015,
+   "t_klaster_nedeli": -0.52
+  },
+  "S7": {
+   "n": 630,
+   "dolya_pobed": 0.395,
+   "etalon": 0.4,
+   "kontrol": 0.382,
+   "prevyshenie_nad_kontrolem": 0.013,
+   "t_klaster_nedeli": 0.54
+  },
+  "drugie9": {
+   "n": 785,
+   "dolya_pobed": 0.368,
+   "etalon": 0.4,
+   "kontrol": 0.397,
+   "prevyshenie_nad_kontrolem": -0.029,
+   "t_klaster_nedeli": -1.46
+  },
+  "uderzhali": {
+   "n": 1415,
+   "dolya_pobed": 0.38,
+   "etalon": 0.4,
+   "kontrol": 0.391,
+   "prevyshenie_nad_kontrolem": -0.01,
+   "t_klaster_nedeli": -0.58
+  },
+  "ne_uderzhali": {
+   "n": 0
+  }
+ }
+}
