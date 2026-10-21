@@ -1,0 +1,120 @@
+{
+ "breakdown_retest_v3": {
+  "medlennaya": ">3600 с",
+  "simvolov_proshlo": "ZROUSDT"
+ },
+ "elder_triple_screen_v2": {
+  "sek": 991,
+  "W1": {
+   "n": 10104,
+   "sredniy": 0.0054253862476418046,
+   "kontrol": -0.021633505245707958,
+   "edzh": 0.027058891493349762,
+   "sigma": 3.3352187732575156,
+   "monet_v_pluse": 35,
+   "monet": 62
+  },
+  "W2": {
+   "n": 3416,
+   "sredniy": -0.014098645545324162,
+   "kontrol": -0.013161285728690412,
+   "edzh": -0.0009373598166337507,
+   "sigma": -0.07818319333519054,
+   "monet_v_pluse": 9,
+   "monet": 29
+  }
+ },
+ "inplay_retest_v3": {
+  "sek": 1684,
+  "W1": {
+   "n": 13092,
+   "sredniy": -0.05728810764916376,
+   "kontrol": -0.04944848855891682,
+   "edzh": -0.007839619090246941,
+   "sigma": -0.7221205768587103,
+   "monet_v_pluse": 15,
+   "monet": 62
+  },
+  "W2": {
+   "n": 3399,
+   "sredniy": -0.07521229799097139,
+   "kontrol": -0.05669402161553703,
+   "edzh": -0.018518276375434357,
+   "sigma": -0.7873647562778071,
+   "monet_v_pluse": 2,
+   "monet": 29
+  }
+ },
+ "micro_scalper_v1": {
+  "sek": 38,
+  "W1": {
+   "n": 0
+  },
+  "W2": {
+   "n": 0
+  }
+ },
+ "sloped_break_retest_v3": {
+  "sek": 1460,
+  "W1": {
+   "n": 1
+  },
+  "W2": {
+   "n": 1
+  }
+ },
+ "scalper_classic_v1": {
+  "sek": 26,
+  "W1": {
+   "n": 0
+  },
+  "W2": {
+   "n": 0
+  }
+ },
+ "alt_resistance_fade_v2": {
+  "sek": 1273,
+  "W1": {
+   "n": 0
+  },
+  "W2": {
+   "n": 0
+  }
+ },
+ "btc_cycle_continuation_v1": {
+  "sek": 82,
+  "W1": {
+   "n": 0
+  },
+  "W2": {
+   "n": 0
+  }
+ },
+ "btc_eth_midterm_short_v1": {
+  "sek": 51,
+  "W1": {
+   "n": 0
+  },
+  "W2": {
+   "n": 0
+  }
+ },
+ "btc_regime_retest_v1": {
+  "sek": 96,
+  "W1": {
+   "n": 0
+  },
+  "W2": {
+   "n": 0
+  }
+ },
+ "grid_smart_v1": {
+  "sek": 24,
+  "W1": {
+   "n": 0
+  },
+  "W2": {
+   "n": 0
+  }
+ }
+}
