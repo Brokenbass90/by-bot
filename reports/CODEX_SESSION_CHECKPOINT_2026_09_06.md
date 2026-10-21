@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT21Oct MORNING MONTHLY LEGACY HANDOFF ADMISSION COMPONENT CLOSED —
+Read ALPACA_MONTHLY_LEGACY_HANDOFF_2026_10_21.md and evidence/monthly_handoff_20261021.
+Base0fa7429; material1c3ff09eedee1cac615ae230921e0bef3522ef9f889ebc52211f8d8fdc6507db.
+LOCAL135PASS584.679s + VPSsame135PASS502.241s;53source/14testhelpers/40imports/0fallback,
+5syntheticE2E receipts; actualCLI8calls/2CID-boundretirementproofs innewpath. Source,
+test,receipt hashes independentlyGETverified;93oldstaticpins unchanged, candidate
+UNSELECTED. env-i/unshare--net/nice15,0realbrokerrequests/writes/financialchanges.
+Freshentry-only4legacyunits/cron/knownprocess retirement capture repeated after
+reservation beforePOST;2s capture/5s finalfreshproof. Scope+runnerpolicy+source
+closure pinned; ownedmaintenance/recovery doNOTquerythis entry-onlyreader.
+Oneverifiedastra/highreview2Important(cronshellgrammar/missingDynamicwriters)
+fixed/regressed; sameworker53targetedPASS closes7unchangedrepros+46handoffcases.
+Notsecondwhole-review, counts overlap. Frozenstrategy/helper unchanged. Private
+actualread-onlynegativegate saved; no operationalretirement/financialhandoffdone.
+NEXT P0: actual-account standing dossier + legacyNET terminalidentity/costliability
+transition and reviewedretirement/rollback procedure. Budget/reserve/loss/validity
+mustbe concretebeforeownerapproval; no GO issued, no automaticoldGOconversion.
+Real30Octclosedsource/2Nov14:30–14:35UTCmarket/broker/handoff facts remainfuture.
+DoNOTwait forcalendar topreparepacket or PUMP4 b138735/7b0a961 adapter/replay next;
+no InPlay/V2 or KITYresearch dependency. DoNOTrerunaccepted135withoutnewchange.
+Private resume ledger .private/monthly_handoff_20261021/progress.md; exactpackage
+location there. NET/SHOP/HALT/lock/profile/financialunits untouched; no actualNET
+brokerreadback inthiswork. Monthly20Oct/LIQ21Oct deliveries done separately.
+configs/allowlist_change_log.json foreignsha365ff7d6…cc2e0e preserved/untracked.
+
 CURRENT20Oct EVENING MONTHLY PRODUCTION ENTRYPOINT COMPONENT CLOSED —
 Read ALPACA_MONTHLY_PRODUCTION_ENTRYPOINT_2026_10_20.md and evidence/monthly_production_20261020.
 Local29PASS545.54s / VPSsame29PASS375.76s;52sources/13testhelpers/39imports/0fallback,

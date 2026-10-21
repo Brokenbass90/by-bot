@@ -1,0 +1,12 @@
+{
+  "files": 70,
+  "financial_units_changed": 0,
+  "money_authority": false,
+  "observed_ms": 1792566702900,
+  "orders_allowed": false,
+  "protected_static_pins": 93,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "source_material_sha256": "1c3ff09eedee1cac615ae230921e0bef3522ef9f889ebc52211f8d8fdc6507db",
+  "status": "INERT_CODE_ONLY_STAGED"
+}

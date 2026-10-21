@@ -35,7 +35,7 @@ def runner(setup,tmp_path,monkeypatch):
     spec=dict(schema='ALPACA_MONTHLY_OWNED_RUNNER_V1',enabled=True,orders_allowed=True,money_authority=True,
         files=native.standing_source_pins(),manager=manager,source_captures=str(tmp_path/'captures'),
         broker_root=str(tmp_path),profile=dict(path=str(tmp_path/'unused-profile'),sha256='d'*64),
-        native_binding=dict(path=str(binding),sha256=hashlib.sha256(binding.read_bytes()).hexdigest()),
+        native_binding=dict(path=str(binding),sha256=hashlib.sha256(binding.read_bytes()).hexdigest()),legacy_handoff=scope['legacy_handoff'],
         native=dict(liability_reserve_usd='0',pending_fee_admission=False),costs=costs,notifications=None)
     scope.update(book=str(dest),runtime=str(m.root/'native'),runner_config_sha256=cli.runner_config_sha256(spec))
     resign(a,scope)
@@ -94,6 +94,7 @@ def test_full_frozen_rotation_runs_through_production_cli(tmp_path):
     assert out['source_loader_injected'] is False and out['selector_monkeypatched'] is False
     assert out['first_entry_buy_and_stop_response_loss_recovered']
     assert out['rotation_exits']==1 and out['simulated_entries']==2 and out['duplicate_entries']==0
+    assert out['legacy_retirement_checks']==2 and out['legacy_handoff_fixture_only'] is True
     assert out['old_exit_pending_during_new_entries'] and out['old_exit_finalized_after_posting']
     assert out['real_broker_requests']==out['real_broker_writes']==0
 

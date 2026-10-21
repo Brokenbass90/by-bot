@@ -252,17 +252,40 @@ def paper_mode():
             else:os.environ[k]=v
 
 
+class LegacyMemoryUnits:
+    """Explicit fake systemd/cron I/O for this OFF rehearsal, never host state."""
+    def __init__(self,root):
+        from research_lab import alpaca_monthly_handoff_v1 as handoff
+        root=Path(root);root.mkdir(parents=True,exist_ok=True)
+        self.rows={};files={};self.cron='';self.processes=''
+        for unit in handoff.UNITS:
+            path=root/unit;path.write_text('[Unit]\nDescription=FIXTURE_ONLY '+unit+'\n')
+            files[unit]=dict(fragment_path=str(path),sha256=ops.sha(path))
+            row=dict(Id=unit,LoadState='loaded',ActiveState='inactive',SubState='dead',
+                UnitFileState='disabled' if unit.endswith('.timer') else 'static',
+                FragmentPath=str(path),DropInPaths='',Transient='no',NeedDaemonReload='no',Job='',TriggeredBy='',Triggers='')
+            if unit.endswith('.timer'):row['Triggers']=unit.removesuffix('.timer')+'.service'
+            else:row.update(MainPID='0',ControlPID='0')
+            self.rows[unit]=row
+        self.policy=dict(schema=handoff.SCHEMA,units=files,cron_projection_sha256=handoff.cron_projection(self.cron)[0],readonly_cron={})
+
+    def show(self):return '\n\n'.join('\n'.join(k+'='+v for k,v in row.items()) for row in self.rows.values())
+
+
 @contextmanager
 def standing_mode(root,manager,now):
     """Fixture-only fake-account grant. Never an actual owner permission."""
     from research_lab import alpaca_monthly_native_binding_v1 as binding
     from research_lab.alpaca_monthly_binding_v1 import strategy_identity
+    from research_lab import alpaca_monthly_handoff_v1 as handoff
+    legacy=LegacyMemoryUnits(root/'fixture-legacy-units')
     manager.lock.touch();stat=manager.lock.stat()
     scope=dict(schema=binding.STANDING_SCHEMA,endpoint='https://api.alpaca.markets',
         account_id=manager.account,contract_sha256=digest(CONTRACT),strategy_identity=strategy_identity(),
         capital_usd='487.42',liability_reserve_usd='0',book=str(manager.book.path),
         runtime=str(manager.root/'native'),lock_path=str(manager.lock),entry_halt_path=str(manager.halt),
         legacy_NET_adoption=False,legacy_entry_authority=False,original_lock_identity=[stat.st_dev,stat.st_ino],
+        legacy_handoff=legacy.policy,
         max_new_entries_per_session=1,max_entry_notional_usd='204.7164',max_cumulative_net_loss_usd='20',
         valid_from_ms=now-86400000,valid_until_ms=now+90*86400000,
         revocation_path=str(root/'fixture-revocation.json'),
@@ -280,8 +303,11 @@ def standing_mode(root,manager,now):
         ALPACA_INTENDED_LIVE_ACK='INTENDED_LIVE_CANARY',ALPACA_LIVE_ACCOUNT_ROLE='monthly_v38',
         ALPACA_LIVE_CONFIRM='MONTHLY_V38_LIVE',ALPACA_LIVE_MAX_CAPITAL_USD='487.42')
     saved={k:os.environ.get(k) for k in values};os.environ.update(values)
+    saved_io={k:getattr(handoff,k) for k in ('_systemctl_show','_legacy_crontab','_legacy_processes')}
+    handoff._systemctl_show=legacy.show;handoff._legacy_crontab=lambda:legacy.cron;handoff._legacy_processes=lambda:legacy.processes
     try:yield dict(live_scope_path=path,live_scope_sha256=pin,owner_go_path=str(go))
     finally:
+        for k,v in saved_io.items():setattr(handoff,k,v)
         for k,v in saved.items():
             if v is None:os.environ.pop(k,None)
             else:os.environ[k]=v
@@ -446,11 +472,12 @@ def run_pending_rotation(directory,*,production_entrypoint=False):
                 import io,contextlib
                 from research_lab.alpaca_monthly_native_binding_v1 import standing_source_pins,PENDING_FEE_POLICY
                 nb=root/'fixture-native-binding.json'
+                scope=json.loads(Path(authority['live_scope_path']).read_bytes())
                 spec=dict(schema=cli.RUNNER_SCHEMA,enabled=True,orders_allowed=True,money_authority=True,
                     files=standing_source_pins(),manager=dict(root=str(m.root),**{k:str(v) for k,v in args.items()}),
                     source_captures=str(captures),broker_root=str(root),
                     profile=dict(path=str(root/'FIXTURE-NO-REAL-PROFILE'),sha256='0'*64),
-                    native_binding=dict(path=str(nb),sha256=ops.sha(nb)),
+                    native_binding=dict(path=str(nb),sha256=ops.sha(nb)),legacy_handoff=scope['legacy_handoff'],
                     native=dict(liability_reserve_usd='.03',pending_fee_admission=True),notifications=None,
                     costs=dict(after='2026-10-30T00:00:00Z',**{n:dict(path=str(p),sha256=ops.sha(p))
                         for n,p in ((n,paths[n+'_path']) for n in ('protocol','calendar','assets'))}))
@@ -550,11 +577,19 @@ def run_pending_rotation(directory,*,production_entrypoint=False):
             broker.publish_fees();final=tick()
             assert not final['issues'],final['issues']
             binding._require_exit_accounting()
+            from research_lab.alpaca_monthly_handoff_v1 import require_fresh
+            proofs=[json.loads(p.read_bytes()) for p in (binding.runtime/'cash-anchors').glob('*.legacy-handoff.json')]
+            if production_entrypoint:
+                assert len(proofs)==buys()
+                for proof in proofs:
+                    require_fresh(proof,scope['legacy_handoff'],proof['client_order_id'],now_ms=proof['completed_ms'])
+            else:assert not proofs
             out=dict(status='MONTHLY_PRODUCTION_ENTRYPOINT_ORDERS_OFF_E2E_PASS' if production_entrypoint
                 else 'MONTHLY_PENDING_FEE_ROTATION_ORDERS_OFF_E2E_PASS',source_symbols=58,
                 selector_monkeypatched=False,rotation_exits=1,simulated_entries=buys(),owned_positions=selected_count,
                 response_loss_recovered=True,old_exit_pending_during_new_entries=with_pending,
                 old_exit_finalized_after_posting=True,duplicate_entries=0,fixture_liability_reserve_usd='.03',
+                legacy_retirement_checks=len(proofs),legacy_handoff_fixture_only=True,
                 fixture_calendar='WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE',
                 real_broker_requests=0,real_broker_writes=0,money_authority=False,orders_allowed=False)
             if production_entrypoint:out.update(production_entrypoint=True,production_cli_calls=cli_calls[0],

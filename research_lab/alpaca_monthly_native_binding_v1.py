@@ -138,7 +138,8 @@ class MonthlyNativeBinding:
             source=lifecycle.safe_path(row['path'],exists=True)
             if hashlib.sha256(source.read_bytes()).hexdigest()!=row['sha256']:
                 raise ValueError('MONTHLY_LIVE_SOURCE_CHANGED')
-        required={str(Path(m.__file__).resolve()) for m in (lifecycle,native)}|{str(Path(__file__).resolve())}
+        from research_lab import alpaca_monthly_handoff_v1 as handoff
+        required={str(Path(m.__file__).resolve()) for m in (lifecycle,native,handoff)}|{str(Path(__file__).resolve())}
         if not required.issubset({r['path'] for r in scope['source_files']}):
             raise ValueError('MONTHLY_LIVE_IMPLEMENTATION_UNBOUND')
         if standing:
@@ -187,6 +188,7 @@ class MonthlyNativeBinding:
             raise ValueError('MONTHLY_STANDING_REVOKED')
 
     def _entry_authority(self,ticket,now,*,reserved=False):
+        started=time.monotonic()
         scope=self._live_custody();selection=self._selection(ticket['selection_id'])
         if scope['schema']==STANDING_SCHEMA:
             self._standing_entry_state(scope,now)
@@ -203,6 +205,9 @@ class MonthlyNativeBinding:
                  and not (reserved and cid==ticket['client_order_id']))
         if used>=scope['max_new_entries_per_session']:
             raise ValueError('MONTHLY_SESSION_ENTRY_ALREADY_CONSUMED')
+        from research_lab.alpaca_monthly_handoff_v1 import capture_retirement
+        self._entry_handoff_proof=capture_retirement(scope.get('legacy_handoff'),ticket['client_order_id'],
+            now_ms=now+int((time.monotonic()-started)*1000))
         return scope
 
     def _admit_new_entry(self,ticket,now):
@@ -467,6 +472,9 @@ class MonthlyNativeBinding:
                     scope=None;pending_proof=None
                     if self.base_url==lifecycle.LIVE:
                         scope=self._entry_authority(ticket,now+int((time.monotonic()-started)*1000),reserved=True)
+                        # An operational sidecar of the existing cash anchor,
+                        # captured before POST; it is not execution/finality truth.
+                        publish_once(anchor_dir/(cid+'.legacy-handoff.json'),lifecycle.canonical(self._entry_handoff_proof))
                     if self.pending_fee_admission:
                         _,pending_proof=self._accounting_for_admission(account=self.client.get_account(),
                             now_ms=now+int((time.monotonic()-started)*1000))
@@ -481,6 +489,9 @@ class MonthlyNativeBinding:
                         raise ValueError('ENTRY_HALT_PRESERVED')
                     if scope and scope['schema']==STANDING_SCHEMA:
                         self._standing_entry_state(scope,effective)
+                    if scope:
+                        from research_lab.alpaca_monthly_handoff_v1 import require_fresh
+                        require_fresh(self._entry_handoff_proof,scope['legacy_handoff'],cid,now_ms=effective)
                 try:
                     native._submit_intended_reserved_entry(**args,pick=pick,notional=ticket['notional'],timeout_sec=0,
                         baseline_atr20=gate['atr20'],baseline_signal_session=s['signal_session'],

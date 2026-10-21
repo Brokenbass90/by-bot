@@ -1,0 +1,23 @@
+{
+  "added": {
+    "research_lab/alpaca_monthly_handoff_v1.py": "347fb2096c8d662270e650500f41fd15d1498fe73412d18530b8d70d8ec68931"
+  },
+  "base_commit": "0fa74294da53aafc14e03a419f85ddd15d064686",
+  "changed": {
+    "research_lab/alpaca_monthly_native_binding_v1.py": {
+      "previous_sha256": "17544718a41fd5c662bce17c64f926b1d32eca1c71e7420e6702db0794a9392b",
+      "sha256": "d2009973c9402e8efa13e81898dfa7451e5e4fe8765e3c60264cf7fd04b85ff1"
+    },
+    "scripts/rehearse_alpaca_monthly_cycle_v1.py": {
+      "previous_sha256": "de7bff9172027e2d76baa3ad5b5fcddc7a67608f5d9d8fb471d85bb046589c3e",
+      "sha256": "86d3c4529204878610bbeeabf864b48868f1dccceac754106100995ed25feb82"
+    },
+    "scripts/run_alpaca_monthly_cycle_v1.py": {
+      "previous_sha256": "967f55921ad64c271481d32744887bdc6ef0b671d72ae82332290fcb35ac0fcc",
+      "sha256": "32e5729d7c563d53abfca25e0a5d9a3e1b78d10dc3233a5f59b2b068e48901c1"
+    }
+  },
+  "frozen_existing_files_unchanged": true,
+  "previous_source_material_sha256": "8a48663fbd195491705fa2aa127fb4b1962e7cddb9aa84cd5ff3fd9ef0e5659b",
+  "source_material_sha256": "1c3ff09eedee1cac615ae230921e0bef3522ef9f889ebc52211f8d8fdc6507db"
+}

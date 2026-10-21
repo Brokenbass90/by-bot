@@ -24,7 +24,7 @@ from research_lab.alpaca_dynamic_v1 import digest
 
 RUNNER_SCHEMA='ALPACA_MONTHLY_OWNED_RUNNER_V1'
 RUNNER_CONFIG_FIELDS=('manager','source_captures','broker_root','profile',
-    'native_binding','native','costs','notifications')
+    'native_binding','native','costs','notifications','legacy_handoff')
 
 
 def runner_config_sha256(spec):
@@ -69,6 +69,9 @@ def runner_authority(spec):
     auth=spec['authority'];raw=ops.safe_path(auth['scope_path']).read_bytes()
     if hashlib.sha256(raw).hexdigest()!=auth['scope_sha256']:raise ValueError('RUNNER_OWNER_SCOPE_PIN')
     scope=json.loads(raw)
+    from research_lab.alpaca_monthly_handoff_v1 import validate_policy
+    validate_policy(spec.get('legacy_handoff'))
+    if scope.get('legacy_handoff')!=spec['legacy_handoff']:raise ValueError('RUNNER_HANDOFF_OWNER_POLICY_CONFLICT')
     if (scope.get('schema')!=STANDING_SCHEMA
         or scope.get('runner_config_sha256')!=runner_config_sha256(spec)):
         raise ValueError('RUNNER_SEPARATE_CONFIG_AUTHORITY_REQUIRED')

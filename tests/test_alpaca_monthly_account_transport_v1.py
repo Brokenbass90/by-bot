@@ -113,6 +113,7 @@ def connect_wire(setup,monkeypatch):
     from research_lab import alpaca_dynamic_live_runtime_v1 as lifecycle
     adapter.lock_path.touch()
     st=adapter.lock_path.stat()
+    from research_lab import alpaca_monthly_handoff_v1 as handoff
     scope=dict(schema='ALPACA_MONTHLY_OWNER_SCOPE_V1',endpoint=LIVE,account_id='fixture',
         contract_sha256=digest(CONTRACT),strategy_identity=strategy_identity(),capital_usd='487.42',
         liability_reserve_usd='0',book=str(book.path),runtime=str(adapter.runtime),
@@ -121,8 +122,15 @@ def connect_wire(setup,monkeypatch):
         max_new_entries_per_session=1,max_entry_notional_usd='204.7164',symbol='NET',
         selection_id=selection['selection_id'],source_files=[
             dict(path=str(Path(m.__file__).resolve()),sha256=hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest())
-            for m in (mod,lifecycle,mod.native)])
+            for m in (mod,lifecycle,mod.native,handoff)])
     root=book.path.parent;scope_path=root/'monthly-scope.json';scope_path.write_bytes(canonical(scope))
+    from scripts.rehearse_alpaca_monthly_cycle_v1 import LegacyMemoryUnits
+    from research_lab import alpaca_monthly_handoff_v1 as handoff
+    legacy=LegacyMemoryUnits(root/'fixture-legacy-units');scope['legacy_handoff']=legacy.policy
+    monkeypatch.setattr(handoff,'_systemctl_show',legacy.show)
+    monkeypatch.setattr(handoff,'_legacy_crontab',lambda:legacy.cron)
+    monkeypatch.setattr(handoff,'_legacy_processes',lambda:legacy.processes)
+    adapter.fixture_legacy=legacy;scope_path.write_bytes(canonical(scope))
     adapter.live_scope_path=scope_path;adapter.live_scope_sha256=hashlib.sha256(scope_path.read_bytes()).hexdigest()
     go=root/'monthly-owner-go.json';go.write_bytes(canonical(dict(schema='ALPACA_MONTHLY_EXACT_OWNER_GO_V1',
         scope_sha256=adapter.live_scope_sha256,owner_go_text='GO ALPACA_MONTHLY '+adapter.live_scope_sha256)))

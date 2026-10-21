@@ -1,0 +1,181 @@
+[
+  {
+    "path": "test-runtime/test_complete_frozen_monthly_c0/rehearsal/receipt.json",
+    "receipt": {
+      "accounting_final": true,
+      "automatic_cost_source": false,
+      "broker_flat": true,
+      "capital_released": true,
+      "closed_roundtrips": 1,
+      "daily_close_ratchet": true,
+      "day_rearm": true,
+      "duplicate_entries": 0,
+      "executed_fixture_subset": [
+        "CVX"
+      ],
+      "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+      "full_native_stop": true,
+      "initial_floor": 184.04,
+      "late_fee_block_proven": false,
+      "money_authority": false,
+      "next_month_selection_ready": true,
+      "orders_allowed": false,
+      "raised_floor": 196.11,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "response_loss_recovered": true,
+      "restarts": 2,
+      "selected_symbols": [
+        "CVX"
+      ],
+      "selector_monkeypatched": false,
+      "simulated_entries": 1,
+      "source_ids": [
+        "da755d4b5db424855ddb819af0b2ab0ef512d81dc0661c14c54631670d0849df",
+        "9c9977f95ef854226c9acc7d6c696fbfa5745c7e98b9488737f9bbd23a34cac1",
+        "4f8e9d0cf51e3df0d50aa20aa445edc9a0423f788c3816ac720a4dd124061448"
+      ],
+      "source_symbols": 58,
+      "standing_grant_count": 0,
+      "status": "MONTHLY_ORDERS_OFF_END_TO_END_PASS"
+    },
+    "sha256": "94d8cf538b930eaf36aeb11cfd35b2e8f420c718a0c096da85474bd352afce42"
+  },
+  {
+    "path": "test-runtime/test_full_frozen_rotation_runs0/production/receipt.json",
+    "receipt": {
+      "clock": "DETERMINISTIC_FIXTURE_NOT_LATENCY_SLO",
+      "duplicate_entries": 0,
+      "first_entry_buy_and_stop_response_loss_recovered": true,
+      "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+      "fixture_liability_reserve_usd": ".03",
+      "legacy_handoff_fixture_only": true,
+      "legacy_retirement_checks": 2,
+      "money_authority": false,
+      "old_exit_finalized_after_posting": true,
+      "old_exit_pending_during_new_entries": true,
+      "orders_allowed": false,
+      "owned_positions": 1,
+      "production_cli_calls": 8,
+      "production_entrypoint": true,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "response_loss_recovered": true,
+      "rotation_exits": 1,
+      "selector_monkeypatched": false,
+      "simulated_entries": 2,
+      "source_loader_injected": false,
+      "source_symbols": 58,
+      "status": "MONTHLY_PRODUCTION_ENTRYPOINT_ORDERS_OFF_E2E_PASS"
+    },
+    "sha256": "abb104d1312d0678ed365a05ff42775bf58f357fc66d894c7be11b128f6346d7"
+  },
+  {
+    "path": "test-runtime/test_full_frozen_source_rotati0/pending-rotation/receipt.json",
+    "receipt": {
+      "duplicate_entries": 0,
+      "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+      "fixture_liability_reserve_usd": ".03",
+      "legacy_handoff_fixture_only": true,
+      "legacy_retirement_checks": 0,
+      "money_authority": false,
+      "old_exit_finalized_after_posting": true,
+      "old_exit_pending_during_new_entries": true,
+      "orders_allowed": false,
+      "owned_positions": 1,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "response_loss_recovered": true,
+      "rotation_exits": 1,
+      "selector_monkeypatched": false,
+      "simulated_entries": 2,
+      "source_symbols": 58,
+      "status": "MONTHLY_PENDING_FEE_ROTATION_ORDERS_OFF_E2E_PASS"
+    },
+    "sha256": "a162338cd2d4a82be6f86b95f67e1dd0bb2e18f349b0b681ba04bcfd284a79cd"
+  },
+  {
+    "path": "test-runtime/test_full_frozen_source_uses_a0/automatic/receipt.json",
+    "receipt": {
+      "accounting_final": true,
+      "automatic_cost_source": true,
+      "broker_flat": true,
+      "capital_released": true,
+      "closed_roundtrips": 1,
+      "daily_close_ratchet": true,
+      "day_rearm": true,
+      "duplicate_entries": 0,
+      "executed_fixture_subset": [
+        "CVX"
+      ],
+      "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+      "full_native_stop": true,
+      "initial_floor": 184.04,
+      "late_fee_block_proven": true,
+      "money_authority": false,
+      "next_month_selection_ready": true,
+      "orders_allowed": false,
+      "raised_floor": 196.11,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "response_loss_recovered": true,
+      "restarts": 2,
+      "selected_symbols": [
+        "CVX"
+      ],
+      "selector_monkeypatched": false,
+      "simulated_entries": 1,
+      "source_ids": [
+        "c6d29b0f16a1265752442592e3e9883aa38de51bce1079d40fce70e5e8729112",
+        "ac5990b4125810198a56515cd6bb71347c5f7edd332e0250ec829cd460c14b4c",
+        "1fca16b0bf6429d91593d835950209ae4c2ebb75c75f956de4967995858d5a42"
+      ],
+      "source_symbols": 58,
+      "standing_grant_count": 0,
+      "status": "MONTHLY_AUTOMATIC_COST_ORDERS_OFF_E2E_PASS"
+    },
+    "sha256": "815ba715771400fef4d8749528f08de6bbc86769b301aa933fd813c7bb690b5e"
+  },
+  {
+    "path": "test-runtime/test_two_monthly_cycles_use_on0/standing/receipt.json",
+    "receipt": {
+      "accounting_final": true,
+      "automatic_cost_source": false,
+      "broker_flat": true,
+      "capital_released": true,
+      "closed_roundtrips": 2,
+      "daily_close_ratchet": true,
+      "day_rearm": true,
+      "duplicate_entries": 0,
+      "executed_fixture_subset": [
+        "CVX"
+      ],
+      "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+      "full_native_stop": true,
+      "initial_floor": 184.04,
+      "late_fee_block_proven": false,
+      "money_authority": false,
+      "next_month_selection_ready": true,
+      "orders_allowed": false,
+      "raised_floor": 196.11,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "response_loss_recovered": true,
+      "restarts": 3,
+      "selected_symbols": [
+        "CVX"
+      ],
+      "selector_monkeypatched": false,
+      "simulated_entries": 2,
+      "source_ids": [
+        "dbb1d777285ccd3496b7c3f31966dbd49374fbf7eea8aff2bc925b40a68a30ba",
+        "a319a9d85062c4de5ad4336b8cc6cd8e8e6b814709ac5a350b091cff5d40d2a8",
+        "f172b0cbf0a1763c6024f7d23beb86a1cd9dde97e80bf249e21a8ad42412faef"
+      ],
+      "source_symbols": 58,
+      "standing_grant_count": 1,
+      "status": "MONTHLY_STANDING_ORDERS_OFF_REPEAT_PASS"
+    },
+    "sha256": "e75c31c29f0548d274cb66f100afac4f99e119b6da105c7ff2149c92599c9445"
+  }
+]
