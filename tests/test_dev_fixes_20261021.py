@@ -101,3 +101,26 @@ def test_sloped_level_po_poslednim_pivotam():
     rows = _rastushchee_soprotivlenie()
     sl = mc.sloped_level(rows, side="resistance", left=1, right=1, min_pivots=2, last_pivots=2)
     assert sl is not None and sl["pivots"] == 2 and sl["slope"] > 0
+
+
+def test_naklonnaya_prichinnost_replay_po_odnomu_baru():
+    """Replay по одному закрытому бару: каждая точка линии подтверждена (pivot + right баров) к моменту построения,
+    а решение, выданное на баре t, не меняется после появления следующих баров."""
+    import random
+    random.seed(20261021)
+    rows, p = [], 100.0
+    for i in range(300):
+        p *= 1 + random.uniform(-0.01, 0.0105)
+        rows.append(_row(i, p, p * (1 + random.uniform(0, 0.01)), p * (1 - random.uniform(0, 0.01)), p * (1 + random.uniform(-0.005, 0.005))))
+    left = right = 2
+    resheniya = {}
+    for t in range(60, len(rows)):
+        okno = rows[t - 59:t + 1]
+        piv = mc.pivot_highs(okno, left, right)
+        assert all(x["idx"] <= len(okno) - 1 - right for x in piv)            # точка подтверждена right барами
+        sl = mc.sloped_level(okno, side="resistance", left=left, right=right, min_pivots=2, last_pivots=3)
+        resheniya[t] = None if sl is None else (round(sl["level_now"], 10), sl["valid"])
+    for t in range(60, len(rows), 37):                                       # пересчёт с тем же срезом даёт то же решение
+        okno = rows[t - 59:t + 1]
+        sl = mc.sloped_level(okno, side="resistance", left=left, right=right, min_pivots=2, last_pivots=3)
+        assert resheniya[t] == (None if sl is None else (round(sl["level_now"], 10), sl["valid"]))
