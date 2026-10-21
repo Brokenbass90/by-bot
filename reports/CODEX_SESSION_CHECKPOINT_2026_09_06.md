@@ -1,5 +1,16 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT21Oct NET ACTIVATION REVIEW — bounded/read-only, no priority change.
+Read NET_RATCHET_RULE_REVIEW_2026_10_21.md. Original3.5default traced06869be→f39fb32;
+no NET-specific optimality evidence in inspected sources. Existing helper2d5243…eea1
+RAMcases1/2/3.5 reproduce initialminlock floor (~+.5% beforecosts); earlierarm means
+closerstop, not provenhigherPnL. Lateobservationmarketceiling may leavefloorbelowentry.
+501dailyNETrows valid/unique butinsufficientfor5minquote-HWM/stop-timing replay;
+same-entryhistorical reachcounts/netPnL/MaxDD/earlyexit metrics NOT_ESTIMATED/BLOCKED_DATA.
+H6 isMonthlydailyforward, notlegacyNET;A10notpreregistered. No researchjudge/retuning/
+Claudechange/financialaction or LIVErepair. P1closedatcurrentavailableevidence,
+no newMoneygate. ContinueMonthlyfinalpacket→PUMPcursor/cooldown/Bybitexecutor.
+
 CURRENT21Oct19:16:34UTC NET URGENT READ-ONLY CONTROL —
 6authenticatedbrokerGET confirmoriginalNETownedqty/fullactive nativeDAYstop,
 expectedidentity/floor;price/PnL/account/order details PRIVATE in
