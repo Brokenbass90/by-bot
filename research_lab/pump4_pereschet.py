@@ -65,6 +65,45 @@ def _py(o):
     return o.item() if hasattr(o, "item") else str(o)
 
 
+V2_START = 1792497600000               # 2026-10-20 12:00 UTC — prereg PREREG_PUMP4_V2_VYHOD: только новые решения
+V2_TP2_R = 0.9
+
+
+def simulate_v2(bars, i, side, sl0, tps, f1, mult, hold):
+    """PUMP4 V2 (prereg PREREG_PUMP4_V2_VYHOD_2026_10_20): вход, стоп ×4, первая цель и её доля — как V1 (из сигнала, как в
+    simulate); отличие одно — после первой цели стоп остатка переносится на вход (действует со СЛЕДУЮЩЕГО бара), вторая цель
+    0.9R. Внутри бара стоп раньше целей (консервативно), как в simulate. Расходы — те же."""
+    from research_machine import FEE_BPS_SIDE
+    e = i + 1
+    if e >= len(bars):
+        return None
+    entry = float(bars[e][1]); short = side == "short"
+    sl = entry + (sl0 - entry) * mult
+    risk = (sl - entry) if short else (entry - sl)
+    if risk <= 0:
+        return None
+    lev = entry / risk; cost = lev * 2 * FEE_BPS_SIDE / 1e4
+    tp1 = (list(tps) + [None])[0]
+    tp2 = entry - V2_TP2_R * risk if short else entry + V2_TP2_R * risk
+    stop, rem, gross, tp1_done, be_next = sl, 1.0, 0.0, False, False
+    for j in range(e, min(e + hold, len(bars))):
+        h, l = float(bars[j][2]), float(bars[j][3])
+        if be_next:
+            stop = entry; be_next = False
+        if (h >= stop) if short else (l <= stop):
+            gross += rem * ((entry - stop) if short else (stop - entry)) / risk
+            return dict(R=gross - cost, bars=j - e, lev=lev)
+        if tp1 and not tp1_done and ((l <= tp1) if short else (h >= tp1)):
+            gross += f1 * ((entry - tp1) if short else (tp1 - entry)) / risk
+            rem -= f1; tp1_done = True; be_next = True
+        if rem > 1e-9 and ((l <= tp2) if short else (h >= tp2)):
+            gross += rem * ((entry - tp2) if short else (tp2 - entry)) / risk
+            return dict(R=gross - cost, bars=j - e, lev=lev)
+    j = min(e + hold, len(bars)) - 1; px = float(bars[j][4])
+    gross += rem * ((entry - px) if short else (px - entry)) / risk
+    return dict(R=gross - cost, bars=j - e, lev=lev)
+
+
 def zaversheno(b, i, r):
     e = i + 1
     if e + HOLD <= len(b):
@@ -108,6 +147,10 @@ def main():
                 zap_r["status"] = "NE_VOSPROIZVEDENO"; rez.append(zap_r); continue
             i, s = signaly[z["ts"]]
             r = simulate(b, i, s.side, s.sl, list(s.tps or []), (s.tp_fracs or [F1])[0], STOP_MULT, HOLD)
+            if z["ts"] >= V2_START:                                    # парная V2 на тех же решениях (только новые)
+                r2 = simulate_v2(b, i, s.side, s.sl, list(s.tps or []), (s.tp_fracs or [F1])[0], STOP_MULT, HOLD)
+                if r2 is not None:
+                    zap_r["v2"] = dict(R=round(r2["R"], 4), zaversheno=bool(zaversheno(b, i, r2)), barov=r2["bars"])
             if r is None or r.get("lev", 0) > MAX_LEV:
                 zap_r["status"] = "NE_ISPOLNIMO"; rez.append(zap_r); continue
             if not zaversheno(b, i, r):
@@ -139,6 +182,18 @@ def main():
                statusy={k: sum(1 for x in rez if x["status"] == k) for k in sorted({x["status"] for x in rez})},
                vse=svod(rez), FORWARD=svod([x for x in rez if x["klass"] == "FORWARD"]),
                OOS_REPLAY=svod([x for x in rez if x["klass"] == "OOS_REPLAY"]), resheniya=rez)
+    pary = [x for x in rez if x.get("status") == "ZAKRYTA" and (x.get("v2") or {}).get("zaversheno")]
+    if pary:
+        d = np.array([x["v2"]["R"] - x["R"] for x in pary])
+        nd = {}
+        for x in pary: nd.setdefault(x["ts"] // (7 * 86400000), [0.0, 0.0]); nd[x["ts"] // (7 * 86400000)][0] += x["v2"]["R"]; nd[x["ts"] // (7 * 86400000)][1] += x["R"]
+        out["V2_pary"] = dict(prereg="PREREG_PUMP4_V2_VYHOD_2026_10_20", n=len(pary), sred_V1=float(np.mean([x["R"] for x in pary])),
+                              sred_V2=float(np.mean([x["v2"]["R"] for x in pary])), raznica=float(d.mean()),
+                              t=float(d.mean() / (d.std(ddof=1) / math.sqrt(len(d)))) if len(d) > 2 and d.std(ddof=1) > 0 else None,
+                              hudshaya_nedelya_V2_minus_V1=float(min(a - b for a, b in nd.values())),
+                              etap="VERDIKT_50" if len(pary) >= 50 else "NAKOPLENIE")
+    else:
+        out["V2_pary"] = dict(n=0, etap="NAKOPLENIE")
     v = out["vse"]
     if v.get("n", 0) >= 50:
         ok = v["edzh"] > 0 and v["t_edzh"] > 2.0 and v["monet_v_pluse"] * 2 >= v["monet"]
@@ -146,7 +201,7 @@ def main():
     else:
         out["verdikt"] = f"NE_HVATILO_DANNYH (закрыто {v.get('n', 0)} из 50)"
     VYVOD.parent.mkdir(parents=True, exist_ok=True); VYVOD.write_text(json.dumps(out, ensure_ascii=False, indent=1, default=_py))
-    print(json.dumps({k: out[k] for k in ("statusy", "vse", "FORWARD", "OOS_REPLAY", "verdikt")}, ensure_ascii=False, indent=1, default=_py))
+    print(json.dumps({k: out[k] for k in ("statusy", "vse", "FORWARD", "OOS_REPLAY", "verdikt", "V2_pary")}, ensure_ascii=False, indent=1, default=_py))
 
 
 if __name__ == "__main__":
