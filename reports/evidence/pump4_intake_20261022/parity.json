@@ -1,0 +1,759 @@
+{
+  "broker_execution": "NOT_IMPLEMENTED",
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "clock_provenance": "HISTORICAL_FIXTURE_CLOCK_ONLY",
+  "cooldown_cases": [
+    {
+      "closed_bars_checked": 27,
+      "parent_bar_open_ms": 1788498000000,
+      "rows": [
+        {
+          "cooldown": 24,
+          "hours_from_parent": 0,
+          "signal_present": true
+        },
+        {
+          "cooldown": 23,
+          "hours_from_parent": 1,
+          "signal_present": false
+        },
+        {
+          "cooldown": 22,
+          "hours_from_parent": 2,
+          "signal_present": false
+        },
+        {
+          "cooldown": 21,
+          "hours_from_parent": 3,
+          "signal_present": false
+        },
+        {
+          "cooldown": 20,
+          "hours_from_parent": 4,
+          "signal_present": false
+        },
+        {
+          "cooldown": 19,
+          "hours_from_parent": 5,
+          "signal_present": false
+        },
+        {
+          "cooldown": 18,
+          "hours_from_parent": 6,
+          "signal_present": false
+        },
+        {
+          "cooldown": 17,
+          "hours_from_parent": 7,
+          "signal_present": false
+        },
+        {
+          "cooldown": 16,
+          "hours_from_parent": 8,
+          "signal_present": false
+        },
+        {
+          "cooldown": 15,
+          "hours_from_parent": 9,
+          "signal_present": false
+        },
+        {
+          "cooldown": 14,
+          "hours_from_parent": 10,
+          "signal_present": false
+        },
+        {
+          "cooldown": 13,
+          "hours_from_parent": 11,
+          "signal_present": false
+        },
+        {
+          "cooldown": 12,
+          "hours_from_parent": 12,
+          "signal_present": false
+        },
+        {
+          "cooldown": 11,
+          "hours_from_parent": 13,
+          "signal_present": false
+        },
+        {
+          "cooldown": 10,
+          "hours_from_parent": 14,
+          "signal_present": false
+        },
+        {
+          "cooldown": 9,
+          "hours_from_parent": 15,
+          "signal_present": false
+        },
+        {
+          "cooldown": 8,
+          "hours_from_parent": 16,
+          "signal_present": false
+        },
+        {
+          "cooldown": 7,
+          "hours_from_parent": 17,
+          "signal_present": false
+        },
+        {
+          "cooldown": 6,
+          "hours_from_parent": 18,
+          "signal_present": false
+        },
+        {
+          "cooldown": 5,
+          "hours_from_parent": 19,
+          "signal_present": false
+        },
+        {
+          "cooldown": 4,
+          "hours_from_parent": 20,
+          "signal_present": false
+        },
+        {
+          "cooldown": 3,
+          "hours_from_parent": 21,
+          "signal_present": false
+        },
+        {
+          "cooldown": 2,
+          "hours_from_parent": 22,
+          "signal_present": false
+        },
+        {
+          "cooldown": 1,
+          "hours_from_parent": 23,
+          "signal_present": false
+        },
+        {
+          "cooldown": 0,
+          "hours_from_parent": 24,
+          "signal_present": false
+        },
+        {
+          "cooldown": 0,
+          "hours_from_parent": 25,
+          "signal_present": false
+        },
+        {
+          "cooldown": 0,
+          "hours_from_parent": 26,
+          "signal_present": false
+        }
+      ],
+      "symbol": "ZROUSDT"
+    },
+    {
+      "closed_bars_checked": 27,
+      "parent_bar_open_ms": 1788667200000,
+      "rows": [
+        {
+          "cooldown": 24,
+          "hours_from_parent": 0,
+          "signal_present": true
+        },
+        {
+          "cooldown": 23,
+          "hours_from_parent": 1,
+          "signal_present": false
+        },
+        {
+          "cooldown": 22,
+          "hours_from_parent": 2,
+          "signal_present": false
+        },
+        {
+          "cooldown": 21,
+          "hours_from_parent": 3,
+          "signal_present": false
+        },
+        {
+          "cooldown": 20,
+          "hours_from_parent": 4,
+          "signal_present": false
+        },
+        {
+          "cooldown": 19,
+          "hours_from_parent": 5,
+          "signal_present": false
+        },
+        {
+          "cooldown": 18,
+          "hours_from_parent": 6,
+          "signal_present": false
+        },
+        {
+          "cooldown": 17,
+          "hours_from_parent": 7,
+          "signal_present": false
+        },
+        {
+          "cooldown": 16,
+          "hours_from_parent": 8,
+          "signal_present": false
+        },
+        {
+          "cooldown": 15,
+          "hours_from_parent": 9,
+          "signal_present": false
+        },
+        {
+          "cooldown": 14,
+          "hours_from_parent": 10,
+          "signal_present": false
+        },
+        {
+          "cooldown": 13,
+          "hours_from_parent": 11,
+          "signal_present": false
+        },
+        {
+          "cooldown": 12,
+          "hours_from_parent": 12,
+          "signal_present": false
+        },
+        {
+          "cooldown": 11,
+          "hours_from_parent": 13,
+          "signal_present": false
+        },
+        {
+          "cooldown": 10,
+          "hours_from_parent": 14,
+          "signal_present": false
+        },
+        {
+          "cooldown": 9,
+          "hours_from_parent": 15,
+          "signal_present": false
+        },
+        {
+          "cooldown": 8,
+          "hours_from_parent": 16,
+          "signal_present": false
+        },
+        {
+          "cooldown": 7,
+          "hours_from_parent": 17,
+          "signal_present": false
+        },
+        {
+          "cooldown": 6,
+          "hours_from_parent": 18,
+          "signal_present": false
+        },
+        {
+          "cooldown": 5,
+          "hours_from_parent": 19,
+          "signal_present": false
+        },
+        {
+          "cooldown": 4,
+          "hours_from_parent": 20,
+          "signal_present": false
+        },
+        {
+          "cooldown": 3,
+          "hours_from_parent": 21,
+          "signal_present": false
+        },
+        {
+          "cooldown": 2,
+          "hours_from_parent": 22,
+          "signal_present": false
+        },
+        {
+          "cooldown": 1,
+          "hours_from_parent": 23,
+          "signal_present": false
+        },
+        {
+          "cooldown": 0,
+          "hours_from_parent": 24,
+          "signal_present": false
+        },
+        {
+          "cooldown": 0,
+          "hours_from_parent": 25,
+          "signal_present": false
+        },
+        {
+          "cooldown": 0,
+          "hours_from_parent": 26,
+          "signal_present": false
+        }
+      ],
+      "symbol": "BLESSUSDT"
+    }
+  ],
+  "cooldown_restart_rows": 54,
+  "elapsed_seconds": 6.807,
+  "fixture_sha256": "f6badf311e888fab05a3d4131559f98152f8589d49b35c7b034e306617726ca4",
+  "fixture_signal_plan_matches": 65,
+  "fixture_source_unavailable": 1,
+  "full_137_universe_census": "NOT_RUN",
+  "money_authority": false,
+  "native_stop_execution": "NOT_RUN",
+  "network_denied": true,
+  "orders_allowed": false,
+  "outcomes_or_pnl_computed": false,
+  "replay_policy": "exact accepted index200 seed invocation then continuous retained history; no moving reset",
+  "research_input_files": {
+    "research_lab/data/oos_bybit_h1_20261020/1000PEPEUSDT.json": "c81d0d2d9d9d5658a1877d772aac84ac1b4226c4ed8d1ae8a9808f96f3b55833",
+    "research_lab/data/oos_bybit_h1_20261020/AAVEUSDT.json": "b8783b4a220d001b1a86142eb188e0a4957d54fb72f5dc4c956e851648b52569",
+    "research_lab/data/oos_bybit_h1_20261020/ACEUSDT.json": "b55e5affbf79291fefc2b9d0ae318ef0818d2d7ad216088704652505367a8142",
+    "research_lab/data/oos_bybit_h1_20261020/ACTUSDT.json": "714507988b71a1cc2d637f608ce89381d4dfa6e39274c2444617dc8002cf79e7",
+    "research_lab/data/oos_bybit_h1_20261020/AEROUSDT.json": "454cc7068988e725007d4a46dd9796b595d462fca8844f010a2154a765b36f0b",
+    "research_lab/data/oos_bybit_h1_20261020/AKEUSDT.json": "3b29aeeb381102829ba23311e2fa521e85fad0820144728b798a08ccc7d7b300",
+    "research_lab/data/oos_bybit_h1_20261020/ALGOUSDT.json": "39a530aa8e5ab35ecde9fcd92ad7a7c3f40bc10e36d187fda3c1433aa06c0f8c",
+    "research_lab/data/oos_bybit_h1_20261020/ALLOUSDT.json": "e698a997665b4cdd403d8337849332d930b40e01f13b65d74ef08dded178e6f2",
+    "research_lab/data/oos_bybit_h1_20261020/APTUSDT.json": "4a4e39568df2853c089b539c021994cbe8534397998c72642606e264d41f4545",
+    "research_lab/data/oos_bybit_h1_20261020/BLESSUSDT.json": "c171d4458e25c41fbb25f68493218fa2123eaed471e246974eecea42fc033e88",
+    "research_lab/data/oos_bybit_h1_20261020/BOMEUSDT.json": "9b29c9c9656f1ccd44c3d93550a14842c61293136b4a4afec57677fc8ba16acb",
+    "research_lab/data/oos_bybit_h1_20261020/BROCCOLIUSDT.json": "7eb3ec1d115ca2c8c4cc166b91ac8a8ab70dca44c420c92e9cdd8233b5e3941c",
+    "research_lab/data/oos_bybit_h1_20261020/CCUSDT.json": "eb04755e4c87f1aaa60063525a801e5ffea645deaffcd12e7e7802b5758e41d7",
+    "research_lab/data/oos_bybit_h1_20261020/COAIUSDT.json": "1324cbd0a6638ec0f79f94f9f2831ab28504ad2c9a5afc7d0cb30ac83956de14",
+    "research_lab/data/oos_bybit_h1_20261020/ENAUSDT.json": "fdf3ee485ae11bc032944f7fdfe84da11112b51d3a5827ab6cb3beda03f0a4ec",
+    "research_lab/data/oos_bybit_h1_20261020/ESPORTSUSDT.json": "8d5fc26432c15eee1704330c5ba7c4f4e9db7a4649395d36cc1a5e12cb7f4af4",
+    "research_lab/data/oos_bybit_h1_20261020/ESPUSDT.json": "0fd8ad87520f3b778005300934fa1d8196fb9f9a03dd6da12b3bed99aa999d80",
+    "research_lab/data/oos_bybit_h1_20261020/FARTCOINUSDT.json": "72a7efff43fdb3d3c7b776cc154b82d9ae3f1f823a8cf5934afbd04bf298ee8a",
+    "research_lab/data/oos_bybit_h1_20261020/FILUSDT.json": "596fe8cc54165d2b509c7f0147f83821f127141e7133b250d409b20e6415825b",
+    "research_lab/data/oos_bybit_h1_20261020/GALAUSDT.json": "66cc164c4f81c15b0c49426148d4b8a4d3bd177ade1d956f1a916d02abc57879",
+    "research_lab/data/oos_bybit_h1_20261020/GRASSUSDT.json": "eda664a35fd5d508e4c40e254bee8fad90e3b14f10f99b14cfdb0fed736fa048",
+    "research_lab/data/oos_bybit_h1_20261020/GWEIUSDT.json": "e5d9b6ad358d38a9c6a8fe3e6d70285060aabe996aa95673e3913235549802c4",
+    "research_lab/data/oos_bybit_h1_20261020/HEIUSDT.json": "0a9319f36ba681eb96974616b94e21f71ecca141c61535d1568c6ccacc7c2008",
+    "research_lab/data/oos_bybit_h1_20261020/ICPUSDT.json": "9530f2a2d55cbb8f96bbcd4a90b4d4ff8bb6811fde21f3b8cac0ef935d5d4f39",
+    "research_lab/data/oos_bybit_h1_20261020/INJUSDT.json": "e77ffffb0b88f3b74f7ebdd08c79e4d304e2003e6574c867bc098933d1e6de96",
+    "research_lab/data/oos_bybit_h1_20261020/JTOUSDT.json": "0051707fe4cc21fdcf0157a26ea3a5024fae5a21355d675b0ea96b3e2d4dc514",
+    "research_lab/data/oos_bybit_h1_20261020/KAITOUSDT.json": "358302cf77e8a62f5c2ef0dcfbbe2ccbfa74007ff7325ce3f0a121e6c0d7928c",
+    "research_lab/data/oos_bybit_h1_20261020/LDOUSDT.json": "509a00271a5edd9fe240b40a17d19ee99a94434814d88a1d3b1e7fbd9a077fd8",
+    "research_lab/data/oos_bybit_h1_20261020/MEUSDT.json": "54b09e5f9a9acd64bcf622e3b3545e35909a2f9812b4411c69b2b282e8916e66",
+    "research_lab/data/oos_bybit_h1_20261020/MMTUSDT.json": "9dbe4b59e9264d399972456c383a6c5f0fc9dc77a7bca6f7b0c785ed65181531",
+    "research_lab/data/oos_bybit_h1_20261020/MSTRUSDT.json": "0530a736a5ebaed9b39c780aecc37c5e398609140c2d02c8e6ab89c010e6891b",
+    "research_lab/data/oos_bybit_h1_20261020/MUBARAKUSDT.json": "dbbcf3cc9c39e2accd2857dcfb65574bc0eb822d6d48ad190da35c1c16529b9e",
+    "research_lab/data/oos_bybit_h1_20261020/NILUSDT.json": "3e93b009bcb0fce383e653405e81da89d43aca2b4806daff3cd4591842b33e41",
+    "research_lab/data/oos_bybit_h1_20261020/OPUSDT.json": "c5821b3bd4510c6efdeeb3daae1518a7ebe22e3d7b3f7750e4e2115f1e9bc84d",
+    "research_lab/data/oos_bybit_h1_20261020/ORDIUSDT.json": "75c1946e72288380148f3a2a81a0ac2ec0ffb13f53d6b444a5959027656cf04e",
+    "research_lab/data/oos_bybit_h1_20261020/PUMPFUNUSDT.json": "b00c76458cb93f65531d60246a69a85c00e0eedb7afc6e002c36016c062b39d1",
+    "research_lab/data/oos_bybit_h1_20261020/RENDERUSDT.json": "891e5f07318e1916242232239d6c416f799db79c6b7bd9674857db4042ac54e7",
+    "research_lab/data/oos_bybit_h1_20261020/SEIUSDT.json": "30b9572391c1856f332b0b1cfea4b302eb7974a88a22bf1331125435da0a3e80",
+    "research_lab/data/oos_bybit_h1_20261020/TAOUSDT.json": "5d011ba6b123e023241cc98d911089d90a46eb9e4083e6a6b4ff423ce9ddb705",
+    "research_lab/data/oos_bybit_h1_20261020/TRUMPUSDT.json": "701793fcea1fb61ac325da1c8a94e08582cc33103ad54cfa7c2af1ad983844e3",
+    "research_lab/data/oos_bybit_h1_20261020/TUTUSDT.json": "86aee4ffa7a5cca975241b757ca5533fc3ae56ad07c59ae8a162fa0c3f159380",
+    "research_lab/data/oos_bybit_h1_20261020/UBUSDT.json": "e3f007f8ae5581266d679b9a9e8e6f80bae1b42944443e87822f7cb4a8e3193c",
+    "research_lab/data/oos_bybit_h1_20261020/UNIUSDT.json": "2ab3947abb00fa8e61864c54ba6eb8321e561dd6922b2ab24f7d7208fc177d72",
+    "research_lab/data/oos_bybit_h1_20261020/VIRTUALUSDT.json": "5149d95c57b4e88660e5010b58943eb866a5d36bb337eb75c5c0545ff6bea84e",
+    "research_lab/data/oos_bybit_h1_20261020/WIFUSDT.json": "10965b7d74c0a2dd472d2dee38a959ba5301fe6995b24ea51c9f8b3eb7fc00d5",
+    "research_lab/data/oos_bybit_h1_20261020/WLDUSDT.json": "fc8ad5cd54c30edeba8097dbd9123235b6185be8a7be61c9da0f66b49147c4a1",
+    "research_lab/data/oos_bybit_h1_20261020/XPLUSDT.json": "c17bab356297502c7df24495f0fe1cea9dc76ce3681405657cf152a0c46c5efa",
+    "research_lab/data/oos_bybit_h1_20261020/ZECUSDT.json": "b0bfc828171c4a5f21c0793994a716b20dc700753938e1d5829243d2394268b8",
+    "research_lab/data/oos_bybit_h1_20261020/ZROUSDT.json": "2c11831f2682657ac655d6d45acdc9cc92d5ccab591b7d0ff2c87eb2e7ea028e"
+  },
+  "research_inputs_unchanged": true,
+  "restart_duplicate_checks": 65,
+  "rows": [
+    {
+      "bar_open_ms": 1790121600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "bar_open_ms": 1790776800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "bar_open_ms": 1790240400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ACEUSDT"
+    },
+    {
+      "bar_open_ms": 1790499600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ACEUSDT"
+    },
+    {
+      "bar_open_ms": 1791763200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ACTUSDT"
+    },
+    {
+      "bar_open_ms": 1790283600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "AEROUSDT"
+    },
+    {
+      "bar_open_ms": 1791734400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "AEROUSDT"
+    },
+    {
+      "bar_open_ms": 1790848800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "AKEUSDT"
+    },
+    {
+      "bar_open_ms": 1791540000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "AKEUSDT"
+    },
+    {
+      "bar_open_ms": 1790006400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "bar_open_ms": 1791532800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "bar_open_ms": 1790071200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ALLOUSDT"
+    },
+    {
+      "bar_open_ms": 1790254800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ALLOUSDT"
+    },
+    {
+      "bar_open_ms": 1789858800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "APTUSDT"
+    },
+    {
+      "bar_open_ms": 1788667200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "bar_open_ms": 1790010000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "bar_open_ms": 1790035200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "BROCCOLIUSDT"
+    },
+    {
+      "bar_open_ms": 1790445600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "CCUSDT"
+    },
+    {
+      "bar_open_ms": 1788498000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "COAIUSDT"
+    },
+    {
+      "bar_open_ms": 1791136800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "COAIUSDT"
+    },
+    {
+      "bar_open_ms": 1788714000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ENAUSDT"
+    },
+    {
+      "bar_open_ms": 1790316000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "bar_open_ms": 1789848000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ESPUSDT"
+    },
+    {
+      "bar_open_ms": 1790856000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ESPUSDT"
+    },
+    {
+      "bar_open_ms": 1790085600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "bar_open_ms": 1792170000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "FILUSDT"
+    },
+    {
+      "bar_open_ms": 1790042400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "GALAUSDT"
+    },
+    {
+      "bar_open_ms": 1791244800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "bar_open_ms": 1791648000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "GWEIUSDT"
+    },
+    {
+      "bar_open_ms": 1790528400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "HEIUSDT"
+    },
+    {
+      "bar_open_ms": 1790913600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "HEIUSDT"
+    },
+    {
+      "bar_open_ms": 1788836400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ICPUSDT"
+    },
+    {
+      "bar_open_ms": 1790733600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ICPUSDT"
+    },
+    {
+      "bar_open_ms": 1791806400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ICPUSDT"
+    },
+    {
+      "bar_open_ms": 1791702000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "INJUSDT"
+    },
+    {
+      "bar_open_ms": 1791972000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "INJUSDT"
+    },
+    {
+      "bar_open_ms": 1790488800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "JTOUSDT"
+    },
+    {
+      "bar_open_ms": 1789790400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "KAITOUSDT"
+    },
+    {
+      "bar_open_ms": 1790442000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "LDOUSDT"
+    },
+    {
+      "bar_open_ms": 1791010800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "MEUSDT"
+    },
+    {
+      "bar_open_ms": 1789797600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "MMTUSDT"
+    },
+    {
+      "bar_open_ms": 1788512400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "MSTRUSDT"
+    },
+    {
+      "bar_open_ms": 1788742800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "bar_open_ms": 1791907200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "bar_open_ms": 1790834400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "NILUSDT"
+    },
+    {
+      "bar_open_ms": 1791734400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "NILUSDT"
+    },
+    {
+      "bar_open_ms": 1789848000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "OPUSDT"
+    },
+    {
+      "bar_open_ms": 1788516000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ORDIUSDT"
+    },
+    {
+      "bar_open_ms": 1791108000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "PUMPFUNUSDT"
+    },
+    {
+      "bar_open_ms": 1790056800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "RENDERUSDT"
+    },
+    {
+      "bar_open_ms": 1790442000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "SEIUSDT"
+    },
+    {
+      "bar_open_ms": 1790089200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "TAOUSDT"
+    },
+    {
+      "bar_open_ms": 1788505200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "TRUMPUSDT"
+    },
+    {
+      "bar_open_ms": 1788728400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "TUTUSDT"
+    },
+    {
+      "bar_open_ms": 1790085600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "UBUSDT"
+    },
+    {
+      "bar_open_ms": 1789812000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "UNIUSDT"
+    },
+    {
+      "bar_open_ms": 1790226000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "UNIUSDT"
+    },
+    {
+      "bar_open_ms": 1790042400000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "VIRTUALUSDT"
+    },
+    {
+      "bar_open_ms": 1789794000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "WIFUSDT"
+    },
+    {
+      "bar_open_ms": 1791666000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "WLDUSDT"
+    },
+    {
+      "bar_open_ms": 1790067600000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "bar_open_ms": 1788786000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ZECUSDT"
+    },
+    {
+      "bar_open_ms": 1788498000000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ZROUSDT"
+    },
+    {
+      "bar_open_ms": 1791118800000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ZROUSDT"
+    },
+    {
+      "bar_open_ms": 1792159200000,
+      "restart_duplicate_preserved": true,
+      "signal_and_plan_match": true,
+      "symbol": "ZROUSDT"
+    }
+  ],
+  "schema": "PUMP4_CLOSED_H1_INTAKE_PARITY_RECEIPT_V1",
+  "source_files": {
+    "research_lab/att1_lifecycle_journal.py": "48b9465eaf1c09bb9ef87160610eac57cb2afb62f206b1b5c18c75c196f681eb",
+    "research_lab/pump4_closed_bar_intake_v1.py": "9e37540b6d12e21cd248e45b62680f4c77b03e7ec0a47b7aa7d812c33f9702aa",
+    "research_lab/pump4_execution_plan_v1.py": "57b4923d5209385d09243c07ee2a243063dc74ac95a2ee9c44c5d73825cc9eb4",
+    "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+    "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+  },
+  "status": "CLOSED_H1_CURSOR_COOLDOWN_COMPONENT_PASS",
+  "tiny_readiness": "NOT_READY"
+}

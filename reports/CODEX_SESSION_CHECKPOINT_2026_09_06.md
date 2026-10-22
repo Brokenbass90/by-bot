@@ -1,5 +1,33 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT22Oct MONEY EXECUTION — MONTHLY CUTOVER REVIEW + PUMP4 CURSOR COMPONENT CLOSED.
+Read ALPACA_MONTHLY_CUTOVER_PACKET_2026_10_22.md and PUMP4_CLOSED_BAR_INTAKE_2026_10_22.md.
+Monthly53accepted source hashes unchanged;45standing-authority closure distinguished.
+Fresh GET4legacyunits/9exitpins confirms original NETtimer active, SHOPdisabled;
+exactly1staleNETexit unitpin. Matching manifest+ownerlauncher refresh/diff and
+retirement commands are preparedPRIVATE REVIEW ONLY, syntax/hash verified; original
+manifest/launcher/claims/units untouched. Procedure/rollback/futureinput inventory
+complete; actual final operationalconfig/scope not issued or pretended complete.
+Actual NETterminalseal/cashcontext/retirement/owner authority and future selection/
+windowfacts remain. Both personalNETexit andMonthly use same5min opening window;
+noextension/datecarry if handoff cannot finish. No current brokerprotection claim.
+PUMP4 new causalH1 intake reuses LifecycleJournal in separateper-symboljournal;
+frozenindex200 seed→continuous retainedhistory/cooldown; duplicate/gap/open/source/
+corrupttail failclosed. FINAL34localPASS(22new+12plan), networkdenied, actual65fixture
+signal+planmatches/1ASTERunavailable,65restartduplicates +54ZRO/BLESShourly checks,
+all24cooldownhours suppressed. No outcomes/PnL/judge/researchwrites. One verified
+astra/high boundedreview1P2interleavedduplicate returnidentity fixedRED→GREEN;
+targetedreviewPASS overlapsroot. Finalsource tests/parity regenerated afterfix.
+LOCAL_ONLY, notBybitexecutor/TINYpass; unauthenticatedhistorical/callerclocks,
+137continuouscensus/actualnextopen/quantity/nativeorders/fees/funding NOT_RUN.
+NEXT concreteengineering: existingBybittransport/native stop/reconcile/40-60partial
+exits/lostreplies/restart, instrumentminima/actualcosts andboundedTINYproposal.
+No newarchitectural/researchtask orcalendarwait. Monthly241acceptance not repeated
+because no acceptedMonthlysourcechanged. No NET/SHOP/HALT/locks/GO/units/financial
+activation/KITYretry. Foreignallowlist365ff7d6…cc2e0e preserved/untracked.
+Private resume .private/pump4_intake_20261022/progress.md. Older blocks below history.
+
+
 CURRENT21Oct NET ACTIVATION REVIEW — bounded/read-only, no priority change.
 Read NET_RATCHET_RULE_REVIEW_2026_10_21.md. Original3.5default traced06869be→f39fb32;
 no NET-specific optimality evidence in inspected sources. Existing helper2d5243…eea1

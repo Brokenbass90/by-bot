@@ -1,0 +1,26 @@
+{
+  "final_review": "NO_UNRESOLVED_ACTIONABLE_FINDINGS",
+  "finding": {
+    "cause": "Duplicate append can replay a journal already advanced to a later hour; old accept returned latest decision instead of requested bar",
+    "fix": "Select requested bar timestamp from locked replay",
+    "priority": "P2",
+    "regression": "test_concurrent_duplicate_returns_requested_bar_even_after_next_bar_commits",
+    "root_red_then_green": true,
+    "status": "FIXED"
+  },
+  "initial_intake_tests_passed": 21,
+  "limitations": [
+    "Reviewer did not independently repeat65fixture/54hour parity",
+    "Reviewer did not verify live broker/VPS truth",
+    "One review plus targeted fix check, not two reviews"
+  ],
+  "monthly_review_artifacts_verified": true,
+  "overlapping_not_additive": true,
+  "review_count": 1,
+  "reviewer_effort": "high",
+  "reviewer_model": "gpt-6-astra",
+  "runtime_turn_context_verified": true,
+  "schema": "PUMP4_INTAKE_BOUNDED_REVIEW_V1",
+  "targeted_fix_tests_passed": 1,
+  "verified_context_count": 1
+}

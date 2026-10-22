@@ -1,0 +1,14 @@
+{
+  "files": {
+    "reports/evidence/pump4_intake_20261022/verify.py": "cc8aba9b64fe9fd2efe07eb77f8b363f971e216898a91ffc498879694cf4a559",
+    "research_lab/alpaca_dynamic_v1.py": "948939d17b3a5a3d85d692c3e00297d2a0ae57bcb196838e1de45ae0407642f5",
+    "research_lab/att1_lifecycle_journal.py": "48b9465eaf1c09bb9ef87160610eac57cb2afb62f206b1b5c18c75c196f681eb",
+    "research_lab/pump4_closed_bar_intake_v1.py": "9e37540b6d12e21cd248e45b62680f4c77b03e7ec0a47b7aa7d812c33f9702aa",
+    "research_lab/pump4_execution_plan_v1.py": "57b4923d5209385d09243c07ee2a243063dc74ac95a2ee9c44c5d73825cc9eb4",
+    "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+    "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c",
+    "tests/test_pump4_closed_bar_intake_v1.py": "b3c56799478aa819d17b4b01964f5ec1dc9b7fae226d64337b009419bcd3872e",
+    "tests/test_pump4_execution_plan_v1.py": "a3f2f7d73744f6515c8134ce7284b23a908012a34b129ccbc9d85ba640e65608"
+  },
+  "schema": "PUMP4_INTAKE_REVIEWED_FILES_V1"
+}
