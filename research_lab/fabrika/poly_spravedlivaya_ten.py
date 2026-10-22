@@ -17,7 +17,7 @@ import poly_yes_ten as Y
 LAB = Path(__file__).resolve().parents[1]; D = LAB / "data"
 ZH = D / "poly_spravedlivaya_ten.jsonl"
 BYBIT = "https://api.bybit.com"
-ZAMOROZKA_MS = 0                        # выставляется коммитом prereg (см. PREREG_POLY_SPRAVEDLIVAYA_TEN_2026_10_22)
+ZAMOROZKA_MS = 1792672201000          # коммит prereg 85803c8 (22.10.2026 12:30 UTC)
 NOTIONAL, FEE, FEE_S, SPRED_S, HEDGE_FEE = 10.0, 0.07, 0.10, 0.01, 0.00055
 ND = NormalDist()
 
@@ -144,4 +144,14 @@ def prohod():
 
 
 if __name__ == "__main__":
-    print(json.dumps(prohod(), ensure_ascii=False))
+    if "--proba" in sys.argv:          # проверка сети и расчёта на одном рынке, окно игнорируется, НИЧЕГО НЕ ПИШЕТ
+        sn = Y.poslednie_snimki(sorted(glob.glob(str(D / "poly" / "snimki" / "*.jsonl")))[-1:])
+        for cid, z in sn.items():
+            m = Y.RX.match(z["vopros"]); r = Y.raschet_ms(m.group(3), m.group(4), z["t"])
+            if r and r > time.time() * 1000:
+                old = Y.OKNO_MS; Y.OKNO_MS = 10 ** 13
+                try: print(json.dumps(resheniya(set(), {cid: z}, int(time.time() * 1000)), ensure_ascii=False, indent=1))
+                finally: Y.OKNO_MS = old
+                break
+    else:
+        print(json.dumps(prohod(), ensure_ascii=False))

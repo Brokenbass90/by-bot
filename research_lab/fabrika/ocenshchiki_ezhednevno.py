@@ -10,7 +10,7 @@ from pathlib import Path
 LAB = Path(__file__).resolve().parents[1]; ROOT = LAB.parent
 ZH = LAB / "data" / "ocenshchiki_ezhednevno.jsonl"
 SOST = LAB / "data" / "ocenshchiki_ezhednevno_sost.json"
-OCENSHCHIKI = ("pump4_pereschet.py", "slope_hedge_vpered.py", "tsmom_long_ten.py", "poly_yes_verdikt.py")
+OCENSHCHIKI = ("pump4_pereschet.py", "slope_hedge_vpered.py", "tsmom_long_ten.py", "poly_yes_verdikt.py", "poly_sprav_verdikt.py")
 CHAS_UTC = 6
 
 

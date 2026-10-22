@@ -56,13 +56,15 @@ def tekst(o):
             f"t по событиям {o['t_sobytiya']} · t по датам {o['t_daty']} · половины {o['polovina1']*100:+.1f}% / {o['polovina2']*100:+.1f}%")
 
 
-def main():
-    rows = [json.loads(l) for l in ZH.read_text().splitlines() if l.strip()] if ZH.exists() else []
+def main(zh=None, imya="poly_yes_verdikt_latest", zagolovok="Polymarket тень"):
+    zh = zh or ZH
+    rows = [json.loads(l) for l in zh.read_text().splitlines() if l.strip()] if zh.exists() else []
     o = sudit(rows)
     (LAB / "results").mkdir(exist_ok=True)
-    (LAB / "results" / "poly_yes_verdikt_latest.json").write_text(json.dumps(o, ensure_ascii=False, indent=1))
-    (LAB / "results" / "poly_yes_verdikt_latest.txt").write_text(tekst(o) + "\n")
-    print(tekst(o))
+    (LAB / "results" / f"{imya}.json").write_text(json.dumps(o, ensure_ascii=False, indent=1))
+    t = tekst(o).replace("Polymarket тень", zagolovok, 1)
+    (LAB / "results" / f"{imya}.txt").write_text(t + "\n")
+    print(t)
 
 
 if __name__ == "__main__":
