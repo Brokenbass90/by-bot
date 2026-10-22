@@ -1,0 +1,137 @@
+{
+  "actual_legacy_retirement": "NOT_PERFORMED",
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "component_calls_seconds": [
+    {
+      "phase": "source",
+      "seconds": 9.959411040996201
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.0730354170082137
+    },
+    {
+      "phase": "source",
+      "seconds": 9.143575208028778
+    },
+    {
+      "phase": "opening",
+      "seconds": 0.8148134590592235
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.07668449997436255
+    },
+    {
+      "phase": "source",
+      "seconds": 9.546394584001973
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.08976154099218547
+    },
+    {
+      "phase": "source",
+      "seconds": 9.562677084002644
+    },
+    {
+      "phase": "opening",
+      "seconds": 0.1968416249146685
+    },
+    {
+      "phase": "source",
+      "seconds": 10.303451291983947
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.0731092500500381
+    },
+    {
+      "phase": "source",
+      "seconds": 10.199648375040852
+    },
+    {
+      "phase": "opening",
+      "seconds": 0.8515881249913946
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.07046179205644876
+    },
+    {
+      "phase": "source",
+      "seconds": 10.013662791927345
+    },
+    {
+      "phase": "opening",
+      "seconds": 0.2025559589965269
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.08209341601468623
+    },
+    {
+      "phase": "source",
+      "seconds": 10.380121916998178
+    },
+    {
+      "phase": "opening",
+      "seconds": 0.22591762500815094
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.08519391703885049
+    },
+    {
+      "phase": "source",
+      "seconds": 10.330353291938081
+    },
+    {
+      "phase": "maintain",
+      "seconds": 0.07380987494252622
+    },
+    {
+      "phase": "source",
+      "seconds": 10.437862083083019
+    }
+  ],
+  "e2e": {
+    "clock": "DETERMINISTIC_FIXTURE_NOT_LATENCY_SLO",
+    "duplicate_entries": 0,
+    "first_entry_buy_and_stop_response_loss_recovered": true,
+    "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+    "fixture_liability_reserve_usd": ".03",
+    "legacy_handoff_fixture_only": true,
+    "legacy_retirement_checks": 2,
+    "money_authority": false,
+    "old_exit_finalized_after_posting": true,
+    "old_exit_pending_during_new_entries": true,
+    "orders_allowed": false,
+    "owned_positions": 1,
+    "production_cli_calls": 8,
+    "production_entrypoint": true,
+    "real_broker_requests": 0,
+    "real_broker_writes": 0,
+    "response_loss_recovered": true,
+    "rotation_exits": 1,
+    "selector_monkeypatched": false,
+    "simulated_entries": 2,
+    "source_loader_injected": false,
+    "source_symbols": 58,
+    "status": "MONTHLY_PRODUCTION_ENTRYPOINT_ORDERS_OFF_E2E_PASS"
+  },
+  "fixture_budget": "existing historical487.42fixture, not owner400allocation proof",
+  "legacy_exit_wire": "NOT_RUN; separately gated owner-only helper",
+  "network_denied": true,
+  "orders_allowed": false,
+  "schema": "MONTHLY_CUTOVER_TIMED_OFF_REHEARSAL_V1",
+  "stages_seconds": {
+    "early_window_and_calendar_guard": 0.000598000013269484,
+    "existing_full_production_cli_rotation": 229.1122128330171,
+    "rollback_empty_disabled_pointer": 0.002284834044985473,
+    "rollback_with_exposure": 0.00020949996542185545
+  },
+  "status": "OFF_REHEARSAL_PASS_WITH_EXPLICIT_LIMITS",
+  "timing_scope": "Local synthetic execution; nested timings overlap; not broker or live cutover SLO"
+}

@@ -1,0 +1,26 @@
+{
+  "broker_get_requests": 6,
+  "broker_writes": 0,
+  "not_online_quote": true,
+  "observed_ms": 1792692959388,
+  "observed_utc": "2026-10-22T18:15:59.388000+00:00",
+  "position": {
+    "avg_entry_price": "311.222",
+    "current_price": "305.92",
+    "qty": "0.325167779",
+    "symbol": "NET",
+    "unrealized_pl": "-1.72404",
+    "unrealized_plpc": "-0.01704"
+  },
+  "protection": {
+    "expires_at": "2026-10-22T20:00:00Z",
+    "qty": "0.325167779",
+    "status": "new",
+    "stop_price": "277.69",
+    "symbol": "NET",
+    "time_in_force": "day",
+    "type": "stop"
+  },
+  "raw_private_sha256": "8e09263bb558c1954ddcef38a07490c81dd2cc08234487d60019c0499dbcf36c",
+  "status": "LEGACY_NET_OPEN_FULL_DAY_STOP_CONFIRMED"
+}

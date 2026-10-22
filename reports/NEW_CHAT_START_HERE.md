@@ -1,5 +1,16 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT22Oct evening: resume checkpoint TOP and
+[NET early-exit decision](ALPACA_MONTHLY_EARLY_NET_EXIT_2026_10_22.md) →
+[PUMP4 lifecycle](PUMP4_EXECUTION_LIFECYCLE_2026_10_22.md).
+New23Oct17:00–17:05Cyprus NET-only packet inspectedUNSELECTED, exact owner
+decision pending/noGO/no claim; do not run personal launcher as agent.
+91local/same91VPS PUMP candidate tests PASS, actual-source/account admission and
+financial gateway remain OPEN/TINYblocked. KITY22C2 signal-only PASS, notmoney.
+NET18:15UTC fullDAYprotection is dated evidence, expires22Oct20UTC.
+CurrentMoney queue preserved; Polymarket follows, not a new priority switch.
+Older dated CURRENT blocks below are history; checkpointTOP is authoritative.
+
 CURRENT19Oct CANONICAL ROADMAP / WRITER OWNERSHIP —
 [ROADMAP_SELF_IMPROVING.md](../ROADMAP_SELF_IMPROVING.md) обновлён на месте.
 Codex — soleintegratingwriter общего roadmap/активнойочереди, executionboard и

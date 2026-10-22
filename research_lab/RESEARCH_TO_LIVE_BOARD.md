@@ -1,5 +1,7 @@
 # Trading OS — единая доска доведения до первой версии
 
+22Oct evening delta: [NET early-exit packet](../reports/ALPACA_MONTHLY_EARLY_NET_EXIT_2026_10_22.md) READY_FOR_EXACT_OWNER_DECISION, separate23Oct17:00–17:05Cyprus scope,21tests/VPSinspectionPASS; noGO/claim/financial exit/retirement. Dated18:15UTC NET fullDAYstop confirmed, expires20UTC. [PUMP lifecycle](../reports/PUMP4_EXECUTION_LIFECYCLE_2026_10_22.md) COMPONENT_PASS:91local/same91VPS, actual-intake→plan→durable lifecycle→signed memory-wire40/60/flat CLI, six review fixes. Actual7GET fees/flat state +fresh136/137publicfilters; real source/account adapter/admission/financial owner gateway OPEN, TINYblocked. [KITY22C2](../reports/KITY_BYBIT_C2_ACTUAL_2026_10_22.md) independent50features/archives +5L5S match within1e−6; numeric qty/C1/C3/edge not proven. Moneyqueue unchanged; Polymarket next after current work. Earlier deltas below are historical.
+
 22Oct execution delta: [Monthly cutover procedure/review artifacts](../reports/ALPACA_MONTHLY_CUTOVER_PACKET_2026_10_22.md) prepared, actual NET/retirement/final config/scope remain unbound; no activation. [PUMP4 closed-H1 intake](../reports/PUMP4_CLOSED_BAR_INTAKE_2026_10_22.md) COMPONENT_PASS:34local/65fixture matches+65restartduplicates/54ZRO-BLESS hourly checks, reviewed concurrency fix. Next Bybit execution/native stops/40-60 exits/cost-TINY acceptance, not LIVE. Derived from canonical roadmap; earlier deltas below are historical.
 
 

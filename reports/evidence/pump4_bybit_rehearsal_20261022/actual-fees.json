@@ -1,0 +1,846 @@
+{
+  "account_flat": true,
+  "broker_get_requests": 7,
+  "broker_writes": 0,
+  "fee_rows": [
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "1000BONKUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "1000RATSUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ACEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ACTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ADAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "AEROUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "AKEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ALLOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "APTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ARBUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ASTERUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ATOMUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BANKUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BCHUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BEATUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BICOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BIOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BLUAIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BMTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BROCCOLIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BTRUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "BZUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "C98USDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "CBRSUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "CCUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "CLUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "COAIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "COOKIEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "COTIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "CRCLUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "CRVUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "CYSUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "DEXEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "DRAMUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ENAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "EPICUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ESPUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ETCUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ETHUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "EWYUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "FILUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "GALAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "GUNUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "GWEIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "HBARUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "HEIUSDT"
+    },
+    {
+      "account_maker_fee_rate": null,
+      "account_taker_fee_rate": null,
+      "public_status": "BLOCKED_SOURCE_OR_NOT_TRADING",
+      "symbol": "HFTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "HOMEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ICPUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "INJUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "INTCUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "JTOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "KAITOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "LAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "LDOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "LITEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "LITUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "METAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MMTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MNTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MONUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MRVLUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MSFTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MSTRUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "MUUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "NBISUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "NILUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "NVDAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "OPUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ORDIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "PAXGUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "PENGUUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "PEOPLEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "PLTRUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "POLUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "PUMPFUNUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "QQQUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "RENDERUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "RKLBUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ROBOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SEIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SHIB1000USDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SIRENUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SKYAI1USDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SNDKUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SOLUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SOXLUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SQDUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "STRKUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "SUIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "TAOUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "THEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "TIAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "TRUMPUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "TRXUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "TSLAUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "TUTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "UBUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "UNIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "USDCUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "USELESSUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0004",
+      "account_taker_fee_rate": "0.0011",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "USUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "VELODROMEUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "VIRTUALUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "WIFUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "WLDUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "WLFIUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XANUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0",
+      "account_taker_fee_rate": "0.000275",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XLMUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XMRUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "XRPUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ZBTUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ZECUSDT"
+    },
+    {
+      "account_maker_fee_rate": "0.0002",
+      "account_taker_fee_rate": "0.00055",
+      "public_status": "PUBLIC_FILTERS_AVAILABLE_NOT_ACCOUNT_ADMISSION",
+      "symbol": "ZROUSDT"
+    }
+  ],
+  "fee_rows_in_api": 942,
+  "margin_mode": "REGULAR_MARGIN",
+  "no_open_orders": true,
+  "observed_ms": 1792693540236,
+  "orders_allowed": false,
+  "private_identity_or_balance_published": false,
+  "raw_private_sha256": "c129225aac9e87b503dca0215b1bc0070c7b66a33066003d0cee95240d33a17c",
+  "remaining": [
+    "No PUMP4 risk/capital/authority scope accepted",
+    "No account-wide PUMP4 financial owner gateway installed or selected",
+    "Actual funding path, margin/lot admission and native account execution still need final acceptance"
+  ],
+  "schema": "PUMP4_ACCOUNT_FEE_READ_ONLY_SUMMARY_V1",
+  "status": "ACTUAL_FEES_CAPTURED_NOT_TINY_ADMISSION",
+  "tiny_ready": false,
+  "universe_count": 137,
+  "universe_fee_coverage": 136
+}

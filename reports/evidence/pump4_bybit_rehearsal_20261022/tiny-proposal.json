@@ -1,0 +1,24 @@
+{
+  "day_new_entry_loss_latch_usdt": "2",
+  "drawdown_review_trigger_usdt": "6",
+  "gross_ceiling_usdt": "30",
+  "latch_reset": "separate exact owner permission",
+  "limitations": [
+    "Sizing depends on actual new signal/stop, quote, tick/qty filters and account margin",
+    "Notional/fee/funding stress figures are scenarios, not worst-case loss bounds",
+    "Does not authorize even one actual order; no owner gateway selected"
+  ],
+  "max_concurrent_positions": 1,
+  "no_leverage_setting_change": true,
+  "no_new_borrowing": true,
+  "nominal_stop_risk_usdt": "1",
+  "not_guaranteed_maximum_loss": true,
+  "orders_allowed": false,
+  "owned_custody_continues": true,
+  "owner_go_issued": false,
+  "proposed_allocation_ceiling_usdt": "50",
+  "schema": "PUMP4_TINY_RISK_PROPOSAL_ONLY_V1",
+  "status": "PROPOSAL_NOT_AUTHORITY",
+  "tiny_ready": false,
+  "week_new_entry_loss_latch_usdt": "3"
+}

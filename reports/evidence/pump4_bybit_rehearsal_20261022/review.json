@@ -1,0 +1,23 @@
+{
+  "all_findings_closed": true,
+  "effort": "high",
+  "followups": "targeted fixes, not independent additional reviewers",
+  "harness_finding": "Unknown fault name executed normal scenario: rejected before mkdir; regression RED-GREEN",
+  "lifecycle_findings": [
+    "P1 preserve observed fills despite missing stop",
+    "P2 timed full exit bypasses partial-split gate",
+    "P2 terminal order and identity immutable",
+    "P2 funding history immutable",
+    "P2 never-verified native descriptor cannot authorize flat fill"
+  ],
+  "limitations": [
+    "No reviewer CLI or VPS rerun",
+    "No real broker orders or financial acceptance"
+  ],
+  "review_count": 1,
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_targeted_tests_overlap_final_suite": true,
+  "root_regressions_red_green": true,
+  "runtime_verified": true,
+  "schema": "PUMP4_EXECUTION_BOUNDED_REVIEW_V1"
+}

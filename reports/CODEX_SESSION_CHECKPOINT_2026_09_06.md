@@ -1,5 +1,42 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT22Oct EVENING — NET EARLY EXIT OWNER DECISION + PUMP4 LIFECYCLE CLOSED.
+Read ALPACA_MONTHLY_EARLY_NET_EXIT_2026_10_22.md,
+PUMP4_EXECUTION_LIFECYCLE_2026_10_22.md and KITY_BYBIT_C2_ACTUAL_2026_10_22.md.
+NET18:15:59UTC authenticated6GET: original0.325167779, entry311.222,
+price305.92/PnL−1.72404, full acceptedDAYstop277.69 expires22Oct20UTC;
+dated snapshot, not overnight/current quote. No financial writes/trailing change.
+New separate23Oct14:00–14:05UTC/17:00–17:05Cyprus exit helper21PASS;
+VPS9pins inspectionPASS, new directory UNSELECTED/noGO/no claim. Exact proposed
+manifest0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449.
+Initiation claim consumes scope; owned recovery may extend beyond5min. Original
+Nov2 helper/authority unchanged. Exact owner decision pending asynchronously;
+agents never launch financial wrapper. No actual exit/retirement/Monthly GO.
+Monthly synthetic fullCLI229.112s PASS;487.42fixture not owner400 proof; actual
+terminal/cash/cost seal/retirement/config/scope remain. MissedNov2 next frozen
+slot1Dec14:30–14:35UTC from30Nov completedsource, no next-day carry.
+PUMP4 COMPONENT_PASS_TINY_BLOCKED: final91local/same91VPS, material
+77e930dcc1d09833111da73cfc50aaaa33ecd39de46d6d3a252e7c3ed68ee70a,
+77packaged files/33imports/0fallback; socketsdenied +VPSunshare-net. Existing
+intake→plan→concrete lifecycle→SignedPostOnce→memoryBybit CLI40/60/flat PASS;
+new-interpreter restart, partials/lostresponses/stop/funding histories covered.
+One verifiedastra/high reviewer, targeted6fixes RED→GREEN; no remaining findings
+in reviewed scope, CLI/VPS root-tested. Observations caller-provided; no selected
+financial owner or actual native trade acceptance. Strict non-exact tick stop
+rejects; real admission/rounding/source/account adapter/gateway remain code work.
+7actual selectedaccount GET: flat/noorders/REGULAR_MARGIN, fees136/137;
+ZROtaker.00055, funding4h. Freshpublic136/137/HFTmissing; no universe rewrite.
+Risk50allocation/30gross/R1/max1/day2/week3/DD6 is PROPOSAL ONLY, no PUMP GO.
+KITY22C2 actual independent50feature/50archive matches, maxerror4.995506e-7<1e-6,
+5L/5S matching, immutable comparison inputs. Numeric order qty absent, notproven;
+C1/C3/edge/Money remain separate, original KITY SPENT/ORDERS_OFF unchanged.
+NEXT PUMP actual causal source/account observations + tick/lot/margin/funding
+admission, then account-wide owner/gateway/latches; no calendar wait. Polymarket
+next after Money work per owner. All53acceptedMonthlysources/9VPSfinancialpins
+unchanged. Foreignallowlist365ff7d6…cc2e0e preserved/untracked. Resume private
+.private/pump4_bybit_20261022/package.json and .private/monthly_early_exit_20261022/rev2/.
+Prior CURRENT blocks below are historical.
+
 CURRENT22Oct MONEY EXECUTION — MONTHLY CUTOVER REVIEW + PUMP4 CURSOR COMPONENT CLOSED.
 Read ALPACA_MONTHLY_CUTOVER_PACKET_2026_10_22.md and PUMP4_CLOSED_BAR_INTAKE_2026_10_22.md.
 Monthly53accepted source hashes unchanged;45standing-authority closure distinguished.

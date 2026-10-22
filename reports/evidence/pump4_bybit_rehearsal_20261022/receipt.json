@@ -1,0 +1,59 @@
+{
+  "accepted_monthly_sources_unchanged": 53,
+  "account_fee_universe_coverage": 136,
+  "account_mode": "REGULAR_MARGIN",
+  "authenticated_get_requests": 7,
+  "checkout_fallback": [],
+  "cli_status": "HISTORICAL_PIPELINE_ORDERS_OFF_PASS",
+  "evidence_files": {
+    "accept.py": "80adc85536f3a1313981f3b3894a950fe035bc683a5658d706278e6a74f50368",
+    "actual-fees.json": "4a187a2485ce545a484289690136dfcbc825c27f9e886ee80c0541f57e03d720",
+    "local-acceptance.json": "870305fb972bbaf9e832b2dff0ec2e9e3e5fc918195f8b90c475fc3c8ec30320",
+    "local-manifest.json": "af1bc437072f9d4d2c1e539f549604f20ba9f14a4577a08d4025acca409f9e92",
+    "local-receipts.json": "c235c3a95a7e27c8f5a2147b79afa8de134eec07776591dafc94d940c5cfe6c7",
+    "local-tests.xml": "d904acce86bbc830c3660ac1673d1099b7477b2b6592c65cf21e2c2f5a4d5c0d",
+    "public-capacity-final.json": "69069e5dd7203fb8d52f25fae99fb12246318e0f4b570b0cfb1a70c49af6c2e9",
+    "review.json": "aefb24c4d09ebfc218adad20db4133af15b05f36832c29407d7a23cb12e05b23",
+    "reviewer-runtime.json": "88718260eb00339d8e2fe7e0fa9e8145e53a556d1bd67b5ec1104a76f6d561c0",
+    "tiny-proposal.json": "d94101cc48f5e18157d89fe8b786097d379a739b56353abc7bf405a65776dfc5",
+    "vps-acceptance.json": "f87182cc2e0689d27d35118031be0d62430f7cca6f953e167c25d08807e1319d",
+    "vps-manifest.json": "af1bc437072f9d4d2c1e539f549604f20ba9f14a4577a08d4025acca409f9e92",
+    "vps-receipts.json": "c235c3a95a7e27c8f5a2147b79afa8de134eec07776591dafc94d940c5cfe6c7",
+    "vps-tests.xml": "226bb4628c0ab18db03f79ccbe8582ae1ba3602db4967fdbe78913a49a16e6c3"
+  },
+  "local_counts": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 91
+  },
+  "material_sha256": "77e930dcc1d09833111da73cfc50aaaa33ecd39de46d6d3a252e7c3ed68ee70a",
+  "missing_public": [
+    "HFTUSDT"
+  ],
+  "money_authority": false,
+  "network_denied": true,
+  "orders_allowed": false,
+  "protected_static_pins_unchanged": 9,
+  "public_get_requests_final": 2,
+  "real_broker_writes": 0,
+  "remaining": [
+    "Actual causal137H1/next-open source loop and authenticated complete account observations to lifecycle",
+    "Real instrument tick/quantity/margin/risk/funding admission; strict exact-stop rejection currently remains",
+    "Selected account-wide PUMP4 owner/send/recovery gateway, risk latches and exact authority",
+    "Actual native protection/fill quality needs a separately approved micro"
+  ],
+  "schema": "PUMP4_LIFECYCLE_PROTOCOL_COMPONENT_ACCEPTANCE_V1",
+  "simulated_signed_order_creates": 29,
+  "source_files": 77,
+  "status": "COMPONENT_PASS_TINY_BLOCKED",
+  "tiny_ready": false,
+  "universe_public_available": 136,
+  "universe_size": 137,
+  "vps_counts": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 91
+  }
+}

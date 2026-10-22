@@ -1,0 +1,28 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "existing_files_changed": 0,
+  "helper_sha256": "f0af81fac7b31b4cd7824c42ebcb29596dd85821a3e4dc746e3bfe4dc3f42565",
+  "inspection": {
+    "broker_requests": 0,
+    "broker_writes": 0,
+    "plan": {
+      "end_ms": 1792764300000,
+      "evidence_classification": "OFF_PROTOCOL",
+      "initial_quantity": "0.325167779",
+      "monthly_activation_authorized": false,
+      "monthly_evidence_eligible": false,
+      "open_ms": 1792764000000,
+      "scheduled_dispatch": false,
+      "session": "2026-10-23",
+      "session_open_ms": 1792762200000,
+      "stop_widening_allowed": false,
+      "symbol": "NET"
+    },
+    "status": "NET_EXIT_PACKET_PREPARED_NOT_ARMED"
+  },
+  "manifest_sha256": "0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449",
+  "new_files": 2,
+  "owner_go_present": false,
+  "status": "UNSELECTED_INSPECTION_PASS"
+}

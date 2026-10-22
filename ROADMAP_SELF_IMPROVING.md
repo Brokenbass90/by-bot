@@ -6,7 +6,7 @@
 экономические преимущества, Brain проверяет портфельную пользу. AI не получает
 самостоятельного права менять LIVE, риск, судью или финансовые разрешения.
 
-**Создан:**10.04.2026. **Актуализирован:**21.10.2026 — legacy pending classifier exact241local/VPS PASS; next financial executor PUMP4.
+**Создан:**10.04.2026. **Актуализирован:**22.10.2026 — NET early-exit decision packet; PUMP4 lifecycle91local/VPS PASS; KITY C2 signal parity.
 **CURRENT STATUS: PARTIAL.** Проверенные компоненты и репетиции существуют;
 непрерывная автономная Factory и автономный денежный Monthly ещё не доказаны.
 Это обновление исходного документа, не новый roadmap и не новый financial GO.
@@ -89,8 +89,8 @@ Git ref. Локальный документ без публикации — pub
 | Slot / владелец | Работа сейчас | Закрывающий acceptance / следующее событие |
 |---|---|---|
 | **P0 Preserve — Codex** | NET20Oct scheduled independent GET completed at13:35:23UTC/16:35:23CY; later handoff preflight GET completed; raw financial/unit receipts retained privately | One-shot PAUSED after control; no new financial/units permissions or strategy changes. Current broker amounts/order identifiers/runtime unit state are excluded from public receipts. Future protection remains a separate dated operational obligation |
-| **P0 Money — Codex** | Monthly accepted financial component241local/same241VPS unchanged. [22Oct cutover review packet](reports/ALPACA_MONTHLY_CUTOVER_PACKET_2026_10_22.md):53source rehash/45standing closure; actual4unit+9exitpin readback; reviewed manifest+matching ownerlauncher refresh, retirement and rollback procedure prepared without installation | Actual NET terminal/cost context and retirement, final operational config/scope/validity/owner authority remain unbound; procedural packet is not final financial activation. Existing NET timer retained/SHOP cancelled. Same five-minute exit/entry window is not extended. Future selection/window facts cannot be fabricated |
-| **NEXT Money — Codex** | **PUMP4 V1 execution**. [22Oct closed-H1 cursor/cooldown](reports/PUMP4_CLOSED_BAR_INTAKE_2026_10_22.md) COMPONENT_PASS:34local tests,65fixture signal/plan matches+65restartduplicates,54ZRO/BLESS hourly state checks; one independent review concurrency fix. Existing journal reused; frozen producer unchanged | NEXT existing Bybit transport/native stop/reconcile,40/60partial exits, partialfills/lostreplies/restart, instrument minima/actual fees/funding and bounded TINY proposal. Full broker executor/137census/VPS/TINY NOT_READY; caller clocks not authenticated. No wait for Monthly calendar/Brain/InPlay/V2; precise separate owner GO |
+| **P0 Money — Codex** | Monthly financial241local/same241VPS unchanged. [Separate early NET exit](reports/ALPACA_MONTHLY_EARLY_NET_EXIT_2026_10_22.md):23Oct17:00–17:05Cyprus candidate21PASS/VPS9pininspection, installedUNSELECTED/noGO; originalNov2 helper unchanged. Existing cutover/retirement/rollback packet retained | Exact early-exit decision pending; after actual flat/terminal orders bind cost/cash/terminal seal, retire legacy only under exact authority, finalize Monthly config/scope. NET timer/protection retained; SHOP cancelled. No financial activation from proposal/tests; future selection/window facts remain |
+| **NEXT Money — Codex** | **PUMP4 V1 execution**. [22Oct lifecycle/CLI](reports/PUMP4_EXECUTION_LIFECYCLE_2026_10_22.md) COMPONENT_PASS:91local/same91VPS,77packaged files/33imports/0fallback, signed memory-wire40/60/flat after actual historical H1 intake; restart/partials/uncertainty tests; six reviewed defects fixed. Actual7GET account fees/flat state and136/137publicfilters obtained | NEXT actual causal137H1/next-open source, authenticated account-observation adapter, real tick/lot/margin/funding/risk admission and account-wide owner/gateway/latches. Strict exact-stop tick rejection remains; no silent rounding. TINY_NOT_READY; proposed50/30/R1/max1 is not authority. No calendar/Brain wait |
 | **P1 Codex** | Существующие DATA_ONLY/journal доставки/QA; следующий bounded fix — Brain receiver capacity, без нового framework |19Oct source22448opps/68878decisions, V2=1534; catchup6136receipts/28.2MB превышает4096/8MiB, BLOCKED до append, старые8 сохранены. Независимый chain/prefix/key audit PASS в узкой границе предоставленных файлов; полный market census/feature PIT UNKNOWN. Нужна controlled continuity/restart/replay в существующем journal. Existing DATA timers поддерживаются; Polymarket global census не отнимает MoneyP0 |
 | **P0 Research — Claude** | Один пакет Factory continuity: V2.2/default money judge + bounded AI proposal cycle + independent windows | Publication3a349a3/82193fe/3e8f779 CLOSED в1407fbf; следующий gate — единый causal automated trace с pins/budget/terminal verdict и независимый review; generator ещё manual/daemon stale не выдавать за полную автономию |
 | **P1 Claude / Codex CR** | BIL/SGOV: опубликованный H5B_DEV_PASS и versioned change request | Research4587a34 входит в подтверждённый origin6826315. Нужны account type/settled cash/interest/actual costs и integration в одном account book; current Monthly отвергает чужой fund sleeve. Никакого GO из DEV_PASS |
@@ -138,19 +138,21 @@ calendar time. See the entrypoint report above.
 | 30Oct после actual close | Причинный закрытый снимок57+SPY и frozen Monthly selection | Закрытие по календарю —20:00UTC/22:00Кипр; сигнал/покупка не гарантируются |
 | 2Nov14:30–14:35UTC /16:30–16:35Кипр | Ближайшее первоначально предусмотренное окно нового Monthly входа, если все actual gates и owner GO пройдены | CASH/NO_SEND допустимы; нет переноса даты, позднего входа или нового отбора по усмотрению инженера |
 
-**Критическая зависимость до23Oct:** личное окно legacy NET exit2Nov14:30–14:35UTC
-совпадает с первым окном Monthly. Должны быть доказаны actual exit/flat/orders,
-fees/cash finality и единственное ownership до нового входа. Поздняя комиссия
-может заблокировать именно это окно. Не закрывать NET раньше, не ослаблять
-cost-finality и не обещать2Nov сделку ради даты; варианты изменения финансовых
-условий выносятся только отдельным конкретным owner packet.
+**Критическая зависимость / update22Oct:** исходное личное окно legacy NET
+exit2Nov14:30–14:35UTC совпадает с первым окном Monthly. Отдельный ранний packet
+23Oct14:00–14:05UTC подготовлен/проверенUNSELECTED, точное решение владельца
+pending; исходное разрешение не переносилось. До любого нового входа нужны
+actual flat/terminal orders, принятый cash/cost context и единственное ownership.
+Поздние расходы не считаются нулевыми. Если2Nov пропущено, следующий frozen
+monthly slot1Dec14:30–14:35UTC от30Novsource; нет next-day переноса или гарантии BUY.
 
-**Дополнение cost-source19Oct:** тот же конфликт применяется к обычной Monthly
+**История cost-source19Oct; программное исправление принято21Oct:** тот же конфликт применялся к обычной Monthly
 rotation: продажа и замена в одном5min окне не совместимы с обязательной full-day
 posted-fee finality перед любым новым entry. Next owner packet должен дать конкретный
 versioned admission CR (возможный bounded pending-cost reserve, conservative loss
 admission, unknown-cost stop) либо сохранить NO_SEND. Сейчас никакой резерв/GO/новый
-лимит не выдан; net PnL остаётся PENDING до реальных assessments. Менять frozen
+лимит тогда не был выдан; актуальный admission/budget описан в21Oct acceptance
+и22Oct packet, настоящий net PnL требует реальных assessments. Менять frozen
 календарь или незаметно объявлять неизвестные расходы нулём нельзя.
 
 **Крипто-checkpoint22–23Oct, не LIVE deadline:** KITY остаётся

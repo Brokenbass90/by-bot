@@ -1,0 +1,33 @@
+{
+  "broker_writes": 0,
+  "completion_may_extend_beyond_window": true,
+  "evidence": {
+    "launcher-security.json": "4227543f437bb7632ed83039316fa24ac53bf14b52f66a794cc6d6284a4d7c7d",
+    "net-readonly.json": "3e3b2a06dcfac76a5a131a3375967e0fae174a0ae91e4591ca644ff7f171d2fc",
+    "review.json": "1cc16b6310a903156fd49a2315e63abc7ea3b560d84b8b5753427a89bba254f4",
+    "tests.xml": "15949323b8cb0c1aa7a16c1920261c3bd25c8a48a9694a85f60337d049a8ff8f",
+    "timed-rehearsal.json": "190afaf103791c31e3d2edd463982c128a820deb485cd78dea717d7316a481a1",
+    "vps-inspection.json": "124378d510812d07fa13fbea1656da59f09a4b062df8c14a1dba74bd5c067103"
+  },
+  "helper_sha256": "f0af81fac7b31b4cd7824c42ebcb29596dd85821a3e4dc746e3bfe4dc3f42565",
+  "human_launcher_creates_go_only_during_personal_invocation": true,
+  "initiation_utc": "2026-10-23T14:00:00Z/2026-10-23T14:05:00Z",
+  "launcher_security_review": "ALL_FINDINGS_CLOSED",
+  "launcher_sha256": "bd437cafcc5904d65e106513eab5756c217f6abd79fd5f3ad178e8500e28ca03",
+  "limitations": [
+    "Actual NET exit, recovery and retirement NOT_RUN",
+    "Monthly fixture budget487.42, not owner400 proof",
+    "No finalized Monthly activation scope/config"
+  ],
+  "manifest_sha256": "0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449",
+  "normal_and_optimized_tamper_regression": "PASS",
+  "owner_go_issued": false,
+  "schema": "NET_EARLY_EXIT_REVIEW_EVIDENCE_V1",
+  "source_hashes": {
+    "scripts/alpaca_legacy_net_early_exit_v1.py": "f0af81fac7b31b4cd7824c42ebcb29596dd85821a3e4dc746e3bfe4dc3f42565",
+    "tests/test_alpaca_legacy_net_early_exit_v1.py": "17675b10f2875d4698ca98ad36acb04088af47d240ba8d37a2697381ce65af31"
+  },
+  "status": "READY_FOR_EXACT_OWNER_DECISION_NOT_ARMED",
+  "tests": 21,
+  "vps_inspection": "UNSELECTED_NO_GO"
+}

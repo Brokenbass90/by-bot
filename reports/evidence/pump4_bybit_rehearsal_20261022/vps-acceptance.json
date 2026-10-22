@@ -1,0 +1,22 @@
+{
+  "checkout_fallback": [],
+  "counts": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 91
+  },
+  "elapsed_seconds": 6.826,
+  "imports": 33,
+  "material_sha256": "77e930dcc1d09833111da73cfc50aaaa33ecd39de46d6d3a252e7c3ed68ee70a",
+  "money_authority": false,
+  "network_denied": true,
+  "orders_allowed": false,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "receipt_count": 12,
+  "schema": "MONEY_CANDIDATE_EXACT_ORDERS_OFF_ACCEPTANCE_V1",
+  "source_files": 77,
+  "status": "PASS",
+  "tiny_ready": false
+}

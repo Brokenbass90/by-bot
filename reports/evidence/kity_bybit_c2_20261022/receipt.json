@@ -1,0 +1,43 @@
+{
+  "archive_day": "2026-10-21",
+  "archive_hash_matches": 50,
+  "broker_writes": 0,
+  "compared_inputs": {
+    "potok.json": "f04f3022fee44e2bfe2046dc506f1e4b93ed7401b8a32c7317df47a99c613255",
+    "signal.json": "e80208a6e60f26bb46ab9060e60a9d1c3bf82affc12cb1ac564346cc262c9a76"
+  },
+  "comparison_receipt_sha256": "c01c4c9e55bafcc0ed2937c451006da849d14bfcdbea905cd242e1cead899003",
+  "d": "2026-10-22",
+  "feature_ineligible": [],
+  "features": 50,
+  "independent_precomparison_seal_sha256": "facc3c85d65475ad035bcdad17a8538bb1a88d5464767ffaaeeabc317fc1bf0f",
+  "limitations": "Signal/raw-feature parity only; C1/C3/account execution and owner GO remain separate",
+  "long": [
+    "GRASSUSDT",
+    "XAUTUSDT",
+    "XAGUSDT",
+    "MNTUSDT",
+    "DOTUSDT"
+  ],
+  "max_feature_absolute_error": 4.995506040494924e-07,
+  "money_ready": false,
+  "order_quantities": "NOT_PRESENT_IN_RESEARCH_SIGNAL_NOT_PROVEN",
+  "orders_allowed": false,
+  "reconstruction_receipt_sha256": "a7274c16a4d63cb8a27d557c7b3a49d19417fd6249e661f6361b791338a79394",
+  "research_writes": 0,
+  "schema": "KITY_C2_ACTUAL_SIGNAL_MATCH_V1",
+  "short": [
+    "LTCUSDT",
+    "MSTRUSDT",
+    "SOXLUSDT",
+    "XAUUSDT",
+    "WLDUSDT"
+  ],
+  "source_hashes": {
+    "research_lab/kity_bybit_c2.py": "60ffdc481237da1aaf6593f5666ba1a2acbc318fe0db89b0f3d7de18138275c8",
+    "scripts/kity_bybit_c2.py": "1c05568b60124e43970a3167bd0250073f783e02e087f07cce7619662e5a79a1"
+  },
+  "source_only_capture_or_C1": "NOT_VERIFIED_BY_C2",
+  "source_snapshot_timestamp": "2026-10-21T23:50:51+00:00",
+  "status": "C2_PASS_MATCH_ONLY"
+}

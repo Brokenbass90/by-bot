@@ -1,0 +1,9 @@
+{
+  "broker_writes": 0,
+  "financial_program_executed": false,
+  "helper_sha256": "f0af81fac7b31b4cd7824c42ebcb29596dd85821a3e4dc746e3bfe4dc3f42565",
+  "launcher_sha256": "bd437cafcc5904d65e106513eab5756c217f6abd79fd5f3ad178e8500e28ca03",
+  "manifest_sha256": "0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449",
+  "normal_and_optimized_python_rejected": true,
+  "status": "TAMPERED_HELPER_REJECTED_BEFORE_CODE_EXECUTION"
+}
