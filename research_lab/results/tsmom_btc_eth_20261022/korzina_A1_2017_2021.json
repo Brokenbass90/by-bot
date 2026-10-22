@@ -1,0 +1,57 @@
+{
+ "monety": [
+  "BTCUSDT",
+  "ETHUSDT",
+  "BNBUSDT",
+  "XRPUSDT",
+  "LTCUSDT",
+  "ADAUSDT",
+  "TRXUSDT",
+  "EOSUSDT",
+  "XLMUSDT",
+  "LINKUSDT"
+ ],
+ "osnovnaya": {
+  "n_nedel": 179,
+  "t": 1.64,
+  "god_%": 15.9,
+  "sharpe": 0.88,
+  "maks_prosadka_%": 31.5
+ },
+ "po_monetam_god_%": {
+  "BTCUSDT": 31.3,
+  "ETHUSDT": 33.6,
+  "BNBUSDT": 35.5,
+  "XRPUSDT": -34.9,
+  "LTCUSDT": 6.7,
+  "ADAUSDT": 24.0,
+  "TRXUSDT": -6.5,
+  "EOSUSDT": -8.0,
+  "XLMUSDT": -8.8,
+  "LINKUSDT": 49.9
+ },
+ "p_perestanovok": 0.0015,
+ "kupit_derzhat_tot_zhe_risk": {
+  "n_nedel": 179,
+  "t": 2.35,
+  "god_%": 29.1,
+  "sharpe": 1.26,
+  "maks_prosadka_%": 27.5
+ },
+ "tolko_long": {
+  "n_nedel": 179,
+  "t": 2.56,
+  "god_%": 24.0,
+  "sharpe": 1.38,
+  "maks_prosadka_%": 20.0
+ },
+ "prevyshenie_nad_derzhat_god_%": -13.2,
+ "monet_v_plyuse": "6/10",
+ "po_godam_%": {
+  "2017": 20.2,
+  "2018": 5.4,
+  "2019": 17.0,
+  "2020": -19.2,
+  "2021": 38.6
+ }
+}
