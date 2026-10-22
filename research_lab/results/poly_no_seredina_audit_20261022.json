@@ -1,0 +1,63 @@
+{
+ "sverka": {
+  "sdelok": 549,
+  "pribyl_usd": 837.27,
+  "sred_roi_na_sdelku": 0.1525,
+  "sred_po_sobytiyam": 0.1048,
+  "sobytiy": 410,
+  "sdelok_v_sobytii": {
+   "2": 117,
+   "1": 282,
+   "3": 11
+  },
+  "roi_sobytiy_1_sdelka": 0.023,
+  "roi_sobytiy_2plus": 0.2848,
+  "komissii_usd": 184.53,
+  "vyigryshey": 323
+ },
+ "kapital": {
+  "itog_usd": 1337.27,
+  "maks_odnovremenno": 6,
+  "pik_zanyato_usd": 60.0,
+  "propushcheno_iz_za_deneg": 0,
+  "min_kapital_po_stoimosti_vhoda": 393.62,
+  "zagruzka_srednyaya_dolya": 0.025
+ },
+ "klastery": {
+  "dat": 281,
+  "sdelok_na_datu_sred": 1.95,
+  "roi_95_dov_interval": [
+   0.031,
+   0.2804
+  ],
+  "dolya_butstrep_le_0": 0.0074,
+  "top5_dat_dolya_pribyli": 0.412,
+  "top10_dat_dolya_pribyli": 0.719
+ },
+ "rynok": {
+  "n": 508,
+  "svobodnyy_chlen_roi_pri_nulevom_dvizhenii": 0.0095,
+  "beta_na_24ch": -25.944,
+  "R2": 0.402,
+  "roi_kogda_aktiv_ros": -0.6846,
+  "n_ros": 217,
+  "roi_kogda_padal": 0.7862,
+  "n_padal": 291
+ },
+ "bez_noyabrya_2025_usd": 498.08,
+ "po_mesyacam_usd": {
+  "2025-09": 6.9,
+  "2025-10": -29.8,
+  "2025-11": 339.2,
+  "2025-12": 128.2,
+  "2026-01": 147.3,
+  "2026-02": 105.5,
+  "2026-03": 17.4,
+  "2026-04": 35.0,
+  "2026-05": 1.5,
+  "2026-06": 72.6,
+  "2026-07": -2.6,
+  "2026-08": -42.8,
+  "2026-09": 58.9
+ }
+}
