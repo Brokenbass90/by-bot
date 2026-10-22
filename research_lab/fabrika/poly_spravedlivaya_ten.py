@@ -80,6 +80,11 @@ def resheniya(est, snimki, seychas_ms, get=Y.get):
         aktiv = m.group(1); sym = Y.AKTIV[aktiv]; K = float(m.group(2).replace(",", ""))
         zap = dict(tip="reshenie", conditionId=cid, sobytie=f"{aktiv}|{dt.datetime.fromtimestamp(r / 1000, Y.NY).date()}", aktiv=aktiv, X=K,
                    raschet_ms=r, reshenie_ms=seychas_ms, zapisano_utc=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"))
+        bids = [b for b in z.get("bids") or [] if b[1] > 0]; asks = [a for a in z.get("asks") or [] if a[1] > 0]
+        mid = (max(bids)[0] + min(asks)[0]) / 2 if bids and asks else None
+        zap["mid_yes_snimok"] = mid
+        if mid is None or not 0.05 <= mid <= 0.95:                       # тот же диапазон, что у тени POLY_YES_PEREPLATA (prereg)
+            zap["status"] = "VNE_DIAPAZONA"; out.append(zap); continue
         try:
             if sym not in kesh: kesh[sym] = (bybit_S(sym, get), bybit_sigma(sym, seychas_ms, get))
             S, sg = kesh[sym]
