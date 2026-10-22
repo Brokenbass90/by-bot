@@ -34,3 +34,20 @@ class T1(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TPoly(unittest.TestCase):
+    R = [dict(tip="reshenie", status="VHOD", aktiv="Bitcoin", X=84000.0, raschet_ms=1792684800000, reshenie_ms=1792598400000,
+              conditionId="0xabc123456789def", tokenov_na_10usd=11.5, vwap_no_10usd=0.866, cena_no=0.874),
+         dict(tip="reshenie", status="VNE_DIAPAZONA", aktiv="Bitcoin", X=90000.0, raschet_ms=1792684800000, conditionId="0xzzz"),
+         dict(tip="ishod", status="OK", conditionId="0xabc123456789def", no_vyigral=True, zapisano_utc="2026-10-23T17:00:00+00:00")]
+
+    def test_ten_ne_raskryvaet_ishod(self):
+        ev = S.iz_poly(self.R); self.assertEqual([e["type"] for e in ev], ["ENTRY_FILLED"])
+        t = T.podpis(ev[0]); self.assertIn("NO «BTC > 84000» 22.10", t); self.assertIn("[SHADOW]", t); self.assertIn("ВХОД 0.874", t)
+
+    def test_ishod_po_zaprosu(self):
+        ev = S.iz_poly(self.R, mode="LIVE", pokazat_ishody=True)
+        self.assertEqual([e["type"] for e in ev], ["ENTRY_FILLED", "EXIT_FILLED", "ACCOUNTING_FINAL"])
+        a = ev[2]; self.assertAlmostEqual(a["gross_pnl"], 11.5 * (1 - 0.866), 6); self.assertAlmostEqual(a["fees"], 11.5 * 0.008, 6)
+        self.assertIn("расчёт: NO выиграл", T.podpis(ev[1]))

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Хук сторожа (22.10.2026): раз в сутки UTC (первый проход после 06:00) запускает forward-оценщики отдельными процессами —
 pump4_pereschet.py (PUMP4 V1 + парные V2), slope_hedge_vpered.py (наклонная + хедж BTC) и
-tsmom_long_ten.py (тень BTC/ETH только лонг + CASH, добавлено 22.10). Отдельный процесс — чтобы chdir и
+tsmom_long_ten.py (тень BTC/ETH только лонг + CASH, добавлено 22.10) и poly_yes_verdikt.py (судья тени Polymarket: до 30 событий —
+только счётчики; добавлено 22.10). Отдельный процесс — чтобы chdir и
 сетевые ошибки оценщика не задевали сторожа. Таймаут 25 мин на оценщик. Итог (код, последние строки вывода) — в
 data/ocenshchiki_ezhednevno.jsonl; ошибка видна в журнале сторожа через возвращаемый статус. Ордеров, ключей, LIVE — нет."""
 import datetime as dt, json, subprocess, sys
@@ -9,7 +10,7 @@ from pathlib import Path
 LAB = Path(__file__).resolve().parents[1]; ROOT = LAB.parent
 ZH = LAB / "data" / "ocenshchiki_ezhednevno.jsonl"
 SOST = LAB / "data" / "ocenshchiki_ezhednevno_sost.json"
-OCENSHCHIKI = ("pump4_pereschet.py", "slope_hedge_vpered.py", "tsmom_long_ten.py")
+OCENSHCHIKI = ("pump4_pereschet.py", "slope_hedge_vpered.py", "tsmom_long_ten.py", "poly_yes_verdikt.py")
 CHAS_UTC = 6
 
 

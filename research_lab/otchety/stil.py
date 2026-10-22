@@ -21,7 +21,7 @@ def dlit(ms):
     return f"{h} ч {m % 60} мин" if h < 48 else f"{h // 24} д {h % 24} ч"
 
 
-PRICHINY = {   # машинные причины → по-русски (неизвестная причина показывается как есть, не скрывается)
+PRICHINY = {"SETTLED_NO": "расчёт: NO выиграл", "SETTLED_YES": "расчёт: YES выиграл",    # машинные причины → по-русски (неизвестная причина показывается как есть, не скрывается)
     "DISPATCH_PREFLIGHT:POST_GO_DISPATCH_DEADLINE": "не уложились в окно отправки 60 с",
     "SIXTY_SECOND_TEN_LEG_SEQUENTIAL_ENTRY_BUDGET_INSUFFICIENT": "60 с мало для 10 последовательных ног",
     "TERMS_NOT_ACCEPTED": "биржа требует принять условия инструмента",

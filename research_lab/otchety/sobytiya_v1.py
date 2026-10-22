@@ -78,3 +78,31 @@ def iz_kity_terminal(d, evidence_id=None, ts_go=None):
     out.append(proverit(dict(base, type="ACCOUNTING_FINAL", ts_ms=int(d["observation_completed_ms"]), gross_pnl=gross, fees=fees,
                              funding=fund, net_pnl=net, ccy="USDT", legs=legs)))
     return out
+
+
+def iz_poly(rows, mode="SHADOW", pokazat_ishody=False):
+    """Адаптер Polymarket (22.10): журнал решений/исходов (`data/poly_yes_ten.jsonl` или будущий LIVE-журнал того же формата) → события.
+    Покупка NO = ENTRY_FILLED, side=long (держим токен NO), px = цена входа с комиссией, qty = токены.
+    Исход (EXIT_FILLED по 1 или 0 + ACCOUNTING_FINAL) — ТОЛЬКО при pokazat_ishody=True: тень не раскрывает доход до вердикта (prereg)."""
+    import datetime as _dt
+    out, vhody = [], {}
+    for r in rows:
+        if r.get("tip") == "reshenie" and r.get("status") == "VHOD":
+            aktiv = {"Bitcoin": "BTC", "Ethereum": "ETH", "Solana": "SOL"}.get(r["aktiv"], r["aktiv"])
+            data = _dt.datetime.fromtimestamp(r["raschet_ms"] / 1000, _dt.timezone.utc).strftime("%d.%m")
+            sym = f"NO «{aktiv} > {r['X']:g}» {data}"
+            base = dict(sleeve="POLYMARKET", venue="Polymarket", strategy="POLY_YES_PEREPLATA", evidence_id=r["conditionId"][:12], mode=mode,
+                        symbol=sym, side="long", ccy="USDC")
+            tok = float(r["tokenov_na_10usd"]); vhody[r["conditionId"]] = (base, tok, float(r["vwap_no_10usd"]), float(r["cena_no"]))
+            out.append(proverit(dict(base, type="ENTRY_FILLED", ts_ms=int(r["reshenie_ms"]), qty=tok, px=float(r["cena_no"]),
+                                     notional=round(tok * float(r["cena_no"]), 4), raschet_ms=int(r["raschet_ms"]))))
+        elif pokazat_ishody and r.get("tip") == "ishod" and r.get("status") == "OK" and r["conditionId"] in vhody:
+            base, tok, vwap, cena = vhody[r["conditionId"]]
+            ts = int(_dt.datetime.fromisoformat(r["zapisano_utc"]).timestamp() * 1000)
+            vypl = 1.0 if r["no_vyigral"] else 0.0
+            gross = tok * (vypl - vwap); fees = tok * (cena - vwap)
+            out.append(proverit(dict(base, type="EXIT_FILLED", ts_ms=ts, qty=tok, px=vypl,
+                                     reason="SETTLED_NO" if r["no_vyigral"] else "SETTLED_YES", net_pnl=round(gross - fees, 4))))
+            out.append(proverit(dict(base, type="ACCOUNTING_FINAL", ts_ms=ts, gross_pnl=round(gross, 6), fees=round(fees, 6), funding=0.0,
+                                     net_pnl=round(gross - fees, 6))))
+    return out
