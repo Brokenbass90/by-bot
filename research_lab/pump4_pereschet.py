@@ -67,6 +67,23 @@ def _py(o):
 
 V2_START = 1792497600000               # 2026-10-20 12:00 UTC — prereg PREREG_PUMP4_V2_VYHOD: только новые решения
 V2_TP2_R = 0.9
+V2_F1_PREREG = 0.55                    # доля первой цели, как ЗАПИСАНО в prereg 20.10 (основной вариант V2)
+# 22.10 (до первой пары): в prereg сказано «как V1 (0.225R, доля 0.55)», а фактическая доля V1 в пересчёте 0.40 (дефект документа
+# PUMP4 раскрыт 20.10). Основной V2 = как записано (0.55); вариант V2_f40 (доля как у фактического V1) — отдельно, помечен.
+POSLE_OKNO = 48                        # часов после выхода для метрик «упущенный рост / предотвращённый убыток»
+
+
+def posle_vyhoda(bars, j, side, lev, okno=POSLE_OKNO):
+    """После выхода на баре j (опорная цена — close бара выхода): лучший ход в сторону сделки (упущенный рост) и худший против
+    (предотвращённый убыток) за okno часов, в единицах риска. None, если окна после выхода ещё нет в данных."""
+    if j + 1 + okno > len(bars):
+        return None
+    ref = float(bars[j][4]); risk = ref / lev; seg = bars[j + 1:j + 1 + okno]
+    if side == "short":
+        up = (ref - min(float(x[3]) for x in seg)) / risk; dn = (max(float(x[2]) for x in seg) - ref) / risk
+    else:
+        up = (max(float(x[2]) for x in seg) - ref) / risk; dn = (ref - min(float(x[3]) for x in seg)) / risk
+    return dict(upushchennyy_rost_R=round(max(up, 0.0), 4), predotvrashchennyy_ubytok_R=round(max(dn, 0.0), 4))
 
 
 def simulate_v2(bars, i, side, sl0, tps, f1, mult, hold):
@@ -148,9 +165,11 @@ def main():
             i, s = signaly[z["ts"]]
             r = simulate(b, i, s.side, s.sl, list(s.tps or []), (s.tp_fracs or [F1])[0], STOP_MULT, HOLD)
             if z["ts"] >= V2_START:                                    # парная V2 на тех же решениях (только новые)
-                r2 = simulate_v2(b, i, s.side, s.sl, list(s.tps or []), (s.tp_fracs or [F1])[0], STOP_MULT, HOLD)
-                if r2 is not None:
-                    zap_r["v2"] = dict(R=round(r2["R"], 4), zaversheno=bool(zaversheno(b, i, r2)), barov=r2["bars"])
+                for klyuch, f1v in (("v2", V2_F1_PREREG), ("v2_f40", (s.tp_fracs or [F1])[0])):
+                    r2 = simulate_v2(b, i, s.side, s.sl, list(s.tps or []), f1v, STOP_MULT, HOLD)
+                    if r2 is not None:
+                        zap_r[klyuch] = dict(R=round(r2["R"], 4), zaversheno=bool(zaversheno(b, i, r2)), barov=r2["bars"], dolya_tp1=f1v,
+                                             posle=posle_vyhoda(b, i + 1 + r2["bars"], s.side, r2["lev"]))
             if r is None or r.get("lev", 0) > MAX_LEV:
                 zap_r["status"] = "NE_ISPOLNIMO"; rez.append(zap_r); continue
             if not zaversheno(b, i, r):
@@ -165,7 +184,8 @@ def main():
             c = [x for x in c if x is not None]
             if z["ts"] >= V2_FUNDING_S:
                 zap_r["v2_funding"] = funding_pered(sym, z["ts"])
-            zap_r.update(status="ZAKRYTA", R=round(r["R"], 4), ctrl=round(float(np.mean(c)), 4) if c else None, barov=r["bars"])
+            zap_r.update(status="ZAKRYTA", R=round(r["R"], 4), ctrl=round(float(np.mean(c)), 4) if c else None, barov=r["bars"],
+                         posle=posle_vyhoda(b, i + 1 + r["bars"], s.side, r["lev"]))
             rez.append(zap_r)
 
     def svod(g):
@@ -182,6 +202,19 @@ def main():
                statusy={k: sum(1 for x in rez if x["status"] == k) for k in sorted({x["status"] for x in rez})},
                vse=svod(rez), FORWARD=svod([x for x in rez if x["klass"] == "FORWARD"]),
                OOS_REPLAY=svod([x for x in rez if x["klass"] == "OOS_REPLAY"]), resheniya=rez)
+    def posle_svod(g, kl):
+        v = [x[kl]["posle"] if kl else x.get("posle") for x in g]
+        v = [p for p in v if p]
+        if not v: return None
+        return dict(n=len(v), upushchennyy_rost_R=round(float(np.mean([p["upushchennyy_rost_R"] for p in v])), 4),
+                    predotvrashchennyy_ubytok_R=round(float(np.mean([p["predotvrashchennyy_ubytok_R"] for p in v])), 4))
+    zakr = [x for x in rez if x.get("status") == "ZAKRYTA"]
+    out["posle_vyhoda_V1"] = posle_svod(zakr, None)
+    pary40 = [x for x in zakr if (x.get("v2_f40") or {}).get("zaversheno")]
+    if pary40:
+        d40 = np.array([x["v2_f40"]["R"] - x["R"] for x in pary40])
+        out["V2_f40_pary_VARIANT"] = dict(primechanie="вариант, НЕ prereg: доля первой цели как фактическая V1", n=len(pary40),
+                                          raznica=float(d40.mean()), posle=posle_svod(pary40, "v2_f40"))
     pary = [x for x in rez if x.get("status") == "ZAKRYTA" and (x.get("v2") or {}).get("zaversheno")]
     if pary:
         d = np.array([x["v2"]["R"] - x["R"] for x in pary])
@@ -191,7 +224,8 @@ def main():
                               sred_V2=float(np.mean([x["v2"]["R"] for x in pary])), raznica=float(d.mean()),
                               t=float(d.mean() / (d.std(ddof=1) / math.sqrt(len(d)))) if len(d) > 2 and d.std(ddof=1) > 0 else None,
                               hudshaya_nedelya_V2_minus_V1=float(min(a - b for a, b in nd.values())),
-                              etap="VERDIKT_50" if len(pary) >= 50 else "NAKOPLENIE")
+                              etap="VERDIKT_50" if len(pary) >= 50 else "NAKOPLENIE",
+                              dolya_tp1=V2_F1_PREREG, posle_V2=posle_svod(pary, "v2"), posle_V1_te_zhe=posle_svod(pary, None))
     else:
         out["V2_pary"] = dict(n=0, etap="NAKOPLENIE")
     v = out["vse"]
@@ -201,7 +235,7 @@ def main():
     else:
         out["verdikt"] = f"NE_HVATILO_DANNYH (закрыто {v.get('n', 0)} из 50)"
     VYVOD.parent.mkdir(parents=True, exist_ok=True); VYVOD.write_text(json.dumps(out, ensure_ascii=False, indent=1, default=_py))
-    print(json.dumps({k: out[k] for k in ("statusy", "vse", "FORWARD", "OOS_REPLAY", "verdikt", "V2_pary")}, ensure_ascii=False, indent=1, default=_py))
+    print(json.dumps({k: out[k] for k in ("statusy", "vse", "FORWARD", "OOS_REPLAY", "verdikt", "V2_pary", "posle_vyhoda_V1")}, ensure_ascii=False, indent=1, default=_py))
 
 
 if __name__ == "__main__":

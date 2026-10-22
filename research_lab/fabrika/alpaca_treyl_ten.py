@@ -18,6 +18,7 @@ SV = LAB / "data" / "alpaca_treyl_ten_svodka.json"
 PERVAYA = "2026-10-19"
 MEST, GORIZONT, BPS = 4, 22, (20.0, 10.0, 30.0)
 VERDIKT_N, PROMEZH = 120, (40, 80)
+POSLE_SESSIY = 10                                       # 22.10: окно «после выхода» для упущенного роста / предотвращённого убытка
 
 
 def _sha(p: Path) -> str:
@@ -94,8 +95,9 @@ def vesti(kog, ryady, bp):
         poz.append((p["sym"], rows, i_v, ef, quantize_sell_stop(sig if sig > 0 else ef * 0.95)))
     if not poz:
         out["zaversheno"] = False; out["pusto"] = True; return out
+    posle = {}
     for nm, ruka in H6.RUKI_B.items():
-        doh = []
+        doh = []; pv = []
         for sym, rows, i_v, ef, s0 in poz:
             i_p = i_v + GORIZONT
             r = H6.vesti_poziciyu(rows, i_v, ef, s0, ruka, bp, i_prinud=i_p if i_p < len(rows) else None)
@@ -104,7 +106,14 @@ def vesti(kog, ryady, bp):
                 doh.append((rows[-1].close / ef - 1) * 100)
             else:
                 doh.append(r["dohod_pct"])
+                j = r["i_vyhod"]                               # 22.10: что было ПОСЛЕ выхода (окно POSLE_SESSIY сессий)
+                if j is not None and j + POSLE_SESSIY < len(rows):
+                    ref = rows[j].close; seg = rows[j + 1:j + 1 + POSLE_SESSIY]
+                    pv.append(((max(x.high for x in seg) / ref - 1) * 100, (1 - min(x.low for x in seg) / ref) * 100))
         out["ruki"][nm] = sum(doh) / len(doh)
+        if pv:
+            posle[nm] = dict(n=len(pv), upushchennyy_rost_pp=sum(a for a, _ in pv) / len(pv), predotvrashchennyy_ubytok_pp=sum(b for _, b in pv) / len(pv))
+    out["posle_vyhoda"] = posle
     return out
 
 
@@ -115,6 +124,12 @@ def svodka(rez):
         return sv
     base = [r["ruki"]["A35"] for r in gotovo]
     for nm in gotovo[0]["ruki"]:
+        pv = [r["posle_vyhoda"][nm] for r in gotovo if nm in (r.get("posle_vyhoda") or {})]
+        if pv:
+            sv.setdefault("posle_vyhoda", {})[nm] = dict(
+                pozitsiy=sum(x["n"] for x in pv),
+                upushchennyy_rost_pp=sum(x["upushchennyy_rost_pp"] * x["n"] for x in pv) / sum(x["n"] for x in pv),
+                predotvrashchennyy_ubytok_pp=sum(x["predotvrashchennyy_ubytok_pp"] * x["n"] for x in pv) / sum(x["n"] for x in pv))
         x = [r["ruki"][nm] for r in gotovo]
         d = [a - b for a, b in zip(x, base)]
         q = lambda v: sorted(v)[max(0, int(0.1 * (len(v) - 1)))]
