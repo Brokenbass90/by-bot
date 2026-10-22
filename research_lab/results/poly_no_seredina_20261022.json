@@ -1,0 +1,62 @@
+{
+ "prereg": "PREREG_POLY_NO_SEREDINA_ISTORIYA_2026_10_22",
+ "rynkov": 621,
+ "qa": {
+  "close@ts": {
+   "sravneno": 272,
+   "sovpalo": 271,
+   "dolya": 0.9963235294117647
+  },
+  "open@ts": {
+   "sravneno": 273,
+   "sovpalo": 273,
+   "dolya": 1.0
+  }
+ },
+ "konv": "open@ts",
+ "sdelok": 549,
+ "isklyucheno": 72,
+ "sobytiy": 410,
+ "dat": 281,
+ "srednee": 0.10476051172871202,
+ "t_sobytiya": 2.0333604430711727,
+ "t_daty": 1.4999534358161168,
+ "dolya_dat_plyus": 0.501779359430605,
+ "polovina1": 0.14789950703173108,
+ "polovina2": 0.061621516425692933,
+ "srednee_stress": 0.06535542927900469,
+ "istochniki": {
+  "h1": 504,
+  "pin": 45
+ },
+ "kalibrovka": {
+  "0.20-0.35": {
+   "n": 142,
+   "cena_yes": 0.27235915492957746,
+   "dolya_yes": 0.15492957746478872,
+   "dohod_na_sdelku": 0.12492395809182387
+  },
+  "0.35-0.50": {
+   "n": 121,
+   "cena_yes": 0.42404545454545456,
+   "dolya_yes": 0.3140495867768595,
+   "dohod_na_sdelku": 0.13123861536377848
+  },
+  "0.50-0.65": {
+   "n": 122,
+   "cena_yes": 0.5727377049180327,
+   "dolya_yes": 0.5,
+   "dohod_na_sdelku": 0.08958880881625499
+  },
+  "0.65-0.80": {
+   "n": 164,
+   "cena_yes": 0.7296432926829268,
+   "dolya_yes": 0.6402439024390244,
+   "dohod_na_sdelku": 0.23889257137833003
+  }
+ },
+ "period": [
+  "2025-09-12",
+  "2026-09-24"
+ ]
+}
