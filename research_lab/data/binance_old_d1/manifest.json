@@ -1,6 +1,6 @@
 {
  "istochnik": "data.binance.vision spot monthly 1d",
- "zagruzheno": "2026-10-22T08:42:14.403295Z",
+ "zagruzheno": "2026-10-22T08:59:02.864124Z",
  "faily": {
   "BTCUSDT.json": {
    "strok": 1353,
@@ -15,6 +15,139 @@
    "po": "2021-04-30",
    "sha256": "192d37c5f048d5e215a9645efc2d69bc5f23a331fd5dbe829db6d80597667786",
    "propuski": []
+  },
+  "BNBUSDT.json": {
+   "strok": 1272,
+   "s": "2017-11-06",
+   "po": "2021-04-30",
+   "sha256": "990c80ff99fa711ba1b1e54f9f8ae48ba5b857d497f07ba159014b964db35dac",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found"
+   ]
+  },
+  "XRPUSDT.json": {
+   "strok": 1093,
+   "s": "2018-05-04",
+   "po": "2021-04-30",
+   "sha256": "3f159b46c6637e6c2480301c872378513c4c43be665e24f515cd0a6f12750e3d",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found",
+    "2017-11: HTTP Error 404: Not Found",
+    "2017-12: HTTP Error 404: Not Found",
+    "2018-01: HTTP Error 404: Not Found",
+    "2018-02: HTTP Error 404: Not Found",
+    "2018-03: HTTP Error 404: Not Found",
+    "2018-04: HTTP Error 404: Not Found"
+   ]
+  },
+  "LTCUSDT.json": {
+   "strok": 1235,
+   "s": "2017-12-13",
+   "po": "2021-04-30",
+   "sha256": "cc59a11bca9191fc875cb9293b20f28024ec1266328271755be6a2759d9215c5",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found",
+    "2017-11: HTTP Error 404: Not Found"
+   ]
+  },
+  "ADAUSDT.json": {
+   "strok": 1110,
+   "s": "2018-04-17",
+   "po": "2021-04-30",
+   "sha256": "defb901d6912a2bdb7e2ff1dff0705088bd3154ae946ec765247275ff52fe007",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found",
+    "2017-11: HTTP Error 404: Not Found",
+    "2017-12: HTTP Error 404: Not Found",
+    "2018-01: HTTP Error 404: Not Found",
+    "2018-02: HTTP Error 404: Not Found",
+    "2018-03: HTTP Error 404: Not Found"
+   ]
+  },
+  "TRXUSDT.json": {
+   "strok": 1055,
+   "s": "2018-06-11",
+   "po": "2021-04-30",
+   "sha256": "dba568b3e1e29ed09160315a2296b0e1d25bc2de06163c0a3070dc569ada50ae",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found",
+    "2017-11: HTTP Error 404: Not Found",
+    "2017-12: HTTP Error 404: Not Found",
+    "2018-01: HTTP Error 404: Not Found",
+    "2018-02: HTTP Error 404: Not Found",
+    "2018-03: HTTP Error 404: Not Found",
+    "2018-04: HTTP Error 404: Not Found",
+    "2018-05: HTTP Error 404: Not Found"
+   ]
+  },
+  "EOSUSDT.json": {
+   "strok": 1069,
+   "s": "2018-05-28",
+   "po": "2021-04-30",
+   "sha256": "ace379888172efa1598279297d5ca753606a7ce927771b38ef4e4bb6ecc8f95e",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found",
+    "2017-11: HTTP Error 404: Not Found",
+    "2017-12: HTTP Error 404: Not Found",
+    "2018-01: HTTP Error 404: Not Found",
+    "2018-02: HTTP Error 404: Not Found",
+    "2018-03: HTTP Error 404: Not Found",
+    "2018-04: HTTP Error 404: Not Found"
+   ]
+  },
+  "XLMUSDT.json": {
+   "strok": 1066,
+   "s": "2018-05-31",
+   "po": "2021-04-30",
+   "sha256": "ab5dd9b79ef915b391b002e3cb1cdfee774a4cc7a28c9cce5976758f39ed4ba9",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found",
+    "2017-11: HTTP Error 404: Not Found",
+    "2017-12: HTTP Error 404: Not Found",
+    "2018-01: HTTP Error 404: Not Found",
+    "2018-02: HTTP Error 404: Not Found",
+    "2018-03: HTTP Error 404: Not Found",
+    "2018-04: HTTP Error 404: Not Found"
+   ]
+  },
+  "LINKUSDT.json": {
+   "strok": 836,
+   "s": "2019-01-16",
+   "po": "2021-04-30",
+   "sha256": "c02a966df6f3895dfe92470f0ae34f6fc8a8403cc746b3ecb82f05be921a7a13",
+   "propuski": [
+    "2017-08: HTTP Error 404: Not Found",
+    "2017-09: HTTP Error 404: Not Found",
+    "2017-10: HTTP Error 404: Not Found",
+    "2017-11: HTTP Error 404: Not Found",
+    "2017-12: HTTP Error 404: Not Found",
+    "2018-01: HTTP Error 404: Not Found",
+    "2018-02: HTTP Error 404: Not Found",
+    "2018-03: HTTP Error 404: Not Found",
+    "2018-04: HTTP Error 404: Not Found",
+    "2018-05: HTTP Error 404: Not Found",
+    "2018-06: HTTP Error 404: Not Found",
+    "2018-07: HTTP Error 404: Not Found",
+    "2018-08: HTTP Error 404: Not Found",
+    "2018-09: HTTP Error 404: Not Found",
+    "2018-10: HTTP Error 404: Not Found",
+    "2018-11: HTTP Error 404: Not Found",
+    "2018-12: HTTP Error 404: Not Found"
+   ]
   }
  }
 }
