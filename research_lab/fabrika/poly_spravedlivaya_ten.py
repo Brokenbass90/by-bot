@@ -149,9 +149,9 @@ if __name__ == "__main__":
         for cid, z in sn.items():
             m = Y.RX.match(z["vopros"]); r = Y.raschet_ms(m.group(3), m.group(4), z["t"])
             if r and r > time.time() * 1000:
-                old = Y.OKNO_MS; Y.OKNO_MS = 10 ** 13
+                old = Y.OKNO_MS, ZAMOROZKA_MS; Y.OKNO_MS, ZAMOROZKA_MS = 10 ** 13, 1   # только для пробы: окно и заморозка не проверяются
                 try: print(json.dumps(resheniya(set(), {cid: z}, int(time.time() * 1000)), ensure_ascii=False, indent=1))
-                finally: Y.OKNO_MS = old
+                finally: Y.OKNO_MS, ZAMOROZKA_MS = old
                 break
     else:
         print(json.dumps(prohod(), ensure_ascii=False))
