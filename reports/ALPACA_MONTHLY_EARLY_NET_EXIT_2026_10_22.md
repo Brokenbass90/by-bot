@@ -1,6 +1,21 @@
 # NET → Monthly: separate early-exit decision, 22 October
 
-**READY_FOR_EXACT_OWNER_DECISION; NOT ARMED.** The original November2
+**OWNER CHAT GO ACCEPTED; PERSONAL COMMAND NOT EXECUTED.** On22October the
+owner explicitly answered: «GO: выйти из NET по этому пакету 23 октября».
+Approval binds the exact manifest below, market exit regardless of current
+profit/loss, initiation23October17:00–17:05Cyprus and recovery beyond that window.
+Nine VPS source pins were rechecked after approval; no GO file/claim exists.
+The issued0700personal launcher has exactly the reviewed bytes, SHA
+`bd437cafcc5904d65e106513eab5756c217f6abd79fd5f3ad178e8500e28ca03`:
+`.private/monthly_early_exit_20261022/rev2/owner-net-early-exit-once.sh`.
+Human invokes it once within the window; agents do not run or schedule it.
+No repeated approval is needed for that scope. After uncertain response retain
+claims and reconcile; do not retry. Earlier/later invocation refuses before SSH.
+See [owner approval](evidence/monthly_early_exit_20261022/owner-approval.json) and
+[fresh read-only pin check](evidence/monthly_early_exit_20261022/approval-readonly-check.json).
+Original preparation receipts below remain immutable dated evidence.
+
+The original November2
 five-minute exit and Monthly entry collide. The old date is both an explicit
 personal packet restriction and a hardcoded helper/calendar guard, not a
 strategy requirement that NET be held until November2. Neither old authority
@@ -12,7 +27,7 @@ It exits only the original legacy NET lifecycle, with a maximum original
 quantity **0.325167779**; actual remaining quantity and owned orders are checked
 again. Market unwind uses the existing owned maintenance/recovery under its
 original lock and native permissions. Price and a profitable exit are not
-guaranteed. No Monthly purchase, manager retirement or new authority is included.
+guaranteed. No Monthly purchase, manager retirement or unrelated authority is included.
 
 ## Evidence and exact proposed scope
 
@@ -36,7 +51,7 @@ guaranteed. No Monthly purchase, manager retirement or new authority is included
   `0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449`.
   The concrete private review files are under
   `.private/monthly_early_exit_20261022/rev2/`; rev1 is superseded.
-  The review launcher is deliberately not an issued executable instruction.
+  The reviewed launcher was issued unchanged only after the explicit chatGO above.
   Its human-only invocation would create the exact exclusive0600GO file and
   invoke the helper in the same SSH call; both local shell and remote Python
   syntax were checked offline. Preparation did not run it or create that GO.

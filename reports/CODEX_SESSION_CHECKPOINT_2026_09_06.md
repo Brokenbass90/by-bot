@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT22Oct19:05UTC — EXACT NET EARLY EXIT CHAT GO ACCEPTED.
+Owner answered «GO: выйти из NET по этому пакету 23 октября» for manifest
+0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449.
+Only originalNET<=0.325167779 marketexit regardlessPnL, initiation23Oct14:00–14:05UTC
+/17:00–17:05Cyprus; alreadyclaimed ownedrecovery may complete beyondcutoff.
+Do NOT ask again for approvedscope. Human must personally run issuedprivate
+.private/monthly_early_exit_20261022/rev2/owner-net-early-exit-once.sh;
+exact reviewedSHA bd437cafcc5904d65e106513eab5756c217f6abd79fd5f3ad178e8500e28ca03,
+0700/BashASTchecksPASS. Agent didnotexecute/schedule it, no executableGO/claims,
+brokerwrites0. Fresh readonly9VPSsourcepins match; no financialunit changes.
+New owner-approval.json /approval-readonly-check.json evidence appended; earlier
+review/sealedreceipts preserved. ChatGO != actualexit. After personalcommand:
+independent GET original lifecycle/flat/terminalorders/uncertainty/costcontext;
+do not disablelegacy while exposure/unknown. Monthly activation/retirement/PUMP
+permissions NOT granted by this GO. Do not retry any uncertain command/resetclaim.
+Main nextengineering still PUMP real source/account admission and owner gateway;
+do not wait for NET calendar to develop. Prior CURRENT blocks below historical.
+
 CURRENT22Oct EVENING — NET EARLY EXIT OWNER DECISION + PUMP4 LIFECYCLE CLOSED.
 Read ALPACA_MONTHLY_EARLY_NET_EXIT_2026_10_22.md,
 PUMP4_EXECUTION_LIFECYCLE_2026_10_22.md and KITY_BYBIT_C2_ACTUAL_2026_10_22.md.

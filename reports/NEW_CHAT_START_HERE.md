@@ -1,5 +1,11 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT22Oct19:05UTC: exactNETearlyexit chatGO accepted, manifest0df85b21…d6449;
+23Oct17:00–17:05Cyprus human-only owner-net-early-exit-once.sh issuedUNCHANGED,
+notexecuted/scheduled.9VPSpins match/noGOfile/no claim. Do not ask again.
+Read checkpointTOP and NET early-exit report owner-approval receipt. Actual exit/
+readback remains future; Monthlyactivation/legacyretirement/PUMP authority separate.
+
 CURRENT22Oct evening: resume checkpoint TOP and
 [NET early-exit decision](ALPACA_MONTHLY_EARLY_NET_EXIT_2026_10_22.md) →
 [PUMP4 lifecycle](PUMP4_EXECUTION_LIFECYCLE_2026_10_22.md).

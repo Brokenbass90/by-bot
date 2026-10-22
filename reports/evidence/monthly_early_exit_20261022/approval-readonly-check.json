@@ -1,0 +1,13 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "checked_source_pins": 9,
+  "executable_go_present": false,
+  "financial_units_changed": 0,
+  "manifest_sha256": "0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449",
+  "observed_ms": 1792695947192,
+  "personal_receipts_present": false,
+  "remote_writes": 0,
+  "schema": "NET_APPROVED_PACKET_READ_ONLY_CHECK_V1",
+  "status": "APPROVED_PINS_MATCH_NOT_PERSONALLY_INITIATED"
+}
