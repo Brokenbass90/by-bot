@@ -1,0 +1,20 @@
+{
+ "istochnik": "data.binance.vision spot monthly 1d",
+ "zagruzheno": "2026-10-22T08:42:14.403295Z",
+ "faily": {
+  "BTCUSDT.json": {
+   "strok": 1353,
+   "s": "2017-08-17",
+   "po": "2021-04-30",
+   "sha256": "a60e17976d2f73fe860593650d91bb668deaa160ca973cf4460e73d9e0679e56",
+   "propuski": []
+  },
+  "ETHUSDT.json": {
+   "strok": 1353,
+   "s": "2017-08-17",
+   "po": "2021-04-30",
+   "sha256": "192d37c5f048d5e215a9645efc2d69bc5f23a331fd5dbe829db6d80597667786",
+   "propuski": []
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "osnovnaya_L12": {
+  "n_nedel": 77,
+  "sred_%_nedelya": 0.007,
+  "t": 0.02,
+  "god_%": -1.5,
+  "sharpe": 0.02,
+  "maks_prosadka_%": 17.4,
+  "itog_x": 0.98
+ },
+ "BTC": {
+  "n_nedel": 77,
+  "sred_%_nedelya": 0.118,
+  "t": 0.36,
+  "god_%": 4.1,
+  "sharpe": 0.29,
+  "maks_prosadka_%": 14.9,
+  "itog_x": 1.06
+ },
+ "ETH": {
+  "n_nedel": 77,
+  "sred_%_nedelya": -0.104,
+  "t": -0.31,
+  "god_%": -7.4,
+  "sharpe": -0.25,
+  "maks_prosadka_%": 20.6,
+  "itog_x": 0.89
+ },
+ "p_perestanovok": 0.403,
+ "kupit_derzhat_tot_zhe_risk": {
+  "n_nedel": 77,
+  "sred_%_nedelya": -0.322,
+  "t": -1.01,
+  "god_%": -17.2,
+  "sharpe": -0.83,
+  "maks_prosadka_%": 37.5,
+  "itog_x": 0.76
+ },
+ "tolko_long_L12": {
+  "n_nedel": 77,
+  "sred_%_nedelya": -0.136,
+  "t": -0.81,
+  "god_%": -7.4,
+  "sharpe": -0.67,
+  "maks_prosadka_%": 20.2,
+  "itog_x": 0.89
+ },
+ "po_godam_%": {
+  "2021": -3.1,
+  "2022": 0.9
+ },
+ "period": [
+  "2021-07-11",
+  "2022-12-25"
+ ]
+}

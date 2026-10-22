@@ -33,7 +33,8 @@ def leg(r, L, long_only=False, signs=None):
         sg = (1 if past > 0 else -1) if signs is None else signs[i - L]
         if long_only and sg < 0:
             sg = 0
-        sig = st.pstdev(r[i - 12:i]) * math.sqrt(52)
+        win = r[max(0, i - 12):i]
+        sig = st.pstdev(win) * math.sqrt(52) if len(win) >= 4 else 0.0
         w = sg * min(CAP, TV / sig) if sig > 0 else 0.0
         ret = w * (math.exp(r[i]) - 1)
         ret -= abs(w - prev_w) * COST

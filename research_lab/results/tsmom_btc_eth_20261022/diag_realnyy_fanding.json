@@ -1,0 +1,46 @@
+{
+ "BTCUSDT": {
+  "konservativno": {
+   "n_nedel": 77,
+   "sred_%_nedelya": 0.118,
+   "t": 0.36,
+   "god_%": 4.1,
+   "sharpe": 0.29,
+   "maks_prosadka_%": 14.9,
+   "itog_x": 1.06
+  },
+  "realnyy_fanding": {
+   "n_nedel": 77,
+   "sred_%_nedelya": 0.186,
+   "t": 0.56,
+   "god_%": 7.8,
+   "sharpe": 0.46,
+   "maks_prosadka_%": 13.7,
+   "itog_x": 1.12
+  },
+  "nedel_short": 53,
+  "sredniy_fanding_nedelya_%": 0.14
+ },
+ "ETHUSDT": {
+  "konservativno": {
+   "n_nedel": 77,
+   "sred_%_nedelya": -0.104,
+   "t": -0.31,
+   "god_%": -7.4,
+   "sharpe": -0.25,
+   "maks_prosadka_%": 20.6,
+   "itog_x": 0.89
+  },
+  "realnyy_fanding": {
+   "n_nedel": 77,
+   "sred_%_nedelya": -0.063,
+   "t": -0.19,
+   "god_%": -5.4,
+   "sharpe": -0.15,
+   "maks_prosadka_%": 19.7,
+   "itog_x": 0.92
+  },
+  "nedel_short": 47,
+  "sredniy_fanding_nedelya_%": 0.114
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "L4": {
+  "BTCUSDT": {
+   "raznica_%": 2.72,
+   "t": 1.55,
+   "n_up": 111,
+   "n_dn": 76
+  },
+  "ETHUSDT": {
+   "raznica_%": 3.62,
+   "t": 1.69,
+   "n_up": 109,
+   "n_dn": 78
+  },
+  "vmeste": {
+   "raznica_%": 3.17,
+   "t": 2.3
+  }
+ },
+ "L12": {
+  "BTCUSDT": {
+   "raznica_%": 2.37,
+   "t": 1.41,
+   "n_up": 103,
+   "n_dn": 76
+  },
+  "ETHUSDT": {
+   "raznica_%": 3.5,
+   "t": 1.58,
+   "n_up": 96,
+   "n_dn": 83
+  },
+  "vmeste": {
+   "raznica_%": 2.93,
+   "t": 2.11
+  }
+ },
+ "L26": {
+  "BTCUSDT": {
+   "raznica_%": 1.11,
+   "t": 0.69,
+   "n_up": 90,
+   "n_dn": 75
+  },
+  "ETHUSDT": {
+   "raznica_%": 0.78,
+   "t": 0.35,
+   "n_up": 98,
+   "n_dn": 67
+  },
+  "vmeste": {
+   "raznica_%": 0.93,
+   "t": 0.69
+  }
+ },
+ "sovpadenie_znaka_L12": 0.539,
+ "VR4": {
+  "BTCUSDT": 1.158,
+  "ETHUSDT": 1.215
+ },
+ "nedel": {
+  "BTCUSDT": 191,
+  "ETHUSDT": 191
+ },
+ "reshenie": "K_PNL_TESTU"
+}
