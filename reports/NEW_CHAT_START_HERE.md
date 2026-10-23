@@ -1,5 +1,14 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT23Oct11:37UTC: **old NET personal launcher TECHNICAL HOLD** after exact
+deployed failure probes and missing publisher import. Read checkpoint TOP and
+[R4 recovery owner review](MONEY_REVIEW_NET_RECOVERY_2026_10_23.md).
+199local/same199VPS PASS; recovery R4UNSELECTED, spec-only manager diff + replacement
+personal packet require exact confirmation. Original saleGO/date/qty unchanged.
+No brokerwrites/units/selected changes. Order: Alpaca→PUMP4→Polymarket→KITY.
+PUMP financialowner/latches/admission NEXT; Monthly241 unchanged. Older launcher
+instructions below are historical and do not override this HOLD.
+
 CURRENT22Oct19:05UTC: exactNETearlyexit chatGO accepted, manifest0df85b21…d6449;
 23Oct17:00–17:05Cyprus human-only owner-net-early-exit-once.sh issuedUNCHANGED,
 notexecuted/scheduled.9VPSpins match/noGOfile/no claim. Do not ask again.

@@ -1,5 +1,13 @@
 # NET → Monthly: separate early-exit decision, 22 October
 
+**23Oct superseding safety notice: ORIGINAL LAUNCHER TECHNICAL HOLD.**
+Do not execute the old command below. Exact deployed fault tests confirmed a
+recovery defect and a missing helper dependency. See
+[R4 replacement owner-review packet](MONEY_REVIEW_NET_RECOVERY_2026_10_23.md).
+Original sale GO/date/quantity remain recorded; changing the selected recovery
+source and issuing the replacement pinned packet needs exact confirmation.
+Historical approval/preparation receipts below are preserved unchanged.
+
 **OWNER CHAT GO ACCEPTED; PERSONAL COMMAND NOT EXECUTED.** On22October the
 owner explicitly answered: «GO: выйти из NET по этому пакету 23 октября».
 Approval binds the exact manifest below, market exit regardless of current

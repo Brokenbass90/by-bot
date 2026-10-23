@@ -16,11 +16,13 @@ if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
 from research_lab.kity_micro_physical_owner_v1 import SignedPostOnce,publish
 from research_lab.alpaca_dynamic_v1 import digest
 from research_lab.pump4_execution_plan_v1 import build_plan
+from research_lab.pump4_account_adapter_v1 import checked_order_ack
 from strategies.signals import TradeSignal
 
 SCENARIOS=('normal','entry_reply_loss','tp1_reply_loss','partial_entry','partial_tp1',
     'native_stop_race','time_exit','intent_reply_loss','missing_native_stop',
-    'unrepresentable_partial','unknown_costs')
+    'unrepresentable_partial','unknown_costs','entry_api_error','entry_rate_limit',
+    'tp1_api_error','tp2_api_error','reduce_race_api_error')
 
 class MemoryBybit:
     def __init__(self,path,scenario):
@@ -37,6 +39,13 @@ class MemoryBybit:
         s['calls']+=1;s['submitted_links'].append(cid);self.save()
         if self.scenario=='intent_reply_loss':raise TimeoutError('fixture before exchange receipt')
         q=D(r['qty']);entry=r['reduceOnly'] is False
+        error=(entry and self.scenario in ('entry_api_error','entry_rate_limit')) or (
+            not entry and ((self.scenario in ('tp1_api_error','reduce_race_api_error') and D(s['held'])==10)
+                or (self.scenario=='tp2_api_error' and D(s['held'])==6)))
+        if error:
+            if self.scenario=='reduce_race_api_error':self.stop_fill()
+            code=10006 if self.scenario=='entry_rate_limit' else 110007 if entry else 110017
+            return 200,json.dumps(dict(retCode=code,retMsg='SIMULATED_API_ERROR',result={})).encode()
         if entry:
             assert r['orderType']=='Market' and r['tpslMode']=='Full' and D(r['stopLoss'])>0
             chunks=[D(4),D(6)] if self.scenario=='partial_entry' else [D(3)] if self.scenario=='unrepresentable_partial' else [q]
@@ -87,7 +96,7 @@ def run(directory,*,scenario='normal'):
         if known:
             if known['request']!=request:raise ValueError('REQUEST_IDENTITY_CONFLICT')
             return known
-        try:sender().post('/v5/order/create',request)
+        try:checked_order_ack(sender().post('/v5/order/create',request),request)
         except Exception:
             # New object reloads durable exchange evidence; never retry POST.
             exchange=MemoryBybit(exchange.path,scenario)

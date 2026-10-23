@@ -14,6 +14,21 @@ DAY=24*H
 TERMINAL={'Filled','Cancelled','Rejected','Deactivated','PartiallyFilledCanceled'}
 
 
+def checked_order_ack(response,request):
+    """Validate a create reply; even success requires independent order/fill GET.
+
+    Called only after SignedPostOnce has persisted its send barrier. Every error
+    keeps that barrier; this function cannot authorize a retry or prove no fill.
+    """
+    need(isinstance(response,dict) and type(response.get('retCode')) is int,'ORDER_ACK_SCHEMA')
+    need(response['retCode']==0,'ORDER_ACK_RECONCILE_ONLY_'+str(response['retCode']))
+    result=response.get('result');need(isinstance(result,dict),'ORDER_ACK_RESULT')
+    oid=result.get('orderId');need(isinstance(oid,str) and bool(oid)
+        and result.get('orderLinkId')==request['orderLinkId'],'ORDER_ACK_IDENTITY')
+    return dict(status='ACK_ONLY_RECONCILE_REQUIRED',order_id=oid,
+        order_link_id=request['orderLinkId'],execution_confirmed=False,orders_allowed=False)
+
+
 def frozen_plan(plan):
     need(plan['schema']=='PUMP4_V1_REFERENCE_EXECUTION_PLAN_V1'
         and plan['plan_sha256']==digest({k:v for k,v in plan.items() if k!='plan_sha256'})

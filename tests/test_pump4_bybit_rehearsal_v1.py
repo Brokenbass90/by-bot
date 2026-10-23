@@ -24,3 +24,13 @@ def test_unknown_fault_name_cannot_claim_a_fault_pass_or_create_evidence(tmp_pat
     with pytest.raises(ValueError,match='UNKNOWN_REHEARSAL_SCENARIO'):
         run(target,scenario='partial_tp2')
     assert not target.exists()
+
+@pytest.mark.parametrize('scenario,calls,remaining',[
+    ('entry_api_error',1,'0'),('entry_rate_limit',1,'0'),
+    ('tp1_api_error',2,'10'),('tp2_api_error',3,'6'),('reduce_race_api_error',2,'0')])
+def test_nonzero_bybit_reply_never_becomes_fill_or_retry(tmp_path,scenario,calls,remaining):
+    r=run(tmp_path/scenario,scenario=scenario)
+    assert r['status']=='BLOCKED' and r['reason']=='UNCERTAIN_DISPATCH_NO_RETRY'
+    assert r['simulated_create_calls']==calls and D(r['remaining_qty'])==D(remaining)
+    assert r['duplicate_order_links']==0 and r['real_broker_requests']==0
+    assert r['orders_allowed'] is r['tiny_ready'] is False

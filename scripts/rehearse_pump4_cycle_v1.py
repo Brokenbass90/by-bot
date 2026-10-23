@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
 from research_lab.pump4_closed_bar_intake_v1 import Pump4Intake
 from research_lab.pump4_execution_plan_v1 import build_plan,HOUR_MS
 from research_lab.pump4_execution_lifecycle_v1 import Pump4Lifecycle
+from research_lab.pump4_account_adapter_v1 import checked_order_ack
 from research_lab.kity_micro_physical_owner_v1 import SignedPostOnce,publish
 from scripts.rehearse_pump4_bybit_v1 import MemoryBybit
 from strategies.signals import TradeSignal
@@ -57,7 +58,8 @@ def run(root,input_path,input_sha256):
         if result.get('role')!=role:raise ValueError('PIPELINE_ROLE_'+result['status'])
         snapshots.append(dict(role=role,request=result['request']))
         exchange.state['fixture_exit_price']=str(price);exchange.save()
-        SignedPostOnce('FIXTURE_KEY_NONFINANCIAL','FIXTURE_SECRET_NONFINANCIAL',root/'send-barriers',wire=exchange.wire).post('/v5/order/create',result['request'])
+        response=SignedPostOnce('FIXTURE_KEY_NONFINANCIAL','FIXTURE_SECRET_NONFINANCIAL',root/'send-barriers',wire=exchange.wire).post('/v5/order/create',result['request'])
+        checked_order_ack(response,result['request'])
         exchange=MemoryBybit(exchange.path,'normal') # drop all in-memory exchange state
     final=observe(plan['targets'][1]);final['costs_complete']=True
     final['funding']=[dict(id='fixture-funding',amount='-.01',currency='USDT')]

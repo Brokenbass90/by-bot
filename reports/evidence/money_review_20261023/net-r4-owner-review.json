@@ -1,0 +1,53 @@
+{
+  "base_overlay_sha256": "a0710690e43ffbb4a96329de33ec8f65edf1d4c4ab11e549ed9b1911249548e4",
+  "broker_writes": 0,
+  "candidate_overlay_sha256": "d5377514c8730690cd3750252e917c31562f4f824f0f7aa194dfe038cd945746",
+  "files": {
+    "manager-wrapper.review.py": "352f4b06183cb10c185494de2d50c8c9abce1d18720b21cc71d1813a6ef299d2",
+    "manifest.json": "2839e305a8b1a026b943ee4aca52c3847f9855fd4649853545b0cdae0ba0a382",
+    "owner-net-exit.review.sh": "27c038ad91815e4669ee7ae3844498d96f5e3ec98dbe919d3c4b08acbeaa9bde",
+    "personal_net_exit_early_v1.py": "1c3c515e9467f3d09992362c9a43cdfb7a10ac0d859349c156b98866593a4bb9",
+    "runtime-v2.py": "d5377514c8730690cd3750252e917c31562f4f824f0f7aa194dfe038cd945746",
+    "spec.json": "18eeb7074cbd73fa586982948031a129dc621a4066e66ee8aa20f0cf865ee0ba"
+  },
+  "financial_unit_changes": 0,
+  "monthly_activation": false,
+  "new_manifest_sha256": "2839e305a8b1a026b943ee4aca52c3847f9855fd4649853545b0cdae0ba0a382",
+  "original_manifest_sha256": "0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449",
+  "remaining_before_release": [
+    "Explicit owner confirmation of recovery selection and replacement personal packet; original launcher HOLD",
+    "Fresh pre/post source selection and actual opening protection GET",
+    "Human-only invocation in the original approved window; never agents"
+  ],
+  "remote_candidate": "/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/net-exit-recovery-20261023-r4",
+  "required_preconditions": [
+    "No prior personal-exit GO/claim or unresolved exit dispatch",
+    "Original manager custody/lock and fresh source pins before source selection",
+    "Fresh broker NET/order/stop readback before and after selection",
+    "Explicit owner confirmation of exact recovery selection and replacement personal packet"
+  ],
+  "residual_risk": "Cancel-to-market gap remains; active/unknown market cannot receive a competing stop; owner action/readback required",
+  "rollback_rule": "BEFORE_EXIT_ONLY: never restore unsafe runtime after exit dispatch/recovery hold; preserve custody and reconcile",
+  "schema": "NET_RECOVERY_SELECTION_OWNER_REVIEW_V1",
+  "scope": {
+    "end_ms": 1792764300000,
+    "evidence_classification": "OFF_PROTOCOL",
+    "initial_quantity": "0.325167779",
+    "monthly_activation_authorized": false,
+    "monthly_evidence_eligible": false,
+    "open_ms": 1792764000000,
+    "scheduled_dispatch": false,
+    "session": "2026-10-23",
+    "session_open_ms": 1792762200000,
+    "stop_widening_allowed": false,
+    "symbol": "NET"
+  },
+  "selection_change": {
+    "expected_before_sha256": "8bce21a9de184b3a10120ada636820ec63e5769c066cddd66e184751e39c6846",
+    "only_net_spec_path_changed": true,
+    "path": "/opt/bybot-research/alpaca-next-entry-20261019-v1/manager-wrapper.py",
+    "proposed_after_sha256": "352f4b06183cb10c185494de2d50c8c9abce1d18720b21cc71d1813a6ef299d2"
+  },
+  "shop_activation": false,
+  "status": "READY_FOR_OWNER_REVIEW_UNSELECTED_ORIGINAL_LAUNCHER_HOLD"
+}

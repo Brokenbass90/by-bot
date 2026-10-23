@@ -147,3 +147,39 @@ def test_quote_on_wrong_side_of_static_stop_is_blocked():
     p,i,t,f,a,policy=sizing();t.update(bid1Price='105',ask1Price='105.01')
     r=execution_feasibility(p,i,t,f,a,policy,now_ms=NOW)
     assert r['status']=='BLOCKED' and r['blocker']=='STOP_WRONG_SIDE_OF_QUOTE'
+
+@pytest.mark.parametrize('fault',['rate_limit','insufficient_balance','reduce_only','bool_code','wrong_cid','missing_order'])
+def test_create_ack_is_not_a_fill_and_invalid_ack_stays_reconcile_only(fault):
+    from research_lab.pump4_account_adapter_v1 import checked_order_ack
+    req=dict(orderLinkId='p4-owned-entry')
+    reply=dict(retCode=0,result=dict(orderId='owned-1',orderLinkId=req['orderLinkId']))
+    if fault=='rate_limit':reply['retCode']=10006
+    elif fault=='insufficient_balance':reply['retCode']=110007
+    elif fault=='reduce_only':reply['retCode']=110017
+    elif fault=='bool_code':reply['retCode']=False
+    elif fault=='wrong_cid':reply['result']['orderLinkId']='other'
+    else:reply['result'].pop('orderId')
+    with pytest.raises(ValueError):checked_order_ack(reply,req)
+
+def test_successful_create_reply_only_confirms_ack_identity():
+    from research_lab.pump4_account_adapter_v1 import checked_order_ack
+    req=dict(orderLinkId='p4-owned-entry')
+    reply=dict(retCode=0,result=dict(orderId='owned-1',orderLinkId=req['orderLinkId']))
+    r=checked_order_ack(reply,req)
+    assert r['status']=='ACK_ONLY_RECONCILE_REQUIRED' and r['execution_confirmed'] is False
+
+@pytest.mark.parametrize('code',[10006,110007,110017])
+def test_api_error_preserves_real_send_once_barrier_across_sender_restart(tmp_path,code):
+    import json
+    from research_lab.kity_micro_physical_owner_v1 import SignedPostOnce
+    from research_lab.kity_micro_transport_v1 import SourceError
+    from research_lab.pump4_account_adapter_v1 import checked_order_ack
+    calls=[]
+    def wire(*args):
+        calls.append(args);return 200,json.dumps(dict(retCode=code,result={})).encode()
+    req=dict(category='linear',symbol='ZROUSDT',orderLinkId='p4-owned-entry')
+    sender=SignedPostOnce('NONFINANCIAL_KEY','NONFINANCIAL_SECRET',tmp_path,wire=wire)
+    with pytest.raises(ValueError):checked_order_ack(sender.post('/v5/order/create',req),req)
+    sender=SignedPostOnce('NONFINANCIAL_KEY','NONFINANCIAL_SECRET',tmp_path,wire=wire)
+    with pytest.raises(SourceError,match='SEND_ALREADY_RECORDED'):sender.post('/v5/order/create',req)
+    assert len(calls)==1 and len(list(tmp_path.glob('send-*.json')))==1

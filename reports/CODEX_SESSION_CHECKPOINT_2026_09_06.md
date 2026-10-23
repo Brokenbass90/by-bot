@@ -1,5 +1,32 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT23Oct11:37UTC — NET ORIGINAL PERSONAL LAUNCHER TECHNICAL HOLD; R4 OWNER REVIEW.
+Read MONEY_REVIEW_NET_RECOVERY_2026_10_23.md before any older launch instruction.
+Owner's current order: Alpaca → PUMP4 → Polymarket → KITY. No new audit/framework.
+Exact deployed fault probes confirm unprotected residual on rejected/unknown/active
+partial exit; old helper also imports a missing VPS publisher. Do NOT run old
+monthly_early_exit_20261022/rev2/owner-net-early-exit-once.sh, despite recorded saleGO.
+Unselected source-pinned recovery R4: manifest2839e305…ba0a382, runtime d5377514…945746.
+Existing custody/lock/floor/HWM/exitCID, no resend; terminal owned truth permits
+stop restoration, active/unknown market remains owner incident/no competing stop.
+DAY expiry/restart/late GET and missing publisher fixed. Proposed manager change
+ONLY NET --spec path; units/timer/SHOP/Monthly untouched. New source selection and
+replacement personal packet require precise owner confirmation, not repeated saleGO.
+Approved sale scope stays23Oct17:00–17:05CY<=.325167779; agents never invoke it.
+199local/same199VPS PASS,89files/43imports/0fallback, socketsdenied/unshare-net;
+material8213d6053961593ab66670c7134a80f3c1c1314f405a2895aaf4b78183d6894f.
+Independent readback11:36:37UTC:9oldpins/oldpacket/manager unchanged, noexitdispatch,
+newGO/claims absent, R4unselected;53Monthly sources unchanged. No brokerwrites.
+2bounded astra/high reviews actual turn_context verified; no remaining scoped P1/P2.
+PUMP ACK/API errors fixed with persistent reconciliation/no-resend regressions;
+financialowner/sendonce/day-week-DDlatches and sourcebound riskcost admission NEXT.
+PUMP TINY_NOT_READY; proposals not GO. Monthly241 financial acceptance unchanged.
+Last11:22UTC NET premarket GET open/no acceptedDAYstop; actual13:30UTC opening
+protection proof still required. After actual personalexit: GET flat/terminal/cost
+then exact authorized retirement/Monthly handoff; no autoactivation. R3 superseded,
+never selected. LocalKITY4c3b69a dossier not in observedorigind8706ac; no weeklyGO.
+Previous CURRENT blocks below are historical and do not override HOLD.
+
 CURRENT23Oct MORNING — PUMP4 ACTUAL SOURCE/ACCOUNT COMPONENT CLOSED; NET PERSONAL EXIT TODAY.
 Read PUMP4_REAL_SOURCE_ACCOUNT_2026_10_23.md. Code f5a517ff013b2c0299ee8e67241293d48a24d283;
 material c8fb58823efd7a8cb5ff11b1777d69b8a183b5d56e3448f67a39595b8cc7f110.

@@ -1,5 +1,9 @@
 # PUMP4 — actual-source/account component, 23 October 2026
 
+**Later23Oct NET safety override:** the old personal NET launcher mentioned below
+is now TECHNICAL HOLD; use the [R4 owner-review result](MONEY_REVIEW_NET_RECOVERY_2026_10_23.md).
+PUMP source evidence here remains valid. No actual exit or LIVE activation occurred.
+
 **COMPONENT_PASS_TINY_BLOCKED. Code `f5a517ff013b2c0299ee8e67241293d48a24d283`.**
 151 tests locally and the **same151** on VPS, no failures/errors/skips. Network
 was denied; VPS additionally used `unshare --net`. 83 packaged files,37 imported

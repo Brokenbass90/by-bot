@@ -1,0 +1,11 @@
+--- current-manager-wrapper.py
++++ review-manager-wrapper.py
+@@ -3,7 +3,7 @@
+ from pathlib import Path
+ kit=Path('/opt/bybot-research/alpaca-next-entry-20261019-v1')
+ pin=json.loads((kit/'control-spec-pin.json').read_bytes())['sha256']
+-commands=[['/root/by-bot/.venv/bin/python', '-B', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/control-v1.py', '--spec', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/spec.json', '--maintenance', '--owner-go', '/opt/bybot-research/alpaca-dynamic-live-20261013/control/oct15-first-entry-v1-1/session/owner-go.json']]
++commands=[['/root/by-bot/.venv/bin/python', '-B', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/oct16-entry-identity-v2/control-v1.py', '--spec', '/opt/bybot-research/alpaca-dynamic-live-20261013/repairs/net-exit-recovery-20261023-r4/spec.json', '--maintenance', '--owner-go', '/opt/bybot-research/alpaca-dynamic-live-20261013/control/oct15-first-entry-v1-1/session/owner-go.json']]
+ results=[]
+ for command in commands:
+  try:

@@ -1,0 +1,33 @@
+{
+  "baseline_sha": "fc46bdfdbe95b10fbe26796e351c90c13bd6a938",
+  "broker_writes": 0,
+  "checkout_fallback": 0,
+  "claude_review_sha": "17eded0289896ac53a0f46cf647a3b977e28dd21",
+  "financial_units_changed": 0,
+  "foreign_allowlist_unchanged_sha256": "365ff7d6eeb2c0e2427e15345558e098ee55a2e57de2f1c04c8a3ceedecc2e0e",
+  "imports": 43,
+  "live_selected": false,
+  "material_sha256": "8213d6053961593ab66670c7134a80f3c1c1314f405a2895aaf4b78183d6894f",
+  "monthly_accepted_source_hashes_unchanged": 53,
+  "new_manifest_sha256": "2839e305a8b1a026b943ee4aca52c3847f9855fd4649853545b0cdae0ba0a382",
+  "new_owner_go": false,
+  "observed_local_research": "4c3b69a7208b07cafd7f9359dfd4aa88254d0c92",
+  "observed_research_origin": "d8706ac58c696af8e364b6dae8cfe37455fe5b61",
+  "old_financial_pins_unchanged": 9,
+  "original_packet_hold": true,
+  "personal_launcher_invocations": 0,
+  "priority": [
+    "Alpaca",
+    "PUMP4",
+    "Polymarket",
+    "KITY"
+  ],
+  "schema": "MONEY_REVIEW_RECONCILIATION_V1",
+  "source_files": 89,
+  "status": "COMPONENT_PASS_NET_SELECTION_OWNER_REVIEW_PUMP_TINY_BLOCKED",
+  "test_counts": {
+    "independent_test_sets": 1,
+    "local": 199,
+    "vps": 199
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "broker_writes": 0,
+  "complete_spec_static_closure": 64,
+  "embedded_publisher_source_pinned": true,
+  "financial_commands_executed": 0,
+  "financial_helper_ast_unchanged_except_missing_import_removal": true,
+  "manager_net_spec_path_only": true,
+  "original_plan_and_limits_identical": true,
+  "schema": "NET_REPLACEMENT_PACKET_STRUCTURAL_REVIEW_V2",
+  "status": "PASS_REVIEW_ONLY_NOT_AUTHORIZED"
+}

@@ -1,0 +1,25 @@
+{
+  "final_bootstrap_tests": 2,
+  "limits": "Bounded code/fixture review; no actual financial execution or TINY acceptance",
+  "metadata_verified_by_root": true,
+  "net_targeted_tests": 33,
+  "pump_targeted_tests": 57,
+  "reviewers": [
+    {
+      "actual_effort": "high",
+      "actual_model": "gpt-6-astra",
+      "scope": "PUMP4 ACK/errors and no-resend regression",
+      "thread": "01a1677f-6646-7903-ac73-0946225745c2",
+      "turn_context_line": 102
+    },
+    {
+      "actual_effort": "high",
+      "actual_model": "gpt-6-astra",
+      "scope": "NET recovery/expiry/freshness and final helper bootstrap",
+      "thread": "01a167b6-aed0-7f23-b7d4-7ae1c96ecfb0",
+      "turn_context_line": 216
+    }
+  ],
+  "schema": "BOUNDED_INDEPENDENT_REVIEW_V1",
+  "status": "NO_REMAINING_P1_P2_IN_REVIEWED_SCOPE"
+}

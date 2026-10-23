@@ -1,0 +1,46 @@
+{
+  "lost_after_accept": {
+    "actual_broker_requests": 0,
+    "fault": "lost_after_accept",
+    "first_reason": "simulated accepted and filled, response lost",
+    "first_status": "BLOCKED_EXECUTION",
+    "market_dispatches": 1,
+    "native_protection_present": false,
+    "position_remains": false,
+    "recovery_reason": null,
+    "recovery_status": "LIVE_EXIT_PENDING_FINALITY"
+  },
+  "lost_before_accept": {
+    "actual_broker_requests": 0,
+    "fault": "lost_before_accept",
+    "first_reason": "simulated no visible acceptance",
+    "first_status": "BLOCKED_EXECUTION",
+    "market_dispatches": 1,
+    "native_protection_present": false,
+    "position_remains": true,
+    "recovery_reason": "UNCERTAIN_EXIT_NO_RESEND",
+    "recovery_status": "BLOCKED_EXECUTION"
+  },
+  "partial_exit": {
+    "actual_broker_requests": 0,
+    "fault": "partial_exit",
+    "first_reason": "PARTIAL_OR_UNCERTAIN_EXIT_NO_RESEND",
+    "first_status": "BLOCKED_EXECUTION",
+    "market_dispatches": 1,
+    "native_protection_present": false,
+    "position_remains": true,
+    "recovery_reason": "UNWIND_ACTIVE_CONFLICT",
+    "recovery_status": "BLOCKED_EXECUTION"
+  },
+  "reject422": {
+    "actual_broker_requests": 0,
+    "fault": "reject422",
+    "first_reason": "simulated definitive market rejection",
+    "first_status": "BLOCKED_EXECUTION",
+    "market_dispatches": 1,
+    "native_protection_present": false,
+    "position_remains": true,
+    "recovery_reason": "UNCERTAIN_EXIT_NO_RESEND",
+    "recovery_status": "BLOCKED_EXECUTION"
+  }
+}
