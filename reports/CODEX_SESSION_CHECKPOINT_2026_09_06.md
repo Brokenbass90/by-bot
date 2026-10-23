@@ -1,5 +1,13 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT23Oct13:30:29UTC /16:30:29CY — ACTUAL OPENING NET DAY PROTECTION CONFIRMED.
+Fresh6GET:originalNET.325167779 open; broker NEW sell STOP277.69 coversfullremaining,
+DAYexpires23Oct20UTC. Manager13:30:00→13:30:05UTC LIVE_PROTECTED. R4sourcepins match,
+noexitGO/claims/dispatch; SHOPabsent/disabled. Evidence money_review_20261023/
+net-opening-protection.json. New human-only R4command unchanged/notrun; approved
+17:00–17:05CY window remains. No more preparation GO required. Agent neverlaunches.
+After humanoutput: independentGET flat/terminal/cost; Monthly notactivated.
+
 CURRENT23Oct11:50UTC — R4 EXACT OWNER APPROVAL RECEIVED AND SELECTED; NEW PERSONAL COMMAND.
 Owner: «Да, установить R4 и выдать замену личной команды». One approved NET
 --spec substitution installed in existing wrapper under original lockinode813893;

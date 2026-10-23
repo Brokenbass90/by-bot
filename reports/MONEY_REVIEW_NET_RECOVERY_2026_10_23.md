@@ -1,5 +1,13 @@
 # NET safety / PUMP4 review closure — 23 October 2026
 
+**Opening update13:30:29UTC /16:30:29Cyprus:** fresh broker GET confirms full
+NET0.325167779 native DAY-stop277.69, status NEW, expires23Oct20UTC/23:00Cyprus.
+Manager completed at13:30:05UTC with LIVE_PROTECTED; R4 source pins match.
+NET still open (dated quote306.20/PnL−1.632993); SHOP absent/disabled. No personal
+sale executed. New human command remains ready for the approved17:00–17:05Cyprus
+window, once; no further preparation GO needed. Monthly stays inactive.
+[Actual opening evidence](evidence/money_review_20261023/net-opening-protection.json).
+
 **LATEST: R4 SELECTED after exact owner approval; personal command NOT EXECUTED.**
 Original NET personal launcher remains **TECHNICAL HOLD / SUPERSEDED**.
 PUMP4 remains **TINY_BLOCKED**, Monthly remains ORDERS_OFF.
