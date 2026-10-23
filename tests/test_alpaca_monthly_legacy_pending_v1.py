@@ -275,3 +275,30 @@ def test_first_buy_with_legacy_pending_uses_native_wire_and_restart(setup,case,t
     assert [row[1]['side'] for row in writes]==['buy','sell']
     assert len(book.rows('positions'))==1 and not book.rows('exits')
     assert not (native.runtime/'standing-loss-stop.json').exists()
+
+
+@pytest.mark.parametrize('fault',['none','partial','foreign_entry','quantity','side','price'])
+def test_complete_legacy_entry_and_exit_source_is_classified_before_first_monthly_buy(case,tmp_path,fault):
+    c,seal=legacy_case(case)
+    seal['entry']['filled_at']='2026-10-01T13:58:00Z'
+    old_exit=copy.deepcopy(c['fills'][0])
+    old_entry=dict(id='original-net-buy-fill',activity_type='FILL',order_id=seal['entry']['id'],
+        symbol='NET',side='buy',qty='1',price='6',transaction_time=seal['entry']['filled_at'])
+    if fault=='foreign_entry':old_entry['order_id']='unowned-net-buy'
+    elif fault=='quantity':old_entry['qty']='2'
+    elif fault=='side':old_entry['side']='sell'
+    elif fault=='price':old_entry['price']='6.01'
+    c.update(fills=[old_entry,old_exit],positions=[],exits=[],fees=[],cash='100',pending='.02',
+        observed=ms('2026-10-03T06:00:01Z'))
+    if fault=='partial':
+        c['fills']=[dict(old_entry,id='net-part1',qty='.4',transaction_time='2026-10-01T13:57:00Z'),
+            dict(old_entry,id='net-part2',qty='.6'),old_exit]
+    native,paths,source=producer_fixture(c,tmp_path)
+    kwargs=dict(source=source,protocol=c['protocol'],calendar=c['calendar'],assets=c['assets'],
+        positions=[],exits=[],legacy_transition=seal,pending=True)
+    if fault not in {'none','partial'}:
+        with pytest.raises(ValueError):costs._account_day_context(**kwargs)
+    else:
+        result=costs._account_day_context(**kwargs)
+        assert Decimal(result['classification']['monthly_unposted_fee_upper_bound_usd'])==0
+        assert Decimal(result['classification']['legacy_unposted_fee_upper_bound_usd'])==Decimal('.02')

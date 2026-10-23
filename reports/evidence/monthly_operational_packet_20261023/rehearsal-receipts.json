@@ -1,0 +1,55 @@
+[
+  {
+    "path": "test-runtime/test_full_frozen_rotation_runs0/production/receipt.json",
+    "receipt": {
+      "clock": "DETERMINISTIC_FIXTURE_NOT_LATENCY_SLO",
+      "duplicate_entries": 0,
+      "first_entry_buy_and_stop_response_loss_recovered": true,
+      "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+      "fixture_liability_reserve_usd": ".03",
+      "legacy_handoff_fixture_only": true,
+      "legacy_retirement_checks": 2,
+      "money_authority": false,
+      "old_exit_finalized_after_posting": true,
+      "old_exit_pending_during_new_entries": true,
+      "orders_allowed": false,
+      "owned_positions": 1,
+      "production_cli_calls": 8,
+      "production_entrypoint": true,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "response_loss_recovered": true,
+      "rotation_exits": 1,
+      "selector_monkeypatched": false,
+      "simulated_entries": 2,
+      "source_loader_injected": false,
+      "source_symbols": 58,
+      "status": "MONTHLY_PRODUCTION_ENTRYPOINT_ORDERS_OFF_E2E_PASS"
+    },
+    "sha256": "abb104d1312d0678ed365a05ff42775bf58f357fc66d894c7be11b128f6346d7"
+  },
+  {
+    "path": "test-runtime/test_full_frozen_source_rotati0/pending-rotation/receipt.json",
+    "receipt": {
+      "duplicate_entries": 0,
+      "fixture_calendar": "WEEKDAY_FIXTURE_NOT_OFFICIAL_XNYS_OR_PROSPECTIVE_EVIDENCE",
+      "fixture_liability_reserve_usd": ".03",
+      "legacy_handoff_fixture_only": true,
+      "legacy_retirement_checks": 0,
+      "money_authority": false,
+      "old_exit_finalized_after_posting": true,
+      "old_exit_pending_during_new_entries": true,
+      "orders_allowed": false,
+      "owned_positions": 1,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "response_loss_recovered": true,
+      "rotation_exits": 1,
+      "selector_monkeypatched": false,
+      "simulated_entries": 2,
+      "source_symbols": 58,
+      "status": "MONTHLY_PENDING_FEE_ROTATION_ORDERS_OFF_E2E_PASS"
+    },
+    "sha256": "a162338cd2d4a82be6f86b95f67e1dd0bb2e18f349b0b681ba04bcfd284a79cd"
+  }
+]

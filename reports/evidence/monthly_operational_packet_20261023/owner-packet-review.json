@@ -1,0 +1,133 @@
+{
+  "account_context": {
+    "cash": "496.31",
+    "equity": "496.31",
+    "fresh_at_entry": false,
+    "get_requests": 9,
+    "observed_ms": 1792786454207,
+    "open_orders": 0,
+    "pending_reg_taf_fees": "0.02",
+    "positions": 0
+  },
+  "actual_cost_classification": {
+    "legacy_unposted_fee_upper_bound_usd": "0.02",
+    "monthly_unposted_fee_upper_bound_usd": "0",
+    "posted_legacy_fees_usd": "0.01",
+    "posted_monthly_fees_usd": "0",
+    "posted_open_monthly_fees_usd": "0",
+    "unposted_account_fees_usd": "0.02"
+  },
+  "actual_terminal_seal_bound": true,
+  "broker_writes": 0,
+  "cost_source_sha256": "e1c5ed559dc5c11b7da136bec57b1f27dae0dba41c67669c70f95b72771c85e7",
+  "financial_unit_installed": false,
+  "future_market_gates": [
+    "Actual30Octcompleted57+SPY selection",
+    "Fresh2Noventry-window account/ownership/cash/cost/protection checks"
+  ],
+  "legacy_halt_preserved": true,
+  "liability_reserve_usd": "40",
+  "money_authority": false,
+  "new_financial_authority_issued": false,
+  "new_monthly_entry_control_requires_explicit_owner_approval": true,
+  "new_runtime_no_adoption": true,
+  "operational_template_validation": {
+    "broker_writes": 0,
+    "diagnostics": "",
+    "installed": false,
+    "original_legacy_halt_present": true,
+    "original_legacy_halt_sha256": "30ca600d7d6f98664fc23757ef5520ab5a08a5b5223c6418d3955edcfe51be23",
+    "status": "UNIT_TEMPLATE_REVIEW_ONLY_V2",
+    "units_changed": 0,
+    "verify_rc": 0
+  },
+  "orders_allowed": false,
+  "original_halt_present": true,
+  "original_halt_sha256": "30ca600d7d6f98664fc23757ef5520ab5a08a5b5223c6418d3955edcfe51be23",
+  "owner_go_present": false,
+  "packet_manifest_sha256": "87478d385585d82d3c9f79a944b974aa02a6a0b8e7faaae31d327450b493040c",
+  "pending_fee_policy": "SOURCE_CLASSIFIED_WITHIN_EXISTING_RESERVE_V1",
+  "preserve": [
+    "original lock",
+    "HALT",
+    "spent GO/claims",
+    "journals",
+    "SHOP cancellation"
+  ],
+  "proposed_scope_sha256": "3401fc4ccf71334cc446b186306ccf6fe98d11b35e4ae3d66ac9a0bc3852917e",
+  "proposed_validity": [
+    "2026-11-02T14:30:00Z",
+    "2027-02-01T00:00:00Z"
+  ],
+  "real_server_disabled_results": [
+    {
+      "broker_writes": 0,
+      "money_authority": false,
+      "orders_allowed": false,
+      "source_files": 45,
+      "status": "MONTHLY_CYCLE_PACKAGE_VERIFIED_ORDERS_OFF"
+    },
+    {
+      "already_bound": false,
+      "broker_writes": 0,
+      "daily_status": "NO_OWNED_MONTHLY_POSITIONS",
+      "money_authority": false,
+      "next_schedule": {
+        "daily_due": true,
+        "entry_open_ms": 1793021400000,
+        "entry_session": "2026-10-26",
+        "money_authority": false,
+        "month_end": false,
+        "monthly_selection_due": false,
+        "next_source_run_ms": 1793046000000,
+        "orders_allowed": false,
+        "signal_session": "2026-10-23"
+      },
+      "notification": {
+        "status": "QUIET"
+      },
+      "orders_allowed": false,
+      "receipt_sha256": "8638228dc2fdc4e98ac3ab98df296a29dc3242d9df7e599d309f9665ea8d1a72",
+      "schema": "ALPACA_SOURCE_OPERATION_RECEIPT_V1",
+      "selection_id": null,
+      "signal_session": "2026-10-23",
+      "source_id": "846365a5002495e26debc7d9c98dbb811c79fa941f7205de0fe137c96f095677",
+      "status": "ORDERS_OFF_OPERATIONAL_PASS"
+    },
+    {
+      "broker_writes": 0,
+      "entry_halt_present": false,
+      "money_authority": false,
+      "notification": {
+        "status": "QUIET"
+      },
+      "orders_allowed": false,
+      "plans": [],
+      "positions": 0,
+      "source_and_financial_book": "/opt/bybot-research/alpaca-monthly-e2e-20261018/candidate-86d5c7c7f8843312-tb149fe05/runtime/monthly400-v2/book/monthly-orders-off.sqlite",
+      "status": "MONTHLY_MANAGER_PREVIEW_ORDERS_OFF",
+      "stops": {
+        "actions": [],
+        "money_authority": false,
+        "orders_allowed": false,
+        "production_writer_installed": false,
+        "status": "STOP_INTENTIONS_ORDERS_OFF"
+      }
+    },
+    {
+      "broker_writes": 0,
+      "financial_units_changed": 0,
+      "owner_go_present": false,
+      "schema": "MONTHLY_ACTUAL_SERVER_DISABLED_CONFIG_ACCEPTANCE_V1",
+      "source_rc": 0
+    }
+  ],
+  "retirement_operation": "systemctl disable --now alpaca-oct15-owned-manager.timer",
+  "runner_config_sha256": "ff7399614d108d1616976148af6a93256ef21a96abe3978bc8dbec97f9be1708",
+  "schema": "MONTHLY_EXACT_OPERATIONAL_PACKET_REVIEW_V1",
+  "source_files": 53,
+  "source_material_sha256": "86d5c7c7f88433126b69467f9a439eb5be2529da59bf514626892eb8f2e1d8da",
+  "standing_files": 45,
+  "status": "READY_FOR_EXACT_OWNER_REVIEW_NOT_ACTIVATED",
+  "validity_requires_owner_approval": true
+}

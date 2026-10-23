@@ -119,6 +119,12 @@ def _account_day_context(*,source,protocol,calendar,assets,positions,exits,
         require(legacy_transition['entry']['id'] not in orders,'LEGACY_TRANSITION_OWNER_CONFLICT')
         legacy_owner='LEGACY:'+legacy_transition['entry']['id']
         require(legacy_owner not in owner.values(),'LEGACY_TRANSITION_OWNER_CONFLICT')
+        # A complete source may include the original NET purchase as well as
+        # its terminal sale. Classify only the exact sealed entry when present;
+        # an older purchase outside the capture is not a missing Monthly fill.
+        if any(r.get('activity_type')=='FILL' and r.get('order_id')==legacy_transition['entry']['id']
+               for r in source['activities']):
+            legacy_orders=[legacy_transition['entry'],*legacy_orders]
         for order in legacy_orders:
             require(order['id'] not in orders,'LEGACY_TRANSITION_OWNER_CONFLICT')
             orders[order['id']]=order;owner[order['id']]=legacy_owner
@@ -132,7 +138,7 @@ def _account_day_context(*,source,protocol,calendar,assets,positions,exits,
             order = orders[oid]; at = _ms(row['transaction_time'])
             require(row['side'] == order['side'] and row['symbol'] == order['symbol']
                 and at <= _ms(order['filled_at']), 'ORDER_FILL_CONFLICT')
-            if owner[oid]==legacy_owner:require(_ms(legacy_transition['entry']['filled_at'])<=at
+            if owner[oid]==legacy_owner and oid!=legacy_transition['entry']['id']:require(_ms(legacy_transition['entry']['filled_at'])<=at
                 <=legacy_transition['sealed_ms'],
                 'LEGACY_TRANSITION_AFTER_ANCHOR')
             qty, price = dec(row['qty']), dec(row['price'])

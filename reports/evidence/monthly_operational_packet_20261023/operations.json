@@ -1,0 +1,21 @@
+{
+  "files": {
+    "alpaca-monthly-owned.service": "ee73a7913fab1bbc7a160a7c990b05a62a0cc8dcf550f9a1da55d82b546448ac",
+    "alpaca-monthly-owned.timer": "33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb"
+  },
+  "financial_units_installed": false,
+  "money_authority": false,
+  "new_monthly_entry_control": "SEPARATE_EXACT_OWNER_AUTHORITY_REQUIRED; legacy HALT remains untouched; v1 old-HALT spec superseded",
+  "operations": [
+    "Fresh account flat/orders terminal/exact NET ownership/source and pending fee context before handoff",
+    "Under original account lock, disable --now ONLY alpaca-oct15-owned-manager.timer; wait for active legacy service/job to finish; no kill",
+    "Verify existing capture_retirement; preserve SHOP disabled, original locks, HALT, journals and spent claims",
+    "Only after exact separate owner approval: install these two pinned fragments, reload daemon and enable monthly timer; owner personally provides exact scope GO file",
+    "No BUY before scope starts 2Nov14:30UTC; future30Oct selection and fresh entry-time readiness remain mandatory"
+  ],
+  "orders_allowed": false,
+  "owner_go_created": false,
+  "packet_manifest_sha256": "87478d385585d82d3c9f79a944b974aa02a6a0b8e7faaae31d327450b493040c",
+  "rollback": "Inhibit new Monthly entries; preserve sole owned custody. No automatic old NET manager re-enable or journal/latch/claim reset",
+  "schema": "MONTHLY_EXACT_OPERATION_REVIEW_V1"
+}

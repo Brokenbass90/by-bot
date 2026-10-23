@@ -1,0 +1,49 @@
+F
+=================================== FAILURES ===================================
+_ test_complete_legacy_entry_and_exit_source_is_classified_before_first_monthly_buy[none] _
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-636/test_complete_legacy_entry_and0')
+fault = 'none'
+
+    @pytest.mark.parametrize('fault',['none','foreign_entry','quantity','side','price'])
+    def test_complete_legacy_entry_and_exit_source_is_classified_before_first_monthly_buy(case,tmp_path,fault):
+        c,seal=legacy_case(case)
+        seal['entry']['filled_at']='2026-10-01T13:58:00Z'
+        old_exit=copy.deepcopy(c['fills'][0])
+        old_entry=dict(id='original-net-buy-fill',activity_type='FILL',order_id=seal['entry']['id'],
+            symbol='NET',side='buy',qty='1',price='6',transaction_time=seal['entry']['filled_at'])
+        if fault=='foreign_entry':old_entry['order_id']='unowned-net-buy'
+        elif fault=='quantity':old_entry['qty']='2'
+        elif fault=='side':old_entry['side']='sell'
+        elif fault=='price':old_entry['price']='6.01'
+        c.update(fills=[old_entry,old_exit],positions=[],exits=[],fees=[],cash='100',pending='.02',
+            observed=ms('2026-10-03T06:00:01Z'))
+        native,paths,source=producer_fixture(c,tmp_path)
+        kwargs=dict(source=source,protocol=c['protocol'],calendar=c['calendar'],assets=c['assets'],
+            positions=[],exits=[],legacy_transition=seal,pending=True)
+        if fault!='none':
+            with pytest.raises(ValueError):costs._account_day_context(**kwargs)
+        else:
+>           result=costs._account_day_context(**kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_legacy_pending_v1.py:299:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_lab/alpaca_monthly_cost_source_v1.py:131: in _account_day_context
+    oid = row.get('order_id'); require(oid in orders, 'FOREIGN_FILL')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, reason = 'FOREIGN_FILL'
+
+    def require(ok, reason):
+>       if not ok: raise ValueError('MONTHLY_COST_'+reason)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: MONTHLY_COST_FOREIGN_FILL
+
+research_lab/alpaca_monthly_cost_source_v1.py:93: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_alpaca_monthly_legacy_pending_v1.py::test_complete_legacy_entry_and_exit_source_is_classified_before_first_monthly_buy[none]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 32 deselected in 0.31s
