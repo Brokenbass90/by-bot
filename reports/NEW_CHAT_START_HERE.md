@@ -1,5 +1,12 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT23Oct17:02CY: ownerR4NETexit EXECUTED; independent brokerGET FLAT/noorders,
+stop canceled, ledger empty. Sold.325167779 at311.888; gross+.216561740814 before
+fees. Cash496.31, pendingregfees.02; netfinality PENDING. PersonalGO SPENT/no retry/
+no Nov2exit. Oldschedules retained; no Monthlyactivation. Read checkpointTOP and
+[actual reconciliation](MONEY_REVIEW_NET_RECOVERY_2026_10_23.md). Next sourcebacked
+cost/cash/terminal handoff; PUMPowner/admission code proceeds withoutcalendarwait.
+
 CURRENT23Oct11:50UTC: R4 explicitly approved and selected via ONLY NETspec path;
 no financialcommand/GO/claims/brokerwrite. New HUMAN ONLY launcher:
 .private/claude_review_intake_20261023/net-recovery-r4/owner-net-exit-once.sh

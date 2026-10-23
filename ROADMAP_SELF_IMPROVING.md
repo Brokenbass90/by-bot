@@ -6,12 +6,20 @@
 экономические преимущества, Brain проверяет портфельную пользу. AI не получает
 самостоятельного права менять LIVE, риск, судью или финансовые разрешения.
 
-**Создан:**10.04.2026. **Актуализирован:**23.10.2026 — NET recovery R4 approved/selected, new personal command issued/notrun; PUMP ACK/errors component PASS.
+**Создан:**10.04.2026. **Актуализирован:**23.10.2026 — NET personally sold/broker FLAT PASS; cost finality pending; PUMP ACK/errors component PASS.
 **CURRENT STATUS: PARTIAL.** Проверенные компоненты и репетиции существуют;
 непрерывная автономная Factory и автономный денежный Monthly ещё не доказаны.
 Это обновление исходного документа, не новый roadmap и не новый financial GO.
 
 **23Oct execution delta:** [NET recovery / PUMP4 review closure](reports/MONEY_REVIEW_NET_RECOVERY_2026_10_23.md):199local/same199VPS PASS,89files/43imports/0fallback. Actual deployed NET failure probes confirm residual-protection defect; original helper imports absent publisher. **Old personal launcher HOLD/superseded.** R4 explicitly approved/selected11:48UTC via only NETspec path; new personal command issued/notrun. All64newpins/9oldpins/4units/98observerchecks verified; sale date/qty unchanged. No broker writes/GO/claims. PUMP ACK errors/rate-limit/reduce-race now reconciliation-only/no resend; financial owner/latches/sourcebound admission NEXT.53Monthly sources unchanged.11:49UTC NET premarket open/no acceptedDAYstop;13:30UTC actual opening proof PENDING. Owner order **Alpaca → PUMP4 → Polymarket → KITY**; no calendar/architecture wait. Earlier dated rows are history.
+
+**23Oct17:02CY superseding delta:** owner executed new personal sale inwindow;
+independent9brokerGET confirms FLAT/noorders, stop canceled, ledger empty.0.325167779
+NET sold311.888; gross+.216561740814 beforefees. Cash496.31/pendingregfees.02;
+finalnet UNKNOWN, no fabricated zero cost or duplicate deduction. PersonalGO spent,
+never retry/Nov2exit. Sourcebacked cost/cash/terminal handoff and exact retirement/
+Monthly authority remain. No agent financialcommand/units mutation/MonthlyBUY.
+PUMP owner/admission code next while pendingfees; order unchanged.
 
 ## Единственный roadmap и кто обновляет что
 
@@ -91,7 +99,7 @@ Git ref. Локальный документ без публикации — pub
 | Slot / владелец | Работа сейчас | Закрывающий acceptance / следующее событие |
 |---|---|---|
 | **P0 Preserve — Codex** | NET20Oct scheduled independent GET completed at13:35:23UTC/16:35:23CY; later handoff preflight GET completed; raw financial/unit receipts retained privately | One-shot PAUSED after control; no new financial/units permissions or strategy changes. Current broker amounts/order identifiers/runtime unit state are excluded from public receipts. Future protection remains a separate dated operational obligation |
-| **P0 Money — Codex** | Monthly financial241 unchanged. OldNETlauncher HOLD/superseded; [R4](reports/MONEY_REVIEW_NET_RECOVERY_2026_10_23.md) approved/selected,199test component PASS. Same23Oct17:00–17:05CY saleGO; new human-only launcher issued/notrun | Actual opening protection GET; human command once, agent never invokes. Then independent flat/terminal/cost/cash proof → separately authorized retirement/Monthly.9oldpins/4units/98observerchecks preserved. Do not remove protection while exposed/unknown; SHOP cancelled |
+| **P0 Money — Codex** | Monthly financial241 unchanged. Owner personally sold NET; [independent broker reconciliation](reports/MONEY_REVIEW_NET_RECOVERY_2026_10_23.md) FLAT/noorders PASS. PersonalGO spent. Cash496.31/pendingfees.02, netfinality PENDING | Finish sourcebacked cost/cash/terminal handoff → exact authorized retirement/Monthly. No repeat exit/claimreset/Nov2sale, no automaticBUY. Existing schedules preserved; SHOP cancelled. PUMP code proceeds while fees pending |
 | **NEXT Money — Codex** | **PUMP4 V1 execution**. Actual source/account component151 PASS preserved; ACK/error/rate-limit/reduce-race and no-resend fixed in current199test candidate.136/137 real source bootstrap,0current signals. Native memory lifecycle40/60/168H/restart implemented | NEXT account-wide financial owner/sendonce/day-week-DDlatches and sourcebound fee/funding/risk admission; execution prices versus research model explicit. Flat empty positions is not proof of symbol one-way config. TINY_NOT_READY;50/30/R1/max1 proposals not authority; no calendar/Brain wait |
 | **AFTER PUMP — Codex** | Existing Polymarket tests/data/prereg acceptance | Resume existing request after PUMP gate, no new framework or automatic financial GO |
 | **AFTER POLYMARKET — Codex** | KITY local4c3b69a DOSIE_READY/C1/C2 evidence; not in observed research origind8706ac | Verify published corrected contract, funding C1.7/weekly executor/authority. Corrected path300/10leg does not grant money; old microGO spent |

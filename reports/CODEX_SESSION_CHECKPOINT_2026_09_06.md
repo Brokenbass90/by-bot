@@ -1,5 +1,22 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT23Oct14:02:46UTC /17:02:46CY — OWNER EXIT EXECUTED; BROKER FLAT PASS.
+Human personally ran newR4launcher once inwindow. Actual NET market sell filled
+23Oct14:00:23.456730UTC,qty.325167779 at311.888. Independent9GET confirms no positions/
+openorders, originalstop canceled/unfilled, nativeledger empty, both FILL activities
+match exact owned entry/exit. Gross+.216561740814 beforefees, NOT finalnet.
+Cash/equity496.31; broker pending_reg_taf_fees.02, one Oct15 CAT fee−.01 published.
+Do not double subtract pending fees or infer finality from flatness/cash. Runtime
+EXIT_PENDING_FINALITY/slotfalse is accounting, not residual exposure. Natural
+14:05UTC manager cycle also returned same single exit/no second intent, ledgerempty;
+file/SQLite readback only, never agent-triggered manager. Evidence:
+money_review_20261023/net-exit-broker-reconciliation.json. R4pins match; noagent
+financialcommand/brokerwrite/retirement/Monthlyactivation. PersonalGO SPENT: no
+repeat/newwrapper/claimreset; do not executeNov2exit. Oldmanager/observer schedules
+retained pending exactretirement authority. Next sourceboundfee/cash/terminal
+handoff; PUMPfinancialowner/admission code can proceed while fees pending, then
+Polymarket/KITY. Exit is OFF_PROTOCOL, not Monthly strategy performance evidence.
+
 CURRENT23Oct13:30:29UTC /16:30:29CY — ACTUAL OPENING NET DAY PROTECTION CONFIRMED.
 Fresh6GET:originalNET.325167779 open; broker NEW sell STOP277.69 coversfullremaining,
 DAYexpires23Oct20UTC. Manager13:30:00→13:30:05UTC LIVE_PROTECTED. R4sourcepins match,

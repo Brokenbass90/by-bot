@@ -1,0 +1,66 @@
+{
+  "accrued_fees": "0",
+  "activity_counts": {
+    "FEE": 1,
+    "FILL": 2
+  },
+  "agent_broker_writes": 0,
+  "agent_financial_commands": 0,
+  "broker_get_requests": 9,
+  "cash": "496.31",
+  "cash_stable_during_get": true,
+  "cost_finality_present": false,
+  "coverage": {
+    "after": "2026-10-15T00:00:00Z",
+    "filter_semantics": "CREATION_TIME_NOT_SETTLEMENT_DATE",
+    "page_count": 1,
+    "pagination_exhausted": true,
+    "until": "2026-10-23T10:02:43.763631981-04:00"
+  },
+  "entry_and_exit_activity_match": true,
+  "entry_price": "311.222",
+  "equity": "496.31",
+  "exit_filled_at": "2026-10-23T14:00:23.456730721Z",
+  "exit_order_status": "filled",
+  "exit_price": "311.888",
+  "gross_before_fees": "0.216561740814",
+  "monthly_activated": false,
+  "native_ledger_empty": true,
+  "net_pnl_status": "NOT_PROVEN",
+  "next_gate": "SOURCE_BACKED_LEGACY_FEE_CASH_TERMINAL_HANDOFF_THEN_EXACT_RETIREMENT_AND_MONTHLY_AUTHORITY",
+  "observed_ms": 1792764166189,
+  "observed_utc": "2026-10-23T14:02:46.189000+00:00",
+  "open_order_count": 0,
+  "original_stop_filled_qty": "0",
+  "original_stop_status": "canceled",
+  "pending_reg_taf_fees": "0.02",
+  "personal_manifest_sha256": "2839e305a8b1a026b943ee4aca52c3847f9855fd4649853545b0cdae0ba0a382",
+  "position_count": 0,
+  "private_capture_sha256": "8cbaa9e168eb3eff558327244e62fe0119765e63470a6383d2c54e5c769af0cc",
+  "published_fees": [
+    {
+      "activity_id_sha256": "ca4ffc00c3ae07176dccf5926f58441728d0cee89ec9be1e061c1d1d2d21512b",
+      "date": "2026-10-15",
+      "net_amount": "-0.01"
+    }
+  ],
+  "qty": "0.325167779",
+  "retirement_executed": false,
+  "schema": "NET_PERSONAL_EXIT_BROKER_RECONCILIATION_V1",
+  "scope_evidence": "OWNER_PLANNED_OFF_PROTOCOL_EXIT_NOT_MONTHLY_STRATEGY_PERFORMANCE",
+  "slot_released": false,
+  "source_capture_hashes": [
+    "a5bf2a4c36d411e8dc44fd4e4b15ae3b8883ad914eaab2f23403884496ec12ce",
+    "0c8aed9907359375bdec039f09f7925533dfbaa9242f4e8882315a34df56e7cb",
+    "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "e42c43dd70a6deb2b6d1ff3f9f8688cc6bd0a56441f3b4c543ad321a3d4addac",
+    "ac2158394a593534bda47f5ab3d37647e03fc6ade3b8db7e61d50a7515e22c8b",
+    "e99dc72243b6cd2cb1679883c8105bd1209459e478e5b579f192361e3f569b24",
+    "8413710283af2a14000835072319131aff544d1cb24f3e92be3952cedc430aed",
+    "0c8aed9907359375bdec039f09f7925533dfbaa9242f4e8882315a34df56e7cb"
+  ],
+  "source_pins_match": true,
+  "status": "EXIT_EXECUTION_PASS_COST_FINALITY_PENDING",
+  "symbol": "NET"
+}

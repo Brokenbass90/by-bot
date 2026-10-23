@@ -1,5 +1,26 @@
 # NET safety / PUMP4 review closure — 23 October 2026
 
+**LATEST EXIT UPDATE14:02:46UTC /17:02:46Cyprus: broker FLAT confirmed.**
+Owner personally invoked the new R4 command in its approved window. Exact NET
+remainder0.325167779 sold at311.888, filled14:00:23.456730UTC. Independent9GET:
+no account positions/open orders; original native stop canceled/unfilled; ledger
+empty; both entry and exit FILL activities match exact owned orders/quantities.
+Gross **+0.216561740814USD before fees**. Cash/equity496.31; pending regulatory
+fees0.02 and one published Oct15 CAT fee−0.01. Do not double subtract the pending
+field or declare net finality from cash/empty orders. Runtime EXIT_PENDING_FINALITY
+and slot_released=false correctly retain accounting obligations, not shares.
+[Actual exit/cash/activities reconciliation](evidence/money_review_20261023/net-exit-broker-reconciliation.json).
+The next naturally scheduled manager cycle14:05UTC also returned
+LIVE_EXIT_PENDING_FINALITY with the same single exit order; no second exit intent,
+ledger still empty. This was file/SQLite readback, not an agent-triggered manager run.
+[Natural next-cycle evidence](evidence/money_review_20261023/net-post-exit-natural-cycle.json).
+Personal exit GO is **SPENT**: no retry, claim reset or November2 exit invocation.
+Agent performed GET only; no retirement, Monthly activation or new BUY. Exact
+source-backed cost/cash/terminal handoff and separately authorized old-manager
+retirement/Monthly scope remain. PUMP4 financial owner/admission work need not
+wait for fee publication. This owner-planned OFF_PROTOCOL exit is not evidence
+of Monthly strategy performance. Earlier opening/selection sections are history.
+
 **Opening update13:30:29UTC /16:30:29Cyprus:** fresh broker GET confirms full
 NET0.325167779 native DAY-stop277.69, status NEW, expires23Oct20UTC/23:00Cyprus.
 Manager completed at13:30:05UTC with LIVE_PROTECTED; R4 source pins match.
