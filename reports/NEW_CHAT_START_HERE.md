@@ -1,5 +1,13 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT23Oct11:50UTC: R4 explicitly approved and selected via ONLY NETspec path;
+no financialcommand/GO/claims/brokerwrite. New HUMAN ONLY launcher:
+.private/claude_review_intake_20261023/net-recovery-r4/owner-net-exit-once.sh
+SHA27c038ad…aa9bde,0700/notrun. Same23Oct17:00–17:05CY scope. Oldrev2 remains
+HOLD/superseded; do not use it.9oldpins/4units/98observerchecks unchanged.
+Read [latest selection receipt](MONEY_REVIEW_NET_RECOVERY_2026_10_23.md) and TOP.
+Actual opening protection readback and personal exit stillPENDING; no MonthlyBUY.
+
 CURRENT23Oct11:37UTC: **old NET personal launcher TECHNICAL HOLD** after exact
 deployed failure probes and missing publisher import. Read checkpoint TOP and
 [R4 recovery owner review](MONEY_REVIEW_NET_RECOVERY_2026_10_23.md).

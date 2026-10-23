@@ -1,10 +1,36 @@
 # NET safety / PUMP4 review closure — 23 October 2026
 
-**COMPONENT PASS. Original NET personal launcher: TECHNICAL HOLD.**
-The replacement R4 packet is **READY_FOR_OWNER_REVIEW, UNSELECTED**.
+**LATEST: R4 SELECTED after exact owner approval; personal command NOT EXECUTED.**
+Original NET personal launcher remains **TECHNICAL HOLD / SUPERSEDED**.
 PUMP4 remains **TINY_BLOCKED**, Monthly remains ORDERS_OFF.
 Owner's current execution order: **Alpaca → PUMP4 → Polymarket → KITY**.
-No financial command, broker write, unit change or financial activation occurred.
+No financial command, broker write, unit change or Monthly activation occurred.
+
+## Owner decision and actual selection — 23Oct11:48UTC
+
+Owner explicitly answered «Да, установить R4 и выдать замену личной команды».
+The sole approved NET spec-path substitution was applied under the unchanged
+account lock, inode813893. All64 new manifest pins match;9 old financial pins,
+4 unit files and98 observer checks remain unchanged. No GOfile, personal claim,
+exit dispatch or financial command was created/executed.
+[Owner approval](evidence/money_review_20261023/net-r4-owner-approval.json),
+[selection](evidence/money_review_20261023/net-r4-selection.json),
+[independent readback](evidence/money_review_20261023/net-r4-selected-readback.json).
+
+New human-only launcher, issued0700 and **never executed by the agent**:
+`.private/claude_review_intake_20261023/net-recovery-r4/owner-net-exit-once.sh`.
+SHA:`27c038ad91815e4669ee7ae3844498d96f5e3ec98dbe919d3c4b08acbeaa9bde`.
+Only23Oct17:00–17:05Cyprus /14:00–14:05UTC, exactly once. Its early invocation
+refuses before claim/SSH; uncertain output consumes initiation and needs GET
+reconciliation, never a retry. The old rev2 command must not be used.
+Actual11:49:49UTC broker GET: original NET0.325167779 still open, market closed,
+no accepted open DAY-stop; quote307.15/PnL−1.324084 is a dated premarket snapshot.
+SHOP remains absent and disabled/inactive. Today's13:30UTC opening stop readback
+is still PENDING, not implied by this installation.
+[Post-selection GET](evidence/money_review_20261023/net-after-selection-get.json).
+After the human's sale command: independent flat/terminal/cost/cash proof, then
+separate old-manager retirement/Monthly authority; no automatic Monthly BUY.
+The sections below preserve the completed engineering and pre-approval review.
 
 ## DONE / TESTED
 

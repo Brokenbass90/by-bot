@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT23Oct11:50UTC — R4 EXACT OWNER APPROVAL RECEIVED AND SELECTED; NEW PERSONAL COMMAND.
+Owner: «Да, установить R4 и выдать замену личной команды». One approved NET
+--spec substitution installed in existing wrapper under original lockinode813893;
+manifest2839e305…ba0a382 all64pins match.9oldfinancialpins/4units/98observerchecks
+unchanged. Independent selected-source readback PASS; noexitdispatch/GO/claims,
+no financialcommand or brokerwrite. Original rev2 launcher remains HOLD/superseded.
+New HUMAN ONLY .private/claude_review_intake_20261023/net-recovery-r4/owner-net-exit-once.sh
+SHA27c038ad91815e4669ee7ae3844498d96f5e3ec98dbe919d3c4b08acbeaa9bde,
+0700/notrun. Same approved23Oct17:00–17:05CY scope,<=.325167779 regardlessPnL;
+agents NEVER invoke/schedule. No new confirmation for alreadyapprovedR4/sale.
+11:49:49UTC GET originalNET stillopen/no acceptedDAYstop premarket, SHOPabsent/
+disabled.13:30UTC openingproof PENDING. Future actual sale needsindependentGET
+flat/terminal/cost/cash before authorized retirement/Monthly; no automaticBUY.
+Read MONEY_REVIEW_NET_RECOVERY_2026_10_23.md latest selection section/evidence.
+Code401e6fb/199local=same199VPS accepted; next code PUMP financialowner/latches/
+sourceboundadmission, then Polymarket, then KITY. Earlier UNSELECTED refers to
+pre-approval evidence; oldlauncher remains blocked, R4 selected/newoneissued.
+
 CURRENT23Oct11:37UTC — NET ORIGINAL PERSONAL LAUNCHER TECHNICAL HOLD; R4 OWNER REVIEW.
 Read MONEY_REVIEW_NET_RECOVERY_2026_10_23.md before any older launch instruction.
 Owner's current order: Alpaca → PUMP4 → Polymarket → KITY. No new audit/framework.

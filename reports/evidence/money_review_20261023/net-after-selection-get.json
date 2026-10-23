@@ -1,0 +1,34 @@
+{
+  "active_native_net_stops": [],
+  "broker_get_requests": 6,
+  "broker_writes": 0,
+  "clock": {
+    "is_open": false,
+    "next_close": "2026-10-23T16:00:00-04:00",
+    "next_open": "2026-10-23T09:30:00-04:00",
+    "timestamp": "2026-10-23T07:49:47.433168283-04:00"
+  },
+  "observed_ms": 1792756189019,
+  "position": [
+    {
+      "avg_entry_price": "311.222",
+      "current_price": "307.15",
+      "qty": "0.325167779",
+      "symbol": "NET",
+      "unrealized_pl": "-1.324084"
+    }
+  ],
+  "protection_status": "PREMARKET_NO_ACCEPTED_DAY_STOP_OPENING_READBACK_REQUIRED",
+  "schema": "NET_POST_R4_SELECTION_GET_V1",
+  "shop_position_or_order": false,
+  "shop_timer_disabled_inactive": true,
+  "source_capture_sha256": [
+    "7297f6e65f26d4f67bbe27117352debb7d30acfcc1d27a977196781ecb697ea6",
+    "8f61dde824545d374aa31bb021dd65d57dfb7046f08816e409a80bba9c39c495",
+    "7a6f329fd26c52c91038f6389b13eda0dcc8e2fd133138f425254c2040f3f9c8",
+    "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "e42c43dd70a6deb2b6d1ff3f9f8688cc6bd0a56441f3b4c543ad321a3d4addac",
+    "b331f26a519cc90b8eeb033e1ab2fe96e4e48e0007c4a60dc7e8671986f1d6c6"
+  ],
+  "units_changed": 0
+}

@@ -1,0 +1,10 @@
+{
+  "agent_financial_invocation": false,
+  "financial_go_expanded": false,
+  "manifest_sha256": "2839e305a8b1a026b943ee4aca52c3847f9855fd4649853545b0cdae0ba0a382",
+  "new_personal_launcher_sha256": "27c038ad91815e4669ee7ae3844498d96f5e3ec98dbe919d3c4b08acbeaa9bde",
+  "owner_answer": "\u0414\u0430, \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c R4 \u0438 \u0432\u044b\u0434\u0430\u0442\u044c \u0437\u0430\u043c\u0435\u043d\u0443 \u043b\u0438\u0447\u043d\u043e\u0439 \u043a\u043e\u043c\u0430\u043d\u0434\u044b",
+  "recorded_ms": 1792756187696,
+  "schema": "NET_R4_EXACT_CHAT_OWNER_APPROVAL_V1",
+  "scope": "Only NET spec path in existing manager-wrapper; replacement personal launcher for original23Oct17:00\u201317:05Cyprus sale scope"
+}
