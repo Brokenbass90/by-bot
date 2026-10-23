@@ -1,6 +1,6 @@
 {
  "d": "2026-10-15",
- "sostavleno": "2026-10-16T08:42:56+00:00",
+ "sostavleno": "2026-10-23T06:23:20+00:00",
  "status": "OPERATIONAL_PASS",
  "proverki": [
   {
@@ -37,6 +37,11 @@
    "proverka": "C1.5b лот проходит при $100",
    "status": "PASS",
    "detal": ""
+  },
+  {
+   "proverka": "C1.6 выход: все ноги оценены",
+   "status": "PASS",
+   "detal": "PAPER_WEEK_OPERATIONAL_PASS"
   }
  ],
  "pnl_v_kvitancii": false
