@@ -1,0 +1,613 @@
+{
+  "acceptance": {
+    "checkout_fallback": [],
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 178
+    },
+    "elapsed_seconds": 12.014,
+    "imports": 28,
+    "material_sha256": "45143de325ebd6e5d0b9ef70c42bff18bffd52021c2582eb7ede1a3d9e381a49",
+    "money_authority": false,
+    "network_denied": true,
+    "orders_allowed": false,
+    "real_broker_requests": 0,
+    "real_broker_writes": 0,
+    "receipt_count": 18,
+    "schema": "PUMP4_ACCOUNT_OWNER_ORDERS_OFF_ACCEPTANCE_V1",
+    "source_files": 81,
+    "status": "PASS",
+    "tiny_ready": false
+  },
+  "artifacts": {
+    "acceptance.json": {
+      "checkout_fallback": [],
+      "counts": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 178
+      },
+      "elapsed_seconds": 12.014,
+      "imports": 28,
+      "material_sha256": "45143de325ebd6e5d0b9ef70c42bff18bffd52021c2582eb7ede1a3d9e381a49",
+      "money_authority": false,
+      "network_denied": true,
+      "orders_allowed": false,
+      "real_broker_requests": 0,
+      "real_broker_writes": 0,
+      "receipt_count": 18,
+      "schema": "PUMP4_ACCOUNT_OWNER_ORDERS_OFF_ACCEPTANCE_V1",
+      "source_files": 81,
+      "status": "PASS",
+      "tiny_ready": false
+    },
+    "receipts.json": [
+      {
+        "receipt": {
+          "actions": [
+            {
+              "request": {
+                "category": "linear",
+                "orderLinkId": "p4-0b33cbf57ef95584fc53-0",
+                "orderType": "Market",
+                "positionIdx": 0,
+                "qty": "10",
+                "reduceOnly": false,
+                "side": "Sell",
+                "slTriggerBy": "LastPrice",
+                "stopLoss": "1.3146404800000007",
+                "symbol": "ZROUSDT",
+                "tpslMode": "Full"
+              },
+              "role": "ENTRY"
+            },
+            {
+              "request": {
+                "category": "linear",
+                "orderLinkId": "p4-0b33cbf57ef95584fc53-1",
+                "orderType": "Market",
+                "positionIdx": 0,
+                "qty": "4.0",
+                "reduceOnly": true,
+                "side": "Buy",
+                "symbol": "ZROUSDT"
+              },
+              "role": "TP1"
+            },
+            {
+              "request": {
+                "category": "linear",
+                "orderLinkId": "p4-0b33cbf57ef95584fc53-2",
+                "orderType": "Market",
+                "positionIdx": 0,
+                "qty": "6.0",
+                "reduceOnly": true,
+                "side": "Buy",
+                "symbol": "ZROUSDT"
+              },
+              "role": "TP2"
+            }
+          ],
+          "actual_account_admission": "NOT_PERFORMED",
+          "durable_module_reload_after_every_order": true,
+          "economic_outcomes_recomputed": false,
+          "entry_qty": "10",
+          "fees_and_funding": "SYNTHETIC_FIXTURE",
+          "fill_count": 3,
+          "input_sha256": "7edc45fbfaee84e8fefb89adc09054c6b038883853d27a65e7403b05c38aa36e",
+          "instrument_filters": "SYNTHETIC_FIXTURE",
+          "money_authority": false,
+          "orders_allowed": false,
+          "process_restart": "separately_tested_in_lifecycle_regression",
+          "prospective_decisions_credited": 0,
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "remaining_qty": "0.0",
+          "schema": "PUMP4_H1_THROUGH_BYBIT_ORDERS_OFF_CLI_V1",
+          "source_provenance": {
+            "bar_file_sha256": "2c11831f2682657ac655d6d45acdc9cc92d5ccab591b7d0ff2c87eb2e7ea028e",
+            "bar_prefix_sha256": "97945a46aedb8d188bd8333f636f313e82fc483bf87456c3d677c2670fe784f3",
+            "fixture_sha256": "f6badf311e888fab05a3d4131559f98152f8589d49b35c7b034e306617726ca4",
+            "kind": "ACCEPTED_HISTORICAL_BAR_PREFIX_NOT_NEW_FORWARD"
+          },
+          "status": "HISTORICAL_PIPELINE_ORDERS_OFF_PASS",
+          "symbol": "ZROUSDT",
+          "tiny_ready": false,
+          "tp1_qty": "4",
+          "tp2_qty": "6"
+        },
+        "sha256": "908737e88573bf79d80a92af25384b81ed1268082c0ef657c322659a8f481d25"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": false,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "UNCERTAIN_DISPATCH_NO_RETRY",
+          "remaining_qty": "0",
+          "scenario": "entry_api_error",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 1,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "c6e1411d8f02129594f2c39c1f2f4720a69bcad86c734227824553a927947415"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": false,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "UNCERTAIN_DISPATCH_NO_RETRY",
+          "remaining_qty": "0",
+          "scenario": "entry_rate_limit",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 1,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "a8cd3d814680a9704d939e2d470b04e9d26d2ca2eed7022f97f719cca4ae7f26"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0.6000",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "UNCERTAIN_DISPATCH_NO_RETRY",
+          "remaining_qty": "10",
+          "scenario": "tp1_api_error",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 2,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "e402dc44bb50f2eec4f0d5c920ddb8bd454ce1356beeeaf715140dbff7b945be"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0.83280",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "UNCERTAIN_DISPATCH_NO_RETRY",
+          "remaining_qty": "6.0",
+          "scenario": "tp2_api_error",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 3,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "0"
+        },
+        "sha256": "5e8eefe8039076e23976c2a35917f9a5c36759b47750d8f726fd35478fc24216"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0.9600",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "UNCERTAIN_DISPATCH_NO_RETRY",
+          "remaining_qty": "0",
+          "scenario": "reduce_race_api_error",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 2,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "6a58fafe27b5b03aa34de596b5cb9c0a44ef26081f0bf45b07e9640c60df354b"
+      },
+      {
+        "receipt": {
+          "entry_qty": "0.20",
+          "final_costs_proven": false,
+          "financial_actor_selected": false,
+          "money_authority": false,
+          "orders_allowed": false,
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "remaining_qty": "0.000",
+          "schema": "PUMP4_ACCOUNT_OWNER_MEMORY_E2E_V1",
+          "shared_account_lease_verified": true,
+          "source_bound_scope_and_go": "FICTIONAL_FIXTURE_ONLY",
+          "status": "MEMORY_WIRE_FULL_CYCLE_PASS",
+          "tp1_qty": "0.080",
+          "tp2_qty": "0.120",
+          "unique_wire_requests": 3
+        },
+        "sha256": "79cc758962273d36b071d8e56fe58efbc8f7f6409244a32702b36abb810fd015"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": false,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "UNCERTAIN_DISPATCH_NO_RETRY",
+          "remaining_qty": "0",
+          "scenario": "intent_reply_loss",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 1,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "e4f8d96ff99e2711f1116dfd9a682b9f9b666a4a0d1a3676ee3627776dc1fdf4"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0.6000",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": false,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "NATIVE_PROTECTION_UNKNOWN",
+          "remaining_qty": "10",
+          "scenario": "missing_native_stop",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 1,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "27536e56909807dc8083758bca252173640458412e0417c4fb5505bb431be3ee"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "0.1800",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "3"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "PARTIAL_SPLIT_UNREPRESENTABLE",
+          "remaining_qty": "3",
+          "scenario": "unrepresentable_partial",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 1,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "625bfd212f3b5de83e0ca03d43a6ef09e78000785695deb48bf3441f5fb50038"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.18200",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": "ACTUAL_COSTS_UNKNOWN",
+          "remaining_qty": "0.0",
+          "scenario": "unknown_costs",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 3,
+          "status": "BLOCKED",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "6.0"
+        },
+        "sha256": "323b3dd548ce9f951f8321b552466e5eb5144d6987492282c456575628180d4e"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.18200",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": null,
+          "remaining_qty": "0.0",
+          "scenario": "normal",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 3,
+          "status": "PROTOCOL_ORDERS_OFF_REHEARSAL_PASS",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "6.0"
+        },
+        "sha256": "8b7f5e23480a7b7866bf2866d145d3cf794e437b8d9026a3ad908ccc23c1b945"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.18200",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": null,
+          "remaining_qty": "0.0",
+          "scenario": "entry_reply_loss",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 3,
+          "status": "PROTOCOL_ORDERS_OFF_REHEARSAL_PASS",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "6.0"
+        },
+        "sha256": "4833f7ebe7f733466a553519f79f285b10db7fdd62cfc8326016180bd416cc61"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.18200",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": null,
+          "remaining_qty": "0.0",
+          "scenario": "tp1_reply_loss",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 3,
+          "status": "PROTOCOL_ORDERS_OFF_REHEARSAL_PASS",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "6.0"
+        },
+        "sha256": "c80fcee8428dc9ab5919711f0e9d02b0811e84d960b577fb7ebabff6d342dfac"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.18200",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "4",
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": null,
+          "remaining_qty": "0.0",
+          "scenario": "partial_entry",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 3,
+          "status": "PROTOCOL_ORDERS_OFF_REHEARSAL_PASS",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "6.0"
+        },
+        "sha256": "5403411a42edbc26e494eff4862152b79837d3b6dd44624b9d504d724b327cc4"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.18200",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": null,
+          "remaining_qty": "0.0",
+          "scenario": "partial_tp1",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 4,
+          "status": "PROTOCOL_ORDERS_OFF_REHEARSAL_PASS",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "6.0"
+        },
+        "sha256": "57217059ca30ae2a2fd2a8149bc6c405fe1de684aac2fd77fff40e30ec8da3e5"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.19280",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": null,
+          "remaining_qty": "0",
+          "scenario": "native_stop_race",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 2,
+          "status": "PROTOCOL_ORDERS_OFF_REHEARSAL_PASS",
+          "tiny_ready": false,
+          "tp1_filled": "4.0",
+          "tp2_filled": "0"
+        },
+        "sha256": "50f7c87cd8eaf04f7ee3bf68ff8fe7c1cf718d7b14187f380dcf1887de2d38cf"
+      },
+      {
+        "receipt": {
+          "actual_cost_source": "NOT_VERIFIED",
+          "duplicate_order_links": 0,
+          "fee_fixture_usdt": "1.1820",
+          "funding_fixture_usdt": "0.01",
+          "instrument_minimums": "FIXTURE_QTY_STEP1_ONLY_NOT_REAL_SOURCE",
+          "margin_and_risk_policy": "NOT_ACCEPTED",
+          "money_authority": false,
+          "native_protection_verified": true,
+          "orders_allowed": false,
+          "partial_entry_protection_sizes": [
+            "10"
+          ],
+          "production_owner_gateway": "NOT_IMPLEMENTED",
+          "real_broker_requests": 0,
+          "real_broker_writes": 0,
+          "reason": null,
+          "remaining_qty": "0",
+          "scenario": "time_exit",
+          "schema": "PUMP4_BYBIT_WHOLE_PROTOCOL_REHEARSAL_V1",
+          "simulated_create_calls": 2,
+          "status": "PROTOCOL_ORDERS_OFF_REHEARSAL_PASS",
+          "tiny_ready": false,
+          "tp1_filled": "0",
+          "tp2_filled": "0"
+        },
+        "sha256": "798a0530ad2466174be574f594f89c8bf85d0e3406653bf402903dc437f6c1e5"
+      }
+    ]
+  },
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "manager_wrapper_sha256": "352f4b06183cb10c185494de2d50c8c9abce1d18720b21cc71d1813a6ef299d2",
+  "observed_ms": 1792770501331,
+  "protected_static_pins_unchanged": 64,
+  "pump4_units_present": false,
+  "remote_writes": 0,
+  "schema": "PUMP4_ACCOUNT_OWNER_INDEPENDENT_VPS_READBACK_V1",
+  "source_files_verified": 81,
+  "status": "PASS_UNSELECTED"
+}

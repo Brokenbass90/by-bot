@@ -1,0 +1,58 @@
+{
+  "accepted_monthly_source_files_unchanged": 53,
+  "actual_broker_evidence": "../money_review_20261023/net-exit-broker-reconciliation.json",
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "budget": {
+    "candidate_capital_ceiling_usd": "400",
+    "leverage": false,
+    "loss_admission_usd": "8",
+    "loss_semantics": "Monthly aggregate realized plus unrealized <= -8 latches new BUY durably; custody continues; separate OWNER GO required to reset; not guaranteed maximum loss",
+    "maximum_gross_usd": "280",
+    "maximum_positions": 4,
+    "maximum_single_entry_usd": "168",
+    "restricted_cash_reserve_usd": "40"
+  },
+  "classification": "OFF_PROTOCOL",
+  "cost_finality_proven": false,
+  "exit_count": 1,
+  "issued_owner_go": false,
+  "missing_inputs": [
+    "actual_monthly_selection",
+    "approved_validity_interval",
+    "cash_and_cost_source_context",
+    "final_operational_config",
+    "fresh_entry_window_broker_readback",
+    "legacy_retirement_capture",
+    "signed_owner_scope"
+  ],
+  "money_authority": false,
+  "old_exit": "SPENT_NO_REPEAT_NO_NOV2_EXIT",
+  "orders_allowed": false,
+  "private_review_envelope_sha256": "9e2f1ab46d30309c5cf837590ec9c351f3b9825c0a2f5d9cfba7c5ead7d85d10",
+  "retirement_proposal": {
+    "observer": "GET_ONLY_UNCHANGED",
+    "operation": "disable --now alpaca-oct15-owned-manager.timer",
+    "preserve_account_lock": true,
+    "preserve_go_claims_halt_journal": true,
+    "required_checks": [
+      "Fresh independent broker flat/all orders terminal + exact original entry/exit ownership",
+      "Source/lease/unit pins match; no unresolved dispatch/job/process",
+      "Separately confirmed exact owner retirement operation",
+      "Existing capture_retirement verifies all four financial units and original cron/process/source closure"
+    ],
+    "service_kill": false,
+    "shop": "REMAIN_DISABLED",
+    "status": "REVIEW_ONLY_NOT_AUTHORIZED_NOT_EXECUTED",
+    "unit_file_mutations": 0
+  },
+  "schema": "MONTHLY_ACTUAL_TERMINAL_TRANSITION_REVIEW_V1",
+  "sealed_ms": 1792764166189,
+  "standing_source_files": 45,
+  "status": "ACTUAL_TERMINAL_SEAL_VALIDATED_REVIEW_NOT_AUTHORITY",
+  "terminal_entry_qty": "0.325167779",
+  "terminal_exit_qty": "0.325167779",
+  "transition_sha256": "bb5363f3361f8e8230a664488f7aea742490e93be3d0c4173fd3b4b195a2a67d",
+  "units_changed": 0,
+  "validated_with": "EXISTING_READ_LEGACY_TRANSITION_AND_OWNERSHIP_VALIDATOR"
+}

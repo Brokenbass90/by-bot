@@ -1,5 +1,11 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT23Oct latest completed gate: PUMP4 account owner178local/same178VPS PASS,
+unselected/no money authority; physical runner/admission next, independent of NET
+fee settlement. Monthly actual terminal seal accepted; LOCAL exact400/280/40/8
+productionCLI E2E PASS. Retirement/final config/owner scope still pending. Read
+[account owner](PUMP4_ACCOUNT_OWNER_2026_10_23.md), [actual Monthly handoff](ALPACA_MONTHLY_ACTUAL_NET_HANDOFF_2026_10_23.md), then checkpointTOP. No repeat NET exit.
+
 CURRENT23Oct17:02CY: ownerR4NETexit EXECUTED; independent brokerGET FLAT/noorders,
 stop canceled, ledger empty. Sold.325167779 at311.888; gross+.216561740814 before
 fees. Cash496.31, pendingregfees.02; netfinality PENDING. PersonalGO SPENT/no retry/

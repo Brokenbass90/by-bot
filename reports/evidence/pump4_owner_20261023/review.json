@@ -1,0 +1,29 @@
+{
+  "actual_effort": "high",
+  "actual_model": "gpt-6-astra",
+  "final_reviewer_rerun": false,
+  "final_root_regressions": true,
+  "findings": [
+    {
+      "fix": "Immutable directory path/device/inode binding checked before reservation and final wire",
+      "id": "R1",
+      "issue": "Replacing send-barriers directory could evade previous send barrier",
+      "regression": "test_relocated_barrier_directory_cannot_resend_the_same_entry",
+      "status": "REPRODUCED_RED_ROOT_FIXED_GREEN"
+    },
+    {
+      "fix": "Entry ticket binds full sizing evidence; final wire checks oldest observation/instrument/quote time and unchanged ticket bytes",
+      "id": "R2",
+      "issue": "Final ENTRY wire guard omitted oldest instrument evidence",
+      "regression": "test_entry_ticket_includes_aging_instrument_evidence_at_final_wire",
+      "status": "REPRODUCED_RED_ROOT_FIXED_GREEN"
+    }
+  ],
+  "metadata_turn_context_line": 10,
+  "money_authority": false,
+  "orders_allowed": false,
+  "requested_model": "gpt-6-astra",
+  "review_scope": "NEW_ACCOUNT_OWNER_AND_TESTS_ONE_SCOPED_REVIEW",
+  "schema": "PUMP4_ACCOUNT_OWNER_REVIEW_V1",
+  "thread_id": "01a16965-16e7-7193-98b2-7710b6367f70"
+}

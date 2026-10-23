@@ -1,0 +1,20 @@
+{
+  "driver_sha256": "c3bdcab61785891ae0a5d23e57b36c4ebea4e667bf1d83e13147a1c6d9dc1efd",
+  "final_normalization": "capital_usd=400.0 in synthetic owner scope",
+  "fixture_inputs": [
+    "capital400",
+    "single_entry168",
+    "reserve40",
+    "loss_admission8",
+    "fictional_cash496.31"
+  ],
+  "fixture_output_instrumentation": true,
+  "full_cli_rehearsal": "LOCAL_ONLY_EXISTING_ACCEPTED_RUNNER",
+  "initial_failure": "Scope capital literal400 differs from existing normalized expected400.0; fixture only; production sources unchanged",
+  "live_risk_limits_relaxed": false,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "schema": "MONTHLY_OWNER400_FIXTURE_CHANGE_REVIEW_V1",
+  "source_and_selector_monkeypatched": false,
+  "unchanged_production_sources": 53
+}

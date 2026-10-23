@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT23Oct — NEXT COMPLETED MONEY GATE: PUMP4 ACCOUNT OWNER COMPONENT PASS.
+Read reports/PUMP4_ACCOUNT_OWNER_2026_10_23.md and
+reports/ALPACA_MONTHLY_ACTUAL_NET_HANDOFF_2026_10_23.md first.
+178local/same178VPS exactPASS,81files/28imports/0fallback/18memoryreceipts,
+material45143de325ebd6e5d0b9ef70c42bff18bffd52021c2582eb7ede1a3d9e381a49.
+Existing AccountLease/SignedPostOnce/LifecycleJournal/Pump4Lifecycle reused;
+source-bound one-lifecycle admission, cost-inclusive sizing, durable entry loss
+latches and custody after expiry/revocation/restart delivered. One astra/high
+review(actual metadata verified) found barrier-directory substitution + missing
+instrument freshness; root reproduced RED/fixed, final full suite passed twice.
+VPS candidate UNSELECTED; no real profile/GO/PUMP financial unit.64selectedNETpins
+unchanged,53Monthly sources unchanged. Next PUMP exact physical owner verifier/
+original lock/profile/causal H1 runner wiring + actual ORDERS_OFF admission and
+risk/alert packet; real TINY requires separate exact OWNER GO. No fees wait.
+Monthly ACTUAL NET terminal seal validated using existing ownership validator;
+privateSHA bb5363f3361f8e8230a664488f7aea742490e93be3d0c4173fd3b4b195a2a67d.
+False-authority review envelope updated. LOCAL fullproductionCLI budget400/gross280/
+reserve40/single168/loss8: PASS,58symbols/8ticks/2entries/1rotation/0duplicates,
+lostresponses/restart/pendingfees/finality. Initialfixture400 vs canonical400.0
+scope failure retained/corrected only in fixture; no production financial change.
+Actual NET sale SPENT/broker-flat at14:02 remains datedtruth, finalfeespending.
+OldNETtimer not retired; final cash/cost/config/retirement/scope/owner authority
+remain, then30Octclosedselection/2Novfreshwindow. No financialcommand, order,
+unit/source selection, lock/HALT/claim change. Queue Alpaca→PUMP→Polymarket→KITY.
+
 CURRENT23Oct14:02:46UTC /17:02:46CY — OWNER EXIT EXECUTED; BROKER FLAT PASS.
 Human personally ran newR4launcher once inwindow. Actual NET market sell filled
 23Oct14:00:23.456730UTC,qty.325167779 at311.888. Independent9GET confirms no positions/

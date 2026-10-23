@@ -21,6 +21,17 @@ never retry/Nov2exit. Sourcebacked cost/cash/terminal handoff and exact retireme
 Monthly authority remain. No agent financialcommand/units mutation/MonthlyBUY.
 PUMP owner/admission code next while pendingfees; order unchanged.
 
+**23Oct completed account-owner delta:** [PUMP4 account owner](reports/PUMP4_ACCOUNT_OWNER_2026_10_23.md)
+178local/same178VPS PASS; global lease/send-once/durable one-lifecycle admission,
+source/cost sizing and entry latches delivered, one reviewed/fixed pair of defects.
+UNSELECTED/no real financial unit; exact physical runner/profile/causal-H1 wiring,
+actual ORDERS_OFF admission and separate TINY scope/GO next. No dependence on NET
+commission finality. [Monthly actual handoff](reports/ALPACA_MONTHLY_ACTUAL_NET_HANDOFF_2026_10_23.md):
+actual terminal seal validated; LOCAL400/280/40/loss8 fullCLI E2E PASS, no duplicates.
+53Monthly/64NET selected pins unchanged. Final retirement/config/cost authority
+and scheduled30Oct/2Novfacts remain; no LIVE activation. Claude continues own
+Polymarket/Brain/Factory queue; no messages or research-code changes by Codex.
+
 ## Единственный roadmap и кто обновляет что
 
 Каноническая версия — **этот путь в ветке `codex/recovery-20260824` репозитория
