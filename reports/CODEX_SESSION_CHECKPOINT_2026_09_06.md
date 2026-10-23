@@ -1,5 +1,31 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT23Oct MORNING — PUMP4 ACTUAL SOURCE/ACCOUNT COMPONENT CLOSED; NET PERSONAL EXIT TODAY.
+Read PUMP4_REAL_SOURCE_ACCOUNT_2026_10_23.md. Code f5a517ff013b2c0299ee8e67241293d48a24d283;
+material c8fb58823efd7a8cb5ff11b1777d69b8a183b5d56e3448f67a39595b8cc7f110.
+151local/same151VPS PASS,83files/37imports/0fallback, networkdenied/unshare-net.
+275publicGET:136/137 continuous1000seed+closedH1+actualnextopen; HFTexplicitunavailable,
+no replacement. All136 actual source→producer→restart duplicate checksPASS,
+0signals/0prospectivecredits; late06UTCbootstrap is never an entry. 9actualaccountGET(8auth+1public)
+06:40UTC bracket1458ms:flat/noorders/REGULAR_MARGIN/no borrow,942fee rows with
+2.75/5.5/11bps rates. Per-capaccountidentity/rawhash/cursor/timing/APIshape validated;
+account/info lacks API time, updatedTime never freshness. API-shaped observations
+feed existing lifecycle; empty costs remain UNKNOWN. Strict stoptick reject,
+40/60 lot-only fits124/137 gross30;12minimumblocked+HFTunavailable. Funding current
+cap/constantgross30/168h stress up50.40 is scenario, never bound/forecast.
+One actualastra/high review found quote-relative risk undercount, reproduced and
+fixed RED/GREEN;28targetedreviewPASS,60rootnew tests. Originalfrozenstop untouched.
+TINY_BLOCKED: account-wide financialowner/sendonce/day-week-DDlatches and fully
+sourcebound riskcost admission next; risk50/30/R1/etc proposals NOT authority.
+NET06:20UTC/09:20CY actualGET:originalopen, no acceptedDAYstop premarket,
+yesterdayexpired; managerWAITING_REGULAR_SESSION. Opening13:30UTC/16:30CY needs
+fresh actualstopproof. Exact personal exit alreadyGO TODAY23Oct17:00–17:05CY,
+manifest0df85b21…d6449, human-onlylauncher bd437caf…28ca03 unchanged/notrun;
+do NOT askagain or invoke/schedule agent-side. Afterhumancommand GET flat/orders/
+terminal/cost, no automatic Monthlyactivation/legacyretirement. All53Monthly
+sources/9financialpins andforeignallowlist unchanged. No broker/financial writes.
+Prior CURRENT blocks below historical; next code owner/gateway/latches, no audit.
+
 CURRENT22Oct19:05UTC — EXACT NET EARLY EXIT CHAT GO ACCEPTED.
 Owner answered «GO: выйти из NET по этому пакету 23 октября» for manifest
 0df85b21e48e8d087a60e181b7e0e89eba287ec280b65eb4c69af949d75d6449.

@@ -1,6 +1,7 @@
 {
+  "account_bundle_get_requests": 9,
   "actual_native_stop_test": "NOT_RUN",
-  "authenticated_bybit_get": 9,
+  "authenticated_bybit_get": 8,
   "base_commit": "aedb291e38876c4dea523e01fa645387903ed6cb",
   "broker_writes": 0,
   "checkout_fallback": 0,
@@ -13,7 +14,8 @@
   "orders_allowed": false,
   "prospective_decisions_credited": 0,
   "public_bootstrap_ready": 136,
-  "public_get": 275,
+  "public_census_get_requests": 275,
+  "public_get": 276,
   "remaining": [
     "account-wide financial owner/send-once/loss latches",
     "versioned stop tick quantization rule or exact-tick admission",

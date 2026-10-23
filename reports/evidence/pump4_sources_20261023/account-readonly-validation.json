@@ -1,5 +1,6 @@
 {
   "account_metadata_clock_basis": "AUTHENTICATED_REQUEST_RECEIVE_BRACKET_ONLY",
+  "authenticated_get_requests": 8,
   "borrowed_funds": false,
   "bracket_ms": 1458,
   "broker_get_requests": 9,
@@ -16,6 +17,7 @@
   "open_orders_empty": true,
   "orders_allowed": false,
   "positions_flat": true,
+  "public_quote_get_requests": 1,
   "remote_writes": 0,
   "started_ms": 1792737606559,
   "status": "ACTUAL_CAPTURE_PARSE_PASS",

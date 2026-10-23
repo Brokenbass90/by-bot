@@ -6,10 +6,12 @@
 экономические преимущества, Brain проверяет портфельную пользу. AI не получает
 самостоятельного права менять LIVE, риск, судью или финансовые разрешения.
 
-**Создан:**10.04.2026. **Актуализирован:**22.10.2026 — NET early-exit decision packet; PUMP4 lifecycle91local/VPS PASS; KITY C2 signal parity.
+**Создан:**10.04.2026. **Актуализирован:**23.10.2026 — PUMP4 actual source/account151local/VPS PASS; approved personal NET exit today.
 **CURRENT STATUS: PARTIAL.** Проверенные компоненты и репетиции существуют;
 непрерывная автономная Factory и автономный денежный Monthly ещё не доказаны.
 Это обновление исходного документа, не новый roadmap и не новый financial GO.
+
+**23Oct execution delta:** [PUMP4 actual-source/account component](reports/PUMP4_REAL_SOURCE_ACCOUNT_2026_10_23.md), code`f5a517f`:151local/same151VPS,136 actual closedH1/intake/restart checks,9accountGET(8auth+1public). 0current signals/0prospectivecredits. HFTexplicitQA skip, no universe rewrite. Actualfees/funding/minimums preserved; diagnostic is not financial admission. Next account-wide owner/sendonce/latches + fullysourcebound TINY risk; no calendar wait or authority expansion. NET06:20UTC premarket had no acceptedDAYstop; opening proof and alreadyapproved human-only17:00–17:05Cyprus exit remain operational next gates. Monthly sources/financialpins unchanged; actual terminal/cost handoff pending. Earlier dated rows below are history.
 
 ## Единственный roadmap и кто обновляет что
 
