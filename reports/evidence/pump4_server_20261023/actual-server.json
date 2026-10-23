@@ -1,0 +1,852 @@
+{
+  "account_flat": true,
+  "account_source_sha256": "de802d8644cfc9c90587fb41bd5ff00f214c5688beaf0db3a3ab213e8439d878",
+  "authenticated_get_requests": 9,
+  "bootstrap_or_replay_only": true,
+  "broker_writes": 0,
+  "census": 137,
+  "duplicate_decisions": 0,
+  "financial_owner_constructed": false,
+  "money_authority": false,
+  "orders_allowed": false,
+  "original_lock_not_replaced": true,
+  "physical": {
+    "expected_inode": 818853,
+    "lock_held": true,
+    "original_lock_inode": 818853,
+    "owner_active": true,
+    "pid": "2734312",
+    "unit": "kity-execution-micro-owner.service"
+  },
+  "physical_owner_status": "EXISTING_OWNER_BUSY_NO_SECOND_WRITER",
+  "policy": "PROPOSAL_ONLY_NOT_OWNER_APPROVED",
+  "prospective_decisions_credited": 0,
+  "restart_replay_duplicates": 136,
+  "rows": [
+    {
+      "decision_id": "pump4-03884e0829f48583ab62b6bdd827ff4ee854ce2ea33b67b438456b05880a1fb2",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "1000BONKUSDT"
+    },
+    {
+      "decision_id": "pump4-541e63829ddfd67e1a4daa770fd7dbaa9183f97ba031a8cb9239861983bbc1fd",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "decision_id": "pump4-1980393774b073c46a55116e8923ad1396012d4ce68088f9f514b2502e3b274b",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "1000RATSUSDT"
+    },
+    {
+      "decision_id": "pump4-ceeb302462c0d5078434239947f6ca706380265e7cbd371bbf48969eba45f049",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "decision_id": "pump4-e5b88bd042fdfcbe0120a6d6c7ce99c46d23248e1200e1573e718ad828d0b12c",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ACEUSDT"
+    },
+    {
+      "decision_id": "pump4-9485e42a210269552e04e184d24d1b208d51c726fe8069e415f4ee54dbf2d161",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ACTUSDT"
+    },
+    {
+      "decision_id": "pump4-53a4e65309ef013de44fef6e87001be170478c578a0f87b5d31f1e27da4dcb3d",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ADAUSDT"
+    },
+    {
+      "decision_id": "pump4-f1bf833b28675e0c66379f21295bd9c39448582eff191c76770bea045779b5fd",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "AEROUSDT"
+    },
+    {
+      "decision_id": "pump4-8b776a0ba07b131ed637755d48aaf2b5a2008d0ce9ebd8da03f942cd5234e094",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "AKEUSDT"
+    },
+    {
+      "decision_id": "pump4-1d0fff1df545eb65d74ced7996cd48e81de13bf7d7c7b10fe32a024e2a04a2ee",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "decision_id": "pump4-6f58f250ca4851cd4454a90892fb601e2e68e77f2e87e7a6375ffae57f099a23",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ALLOUSDT"
+    },
+    {
+      "decision_id": "pump4-bef20f05d55ecf15f84debcb06b9b31c80ca2cd0f9de68942771a728311a181d",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "APTUSDT"
+    },
+    {
+      "decision_id": "pump4-3366edbe89d8799800130e6f684e5ee5fc8260eeab6397bea40a9fe250219aac",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ARBUSDT"
+    },
+    {
+      "decision_id": "pump4-d83cad93ff0016a651bf268a87ef2806eec9985a0511ad44c5ce330336874995",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ASTERUSDT"
+    },
+    {
+      "decision_id": "pump4-3d85592caeac5f742568f05350d499af006ec77696e28024f3adff67be6a7220",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ATOMUSDT"
+    },
+    {
+      "decision_id": "pump4-270e01b61edf5359f56421d35b23c40fae2c388ecf1b27f3dce954b00e34d406",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "decision_id": "pump4-6876c695e73c752beba5a5e857854123db6f39f715402df79025305d8495f703",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "decision_id": "pump4-1911068c3646b143c616fc24b695e971b6faea38b9c443d7af29a0288f38e0ab",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BANKUSDT"
+    },
+    {
+      "decision_id": "pump4-ce95221c61883942a8fac53876b4804e3a1c6ae281122c8eb6232dc7528c1fb0",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BCHUSDT"
+    },
+    {
+      "decision_id": "pump4-7ea5dc4f442bc647b7589308511475c67c50324e4cb5e206e3a9d92f1931e499",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BEATUSDT"
+    },
+    {
+      "decision_id": "pump4-214fca5a830d42549626aa452ebec49395adc6561100818bde6b071e4d780169",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BICOUSDT"
+    },
+    {
+      "decision_id": "pump4-c431d44b59dbdfe799134ac4ec666d306545a6ce9ccfdf10e0c3e674edb1a18d",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BIOUSDT"
+    },
+    {
+      "decision_id": "pump4-08a7a5bf7765d798541fbc9f226fcf4c140f056030cb92567bf3c7d1f20cf1c1",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "decision_id": "pump4-3a29e51f9560d798092357ab8aadee9c63283ee969a95ba691d5f45cd15c5525",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BLUAIUSDT"
+    },
+    {
+      "decision_id": "pump4-41a2b7d40b956b8266952742c4f02ac1aa39511a61112f47b9f50438d9ab103e",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BMTUSDT"
+    },
+    {
+      "decision_id": "pump4-99791b09abba426fbe24cf8a66baf637203fc9b178d388fce875582fc8428e4f",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "decision_id": "pump4-5e400aa441636320152c6c14a8d571ea4b74a866f94173bfcf444472faace341",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "decision_id": "pump4-3d424d071f2260ce83677da39fb7c5c23ceec4651edd45668b7c54ac0b4bcdb5",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BROCCOLIUSDT"
+    },
+    {
+      "decision_id": "pump4-aef221b80e5d4371c04cf63542887be93dc54c618979961472c853a4838c323c",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "decision_id": "pump4-f463f76e9258511e5b934befe9759548af3d95e46ec0be4cec5731806317a86c",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BTRUSDT"
+    },
+    {
+      "decision_id": "pump4-812a6d6e7c448818c98213311812ccb0d447acb3ca7601d2058ccffe5a7f6e3a",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "BZUSDT"
+    },
+    {
+      "decision_id": "pump4-71aacc760c77da4dbb71ed1caf9633a48424dd523001f7d6720e56473b3a8606",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "C98USDT"
+    },
+    {
+      "decision_id": "pump4-adf32b5c4b412770ce064da2b24b9ca1f85fa625a064f810e3563571e82198fc",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "CBRSUSDT"
+    },
+    {
+      "decision_id": "pump4-e5c698b1798c7c5e89a44e95f20169f96f18c6a66ddd2ff71e653ebc31367b0a",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "CCUSDT"
+    },
+    {
+      "decision_id": "pump4-fb51c2a56d6f3b8ca47594986deb71e1ba6cfb8e239faa648cfda1d15c12c028",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "CLUSDT"
+    },
+    {
+      "decision_id": "pump4-9d4eecdd30c0477f1ebc81e9b5dd4913045089f2bb8edf8c7bf9b9a3200ef559",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "COAIUSDT"
+    },
+    {
+      "decision_id": "pump4-066ea46398debf33c7d6fac2caf13f2cde92eafb6f4022a2e71d6f703830f6a2",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "COOKIEUSDT"
+    },
+    {
+      "decision_id": "pump4-a1dbf0a41af09e9d7fd04b00dfab2a1454501240bdc9babc25e83fb59e67382d",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "COTIUSDT"
+    },
+    {
+      "decision_id": "pump4-2e368d6e8d9fc0c559bfdb26a4e5051cbbc39ff86649e39583d20c1d8a927af1",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "CRCLUSDT"
+    },
+    {
+      "decision_id": "pump4-ecaa74956a12c11d9ece02fd43f84732c4803e7460d57d4bf702f0927d9ea7cd",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "CRVUSDT"
+    },
+    {
+      "decision_id": "pump4-f11811057f77964e55d770198a1baf2814c00b6813fb04cad3d5428030675ac1",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "CYSUSDT"
+    },
+    {
+      "decision_id": "pump4-821b9e855d9a2c0216a841af56b44f251eb34c2b527c0246cb7fcd2ad014e531",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "DEXEUSDT"
+    },
+    {
+      "decision_id": "pump4-f21a516c55fa1dd7797b02a897e3edd7588494734807c34225e7a71df7b0e81f",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "decision_id": "pump4-b7093f7045b77de23bace3704c19529e16b5df74851641f3e93e15e925f2ace9",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "DRAMUSDT"
+    },
+    {
+      "decision_id": "pump4-ccfccbc0c6ac4189a20734c1bfaccb7af932a9c8223d35a3faaab0bc53c2180b",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ENAUSDT"
+    },
+    {
+      "decision_id": "pump4-505cd5a0a9cc91203c5bdcfdf335b87528cb8beca10b5240c547ef4de25e16de",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "EPICUSDT"
+    },
+    {
+      "decision_id": "pump4-9f15f48d2d3c2f336abe753035d7aefe2f6ca443d1b61e9014b019012b606ca5",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "decision_id": "pump4-839d920a5ccce5878ef252a98cff10e3da480e5f46ae88a03c72eca0810859d5",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ESPUSDT"
+    },
+    {
+      "decision_id": "pump4-b26bb04069da853eedb62efcc82daf2f3afb20cead0efa3a740af20e96fe8af7",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ETCUSDT"
+    },
+    {
+      "decision_id": "pump4-3a57ff1f35f81de28b4990e69c67df3103589287222bd4ba1c816871ba24acce",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "decision_id": "pump4-6727b9fc1a0a62d2ac7f7d4ec6192de20ca7962bc59abd0931e2c8bacb98e355",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ETHUSDT"
+    },
+    {
+      "decision_id": "pump4-c7d6ed81e833d61d95470f20268f902d9ab5a3484571accf768752c5f19c3aa1",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "EWYUSDT"
+    },
+    {
+      "decision_id": "pump4-9e52b21bb4a043ef1a9f3b4cc6d6ecbf7fb1a12659ab24181a190efad2d12a03",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "decision_id": "pump4-1e0ade9b35fbf814fad971f718132ab0a59913ffcbadb24f0cf0755253db7547",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "FILUSDT"
+    },
+    {
+      "decision_id": "pump4-481ef54596f79b2d36aa1177aabfd76baee2479305e99d33d45fe997f2142db6",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "GALAUSDT"
+    },
+    {
+      "decision_id": "pump4-bb4bb6a6e53ee0340a4a062d37a293f53ebb9b311a15979c18dfa3e90528b2fd",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "decision_id": "pump4-0fb0ed2e809b1406bbe4d6d125b6e8edc87e784034ad7b39d0c891fc677ed765",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "GUNUSDT"
+    },
+    {
+      "decision_id": "pump4-848bb5382fcc48ffe116a99978f3b6ec2a17abb33b55a3710b80ddf7669a4160",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "GWEIUSDT"
+    },
+    {
+      "decision_id": "pump4-a80132dac8c3bed5d0d42264059389d694ea677b874b64e59522a589322d557c",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "HBARUSDT"
+    },
+    {
+      "decision_id": "pump4-a3fe8a26a598b6ecdfeb5ab6871a41bc9283d842ca31f21f16c9d88df4952e74",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "HEIUSDT"
+    },
+    {
+      "status": "UNAVAILABLE_INSTRUMENT",
+      "symbol": "HFTUSDT"
+    },
+    {
+      "decision_id": "pump4-297dec70ebf306b4db58939de94bbdfbc8c09514372d363ff9112c76dd0e011f",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "HOMEUSDT"
+    },
+    {
+      "decision_id": "pump4-6d3f8878bbcefc39347d6f9c2f4a6329de2a2be61ce50bda808c443a0a04f082",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "decision_id": "pump4-c0514601e2595ffa61816aab17179f375ffc0f19ad30a99475700a4fedb37fea",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ICPUSDT"
+    },
+    {
+      "decision_id": "pump4-86e0002d8f7555cba635f7c75d046e8b48c19358f38a3e87a658eb184433abd8",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "INJUSDT"
+    },
+    {
+      "decision_id": "pump4-d56683d24e4d359211521d3a819b0fe838c9637acb00c42bedfb61a492bcb025",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "INTCUSDT"
+    },
+    {
+      "decision_id": "pump4-6461e698c2665ee96521c901bd545becfe92ac1ba068b9238301a5ee306134d4",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "JTOUSDT"
+    },
+    {
+      "decision_id": "pump4-7ea9e938c5418efcd98058ce44625b2b2b1e989cadab7375d849b0b7ab1a14eb",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "KAITOUSDT"
+    },
+    {
+      "decision_id": "pump4-b9ba4c95f8aff494fc47bef4d3e7fc2787e1cea804ffbdb3624086dfcd070ab5",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "LAUSDT"
+    },
+    {
+      "decision_id": "pump4-4704f88e5a1af7e92c495fc2d96414f7eb33088394e4db42b4e91fdb01cebd71",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "LDOUSDT"
+    },
+    {
+      "decision_id": "pump4-16188c8a3d18d394047048ecd9fccaf7f9802a6a8d8a758a02aa4926f529c06c",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "LITEUSDT"
+    },
+    {
+      "decision_id": "pump4-aded8135937d9fb526fb93382e95c19bbccfb97b7b37737c0c408b1b0caea768",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "LITUSDT"
+    },
+    {
+      "decision_id": "pump4-908c0622e1bc1f47185469b7961387451cbf0e1ead9fa8694278b28a019ea62c",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "METAUSDT"
+    },
+    {
+      "decision_id": "pump4-044d55c35f7354250987c85de7b57837b8c0f22b0bb611e93b4481e64a26b981",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MEUSDT"
+    },
+    {
+      "decision_id": "pump4-20b7004f2f4de63a6ce8de413a4ceca219e1d1d8a26d11d2529b2715edeadc7a",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MMTUSDT"
+    },
+    {
+      "decision_id": "pump4-a5ece69d483b26ade9afed6c86a1b7f7efe7fcf519c04aefa375bca041feb107",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MNTUSDT"
+    },
+    {
+      "decision_id": "pump4-2d29e9e6b89eaa281ec193a6a916ffa474a705c9164ef4e6d71aa4acb7d77538",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MONUSDT"
+    },
+    {
+      "decision_id": "pump4-03ca5fa62c85ecb39c19cd3df4654bce2b61b5ef0c56890a3219b2e0f750f613",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MRVLUSDT"
+    },
+    {
+      "decision_id": "pump4-da994d005cf73d73e7e0e0b3fe77e147858d04de2ef43dec2c53f47a5c0743fe",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MSFTUSDT"
+    },
+    {
+      "decision_id": "pump4-d4029392eb7ce2b52a572a41c827955efd0f1bea4eba17873cd45ec6d139de35",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MSTRUSDT"
+    },
+    {
+      "decision_id": "pump4-5014b009a5c7775f88d35f59f1e336a882937dbb453b1593f64a1301a39d2d9b",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "decision_id": "pump4-e7b00594d25b453e260d742efe48f4d9b67c52132dd5752b9496220cfe9a1701",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "MUUSDT"
+    },
+    {
+      "decision_id": "pump4-758e5ae9cb6bd0b9f2d3a365923d0ffd8448686122a7e7a1413092f61438550e",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "NBISUSDT"
+    },
+    {
+      "decision_id": "pump4-b95148e74f21b6e0336a32594ee49387916daea7e27de0e82c8b05775d2f4f0a",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "NILUSDT"
+    },
+    {
+      "decision_id": "pump4-a2c87f5e41de1db513e8f5fc2a07e02346f73ee328dff4007df549ce4a3f6e88",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "NVDAUSDT"
+    },
+    {
+      "decision_id": "pump4-ab38369b9bd55a2455109d3fd0788f3d581a887be6f5a9ebf0a1831bd1219284",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "decision_id": "pump4-5fa75fc3261cf24cf9b74bb215bec03f16d2458261dd9a320a9e99209f189a1b",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "OPUSDT"
+    },
+    {
+      "decision_id": "pump4-933b65b8005dfcb5e70165e7d13348822ebe62b9922004be699cdf48a2dee450",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ORDIUSDT"
+    },
+    {
+      "decision_id": "pump4-aee2861715f504d110904160ebb9e1c88d6bcd181f4095b868db48409e66ccf8",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "PAXGUSDT"
+    },
+    {
+      "decision_id": "pump4-eeae5d356edd1dc049a6b8e8dfad7ac957df757f48ed48aa8b79342661c28d6a",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "PENGUUSDT"
+    },
+    {
+      "decision_id": "pump4-ef5bbcd105bcc9eb8717ca82e94e159f81ba99962313f57a1e2f46ae341f6222",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "PEOPLEUSDT"
+    },
+    {
+      "decision_id": "pump4-2beace8099e697a479204930bf85539d57dd82e328d21ad81e63162ba33e9507",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "PLTRUSDT"
+    },
+    {
+      "decision_id": "pump4-3599103444a022fcb83c2c0b209c9fb963b6f5e433082446fd1ae7a0b356e6b9",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "POLUSDT"
+    },
+    {
+      "decision_id": "pump4-9f1365d15eab649d000097082369117a33c9ff67931fe2a892d8a9a043fb3800",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "PUMPFUNUSDT"
+    },
+    {
+      "decision_id": "pump4-695220ea060bae10191425e084aa278f5a3c121af33a67ff651a38bdeacf6107",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "QQQUSDT"
+    },
+    {
+      "decision_id": "pump4-f81f3f6e0204be478108724eb69107a66c674a411232781a0f0907a511bef1c7",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "RENDERUSDT"
+    },
+    {
+      "decision_id": "pump4-4557c3eec1200274309dead7cc0c862ec4e0537965b359b653e2cdba005f0a60",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "RKLBUSDT"
+    },
+    {
+      "decision_id": "pump4-648a9efaa23f2ddcdd9e261333ed8b0e3449d82c634832fe8a95db345876eac9",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ROBOUSDT"
+    },
+    {
+      "decision_id": "pump4-03095722cfe352c0b07b5574817b8d0ea08dd1fbeac85468ee4a0425724f1878",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SEIUSDT"
+    },
+    {
+      "decision_id": "pump4-c8757a4b1f2a1305f14025bf2205fdd9d2c5217f48a2a6f1df05f8323ef1b736",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SHIB1000USDT"
+    },
+    {
+      "decision_id": "pump4-f57e0d5c0163033b2af53ca7da6c3eb930e1886c407dbebb6fad7e81b0c5750c",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SIRENUSDT"
+    },
+    {
+      "decision_id": "pump4-40b379864cd0977c3f3b88c7bb04dc51d075a151699c512ddffe5f2432e01d77",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SKYAI1USDT"
+    },
+    {
+      "decision_id": "pump4-5f621a060ef9cc7254299b5ea4802be13fe05783a467d589ba57e6884391c2e6",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SNDKUSDT"
+    },
+    {
+      "decision_id": "pump4-242e5da5222002095871a8e979790669a42940e84e7acac8523008d66fb9a21d",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SOLUSDT"
+    },
+    {
+      "decision_id": "pump4-2727c07b3e603f3a3bc88059d5c3d6fc4b3fe4d4f34863b7a2507325f47dc4ac",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SOXLUSDT"
+    },
+    {
+      "decision_id": "pump4-dcdab3f1428cc392c81fb918f331b4bcbf68aa70a122587e8f69f60831fc5284",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SQDUSDT"
+    },
+    {
+      "decision_id": "pump4-47c8b7e68af706f5856c3009c5d08827c82cdcadb2d1657d99570ad5d5082e61",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "STRKUSDT"
+    },
+    {
+      "decision_id": "pump4-65f5a42b9ffde35afe122da984db4ff185ced9df3ddf8310a1ee74c51dc7319b",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "SUIUSDT"
+    },
+    {
+      "decision_id": "pump4-1fb3003c01f59d1507ff882d5c93fd8682a42a075d5946f5f31e27879493e081",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "TAOUSDT"
+    },
+    {
+      "decision_id": "pump4-5ff49c6363cda87e6a478650a54a97fd08ebaa5b97bc94c93e16c5725b2a2b8b",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "THEUSDT"
+    },
+    {
+      "decision_id": "pump4-3e0432a6b0acce0ec8921f39d9d5544fa144a5ed89d50c230959b21778299d23",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "TIAUSDT"
+    },
+    {
+      "decision_id": "pump4-9d63b303f949e3fd35896d9acf114045bdd92374d5c74daa751b565556f3e9b5",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "TRUMPUSDT"
+    },
+    {
+      "decision_id": "pump4-48c2d5a515a08c6b6808a7b8a5503a717a7c5d43fb2306d467d6e270a6f1f1d2",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "TRXUSDT"
+    },
+    {
+      "decision_id": "pump4-991fcd6ae946764d8c98e0378edf02e570f20a6183654901bdbd304cd7f7e991",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "TSLAUSDT"
+    },
+    {
+      "decision_id": "pump4-d2861e421c66459d0388fe346e266741358b75229a6446ca83fd8ea655f8d2b3",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "TUTUSDT"
+    },
+    {
+      "decision_id": "pump4-26814a8817d4eab5989d17838aa4fd1a7ddc4d5ffef48225f8115159825aae84",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "UBUSDT"
+    },
+    {
+      "decision_id": "pump4-04c487a812ed2e197328ea4c2e033bb57f1c4845fb6ca29f335a6275e30b74a9",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "UNIUSDT"
+    },
+    {
+      "decision_id": "pump4-4fa6200f69e53955860ad6e6284735d9c63561670ad4d7d4d8376c5039a81ebe",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "USDCUSDT"
+    },
+    {
+      "decision_id": "pump4-43239e3ad09b94650bb13f75277b2dbbcd14973bfb514561d538cb8608fad52e",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "USELESSUSDT"
+    },
+    {
+      "decision_id": "pump4-f009c811d9f24eb8f0ca953bcd795b511dfbac3cfb8680e894da4d4746e5f805",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "USUSDT"
+    },
+    {
+      "decision_id": "pump4-632df4be3efa8ef92c6a4b42f98363fd040503b32e6dd41a32450d952765ff14",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "VELODROMEUSDT"
+    },
+    {
+      "decision_id": "pump4-e661684176be0010d49061c6b176f166a139db21bca47cb712f498bbbb6dae48",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "VIRTUALUSDT"
+    },
+    {
+      "decision_id": "pump4-23f5d49e6a92feeedc7177066e2749ee0c95ea43bf4790cbb8f9a7286b057499",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "decision_id": "pump4-2a14a66a69b7b61ecc43079e64d1032a5569d7b6e46738891d3a49ff94e8e2ea",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "WIFUSDT"
+    },
+    {
+      "decision_id": "pump4-5f22324f65ade75d3ddb4080dd32be96a16cadd6f282b4a2eb266f3cbbcc5ee7",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "WLDUSDT"
+    },
+    {
+      "decision_id": "pump4-1e89c1607705a26b5a08cced1e57148260be49c247bfebf505fe1dc44bc5f3f1",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "WLFIUSDT"
+    },
+    {
+      "decision_id": "pump4-e45314fc232f569ccd4af79d55fb7f23b2a40e1f52f44eb53a459f125938215e",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XAGUSDT"
+    },
+    {
+      "decision_id": "pump4-32c9a08797ba081b76cd24dd8d3bb3756227d7d3c13c30c93efbba72cf086df1",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XANUSDT"
+    },
+    {
+      "decision_id": "pump4-6e69174416bb3441a1754419081800e818bbdf32a81827c729664dfff4d78af5",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "decision_id": "pump4-281a11c649531c16ea2f5b0d2af9131d7c43a27cfe8fb784c9a5c06a1c1e8786",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XAUUSDT"
+    },
+    {
+      "decision_id": "pump4-5da8ac6b1710b1427f68af5ae5196ee761c1c16db7c7a5c0a372c3043f0c83dc",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XLMUSDT"
+    },
+    {
+      "decision_id": "pump4-435889b9baa43052cbc977ee1bf2ac299720d5a3394f327afbd3abf6341adb08",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XMRUSDT"
+    },
+    {
+      "decision_id": "pump4-1725ed6cb3bc03d59d767a793e913ef6393921590319e1d5afd53d9b8ac31a7f",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "decision_id": "pump4-6e1d35fc5e3025414bd639be92d0dbadf70f2969c908de5d5e1575849ef61dc2",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "XRPUSDT"
+    },
+    {
+      "decision_id": "pump4-5e50aa9a352fa07b17070e06514d49706504f9630044f225de132636581d01f9",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ZBTUSDT"
+    },
+    {
+      "decision_id": "pump4-f2f7fdb1758a931eafba83a19e9af3b445ee482082cb43ba504f3c88192cc001",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ZECUSDT"
+    },
+    {
+      "decision_id": "pump4-512170dfd016604ecaddb02dbe92441d24ed4ede1499809b11780cb5c889369a",
+      "signal_present": false,
+      "status": "CLOSED_H1_INTAKE_PASS",
+      "symbol": "ZROUSDT"
+    }
+  ],
+  "schema": "PUMP4_SERVER_ACTUAL_ORDERS_OFF_CYCLE_V1",
+  "source_archive_sha256": "650274467d224658ada5d03c83c3e6be8e6a728ddbcad8621216064cd93c7754",
+  "source_intake_pass": 136,
+  "status": "DATA_COMPONENT_PASS_FINANCIAL_NOT_SELECTED",
+  "tiny_ready": false
+}

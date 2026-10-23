@@ -1,0 +1,22 @@
+{
+  "actual_effort": "high",
+  "actual_model": "gpt-6-astra",
+  "deferred_minors": [
+    "DATA_COMPONENT_PASS aggregate is not sufficient evidence when source_intake_pass=0; inspect counts/rows. Actual accepted run has136/137.",
+    "Server receipt authenticated_get_requests field currently counts9 total account calls; actual transport is8authenticated+1public, not9authenticated."
+  ],
+  "important_findings": [
+    {
+      "issue": "Re-sealed changed historical seed reused old decision but reported new source hash",
+      "regression": "test_resealed_changed_seed_history_cannot_reuse_old_decision_lineage",
+      "status": "ROOT_REPRODUCED_RED_FIXED_GREEN_FINAL184LOCAL_AND_VPS"
+    }
+  ],
+  "metadata_turn_context_line": 10,
+  "money_authority": false,
+  "monthly_review": "Initial v1 reviewed; no additional Important/Critical finding; v2 HALT/config proposal root-verified, not a second independent signoff",
+  "orders_allowed": false,
+  "schema": "MONEY_RUNNER_COMPLETION_REVIEW_V1",
+  "thread_id": "01a16a75-cd1a-7a80-95cd-c56249949203",
+  "v2_authority_ruling": "Separate proposed Monthly entry control and validity require explicit new scope approval; original legacy HALT retained. If approved incorrectly, this could reopen entries under an unintended control; no deployment or GO occurred."
+}

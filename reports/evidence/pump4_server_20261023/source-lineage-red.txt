@@ -1,0 +1,27 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_resealed_changed_seed_history_cannot_reuse_old_decision_lineage _____
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-642/test_resealed_changed_seed_his0')
+
+    def test_resealed_changed_seed_history_cannot_reuse_old_decision_lineage(tmp_path):
+        from research_lab.pump4_server_cycle_v1 import analyze
+        s=create(tmp_path/'fixture') if (tmp_path/'fixture').mkdir() is None else None
+        o,e,t,c,f,l=s
+        try:
+            x,p=inputs(e,now=t[0]);src=archive(tmp_path)
+            args=dict(fingerprint=FP,now_ms=t[0],physical={})
+            analyze(tmp_path/'data',src,x,p,o.scope['policy'],**args)
+            z=src/'symbols/ZROUSDT.json';r=json.loads(z.read_bytes());cap=r['captures'][0]
+            cap['body']['result']['list'][-1][5]='999'
+            cap['raw']=json.dumps(cap['body']);cap['raw_sha256']=hashlib.sha256(cap['raw'].encode()).hexdigest()
+            r['source']=closed_h1(r['captures'],'ZROUSDT',next_open_ms=NOW,observed_ms=NOW+2)
+            z.write_text(json.dumps(r));seal=json.loads((src/'receipt.json').read_bytes());seal['source_capture_files']['symbols/ZROUSDT.json']=hashlib.sha256(z.read_bytes()).hexdigest();(src/'receipt.json').write_text(json.dumps(seal))
+>           with pytest.raises(ValueError,match='SOURCE_HISTORY_CONFLICT'):analyze(tmp_path/'data',src,x,p,o.scope['policy'],**args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE ValueError
+
+tests/test_pump4_server_cycle_v1.py:91: Failed
+=========================== short test summary info ============================
+FAILED tests/test_pump4_server_cycle_v1.py::test_resealed_changed_seed_history_cannot_reuse_old_decision_lineage
+1 failed, 5 deselected in 0.35s

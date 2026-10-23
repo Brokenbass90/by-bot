@@ -1,5 +1,29 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT23Oct latest bounded completion — MONTHLY EXACT REVIEW + PUMP SERVER DATA.
+Read ALPACA_MONTHLY_OPERATIONAL_PACKET_2026_10_23.md / PUMP4_SERVER_ORDERS_OFF_2026_10_23.md.
+Monthly fresh9GET flat/noorders/cash496.31/pending.02. Real fullsource exposed
+original NET BUY FOREIGN_FILL; exact sealed entry inclpartials nowclassified,
+unknownorders stillblocked.247local/same247VPS PASS, material86d5c7c7f88433126b69467f9a439eb5be2529da59bf514626892eb8f2e1d8da.
+Actual pending.02 legacy/Monthly0. Exact45pin operational config stagedDISABLED/
+PROPOSED, actual23Oct58source/preview/repeat PASS; templates systemdverify0.
+V1 reused oldHALT and wasblocked. V2 new Monthly-local ENTRY_HALT/newruntime/no
+adoption is PROPOSED NEW ENTRY AUTHORITY, not budgetGO continuation. LegacyHALT
+30ca600d…51be23 retained; original lock813893. Scope3401fc4ccf71334cc446b186306ccf6fe98d11b35e4ae3d66ac9a0bc3852917e,
+proposed validity2Nov14:30UTC→1Feb2027 00UTC requires explicitownerapproval;
+capital400/gross280/reserve40/single168/4positions/loss8 unchanged. NoGO/installed
+financialunits/retirement/activation. Future30Octselection/2Novfreshchecks remain.
+PUMP GET-only server FINAL184local/same184VPS PASS,85files/32imports,
+material15a9d213a79c44ae0aef4766903459d56c31659e27134a4ec95225d5f11b043c.
+Actual136/137H1 +136duplicates/0signals/0prospective, HFTunavailable.9accountGET=
+8auth+1public; rawfieldlabel minor retained. OriginalKITYowner2734312 holds
+lock818853; NOsecondfinancialowner/lease. One reviewed historical-lineage defect
+RED→GREEN fixed; aggregatezero-source status minor deferred/usecounts.
+NEXT PUMP financial server wrapper/physical verifier + original-owner handoff,
+timely causal admission/risk/alert packet, then exactTINYGO. DATA CLI has no money
+mode. FeesNET are NOT dependency.64selectedNETpins/HALT unchanged. No Polymarket,
+KITY, Brain/Factory expansion; those remain after these two lines/Claude scope.
+
 CURRENT23Oct — NEXT COMPLETED MONEY GATE: PUMP4 ACCOUNT OWNER COMPONENT PASS.
 Read reports/PUMP4_ACCOUNT_OWNER_2026_10_23.md and
 reports/ALPACA_MONTHLY_ACTUAL_NET_HANDOFF_2026_10_23.md first.

@@ -50,3 +50,13 @@ One critical astra/high review, two reproduced/fixed regressions. Actual NET
 terminal seal validated; local Monthly400/280/40/8 fullCLI E2E PASS. Next same
 Task5: pinned physical runner/profile/original account lease and closed-H1 wiring,
 then actual ORDERS_OFF sizing/alert/risk packet. No real activation or fee wait.
+
+23Oct owner continuation after13a16e8: complete exact Monthly operational review
+packet first; real GET showed original NET buy inside complete source incorrectly
+classified FOREIGN_FILL. Ruling: fix exact sealed legacy entry classification,
+not source omission or model-limit relaxation; keep original LIVE pins unchanged.
+Then one DATA-only server process joins existing PUMP H1/account/owner adapter;
+original Bybit owner is active and holds inode818853, so physical handoff is a
+real separate owner operation, never create another lease/financial process.
+No new Polymarket/KITY/Brain work. One bounded review of changed financial code,
+server runner and exact Monthly packet; root fixes confirmed findings via TDD.

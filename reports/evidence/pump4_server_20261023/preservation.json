@@ -1,0 +1,10 @@
+{
+  "broker_writes": 0,
+  "legacy_halt_unchanged": true,
+  "monthly_config_verified_until_missing_owner_GO": true,
+  "new_financial_units_installed": false,
+  "observed_ms": 1792787978087,
+  "protected_selected_files_unchanged": 64,
+  "remote_readback_writes": 0,
+  "status": "PASS_UNSELECTED_NO_GO"
+}

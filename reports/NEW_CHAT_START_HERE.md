@@ -1,5 +1,12 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT23Oct: [Monthly exact operational packet](ALPACA_MONTHLY_OPERATIONAL_PACKET_2026_10_23.md)
+READY_FOR_EXACT_OWNER_REVIEW,247local/same247VPS; real58source/previewPASS.
+NewMonthly entry-control/validity is explicit proposal, legacyHALT untouched,
+noGO/retirement/financialunit. [PUMP server](PUMP4_SERVER_ORDERS_OFF_2026_10_23.md)
+184local/same184VPS +actual136/137H1/136replay/0signals; DATA-only, original
+KITYlease busy. Next financialwrapper/handoff/timelyTINYadmission; no third line.
+
 CURRENT23Oct latest completed gate: PUMP4 account owner178local/same178VPS PASS,
 unselected/no money authority; physical runner/admission next, independent of NET
 fee settlement. Monthly actual terminal seal accepted; LOCAL exact400/280/40/8

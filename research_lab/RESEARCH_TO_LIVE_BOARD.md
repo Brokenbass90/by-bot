@@ -1,5 +1,13 @@
 # Trading OS — единая доска доведения до первой версии
 
+23Oct newest execution delta: [Monthly exact packet](../reports/ALPACA_MONTHLY_OPERATIONAL_PACKET_2026_10_23.md)
+247local/same247VPS PASS; actual complete NET buy/sell classification corrected,
+pendinglegacy.02/Monthly0. V2 exact config/newMonthly entry-control/validity ready
+for explicitownerreview, noGO/retirement/unitactivation. [PUMP server DATA](../reports/PUMP4_SERVER_ORDERS_OFF_2026_10_23.md)
+184local/same184VPS; actual136H1/136duplicates/0signals/HFTskip. Financialwrapper/
+original-owner handoff/timelyentry remains BLOCKED; no second owner, no netfee
+wait. Monthly/PUMP before Polymarket/KITY; canonical roadmap unchanged.
+
 23Oct latest completed gate: [PUMP account owner](../reports/PUMP4_ACCOUNT_OWNER_2026_10_23.md)178local/same178VPS COMPONENT_PASS, UNSELECTED/TINY_BLOCKED; original physical owner runner/profile/causalH1 wiring and actual source admission next. [Monthly actual handoff](../reports/ALPACA_MONTHLY_ACTUAL_NET_HANDOFF_2026_10_23.md): terminal seal actualPASS; LOCAL400/280/40/8 fullCLI PASS. Financial retirement/config/scope pending, no activation. NET sale spent/broker-flat dated14:02, feespending not zero. PUMP engineering independent of fees; canonical order unchanged.
 
 23Oct morning delta: [PUMP4 real sources/account](../reports/PUMP4_REAL_SOURCE_ACCOUNT_2026_10_23.md) `f5a517f` COMPONENT_PASS,151local/same151VPS,136 actual source→intake→restart checks,9accountGET(8auth+1public). 0new signals/0prospectivecredits; latebootstrap never entry. HFTexplicitQA skip retained in137. Actualfees differ; gross30 lot-only fits124,12blocked. One reviewed quote-risk fix closed. Financial owner/gateway/latches + fullybound TINY admission NEXT; no LIVE. NET06:20UTC premarket no acceptedDAYstop, actual opening confirmation pending; human-only approved23Oct17:00–17:05Cyprus exit preserved, neveragent-run. Monthly53sources/9VPSpins unchanged. This is derived from canonical roadmap; earlier deltas historical.

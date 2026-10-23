@@ -32,6 +32,16 @@ actual terminal seal validated; LOCAL400/280/40/loss8 fullCLI E2E PASS, no dupli
 and scheduled30Oct/2Novfacts remain; no LIVE activation. Claude continues own
 Polymarket/Brain/Factory queue; no messages or research-code changes by Codex.
 
+**23Oct latest completed gate:** [Monthly exact operational packet](reports/ALPACA_MONTHLY_OPERATIONAL_PACKET_2026_10_23.md)
+247local/same247VPS +actual58source/restartPASS; complete actual NET buy/sell fee
+classification fixed, pendinglegacy.02/Monthly0. Exact v2 config/new Monthly entry
+control and proposed validity ready for separate owner review; originalHALT/lock
+preserved, no activation. [PUMP actual DATA server](reports/PUMP4_SERVER_ORDERS_OFF_2026_10_23.md)
+184local/same184VPS,136H1/136restartduplicates/0signals, HFTexplicitunavailable.
+Financialwrapper/physicalverifier/original-owner handoff and timely entry admission
+remain; originalKITYowner holds818853, no second writer. FeesNET do notblock PUMP.
+Finish these lines before Polymarket/KITY expansion. No new research/financialGO.
+
 ## Единственный roadmap и кто обновляет что
 
 Каноническая версия — **этот путь в ветке `codex/recovery-20260824` репозитория
