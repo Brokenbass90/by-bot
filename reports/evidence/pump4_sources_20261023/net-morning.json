@@ -1,0 +1,13 @@
+{
+  "broker_get_requests": 6,
+  "broker_writes": 0,
+  "capture_sha256": "f8ff0c15174be88404d1fb7269d9016fa19f5614a71b31e434596a9de6f407c5",
+  "historical_snapshot_not_current_protection": true,
+  "net_open": true,
+  "next_regular_open_utc": "2026-10-23T13:30:00Z",
+  "observed_ms": 1792736406065,
+  "open_net_order_count": 0,
+  "protection_status": "NO_ACCEPTED_DAY_STOP_PREMARKET",
+  "remote_writes": 0,
+  "schema": "NET_23OCT_READ_ONLY_SANITIZED_V1"
+}

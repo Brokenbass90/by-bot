@@ -1,0 +1,29 @@
+{
+  "actual_native_stop_test": "NOT_RUN",
+  "authenticated_bybit_get": 9,
+  "base_commit": "aedb291e38876c4dea523e01fa645387903ed6cb",
+  "broker_writes": 0,
+  "checkout_fallback": 0,
+  "current_signal_count": 0,
+  "frozen_universe": 137,
+  "local_tests": 151,
+  "material_sha256": "c8fb58823efd7a8cb5ff11b1777d69b8a183b5d56e3448f67a39595b8cc7f110",
+  "net_broker_get": 6,
+  "network_denied": true,
+  "orders_allowed": false,
+  "prospective_decisions_credited": 0,
+  "public_bootstrap_ready": 136,
+  "public_get": 275,
+  "remaining": [
+    "account-wide financial owner/send-once/loss latches",
+    "versioned stop tick quantization rule or exact-tick admission",
+    "fully source-bound risk/fees/funding budget and 40/60 sizing under owner TINY policy",
+    "future fresh causal signal and separate precise owner execution authority"
+  ],
+  "remote_financial_writes": 0,
+  "schema": "PUMP4_REAL_SOURCE_GATE_20261023_V1",
+  "source_files": 83,
+  "status": "COMPONENT_PASS_TINY_BLOCKED",
+  "tiny_ready": false,
+  "vps_same_tests": 151
+}

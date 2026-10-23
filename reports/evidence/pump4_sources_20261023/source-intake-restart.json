@@ -1,0 +1,23 @@
+{
+  "bootstrap_signals": 0,
+  "broker_writes": 0,
+  "census": 137,
+  "diagnostic_results": [],
+  "financial_admission": "BLOCKED_LATE_BOOTSTRAP_AND_UNAPPROVED_AUTHORITY",
+  "late_bootstrap": true,
+  "money_authority": false,
+  "orders_allowed": false,
+  "prospective_decisions_credited": 0,
+  "raw_account_sha256": "4cb1b8890e93c8749ade14ca24169eca430b91f5152738f5609bc19cbe9fb770",
+  "raw_public_receipt_sha256": "fbdaafa512a019c577fe161263d09ac07df8a74152015fd33b1ada3082b74f06",
+  "schema": "PUMP4_ACTUAL_CAPTURE_SOURCE_INTAKE_RESTART_RECEIPT_V1",
+  "source_hour_open_ms": 1792735200000,
+  "source_intake_restart_pass": 136,
+  "status": "COMPONENT_PASS_TINY_BLOCKED",
+  "unavailable": [
+    {
+      "status": "UNAVAILABLE_INSTRUMENT",
+      "symbol": "HFTUSDT"
+    }
+  ]
+}

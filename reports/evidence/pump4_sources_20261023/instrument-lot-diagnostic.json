@@ -1,0 +1,1509 @@
+{
+  "instruments": [
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "2000",
+      "minimum_gross": "6.2840000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "1000BONKUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1500",
+      "minimum_gross": "6.8910000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "1000PEPEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "300",
+      "minimum_gross": "5.46900",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "1000RATSUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.6540",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "7.4730",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "AAVEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "34.0",
+      "minimum_gross": "5.058520",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ACEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "570",
+      "minimum_gross": "5.015430",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ACTUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.6540",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "25",
+      "minimum_gross": "5.4125",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ADAUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "10",
+      "minimum_gross": "7.9290",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "AEROUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "500",
+      "minimum_gross": "17.7050000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "AKEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.0790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "46.0",
+      "minimum_gross": "5.001120",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ALGOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "25",
+      "minimum_gross": "5.06000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ALLOUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.7090",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "6.50",
+      "minimum_gross": "5.027100",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "APTUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.7090",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "27.5",
+      "minimum_gross": "5.009400",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ARBUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "10",
+      "minimum_gross": "7.0020",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ASTERUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.9690",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "3.0",
+      "minimum_gross": "5.38800",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ATOMUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1.0",
+      "minimum_gross": "9.3020",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "AVAXUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1000",
+      "minimum_gross": "6.140000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BANANAS31USDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "200",
+      "minimum_gross": "5.18200",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BANKUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "14.2485",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BCHUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "70",
+      "minimum_gross": "5.08900",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BEATUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "15.750",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "307.0",
+      "minimum_gross": "5.0034860",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BICOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "210",
+      "minimum_gross": "5.03580",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BIOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "50.40",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "650",
+      "minimum_gross": "5.134350",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BLESSUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "50.40",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "600",
+      "minimum_gross": "5.039400",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BLUAIUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "185",
+      "minimum_gross": "5.051425",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BMTUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "37.1595",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "BNBUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "8000",
+      "minimum_gross": "5.0304000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BOMEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "250",
+      "minimum_gross": "5.091250",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BROCCOLIUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.09790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.005",
+      "minimum_gross": "408.91150",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "BTCUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "85",
+      "minimum_gross": "5.27340",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BTRUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "5.4990",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "BZUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "329.5",
+      "minimum_gross": "5.0051050",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "C98USDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "5.5580",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "CBRSUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "50",
+      "minimum_gross": "5.14950",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "CCUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "1.68210",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "5.04400",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "CLUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "20",
+      "minimum_gross": "5.3920",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "COAIUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "550",
+      "minimum_gross": "5.022600",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "COOKIEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "450",
+      "minimum_gross": "5.001750",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "COTIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.7250",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.10",
+      "minimum_gross": "8.7520",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "CRCLUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.9690",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "14.0",
+      "minimum_gross": "5.10580",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "CRVUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "45",
+      "minimum_gross": "5.0130",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "CYSUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "3.0",
+      "minimum_gross": "5.20500",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "DEXEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.6540",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "65",
+      "minimum_gross": "5.19155",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "DOGEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "1.890",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.5",
+      "minimum_gross": "23.7900",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "DRAMUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "5.4180",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "25",
+      "minimum_gross": "5.02800",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ENAUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "40",
+      "minimum_gross": "5.2680",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "EPICUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "620",
+      "minimum_gross": "5.003400",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ESPORTSUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "18.900",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "100",
+      "minimum_gross": "8.85100",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ESPUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.0790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1.0",
+      "minimum_gross": "7.8830",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ETCUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "8.0",
+      "minimum_gross": "5.25840",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ETHFIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.09790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "120.1835",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "ETHUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "1.890",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "7.6130",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "EWYUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "35",
+      "minimum_gross": "5.11910",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "FARTCOINUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "5.5",
+      "minimum_gross": "5.45930",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "FILUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.0790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "2640",
+      "minimum_gross": "5.000160",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "GALAUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "10",
+      "minimum_gross": "6.48000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "GRASSUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "2275",
+      "minimum_gross": "5.005000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "GUNUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "240",
+      "minimum_gross": "5.07120",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "GWEIUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "65",
+      "minimum_gross": "5.23055",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "HBARUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "46.0",
+      "minimum_gross": "5.048960",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "HEIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "status": "UNAVAILABLE_INSTRUMENT",
+      "symbol": "HFTUSDT"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1000",
+      "minimum_gross": "5.029000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "HOMEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.9690",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.10",
+      "minimum_gross": "7.82800",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "HYPEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.0790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "2.0",
+      "minimum_gross": "5.5500",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ICPUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.7090",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1.0",
+      "minimum_gross": "8.18900",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "INJUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.10",
+      "minimum_gross": "8.7600",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "INTCUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.300",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "11.0",
+      "minimum_gross": "5.08750",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "JTOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "20",
+      "minimum_gross": "5.3920",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "KAITOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "91.5",
+      "minimum_gross": "5.013285",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "LAUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "5.040",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "13.0",
+      "minimum_gross": "5.05180",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "LDOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "39.0715",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "LITEUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1.5",
+      "minimum_gross": "5.12085",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "LITUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "32.3900",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "METAUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "85",
+      "minimum_gross": "5.20795",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "40",
+      "minimum_gross": "5.65200",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MMTUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "9.5",
+      "minimum_gross": "5.120500",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MNTUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "230",
+      "minimum_gross": "5.004800",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MONUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "11.4315",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MRVLUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "25.8665",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MSFTUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "7.3970",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MSTRUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "95",
+      "minimum_gross": "5.100170",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "MUBARAKUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "1.890",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "44.0610",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "MUUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.7250",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "8.2130",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "NBISUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "60",
+      "minimum_gross": "5.05140",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "NILUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "10.7310",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "NVDAUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "5.4180",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "15",
+      "minimum_gross": "6.5625",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ONDOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.0790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "42.0",
+      "minimum_gross": "5.029500",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "OPUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.300",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1.35",
+      "minimum_gross": "5.13270",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ORDIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "7.3080",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.005",
+      "minimum_gross": "20.13305",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "PAXGUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "650",
+      "minimum_gross": "5.159700",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "PENGUUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "625",
+      "minimum_gross": "5.038125",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "PEOPLEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "9.8290",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "PLTRUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "55",
+      "minimum_gross": "5.05120",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "POLUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1500",
+      "minimum_gross": "6.9405000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "PUMPFUNUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.7250",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "35.3935",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "QQQUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.300",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "3.0",
+      "minimum_gross": "5.40300",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "RENDERUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.10",
+      "minimum_gross": "5.1970",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "RKLBUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "850",
+      "minimum_gross": "5.159500",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ROBOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "90",
+      "minimum_gross": "5.28750",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "SEIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1000",
+      "minimum_gross": "5.050000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "SHIB1000USDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "220",
+      "minimum_gross": "5.07320",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "SIRENUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "165",
+      "minimum_gross": "5.02920",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "SKYAI1USDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "64.8775",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "SNDKUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.5",
+      "minimum_gross": "52.1850",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "SOLUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "1.890",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.10",
+      "minimum_gross": "8.6510",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "SOXLUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "265",
+      "minimum_gross": "5.02705",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "SQDUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.300",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "95.5",
+      "minimum_gross": "5.022345",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "STRKUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.7090",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "50",
+      "minimum_gross": "49.86500",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "SUIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "5.4180",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.020",
+      "minimum_gross": "5.25080",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "TAOUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "95",
+      "minimum_gross": "5.07205",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "THEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "9.0",
+      "minimum_gross": "5.01480",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "TIAUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.7880",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "3.0",
+      "minimum_gross": "5.3460",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "TRUMPUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.6540",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "20",
+      "minimum_gross": "6.59400",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "TRXUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "18.8915",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "TSLAUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "270",
+      "minimum_gross": "5.048730",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "TUTUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "50",
+      "minimum_gross": "6.309000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "UBUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "1.0",
+      "minimum_gross": "7.2210",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "UNIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.30",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "5.0",
+      "minimum_gross": "5.00250",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "USDCUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "35",
+      "minimum_gross": "5.70255",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "USELESSUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "900",
+      "minimum_gross": "5.130000",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "USUSDT",
+      "taker_fee_rate": "0.0011"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "145",
+      "minimum_gross": "5.041795",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "VELODROMEUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.300",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "10",
+      "minimum_gross": "6.6340",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "VIRTUALUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "31.500",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.20",
+      "minimum_gross": "5.234400",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "VVVUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "25",
+      "minimum_gross": "5.02500",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "WIFUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.7090",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "9.5",
+      "minimum_gross": "5.24590",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "WLDUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.6780",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "95",
+      "minimum_gross": "5.17655",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "WLFIUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.36420",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.095",
+      "minimum_gross": "5.14995",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "XAGUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "50.40",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "570",
+      "minimum_gross": "5.013150",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "XANUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "7.3080",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.005",
+      "minimum_gross": "20.09570",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "XAUTUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.36420",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.005",
+      "minimum_gross": "20.12060",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "XAUUSDT",
+      "taker_fee_rate": "0.000275"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "30",
+      "minimum_gross": "5.34300",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "XLMUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "2.0790",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "30.4305",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "XMRUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "65",
+      "minimum_gross": "5.08235",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "XPLUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "4.0",
+      "minimum_gross": "5.29880",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "XRPUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "25.20",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "72.0",
+      "minimum_gross": "5.009760",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ZBTUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+      "funding_interval_minutes": 480,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "0.05",
+      "minimum_gross": "61.3110",
+      "status": "LOT_GROSS30_BLOCKED",
+      "symbol": "ZECUSDT",
+      "taker_fee_rate": "0.00055"
+    },
+    {
+      "constant_gross30_current_cap_168h_funding_scenario": "6.300",
+      "funding_interval_minutes": 240,
+      "funding_is_guaranteed_bound": false,
+      "minimum_40_60_qty": "3.0",
+      "minimum_gross": "5.36550",
+      "status": "LOT_ONLY_FITS_GROSS30",
+      "symbol": "ZROUSDT",
+      "taker_fee_rate": "0.00055"
+    }
+  ],
+  "summary": {
+    "blocked": [
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "37.1595",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "BNBUSDT",
+        "taker_fee_rate": "0.00055"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "2.09790",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.005",
+        "minimum_gross": "408.91150",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "BTCUSDT",
+        "taker_fee_rate": "0.00055"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "2.09790",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "120.1835",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "ETHUSDT",
+        "taker_fee_rate": "0.00055"
+      },
+      {
+        "status": "UNAVAILABLE_INSTRUMENT",
+        "symbol": "HFTUSDT"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "12.60",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "39.0715",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "LITEUSDT",
+        "taker_fee_rate": "0.000275"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "32.3900",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "METAUSDT",
+        "taker_fee_rate": "0.000275"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "1.890",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "44.0610",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "MUUSDT",
+        "taker_fee_rate": "0.000275"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "4.7250",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "35.3935",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "QQQUSDT",
+        "taker_fee_rate": "0.000275"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "64.8775",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "SNDKUSDT",
+        "taker_fee_rate": "0.000275"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "3.150",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.5",
+        "minimum_gross": "52.1850",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "SOLUSDT",
+        "taker_fee_rate": "0.00055"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "2.7090",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "50",
+        "minimum_gross": "49.86500",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "SUIUSDT",
+        "taker_fee_rate": "0.00055"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "2.0790",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "30.4305",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "XMRUSDT",
+        "taker_fee_rate": "0.00055"
+      },
+      {
+        "constant_gross30_current_cap_168h_funding_scenario": "4.1580",
+        "funding_interval_minutes": 480,
+        "funding_is_guaranteed_bound": false,
+        "minimum_40_60_qty": "0.05",
+        "minimum_gross": "61.3110",
+        "status": "LOT_GROSS30_BLOCKED",
+        "symbol": "ZECUSDT",
+        "taker_fee_rate": "0.00055"
+      }
+    ],
+    "capture_mix": "DATED_READ_ONLY_DIAGNOSTICS_NOT_ATOMIC_ENTRY_OR_QUOTE",
+    "census": 137,
+    "frozen_universe_taker_fee_rates": [
+      "0.000275",
+      "0.00055",
+      "0.0011"
+    ],
+    "lot_only_fits_gross30": 124,
+    "max_constant_gross30_current_cap_168h_funding_scenario": "50.40",
+    "money_authority": false,
+    "orders_allowed": false,
+    "schema": "PUMP4_ACTUAL_INSTRUMENT_LOT_ONLY_DIAGNOSTIC_V1",
+    "strategy_risk_or_stop_admission": "NOT_TESTED_NO_CURRENT_SIGNAL"
+  }
+}

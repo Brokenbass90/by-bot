@@ -1,0 +1,27 @@
+{
+  "account_metadata_clock_basis": "AUTHENTICATED_REQUEST_RECEIVE_BRACKET_ONLY",
+  "borrowed_funds": false,
+  "bracket_ms": 1458,
+  "broker_get_requests": 9,
+  "broker_writes": 0,
+  "capture_sha256": "4cb1b8890e93c8749ade14ca24169eca430b91f5152738f5609bc19cbe9fb770",
+  "completed_ms": 1792737608017,
+  "fee_symbols": 942,
+  "history_rows": {
+    "executions": 0,
+    "history": 0,
+    "transactions": 0
+  },
+  "margin_mode": "REGULAR_MARGIN",
+  "open_orders_empty": true,
+  "orders_allowed": false,
+  "positions_flat": true,
+  "remote_writes": 0,
+  "started_ms": 1792737606559,
+  "status": "ACTUAL_CAPTURE_PARSE_PASS",
+  "taker_fee_rates": [
+    "0.000275",
+    "0.00055",
+    "0.0011"
+  ]
+}

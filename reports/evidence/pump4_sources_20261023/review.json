@@ -1,0 +1,22 @@
+{
+  "effort": "high",
+  "final_root_targeted_tests": 60,
+  "findings": [
+    {
+      "fix": "use larger reference/adverse executable quote distance, reject quote wrong side of unchanged stop",
+      "issue": "quote-based fixed-stop risk understated",
+      "priority": "P2",
+      "regression": "original minNotional5 now CAPACITY_BLOCKED; minNotional3 qty.05 risk.7045<=R1; wrong-sidequote BLOCKED",
+      "reproduction": "short reference100 stop104 quote90 returnedqty.25 risk1 despite3.5 before slippage",
+      "status": "CLOSED",
+      "targeted_followup_tests": 28
+    }
+  ],
+  "initial_targeted_tests": 58,
+  "model": "gpt-6-astra",
+  "remaining_findings_in_reviewed_scope": [],
+  "reviewer_task": "/root/pump4_sources_review_20261023",
+  "runtime_rollout_id": "01a1677f-6646-7903-ac73-0946225745c2",
+  "schema": "PUMP4_BOUNDED_REVIEW_V1",
+  "verification": "ACTUAL_TURN_CONTEXT"
+}
