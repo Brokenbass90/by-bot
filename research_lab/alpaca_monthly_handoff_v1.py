@@ -113,7 +113,10 @@ def capture_retirement(policy,cid,*,now_ms):
             Transient='no',NeedDaemonReload='no',Job='',FragmentPath=expected['fragment_path'])
         if any(row.get(k)!=v for k,v in conditions.items()):raise ValueError('MONTHLY_LEGACY_NOT_RETIRED:'+unit)
         if unit.endswith('.timer'):
-            if (row.get('UnitFileState')!='disabled' or row.get('TriggeredBy')!=''
+            # A pinned timer without an [Install] section becomes static when
+            # its enablement symlink is removed. Inactivity/jobs/source/cron
+            # checks still apply; static does not mean an active schedule.
+            if (row.get('UnitFileState') not in {'disabled','static'} or row.get('TriggeredBy')!=''
                 or row.get('Triggers')!=unit.removesuffix('.timer')+'.service'):
                 raise ValueError('MONTHLY_LEGACY_TIMER_NOT_DISABLED:'+unit)
         elif (row.get('UnitFileState') not in {'static','disabled'}

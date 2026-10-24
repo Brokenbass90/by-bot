@@ -1,0 +1,60 @@
+import importlib.util, json, tempfile, unittest, hashlib, os, time
+from pathlib import Path
+from unittest.mock import patch
+spec=importlib.util.spec_from_file_location('ops',Path(__file__).with_name('monthly-operations.py'));ops=importlib.util.module_from_spec(spec);spec.loader.exec_module(ops)
+class Safety(unittest.TestCase):
+ def fixture(self):
+  return dict(account_before=dict(id='test'),account_after=dict(id='test',cash='496.31',pending_reg_taf_fees='.02',accrued_fees='0',trading_blocked=False,account_blocked=False),positions=[],open_orders=[],exit_order=dict(id='5d8a43a6-7aab-40e5-866f-ac5046813493',status='filled',side='sell',symbol='NET',filled_qty='0.325167779'),entry_order=dict(id='705a1b5b-1d45-4ba1-97cf-9c646033d78d',status='filled'),old_native_stop=dict(status='canceled',filled_qty='0'),native_ledger={},source_pins_match=True,coverage=dict(pagination_exhausted=True),broker_writes=0,remote_writes=0,observed_ms=time.time_ns()//1000000)
+ def test_install_pending_never_becomes_activation(self):
+  def unknown():raise ValueError('MONTHLY_COST_LIABILITY_UNCLASSIFIED')
+  self.assertEqual(ops.classify_costs('install',unknown),dict(status='COST_RECONCILIATION_PENDING',reason='MONTHLY_COST_LIABILITY_UNCLASSIFIED',classification=None))
+  with self.assertRaisesRegex(ValueError,'LIABILITY_UNCLASSIFIED'):ops.classify_costs('activate',unknown)
+ def test_other_cost_errors_never_bypassed(self):
+  def foreign():raise ValueError('MONTHLY_COST_FOREIGN_FILL')
+  for mode in ('install','activate'):
+   with self.assertRaisesRegex(ValueError,'FOREIGN_FILL'):ops.classify_costs(mode,foreign)
+ def test_actual_terminal_lineage_then_pending(self):
+  import sys,copy
+  root=Path(os.environ.get('MONTHLY_TEST_APP_ROOT',str(Path(__file__).resolve().parents[2])))
+  if not (root/'research_lab').is_dir():self.skipTest('local saved actual capture only')
+  sys.path.insert(0,str(root))
+  d=json.loads(Path(__file__).with_name('cost-blocker-private.json').read_bytes())
+  packet=Path(os.environ.get('MONTHLY_TEST_PACKET_ROOT',str(root/'.private/money_runner_completion_20261023/monthly-owner-packet-v2')))
+  seal=json.loads((packet/'legacy-transition.json').read_bytes());protocol=json.loads((packet/'protocol.json').read_bytes())
+  ops.terminal_activity_ownership(d,seal,protocol)
+  foreign=copy.deepcopy(d);foreign['activities'].append({**next(r for r in d['activities'] if r['activity_type']=='FILL'),'order_id':'foreign'})
+  def unknown():raise ValueError('MONTHLY_COST_LIABILITY_UNCLASSIFIED')
+  with self.assertRaisesRegex(ValueError,'FOREIGN_FILL'):
+   ops.terminal_activity_ownership(foreign,seal,protocol)
+   ops.classify_costs('install',unknown)
+  broken=copy.deepcopy(d);next(r for r in broken['activities'] if r['activity_type']=='FILL')['qty']='1'
+  with self.assertRaisesRegex(ValueError,'FILL_QUANTITY'):ops.terminal_activity_ownership(broken,seal,protocol)
+ def test_flat(self):ops.flat_capture(self.fixture(),'test')
+ def test_nonflat(self):
+  for field in ('positions','open_orders','native_ledger'):
+   d=self.fixture();d[field]=[dict(symbol='NET')]
+   with self.subTest(field=field),self.assertRaises(ValueError):ops.flat_capture(d,'test')
+ def test_terminal_and_account_conflicts(self):
+  for group,key,value in [('exit_order','status','accepted'),('exit_order','filled_qty','.3'),('exit_order','id','foreign'),('entry_order','id','foreign'),('old_native_stop','status','new'),('account_after','id','foreign'),('account_after','cash','399'),('account_after','trading_blocked',True),('account_after','accrued_fees','-1')]:
+   d=self.fixture();d[group][key]=value
+   with self.subTest(group=group,key=key),self.assertRaises(ValueError):ops.flat_capture(d,'test')
+ def test_stale_or_truncated(self):
+  for key,value in [('observed_ms',0),('broker_writes',1),('remote_writes',1),('source_pins_match',False),('coverage',dict(pagination_exhausted=False))]:
+   d=self.fixture();d[key]=value
+   with self.subTest(key=key),self.assertRaises(ValueError):ops.flat_capture(d,'test')
+ def test_no_rewrite_and_no_symlink(self):
+  with tempfile.TemporaryDirectory() as root:
+   p=Path(root).resolve()/'file';ops.create(p,b'first',0o600)
+   with self.assertRaises(FileExistsError):ops.create(p,b'second',0o600)
+   self.assertEqual(p.read_bytes(),b'first');self.assertEqual(p.stat().st_mode&0o777,0o600)
+   link=p.with_name('link');link.symlink_to(p)
+   with self.assertRaises(ValueError):ops.pin(link,hashlib.sha256(b'first').hexdigest())
+   with self.assertRaises(ValueError):ops.create(link,b'bad',0o600)
+ def test_wrong_owner_text_precedes_io(self):
+  with patch.object(ops.os,'geteuid',return_value=0),patch.object(ops,'pin',side_effect=AssertionError('must not reach IO')):
+   with self.assertRaisesRegex(ValueError,'EXACT_PERSONAL'):ops.run('activate',owner_text='yes')
+ def test_busy_service(self):
+  row=dict(ActiveState='inactive',SubState='dead',MainPID='0',ControlPID='0',Job='',DropInPaths='',NeedDaemonReload='no');ops.require_idle(row)
+  for key,value in [('Job','42'),('MainPID','42'),('ActiveState','active'),('DropInPaths','/override'),('NeedDaemonReload','yes')]:
+   with self.subTest(key=key),self.assertRaises(ValueError):ops.require_idle({**row,key:value})
+if __name__=='__main__':unittest.main()

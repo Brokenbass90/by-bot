@@ -1,5 +1,45 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT24Oct — MONTHLY PHYSICAL HANDOFF DONE / COST RECONCILIATION HOLD; PUMP COMPONENT193PASS.
+Read MONTHLY_INSTALLED_AND_PUMP4_SELECTED_COMPONENT_2026_10_24.md first.
+Owner accepted exact presented Monthly parameters/period/entrycontrol/ops inchat;
+agent never mints/runs financialGO. OldNETtimer actually retired under original
+lock813893. Four oldunits inactive/jobless; NETtimer static/no enablement, SHOP
+stilldisabled. ExactMonthlyservice installedinactive; newtimer disabled/inactive;
+64oldpins/globalHALT unchanged. No positions/orders/newGO/financialdispatch.
+Actual systemd static-after-disable exposed fixture gap:1line retirementfix,
+RED→GREEN/newsource7db2ac3c…4c3e1b9,248local/same248VPS PASS/53files/40imports.
+Newscope cf3202e4c53bd3b400fb93aa2c62a46947850fff5eb8e09c60b3a79000b3ecd2
+binds codefix/newcandidatepaths ONLY;400/280/40/4positions/single168/loss8 and
+2Nov14:30UTC→1Feb00UTC unchanged. Exactspec84ef3401…0c283a.
+Fresh9GET: flat/cash496.31; fees CAT15Oct.01 +CAT/REG23Oct.01each published,
+yet accountpending.02. MONTHLY_COST_LIABILITY_UNCLASSIFIED: not finalnet/zero.
+Install-only pending branch retains independent terminal/historyownership checks;
+activation stillhardblocks beforeGO/enable.10localopsPASS;9VPS/1privatefixtureSKIP.
+Auto-review denied full brokerfixture export; safe source-only staging succeeded.
+Owner-only command/README .private/monthly_activation_20261024/; HOLD until fresh
+cost reconciliationPASS. Do not rerunNET sale or ask again for approvedbudget.
+Newcandidate /opt/bybot-research/alpaca-monthly-e2e-20261018/candidate-7db2ac3cb3d5c753-tcf34dac2,
+owner-review-v3; runtime/monthly400-v3; actual23Oct57+SPYdisabledsourcePASS. No
+future30Octselection/2Novfreshentry attestation. NewMonthlyunitsinstalled supersedes
+older NOTINSTALLED rows below; no activation is implied.
+PUMP selected-owner factory +causal-plan validator LOCAL/API component accepted;
+explicit137symbolGETscope fixes legacy10-symbol modequery blocker (defaultKITY
+unchanged). ActualZRO/BLESS2GET one-way/zero-size PASS; not account-wide readiness.
+193local/same193VPS PASS/87files/34imports; source2c9ad60f…c8f1f3 stagedUNSELECTED.
+ActualKITY PID2734312 holds original818853; no newfinancialowner/unit/lease/GO/POST.
+Factory tests stubplatform, actual supervisor +causal-to-owner wiring stillOPEN;
+≤60s entrydelay is proposal, not researchrule/approvedfinancialpolicy. One bounded
+astra/highreview,2finalfactorytests rootonly; noTINY_READY claim.
+NEXT engineering: persistent PUMP supervisor joining existing actual H1 intake,
+causal admission and accepted soleowner/custody API; source/risk/alert/handoff/
+rollback ORDERS_OFF, then complete TINY packet/financialGO. Do not waitNETfees.
+Monthly nextfreshGET costproof; financialarming remains human-only. No Polymarket/
+KITY/Brain expansion. LIQ24Oct delivered;8daysallhashes verified; gaps retained,
+0prospective. Source/collector/epoch/researchcode/KARTA/Claude messages unchanged.
+Earlier rows below are dated history, not today's unit/authority state.
+
+
 CURRENT23Oct latest bounded completion — MONTHLY EXACT REVIEW + PUMP SERVER DATA.
 Read ALPACA_MONTHLY_OPERATIONAL_PACKET_2026_10_23.md / PUMP4_SERVER_ORDERS_OFF_2026_10_23.md.
 Monthly fresh9GET flat/noorders/cash496.31/pending.02. Real fullsource exposed

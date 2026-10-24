@@ -1,0 +1,22 @@
+{
+  "checkout_fallback": [],
+  "counts": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 193
+  },
+  "elapsed_seconds": 13.485,
+  "imports": 34,
+  "material_sha256": "2c9ad60f035849fc3ebddeb0a41639ce502e54628b0b9ddaa23c807f80c8f1f3",
+  "money_authority": false,
+  "network_denied": true,
+  "orders_allowed": false,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "receipt_count": 18,
+  "schema": "PUMP4_SERVER_ORDERS_OFF_ACCEPTANCE_V1",
+  "source_files": 87,
+  "status": "PASS",
+  "tiny_ready": false
+}

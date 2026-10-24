@@ -7,6 +7,23 @@ from test_pump4_account_owner_v1 import create,inputs,FP
 from research_lab.pump4_bybit_sources_v1 import closed_h1,universe
 
 
+def test_symbol_mode_reader_uses_explicit_pump_universe_and_preserves_legacy_scope():
+    from research_lab.kity_micro_transport_v1 import BybitReadTransport,SourceError
+    calls=[]
+    def wire(method,url,headers,data,timeout):
+        calls.append((method,url,data))
+        return 200,b'{"retCode":0,"result":{"list":[]},"time":1}'
+    legacy=BybitReadTransport('fixture-key','fixture-secret',wire=wire)
+    with pytest.raises(SourceError,match='GET_SCOPE_CONFLICT'):
+        legacy.get('/v5/position/list',dict(category='linear',symbol='ZROUSDT'))
+    try:reader=BybitReadTransport('fixture-key','fixture-secret',wire=wire,symbols=universe())
+    except TypeError:pytest.fail('Explicit PUMP symbol scope missing: one-way GET cannot reach its actual instruments')
+    assert reader.result(reader.get('/v5/position/list',dict(category='linear',symbol='ZROUSDT')))['list']==[]
+    with pytest.raises(SourceError,match='GET_SCOPE_CONFLICT'):
+        reader.get('/v5/position/list',dict(category='linear',symbol='NOTINUNIVERSEUSDT'))
+    assert len(calls)==1 and calls[0][0]=='GET' and calls[0][2] is None
+
+
 def archive(tmp_path):
     root=tmp_path/'source';(root/'symbols').mkdir(parents=True)
     caps=klines();s=closed_h1(caps,'ZROUSDT',next_open_ms=NOW,observed_ms=NOW+2)

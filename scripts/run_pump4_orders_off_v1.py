@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
 from research_lab.kity_micro_physical_owner_v1 import load_bound_credentials,publish
 from research_lab.kity_micro_transport_v1 import BybitReadTransport,wire_get
-from research_lab.pump4_bybit_sources_v1 import public_get,checked
+from research_lab.pump4_bybit_sources_v1 import public_get,checked,universe
 from research_lab.pump4_server_cycle_v1 import analyze
 from scripts.capture_pump4_sources_v1 import capture
 
@@ -41,7 +41,7 @@ def main(argv=None):
     def get_wire(method,url,headers,data,timeout):
         if method!='GET' or data is not None:raise ValueError('GET_ONLY_SERVER_PROCESS')
         routes.append(url.split('?',1)[0]);return wire_get(method,url,headers,data,6)
-    reader=BybitReadTransport(key,secret,wire=get_wire);start=time.time_ns()//1000000;begin=start-86400000
+    reader=BybitReadTransport(key,secret,wire=get_wire,symbols=universe());start=time.time_ns()//1000000;begin=start-86400000
     specs=[('account','/v5/account/info',{},False),('wallet','/v5/account/wallet-balance',dict(accountType='UNIFIED'),False),('fees','/v5/account/fee-rate',dict(category='linear'),False),('positions','/v5/position/list',dict(category='linear',settleCoin='USDT',limit='200'),True),('orders','/v5/order/realtime',dict(category='linear',settleCoin='USDT',openOnly='0',limit='50'),True),('quote','/v5/market/tickers',dict(category='linear'),False)]
     for name,path,limit,extra in [('history','/v5/order/history','50',{}),('executions','/v5/execution/list','100',{}),('transactions','/v5/account/transaction-log','50',dict(accountType='UNIFIED',currency='USDT'))]:specs.append((name,path,dict(category='linear',startTime=str(begin),endTime=str(start),limit=limit,**extra),True))
     def read(spec):

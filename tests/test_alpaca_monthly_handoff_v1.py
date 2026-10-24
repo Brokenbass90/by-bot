@@ -34,6 +34,16 @@ def test_retired_units_produce_fresh_bound_check(retired):
     assert m.require_fresh(proof,u.policy,'fixture-cid',now_ms=proof['completed_ms']) is proof
 
 
+def test_pinned_static_timer_is_retired_only_while_inactive_and_jobless(retired):
+    m,u=retired;timer='alpaca-oct15-owned-manager.timer'
+    u.rows[timer]['UnitFileState']='static'
+    proof=m.capture_retirement(u.policy,'fixture-cid',now_ms=10000)
+    assert proof['units'][timer]['UnitFileState']=='static'
+    u.rows[timer]['Job']='42'
+    with pytest.raises(ValueError,match='MONTHLY_LEGACY_NOT_RETIRED'):
+        m.capture_retirement(u.policy,'fixture-cid',now_ms=10000)
+
+
 @pytest.mark.parametrize('fault',['active_timer','enabled_timer','active_service','pid','control_pid','job',
     'dropin','daemon_reload','transient','load_unknown','extra_trigger','missing_unit','fragment_drift','cron_writer','cron_drift'])
 def test_unsafe_legacy_state_never_passes(retired,fault):

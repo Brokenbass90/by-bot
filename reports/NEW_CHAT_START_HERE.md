@@ -1,5 +1,15 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT24Oct: read [actual installation + PUMP component](MONTHLY_INSTALLED_AND_PUMP4_SELECTED_COMPONENT_2026_10_24.md).
+NET timer retired; Monthly units installedDISABLED; source248local/same248VPS.
+Broker pending.02 conflicts with published fees: activation HOLD beforeGO/enable.
+Same approved400/280/40/8/validity; source-fixed scope cf3202e4…b3ecd2. Original
+HALT/lock/SHOP preserved. PUMP factory/causal validator/GET scope193local/same193VPS,
+UNSELECTED; originalKITYowner retains818853. Persistent supervisor/causal-to-owner/
+physicalhandoff next; no fee wait/no TINY_READY. CheckpointTOP has exactpaths.
+Older dated paragraphs below do not supersede this actual state.
+
+
 CURRENT23Oct: [Monthly exact operational packet](ALPACA_MONTHLY_OPERATIONAL_PACKET_2026_10_23.md)
 READY_FOR_EXACT_OWNER_REVIEW,247local/same247VPS; real58source/previewPASS.
 NewMonthly entry-control/validity is explicit proposal, legacyHALT untouched,

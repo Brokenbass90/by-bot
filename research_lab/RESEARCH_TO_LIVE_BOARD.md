@@ -1,5 +1,15 @@
 # Trading OS — единая доска доведения до первой версии
 
+24Oct superseding execution delta: [Monthly installed / PUMP selected component](../reports/MONTHLY_INSTALLED_AND_PUMP4_SELECTED_COMPONENT_2026_10_24.md).
+NET timer retired, Monthly installedDISABLED,248local/same248VPS. Freshbroker
+pending.02 vs postedfees conflict blocks activation; noGO/BUY/erased liability.
+Approved limits/dates unchanged; source-fixed scope cf3202e4…b3ecd2. PUMP193local/
+same193VPS selectedfactory/causalvalidator/explicitGETscope componentPASS; actual
+ZRO/BLESS modeGETPASS, originalKITYowner/818853 preserved. Supervisor/causal-to-owner/
+actualhandoff/TINY packet remainOPEN. No fees dependency/thirdline. LIQ24delivered.
+Canonical roadmap unchanged in priority; all23Oct rows below are history.
+
+
 23Oct newest execution delta: [Monthly exact packet](../reports/ALPACA_MONTHLY_OPERATIONAL_PACKET_2026_10_23.md)
 247local/same247VPS PASS; actual complete NET buy/sell classification corrected,
 pendinglegacy.02/Monthly0. V2 exact config/newMonthly entry-control/validity ready

@@ -1,0 +1,22 @@
+{
+  "actual_turn_context_verified": true,
+  "broker_writes": 0,
+  "effort": "high",
+  "finding": "Pending liability rejection previously preceded historical fill validation",
+  "fix": "Independent terminal activity ownership before install-only pending branch; activation still hardblocks",
+  "independent_targeted_static_timer_checks": 16,
+  "local_ops_tests": {
+    "pass_count": 10,
+    "tests": 10
+  },
+  "model": "gpt-6-astra",
+  "source_changes": "Only retirement static state; actual source closure re-bound",
+  "status": "SCOPED_REVIEW_FINDING_FIXED",
+  "thread_id": "01a16a8f-14ec-7ee3-bf61-df727a6f9398",
+  "vps_ops_tests": {
+    "pass_count": 9,
+    "reason": "Private actual broker fixture retained locally; auto-review rejected export",
+    "skipped": 1,
+    "tests": 10
+  }
+}

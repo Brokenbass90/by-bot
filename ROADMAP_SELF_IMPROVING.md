@@ -6,10 +6,22 @@
 экономические преимущества, Brain проверяет портфельную пользу. AI не получает
 самостоятельного права менять LIVE, риск, судью или финансовые разрешения.
 
-**Создан:**10.04.2026. **Актуализирован:**23.10.2026 — NET personally sold/broker FLAT PASS; cost finality pending; PUMP ACK/errors component PASS.
+**Создан:**10.04.2026. **Актуализирован:**24.10.2026 — NET timer retired; Monthly installedDISABLED/cost reconciliation HOLD; PUMP selected-owner component PASS.
 **CURRENT STATUS: PARTIAL.** Проверенные компоненты и репетиции существуют;
 непрерывная автономная Factory и автономный денежный Monthly ещё не доказаны.
 Это обновление исходного документа, не новый roadmap и не новый financial GO.
+
+**24Oct superseding execution delta:** [actual Monthly installation / PUMP component](reports/MONTHLY_INSTALLED_AND_PUMP4_SELECTED_COMPONENT_2026_10_24.md).
+OriginalNET timer retired under original lock; newMonthlyunits installeddisabled,
+64oldpins/HALT preserved. Static systemd state fixed in new bound candidate,
+248local/same248VPS. Same approved400/280/40/8/entrydates; human-only executableGO
+absent. Publishedfees/accountpending.02 disagree: activationHOLD, no zero/finality
+assumption. PUMP factory/causalvalidator/explicit137GETscope193local/same193VPS,
+actual2modeGETPASS, originalKITYowner keeps818853. Persistent supervisor,
+causal-to-owner integration and physicalhandoff/TINY packet are next. They do not
+wait for NETfee settlement. No new Money/OS architecture or priority change;
+Polymarket/KITY expansion remains after these two execution lines. LIQ24delivered.
+Older dated deltas below are historical.
 
 **23Oct execution delta:** [NET recovery / PUMP4 review closure](reports/MONEY_REVIEW_NET_RECOVERY_2026_10_23.md):199local/same199VPS PASS,89files/43imports/0fallback. Actual deployed NET failure probes confirm residual-protection defect; original helper imports absent publisher. **Old personal launcher HOLD/superseded.** R4 explicitly approved/selected11:48UTC via only NETspec path; new personal command issued/notrun. All64newpins/9oldpins/4units/98observerchecks verified; sale date/qty unchanged. No broker writes/GO/claims. PUMP ACK errors/rate-limit/reduce-race now reconciliation-only/no resend; financial owner/latches/sourcebound admission NEXT.53Monthly sources unchanged.11:49UTC NET premarket open/no acceptedDAYstop;13:30UTC actual opening proof PENDING. Owner order **Alpaca → PUMP4 → Polymarket → KITY**; no calendar/architecture wait. Earlier dated rows are history.
 

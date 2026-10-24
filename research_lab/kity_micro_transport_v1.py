@@ -6,6 +6,7 @@ single physical account owner, never to this credential-bearing reader.
 import hashlib
 import hmac
 import json
+import re
 from pathlib import Path
 import time
 import urllib.error
@@ -68,18 +69,23 @@ def existing_selected_credentials(env_path='/root/by-bot/.env',pid=1648585):
 
 
 class BybitReadTransport:
-    def __init__(self,key,secret,*,wire=wire_get,clock=None):
+    def __init__(self,key,secret,*,wire=wire_get,clock=None,symbols=SYMBOLS):
         if not isinstance(key,str) or not key or not isinstance(secret,str) or not secret:
             raise SourceError('EXISTING_CREDENTIALS_REQUIRED')
         self._key,self._secret,self._wire=key,secret,wire
         self._clock=clock or (lambda:time.time_ns()//1_000_000)
+        if (not isinstance(symbols,(tuple,list)) or not symbols
+            or len(set(symbols))!=len(symbols)
+            or any(not isinstance(s,str) or not re.fullmatch('[A-Z0-9]{1,24}USDT',s) for s in symbols)):
+            raise SourceError('EXPLICIT_GET_SYMBOL_SCOPE_REQUIRED')
+        self._symbols=frozenset(symbols)
         self.account_fingerprint=hashlib.sha256(key.encode()).hexdigest()
 
     def get(self,path,params):
         if (path not in ALLOW or not isinstance(params,dict) or not set(params)<=ALLOW[path]
             or any(type(v) not in (str,int) for v in params.values())
             or ('category' in params and params['category']!='linear')
-            or ('symbol' in params and params['symbol'] not in SYMBOLS)
+            or ('symbol' in params and params['symbol'] not in self._symbols)
             or ('settleCoin' in params and params['settleCoin']!='USDT')
             or ('accountType' in params and params['accountType']!='UNIFIED')
             or ('currency' in params and params['currency']!='USDT')):

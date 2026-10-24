@@ -1,0 +1,180 @@
+"""Exact approved Monthly ops. Install is nonfinancial; activate is OWNER-ONLY.
+Never invokes dispatch CLI, broker mutations, legacy HALT/claim edits or NET exit.
+"""
+import argparse, hashlib, json, os, stat, subprocess, sys, time
+from pathlib import Path
+from decimal import Decimal, ROUND_HALF_UP
+
+CANDIDATE=Path('/opt/bybot-research/alpaca-monthly-e2e-20261018/candidate-7db2ac3cb3d5c753-tcf34dac2')
+REVIEW=CANDIDATE/'owner-review-v3'
+SCOPE_SHA='cf3202e4c53bd3b400fb93aa2c62a46947850fff5eb8e09c60b3a79000b3ecd2'
+SPEC_SHA='84ef3401d25a5430400b417b069d8dd6d9f355808b065f719c1267058c0c283a'
+MANIFEST_SHA='20ffba701d33f58ba71fb645cbc24ca813f436f90b96c24433a469195c78be95'
+HALT=Path('/root/by-bot/runtime/locks/alpaca_bridge_0d0c322aef55c952.paper-kill/.paper-entry-halt.json')
+HALT_SHA='30ca600d7d6f98664fc23757ef5520ab5a08a5b5223c6418d3955edcfe51be23'
+FRAGMENTS={'alpaca-monthly-owned.service':'1b5600cd69adfa9852b52f608b8eafe8efbc1854c41657fbb85cd1d2094d3c87','alpaca-monthly-owned.timer':'33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb'}
+GO=dict(schema='ALPACA_MONTHLY_STANDING_OWNER_GO_V1',scope_sha256=SCOPE_SHA,owner_go_text='GO ALPACA_MONTHLY_STANDING '+SCOPE_SHA)
+
+def need(ok,why):
+    if not ok: raise ValueError(why)
+
+def pin(path,expected):
+    p=Path(path)
+    need(p.is_absolute() and all(not x.is_symlink() for x in (p,*p.parents)), 'SYMLINK_OR_RELATIVE')
+    st=p.stat();need(stat.S_ISREG(st.st_mode) and st.st_nlink==1,'FILE_CUSTODY')
+    raw=p.read_bytes();need(hashlib.sha256(raw).hexdigest()==expected,'HASH_DRIFT:'+str(p));return raw
+
+def create(path,raw,mode):
+    p=Path(path);need(all(not x.is_symlink() for x in (p,*p.parents)),'CREATE_SYMLINK')
+    fd=os.open(p,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,mode)
+    try:
+        with os.fdopen(fd,'wb') as f:f.write(raw);f.flush();os.fsync(f.fileno())
+        directory=os.open(p.parent,os.O_RDONLY|os.O_DIRECTORY)
+        try:os.fsync(directory)
+        finally:os.close(directory)
+    except BaseException:
+        # Partial evidence/authority is never removed or overwritten by recovery.
+        raise
+
+def command(*args):
+    return subprocess.run(['/usr/bin/systemctl',*args],check=True,capture_output=True,text=True,timeout=10,env={'PATH':'/usr/bin:/bin','LC_ALL':'C'}).stdout
+
+def state(unit):
+    raw=command('show',unit,'--no-pager','--property=ActiveState,SubState,UnitFileState,MainPID,ControlPID,Job,DropInPaths,NeedDaemonReload,FragmentPath')
+    return dict(line.split('=',1) for line in raw.splitlines() if '=' in line)
+
+def require_idle(row):
+    need(all(row.get(k)==v for k,v in dict(ActiveState='inactive',SubState='dead',MainPID='0',ControlPID='0',Job='',DropInPaths='',NeedDaemonReload='no').items()),'SERVICE_OR_JOB_NOT_IDLE')
+
+def flat_capture(d,account_id):
+    need(d['account_after']['id']==account_id==d['account_before']['id'],'ACCOUNT_CONFLICT')
+    need(d['positions']==[] and d['open_orders']==[],'NOT_FLAT')
+    e=d['exit_order'];buy=d['entry_order'];stop=d['old_native_stop']
+    need(e['id']=='5d8a43a6-7aab-40e5-866f-ac5046813493' and e['status']=='filled' and e['side']=='sell' and e['symbol']=='NET' and Decimal(e['filled_qty'])==Decimal('0.325167779'),'NET_EXIT_NOT_TERMINAL')
+    need(buy['id']=='705a1b5b-1d45-4ba1-97cf-9c646033d78d' and buy['status']=='filled','NET_ENTRY_CONFLICT')
+    need(stop['status']=='canceled' and Decimal(stop['filled_qty'])==0 and d['native_ledger']=={},'LEGACY_NATIVE_NOT_TERMINAL')
+    need(d['source_pins_match'] and d['coverage']['pagination_exhausted'] and d['broker_writes']==d['remote_writes']==0,'CAPTURE_NOT_READ_ONLY_OR_INCOMPLETE')
+    need(0<=time.time_ns()//1000000-d['observed_ms']<5000,'BROKER_CAPTURE_STALE')
+    account=d['account_after']
+    need(Decimal(account['cash'])>=Decimal('400') and account['trading_blocked'] is False and account['account_blocked'] is False,'ACCOUNT_NOT_ADMISSIBLE')
+    for k in ('pending_reg_taf_fees','accrued_fees'):need(Decimal(account[k])>=0,'ACCOUNT_LIABILITY_UNKNOWN')
+
+
+def terminal_activity_ownership(d,seal,protocol):
+    # Independent validation is necessary because the financial classifier can
+    # reject pending liabilities before reaching its ownership checks.
+    from research_lab.alpaca_monthly_cost_source_v1 import legacy_transition_orders,_ms
+    exits=legacy_transition_orders(seal,account_id=d['account_after']['id'],before_ms=d['observed_ms'])
+    orders={o['id']:o for o in [seal['entry'],*exits]}
+    for actual in (d['entry_order'],d['exit_order']):
+        expected=orders.get(actual['id']);need(expected is not None,'TERMINAL_OWNER_UNKNOWN')
+        need(all(actual[k]==expected[k] for k in ('id','symbol','side','client_order_id','status')),'TERMINAL_ORDER_CONFLICT')
+        need(_ms(actual['filled_at'])==_ms(expected['filled_at']),'TERMINAL_ORDER_FILL_TIME')
+        need(all(Decimal(actual[k])==Decimal(expected[k]) for k in ('filled_qty','filled_avg_price')),'TERMINAL_ORDER_QUANTITY_PRICE')
+    groups={k:[] for k in orders}
+    for row in d['activities']:
+        if row['activity_type']!='FILL':continue
+        order=orders.get(row.get('order_id'));need(order is not None,'MONTHLY_COST_FOREIGN_FILL')
+        need(row['side']==order['side'] and row['symbol']==order['symbol'] and _ms(row['transaction_time'])<=_ms(order['filled_at']),'TERMINAL_FILL_CONFLICT')
+        need(_ms(seal['entry']['filled_at'])<=_ms(row['transaction_time']) if order['side']=='sell' else True,'TERMINAL_EXIT_BEFORE_ENTRY')
+        groups[order['id']].append(row)
+    for oid,rows in groups.items():
+        order=orders[oid];qty=sum((Decimal(r['qty']) for r in rows),Decimal(0))
+        need(qty==Decimal(order['filled_qty']) and qty>0,'TERMINAL_FILL_QUANTITY')
+        average=sum((Decimal(r['qty'])*Decimal(r['price']) for r in rows),Decimal(0))/qty
+        if average!=Decimal(order['filled_avg_price']):
+            precision=protocol.get('execution_average_precision',{})
+            places=precision.get('decimal_places')
+            need(type(places) is int and 0<=places<=9 and precision.get('rounding')=='ROUND_HALF_UP' and precision.get('source_sha256') in {r.get('sha256') for r in protocol['sources'].values()},'TERMINAL_PRECISION_UNBOUND')
+            need(average.quantize(Decimal(1).scaleb(-places),rounding=ROUND_HALF_UP)==Decimal(order['filled_avg_price']),'TERMINAL_FILL_PRICE')
+
+
+def classify_costs(mode,calculate):
+    try:
+        costs=calculate()
+        need(Decimal(costs['classification']['monthly_unposted_fee_upper_bound_usd'])==0,'MONTHLY_PENDING_UNEXPECTED')
+        return dict(status='CLASSIFIED',classification=costs['classification'])
+    except ValueError as exc:
+        # Installation grants no entries and keeps the timer disabled. Preserve
+        # the real unresolved broker liability; activation still fails closed.
+        if mode!='install' or str(exc)!='MONTHLY_COST_LIABILITY_UNCLASSIFIED':raise
+        return dict(status='COST_RECONCILIATION_PENDING',reason=str(exc),classification=None)
+
+
+def run(mode,*,owner_text=None):
+    need(mode in {'install','activate'},'MODE')
+    need(os.geteuid()==0,'ROOT_REQUIRED')
+    if mode=='activate':need(owner_text==GO['owner_go_text'],'EXACT_PERSONAL_OWNER_TEXT_REQUIRED')
+    manifest=json.loads(pin(REVIEW/'manifest.json',MANIFEST_SHA))
+    for name,sha in manifest['files'].items():pin(REVIEW/name,sha)
+    pin(REVIEW/'standing-scope.PROPOSED.json',SCOPE_SHA);spec=json.loads(pin(REVIEW/'runner.PROPOSED.json',SPEC_SHA))
+    for name,sha in spec['files'].items():pin(CANDIDATE/'app'/name,sha)
+    pin(HALT,HALT_SHA)
+    sys.path.insert(0,str(CANDIDATE/'app'))
+    from scripts.run_alpaca_monthly_cycle_v1 import runner_config_sha256
+    from research_lab.alpaca_dynamic_live_runtime_v1 import account_lock
+    from research_lab.alpaca_monthly_handoff_v1 import capture_retirement,require_fresh
+    from research_lab.alpaca_fee_to_live_closure_v1 import collect_account_cost_source
+    from research_lab.alpaca_monthly_cost_source_v1 import _account_day_context
+    scope=json.loads((REVIEW/'standing-scope.PROPOSED.json').read_bytes())
+    need(scope['runner_config_sha256']==runner_config_sha256(spec),'CONFIG_SCOPE_CONFLICT')
+    for key in ('native_binding','profile'):pin(spec[key]['path'],spec[key]['sha256'])
+    fragments={name:pin(REVIEW/'ops-review'/name,sha) for name,sha in FRAGMENTS.items()}
+    target=Path('/etc/systemd/system');go=Path(spec['authority']['owner_go_path'])
+    if mode=='install':need(not os.path.lexists(go),'GO_ALREADY_EXISTS_RECONCILE')
+    lock=Path(spec['manager']['account_lock_path']);st=lock.stat()
+    need(not lock.is_symlink() and (st.st_dev,st.st_ino)==(64769,813893),'ORIGINAL_LOCK_CHANGED')
+    with account_lock(dict(lock_path=str(lock))):
+        need((lock.stat().st_dev,lock.stat().st_ino)==(64769,813893),'LOCK_REPLACED')
+        # Existing read-only GET observer; no client capable of POST is constructed.
+        import contextlib,io
+        capture_script=Path(__file__).with_name('capture-alpaca.py')
+        raw=pin(capture_script,'922006306e84b1585a27f3e2e2811f0ced380d30ff037e14f41d44b1d5a9f009')
+        output=io.StringIO()
+        with contextlib.redirect_stdout(output):exec(compile(raw,str(capture_script),'exec'),{'__name__':'__main__'})
+        d=json.loads(output.getvalue());flat_capture(d,spec['manager']['account_id'])
+        rows=iter(r for r in d['captures'] if r['route'] in {'/v2/account','/v2/account/activities'})
+        def get(route,query):
+            r=next(rows);need(r['route']==route and {k:str(v) for k,v in r['query'].items()}=={k:str(v) for k,v in query.items()},'CAPTURE_SEQUENCE');return r
+        source=collect_account_cost_source(get,account_id=d['account_after']['id'],after=spec['costs']['after'],until=d['clock']['timestamp'],now_ms=d['observed_ms'])
+        inputs={key:json.loads(pin(spec['costs'][key]['path'],spec['costs'][key]['sha256'])) for key in ('protocol','calendar','assets','legacy_transition')}
+        terminal_activity_ownership(d,inputs['legacy_transition'],inputs['protocol'])
+        costs=classify_costs(mode,lambda:_account_day_context(source=source,positions=[],exits=[],pending=True,**inputs))
+        require_idle(state('alpaca-oct15-owned-manager.service'))
+        require_idle(state('alpaca-dynamic-next-entry-20261019.service'))
+        if mode=='install':
+            command('disable','--now','alpaca-oct15-owned-manager.timer')
+            # No stop/kill is ever sent to its service. A job arriving in the
+            # pre-disable race makes capture reject and requires reconciliation.
+            proof=capture_retirement(spec['legacy_handoff'],'monthly-ops',now_ms=time.time_ns()//1000000)
+            for name,raw in fragments.items():
+                p=target/name
+                if os.path.lexists(p):pin(p,FRAGMENTS[name])
+                else:create(p,raw,0o644)
+            command('daemon-reload')
+        else:
+            for name in fragments:pin(target/name,FRAGMENTS[name])
+        proof=capture_retirement(spec['legacy_handoff'],'monthly-ops',now_ms=time.time_ns()//1000000)
+        require_fresh(proof,spec['legacy_handoff'],'monthly-ops',now_ms=time.time_ns()//1000000)
+        require_idle(state('alpaca-monthly-owned.service'))
+        timer=state('alpaca-monthly-owned.timer')
+        need(timer.get('DropInPaths')=='' and timer.get('NeedDaemonReload')=='no','MONTHLY_UNIT_OVERRIDE')
+        if mode=='install':need(timer['ActiveState']=='inactive' and timer['UnitFileState']=='disabled','MONTHLY_NOT_DISABLED')
+        else:
+            need(time.time_ns()//1000000<scope['valid_until_ms'],'SCOPE_EXPIRED')
+            encoded=(json.dumps(GO,sort_keys=True,indent=2)+'\n').encode()
+            if os.path.lexists(go):
+                pin(go,hashlib.sha256(encoded).hexdigest());need(stat.S_IMODE(go.stat().st_mode)==0o600,'GO_MODE')
+            else:create(go,encoded,0o600)
+            from scripts.run_alpaca_monthly_cycle_v1 import runner_authority
+            runner_authority(spec)
+            command('enable','--now','alpaca-monthly-owned.timer')
+        pin(HALT,HALT_SHA)
+        receipt=dict(schema='MONTHLY_OPERATIONAL_HANDOFF_RECEIPT_V1',status='INSTALLED_DISABLED_AWAITING_PERSONAL_ACTIVATION' if mode=='install' else 'OWNER_ARMED_FUTURE_MONTHLY',observed_ms=time.time_ns()//1000000,scope_sha256=SCOPE_SHA,spec_sha256=SPEC_SHA,legacy_retirement=proof,monthly_units={u:state(u) for u in FRAGMENTS},broker_get_requests=d['broker_get_requests'],broker_writes=0,legacy_halt_unchanged=True,original_lock_inode=813893,owner_go_created=mode=='activate',actual_entry_executed=False,cash=d['account_after']['cash'],pending_reg_taf_fees=d['account_after']['pending_reg_taf_fees'],cost_reconciliation=costs)
+        destination=CANDIDATE/'runtime/monthly400-v3/ops';destination.mkdir(mode=0o700,exist_ok=True)
+        create(destination/(str(receipt['observed_ms'])+'-'+mode+'.json'),(json.dumps(receipt,sort_keys=True,indent=2)+'\n').encode(),0o600)
+        return receipt
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('mode',choices=['install','activate']);p.add_argument('--owner-text');a=p.parse_args()
+    print(json.dumps(run(a.mode,owner_text=a.owner_text)))

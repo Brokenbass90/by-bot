@@ -1,0 +1,23 @@
+{
+  "actual_turn_context_verified": true,
+  "broker_writes": 0,
+  "effort": "high",
+  "final_exact_tests": 193,
+  "final_root_targeted_tests": 30,
+  "independent_targeted_tests": 28,
+  "limitations": [
+    "platform verifier replaced by fixture stub in factory tests",
+    "actual physical selection/supervisor/causal-to-owner wiring NOT_ACCEPTED",
+    "two final factory tests root-verified after bounded review"
+  ],
+  "model": "gpt-6-astra",
+  "real_broker_requests_by_reviewer": 0,
+  "scope": [
+    "selected-owner factory",
+    "causal plan validator",
+    "explicit GET symbol scope"
+  ],
+  "status": "NO_CRITICAL_IMPORTANT_FINDINGS_WITHIN_COMPONENT_SCOPE",
+  "thread_id": "01a16c4a-2761-7c33-afce-d049f30068c6",
+  "tiny_ready": false
+}
