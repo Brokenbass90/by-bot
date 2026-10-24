@@ -1,0 +1,22 @@
+{
+  "status": "SAVED_ACTUAL_REPLAY_PASS_NOT_FRESH",
+  "classification": {
+    "unposted_account_fees_usd": "0.02",
+    "monthly_unposted_fee_upper_bound_usd": "0.02",
+    "legacy_unposted_fee_upper_bound_usd": "0",
+    "posted_monthly_fees_usd": "0",
+    "posted_open_monthly_fees_usd": "0",
+    "posted_legacy_fees_usd": "0.03",
+    "account_liability_reserve_policy": {
+      "loss_metric": "CONSERVATIVE_MONTHLY_LOWER_BOUND",
+      "reserve_usd": "40",
+      "schema": "ALPACA_MONTHLY_PENDING_ACCOUNT_RESERVE_V1",
+      "terminal_cost_finality_proven": false
+    },
+    "modelled_unposted_fees_usd": "0.00",
+    "reported_pending_liability_reserve_usd": "0.02"
+  },
+  "broker_writes": 0,
+  "owner_go_created": false,
+  "terminal_cost_finality_proven": false
+}

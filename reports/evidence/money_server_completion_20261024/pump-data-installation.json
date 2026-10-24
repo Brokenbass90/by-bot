@@ -1,0 +1,53 @@
+{
+  "broker_private_requests": 0,
+  "broker_writes": 0,
+  "financial_owner_selected": false,
+  "first_cycle_summary": {
+    "archive_id": "184c89e168285d0b3a9f8e6fc0aee720f84436b08e52adf1c551537bd0596ca0",
+    "broker_writes": 0,
+    "census": 137,
+    "financial_owner_constructed": false,
+    "money_authority": false,
+    "orders_allowed": false,
+    "original_account_lease_acquired": false,
+    "prospective_decisions_credited": 0,
+    "schema": "PUMP4_PERSISTENT_DATA_CYCLE_V1",
+    "source_archive": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-9c6901a65a66e035/app/.private/pump4-supervisor-v1/archives/1792843200000",
+    "source_hour_open_ms": 1792843200000,
+    "source_intake_pass": 136,
+    "status": "ORDERS_OFF_DATA_ONLY",
+    "tiny_ready": false
+  },
+  "fragments_sha256": {
+    "pump4-data-supervisor.service": "2ae411a2bdaa66c42c9e50ee9c3776bf22c344bdcaf6ed902673eae99596dd2c",
+    "pump4-data-supervisor.timer": "d31f4ba785c56b0dda7b15f2060578effd9d10a2fab89df8f1457b2411fbca98"
+  },
+  "legacy_owner_pid": "2825351",
+  "material_sha256": "9c6901a65a66e035f24e13ab3b96bc6734fb89d75f87ec45950ad63ac302e522",
+  "minimum_free_bytes": 3221225472,
+  "observed_ms": 1792845175607,
+  "original_lock_inode": 818853,
+  "schema": "PUMP4_DATA_HOURLY_INSTALLATION_V1",
+  "service": {
+    "ActiveState": "inactive",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/pump4-data-supervisor.service",
+    "Job": "",
+    "MainPID": "0",
+    "NRestarts": "0",
+    "SubState": "dead",
+    "UnitFileState": "static"
+  },
+  "status": "ENABLED_DATA_ONLY_HOURLY_WITH_DISK_GUARD",
+  "timeout_seconds": 900,
+  "timer": {
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/pump4-data-supervisor.timer",
+    "Job": "",
+    "NextElapseUSecRealtime": "Sat 2026-10-24 13:00:02 UTC",
+    "SubState": "waiting",
+    "UnitFileState": "enabled"
+  },
+  "tiny_ready": false
+}

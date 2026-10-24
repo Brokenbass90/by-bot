@@ -1,0 +1,42 @@
+{
+  "financial_go_issued": false,
+  "kity": {
+    "artifacts": [
+      "research_lab/KITY_PUT_K_LIVE_2026_10_22.md",
+      "research_lab/DOSIE_KITY_BYBIT_2026-10-22.md"
+    ],
+    "contract_conflict": "DOSIE contains stale 8legs/$800 template; versioned path explicitly corrects CAP300/10legs; never implement old template",
+    "economic_verdict": "ECONOMIC_INCONCLUSIVE",
+    "gates": [
+      "source-backed funding C1.7",
+      "weekly d+7 executor and stop custody",
+      "separate exact weekly money GO"
+    ],
+    "status": "DOSIE_READY_WEEKLY_EXECUTOR_OPEN"
+  },
+  "outcomes_opened": false,
+  "polymarket": {
+    "artifacts": [
+      "research_lab/POLY_NO_SEREDINA_ITOG_2026_10_22.md",
+      "research_lab/POLY_SPRAVEDLIVAYA_CENA_ZAMERY_ITOG_2026_10_22.md",
+      "research_lab/polymarket/QA_POLY_YES_TEN_2026_10_19.md"
+    ],
+    "gates": [
+      "published prospective verdict under prereg cluster/date rule",
+      "actual executable NO quotes/fees/depth/official resolution",
+      "separate exact financial execution/account/access authority"
+    ],
+    "status": "INCONCLUSIVE_RESEARCH_NOT_LIVE_READY"
+  },
+  "queue": [
+    "Monthly personal arm/future frozen runtime gates",
+    "PUMP original-owner physical handoff and real provider/TINY packet",
+    "Polymarket current published prospective evidence/data execution intake",
+    "KITY weekly executor"
+  ],
+  "read_only": true,
+  "research_code_changed": false,
+  "research_ref": "origin/research/fabrika-v1",
+  "research_sha": "0c91b9ad2d867c7ae04a172245e9b2cdc3c9b639",
+  "schema": "RESEARCH_INTAKE_STATUS_ONLY_V1"
+}

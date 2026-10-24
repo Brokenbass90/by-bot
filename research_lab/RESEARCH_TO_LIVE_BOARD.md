@@ -1,5 +1,15 @@
 # Trading OS — единая доска доведения до первой версии
 
+**24Oct superseding completion:** [Monthly ready / PUMP hourly DATA](../reports/MONEY_SERVER_COMPLETION_2026_10_24.md).
+Monthly257local/same257VPS, actualpending0/flat/cash496.31; v4 installeddisabled,
+READY personalarm (budget400/280/40/8 unchanged), agentdidnotactivate. Future
+30Octselection/2Novfreshgates remain. PUMP213/213,136/137actualDATA/0prospective,
+hourlytimeractive/3GiBguard; financialprovider/physicalhandoff/alerts/TINYGOOPEN.
+No NETfeesdependency. Researchref0c91b9a verified: PolyINCONCLUSIVE and KITYweekly
+executor/funding/GOOPEN. QueueMonthly→PUMP→Poly→KITY, independentDATAintake allowed.
+Earlier24Oct HOLD/no-thirdline paragraphs below are dated superseded evidence.
+
+
 24Oct superseding execution delta: [Monthly installed / PUMP selected component](../reports/MONTHLY_INSTALLED_AND_PUMP4_SELECTED_COMPONENT_2026_10_24.md).
 NET timer retired, Monthly installedDISABLED,248local/same248VPS. Freshbroker
 pending.02 vs postedfees conflict blocks activation; noGO/BUY/erased liability.

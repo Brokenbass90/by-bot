@@ -1,5 +1,15 @@
 # START HERE — Monthly P0 / SHOP cancelled / NET preserved
 
+CURRENT24Oct: [completed Monthly/PUMP server gate](MONEY_SERVER_COMPLETION_2026_10_24.md).
+Monthly257local/same257VPS; freshpending0/cash496.31/flat;v4installedDISABLED,
+READY human-only .private/money_completion_20261024_v4/owner-monthly-activate.sh.
+Approved400/280/40/8/date scope unchanged; no GO/agentactivation. PUMP213/213,
+actual136/137 DATAintake +hourlytimer enabled/diskguard; financialdispatchOPEN,
+originalKITYowner/818853 preserved. Next realprovider/physicalhandoff/TINYpacket.
+VerifiedPolyINCONCLUSIVE/KITYweeklyOPEN; queueMonthly→PUMP→Poly→KITY.
+Older24OctHOLD and other dated paragraphs below are superseded history.
+
+
 CURRENT24Oct: read [actual installation + PUMP component](MONTHLY_INSTALLED_AND_PUMP4_SELECTED_COMPONENT_2026_10_24.md).
 NET timer retired; Monthly units installedDISABLED; source248local/same248VPS.
 Broker pending.02 conflicts with published fees: activation HOLD beforeGO/enable.

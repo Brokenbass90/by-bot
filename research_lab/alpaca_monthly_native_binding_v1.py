@@ -134,6 +134,10 @@ class MonthlyNativeBinding:
             pin=scope.get('pending_fee_protocol_sha256')
             if not isinstance(pin,str) or len(pin)!=64 or any(c not in '0123456789abcdef' for c in pin):
                 raise ValueError('MONTHLY_PENDING_FEE_PROTOCOL_REQUIRED')
+        if scope.get('account_liability_reserve_policy') is not None:
+            if not self.pending_fee_admission:raise ValueError('MONTHLY_PENDING_FEE_SCOPE_REQUIRED')
+            from research_lab.alpaca_monthly_cost_source_v1 import liability_reserve_policy
+            liability_reserve_policy(scope['account_liability_reserve_policy'],reserve=self.liability)
         count=scope.get('max_new_entries_per_session')
         if type(count) is not int or not 1<=count<=(4 if standing else 1):
             raise ValueError('MONTHLY_SESSION_ENTRY_LIMIT')

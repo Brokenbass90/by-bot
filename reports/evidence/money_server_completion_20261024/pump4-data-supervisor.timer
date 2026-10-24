@@ -1,0 +1,9 @@
+[Unit]
+Description=PUMP4 DATA-only closed H1 intake
+[Timer]
+OnCalendar=*-*-* *:00:02 UTC
+AccuracySec=1s
+Persistent=true
+Unit=pump4-data-supervisor.service
+[Install]
+WantedBy=timers.target

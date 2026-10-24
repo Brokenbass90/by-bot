@@ -16,7 +16,9 @@ from research_lab.pump4_execution_plan_v1 import build_plan,HOUR_MS
 from strategies.signals import TradeSignal
 
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE_FILES=('research_lab/pump4_selected_runner_v1.py','research_lab/pump4_account_owner_v1.py',
+SOURCE_FILES=('research_lab/pump4_selected_runner_v1.py','research_lab/pump4_supervisor_v1.py',
+ 'scripts/run_pump4_supervisor_v1.py','scripts/capture_pump4_sources_v1.py',
+ 'research_lab/pump4_server_cycle_v1.py','research_lab/kity_fresh_eligibility_watch_v1.py','research_lab/pump4_account_owner_v1.py',
  'research_lab/pump4_account_adapter_v1.py','research_lab/pump4_execution_lifecycle_v1.py',
  'research_lab/pump4_execution_plan_v1.py','research_lab/pump4_closed_bar_intake_v1.py',
  'research_lab/pump4_bybit_sources_v1.py','research_lab/kity_micro_physical_owner_v1.py',

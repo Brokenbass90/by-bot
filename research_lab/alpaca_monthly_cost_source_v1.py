@@ -83,8 +83,21 @@ def read_legacy_transition(pin, *, account_id, before_ms):
     return value
 
 
+def liability_reserve_policy(value,*,reserve=None):
+    """Explicit owner opt-in, never permission to erase an account liability."""
+    if (not isinstance(value,dict) or set(value)!={'schema','reserve_usd','loss_metric','terminal_cost_finality_proven'}
+        or value['schema']!='ALPACA_MONTHLY_PENDING_ACCOUNT_RESERVE_V1'
+        or value['loss_metric']!='CONSERVATIVE_MONTHLY_LOWER_BOUND'
+        or value['terminal_cost_finality_proven'] is not False):
+        raise ValueError('MONTHLY_ACCOUNT_LIABILITY_POLICY')
+    cap=dec(value['reserve_usd'])
+    if cap<=0 or (reserve is not None and cap!=dec(reserve)):
+        raise ValueError('MONTHLY_ACCOUNT_LIABILITY_POLICY_RESERVE')
+    return cap
+
+
 def _account_day_context(*,source,protocol,calendar,assets,positions,exits,
-                         legacy_transition=None,anchor=None,pending=False):
+                         legacy_transition=None,anchor=None,pending=False,liability_policy=None):
     """One source/ownership/allocation implementation for exit and initial admission."""
     proof = reconcile_account_day_fees(source, protocol=protocol, protocol_sha256=digest(protocol),
         calendar=calendar, calendar_sha256=digest(calendar), assets=assets, assets_sha256=digest(assets),
@@ -94,8 +107,13 @@ def _account_day_context(*,source,protocol,calendar,assets,positions,exits,
     account = source['account_after']
     liabilities=[dec(account[k]) for k in ('accrued_fees','pending_reg_taf_fees')]
     if pending:
-        require(all(v>=0 for v in liabilities)
-            and sum(liabilities,dec(0))<=dec(proof['unposted_account_fees_usd']), 'LIABILITY_UNCLASSIFIED')
+        require(all(v>=0 for v in liabilities),'LIABILITY_UNCLASSIFIED')
+        if liability_policy is None:
+            require(sum(liabilities,dec(0))<=dec(proof['unposted_account_fees_usd']), 'LIABILITY_UNCLASSIFIED')
+        else:
+            cap=liability_reserve_policy(liability_policy)
+            require(sum(liabilities,dec(0))+dec(proof['unposted_account_fees_usd'])<=cap,
+                'ACCOUNT_LIABILITY_RESERVE_EXCEEDED')
     else:require(all(v==0 for v in liabilities), 'LIABILITY_PENDING')
     orders = {}; owner = {}
     for p in positions + [r['retired_position'] for r in exits]:
@@ -197,12 +215,21 @@ def _account_day_context(*,source,protocol,calendar,assets,positions,exits,
         posted_monthly_fees_usd=str(monthly_posted),
         posted_open_monthly_fees_usd=str(sum((charge[p['entry_id']] for p in positions),dec(0))),
         posted_legacy_fees_usd=str(charge[legacy_owner]) if legacy_owner is not None else '0')
+    if pending and liability_policy is not None:
+        # The two sources may describe overlapping OR disjoint obligations.
+        # Reserve their sum; do not assume overlap, attribute it to NET, debit
+        # cash again, or turn the buffer into actual Monthly net PnL.
+        reported=sum(liabilities,dec(0));modelled=dec(proof['unposted_account_fees_usd'])
+        classification.update(account_liability_reserve_policy=liability_policy,
+            modelled_unposted_fees_usd=str(modelled),reported_pending_liability_reserve_usd=str(reported),
+            unposted_account_fees_usd=str(modelled+reported),
+            monthly_unposted_fee_upper_bound_usd=str(max(dec(0),monthly_expected-monthly_posted)+reported))
     return dict(proof=proof,cash_moves=cash_moves,entry_times=entry_times,allocations=allocations,
         charge=charge,legacy_owner=legacy_owner,classification=classification)
 
 
 def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
-                           positions, exits, entry_id, pending=False,legacy_transition=None):
+                           positions, exits, entry_id, pending=False,legacy_transition=None,liability_policy=None):
     """Derive one external finality document; caller pins/persists every input.
 
     Full raw source replay and the pinned retail protocol precede allocation.
@@ -221,7 +248,8 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
     target = found[0]; retired = target['retired_position']; entry = retired['raw_entry']
     require(anchor.get('client_order_id') == entry.get('client_order_id'), 'ANCHOR_OWNER')
     context=_account_day_context(source=source,protocol=protocol,calendar=calendar,assets=assets,
-        positions=positions,exits=exits,legacy_transition=legacy_transition,anchor=anchor,pending=pending)
+        positions=positions,exits=exits,legacy_transition=legacy_transition,anchor=anchor,pending=pending,
+        liability_policy=liability_policy)
     proof=context['proof'];account=source['account_after']
     cash_moves=context['cash_moves'];entry_times=context['entry_times'][entry_id]
     require(entry_times and anchor['observed_ms']<min(entry_times),'ANCHOR_AFTER_ENTRY')
@@ -259,6 +287,7 @@ def derive_owned_exit_cost(*, source, protocol, calendar, assets, anchor,
             unposted_account_fees_usd=proof['unposted_account_fees_usd'],
             known_net_before_pending_account_fees_usd=str(activity_gross-allocated),
             terminal_cost_finality_proven=False)
+    if pending and liability_policy is not None:out.update(context['classification'])
     if legacy_transition is not None:
         if pending:out.update(context['classification'])
         out.update(legacy_transition_sha256=digest(legacy_transition),
@@ -276,7 +305,7 @@ def _document(inputs, entry_id, *, pending=False):
         or snapshot['account_id'] != values['source']['account_id']):
         raise ValueError('MONTHLY_COST_BOOK_ACCOUNT')
     derived = derive_owned_exit_cost(**values, positions=snapshot['positions'], exits=snapshot['exits'],
-        entry_id=entry_id,pending=pending)
+        entry_id=entry_id,pending=pending,liability_policy=snapshot.get('account_liability_reserve_policy'))
     return _seal_document(derived,inputs)
 
 
@@ -290,7 +319,8 @@ def _account_document(inputs):
     if (snapshot['schema']!='ALPACA_MONTHLY_COST_BOOK_SNAPSHOT_V1'
         or snapshot['account_id']!=values['source']['account_id']
         or 'legacy_transition' not in values):raise ValueError('MONTHLY_COST_BOOK_ACCOUNT')
-    context=_account_day_context(**values,positions=snapshot['positions'],exits=snapshot['exits'],pending=True)
+    context=_account_day_context(**values,positions=snapshot['positions'],exits=snapshot['exits'],pending=True,
+        liability_policy=snapshot.get('account_liability_reserve_policy'))
     source=values['source']
     derived=dict(schema='ALPACA_MONTHLY_ACCOUNT_FEE_ADMISSION_V1',account_id=source['account_id'],
         source_sha256=digest(source),observed_ms=source['observed_ms'],
@@ -358,6 +388,11 @@ def pending_admission_net(native, *, account, now_ms, owner_scope=None):
                     **{k:doc['replay_inputs'][k] for k in ('protocol','calendar','assets')})
                 require(owner_scope.get('legacy_pending_cost_inputs')==expected,'LEGACY_SOURCE_POLICY_CONFLICT')
         snapshot=read_json(doc['replay_inputs']['book_snapshot']['path']);same_book(snapshot)
+        policy=snapshot.get('account_liability_reserve_policy')
+        if native.base_url=='https://api.alpaca.markets':
+            require(owner_scope is not None and policy==owner_scope.get('account_liability_reserve_policy'),
+                'ACCOUNT_LIABILITY_SCOPE_CONFLICT')
+        if policy is not None:liability_reserve_policy(policy,reserve=native.liability)
         source=read_json(doc['replay_inputs']['source']['path']);after=source['account_after']
         require(doc['account_id']==native.account==account.get('id')==after.get('id')
             and account.get('currency')==after.get('currency')=='USD','ACCOUNT_CONFLICT')
@@ -406,11 +441,15 @@ def pending_admission_net(native, *, account, now_ms, owner_scope=None):
             posted_open_monthly_fees_usd=str(posted_open),
             legacy_unposted_fee_upper_bound_usd=account_doc['legacy_unposted_fee_upper_bound_usd'],
             account_context_source=context_pin)
+        if account_doc.get('account_liability_reserve_policy') is not None:
+            for key in ('account_liability_reserve_policy','modelled_unposted_fees_usd',
+                        'reported_pending_liability_reserve_usd'):
+                out[key]=account_doc[key]
     return lower,out
 
 
 def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, assets_path, now_ms,
-                         allow_pending=False,legacy_transition=None):
+                         allow_pending=False,legacy_transition=None,liability_policy=None):
     """Existing tick cost_sources callback: only order GETs + immutable evidence.
 
     Does not construct a controller/journal, load credentials, submit or invoke a
@@ -431,6 +470,14 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
                 raise ValueError('MONTHLY_COST_IMMUTABLE_CONFLICT')
         else: publish_once(path, raw)
     if type(allow_pending) is not bool:raise ValueError('MONTHLY_COST_EXPLICIT_MODE_REQUIRED')
+    if native.base_url=='https://api.alpaca.markets':
+        authorized=native._live_custody().get('account_liability_reserve_policy')
+        if liability_policy is not None and liability_policy!=authorized:
+            raise ValueError('MONTHLY_PENDING_FEE_ACCOUNT_LIABILITY_SCOPE_CONFLICT')
+        liability_policy=authorized
+    if liability_policy is not None:
+        if not allow_pending:raise ValueError('MONTHLY_COST_EXPLICIT_PENDING_POLICY_REQUIRED')
+        liability_reserve_policy(liability_policy,reserve=native.liability)
     paths = dict(source=source_path, protocol=protocol_path, calendar=calendar_path, assets=assets_path)
     inputs = {name: pin(path) for name,path in paths.items()}
     if legacy_transition is not None:
@@ -451,6 +498,7 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
                 execution_identity_v1(old, current); e['orders'][i] = current
         snapshot = dict(schema='ALPACA_MONTHLY_COST_BOOK_SNAPSHOT_V1', account_id=native.account,
             positions=positions, exits=exits)
+        if liability_policy is not None:snapshot['account_liability_reserve_policy']=deepcopy(liability_policy)
         root = safe_directory(native.runtime/'cost-sources'/digest(dict(inputs=inputs, snapshot=snapshot)))
         root.mkdir(parents=True, exist_ok=True, mode=0o700)
         snapshot_path = root/'book-snapshot.json'; publish(snapshot_path, snapshot)
@@ -463,7 +511,8 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
             try:document = _document(selected, eid)
             except ValueError as exc:
                 if not allow_pending or str(exc) not in {
-                    'COST_FEE_DAY_COVERAGE_OR_SESSION_NOT_CLOSED','COST_FEE_POSTING_PENDING_OR_CONFLICT'}:raise
+                    'COST_FEE_DAY_COVERAGE_OR_SESSION_NOT_CLOSED','COST_FEE_POSTING_PENDING_OR_CONFLICT',
+                    'MONTHLY_COST_LIABILITY_PENDING'}:raise
                 document=_document(selected,eid,pending=True)
             # A later as-of capture may reveal a correction. Never overwrite a
             # previously finalized allocation or silently keep stale net PnL.

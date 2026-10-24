@@ -1,5 +1,34 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT24Oct12UTC supersedes earlier24Oct HOLD — MONTHLY READY FOR PERSONAL ARM;
+PUMP actual hourly DATA enabled. Read MONEY_SERVER_COMPLETION_2026_10_24.md.
+Monthly257local/same257VPS PASS; new source dcaafa089f…9200,53files/40imports.
+Opt-in policy SUM(modelled unposted, reported pending) inside same40reserve;
+reported amount reduces conservative loss-admission lowerbound, no actualPnL/
+finality/cashdoubledebit. Oldscope withoutoptin rejects. Savedactual pending.02
+replayPASS; fresh9GET pending0/cash496.31/flat/allownedfees classified. v4 installed
+DISABLED under original813893,64oldpins/HALT unchanged; oldNET/SHOPinactive.
+Scopeaadf1055…cff2d, specf3447a28…8dbb;400/280/40/4/single168/loss8 and2Nov14:30UTC
+→1Feb00UTC unchanged. READY personal command in .private/money_completion_20261024_v4/
+owner-monthly-activate.sh; agentMUSTNOTRUN. No repeat budgetGO needed. Oldactivation
+commands superseded, NETsaleSPENT. Actual30Octselection/2Novfreshruntime remain.
+PUMP213local/same213VPS/91files/38imports/41memoryreceipts; source9c6901a6…e522.
+Newpersistent DATA supervisor +selectedcustodybridge. Firstactual137census,
+136intake/HFTunavailable/0prospective/0writes. DATAonlytimer enabled hourly00:02UTC,
+900s timeout/3GiB diskguard; ownDATAlock/no creds/no accountlease. Fullbootstrap
+minutes not≤60s financialsourceproof. FinancialCLI dispatch stillrejects. Original
+KITYPID2825351 (invocation24Oct06:08:54UTC,NRestarts0),sameff249e…7efconfig/818853;
+not changed by thisdeployment. No financialPUMPunit/GO/TINY_READY. NEXT trusted
+fresh per-signal+accountprovider/physical original-ownerhandoff+rollback/alerts,
+exactTINYpacket/ownerGO; no NETfeeswait. Oneastra/highreview noimportantfindings;
+actualmetadata verified. Priorimplementer allowancefailure recorded/rootfinished.
+Researchref0c91b9a verified/read-only: PolyINCONCLUSIVE; KITYDOSIE_READY but stale
+8leg800template corrected by versionedpath300/10; weeklyexecutor/fundingGOOPEN.
+QueueMonthly→PUMP→Polymarket→KITY, no blindmerge/researchjudge. Foreignuntracked
+configs/allowlist_change_log.json untouched. See report for retained integration
+failures, final receipts and exact next gate. Earlier paragraphs are history.
+
+
 CURRENT24Oct — MONTHLY PHYSICAL HANDOFF DONE / COST RECONCILIATION HOLD; PUMP COMPONENT193PASS.
 Read MONTHLY_INSTALLED_AND_PUMP4_SELECTED_COMPONENT_2026_10_24.md first.
 Owner accepted exact presented Monthly parameters/period/entrycontrol/ops inchat;

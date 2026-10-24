@@ -1,5 +1,15 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**24Oct superseding completion:** [Monthly ready / PUMP hourly DATA](reports/MONEY_SERVER_COMPLETION_2026_10_24.md).
+Monthly257local/same257VPS, actualpending0/flat/cash496.31; v4 installeddisabled,
+READY personalarm (budget400/280/40/8 unchanged), agentdidnotactivate. Future
+30Octselection/2Novfreshgates remain. PUMP213/213,136/137actualDATA/0prospective,
+hourlytimeractive/3GiBguard; financialprovider/physicalhandoff/alerts/TINYGOOPEN.
+No NETfeesdependency. Researchref0c91b9a verified: PolyINCONCLUSIVE and KITYweekly
+executor/funding/GOOPEN. QueueMonthly→PUMP→Poly→KITY, independentDATAintake allowed.
+Earlier24Oct HOLD/no-thirdline paragraphs below are dated superseded evidence.
+
+
 **ORIGINAL GOAL:** безопасная автономная мультистратегийная Trading OS: данные →
 проверяемые гипотезы → независимое исследование → допуск → ограниченное исполнение →
 защита → выход → сверка → диагностика и следующий разрешённый цикл. Factory ищет

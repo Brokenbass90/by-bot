@@ -1,0 +1,83 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "observed_ms": 1792845233898,
+  "old_net_exit_spent": true,
+  "original_alpaca_lock_inode": 813893,
+  "original_kity_lock_inode": 818853,
+  "owner_go_present": false,
+  "units": {
+    "alpaca-dynamic-next-entry-20261019.timer": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-dynamic-next-entry-20261019.timer",
+      "Job": "",
+      "NextElapseUSecRealtime": "",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "alpaca-monthly-owned.service": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-monthly-owned.service",
+      "Job": "",
+      "MainPID": "0",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "alpaca-monthly-owned.timer": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-monthly-owned.timer",
+      "Job": "",
+      "NextElapseUSecRealtime": "",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "alpaca-oct15-owned-manager.timer": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-oct15-owned-manager.timer",
+      "Job": "",
+      "NextElapseUSecRealtime": "",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "kity-execution-micro-owner.service": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service",
+      "Job": "",
+      "MainPID": "2825351",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "pump4-data-supervisor.service": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/pump4-data-supervisor.service",
+      "Job": "",
+      "MainPID": "0",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "pump4-data-supervisor.timer": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/pump4-data-supervisor.timer",
+      "Job": "",
+      "NextElapseUSecRealtime": "Sat 2026-10-24 13:00:02 UTC",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "pump4-execution-owner.service": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "",
+      "Job": "",
+      "MainPID": "0",
+      "SubState": "dead",
+      "UnitFileState": ""
+    }
+  }
+}
