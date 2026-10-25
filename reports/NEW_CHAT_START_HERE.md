@@ -17,29 +17,23 @@ reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
 single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
 2Novfreshentry/protection checks remain actual future gates; CASHpossible.
 
-## NEXT PUMP — new publication fix verified, NOT SELECTED
+## NEXT PUMP — streaming DEPLOYED ORDERS_OFF; new-H1 gate pending
 
-`PUMP4_STREAM_PUBLICATION_2026_10_25.md` and `evidence/pump4_stream_20261025/`.
-Rootcause: full137archive delayed every publisheddecision84–230s; source93timely
-was not financialpublication (0/132≤60s). Existing collector now calls sameintake
-as each symbol is fsynced; immutablecontext/row receipts, fullseal later; no new
-framework/frozenproducer/journal/epoch/60sgate change.253local/same253VPSPASS,
-actualastra/high review0Important/27targetedPASS. Candidate UNSELECTED:
-`/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5deafc9fdd232bdc`.
-Exactmaterial5deafc9fdd232bdc1e63148e0a3718cc680236d26f7815280b0e1de8d9d9baf1.
-No actual new-H1 latency PASS, no TINY_READY, no PUMP financialGO.
-
-Selected owner still candidate30677ce61f137272/owner-review-health-v3/runner.json,
-SHA83a32143606b37c0ce8410ddd20067aaad8840dfb2b5d445556d132375803306;
-PID2865120/NRestarts0/OFF at datedreadback, originalBybit818853.
-DATA root candidate9c6901a65a66e035/app/.private/pump4-supervisor-v1,
-bindingf1a32a29…38a00 remains unchanged. OldKITYretired/disabled; neverrestart besidePUMP.
-
-Do next: bounded existing DATA/config handoff+rollback preserving exact original
-journals/epochs/cursors/observations and one writer; no in-place repin/reset.
-Then actual NEW H1 source vs publication timing; freshaccount/fees/funding/rounding/
-sizing/admission/execution ORDERS_OFF; exactTINYpacket for separate ownerdecision.
-Never infer new authority or retry ambiguous money actions. Existingclaims SPENT.
+Read `PUMP4_STREAM_HANDOFF_2026_10_25.md` and its evidence directory.
+Reviewed DATA5deafc9fdd232bdc is now selected by SAME DATA service/timer.
+10433historyfiles preserved;oldrootintact/newbinding135d6e09…8dd0.
+SAMEsolefinancialunit/app30677ce6,config356a195b…9bb7/scopef6c3312f…a8b0;
+PID2890108/NRestarts0/original818853held/HEALTHY/NO_NEW_SIGNAL at12:36UTC.
+Config `/opt/bybot-research/pump4-server-orders-off-20261023/stream-handoff-20261025/owner-review-stream-v1/runner.json`.
+DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5deafc9fdd232bdc/app/.private/pump4-supervisor-v1`.
+Oldscope/claims preserved;2freshGETflat barriers;0POST/GO. KITY remains retired.
+19local/same19VPSnetworkdenied handofftests;boundedreview fixes regressed.
+Pinned private helper `stream-handoff-20261025/ops-final.py` includes explicit
+state-preserving rollback; no automatic retry, no repin/reset/history overwrite.
+Actualsystemd cachedarchivePASS is not timely/new signal. NEXT actual25Oct13:00UTC
+H1 (timer+2s): source→publication_completed_ms→financialreadiness separately.
+Then freshaccount/fees/funding/oneway/rounding/sizing/OFF→exact TINY proposal.
+TINY_NOT_READY; separate moneyGO absent. Monthly stays selected, no repeat commands.
 
 ## Broader goal and ownership
 

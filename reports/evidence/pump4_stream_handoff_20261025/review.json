@@ -1,0 +1,22 @@
+{
+  "broker_writes": 0,
+  "critical": 0,
+  "effort": "high",
+  "final_two_findings_red_green": true,
+  "important_findings_fixed": [
+    "Integrity before imports; exact manifest/material/driver",
+    "DATA unit/timer overrides and original PID",
+    "Durable clone and atomic rollback journal copy",
+    "Create systemd writable runtime before start",
+    "Release DATA locks before timer catchup",
+    "Recover wrapper switch independently of unit switch"
+  ],
+  "independent_rereview": false,
+  "local_tests": 19,
+  "model": "gpt-6-astra",
+  "rollout_id": "01a17307-4e93-7dc0-9f34-a1ec492fa89e",
+  "runtime_verified": true,
+  "scope": "New bounded handoff only; accepted strategy/candidate not re-audited",
+  "vps_network_denied": true,
+  "vps_same_tests": 19
+}

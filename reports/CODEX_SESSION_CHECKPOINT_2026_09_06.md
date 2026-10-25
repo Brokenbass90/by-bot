@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct12:36UTC — PUMP STREAM DATA/CONSUMER DEPLOYED ORDERS_OFF.
+Read PUMP4_STREAM_HANDOFF_2026_10_25.md and evidence/pump4_stream_handoff_20261025/.
+DATA5deafc9fdd232bdc selected via SAME service/timer;10433historyfiles preserved,
+oldrootintact;newbinding135d6e09…8dd0. Actualsystemd cachedarchivePASS, NOTnewH1.
+SAMEsoleownerunit/app30677ce6, immutableconfig356a195b…9bb7/scopef6c3312f…a8b0,
+newOFFrootcandidate5deaf…/runtime/financial-orders-off-stream-v1;PID2890108/
+NRestarts0/original818853held/HEALTHY/NO_NEW_SIGNAL. Oldscope/claims unchanged;
+2freshflat/noordersGETbarriers,0POST/GO. Existinghealthcronunchanged/newpinnedwrapper.
+19local/same19VPSnetworkdeniedhandofftestsPASS,actualastra/highboundedreview;
+final2ImportantfixedRED→GREEN/rootverified,noindependentrereview.
+Monthlyunit9d944…32cc1d unchanged; NEVERrepeatMonthlyactivation/NETexit.
+NEXT actual13:00UTC newH1 publicationtiming (not sourceclock), freshcosts/account/
+lot/oneway/OFF andexactTINYpacket. TINY_NOT_READY/moneyGOabsent;noPoly/KITYpivotyet.
+Previous UNSELECTED/PID2865120 states below are superseded history.
+
+
 CURRENT25Oct — PUMP STREAM COMPONENT PASS, NOT DEPLOYED; MONTHLY LEAVE SELECTED.
 Read PUMP4_STREAM_PUBLICATION_2026_10_25.md + evidence/pump4_stream_20261025/.
 New existingcollector as_completed→fsyncedsymbolcallback→sameintake/journal,

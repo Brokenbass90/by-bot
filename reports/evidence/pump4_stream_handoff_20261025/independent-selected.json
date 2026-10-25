@@ -1,0 +1,84 @@
+{
+  "data_applied": {
+    "binding_sha256": "135d6e096d14bae0eb8f706763355f7d3625a582337c551e459335298cc28dd0",
+    "broker_writes": 0,
+    "data_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5deafc9fdd232bdc/app/.private/pump4-supervisor-v1",
+    "observed_ms": 1792931696606,
+    "original_lock_inode": 818853,
+    "owner_go_created": false,
+    "owner_pid": "2865120",
+    "preserved_files": 10433,
+    "status": "STREAM_DATA_SELECTED"
+  },
+  "health": {
+    "age_ms": 9156,
+    "financial_trading_proven": false,
+    "observed_ms": 1792931803883,
+    "orders_allowed": false,
+    "owner": "PUMP4",
+    "pid": 2890108,
+    "reason": "ORDERS_OFF_SUPERVISOR_ALIVE",
+    "restart_allowed": false,
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "status": "HEALTHY"
+  },
+  "latest_receipt": {
+    "broker_writes": 0,
+    "final_costs_proven": false,
+    "mode": "ORDERS_OFF",
+    "observed_ms": 1792931794727,
+    "pid": 2890108,
+    "result": {
+      "broker_writes": 0,
+      "status": "NO_NEW_SIGNAL"
+    },
+    "run_id": "b65ba0789f914801b352ec6a28d44114",
+    "runner_config_sha256": "356a195bea26d145384c92a0739fd456bba84f2c35eb407911c38a6f3a519bb7",
+    "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+    "scope_sha256": "f6c3312fa3a5d6402cdd2657d6fd7c8030fcf87d526bcbac1990776eb85ea8b0",
+    "tick": 7
+  },
+  "lock_held_by_selected_pid": true,
+  "lock_inode": 818853,
+  "monthly_unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+  "observed_ms": 1792931803731,
+  "original_scope_preserved": true,
+  "owner_applied": {
+    "broker_writes": 0,
+    "config_path": "/opt/bybot-research/pump4-server-orders-off-20261023/stream-handoff-20261025/owner-review-stream-v1/runner.json",
+    "config_sha256": "356a195bea26d145384c92a0739fd456bba84f2c35eb407911c38a6f3a519bb7",
+    "fresh_flat_before": {
+      "bundle_sha256": "0acd1338d5ba51df48b498f9bfa2e1b2ad37f37fda3e24549fb9afc912379c9f",
+      "observed_ms": 1792931725508,
+      "open_orders_empty": true,
+      "positions_flat": true,
+      "source_ms": 1792931724302
+    },
+    "fresh_flat_stopped": {
+      "bundle_sha256": "7da053846a82365b86b59da663bb159c0e7a4d79309a411d13287fea19f41062",
+      "observed_ms": 1792931728091,
+      "open_orders_empty": true,
+      "positions_flat": true,
+      "source_ms": 1792931726680
+    },
+    "new_pid": 2890108,
+    "new_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5deafc9fdd232bdc/runtime/financial-orders-off-stream-v1",
+    "observed_ms": 1792931737302,
+    "old_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-30677ce61f137272/runtime/financial-orders-off-monitor-v3",
+    "original_lock_inode": 818853,
+    "owner_go_created": false,
+    "scope_sha256": "f6c3312fa3a5d6402cdd2657d6fd7c8030fcf87d526bcbac1990776eb85ea8b0",
+    "source_result": {
+      "broker_writes": 0,
+      "status": "NO_NEW_SIGNAL"
+    },
+    "status": "STREAM_CONSUMER_ORDERS_OFF_SELECTED"
+  },
+  "owner_go_present": false,
+  "owner_state": {
+    "ActiveState": "active",
+    "MainPID": "2890108",
+    "NRestarts": "0"
+  },
+  "status": "INDEPENDENT_SELECTED_ORDERS_OFF_READBACK"
+}
