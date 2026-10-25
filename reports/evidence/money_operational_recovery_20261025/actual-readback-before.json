@@ -1,0 +1,134 @@
+{
+  "account_lock": {
+    "st_dev": 64769,
+    "st_ino": 818853
+  },
+  "alpaca": {
+    "broker_writes": 0,
+    "cash": "496.31",
+    "get_requests": 9,
+    "open_orders": [],
+    "pending_fees": "0",
+    "positions": []
+  },
+  "bybit": {
+    "available_balance": "1019.44944712",
+    "borrowed_funds": false,
+    "broker_writes": 0,
+    "margin_mode": "REGULAR_MARGIN",
+    "open_orders_empty": true,
+    "positions_flat": true,
+    "source_ms": 1792908737206
+  },
+  "lock_holders": [],
+  "monthly_candidate_acceptance": {
+    "checkout_fallback": [],
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 260
+    },
+    "elapsed_seconds": 252.184,
+    "money_authority": false,
+    "network_denied": true,
+    "orders_allowed": false,
+    "real_broker_requests": 0,
+    "real_broker_writes": 0,
+    "receipt_count": 2,
+    "schema": "ALPACA_MONTHLY_LEGACY_PENDING_EXACT_ACCEPTANCE_V1",
+    "source_file_count": 53,
+    "source_import_count": 40,
+    "source_material_sha256": "0a0e7c6e6a4b0d53f7db450c729c9e1700c5870cf1dbd10027fbfbaeb8039948",
+    "status": "PASS",
+    "test_file_count": 18,
+    "whole_live_handoff": "OPEN"
+  },
+  "monthly_log": "alpaca-monthly-owned.service: Consumed 20.435s CPU time.\nStarting alpaca-monthly-owned.service - Alpaca Monthly single owned cycle...\n{\"accounting\": [], \"broker_write_count_source\": \"EXISTING_OWNED_DISPATCH_JOURNAL\", \"entry_status\": \"BLOCKED\", \"issues\": [{\"code\": \"ValueError\", \"phase\": \"ACCOUNTING\", \"reason\": \"MONTHLY_PENDING_FEE_STALE_SOURCE\"}, {\"code\": \"ValueError\", \"phase\": \"LOSS_ADMISSION\", \"reason\": \"MONTHLY_PENDING_FEE_STALE_SOURCE\"}], \"maintenance\": {\"money_authority\": false, \"orders_allowed\": false, \"production_writer_installed\": false, \"status\": \"MONTHLY_WAITING_REGULAR_SESSION\"}, \"money_authority\": false, \"notifications\": {\"health\": {\"delivery\": {\"delivered\": true, \"http_status\": 200, \"message_id\": 15344, \"response_sha256\": \"d24c947eaba5f754be3028d867f936b19ca351f8a65baaeab45099d161ade477\", \"status\": \"DELIVERED\"}, \"status\": \"ALREADY_RECORDED\"}, \"trades\": []}, \"opening\": null, \"orders_allowed\": false, \"production_entrypoint\": true, \"recovered\": [], \"runner_config_sha256\": \"9d79daf1eaa1c7b9ac7b07f2754cb54011d5e8908aefbfd38b1df846a74a1829\", \"source\": {\"already_bound\": true, \"broker_writes\": 0, \"daily_status\": \"NO_OWNED_MONTHLY_POSITIONS\", \"money_authority\": false, \"next_schedule\": {\"daily_due\": false, \"entry_open_ms\": 1793021400000, \"entry_session\": \"2026-10-26\", \"money_authority\": false, \"month_end\": false, \"monthly_selection_due\": false, \"next_source_run_ms\": 1793046000000, \"orders_allowed\": false, \"signal_session\": \"2026-10-23\"}, \"orders_allowed\": false, \"receipt_sha256\": \"41bc72ece072ee0d148cb28a9951cadddab58d817b472f2e00c17a64db506a1a\", \"schema\": \"ALPACA_SOURCE_OPERATION_RECEIPT_V1\", \"selection_id\": null, \"signal_session\": \"2026-10-23\", \"source_id\": \"846365a5002495e26debc7d9c98dbb811c79fa941f7205de0fe137c96f095677\", \"status\": \"ORDERS_OFF_OPERATIONAL_PASS\"}, \"status\": \"MONTHLY_STANDING_DISPATCH_TICK\"}\nalpaca-monthly-owned.service: Main process exited, code=exited, status=2/INVALIDARGUMENT\nalpaca-monthly-owned.service: Failed with result 'exit-code'.\nFailed to start alpaca-monthly-owned.service - Alpaca Monthly single owned cycle.\nalpaca-monthly-owned.service: Consumed 21.815s CPU time.\nStarting alpaca-monthly-owned.service - Alpaca Monthly single owned cycle...\n",
+  "new_owner_go_present": false,
+  "observed_ms": 1792908736032,
+  "pump_candidate_acceptance": {
+    "checkout_fallback": [],
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 246
+    },
+    "elapsed_seconds": 41.282,
+    "imports": 45,
+    "material_sha256": "30677ce61f13727274836265d92ad319fc77c5dc67e6d9a6a152385630733a97",
+    "money_authority": false,
+    "network_denied": true,
+    "orders_allowed": false,
+    "real_broker_requests": 0,
+    "real_broker_writes": 0,
+    "receipt_count": 54,
+    "schema": "PUMP4_SERVER_ORDERS_OFF_ACCEPTANCE_V1",
+    "source_files": 105,
+    "status": "PASS",
+    "tiny_ready": false
+  },
+  "units": {
+    "alpaca-dynamic-next-entry-20261019.timer": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-dynamic-next-entry-20261019.timer",
+      "Job": "",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "alpaca-monthly-owned.service": {
+      "ActiveState": "activating",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-monthly-owned.service",
+      "Job": "7632045",
+      "MainPID": "2863094",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "start",
+      "UnitFileState": "static"
+    },
+    "alpaca-monthly-owned.timer": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-monthly-owned.timer",
+      "Job": "",
+      "Result": "success",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "kity-execution-micro-owner.service": {
+      "ActiveState": "failed",
+      "DropInPaths": "/etc/systemd/system/kity-execution-micro-owner.service.d/90-kity-micro-inhibit.conf",
+      "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service",
+      "Job": "",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "signal",
+      "SubState": "failed",
+      "UnitFileState": "disabled"
+    },
+    "pump4-data-supervisor.timer": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/pump4-data-supervisor.timer",
+      "Job": "",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "pump4-execution-owner.service": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "",
+      "Job": "",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": ""
+    }
+  }
+}

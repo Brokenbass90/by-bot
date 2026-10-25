@@ -1,5 +1,54 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct continuation safety note — SUPERSEDES READY/old-owner-active below.
+LIQ25Oct DATA delivery completed:9 immutable daily snapshots17–25 verified,
+remote/local seal hashes equal;61709 raw25Oct rows,25symbols/sameepoch,
+coverage UNKNOWN_NO_SEQUENCE_OR_BACKFILL/prospective0; collector/export unchanged.
+
+Unfinished preceding HUMAN money task is preserved, not resumed by DATA heartbeat:
+Human PERSONALLY ran v4 Monthly activation; OWNER_ARMED_FUTURE_MONTHLY,
+scopeaadf1055…cff2d/specf3447a28…8dbb, timeractive. First independent actual tick
+FAILED CYCLE_IDENTITY_FOREIGN_ROOT: ops/alerts had preceded cycleidentity.
+Exact evidence-manifest metadata bootstrap applied ONCE,9freshGETflat,0writes,
+oldGO/unit/source unchanged; identity496e0c5f…c236. Then actual runner exposed
+MONTHLY_PENDING_FEE_STALE_SOURCE, entries remainBLOCKED. Confirmed omitted
+custody elapsed in tick/opening/recover clocks; three source moves and three
+RED→GREEN tests,54focusedPASS. Changed local alpaca_monthly_cycle_v1.py and test.
+New isolated candidate0a0e7c6e6a4b0d53-t24685496 staged UNSELECTED; full local/VPS
+acceptance was running when heartbeat steered. Read /tmp/monthly-clock-local.log,
+VPS /tmp/monthly-clock-exact.log and candidate acceptance.json; do not assertPASS
+without reading. Need exact corrected owner packet; NEVER rerun oldactivation or
+mint agentGO/change signed sources in place. Cash496.31/flat was dated preflight,
+not current truth. Current v4 scope/risk unchanged; NETsaleSPENT/SHOPcancelled.
+
+PUMP new supervisor/provider/CLI,72sourcepins,105packagedfiles/45imports:
+final candidate30677ce61f13727274836265d92ad319fc77c5dc67e6d9a6a152385630733a97,
+246local exactPASS; VPS run finished, read acceptance before claim.23local
+handoff recovery testsPASS. Real source flat preflight PASS/available1019.39943093
+is dated. PHYSICAL HANDOFF DID NOT COMPLETE: oldKITY stopped/disabled,
+MainPID0/failed/Resultsignal/ExecMainStatus9, exact new inhibitor present;
+original818853 free; PUMP unitfragment absent/PID0, PUMP GO absent. This is actual
+24Oct19:29UTC readback, must recheck drift before operations. Do not claim old
+PID2825351 active. No broker POST/financial GO was issued. ALL oldSPENT/claims/
+sourceguards retained; DATA hourly supervisor unchanged. Handoff helper rejected
+failed-vs-inactive after stop BEFORE creating new unit. Do NOT rerun handoff.
+Private helper /opt/bybot-research/pump4-server-orders-off-20261023/
+candidate-30677ce61f137272/handoff-operations.py SHA909fc29a…4314336 and exact
+owner-review-v2 packet da83e2cb…50029c. Explicit verified rollback exists; distinct
+complete-stopped recovery was requested but worker hit allowance BEFORE delivery.
+Root must implement/test that exact known partial-state continuation OR explicitly
+rollback after fresh GET reconciliation; no blind retries, no real PUMPorders.
+Source .flat() now separate recent account-only history; never relabel oldfixture
+signal. Helper tests local .private/pump4_financial_handoff_20261024/,23PASS.
+Next scope HUMAN money work remains Monthly correction → PUMP ORDERS_OFF physical
+completion/TINY packet; no Poly/KITY expansion. Dirty changes NOT yetcommitted;
+foreign configs/allowlist_change_log.json remains untouched. Private receipts:
+/tmp/monthly-after-personal-arm-readback.json,/tmp/monthly-identity-bootstrap-result.json,
+/tmp/monthly-after-bootstrap-runtime.json,/tmp/pump4-financial-preflight-final.json.
+Latest DATA-only heartbeat did NOT touch any financial process/authority.
+Earlier CURRENT paragraphs below are history.
+
+
 CURRENT24Oct12UTC supersedes earlier24Oct HOLD — MONTHLY READY FOR PERSONAL ARM;
 PUMP actual hourly DATA enabled. Read MONEY_SERVER_COMPLETION_2026_10_24.md.
 Monthly257local/same257VPS PASS; new source dcaafa089f…9200,53files/40imports.

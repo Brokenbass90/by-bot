@@ -97,8 +97,8 @@ class MonthlyManager:
 
     def opening(self,native,history,selection_id,*,quotes,now_ms,apply=False,symbols=None,before_entry=None):
         if type(apply) is not bool:raise ValueError('CYCLE_EXPLICIT_BOOLEAN_REQUIRED')
-        self._custody(native)
         started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
+        self._custody(native)
         with self.guard():
             selected=next(s for s in self.book.rows('selections') if s['selection_id']==selection_id)
             allowed={p['symbol'] for p in selected['picks']}
@@ -161,10 +161,10 @@ class MonthlyManager:
 
     def recover(self,native,*,now_ms,apply=False):
         """Only durable dispatched CIDs, across ALL selections; never resend a buy."""
+        started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
         self._custody(native)
         if type(apply) is not bool:raise ValueError('CYCLE_EXPLICIT_BOOLEAN_REQUIRED')
         if not apply:return []
-        started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
         with self.guard():
             # Reconcile a native rotation committed before the Monthly journal.
             # Never hold the account lock around enter(), which takes it itself.
@@ -192,9 +192,9 @@ class MonthlyManager:
         inferred from empty activities or flatness. Default does no broker I/O.
         """
         if type(apply) is not bool:raise ValueError('CYCLE_EXPLICIT_BOOLEAN_REQUIRED')
+        started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
         self._custody(native)
         if not apply:return self.preview(now_ms=now_ms)
-        started=time.monotonic();clock=lambda:now_ms+int((time.monotonic()-started)*1000)
         out=dict(status='MONTHLY_STANDING_DISPATCH_TICK',recovered=[],maintenance=None,
             source=None,accounting=[],opening=None,issues=[],entry_status='NO_SOURCE',
             orders_allowed=False,money_authority=False)
