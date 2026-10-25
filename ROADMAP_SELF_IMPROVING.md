@@ -1,5 +1,16 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**25Oct PUMP publication component:** [existing intake streams completed symbols](reports/PUMP4_STREAM_PUBLICATION_2026_10_25.md).
+253local/same253VPS exactPASS; independentcriticalreview0Important. UNSELECTED,
+actualnextH1latencyUNVERIFIED/TINY_NOT_READY. Next boundedDATA/confighandoff with
+samejournals/epochs/onewriter/rollback, then actualtiming+source/sizing/OFF/TINYpacket.
+Monthlypersonallyselected/actualidlePASS unchanged; no repeatownercommand.
+**Owner reaffirmed North Star:** Brain, Factory, classical strategies and intelligent
+portfolio management stay in this canonical roadmap. Current execution queue
+Monthly→PUMP→Polymarket→KITY supports that goal; no secondroadmap/automaticAI moneyauthority.
+Earlier dated rows below are historical.
+
+
 **25Oct latest ACTUAL acceptance:** [v6 personally selected;3clean realcycles](reports/ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md).
 Fresh independent9GETflat/cash496.31/pending0/orders0; exact source/scope/unit,
 activeenabledtimer/original813893/noentrylatchPASS. Current Monthly personal action

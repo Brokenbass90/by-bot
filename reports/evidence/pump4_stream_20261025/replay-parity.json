@@ -1,0 +1,33 @@
+{
+  "actual_publication_latency_verified": false,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "cases": [
+    {
+      "case": "before",
+      "decision_ids": [
+        "pump4-72d4b60c01e2357261e2287ceed7996e027e2e6654bfb474ef68884b83423ced"
+      ],
+      "elapsed_seconds": 0.1523737080860883,
+      "journal_sha256": "b6b1c1e477f79fb41d5ac03c58e79b328ac5c7051eaeca5f9c16e6e6d50e91c1",
+      "mode": "CURRENT_CLOSED_BAR",
+      "replay_calls": 6,
+      "status": "CLOSED_H1_INTAKE_PASS"
+    },
+    {
+      "case": "after",
+      "decision_ids": [
+        "pump4-72d4b60c01e2357261e2287ceed7996e027e2e6654bfb474ef68884b83423ced"
+      ],
+      "elapsed_seconds": 0.11738695902749896,
+      "journal_sha256": "b6b1c1e477f79fb41d5ac03c58e79b328ac5c7051eaeca5f9c16e6e6d50e91c1",
+      "mode": "CURRENT_CLOSED_BAR",
+      "replay_calls": 5,
+      "status": "CLOSED_H1_INTAKE_PASS"
+    }
+  ],
+  "same_frozen_fixture": true,
+  "schema": "PUMP4_EXISTING_REPLAY_REUSE_PARITY_V1",
+  "status": "PASS",
+  "synthetic_clock": true
+}

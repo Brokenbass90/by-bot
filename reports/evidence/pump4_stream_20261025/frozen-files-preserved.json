@@ -1,0 +1,11 @@
+{
+  "epoch_or_existing_evidence_changed": false,
+  "files": {
+    "configs/preregistered/pump4_v1_universe_20261020.json": "e7cca156e48dedd4a1cb7149cebf09a3bf0686859daad597a0bead4b6c59b3fa",
+    "research_lab/pump4_closed_bar_intake_v1.py": "9e37540b6d12e21cd248e45b62680f4c77b03e7ec0a47b7aa7d812c33f9702aa",
+    "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+    "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+  },
+  "journal_schema_changed": false,
+  "status": "PASS"
+}

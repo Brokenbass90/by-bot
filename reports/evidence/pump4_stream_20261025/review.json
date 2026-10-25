@@ -1,0 +1,14 @@
+{
+  "actual_effort": "high",
+  "actual_model": "gpt-6-astra",
+  "actual_publication_latency_verified": false,
+  "critical_findings": 0,
+  "financial_signoff": false,
+  "important_findings": 0,
+  "independent_targeted_tests": 27,
+  "independent_test_seconds": 6.44,
+  "requested_model": "gpt-6-astra",
+  "rollout_id": "01a172ed-37f8-71a2-84ea-d1595062ee80",
+  "scope": "Streaming DATA publication, immutable context/capture receipts, recovery and existing financial consumer window",
+  "targeted_followup": "Receipt strategy_calls unknown for external callback confirmed; no new findings, no broad tests repeated"
+}

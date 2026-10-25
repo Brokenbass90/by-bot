@@ -1,0 +1,41 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "config_keys": [
+    "account_fingerprint",
+    "app_root",
+    "authority",
+    "credential_source",
+    "credential_source_sha256",
+    "custody_runtime_root",
+    "data_source",
+    "entry_max_delay_ms",
+    "epoch_started_ms",
+    "guard_source_files",
+    "inhibit_marker",
+    "inhibitors",
+    "mode",
+    "notifications",
+    "original_cron_sha256",
+    "original_owner",
+    "schema",
+    "source_files",
+    "unit",
+    "unit_template_sha256"
+  ],
+  "data_source": {
+    "binding": {
+      "path": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-9c6901a65a66e035/app/.private/pump4-supervisor-v1/data-binding.json",
+      "sha256": "f1a32a29b5ab3acd098aab9ccb98a12fb2a9ae5641a066cb0525f2a914d38a00"
+    },
+    "root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-9c6901a65a66e035/app/.private/pump4-supervisor-v1"
+  },
+  "mode": "ORDERS_OFF",
+  "monthly_unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+  "observed_ms": 1792929844762,
+  "physical_state": "MainPID=2865120\nResult=success\nNRestarts=0\nActiveState=active\nSubState=running\n",
+  "schema": "PUMP4_SELECTED_ACCOUNT_RUNNER_V1",
+  "selected_configuration_sha256": "83a32143606b37c0ce8410ddd20067aaad8840dfb2b5d445556d132375803306",
+  "source_or_unit_changes": 0,
+  "unit_sha256": "80c605bbdceb5fc19253203c07b40b2420a87a74711d25f99d604478d8957eb5"
+}

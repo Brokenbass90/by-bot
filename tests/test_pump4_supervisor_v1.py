@@ -206,7 +206,7 @@ def test_current_signal_flows_through_causal_plan_and_stale_replay_stays_blocked
 
 def test_public_capture_cadence_survives_restart_without_repeated_collector(tmp_path):
     m=module();root=tmp_path/'state';t=[NOW+3];calls=[]
-    def collect(path):calls.append(path);archive(path,hour=t[0]//H)
+    def collect(path,*,on_symbol=None):calls.append(path);archive(path,hour=t[0]//H)
     one=m.Supervisor(root,clock=lambda:t[0]).public_cycle(collector=collect)
     two=m.Supervisor(root,clock=lambda:t[0]+30000).public_cycle(collector=collect)
     assert one==two and len(calls)==1

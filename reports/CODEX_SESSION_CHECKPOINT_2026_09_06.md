@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct — PUMP STREAM COMPONENT PASS, NOT DEPLOYED; MONTHLY LEAVE SELECTED.
+Read PUMP4_STREAM_PUBLICATION_2026_10_25.md + evidence/pump4_stream_20261025/.
+New existingcollector as_completed→fsyncedsymbolcallback→sameintake/journal,
+immutablemetadata context+per-symbolreceipt, laterfullcensus verified/reused.
+253local/same253VPS exactPASS;106files/46imports/14tests/68fixtures/0network/fallback.
+Candidate5deafc9fdd232bdc UNSELECTED/noPUMPmoneyGO, actualnewH1latencyUNVERIFIED.
+Actualastra/highcriticalreview0Important/27targetedPASS; provenancefollowupPASS.
+Frozenintake9e37540b…702aa/producer/universe unchanged; clonefixture6→5replays,
+identicaljournalSHA/decisionID, NOTactualmarketspeed/prospectivecredit.
+CURRENT selected PUMPOFF30677ce6/config83a32143…3306/PID2865120/NRestarts0,
+original818853 unchanged. DATArootstill9c6901a6/app/.private/pump4-supervisor-v1,
+bindingf1a32a29…38a00. No units/sourcebinding/epochs/history/claims/GO changes.
+NEXT boundedDATA/confighandoff+rollback preservingexactjournals/epoch/cursors,
+no secondwriter/repininplace; then actualNEW H1publicationclock +freshaccount/
+sizing/admission/OFF +exactTINYpacket. No financialPUMPorders untilseparatemoneyGO.
+Monthlyv6 personallyselectedaf7…/a78…;actual3cleanidlecycles accepted59bd50a,
+400/280/40/loss8/2Nov→1Feb unchanged. No furtherpersonalactivation/NETexit.
+Owner reaffirmedNorthStar Brain/Factory/classicalstrategies/portfoliointelligence;
+keep existingroadmap, queueMonthly→PUMP→Poly→KITY. Do notstartnewarchitecture.
+This chat history is long; concise NEW_CHAT_START_HERE.md now points directly here.
+Earlier rows below are history, do not repeat accepted work.
+
+
 CURRENT25Oct — MONTHLY v6 PERSONALLY EXECUTED; ACTUAL IDLE DEFECT CLOSED.
 Independent receipt: evidence/monthly_clock_default_cli_20261025/v6-personal-independent-actual-pass.json.
 HUMAN v6 once:2clean realcycles; independentreadback3cleanpostGOcycles,

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Explicit PUBLIC DATA_ONLY137-symbol bootstrap. No strategy or financial calls."""
-import argparse,concurrent.futures as cf,json,time
+"""PUBLIC DATA_ONLY137 capture; optional existing causal DATA intake callback."""
+import argparse,concurrent.futures as cf,hashlib,json,time
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1]
@@ -9,7 +9,7 @@ from research_lab.pump4_bybit_sources_v1 import public_get,checked,closed_h1,uni
 from research_lab.kity_micro_physical_owner_v1 import publish
 
 
-def capture(root):
+def capture(root,*,on_symbol=None):
     root=Path(root).absolute()
     need(root.is_relative_to(ROOT/'.private') and not root.exists() and '..' not in root.parts
         and not any(p.is_symlink() for p in (root,*root.parents)),'EXCLUSIVE_PRIVATE_ROOT')
@@ -29,6 +29,14 @@ def capture(root):
     publish(root/'instrument-pages.json',dict(complete=True,pages=pages))
     tickers=public_get('/v5/market/tickers',dict(category='linear'))
     checked(tickers,'/v5/market/tickers',now_ms=time.time_ns()//1000000,private=False);publish(root/'tickers.json',tickers)
+    # This immutable prefix permits per-symbol processing before full coverage.
+    # The final receipt still proves the complete137 census separately.
+    context=dict(schema='PUMP4_PUBLIC_CAPTURE_CONTEXT_V1',universe_sha256=UNIVERSE_SHA,
+        census=137,source_hour_open_ms=next_open,started_ms=start,
+        source_capture_files={n:hashlib.sha256((root/n).read_bytes()).hexdigest()
+            for n in ('clock.json','instrument-pages.json','tickers.json')},
+        orders_allowed=False,money_authority=False)
+    publish(root/'capture-context.json',context)
     def one(symbol):
         caps=[];i=instruments.get(symbol)
         if not i or i.get('status')!='Trading' or i.get('quoteCoin')!='USDT' or i.get('contractType')!='LinearPerpetual':
@@ -47,16 +55,24 @@ def capture(root):
             except (ValueError,KeyError,TypeError,OSError) as e:
                 result=dict(status='BLOCKED_SOURCE',symbol=symbol,reason=str(e),captures=caps)
         publish(root/'symbols'/(symbol+'.json'),result);return result
-    results=[]
+    results={}
     with cf.ThreadPoolExecutor(max_workers=8) as pool:
-        for result in pool.map(one,universe()):results.append(result)
+        futures={pool.submit(one,symbol):symbol for symbol in universe()}
+        for future in cf.as_completed(futures):
+            result=future.result();symbol=futures[future];results[symbol]=result
+            # one() returned only after atomic publication/fsync. Main-thread
+            # callback avoids concurrent strategy/journal writers.
+            if on_symbol is not None:on_symbol(root,symbol)
+    results=[results[symbol] for symbol in universe()]
     receipt=dict(schema='PUMP4_FROZEN137_PUBLIC_BOOTSTRAP_RECEIPT_V1',status='DATA_ONLY_BOOTSTRAP_COMPLETED',
         universe_sha256=UNIVERSE_SHA,census=len(results),ready=sum(r['status']=='READY_H1_BOOTSTRAP_NOT_ENTRY' for r in results),
         blocked=[{k:v for k,v in r.items() if k not in ('source','captures')} for r in results if r['status']!='READY_H1_BOOTSTRAP_NOT_ENTRY'],
         source_hour_open_ms=next_open,started_ms=start,completed_ms=time.time_ns()//1000000,
         public_get_requests=1+len(pages)+1+sum(len(r['captures']) for r in results),
         source_capture_files={str(p.relative_to(root)):__import__('hashlib').sha256(p.read_bytes()).hexdigest() for p in root.rglob('*.json')},
-        bootstrap_only=True,prospective_decisions_credited=0,strategy_calls=0,broker_private_requests=0,broker_writes=0,
+        bootstrap_only=True,prospective_decisions_credited=0,
+        strategy_calls=0 if on_symbol is None else None,data_intake_callback_used=on_symbol is not None,
+        broker_private_requests=0,broker_writes=0,
         orders_allowed=False,money_authority=False)
     publish(root/'receipt.json',receipt);return receipt
 

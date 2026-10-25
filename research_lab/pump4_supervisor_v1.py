@@ -17,7 +17,7 @@ from research_lab.alpaca_dynamic_v1 import digest
 from research_lab.kity_micro_physical_owner_v1 import publish
 from research_lab.kity_oct15_deadline_v1 import decode, stable_bytes
 from research_lab.pump4_account_owner_v1 import safe, source_sizing
-from research_lab.pump4_bybit_sources_v1 import closed_h1, universe, UNIVERSE_SHA, H
+from research_lab.pump4_bybit_sources_v1 import closed_h1, checked, universe, UNIVERSE_SHA, H
 from research_lab.pump4_closed_bar_intake_v1 import Pump4Intake
 from research_lab.pump4_execution_lifecycle_v1 import Pump4Lifecycle
 from research_lab.pump4_selected_runner_v1 import causal_plan, source_pins
@@ -136,7 +136,7 @@ class Supervisor:
         need(not events or epoch_path.exists(), 'EPOCH_MISSING_NO_RESET')
         bootstrap=not events
         if events:
-            snapshot=intake.snapshot();cursor=snapshot['cursor_ms']
+            snapshot=intake._replay(events);cursor=snapshot['cursor_ms']
             known={b[0]:b for b in events[0]['bars']}
             known.update({e['bar'][0]:e['bar'] for e in events[1:]})
             need(all(b[0] not in known or known[b[0]]==b for b in bars), 'SOURCE_HISTORY_CONFLICT')
@@ -148,14 +148,14 @@ class Supervisor:
                 seed_sha256=digest(source['seed']),financial_authority=False)
             if not epoch_path.exists():publish(epoch_path,epoch)
             need(read(epoch_path)['seed_sha256']==digest(source['seed']), 'BOOTSTRAP_PREFIX_CHANGED')
-            intake.seed(source['seed'],available_ms=source['available_ms'],observed_ms=source['observed_ms'])
+            snapshot=intake.seed(source['seed'],available_ms=source['available_ms'],observed_ms=source['observed_ms'])
             pending=[source['signal_bar']]
         epoch=read(epoch_path)
         need(epoch['schema']=='PUMP4_DATA_EPOCH_V1' and epoch['symbol']==symbol
             and epoch['financial_authority'] is False
-            and epoch['seed_sha256']==intake.snapshot()['seed_bars_sha256']
+            and epoch['seed_sha256']==snapshot['seed_bars_sha256']
             and type(epoch['epoch_started_ms']) is int
-            and intake.journal.read()[0]['observed_ms']<epoch['epoch_started_ms'], 'EPOCH_IDENTITY')
+            and (events[0]['observed_ms'] if events else source['observed_ms'])<epoch['epoch_started_ms'], 'EPOCH_IDENTITY')
         mode='BOOTSTRAP_REPLAY' if bootstrap else ('CATCHUP_REPLAY' if len(pending)>1 else 'CURRENT_CLOSED_BAR')
         batch_path=safe(self.root/'batches'/archive_id/(symbol+'.json'))
         recovered=batch_path.exists()
@@ -198,8 +198,68 @@ class Supervisor:
         return dict(symbol=symbol,status='CLOSED_H1_INTAKE_PASS',mode=mode,accepted_bars=len(pending),
             cursor_ms=intake.snapshot()['cursor_ms'],decisions=decisions)
 
+    def _stream_context(self, archive):
+        """Verify a collector-sealed prefix, never claim complete coverage early."""
+        archive=safe(archive);raw=stable_bytes(safe(archive/'capture-context.json'));header=decode(raw)
+        need(header['schema']=='PUMP4_PUBLIC_CAPTURE_CONTEXT_V1'
+            and header['universe_sha256']==UNIVERSE_SHA and header['census']==137
+            and header['orders_allowed'] is False and header['money_authority'] is False,
+            'STREAM_CONTEXT_IDENTITY')
+        pins=header['source_capture_files']
+        need(set(pins)=={'clock.json','instrument-pages.json','tickers.json'},'STREAM_CONTEXT_FILES')
+        documents={}
+        for name,pin in pins.items():
+            value=stable_bytes(safe(archive/name))
+            need(hashlib.sha256(value).hexdigest()==pin,'STREAM_CONTEXT_HASH')
+            documents[name]=decode(value)
+        clock=documents['clock.json'];checked(clock,'/v5/market/time',now_ms=clock['receive_ms'],private=False)
+        need(type(header['source_hour_open_ms']) is int
+            and header['source_hour_open_ms']==clock['body']['time']//H*H,'STREAM_CONTEXT_HOUR')
+        pages=documents['instrument-pages.json'];need(pages.get('complete') is True
+            and 0<len(pages['pages'])<=8,'STREAM_METADATA_INCOMPLETE')
+        for cap in pages['pages']:checked(cap,'/v5/market/instruments-info',now_ms=cap['receive_ms'],private=False)
+        need(pages['pages'][-1]['body']['result'].get('nextPageCursor','')=='','STREAM_METADATA_CURSOR')
+        ticker=documents['tickers.json'];checked(ticker,'/v5/market/tickers',now_ms=ticker['receive_ms'],private=False)
+        return hashlib.sha256(raw).hexdigest(),header
+
+    def _stream_symbol(self, archive, symbol, context, *, expected_sha256=None):
+        """Same intake/batch/recovery rules, sealed individually before census."""
+        need(symbol in universe(),'STREAM_SYMBOL')
+        context_id,header=context
+        binding_path=safe(self.root/'stream-archives'/(digest(str(archive))+'.json'))
+        binding=dict(archive=str(archive),context_sha256=context_id)
+        try:publish(binding_path,binding)
+        except FileExistsError:need(read(binding_path)==binding,'STREAM_CONTEXT_CHANGED')
+        raw=stable_bytes(safe(archive/'symbols'/(symbol+'.json')))
+        pin=hashlib.sha256(raw).hexdigest()
+        need(expected_sha256 is None or pin==expected_sha256,'STREAM_FULL_SEAL_CAPTURE_CHANGED')
+        receipt_path=safe(self.root/'streamed'/context_id/(symbol+'.json'))
+        if receipt_path.exists():
+            previous=read(receipt_path)
+            need(previous['context_sha256']==context_id and previous['symbol']==symbol
+                and previous['capture_sha256']==pin,'STREAM_CAPTURE_CHANGED')
+            return previous['result']
+        identity=digest(dict(context_sha256=context_id,symbol=symbol,capture_sha256=pin))
+        try:result=self._symbol(symbol,decode(raw),header,identity)
+        except (ValueError,KeyError,TypeError,OSError) as exc:
+            result=dict(symbol=symbol,status='BLOCKED_SOURCE',reason=str(exc))
+        # Conservative completion time follows the observation's fsync; no
+        # first-observed/source clock is changed to make a delayed row fresh.
+        publish(receipt_path,dict(schema='PUMP4_STREAMED_SYMBOL_RECEIPT_V1',
+            context_sha256=context_id,symbol=symbol,capture_sha256=pin,
+            publication_completed_ms=self.clock(),result=result,
+            coverage_complete=False,broker_writes=0,orders_allowed=False,money_authority=False))
+        return result
+
     def process_archive(self, archive):
         archive,archive_id,seal,data=self._archive(archive)
+        context=None
+        if 'capture-context.json' in data:
+            context=self._stream_context(archive);context_id,header=context
+            need(context_id==seal['source_capture_files']['capture-context.json']
+                and header['source_hour_open_ms']==seal['source_hour_open_ms']
+                and all(seal['source_capture_files'].get(n)==h for n,h in header['source_capture_files'].items()),
+                'STREAM_FINAL_CONTEXT_CONFLICT')
         with self._writer():
             receipt_path=safe(self.root/'cycles'/(archive_id+'.json'))
             if receipt_path.exists():
@@ -209,8 +269,15 @@ class Supervisor:
             rows=[]
             for symbol in universe():
                 try:
-                    result=self._symbol(symbol,data['symbols/'+symbol+'.json'],seal,archive_id)
+                    if context is None:
+                        result=self._symbol(symbol,data['symbols/'+symbol+'.json'],seal,archive_id)
+                    else:
+                        # _archive already checked all bytes against full seal.
+                        # A changed streamed row is fatal, never silently replayed.
+                        result=self._stream_symbol(archive,symbol,context,
+                            expected_sha256=seal['source_capture_files']['symbols/'+symbol+'.json'])
                 except (ValueError,KeyError,TypeError,OSError) as exc:
+                    if context is not None:raise
                     result=dict(symbol=symbol,status='BLOCKED_SOURCE',reason=str(exc))
                 rows.append(result)
             receipt=dict(schema='PUMP4_PERSISTENT_DATA_CYCLE_V1',status='ORDERS_OFF_DATA_ONLY',
@@ -250,6 +317,12 @@ class Supervisor:
         archive=safe(self.root/'archives'/str(hour))
         with self._writer():
             if not archive.exists():
-                collector(archive)
+                context=None
+                def completed(path,symbol):
+                    nonlocal context
+                    need(safe(path)==archive,'STREAM_ARCHIVE_PATH')
+                    if context is None:context=self._stream_context(archive)
+                    self._stream_symbol(archive,symbol,context)
+                collector(archive,on_symbol=completed)
             need((archive/'receipt.json').is_file(), 'PARTIAL_ARCHIVE_PRESERVED_UNTIL_NEXT_HOUR')
         return self.process_archive(archive)
