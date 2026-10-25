@@ -302,9 +302,9 @@ def build_digest(snap: dict) -> str:
     if alive and feed_ok:
         any_live = any((rmult.get(s) or 0) > 0 and enabled.get(s) for s in rmult)
         if any_live:
-            L.append("ALIVE & PROTECTED, торгует с малым риском — фаза доказательства эджа.")
+            L.append("Наблюдательный heartbeat активен; исполнение и защита денег не подтверждены этим отчётом.")
         else:
-            L.append("ALIVE & PROTECTED, но почти всё в SHADOW — фаза доказательства, реального риска ~нет.")
+            L.append("Наблюдательный heartbeat активен, стратегии в SHADOW; финансовый риск этим отчётом не подтверждён.")
     else:
         L.append("Бот не в активной торговле — проверить trade_on / feed.")
     L.append("===================================================")
@@ -318,7 +318,7 @@ def build_telegram_digest(snap: dict) -> str:
     _enabled, rmult, live, shadow, _off = _runtime_sets(hb)
     msgs = hb.get("bybit_msgs")
     feed = "ОК" if isinstance(msgs, (int, float)) and msgs > 0 else "УСТАРЕЛИ"
-    alive = "ЖИВ И ТОРГУЕТ" if hb.get("trade_on") else "НЕ ТОРГУЕТ"
+    alive = "НАБЛЮДАТЕЛЬ АКТИВЕН" if hb.get("trade_on") else "НАБЛЮДАТЕЛЬ: trade_on=false"
     block = "да" if hb.get("allocator_hard_block") else "нет"
     live_rows, _shadow_rows, live_pnl, live_n, all_pnl, all_n = _split_pnl_by_runtime(pnl, set(live), set(shadow))
     last = _latest_trade_event(snap.get("recent_trade_events") or [])
@@ -336,7 +336,8 @@ def build_telegram_digest(snap: dict) -> str:
         f"{alive} | режим: {_regime_ru(hb.get('regime'))} | данные: {feed} | в позиции: {hb.get('open_trades')}",
         f"риск/сделка: {hb.get('risk_per_trade_pct')}% | макс. позиций: {hb.get('max_positions')} "
         f"| блокировка: {block}",
-        f"В БОЮ: {live_line}",
+        f"В конфиге наблюдателя: {live_line}",
+        "Финансовое исполнение и стопы этим пульсом не подтверждаются.",
         f"Наблюдение: {shadow_line or '—'}",
         last_line,
         f"Журнал P&L: боевые {live_pnl:+.3f} / {live_n} сд. | всего {all_pnl:+.3f} / {all_n} сд.",

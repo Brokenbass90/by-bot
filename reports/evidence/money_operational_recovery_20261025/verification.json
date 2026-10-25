@@ -1,0 +1,32 @@
+{
+  "actual_monthly_corrected_cycle": "PENDING_PERSONAL_CORRECTION",
+  "component_commit": "f591e24",
+  "financial_activation_by_agent": false,
+  "handoff_recovery_local_tests": 26,
+  "independent_review": {
+    "actual_turn_context_verified": true,
+    "additional_blocking_findings": 0,
+    "effort": "high",
+    "model": "gpt-6-astra",
+    "rollout_id": "01a171b8-07e6-7002-92f4-1cb423bc2dfc",
+    "scope": "Monthly correction helper actualdiff + PUMP complete-stopped delta"
+  },
+  "monthly_local_and_vps": {
+    "errors": 0,
+    "failures": 0,
+    "network_denied": true,
+    "skipped": 0,
+    "tests": 260
+  },
+  "monthly_packet_negative_checks": 6,
+  "observer_local_tests": 15,
+  "observer_rebind_review": "ROOT_ONLY_PLUS_ACTUAL_SYSTEMD_AND_CRON_RECEIPTS",
+  "pump_local_and_vps": {
+    "errors": 0,
+    "failures": 0,
+    "network_denied": true,
+    "skipped": 0,
+    "tests": 246
+  },
+  "schema": "MONEY_RECOVERY_VERIFICATION_V1"
+}

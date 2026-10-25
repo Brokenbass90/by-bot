@@ -1,5 +1,12 @@
 # Trading OS — единая доска доведения до первой версии
 
+**25Oct superseding actual state:** [operational recovery](../reports/MONEY_OPERATIONAL_RECOVERY_2026_10_25.md).
+Monthly v4 personally armed but BLOCKED; corrected260/260candidate and exact
+human-only correction READY. PUMP single physical owner and read-only monitor
+actual ORDERS_OFF HEALTHY; no moneyGO/TINY_READY. Next actual source latency/
+sizing + exactTINYpacket, independent of NETfees. Queue unchanged. Earlier rows history.
+
+
 **24Oct superseding completion:** [Monthly ready / PUMP hourly DATA](../reports/MONEY_SERVER_COMPLETION_2026_10_24.md).
 Monthly257local/same257VPS, actualpending0/flat/cash496.31; v4 installeddisabled,
 READY personalarm (budget400/280/40/8 unchanged), agentdidnotactivate. Future

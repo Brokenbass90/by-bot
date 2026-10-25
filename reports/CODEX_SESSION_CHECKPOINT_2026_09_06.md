@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct — OPERATIONAL RECOVERY; read MONEY_OPERATIONAL_RECOVERY_2026_10_25.md.
+PUMP actual single ownerPID2865120/OFF/818853/NRestarts0, source/guards/cron verified,
+flat/noorders/newGOabsent; unchanged cron actual HEALTHY/PUMP4 x3. OldKITYdisabled,
+PID0/failedSIGKILL is RETIRED, not selected ownerfailure. Monitor-only rebind
+83a32143…3306/newfinancial-orders-off-monitor-v3; oldOFFroot and claims retained,
+no admission/flow/attempt/send existed before rebind. No broker mutation/GO.
+Generic pulse wording fixed/deployed; repeated identical errors deduplicated.
+Monthly260local/same260VPS PASS; v5 source0a0e7c6e…39948 UNSELECTED; oldv4 personally
+armed but actual BLOCKED. Identitybootstrap fixed firstroot bug; three time-anchor
+moves fix future/stale-fee bug. Exact corrected owner packet verifyPASS/scope
+8bb8b06d…f66b76/spec234e7541…30d66/packet115d9641…7f7af/helper1e06c3d1…841726.
+One HUMAN action: .private/money_completion_20261024_v5/owner-monthly-clock-correction.sh.
+AgentMUSTNOTRUN/neverrepeatoldactivation. Same400/280/40/8/dates/strategy; no budget
+reapproval. NewGOabsent at finalreadback. After owner command realcycle/readback
+required, no operationalPASS yet. Fresh AlpacaGETflat/cash496.31/pending0 dated.
+PUMP246local/same246VPS;26recoverytests/15observertestsPASS; 137universe/HFTunavailable.
+Actual132H1latest/93timely≤60s, p50 46.531s/max79.872s. Timer hour+2SECONDS;
+229swholeworker/87.36CPU sec/40%quota; no resource change. NEXT warm source/replay
+latency +actual fullsource sizing/admission/OFF +exact TINY cost/risk packet;
+separate moneyGO absent. Do not wait NETfees/start newstrategy/pretend latecapture
+prospective. Existing LIQ9days17–25verified, no source/collector/research changes.
+Component work savedf591e24; current commit contains final receipts/observer fix.
+Older CURRENT rows below are historical and must not supersede this state.
+
+
 CURRENT25Oct continuation safety note — SUPERSEDES READY/old-owner-active below.
 LIQ25Oct DATA delivery completed:9 immutable daily snapshots17–25 verified,
 remote/local seal hashes equal;61709 raw25Oct rows,25symbols/sameepoch,

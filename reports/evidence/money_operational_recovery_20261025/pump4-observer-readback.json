@@ -1,0 +1,1 @@
+{"schema": "BYBIT_ACCOUNT_HEALTH_V1", "observed_ms": 1792909831891, "status": "HEALTHY", "owner": "PUMP4", "orders_allowed": false, "restart_allowed": false, "reason": "ORDERS_OFF_SUPERVISOR_ALIVE", "pid": 2865120, "age_ms": 7469, "financial_trading_proven": false}

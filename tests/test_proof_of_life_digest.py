@@ -36,9 +36,11 @@ def test_regime_translation():
 def test_telegram_digest_is_russian_and_human():
     txt = build_telegram_digest(_snap())
     assert "ПУЛЬС БОТА" in txt
-    assert "ЖИВ И ТОРГУЕТ" in txt
+    assert "НАБЛЮДАТЕЛЬ АКТИВЕН" in txt
+    assert "ЖИВ И ТОРГУЕТ" not in txt
+    assert "стопы этим пульсом не подтверждаются" in txt
     assert "медвежий флэт" in txt
-    assert "В БОЮ" in txt and "пила во флэте" in txt
+    assert "В конфиге наблюдателя" in txt and "пила во флэте" in txt
     assert "BOT PULSE" not in txt  # no leftover English
 
 

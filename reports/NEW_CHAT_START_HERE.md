@@ -1,4 +1,20 @@
-# START HERE — Monthly P0 / SHOP cancelled / NET preserved
+# START HERE — 25 October operational recovery / no new LIVE orders
+
+Read only these current items first; older text below is history:
+1. CODEX_SESSION_CHECKPOINT_2026_09_06.md TOP.
+2. MONEY_OPERATIONAL_RECOVERY_2026_10_25.md and its final independent receipt.
+3. Git status/HEAD and only drift-prone VPS facts. Do not restart an audit.
+
+Monthly: new exact HUMAN-ONLY correction command already delivered in report.
+Check whether owner has run it; if absent, never activate for them. If present,
+independent actual corrected cycle/fees/book/units proof next. No old GO repeats.
+PUMP: physical single supervisor +monitor already running ORDERS_OFF, no GO.
+Continue existing warm H1 source latency/sizing/admission and exactTINYpacket,
+not a new executor. Original lock818853/history/claims/epochs stay. Old KITY is
+retired/disabled; do not start it beside PUMP. HFT unavailable/late rows explicit.
+Same400/280/40/8,2Nov→1Feb Monthly authority; no PUMP financial approval.
+Queue Monthly → PUMP → Polymarket → KITY. No Claude checkout/judge edits.
+
 
 CURRENT24Oct: [completed Monthly/PUMP server gate](MONEY_SERVER_COMPLETION_2026_10_24.md).
 Monthly257local/same257VPS; freshpending0/cash496.31/flat;v4installedDISABLED,

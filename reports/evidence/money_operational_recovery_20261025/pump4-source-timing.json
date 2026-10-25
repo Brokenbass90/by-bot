@@ -1,0 +1,1 @@
+{"schema": "PUMP4_ACTUAL_SOURCE_LATENCY_DIAGNOSTIC_V1", "observed_ms": 1792909881070, "observations": 2580, "latest_entry_bar_ms": 1792908000000, "latest_count": 132, "mode_counts": {"CURRENT_CLOSED_BAR": 130, "CATCHUP_REPLAY": 2}, "delay_min_ms": 11016, "delay_p50_ms": 46531, "delay_max_ms": 79872, "within_60000": 93, "broker_writes": 0, "strategy_or_outcome_runs": 0}
