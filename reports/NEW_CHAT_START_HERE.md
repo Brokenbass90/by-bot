@@ -1,3 +1,20 @@
+# START HERE — v6 selected; actual Monthly idle acceptance PASS
+
+Owner personally ran v6 once. Independent3cleanpostGOcycles +source/unit/scope
+pins/activeenabledtimer/original813893 PASS; fresh accountflat/orders0/cash496.31/
+pending0. NO OWNER COMMAND NEEDED; do not repeat any activation/NETexit.
+Scopeaf7a1159…86f12e/speca78d9472…bd30f selected. Read checkpointTOP and
+ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md superseding actual acceptance.
+Numericalstrategy/400/280/40/loss8/2Nov→1Feb unchanged.30Octselection/2Novfresh
+entry/protection are future marketgates, not completed trades. CASHpossible.
+
+NEXT PUMP existing source publication fix (0/132actuallypublished≤60s despite
+93timely sourcecaptures), then source→sizing/admission/execution ORDERS_OFF and
+exactTINYpacket. Single Bybitowner/818853/OFF remains; nofinancialGO. Preserve
+epochs/journals/producer/HFTskip; no gatewidening/backdating/newframework.
+Queue Monthly→PUMP→Polymarket→KITY. No Claude/judge edits; no broad new audit.
+Earlier dated personal-pending/UNSELECTED sections below are historical.
+
 # START HERE — 25 October v5 failed, v6 staged, no new PUMP authority
 
 1. Read CODEX_SESSION_CHECKPOINT_2026_09_06.md TOP.

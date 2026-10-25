@@ -1,0 +1,71 @@
+{
+  "actual_entry_executed": false,
+  "book_counts": {
+    "dispatches": 0,
+    "exits": 0,
+    "positions": 0
+  },
+  "broker": {
+    "cash": "496.31",
+    "get_requests": 9,
+    "open_orders": [],
+    "pending_fees": "0",
+    "positions": [],
+    "writes": 0
+  },
+  "cycles": {
+    "broker_requests": 0,
+    "broker_writes": 0,
+    "completed_cycles": 3,
+    "cycles": [
+      {
+        "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+        "issues": [],
+        "maintenance": {
+          "money_authority": false,
+          "orders_allowed": false,
+          "production_writer_installed": false,
+          "status": "MONTHLY_WAITING_REGULAR_SESSION"
+        },
+        "observed_ms": 1792927299784,
+        "status": "MONTHLY_STANDING_DISPATCH_TICK"
+      },
+      {
+        "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+        "issues": [],
+        "maintenance": {
+          "money_authority": false,
+          "orders_allowed": false,
+          "production_writer_installed": false,
+          "status": "MONTHLY_WAITING_REGULAR_SESSION"
+        },
+        "observed_ms": 1792927347077,
+        "status": "MONTHLY_STANDING_DISPATCH_TICK"
+      }
+    ],
+    "financial_command_repeated": false,
+    "market_execution_pass": false,
+    "observed_ms": 1792927379817,
+    "schema": "MONTHLY_PERSONAL_ACTUAL_CYCLE_ACCEPTANCE_V1",
+    "scope_sha256": "af7a11594367e3532a1e448e212c2dbafbda4df868c3b1a7be13d157b686f12e",
+    "status": "ACTUAL_IDLE_CYCLES_PASS"
+  },
+  "entry_latches": [],
+  "financial_command_repeated": false,
+  "financial_parameters_changed": false,
+  "market_execution_pass": false,
+  "observed_ms": 1792927382887,
+  "old_v5_entries_revoked": true,
+  "original_lock_inode": 813893,
+  "owner_go_present": true,
+  "remote_state_writes": 0,
+  "schema": "MONTHLY_V6_POST_PERSONAL_INDEPENDENT_ACCEPTANCE_V1",
+  "scope_sha256": "af7a11594367e3532a1e448e212c2dbafbda4df868c3b1a7be13d157b686f12e",
+  "selected_unit_pin_match": true,
+  "source_pins_match": true,
+  "spec_sha256": "a78d94727388d942839626c5e0812dc29efc53bbb88f9e53326f94a5acabd30f",
+  "status": "ACTUAL_IDLE_CYCLES_AND_ACCOUNT_PASS",
+  "units": "MainPID=2884567\nResult=success\nExecMainStatus=0\nId=alpaca-monthly-owned.service\nActiveState=activating\nSubState=start\nDropInPaths=\nUnitFileState=static\n\nTimersCalendar={ OnCalendar=*-*-* *:*:00 UTC ; next_elapse=Sun 2026-10-25 11:23:00 UTC }\nNextElapseUSecRealtime=\nResult=success\nId=alpaca-monthly-owned.timer\nActiveState=active\nSubState=running\nDropInPaths=\nUnitFileState=enabled\n\nMainPID=0\nResult=success\nExecMainStatus=0\nId=alpaca-oct15-owned-manager.service\nActiveState=inactive\nSubState=dead\nDropInPaths=\nUnitFileState=static\n\nTimersCalendar={ OnCalendar=*-*-* *:00/5:00 UTC ; next_elapse=(null) }\nNextElapseUSecRealtime=\nResult=success\nId=alpaca-oct15-owned-manager.timer\nActiveState=inactive\nSubState=dead\nDropInPaths=\nUnitFileState=static\n\nTimersCalendar={ OnCalendar=2026-10-19 13:31:00 UTC ; next_elapse=(null) }\nNextElapseUSecRealtime=\nResult=success\nId=alpaca-dynamic-next-entry-20261019.timer\nActiveState=inactive\nSubState=dead\nDropInPaths=\nUnitFileState=disabled\n",
+  "valid_from_ms": 1793629800000,
+  "valid_until_ms": 1801440000000
+}

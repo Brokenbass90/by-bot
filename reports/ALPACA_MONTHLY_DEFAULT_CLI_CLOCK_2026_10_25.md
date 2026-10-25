@@ -1,5 +1,32 @@
 # Monthly v5 actual FAIL; complete clock correction v6 — 25 October 2026
 
+## Superseding actual acceptance — owner executed v6
+
+The HUMAN personally ran the exact v6 launcher ONCE. It returned
+`OWNER_ARMED_CORRECTED_FUTURE_MONTHLY` then `ACTUAL_IDLE_CYCLES_PASS` (two real
+cycles). Independent read-only verification subsequently found **three clean
+completed post-GO cycles**, exact selected v6 source/scope/unit pins, active enabled
+Monthly timer, original Alpaca lock813893 and no entry latches. Fresh9brokerGET:
+flat/no open orders/cash496.31/pending0; existing book positions/exits/dispatches0.
+NET manager/timer inactive; cancelled SHOP timer disabled/inactive. Old v5 future
+entry scope revoked. No financial command repeated, no agent broker/state writes.
+See [actual receipt](evidence/monthly_clock_default_cli_20261025/v6-personal-independent-actual-pass.json).
+
+**The repeated stale-source idle-cycle defect is CLOSED on actual deployed v6.**
+Earlier UNSELECTED/GOabsent/personal-action-pending statements below are history.
+No further owner command or new budget approval is required for this existing
+scope. `RECOVERED` is health recovery, not a trade/profit receipt. The notification
+observer never sends orders; the separate authorized Monthly runner is selected.
+Current idle status OUTSIDE_MONTHLY_WINDOW/WAITING_REGULAR_SESSION is expected.
+
+Same400capital/280gross/40reserve/loss-admission8/max4/single168/no new margin;
+valid2Nov2026 14:30UTC→1Feb2027 00UTC. Actual30Oct closed monthly selection and
+2Nov fresh opening/account/native-stop execution remain future gates, not completed
+market execution. CASH/no entry remains possible under the frozen selector. No
+financial authority is extended. Next engineering task is PUMP publication latency,
+ORDERS_OFF sizing/execution and exactTINYpacket; PUMP money GO remains absent.
+
+
 ## Verdict
 
 **v5 personally activated, but operational FAIL. v6 engineering PASS, UNSELECTED.**

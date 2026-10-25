@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct — MONTHLY v6 PERSONALLY EXECUTED; ACTUAL IDLE DEFECT CLOSED.
+Independent receipt: evidence/monthly_clock_default_cli_20261025/v6-personal-independent-actual-pass.json.
+HUMAN v6 once:2clean realcycles; independentreadback3cleanpostGOcycles,
+source/scope/unit pinsPASS, timeractiveenabled/original813893, noentrylatches.
+Scopeaf7a1159…86f12e/speca78d9472…bd30f selected; oldv5entryscope revoked.
+Fresh9GETflat/orders0/cash496.31/pending0; bookpositions/exits/dispatches0.
+NETmanager/timerinactive, SHOPdisabledinactive. No agentfinancialcommand/retry/
+GO/statewrites. NO furtherpersonalcommand needed for currentMonthlyscope.
+RECOVERED=health recovery, not trade/PnL. OUTSIDE_MONTHLY_WINDOW expected.
+Same400/280/40/loss8/date2Nov14:30UTC→1Feb00UTC.30Octcausalselection/2Novfresh
+opening/protection remainfuturegates, not actualmarketexecutionPASS; CASHpossible.
+Next PUMPpublication latency/codeOFF/sizing/execution/exactTINYpacket; moneyGO
+absent. No newMonthlychanges/research/audit; queueMonthly→PUMP→Poly→KITY.
+Oldv5fail andv6UNSELECTED/personalpending lines below are historical, neverretry.
+
+
 CURRENT25Oct — v5 PERSONAL CORRECTION EXECUTED; ACTUAL TWO-CYCLE FAIL.
 Read ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md + evidence/monthly_clock_default_cli_20261025/.
 Both systemd cycles MONTHLY_PENDING_FEE_STALE_SOURCE; fresh flat account496.31,

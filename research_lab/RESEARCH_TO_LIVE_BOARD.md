@@ -1,5 +1,14 @@
 # Trading OS — единая доска доведения до первой версии
 
+**25Oct latest ACTUAL acceptance:** [v6 personally selected;3clean realcycles](../reports/ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md).
+Fresh independent9GETflat/cash496.31/pending0/orders0; exact source/scope/unit,
+activeenabledtimer/original813893/noentrylatchPASS. Current Monthly personal action
+COMPLETE/SPENT, no further ownercommand/budgetapproval. Idle clockdefectCLOSED;
+30Octselection/2Novactualentry/protection remain futuregates, CASHpossible.
+PUMPpublication path/execution ORDERS_OFF/exactTINYpacket NEXT; no PUMPfinancialGO.
+Earlier v6UNSELECTED/personalpending states below are history. Queue unchanged.
+
+
 **25Oct superseding actual correction:** [v5 FAIL / complete v6 staged](../reports/ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md).
 Owner personally ran v5; TWO actual cycles again rejected stale fee source.
 Outer CLI/default clock and native elapsed corrected;266local/same266VPS exactPASS.
