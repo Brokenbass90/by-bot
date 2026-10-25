@@ -1,0 +1,16 @@
+...............F                                                         [100%]
+=================================== FAILURES ===================================
+______________ test_systemd_writable_runtime_exists_before_start _______________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-702/test_systemd_writable_runtime_0')
+
+    def test_systemd_writable_runtime_exists_before_start(tmp_path):
+        root=tmp_path/'runtime/off'
+>       m.prepare_runtime(root)
+        ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'prepare_runtime'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:71: AttributeError
+=========================== short test summary info ============================
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_systemd_writable_runtime_exists_before_start
+1 failed, 15 passed in 0.11s

@@ -1,0 +1,147 @@
+FFFFFFFFFF                                                               [100%]
+=================================== FAILURES ===================================
+___________ test_clone_preserves_history_and_rejects_existing_target ___________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_clone_preserves_history_a0')
+
+    def test_clone_preserves_history_and_rejects_existing_target(tmp_path):
+        old=tmp_path/'old';old.mkdir();(old/'intake').mkdir()
+        (old/'intake/A.jsonl').write_bytes(b'{"cursor":42}\n')
+        (old/'data-binding.json').write_bytes(b'old binding')
+>       before=m.tree(old);new=tmp_path/'new'
+               ^^^^^^
+E       AttributeError: module 'ops' has no attribute 'tree'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:12: AttributeError
+__________________________ test_clone_refuses_symlink __________________________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_clone_refuses_symlink0')
+
+    def test_clone_refuses_symlink(tmp_path):
+        old=tmp_path/'old';old.mkdir();(old/'leak').symlink_to(tmp_path/'other')
+>       with pytest.raises(AssertionError):m.clone_data(old,tmp_path/'new',b'binding')
+                                           ^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'clone_data'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:22: AttributeError
+___________ test_rebind_rejects_any_financial_history[owner-go.json] ___________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_rejects_any_financ0')
+name = 'owner-go.json'
+
+    @pytest.mark.parametrize('name',['owner-go.json','admitted-lifecycle.json','entry-revoked.json','risk.jsonl',
+        'flows/p/execution-config.json','send-barriers/once.json','supervisor/attempts/a.json'])
+    def test_rebind_rejects_any_financial_history(tmp_path,name):
+        p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
+>       with pytest.raises(AssertionError):m.empty_off(tmp_path)
+                                           ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:28: AttributeError
+______ test_rebind_rejects_any_financial_history[admitted-lifecycle.json] ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_rejects_any_financ1')
+name = 'admitted-lifecycle.json'
+
+    @pytest.mark.parametrize('name',['owner-go.json','admitted-lifecycle.json','entry-revoked.json','risk.jsonl',
+        'flows/p/execution-config.json','send-barriers/once.json','supervisor/attempts/a.json'])
+    def test_rebind_rejects_any_financial_history(tmp_path,name):
+        p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
+>       with pytest.raises(AssertionError):m.empty_off(tmp_path)
+                                           ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:28: AttributeError
+________ test_rebind_rejects_any_financial_history[entry-revoked.json] _________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_rejects_any_financ2')
+name = 'entry-revoked.json'
+
+    @pytest.mark.parametrize('name',['owner-go.json','admitted-lifecycle.json','entry-revoked.json','risk.jsonl',
+        'flows/p/execution-config.json','send-barriers/once.json','supervisor/attempts/a.json'])
+    def test_rebind_rejects_any_financial_history(tmp_path,name):
+        p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
+>       with pytest.raises(AssertionError):m.empty_off(tmp_path)
+                                           ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:28: AttributeError
+____________ test_rebind_rejects_any_financial_history[risk.jsonl] _____________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_rejects_any_financ3')
+name = 'risk.jsonl'
+
+    @pytest.mark.parametrize('name',['owner-go.json','admitted-lifecycle.json','entry-revoked.json','risk.jsonl',
+        'flows/p/execution-config.json','send-barriers/once.json','supervisor/attempts/a.json'])
+    def test_rebind_rejects_any_financial_history(tmp_path,name):
+        p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
+>       with pytest.raises(AssertionError):m.empty_off(tmp_path)
+                                           ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:28: AttributeError
+___ test_rebind_rejects_any_financial_history[flows/p/execution-config.json] ___
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_rejects_any_financ4')
+name = 'flows/p/execution-config.json'
+
+    @pytest.mark.parametrize('name',['owner-go.json','admitted-lifecycle.json','entry-revoked.json','risk.jsonl',
+        'flows/p/execution-config.json','send-barriers/once.json','supervisor/attempts/a.json'])
+    def test_rebind_rejects_any_financial_history(tmp_path,name):
+        p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
+>       with pytest.raises(AssertionError):m.empty_off(tmp_path)
+                                           ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:28: AttributeError
+______ test_rebind_rejects_any_financial_history[send-barriers/once.json] ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_rejects_any_financ5')
+name = 'send-barriers/once.json'
+
+    @pytest.mark.parametrize('name',['owner-go.json','admitted-lifecycle.json','entry-revoked.json','risk.jsonl',
+        'flows/p/execution-config.json','send-barriers/once.json','supervisor/attempts/a.json'])
+    def test_rebind_rejects_any_financial_history(tmp_path,name):
+        p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
+>       with pytest.raises(AssertionError):m.empty_off(tmp_path)
+                                           ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:28: AttributeError
+____ test_rebind_rejects_any_financial_history[supervisor/attempts/a.json] _____
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_rejects_any_financ6')
+name = 'supervisor/attempts/a.json'
+
+    @pytest.mark.parametrize('name',['owner-go.json','admitted-lifecycle.json','entry-revoked.json','risk.jsonl',
+        'flows/p/execution-config.json','send-barriers/once.json','supervisor/attempts/a.json'])
+    def test_rebind_rejects_any_financial_history(tmp_path,name):
+        p=tmp_path/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'{}')
+>       with pytest.raises(AssertionError):m.empty_off(tmp_path)
+                                           ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:28: AttributeError
+________________ test_rebind_accepts_only_empty_financial_state ________________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-695/test_rebind_accepts_only_empty0')
+
+    def test_rebind_accepts_only_empty_financial_state(tmp_path):
+        for n in ('flows','send-barriers','supervisor/attempts'):(tmp_path/n).mkdir(parents=True,exist_ok=True)
+>       m.empty_off(tmp_path)
+        ^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'empty_off'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:32: AttributeError
+=========================== short test summary info ============================
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_clone_preserves_history_and_rejects_existing_target
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_clone_refuses_symlink
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_rejects_any_financial_history[owner-go.json]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_rejects_any_financial_history[admitted-lifecycle.json]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_rejects_any_financial_history[entry-revoked.json]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_rejects_any_financial_history[risk.jsonl]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_rejects_any_financial_history[flows/p/execution-config.json]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_rejects_any_financial_history[send-barriers/once.json]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_rejects_any_financial_history[supervisor/attempts/a.json]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rebind_accepts_only_empty_financial_state
+10 failed in 0.14s

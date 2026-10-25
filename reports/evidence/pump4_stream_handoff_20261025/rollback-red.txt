@@ -1,0 +1,49 @@
+..........FFF                                                            [100%]
+=================================== FAILURES ===================================
+_________ test_rollback_copies_forward_new_journal_bytes_and_receipts __________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-697/test_rollback_copies_forward_n0')
+
+    def test_rollback_copies_forward_new_journal_bytes_and_receipts(tmp_path):
+        old=tmp_path/'old';new=tmp_path/'new';old.mkdir();new.mkdir()
+        (old/'a.jsonl').write_bytes(b'prefix\n');(new/'a.jsonl').write_bytes(b'prefix\nnext\n')
+        (old/'data-binding.json').write_bytes(b'old');(new/'data-binding.json').write_bytes(b'new')
+        (new/'receipt.json').write_bytes(b'{}')
+>       m.copy_forward(new,old)
+        ^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'copy_forward'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:39: AttributeError
+_____ test_rollback_refuses_conflicting_history_before_any_write[a.jsonl] ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-697/test_rollback_refuses_conflict0')
+name = 'a.jsonl'
+
+    @pytest.mark.parametrize('name', ['a.jsonl','epoch.json'])
+    def test_rollback_refuses_conflicting_history_before_any_write(tmp_path,name):
+        old=tmp_path/'old';new=tmp_path/'new';old.mkdir();new.mkdir()
+        (old/name).write_bytes(b'old\n');(new/name).write_bytes(b'foreign\n');(new/'fresh').write_bytes(b'new')
+>       with pytest.raises(AssertionError):m.copy_forward(new,old)
+                                           ^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'copy_forward'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:49: AttributeError
+____ test_rollback_refuses_conflicting_history_before_any_write[epoch.json] ____
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-697/test_rollback_refuses_conflict1')
+name = 'epoch.json'
+
+    @pytest.mark.parametrize('name', ['a.jsonl','epoch.json'])
+    def test_rollback_refuses_conflicting_history_before_any_write(tmp_path,name):
+        old=tmp_path/'old';new=tmp_path/'new';old.mkdir();new.mkdir()
+        (old/name).write_bytes(b'old\n');(new/name).write_bytes(b'foreign\n');(new/'fresh').write_bytes(b'new')
+>       with pytest.raises(AssertionError):m.copy_forward(new,old)
+                                           ^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'copy_forward'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:49: AttributeError
+=========================== short test summary info ============================
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rollback_copies_forward_new_journal_bytes_and_receipts
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rollback_refuses_conflicting_history_before_any_write[a.jsonl]
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rollback_refuses_conflicting_history_before_any_write[epoch.json]
+3 failed, 10 passed in 0.25s

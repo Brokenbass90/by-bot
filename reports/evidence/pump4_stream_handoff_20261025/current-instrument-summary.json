@@ -1,0 +1,28 @@
+{
+  "account_flat": true,
+  "assumptions": "30USDT constant notional,168h maximum hold,current published SHORT funding cap,10bps one-way slippage; scenario,not guaranteed bound",
+  "broker_writes": 0,
+  "current_account_read_ms": 1792931975766,
+  "explicit_one_way": 136,
+  "fee_rates": [
+    "0.000275",
+    "0.00055",
+    "0.0011"
+  ],
+  "financial_authority": false,
+  "full_sizing_pass": false,
+  "lot_40_60_only_at_gross30": 124,
+  "no_current_signal": true,
+  "observed_ms": 1792931983947,
+  "open_orders_empty": true,
+  "schema": "PUMP4_CURRENT_ACCOUNT_INSTRUMENT_DIAGNOSTIC_V1",
+  "short_cost_scenario_usdt": {
+    "max": "126.1260",
+    "median": "6.39300",
+    "min": "1.758600"
+  },
+  "unavailable_modes": [
+    "XRPUSDT"
+  ],
+  "universe": 137
+}

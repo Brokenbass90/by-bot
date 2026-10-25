@@ -52,3 +52,24 @@ fail closed for reconciliation, without automatic retry or financial authority.
 Next: actual NEW H1 publication→fresh account/fees/funding/one-way/lot/stop
 ORDERS_OFF→exact one-lifecycle TINY proposal and separate owner decision.
 No financial PUMP entry, TINY_READY or profit claim from this deployment.
+
+## Current cost/mode dossier (12:39UTC, separate from a signal)
+
+One bounded account/instrument GET collection: flat/noorders;136 explicit one-way
+symbols. XRPUSDT has two zero-size hedge rows(positionIdx1/2) and is rejected by
+the existing financial gate. No account mode was changed; universe stays137.
+Taker rates differ:0.000275/0.00055/0.0011 per side.124 symbols pass only the
+30gross lot/40-60 minimum screen. This is not cost/stop feasibility.
+
+At30constantUSDT and168h maximum hold, current published SHORT funding-cap plus
+10bps one-way slippage and actual taker fees gives cost-only stress
+min1.7586/median6.393/max126.126USDT. Not forecast or future guaranteed bound.
+At the actual minimum40/60 lot, only30 symbols pass cost-only<R1 and gross<=30
+with explicit one-way. Stop distance, exact native tick/targets/current signal
+still unchecked; no numeric policy relaxation and no automatic allowlist filter.
+Per-signal existing source_sizing remains authoritative; risk nominal1 does not
+cap actual loss from gaps/funding/execution. Software allocation50 is not an
+isolated brokerage subaccount. Proposed50/30/20/R1/day2/week3/DD6/max1 remain
+unapproved; [exact blocked proposal](evidence/pump4_stream_handoff_20261025/tiny-proposal.json).
+[Current source summary](evidence/pump4_stream_handoff_20261025/current-instrument-summary.json),
+[recorded-source minimum-capacity calculation](evidence/pump4_stream_handoff_20261025/minimum-cost-capacity.json).

@@ -1,10 +1,13 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-**25Oct PUMP publication component:** [existing intake streams completed symbols](reports/PUMP4_STREAM_PUBLICATION_2026_10_25.md).
-253local/same253VPS exactPASS; independentcriticalreview0Important. UNSELECTED,
-actualnextH1latencyUNVERIFIED/TINY_NOT_READY. Next boundedDATA/confighandoff with
-samejournals/epochs/onewriter/rollback, then actualtiming+source/sizing/OFF/TINYpacket.
-Monthlypersonallyselected/actualidlePASS unchanged; no repeatownercommand.
+**25Oct12:36UTC actual PUMP streaming deployment:** [state-preserving handoff](reports/PUMP4_STREAM_HANDOFF_2026_10_25.md).
+Reviewed DATA5deafc9f selected by existing service/timer;10433historyfiles preserved.
+SAMEsoleownerunit/app30677ce6,newOFFconfig356a195b…9bb7/PID2890108/original818853.
+IndependentHEALTHY/noGO/noPOST;Monthlyselectedunit unchanged.19local/same19VPS
+handofftests;actualreview fixes regressed. NEXT actual13:00UTC NEW H1 publication
+clock plus freshcost/sizing/OFF/TINYproposal, no gate extension. TINY_NOT_READY.
+Current137modeGET:136oneway/XRPhedgeblocked;minimumcost-onlyR1capacity30symbols,
+not full stop/signal sizing PASS. Numeric50/30/20/R1/2/3/6 remain proposals.
 **Owner reaffirmed North Star:** Brain, Factory, classical strategies and intelligent
 portfolio management stay in this canonical roadmap. Current execution queue
 Monthly→PUMP→Polymarket→KITY supports that goal; no secondroadmap/automaticAI moneyauthority.
@@ -180,8 +183,8 @@ Git ref. Локальный документ без публикации — pub
 | Slot / владелец | Работа сейчас | Закрывающий acceptance / следующее событие |
 |---|---|---|
 | **P0 Preserve — Codex** | NET20Oct scheduled independent GET completed at13:35:23UTC/16:35:23CY; later handoff preflight GET completed; raw financial/unit receipts retained privately | One-shot PAUSED after control; no new financial/units permissions or strategy changes. Current broker amounts/order identifiers/runtime unit state are excluded from public receipts. Future protection remains a separate dated operational obligation |
-| **P0 Money — Codex** | Monthly financial241 unchanged. Owner personally sold NET; [independent broker reconciliation](reports/MONEY_REVIEW_NET_RECOVERY_2026_10_23.md) FLAT/noorders PASS. PersonalGO spent. Cash496.31/pendingfees.02, netfinality PENDING | Finish sourcebacked cost/cash/terminal handoff → exact authorized retirement/Monthly. No repeat exit/claimreset/Nov2sale, no automaticBUY. Existing schedules preserved; SHOP cancelled. PUMP code proceeds while fees pending |
-| **NEXT Money — Codex** | **PUMP4 V1 execution**. Actual source/account component151 PASS preserved; ACK/error/rate-limit/reduce-race and no-resend fixed in current199test candidate.136/137 real source bootstrap,0current signals. Native memory lifecycle40/60/168H/restart implemented | NEXT account-wide financial owner/sendonce/day-week-DDlatches and sourcebound fee/funding/risk admission; execution prices versus research model explicit. Flat empty positions is not proof of symbol one-way config. TINY_NOT_READY;50/30/R1/max1 proposals not authority; no calendar/Brain wait |
+| **P0 Money — Codex** | Monthlyv6 personally selected and independently accepted3clean idlecycles; no repeat NET sale/Monthly activation. Existing400capital/280gross/40reserve/loss-admission8/max4 unchanged | Actual30Octclosedselection and2Nov14:30UTCfreshentry/protection; CASH allowed. Historical NET-fee/activation blockers below are superseded by current acceptance |
+| **NEXT Money — Codex** | **PUMP4 V1 streaming DEPLOYED ORDERS_OFF**;same137/frozenintake/history/oneowner818853. Newbinding135d6e09/config356a195b/PID2890108, HEALTHY;currentaccountflat/noorders. Existing40/60/168H/restart/sendonce/latches retained | Actual25Oct13:00UTC NEW H1 source versus durablepublication; per-signal freshcost/lot/tick/oneway/native admission→exactTINYproposal. XRPhedge fails closed;30symbols pass minimumcost-onlyR1, not fullsizing. TINY_NOT_READY;no moneyGO |
 | **AFTER PUMP — Codex** | Existing Polymarket tests/data/prereg acceptance | Resume existing request after PUMP gate, no new framework or automatic financial GO |
 | **AFTER POLYMARKET — Codex** | KITY local4c3b69a DOSIE_READY/C1/C2 evidence; not in observed research origind8706ac | Verify published corrected contract, funding C1.7/weekly executor/authority. Corrected path300/10leg does not grant money; old microGO spent |
 | **P1 Codex** | Существующие DATA_ONLY/journal доставки/QA; следующий bounded fix — Brain receiver capacity, без нового framework |19Oct source22448opps/68878decisions, V2=1534; catchup6136receipts/28.2MB превышает4096/8MiB, BLOCKED до append, старые8 сохранены. Независимый chain/prefix/key audit PASS в узкой границе предоставленных файлов; полный market census/feature PIT UNKNOWN. Нужна controlled continuity/restart/replay в существующем journal. Existing DATA timers поддерживаются; Polymarket global census не отнимает MoneyP0 |

@@ -1,0 +1,56 @@
+{
+  "cost_only_minimum_candidates": 30,
+  "current_account_observation": {
+    "explicit_one_way_symbols": 136,
+    "flat": true,
+    "hedge_mode_blocked": [
+      "XRPUSDT"
+    ],
+    "mode_changes_performed": 0,
+    "open_orders_empty": true
+  },
+  "data_binding_sha256": "135d6e096d14bae0eb8f706763355f7d3625a582337c551e459335298cc28dd0",
+  "full_signal_sizing_pass": false,
+  "installed_off_config_sha256": "356a195bea26d145384c92a0739fd456bba84f2c35eb407911c38a6f3a519bb7",
+  "max_lifecycles": 1,
+  "money_authority": false,
+  "orders_allowed": false,
+  "original_lock_inode": 818853,
+  "owner_go_created": false,
+  "policy_proposal_only": {
+    "allocation_usdt": "50",
+    "day_loss_usdt": "2",
+    "drawdown_usdt": "6",
+    "gross_usdt": "30",
+    "max_entries": 1,
+    "max_positions": 1,
+    "reserve_usdt": "20",
+    "risk_usdt": "1",
+    "slippage_bps": "10",
+    "week_loss_usdt": "3"
+  },
+  "remaining_gates": [
+    "Actual new H1: close/source/decision/publication/consumer clocks separately",
+    "Current causal signal->fresh account->cost-inclusive exact lot/tick/native geometry sizing->OFF lifecycle readiness; fixtures do not substitute for real signals",
+    "No broker post unless exact money scope reviewed and owner personally initiates under existing protocol"
+  ],
+  "risk_disclosure": [
+    "R1 is admission scenario, not guaranteed realized-loss cap",
+    "Day2/week3/drawdown6 inhibit NEW entries; gaps/slippage/funding can exceed triggers",
+    "Constant-price current-funding-cap 168h stress is not a forecast or future cap guarantee",
+    "Same cross-margin account;allocation50 is software envelope,not a separately funded isolated account",
+    "No stop or risk-policy changes; exact tick rejection preserved",
+    "No profit promise; prereg research evidence is distinct from operational acceptance"
+  ],
+  "schema": "PUMP4_TINY_REVIEW_PROPOSAL_V1",
+  "status": "BLOCKED_ACTUAL_NEW_H1_AND_FULL_SOURCE_ADMISSION",
+  "strategy": {
+    "contract_commit": "b1387354e5b64de205e7f933b0537a2f6f37c123",
+    "entry_delay_ms": 60000,
+    "first_tp_fraction": "0.4",
+    "max_hold_h1": 168,
+    "second_tp_fraction": "0.6",
+    "static_stop_multiplier": 4,
+    "universe": 137
+  }
+}

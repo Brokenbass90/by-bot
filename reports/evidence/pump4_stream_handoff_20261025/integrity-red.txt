@@ -1,0 +1,30 @@
+.............FF                                                          [100%]
+=================================== FAILURES ===================================
+__________ test_candidate_rejects_forged_material_and_changed_driver ___________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-700/test_candidate_rejects_forged_0')
+
+    def test_candidate_rejects_forged_material_and_changed_driver(tmp_path):
+        (tmp_path/'app').mkdir();(tmp_path/'app/source.py').write_bytes(b'pass\n');(tmp_path/'accept.py').write_bytes(b'driver')
+        body=dict(files={'source.py':m.sha(b'pass\n')},driver_sha256=m.sha(b'driver'))
+        material=m.digest(body)
+        manifest=dict(files=body['files'],acceptance_driver_sha256=body['driver_sha256'],material_sha256=material)
+        raw=m.encode(manifest);(tmp_path/'manifest.json').write_bytes(raw)
+>       m.verify_candidate(tmp_path,material,m.sha(raw))
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'verify_candidate'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:58: AttributeError
+______________________ test_worker_overrides_fail_closed _______________________
+
+    def test_worker_overrides_fail_closed():
+        clean=dict(MainPID='0',ActiveState='inactive',DropInPaths='',ExecStop='',ExecStopPost='',Job='')
+>       m.quiet_state(clean)
+        ^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'quiet_state'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:65: AttributeError
+=========================== short test summary info ============================
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_candidate_rejects_forged_material_and_changed_driver
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_worker_overrides_fail_closed
+2 failed, 13 passed in 0.11s

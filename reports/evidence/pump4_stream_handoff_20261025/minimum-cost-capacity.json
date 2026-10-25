@@ -1,0 +1,973 @@
+{
+  "broker_writes": 0,
+  "cost_only_under_R1": 30,
+  "full_sizing_pass": false,
+  "new_get_requests": 0,
+  "oneway_issue": [
+    {
+      "automatic_rejection": "EXPLICIT_ONE_WAY_REQUIRED",
+      "one_way": false,
+      "positionIdx": [
+        1,
+        2
+      ],
+      "sizes_zero": true,
+      "symbol": "XRPUSDT"
+    }
+  ],
+  "recorded_source_only": true,
+  "rows": [
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.0060000",
+      "minimum_short_cost_scenario_usdt": "2.541138600000",
+      "stop_geometry_unchecked": true,
+      "symbol": "1000BONKUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.6600000",
+      "minimum_short_cost_scenario_usdt": "1.419246000000",
+      "stop_geometry_unchecked": true,
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.29500",
+      "minimum_short_cost_scenario_usdt": "5.5761645000",
+      "stop_geometry_unchecked": true,
+      "symbol": "1000RATSUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "6.7930",
+      "minimum_short_cost_scenario_usdt": "0.848445700",
+      "stop_geometry_unchecked": true,
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.023800",
+      "minimum_short_cost_scenario_usdt": "4.23556578000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ACEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.034600",
+      "minimum_short_cost_scenario_usdt": "4.24467126000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ACTUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.1050",
+      "minimum_short_cost_scenario_usdt": "0.637614500",
+      "stop_geometry_unchecked": true,
+      "symbol": "ADAUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.8660",
+      "minimum_short_cost_scenario_usdt": "5.788724600",
+      "stop_geometry_unchecked": true,
+      "symbol": "AEROUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "14.6145000",
+      "minimum_short_cost_scenario_usdt": "12.321484950000",
+      "stop_geometry_unchecked": true,
+      "symbol": "AKEUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.042590",
+      "minimum_short_cost_scenario_usdt": "0.36508351600",
+      "stop_geometry_unchecked": true,
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.47800",
+      "minimum_short_cost_scenario_usdt": "4.624527600",
+      "stop_geometry_unchecked": true,
+      "symbol": "ALLOUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.000400",
+      "minimum_short_cost_scenario_usdt": "0.46703736000",
+      "stop_geometry_unchecked": true,
+      "symbol": "APTUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.063000",
+      "minimum_short_cost_scenario_usdt": "0.47288420000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ARBUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "7.0750",
+      "minimum_short_cost_scenario_usdt": "1.002527500",
+      "stop_geometry_unchecked": true,
+      "symbol": "ASTERUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.67000",
+      "minimum_short_cost_scenario_usdt": "0.7677180000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ATOMUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "8.8180",
+      "minimum_short_cost_scenario_usdt": "1.249510600",
+      "stop_geometry_unchecked": true,
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.027000",
+      "minimum_short_cost_scenario_usdt": "6.34703370000",
+      "stop_geometry_unchecked": true,
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.90000",
+      "minimum_short_cost_scenario_usdt": "6.219780000",
+      "stop_geometry_unchecked": true,
+      "symbol": "BANKUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "13.6340",
+      "minimum_short_cost_scenario_usdt": "1.931937800",
+      "stop_geometry_unchecked": true,
+      "symbol": "BCHUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.02500",
+      "minimum_short_cost_scenario_usdt": "4.242105000",
+      "stop_geometry_unchecked": true,
+      "symbol": "BEATUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.0045650",
+      "minimum_short_cost_scenario_usdt": "2.642910776500",
+      "stop_geometry_unchecked": true,
+      "symbol": "BICOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.00175",
+      "minimum_short_cost_scenario_usdt": "4.2169754250",
+      "stop_geometry_unchecked": true,
+      "symbol": "BIOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.359250",
+      "minimum_short_cost_scenario_usdt": "9.0260488500",
+      "stop_geometry_unchecked": true,
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.022050",
+      "minimum_short_cost_scenario_usdt": "8.4581366100",
+      "stop_geometry_unchecked": true,
+      "symbol": "BLUAIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.125400",
+      "minimum_short_cost_scenario_usdt": "21.5482066800",
+      "stop_geometry_unchecked": true,
+      "symbol": "BMTUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "37.0005",
+      "minimum_short_cost_scenario_usdt": "5.242970850",
+      "stop_geometry_unchecked": true,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.1952000",
+      "minimum_short_cost_scenario_usdt": "4.380073120000",
+      "stop_geometry_unchecked": true,
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.090850",
+      "minimum_short_cost_scenario_usdt": "5.3667740700",
+      "stop_geometry_unchecked": true,
+      "symbol": "BROCCOLIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "401.97100",
+      "minimum_short_cost_scenario_usdt": "29.3559421300",
+      "stop_geometry_unchecked": true,
+      "symbol": "BTCUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.09485",
+      "minimum_short_cost_scenario_usdt": "4.301072370",
+      "stop_geometry_unchecked": true,
+      "symbol": "BTRUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.5595",
+      "minimum_short_cost_scenario_usdt": "0.5979242250",
+      "stop_geometry_unchecked": true,
+      "symbol": "BZUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.0055000",
+      "minimum_short_cost_scenario_usdt": "2.117827050000",
+      "stop_geometry_unchecked": true,
+      "symbol": "C98USDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.5990",
+      "minimum_short_cost_scenario_usdt": "2.3658574500",
+      "stop_geometry_unchecked": true,
+      "symbol": "CBRSUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.01550",
+      "minimum_short_cost_scenario_usdt": "4.2285680500",
+      "stop_geometry_unchecked": true,
+      "symbol": "CCUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.15250",
+      "minimum_short_cost_scenario_usdt": "0.30203955000",
+      "stop_geometry_unchecked": true,
+      "symbol": "CLUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.1075",
+      "minimum_short_cost_scenario_usdt": "5.15595150",
+      "stop_geometry_unchecked": true,
+      "symbol": "COAIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.041080",
+      "minimum_short_cost_scenario_usdt": "4.25013454800",
+      "stop_geometry_unchecked": true,
+      "symbol": "COOKIEUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.021205",
+      "minimum_short_cost_scenario_usdt": "0.54279226050",
+      "stop_geometry_unchecked": true,
+      "symbol": "COTIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "8.5180",
+      "minimum_short_cost_scenario_usdt": "1.3633059000",
+      "stop_geometry_unchecked": true,
+      "symbol": "CRCLUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.15850",
+      "minimum_short_cost_scenario_usdt": "0.6984609000",
+      "stop_geometry_unchecked": true,
+      "symbol": "CRVUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.0355",
+      "minimum_short_cost_scenario_usdt": "5.30842410",
+      "stop_geometry_unchecked": true,
+      "symbol": "CYSUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.62800",
+      "minimum_short_cost_scenario_usdt": "5.9268468000",
+      "stop_geometry_unchecked": true,
+      "symbol": "DEXEUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.36060",
+      "minimum_short_cost_scenario_usdt": "0.6695389400",
+      "stop_geometry_unchecked": true,
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "23.7900",
+      "minimum_short_cost_scenario_usdt": "1.5594345000",
+      "stop_geometry_unchecked": true,
+      "symbol": "DRAMUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.83260",
+      "minimum_short_cost_scenario_usdt": "1.0714486200",
+      "stop_geometry_unchecked": true,
+      "symbol": "ENAUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.1680",
+      "minimum_short_cost_scenario_usdt": "5.44810560",
+      "stop_geometry_unchecked": true,
+      "symbol": "EPICUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.011500",
+      "minimum_short_cost_scenario_usdt": "5.2831233000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "8.50600",
+      "minimum_short_cost_scenario_usdt": "5.3851486000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ESPUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "7.5140",
+      "minimum_short_cost_scenario_usdt": "0.544013600",
+      "stop_geometry_unchecked": true,
+      "symbol": "ETCUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.18075",
+      "minimum_short_cost_scenario_usdt": "4.3678903250",
+      "stop_geometry_unchecked": true,
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "116.5610",
+      "minimum_short_cost_scenario_usdt": "8.512449830",
+      "stop_geometry_unchecked": true,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "7.5955",
+      "minimum_short_cost_scenario_usdt": "0.4978850250",
+      "stop_geometry_unchecked": true,
+      "symbol": "EWYUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.55840",
+      "minimum_short_cost_scenario_usdt": "4.6862870400",
+      "stop_geometry_unchecked": true,
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.02755",
+      "minimum_short_cost_scenario_usdt": "2.1271564050",
+      "stop_geometry_unchecked": true,
+      "symbol": "FILUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.005400",
+      "minimum_short_cost_scenario_usdt": "0.36239096000",
+      "stop_geometry_unchecked": true,
+      "symbol": "GALAUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.90200",
+      "minimum_short_cost_scenario_usdt": "2.9202362000",
+      "stop_geometry_unchecked": true,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.002400",
+      "minimum_short_cost_scenario_usdt": "5.26802744000",
+      "stop_geometry_unchecked": true,
+      "symbol": "GUNUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.01600",
+      "minimum_short_cost_scenario_usdt": "4.234507200",
+      "stop_geometry_unchecked": true,
+      "symbol": "GWEIUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.38020",
+      "minimum_short_cost_scenario_usdt": "0.7623743400",
+      "stop_geometry_unchecked": true,
+      "symbol": "HBARUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.015040",
+      "minimum_short_cost_scenario_usdt": "5.28133862400",
+      "stop_geometry_unchecked": true,
+      "symbol": "HEIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.032000",
+      "minimum_short_cost_scenario_usdt": "4.24247920000",
+      "stop_geometry_unchecked": true,
+      "symbol": "HOMEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "7.64690",
+      "minimum_short_cost_scenario_usdt": "1.0353902600",
+      "stop_geometry_unchecked": true,
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.2300",
+      "minimum_short_cost_scenario_usdt": "0.378652000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ICPUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "7.60900",
+      "minimum_short_cost_scenario_usdt": "0.7106806000",
+      "stop_geometry_unchecked": true,
+      "symbol": "INJUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "8.6740",
+      "minimum_short_cost_scenario_usdt": "1.8436587000",
+      "stop_geometry_unchecked": true,
+      "symbol": "INTCUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.03160",
+      "minimum_short_cost_scenario_usdt": "1.0722339600",
+      "stop_geometry_unchecked": true,
+      "symbol": "JTOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.1825",
+      "minimum_short_cost_scenario_usdt": "5.212465750",
+      "stop_geometry_unchecked": true,
+      "symbol": "KAITOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.007140",
+      "minimum_short_cost_scenario_usdt": "4.22151973400",
+      "stop_geometry_unchecked": true,
+      "symbol": "LAUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.05540",
+      "minimum_short_cost_scenario_usdt": "0.8649789400",
+      "stop_geometry_unchecked": true,
+      "symbol": "LDOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "38.0350",
+      "minimum_short_cost_scenario_usdt": "16.0716892500",
+      "stop_geometry_unchecked": true,
+      "symbol": "LITEUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "6.37120",
+      "minimum_short_cost_scenario_usdt": "0.9027990400",
+      "stop_geometry_unchecked": true,
+      "symbol": "LITUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "32.0925",
+      "minimum_short_cost_scenario_usdt": "3.4515483750",
+      "stop_geometry_unchecked": true,
+      "symbol": "METAUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.12805",
+      "minimum_short_cost_scenario_usdt": "4.3234589550",
+      "stop_geometry_unchecked": true,
+      "symbol": "MEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.44400",
+      "minimum_short_cost_scenario_usdt": "4.5898364000",
+      "stop_geometry_unchecked": true,
+      "symbol": "MMTUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.135000",
+      "minimum_short_cost_scenario_usdt": "2.17261850000",
+      "stop_geometry_unchecked": true,
+      "symbol": "MNTUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.066400",
+      "minimum_short_cost_scenario_usdt": "1.07964984000",
+      "stop_geometry_unchecked": true,
+      "symbol": "MONUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "11.4435",
+      "minimum_short_cost_scenario_usdt": "2.4323159250",
+      "stop_geometry_unchecked": true,
+      "symbol": "MRVLUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "26.1965",
+      "minimum_short_cost_scenario_usdt": "2.8174335750",
+      "stop_geometry_unchecked": true,
+      "symbol": "MSFTUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "7.2115",
+      "minimum_short_cost_scenario_usdt": "1.5328043250",
+      "stop_geometry_unchecked": true,
+      "symbol": "MSTRUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.124200",
+      "minimum_short_cost_scenario_usdt": "4.32021302000",
+      "stop_geometry_unchecked": true,
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "44.4880",
+      "minimum_short_cost_scenario_usdt": "2.9161884000",
+      "stop_geometry_unchecked": true,
+      "symbol": "MUUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "7.9140",
+      "minimum_short_cost_scenario_usdt": "1.2666357000",
+      "stop_geometry_unchecked": true,
+      "symbol": "NBISUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.18220",
+      "minimum_short_cost_scenario_usdt": "5.4573748200",
+      "stop_geometry_unchecked": true,
+      "symbol": "NILUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "10.6180",
+      "minimum_short_cost_scenario_usdt": "1.1419659000",
+      "stop_geometry_unchecked": true,
+      "symbol": "NVDAUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.0285",
+      "minimum_short_cost_scenario_usdt": "1.107435450",
+      "stop_geometry_unchecked": true,
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.020470",
+      "minimum_short_cost_scenario_usdt": "0.36348202800",
+      "stop_geometry_unchecked": true,
+      "symbol": "OPUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.10255",
+      "minimum_short_cost_scenario_usdt": "1.0873534050",
+      "stop_geometry_unchecked": true,
+      "symbol": "ORDIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "20.00570",
+      "minimum_short_cost_scenario_usdt": "4.9354061900",
+      "stop_geometry_unchecked": true,
+      "symbol": "PAXGUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.153400",
+      "minimum_short_cost_scenario_usdt": "4.34483154000",
+      "stop_geometry_unchecked": true,
+      "symbol": "PENGUUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.000880",
+      "minimum_short_cost_scenario_usdt": "0.54059512800",
+      "stop_geometry_unchecked": true,
+      "symbol": "PEOPLEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "9.8185",
+      "minimum_short_cost_scenario_usdt": "4.1488071750",
+      "stop_geometry_unchecked": true,
+      "symbol": "PLTRUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.29080",
+      "minimum_short_cost_scenario_usdt": "0.7497063600",
+      "stop_geometry_unchecked": true,
+      "symbol": "POLUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.2865000",
+      "minimum_short_cost_scenario_usdt": "5.300148150000",
+      "stop_geometry_unchecked": true,
+      "symbol": "PUMPFUNUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "35.2780",
+      "minimum_short_cost_scenario_usdt": "5.6462439000",
+      "stop_geometry_unchecked": true,
+      "symbol": "QQQUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.04300",
+      "minimum_short_cost_scenario_usdt": "1.0746633000",
+      "stop_geometry_unchecked": true,
+      "symbol": "RENDERUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.2690",
+      "minimum_short_cost_scenario_usdt": "2.2264159500",
+      "stop_geometry_unchecked": true,
+      "symbol": "RKLBUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.130000",
+      "minimum_short_cost_scenario_usdt": "4.32510300000",
+      "stop_geometry_unchecked": true,
+      "symbol": "ROBOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.25100",
+      "minimum_short_cost_scenario_usdt": "1.1189881000",
+      "stop_geometry_unchecked": true,
+      "symbol": "SEIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.103000",
+      "minimum_short_cost_scenario_usdt": "1.08744930000",
+      "stop_geometry_unchecked": true,
+      "symbol": "SHIB1000USDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.10040",
+      "minimum_short_cost_scenario_usdt": "5.376841680",
+      "stop_geometry_unchecked": true,
+      "symbol": "SIRENUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.09880",
+      "minimum_short_cost_scenario_usdt": "5.3695462800",
+      "stop_geometry_unchecked": true,
+      "symbol": "SKYAI1USDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "62.1215",
+      "minimum_short_cost_scenario_usdt": "6.6811673250",
+      "stop_geometry_unchecked": true,
+      "symbol": "SNDKUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "50.4400",
+      "minimum_short_cost_scenario_usdt": "5.452564000",
+      "stop_geometry_unchecked": true,
+      "symbol": "SOLUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "8.4340",
+      "minimum_short_cost_scenario_usdt": "0.5528487000",
+      "stop_geometry_unchecked": true,
+      "symbol": "SOXLUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.01000",
+      "minimum_short_cost_scenario_usdt": "5.2760310000",
+      "stop_geometry_unchecked": true,
+      "symbol": "SQDUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.009400",
+      "minimum_short_cost_scenario_usdt": "1.06750314000",
+      "stop_geometry_unchecked": true,
+      "symbol": "STRKUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "45.90500",
+      "minimum_short_cost_scenario_usdt": "4.2875270000",
+      "stop_geometry_unchecked": true,
+      "symbol": "SUIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.21725",
+      "minimum_short_cost_scenario_usdt": "1.1421088250",
+      "stop_geometry_unchecked": true,
+      "symbol": "TAOUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.14100",
+      "minimum_short_cost_scenario_usdt": "5.4139871000",
+      "stop_geometry_unchecked": true,
+      "symbol": "THEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.25900",
+      "minimum_short_cost_scenario_usdt": "2.2250829000",
+      "stop_geometry_unchecked": true,
+      "symbol": "TIAUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.7645",
+      "minimum_short_cost_scenario_usdt": "0.937884150",
+      "stop_geometry_unchecked": true,
+      "symbol": "TRUMPUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "6.57800",
+      "minimum_short_cost_scenario_usdt": "0.8215922000",
+      "stop_geometry_unchecked": true,
+      "symbol": "TRXUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "18.5855",
+      "minimum_short_cost_scenario_usdt": "1.9988705250",
+      "stop_geometry_unchecked": true,
+      "symbol": "TSLAUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.056300",
+      "minimum_short_cost_scenario_usdt": "5.3303514600",
+      "stop_geometry_unchecked": true,
+      "symbol": "TUTUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.091500",
+      "minimum_short_cost_scenario_usdt": "6.41495865000",
+      "stop_geometry_unchecked": true,
+      "symbol": "UBUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "6.7060",
+      "minimum_short_cost_scenario_usdt": "0.950240200",
+      "stop_geometry_unchecked": true,
+      "symbol": "UNIUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.00200",
+      "minimum_short_cost_scenario_usdt": "1.0659262000",
+      "stop_geometry_unchecked": true,
+      "symbol": "USDCUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.22300",
+      "minimum_short_cost_scenario_usdt": "5.5003413000",
+      "stop_geometry_unchecked": true,
+      "symbol": "USELESSUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.050500",
+      "minimum_short_cost_scenario_usdt": "5.3242371000",
+      "stop_geometry_unchecked": true,
+      "symbol": "USUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.130090",
+      "minimum_short_cost_scenario_usdt": "5.40249777900",
+      "stop_geometry_unchecked": true,
+      "symbol": "VELODROMEUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.1620",
+      "minimum_short_cost_scenario_usdt": "1.313122200",
+      "stop_geometry_unchecked": true,
+      "symbol": "VIRTUALUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "6.170000",
+      "minimum_short_cost_scenario_usdt": "6.49762700000",
+      "stop_geometry_unchecked": true,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.33100",
+      "minimum_short_cost_scenario_usdt": "2.2555461000",
+      "stop_geometry_unchecked": true,
+      "symbol": "WIFUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.17845",
+      "minimum_short_cost_scenario_usdt": "0.4836672300",
+      "stop_geometry_unchecked": true,
+      "symbol": "WLDUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.02360",
+      "minimum_short_cost_scenario_usdt": "1.1338265200",
+      "stop_geometry_unchecked": true,
+      "symbol": "WLFIUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.10530",
+      "minimum_short_cost_scenario_usdt": "0.58552685700",
+      "stop_geometry_unchecked": true,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.002500",
+      "minimum_short_cost_scenario_usdt": "8.41970775000",
+      "stop_geometry_unchecked": true,
+      "symbol": "XANUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "19.94615",
+      "minimum_short_cost_scenario_usdt": "4.9207152050",
+      "stop_geometry_unchecked": true,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "19.97120",
+      "minimum_short_cost_scenario_usdt": "2.29049692800",
+      "stop_geometry_unchecked": true,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.06100",
+      "minimum_short_cost_scenario_usdt": "0.7171437000",
+      "stop_geometry_unchecked": true,
+      "symbol": "XLMUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "30.3550",
+      "minimum_short_cost_scenario_usdt": "2.197702000",
+      "stop_geometry_unchecked": true,
+      "symbol": "XMRUSDT"
+    },
+    {
+      "cost_only_under_R1": true,
+      "minimum_40_60_gross_usdt": "5.03230",
+      "minimum_short_cost_scenario_usdt": "0.7130769100",
+      "stop_geometry_unchecked": true,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.18280",
+      "minimum_short_cost_scenario_usdt": "0.5602606800",
+      "stop_geometry_unchecked": true,
+      "symbol": "XRPUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.008635",
+      "minimum_short_cost_scenario_usdt": "4.22278016850",
+      "stop_geometry_unchecked": true,
+      "symbol": "ZBTUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "60.6360",
+      "minimum_short_cost_scenario_usdt": "8.592121200",
+      "stop_geometry_unchecked": true,
+      "symbol": "ZECUSDT"
+    },
+    {
+      "cost_only_under_R1": false,
+      "minimum_40_60_gross_usdt": "5.14410",
+      "minimum_short_cost_scenario_usdt": "1.0962077100",
+      "stop_geometry_unchecked": true,
+      "symbol": "ZROUSDT"
+    }
+  ]
+}

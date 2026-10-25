@@ -1,0 +1,51 @@
+................FFF                                                      [100%]
+=================================== FAILURES ===================================
+________________ test_timer_catchup_can_acquire_both_data_locks ________________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-705/test_timer_catchup_can_acquire0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10afed730>
+
+    def test_timer_catchup_can_acquire_both_data_locks(tmp_path,monkeypatch):
+        paths=[tmp_path/'old.lock',tmp_path/'new.lock'];fds=[]
+        for p in paths:
+            fd=os.open(p,os.O_CREAT|os.O_RDWR,0o600);fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB);fds.append(fd)
+        calls=[]
+        def start(*args):
+            calls.append(args)
+            for p in paths:
+                fd=os.open(p,os.O_RDWR)
+                try:fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                finally:os.close(fd)
+        monkeypatch.setattr(m,'ctl',start)
+>       m.resume_timer('timer',fds)
+        ^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'resume_timer'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:87: AttributeError
+________ test_rollback_restores_wrapper_after_crash_before_unit_replace ________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-705/test_rollback_restores_wrapper0')
+
+    def test_rollback_restores_wrapper_after_crash_before_unit_replace(tmp_path):
+        unit=tmp_path/'unit';wrapper=tmp_path/'wrapper';unit.write_bytes(b'old unit');wrapper.write_bytes(b'new wrapper')
+>       m.restore_owner_files(unit,wrapper,b'old unit',b'new unit',b'old wrapper',b'new wrapper')
+        ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'restore_owner_files'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:92: AttributeError
+___________ test_rollback_rejects_unknown_wrapper_before_unit_write ____________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-705/test_rollback_rejects_unknown_0')
+
+    def test_rollback_rejects_unknown_wrapper_before_unit_write(tmp_path):
+        unit=tmp_path/'unit';wrapper=tmp_path/'wrapper';unit.write_bytes(b'new unit');wrapper.write_bytes(b'unknown')
+>       with pytest.raises(AssertionError):m.restore_owner_files(unit,wrapper,b'old unit',b'new unit',b'old wrapper',b'new wrapper')
+                                           ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'restore_owner_files'
+
+.private/pump4_stream_handoff_20261025/test_handoff.py:97: AttributeError
+=========================== short test summary info ============================
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_timer_catchup_can_acquire_both_data_locks
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rollback_restores_wrapper_after_crash_before_unit_replace
+FAILED .private/pump4_stream_handoff_20261025/test_handoff.py::test_rollback_rejects_unknown_wrapper_before_unit_write
+3 failed, 16 passed in 0.12s
