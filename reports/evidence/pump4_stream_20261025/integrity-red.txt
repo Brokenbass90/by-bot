@@ -1,0 +1,16 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_____ test_changed_context_after_early_publication_cannot_fork_the_archive _____
+tests/test_pump4_stream_publication_v1.py:133: in test_changed_context_after_early_publication_cannot_fork_the_archive
+    with pytest.raises(ValueError,match='STREAM_CONTEXT_CHANGED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+______ test_finalization_rechecks_actual_capture_bytes_against_full_seal _______
+tests/test_pump4_stream_publication_v1.py:145: in test_finalization_rechecks_actual_capture_bytes_against_full_seal
+    with pytest.raises(ValueError,match='STREAM_FULL_SEAL_CAPTURE_CHANGED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_stream_publication_v1.py::test_changed_context_after_early_publication_cannot_fork_the_archive
+FAILED tests/test_pump4_stream_publication_v1.py::test_finalization_rechecks_actual_capture_bytes_against_full_seal
+2 failed, 5 deselected in 1.29s

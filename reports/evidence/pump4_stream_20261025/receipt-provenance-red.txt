@@ -1,0 +1,9 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_public_collector_calls_back_on_completion_not_input_order ________
+tests/test_pump4_stream_publication_v1.py:126: in test_public_collector_calls_back_on_completion_not_input_order
+    assert out['strategy_calls'] is None and out['data_intake_callback_used'] is True
+E   assert (0 is None)
+=========================== short test summary info ============================
+FAILED tests/test_pump4_stream_publication_v1.py::test_public_collector_calls_back_on_completion_not_input_order
+1 failed, 6 deselected in 0.24s

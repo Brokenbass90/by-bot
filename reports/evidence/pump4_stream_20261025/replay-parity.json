@@ -1,5 +1,7 @@
 {
   "actual_publication_latency_verified": false,
+  "baseline_commit": "59bd50a",
+  "baseline_path": "research_lab/pump4_supervisor_v1.py",
   "broker_requests": 0,
   "broker_writes": 0,
   "cases": [

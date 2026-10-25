@@ -1,0 +1,56 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_ test_current_decision_is_durable_before_full_census_and_finalization_is_idempotent _
+tests/test_pump4_stream_publication_v1.py:62: in test_current_decision_is_durable_before_full_census_and_finalization_is_idempotent
+    out=s.public_cycle(collector=streaming_collector(template,t,check))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_lab/pump4_supervisor_v1.py:253: in public_cycle
+    collector(archive)
+tests/test_pump4_stream_publication_v1.py:42: in collect
+    assert callable(on_symbol), 'FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION'
+E   AssertionError: FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION
+E   assert False
+E    +  where False = callable(None)
+________ test_partial_stream_is_preserved_and_never_blindly_recollected ________
+tests/test_pump4_stream_publication_v1.py:76: in test_partial_stream_is_preserved_and_never_blindly_recollected
+    s.public_cycle(collector=streaming_collector(template,t,interrupted))
+research_lab/pump4_supervisor_v1.py:253: in public_cycle
+    collector(archive)
+tests/test_pump4_stream_publication_v1.py:42: in collect
+    assert callable(on_symbol), 'FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION'
+E   AssertionError: FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION
+E   assert False
+E    +  where False = callable(None)
+_______ test_changed_capture_after_early_publication_blocks_finalization _______
+tests/test_pump4_stream_publication_v1.py:89: in test_changed_capture_after_early_publication_blocks_finalization
+    s.public_cycle(collector=streaming_collector(template,t,changed))
+research_lab/pump4_supervisor_v1.py:253: in public_cycle
+    collector(archive)
+tests/test_pump4_stream_publication_v1.py:42: in collect
+    assert callable(on_symbol), 'FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION'
+E   AssertionError: FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION
+E   assert False
+E    +  where False = callable(None)
+________ test_streaming_cannot_promote_bootstrap_or_extend_entry_window ________
+tests/test_pump4_stream_publication_v1.py:99: in test_streaming_cannot_promote_bootstrap_or_extend_entry_window
+    out=Supervisor(root,clock=lambda:t[0]).public_cycle(collector=streaming_collector(template,t))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_lab/pump4_supervisor_v1.py:253: in public_cycle
+    collector(archive)
+tests/test_pump4_stream_publication_v1.py:42: in collect
+    assert callable(on_symbol), 'FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION'
+E   AssertionError: FULL_CENSUS_MUST_NOT_PRECEDE_PUBLICATION
+E   assert False
+E    +  where False = callable(None)
+________ test_public_collector_calls_back_on_completion_not_input_order ________
+tests/test_pump4_stream_publication_v1.py:123: in test_public_collector_calls_back_on_completion_not_input_order
+    out=collector.capture(tmp_path/'.private/source',on_symbol=ready)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: capture() got an unexpected keyword argument 'on_symbol'
+=========================== short test summary info ============================
+FAILED tests/test_pump4_stream_publication_v1.py::test_current_decision_is_durable_before_full_census_and_finalization_is_idempotent
+FAILED tests/test_pump4_stream_publication_v1.py::test_partial_stream_is_preserved_and_never_blindly_recollected
+FAILED tests/test_pump4_stream_publication_v1.py::test_changed_capture_after_early_publication_blocks_finalization
+FAILED tests/test_pump4_stream_publication_v1.py::test_streaming_cannot_promote_bootstrap_or_extend_entry_window
+FAILED tests/test_pump4_stream_publication_v1.py::test_public_collector_calls_back_on_completion_not_input_order
+5 failed in 0.69s
