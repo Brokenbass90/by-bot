@@ -1,0 +1,83 @@
+{
+  "observed_ms": 1792946317843,
+  "owner_state": {
+    "MainPID": "2904935",
+    "NRestarts": "0",
+    "ActiveState": "active"
+  },
+  "original_lock_inode": 818853,
+  "lock_held_by_selected_pid": true,
+  "latest_receipt": {
+    "broker_writes": 0,
+    "final_costs_proven": false,
+    "mode": "ORDERS_OFF",
+    "observed_ms": 1792946315240,
+    "pid": 2904935,
+    "result": {
+      "broker_writes": 0,
+      "status": "NO_NEW_SIGNAL"
+    },
+    "run_id": "7d6dd8ce9801477aa3cf1a53fcec6b86",
+    "runner_config_sha256": "22fc90a5d594b53d58365fd22f06fb08294f83020c0bf5ade6f5115e7eb1e35b",
+    "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+    "scope_sha256": "38e45152ea65c72df4e7df06df18a21bde798cf231dae91114008433cd0a4b8f",
+    "tick": 9
+  },
+  "health": {
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "observed_ms": 1792946317989,
+    "status": "HEALTHY",
+    "owner": "PUMP4",
+    "orders_allowed": false,
+    "restart_allowed": false,
+    "reason": "ORDERS_OFF_SUPERVISOR_ALIVE",
+    "pid": 2904935,
+    "age_ms": 2749,
+    "financial_trading_proven": false
+  },
+  "monthly_unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+  "data_applied": {
+    "binding_sha256": "726bfe7620f7aaebff1aeb65adeada8b8ef4b6b5d87dcd92720c7a46799732e9",
+    "broker_writes": 0,
+    "data_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-617d9e3419d45d8b/app/.private/pump4-supervisor-v1",
+    "observed_ms": 1792946182667,
+    "original_lock_inode": 818853,
+    "owner_go_created": false,
+    "owner_pid": "2890108",
+    "preserved_files": 12611,
+    "status": "STREAM_DATA_SELECTED"
+  },
+  "owner_applied": {
+    "broker_writes": 0,
+    "config_path": "/opt/bybot-research/pump4-server-orders-off-20261023/warm-handoff-20261025/owner-review-stream-v1/runner.json",
+    "config_sha256": "22fc90a5d594b53d58365fd22f06fb08294f83020c0bf5ade6f5115e7eb1e35b",
+    "fresh_flat_before": {
+      "bundle_sha256": "6781e335f0dcdb5ec4aca0bf44fd03fa15f37acbee0965827e3ed0e8d0688a2d",
+      "observed_ms": 1792946209260,
+      "open_orders_empty": true,
+      "positions_flat": true,
+      "source_ms": 1792946208032
+    },
+    "fresh_flat_stopped": {
+      "bundle_sha256": "d8c70c7fd199b0416e8872ff0eab0571ed074d8fe92d7780094312a6a3ee0f71",
+      "observed_ms": 1792946213981,
+      "open_orders_empty": true,
+      "positions_flat": true,
+      "source_ms": 1792946212135
+    },
+    "new_pid": 2904935,
+    "new_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-617d9e3419d45d8b/runtime/financial-orders-off-stream-v1",
+    "observed_ms": 1792946231863,
+    "old_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5deafc9fdd232bdc/runtime/financial-orders-off-stream-v1",
+    "original_lock_inode": 818853,
+    "owner_go_created": false,
+    "scope_sha256": "38e45152ea65c72df4e7df06df18a21bde798cf231dae91114008433cd0a4b8f",
+    "source_result": {
+      "broker_writes": 0,
+      "status": "NO_NEW_SIGNAL"
+    },
+    "status": "STREAM_CONSUMER_ORDERS_OFF_SELECTED"
+  },
+  "owner_go_present": false,
+  "data_unit": "Result=success\nCPUQuotaPerSecUSec=1s\nId=pump4-data-supervisor.service\nActiveState=inactive\n\nNextElapseUSecRealtime=Sun 2026-10-25 17:00:02 UTC\nResult=success\nId=pump4-data-supervisor.timer\nActiveState=active\n"
+}

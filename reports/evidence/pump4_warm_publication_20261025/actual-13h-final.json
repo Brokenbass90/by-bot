@@ -1,0 +1,60 @@
+{
+  "blocked": [
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "ASTERUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "BEATUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "AKEUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "reason": "UNAVAILABLE_INSTRUMENT",
+      "symbol": "HFTUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "ACTUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "ADAUSDT"
+    },
+    {
+      "reason": "BLOCKED_SOURCE",
+      "symbol": "AAVEUSDT"
+    }
+  ],
+  "broker_writes": 0,
+  "full_seal_present": true,
+  "intake_pass": 127,
+  "new_h1_ms": 1792933200000,
+  "observed_ms": 1792933460783,
+  "observer_read_only": true,
+  "publication_delay_ms": {
+    "max": 257734,
+    "median": 165837,
+    "min": 25272
+  },
+  "published": 137,
+  "published_within60s": 4,
+  "signal_symbols": [],
+  "source_captured": 127,
+  "source_within60s": 68
+}

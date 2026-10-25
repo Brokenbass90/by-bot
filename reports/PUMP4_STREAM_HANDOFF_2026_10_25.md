@@ -73,3 +73,40 @@ isolated brokerage subaccount. Proposed50/30/20/R1/day2/week3/DD6/max1 remain
 unapproved; [exact blocked proposal](evidence/pump4_stream_handoff_20261025/tiny-proposal.json).
 [Current source summary](evidence/pump4_stream_handoff_20261025/current-instrument-summary.json),
 [recorded-source minimum-capacity calculation](evidence/pump4_stream_handoff_20261025/minimum-cost-capacity.json).
+
+## Actual13:00UTC result — publication gate NOT PASSED
+
+The existing timer captured the genuine13:00UTC boundary.137symbol processing
+receipts published,127intakePASS,9Bybit10006rate-limit failures and HFTunavailable.
+Only4/127successful publications were within60s;68sources arrived within60s.
+Publication min25.272s/median165.837s/max257.734s. No signals. Historical/cached
+acceptance above must not be confused with this actual publication failure.
+Immutable early receipts prove streaming physically works; timeliness is insufficient.
+
+Measured DATA cgroup40%CPU:42.17CPU seconds by114s,751/1142periods throttled,
+36.51s throttled time. Isolated recorded13H1 in original12state shows four full
+frozen producer replays per ordinary warm bar; no original journal was edited.
+The first profile-copy attempt failed mode custody0600 and wrote no live state;
+copy2 fixed only the isolated profile fixture. New warm-path code cuts4→2 without
+changing frozen intake9e37540b…9702aa, producer, journal format, observed clocks,
+source overlap, epochs or60s. Original append_checked locked validation/fsync stays.
+Bootstrap/catchup/recovery use the existing accept path. No automatic retry after
+rate-limit errors; original13H1 failed captures remain unchanged.
+
+New candidate617d9e3419d45d8b:259local/same259VPS network-deniedPASS,
+107files/47imports/15modules/83fixture receipts/no fallback. One new bounded
+astra/high review0Critical/Important; actual runtime verified.55targetedPASS plus
+reviewer's post-fsync response-loss check. Isolated recorded journal/decisions/
+observations exactly equal; a single local sample.0611→.0325s is not market proof.
+New DATA selection completed16:36UTC; DATA CPU quota changed
+40→100%onecore, with2vCPU host and same768MiB cap. Financial risk/budget/60s unchanged.
+Actual new-H1 acceptance remains pending after selection. No moneyGO/TINY_READY.
+[Actual13H1 and warm-path evidence](evidence/pump4_warm_publication_20261025/).
+
+Actual second selection:DATA617d9e3419d45d8b/binding726bfe76…732e9;
+12611historyfiles preserved, all previous DATA roots remain intact.
+SAMEfinancialunit/app30677ce6, config22fc90a5…1e35b/scope38e45152…a4b8f,
+PID2904935/NRestarts0/original818853held.2freshflat/noordersGETbarriers,
+HEALTHY/NO_NEW_SIGNAL/noGO;Monthly9d944…32cc1d unchanged. Actual installed
+systemd cached16Harchive Result=success, observedCPUQuota=1s; not newmarketproof.
+Next actual17:00UTC H1. Prior13H1 failure and original source errors stay sealed.

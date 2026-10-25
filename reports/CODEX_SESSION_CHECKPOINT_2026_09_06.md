@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct16:38UTC — WARM PUMP REPLAY OPTIMIZATION DEPLOYED ORDERS_OFF.
+Read PUMP4_STREAM_HANDOFF_2026_10_25.md + evidence/pump4_warm_publication_20261025/.
+Actual13H1:137published/127intakePASS/4≤60s/median165.837s/max257.734s;
+68sources≤60s/9Bybit10006+HFTunavailable/0signals. Publication gate NOTPASS.
+MeasuredCPU40%throttle+4warmreplays. Samefrozenintake9e37540b…9702aa/producer/
+journals unchanged; narrow normalwarm4→2 lockedvalidated replay, oldrecoverypaths.
+259local/same259VPSnetworkdeniedPASS;55targeted;actualastra/highreview0Important.
+NewDATA617d9e3419d45d8b selected, binding726bfe76…732e9;12611historyfiles preserved;
+ONLYDATA CPU40→100%onecore, same768MiB/60s/timer, no financialriskchange.
+SAMEownerunit/app30677ce6,config22fc90a5…1e35b/scope38e45152…a4b8f,
+PID2904935/NRestarts0/818853held/HEALTHY/NO_NEW_SIGNAL/GOabsent.2freshGETflatbarriers.
+Newprivatepacketwarm-handoff-20261025/ops.py includes exactrollback; oldroots/
+scopes/claims intact. Systemd cached16HarchivePASS is not actualnewH1speedPASS.
+NEXT actual17:00UTC source vs durablepublication/consumer clocks→freshcost/sizing/
+OFF→exactTINYpacket. TINY_NOT_READY/noPUMPmoneyorders. Monthlyunchangedselected,
+NEVERrepeatMonthly/NETcommands. Userasked developmentplan: added inside existing
+ROADMAP_SELF_IMPROVING.md (one roadmap, no newarchitecture/researchqueue).
+Prioraccountquota interrupted profile/reviewer; renewed only after verifiedreset
+anddirectownercontinue. Failedprofilemode fixture touched no livejournal.
+Earlier PID2890108/UNSELECTEDwarmcandidate rows below are superseded history.
+
+
 CURRENT25Oct12:36UTC — PUMP STREAM DATA/CONSUMER DEPLOYED ORDERS_OFF.
 Read PUMP4_STREAM_HANDOFF_2026_10_25.md and evidence/pump4_stream_handoff_20261025/.
 DATA5deafc9fdd232bdc selected via SAME service/timer;10433historyfiles preserved,

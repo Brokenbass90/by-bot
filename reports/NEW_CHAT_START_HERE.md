@@ -17,23 +17,24 @@ reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
 single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
 2Novfreshentry/protection checks remain actual future gates; CASHpossible.
 
-## NEXT PUMP — streaming DEPLOYED ORDERS_OFF; new-H1 gate pending
+## NEXT PUMP — warm streaming DEPLOYED OFF; actual speed gate pending
 
-Read `PUMP4_STREAM_HANDOFF_2026_10_25.md` and its evidence directory.
-Reviewed DATA5deafc9fdd232bdc is now selected by SAME DATA service/timer.
-10433historyfiles preserved;oldrootintact/newbinding135d6e09…8dd0.
-SAMEsolefinancialunit/app30677ce6,config356a195b…9bb7/scopef6c3312f…a8b0;
-PID2890108/NRestarts0/original818853held/HEALTHY/NO_NEW_SIGNAL at12:36UTC.
-Config `/opt/bybot-research/pump4-server-orders-off-20261023/stream-handoff-20261025/owner-review-stream-v1/runner.json`.
-DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5deafc9fdd232bdc/app/.private/pump4-supervisor-v1`.
-Oldscope/claims preserved;2freshGETflat barriers;0POST/GO. KITY remains retired.
-19local/same19VPSnetworkdenied handofftests;boundedreview fixes regressed.
-Pinned private helper `stream-handoff-20261025/ops-final.py` includes explicit
-state-preserving rollback; no automatic retry, no repin/reset/history overwrite.
-Actualsystemd cachedarchivePASS is not timely/new signal. NEXT actual25Oct13:00UTC
-H1 (timer+2s): source→publication_completed_ms→financialreadiness separately.
-Then freshaccount/fees/funding/oneway/rounding/sizing/OFF→exact TINY proposal.
-TINY_NOT_READY; separate moneyGO absent. Monthly stays selected, no repeat commands.
+Read `PUMP4_STREAM_HANDOFF_2026_10_25.md` and `evidence/pump4_warm_publication_20261025/`.
+Actual13H1 only4/127successfulpublications≤60s;median165.837/max257.734s,
+9Bybit10006/HFTunavailable/0signals. No source/error retry or60s extension.
+Newwarm4→2 locked replay keeps frozenintake/producer/epochs/journal unchanged.
+259local/same259VPSPASS,actualastra/highreview0Important. DATA617d9e3419d45d8b
+selected;12611historyfiles preserved;onlyDATA CPU40→100%onecore/same768MiB.
+SAMEsolefinancialunit/app30677ce6,config22fc90a5…1e35b/scope38e45152…a4b8f,
+PID2904935/NRestarts0/818853held/HEALTHY/NO_NEW_SIGNAL/GOabsent at16:38UTC.
+Config `/opt/bybot-research/pump4-server-orders-off-20261023/warm-handoff-20261025/owner-review-stream-v1/runner.json`.
+DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-617d9e3419d45d8b/app/.private/pump4-supervisor-v1`.
+Binding726bfe76…732e9;oldroots/scopes/claims intact;fresh2GETflat barriers.
+Private `warm-handoff-20261025/ops.py` has exactstateforwardrollback;neverblindretry.
+Systemd cached16HarchivePASS is not newH1proof. NEXT actual17:00UTC timing,
+then fresh source/account/cost/lot/oneway/stop/OFF→exactTINYproposal. MoneyGOabsent.
+12:39dateddiagnostics:136oneway/XRPhedgeblocked/minimumcost-onlyR1capacity30;
+not currentfullsizingPASS. Numeric50/30/20/R1/2/3/6 are proposals. Monthly unchanged.
 
 ## Broader goal and ownership
 

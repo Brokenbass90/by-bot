@@ -1,0 +1,206 @@
+{
+  "symbol": "1000BONKUSDT",
+  "recorded_source_replay_only": true,
+  "actual_new_h1_pass": false,
+  "wall_seconds": 0.41354349395260215,
+  "top_functions": [
+    {
+      "file": "pump4_supervisor_v1.py",
+      "line": 125,
+      "name": "_symbol",
+      "calls": 1,
+      "self_seconds": 0.001233781,
+      "cumulative_seconds": 0.412836888
+    },
+    {
+      "file": "pump4_closed_bar_intake_v1.py",
+      "line": 59,
+      "name": "_replay",
+      "calls": 4,
+      "self_seconds": 0.012858925,
+      "cumulative_seconds": 0.23002133900000002
+    },
+    {
+      "file": "pump4_closed_bar_intake_v1.py",
+      "line": 112,
+      "name": "accept",
+      "calls": 1,
+      "self_seconds": 0.00014713400000000002,
+      "cumulative_seconds": 0.19125201700000002
+    },
+    {
+      "file": "att1_lifecycle_journal.py",
+      "line": 133,
+      "name": "_load",
+      "calls": 4,
+      "self_seconds": 0.003442291,
+      "cumulative_seconds": 0.12852792300000002
+    },
+    {
+      "file": "__init__.py",
+      "line": 183,
+      "name": "dumps",
+      "calls": 743,
+      "self_seconds": 0.002661622,
+      "cumulative_seconds": 0.120152216
+    },
+    {
+      "file": "encoder.py",
+      "line": 183,
+      "name": "encode",
+      "calls": 743,
+      "self_seconds": 0.002369089,
+      "cumulative_seconds": 0.116919858
+    },
+    {
+      "file": "encoder.py",
+      "line": 205,
+      "name": "iterencode",
+      "calls": 743,
+      "self_seconds": 0.113457979,
+      "cumulative_seconds": 0.113457979
+    },
+    {
+      "file": "att1_lifecycle_journal.py",
+      "line": 178,
+      "name": "read",
+      "calls": 3,
+      "self_seconds": 0.000124805,
+      "cumulative_seconds": 0.097057581
+    },
+    {
+      "file": "pump_fade_v4r.py",
+      "line": 1193,
+      "name": "maybe_signal",
+      "calls": 3302,
+      "self_seconds": 0.003216641,
+      "cumulative_seconds": 0.097030898
+    },
+    {
+      "file": "att1_lifecycle_journal.py",
+      "line": 190,
+      "name": "append_checked",
+      "calls": 1,
+      "self_seconds": 0.00028998,
+      "cumulative_seconds": 0.09510897600000001
+    },
+    {
+      "file": "att1_lifecycle_journal.py",
+      "line": 200,
+      "name": "_append",
+      "calls": 1,
+      "self_seconds": 0.00014194900000000002,
+      "cumulative_seconds": 0.09481814200000001
+    },
+    {
+      "file": "pump_fade_v4r.py",
+      "line": 1027,
+      "name": "on_bar",
+      "calls": 3302,
+      "self_seconds": 0.01810171,
+      "cumulative_seconds": 0.09381425700000001
+    },
+    {
+      "file": "pump4_closed_bar_intake_v1.py",
+      "line": 129,
+      "name": "snapshot",
+      "calls": 1,
+      "self_seconds": 0.00032936200000000004,
+      "cumulative_seconds": 0.09014886800000001
+    },
+    {
+      "file": "att1_lifecycle_journal.py",
+      "line": 25,
+      "name": "_canonical",
+      "calls": 529,
+      "self_seconds": 0.001102784,
+      "cumulative_seconds": 0.08834954
+    },
+    {
+      "file": "pump4_closed_bar_intake_v1.py",
+      "line": 36,
+      "name": "_closed",
+      "calls": 4103,
+      "self_seconds": 0.008142818000000001,
+      "cumulative_seconds": 0.073209101
+    },
+    {
+      "file": "pump_fade_v4r.py",
+      "line": 641,
+      "name": "_on_bar_v4",
+      "calls": 3302,
+      "self_seconds": 0.026114572000000003,
+      "cumulative_seconds": 0.065666956
+    },
+    {
+      "file": "pump4_closed_bar_intake_v1.py",
+      "line": 26,
+      "name": "_bar",
+      "calls": 4103,
+      "self_seconds": 0.024183863,
+      "cumulative_seconds": 0.064304599
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "name": "<built-in method builtins.all>",
+      "calls": 5217,
+      "self_seconds": 0.010721381,
+      "cumulative_seconds": 0.042480768
+    },
+    {
+      "file": "att1_lifecycle_journal.py",
+      "line": 33,
+      "name": "_hash",
+      "calls": 211,
+      "self_seconds": 0.000497761,
+      "cumulative_seconds": 0.039206298
+    },
+    {
+      "file": "att1_lifecycle_journal.py",
+      "line": 50,
+      "name": "_event",
+      "calls": 106,
+      "self_seconds": 0.0018700140000000001,
+      "cumulative_seconds": 0.03698833
+    }
+  ],
+  "result": {
+    "symbol": "1000BONKUSDT",
+    "status": "CLOSED_H1_INTAKE_PASS",
+    "mode": "CURRENT_CLOSED_BAR",
+    "accepted_bars": 1,
+    "cursor_ms": 1792929600000,
+    "decisions": [
+      {
+        "schema": "PUMP4_DATA_DECISION_OBSERVATION_V1",
+        "decision": {
+          "domain_schema": "PUMP4_CLOSED_H1_INTAKE_V1",
+          "symbol": "1000BONKUSDT",
+          "bar_open_ms": 1792929600000,
+          "history_sha256": "921355184db94c2aa22c5bebfb9ee86245c91a17ef229a34b68b439030f81f9b",
+          "source_pins": {
+            "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+            "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+          },
+          "signal": null,
+          "decision_id": "pump4-27f49a518c14a2553252fbdcc320c88b68fcb2f16bac9ef7f5d631e263cb53e7",
+          "available_ms": 1792933210657,
+          "first_observed_ms": 1792933210657,
+          "cooldown_remaining": 0,
+          "clock_provenance": "CALLER_PROVIDED_NOT_AUTHENTICATED",
+          "execution_admission": "NOT_PERFORMED",
+          "universe_validation": "NOT_PERFORMED",
+          "orders_allowed": false,
+          "money_authority": false
+        },
+        "archive_id": "e01c3a59219eeaa4f628115e85546e267f69807ebb7e05c5dbda7f00ba5caac4",
+        "mode": "CURRENT_CLOSED_BAR",
+        "status": "NO_SIGNAL",
+        "orders_allowed": false,
+        "money_authority": false
+      }
+    ]
+  },
+  "journal_sha256": "ae44a103c6f3c8f443615ce7e5333f29a9db5f2f79c5f85e9befafb9569573ee"
+}

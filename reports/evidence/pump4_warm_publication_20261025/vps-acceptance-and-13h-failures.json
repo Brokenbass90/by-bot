@@ -1,0 +1,131 @@
+{
+  "acceptance": {
+    "checkout_fallback": [],
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 259
+    },
+    "elapsed_seconds": 94.377,
+    "imports": 47,
+    "material_sha256": "617d9e3419d45d8ba781223c9f13d04a62d57d8baf1b719222e3b3d2fcae9b5a",
+    "money_authority": false,
+    "network_denied": true,
+    "orders_allowed": false,
+    "real_broker_requests": 0,
+    "real_broker_writes": 0,
+    "receipt_count": 83,
+    "schema": "PUMP4_SERVER_ORDERS_OFF_ACCEPTANCE_V1",
+    "source_files": 107,
+    "status": "PASS",
+    "tiny_ready": false
+  },
+  "actual_13h_blocked": [
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "ACTUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "ADAUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "AKEUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "ASTERUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "BEATUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "codes": [
+        {
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "status": "BLOCKED_SOURCE",
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "codes": [],
+      "status": "UNAVAILABLE_INSTRUMENT",
+      "symbol": "HFTUSDT"
+    }
+  ],
+  "observed_ms": 1792946096569
+}

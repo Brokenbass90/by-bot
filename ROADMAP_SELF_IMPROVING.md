@@ -1,13 +1,12 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-**25Oct12:36UTC actual PUMP streaming deployment:** [state-preserving handoff](reports/PUMP4_STREAM_HANDOFF_2026_10_25.md).
-Reviewed DATA5deafc9f selected by existing service/timer;10433historyfiles preserved.
-SAMEsoleownerunit/app30677ce6,newOFFconfig356a195b…9bb7/PID2890108/original818853.
-IndependentHEALTHY/noGO/noPOST;Monthlyselectedunit unchanged.19local/same19VPS
-handofftests;actualreview fixes regressed. NEXT actual13:00UTC NEW H1 publication
-clock plus freshcost/sizing/OFF/TINYproposal, no gate extension. TINY_NOT_READY.
-Current137modeGET:136oneway/XRPhedgeblocked;minimumcost-onlyR1capacity30symbols,
-not full stop/signal sizing PASS. Numeric50/30/20/R1/2/3/6 remain proposals.
+**25Oct latest actual PUMP gate:** streaming deployed; [13:00UTC observation](reports/PUMP4_STREAM_HANDOFF_2026_10_25.md).
+137publications/127intakePASS,4within60s,publication median165.837s/max257.734s;
+68sourceswithin60s,9API failures+HFTunavailable,0signals. TINY_NOT_READY/noGO.
+Measured40%CPU throttle and repeated warm replay; normal-path4→2 optimization
+keeps frozen intake/producer/journal unchanged.259local/same259VPSPASS; selected
+DATA617d9e34/CPU100%onecore and soleOFFPID2904935 at16:38UTC. Actual17H1
+latencygate pending;no moneyGO/TINY_READY. Monthly remains selected unchanged.
 **Owner reaffirmed North Star:** Brain, Factory, classical strategies and intelligent
 portfolio management stay in this canonical roadmap. Current execution queue
 Monthly→PUMP→Polymarket→KITY supports that goal; no secondroadmap/automaticAI moneyauthority.
@@ -104,6 +103,54 @@ preserved, no activation. [PUMP actual DATA server](reports/PUMP4_SERVER_ORDERS_
 Financialwrapper/physicalverifier/original-owner handoff and timely entry admission
 remain; originalKITYowner holds818853, no second writer. FeesNET do notblock PUMP.
 Finish these lines before Polymarket/KITY expansion. No new research/financialGO.
+
+## Как развиваем систему — уточнение владельцу25Oct
+
+Сейчас это набор стратегий и компонентов разной зрелости с общей частью
+исполнения, а не доказанный автономный интеллектуальный трейдер. Monthly выбран
+владельцем и прошёл idle acceptance; будущая торговая работа ещё проверяется по
+календарю. PUMP — главный инженерный исполнительный этап. Polymarket и KITY
+сохраняют собственные экономические/операционные gates. Brain/Factory существуют,
+но их наличие и положительные отдельные результаты не доказывают портфельный edge.
+
+Порядок работ остаётся в единственной активной очереди ниже:
+
+1. Сохранить Monthly;30Oct отбор после закрытия,2Nov свежий допуск/защита.
+2. PUMP: исправить измеренную задержку и подтвердить новую H1; полный OFF-путь,
+   точный TINY-пакет, затем только разрешённая одна сделка с защитой и сверкой.
+3. Polymarket: продолжить существующие исследования, проверить независимость
+   событий, расхождения PnL, bid/ask/ликвидность, комиссии, settlement и допустимость
+   конкретного счёта.500USD — предложение владельца, не разрешение пополнения,
+   запуска или обещание доходности. Ключи через локальное защищённое подключение.
+4. KITY: недельный исполнитель/funding/завершение, отдельные экономические
+   доказательства и владение Bybit без параллельного финансового owner.
+5. Связать допущенные рукава существующими учётом, позициями, журналом решений и
+   совокупным риск-бюджетом. Не создавать второй ledger/денежный framework.
+6. Brain допускается к выбору/распределению только после сравнения с простым
+   фиксированным baseline на одинаковом капитале и после всех расходов.
+   Улучшения не должны блокировать первые ограниченные запуски отдельных рукавов.
+7. Factory: ограниченные предложения→prereg→независимые данные/судья→теневая
+   проверка→версионное предложение допуска. Закрытые гипотезы и spent evidence
+   сохраняются; повторный подбор под известный результат запрещён.
+
+Целевое состояние: одна наблюдаемая мультистратегийная Trading OS. Источники дают
+причинные данные; допущенные стратегии — проверяемые возможности; портфельный
+контур проверяет общую экспозицию/корреляции/капитал; единственный исполнитель
+соответствующего счёта сопровождает сделки; учёт сверяет фактические деньги.
+Brain помогает выбирать среди доказанных возможностей. Factory поставляет новые
+проверяемые версии. LLM объясняет и предлагает, но не выдаёт себе финансовый GO.
+
+Самовосстановление сначала техническое: обнаружить сбой/деградацию, заблокировать
+новые входы при неизвестности, сохранить разрешённое сопровождение, собрать
+диагноз и восстановить известное состояние без двойных заявок. Автоматическое
+изменение стратегии, риска или финансового допуска по короткой серии PnL не
+является разрешённым самовосстановлением. Улучшения проходят versioned review и
+предусмотренное разрешение владельца.
+
+Считаем результат по закрытым препятствиям, фактическому net после комиссий и
+funding, независимым сделкам, просадке, своевременности и корректности защиты/
+восстановления. Число тестов/файлов/отчётов — только инженерные доказательства.
+Доходность не обещана: цель — воспроизводимое преимущество и контролируемый риск.
 
 ## Единственный roadmap и кто обновляет что
 

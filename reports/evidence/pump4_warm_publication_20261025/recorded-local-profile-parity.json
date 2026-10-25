@@ -1,0 +1,21 @@
+{
+  "recorded_source_only": true,
+  "source_hour": "2026-10-25T13:00:00Z",
+  "symbol": "1000BONKUSDT",
+  "journal_decisions_observations_equal": true,
+  "actual_new_h1_speed_pass": false,
+  "measurements": [
+    {
+      "label": "baseline",
+      "wall_seconds": 0.06113375001586974,
+      "cpu_seconds": 0.060962,
+      "journal_sha256": "ae44a103c6f3c8f443615ce7e5333f29a9db5f2f79c5f85e9befafb9569573ee"
+    },
+    {
+      "label": "optimized",
+      "wall_seconds": 0.032468499965034425,
+      "cpu_seconds": 0.03231700000000001,
+      "journal_sha256": "ae44a103c6f3c8f443615ce7e5333f29a9db5f2f79c5f85e9befafb9569573ee"
+    }
+  ]
+}

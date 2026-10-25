@@ -18,7 +18,8 @@ from research_lab.kity_micro_physical_owner_v1 import publish
 from research_lab.kity_oct15_deadline_v1 import decode, stable_bytes
 from research_lab.pump4_account_owner_v1 import safe, source_sizing
 from research_lab.pump4_bybit_sources_v1 import closed_h1, checked, universe, UNIVERSE_SHA, H
-from research_lab.pump4_closed_bar_intake_v1 import Pump4Intake
+from research_lab.pump4_closed_bar_intake_v1 import Pump4Intake, _closed
+from research_lab.att1_lifecycle_journal import SCHEMA
 from research_lab.pump4_execution_lifecycle_v1 import Pump4Lifecycle
 from research_lab.pump4_selected_runner_v1 import causal_plan, source_pins
 from research_lab.pump4_server_cycle_v1 import owner_cycle
@@ -122,6 +123,19 @@ class Supervisor:
         need(all('symbols/'+s+'.json' in data for s in universe()), 'ARCHIVE_COVERAGE')
         return archive,hashlib.sha256(raw).hexdigest(),seal,data
 
+    @staticmethod
+    def _warm_accept(intake,bar,*,available_ms,observed_ms):
+        # Same frozen event and validator as accept(). The normal single-bar
+        # caller already verified its prefix; validate again under append lock,
+        # never substitute a cached result for the locked producer replay.
+        _closed(bar,available_ms,observed_ms)
+        event=dict(schema_id=SCHEMA,event_id='pump4:'+intake.symbol+':'+str(bar[0]),
+            **intake._context(),kind='CLOSED_BAR',bar=bar,
+            available_ms=available_ms,observed_ms=observed_ms)
+        new,state=intake.journal.append_checked(event,intake._replay)
+        decision=next(d for d in state['decisions'] if d['bar_open_ms']==bar[0])
+        return dict(new=new,decision=decision),state['cursor_ms']
+
     def _symbol(self, symbol, row, seal, archive_id):
         need(row['symbol']==symbol, 'SYMBOL_IDENTITY')
         if row['status']!='READY_H1_BOOTSTRAP_NOT_ENTRY':
@@ -166,9 +180,13 @@ class Supervisor:
         else:
             batch=dict(symbol=symbol,archive_id=archive_id,mode=mode,bars=pending)
             publish(batch_path,batch)
-        decisions=[]
+        decisions=[];warm_cursor=None
+        warm_current=bool(events) and not recovered and mode=='CURRENT_CLOSED_BAR' and len(pending)==1
         for bar in pending:
-            result=intake.accept(bar,available_ms=source['available_ms'],observed_ms=source['observed_ms'])
+            if warm_current:
+                result,warm_cursor=self._warm_accept(intake,bar,available_ms=source['available_ms'],observed_ms=source['observed_ms'])
+            else:
+                result=intake.accept(bar,available_ms=source['available_ms'],observed_ms=source['observed_ms'])
             decision=result['decision'];path=safe(self.root/'observations'/(decision['decision_id']+'.json'))
             if path.exists():
                 observation=read(path)
@@ -196,7 +214,7 @@ class Supervisor:
                 publish(path,observation)
             decisions.append(observation)
         return dict(symbol=symbol,status='CLOSED_H1_INTAKE_PASS',mode=mode,accepted_bars=len(pending),
-            cursor_ms=intake.snapshot()['cursor_ms'],decisions=decisions)
+            cursor_ms=warm_cursor if warm_cursor is not None else intake.snapshot()['cursor_ms'],decisions=decisions)
 
     def _stream_context(self, archive):
         """Verify a collector-sealed prefix, never claim complete coverage early."""

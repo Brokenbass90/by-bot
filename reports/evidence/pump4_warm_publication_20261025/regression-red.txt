@@ -1,0 +1,50 @@
+...FFF                                                                   [100%]
+=================================== FAILURES ===================================
+____________ test_plain_warm_path_runs_two_frozen_replays_not_four _____________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-709/test_plain_warm_path_runs_two_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b06d50>
+
+    def test_plain_warm_path_runs_two_frozen_replays_not_four(tmp_path,monkeypatch):
+        root,row,header,s=setup(tmp_path,'plain');original=Pump4Intake._replay;calls=[]
+        def counted(self,events):calls.append(len(events));return original(self,events)
+        monkeypatch.setattr(Pump4Intake,'_replay',counted)
+        out=s._symbol('ZROUSDT',row,header,'one-warm-bar')
+>       assert out['mode']=='CURRENT_CLOSED_BAR' and len(calls)==2
+E       AssertionError: assert ('CURRENT_CLOSED_BAR' == 'CURRENT_CLOSED_BAR'
+E         
+E           CURRENT_CLOSED_BAR and 4 == 2)
+E        +  where 4 = len([2, 2, 3, 3])
+
+tests/test_pump4_warm_publication_v1.py:55: AssertionError
+_______ test_crash_after_batch_keeps_existing_recovery_and_no_promotion ________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-709/test_crash_after_batch_keeps_e0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d4fb60>
+
+    def test_crash_after_batch_keeps_existing_recovery_and_no_promotion(tmp_path,monkeypatch):
+        root,row,header,s=setup(tmp_path,'signal')
+        def lost(*a,**kw):raise OSError('before locked append')
+>       monkeypatch.setattr(Supervisor,'_warm_accept',staticmethod(lost))
+E       AttributeError: <class 'research_lab.pump4_supervisor_v1.Supervisor'> has no attribute '_warm_accept'
+
+tests/test_pump4_warm_publication_v1.py:61: AttributeError
+_______ test_locked_replay_selects_requested_duplicate_before_later_bar ________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-709/test_locked_replay_selects_req0')
+
+    def test_locked_replay_selects_requested_duplicate_before_later_bar(tmp_path):
+        root,row,header,s=setup(tmp_path,'plain');i=Pump4Intake(root/'intake/ZROUSDT.jsonl','ZROUSDT')
+        bar=row['source']['signal_bar'];kw=dict(available_ms=row['source']['available_ms'],observed_ms=row['source']['observed_ms'])
+        requested=i.accept(bar,**kw)['decision']
+        later=[bar[0]+H,*bar[1:]];i.accept(later,available_ms=bar[0]+2*H,observed_ms=bar[0]+2*H)
+>       result,cursor=s._warm_accept(i,bar,**kw)
+                      ^^^^^^^^^^^^^^
+E       AttributeError: 'Supervisor' object has no attribute '_warm_accept'
+
+tests/test_pump4_warm_publication_v1.py:74: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_warm_publication_v1.py::test_plain_warm_path_runs_two_frozen_replays_not_four
+FAILED tests/test_pump4_warm_publication_v1.py::test_crash_after_batch_keeps_existing_recovery_and_no_promotion
+FAILED tests/test_pump4_warm_publication_v1.py::test_locked_replay_selects_requested_duplicate_before_later_bar
+3 failed, 3 passed in 2.40s
