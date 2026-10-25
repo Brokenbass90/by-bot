@@ -1,0 +1,15 @@
+{
+  "actual_latency_pass": false,
+  "critical": 0,
+  "effort": "high",
+  "important": 0,
+  "independent_addendum_rereview": false,
+  "model": "gpt-6-astra",
+  "original_frozen_intake_unchanged": true,
+  "rollout_id": "01a17307-4e93-7dc0-9f34-a1ec492fa89e",
+  "root_operational_addendum": "Old-code rollback refuses current incomplete process hour;20handoff testsPASS including RED->GREEN guard",
+  "runtime_verified": true,
+  "scope": "New capture subprocess boundary, not strategy audit",
+  "subprocess_test_cases": 16,
+  "targeted_tests": 71
+}

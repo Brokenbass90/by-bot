@@ -1,0 +1,488 @@
+FFFFFFFFFFFFFF                                                           [100%]
+=================================== FAILURES ===================================
+_____ test_real_child_publishes_early_in_parent_without_credentials_or_fd ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_real_child_publishes_earl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d042f0>
+
+    def test_real_child_publishes_early_in_parent_without_credentials_or_fd(tmp_path,monkeypatch):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,'delayed');original=s._stream_symbol;calls=[]
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_real_child_publishes_earl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d042f0>
+mode = 'delayed'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+_____ test_child_failure_is_reaped_and_never_retried_same_hour[oversized] ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d06b40>
+mode = 'oversized'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d06b40>
+mode = 'oversized'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+_____ test_child_failure_is_reaped_and_never_retried_same_hour[malformed] ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106cebe30>
+mode = 'malformed'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106cebe30>
+mode = 'malformed'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+______ test_child_failure_is_reaped_and_never_retried_same_hour[unknown] _______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d077d0>
+mode = 'unknown'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d077d0>
+mode = 'unknown'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+________ test_child_failure_is_reaped_and_never_retried_same_hour[hash] ________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d071a0>
+mode = 'hash'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d071a0>
+mode = 'hash'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+_____ test_child_failure_is_reaped_and_never_retried_same_hour[duplicate] ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d06630>
+mode = 'duplicate'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d06630>
+mode = 'duplicate'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+______ test_child_failure_is_reaped_and_never_retried_same_hour[nonzero] _______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b42a50>
+mode = 'nonzero'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b42a50>
+mode = 'nonzero'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+___ test_child_failure_is_reaped_and_never_retried_same_hour[missing_notice] ___
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b431d0>
+mode = 'missing_notice'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b431d0>
+mode = 'missing_notice'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+____ test_child_failure_is_reaped_and_never_retried_same_hour[missing_seal] ____
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d07560>
+mode = 'missing_seal'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d07560>
+mode = 'missing_seal'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+_ test_child_failure_is_reaped_and_never_retried_same_hour[nonzero_after_seal] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b40da0>
+mode = 'nonzero_after_seal'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b40da0>
+mode = 'nonzero_after_seal'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+_____ test_child_failure_is_reaped_and_never_retried_same_hour[wrong_hour] _____
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b68bc0>
+mode = 'wrong_hour'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b68bc0>
+mode = 'wrong_hour'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+_______ test_child_failure_is_reaped_and_never_retried_same_hour[silent] _______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a10')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b41550>
+mode = 'silent'
+
+    @pytest.mark.parametrize('mode',['oversized','malformed','unknown','hash','duplicate','nonzero','missing_notice','missing_seal','nonzero_after_seal','wrong_hour','silent'])
+    def test_child_failure_is_reaped_and_never_retried_same_hour(tmp_path,monkeypatch,mode):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,mode)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_child_failure_is_reaped_a10')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b41550>
+mode = 'silent'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+_____________ test_noisy_stderr_is_drained_with_bounded_retention ______________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_noisy_stderr_is_drained_w0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b42480>
+
+    def test_noisy_stderr_is_drained_with_bounded_retention(tmp_path,monkeypatch):
+>       root,s,children=child_fixture(tmp_path,monkeypatch,'noisy')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_noisy_stderr_is_drained_w0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b42480>
+mode = 'noisy'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+________ test_parent_loss_after_fsync_preserves_decision_without_replay ________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_parent_loss_after_fsync_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b424e0>
+
+    def test_parent_loss_after_fsync_preserves_decision_without_replay(tmp_path,monkeypatch):
+>       root,s,children=child_fixture(tmp_path,monkeypatch);original=s._stream_symbol
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_capture_process_v1.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-714/test_parent_loss_after_fsync_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b424e0>
+mode = 'normal'
+
+    def child_fixture(tmp_path,monkeypatch,mode='normal'):
+        root=tmp_path/'state';template=warm(root,tmp_path);context(template)
+        stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+        monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
+        monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
+        def launch(command,**kwargs):
+            assert command[0]==sys.executable and '--stream-symbols' in command
+            assert kwargs['close_fds'] is True and 'pass_fds' not in kwargs
+            destination=command[command.index('--root')+1]
+            child=original([sys.executable,'-B',str(stub),str(template),destination,mode],**kwargs)
+            children.append(child);return child
+>       monkeypatch.setattr(module.subprocess,'Popen',launch)
+                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'research_lab.pump4_supervisor_v1' has no attribute 'subprocess'
+
+tests/test_pump4_capture_process_v1.py:54: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_capture_process_v1.py::test_real_child_publishes_early_in_parent_without_credentials_or_fd
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[oversized]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[malformed]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[unknown]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[hash]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[duplicate]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[nonzero]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[missing_notice]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[missing_seal]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[nonzero_after_seal]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[wrong_hour]
+FAILED tests/test_pump4_capture_process_v1.py::test_child_failure_is_reaped_and_never_retried_same_hour[silent]
+FAILED tests/test_pump4_capture_process_v1.py::test_noisy_stderr_is_drained_with_bounded_retention
+FAILED tests/test_pump4_capture_process_v1.py::test_parent_loss_after_fsync_preserves_decision_without_replay
+14 failed in 3.43s

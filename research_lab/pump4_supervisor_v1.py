@@ -11,6 +11,11 @@ import fcntl
 import hashlib
 import os
 from pathlib import Path
+import json
+import resource
+import selectors
+import subprocess
+import sys
 import time
 
 from research_lab.alpaca_dynamic_v1 import digest
@@ -23,6 +28,9 @@ from research_lab.att1_lifecycle_journal import SCHEMA
 from research_lab.pump4_execution_lifecycle_v1 import Pump4Lifecycle
 from research_lab.pump4_selected_runner_v1 import causal_plan, source_pins
 from research_lab.pump4_server_cycle_v1 import owner_cycle
+
+ROOT=Path(__file__).resolve().parents[1]
+CAPTURE_PROCESS_TIMEOUT_SECONDS=600
 
 
 def need(ok, reason):
@@ -322,25 +330,97 @@ class Supervisor:
                     except FileExistsError:need(read(target/'terminal.json')==event,'ALERT_IDENTITY')
                     notify_once(target,event,self.alert)
 
+    def _capture_process(self,archive,on_symbol,hour):
+        """Public archive child only; this parent remains the sole journal writer."""
+        command=[sys.executable,'-B',str(ROOT/'scripts/capture_pump4_sources_v1.py'),
+            '--capture','--root',str(archive),'--stream-symbols']
+        env=dict(PATH='/usr/bin:/bin',LANG='C.UTF-8',PYTHONDONTWRITEBYTECODE='1',
+            OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1')
+        start=self.clock();usage=resource.getrusage(resource.RUSAGE_CHILDREN)
+        before_cpu=usage.ru_utime+usage.ru_stime;deadline=time.monotonic()+CAPTURE_PROCESS_TIMEOUT_SECONDS
+        process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
+            stdin=subprocess.DEVNULL,env=env,close_fds=True,bufsize=0,cwd=str(ROOT))
+        selector=selectors.DefaultSelector();buffer=b'';seen=set();stderr=b'';stderr_bytes=0;notice_times=[]
+        try:
+            for kind,pipe in (('out',process.stdout),('err',process.stderr)):
+                os.set_blocking(pipe.fileno(),False);selector.register(pipe,selectors.EVENT_READ,kind)
+            while selector.get_map():
+                need(time.monotonic()<deadline,'CAPTURE_PROCESS_TIMEOUT')
+                for key,_ in selector.select(min(.25,max(0,deadline-time.monotonic()))):
+                    chunk=os.read(key.fd,4096)
+                    if not chunk:selector.unregister(key.fileobj);continue
+                    received=self.clock()
+                    if key.data=='err':
+                        stderr_bytes+=len(chunk);need(stderr_bytes<=1048576,'CAPTURE_STDERR_LIMIT')
+                        stderr=(stderr+chunk)[-65536:];continue
+                    buffer+=chunk
+                    while b'\n' in buffer:
+                        line,buffer=buffer.split(b'\n',1);need(0<len(line)<=1024,'CAPTURE_NOTICE_SIZE')
+                        notice=decode(line)
+                        need(isinstance(notice,dict) and set(notice)=={'schema','symbol','capture_sha256'}
+                            and notice['schema']=='PUMP4_PUBLIC_SYMBOL_NOTICE_V1','CAPTURE_NOTICE_SCHEMA')
+                        symbol=notice['symbol'];pin=notice['capture_sha256']
+                        need(type(symbol) is str and symbol in universe() and symbol not in seen and len(seen)<137,'CAPTURE_NOTICE_SYMBOL')
+                        need(type(pin) is str and len(pin)==64 and all(c in '0123456789abcdef' for c in pin),'CAPTURE_NOTICE_HASH')
+                        begun=self.clock();seen.add(symbol)
+                        on_symbol(archive,symbol,expected_sha256=pin)
+                        notice_times.append(dict(symbol=symbol,parent_received_ms=received,
+                            parent_processing_started_ms=begun,parent_publication_finished_ms=self.clock()))
+                    need(len(buffer)<=1024,'CAPTURE_NOTICE_SIZE')
+            need(not buffer,'CAPTURE_NOTICE_TRUNCATED')
+            remaining=max(.01,deadline-time.monotonic())
+            try:code=process.wait(timeout=remaining)
+            except subprocess.TimeoutExpired:raise ValueError('PUMP4_SUPERVISOR_CAPTURE_PROCESS_TIMEOUT')
+            need(code==0 and len(seen)==137 and (archive/'receipt.json').is_file(),'CAPTURE_PROCESS_INCOMPLETE')
+            usage=resource.getrusage(resource.RUSAGE_CHILDREN)
+            publish(self.root/'capture-process'/(str(hour)+'.json'),
+                dict(schema='PUMP4_PUBLIC_CAPTURE_PROCESS_RECEIPT_V1',source_hour_open_ms=hour,
+                    child_pid=process.pid,child_returncode=code,child_cpu_seconds=usage.ru_utime+usage.ru_stime-before_cpu,
+                    parent_pid=os.getpid(),parent_started_ms=start,parent_completed_ms=self.clock(),
+                    symbols=137,notices=notice_times,stderr_bytes=stderr_bytes,
+                    stderr_tail=stderr.decode('utf-8',errors='replace').encode('utf-8')[-65536:].decode('utf-8',errors='ignore'),
+                    financial_owner_constructed=False,broker_writes=0))
+        except BaseException as exc:
+            try:
+                publish(self.root/'capture-process-failures'/(str(hour)+'.json'),
+                    dict(schema='PUMP4_PUBLIC_CAPTURE_PROCESS_FAILURE_V1',source_hour_open_ms=hour,
+                        child_pid=process.pid,child_returncode=process.poll(),observed_ms=self.clock(),
+                        error_type=type(exc).__name__,notice_count=len(seen),stderr_bytes=stderr_bytes,
+                        stderr_tail=stderr.decode('utf-8',errors='replace').encode('utf-8')[-65536:].decode('utf-8',errors='ignore'),
+                        incomplete_preserved=True,broker_writes=0))
+            except (ValueError,OSError):pass # attempt marker still prohibits a same-hour retry
+            raise
+        finally:
+            selector.close()
+            if process.poll() is None:
+                process.terminate()
+                try:process.wait(timeout=5)
+                except subprocess.TimeoutExpired:process.kill();process.wait(timeout=5)
+            process.stdout.close();process.stderr.close()
+
     def public_cycle(self, *, collector=None):
         """At most one full existing capture per UTC hour, including restarts.
 
         A partial capture is preserved and blocked for that hour. Next hour can
         recover bars from the source window; no in-place archive repair/reset.
         """
-        if collector is None:
-            from scripts.capture_pump4_sources_v1 import capture
-            collector=capture
         hour=self.clock()//H*H
         archive=safe(self.root/'archives'/str(hour))
+        attempt=safe(self.root/'capture-attempts'/(str(hour)+'.json'))
+        complete=safe(self.root/'capture-complete'/(str(hour)+'.json'))
         with self._writer():
+            need(not attempt.exists() or complete.exists(),'PARTIAL_ARCHIVE_PRESERVED_UNTIL_NEXT_HOUR')
             if not archive.exists():
+                publish(attempt,dict(source_hour_open_ms=hour,started_ms=self.clock(),money_authority=False))
                 context=None
-                def completed(path,symbol):
+                def completed(path,symbol,*,expected_sha256=None):
                     nonlocal context
                     need(safe(path)==archive,'STREAM_ARCHIVE_PATH')
                     if context is None:context=self._stream_context(archive)
-                    self._stream_symbol(archive,symbol,context)
-                collector(archive,on_symbol=completed)
+                    need(context[1]['source_hour_open_ms']==hour,'STREAM_PARENT_HOUR')
+                    self._stream_symbol(archive,symbol,context,expected_sha256=expected_sha256)
+                if collector is None:self._capture_process(archive,completed,hour)
+                else:collector(archive,on_symbol=completed)
+                publish(complete,dict(source_hour_open_ms=hour,completed_ms=self.clock(),money_authority=False))
             need((archive/'receipt.json').is_file(), 'PARTIAL_ARCHIVE_PRESERVED_UNTIL_NEXT_HOUR')
         return self.process_archive(archive)

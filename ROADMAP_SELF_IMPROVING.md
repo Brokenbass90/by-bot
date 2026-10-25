@@ -1,12 +1,12 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-**25Oct latest actual PUMP gate:** streaming deployed; [13:00UTC observation](reports/PUMP4_STREAM_HANDOFF_2026_10_25.md).
-137publications/127intakePASS,4within60s,publication median165.837s/max257.734s;
-68sourceswithin60s,9API failures+HFTunavailable,0signals. TINY_NOT_READY/noGO.
-Measured40%CPU throttle and repeated warm replay; normal-path4→2 optimization
-keeps frozen intake/producer/journal unchanged.259local/same259VPSPASS; selected
-DATA617d9e34/CPU100%onecore and soleOFFPID2904935 at16:38UTC. Actual17H1
-latencygate pending;no moneyGO/TINY_READY. Monthly remains selected unchanged.
+**25Oct17:32UTC PUMP actual state:** [capture-process deployment](reports/PUMP4_CAPTURE_PROCESS_2026_10_25.md).
+Actual17H1:10/128publications≤60s,median90.8925/max110.562s,0signals;gateNOTPASS.
+Newexistingcollector child+sameparentjournalwriter selected DATA8c00885c;
+275local/same275VPSPASS/actualcriticalreview0Important. OnlyDATA ceiling2cores/
+same768MiB;solefinancialOFFPID2908831/818853/HEALTHY/noGO/Monthlyunchanged.
+NEXT actual18H1 source/publication/childCPU/memory/ownercontinuity, then financial
+OFF/exactTINY. TINY_NOT_READY;cached/synthetic success is not market proof.
 **Owner reaffirmed North Star:** Brain, Factory, classical strategies and intelligent
 portfolio management stay in this canonical roadmap. Current execution queue
 Monthly→PUMP→Polymarket→KITY supports that goal; no secondroadmap/automaticAI moneyauthority.
@@ -231,7 +231,7 @@ Git ref. Локальный документ без публикации — pub
 |---|---|---|
 | **P0 Preserve — Codex** | NET20Oct scheduled independent GET completed at13:35:23UTC/16:35:23CY; later handoff preflight GET completed; raw financial/unit receipts retained privately | One-shot PAUSED after control; no new financial/units permissions or strategy changes. Current broker amounts/order identifiers/runtime unit state are excluded from public receipts. Future protection remains a separate dated operational obligation |
 | **P0 Money — Codex** | Monthlyv6 personally selected and independently accepted3clean idlecycles; no repeat NET sale/Monthly activation. Existing400capital/280gross/40reserve/loss-admission8/max4 unchanged | Actual30Octclosedselection and2Nov14:30UTCfreshentry/protection; CASH allowed. Historical NET-fee/activation blockers below are superseded by current acceptance |
-| **NEXT Money — Codex** | **PUMP4 V1 streaming DEPLOYED ORDERS_OFF**;same137/frozenintake/history/oneowner818853. Newbinding135d6e09/config356a195b/PID2890108, HEALTHY;currentaccountflat/noorders. Existing40/60/168H/restart/sendonce/latches retained | Actual25Oct13:00UTC NEW H1 source versus durablepublication; per-signal freshcost/lot/tick/oneway/native admission→exactTINYproposal. XRPhedge fails closed;30symbols pass minimumcost-onlyR1, not fullsizing. TINY_NOT_READY;no moneyGO |
+| **NEXT Money — Codex** | **PUMP4 V1 engineering ORDERS_OFF**. Latest selected source/config/actual timing in [current delivery](reports/PUMP4_CAPTURE_PROCESS_2026_10_25.md);frozen137/intake/history/oneowner818853 preserved | Actual NEW H1 timeliness/resource/owner gate→fresh per-signal costs/lot/tick/oneway/native OFF→exactTINYproposal. No moneyGO;50/30/20/R1/2/3/6 remain proposals;CASH/NO_SEND allowed |
 | **AFTER PUMP — Codex** | Existing Polymarket tests/data/prereg acceptance | Resume existing request after PUMP gate, no new framework or automatic financial GO |
 | **AFTER POLYMARKET — Codex** | KITY local4c3b69a DOSIE_READY/C1/C2 evidence; not in observed research origind8706ac | Verify published corrected contract, funding C1.7/weekly executor/authority. Corrected path300/10leg does not grant money; old microGO spent |
 | **P1 Codex** | Существующие DATA_ONLY/journal доставки/QA; следующий bounded fix — Brain receiver capacity, без нового framework |19Oct source22448opps/68878decisions, V2=1534; catchup6136receipts/28.2MB превышает4096/8MiB, BLOCKED до append, старые8 сохранены. Независимый chain/prefix/key audit PASS в узкой границе предоставленных файлов; полный market census/feature PIT UNKNOWN. Нужна controlled continuity/restart/replay в существующем journal. Existing DATA timers поддерживаются; Polymarket global census не отнимает MoneyP0 |

@@ -1,0 +1,13 @@
+{
+  "status": "DISABLED_FRESH_INTERPRETER_SMOKE_PASS",
+  "elapsed_seconds": 0.26120913308113813,
+  "child_stdout": {
+    "status": "DATA_ONLY_OFFLINE_NO_REQUESTS",
+    "broker_writes": 0
+  },
+  "stderr_bytes": 0,
+  "credentials_in_environment": false,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "actual_capture_path_pass": false
+}

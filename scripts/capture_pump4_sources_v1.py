@@ -79,10 +79,17 @@ def capture(root,*,on_symbol=None):
 
 def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--capture',action='store_true');p.add_argument('--root',type=Path)
+    p.add_argument('--stream-symbols',action='store_true')
     a=p.parse_args(argv)
     if not a.capture:print(json.dumps(dict(status='DATA_ONLY_OFFLINE_NO_REQUESTS',broker_writes=0)));return 0
     if not a.root:raise ValueError('EXPLICIT_OUTPUT_ROOT_REQUIRED')
-    r=capture(a.root);print(json.dumps({k:v for k,v in r.items() if k!='source_capture_files'},sort_keys=True));return 0
+    def completed(root,symbol):
+        raw=(root/'symbols'/(symbol+'.json')).read_bytes()
+        print(json.dumps(dict(schema='PUMP4_PUBLIC_SYMBOL_NOTICE_V1',symbol=symbol,
+            capture_sha256=hashlib.sha256(raw).hexdigest()),sort_keys=True),flush=True)
+    r=capture(a.root,on_symbol=completed if a.stream_symbols else None)
+    if not a.stream_symbols:print(json.dumps({k:v for k,v in r.items() if k!='source_capture_files'},sort_keys=True))
+    return 0
 
 
 if __name__=='__main__':raise SystemExit(main())

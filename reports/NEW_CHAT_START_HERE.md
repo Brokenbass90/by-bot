@@ -17,24 +17,26 @@ reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
 single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
 2Novfreshentry/protection checks remain actual future gates; CASHpossible.
 
-## NEXT PUMP — warm streaming DEPLOYED OFF; actual speed gate pending
+## NEXT PUMP — capture subprocess DEPLOYED OFF; actual18H1 next
 
-Read `PUMP4_STREAM_HANDOFF_2026_10_25.md` and `evidence/pump4_warm_publication_20261025/`.
-Actual13H1 only4/127successfulpublications≤60s;median165.837/max257.734s,
-9Bybit10006/HFTunavailable/0signals. No source/error retry or60s extension.
-Newwarm4→2 locked replay keeps frozenintake/producer/epochs/journal unchanged.
-259local/same259VPSPASS,actualastra/highreview0Important. DATA617d9e3419d45d8b
-selected;12611historyfiles preserved;onlyDATA CPU40→100%onecore/same768MiB.
-SAMEsolefinancialunit/app30677ce6,config22fc90a5…1e35b/scope38e45152…a4b8f,
-PID2904935/NRestarts0/818853held/HEALTHY/NO_NEW_SIGNAL/GOabsent at16:38UTC.
-Config `/opt/bybot-research/pump4-server-orders-off-20261023/warm-handoff-20261025/owner-review-stream-v1/runner.json`.
-DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-617d9e3419d45d8b/app/.private/pump4-supervisor-v1`.
-Binding726bfe76…732e9;oldroots/scopes/claims intact;fresh2GETflat barriers.
-Private `warm-handoff-20261025/ops.py` has exactstateforwardrollback;neverblindretry.
-Systemd cached16HarchivePASS is not newH1proof. NEXT actual17:00UTC timing,
-then fresh source/account/cost/lot/oneway/stop/OFF→exactTINYproposal. MoneyGOabsent.
-12:39dateddiagnostics:136oneway/XRPhedgeblocked/minimumcost-onlyR1capacity30;
-not currentfullsizingPASS. Numeric50/30/20/R1/2/3/6 are proposals. Monthly unchanged.
+Read `PUMP4_CAPTURE_PROCESS_2026_10_25.md` and its evidence. Actual17H1 after
+warmfix:10/128publications≤60s,median90.8925/max110.562s;107sources≤60s,
+0signals. Timeliness NOTPASS. Newdefault publiccollector is freshminimalenv
+child; sameparent ONLYjournalwriter;strictsymbol/hashpipe,deadline,kill/reap,
+attempt/completionmarkers/no samehourretry. Frozenintake/producer/epochs/60s unchanged.
+275local/same275VPSPASS,actualastra/highreview0Important. DATA8c00885cf6329bae
+selected;13159historyfiles preserved;ONLYDATA ceiling2cores/same768MiB aggregate.
+SAMEsolefinancialunit/app30677ce6 config1634b014…bd628/scopee6f8c78a…de0cb,
+PID2908831/NRestarts0/818853held/HEALTHY/NO_NEW_SIGNAL/GOabsent at17:32UTC.
+Config `/opt/bybot-research/pump4-server-orders-off-20261023/process-handoff-20261025/owner-review-stream-v1/runner.json`.
+DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-8c00885cf6329bae/app/.private/pump4-supervisor-v1`.
+Binding2f6bbd80…16608;oldroots/scopes/claims intact;fresh2GETflat barriers.
+Private `process-handoff-20261025/ops.py` rollback20PASS; current incomplete
+process hour cannot rollback to old code until next hour/reconciliation.
+NEXT actual18:00UTC timings/childCPU/aggregate memory/financialowner continuity.
+Cached17systemdPASS and disabledchildsmoke are not actualnewH1proof.
+Then freshaccount/cost/lot/oneway/stop/OFF→exactTINYproposal. MoneyGOabsent.
+Monthly remains selected, neverrepeatMonthly/NETcommands. Poly/KITY afterPUMPgate.
 
 ## Broader goal and ownership
 

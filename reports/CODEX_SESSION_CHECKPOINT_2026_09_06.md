@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct17:32UTC — PUBLIC CAPTURE PROCESS SEPARATION DEPLOYED ORDERS_OFF.
+Read PUMP4_CAPTURE_PROCESS_2026_10_25.md + evidence/pump4_capture_process_20261025/.
+Actual17H1 warmfix:137published/128PASS/10≤60s/107sources≤60s,
+median90.8925s/max110.562s/0signals. NOTactualtimelinessPASS/TINY_READY.
+Queue+prefix47.145smedian vs lockedappend148ms; CPUthrottlemostlygone.
+Newdefaultcollector freshminimalenv child; parent onlyjournalwriter/DATAlock.
+Bounded symbol/hashpipe,strictcontext/hour/hash,deadline,kill/reap,attempt/
+complete markers/no samehourretry even fullseal childfailure. Frozenintake/
+producer/universe137/epochs/journals/60s preserved; diagnostics notmarketclocks.
+275local/same275VPSnetworkdeniedPASS,108files/48imports/16modules/0fallback;
+71targeted/actualastrahighreview0Important. DATA8c00885cf6329bae selected,
+binding2f6bbd80…16608;13159historyfiles preserved. ONLYDATA ceiling2cores,
+same768MiB aggregate,2vCPUhost; actualmemory/financialsibling nextH1gates.
+SAMEownerunit/app30677ce6 config1634b014…bd628/scopee6f8c78a…de0cb,
+PID2908831/NRestarts0/original818853held/HEALTHY/NO_NEW_SIGNAL/GOabsent.
+2freshGETflat barriers;oldroots/scopes/claims intact;Monthlyunit unchanged.
+Cached17systemdPASS/disabledfreshchildsmoke0requests are not newH1PASS.
+Privateprocess-handoff-20261025/ops.py exactrollback,20testedguards including
+refusal of old-code rollback in current incomplete process hour;noautoblindretry.
+NEXT actual18H1 source/notice/publication/childCPU/memory/sibling continuity,
+then fresh financialsource/cost/native/OFF/exactTINY. No PUMPfinancialGO/orders.
+User developmentvision saved in ONE existing ROADMAP_SELF_IMPROVING.md107+.
+Earlier PID2904935/617candidate-only rows below are superseded history.
+
+
 CURRENT25Oct16:38UTC — WARM PUMP REPLAY OPTIMIZATION DEPLOYED ORDERS_OFF.
 Read PUMP4_STREAM_HANDOFF_2026_10_25.md + evidence/pump4_warm_publication_20261025/.
 Actual13H1:137published/127intakePASS/4≤60s/median165.837s/max257.734s;

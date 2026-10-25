@@ -1,0 +1,17 @@
+...................F                                                     [100%]
+=================================== FAILURES ===================================
+_____________ test_rollback_blocks_current_incomplete_process_hour _____________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-720/test_rollback_blocks_current_i0')
+
+    def test_rollback_blocks_current_incomplete_process_hour(tmp_path):
+        (tmp_path/'capture-attempts').mkdir();(tmp_path/'capture-complete').mkdir()
+        (tmp_path/'capture-attempts/7200000.json').write_text('{}')
+>       with pytest.raises(AssertionError):m.rollback_capture_safe(tmp_path,7200001)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'ops' has no attribute 'rollback_capture_safe'
+
+.private/pump4_process_20261025/test_handoff.py:104: AttributeError
+=========================== short test summary info ============================
+FAILED .private/pump4_process_20261025/test_handoff.py::test_rollback_blocks_current_incomplete_process_hour
+1 failed, 19 passed in 1.27s
