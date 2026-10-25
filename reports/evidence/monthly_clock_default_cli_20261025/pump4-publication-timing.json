@@ -1,0 +1,12 @@
+{
+  "broker_writes": 0,
+  "count": 132,
+  "entry_hour_ms": 1792908000000,
+  "note": "filesystem_mtime_is_publication_proxy_not_authenticated_exchange_time",
+  "observed_ms": 1792911198403,
+  "publication_max_ms": 230339,
+  "publication_min_ms": 84544,
+  "publication_timely": 0,
+  "schema": "PUMP4_SOURCE_VS_ACTUAL_PUBLICATION_TIMING_V1",
+  "source_timely": 93
+}

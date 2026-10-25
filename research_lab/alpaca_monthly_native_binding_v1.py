@@ -237,21 +237,21 @@ class MonthlyNativeBinding:
 
     def _admit_new_entry(self,ticket,now):
         """GET-only complete account check under the original writer lock."""
-        started=time.monotonic()
+        started=time.monotonic();observed=lambda:now+int((time.monotonic()-started)*1000)
         realized=None if self.pending_fee_admission else self._accounting_net()
-        account=self.client.get_account();account_observed=now+int((time.monotonic()-started)*1000)
+        account=self.client.get_account();account_observed=observed()
         clock=self.client.get_clock()
         stamp=native._parse_iso_utc(clock.get('timestamp',''))
         if (account.get('id')!=self.account or account.get('trading_blocked') is not False
             or account.get('account_blocked') is not False or clock.get('is_open') is not True
-            or stamp is None or abs(int(stamp.timestamp()*1000)-now)>5000):
+            or stamp is None or abs(int(stamp.timestamp()*1000)-observed())>5000):
             raise ValueError('MONTHLY_FRESH_ACCOUNT_CLOCK_REQUIRED')
         if self.base_url==lifecycle.LIVE:
-            scope=self._entry_authority(ticket,now)
+            scope=self._entry_authority(ticket,observed())
         else:scope=None
         admission=None
         if self.pending_fee_admission:
-            realized,admission=self._accounting_for_admission(account=account,now_ms=now)
+            realized,admission=self._accounting_for_admission(account=account,now_ms=observed())
         state=self._state();owned={p['symbol']:p for p in self.book.rows('positions')}
         positions=self.client.list_positions();orders=self.client.list_orders(status='open',limit=500)
         if (len(orders)>=500 or len({p['symbol'] for p in positions})!=len(positions)
@@ -281,7 +281,7 @@ class MonthlyNativeBinding:
         if {o['id'] for o in orders}!=stop_ids or len(orders)!=len(stop_ids):
             raise ValueError('MONTHLY_FOREIGN_OR_UNRECONCILED_ORDER')
         if scope and scope['schema']==STANDING_SCHEMA:
-            self._observe_loss_locked(scope,now_ms=now)
+            self._observe_loss_locked(scope,now_ms=observed())
         notional=positive(ticket['notional']);equity=min(positive(account['equity']),dec(self.capital))
         cash=min(dec(account['cash']),dec(account['non_marginable_buying_power']))
         gross=sum((abs(dec(p['market_value'])) for p in positions),dec(0))
@@ -295,7 +295,7 @@ class MonthlyNativeBinding:
         quoted=native._parse_iso_utc(quote.get('t',''))
         if (asset.get('symbol')!=ticket['symbol'] or asset.get('status')!='active'
             or asset.get('tradable') is not True or asset.get('fractionable') is not True
-            or quoted is None or not 0<=now-int(quoted.timestamp()*1000)<=300000):
+            or quoted is None or not 0<=observed()-int(quoted.timestamp()*1000)<=300000):
             raise ValueError('MONTHLY_FRESH_ASSET_OR_QUOTE_REQUIRED')
         positive(quote['ap'])
         anchor=dict(schema='ALPACA_MONTHLY_CASH_ANCHOR_V1',account_id=self.account,
@@ -685,13 +685,14 @@ class MonthlyNativeBinding:
                 open_order_ids=[o['id'] for o in orders if o['symbol']==p['symbol']])
 
     def maintain(self,*,now_ms,apply=False):
+        started=time.monotonic();observed=lambda:instant(now_ms)+int((time.monotonic()-started)*1000)
         if type(apply) is not bool:raise ValueError('EXPLICIT_BOOLEAN_OPERATION_REQUIRED')
         if not apply:return self.book.stop_actions(now_ms=now_ms)
         with account_lock(dict(lock_path=str(self.lock_path))):
             self._native_authority()
-            recovered=self._recover_safety_exits(now_ms=now_ms)
+            recovered=self._recover_safety_exits(now_ms=observed())
             if recovered and not self.book.rows('positions'):return recovered[-1]
-            state=self._state();now=instant(now_ms);clock=self.client.get_clock()
+            state=self._state();clock=self.client.get_clock();now=observed()
             stamp=native._parse_iso_utc(clock['timestamp'])
             if stamp is None or abs(int(stamp.timestamp()*1000)-now)>5000:
                 raise ValueError('MONTHLY_MANAGER_CLOCK_CONFLICT')

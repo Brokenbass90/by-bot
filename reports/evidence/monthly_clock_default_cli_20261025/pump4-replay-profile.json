@@ -1,0 +1,12 @@
+{
+  "broker_requests": 0,
+  "decisions": 20,
+  "elapsed_seconds": 0.2967649418860674,
+  "journal_unchanged": true,
+  "observed_ms": 1792912014982,
+  "outcome_or_judge_runs": 0,
+  "profile": "         57220 function calls (57173 primitive calls) in 0.278 seconds\n\n   Ordered by: cumulative time\n   List reduced from 157 to 10 due to restriction <10>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n        1    0.000    0.000    0.277    0.277 pump4_closed_bar_intake_v1.py:129(snapshot)\n        1    0.010    0.010    0.185    0.185 pump4_closed_bar_intake_v1.py:59(_replay)\n      147    0.001    0.000    0.099    0.001 __init__.py:183(dumps)\n      147    0.001    0.000    0.096    0.001 encoder.py:183(encode)\n      147    0.095    0.001    0.095    0.001 encoder.py:205(iterencode)\n        1    0.000    0.000    0.091    0.091 att1_lifecycle_journal.py:178(read)\n        1    0.003    0.003    0.091    0.091 att1_lifecycle_journal.py:133(_load)\n      820    0.005    0.000    0.087    0.000 pump_fade_v4r.py:1193(maybe_signal)\n      820    0.011    0.000    0.082    0.000 pump_fade_v4r.py:1027(on_bar)\n      772    0.026    0.000    0.068    0.000 pump_fade_v4r.py:641(_on_bar_v4)\n\n\n",
+  "schema": "PUMP4_EXISTING_JOURNAL_REPLAY_PROFILE_V1",
+  "state_writes": 0,
+  "symbol": "ZROUSDT"
+}

@@ -1,0 +1,35 @@
+{
+  "broker_requests": 0,
+  "checks": [
+    {
+      "case": "capital_usd",
+      "rejected": true
+    },
+    {
+      "case": "max_cumulative_net_loss_usd",
+      "rejected": true
+    },
+    {
+      "case": "valid_until_ms",
+      "rejected": true
+    },
+    {
+      "case": "liability_reserve_usd",
+      "rejected": true
+    },
+    {
+      "case": "contract_sha256",
+      "rejected": true
+    },
+    {
+      "case": "frozen_reference_source",
+      "rejected": true
+    },
+    {
+      "case": "invalid_owner_text_pre_io",
+      "rejected": true
+    }
+  ],
+  "financial_state_writes": 0,
+  "status": "PASS"
+}

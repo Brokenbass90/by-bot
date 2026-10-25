@@ -1,0 +1,23 @@
+{
+  "account_document_sha256": "79c79c5b14a5fd05a195082685b9fe01664ddc0fde77f63625630943aff61798",
+  "broker_writes": 0,
+  "cases": [
+    {
+      "case": "previous_cli_clock_before_capture",
+      "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE",
+      "status": "REJECTED"
+    },
+    {
+      "case": "current_clock_after_capture",
+      "conservative_monthly_net": "0",
+      "status": "PASS",
+      "terminal_cost_finality_proven": false
+    }
+  ],
+  "financial_state_writes": 0,
+  "live_broker_requests": 0,
+  "observed_ms": 1792911299277,
+  "schema": "MONTHLY_SAVED_ACTUAL_CLOCK_COUNTERFACTUAL_REPLAY_V1",
+  "source_sha256": "5238549cdee2d53e15d9415b8821f9b2b83bc74f29e34dc5d65144775b783a3f",
+  "synthetic_clock_offsets_are_diagnostic_only": true
+}

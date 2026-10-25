@@ -176,7 +176,9 @@ def main(argv=None,*,client_factory=None,now_ms=None,bundle_loader=None):
             runner_authority(spec)
             trusted_notifications=spec.get('notifications')
             dispatch_started=True
-            out=dispatch_cycle(spec,client_factory=client_factory,now_ms=now,bundle_loader=bundle_loader)
+            # Production samples time inside dispatch after authority validation.
+            # Only explicit fixture callers supply a fixed clock.
+            out=dispatch_cycle(spec,client_factory=client_factory,now_ms=now_ms,bundle_loader=bundle_loader)
         else:
             trusted_notifications=spec.get('notifications')
             m=MonthlyManager(**spec['manager'])

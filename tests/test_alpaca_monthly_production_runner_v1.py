@@ -180,3 +180,31 @@ def test_disabled_source_failure_keeps_authorized_existing_alert_route(runner,tm
     path=tmp_path/'disabled-source.json';pin=write(path,spec)['sha256']
     assert cli.main(['--spec',str(path),'--spec-sha256',pin,'--source'],now_ms=now)==2
     assert sent and sent[0]['component']=='source' and writes==[]
+
+
+def test_default_cli_clock_is_sampled_after_slow_authority_checks(runner,tmp_path,monkeypatch,capsys):
+    """Real CLI -> dispatcher -> manager, production default time, memory I/O."""
+    spec,m,client,writes,now,a,scope=runner
+    wall=[now];checked=[];authority=cli.runner_authority;tick=MonthlyManager.tick
+    monkeypatch.setattr(cli.time,'time_ns',lambda:wall[0]*1000000)
+    def slow_authority(value):
+        result=authority(value)
+        wall[0]+=7000
+        return result
+    def actual_tick(self,native,*,now_ms,**kwargs):
+        checked.append(now_ms)
+        assert 0<=now_ms-wall[0]<1000,'CLI_FROZE_TIME_BEFORE_AUTHORITY_CHECKS'
+        return tick(self,native,now_ms=now_ms,**kwargs)
+    monkeypatch.setattr(cli,'runner_authority',slow_authority)
+    monkeypatch.setattr(MonthlyManager,'tick',actual_tick)
+    from datetime import datetime,timezone
+    client.get_clock=lambda:dict(is_open=False,timestamp=datetime.fromtimestamp(wall[0]/1000,timezone.utc).isoformat())
+    path=tmp_path/'production-default-clock.json';pin=write(path,spec)['sha256']
+    def unavailable(*args):raise ValueError('fixture source unavailable')
+    # Deliberately NO now_ms argument: previous E2E always supplied frozen time.
+    rc=cli.main(['--spec',str(path),'--spec-sha256',pin,'--dispatch'],
+        client_factory=lambda s:client,bundle_loader=unavailable)
+    assert checked and writes==[]
+    out=json.loads(capsys.readouterr().out)
+    assert rc==2 and [i['phase'] for i in out['issues']]==['SOURCE']
+    assert out['maintenance']['status']=='MONTHLY_WAITING_REGULAR_SESSION'

@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT25Oct — v5 PERSONAL CORRECTION EXECUTED; ACTUAL TWO-CYCLE FAIL.
+Read ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md + evidence/monthly_clock_default_cli_20261025/.
+Both systemd cycles MONTHLY_PENDING_FEE_STALE_SOURCE; fresh flat account496.31,
+pending0/orders0 dated. No new purchases/agent financial retries/latches.
+Complete fix: outer CLI passes None clock + native maintain/admission elapsed;
+unchanged5s/300s guards/numericalstrategy/400/280/40/8/dates.266local/same266VPS
+PASS,53source/40imports/18tests/no fallback. Candidate70fb661c269ad460-tfee25909,
+scopeaf7a1159…86f12e/speca78d9472…bd30f/packeteb4c53d8…74f66.
+V6 UNSELECTED/GOabsent/read-onlyverifyPASS. HUMANONLY once:
+.private/money_completion_20261025_v6/owner-monthly-v6-once.sh.
+It activates exact packet ONCE then READONLY waits240s for2actualcleanidlecycles.
+No actualv6PASS until records; oldv5 SPENT neverrepeat. Samebook/original813893,
+NETretired/SHOPcancelled/HALT preserved. Stronger code reviewedastra/high; final
+observer rootreview6cases/helper7negatives, targetedpeerhitlimit/notreplaced.
+PUMP original818853/PID2865120/OFF monitorhealthy at lastread; nofinancialGO.
+CORRECTION:93/132timely was SOURCEcapture, actualDECISIONpublication0/132≤60s,
+84.544–230.339smtimeproxy. Must stream completedper-symbolcapture into EXISTING
+intake beforefullcensus and reduce repeatedreplay; no delayextension/backdating/
+epochreset/newframework. No PUMPcode changed in this clock-fix cycle yet.
+Next: humanv6→independent actualcycle/brokerreadback; PUMPpublication path→TINY.
+Queue Monthly→PUMP→Poly→KITY. Foreignallowlist retained/excluded. Older rows history.
+
+
 CURRENT25Oct — OPERATIONAL RECOVERY; read MONEY_OPERATIONAL_RECOVERY_2026_10_25.md.
 PUMP actual single ownerPID2865120/OFF/818853/NRestarts0, source/guards/cron verified,
 flat/noorders/newGOabsent; unchanged cron actual HEALTHY/PUMP4 x3. OldKITYdisabled,

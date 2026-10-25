@@ -1,0 +1,87 @@
+{
+  "broker": {
+    "broker_writes": 0,
+    "cash": "496.31",
+    "get_requests": 9,
+    "open_orders": [],
+    "pending_fees": "0",
+    "positions": []
+  },
+  "completed_cycle_count": 0,
+  "completed_cycles": [],
+  "entry_block_markers": [],
+  "financial_command_repeated": false,
+  "observed_ms": 1792910705954,
+  "old_scope_entries_revoked": true,
+  "original_lock_inode": 813893,
+  "owner_go_present": true,
+  "personal_receipt": {
+    "actual_entry_executed": false,
+    "broker_get_requests": 18,
+    "broker_writes": 0,
+    "financial_parameters_changed": false,
+    "new_scope_sha256": "8bb8b06de94c36f6dbcf52e9aa2b8377f1e9ede0006fcf9db91164c17bf66b76",
+    "new_spec_sha256": "234e754195cb1b8d12c9b505ee599465de8735ae40ee6acbc7d5c88390530d66",
+    "observed_ms": 1792910663996,
+    "old_scope_entries_revoked": true,
+    "owner_go_created": true,
+    "schema": "MONTHLY_CLOCK_CORRECTION_RECEIPT_V1",
+    "server_cycle_acceptance": "PENDING_INDEPENDENT_READBACK",
+    "status": "OWNER_ARMED_CORRECTED_FUTURE_MONTHLY"
+  },
+  "schema": "MONTHLY_CORRECTED_PERSONAL_ARM_INDEPENDENT_READBACK_V1",
+  "scope_sha256": "8bb8b06de94c36f6dbcf52e9aa2b8377f1e9ede0006fcf9db91164c17bf66b76",
+  "source_pins_match": true,
+  "spec_sha256": "234e754195cb1b8d12c9b505ee599465de8735ae40ee6acbc7d5c88390530d66",
+  "units": {
+    "alpaca-dynamic-next-entry-20261019.timer": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-dynamic-next-entry-20261019.timer",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "alpaca-monthly-owned.service": {
+      "ActiveState": "activating",
+      "DropInPaths": "",
+      "ExecMainStatus": "0",
+      "FragmentPath": "/etc/systemd/system/alpaca-monthly-owned.service",
+      "MainPID": "2866718",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "start",
+      "UnitFileState": "static"
+    },
+    "alpaca-monthly-owned.timer": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/alpaca-monthly-owned.timer",
+      "Result": "success",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "kity-execution-micro-owner.service": {
+      "ActiveState": "failed",
+      "DropInPaths": "/etc/systemd/system/kity-execution-micro-owner.service.d/90-kity-micro-inhibit.conf",
+      "ExecMainStatus": "9",
+      "FragmentPath": "/etc/systemd/system/kity-execution-micro-owner.service",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "signal",
+      "SubState": "failed",
+      "UnitFileState": "disabled"
+    },
+    "pump4-execution-owner.service": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "ExecMainStatus": "0",
+      "FragmentPath": "/etc/systemd/system/pump4-execution-owner.service",
+      "MainPID": "2865120",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    }
+  }
+}

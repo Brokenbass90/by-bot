@@ -1,0 +1,47 @@
+{
+  "acceptance": {
+    "checkout_fallback": [],
+    "counts": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 266
+    },
+    "elapsed_seconds": 414.064,
+    "money_authority": false,
+    "network_denied": true,
+    "orders_allowed": false,
+    "real_broker_requests": 0,
+    "real_broker_writes": 0,
+    "receipt_count": 2,
+    "schema": "ALPACA_MONTHLY_LEGACY_PENDING_EXACT_ACCEPTANCE_V1",
+    "source_file_count": 53,
+    "source_import_count": 40,
+    "source_material_sha256": "70fb661c269ad4601498ba1f1eeee14739c7a30ea63a95bc2ae057e16747720c",
+    "status": "PASS",
+    "test_file_count": 18,
+    "whole_live_handoff": "OPEN"
+  },
+  "activation_repeated": false,
+  "pins": {
+    "alpaca-monthly-owned.service": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+    "clock-correction.py": "54be0dd547a7a54f9271b68a70fc5939d5f4ac393dc4a5e5e3c0f6bef86b24d9",
+    "observe-cycles-v2.py": "b287861cd36fac2dfde28546ebe5453f5e4aae8622888c46e9086eb8d44c37ee",
+    "packet.json": "eb4c53d81d1fa3e3c56c0772f7b1ca35815164816c46fdeceb59c99933c74f66",
+    "runner.json": "a78d94727388d942839626c5e0812dc29efc53bbb88f9e53326f94a5acabd30f",
+    "scope.json": "af7a11594367e3532a1e448e212c2dbafbda4df868c3b1a7be13d157b686f12e"
+  },
+  "read_only": true,
+  "unit_states": "Result=success\nId=alpaca-monthly-owned.timer\nActiveState=active\nSubState=running\n\nMainPID=2883016\nResult=success\nNRestarts=0\nId=alpaca-monthly-owned.service\nActiveState=activating\nSubState=start\n\nMainPID=2865120\nResult=success\nNRestarts=0\nId=pump4-execution-owner.service\nActiveState=active\nSubState=running\n",
+  "verify": {
+    "actual_entry_executed": false,
+    "broker_writes": 0,
+    "financial_parameters_changed": false,
+    "new_scope_sha256": "af7a11594367e3532a1e448e212c2dbafbda4df868c3b1a7be13d157b686f12e",
+    "new_spec_sha256": "a78d94727388d942839626c5e0812dc29efc53bbb88f9e53326f94a5acabd30f",
+    "observed_ms": 1792926798294,
+    "owner_go_created": false,
+    "schema": "MONTHLY_CLOCK_CORRECTION_RECEIPT_V1",
+    "status": "READY_FOR_PERSONAL_CLOCK_CORRECTION"
+  }
+}

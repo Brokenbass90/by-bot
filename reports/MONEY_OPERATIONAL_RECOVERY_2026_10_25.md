@@ -1,3 +1,10 @@
+LATEST25Oct: owner executed v5, but TWO ACTUAL CYCLES FAILED. The prior READY
+command below is SPENT and MUST NOT be repeated. Source-time93/132 is NOT timely
+financial publication: actual publication0/132 within60s. Continue
+[default CLI clock correction](ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md).
+v6 exact266/266 accepted, human-only selection pending, no operational PASS.
+Earlier final/component sections below are dated evidence, not current commands.
+
 # Operational recovery, 25 October 2026 — component closure, NOT LIVE PASS
 
 ## Final bounded result, 25 October

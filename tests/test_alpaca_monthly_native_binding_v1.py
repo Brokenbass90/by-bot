@@ -243,3 +243,33 @@ def test_exit_crash_between_native_and_monthly_commits_is_reconciled(setup,monke
     monkeypatch.setattr(b,'record_exit',record_exit)
     assert a.maintain(now_ms=now+60000,apply=True)['status']=='MONTHLY_EXIT_PENDING_ACCOUNTING'
     assert not b.rows('positions') and io.sent==['buy','stop']
+
+
+@pytest.mark.parametrize('broker_offset,allowed',[(0,True),(6000,False)])
+def test_maintenance_clock_counts_slow_custody_but_keeps_five_second_gate(setup,monkeypatch,broker_offset,allowed):
+    b,s,a,io,now=setup;elapsed=[0.];authority=a._native_authority
+    monkeypatch.setattr(binding.time,'monotonic',lambda:elapsed[0])
+    def delayed():authority();elapsed[0]+=7.
+    monkeypatch.setattr(a,'_native_authority',delayed)
+    io.get_clock=lambda:dict(is_open=False,timestamp=datetime.fromtimestamp((now+int(elapsed[0]*1000)+broker_offset)/1000,timezone.utc).isoformat())
+    if allowed:assert a.maintain(now_ms=now,apply=True)['status']=='MONTHLY_WAITING_REGULAR_SESSION'
+    else:
+        with pytest.raises(ValueError,match='MONTHLY_MANAGER_CLOCK_CONFLICT'):a.maintain(now_ms=now,apply=True)
+    assert io.sent==[]
+
+
+@pytest.mark.parametrize('quote_offset,allowed',[(0,True),(-301000,False),(1000,False)])
+def test_admission_samples_clock_after_fresh_account_and_quote_io(setup,monkeypatch,quote_offset,allowed):
+    b,s,a,io,now=setup;prepared=ticket(setup);elapsed=[0.];account=io.get_account
+    monkeypatch.setattr(binding.time,'monotonic',lambda:elapsed[0])
+    def delayed_account():elapsed[0]+=7.;return account()
+    io.get_account=delayed_account
+    io.get_clock=lambda:dict(is_open=True,timestamp=datetime.fromtimestamp((now+int(elapsed[0]*1000))/1000,timezone.utc).isoformat())
+    def latest(symbol):
+        elapsed[0]+=1.
+        return dict(ap='311',t=datetime.fromtimestamp((now+int(elapsed[0]*1000)+quote_offset)/1000,timezone.utc).isoformat())
+    io.latest_quote=latest
+    if allowed:assert a._admit_new_entry(prepared,now)['client_order_id']==prepared['client_order_id']
+    else:
+        with pytest.raises(ValueError,match='MONTHLY_FRESH_ASSET_OR_QUOTE_REQUIRED'):a._admit_new_entry(prepared,now)
+    assert io.sent==[]

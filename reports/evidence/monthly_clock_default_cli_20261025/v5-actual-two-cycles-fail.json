@@ -1,0 +1,84 @@
+{
+  "count": 2,
+  "cycles": [
+    {
+      "entry_status": "BLOCKED",
+      "issues": [
+        {
+          "code": "ValueError",
+          "phase": "ACCOUNTING",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        },
+        {
+          "code": "ValueError",
+          "phase": "LOSS_ADMISSION",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        }
+      ],
+      "maintenance": {
+        "money_authority": false,
+        "orders_allowed": false,
+        "production_writer_installed": false,
+        "status": "MONTHLY_WAITING_REGULAR_SESSION"
+      },
+      "notifications": {
+        "health": {
+          "delivery": {
+            "delivered": true,
+            "http_status": 200,
+            "message_id": 15344,
+            "response_sha256": "d24c947eaba5f754be3028d867f936b19ca351f8a65baaeab45099d161ade477",
+            "status": "DELIVERED"
+          },
+          "status": "ALREADY_RECORDED"
+        },
+        "trades": []
+      },
+      "observed_ms": 1792910724175,
+      "opening": null,
+      "source_status": "ORDERS_OFF_OPERATIONAL_PASS",
+      "status": "MONTHLY_STANDING_DISPATCH_TICK"
+    },
+    {
+      "entry_status": "BLOCKED",
+      "issues": [
+        {
+          "code": "ValueError",
+          "phase": "ACCOUNTING",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        },
+        {
+          "code": "ValueError",
+          "phase": "LOSS_ADMISSION",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        }
+      ],
+      "maintenance": {
+        "money_authority": false,
+        "orders_allowed": false,
+        "production_writer_installed": false,
+        "status": "MONTHLY_WAITING_REGULAR_SESSION"
+      },
+      "notifications": {
+        "health": {
+          "delivery": {
+            "delivered": true,
+            "http_status": 200,
+            "message_id": 15344,
+            "response_sha256": "d24c947eaba5f754be3028d867f936b19ca351f8a65baaeab45099d161ade477",
+            "status": "DELIVERED"
+          },
+          "status": "ALREADY_RECORDED"
+        },
+        "trades": []
+      },
+      "observed_ms": 1792910781563,
+      "opening": null,
+      "source_status": "ORDERS_OFF_OPERATIONAL_PASS",
+      "status": "MONTHLY_STANDING_DISPATCH_TICK"
+    }
+  ],
+  "latches": [],
+  "observed_ms": 1792910824834,
+  "unit": "MainPID=2866873\nResult=success\nExecMainStatus=0\nActiveState=activating\nSubState=start\n"
+}

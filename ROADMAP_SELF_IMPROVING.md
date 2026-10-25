@@ -1,5 +1,16 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**25Oct superseding actual correction:** [v5 FAIL / complete v6 staged](reports/ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md).
+Owner personally ran v5; TWO actual cycles again rejected stale fee source.
+Outer CLI/default clock and native elapsed corrected;266local/same266VPS exactPASS.
+v6 UNSELECTED/GOabsent, exact HUMAN-only packet ready; actual two-cycle acceptance
+still pending. Same400/280/40/8/calendar/numericalstrategy, no repeatbudgetapproval.
+PUMP source93/132timely != financialpublication: actualpublication0/132≤60s,
+84.544–230.339s(mtimeproxy). Next existing warm-source streaming/replay fix, no
+latenessgate relaxation/epochreset/newframework. Single owner/monitor remainsOFF,
+noTINYGO. Queue unchanged; prior READY commands/counts below are dated history.
+
+
 **25Oct superseding actual state:** [operational recovery](reports/MONEY_OPERATIONAL_RECOVERY_2026_10_25.md).
 Monthly v4 personally armed but BLOCKED; corrected260/260candidate and exact
 human-only correction READY. PUMP single physical owner and read-only monitor

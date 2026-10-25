@@ -1,0 +1,15 @@
+{
+  "actual_effort": "high",
+  "actual_model": "gpt-6-astra",
+  "final_candidate_path_rebind_and_manifest_review": "ROOT_ONLY",
+  "financial_signoff": false,
+  "important_findings_fixed": [
+    "native maintenance omitted custody elapsed"
+  ],
+  "independent_targeted_tests": 6,
+  "read_only_observer_final_review": "ROOT_ONLY: targeted peer followup hit usage limit; no replacement worker",
+  "requested_model": "gpt-6-astra",
+  "rollout_id": "01a171d6-81b3-7712-9f1d-3c1c398478a3",
+  "scope": "CLI default time, native maintain/admission clocks; previous-path exact packet semantics",
+  "unresolved_critical_important_in_code_review": 0
+}

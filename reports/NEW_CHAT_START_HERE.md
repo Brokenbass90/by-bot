@@ -1,3 +1,26 @@
+# START HERE — 25 October v5 failed, v6 staged, no new PUMP authority
+
+1. Read CODEX_SESSION_CHECKPOINT_2026_09_06.md TOP.
+2. Read ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md and exact evidence.
+3. Check actual Git status and only drift-prone runtime facts. Do not restart audit.
+
+HUMAN ran v5: two real cycles failed same stale-source error. New complete v6
+266local/same266VPS is staged UNSELECTED, scopeaf7a1159…86f12e/speca78d9472…bd30f.
+Private personal launcher .private/money_completion_20261025_v6/owner-monthly-v6-once.sh
+runs once then waits read-only for2actualcycles. First check if owner already ran;
+never execute it as agent/retry old activation. NewGOabsence means pending, notPASS.
+If executed, independent cycle/broker/book/unit/lock813893 readback next. Same
+400/280/40/loss8/date2Nov→1Feb; numericalstrategy unchanged; no new budgetapproval.
+
+PUMP single supervisor/monitor already physical ORDERS_OFF, no moneyGO. Timing
+corrected: source93/132within60s, DECISIONpublication0/132within60s (mtimeproxy).
+Fix existing warm source census-before-publication/repeatedreplay; preserve
+producer/journal/epoch/universe/HFTskip, no gatewidening/backdating/newframework.
+OriginalBybit818853/PID2865120 at lastcheck; KITYretired neverrestartbesidePUMP.
+Queue Monthly → PUMP → Polymarket → KITY. No Claude checkout/outcomes/judge edits.
+
+Older dated START sections below are historical.
+
 # START HERE — 25 October operational recovery / no new LIVE orders
 
 Read only these current items first; older text below is history:
