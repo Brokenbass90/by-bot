@@ -12,7 +12,7 @@ from pathlib import Path
 LAB = Path(__file__).resolve().parents[1]; ROOT = LAB.parent
 ZH = LAB / "data" / "ocenshchiki_ezhednevno.jsonl"
 SOST = LAB / "data" / "ocenshchiki_ezhednevno_sost.json"
-OCENSHCHIKI = ("pump4_pereschet.py", "pump4_polnyy_povtor.py", "slope_hedge_vpered.py", "tsmom_long_ten.py", "poly_yes_verdikt.py", "poly_sprav_verdikt.py", "poly_novosti_ollama.py")
+OCENSHCHIKI = ("pump4_pereschet.py", "pump4_polnyy_povtor.py", "slope_hedge_vpered.py", "tsmom_long_ten.py", "poly_yes_verdikt.py", "poly_sprav_verdikt.py", "poly_novosti_ollama.py", "poly_maker_no_vpered.py")
 CHAS_UTC = 6
 
 
