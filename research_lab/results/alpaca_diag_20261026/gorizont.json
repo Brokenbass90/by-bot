@@ -1,0 +1,116 @@
+{
+ "bumag": 918,
+ "sessiy": 2696,
+ "dat": 483,
+ "L5_H5": {
+  "n": 483,
+  "spred_pct": -0.119,
+  "t": -1.42
+ },
+ "L5_H21": {
+  "n": 121,
+  "spred_pct": 0.177,
+  "t": 0.93
+ },
+ "L21_H5": {
+  "n": 483,
+  "spred_pct": 0.027,
+  "t": 0.3
+ },
+ "L21_H21": {
+  "n": 121,
+  "spred_pct": 0.378,
+  "t": 0.87
+ },
+ "L63_H5": {
+  "n": 483,
+  "spred_pct": 0.085,
+  "t": 0.83
+ },
+ "L63_H21": {
+  "n": 121,
+  "spred_pct": 0.484,
+  "t": 1.26
+ },
+ "L126_H5": {
+  "n": 483,
+  "spred_pct": 0.179,
+  "t": 1.55
+ },
+ "L126_H21": {
+  "n": 121,
+  "spred_pct": 0.807,
+  "t": 2.16
+ },
+ "L231_H5": {
+  "n": 483,
+  "spred_pct": 0.282,
+  "t": 2.32
+ },
+ "L231_H21": {
+  "n": 121,
+  "spred_pct": 1.071,
+  "t": 2.43
+ },
+ "L5_H5_rynok_slab": {
+  "n": 124,
+  "spred_pct": -0.326,
+  "t": -1.81
+ },
+ "L5_H5_rynok_silen": {
+  "n": 359,
+  "spred_pct": -0.047,
+  "t": -0.5
+ },
+ "L5_H21_rynok_slab": {
+  "n": 31,
+  "spred_pct": -0.026,
+  "t": -0.38
+ },
+ "L5_H21_rynok_silen": {
+  "n": 90,
+  "spred_pct": 0.247,
+  "t": 1.39
+ },
+ "L126_H5_rynok_slab": {
+  "n": 124,
+  "spred_pct": 0.189,
+  "t": 0.92
+ },
+ "L126_H5_rynok_silen": {
+  "n": 359,
+  "spred_pct": 0.176,
+  "t": 1.27
+ },
+ "L126_H21_rynok_slab": {
+  "n": 31,
+  "spred_pct": 0.815,
+  "t": 0.5
+ },
+ "L126_H21_rynok_silen": {
+  "n": 90,
+  "spred_pct": 0.804,
+  "t": 1.78
+ },
+ "L231_H5_rynok_slab": {
+  "n": 124,
+  "spred_pct": 0.518,
+  "t": 2.72
+ },
+ "L231_H5_rynok_silen": {
+  "n": 359,
+  "spred_pct": 0.2,
+  "t": 1.34
+ },
+ "L231_H21_rynok_slab": {
+  "n": 31,
+  "spred_pct": 1.662,
+  "t": 1.8
+ },
+ "L231_H21_rynok_silen": {
+  "n": 90,
+  "spred_pct": 0.867,
+  "t": 2.1
+ },
+ "dolya_slabogo_rynka": 0.257
+}
