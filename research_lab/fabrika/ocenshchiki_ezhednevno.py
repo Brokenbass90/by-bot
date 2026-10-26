@@ -4,13 +4,14 @@ pump4_pereschet.py (PUMP4 V1 + парные V2), slope_hedge_vpered.py (накл
 tsmom_long_ten.py (тень BTC/ETH только лонг + CASH, добавлено 22.10) и poly_yes_verdikt.py (судья тени Polymarket: до 30 событий —
 только счётчики; добавлено 22.10). Отдельный процесс — чтобы chdir и
 сетевые ошибки оценщика не задевали сторожа. Таймаут 25 мин на оценщик. Итог (код, последние строки вывода) — в
-data/ocenshchiki_ezhednevno.jsonl; ошибка видна в журнале сторожа через возвращаемый статус. Ордеров, ключей, LIVE — нет."""
+data/ocenshchiki_ezhednevno.jsonl; ошибка видна в журнале сторожа через возвращаемый статус. Ордеров, ключей, LIVE — нет.
+26.10: + poly_novosti_ollama.py (тень прогнозиста новости+Ollama, prereg PREREG_POLY_NOVOSTI_OLLAMA_2026_10_26)."""
 import datetime as dt, json, subprocess, sys
 from pathlib import Path
 LAB = Path(__file__).resolve().parents[1]; ROOT = LAB.parent
 ZH = LAB / "data" / "ocenshchiki_ezhednevno.jsonl"
 SOST = LAB / "data" / "ocenshchiki_ezhednevno_sost.json"
-OCENSHCHIKI = ("pump4_pereschet.py", "slope_hedge_vpered.py", "tsmom_long_ten.py", "poly_yes_verdikt.py", "poly_sprav_verdikt.py")
+OCENSHCHIKI = ("pump4_pereschet.py", "slope_hedge_vpered.py", "tsmom_long_ten.py", "poly_yes_verdikt.py", "poly_sprav_verdikt.py", "poly_novosti_ollama.py")
 CHAS_UTC = 6
 
 
