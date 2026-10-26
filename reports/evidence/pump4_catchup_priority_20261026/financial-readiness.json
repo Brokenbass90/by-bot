@@ -1,0 +1,21 @@
+{
+  "schema": "PUMP4_FINANCIAL_READINESS_GATES_20261026",
+  "engineering_component": "PASS_283_LOCAL_AND_VPS",
+  "selected_DATA": "DEPLOYED",
+  "financial_runtime": "ORDERS_OFF_HEALTHY_NO_NEW_SIGNAL",
+  "physical_single_owner_lock": "PASS_818853",
+  "new_H1_publication_gate": "FAIL_20_OF_133_WITHIN60S",
+  "frozen_producer_intake_signal_only_parity": "PASS_OWNER84_CLOSED_PLUS_OPEN1_ON_IDENTICAL_INPUTS",
+  "historical_shadow_signal_geometry": "NOT_RECORDED",
+  "shadow_wrapper_mechanism": "FIXED_INPUT_51_OF_51_SEEN_BAR_OMISSION",
+  "economics_correct_continuous_stream": "INCONCLUSIVE_FUNDING_SLIPPAGE_UNKNOWN",
+  "actual_per_signal_financial_protection_cost_acceptance": "BLOCKED_NOT_PROVEN",
+  "entry_window_300_CR": "NOT_APPLIED_60_SECONDS_RETAINED",
+  "TINY_READY": false,
+  "owner_financial_GO": false,
+  "TINY_LIVE": false,
+  "broker_writes_this_change": 0,
+  "Monthly_reselected": false,
+  "priority_gate": "PASS_CURRENT_BEFORE12CATCHUP",
+  "native_stop_compatibility": "FAIL_ZERO_OF84_EXACT_CURRENT_TICK"
+}

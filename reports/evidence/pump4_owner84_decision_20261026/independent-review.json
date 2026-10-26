@@ -1,0 +1,20 @@
+{
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "runtime_metadata_verified": true,
+  "session_id": "01a17307-4e93-7dc0-9f34-a1ec492fa89e",
+  "arithmetic_independently_recomputed": true,
+  "minimum_quantity_arithmetic_verified": 84,
+  "native_stops_exactly_representable": 0,
+  "closed_signal_parity_scope": 84,
+  "open_signal_parity_scope": 1,
+  "financial_executor": "BLOCKED_NOT_PROVEN",
+  "economics": "INCONCLUSIVE",
+  "report_scope_corrections_root_applied": [
+    "hybrid historical-width/current-bid diagnostic is not admission",
+    "stop compatibility is not full executor test"
+  ],
+  "financial_GO": false,
+  "broker_requests_by_reviewer": 0,
+  "evaluator_calls": 0
+}

@@ -1,15 +1,13 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-**26Oct08:24UTC PUMP actual state:** [priority deployment](reports/PUMP4_CATCHUP_PRIORITY_2026_10_26.md).
-283local/same283VPS PASS, DATA5882783b selectedOFF,21376historyfiles retained;
-new09H1 timing pending. Actual25Oct18:15/127≤60s,median87.974/max107.326s,0signals.
-[Exact51 reconciliation](reports/PUMP4_SIGNAL_RECONCILIATION_2026_10_26.md):
-all51 reconstructed by research wrapper's seen-bar omission on fixedinputs;
-continuous frozenintake yields cooldown/no signal. Historical run attestations
-missing; economics of correct stream unconfirmed. [300sCR](reports/PUMP4_ENTRY_WINDOW_300_CR_2026_10_26.md)
-NOTapplied; no capital/risk increase. Same solefinancialOFF/818853/noGO/Monthlyunchanged.
-NEXT real09H1 proof + correct signal/state lineage/economics + fresh financialgates;
-TINY_NOT_READY. Engineering PASS does not imply financialGO.
+**26Oct13:26UTC PUMP decision:** [five owner gates](reports/PUMP4_OWNER_DECISION_2026_10_26.md).
+H1priorityPASS/current-before12catchup;60sFAIL20/133,median87.514/max115.140s.
+Exact84closed+open1 same-input frozenproducer/intake parityPASS;correct-stream
+costsINCONCLUSIVE (+.04796R fee/slipscenario BEFORE funding). All84 native reference
+stops offcurrenttick =>executorBLOCKED/NOTPROVEN,TINYBLOCKED/noGO. ONE nextOFFblock:
+non-widening native-stop tickmapping preservingreferenceplan/hash/originalriskbasis
+andqty;testlifecycle/restart/reconcile. Latency/funding gates remain, no60→300,
+no riskincrease. Monthlyv6 preserved;Claude ownsWeeklyFillresearch perlatestowner.
 **Owner reaffirmed North Star:** Brain, Factory, classical strategies and intelligent
 portfolio management stay in this canonical roadmap. Current execution queue
 Monthly→PUMP→Polymarket→KITY supports that goal; no secondroadmap/automaticAI moneyauthority.

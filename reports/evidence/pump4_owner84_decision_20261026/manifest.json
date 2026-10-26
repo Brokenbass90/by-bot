@@ -1,0 +1,38 @@
+{
+  "ref": "29366fb26f3992e8d3d2f96f92a7b5391969b3a7",
+  "publication_at_origin": "NOT_CONFIRMED_ORIGIN_TIP_36e7e96",
+  "files": {
+    "research_lab/PUMP4_POLNYY_POVTOR_ITOG_2026_10_26.md": {
+      "sha256": "395eff5d8f1592bef942dfd7f9064c63b7b4f0b6ec49e46a52ab632c1d2f4656",
+      "git_blob": "f8835a0861c23047c659b7bc90681b7b63eb142f"
+    },
+    "research_lab/results/pump4_polnyy_povtor_20261026T0857Z.json": {
+      "sha256": "68240dd17ba005da661d143d962206cf78bf61f7b74160699d6373324c0da4d6",
+      "git_blob": "7d0c493fe5fb28687c22f2f75a53f4ebb372380a"
+    },
+    "research_lab/pump4_polnyy_povtor.py": {
+      "sha256": "d308eadbe1768ea6b35950fc37fde5722b0ec541e8cdc4c9e1a08e3926b12978",
+      "git_blob": "131b1b60e48aabd8e2ffa1fdc4180d2570462a2c"
+    },
+    "research_lab/pump4_pereschet.py": {
+      "sha256": "fabcace4ef0b4d77b19d9b86e718c81d857f9a8e09f537155cc3c977ed8f1b73",
+      "git_blob": "c3c30a9787d3291c54a181854b5e92e0ff1e5c46"
+    },
+    "research_lab/research_machine.py": {
+      "sha256": "95ca5322c1da54cf06cd213bdf8075eedc7eff68d3127594db3b3479d32e8572",
+      "git_blob": "4898bd777244f4592abd29f7b906a8421431525c"
+    },
+    "research_lab/data/pump4_v1_universe_20261020.json": {
+      "sha256": "e7cca156e48dedd4a1cb7149cebf09a3bf0686859daad597a0bead4b6c59b3fa",
+      "git_blob": "a51e9508498c8c7148bc947e6749406f40e41313"
+    },
+    "strategies/pump_fade_v4r.py": {
+      "sha256": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+      "git_blob": "30d2f06f0a4ffd9eb88fe753970d165234cea530"
+    },
+    "strategies/signals.py": {
+      "sha256": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c",
+      "git_blob": "c1317ec259e9b3de88351efe7136f79daf0f3c79"
+    }
+  }
+}

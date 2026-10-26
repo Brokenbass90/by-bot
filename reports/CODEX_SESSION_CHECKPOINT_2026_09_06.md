@@ -1,5 +1,33 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT26Oct13:26UTC — OWNER84 DECISION: TINY BLOCKED; CONTINUE NATIVE-STOP OFF ADAPTER.
+Read PUMP4_OWNER_DECISION_2026_10_26.md first. Latestownerattachment narrowsCodex
+PUMP production;ClaudeWeeklyFill research only, Monthlyv6unchanged/noactivation.
+Actual09H1 installed588path:137outcomes/133PASS/20≤60s/median87.514/max115.140s,
+112sources≤60s/0signals. PriorityPASS12CATCHUPafter121CURRENT;publication60sFAIL.
+CURRENTmedian85.475/max106.047s;immediate70.211s,deferred7.240s,notice-prefix
+estimate26.069s includingprotocol/context checks, not pureclassifierCPU.
+Childexit0/fullseal;CPU66.421s/child28.482s/MemoryPeak272023552;nohourretry/reseed.
+OwnerexactlocalClaude29366fb resultSHA68240dd…4d6 frozen;NOTinorigin36e7e96 atfetch.
+84closed+1open through22Oct;identicalinputs researchfeed0+1200warm vsfrozenintake
+feed200:fullsignal/cooldown84/84+open1PASS,exceptions0;notall137census or oldcapture
+attestation. Producer/strategy unchanged;no evaluator/judge/PnL rerun.
+FreshGETfees/instruments13:19:flat/orders0/no borrowed/REGULAR_MARGIN;observedfees
+68×5.5bps,14×11bps,2×2.75bps. Existing10bps/side slippage scenario yields+.04796R
+beforefunding;fundingactualUNKNOWN/currentcapstressnegative=>INCONCLUSIVE.
+ALL84 exactreference stops offcurrenttick;financialend-to-endBLOCKED/NOTPROVEN,
+NOT claimed84actualfull-executor tests. Minlots computed57;2/84R1cap/82gross30
+are hybrid historical%-width/currentbid diagnostics, NOT admissions.
+ONE nextboundedOFFblock: separate non-widening native-stop tickmapping while
+preservingreferenceplan/hash/originalriskbasis/noqtyincrease;invalidtrigger
+geometryBLOCK,metadatabinding+lifecycle/restart/readback/reconcile tests.
+Thisdoesnot waive latency/funding. TINYBLOCKED/noMoneyGO/launcher/riskincrease.
+Selectedsamefinancialapp306/config125b0ae6/scopea527f12c/PID2955754/NRestarts0/
+818853held/NO_NEW_SIGNAL/pinsPASS at13:26;Monthlyunit9d944…32cc1d unchanged.
+DATA588/bindingea4c…ab23/all21376historyfiles intact,priorroots/scopes/claims retained.
+Earlier09pending/51-only statements below are datedhistory. Neverrestartaudit.
+
+
 CURRENT26Oct08:24UTC — CATCHUP PRIORITY DEPLOYED OFF; EXACT51 SIGNAL MECHANISM FOUND.
 Read PUMP4_CATCHUP_PRIORITY_2026_10_26.md + PUMP4_SIGNAL_RECONCILIATION_2026_10_26.md
 + PUMP4_ENTRY_WINDOW_300_CR_2026_10_26.md. No new audit, no researchmerge/judge/PnL.

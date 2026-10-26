@@ -1,0 +1,767 @@
+[
+  {
+    "sym": "1000PEPEUSDT",
+    "ts": 1790121600000,
+    "entry_bar_open_ms": 1790125200000,
+    "entry": 0.004916,
+    "raw_sha256": "a969731b1206e0139d4605f8a5ab282609617d876d9507be28dd4472ef7a8257",
+    "received_ms": 1793020923902,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=1000PEPEUSDT&interval=60&start=1790125200000&end=1790128799999&limit=1"
+  },
+  {
+    "sym": "AAVEUSDT",
+    "ts": 1790776800000,
+    "entry_bar_open_ms": 1790780400000,
+    "entry": 159.33,
+    "raw_sha256": "977a9519b554eb4bb0483c12ec16f5d8afd99e82ddd12453608fc045604ba6d6",
+    "received_ms": 1793020923924,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AAVEUSDT&interval=60&start=1790780400000&end=1790783999999&limit=1"
+  },
+  {
+    "sym": "ACEUSDT",
+    "ts": 1788890400000,
+    "entry_bar_open_ms": 1788894000000,
+    "entry": 0.16913,
+    "raw_sha256": "a25758d2a03619e6c0e5e9e737201d4422453f021f63f0d9a0e31e570724ffc9",
+    "received_ms": 1793020923902,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ACEUSDT&interval=60&start=1788894000000&end=1788897599999&limit=1"
+  },
+  {
+    "sym": "ACEUSDT",
+    "ts": 1790240400000,
+    "entry_bar_open_ms": 1790244000000,
+    "entry": 0.18314,
+    "raw_sha256": "afd20ec06ec0a2662c0d639028838d382398ebdf83f72e149f68de09981d5ed4",
+    "received_ms": 1793020924219,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ACEUSDT&interval=60&start=1790244000000&end=1790247599999&limit=1"
+  },
+  {
+    "sym": "ACEUSDT",
+    "ts": 1790499600000,
+    "entry_bar_open_ms": 1790503200000,
+    "entry": 0.20096,
+    "raw_sha256": "5044ec774ad088491e56bc25e83758338e2a11caba8a55ce9e88fb04b8b3b27e",
+    "received_ms": 1793020924219,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ACEUSDT&interval=60&start=1790503200000&end=1790506799999&limit=1"
+  },
+  {
+    "sym": "ACTUSDT",
+    "ts": 1791763200000,
+    "entry_bar_open_ms": 1791766800000,
+    "entry": 0.010843,
+    "raw_sha256": "42274baafabb5c73f32da32ff7ef13f55b1af620fe4a758ad6851598cd8d4467",
+    "received_ms": 1793020924258,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ACTUSDT&interval=60&start=1791766800000&end=1791770399999&limit=1"
+  },
+  {
+    "sym": "AEROUSDT",
+    "ts": 1790283600000,
+    "entry_bar_open_ms": 1790287200000,
+    "entry": 0.6943,
+    "raw_sha256": "d8cbf1ad5f11fe82ac06a823aabfd0a106e695c790f6087390a446e1f37b5cdd",
+    "received_ms": 1793020924541,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AEROUSDT&interval=60&start=1790287200000&end=1790290799999&limit=1"
+  },
+  {
+    "sym": "AEROUSDT",
+    "ts": 1791734400000,
+    "entry_bar_open_ms": 1791738000000,
+    "entry": 0.9612,
+    "raw_sha256": "407789a5f0d8e8e50f6b094968c58aedc62c47394898c86bebdae6ff4fec1b0a",
+    "received_ms": 1793020924552,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AEROUSDT&interval=60&start=1791738000000&end=1791741599999&limit=1"
+  },
+  {
+    "sym": "AKEUSDT",
+    "ts": 1788332400000,
+    "entry_bar_open_ms": 1788336000000,
+    "entry": 0.008621,
+    "raw_sha256": "346fd37ea5422a81b5b4935698d78c1943563aa1141ebc455758d0c5cbecba1d",
+    "received_ms": 1793020924589,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AKEUSDT&interval=60&start=1788336000000&end=1788339599999&limit=1"
+  },
+  {
+    "sym": "AKEUSDT",
+    "ts": 1790848800000,
+    "entry_bar_open_ms": 1790852400000,
+    "entry": 0.03193,
+    "raw_sha256": "74f90ffd4f5836afe2d23e47d68b6b0a0d4aa5bc2131a41fde81020d16ec3291",
+    "received_ms": 1793020924896,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AKEUSDT&interval=60&start=1790852400000&end=1790855999999&limit=1"
+  },
+  {
+    "sym": "AKEUSDT",
+    "ts": 1791540000000,
+    "entry_bar_open_ms": 1791543600000,
+    "entry": 0.027238,
+    "raw_sha256": "9c1926c8c70b9e9ef2e26c8d3470355f261dc9b5bde0780236feccd9678daa95",
+    "received_ms": 1793020924875,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AKEUSDT&interval=60&start=1791543600000&end=1791547199999&limit=1"
+  },
+  {
+    "sym": "ALGOUSDT",
+    "ts": 1790006400000,
+    "entry_bar_open_ms": 1790010000000,
+    "entry": 0.11174,
+    "raw_sha256": "99b5cae74f9fe8fb42224ed2bd3d1091595c5b29e27958e9d15e448fcb5eb700",
+    "received_ms": 1793020924913,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALGOUSDT&interval=60&start=1790010000000&end=1790013599999&limit=1"
+  },
+  {
+    "sym": "ALGOUSDT",
+    "ts": 1791532800000,
+    "entry_bar_open_ms": 1791536400000,
+    "entry": 0.11843,
+    "raw_sha256": "3e8b29661f94e50e5890880cd20fb1428bb8cd1a5f1851f5411fa2af3b21a2c0",
+    "received_ms": 1793020925194,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALGOUSDT&interval=60&start=1791536400000&end=1791539999999&limit=1"
+  },
+  {
+    "sym": "ALLOUSDT",
+    "ts": 1790071200000,
+    "entry_bar_open_ms": 1790074800000,
+    "entry": 0.2597,
+    "raw_sha256": "a7ede3f97f12d566a2420ff604acb226f99b2f9af54e25999da816af17acf9e0",
+    "received_ms": 1793020925224,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALLOUSDT&interval=60&start=1790074800000&end=1790078399999&limit=1"
+  },
+  {
+    "sym": "ALLOUSDT",
+    "ts": 1790254800000,
+    "entry_bar_open_ms": 1790258400000,
+    "entry": 0.2888,
+    "raw_sha256": "f8c2795a1fa526af3ddf9aa53fad33bfdece9f82e79728963cbe75313070b2f0",
+    "received_ms": 1793020925243,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALLOUSDT&interval=60&start=1790258400000&end=1790261999999&limit=1"
+  },
+  {
+    "sym": "APTUSDT",
+    "ts": 1789858800000,
+    "entry_bar_open_ms": 1789862400000,
+    "entry": 0.7245,
+    "raw_sha256": "8779d347190a4705432bfad1368882131580fb6484251b413fbf9de43dd52e21",
+    "received_ms": 1793020925512,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=APTUSDT&interval=60&start=1789862400000&end=1789865999999&limit=1"
+  },
+  {
+    "sym": "ARBUSDT",
+    "ts": 1788307200000,
+    "entry_bar_open_ms": 1788310800000,
+    "entry": 0.10798,
+    "raw_sha256": "2af35f19f421737996e7612cebafda5fff04bd3e6e4e5ff1c4b57d159336ccd8",
+    "received_ms": 1793020925551,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ARBUSDT&interval=60&start=1788310800000&end=1788314399999&limit=1"
+  },
+  {
+    "sym": "ASTERUSDT",
+    "ts": 1788696000000,
+    "entry_bar_open_ms": 1788699600000,
+    "entry": 0.7807,
+    "raw_sha256": "8aeaa74e6199915be6a37b86b0f67cfeaa54da46a3adeba5436d3fae8a261991",
+    "received_ms": 1793020925567,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ASTERUSDT&interval=60&start=1788699600000&end=1788703199999&limit=1"
+  },
+  {
+    "sym": "BLESSUSDT",
+    "ts": 1788667200000,
+    "entry_bar_open_ms": 1788670800000,
+    "entry": 0.009345,
+    "raw_sha256": "dccb99540f63b78e274edc7feaf8a2164ffc95e92a05f4d64de07ab1ed317606",
+    "received_ms": 1793020925837,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BLESSUSDT&interval=60&start=1788670800000&end=1788674399999&limit=1"
+  },
+  {
+    "sym": "BLESSUSDT",
+    "ts": 1792558800000,
+    "entry_bar_open_ms": 1792562400000,
+    "entry": 0.007744,
+    "raw_sha256": "ff778a6cd4cb7d0f4ba1c929494e6ddba4d31d86839736c90163fd89e7008d3f",
+    "received_ms": 1793020925883,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BLESSUSDT&interval=60&start=1792562400000&end=1792565999999&limit=1"
+  },
+  {
+    "sym": "BOMEUSDT",
+    "ts": 1790010000000,
+    "entry_bar_open_ms": 1790013600000,
+    "entry": 0.0010376,
+    "raw_sha256": "fb9c01f93bf9ba6c7de8d956a518d0df95febccdc6c8258208e6046b90e43e68",
+    "received_ms": 1793020925889,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BOMEUSDT&interval=60&start=1790013600000&end=1790017199999&limit=1"
+  },
+  {
+    "sym": "BROCCOLIUSDT",
+    "ts": 1790035200000,
+    "entry_bar_open_ms": 1790038800000,
+    "entry": 0.020386,
+    "raw_sha256": "c431be36d30b3aee62960247762fd676bb459786d62776ce1390662177d9c2dd",
+    "received_ms": 1793020926162,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BROCCOLIUSDT&interval=60&start=1790038800000&end=1790042399999&limit=1"
+  },
+  {
+    "sym": "CCUSDT",
+    "ts": 1790445600000,
+    "entry_bar_open_ms": 1790449200000,
+    "entry": 0.13353,
+    "raw_sha256": "2a7e0a8500c2c0fc64f9cea26c63411c4a93dce327037cd35e10818541f0983d",
+    "received_ms": 1793020926206,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=CCUSDT&interval=60&start=1790449200000&end=1790452799999&limit=1"
+  },
+  {
+    "sym": "COAIUSDT",
+    "ts": 1788498000000,
+    "entry_bar_open_ms": 1788501600000,
+    "entry": 0.3172,
+    "raw_sha256": "a6c643e8fac202d5b334eb76538c70851a48b13ec0dcea0c66ab9dcca30d2375",
+    "received_ms": 1793020926216,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=COAIUSDT&interval=60&start=1788501600000&end=1788505199999&limit=1"
+  },
+  {
+    "sym": "COAIUSDT",
+    "ts": 1791136800000,
+    "entry_bar_open_ms": 1791140400000,
+    "entry": 0.3365,
+    "raw_sha256": "bddd11de2d6e6703360c41e2b0e0b14984a95339bbde9435dfd1790b19dbc9e8",
+    "received_ms": 1793020926477,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=COAIUSDT&interval=60&start=1791140400000&end=1791143999999&limit=1"
+  },
+  {
+    "sym": "COTIUSDT",
+    "ts": 1789081200000,
+    "entry_bar_open_ms": 1789084800000,
+    "entry": 0.018603,
+    "raw_sha256": "773b28cf1506e3ea2a1f20fa9727acd7f0e3701f2fbff391c1fd449b3668a7a5",
+    "received_ms": 1793020926537,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=COTIUSDT&interval=60&start=1789084800000&end=1789088399999&limit=1"
+  },
+  {
+    "sym": "CRVUSDT",
+    "ts": 1788336000000,
+    "entry_bar_open_ms": 1788339600000,
+    "entry": 0.3723,
+    "raw_sha256": "c95085e59f958d0272d627d9d7c0c4126b4b90afa3a5aaa93df52bc57c69a99b",
+    "received_ms": 1793020926544,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=CRVUSDT&interval=60&start=1788339600000&end=1788343199999&limit=1"
+  },
+  {
+    "sym": "ENAUSDT",
+    "ts": 1788714000000,
+    "entry_bar_open_ms": 1788717600000,
+    "entry": 0.17342,
+    "raw_sha256": "c9cb95c154334979b5e9b8a40491c061063e20291a52a11e6197e9b54e568500",
+    "received_ms": 1793020926797,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ENAUSDT&interval=60&start=1788717600000&end=1788721199999&limit=1"
+  },
+  {
+    "sym": "ESPORTSUSDT",
+    "ts": 1788307200000,
+    "entry_bar_open_ms": 1788310800000,
+    "entry": 0.0153,
+    "raw_sha256": "e87216acdc839b9fbc217eb439495845b8a0578dfda94c2471a149ecf9b99681",
+    "received_ms": 1793020926862,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPORTSUSDT&interval=60&start=1788310800000&end=1788314399999&limit=1"
+  },
+  {
+    "sym": "ESPORTSUSDT",
+    "ts": 1790316000000,
+    "entry_bar_open_ms": 1790319600000,
+    "entry": 0.0106,
+    "raw_sha256": "0068312f688fa539d9d20f88008cf66ffbcbc7446066b0d93d6b43b60eaaec87",
+    "received_ms": 1793020926881,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPORTSUSDT&interval=60&start=1790319600000&end=1790323199999&limit=1"
+  },
+  {
+    "sym": "ESPUSDT",
+    "ts": 1789848000000,
+    "entry_bar_open_ms": 1789851600000,
+    "entry": 0.09438,
+    "raw_sha256": "6d61033e9f8b392b4d387d2c060ce17685422b6132a945828adc066f1ad1dc80",
+    "received_ms": 1793020927130,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPUSDT&interval=60&start=1789851600000&end=1789855199999&limit=1"
+  },
+  {
+    "sym": "ESPUSDT",
+    "ts": 1790856000000,
+    "entry_bar_open_ms": 1790859600000,
+    "entry": 0.10725,
+    "raw_sha256": "ea018b0a238765aac729e4001d2fea306a8cb57925c90b5f07f8a812126adec0",
+    "received_ms": 1793020927187,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPUSDT&interval=60&start=1790859600000&end=1790863199999&limit=1"
+  },
+  {
+    "sym": "FARTCOINUSDT",
+    "ts": 1790085600000,
+    "entry_bar_open_ms": 1790089200000,
+    "entry": 0.19927,
+    "raw_sha256": "980edc3396d3c54661167d977b342ca7ffda1e3fb1739644b5b254e1a69f08f5",
+    "received_ms": 1793020927198,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FARTCOINUSDT&interval=60&start=1790089200000&end=1790092799999&limit=1"
+  },
+  {
+    "sym": "FILUSDT",
+    "ts": 1792170000000,
+    "entry_bar_open_ms": 1792173600000,
+    "entry": 1.1423,
+    "raw_sha256": "439d948b87c05754b334fb7c70378802954ae499a1588a4fbf1d56776c7e7278",
+    "received_ms": 1793020927452,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FILUSDT&interval=60&start=1792173600000&end=1792177199999&limit=1"
+  },
+  {
+    "sym": "GALAUSDT",
+    "ts": 1790042400000,
+    "entry_bar_open_ms": 1790046000000,
+    "entry": 0.00208,
+    "raw_sha256": "41bbbdb395181ee77751f215b5392e30a92444a7321567be2488615ff2227b9b",
+    "received_ms": 1793020927510,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=GALAUSDT&interval=60&start=1790046000000&end=1790049599999&limit=1"
+  },
+  {
+    "sym": "GRASSUSDT",
+    "ts": 1791244800000,
+    "entry_bar_open_ms": 1791248400000,
+    "entry": 0.7414,
+    "raw_sha256": "e68094d99731828363741d88a5187d9ec4bb8de744e3b12ecd00fc8ff26addc8",
+    "received_ms": 1793020927513,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=GRASSUSDT&interval=60&start=1791248400000&end=1791251999999&limit=1"
+  },
+  {
+    "sym": "GWEIUSDT",
+    "ts": 1791648000000,
+    "entry_bar_open_ms": 1791651600000,
+    "entry": 0.02045,
+    "raw_sha256": "8ba5a2744a2705a42d3bdd7a08f5704cafc2111900f2077c0dcf80f801da5e82",
+    "received_ms": 1793020927763,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=GWEIUSDT&interval=60&start=1791651600000&end=1791655199999&limit=1"
+  },
+  {
+    "sym": "GWEIUSDT",
+    "ts": 1792404000000,
+    "entry_bar_open_ms": 1792407600000,
+    "entry": 0.02187,
+    "raw_sha256": "742d93088f8a6721107099858aca2216791fdc9f7bcf4a572a3b0f465d04d10d",
+    "received_ms": 1793020927834,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=GWEIUSDT&interval=60&start=1792407600000&end=1792411199999&limit=1"
+  },
+  {
+    "sym": "HEIUSDT",
+    "ts": 1790528400000,
+    "entry_bar_open_ms": 1790532000000,
+    "entry": 0.14764,
+    "raw_sha256": "3960569ccd5e68524e66bdad8b4e0fd1fe4b291ae9eaad00390efcc31ee4446c",
+    "received_ms": 1793020927829,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=HEIUSDT&interval=60&start=1790532000000&end=1790535599999&limit=1"
+  },
+  {
+    "sym": "HEIUSDT",
+    "ts": 1790913600000,
+    "entry_bar_open_ms": 1790917200000,
+    "entry": 0.14808,
+    "raw_sha256": "90923821151edf8c4352410caf963e01076659e575d9fe9a58d7ed9b3df20952",
+    "received_ms": 1793020928095,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=HEIUSDT&interval=60&start=1790917200000&end=1790920799999&limit=1"
+  },
+  {
+    "sym": "ICPUSDT",
+    "ts": 1788836400000,
+    "entry_bar_open_ms": 1788840000000,
+    "entry": 2.998,
+    "raw_sha256": "f65ab47d5e7b4349192682d86a6ff1db6ff8f9a207e2e3f02f43b56b653e60e5",
+    "received_ms": 1793020928155,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1788840000000&end=1788843599999&limit=1"
+  },
+  {
+    "sym": "ICPUSDT",
+    "ts": 1790733600000,
+    "entry_bar_open_ms": 1790737200000,
+    "entry": 3.365,
+    "raw_sha256": "2d5905f913af5158fc43a5d4981e4ff343c118f287487f56d38165337bfaf44b",
+    "received_ms": 1793020928149,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1790737200000&end=1790740799999&limit=1"
+  },
+  {
+    "sym": "ICPUSDT",
+    "ts": 1791806400000,
+    "entry_bar_open_ms": 1791810000000,
+    "entry": 3.4,
+    "raw_sha256": "526262c42b777383d6663adcf9c189004e290b67435be1c25fbe88aa10372a39",
+    "received_ms": 1793020928441,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1791810000000&end=1791813599999&limit=1"
+  },
+  {
+    "sym": "INJUSDT",
+    "ts": 1791702000000,
+    "entry_bar_open_ms": 1791705600000,
+    "entry": 7.604,
+    "raw_sha256": "584fea8a670641469503a763adf210eae8b861881e89647591ad154f0698d8bc",
+    "received_ms": 1793020928465,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=INJUSDT&interval=60&start=1791705600000&end=1791709199999&limit=1"
+  },
+  {
+    "sym": "INJUSDT",
+    "ts": 1791972000000,
+    "entry_bar_open_ms": 1791975600000,
+    "entry": 7.949,
+    "raw_sha256": "39e9285b5a7e3d387c6b59c612883e153ad42b8dcc433a6675d92865604273ab",
+    "received_ms": 1793020928478,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=INJUSDT&interval=60&start=1791975600000&end=1791979199999&limit=1"
+  },
+  {
+    "sym": "JTOUSDT",
+    "ts": 1790488800000,
+    "entry_bar_open_ms": 1790492400000,
+    "entry": 0.6136,
+    "raw_sha256": "45070f4d127854c2cec31d95cb2bef192b3974c8fac7ba829f623216a674d3dc",
+    "received_ms": 1793020928763,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=JTOUSDT&interval=60&start=1790492400000&end=1790495999999&limit=1"
+  },
+  {
+    "sym": "KAITOUSDT",
+    "ts": 1789790400000,
+    "entry_bar_open_ms": 1789794000000,
+    "entry": 0.3349,
+    "raw_sha256": "83e980d9da115da1e6343ed27c8e58f47f7806247d08eb8e3ee1bead5d0d5ec9",
+    "received_ms": 1793020928792,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=KAITOUSDT&interval=60&start=1789794000000&end=1789797599999&limit=1"
+  },
+  {
+    "sym": "LAUSDT",
+    "ts": 1792627200000,
+    "entry_bar_open_ms": 1792630800000,
+    "entry": 0.05846,
+    "raw_sha256": "bd9edeffb06a5d55302f7f6e4776c0198eeea54bd566cd1ec76e5f4884082282",
+    "received_ms": 1793020928805,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=LAUSDT&interval=60&start=1792630800000&end=1792634399999&limit=1"
+  },
+  {
+    "sym": "LDOUSDT",
+    "ts": 1790442000000,
+    "entry_bar_open_ms": 1790445600000,
+    "entry": 0.4893,
+    "raw_sha256": "d33aa73d8d66816e481592f626e7a5ed3dd32184d1f317e91b7e4e7c7fbded7e",
+    "received_ms": 1793020929081,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=LDOUSDT&interval=60&start=1790445600000&end=1790449199999&limit=1"
+  },
+  {
+    "sym": "LITEUSDT",
+    "ts": 1788980400000,
+    "entry_bar_open_ms": 1788984000000,
+    "entry": 989.19,
+    "raw_sha256": "1bcf8a017dbd925ae4778e29f99b07036cbe258a80e64fb85f8f7443cb933e90",
+    "received_ms": 1793020929134,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=LITEUSDT&interval=60&start=1788984000000&end=1788987599999&limit=1"
+  },
+  {
+    "sym": "MEUSDT",
+    "ts": 1791010800000,
+    "entry_bar_open_ms": 1791014400000,
+    "entry": 0.07903,
+    "raw_sha256": "033a863faf06b3ea3c6d80ddac6d774ec4f19196fa1193aecb00fdc7f967f08b",
+    "received_ms": 1793020929119,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=MEUSDT&interval=60&start=1791014400000&end=1791017999999&limit=1"
+  },
+  {
+    "sym": "MMTUSDT",
+    "ts": 1789797600000,
+    "entry_bar_open_ms": 1789801200000,
+    "entry": 0.1559,
+    "raw_sha256": "83b15c9c42eef29c6b2398884291b467960f19ba0f973c42c1837eee215cb883",
+    "received_ms": 1793020929410,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=MMTUSDT&interval=60&start=1789801200000&end=1789804799999&limit=1"
+  },
+  {
+    "sym": "MSTRUSDT",
+    "ts": 1788512400000,
+    "entry_bar_open_ms": 1788516000000,
+    "entry": 141.64,
+    "raw_sha256": "0a2ed42f087091915e52452f54b190426a09b91cf9367adeb85f1fd505f6a7cb",
+    "received_ms": 1793020929442,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=MSTRUSDT&interval=60&start=1788516000000&end=1788519599999&limit=1"
+  },
+  {
+    "sym": "MUBARAKUSDT",
+    "ts": 1788742800000,
+    "entry_bar_open_ms": 1788746400000,
+    "entry": 0.03077,
+    "raw_sha256": "f7d99aa423ca3471d26851649e47012b71f8f1263ae2bc6973a760b4df9594ef",
+    "received_ms": 1793020929458,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=MUBARAKUSDT&interval=60&start=1788746400000&end=1788749999999&limit=1"
+  },
+  {
+    "sym": "MUBARAKUSDT",
+    "ts": 1789268400000,
+    "entry_bar_open_ms": 1789272000000,
+    "entry": 0.029623,
+    "raw_sha256": "473fa09a3e1eb403c555d0bdb980f99d414eaeb13d71cbfa5b2c8169c7795aad",
+    "received_ms": 1793020929740,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=MUBARAKUSDT&interval=60&start=1789272000000&end=1789275599999&limit=1"
+  },
+  {
+    "sym": "MUBARAKUSDT",
+    "ts": 1791907200000,
+    "entry_bar_open_ms": 1791910800000,
+    "entry": 0.070071,
+    "raw_sha256": "3aee6be609edae55d7b6a7177bffa2983bd56743d70531c7616f1a1db1f7ea33",
+    "received_ms": 1793020929759,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=MUBARAKUSDT&interval=60&start=1791910800000&end=1791914399999&limit=1"
+  },
+  {
+    "sym": "NILUSDT",
+    "ts": 1790834400000,
+    "entry_bar_open_ms": 1790838000000,
+    "entry": 0.08581,
+    "raw_sha256": "9a75c84eca8929ec82c31662b85ff17662d9fa7d2d9151b943376f0868965cc7",
+    "received_ms": 1793020929776,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=NILUSDT&interval=60&start=1790838000000&end=1790841599999&limit=1"
+  },
+  {
+    "sym": "NILUSDT",
+    "ts": 1791734400000,
+    "entry_bar_open_ms": 1791738000000,
+    "entry": 0.09284,
+    "raw_sha256": "4807c8e6dda938b6ff5684471a65a4243b843a746759941b62a1e0d16f346312",
+    "received_ms": 1793020930056,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=NILUSDT&interval=60&start=1791738000000&end=1791741599999&limit=1"
+  },
+  {
+    "sym": "OPUSDT",
+    "ts": 1789848000000,
+    "entry_bar_open_ms": 1789851600000,
+    "entry": 0.12144,
+    "raw_sha256": "92228dee5751cc3bfbf53a14106fbd26e5f7720103acdecfeb7e006a27c8402e",
+    "received_ms": 1793020930097,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=OPUSDT&interval=60&start=1789851600000&end=1789855199999&limit=1"
+  },
+  {
+    "sym": "ORDIUSDT",
+    "ts": 1788516000000,
+    "entry_bar_open_ms": 1788519600000,
+    "entry": 4.075,
+    "raw_sha256": "a9978b2570b0b6663c3ffc85cf14ac65a1a9b8ba931f18bd2b2cb4cc0e66d67b",
+    "received_ms": 1793020930093,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ORDIUSDT&interval=60&start=1788519600000&end=1788523199999&limit=1"
+  },
+  {
+    "sym": "PEOPLEUSDT",
+    "ts": 1789725600000,
+    "entry_bar_open_ms": 1789729200000,
+    "entry": 0.00837,
+    "raw_sha256": "e04498a8f84d259182222de51a943fe5b611c646ae0caaa65c8be440d87285fd",
+    "received_ms": 1793020930388,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=PEOPLEUSDT&interval=60&start=1789729200000&end=1789732799999&limit=1"
+  },
+  {
+    "sym": "PUMPFUNUSDT",
+    "ts": 1791108000000,
+    "entry_bar_open_ms": 1791111600000,
+    "entry": 0.006297,
+    "raw_sha256": "414c5407c3de8a2c116b9626c442efa1298b12d308422b498ae3a39aa0cc63ed",
+    "received_ms": 1793020930425,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=PUMPFUNUSDT&interval=60&start=1791111600000&end=1791115199999&limit=1"
+  },
+  {
+    "sym": "RENDERUSDT",
+    "ts": 1790056800000,
+    "entry_bar_open_ms": 1790060400000,
+    "entry": 1.802,
+    "raw_sha256": "183b44db6dfdc66da3c9ad519f24f15fd6781ba98f33d9bb2ca2ab576fb56f22",
+    "received_ms": 1793020930419,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=RENDERUSDT&interval=60&start=1790060400000&end=1790063999999&limit=1"
+  },
+  {
+    "sym": "SEIUSDT",
+    "ts": 1790442000000,
+    "entry_bar_open_ms": 1790445600000,
+    "entry": 0.07301,
+    "raw_sha256": "b82e1f94f70fda3530af630ba4113ee30436c4edbb2cf3aa673e8c4d8c68f0ca",
+    "received_ms": 1793020930731,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=SEIUSDT&interval=60&start=1790445600000&end=1790449199999&limit=1"
+  },
+  {
+    "sym": "SEIUSDT",
+    "ts": 1792195200000,
+    "entry_bar_open_ms": 1792198800000,
+    "entry": 0.06431,
+    "raw_sha256": "b3346de5701ab7d32ca4def36a1339dda92fe92e9d4b7596cf5c7043ac0c9508",
+    "received_ms": 1793020930747,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=SEIUSDT&interval=60&start=1792198800000&end=1792202399999&limit=1"
+  },
+  {
+    "sym": "TAOUSDT",
+    "ts": 1790089200000,
+    "entry_bar_open_ms": 1790092800000,
+    "entry": 312.34,
+    "raw_sha256": "a220a5172448950ccff73a9b6881c5d61b3160b68a815c9dfae01265fc8a060e",
+    "received_ms": 1793020930757,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TAOUSDT&interval=60&start=1790092800000&end=1790096399999&limit=1"
+  },
+  {
+    "sym": "TRUMPUSDT",
+    "ts": 1788505200000,
+    "entry_bar_open_ms": 1788508800000,
+    "entry": 2.354,
+    "raw_sha256": "68223b2476d868c1ab4644f8b7eebf8902c4b95689e29b98f81cff503d11181a",
+    "received_ms": 1793020931060,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TRUMPUSDT&interval=60&start=1788508800000&end=1788512399999&limit=1"
+  },
+  {
+    "sym": "TUTUSDT",
+    "ts": 1788728400000,
+    "entry_bar_open_ms": 1788732000000,
+    "entry": 0.025681,
+    "raw_sha256": "7e3c0de000fd58b14b5e7aafe79381a0d1358e0bc892a3e833c3fa151f174232",
+    "received_ms": 1793020931143,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TUTUSDT&interval=60&start=1788732000000&end=1788735599999&limit=1"
+  },
+  {
+    "sym": "TUTUSDT",
+    "ts": 1789549200000,
+    "entry_bar_open_ms": 1789552800000,
+    "entry": 0.01958,
+    "raw_sha256": "2fff2acb01b33ae6d04b6b5c64810367228ba736d2ed391bc17da9f67a3af81e",
+    "received_ms": 1793020931145,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TUTUSDT&interval=60&start=1789552800000&end=1789556399999&limit=1"
+  },
+  {
+    "sym": "UBUSDT",
+    "ts": 1790085600000,
+    "entry_bar_open_ms": 1790089200000,
+    "entry": 0.1457,
+    "raw_sha256": "fc6d8980e5bde799c48a3980cb5363cae78e0b55e93de4bbaa6952f32938cad7",
+    "received_ms": 1793020931377,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UBUSDT&interval=60&start=1790089200000&end=1790092799999&limit=1"
+  },
+  {
+    "sym": "UBUSDT",
+    "ts": 1792623600000,
+    "entry_bar_open_ms": 1792627200000,
+    "entry": 0.13206,
+    "raw_sha256": "646e8203e2310924320c0df9e09f8684d0e6dd5ea1c75fb62f634fa5c5d78576",
+    "received_ms": 1793020931463,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UBUSDT&interval=60&start=1792627200000&end=1792630799999&limit=1"
+  },
+  {
+    "sym": "UNIUSDT",
+    "ts": 1789812000000,
+    "entry_bar_open_ms": 1789815600000,
+    "entry": 9.032,
+    "raw_sha256": "8121b2bd8d0850d8cc5d515949cb0a7d8c317b004bdaa9ea8cb74e0b555bfdfd",
+    "received_ms": 1793020931469,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UNIUSDT&interval=60&start=1789815600000&end=1789819199999&limit=1"
+  },
+  {
+    "sym": "UNIUSDT",
+    "ts": 1790226000000,
+    "entry_bar_open_ms": 1790229600000,
+    "entry": 9.258,
+    "raw_sha256": "ddaed0bbc8124b1ace99f0c6d413982f22a0c2acedafe297aca6450085da5271",
+    "received_ms": 1793020931708,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UNIUSDT&interval=60&start=1790229600000&end=1790233199999&limit=1"
+  },
+  {
+    "sym": "USUSDT",
+    "ts": 1789135200000,
+    "entry_bar_open_ms": 1789138800000,
+    "entry": 0.01557,
+    "raw_sha256": "c4f1cda03b2493b32e297296fa5e36e59e5e8fc3bd5e9acb1ba05501a1adc805",
+    "received_ms": 1793020931796,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=USUSDT&interval=60&start=1789138800000&end=1789142399999&limit=1"
+  },
+  {
+    "sym": "USUSDT",
+    "ts": 1792699200000,
+    "entry_bar_open_ms": 1792702800000,
+    "entry": 0.00547,
+    "raw_sha256": "afce6dacbf8116ca9be9ee8b058e12a79c232e5a36a1553d9231c15ccdbce3c7",
+    "received_ms": 1793020931786,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=USUSDT&interval=60&start=1792702800000&end=1792706399999&limit=1"
+  },
+  {
+    "sym": "VIRTUALUSDT",
+    "ts": 1790042400000,
+    "entry_bar_open_ms": 1790046000000,
+    "entry": 0.7157,
+    "raw_sha256": "4b3e2140252fe622473bbf3449acd5d6ef3fc03cccb1ebdc8a6f6aaf39427c55",
+    "received_ms": 1793020932044,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=VIRTUALUSDT&interval=60&start=1790046000000&end=1790049599999&limit=1"
+  },
+  {
+    "sym": "WIFUSDT",
+    "ts": 1789794000000,
+    "entry_bar_open_ms": 1789797600000,
+    "entry": 0.2056,
+    "raw_sha256": "43f0d48f806f5c0471f5edcbc50f91d5d4df447850974d6f7b9296f2c7d78c9f",
+    "received_ms": 1793020932118,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WIFUSDT&interval=60&start=1789797600000&end=1789801199999&limit=1"
+  },
+  {
+    "sym": "WLDUSDT",
+    "ts": 1788890400000,
+    "entry_bar_open_ms": 1788894000000,
+    "entry": 0.4711,
+    "raw_sha256": "8ca0114d0e6013a32730b749f7d6364a5b7e18db3bd2477e09672bd70c2f1c23",
+    "received_ms": 1793020932131,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1788894000000&end=1788897599999&limit=1"
+  },
+  {
+    "sym": "WLDUSDT",
+    "ts": 1791666000000,
+    "entry_bar_open_ms": 1791669600000,
+    "entry": 0.5568,
+    "raw_sha256": "c1eda69b7dfe2ef384cb810accec61b25e0be1553cb183efe836c6c6fb42a212",
+    "received_ms": 1793020932367,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1791669600000&end=1791673199999&limit=1"
+  },
+  {
+    "sym": "WLDUSDT",
+    "ts": 1792573200000,
+    "entry_bar_open_ms": 1792576800000,
+    "entry": 0.5809,
+    "raw_sha256": "4cf64489e58cbde93b19e3410124d2c190e3e06b42f88eec8448860fbf646736",
+    "received_ms": 1793020932444,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1792576800000&end=1792580399999&limit=1"
+  },
+  {
+    "sym": "XPLUSDT",
+    "ts": 1790067600000,
+    "entry_bar_open_ms": 1790071200000,
+    "entry": 0.09501,
+    "raw_sha256": "ca24f458f08ac0e30f65bea174e86e856511ed5d790be76a689696b1df62830b",
+    "received_ms": 1793020932454,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=XPLUSDT&interval=60&start=1790071200000&end=1790074799999&limit=1"
+  },
+  {
+    "sym": "ZECUSDT",
+    "ts": 1788786000000,
+    "entry_bar_open_ms": 1788789600000,
+    "entry": 1184.32,
+    "raw_sha256": "0bb16f9d0c326747ac8760dcd27f4b90749694f189aa3fdfdadeda2898ccbfcc",
+    "received_ms": 1793020932695,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZECUSDT&interval=60&start=1788789600000&end=1788793199999&limit=1"
+  },
+  {
+    "sym": "ZROUSDT",
+    "ts": 1788498000000,
+    "entry_bar_open_ms": 1788501600000,
+    "entry": 1.1091,
+    "raw_sha256": "01d017a78d26b4c3e4457b1ffdab6ab2fb968d4718dd4170a302be5a0688c104",
+    "received_ms": 1793020932757,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1788501600000&end=1788505199999&limit=1"
+  },
+  {
+    "sym": "ZROUSDT",
+    "ts": 1791118800000,
+    "entry_bar_open_ms": 1791122400000,
+    "entry": 1.9701,
+    "raw_sha256": "f00abb21688ca9190e22791f13be16630848573ec479f60b8ea2ef4a32f0e03c",
+    "received_ms": 1793020932770,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1791122400000&end=1791125999999&limit=1"
+  },
+  {
+    "sym": "ZROUSDT",
+    "ts": 1792159200000,
+    "entry_bar_open_ms": 1792162800000,
+    "entry": 2.1646,
+    "raw_sha256": "c5309575a1272b8019d292b06cbec37e423c329cb40de40e9110f3b0ab9662a0",
+    "received_ms": 1793020933021,
+    "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1792162800000&end=1792166399999&limit=1"
+  }
+]

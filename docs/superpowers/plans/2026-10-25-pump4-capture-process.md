@@ -30,7 +30,7 @@ Interfaces: capture(root,on_symbol) unchanged. CLI adds --stream-symbols. Superv
 - [x] Write failing real-subprocess fixture tests for parity,early durability,parent-only writing,minimal env,strict framing/hash/hour,stderr/backpressure,nonzero/missing inventory/seal/silent timeout and post-fsync parent failure.
 - [x] Run tests and confirm missing transport failure.
 - [x] Implement bounded selectors-driven transport and exact CLI notices; keep existing parent intake and final archive checks.
-- [ ] Run all PUMP component tests; compare journal/decision/timestamp bytes to in-process fixture; freeze hashes and commit.
+- [x] Run all PUMP component tests; compare journal/decision/timestamp bytes to in-process fixture; freeze hashes and commit.
 
 ## Task2: Existing bounded operational acceptance
 
@@ -38,6 +38,26 @@ Files: existing private packaging/handoff helpers; public evidence/checkpoint/ST
 Interfaces: reviewed candidate manifest/source pins, original account lock818853, existing DATA/financial units.
 - [x] One critical review of new diff, fix Important defects RED→GREEN.
 - [x] Same exact network-denied local/VPS acceptance, no fallback.
-- [ ] Existing state-preserving DATA/config OFF handoff; ONLY DATA CPU ceiling2cores, no second intake/account writer.
-- [ ] Actual new H1:all137 statuses,source/publication timing,queue diagnostics,child CPU,aggregate memory,sibling owner continuity.
-- [ ] Save actual verdict; no TINY_READY from synthetic/cached/late cases. Continue current-account/cost/native/OFF/TINY only after real gate.
+- [x] Existing state-preserving DATA/config OFF handoff; ONLY DATA CPU ceiling2cores, no second intake/account writer.
+- [x] Actual new H1:all137 statuses,source/publication timing,queue diagnostics,child CPU,aggregate memory,sibling owner continuity.
+- [x] Save actual verdict; no TINY_READY from synthetic/cached/late cases. Continue current-account/cost/native/OFF/TINY only after real gate.
+
+
+## Task3: Previously started CATCHUP priority —26Oct continuation
+
+Actual25Oct18:137publications/127PASS/15≤60s,median87.974s/max107.326s;
+7CATCHUP34.545s parenttime,120CURRENT62.009s. Gate FAIL; no strategy change.
+
+- [x] Defer only verified existing multi-bar CATCHUP, excluding bootstrap/seed-only/recovery.
+- [x] Preserve per-symbol validation and sole parent writer; require fullseal/childsuccess
+  and journal/epoch/batch hashes before deferred work; no entry from CATCHUP.
+- [x] RED→GREEN ordering/failure/mutation/parity tests;79targeted/283local/283VPS PASS.
+- [x] Independent bounded actualastra/high review0Critical/Important.
+- [x] Existing DATA/OFF handoff5882783b,21376historyfiles retained, original818853,
+  config125b0ae6/scopea527f12c/PID2955754,2freshGETflat barriers/NO_NEW_SIGNAL.
+- [x] Actual26Oct09H1 via existing timer:CURRENT versus CATCHUP timing, classification
+  overhead, fullseal, childCPU/memory, unchanged sole financial owner/Monthly.
+- [x] Publish measured result/checkpoint; no further latency experiment or TINY claim
+  from engineering tests.51shadow discrepancies/CR300 have separate source-only reports.
+
+Actual09H1: priorityPASS12deferred,publicationFAIL20/133. See PUMP4_OWNER_DECISION_2026_10_26.md for84/cost/native-stop follow-up; no further latency experiment started.

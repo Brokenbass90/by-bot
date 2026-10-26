@@ -1,7 +1,16 @@
 # PUMP4: очередность CATCHUP_REPLAY — 26 октября 2026
 
-**Установлено ORDERS_OFF. Проверка новой H1 назначена существующим таймером
-на 09:00 UTC; до её результата timeliness PASS не заявляется. TINY_NOT_READY.**
+**Установлено ORDERS_OFF. Actual26Oct09H1: PASS очередности CURRENT перед12CATCHUP,
+FAIL публикации≤60s —20/133,median87.514s/max115.140s. TINY_NOT_READY.**
+
+Latest owner decision: [five gates /84 parity /costs /native stop blocker](PUMP4_OWNER_DECISION_2026_10_26.md).
+Existing timer started09:00:02UTC;137 outcomes,133PASS,112sources≤60s,0signals.
+CURRENT121 median85.475/max106.047s;12CATCHUP began only107.888s after all
+immediate work. Native scheduling fix works; total latency remains blocked.
+Same financialPID2955754/818853/noGO/0writes and Monthlyunit unchanged at09:03
+and fresh13:26 readback. Full seal/childexit0; no retry/reseed.
+[Actual09H1](evidence/pump4_catchup_priority_20261026/actual-09h-final-runtime.json),
+[source/signal counts](evidence/pump4_catchup_priority_20261026/actual-09h-sources-signals.json).
 
 ## Измеренная причина и исправление
 
