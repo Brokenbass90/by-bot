@@ -13,6 +13,40 @@ HERE = Path(__file__).resolve().parent; sys.path.insert(0, str(HERE))
 import pump4_pereschet as P
 START = 1788220800000                    # 2026-09-01 00:00 UTC — первые учитываемые сигналы
 PROGREV_CH = 1200
+GRAN_VPERED = 1793005200000              # 2026-10-26 09:00 UTC: сигналы с ts ≥ GRAN — проспективные (после первого прогона 08:57)
+ZHURNAL_VPERED = HERE / "data" / "pump4_vpered_zhurnal.jsonl"
+
+
+def zhurnal_vpered(sdelki, kogda_ms, put=None):
+    """Append-only журнал проспективных сигналов: строка SIGNAL при первом появлении, ISHOD при первом закрытии,
+    REVIZIYA — если ранее записанный сигнал исчез или сменил сторону/исход. Старые строки не меняются."""
+    import hashlib
+    put = put or ZHURNAL_VPERED; put.parent.mkdir(parents=True, exist_ok=True)
+    bylo = [json.loads(l) for l in put.open()] if put.exists() else []
+    sig = {(x["sym"], x["ts"]): x for x in bylo if x["vid"] == "SIGNAL"}
+    ish = {(x["sym"], x["ts"]): x for x in bylo if x["vid"] == "ISHOD"}
+    rev = {(x["sym"], x["ts"], x["prichina"]) for x in bylo if x["vid"] == "REVIZIYA"}
+    seychas = {(x["sym"], x["ts"]): x for x in sdelki if x["ts"] >= GRAN_VPERED}
+    novye = []
+    for k, x in sorted(seychas.items(), key=lambda kv: kv[0][1]):
+        if k not in sig:
+            novye.append(dict(vid="SIGNAL", sym=k[0], ts=k[1], side=x["side"], status=x["status"], uvideno_ms=kogda_ms,
+                              zapazdyvanie_ch=round((kogda_ms - k[1]) / 3.6e6, 1)))
+        elif sig[k]["side"] != x["side"] and (k[0], k[1], "storona") not in rev:
+            novye.append(dict(vid="REVIZIYA", sym=k[0], ts=k[1], prichina="storona", bylo=sig[k]["side"], stalo=x["side"], uvideno_ms=kogda_ms))
+        if x["status"] == "ZAKRYTA":
+            if k not in ish:
+                novye.append(dict(vid="ISHOD", sym=k[0], ts=k[1], R=x["R"], ctrl=x.get("ctrl"), komissiya_R=x.get("komissiya_R"), uvideno_ms=kogda_ms))
+            elif abs(ish[k]["R"] - x["R"]) > 1e-6 and (k[0], k[1], "ishod") not in rev:
+                novye.append(dict(vid="REVIZIYA", sym=k[0], ts=k[1], prichina="ishod", bylo=ish[k]["R"], stalo=x["R"], uvideno_ms=kogda_ms))
+    for k in sig:
+        if k not in seychas and (k[0], k[1], "ischez") not in rev:
+            novye.append(dict(vid="REVIZIYA", sym=k[0], ts=k[1], prichina="ischez", uvideno_ms=kogda_ms))
+    with put.open("a") as fh:
+        for z in novye:
+            z["sha256"] = hashlib.sha256(json.dumps(z, sort_keys=True).encode()).hexdigest(); fh.write(json.dumps(z) + "\n")
+    return dict(novyh_signalov=sum(z["vid"] == "SIGNAL" for z in novye), novyh_ishodov=sum(z["vid"] == "ISHOD" for z in novye),
+                reviziy=sum(z["vid"] == "REVIZIYA" for z in novye))
 
 
 def main():
@@ -68,6 +102,8 @@ def main():
                            {"0": (0, 0), "1-2": (1, 2), "3-5": (3, 5), "6+": (6, 10 ** 6)}.items()},
                po_mesyacam={m: svod([x for x in z if time.strftime("%Y-%m", time.gmtime(x["ts"] / 1000)) == m]) for m in
                             sorted({time.strftime("%Y-%m", time.gmtime(x["ts"] / 1000)) for x in z})})
+    out["zhurnal_vpered"] = zhurnal_vpered(sdelki, now)
+    vp = [x for x in z if x["ts"] >= GRAN_VPERED]; out["tolko_vpered"] = svod(vp)
     f = Path(time.strftime("research_lab/results/pump4_polnyy_povtor_%Y%m%dT%H%MZ.json", time.gmtime()))
     f.write_text(json.dumps(dict(svod=out, sdelki=sdelki), ensure_ascii=False, indent=1))
     print(json.dumps(out, ensure_ascii=False, indent=1)); print("файл:", f)
