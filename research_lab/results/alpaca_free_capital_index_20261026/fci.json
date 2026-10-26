@@ -1,0 +1,397 @@
+{
+ "prereg": "PREREG_ALPACA_FREE_CAPITAL_INDEX_2026_10_26",
+ "commit_prereg": "98a6585",
+ "vselennaya": "U58",
+ "A": {
+  "20bps": {
+   "M": {
+    "cagr_pct": 8.515870077721166,
+    "maxDD_pct": 16.16723784912224,
+    "calmar": 0.5267362401168307,
+    "vosstanovlenie_max_sessiy": 776,
+    "itog": 2.3126804521490274,
+    "oborot_dol_kapitala": 0.0,
+    "sdelok_overleya": 0,
+    "svobodno_srednee": 0.7493314441606066,
+    "ekspoziciya_srednyaya": 0.2506685558393934,
+    "potrebnost_likvidnosti_max": 0.0,
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 3.9226206887868154,
+      "maxDD_pct": 16.16723784912224,
+      "calmar": 0.24262775901449263,
+      "vosstanovlenie_max_sessiy": 188,
+      "itog": 1.1477324250155665
+     },
+     "P2": {
+      "cagr_pct": 15.138372169907077,
+      "maxDD_pct": 13.219923334179706,
+      "calmar": 1.145118000099689,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.5247523934961162
+     },
+     "P3": {
+      "cagr_pct": 8.257869993181233,
+      "maxDD_pct": 13.69525598838347,
+      "calmar": 0.6029730295063989,
+      "vosstanovlenie_max_sessiy": 353,
+      "itog": 1.3378954534246077
+     }
+    }
+   },
+   "M+BIL_3": {
+    "cagr_pct": 9.695432177300955,
+    "maxDD_pct": 15.488858114696058,
+    "calmar": 0.625961714253279,
+    "vosstanovlenie_max_sessiy": 422,
+    "itog": 2.5839451609424615,
+    "dolya_v_fonde_srednyaya": 0.4717355456491606,
+    "oborot_dol_kapitala": 81.18031352514099,
+    "sdelok_overleya": 219,
+    "potrebnost_likvidnosti_max": 1.0003000900270083,
+    "sessiy_prodazha_fonda": 73,
+    "dohod_overleya_po_godam_usd": {
+     "2016": 0.0,
+     "2017": -1.45,
+     "2018": 8.7,
+     "2019": 15.72,
+     "2020": 2.32,
+     "2021": 0.0,
+     "2022": 14.1,
+     "2023": 62.44,
+     "2024": 62.5,
+     "2025": 65.98,
+     "2026": 40.93
+    },
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 4.508889604794053,
+      "maxDD_pct": 15.488858114696058,
+      "calmar": 0.291105359181769,
+      "vosstanovlenie_max_sessiy": 188,
+      "itog": 1.1710887618481145
+     },
+     "P2": {
+      "cagr_pct": 15.229848371583298,
+      "maxDD_pct": 13.04904267063025,
+      "calmar": 1.1671238079297137,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.528380341023276
+     },
+     "P3": {
+      "cagr_pct": 10.893392674691516,
+      "maxDD_pct": 11.38209089834794,
+      "calmar": 0.9570642838806219,
+      "vosstanovlenie_max_sessiy": 329,
+      "itog": 1.4613233840229458
+     }
+    }
+   },
+   "M+SPY_3": {
+    "cagr_pct": 15.992771642188597,
+    "maxDD_pct": 34.583426998315915,
+    "calmar": 0.4624403371871557,
+    "vosstanovlenie_max_sessiy": 422,
+    "itog": 4.581200229058584,
+    "dolya_v_fonde_srednyaya": 0.7921909401065413,
+    "oborot_dol_kapitala": 80.81598768949719,
+    "sdelok_overleya": 314,
+    "potrebnost_likvidnosti_max": 0.7005053656551113,
+    "sessiy_prodazha_fonda": 99,
+    "dohod_overleya_po_godam_usd": {
+     "2016": 28.08,
+     "2017": 113.57,
+     "2018": -127.61,
+     "2019": 368.24,
+     "2020": 90.37,
+     "2021": 305.87,
+     "2022": -355.02,
+     "2023": 465.13,
+     "2024": 524.53,
+     "2025": 406.41,
+     "2026": 448.97
+    },
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 12.643392848075031,
+      "maxDD_pct": 22.93629123888318,
+      "calmar": 0.5512396366262162,
+      "vosstanovlenie_max_sessiy": 167,
+      "itog": 1.531665116204921
+     },
+     "P2": {
+      "cagr_pct": 12.186956137348393,
+      "maxDD_pct": 34.583426998315915,
+      "calmar": 0.35239295798943965,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.4107532976055073
+     },
+     "P3": {
+      "cagr_pct": 23.00886663939923,
+      "maxDD_pct": 19.924414613532925,
+      "calmar": 1.1548076611380744,
+      "vosstanovlenie_max_sessiy": 124,
+      "itog": 2.1377235272057673
+     }
+    }
+   },
+   "M+SPY/BIL_3": {
+    "cagr_pct": 12.023911030457658,
+    "maxDD_pct": 21.739911005174363,
+    "calmar": 0.5530800483771907,
+    "vosstanovlenie_max_sessiy": 664,
+    "itog": 3.205275185708016,
+    "dolya_v_fonde_srednyaya": 0.7547424409183109,
+    "oborot_dol_kapitala": 97.32627485168554,
+    "sdelok_overleya": 318,
+    "potrebnost_likvidnosti_max": 0.7371011074840556,
+    "sessiy_prodazha_fonda": 99,
+    "dohod_overleya_po_godam_usd": {
+     "2016": 10.62,
+     "2017": 110.19,
+     "2018": -125.68,
+     "2019": 176.27,
+     "2020": -76.82,
+     "2021": 203.35,
+     "2022": -206.69,
+     "2023": 110.13,
+     "2024": 361.19,
+     "2025": 117.83,
+     "2026": 212.22
+    },
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 8.01365368120277,
+      "maxDD_pct": 17.203661996159468,
+      "calmar": 0.46581092345290975,
+      "vosstanovlenie_max_sessiy": 321,
+      "itog": 1.3179250523189983
+     },
+     "P2": {
+      "cagr_pct": 11.536169049873447,
+      "maxDD_pct": 21.739911005174363,
+      "calmar": 0.5306447228384559,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3864051841658123
+     },
+     "P3": {
+      "cagr_pct": 16.6791529833924,
+      "maxDD_pct": 15.574665942709753,
+      "calmar": 1.0709156167294642,
+      "vosstanovlenie_max_sessiy": 156,
+      "itog": 1.761081865289025
+     }
+    }
+   },
+   "dolya_dney_rezhima": {
+    "SPY": 0.83,
+    "BIL": 0.115,
+    "CASH": 0.055
+   },
+   "M+BIL_10": {
+    "cagr_pct": 9.23860688306537,
+    "maxDD_pct": 16.0203663910523,
+    "calmar": 0.5766788759728566,
+    "vosstanovlenie_max_sessiy": 422,
+    "itog": 2.4756569955809358,
+    "dolya_v_fonde_srednyaya": 0.467890022229757,
+    "oborot_dol_kapitala": 82.86164289917673,
+    "sdelok_overleya": 219,
+    "potrebnost_likvidnosti_max": 1.001001001001001,
+    "sessiy_prodazha_fonda": 77,
+    "dohod_overleya_po_godam_usd": {
+     "2016": 0.0,
+     "2017": -4.58,
+     "2018": -4.64,
+     "2019": 7.7,
+     "2020": -1.65,
+     "2021": 0.0,
+     "2022": 5.85,
+     "2023": 45.95,
+     "2024": 41.7,
+     "2025": 47.93,
+     "2026": 24.72
+    },
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 3.883394242813565,
+      "maxDD_pct": 16.0203663910523,
+      "calmar": 0.2424035847883304,
+      "vosstanovlenie_max_sessiy": 188,
+      "itog": 1.146181768977272
+     },
+     "P2": {
+      "cagr_pct": 15.250898808253165,
+      "maxDD_pct": 13.241678282054748,
+      "calmar": 1.151734582535609,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.5292160143411582
+     },
+     "P3": {
+      "cagr_pct": 10.235725312577904,
+      "maxDD_pct": 12.102183412333844,
+      "calmar": 0.8457750939509184,
+      "vosstanovlenie_max_sessiy": 329,
+      "itog": 1.4297789715254867
+     }
+    }
+   },
+   "M+SPY_10": {
+    "cagr_pct": 15.4004876665784,
+    "maxDD_pct": 34.61201630282395,
+    "calmar": 0.444946273335769,
+    "vosstanovlenie_max_sessiy": 565,
+    "itog": 4.346815748079835,
+    "dolya_v_fonde_srednyaya": 0.7871279029320021,
+    "oborot_dol_kapitala": 83.29240141141094,
+    "sdelok_overleya": 316,
+    "potrebnost_likvidnosti_max": 0.7009954681615893,
+    "sessiy_prodazha_fonda": 99,
+    "dohod_overleya_po_godam_usd": {
+     "2016": 23.62,
+     "2017": 104.71,
+     "2018": -135.16,
+     "2019": 353.96,
+     "2020": 73.64,
+     "2021": 274.37,
+     "2022": -344.7,
+     "2023": 429.45,
+     "2024": 479.89,
+     "2025": 365.37,
+     "2026": 408.98
+    },
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 11.918450067271301,
+      "maxDD_pct": 23.106525156044246,
+      "calmar": 0.5158045178486586,
+      "vosstanovlenie_max_sessiy": 167,
+      "itog": 1.4966569384309643
+     },
+     "P2": {
+      "cagr_pct": 11.778781703097053,
+      "maxDD_pct": 34.61201630282395,
+      "calmar": 0.34030903025248016,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3954491436921395
+     },
+     "P3": {
+      "cagr_pct": 22.40732221636186,
+      "maxDD_pct": 20.05229061769661,
+      "calmar": 1.1174445176147048,
+      "vosstanovlenie_max_sessiy": 141,
+      "itog": 2.099620284418463
+     }
+    }
+   },
+   "M+SPY/BIL_10": {
+    "cagr_pct": 10.74157409534946,
+    "maxDD_pct": 24.09849291477759,
+    "calmar": 0.44573634265579115,
+    "vosstanovlenie_max_sessiy": 713,
+    "itog": 2.8482053077392595,
+    "dolya_v_fonde_srednyaya": 0.7407952511908941,
+    "oborot_dol_kapitala": 103.67037517014879,
+    "sdelok_overleya": 319,
+    "potrebnost_likvidnosti_max": 0.7767485586890974,
+    "sessiy_prodazha_fonda": 99,
+    "dohod_overleya_po_godam_usd": {
+     "2016": 4.76,
+     "2017": 101.05,
+     "2018": -147.45,
+     "2019": 157.62,
+     "2020": -108.51,
+     "2021": 162.63,
+     "2022": -210.39,
+     "2023": 55.54,
+     "2024": 298.52,
+     "2025": 61.8,
+     "2026": 159.96
+    },
+    "podperiody": {
+     "P1": {
+      "cagr_pct": 6.720393306297057,
+      "maxDD_pct": 18.226780392670715,
+      "calmar": 0.36870984131676027,
+      "vosstanovlenie_max_sessiy": 456,
+      "itog": 1.2622839926853633
+     },
+     "P2": {
+      "cagr_pct": 10.373448837188914,
+      "maxDD_pct": 22.666356901415096,
+      "calmar": 0.45765840899387245,
+      "vosstanovlenie_max_sessiy": 288,
+      "itog": 1.3436034426673273
+     },
+     "P3": {
+      "cagr_pct": 15.316595265032017,
+      "maxDD_pct": 16.71986175338047,
+      "calmar": 0.9160718845019914,
+      "vosstanovlenie_max_sessiy": 159,
+      "itog": 1.686800532300305
+     }
+    }
+   },
+   "krizisy": {
+    "2018_Q4": {
+     "M": -7.38,
+     "M+BIL": -6.77,
+     "M+SPY": -14.31,
+     "M+SPY/BIL": -19.0,
+     "SPY_100": -7.59
+    },
+    "2020_covid": {
+     "M": 0.0,
+     "M+BIL": 0.1,
+     "M+SPY": -9.59,
+     "M+SPY/BIL": -18.78,
+     "SPY_100": -9.57
+    },
+    "2022_bear": {
+     "M": -0.94,
+     "M+BIL": -0.14,
+     "M+SPY": -12.81,
+     "M+SPY/BIL": -10.25,
+     "SPY_100": -19.71
+    },
+    "2025_fevral": {
+     "M": -3.74,
+     "M+BIL": -2.99,
+     "M+SPY": -8.91,
+     "M+SPY/BIL": -10.07,
+     "SPY_100": -8.02
+    }
+   }
+  }
+ },
+ "SPY_100": {
+  "cagr_pct": 13.49065172402366,
+  "maxDD_pct": 34.10474689324394,
+  "calmar": 0.395565220473638,
+  "vosstanovlenie_max_sessiy": 512,
+  "itog": 3.6628619717124247,
+  "podperiody": {
+   "P1": {
+    "cagr_pct": 12.623538021368685,
+    "maxDD_pct": 20.178483869435325,
+    "calmar": 0.625593979361837,
+    "vosstanovlenie_max_sessiy": 149,
+    "itog": 1.5306985248095917
+   },
+   "P2": {
+    "cagr_pct": 5.602336627501647,
+    "maxDD_pct": 34.10474689324394,
+    "calmar": 0.1642685296870347,
+    "vosstanovlenie_max_sessiy": 250,
+    "itog": 1.177178558881163
+   },
+   "P3": {
+    "cagr_pct": 21.16428236038681,
+    "maxDD_pct": 18.99890412950491,
+    "calmar": 1.113973849024224,
+    "vosstanovlenie_max_sessiy": 88,
+    "itog": 2.0224515194278894
+   }
+  }
+ }
+}

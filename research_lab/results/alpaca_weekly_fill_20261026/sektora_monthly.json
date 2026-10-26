@@ -1,0 +1,81 @@
+{
+ "dney": 2684,
+ "dney_2_v_odnom_sektore": 343,
+ "dolya": 0.128,
+ "sdelki_s_parnym_sektorom": {
+  "n": 93,
+  "sred_pct": 2.62,
+  "pnl_usd": 496.2
+ },
+ "sdelki_odinochnye": {
+  "n": 232,
+  "sred_pct": 1.27,
+  "pnl_usd": 875.7
+ },
+ "hudshie_prosadki": [
+  {
+   "pik": "2019-05-03",
+   "dno": "2019-10-03",
+   "dd": 16.2,
+   "ubytok_po_sektoram": {
+    "tech": -66.7,
+    "consumer": -56.3,
+    "unknown": -26.4,
+    "finance": -17.7
+   },
+   "dney_2_v_sektore": 16,
+   "dney": 107
+  },
+  {
+   "pik": "2021-11-08",
+   "dno": "2024-01-11",
+   "dd": 14.3,
+   "ubytok_po_sektoram": {
+    "tech": -103.2,
+    "finance": -79.2,
+    "energy": -27.1,
+    "health": -14.0
+   },
+   "dney_2_v_sektore": 45,
+   "dney": 547
+  },
+  {
+   "pik": "2018-03-09",
+   "dno": "2018-05-09",
+   "dd": 9.3,
+   "ubytok_po_sektoram": {
+    "tech": -63.7,
+    "cyber": 8.4,
+    "consumer": 37.9
+   },
+   "dney_2_v_sektore": 5,
+   "dney": 43
+  },
+  {
+   "pik": "2017-06-08",
+   "dno": "2017-10-04",
+   "dd": 8.1,
+   "ubytok_po_sektoram": {
+    "consumer": -49.5,
+    "health": -8.7,
+    "unknown": -4.5,
+    "cyber": 0.4
+   },
+   "dney_2_v_sektore": 1,
+   "dney": 83
+  },
+  {
+   "pik": "2025-11-03",
+   "dno": "2026-03-20",
+   "dd": 8.0,
+   "ubytok_po_sektoram": {
+    "tech": -78.9,
+    "health": -51.3,
+    "consumer": -43.2,
+    "energy": -33.4
+   },
+   "dney_2_v_sektore": 4,
+   "dney": 95
+  }
+ ]
+}
