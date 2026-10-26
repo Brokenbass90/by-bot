@@ -1,4 +1,4 @@
-# Почему Monthly устойчивее Weekly Dynamic и EVENT — итог диагностики (26.10.2026). Prereg 2179e2d-ветки (до расчёта).
+# Почему Monthly устойчивее Weekly Dynamic и EVENT — итог диагностики (26.10.2026). Prereg `prereg/PREREG_ALPACA_DIAGNOZ_GORIZONT_2026_10_26.md` (закоммичен до расчёта).
 Данные U2: 918 бумаг (вкл. снятые с торгов), 2 696 сессий 2016–2026, 483 даты решений. Только объяснение; Monthly v6 не менялась.
 Результат: `results/alpaca_diag_20261026/gorizont.json`, код `alpaca_diagnoz_gorizont.py`.
 
