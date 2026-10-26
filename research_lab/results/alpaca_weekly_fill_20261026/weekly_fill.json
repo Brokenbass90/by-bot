@@ -1,0 +1,295 @@
+{
+ "prereg": "PREREG_ALPACA_WEEKLY_FILL_2026_10_26",
+ "ruki": {
+  "MONTHLY": {
+   "20bps": {
+    "godovyh_pct": 8.48,
+    "dohod_pct": 138.4,
+    "maxDD_pct": 16.17,
+    "pf": 1.537,
+    "sdelok": 325,
+    "dozapolneno": 0,
+    "ekspoziciya_pct": 24.7,
+    "oborot_v_god_x": 12.45,
+    "komissii_usd": 420.0,
+    "sred_pozicij": 1.23,
+    "dolya_dney_so_svobodnym_mestom": 0.926,
+    "vyhody": {
+     "monthly_rotation_next_open": 54,
+     "protective_stop_gap_open": 51,
+     "protective_stop_intraday": 220
+    }
+   },
+   "10bps": {
+    "godovyh_pct": 9.46,
+    "dohod_pct": 162.3,
+    "maxDD_pct": 15.8,
+    "pf": 1.612,
+    "sdelok": 325,
+    "dozapolneno": 0,
+    "ekspoziciya_pct": 24.9,
+    "oborot_v_god_x": 12.46,
+    "komissii_usd": 221.0,
+    "sred_pozicij": 1.24,
+    "dolya_dney_so_svobodnym_mestom": 0.926,
+    "vyhody": {
+     "monthly_rotation_next_open": 55,
+     "protective_stop_gap_open": 50,
+     "protective_stop_intraday": 220
+    }
+   },
+   "30bps": {
+    "godovyh_pct": 6.86,
+    "dohod_pct": 103.0,
+    "maxDD_pct": 16.28,
+    "pf": 1.414,
+    "sdelok": 326,
+    "dozapolneno": 0,
+    "ekspoziciya_pct": 24.4,
+    "oborot_v_god_x": 12.44,
+    "komissii_usd": 579.0,
+    "sred_pozicij": 1.22,
+    "dolya_dney_so_svobodnym_mestom": 0.926,
+    "vyhody": {
+     "monthly_rotation_next_open": 51,
+     "protective_stop_gap_open": 50,
+     "protective_stop_intraday": 225
+    }
+   }
+  },
+  "WEEKLY_FILL": {
+   "20bps": {
+    "godovyh_pct": 9.35,
+    "dohod_pct": 159.5,
+    "maxDD_pct": 26.87,
+    "pf": 1.361,
+    "sdelok": 576,
+    "dozapolneno": 273,
+    "ekspoziciya_pct": 36.0,
+    "oborot_v_god_x": 20.79,
+    "komissii_usd": 737.8,
+    "sred_pozicij": 1.87,
+    "dolya_dney_so_svobodnym_mestom": 0.782,
+    "vyhody": {
+     "monthly_rotation_next_open": 174,
+     "protective_stop_gap_open": 69,
+     "protective_stop_intraday": 333
+    }
+   },
+   "10bps": {
+    "godovyh_pct": 10.69,
+    "dohod_pct": 195.3,
+    "maxDD_pct": 25.44,
+    "pf": 1.424,
+    "sdelok": 580,
+    "dozapolneno": 277,
+    "ekspoziciya_pct": 36.1,
+    "oborot_v_god_x": 21.04,
+    "komissii_usd": 394.1,
+    "sred_pozicij": 1.87,
+    "dolya_dney_so_svobodnym_mestom": 0.783,
+    "vyhody": {
+     "monthly_rotation_next_open": 172,
+     "protective_stop_gap_open": 69,
+     "protective_stop_intraday": 339
+    }
+   },
+   "30bps": {
+    "godovyh_pct": 7.76,
+    "dohod_pct": 122.0,
+    "maxDD_pct": 26.59,
+    "pf": 1.29,
+    "sdelok": 577,
+    "dozapolneno": 274,
+    "ekspoziciya_pct": 35.5,
+    "oborot_v_god_x": 20.68,
+    "komissii_usd": 1033.0,
+    "sred_pozicij": 1.85,
+    "dolya_dney_so_svobodnym_mestom": 0.783,
+    "vyhody": {
+     "monthly_rotation_next_open": 179,
+     "protective_stop_gap_open": 68,
+     "protective_stop_intraday": 330
+    }
+   }
+  },
+  "WEEKLY_FILL_diag": {
+   "nedel": 476,
+   "nedel_so_svobodnym": 476,
+   "sred_svobodnyh_mest": 2.75,
+   "prichiny": {
+    "rynok": 181,
+    "vhod": 131,
+    "pauza_posle_stopa": 164
+   },
+   "dopustimyh_kandidatov": {
+    "med": 33,
+    "min": 11,
+    "max": 46
+   },
+   "sdelki_dozapolneniya": {
+    "n": 273,
+    "sred_pct": 0.75,
+    "pnl_usd": 561.5,
+    "dolya_plyus": 0.568
+   },
+   "sektory_dozapolneniy": {
+    "tech": 84,
+    "consumer": 47,
+    "health": 31,
+    "industrial": 26,
+    "cyber": 23,
+    "cloud": 19,
+    "finance": 17,
+    "unknown": 12,
+    "semi": 6,
+    "staples": 5,
+    "energy": 3
+   },
+   "po_godam_dozap_usd": {
+    "2016": 29.9,
+    "2017": 178.4,
+    "2018": -10.4,
+    "2019": 7.3,
+    "2020": 135.1,
+    "2021": 6.6,
+    "2022": -16.1,
+    "2023": 133.7,
+    "2024": -227.0,
+    "2025": 176.0,
+    "2026": 148.0
+   }
+  },
+  "SPY_100": {
+   "godovyh_pct": 13.42,
+   "maxDD_pct": 34.1
+  },
+  "SPY_na_ekspoziciyu_WF": {
+   "dolya": 0.36,
+   "godovyh_pct": 5.02,
+   "maxDD_pct": 13.34
+  },
+  "RANDOM_20bps": {
+   "0": {
+    "godovyh_pct": 10.13,
+    "maxDD_pct": 18.09,
+    "pf": 1.447,
+    "dozapolneno": 262
+   },
+   "1": {
+    "godovyh_pct": 7.81,
+    "maxDD_pct": 17.55,
+    "pf": 1.331,
+    "dozapolneno": 276
+   },
+   "2": {
+    "godovyh_pct": 9.22,
+    "maxDD_pct": 19.8,
+    "pf": 1.402,
+    "dozapolneno": 270
+   },
+   "3": {
+    "godovyh_pct": 7.62,
+    "maxDD_pct": 22.52,
+    "pf": 1.311,
+    "dozapolneno": 274
+   },
+   "4": {
+    "godovyh_pct": 12.22,
+    "maxDD_pct": 21.07,
+    "pf": 1.543,
+    "dozapolneno": 277
+   },
+   "5": {
+    "godovyh_pct": 9.31,
+    "maxDD_pct": 16.8,
+    "pf": 1.426,
+    "dozapolneno": 267
+   },
+   "6": {
+    "godovyh_pct": 9.32,
+    "maxDD_pct": 13.84,
+    "pf": 1.399,
+    "dozapolneno": 268
+   },
+   "7": {
+    "godovyh_pct": 7.85,
+    "maxDD_pct": 21.32,
+    "pf": 1.335,
+    "dozapolneno": 265
+   },
+   "8": {
+    "godovyh_pct": 10.51,
+    "maxDD_pct": 20.07,
+    "pf": 1.486,
+    "dozapolneno": 269
+   },
+   "9": {
+    "godovyh_pct": 9.49,
+    "maxDD_pct": 20.7,
+    "pf": 1.375,
+    "dozapolneno": 269
+   },
+   "10": {
+    "godovyh_pct": 9.96,
+    "maxDD_pct": 17.11,
+    "pf": 1.413,
+    "dozapolneno": 259
+   },
+   "11": {
+    "godovyh_pct": 9.14,
+    "maxDD_pct": 20.79,
+    "pf": 1.395,
+    "dozapolneno": 267
+   },
+   "12": {
+    "godovyh_pct": 4.75,
+    "maxDD_pct": 27.88,
+    "pf": 1.194,
+    "dozapolneno": 278
+   },
+   "13": {
+    "godovyh_pct": 10.2,
+    "maxDD_pct": 16.83,
+    "pf": 1.451,
+    "dozapolneno": 281
+   },
+   "14": {
+    "godovyh_pct": 7.92,
+    "maxDD_pct": 18.31,
+    "pf": 1.314,
+    "dozapolneno": 266
+   },
+   "15": {
+    "godovyh_pct": 8.28,
+    "maxDD_pct": 21.03,
+    "pf": 1.346,
+    "dozapolneno": 273
+   },
+   "16": {
+    "godovyh_pct": 10.94,
+    "maxDD_pct": 18.31,
+    "pf": 1.477,
+    "dozapolneno": 268
+   },
+   "17": {
+    "godovyh_pct": 10.91,
+    "maxDD_pct": 18.21,
+    "pf": 1.449,
+    "dozapolneno": 259
+   },
+   "18": {
+    "godovyh_pct": 7.64,
+    "maxDD_pct": 19.43,
+    "pf": 1.317,
+    "dozapolneno": 280
+   },
+   "19": {
+    "godovyh_pct": 9.47,
+    "maxDD_pct": 17.86,
+    "pf": 1.402,
+    "dozapolneno": 270
+   }
+  }
+ }
+}
