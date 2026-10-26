@@ -58,7 +58,8 @@ def otbor(seychas, gamma=get_json):
                 dn = (kon - seychas).total_seconds() / 86400
                 if not (DNI[0] <= dn <= DNI[1]) or obem < MIN_OBEM or not 0.05 <= mid <= 0.95: continue
                 out.append(dict(cid=m.get("conditionId"), mid_id=m.get("id"), vopros=q, pravila=(m.get("description") or "")[:1500],
-                                konec=kon.isoformat(), obem=obem, token_yes=toks[0], tegi=teg, fee=fee_rate(teg)))
+                                konec=kon.isoformat(), obem=obem, token_yes=toks[0], tegi=teg, fee=fee_rate(teg),
+                                sobytie=str(e.get("id")), negrisk=bool(e.get("negRisk")), iskhodov=len(e.get("markets") or [])))
         if not evs: break
         time.sleep(0.25)
     out.sort(key=lambda x: -x["obem"])
@@ -122,7 +123,8 @@ def prognoz(seychas=None, gamma=get_json, fetch=None, book=None, kl=None):
         except Exception as e:
             print("  !", m["vopros"][:60], type(e).__name__, str(e)[:100]); continue
         z = dict(kogda=seychas.isoformat(timespec="seconds"), model=model, cid=m["cid"], market_id=m["mid_id"], vopros=m["vopros"],
-                 konec=m["konec"], obem=m["obem"], fee=m["fee"], tegi=m["tegi"], novostey=len(nov), novosti=nov,
+                 konec=m["konec"], obem=m["obem"], fee=m["fee"], tegi=m["tegi"], sobytie=m.get("sobytie"), negrisk=m.get("negrisk"),
+                 iskhodov=m.get("iskhodov"), novostey=len(nov), novosti=nov,
                  p_model=round(p, 4), prichina=str(otv.get("prichina", ""))[:300], bid=bid, ask=ask,
                  mid=round((bid + ask) / 2, 4) if bid is not None and ask is not None else None)
         z["sha256"] = hashlib.sha256(json.dumps(z, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
@@ -138,6 +140,33 @@ def ishod(market_id, gamma=get_json):
     try: y = float(pr[0])
     except Exception: return None
     return 1.0 if y > 0.99 else (0.0 if y < 0.01 else None)
+
+
+def soglasovannost(Z, sost, gamma=get_json):
+    """Механическая проверка (добавлена 26.10 после первых 15 прогнозов; прогнozy не меняются): в negRisk-событии исходы
+    взаимоисключающие → сумма p_model по прогнозам одного события в один день должна быть ≤ 1 (= 1, если покрыты все исходы).
+    Для старых строк без события — событие берётся из Gamma /markets/<id> (кэш в sudya.json)."""
+    kesh = sost.setdefault("sobytiya_kesh", {})
+    gr = {}
+    for z in Z:
+        ev, nr, n = z.get("sobytie"), z.get("negrisk"), z.get("iskhodov")
+        if ev is None:
+            if z["market_id"] not in kesh:
+                try:
+                    m = gamma(f"{GAMMA}/markets/{z['market_id']}") or {}; e = (m.get("events") or [{}])[0]
+                    kesh[z["market_id"]] = [str(e.get("id")), bool(e.get("negRisk")), len(e.get("markets") or []) or None]
+                except Exception:
+                    continue
+            ev, nr, n = kesh[z["market_id"]]
+        gr.setdefault((ev, z["kogda"][:10]), dict(negrisk=nr, iskhodov=n, p=[], mid=[], q=[]))
+        g = gr[(ev, z["kogda"][:10])]; g["p"].append(z["p_model"]); g["mid"].append(z.get("mid")); g["q"].append(z["vopros"][:60])
+    out = []
+    for (ev, d), g in gr.items():
+        if len(g["p"]) < 2 or not g["negrisk"]: continue
+        sp = sum(g["p"]); polno = g["iskhodov"] == len(g["p"])
+        out.append(dict(sobytie=ev, den=d, prognozov=len(g["p"]), iskhodov=g["iskhodov"], summa_model=round(sp, 3),
+                        summa_rynok=round(sum(x for x in g["mid"] if x is not None), 3), narushenie=sp > 1.05 or (polno and abs(sp - 1) > 0.1)))
+    return dict(grupp=len(out), narusheniy=sum(x["narushenie"] for x in out), gruppy=out)
 
 
 def sudya(gamma=get_json, seychas=None):
@@ -177,6 +206,7 @@ def sudya(gamma=get_json, seychas=None):
         elif t is not None and t >= 2 and sum(pnl) > 0: sost["verdikt"] = "PASS"
         elif (t is not None and t <= -2) or (n >= 150 and (t is None or t < 2)): sost["verdikt"] = "FAIL"
         else: sost["verdikt"] = "INCONCLUSIVE"
+    sost["soglasovannost"] = soglasovannost(Z, sost, gamma)
     D.mkdir(parents=True, exist_ok=True); SUD.write_text(json.dumps(sost, ensure_ascii=False, indent=1))
     return {k: v for k, v in sost.items() if k != "ishody"}
 
