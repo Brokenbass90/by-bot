@@ -188,6 +188,61 @@ except Exception:
     pass
 
 
+# ---------- 26.10 BRAIN_V3 (задание PM 26.10): только ДОПУЩЕННЫЕ ноги (KITY, PUMP4, MONTHLY) и CASH (= неразмещённые единицы).
+# Политики V1/V2 не меняются и решают только по своим рукавам (KITY_BYBIT, ELDER). V3 — отдельная пара с собственным sha:
+#   BASELINE_V3 — фиксированное распределение: 1 ед. на возможность (через тот же Risk Engine);
+#   BRAIN_V3    — та же логика brain_v1 (без новых параметров) с приорами V3. Неизвестный фандинг PUMP4 → край UNKNOWN → 0 (CASH).
+# Техническая приёмка ≠ экономическая оценка: экономика — не раньше ~12 недель общих исходов.
+RUKAVA_V1 = {"KITY_BYBIT", "ELDER"}
+RUKAVA_V3 = {"KITY_BYBIT", "PUMP4", "MONTHLY"}
+PRIORY_V3 = {
+    "PUMP4": dict(R=0.061, R_se=0.055, fee=12.0, spread=0.0, slip=2.0, funding=U, horizon=168 * H,
+                  ref="PUMP4_POLNYY_POVTOR_ITOG_2026_10_26: 84 сд. +0.061R (тейкер), превышение +0.127R t 2.3; фандинг не учтён",
+                  status="HIST_INCONCLUSIVE; PROSPECTIVE_PENDING"),
+}
+SHA_V3 = hashlib.sha256(json.dumps([PRIORY_V3, PRIORY["KITY_BYBIT"], RISK, BRAIN, "v3"], sort_keys=True, ensure_ascii=False, default=str).encode()).hexdigest()
+POLITIKI_V3 = {"BASELINE_V3": baseline_v1, "BRAIN_V3": brain_v1}
+
+
+def iz_pump4(btc, put=None):
+    """Источник — append-only журнал проспективных сигналов непрерывного повтора (pump4_polnyy_povtor.zhurnal_vpered).
+    t_obs = закрытие сигнального часа, t_av = момент обнаружения ежедневным прогоном. Обнаружение позже 6 ч → не причинно
+    (честно: для причинных PUMP4-возможностей нужен ежечасный производитель Codex — join-контракт)."""
+    p = put or (D / "pump4_vpered_zhurnal.jsonl"); out = []
+    if not p.exists(): return out
+    P = PRIORY_V3["PUMP4"]
+    for l in open(p, encoding="utf-8"):
+        if not l.strip(): continue
+        x = json.loads(l)
+        if x.get("vid") != "SIGNAL": continue
+        t_obs = int(x["ts"]) + H; t_av = max(t_obs, int(x["uvideno_ms"]))
+        rp = x.get("risk_pct")
+        g = P["R"] * rp * 100 if isinstance(rp, (int, float)) else U
+        u = P["R_se"] * rp * 100 if isinstance(rp, (int, float)) else U
+        out.append(V2.vozmozhnost(source_ref=f"data/pump4_vpered_zhurnal.jsonl#{x['sym']}:{x['ts']}", source_sha256=x["sha256"],
+                                  t_observation_ms=t_obs, t_available_ms=t_av, t_decision_ms=t_av, sleeve="PUMP4", mechanism="PUMP_FADE_V4R",
+                                  version="V1_frozen", symbol=x["sym"], side=1 if x["side"] == "long" else -1, horizon_ms=P["horizon"],
+                                  context=btc(t_obs), features=dict(zapazdyvanie_ch=x.get("zapazdyvanie_ch")),
+                                  exp_gross_bps=g, cost_fee_bps=P["fee"], cost_spread_bps=P["spread"], cost_slip_bps=P["slip"],
+                                  cost_funding_bps=P["funding"], uncertainty_bps=u, prior_ref=P["ref"], prior_status=P["status"]))
+    return out
+
+
+def prikrepit_pump4(hr, seychas=None, put=None):
+    """Исход PUMP4 — строка ISHOD журнала вперёд: R × риск % → bps на номинал (после тейкера, БЕЗ фандинга — помечено в source_ref)."""
+    p = put or (D / "pump4_vpered_zhurnal.jsonl"); n = 0
+    if not p.exists(): return 0
+    po = {(z["symbol"], z["t_observation_ms"] - H): z for z in hr.opp.zapisi if z["sleeve"] == "PUMP4"}
+    for l in open(p, encoding="utf-8"):
+        x = json.loads(l)
+        if x.get("vid") != "ISHOD" or not isinstance(x.get("risk_pct"), (int, float)): continue
+        o = po.get((x["sym"], int(x["ts"])))
+        if o is None: continue
+        if hr.prikrepit_ishod(o["opp_id"], int(x["uvideno_ms"]), round(x["R"] * x["risk_pct"] * 100, 3),
+                              f"data/pump4_vpered_zhurnal.jsonl#ISHOD:{x['sym']}:{x['ts']} (без фандинга)", x["sha256"], seychas): n += 1
+    return n
+
+
 def prohod(hr=None, btc=None, seychas=None):
     if hr is None:                                   # один писатель: цепочка хешей не переживает двух одновременных проходов
         import fcntl
@@ -211,13 +266,16 @@ def _prohod(hr, btc=None, seychas=None):
             btc = None
     btc = kontekst_fabrika(btc)
     novye = [z for z in (hr.dobavit_vozmozhnost(v, seychas) for v in
-                         sorted(iz_kity(btc) + iz_elder(btc), key=lambda v: (v["t_decision_ms"], v["sleeve"], v["symbol"]))) if z]
+                         sorted(iz_kity(btc) + iz_elder(btc) + iz_pump4(btc), key=lambda v: (v["t_decision_ms"], v["sleeve"], v["symbol"]))) if z]
     resh = 0
     t0 = novye[0]["t_decision_ms"] if novye else 0
-    otkr = {imya: otkryto(hr, imya, t0, vklyuchaya_budushchie=True) for imya in POLITIKI}
+    VSE = {**POLITIKI, **POLITIKI_V3}; SHA_VSE = {**SHA, **{k: SHA_V3 for k in POLITIKI_V3}}
+    otkr = {imya: otkryto(hr, imya, t0, vklyuchaya_budushchie=True) for imya in VSE}
     for v in novye:
         t = v["t_decision_ms"]
-        for imya, f in POLITIKI.items():
+        for imya, f in VSE.items():
+            if (imya in POLITIKI and v["sleeve"] not in RUKAVA_V1) or (imya in POLITIKI_V3 and v["sleeve"] not in RUKAVA_V3):
+                continue
             otkr[imya] = [(o, a) for o, a in otkr[imya] if o["t_decision_ms"] + o["horizon_ms"] > t]
             tek = [(o, a) for o, a in otkr[imya] if o["t_decision_ms"] <= t]
             if not prichinno(v):
@@ -225,9 +283,9 @@ def _prohod(hr, btc=None, seychas=None):
             else:
                 zh, ogr1 = f(v, tek)
             u, ogr2 = risk_engine(v, zh, tek)
-            hr.dobavit_reshenie(v["opp_id"], imya, SHA[imya], u, ogr1 + ogr2, seychas); resh += 1
+            hr.dobavit_reshenie(v["opp_id"], imya, SHA_VSE[imya], u, ogr1 + ogr2, seychas); resh += 1
             if u > 0: otkr[imya].append((v, u))
-    ish = prikrepit_kity(hr, seychas)
+    ish = prikrepit_kity(hr, seychas) + prikrepit_pump4(hr, seychas)
     return dict(novyh=len(novye), resheniy=resh, ishodov=ish, late=sum(1 for z in hr.opp.zapisi if z["late"]), vsego=len(hr.opp.zapisi))
 
 

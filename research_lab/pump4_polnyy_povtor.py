@@ -36,7 +36,8 @@ def zhurnal_vpered(sdelki, kogda_ms, put=None):
             novye.append(dict(vid="REVIZIYA", sym=k[0], ts=k[1], prichina="storona", bylo=sig[k]["side"], stalo=x["side"], uvideno_ms=kogda_ms))
         if x["status"] == "ZAKRYTA":
             if k not in ish:
-                novye.append(dict(vid="ISHOD", sym=k[0], ts=k[1], R=x["R"], ctrl=x.get("ctrl"), komissiya_R=x.get("komissiya_R"), uvideno_ms=kogda_ms))
+                novye.append(dict(vid="ISHOD", sym=k[0], ts=k[1], R=x["R"], ctrl=x.get("ctrl"), komissiya_R=x.get("komissiya_R"),
+                                  risk_pct=x.get("risk_pct"), uvideno_ms=kogda_ms))
             elif abs(ish[k]["R"] - x["R"]) > 1e-6 and (k[0], k[1], "ishod") not in rev:
                 novye.append(dict(vid="REVIZIYA", sym=k[0], ts=k[1], prichina="ishod", bylo=ish[k]["R"], stalo=x["R"], uvideno_ms=kogda_ms))
     for k in sig:
