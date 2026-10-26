@@ -8,6 +8,14 @@ import research_lab.pump4_supervisor_v1 as module
 
 REAL_POPEN=subprocess.Popen
 
+def closed_tail(root):
+    from research_lab.pump4_closed_bar_intake_v1 import Pump4Intake
+    from research_lab.alpaca_dynamic_v1 import digest
+    path=root/'intake/ZROUSDT.jsonl';i=Pump4Intake(path,'ZROUSDT');seed=i.journal.read()[0];path.unlink()
+    i.seed(seed['bars'][:-1],available_ms=seed['available_ms'],observed_ms=seed['observed_ms'])
+    i.accept(seed['bars'][-1],available_ms=seed['available_ms'],observed_ms=seed['observed_ms'])
+    epoch=root/'epochs/ZROUSDT.json';e=json.loads(epoch.read_bytes());e['seed_sha256']=digest(seed['bars'][:-1]);epoch.write_text(json.dumps(e))
+
 
 STUB=r'''
 import os,sys,json,shutil,hashlib,time,socket
@@ -204,6 +212,26 @@ def test_classifier_never_defers_seed_only_or_recovery(tmp_path,monkeypatch):
     assert s._catchup_reference(source,'BLESSUSDT',context_info,pin) is None
     p.unlink();journal=root/'intake/BLESSUSDT.jsonl';rows=journal.read_bytes().splitlines(keepends=True);journal.write_bytes(rows[0])
     assert s._catchup_reference(source,'BLESSUSDT',context_info,pin) is None
+
+def test_current_scheduling_does_not_replay_the_full_journal(tmp_path,monkeypatch):
+    import hashlib
+    root,s,children=child_fixture(tmp_path,monkeypatch);source=tmp_path/'source';context_info=s._stream_context(source)
+    closed_tail(root)
+    pin=hashlib.sha256((source/'symbols/ZROUSDT.json').read_bytes()).hexdigest()
+    def forbidden(*a,**kw):raise AssertionError('CURRENT_SCHEDULING_REPEATED_FULL_VALIDATION')
+    monkeypatch.setattr(module,'Pump4Intake',forbidden)
+    assert s._catchup_reference(source,'ZROUSDT',context_info,pin) is None
+
+def test_unverified_current_tail_never_bypasses_actual_acceptance(tmp_path,monkeypatch):
+    import hashlib
+    root,s,children=child_fixture(tmp_path,monkeypatch);source=tmp_path/'source';context_info=s._stream_context(source)
+    closed_tail(root)
+    path=root/'intake/ZROUSDT.jsonl';lines=path.read_bytes().splitlines();last=json.loads(lines[-1]);last['event']['bar'][0]=context_info[1]['source_hour_open_ms']-3600000
+    path.write_bytes(b'\n'.join(lines[:-1]+[json.dumps(last).encode()])+b'\n')
+    pin=hashlib.sha256((source/'symbols/ZROUSDT.json').read_bytes()).hexdigest()
+    assert s._catchup_reference(source,'ZROUSDT',context_info,pin) is None
+    out=s._stream_symbol(source,'ZROUSDT',context_info,expected_sha256=pin)
+    assert out['status']=='BLOCKED_SOURCE' and not list((root/'observations').glob('*.json'))
 
 
 def test_deferred_schedule_preserves_exact_existing_state(tmp_path,monkeypatch):

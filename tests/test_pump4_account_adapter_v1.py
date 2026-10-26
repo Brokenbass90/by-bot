@@ -89,7 +89,8 @@ def test_tiny_feasibility_uses_risk_lots_fees_and_funding_without_authority():
 @pytest.mark.parametrize('fault',['stop_tick','minimum','cash','fee','foreign','zero_funding_interval'])
 def test_real_admission_blocks_instead_of_changing_strategy_or_inventing_cost(fault):
     p,i,t,f,a,policy=sizing()
-    if fault=='stop_tick':i['priceFilter']['tickSize']='3'
+    if fault=='stop_tick':
+        i['priceFilter']['tickSize']='200';t['lastPrice']='100'
     elif fault=='minimum':i['lotSizeFilter']['minOrderQty']='10'
     elif fault=='cash':a['available_balance']='1'
     elif fault=='fee':f.pop('takerFeeRate')
@@ -97,7 +98,7 @@ def test_real_admission_blocks_instead_of_changing_strategy_or_inventing_cost(fa
     else:i['fundingInterval']=0
     r=execution_feasibility(p,i,t,f,a,policy,now_ms=NOW)
     assert r['status']=='BLOCKED' and r['orders_allowed'] is False
-    if fault=='stop_tick':assert r['blocker']=='STOP_TICK_UNREPRESENTABLE' and r['rounding_candidates_not_selected']
+    if fault=='stop_tick':assert r['blocker']=='PUMP4_NATIVE_STOP_INVALID_NATIVE_GEOMETRY' and r['rounding_candidates_not_selected']
 
 def test_native_last_price_trigger_does_not_use_mark_price():
     x,p,r=fixture();x['captures']['quote']['body']['result']['list'][0]['lastPrice']='101'

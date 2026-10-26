@@ -14,6 +14,7 @@ from pathlib import Path
 import json
 import resource
 import selectors
+import stat
 import subprocess
 import sys
 import time
@@ -333,6 +334,20 @@ class Supervisor:
     def _catchup_reference(self,archive,symbol,context,pin):
         """Advisory scheduling only; unchanged _symbol still validates producer."""
         try:
+            # An UNVERIFIED bounded tail can only choose the immediate path.
+            # Actual _stream_symbol/_symbol still performs every hash, source,
+            # journal and producer check. No hint can authorize a publication.
+            path=safe(self.root/'intake'/(symbol+'.jsonl'))
+            if path.is_file():
+                with os.fdopen(os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK),'rb') as f:
+                    st=os.fstat(f.fileno());need(stat.S_ISREG(st.st_mode),'PRIORITY_HINT_FILE')
+                    f.seek(max(0,st.st_size-8192));tail=f.read(8192)
+                if tail.endswith(b'\n'):
+                    try:
+                        last=decode(tail.splitlines()[-1])['event'];cursor=last['bar'][0]
+                        if (last['kind']=='CLOSED_BAR' and type(cursor) is int and cursor%H==0
+                            and cursor>=context[1]['source_hour_open_ms']-2*H):return None
+                    except (ValueError,KeyError,TypeError,IndexError):pass
             raw=stable_bytes(safe(archive/'symbols'/(symbol+'.json')))
             need(hashlib.sha256(raw).hexdigest()==pin,'PRIORITY_CAPTURE_HASH')
             row=decode(raw)
@@ -369,11 +384,12 @@ class Supervisor:
         before_cpu=usage.ru_utime+usage.ru_stime;deadline=time.monotonic()+CAPTURE_PROCESS_TIMEOUT_SECONDS
         process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
             stdin=subprocess.DEVNULL,env=env,close_fds=True,bufsize=0,cwd=str(ROOT))
-        selector=selectors.DefaultSelector();buffer=b'';seen=set();stderr=b'';stderr_bytes=0;notice_times=[];deferred=[];context=None
+        selector=selectors.DefaultSelector();buffer=b'';seen=set();stderr=b'';stderr_bytes=0;notice_times=[];deferred=[];context=None;classification_starts={}
         def run_notice(symbol,pin,received,classified,index,scheduling):
             begun=self.clock();on_symbol(archive,symbol,expected_sha256=pin)
             notice_times.append(dict(symbol=symbol,notice_index=index,parent_received_ms=received,
                 classification_completed_ms=classified,parent_processing_started_ms=begun,
+                classification_started_ms=classification_starts[symbol],
                 parent_publication_finished_ms=self.clock(),scheduling=scheduling))
         try:
             for kind,pipe in (('out',process.stdout),('err',process.stderr)):
@@ -399,6 +415,7 @@ class Supervisor:
                         seen.add(symbol)
                         if context is None:context=self._stream_context(archive)
                         need(context[1]['source_hour_open_ms']==hour,'STREAM_PARENT_HOUR')
+                        classification_starts[symbol]=self.clock()
                         reference=self._catchup_reference(archive,symbol,context,pin);classified=self.clock();index=len(seen)
                         if reference is not None:deferred.append((symbol,pin,received,classified,index,reference))
                         else:run_notice(symbol,pin,received,classified,index,'IMMEDIATE')

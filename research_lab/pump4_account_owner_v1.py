@@ -69,11 +69,13 @@ def source_sizing(plan,bundle,public,policy,*,fingerprint,now_ms):
         and quantity*price>=number(instrument['lotSizeFilter']['minNotionalValue']),'COST_INCLUSIVE_CAPACITY')
     cost=quantity*unit_cost
     need(quantity*price+cost+number(policy['reserve_usdt'],zero=True)<=min(number(view['available_balance'],zero=True),number(policy['allocation_usdt'])),'COST_INCLUSIVE_RESERVE')
-    return dict(quantity=str(quantity),qty_step=str(lot),min_qty=str(minimum),
+    result=dict(quantity=str(quantity),qty_step=str(lot),min_qty=str(minimum),
         min_notional=str(instrument['lotSizeFilter']['minNotionalValue']),tick_size=str(instrument['priceFilter']['tickSize']),
         scenario_stop_and_cost_usdt=str(quantity*distance+cost),cost_scenario_usdt=str(cost),
         guaranteed_loss_bound=False,source_ms=min(*stamps,quote['body']['time'],quote['request_ms']),source_bundle_sha256=digest(dict(bundle=bundle,public=public)),
         orders_allowed=False,money_authority=False)
+    if 'native_stop_mapping' in diagnostic:result['native_stop_mapping']=diagnostic['native_stop_mapping']
+    return result
 
 
 class Pump4AccountOwner:
@@ -136,7 +138,9 @@ class Pump4AccountOwner:
         if (path/'execution-config.json').exists():
             flow=Pump4Lifecycle.resume(path);need(flow.config['plan']==plan,'PLAN_CHANGED');return flow
         sizing=source_sizing(plan,bundle,public,self.scope['policy'],fingerprint=self.scope['account_fingerprint'],now_ms=self.clock())
-        return Pump4Lifecycle(path,plan,**{k:sizing[k] for k in ('quantity','qty_step','min_qty','min_notional','tick_size') if k!='quantity'},qty=sizing['quantity'])
+        need('native_stop_mapping' not in sizing or self.scope['mode']=='ORDERS_OFF','NATIVE_MAPPING_ORDERS_OFF_ONLY')
+        return Pump4Lifecycle(path,plan,**{k:sizing[k] for k in ('quantity','qty_step','min_qty','min_notional','tick_size') if k!='quantity'},qty=sizing['quantity'],
+            **({'native_stop_mapping':sizing['native_stop_mapping']} if 'native_stop_mapping' in sizing else {}))
 
     def _risk_rows(self):
         rows=self.risk.read()
@@ -173,6 +177,7 @@ class Pump4AccountOwner:
 
     def cycle(self,flow,bundle,public,*,apply=False):
         self._exclusive();self._flow(flow);now=self.clock();plan=flow.config['plan'];new=not flow.requests()
+        need(not apply or 'native_stop_mapping' not in flow.config,'NATIVE_MAPPING_ORDERS_OFF_ONLY')
         if apply:self._authority('ENTRY' if new else 'CUSTODY')
         else:need(self.scope['mode']=='ORDERS_OFF','ISOLATED_ORDERS_OFF_ROOT_REQUIRED')
         observation=owned_observation(bundle,plan,flow.requests(),first_send_ms=plan['entry_bar_open_ms'],expected_fingerprint=self.scope['account_fingerprint'],now_ms=now,
@@ -184,6 +189,9 @@ class Pump4AccountOwner:
             need(not os.path.lexists(admission),'ACCOUNT_LIFECYCLE_ALREADY_RESERVED')
             size=source_sizing(plan,bundle,public,self.scope['policy'],fingerprint=self.scope['account_fingerprint'],now_ms=now)
             need(D(size['quantity'])==D(flow.config['qty']),'SOURCE_SIZING_CHANGED')
+            original=flow.config.get('native_stop_mapping');fresh=size.get('native_stop_mapping')
+            need((original is None and fresh is None) or (original is not None and fresh is not None
+                and all(original[k]==fresh[k] for k in ('schema','plan_sha256','symbol','side','tick_size','native_stop','reference_stop','quantity_basis'))),'NATIVE_MAPPING_SOURCE_CHANGED')
             publish(admission,identity) # Before reservation/POST: never a second lifecycle on reply loss.
         else:need(decode(stable_bytes(admission))==identity,'OWNED_LIFECYCLE_REQUIRED')
         result=flow.advance(observation,now_ms=now)

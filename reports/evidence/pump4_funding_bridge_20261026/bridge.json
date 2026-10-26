@@ -1,0 +1,1308 @@
+{
+  "schema": "PUMP4_84_SAME_ACCOUNTING_COST_BRIDGE_V1",
+  "ref": "99da9effa2fe085277a3927c9ad7d3cf2174b9e3",
+  "json_sha256": "ab9b4c02c55c0a3353b13ef1e0e809e087b0453733ce9d15691aca68eeeef465",
+  "origin_pin": "b3516e34f940099dde98465dfecc16461c25df46",
+  "membership": 84,
+  "funding_scenario_mean_R": 0.002353571428571429,
+  "slippage_units": "BPS_PER_SIDE",
+  "fee_basis": "OBSERVED_ACCOUNT_SYMBOL_FEES_20261026_131941UTC",
+  "summary": {
+    "0": {
+      "mean_R": 0.06279750137171712,
+      "by_month": {
+        "2026-09": -0.06665088890825506,
+        "2026-10": 0.3216942819316615
+      }
+    },
+    "2": {
+      "mean_R": 0.06030068470303169,
+      "by_month": {
+        "2026-09": -0.06915613848278063,
+        "2026-10": 0.31921433107465635
+      }
+    },
+    "5": {
+      "mean_R": 0.056555459700003544,
+      "by_month": {
+        "2026-09": -0.07291401284456897,
+        "2026-10": 0.3154944047891486
+      }
+    },
+    "10": {
+      "mean_R": 0.050313418028289945,
+      "by_month": {
+        "2026-09": -0.0791771367808829,
+        "2026-10": 0.3092945276466356
+      }
+    }
+  },
+  "rows": [
+    {
+      "symbol": "1000PEPEUSDT",
+      "ts": 1790121600000,
+      "month": "2026-09",
+      "published_R": 0.3471,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0129,
+      "funding_entry_notional_scenario_R": 0.0011,
+      "scenarios_net_R": {
+        "0": 0.34924515888591334,
+        "2": 0.3449343075717,
+        "5": 0.33846803060038,
+        "10": 0.3276909023148466
+      }
+    },
+    {
+      "symbol": "AAVEUSDT",
+      "ts": 1790776800000,
+      "month": "2026-09",
+      "published_R": -1.0068,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0068,
+      "funding_entry_notional_scenario_R": 0.0056,
+      "scenarios_net_R": {
+        "0": -1.0006159310671214,
+        "2": -1.0028762696369837,
+        "5": -1.0062667774917773,
+        "10": -1.0119176239164334
+      }
+    },
+    {
+      "symbol": "ACEUSDT",
+      "ts": 1788890400000,
+      "month": "2026-09",
+      "published_R": 0.3502,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0098,
+      "funding_entry_notional_scenario_R": -0.0785,
+      "scenarios_net_R": {
+        "0": 0.27254394423650224,
+        "2": 0.26928719668613943,
+        "5": 0.26440207536059523,
+        "10": 0.2562602064846882
+      }
+    },
+    {
+      "symbol": "ACEUSDT",
+      "ts": 1790240400000,
+      "month": "2026-09",
+      "published_R": -0.5171,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0071,
+      "funding_entry_notional_scenario_R": 0.0021,
+      "scenarios_net_R": {
+        "0": -0.5143876269610955,
+        "2": -0.5167467640378575,
+        "5": -0.5202854696530005,
+        "10": -0.5261833123449055
+      }
+    },
+    {
+      "symbol": "ACEUSDT",
+      "ts": 1790499600000,
+      "month": "2026-09",
+      "published_R": 0.3547,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0053,
+      "funding_entry_notional_scenario_R": 0.0016,
+      "scenarios_net_R": {
+        "0": 0.35670129463252087,
+        "2": 0.3549199472261648,
+        "5": 0.35224792611663075,
+        "10": 0.34779455760074063
+      }
+    },
+    {
+      "symbol": "ACTUSDT",
+      "ts": 1791763200000,
+      "month": "2026-10",
+      "published_R": 0.3503,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0097,
+      "funding_entry_notional_scenario_R": 0.0012,
+      "scenarios_net_R": {
+        "0": 0.3522745875421228,
+        "2": 0.34902898301198565,
+        "5": 0.3441605762167799,
+        "10": 0.336046564891437
+      }
+    },
+    {
+      "symbol": "AEROUSDT",
+      "ts": 1790283600000,
+      "month": "2026-09",
+      "published_R": -1.0063,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0063,
+      "funding_entry_notional_scenario_R": 0.0013,
+      "scenarios_net_R": {
+        "0": -1.0044671373227034,
+        "2": -1.006564278167323,
+        "5": -1.009709989434252,
+        "10": -1.014952841545801
+      }
+    },
+    {
+      "symbol": "AEROUSDT",
+      "ts": 1791734400000,
+      "month": "2026-10",
+      "published_R": 0.3511,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0089,
+      "funding_entry_notional_scenario_R": 0.001,
+      "scenarios_net_R": {
+        "0": 0.352837948398715,
+        "2": 0.3498699296346114,
+        "5": 0.3454179014884559,
+        "10": 0.33799785457819675
+      }
+    },
+    {
+      "symbol": "AKEUSDT",
+      "ts": 1788332400000,
+      "month": "2026-09",
+      "published_R": -0.5164,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0064,
+      "funding_entry_notional_scenario_R": 0.0002,
+      "scenarios_net_R": {
+        "0": -0.515621830177967,
+        "2": -0.5177388593335914,
+        "5": -0.520914403067028,
+        "10": -0.5262069759560889
+      }
+    },
+    {
+      "symbol": "AKEUSDT",
+      "ts": 1790848800000,
+      "month": "2026-10",
+      "published_R": 0.3543,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0057,
+      "funding_entry_notional_scenario_R": 0.0164,
+      "scenarios_net_R": {
+        "0": 0.3711683382086509,
+        "2": 0.3692659157390694,
+        "5": 0.36641228203469717,
+        "10": 0.3616562258607434
+      }
+    },
+    {
+      "symbol": "AKEUSDT",
+      "ts": 1791540000000,
+      "month": "2026-10",
+      "published_R": 0.3537,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0063,
+      "funding_entry_notional_scenario_R": 0.004,
+      "scenarios_net_R": {
+        "0": 0.35824377596677237,
+        "2": 0.3561506035910532,
+        "5": 0.35301084502747454,
+        "10": 0.3477779140881767
+      }
+    },
+    {
+      "symbol": "ALGOUSDT",
+      "ts": 1790006400000,
+      "month": "2026-09",
+      "published_R": -0.5153,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0053,
+      "funding_entry_notional_scenario_R": 0.0044,
+      "scenarios_net_R": {
+        "0": -0.5104759190199322,
+        "2": -0.5122489804817256,
+        "5": -0.5149085726744159,
+        "10": -0.5193412263288997
+      }
+    },
+    {
+      "symbol": "ALGOUSDT",
+      "ts": 1791532800000,
+      "month": "2026-10",
+      "published_R": 0.3455,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0145,
+      "funding_entry_notional_scenario_R": -0.0006,
+      "scenarios_net_R": {
+        "0": 0.3460915619069725,
+        "2": 0.3412521298731443,
+        "5": 0.333992981822402,
+        "10": 0.32189440173783157
+      }
+    },
+    {
+      "symbol": "ALLOUSDT",
+      "ts": 1790071200000,
+      "month": "2026-09",
+      "published_R": -1.0074,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0074,
+      "funding_entry_notional_scenario_R": 0.0009,
+      "scenarios_net_R": {
+        "0": -1.0125932795749715,
+        "2": -1.0150466031340573,
+        "5": -1.0187265884726857,
+        "10": -1.0248598973704
+      }
+    },
+    {
+      "symbol": "ALLOUSDT",
+      "ts": 1790254800000,
+      "month": "2026-09",
+      "published_R": 0.1496,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0057,
+      "funding_entry_notional_scenario_R": 0.0108,
+      "scenarios_net_R": {
+        "0": 0.15561282572698487,
+        "2": 0.15370606676825485,
+        "5": 0.1508459283301598,
+        "10": 0.14607903093333474
+      }
+    },
+    {
+      "symbol": "APTUSDT",
+      "ts": 1789858800000,
+      "month": "2026-09",
+      "published_R": -1.0077,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0077,
+      "funding_entry_notional_scenario_R": 0.0019,
+      "scenarios_net_R": {
+        "0": -1.0052023942541324,
+        "2": -1.0077850830738169,
+        "5": -1.0116591163033435,
+        "10": -1.0181158383525548
+      }
+    },
+    {
+      "symbol": "ARBUSDT",
+      "ts": 1788307200000,
+      "month": "2026-09",
+      "published_R": -1.0062,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0062,
+      "funding_entry_notional_scenario_R": 0.0016,
+      "scenarios_net_R": {
+        "0": -1.004095822788355,
+        "2": -1.0061670310750295,
+        "5": -1.0092738435050415,
+        "10": -1.0144518642217277
+      }
+    },
+    {
+      "symbol": "ASTERUSDT",
+      "ts": 1788696000000,
+      "month": "2026-09",
+      "published_R": 0.3523,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0077,
+      "funding_entry_notional_scenario_R": 0.0021,
+      "scenarios_net_R": {
+        "0": 0.3550510701154988,
+        "2": 0.3524878228847711,
+        "5": 0.3486429520386795,
+        "10": 0.3422348339618603
+      }
+    },
+    {
+      "symbol": "BLESSUSDT",
+      "ts": 1788667200000,
+      "month": "2026-09",
+      "published_R": 0.3495,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0105,
+      "funding_entry_notional_scenario_R": 0.0,
+      "scenarios_net_R": {
+        "0": 0.3407695185785215,
+        "2": 0.33727306741097995,
+        "5": 0.33202839065966766,
+        "10": 0.32328726274081376
+      }
+    },
+    {
+      "symbol": "BOMEUSDT",
+      "ts": 1790010000000,
+      "month": "2026-09",
+      "published_R": 0.2118,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0056,
+      "funding_entry_notional_scenario_R": 0.0023,
+      "scenarios_net_R": {
+        "0": 0.21461055570082327,
+        "2": 0.21275984868294082,
+        "5": 0.20998378815611715,
+        "10": 0.20535702061141106
+      }
+    },
+    {
+      "symbol": "BROCCOLIUSDT",
+      "ts": 1790035200000,
+      "month": "2026-09",
+      "published_R": -1.0059,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.0005,
+      "scenarios_net_R": {
+        "0": -1.0102551832034856,
+        "2": -1.0122106710586647,
+        "5": -1.0151439028414335,
+        "10": -1.0200326224793814
+      }
+    },
+    {
+      "symbol": "CCUSDT",
+      "ts": 1790445600000,
+      "month": "2026-09",
+      "published_R": 0.3545,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0055,
+      "funding_entry_notional_scenario_R": 0.0034,
+      "scenarios_net_R": {
+        "0": 0.3583160655692312,
+        "2": 0.3564673621398607,
+        "5": 0.353694306995805,
+        "10": 0.34907254842237884
+      }
+    },
+    {
+      "symbol": "COAIUSDT",
+      "ts": 1788498000000,
+      "month": "2026-09",
+      "published_R": 0.3528,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0072,
+      "funding_entry_notional_scenario_R": 0.0197,
+      "scenarios_net_R": {
+        "0": 0.36657660883026855,
+        "2": 0.3641905377084992,
+        "5": 0.36061143102584514,
+        "10": 0.3546462532214218
+      }
+    },
+    {
+      "symbol": "COAIUSDT",
+      "ts": 1791136800000,
+      "month": "2026-10",
+      "published_R": 0.3547,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0053,
+      "funding_entry_notional_scenario_R": 0.0031,
+      "scenarios_net_R": {
+        "0": 0.35342995454307957,
+        "2": 0.35167176446000314,
+        "5": 0.34903447933538845,
+        "10": 0.3446390041276973
+      }
+    },
+    {
+      "symbol": "COTIUSDT",
+      "ts": 1789081200000,
+      "month": "2026-09",
+      "published_R": 0.3543,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0057,
+      "funding_entry_notional_scenario_R": 0.001,
+      "scenarios_net_R": {
+        "0": 0.355796717181734,
+        "2": 0.35390461433872816,
+        "5": 0.3510664600742195,
+        "10": 0.3463362029667049
+      }
+    },
+    {
+      "symbol": "CRVUSDT",
+      "ts": 1788336000000,
+      "month": "2026-09",
+      "published_R": 0.1401,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0051,
+      "funding_entry_notional_scenario_R": 0.0041,
+      "scenarios_net_R": {
+        "0": 0.14458363815267591,
+        "2": 0.1428685974809217,
+        "5": 0.1402960364732904,
+        "10": 0.13600843479390487
+      }
+    },
+    {
+      "symbol": "ENAUSDT",
+      "ts": 1788714000000,
+      "month": "2026-09",
+      "published_R": 0.3491,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0109,
+      "funding_entry_notional_scenario_R": 0.0019,
+      "scenarios_net_R": {
+        "0": 0.35194415680173824,
+        "2": 0.3483238501841885,
+        "5": 0.34289339025786386,
+        "10": 0.33384262371398954
+      }
+    },
+    {
+      "symbol": "ESPORTSUSDT",
+      "ts": 1788307200000,
+      "month": "2026-09",
+      "published_R": 0.3537,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0063,
+      "funding_entry_notional_scenario_R": 0.05,
+      "scenarios_net_R": {
+        "0": 0.3984536223929747,
+        "2": 0.39635428100987924,
+        "5": 0.393205268935236,
+        "10": 0.3879569154774972
+      }
+    },
+    {
+      "symbol": "ESPORTSUSDT",
+      "ts": 1790316000000,
+      "month": "2026-09",
+      "published_R": -0.515,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.005,
+      "funding_entry_notional_scenario_R": 0.0151,
+      "scenarios_net_R": {
+        "0": -0.5041513543792389,
+        "2": -0.5058334188118278,
+        "5": -0.508356515460711,
+        "10": -0.5125616765421833
+      }
+    },
+    {
+      "symbol": "ESPUSDT",
+      "ts": 1789848000000,
+      "month": "2026-09",
+      "published_R": -0.393,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0089,
+      "funding_entry_notional_scenario_R": 0.0152,
+      "scenarios_net_R": {
+        "0": -0.3770226606411877,
+        "2": -0.37997635541980146,
+        "5": -0.384406897587722,
+        "10": -0.39179113453425635
+      }
+    },
+    {
+      "symbol": "ESPUSDT",
+      "ts": 1790856000000,
+      "month": "2026-10",
+      "published_R": 0.0162,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0051,
+      "funding_entry_notional_scenario_R": -0.0203,
+      "scenarios_net_R": {
+        "0": -0.0036563559940158627,
+        "2": -0.005349576355476176,
+        "5": -0.007889406897666646,
+        "10": -0.012122457801317429
+      }
+    },
+    {
+      "symbol": "FARTCOINUSDT",
+      "ts": 1790085600000,
+      "month": "2026-09",
+      "published_R": 0.3531,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0069,
+      "funding_entry_notional_scenario_R": 0.0055,
+      "scenarios_net_R": {
+        "0": 0.3591820829028137,
+        "2": 0.3568846585038369,
+        "5": 0.3534385219053716,
+        "10": 0.3476949609079295
+      }
+    },
+    {
+      "symbol": "FILUSDT",
+      "ts": 1792170000000,
+      "month": "2026-10",
+      "published_R": 0.3528,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0072,
+      "funding_entry_notional_scenario_R": -0.0003,
+      "scenarios_net_R": {
+        "0": 0.3531058475117783,
+        "2": 0.3507079738796977,
+        "5": 0.34711116343157683,
+        "10": 0.34111647935137535
+      }
+    },
+    {
+      "symbol": "GALAUSDT",
+      "ts": 1790042400000,
+      "month": "2026-09",
+      "published_R": 0.3512,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0088,
+      "funding_entry_notional_scenario_R": 0.0029,
+      "scenarios_net_R": {
+        "0": 0.3548282688394488,
+        "2": 0.3518930938719756,
+        "5": 0.34749033142076585,
+        "10": 0.3401523940020829
+      }
+    },
+    {
+      "symbol": "GRASSUSDT",
+      "ts": 1791244800000,
+      "month": "2026-10",
+      "published_R": 0.3541,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.0008,
+      "scenarios_net_R": {
+        "0": 0.35536299417325573,
+        "2": 0.3533859011453487,
+        "5": 0.35042026160348816,
+        "10": 0.34547752903372053
+      }
+    },
+    {
+      "symbol": "GWEIUSDT",
+      "ts": 1791648000000,
+      "month": "2026-10",
+      "published_R": 0.3516,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0084,
+      "funding_entry_notional_scenario_R": 0.0035,
+      "scenarios_net_R": {
+        "0": 0.34805124084543415,
+        "2": 0.34524237554460396,
+        "5": 0.34102907759335876,
+        "10": 0.3340069143412833
+      }
+    },
+    {
+      "symbol": "GWEIUSDT",
+      "ts": 1792404000000,
+      "month": "2026-10",
+      "published_R": 0.3544,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0056,
+      "funding_entry_notional_scenario_R": 0.0041,
+      "scenarios_net_R": {
+        "0": 0.35374294263213996,
+        "2": 0.35185984129252906,
+        "5": 0.34903518928311267,
+        "10": 0.3443274359340854
+      }
+    },
+    {
+      "symbol": "HEIUSDT",
+      "ts": 1790528400000,
+      "month": "2026-09",
+      "published_R": 0.3522,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0078,
+      "funding_entry_notional_scenario_R": 0.0091,
+      "scenarios_net_R": {
+        "0": 0.3619462337581791,
+        "2": 0.3593448642156987,
+        "5": 0.35544280990197824,
+        "10": 0.3489393860457774
+      }
+    },
+    {
+      "symbol": "HEIUSDT",
+      "ts": 1790913600000,
+      "month": "2026-10",
+      "published_R": 0.3525,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0075,
+      "funding_entry_notional_scenario_R": 0.0055,
+      "scenarios_net_R": {
+        "0": 0.3586174425726791,
+        "2": 0.35611469441728966,
+        "5": 0.3523605721842055,
+        "10": 0.34610370179573197
+      }
+    },
+    {
+      "symbol": "ICPUSDT",
+      "ts": 1788836400000,
+      "month": "2026-09",
+      "published_R": 0.3532,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0068,
+      "funding_entry_notional_scenario_R": 0.002,
+      "scenarios_net_R": {
+        "0": 0.3557362866120866,
+        "2": 0.35345857265284536,
+        "5": 0.35004200171398353,
+        "10": 0.34434771681588044
+      }
+    },
+    {
+      "symbol": "ICPUSDT",
+      "ts": 1790733600000,
+      "month": "2026-09",
+      "published_R": 0.182,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0052,
+      "funding_entry_notional_scenario_R": 0.0033,
+      "scenarios_net_R": {
+        "0": 0.18573972789479587,
+        "2": 0.18400871985653983,
+        "5": 0.18141220779915573,
+        "10": 0.17708468770351563
+      }
+    },
+    {
+      "symbol": "ICPUSDT",
+      "ts": 1791806400000,
+      "month": "2026-10",
+      "published_R": 0.353,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.007,
+      "funding_entry_notional_scenario_R": 0.0006,
+      "scenarios_net_R": {
+        "0": 0.3542121662613068,
+        "2": 0.35188931762905473,
+        "5": 0.3484050446806766,
+        "10": 0.3425979231000465
+      }
+    },
+    {
+      "symbol": "INJUSDT",
+      "ts": 1791702000000,
+      "month": "2026-10",
+      "published_R": 0.3526,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0074,
+      "funding_entry_notional_scenario_R": 0.0022,
+      "scenarios_net_R": {
+        "0": 0.3554374614430845,
+        "2": 0.35297835651329706,
+        "5": 0.3492896991186159,
+        "10": 0.3431419367941473
+      }
+    },
+    {
+      "symbol": "INJUSDT",
+      "ts": 1791972000000,
+      "month": "2026-10",
+      "published_R": 0.3548,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0052,
+      "funding_entry_notional_scenario_R": -0.0005,
+      "scenarios_net_R": {
+        "0": 0.35472822903714774,
+        "2": 0.35299303959611056,
+        "5": 0.35039025543455476,
+        "10": 0.34605228183196185
+      }
+    },
+    {
+      "symbol": "JTOUSDT",
+      "ts": 1790488800000,
+      "month": "2026-09",
+      "published_R": 0.3543,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0057,
+      "funding_entry_notional_scenario_R": 0.0007,
+      "scenarios_net_R": {
+        "0": 0.35543676002258257,
+        "2": 0.35352285457624893,
+        "5": 0.35065199640674855,
+        "10": 0.3458672327909145
+      }
+    },
+    {
+      "symbol": "KAITOUSDT",
+      "ts": 1789790400000,
+      "month": "2026-09",
+      "published_R": 0.3457,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0143,
+      "funding_entry_notional_scenario_R": 0.0045,
+      "scenarios_net_R": {
+        "0": 0.3513701117995421,
+        "2": 0.3465956069993756,
+        "5": 0.33943384979912583,
+        "10": 0.3274975877987095
+      }
+    },
+    {
+      "symbol": "LAUSDT",
+      "ts": 1792627200000,
+      "month": "2026-10",
+      "published_R": 0.3535,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0065,
+      "funding_entry_notional_scenario_R": 0.0008,
+      "scenarios_net_R": {
+        "0": 0.3548675107789637,
+        "2": 0.3527102419713142,
+        "5": 0.34947433875983985,
+        "10": 0.3440811667407159
+      }
+    },
+    {
+      "symbol": "LDOUSDT",
+      "ts": 1790442000000,
+      "month": "2026-09",
+      "published_R": 0.3498,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0102,
+      "funding_entry_notional_scenario_R": 0.0017,
+      "scenarios_net_R": {
+        "0": 0.35235899851718566,
+        "2": 0.3489622707052532,
+        "5": 0.34386717898735447,
+        "10": 0.3353753594575233
+      }
+    },
+    {
+      "symbol": "LITEUSDT",
+      "ts": 1788980400000,
+      "month": "2026-09",
+      "published_R": 0.3525,
+      "observed_fee_rate_per_side": 0.000275,
+      "reported_model_fee_R": 0.0075,
+      "funding_entry_notional_scenario_R": 0.0,
+      "scenarios_net_R": {
+        "0": 0.3565459573007288,
+        "2": 0.35403392624671337,
+        "5": 0.3502658796656903,
+        "10": 0.3439858020306517
+      }
+    },
+    {
+      "symbol": "MEUSDT",
+      "ts": 1791010800000,
+      "month": "2026-10",
+      "published_R": 0.3541,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.0011,
+      "scenarios_net_R": {
+        "0": 0.35573280331239626,
+        "2": 0.3537810954259949,
+        "5": 0.3508535335963929,
+        "10": 0.34597426388038943
+      }
+    },
+    {
+      "symbol": "MMTUSDT",
+      "ts": 1789797600000,
+      "month": "2026-09",
+      "published_R": -0.539,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0061,
+      "funding_entry_notional_scenario_R": 0.0128,
+      "scenarios_net_R": {
+        "0": -0.5256722425701267,
+        "2": -0.5276985125956273,
+        "5": -0.5307379176338781,
+        "10": -0.5358035926976297
+      }
+    },
+    {
+      "symbol": "MSTRUSDT",
+      "ts": 1788512400000,
+      "month": "2026-09",
+      "published_R": 0.3458,
+      "observed_fee_rate_per_side": 0.000275,
+      "reported_model_fee_R": 0.0142,
+      "funding_entry_notional_scenario_R": 0.0,
+      "scenarios_net_R": {
+        "0": 0.35350791563940476,
+        "2": 0.34878639974079,
+        "5": 0.3417041258928679,
+        "10": 0.3299003361463311
+      }
+    },
+    {
+      "symbol": "MUBARAKUSDT",
+      "ts": 1788742800000,
+      "month": "2026-09",
+      "published_R": 0.3529,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0071,
+      "funding_entry_notional_scenario_R": 0.0017,
+      "scenarios_net_R": {
+        "0": 0.35521406444092296,
+        "2": 0.3528555424194404,
+        "5": 0.3493177593872166,
+        "10": 0.3434214543335102
+      }
+    },
+    {
+      "symbol": "MUBARAKUSDT",
+      "ts": 1789268400000,
+      "month": "2026-09",
+      "published_R": -0.1806,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0052,
+      "funding_entry_notional_scenario_R": 0.0095,
+      "scenarios_net_R": {
+        "0": -0.1706408853916603,
+        "2": -0.1723648437159004,
+        "5": -0.1749507812022606,
+        "10": -0.17926067701286086
+      }
+    },
+    {
+      "symbol": "MUBARAKUSDT",
+      "ts": 1791907200000,
+      "month": "2026-10",
+      "published_R": 0.3523,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0077,
+      "funding_entry_notional_scenario_R": 0.0006,
+      "scenarios_net_R": {
+        "0": 0.3535280878538841,
+        "2": 0.3509564834371147,
+        "5": 0.3470990768119606,
+        "10": 0.34067006577003717
+      }
+    },
+    {
+      "symbol": "NILUSDT",
+      "ts": 1790834400000,
+      "month": "2026-10",
+      "published_R": 0.3547,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0053,
+      "funding_entry_notional_scenario_R": 0.0014,
+      "scenarios_net_R": {
+        "0": 0.3565673208471758,
+        "2": 0.35480998297342153,
+        "5": 0.35217397616279006,
+        "10": 0.3477806314784044
+      }
+    },
+    {
+      "symbol": "NILUSDT",
+      "ts": 1791734400000,
+      "month": "2026-10",
+      "published_R": 0.3548,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0052,
+      "funding_entry_notional_scenario_R": 0.0011,
+      "scenarios_net_R": {
+        "0": 0.3563156884791245,
+        "2": 0.35457593883516975,
+        "5": 0.35196631436923764,
+        "10": 0.34761694025935086
+      }
+    },
+    {
+      "symbol": "OPUSDT",
+      "ts": 1789848000000,
+      "month": "2026-09",
+      "published_R": -1.0074,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0074,
+      "funding_entry_notional_scenario_R": 0.006,
+      "scenarios_net_R": {
+        "0": -1.0007506379510531,
+        "2": -1.0032054153877998,
+        "5": -1.0068875815429197,
+        "10": -1.0130245251347862
+      }
+    },
+    {
+      "symbol": "ORDIUSDT",
+      "ts": 1788516000000,
+      "month": "2026-09",
+      "published_R": 0.2226,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.009,
+      "funding_entry_notional_scenario_R": 0.0012,
+      "scenarios_net_R": {
+        "0": 0.22453369458578665,
+        "2": 0.2215277653442545,
+        "5": 0.2170188714819563,
+        "10": 0.20950404837812597
+      }
+    },
+    {
+      "symbol": "PEOPLEUSDT",
+      "ts": 1789725600000,
+      "month": "2026-09",
+      "published_R": -1.0126,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0126,
+      "funding_entry_notional_scenario_R": 0.0031,
+      "scenarios_net_R": {
+        "0": -1.0084435422363,
+        "2": -1.012641193958591,
+        "5": -1.0189376715420275,
+        "10": -1.029431800847755
+      }
+    },
+    {
+      "symbol": "PUMPFUNUSDT",
+      "ts": 1791108000000,
+      "month": "2026-10",
+      "published_R": 0.3541,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.0043,
+      "scenarios_net_R": {
+        "0": 0.3589203329930543,
+        "2": 0.35696409044507404,
+        "5": 0.3540297266231036,
+        "10": 0.3491391202531529
+      }
+    },
+    {
+      "symbol": "RENDERUSDT",
+      "ts": 1790056800000,
+      "month": "2026-09",
+      "published_R": -0.0812,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.005,
+      "funding_entry_notional_scenario_R": 0.0027,
+      "scenarios_net_R": {
+        "0": -0.07811273675705664,
+        "2": -0.0797900955778045,
+        "5": -0.08230613380892632,
+        "10": -0.08649953086079598
+      }
+    },
+    {
+      "symbol": "SEIUSDT",
+      "ts": 1790442000000,
+      "month": "2026-09",
+      "published_R": -0.5211,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0111,
+      "funding_entry_notional_scenario_R": 0.0015,
+      "scenarios_net_R": {
+        "0": -0.5187191822516481,
+        "2": -0.5224352485249747,
+        "5": -0.5280093479349646,
+        "10": -0.5372995136182811
+      }
+    },
+    {
+      "symbol": "SEIUSDT",
+      "ts": 1792195200000,
+      "month": "2026-10",
+      "published_R": 0.3543,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0057,
+      "funding_entry_notional_scenario_R": 0.0011,
+      "scenarios_net_R": {
+        "0": 0.3558856408278699,
+        "2": 0.35398951021982256,
+        "5": 0.35114531430775164,
+        "10": 0.34640498778763334
+      }
+    },
+    {
+      "symbol": "TAOUSDT",
+      "ts": 1790089200000,
+      "month": "2026-09",
+      "published_R": 0.3538,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0062,
+      "funding_entry_notional_scenario_R": 0.0019,
+      "scenarios_net_R": {
+        "0": 0.3561845133057816,
+        "2": 0.354106154507884,
+        "5": 0.3509886163110376,
+        "10": 0.3457927193162936
+      }
+    },
+    {
+      "symbol": "TRUMPUSDT",
+      "ts": 1788505200000,
+      "month": "2026-09",
+      "published_R": 0.3528,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0072,
+      "funding_entry_notional_scenario_R": 0.0,
+      "scenarios_net_R": {
+        "0": 0.35342166769641,
+        "2": 0.3510295468587409,
+        "5": 0.34744136560223726,
+        "10": 0.3414610635080645
+      }
+    },
+    {
+      "symbol": "TUTUSDT",
+      "ts": 1788728400000,
+      "month": "2026-09",
+      "published_R": 0.3538,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0062,
+      "funding_entry_notional_scenario_R": -0.008,
+      "scenarios_net_R": {
+        "0": 0.34064016925520885,
+        "2": 0.33857474548342864,
+        "5": 0.33547660982575833,
+        "10": 0.3303130503963078
+      }
+    },
+    {
+      "symbol": "TUTUSDT",
+      "ts": 1789549200000,
+      "month": "2026-09",
+      "published_R": -1.0056,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0056,
+      "funding_entry_notional_scenario_R": -0.0127,
+      "scenarios_net_R": {
+        "0": -1.0228971615359543,
+        "2": -1.0247511909061278,
+        "5": -1.0275322349613882,
+        "10": -1.032167308386822
+      }
+    },
+    {
+      "symbol": "UBUSDT",
+      "ts": 1790085600000,
+      "month": "2026-09",
+      "published_R": -0.0835,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.008,
+      "funding_entry_notional_scenario_R": 0.0097,
+      "scenarios_net_R": {
+        "0": -0.07309606879964804,
+        "2": -0.07574918472679278,
+        "5": -0.07972885861750989,
+        "10": -0.08636164843537174
+      }
+    },
+    {
+      "symbol": "UBUSDT",
+      "ts": 1792623600000,
+      "month": "2026-10",
+      "published_R": 0.344,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.016,
+      "funding_entry_notional_scenario_R": 0.0015,
+      "scenarios_net_R": {
+        "0": 0.34686651704046345,
+        "2": 0.3415452505097229,
+        "5": 0.33356335071361204,
+        "10": 0.3202601843867606
+      }
+    },
+    {
+      "symbol": "UNIUSDT",
+      "ts": 1789812000000,
+      "month": "2026-09",
+      "published_R": -0.5159,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.002,
+      "scenarios_net_R": {
+        "0": -0.5133989196943843,
+        "2": -0.515362163219615,
+        "5": -0.518307028507461,
+        "10": -0.5232151373205377
+      }
+    },
+    {
+      "symbol": "UNIUSDT",
+      "ts": 1790226000000,
+      "month": "2026-09",
+      "published_R": 0.3469,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0131,
+      "funding_entry_notional_scenario_R": -0.0007,
+      "scenarios_net_R": {
+        "0": 0.34729167418970514,
+        "2": 0.3429250102586888,
+        "5": 0.3363750143621643,
+        "10": 0.3254583545346235
+      }
+    },
+    {
+      "symbol": "USUSDT",
+      "ts": 1789135200000,
+      "month": "2026-09",
+      "published_R": -0.1481,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0061,
+      "funding_entry_notional_scenario_R": 0.0098,
+      "scenarios_net_R": {
+        "0": -0.14333070898073458,
+        "2": -0.14535447424995904,
+        "5": -0.14839012215379574,
+        "10": -0.1534495353268569
+      }
+    },
+    {
+      "symbol": "USUSDT",
+      "ts": 1792699200000,
+      "month": "2026-10",
+      "published_R": 0.3541,
+      "observed_fee_rate_per_side": 0.0011,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.0025,
+      "scenarios_net_R": {
+        "0": 0.3517680821311874,
+        "2": 0.3498168243368578,
+        "5": 0.3468899376453634,
+        "10": 0.3420117931595395
+      }
+    },
+    {
+      "symbol": "VIRTUALUSDT",
+      "ts": 1790042400000,
+      "month": "2026-09",
+      "published_R": -0.5182,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0082,
+      "funding_entry_notional_scenario_R": 0.0065,
+      "scenarios_net_R": {
+        "0": -0.5110026455147471,
+        "2": -0.5137308802473823,
+        "5": -0.5178232323463352,
+        "10": -0.5246438191779235
+      }
+    },
+    {
+      "symbol": "WIFUSDT",
+      "ts": 1789794000000,
+      "month": "2026-09",
+      "published_R": -0.5155,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0055,
+      "funding_entry_notional_scenario_R": 0.0017,
+      "scenarios_net_R": {
+        "0": -0.5133081047326323,
+        "2": -0.5151292337263168,
+        "5": -0.5178609272168436,
+        "10": -0.5224137497010549
+      }
+    },
+    {
+      "symbol": "WLDUSDT",
+      "ts": 1788890400000,
+      "month": "2026-09",
+      "published_R": 0.3541,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.0005,
+      "scenarios_net_R": {
+        "0": 0.35507698358015155,
+        "2": 0.35310497760929754,
+        "5": 0.35014696865301653,
+        "10": 0.34521695372588157
+      }
+    },
+    {
+      "symbol": "WLDUSDT",
+      "ts": 1791666000000,
+      "month": "2026-10",
+      "published_R": 0.3462,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0138,
+      "funding_entry_notional_scenario_R": 0.0039,
+      "scenarios_net_R": {
+        "0": 0.35126865029672777,
+        "2": 0.3466754322228106,
+        "5": 0.33978560511193484,
+        "10": 0.3283025599271419
+      }
+    },
+    {
+      "symbol": "WLDUSDT",
+      "ts": 1792573200000,
+      "month": "2026-10",
+      "published_R": 0.3503,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0097,
+      "funding_entry_notional_scenario_R": -0.0015,
+      "scenarios_net_R": {
+        "0": 0.34961330971671184,
+        "2": 0.3463817859773343,
+        "5": 0.34153450036826805,
+        "10": 0.33345569101982425
+      }
+    },
+    {
+      "symbol": "XPLUSDT",
+      "ts": 1790067600000,
+      "month": "2026-09",
+      "published_R": 0.3541,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0059,
+      "funding_entry_notional_scenario_R": 0.0002,
+      "scenarios_net_R": {
+        "0": 0.35477859637255493,
+        "2": 0.3528071768716658,
+        "5": 0.3498500476203321,
+        "10": 0.34492149886810936
+      }
+    },
+    {
+      "symbol": "ZECUSDT",
+      "ts": 1788786000000,
+      "month": "2026-09",
+      "published_R": 0.3513,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0087,
+      "funding_entry_notional_scenario_R": 0.0004,
+      "scenarios_net_R": {
+        "0": 0.352448932530473,
+        "2": 0.3495576352688268,
+        "5": 0.3452206893763575,
+        "10": 0.33799244622224206
+      }
+    },
+    {
+      "symbol": "ZROUSDT",
+      "ts": 1788498000000,
+      "month": "2026-09",
+      "published_R": 0.3535,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0065,
+      "funding_entry_notional_scenario_R": 0.0053,
+      "scenarios_net_R": {
+        "0": 0.35936438089470263,
+        "2": 0.3572059739473218,
+        "5": 0.35396836352625044,
+        "10": 0.3485723461577983
+      }
+    },
+    {
+      "symbol": "ZROUSDT",
+      "ts": 1791118800000,
+      "month": "2026-10",
+      "published_R": -0.2101,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0057,
+      "funding_entry_notional_scenario_R": 0.0066,
+      "scenarios_net_R": {
+        "0": -0.20304849629858113,
+        "2": -0.2049570404071561,
+        "5": -0.20781985657001853,
+        "10": -0.21259121684145593
+      }
+    },
+    {
+      "symbol": "ZROUSDT",
+      "ts": 1792159200000,
+      "month": "2026-10",
+      "published_R": 0.3546,
+      "observed_fee_rate_per_side": 0.00055,
+      "reported_model_fee_R": 0.0054,
+      "funding_entry_notional_scenario_R": 0.0005,
+      "scenarios_net_R": {
+        "0": 0.3555063110584207,
+        "2": 0.3536904241705736,
+        "5": 0.3509665938388031,
+        "10": 0.3464268766191854
+      }
+    }
+  ],
+  "economics": "INCONCLUSIVE",
+  "actual_money_cashflows": false,
+  "scenario_uses_entry_notional_not_settlement_mark": true,
+  "prose_residual_fraction_045_incorrect_code_060_correct": true,
+  "no_evaluator_rerun": true,
+  "broker_writes": 0
+}

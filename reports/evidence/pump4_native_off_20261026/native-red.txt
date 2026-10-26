@@ -1,0 +1,102 @@
+FFFFFFFFF.                                                               [100%]
+=================================== FAILURES ===================================
+_______ test_non_widening_mapping_keeps_reference_identity[short-103.8] ________
+
+side = 'short', native = '103.8'
+
+    @pytest.mark.parametrize('side,native',[('short','103.8'),('long','96.0')])
+    def test_non_widening_mapping_keeps_reference_identity(side,native):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:19: ModuleNotFoundError
+________ test_non_widening_mapping_keeps_reference_identity[long-96.0] _________
+
+side = 'long', native = '96.0'
+
+    @pytest.mark.parametrize('side,native',[('short','103.8'),('long','96.0')])
+    def test_non_widening_mapping_keeps_reference_identity(side,native):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:19: ModuleNotFoundError
+______________ test_invalid_or_tampered_mapping_rejected[symbol] _______________
+
+fault = 'symbol'
+
+    @pytest.mark.parametrize('fault',['symbol','tick','price','entry','mapping','plan'])
+    def test_invalid_or_tampered_mapping_rejected(fault):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:28: ModuleNotFoundError
+_______________ test_invalid_or_tampered_mapping_rejected[tick] ________________
+
+fault = 'tick'
+
+    @pytest.mark.parametrize('fault',['symbol','tick','price','entry','mapping','plan'])
+    def test_invalid_or_tampered_mapping_rejected(fault):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:28: ModuleNotFoundError
+_______________ test_invalid_or_tampered_mapping_rejected[price] _______________
+
+fault = 'price'
+
+    @pytest.mark.parametrize('fault',['symbol','tick','price','entry','mapping','plan'])
+    def test_invalid_or_tampered_mapping_rejected(fault):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:28: ModuleNotFoundError
+_______________ test_invalid_or_tampered_mapping_rejected[entry] _______________
+
+fault = 'entry'
+
+    @pytest.mark.parametrize('fault',['symbol','tick','price','entry','mapping','plan'])
+    def test_invalid_or_tampered_mapping_rejected(fault):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:28: ModuleNotFoundError
+______________ test_invalid_or_tampered_mapping_rejected[mapping] ______________
+
+fault = 'mapping'
+
+    @pytest.mark.parametrize('fault',['symbol','tick','price','entry','mapping','plan'])
+    def test_invalid_or_tampered_mapping_rejected(fault):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:28: ModuleNotFoundError
+_______________ test_invalid_or_tampered_mapping_rejected[plan] ________________
+
+fault = 'plan'
+
+    @pytest.mark.parametrize('fault',['symbol','tick','price','entry','mapping','plan'])
+    def test_invalid_or_tampered_mapping_rejected(fault):
+>       from research_lab.pump4_native_stop_v1 import native_mapping,verify_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:28: ModuleNotFoundError
+___________ test_mapping_lifecycle_restart_and_exact_native_readback ___________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-730/test_mapping_lifecycle_restart0')
+
+    def test_mapping_lifecycle_restart_and_exact_native_readback(tmp_path):
+>       from research_lab.pump4_native_stop_v1 import native_mapping
+E       ModuleNotFoundError: No module named 'research_lab.pump4_native_stop_v1'
+
+tests/test_pump4_native_stop_v1.py:41: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_native_stop_v1.py::test_non_widening_mapping_keeps_reference_identity[short-103.8]
+FAILED tests/test_pump4_native_stop_v1.py::test_non_widening_mapping_keeps_reference_identity[long-96.0]
+FAILED tests/test_pump4_native_stop_v1.py::test_invalid_or_tampered_mapping_rejected[symbol]
+FAILED tests/test_pump4_native_stop_v1.py::test_invalid_or_tampered_mapping_rejected[tick]
+FAILED tests/test_pump4_native_stop_v1.py::test_invalid_or_tampered_mapping_rejected[price]
+FAILED tests/test_pump4_native_stop_v1.py::test_invalid_or_tampered_mapping_rejected[entry]
+FAILED tests/test_pump4_native_stop_v1.py::test_invalid_or_tampered_mapping_rejected[mapping]
+FAILED tests/test_pump4_native_stop_v1.py::test_invalid_or_tampered_mapping_rejected[plan]
+FAILED tests/test_pump4_native_stop_v1.py::test_mapping_lifecycle_restart_and_exact_native_readback
+9 failed, 1 passed in 3.35s

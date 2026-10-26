@@ -1,0 +1,20 @@
+{
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "runtime_metadata_verified": true,
+  "critical_findings": 0,
+  "important_findings": 0,
+  "native_review_tests": 115,
+  "independent84case_harness_pass": true,
+  "source_sha256": {
+    "research_lab/pump4_native_stop_v1.py": "95dda4be2325c6ee0314d4b5c6a7b5c18c9d9edd47880733a8f10b4155e49880",
+    "research_lab/pump4_execution_lifecycle_v1.py": "134dfe7a2af0fcbed94f562f9ec410d9660284899ce435bbb8ca328bb9b618d7",
+    "research_lab/pump4_account_adapter_v1.py": "e60da3aad8fb072130d1576ac451070036631398a4e92b16f937c7d62e817185",
+    "research_lab/pump4_account_owner_v1.py": "4dbe1b7956b929f3f02952ce11bf7f010d4fc56465d6cfaa1b9c7db4d9d6e602",
+    "research_lab/pump4_selected_runner_v1.py": "edac4c67872e64fb21369841fae4335163f892c3c3838216e976fbc5429c209d",
+    "research_lab/pump4_supervisor_v1.py": "80f329a8df605ad39c1cef278c78cb2e259ae0f58fc849a2c2ce73531a0ec23f"
+  },
+  "actual_H1_NOT_PROVEN": true,
+  "real_broker_writes": 0,
+  "financial_GO": false
+}

@@ -2,13 +2,14 @@
 
 No credentials, POST, ownership adoption or financial authority. Fee/funding
 observations are retained; complete pagination never establishes final costs
-from absent or potentially delayed activities. Exact-stop tick policy remains
-fail-closed. Quantization candidates are reported, never silently selected.
+from absent or potentially delayed activities. Reference geometry stays frozen;
+off-tick native geometry uses an explicit versioned ORDERS_OFF mapping.
 """
 from decimal import Decimal as D,ROUND_CEILING,ROUND_FLOOR
 from research_lab.alpaca_dynamic_v1 import digest
 from research_lab.pump4_bybit_sources_v1 import account_view,checked,paged,number,need,H
 from research_lab.pump4_execution_plan_v1 import frozen_sources
+from research_lab.pump4_native_stop_v1 import native_mapping
 
 DAY=24*H
 TERMINAL={'Filled','Cancelled','Rejected','Deactivated','PartiallyFilledCanceled'}
@@ -152,12 +153,13 @@ def execution_feasibility(plan,instrument,ticker,fee,account,policy,*,now_ms):
         need(account['borrowed_funds'] is False and account['margin_mode']=='REGULAR_MARGIN','BORROW_OR_MARGIN_UNKNOWN')
         entry,stop=number(plan['entry']),number(plan['stop']);lots=instrument['lotSizeFilter'];step=number(lots['qtyStep']);tick=number(instrument['priceFilter']['tickSize'])
         out.update(reference_stop=str(stop),rounding_candidates_not_selected=dict(floor=str((stop/tick).to_integral_value(rounding=ROUND_FLOOR)*tick),ceil=str((stop/tick).to_integral_value(rounding=ROUND_CEILING)*tick)))
-        need(stop%tick==0,'STOP_TICK_UNREPRESENTABLE')
+        mapping=native_mapping(plan,instrument,ticker) if stop%tick else None
+        native=number(mapping['native_stop']) if mapping is not None else stop
         r=number(policy['risk_usdt']);gross=number(policy['gross_usdt']);allocation=number(policy['allocation_usdt']);reserve=number(policy['reserve_usdt'],zero=True)
         rate=number(fee['takerFeeRate'],zero=True);slippage=number(policy['slippage_bps'],zero=True)/10000
         need(slippage<1 and plan['side'] in ('long','short'),'SLIPPAGE_OR_SIDE')
         price=number(ticker['ask1Price'] if plan['side']=='long' else ticker['bid1Price'])
-        need(stop<price if plan['side']=='long' else price<stop,'STOP_WRONG_SIDE_OF_QUOTE')
+        need(native<price if plan['side']=='long' else price<native,'STOP_WRONG_SIDE_OF_QUOTE')
         adverse_entry=price*(1+slippage if plan['side']=='long' else 1-slippage)
         stop_distance=max(abs(entry-stop),abs(adverse_entry-stop))
         unit=5*step;qty=(min(r/stop_distance,gross/(price*(1+slippage)),allocation/(price*(1+slippage)))/unit).to_integral_value(rounding=ROUND_FLOOR)*unit
@@ -170,7 +172,7 @@ def execution_feasibility(plan,instrument,ticker,fee,account,policy,*,now_ms):
         current=D(ticker['fundingRate']);low=D(instrument['lowerFundingRate']);high=D(instrument['upperFundingRate'])
         need(all(n.is_finite() for n in (current,low,high)) and low<=current<=high,'FUNDING_RATE_UNKNOWN')
         count=(D(plan['hold_bars']*60)/interval).to_integral_value(rounding=ROUND_CEILING)
-        out.update(status='FEASIBLE_PROPOSAL_ONLY',native_stop=str(stop),quantity=str(qty),gross_usdt=str(qty*price),
+        out.update(status='FEASIBLE_PROPOSAL_ONLY',native_stop=str(native),quantity=str(qty),gross_usdt=str(qty*price),
             nominal_stop_risk_usdt=str(qty*stop_distance),reference_stop_risk_usdt=str(qty*abs(entry-stop)),
             adverse_entry_price_scenario=str(adverse_entry),loss_is_guaranteed_bound=False,
             constant_price_roundtrip_fee_usdt=str(fee_est),
@@ -178,5 +180,6 @@ def execution_feasibility(plan,instrument,ticker,fee,account,policy,*,now_ms):
             constant_notional_current_rate_funding_scenario_usdt=str(qty*price*abs(current)*count),
             constant_notional_current_cap_funding_scenario_usdt=str(qty*price*max(abs(low),abs(high))*count),
             funding_is_guaranteed_bound=False,authority_status='NOT_APPROVED',input_identity_sha256=digest(dict(plan=plan,instrument=instrument,ticker=ticker,fee=fee,account=account,policy=policy)))
+        if mapping is not None:out['native_stop_mapping']=mapping
     except (ValueError,KeyError,TypeError,ArithmeticError) as e:out['blocker']=str(e).removeprefix('PUMP4_SOURCE_')
     return out

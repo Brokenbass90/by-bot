@@ -1,5 +1,31 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT26Oct19:30UTC — NATIVE STOP +84 OFF PROTOCOL CODE PASS; CURRENT PREFIX STAGED.
+Read PUMP4_NATIVE_STOP_AND_CURRENT_2026_10_26.md. Native mapper preservesreference
+plan/hash/qtyrisk;SHORTfloor/LONGceil;exactmappedreadback;immutableconfig/resume;
+newmappedapplyTrue denied,oldGO cannotarm.119targeted/84of84 memoryprotocolPASS;
+source-sizingseparate2fixturePASS/51capacityBLOCK/31costcapacityBLOCK,notmoney.
+303local networkdeniedPASS/113sources/52imports/18modules/0fallback/0realbrokercalls.
+Candidate70d4a1009c13eccf stagedUNSELECTED onVPS;303VPS networkdeniedPASS.
+AdvisoryCURRENTclassifier nowbounded8KBunverifiedhint->IMMEDIATE only;actualfull
+source/hash/journal/producerchecksunchanged.81prefix testsPASS;actualnewH1pending.
+Oneboundedcriticalreviewnative andseparateharness/prefix:0Important;runtimeastraHIGH.
+Originalintake/strategy/60s/Monthlyunchanged. No newfinancialselection/GO/orders.
+Funding99da9ef/29366fb/76c9041 nowpublished underoriginb3516e34;no seconddata download/
+judge/evaluator rerun. Same84rows/accountfees unified scenarios netR2bps .06030,
+5bps .05656,10bps .05031 afterClaude funding scenario+.00235357R. Notactualcashflow:
+entrynotional!=settlementmark,9entry/25exitboundaries uncertain,sourcegapsunattested.
+0.45residualinreporttypo;codecorrect0.60. EconomyINCONCLUSIVE;notbyitselfabar to
+separateowner-approvedtechnicalmicro,notprofitablemassLIVEclaim.
+KITY boundedstatus:twoC1operational/C2parityPASS !=economicPASS;last27weekst.26,
+oldmicroSPENT/earlyunwind−.22198USD;weeklylifecycle/independentnetnotready. NoKITYstart.
+NEXT preservecurrentuncommittedworknowcommitting;finishVPSacceptance->sameDATA/
+legacyappOFFconsumerhandoff exacttestedops native-prefix-handoff-20261026 preserving
+allhistory/oneowner818853->actual20H1 withquote/delaymeasurement. No hourretry.
+Residualold lifecycle5s/exactopen intentionallynotrelaxed;newrealentrycontract
+needsexplicitOFFversionandownerreview beforeanymonetarypacket. No oldGOinheritance.
+
+
 CURRENT26Oct13:26UTC — OWNER84 DECISION: TINY BLOCKED; CONTINUE NATIVE-STOP OFF ADAPTER.
 Read PUMP4_OWNER_DECISION_2026_10_26.md first. Latestownerattachment narrowsCodex
 PUMP production;ClaudeWeeklyFill research only, Monthlyv6unchanged/noactivation.

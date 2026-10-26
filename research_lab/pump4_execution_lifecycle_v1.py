@@ -14,6 +14,7 @@ from research_lab.alpaca_dynamic_v1 import digest
 from research_lab.att1_lifecycle_journal import LifecycleJournal, SCHEMA
 from research_lab.kity_micro_physical_owner_v1 import AccountLease, publish
 from research_lab.pump4_execution_plan_v1 import HOUR_MS, frozen_sources
+from research_lab.pump4_native_stop_v1 import verify_mapping
 
 DOMAIN='PUMP4_BYBIT_EXECUTION_ORDERS_OFF_V1'
 TERMINAL={'Filled','Cancelled','Rejected','Deactivated','PartiallyFilledCanceled'}
@@ -37,7 +38,7 @@ class Pump4Lifecycle:
     global single-writer ownership, risk/fee/funding policy and send-once gateway.
     This module deliberately cannot activate that authority or spend money.
     """
-    def __init__(self,root,plan,*,qty,qty_step,min_qty,min_notional,tick_size):
+    def __init__(self,root,plan,*,qty,qty_step,min_qty,min_notional,tick_size,native_stop_mapping=None):
         self.root=Path(root).absolute()
         need('..' not in self.root.parts and not any(p.is_symlink() for p in (self.root,*self.root.parents)),'ROOT_CUSTODY')
         frozen_sources()
@@ -49,9 +50,11 @@ class Pump4Lifecycle:
         q,step,mq,mn,tick=map(number,(qty,qty_step,min_qty,min_notional,tick_size))
         need(q%step==0 and q*D('.4')%step==0 and q*D('.6')%step==0
             and min(q*D('.4'),q*D('.6'))>=mq and q*number(plan['entry'])>=mn,'LOT_40_60_OR_MINIMUM')
-        need(number(plan['stop'])%tick==0,'STOP_TICK_UNREPRESENTABLE')
+        if native_stop_mapping is None:need(number(plan['stop'])%tick==0,'STOP_TICK_UNREPRESENTABLE')
+        else:verify_mapping(plan,tick_size,native_stop_mapping)
         self.config=dict(domain=DOMAIN,plan=plan,qty=str(q),qty_step=str(step),min_qty=str(mq),
             min_notional=str(mn),tick_size=str(tick),orders_allowed=False,money_authority=False)
+        if native_stop_mapping is not None:self.config['native_stop_mapping']=json.loads(json.dumps(native_stop_mapping))
         self.root.mkdir(mode=0o700,parents=True,exist_ok=True)
         p=self.root/'execution-config.json'
         try:publish(p,self.config)
@@ -62,7 +65,8 @@ class Pump4Lifecycle:
     @classmethod
     def resume(cls,root):
         c=json.loads((Path(root)/'execution-config.json').read_bytes())
-        return cls(root,c['plan'],**{k:c[k] for k in ('qty','qty_step','min_qty','min_notional','tick_size')})
+        return cls(root,c['plan'],**{k:c[k] for k in ('qty','qty_step','min_qty','min_notional','tick_size')},
+            **({'native_stop_mapping':c['native_stop_mapping']} if 'native_stop_mapping' in c else {}))
 
     def _events(self):
         rows=self.journal.read();pin=digest(self.config)
@@ -91,6 +95,12 @@ class Pump4Lifecycle:
 
     def _advance(self,o,now):
         c=self.config;p=c['plan'];events=self._events();short=p['side']=='short'
+        mapping=c.get('native_stop_mapping')
+        if mapping is not None:verify_mapping(p,c['tick_size'],mapping)
+        intended=number(mapping['native_stop']) if mapping is not None else number(p['stop'])
+        def accepted_stop(value):
+            stop=number(value)
+            return stop==intended if mapping is not None else (stop<=intended if short else stop>=intended)
         need(type(now) is int and o['schema']=='PUMP4_BYBIT_OBSERVATION_V1'
             and type(o['source_ms']) is int and type(o['observed_ms']) is int
             and 0<=now-o['source_ms']<=5000 and o['source_ms']<=o['observed_ms']<=now
@@ -134,8 +144,7 @@ class Pump4Lifecycle:
                 and native['positionIdx']==0 and native['stopOrderType']=='StopLoss','NATIVE_STOP_IDENTITY')
             if (held>0 and native['orderStatus']=='Untriggered'
                 and number(native['qty'],zero=True)==held
-                and (number(native['triggerPrice'])<=number(p['stop']) if short
-                     else number(native['triggerPrice'])>=number(p['stop']))):
+                and accepted_stop(native['triggerPrice'])):
                 stops.add(native['orderId'])
         entry=D(0);exit_qty=D(0);fee=D(0);fees_known=True;percid={cid:D(0) for cid in requests}
         for fill in fills:
@@ -174,8 +183,7 @@ class Pump4Lifecycle:
         protected=False
         if held:
             if native and native['orderStatus']=='Untriggered' and number(native['qty'],zero=True)==held:
-                stop=number(native['triggerPrice']);frozen=number(p['stop'])
-                protected=stop<=frozen if short else stop>=frozen
+                stop=number(native['triggerPrice']);protected=accepted_stop(native['triggerPrice'])
         # Preserve validated financial facts even when protection prevents action.
         # Unverified stop IDs are retained as evidence but never trusted for fills.
         self.observations.append(dict(schema_id=SCHEMA,event_id='pump4-observation-'+digest(o),
@@ -197,6 +205,7 @@ class Pump4Lifecycle:
         if not events:
             need(p['entry_bar_open_ms']<=now<=p['entry_bar_open_ms']+5000,'NEXT_OPEN_WINDOW')
             need(price==number(p['entry']),'NEXT_OPEN_PRICE_CONFLICT')
+            need(price<intended if short else intended<price,'NATIVE_TRIGGER_GEOMETRY')
             role='ENTRY';qty=number(c['qty'])
         else:
             role=None;qty=D(0)
@@ -215,7 +224,7 @@ class Pump4Lifecycle:
         cid='p4-'+digest(self.config)[:20]+'-'+str(len(events))
         request=dict(category='linear',symbol=p['symbol'],side=('Sell' if short else 'Buy') if role=='ENTRY' else ('Buy' if short else 'Sell'),
             orderType='Market',qty=str(qty),positionIdx=0,reduceOnly=role!='ENTRY',orderLinkId=cid)
-        if role=='ENTRY':request.update(stopLoss=str(p['stop']),slTriggerBy='LastPrice',tpslMode='Full')
+        if role=='ENTRY':request.update(stopLoss=mapping['native_stop'] if mapping is not None else str(p['stop']),slTriggerBy='LastPrice',tpslMode='Full')
         event=dict(schema_id=SCHEMA,event_id='pump4-action-'+digest(self.config)[:20]+'-'+str(len(events)),
             domain=DOMAIN,config_sha256=digest(self.config),kind='RESERVED_ACTION',role=role,request=request,
             observed_ms=now,observation_sha256=digest(o),native_stop_id=native['orderId'] if native else None)

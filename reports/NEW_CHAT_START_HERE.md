@@ -17,6 +17,25 @@ reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
 single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
 2Novfreshentry/protection checks remain actual future gates; CASHpossible.
 
+## Current19:30 — continue native/prefix acceptance, do not restart
+
+Read `PUMP4_NATIVE_STOP_AND_CURRENT_2026_10_26.md` FIRST. Code native mapping +84
+memory protocol PASS;303local networkdeniedPASS, candidate70d4a1009c13eccf staged
+UNSELECTED/303VPS network-deniedPASS. Prefix advisory bounded-tail fix accepted
+81tests; actualnewH1 pending. No brokerwrites/financialGO/Monthlychange.
+Same activefinancialapp306/config125b0ae6/scopea527f12c/PID2955754 until explicit
+legacyappOFF rebind; oldroots/epochs/journals preserved. Don't repeat acceptance.
+Native source tree saved; exact84 source-sizing remains2fixturePASS/82BLOCK, not
+84financialadmissions. Same-input84parity staysPASS;actual09timelinessFAIL history.
+Originb3516e34 nowcontains29366fb,76c9041,99da9ef; funding arithmetic unified,
+2/5/10bpsperSIDE net scenario .06030/.05656/.05031R withobservedfees,NOTactualcashflow.
+0.45reporttypo only;code.60. Mark/boundary/coverage caveats in currentreport.
+KITY status `KITY_BOUNDED_MONEY_STATUS_2026_10_26.md`,noeconomicsPASS/noswitch.
+NEXT exactVPSacceptance->sameDATA/legacyownerOFFhandoff->actual20H1 andquote delay.
+Existinglifecycle5s/exactopen gate remains separateversionedentry-contract task;
+no silentrelaxation or monetaryGO. KeepfinancialOFF. Technicalmicro ownerreview
+canremain economicallyINCONCLUSIVE aftertechnicalPASS; don'tclaimincomeLIVE.
+
 ## NEXT PUMP — five-gate decision BLOCKED;84 parity PASS; no new audit
 
 Read `PUMP4_OWNER_DECISION_2026_10_26.md` FIRST, then only linked evidence needed.
