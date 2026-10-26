@@ -1,0 +1,881 @@
+{
+  "observed_ms": 1792951589441,
+  "process_receipt": {
+    "broker_writes": 0,
+    "child_cpu_seconds": 30.468712,
+    "child_pid": 2910819,
+    "child_returncode": 0,
+    "financial_owner_constructed": false,
+    "notices": [
+      {
+        "parent_processing_started_ms": 1792951209787,
+        "parent_publication_finished_ms": 1792951218528,
+        "parent_received_ms": 1792951209786,
+        "symbol": "1000RATSUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951218533,
+        "parent_publication_finished_ms": 1792951218816,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ACEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951218816,
+        "parent_publication_finished_ms": 1792951220285,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ADAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951220286,
+        "parent_publication_finished_ms": 1792951227883,
+        "parent_received_ms": 1792951218528,
+        "symbol": "AAVEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951227884,
+        "parent_publication_finished_ms": 1792951230467,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ACTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951230468,
+        "parent_publication_finished_ms": 1792951232481,
+        "parent_received_ms": 1792951218528,
+        "symbol": "AEROUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951232482,
+        "parent_publication_finished_ms": 1792951236617,
+        "parent_received_ms": 1792951218528,
+        "symbol": "1000BONKUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951236617,
+        "parent_publication_finished_ms": 1792951238474,
+        "parent_received_ms": 1792951218528,
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951238475,
+        "parent_publication_finished_ms": 1792951238609,
+        "parent_received_ms": 1792951218528,
+        "symbol": "AKEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951238610,
+        "parent_publication_finished_ms": 1792951238872,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ARBUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951238873,
+        "parent_publication_finished_ms": 1792951240601,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ALLOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951240602,
+        "parent_publication_finished_ms": 1792951241540,
+        "parent_received_ms": 1792951218528,
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951241542,
+        "parent_publication_finished_ms": 1792951247258,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ALGOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951247267,
+        "parent_publication_finished_ms": 1792951253460,
+        "parent_received_ms": 1792951218528,
+        "symbol": "APTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951253461,
+        "parent_publication_finished_ms": 1792951255745,
+        "parent_received_ms": 1792951218528,
+        "symbol": "BANANAS31USDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951255745,
+        "parent_publication_finished_ms": 1792951257456,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ASTERUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951257457,
+        "parent_publication_finished_ms": 1792951258161,
+        "parent_received_ms": 1792951218528,
+        "symbol": "ATOMUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951258162,
+        "parent_publication_finished_ms": 1792951259188,
+        "parent_received_ms": 1792951218528,
+        "symbol": "BANKUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951259189,
+        "parent_publication_finished_ms": 1792951259208,
+        "parent_received_ms": 1792951218528,
+        "symbol": "BEATUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951259209,
+        "parent_publication_finished_ms": 1792951259238,
+        "parent_received_ms": 1792951218528,
+        "symbol": "BIOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951259239,
+        "parent_publication_finished_ms": 1792951260336,
+        "parent_received_ms": 1792951218528,
+        "symbol": "BICOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951260341,
+        "parent_publication_finished_ms": 1792951261811,
+        "parent_received_ms": 1792951218528,
+        "symbol": "BCHUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951261812,
+        "parent_publication_finished_ms": 1792951264008,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BLUAIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951264009,
+        "parent_publication_finished_ms": 1792951266007,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BMTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951266007,
+        "parent_publication_finished_ms": 1792951267898,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BLESSUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951267898,
+        "parent_publication_finished_ms": 1792951270188,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BNBUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951270188,
+        "parent_publication_finished_ms": 1792951271727,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BROCCOLIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951271727,
+        "parent_publication_finished_ms": 1792951272115,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BOMEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951272115,
+        "parent_publication_finished_ms": 1792951272152,
+        "parent_received_ms": 1792951261811,
+        "symbol": "CCUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951272152,
+        "parent_publication_finished_ms": 1792951272191,
+        "parent_received_ms": 1792951261811,
+        "symbol": "CBRSUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951272191,
+        "parent_publication_finished_ms": 1792951272630,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BZUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951272633,
+        "parent_publication_finished_ms": 1792951273014,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BTCUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951273015,
+        "parent_publication_finished_ms": 1792951273038,
+        "parent_received_ms": 1792951261811,
+        "symbol": "COOKIEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951273039,
+        "parent_publication_finished_ms": 1792951273578,
+        "parent_received_ms": 1792951261811,
+        "symbol": "BTRUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951273579,
+        "parent_publication_finished_ms": 1792951274049,
+        "parent_received_ms": 1792951261811,
+        "symbol": "C98USDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951274049,
+        "parent_publication_finished_ms": 1792951274300,
+        "parent_received_ms": 1792951261811,
+        "symbol": "COAIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951274301,
+        "parent_publication_finished_ms": 1792951274678,
+        "parent_received_ms": 1792951261811,
+        "symbol": "CLUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951274678,
+        "parent_publication_finished_ms": 1792951274960,
+        "parent_received_ms": 1792951261811,
+        "symbol": "COTIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951274960,
+        "parent_publication_finished_ms": 1792951276032,
+        "parent_received_ms": 1792951261811,
+        "symbol": "CRVUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951276033,
+        "parent_publication_finished_ms": 1792951276377,
+        "parent_received_ms": 1792951261811,
+        "symbol": "CRCLUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951276377,
+        "parent_publication_finished_ms": 1792951276409,
+        "parent_received_ms": 1792951261811,
+        "symbol": "DEXEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951276410,
+        "parent_publication_finished_ms": 1792951276903,
+        "parent_received_ms": 1792951261811,
+        "symbol": "CYSUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951276904,
+        "parent_publication_finished_ms": 1792951277314,
+        "parent_received_ms": 1792951261811,
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951277314,
+        "parent_publication_finished_ms": 1792951277712,
+        "parent_received_ms": 1792951261811,
+        "symbol": "DRAMUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951277712,
+        "parent_publication_finished_ms": 1792951278270,
+        "parent_received_ms": 1792951261811,
+        "symbol": "ENAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951278270,
+        "parent_publication_finished_ms": 1792951278697,
+        "parent_received_ms": 1792951261811,
+        "symbol": "EPICUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951278697,
+        "parent_publication_finished_ms": 1792951279197,
+        "parent_received_ms": 1792951261811,
+        "symbol": "ESPUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951279198,
+        "parent_publication_finished_ms": 1792951279605,
+        "parent_received_ms": 1792951261811,
+        "symbol": "ESPORTSUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951279605,
+        "parent_publication_finished_ms": 1792951280022,
+        "parent_received_ms": 1792951279605,
+        "symbol": "ETHUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951280022,
+        "parent_publication_finished_ms": 1792951280496,
+        "parent_received_ms": 1792951279605,
+        "symbol": "ETCUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951280497,
+        "parent_publication_finished_ms": 1792951280969,
+        "parent_received_ms": 1792951279605,
+        "symbol": "ETHFIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951280969,
+        "parent_publication_finished_ms": 1792951281354,
+        "parent_received_ms": 1792951279605,
+        "symbol": "EWYUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951281355,
+        "parent_publication_finished_ms": 1792951282446,
+        "parent_received_ms": 1792951279605,
+        "symbol": "FARTCOINUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951282446,
+        "parent_publication_finished_ms": 1792951282456,
+        "parent_received_ms": 1792951279605,
+        "symbol": "HFTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951282457,
+        "parent_publication_finished_ms": 1792951282703,
+        "parent_received_ms": 1792951279605,
+        "symbol": "GRASSUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951282705,
+        "parent_publication_finished_ms": 1792951282999,
+        "parent_received_ms": 1792951279605,
+        "symbol": "FILUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951283000,
+        "parent_publication_finished_ms": 1792951283296,
+        "parent_received_ms": 1792951279605,
+        "symbol": "GALAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951283297,
+        "parent_publication_finished_ms": 1792951283524,
+        "parent_received_ms": 1792951279605,
+        "symbol": "GWEIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951283526,
+        "parent_publication_finished_ms": 1792951283811,
+        "parent_received_ms": 1792951279605,
+        "symbol": "HBARUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951283812,
+        "parent_publication_finished_ms": 1792951284029,
+        "parent_received_ms": 1792951279605,
+        "symbol": "HEIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951284030,
+        "parent_publication_finished_ms": 1792951284314,
+        "parent_received_ms": 1792951279605,
+        "symbol": "GUNUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951284314,
+        "parent_publication_finished_ms": 1792951284602,
+        "parent_received_ms": 1792951279605,
+        "symbol": "HOMEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951284603,
+        "parent_publication_finished_ms": 1792951284868,
+        "parent_received_ms": 1792951279605,
+        "symbol": "ICPUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951284868,
+        "parent_publication_finished_ms": 1792951285090,
+        "parent_received_ms": 1792951279605,
+        "symbol": "HYPEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951285091,
+        "parent_publication_finished_ms": 1792951285343,
+        "parent_received_ms": 1792951279605,
+        "symbol": "INTCUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951285344,
+        "parent_publication_finished_ms": 1792951285542,
+        "parent_received_ms": 1792951279605,
+        "symbol": "INJUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951285542,
+        "parent_publication_finished_ms": 1792951285839,
+        "parent_received_ms": 1792951279605,
+        "symbol": "LAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951285840,
+        "parent_publication_finished_ms": 1792951286070,
+        "parent_received_ms": 1792951279605,
+        "symbol": "KAITOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951286071,
+        "parent_publication_finished_ms": 1792951286321,
+        "parent_received_ms": 1792951279605,
+        "symbol": "JTOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951286322,
+        "parent_publication_finished_ms": 1792951286566,
+        "parent_received_ms": 1792951279605,
+        "symbol": "LDOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951286567,
+        "parent_publication_finished_ms": 1792951286820,
+        "parent_received_ms": 1792951279605,
+        "symbol": "LITUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951286820,
+        "parent_publication_finished_ms": 1792951287194,
+        "parent_received_ms": 1792951279605,
+        "symbol": "LITEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951287194,
+        "parent_publication_finished_ms": 1792951287621,
+        "parent_received_ms": 1792951279605,
+        "symbol": "METAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951287621,
+        "parent_publication_finished_ms": 1792951287983,
+        "parent_received_ms": 1792951279605,
+        "symbol": "MMTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951287985,
+        "parent_publication_finished_ms": 1792951288403,
+        "parent_received_ms": 1792951279605,
+        "symbol": "MEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951288404,
+        "parent_publication_finished_ms": 1792951288720,
+        "parent_received_ms": 1792951288403,
+        "symbol": "MRVLUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951288721,
+        "parent_publication_finished_ms": 1792951289074,
+        "parent_received_ms": 1792951288403,
+        "symbol": "MONUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951289075,
+        "parent_publication_finished_ms": 1792951289436,
+        "parent_received_ms": 1792951288403,
+        "symbol": "MNTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951289437,
+        "parent_publication_finished_ms": 1792951289873,
+        "parent_received_ms": 1792951288403,
+        "symbol": "MSFTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951289874,
+        "parent_publication_finished_ms": 1792951290271,
+        "parent_received_ms": 1792951288403,
+        "symbol": "MUBARAKUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951290272,
+        "parent_publication_finished_ms": 1792951290636,
+        "parent_received_ms": 1792951288403,
+        "symbol": "MSTRUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951290637,
+        "parent_publication_finished_ms": 1792951291000,
+        "parent_received_ms": 1792951288403,
+        "symbol": "NBISUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951291001,
+        "parent_publication_finished_ms": 1792951291425,
+        "parent_received_ms": 1792951288403,
+        "symbol": "MUUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951291426,
+        "parent_publication_finished_ms": 1792951291860,
+        "parent_received_ms": 1792951288403,
+        "symbol": "NILUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951291860,
+        "parent_publication_finished_ms": 1792951292292,
+        "parent_received_ms": 1792951288403,
+        "symbol": "NVDAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951292293,
+        "parent_publication_finished_ms": 1792951292709,
+        "parent_received_ms": 1792951288403,
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951292709,
+        "parent_publication_finished_ms": 1792951293162,
+        "parent_received_ms": 1792951288403,
+        "symbol": "OPUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951293163,
+        "parent_publication_finished_ms": 1792951293504,
+        "parent_received_ms": 1792951288403,
+        "symbol": "ORDIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951293504,
+        "parent_publication_finished_ms": 1792951293774,
+        "parent_received_ms": 1792951288403,
+        "symbol": "PAXGUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951293775,
+        "parent_publication_finished_ms": 1792951294072,
+        "parent_received_ms": 1792951288403,
+        "symbol": "PUMPFUNUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951294073,
+        "parent_publication_finished_ms": 1792951294340,
+        "parent_received_ms": 1792951288403,
+        "symbol": "PLTRUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951294340,
+        "parent_publication_finished_ms": 1792951294730,
+        "parent_received_ms": 1792951288403,
+        "symbol": "PEOPLEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951294731,
+        "parent_publication_finished_ms": 1792951295046,
+        "parent_received_ms": 1792951288403,
+        "symbol": "POLUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951295047,
+        "parent_publication_finished_ms": 1792951295469,
+        "parent_received_ms": 1792951288403,
+        "symbol": "PENGUUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951295470,
+        "parent_publication_finished_ms": 1792951295785,
+        "parent_received_ms": 1792951288403,
+        "symbol": "QQQUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951295785,
+        "parent_publication_finished_ms": 1792951296167,
+        "parent_received_ms": 1792951288403,
+        "symbol": "RENDERUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951296168,
+        "parent_publication_finished_ms": 1792951296576,
+        "parent_received_ms": 1792951288403,
+        "symbol": "RKLBUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951296577,
+        "parent_publication_finished_ms": 1792951296925,
+        "parent_received_ms": 1792951288403,
+        "symbol": "ROBOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951296926,
+        "parent_publication_finished_ms": 1792951297301,
+        "parent_received_ms": 1792951288403,
+        "symbol": "SHIB1000USDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951297302,
+        "parent_publication_finished_ms": 1792951297724,
+        "parent_received_ms": 1792951288403,
+        "symbol": "SEIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951297724,
+        "parent_publication_finished_ms": 1792951298069,
+        "parent_received_ms": 1792951288403,
+        "symbol": "SKYAI1USDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951298069,
+        "parent_publication_finished_ms": 1792951298403,
+        "parent_received_ms": 1792951288403,
+        "symbol": "SIRENUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951298403,
+        "parent_publication_finished_ms": 1792951298803,
+        "parent_received_ms": 1792951298403,
+        "symbol": "SOLUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951298803,
+        "parent_publication_finished_ms": 1792951299228,
+        "parent_received_ms": 1792951298403,
+        "symbol": "SNDKUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951299229,
+        "parent_publication_finished_ms": 1792951299747,
+        "parent_received_ms": 1792951298403,
+        "symbol": "SOXLUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951299747,
+        "parent_publication_finished_ms": 1792951300131,
+        "parent_received_ms": 1792951298403,
+        "symbol": "SQDUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951300131,
+        "parent_publication_finished_ms": 1792951300509,
+        "parent_received_ms": 1792951298403,
+        "symbol": "STRKUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951300510,
+        "parent_publication_finished_ms": 1792951300895,
+        "parent_received_ms": 1792951298403,
+        "symbol": "TAOUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951300896,
+        "parent_publication_finished_ms": 1792951301208,
+        "parent_received_ms": 1792951298403,
+        "symbol": "THEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951301209,
+        "parent_publication_finished_ms": 1792951301526,
+        "parent_received_ms": 1792951298403,
+        "symbol": "SUIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951301528,
+        "parent_publication_finished_ms": 1792951301895,
+        "parent_received_ms": 1792951298403,
+        "symbol": "TIAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951301896,
+        "parent_publication_finished_ms": 1792951302258,
+        "parent_received_ms": 1792951298403,
+        "symbol": "TRUMPUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951302259,
+        "parent_publication_finished_ms": 1792951302498,
+        "parent_received_ms": 1792951298403,
+        "symbol": "TRXUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951302498,
+        "parent_publication_finished_ms": 1792951302742,
+        "parent_received_ms": 1792951298403,
+        "symbol": "TSLAUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951302746,
+        "parent_publication_finished_ms": 1792951303034,
+        "parent_received_ms": 1792951298403,
+        "symbol": "TUTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951303035,
+        "parent_publication_finished_ms": 1792951303258,
+        "parent_received_ms": 1792951298403,
+        "symbol": "USDCUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951303260,
+        "parent_publication_finished_ms": 1792951303454,
+        "parent_received_ms": 1792951298403,
+        "symbol": "UBUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951303455,
+        "parent_publication_finished_ms": 1792951303713,
+        "parent_received_ms": 1792951298403,
+        "symbol": "UNIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951303713,
+        "parent_publication_finished_ms": 1792951303931,
+        "parent_received_ms": 1792951298403,
+        "symbol": "USUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951303932,
+        "parent_publication_finished_ms": 1792951304113,
+        "parent_received_ms": 1792951298403,
+        "symbol": "USELESSUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951304114,
+        "parent_publication_finished_ms": 1792951304299,
+        "parent_received_ms": 1792951298403,
+        "symbol": "VELODROMEUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951304300,
+        "parent_publication_finished_ms": 1792951304477,
+        "parent_received_ms": 1792951298403,
+        "symbol": "VVVUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951304478,
+        "parent_publication_finished_ms": 1792951304661,
+        "parent_received_ms": 1792951298403,
+        "symbol": "VIRTUALUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951304662,
+        "parent_publication_finished_ms": 1792951304848,
+        "parent_received_ms": 1792951298403,
+        "symbol": "WLFIUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951304849,
+        "parent_publication_finished_ms": 1792951305076,
+        "parent_received_ms": 1792951298403,
+        "symbol": "WLDUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951305077,
+        "parent_publication_finished_ms": 1792951305273,
+        "parent_received_ms": 1792951298403,
+        "symbol": "WIFUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951305274,
+        "parent_publication_finished_ms": 1792951305464,
+        "parent_received_ms": 1792951298403,
+        "symbol": "XAGUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951305465,
+        "parent_publication_finished_ms": 1792951305654,
+        "parent_received_ms": 1792951298403,
+        "symbol": "XANUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951305655,
+        "parent_publication_finished_ms": 1792951305847,
+        "parent_received_ms": 1792951298403,
+        "symbol": "XAUTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951305848,
+        "parent_publication_finished_ms": 1792951306049,
+        "parent_received_ms": 1792951305847,
+        "symbol": "XMRUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951306050,
+        "parent_publication_finished_ms": 1792951306226,
+        "parent_received_ms": 1792951305847,
+        "symbol": "XLMUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951306227,
+        "parent_publication_finished_ms": 1792951306404,
+        "parent_received_ms": 1792951305847,
+        "symbol": "XAUUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951306405,
+        "parent_publication_finished_ms": 1792951306594,
+        "parent_received_ms": 1792951305847,
+        "symbol": "XPLUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951306595,
+        "parent_publication_finished_ms": 1792951306790,
+        "parent_received_ms": 1792951305847,
+        "symbol": "XRPUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951306791,
+        "parent_publication_finished_ms": 1792951306960,
+        "parent_received_ms": 1792951305847,
+        "symbol": "ZECUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951306960,
+        "parent_publication_finished_ms": 1792951307146,
+        "parent_received_ms": 1792951305847,
+        "symbol": "ZBTUSDT"
+      },
+      {
+        "parent_processing_started_ms": 1792951307147,
+        "parent_publication_finished_ms": 1792951307330,
+        "parent_received_ms": 1792951305847,
+        "symbol": "ZROUSDT"
+      }
+    ],
+    "parent_completed_ms": 1792951307330,
+    "parent_pid": 2910817,
+    "parent_started_ms": 1792951203872,
+    "schema": "PUMP4_PUBLIC_CAPTURE_PROCESS_RECEIPT_V1",
+    "source_hour_open_ms": 1792951200000,
+    "stderr_bytes": 0,
+    "stderr_tail": "",
+    "symbols": 137
+  },
+  "parent_service_ms": {
+    "min": 10,
+    "median": 361,
+    "max": 8741,
+    "total": 97422
+  },
+  "timing_extremes": {
+    "parent_received_ms": {
+      "min": 1792951209786,
+      "max": 1792951305847
+    },
+    "parent_processing_started_ms": {
+      "min": 1792951209787,
+      "max": 1792951307147
+    },
+    "parent_publication_finished_ms": {
+      "min": 1792951218528,
+      "max": 1792951307330
+    }
+  },
+  "unit_state": "MainPID=0\nResult=success\nNRestarts=0\nMemoryPeak=[not set]\nCPUUsageNSec=58290102000\nId=pump4-data-supervisor.service\nActiveState=inactive\n\nMainPID=2908831\nResult=success\nNRestarts=0\nMemoryPeak=55164928\nCPUUsageNSec=481320454000\nId=pump4-execution-owner.service\nActiveState=active\n",
+  "latest_financial_receipt": {
+    "broker_writes": 0,
+    "final_costs_proven": false,
+    "mode": "ORDERS_OFF",
+    "observed_ms": 1792951578712,
+    "pid": 2908831,
+    "result": {
+      "broker_writes": 0,
+      "status": "NO_NEW_SIGNAL"
+    },
+    "run_id": "d20c97cc13664f998be27bea4e686a36",
+    "runner_config_sha256": "1634b01482de7d770620ce40cbffa4e0dff9c4d4119403c9c1d1b3cc39fbd628",
+    "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+    "scope_sha256": "e6f8c78accb8fbe9dc7a35c49572b241079f1b6dc554af6b4370bd03c69de0cb",
+    "tick": 215
+  },
+  "owner_go_present": false,
+  "monthly_unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d"
+}

@@ -6,6 +6,8 @@ from test_pump4_stream_publication_v1 import warm,context
 from test_pump4_bybit_sources_v1 import NOW
 import research_lab.pump4_supervisor_v1 as module
 
+REAL_POPEN=subprocess.Popen
+
 
 STUB=r'''
 import os,sys,json,shutil,hashlib,time,socket
@@ -30,11 +32,12 @@ def notice(symbol):
 if mode=='oversized':print('x'*2048,flush=True);raise SystemExit(0)
 if mode=='malformed':print('not json',flush=True);raise SystemExit(0)
 if mode=='unknown':print(json.dumps(dict(notice('ZROUSDT'),symbol='UNKNOWNUSDT')),flush=True);raise SystemExit(0)
-first=notice('ZROUSDT')
+first=notice('BLESSUSDT' if mode.startswith('catchup') else 'ZROUSDT')
 if mode=='hash':first['capture_sha256']='0'*64
 print(json.dumps(first),flush=True)
 if mode=='duplicate':print(json.dumps(first),flush=True);raise SystemExit(0)
 if mode=='nonzero':raise SystemExit(7)
+if mode=='catchup_fail':print(json.dumps(notice('ZROUSDT')),flush=True);raise SystemExit(7)
 if mode=='noisy':sys.stderr.write('noise\n'*20000);sys.stderr.flush()
 if mode=='delayed':
  deadline=time.monotonic()+5
@@ -42,7 +45,7 @@ if mode=='delayed':
   assert time.monotonic()<deadline,'parent never published early decision'
   time.sleep(.01)
 for p in sorted((archive/'symbols').glob('*.json')):
- if p.stem!='ZROUSDT' and not (mode=='missing_notice' and p.stem=='HFTUSDT'):print(json.dumps(notice(p.stem)),flush=True)
+ if p.stem!=first['symbol'] and not (mode=='missing_notice' and p.stem=='HFTUSDT'):print(json.dumps(notice(p.stem)),flush=True)
 if mode=='missing_seal':raise SystemExit(0)
 seal['source_capture_files']={str(p.relative_to(archive)):hashlib.sha256(p.read_bytes()).hexdigest() for p in archive.rglob('*.json')}
 (archive/'receipt.json').write_text(json.dumps(seal))
@@ -52,7 +55,19 @@ if mode=='nonzero_after_seal':raise SystemExit(9)
 
 def child_fixture(tmp_path,monkeypatch,mode='normal'):
     root=tmp_path/'state';template=warm(root,tmp_path);context(template)
-    stub=tmp_path/'child.py';stub.write_text(STUB);original=subprocess.Popen;children=[]
+    if mode.startswith('catchup'):
+        from test_pump4_supervisor_v1 import archive_bars
+        from test_pump4_bybit_sources_v1 import H
+        from research_lab.pump4_closed_bar_intake_v1 import Pump4Intake
+        from research_lab.kity_micro_physical_owner_v1 import publish
+        from research_lab.alpaca_dynamic_v1 import digest
+        source=archive_bars(tmp_path/'catchup-source',[[i*H,10.,12.,8.,11.,100.] for i in range(999,2001)],symbol='BLESSUSDT')
+        (template/'symbols/BLESSUSDT.json').write_bytes((source/'symbols/BLESSUSDT.json').read_bytes())
+        intake=Pump4Intake(root/'intake/BLESSUSDT.jsonl','BLESSUSDT');bars=[[i*H,10.,12.,8.,11.,100.] for i in range(997,1997)]
+        state=intake.seed(bars,available_ms=1997*H,observed_ms=1997*H)
+        publish(root/'epochs/BLESSUSDT.json',dict(schema='PUMP4_DATA_EPOCH_V1',symbol='BLESSUSDT',epoch_started_ms=1997*H+1,seed_sha256=state['seed_bars_sha256'],financial_authority=False))
+        intake.accept([1997*H,10.,12.,8.,11.,100.],available_ms=1998*H,observed_ms=1998*H)
+    stub=tmp_path/'child.py';stub.write_text(STUB);original=REAL_POPEN;children=[]
     monkeypatch.setenv('BYBIT_API_KEY','FICTIONAL_TEST_VALUE')
     monkeypatch.setenv('BYBIT_ACCOUNTS_JSON','FICTIONAL_TEST_VALUE')
     def launch(command,**kwargs):
@@ -150,3 +165,79 @@ def test_cli_progress_protocol_contains_only_published_symbol_and_hash(tmp_path,
     notice=json.loads(capsys.readouterr().out)
     assert notice==dict(schema='PUMP4_PUBLIC_SYMBOL_NOTICE_V1',symbol='ZROUSDT',
         capture_sha256=hashlib.sha256(b'{"public":true}\n').hexdigest())
+
+
+def test_current_signal_precedes_earlier_nonentry_catchup(tmp_path,monkeypatch):
+    root,s,children=child_fixture(tmp_path,monkeypatch,'catchup_first');original=s._stream_symbol;first=[]
+    before=(root/'intake/BLESSUSDT.jsonl').read_bytes()
+    def observed(archive,symbol,*a,**kw):
+        if symbol in ('BLESSUSDT','ZROUSDT') and symbol not in first:
+            first.append(symbol)
+            if symbol=='ZROUSDT':assert (root/'intake/BLESSUSDT.jsonl').read_bytes()==before
+        return original(archive,symbol,*a,**kw)
+    monkeypatch.setattr(s,'_stream_symbol',observed)
+    out=s.public_cycle()
+    assert first==['ZROUSDT','BLESSUSDT']
+    catchup=next(r for r in out['rows'] if r['symbol']=='BLESSUSDT')
+    assert catchup['mode']=='CATCHUP_REPLAY' and catchup['accepted_bars']==2
+    assert all(r['mode']=='CATCHUP_REPLAY' and r['status']=='NO_SIGNAL' for r in catchup['decisions'])
+    proof=json.loads(next((root/'capture-process').glob('*.json')).read_bytes())
+    notice=next(r for r in proof['notices'] if r['symbol']=='BLESSUSDT')
+    assert notice['scheduling']=='DEFERRED_CATCHUP_NON_ENTRY'
+
+
+def test_failed_child_never_processes_deferred_catchup(tmp_path,monkeypatch):
+    root,s,children=child_fixture(tmp_path,monkeypatch,'catchup_fail')
+    before=(root/'intake/BLESSUSDT.jsonl').read_bytes()
+    with pytest.raises(ValueError):s.public_cycle()
+    assert (root/'intake/BLESSUSDT.jsonl').read_bytes()==before and children[0].poll() is not None
+
+
+def test_classifier_never_defers_seed_only_or_recovery(tmp_path,monkeypatch):
+    from research_lab.pump4_bybit_sources_v1 import H
+    from research_lab.pump4_closed_bar_intake_v1 import Pump4Intake
+    from research_lab.alpaca_dynamic_v1 import digest
+    root,s,children=child_fixture(tmp_path,monkeypatch,'catchup_first');source=tmp_path/'source';raw=(source/'symbols/BLESSUSDT.json').read_bytes();pin=__import__('hashlib').sha256(raw).hexdigest();context_info=s._stream_context(source)
+    descriptor=s._catchup_reference(source,'BLESSUSDT',context_info,pin)
+    assert descriptor is not None
+    identity=digest(dict(context_sha256=context_info[0],symbol='BLESSUSDT',capture_sha256=pin));p=root/'batches'/identity/'BLESSUSDT.json';p.parent.mkdir(parents=True);p.write_text('{}')
+    assert s._catchup_reference(source,'BLESSUSDT',context_info,pin) is None
+    p.unlink();journal=root/'intake/BLESSUSDT.jsonl';rows=journal.read_bytes().splitlines(keepends=True);journal.write_bytes(rows[0])
+    assert s._catchup_reference(source,'BLESSUSDT',context_info,pin) is None
+
+
+def test_deferred_schedule_preserves_exact_existing_state(tmp_path,monkeypatch):
+    results=[]
+    for label in ('fifo','priority'):
+        home=tmp_path/label;home.mkdir();root,s,children=child_fixture(home,monkeypatch,'catchup_first')
+        if label=='fifo':monkeypatch.setattr(s,'_catchup_reference',lambda *a:None)
+        out=s.public_cycle();results.append((out['rows'],
+            {p.name:p.read_bytes() for p in (root/'intake').glob('*.jsonl')},
+            {p.name:p.read_bytes() for p in (root/'observations').glob('*.json')},
+            {p.name:p.read_bytes() for p in (root/'epochs').glob('*.json')}))
+    assert results[0]==results[1]
+
+
+@pytest.mark.parametrize('fault',['journal','epoch','source','batch'])
+def test_changed_queued_input_is_never_silently_reinterpreted(tmp_path,monkeypatch,fault):
+    import hashlib
+    from research_lab.alpaca_dynamic_v1 import digest
+    root,s,children=child_fixture(tmp_path,monkeypatch,'catchup_first');original=s._stream_symbol;changed=[]
+    def mutate(archive,symbol,context_info,*a,**kw):
+        if symbol=='ZROUSDT' and not changed:
+            changed.append(True)
+            if fault=='journal':
+                p=root/'intake/BLESSUSDT.jsonl';p.write_bytes(p.read_bytes()+b'\n')
+            elif fault=='epoch':
+                p=root/'epochs/BLESSUSDT.json';v=json.loads(p.read_bytes());v['epoch_started_ms']+=1;p.write_text(json.dumps(v))
+            elif fault=='source':
+                p=archive/'symbols/BLESSUSDT.json';p.write_bytes(p.read_bytes()+b' ')
+            else:
+                pin=hashlib.sha256((archive/'symbols/BLESSUSDT.json').read_bytes()).hexdigest()
+                identity=digest(dict(context_sha256=context_info[0],symbol='BLESSUSDT',capture_sha256=pin))
+                p=root/'batches'/identity/'BLESSUSDT.json';p.parent.mkdir(parents=True,exist_ok=True);p.write_text('{}')
+        return original(archive,symbol,context_info,*a,**kw)
+    monkeypatch.setattr(s,'_stream_symbol',mutate)
+    with pytest.raises(ValueError):s.public_cycle()
+    assert children[0].poll() is not None
+    with pytest.raises(ValueError):s.public_cycle()

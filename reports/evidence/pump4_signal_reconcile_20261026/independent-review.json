@@ -1,0 +1,15 @@
+{
+  "status": "PASS_CONDITIONAL_MECHANISM_ONLY",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "runtime_metadata_verified": true,
+  "session_id": "01a17307-4e93-7dc0-9f34-a1ec492fa89e",
+  "important_findings": 0,
+  "fresh_cases": 51,
+  "archived_covered_cases": 49,
+  "verified_public_responses": 86,
+  "historical_run_attested": false,
+  "producer_changed": false,
+  "PnL_evaluator_calls": 0,
+  "broker_requests": 0
+}

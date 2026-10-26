@@ -1,0 +1,121 @@
+{
+  "AAVEUSDT": {
+    "sha256": "b8783b4a220d001b1a86142eb188e0a4957d54fb72f5dc4c956e851648b52569",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "AEROUSDT": {
+    "sha256": "454cc7068988e725007d4a46dd9796b595d462fca8844f010a2154a765b36f0b",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "ALGOUSDT": {
+    "sha256": "39a530aa8e5ab35ecde9fcd92ad7a7c3f40bc10e36d187fda3c1433aa06c0f8c",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "BLESSUSDT": {
+    "sha256": "c171d4458e25c41fbb25f68493218fa2123eaed471e246974eecea42fc033e88",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "ESPUSDT": {
+    "sha256": "0fd8ad87520f3b778005300934fa1d8196fb9f9a03dd6da12b3bed99aa999d80",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "FARTCOINUSDT": {
+    "sha256": "72a7efff43fdb3d3c7b776cc154b82d9ae3f1f823a8cf5934afbd04bf298ee8a",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "FILUSDT": {
+    "sha256": "596fe8cc54165d2b509c7f0147f83821f127141e7133b250d409b20e6415825b",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "HEIUSDT": {
+    "sha256": "0a9319f36ba681eb96974616b94e21f71ecca141c61535d1568c6ccacc7c2008",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "ICPUSDT": {
+    "sha256": "9530f2a2d55cbb8f96bbcd4a90b4d4ff8bb6811fde21f3b8cac0ef935d5d4f39",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "KAITOUSDT": {
+    "sha256": "358302cf77e8a62f5c2ef0dcfbbe2ccbfa74007ff7325ce3f0a121e6c0d7928c",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "OPUSDT": {
+    "sha256": "c5821b3bd4510c6efdeeb3daae1518a7ebe22e3d7b3f7750e4e2115f1e9bc84d",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "SEIUSDT": {
+    "sha256": "30b9572391c1856f332b0b1cfea4b302eb7974a88a22bf1331125435da0a3e80",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "TAOUSDT": {
+    "sha256": "5d011ba6b123e023241cc98d911089d90a46eb9e4083e6a6b4ff423ce9ddb705",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "UBUSDT": {
+    "sha256": "e3f007f8ae5581266d679b9a9e8e6f80bae1b42944443e87822f7cb4a8e3193c",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "UNIUSDT": {
+    "sha256": "2ab3947abb00fa8e61864c54ba6eb8321e561dd6922b2ab24f7d7208fc177d72",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "WLDUSDT": {
+    "sha256": "fc8ad5cd54c30edeba8097dbd9123235b6185be8a7be61c9da0f66b49147c4a1",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  },
+  "ZROUSDT": {
+    "sha256": "2c11831f2682657ac655d6d45acdc9cc92d5ccab591b7d0ff2c87eb2e7ea028e",
+    "bars": 4138,
+    "first_ms": 1777593600000,
+    "last_ms": 1792486800000,
+    "historical_capture_at_decision": false
+  }
+}

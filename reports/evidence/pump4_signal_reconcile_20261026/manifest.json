@@ -1,0 +1,18 @@
+{
+  "schema": "PUMP4_SIGNAL_ONLY_EVIDENCE_V1",
+  "published_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+  "input_blob_sha256": "e011aa43b827d4b627f9205a72398816fdf0ff51a41c68c14d3ab42b163e3fb4",
+  "decoded_input_sha256": "34e55e89a558615b9897e8e5a0b5d796948251acf51de0377f56a6d8b903118e",
+  "compressed_bytes": 2521641,
+  "case_membership_sha256": "a918daf0021d14a964c197df57c37ec17cf0003469a8639b7a4f1bf5c0c4477b",
+  "source_pins": {
+    "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+    "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+  },
+  "config_sha256": "e5686636a3a773eb454c7d3ea29d2a541d39301dee4947b2bb0d4dcc93814ad0",
+  "producer_changed": false,
+  "orders_allowed": false,
+  "PnL_evaluator_calls": 0,
+  "source_snapshots_retrospective": true,
+  "original_raw_journal_sha256": "d8e53ef1e0ace169715e5fdd4280cf13b72deff689ed393d25b5b8343fbb3239"
+}

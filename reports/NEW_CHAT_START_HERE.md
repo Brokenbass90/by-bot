@@ -1,4 +1,4 @@
-# START HERE — Trading OS, 25 October 2026
+# START HERE — Trading OS, 26 October 2026
 
 Repo `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`.
 Branch `codex/recovery-20260824`. Read AGENTS.md, checkpoint TOP and the TWO reports
@@ -17,26 +17,35 @@ reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
 single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
 2Novfreshentry/protection checks remain actual future gates; CASHpossible.
 
-## NEXT PUMP — capture subprocess DEPLOYED OFF; actual18H1 next
+## NEXT PUMP — priority DEPLOYED OFF; exact51 reconciled; new09H1 pending
 
-Read `PUMP4_CAPTURE_PROCESS_2026_10_25.md` and its evidence. Actual17H1 after
-warmfix:10/128publications≤60s,median90.8925/max110.562s;107sources≤60s,
-0signals. Timeliness NOTPASS. Newdefault publiccollector is freshminimalenv
-child; sameparent ONLYjournalwriter;strictsymbol/hashpipe,deadline,kill/reap,
-attempt/completionmarkers/no samehourretry. Frozenintake/producer/epochs/60s unchanged.
-275local/same275VPSPASS,actualastra/highreview0Important. DATA8c00885cf6329bae
-selected;13159historyfiles preserved;ONLYDATA ceiling2cores/same768MiB aggregate.
-SAMEsolefinancialunit/app30677ce6 config1634b014…bd628/scopee6f8c78a…de0cb,
-PID2908831/NRestarts0/818853held/HEALTHY/NO_NEW_SIGNAL/GOabsent at17:32UTC.
-Config `/opt/bybot-research/pump4-server-orders-off-20261023/process-handoff-20261025/owner-review-stream-v1/runner.json`.
-DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-8c00885cf6329bae/app/.private/pump4-supervisor-v1`.
-Binding2f6bbd80…16608;oldroots/scopes/claims intact;fresh2GETflat barriers.
-Private `process-handoff-20261025/ops.py` rollback20PASS; current incomplete
-process hour cannot rollback to old code until next hour/reconciliation.
-NEXT actual18:00UTC timings/childCPU/aggregate memory/financialowner continuity.
-Cached17systemdPASS and disabledchildsmoke are not actualnewH1proof.
-Then freshaccount/cost/lot/oneway/stop/OFF→exactTINYproposal. MoneyGOabsent.
-Monthly remains selected, neverrepeatMonthly/NETcommands. Poly/KITY afterPUMPgate.
+Read these current deltas; do not restart the audit:
+1. `PUMP4_CATCHUP_PRIORITY_2026_10_26.md` — reviewed283 local/same283VPS PASS,
+   existing CATCHUP non-entry deferred behind CURRENT; one parent writer,
+   all21376history files/epochs preserved. Actual25Oct18:15/127≤60s,
+   median87.974/max107.326s,0signals; NOT gatePASS.
+2. `PUMP4_SIGNAL_RECONCILIATION_2026_10_26.md` — publishedClaude5b4a272 verified.
+   Exact51: same fixed inputs + seen-bar omission reconstruct51/51; continuous
+   frozen producer/intake gives COOLDOWN_ACTIVE51/51. Historical run code/env/
+   captures/state not recorded, so mechanism proven conditionally, not full
+   historical attribution or corrected economics.34shift cases kept separate.
+3. `PUMP4_ENTRY_WINDOW_300_CR_2026_10_26.md` — separate CR, NOT applied.
+   Study73/158 measures minute-open displacement, not causal late lifecycle;
+   rollback20/30 inconsistency. Closing orders min-notional exemption invalidates
+   universal TP1≥$5 claim; no automatic capital/risk increase.
+
+DATA5882783b99ca5c48 selected26Oct08:18UTC; same timer/2cores/768MiB/60s.
+Bindingea4c8699…0ab23. SAMEfinancialunit/app30677ce6 ORDERS_OFF,
+config125b0ae6…69b16/scopea527f12c…bb28/PID2955754/original818853,
+2freshGETflat/noorders barriers/NO_NEW_SIGNAL/noGO at08:19UTC.
+Config `/opt/bybot-research/pump4-server-orders-off-20261023/priority-handoff-20261026/owner-review-stream-v1/runner.json`.
+DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5882783b99ca5c48/app/.private/pump4-supervisor-v1`.
+Privatepriority-handoff-20261026/ops.py exacttestedrollback; retain oldroots/claims.
+NEXT actualNEW09H1 source/publication timings/CURRENT vsCATCHUP and ownercontinuity.
+Bounded read-only observer already running in current session; DO NOT start another
+capture/timer or retry currenthour. Then save outcome and update checkpoint.
+TINY_NOT_READY: corrected producer economics/lineage + fresh per-signal financial
+proof still required; no financialGO. Monthly v6 unchanged, no activation/NETexit.
 
 ## Broader goal and ownership
 

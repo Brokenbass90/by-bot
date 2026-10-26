@@ -1,0 +1,989 @@
+{
+  "groups": {
+    "CATCHUP_REPLAY": {
+      "count": 7,
+      "total_ms": 34545,
+      "median_ms": 5716,
+      "max_ms": 8741
+    },
+    "BLOCKED_SOURCE": {
+      "count": 9,
+      "total_ms": 858,
+      "median_ms": 37,
+      "max_ms": 283
+    },
+    "CURRENT_CLOSED_BAR": {
+      "count": 120,
+      "total_ms": 62009,
+      "median_ms": 362.0,
+      "max_ms": 2583
+    },
+    "UNAVAILABLE_INSTRUMENT": {
+      "count": 1,
+      "total_ms": 10,
+      "median_ms": 10,
+      "max_ms": 10
+    }
+  },
+  "ordered": [
+    {
+      "symbol": "1000RATSUSDT",
+      "mode": "CATCHUP_REPLAY",
+      "duration_ms": 8741,
+      "published_delay_ms": 18480,
+      "received_delay_ms": 9786
+    },
+    {
+      "symbol": "ACEUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 283,
+      "published_delay_ms": 18739,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "ADAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1469,
+      "published_delay_ms": 20253,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "AAVEUSDT",
+      "mode": "CATCHUP_REPLAY",
+      "duration_ms": 7597,
+      "published_delay_ms": 27853,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "ACTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 2583,
+      "published_delay_ms": 30454,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "AEROUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 2013,
+      "published_delay_ms": 32428,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "1000BONKUSDT",
+      "mode": "CATCHUP_REPLAY",
+      "duration_ms": 4135,
+      "published_delay_ms": 36605,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "1000PEPEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1857,
+      "published_delay_ms": 38440,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "AKEUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 134,
+      "published_delay_ms": 38526,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "ARBUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 262,
+      "published_delay_ms": 38821,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "ALLOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1728,
+      "published_delay_ms": 40586,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "AVAXUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 938,
+      "published_delay_ms": 41517,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "ALGOUSDT",
+      "mode": "CATCHUP_REPLAY",
+      "duration_ms": 5716,
+      "published_delay_ms": 47170,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "APTUSDT",
+      "mode": "CATCHUP_REPLAY",
+      "duration_ms": 6193,
+      "published_delay_ms": 53446,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "BANANAS31USDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 2284,
+      "published_delay_ms": 55701,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "ASTERUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1711,
+      "published_delay_ms": 57440,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "ATOMUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 704,
+      "published_delay_ms": 58151,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "BANKUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1026,
+      "published_delay_ms": 59178,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "BEATUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 19,
+      "published_delay_ms": 59203,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "BIOUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 29,
+      "published_delay_ms": 59228,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "BICOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1097,
+      "published_delay_ms": 60313,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "BCHUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1470,
+      "published_delay_ms": 61757,
+      "received_delay_ms": 18528
+    },
+    {
+      "symbol": "BLUAIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 2196,
+      "published_delay_ms": 63961,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BMTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1998,
+      "published_delay_ms": 65954,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BLESSUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1891,
+      "published_delay_ms": 67867,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BNBUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 2290,
+      "published_delay_ms": 70113,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BROCCOLIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 1539,
+      "published_delay_ms": 71711,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BOMEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 388,
+      "published_delay_ms": 72109,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "CCUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 37,
+      "published_delay_ms": 72139,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "CBRSUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 39,
+      "published_delay_ms": 72172,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BZUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 439,
+      "published_delay_ms": 72623,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BTCUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 381,
+      "published_delay_ms": 73005,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "COOKIEUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 23,
+      "published_delay_ms": 73025,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "BTRUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 539,
+      "published_delay_ms": 73566,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "C98USDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 470,
+      "published_delay_ms": 74040,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "COAIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 251,
+      "published_delay_ms": 74291,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "CLUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 377,
+      "published_delay_ms": 74672,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "COTIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 282,
+      "published_delay_ms": 74950,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "CRVUSDT",
+      "mode": "CATCHUP_REPLAY",
+      "duration_ms": 1072,
+      "published_delay_ms": 76024,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "CRCLUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 344,
+      "published_delay_ms": 76369,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "DEXEUSDT",
+      "mode": "BLOCKED_SOURCE",
+      "duration_ms": 32,
+      "published_delay_ms": 76400,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "CYSUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 493,
+      "published_delay_ms": 76890,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 410,
+      "published_delay_ms": 77303,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "DRAMUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 398,
+      "published_delay_ms": 77700,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "ENAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 558,
+      "published_delay_ms": 78261,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "EPICUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 427,
+      "published_delay_ms": 78689,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "ESPUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 500,
+      "published_delay_ms": 79173,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "ESPORTSUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 407,
+      "published_delay_ms": 79595,
+      "received_delay_ms": 61811
+    },
+    {
+      "symbol": "ETHUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 417,
+      "published_delay_ms": 80013,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "ETCUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 474,
+      "published_delay_ms": 80487,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "ETHFIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 472,
+      "published_delay_ms": 80958,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "EWYUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 385,
+      "published_delay_ms": 81346,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "FARTCOINUSDT",
+      "mode": "CATCHUP_REPLAY",
+      "duration_ms": 1091,
+      "published_delay_ms": 82441,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "HFTUSDT",
+      "mode": "UNAVAILABLE_INSTRUMENT",
+      "duration_ms": 10,
+      "published_delay_ms": 82452,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "GRASSUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 246,
+      "published_delay_ms": 82689,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "FILUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 294,
+      "published_delay_ms": 82988,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "GALAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 296,
+      "published_delay_ms": 83287,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "GWEIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 227,
+      "published_delay_ms": 83519,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "HBARUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 285,
+      "published_delay_ms": 83807,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "HEIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 217,
+      "published_delay_ms": 84021,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "GUNUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 284,
+      "published_delay_ms": 84302,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "HOMEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 288,
+      "published_delay_ms": 84594,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "ICPUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 265,
+      "published_delay_ms": 84864,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "HYPEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 222,
+      "published_delay_ms": 85085,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "INTCUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 252,
+      "published_delay_ms": 85336,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "INJUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 198,
+      "published_delay_ms": 85535,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "LAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 297,
+      "published_delay_ms": 85827,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "KAITOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 230,
+      "published_delay_ms": 86063,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "JTOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 250,
+      "published_delay_ms": 86318,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "LDOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 244,
+      "published_delay_ms": 86560,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "LITUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 253,
+      "published_delay_ms": 86816,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "LITEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 374,
+      "published_delay_ms": 87188,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "METAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 427,
+      "published_delay_ms": 87613,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "MMTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 362,
+      "published_delay_ms": 87974,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "MEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 418,
+      "published_delay_ms": 88391,
+      "received_delay_ms": 79605
+    },
+    {
+      "symbol": "MRVLUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 316,
+      "published_delay_ms": 88716,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "MONUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 353,
+      "published_delay_ms": 89062,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "MNTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 361,
+      "published_delay_ms": 89416,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "MSFTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 436,
+      "published_delay_ms": 89866,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "MUBARAKUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 397,
+      "published_delay_ms": 90259,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "MSTRUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 364,
+      "published_delay_ms": 90629,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "NBISUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 363,
+      "published_delay_ms": 90989,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "MUUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 424,
+      "published_delay_ms": 91416,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "NILUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 434,
+      "published_delay_ms": 91856,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "NVDAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 432,
+      "published_delay_ms": 92283,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "ONDOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 416,
+      "published_delay_ms": 92703,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "OPUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 453,
+      "published_delay_ms": 93154,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "ORDIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 341,
+      "published_delay_ms": 93495,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "PAXGUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 270,
+      "published_delay_ms": 93760,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "PUMPFUNUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 297,
+      "published_delay_ms": 94064,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "PLTRUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 267,
+      "published_delay_ms": 94331,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "PEOPLEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 390,
+      "published_delay_ms": 94723,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "POLUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 315,
+      "published_delay_ms": 95029,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "PENGUUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 422,
+      "published_delay_ms": 95457,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "QQQUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 315,
+      "published_delay_ms": 95775,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "RENDERUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 382,
+      "published_delay_ms": 96149,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "RKLBUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 408,
+      "published_delay_ms": 96568,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "ROBOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 348,
+      "published_delay_ms": 96917,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "SHIB1000USDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 375,
+      "published_delay_ms": 97289,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "SEIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 422,
+      "published_delay_ms": 97710,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "SKYAI1USDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 345,
+      "published_delay_ms": 98058,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "SIRENUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 334,
+      "published_delay_ms": 98395,
+      "received_delay_ms": 88403
+    },
+    {
+      "symbol": "SOLUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 400,
+      "published_delay_ms": 98796,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "SNDKUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 425,
+      "published_delay_ms": 99216,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "SOXLUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 518,
+      "published_delay_ms": 99736,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "SQDUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 384,
+      "published_delay_ms": 100119,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "STRKUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 378,
+      "published_delay_ms": 100500,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "TAOUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 385,
+      "published_delay_ms": 100886,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "THEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 312,
+      "published_delay_ms": 101198,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "SUIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 317,
+      "published_delay_ms": 101521,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "TIAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 367,
+      "published_delay_ms": 101889,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "TRUMPUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 362,
+      "published_delay_ms": 102254,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "TRXUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 239,
+      "published_delay_ms": 102492,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "TSLAUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 244,
+      "published_delay_ms": 102732,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "TUTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 288,
+      "published_delay_ms": 103030,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "USDCUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 223,
+      "published_delay_ms": 103253,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "UBUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 194,
+      "published_delay_ms": 103446,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "UNIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 258,
+      "published_delay_ms": 103707,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "USUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 218,
+      "published_delay_ms": 103928,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "USELESSUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 181,
+      "published_delay_ms": 104109,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "VELODROMEUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 185,
+      "published_delay_ms": 104295,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "VVVUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 177,
+      "published_delay_ms": 104472,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "VIRTUALUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 183,
+      "published_delay_ms": 104655,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "WLFIUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 186,
+      "published_delay_ms": 104844,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "WLDUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 227,
+      "published_delay_ms": 105071,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "WIFUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 196,
+      "published_delay_ms": 105269,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "XAGUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 190,
+      "published_delay_ms": 105459,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "XANUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 189,
+      "published_delay_ms": 105649,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "XAUTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 192,
+      "published_delay_ms": 105841,
+      "received_delay_ms": 98403
+    },
+    {
+      "symbol": "XMRUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 201,
+      "published_delay_ms": 106044,
+      "received_delay_ms": 105847
+    },
+    {
+      "symbol": "XLMUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 176,
+      "published_delay_ms": 106219,
+      "received_delay_ms": 105847
+    },
+    {
+      "symbol": "XAUUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 177,
+      "published_delay_ms": 106399,
+      "received_delay_ms": 105847
+    },
+    {
+      "symbol": "XPLUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 189,
+      "published_delay_ms": 106590,
+      "received_delay_ms": 105847
+    },
+    {
+      "symbol": "XRPUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 195,
+      "published_delay_ms": 106784,
+      "received_delay_ms": 105847
+    },
+    {
+      "symbol": "ZECUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 169,
+      "published_delay_ms": 106955,
+      "received_delay_ms": 105847
+    },
+    {
+      "symbol": "ZBTUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 186,
+      "published_delay_ms": 107142,
+      "received_delay_ms": 105847
+    },
+    {
+      "symbol": "ZROUSDT",
+      "mode": "CURRENT_CLOSED_BAR",
+      "duration_ms": 183,
+      "published_delay_ms": 107326,
+      "received_delay_ms": 105847
+    }
+  ]
+}

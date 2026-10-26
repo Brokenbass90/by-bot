@@ -1,0 +1,418 @@
+{
+  "status": "PASS",
+  "cases": 51,
+  "intake_source_sha256": "9e37540b6d12e21cd248e45b62680f4c77b03e7ec0a47b7aa7d812c33f9702aa",
+  "no_journal_written": true,
+  "caller_clocks_only": true,
+  "financial_authority": false,
+  "decisions": [
+    {
+      "sym": "AAVEUSDT",
+      "ts": 1790787600000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-413aa82529f97a8a6198700a8b086aabdbedd747e252f7822b299df1513c6c70",
+      "history_sha256": "ef1c4f24a6d06f113b050e41828a95d1ff2667522bcfda81c9a8790f0ac52663"
+    },
+    {
+      "sym": "AAVEUSDT",
+      "ts": 1790791200000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-a723a90903b0a065111e11a5a0b635f32a215d030b984af38df7d8ff340e7f34",
+      "history_sha256": "11d39fd5f2a88cddd8d441e21561538939500687c29f75f10622d3f9e454d25c"
+    },
+    {
+      "sym": "AAVEUSDT",
+      "ts": 1790794800000,
+      "signal": null,
+      "cooldown_remaining": 19,
+      "decision_id": "pump4-e6229b1312a1a4d8f1ecb50899d3bcda265281d06641e30bb4a3513aa55d985e",
+      "history_sha256": "08ee50d51599567f746e8ea7132f9c8ae22267f60631d540303b2796a8e98113"
+    },
+    {
+      "sym": "AEROUSDT",
+      "ts": 1791745200000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-14858f1ad38628443d1b3d7f4551f1f05707ed6adac4eb1b2245dfa3c36c66e8",
+      "history_sha256": "795fa0b29f54078d3d9620b59c4e333e2e573b0ddd9aa4c5ba9c306d7d5e7dee"
+    },
+    {
+      "sym": "AEROUSDT",
+      "ts": 1791748800000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-651d0d3d7ee50be24c78dbce810cb3b8b07940f7a24b921ce75ff3858c7a0807",
+      "history_sha256": "a12426332a9eb8e761989770eec783d3a7ed943a4649f983c8d0a5abc8efe3a4"
+    },
+    {
+      "sym": "ALGOUSDT",
+      "ts": 1790024400000,
+      "signal": null,
+      "cooldown_remaining": 19,
+      "decision_id": "pump4-4f940b5fc0ee577f92b52332e4b88ae5be34f47c049efa44566a594a51febacd",
+      "history_sha256": "51a2853f860d18d8918e48d456d8a15149a5b010e2bec8fd3871efc14dc5c3e7"
+    },
+    {
+      "sym": "ALGOUSDT",
+      "ts": 1791547200000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-3b131b60151c92c00fc00f0319fedc3b1c9cbba3a70a08968b4e2bd4885bd563",
+      "history_sha256": "dd0a4a0b4335e3636b380ab2a72bdcab9a8e6383f6de153b5a32a8ace262b591"
+    },
+    {
+      "sym": "ALGOUSDT",
+      "ts": 1791550800000,
+      "signal": null,
+      "cooldown_remaining": 19,
+      "decision_id": "pump4-2130879fa309549c170fa00fd71cb3841cb5e98e5294f10c0ba80b1fd64dcd2b",
+      "history_sha256": "e0a5033a4a098706db96330a0a55502dc132e8157241eaf3c85371e7321d14c3"
+    },
+    {
+      "sym": "ALGOUSDT",
+      "ts": 1791554400000,
+      "signal": null,
+      "cooldown_remaining": 18,
+      "decision_id": "pump4-10bec9ac2776693bc7eb3ec6378e72959b0e1729f6500322f41665db1c840623",
+      "history_sha256": "539377467f665974651be50e62e0978585b42526d5b94dee3d2a1d0836c13b55"
+    },
+    {
+      "sym": "ALGOUSDT",
+      "ts": 1791558000000,
+      "signal": null,
+      "cooldown_remaining": 17,
+      "decision_id": "pump4-7d57649903231148b867f93dc1ce24fda477ce36827d826fd918ab015b34b65e",
+      "history_sha256": "e5b268597d4123191ce105f4cc1c93178dd53c25dd80d4b6f3c944bf408b956e"
+    },
+    {
+      "sym": "ALGOUSDT",
+      "ts": 1791565200000,
+      "signal": null,
+      "cooldown_remaining": 15,
+      "decision_id": "pump4-8964532fabbcb7014dd055cca7c85e2a0dd908799946455660144f4016b67dbb",
+      "history_sha256": "b29f46832a3a49f2ec00a56788ce2b4a8eb8b0e928c93d94f25db40d383ef60e"
+    },
+    {
+      "sym": "BLESSUSDT",
+      "ts": 1788678000000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-dd6c3bde975529be66d8baec0b55662d9d77ba03833d979f2f64ab48c467d689",
+      "history_sha256": "0bdcb9bed5ab79ade274a3107b2862f346cb05606ec3ab88b4386a90f8c0cdb3"
+    },
+    {
+      "sym": "ESPUSDT",
+      "ts": 1789866000000,
+      "signal": null,
+      "cooldown_remaining": 19,
+      "decision_id": "pump4-3093509e3370b0438964ca1e3635dc38228a3dc789078a4e77e6967644c5c219",
+      "history_sha256": "909db9d30b23a6506a13c0f7742ae7cc74dce60e3e71c3be94aa28973761b1b1"
+    },
+    {
+      "sym": "ESPUSDT",
+      "ts": 1789891200000,
+      "signal": null,
+      "cooldown_remaining": 12,
+      "decision_id": "pump4-cb14a8bbb4753f19a8d28135e5e58a98ae1f5420f129598b78bbb9718f018e6b",
+      "history_sha256": "88573e8d652d84c9e35249ee606c5c49e05bacf776676ac031914eeab7cc893a"
+    },
+    {
+      "sym": "ESPUSDT",
+      "ts": 1789894800000,
+      "signal": null,
+      "cooldown_remaining": 11,
+      "decision_id": "pump4-5fa8f0ec4730de224fccaeb0cd1bae7d9cb7f5bfd7d82b55cd3b5c458d2f056b",
+      "history_sha256": "e34e0e28dc83e4443fb4e0c83d1b17074627189694b99532fa8b7d4b12903d12"
+    },
+    {
+      "sym": "ESPUSDT",
+      "ts": 1789898400000,
+      "signal": null,
+      "cooldown_remaining": 10,
+      "decision_id": "pump4-d5b014f600079d2e7167b18b8a2d56034410cf6b4294c906f04db109c756bb27",
+      "history_sha256": "1ce12d24d5a8a62c6e02f41360124cff39d0b1aa1afce28ba3ece9010a0d4515"
+    },
+    {
+      "sym": "ESPUSDT",
+      "ts": 1789902000000,
+      "signal": null,
+      "cooldown_remaining": 9,
+      "decision_id": "pump4-0e0892c1c75e62bb14d1a8aee08f11349b098263282f0f11422e094db6dfddf1",
+      "history_sha256": "6e9d296855344eb5b446bbb774444737e412f7f58f8b8484d6e19c445a182c59"
+    },
+    {
+      "sym": "ESPUSDT",
+      "ts": 1789927200000,
+      "signal": null,
+      "cooldown_remaining": 2,
+      "decision_id": "pump4-ff045eec606c5e69741804656cdbed36c5ff48f5094cef0f13ea3074c5f2a6a1",
+      "history_sha256": "cab6018009bf1b67ed8f639c92eb61b64a92cb1828ca3ab7f6f09cb60dc1e561"
+    },
+    {
+      "sym": "FARTCOINUSDT",
+      "ts": 1790107200000,
+      "signal": null,
+      "cooldown_remaining": 18,
+      "decision_id": "pump4-4a7a83cabb9968b68fb5b2f503a3c2d740e0d7bd53c4619b5a9ded3d0c8ce36d",
+      "history_sha256": "7a08c36e1fc42739042d2ffbbbb1f7d8cdc631fb19354a0f093b433bf4313c79"
+    },
+    {
+      "sym": "FILUSDT",
+      "ts": 1792180800000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-97f4fa8af0c1638ac0648fdf6c26e6e9c89a6a9adae03cd642402229b66ce3d1",
+      "history_sha256": "65366e56c3d3a2141bd8045f75a715c535fb82cf9841cdef493ceb9517b5a33a"
+    },
+    {
+      "sym": "FILUSDT",
+      "ts": 1792198800000,
+      "signal": null,
+      "cooldown_remaining": 16,
+      "decision_id": "pump4-6801c8bc43ca666c7f5465326e645e35e8de3690786fbe2510403735fc330873",
+      "history_sha256": "00e0250abd962ea0787c792837e85bb4a87621444b1be3929b8bfe063fa297ce"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790539200000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-1295ac8fc3a536c1bd4ca4d602efcb05e650f48357271f071837893d21c07d76",
+      "history_sha256": "a6d08d9851640aa04e1d3eaa9d55f93dc0c98fd320e898920953f78518e9b97b"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790938800000,
+      "signal": null,
+      "cooldown_remaining": 17,
+      "decision_id": "pump4-5a58b1c2eb2ed527f8e59096fa800a43c377acaf36e3009d804cb3571e270fb0",
+      "history_sha256": "282355163502740095e3e59f4d06c6778bc7759ccc148d88ec9e31df66801389"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790542800000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-fb3d741a31aa57518f4fde74fa4daa4a2a3f4e63be7ddc635f3310f8bd28b693",
+      "history_sha256": "a67822004c89e12b38a8a3604183784212fe38865f9ec879fc367bbb7add0eec"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790546400000,
+      "signal": null,
+      "cooldown_remaining": 19,
+      "decision_id": "pump4-3e91f060d0f60cafe256fc250c2ba2fef4788642ee5637701cd0bd52b22a164c",
+      "history_sha256": "a9f91c9470ec47cbc72308df39190b0a566eb11cf8614f080303fa281051c5b8"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790553600000,
+      "signal": null,
+      "cooldown_remaining": 17,
+      "decision_id": "pump4-275971a18ef268077e76f9241a01d27cf1927f567f47338c0d72d6bb5a644187",
+      "history_sha256": "2367ac7c6d60f596ddae9c4bb84e0957dfcef9537855b3162cf05796e371f106"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790560800000,
+      "signal": null,
+      "cooldown_remaining": 15,
+      "decision_id": "pump4-7bb728a25a3f6584d10c478cd55ef1b39f878f5a8b415f66bc54ec9c667ffa91",
+      "history_sha256": "98d65d83a03ca07db075c7c009deb7fe795adfe473ed48f4a2ccc891a07a35da"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790564400000,
+      "signal": null,
+      "cooldown_remaining": 14,
+      "decision_id": "pump4-807e32e66c32f3c67b916f2070b1676d85d75bb011fc1cb65d85eb9c72807fab",
+      "history_sha256": "b7f647afd1a8f1466b51fd3864f4aa7259d2acbd07584d5b9cdaabdd6754c0d5"
+    },
+    {
+      "sym": "HEIUSDT",
+      "ts": 1790571600000,
+      "signal": null,
+      "cooldown_remaining": 12,
+      "decision_id": "pump4-4631022e081e19a83034d859d6d2bf1fa9c169f9c49e50fec3f4fe4128b27efa",
+      "history_sha256": "073d582999b1529b0de78b08590894523c5201008d1c906209096d585f00f9b7"
+    },
+    {
+      "sym": "ICPUSDT",
+      "ts": 1790748000000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-d252f9a56137f0bc40f505abf4f6bf44a335b2d08b934d103f26f9622de079b0",
+      "history_sha256": "b25b00d6c582db77308c765e38bc9ad43eba3a5293f9eb2c90f1db97706f0478"
+    },
+    {
+      "sym": "KAITOUSDT",
+      "ts": 1789801200000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-0e754b8c8cb1f57b61c74b2e2e6bbf44f71a48a14d612785781752b4d9302ad9",
+      "history_sha256": "af36cdb5f9401095054ecc8fc41bedda53ec776d7169171d0d622663130cf5b0"
+    },
+    {
+      "sym": "OPUSDT",
+      "ts": 1789862400000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-24a0609d0798e14865e077e3f12611e9bf6de2ed83f6f18b15dbb1036ab6f1f7",
+      "history_sha256": "7256d0b42c60161cd9a5a19ee650a8b1edf0be764d98f8a15876317919568956"
+    },
+    {
+      "sym": "SEIUSDT",
+      "ts": 1790452800000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-47cf1b598213971d7238b407c241a74e54853079695640d3b9411ce5c32cc9dd",
+      "history_sha256": "dcfe1aa03ea381d9f7d9d81abd376a2f15fd7af5e7e01d97d58ec5d255051241"
+    },
+    {
+      "sym": "SEIUSDT",
+      "ts": 1790456400000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-d995cd59dee471c3b65782edfb8d3c86b37fbfb9118bad0c4df992d0a5a3577c",
+      "history_sha256": "814d7e6c2a6af2c75603b63a9c445291637ffc8e574c7a88dc1145e060b6db6b"
+    },
+    {
+      "sym": "SEIUSDT",
+      "ts": 1790467200000,
+      "signal": null,
+      "cooldown_remaining": 17,
+      "decision_id": "pump4-8dc046decf8b9f42c1744ad647e838a6cfa9a94ecdb5e0f28bde5e58b350313a",
+      "history_sha256": "536bf580b2d0c52b70e3480b9474e1292f4f44722c684036a98018972f80960a"
+    },
+    {
+      "sym": "SEIUSDT",
+      "ts": 1790478000000,
+      "signal": null,
+      "cooldown_remaining": 14,
+      "decision_id": "pump4-57f2adbd0ab2439991590a8e0e1625dc0c3a1449b9499b5d6a7ea0b9e641a301",
+      "history_sha256": "08daf522d31bdd17bf1d5f2084d7ddae0b2fee9d51430ea3a2d626d59b229b43"
+    },
+    {
+      "sym": "SEIUSDT",
+      "ts": 1790481600000,
+      "signal": null,
+      "cooldown_remaining": 13,
+      "decision_id": "pump4-dfce64b0482ed995184416bf356897f3d4f3bf9851d91b76ccdb6b3b0b2cb0f2",
+      "history_sha256": "afc5e55fee2dcb14b847e210091508e9ec1127336a1fb5294cb0b8b9704e3755"
+    },
+    {
+      "sym": "TAOUSDT",
+      "ts": 1790100000000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-943fb4f9cad59401aca7d7150bcc8c262ca56386e793687e674c7f7ffa7eb9e1",
+      "history_sha256": "85c1f9f4ce071c51a2be61e71a7d0a208da48dcd2c9cfea74d87b39487d18d3a"
+    },
+    {
+      "sym": "TAOUSDT",
+      "ts": 1790146800000,
+      "signal": null,
+      "cooldown_remaining": 8,
+      "decision_id": "pump4-0dffe674bef11e4fb1ac5cf7eae946bcf767f96cabd3be37d2c5c91ac201937b",
+      "history_sha256": "8c98887dd6bdfa0b743c8862550f46209f7aa0251532a5925b477a3dc8ca9d41"
+    },
+    {
+      "sym": "TAOUSDT",
+      "ts": 1790150400000,
+      "signal": null,
+      "cooldown_remaining": 7,
+      "decision_id": "pump4-8bf5c9140a411aa279738622e182473af18e9b614d6bf4966341516a54a184ea",
+      "history_sha256": "3a2e55ee68a0c06926b2c07a33b1fe59bc265c33a93e2820d7924b1a11de60a8"
+    },
+    {
+      "sym": "TAOUSDT",
+      "ts": 1790154000000,
+      "signal": null,
+      "cooldown_remaining": 6,
+      "decision_id": "pump4-62bc216127f1bee629a73384eb9c63714319b2fdcd4f1369bfa17f00f1b8c6f6",
+      "history_sha256": "cda303500cd0f60ac163d559c1e1a49e3f3d327a65d9fdfcce975e74bef86c1d"
+    },
+    {
+      "sym": "UBUSDT",
+      "ts": 1792634400000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-fa7c1817c509cdb480a9d7d6f323b83975b50bf6f9e888ee2072568fc7bf75ec",
+      "history_sha256": "67e20d8685768aad2b17e9898fe67f5900dbcdd042688cadc5b1d809d68f5518"
+    },
+    {
+      "sym": "UBUSDT",
+      "ts": 1792638000000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-bacf2c6bd8da427210486f5cd6153f6e013c7de67a79060e537eb24fde285eef",
+      "history_sha256": "f41635c049451fc95128edf9c4872b9392d6f716b3f9edb62013716a25700697"
+    },
+    {
+      "sym": "UNIUSDT",
+      "ts": 1789822800000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-726c0866bda378a10833579a9b415d324ed4dca7f587f94550921722cc74fb8e",
+      "history_sha256": "1bdf7ccdaa3eb3bfa85d29696cbb94f419e8d10a2470f85bff1494edb9ec32f5"
+    },
+    {
+      "sym": "UNIUSDT",
+      "ts": 1790236800000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-3403fa7078ace020944a0a512d1bc405f355131bd929d34fbc732c74a56dd718",
+      "history_sha256": "6f83f58a9721909e2d3a770176f8aa903a0478b1add78968c9ea72b78bc95974"
+    },
+    {
+      "sym": "WLDUSDT",
+      "ts": 1791676800000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-a21e5f35162c1ae1d87711c0d45edc93376162049826de0596ff0f417257ae2c",
+      "history_sha256": "b9a1b994a7d42214ed09a5c27a322bc8a8302d326a8d2d19ccc2a17260c2d02a"
+    },
+    {
+      "sym": "ZROUSDT",
+      "ts": 1788508800000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-23c72f74180b7c3101fe7635b3325de06b97af26743b676331bb5cf12647f8d7",
+      "history_sha256": "a058dd38f871c6319a730eda084c0a2c72d7ecd0878f7412bd83b094e15e680e"
+    },
+    {
+      "sym": "ZROUSDT",
+      "ts": 1788512400000,
+      "signal": null,
+      "cooldown_remaining": 20,
+      "decision_id": "pump4-edb558745a0cc21dfe20158edafbbb2269e49a6e621a7e68f8ba0fa985af8a7e",
+      "history_sha256": "b052350ece0d92b265f1a9265f91a0cdae042b85d54f7ef4ab16277dc646744e"
+    },
+    {
+      "sym": "ZROUSDT",
+      "ts": 1791129600000,
+      "signal": null,
+      "cooldown_remaining": 21,
+      "decision_id": "pump4-52f0dfc6193ae8d0400d36f1bf114bfd9e66033fa675451062eb6f0dafdd7b4f",
+      "history_sha256": "4210e72e766c33a167f788f1f14aa702d6bfc155550ba3d7b7b962b4082c44cb"
+    },
+    {
+      "sym": "ZROUSDT",
+      "ts": 1791144000000,
+      "signal": null,
+      "cooldown_remaining": 17,
+      "decision_id": "pump4-a0edc3f6aaa36a356e6f257c95ed7d77b013cc4003a0d2871af2cf707521c3f0",
+      "history_sha256": "4d5a339f09b53317b786f581d0ee22bee7ae0d6078a2d078a0c971956ea8b0c6"
+    },
+    {
+      "sym": "ZROUSDT",
+      "ts": 1791151200000,
+      "signal": null,
+      "cooldown_remaining": 15,
+      "decision_id": "pump4-ee20ef268e1fd6128ba8186da87d48267bdc966eeaaf20ab2e38828a414f241f",
+      "history_sha256": "bed75fe298c5b288d1f331472525a49e4d5bf72f92d8be56943b7d7f70abe7b8"
+    }
+  ]
+}

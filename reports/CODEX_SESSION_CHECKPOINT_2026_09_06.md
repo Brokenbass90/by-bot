@@ -1,5 +1,31 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT26Oct08:24UTC — CATCHUP PRIORITY DEPLOYED OFF; EXACT51 SIGNAL MECHANISM FOUND.
+Read PUMP4_CATCHUP_PRIORITY_2026_10_26.md + PUMP4_SIGNAL_RECONCILIATION_2026_10_26.md
++ PUMP4_ENTRY_WINDOW_300_CR_2026_10_26.md. No new audit, no researchmerge/judge/PnL.
+283local/same283VPS PASS/79targeted/20handoff; actualastraHIGHreview0Important.
+Existing genuine multi-barCATCHUP deferred until fullseal/childsuccess; CURRENT
+immediate, same parent solewriter/producer/intake/epochs/60s preserved.
+DATA5882783b99ca5c48 selected08:18UTC, bindingea4c8699…0ab23/21376files retained;
+SAMEfinancialunit/app30677ce6 ORDERS_OFF, config125b0ae6…69b16/scopea527f12c…bb28,
+PID2955754/original818853/2freshGETflat barriers/NO_NEW_SIGNAL/noGO08:19UTC.
+Oldroots/scopes/claims intact, privatepriority-handoff-20261026 exactrollback.
+Actual25Oct18H1:15/127≤60s/95sources≤60s/median87.974/max107.326s/0signals;
+7CATCHUP34.545s vs120CURRENT62.009s; gateFAIL, not future TINY readiness.
+PublishedClaude5b4a272 ref verified; exact51 membership pinned. On same fresh
+public input51/51 reconstructed solely by skipping previously seen signal bars;
+without omission reference/frozenintake51/51 COOLDOWN_ACTIVE/no signal.
+Archive20Oct49/49 covered likewise;69202overlapbars unchanged;17symbols in137.
+Mechanism proven on fixedinputs; historical PF/code/capture/pass-state missing,
+full originalsignalgeometry unrecorded. No forcedmatching/time shifts/strategyfix.
+34shifted kept separate. Old economics remains unconfirmed for correct producer.
+300s CR notapplied:73selected minuteopen displacement != causalexecution/economics;
+20vs30 rollbackconflict; Bybitclosingminnotionalexemption corrects$12.5claim.
+NEXT actualNEW26Oct09H1 via SAMEtimer; boundedreadonlyobserver alreadyrunning.
+Save CURRENT/CATCHUP timing/ownercontinuity; no duplicatecollector/currenthourretry.
+TINY_NOT_READY, no moneyGO; Monthlyv6 unitunchanged/noactivation/NETexit.
+
+
 CURRENT25Oct17:32UTC — PUBLIC CAPTURE PROCESS SEPARATION DEPLOYED ORDERS_OFF.
 Read PUMP4_CAPTURE_PROCESS_2026_10_25.md + evidence/pump4_capture_process_20261025/.
 Actual17H1 warmfix:137published/128PASS/10≤60s/107sources≤60s,

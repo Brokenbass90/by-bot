@@ -1,0 +1,636 @@
+[
+  {
+    "symbol": "AAVEUSDT",
+    "start_ms": 1776027600000,
+    "end_exclusive_ms": 1792490400000,
+    "bars": 4573,
+    "first_ms": 1776027600000,
+    "last_ms": 1792486800000,
+    "bars_sha256": "59aba2e5a61eb0a49d120b275e2211e311fd9527c522892c2b52cabde1a6eed6",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AAVEUSDT&interval=60&start=1776027600000&end=1779623999999&limit=1000",
+        "received_ms": 1793002258552,
+        "sha256": "e62894bc454212dc294c0703ca26516978ad67ea1314711f2737ecdceaa36adb"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AAVEUSDT&interval=60&start=1779624000000&end=1783220399999&limit=1000",
+        "received_ms": 1793002259263,
+        "sha256": "6861cfb4f70c512045c0dcfdb11fa1ea00cac440a10ff045d1b7f5f9d513ce30"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AAVEUSDT&interval=60&start=1783220400000&end=1786816799999&limit=1000",
+        "received_ms": 1793002259863,
+        "sha256": "452e0ecec48759822e5693ee5ab89b997f8c563fa6fd671042ec8828e9913d4d"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AAVEUSDT&interval=60&start=1786816800000&end=1790413199999&limit=1000",
+        "received_ms": 1793002260747,
+        "sha256": "bc2fa0d23df77f9e76cc52775b377320cd30771ad7bef9ab5e58499b8d56b35c"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AAVEUSDT&interval=60&start=1790413200000&end=1792490399999&limit=1000",
+        "received_ms": 1793002261352,
+        "sha256": "2b8c433ed619ec3f9f70fcf3f7f0112c97d9314fbfaa5c463b075b67abfceed8"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "AEROUSDT",
+    "start_ms": 1776985200000,
+    "end_exclusive_ms": 1792490400000,
+    "bars": 4307,
+    "first_ms": 1776985200000,
+    "last_ms": 1792486800000,
+    "bars_sha256": "91c41a5f76066c44d0a0d7e9917e0ca7c960c72aa5e587c6e2ca4f2a9521268d",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AEROUSDT&interval=60&start=1776985200000&end=1780581599999&limit=1000",
+        "received_ms": 1793002258552,
+        "sha256": "99eee4145ee05e76aba36e7a471d9f6330a771d515e504022204418cd41e17ef"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AEROUSDT&interval=60&start=1780581600000&end=1784177999999&limit=1000",
+        "received_ms": 1793002259251,
+        "sha256": "26775adcd937f4b122eec3c29d57983b1b80d40d1dda41b34c7da08d8a184d57"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AEROUSDT&interval=60&start=1784178000000&end=1787774399999&limit=1000",
+        "received_ms": 1793002259860,
+        "sha256": "3e90cd36bd834280b255f3c36a2cb35aa95935557579ca2fac27265f1227c0f5"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AEROUSDT&interval=60&start=1787774400000&end=1791370799999&limit=1000",
+        "received_ms": 1793002260463,
+        "sha256": "dd8fb724f5a1d330c0ae98ff2d1220ad716e3680241473a9e517f0800207872a"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=AEROUSDT&interval=60&start=1791370800000&end=1792490399999&limit=1000",
+        "received_ms": 1793002261069,
+        "sha256": "4a5078d9dab00779e275fb02944f67701463edcfec7e2beb100606eab6fb0430"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "ALGOUSDT",
+    "start_ms": 1775264400000,
+    "end_exclusive_ms": 1792504800000,
+    "bars": 4789,
+    "first_ms": 1775264400000,
+    "last_ms": 1792501200000,
+    "bars_sha256": "3b9e1925ed94674d98e064642b4aab469b7a98b6c412cbc65ef53a1faa03aea3",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALGOUSDT&interval=60&start=1775264400000&end=1778860799999&limit=1000",
+        "received_ms": 1793002258552,
+        "sha256": "c1be12f89b49e42032466fcef0acea6fd25e936cdcf5da507ec3f7bf99e83480"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALGOUSDT&interval=60&start=1778860800000&end=1782457199999&limit=1000",
+        "received_ms": 1793002259257,
+        "sha256": "18c423e4bb3c48b44bff3cd97688089defc12daf441119d60d37d4d1d641bc06"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALGOUSDT&interval=60&start=1782457200000&end=1786053599999&limit=1000",
+        "received_ms": 1793002259871,
+        "sha256": "93ea73f0a837021375d340b2098712aab2479f3c41940cbb5c1b106d284c0df2"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALGOUSDT&interval=60&start=1786053600000&end=1789649999999&limit=1000",
+        "received_ms": 1793002260467,
+        "sha256": "ae372e1a500966da6fb8cc87302b32f5cb16c22c62e3af146bb3bdfc6ce0eaed"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ALGOUSDT&interval=60&start=1789650000000&end=1792504799999&limit=1000",
+        "received_ms": 1793002261082,
+        "sha256": "480da7c6971d2d9b8ae96468a0414ff8a0e9f3d5e85f53d9f0107ea9d7bbbf2d"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "BLESSUSDT",
+    "start_ms": 1773918000000,
+    "end_exclusive_ms": 1788681600000,
+    "bars": 4101,
+    "first_ms": 1773918000000,
+    "last_ms": 1788678000000,
+    "bars_sha256": "06ce40a5f6d653474fbf1de30cd66d98a713721e3495e6c459d922bf9970e07d",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BLESSUSDT&interval=60&start=1773918000000&end=1777514399999&limit=1000",
+        "received_ms": 1793002261622,
+        "sha256": "f23dfa62958ec3c7ac5c2bce4565429bc0f7a1b784ca40b6418cfe0037d24352"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BLESSUSDT&interval=60&start=1777514400000&end=1781110799999&limit=1000",
+        "received_ms": 1793002262259,
+        "sha256": "34f83feac403a65f9739a90ac5dc4df3f382b28ee1ea10258b24390c2c5d401c"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BLESSUSDT&interval=60&start=1781110800000&end=1784707199999&limit=1000",
+        "received_ms": 1793002262994,
+        "sha256": "c88529b3f12b8d19f228842958a2a06d4174a0b849bbfd927cd7cc54b2b582ff"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BLESSUSDT&interval=60&start=1784707200000&end=1788303599999&limit=1000",
+        "received_ms": 1793002263603,
+        "sha256": "a75e6b32510ebcb3415f60654b2bbac080998440d1b32b1249889985dfa070ef"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=BLESSUSDT&interval=60&start=1788303600000&end=1788681599999&limit=1000",
+        "received_ms": 1793002264219,
+        "sha256": "67df61b83a302418336d082c366856ddce68750afa1b5d4ba326a69cd449a4cf"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "ESPUSDT",
+    "start_ms": 1775106000000,
+    "end_exclusive_ms": 1792501200000,
+    "bars": 4832,
+    "first_ms": 1775106000000,
+    "last_ms": 1792497600000,
+    "bars_sha256": "910265e7bfe4ef3d41d23adfad141c9302f0d7dbc9e5a55af7f524ae739cb81e",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPUSDT&interval=60&start=1775106000000&end=1778702399999&limit=1000",
+        "received_ms": 1793002261685,
+        "sha256": "d57cf4e52f490e1e60b68b5079cd13500ab5587cb1f44ce1ed36757b2faa6a3f"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPUSDT&interval=60&start=1778702400000&end=1782298799999&limit=1000",
+        "received_ms": 1793002262387,
+        "sha256": "c3bb5c6dce569ccc8040217a9ac8460664eb8b627eb4be20737c50d314add01e"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPUSDT&interval=60&start=1782298800000&end=1785895199999&limit=1000",
+        "received_ms": 1793002263086,
+        "sha256": "9439dfec4b910326787a2bccbf8ce594e5483e4d25242bd7b012fcbdc5eb99ec"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPUSDT&interval=60&start=1785895200000&end=1789491599999&limit=1000",
+        "received_ms": 1793002263683,
+        "sha256": "22c739f6e08a24d187d59945550dd4b0bd214255268be63082bd5e4229b49ba0"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ESPUSDT&interval=60&start=1789491600000&end=1792501199999&limit=1000",
+        "received_ms": 1793002264279,
+        "sha256": "5fcbf44fdc4655619e6ed2adea1f49a9a63fa9389d1a72153b3c2f009cfcf6f1"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "FARTCOINUSDT",
+    "start_ms": 1775347200000,
+    "end_exclusive_ms": 1792483200000,
+    "bars": 4760,
+    "first_ms": 1775347200000,
+    "last_ms": 1792479600000,
+    "bars_sha256": "500df43e14826f54dfb6c2ef455801ffe4690232801220f0f4fb0bcf38d28a28",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FARTCOINUSDT&interval=60&start=1775347200000&end=1778943599999&limit=1000",
+        "received_ms": 1793002261950,
+        "sha256": "b2c629749bd3184e535767f4555fe55859f5e874b5fa7d026d1c65ce37eb7133"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FARTCOINUSDT&interval=60&start=1778943600000&end=1782539999999&limit=1000",
+        "received_ms": 1793002263192,
+        "sha256": "cb80175f22ed43635c4f46c97f857d45176f50b67881124fbba851f5b1345037"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FARTCOINUSDT&interval=60&start=1782540000000&end=1786136399999&limit=1000",
+        "received_ms": 1793002263872,
+        "sha256": "7c384bf02d680075d56737eb2252e41c1b68a7c02bd0802736b5d75fc4235a35"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FARTCOINUSDT&interval=60&start=1786136400000&end=1789732799999&limit=1000",
+        "received_ms": 1793002264459,
+        "sha256": "088d51e07070030e3fe1b0fe48f67541bcf44a53903bf2c6229f36d3a7766f51"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FARTCOINUSDT&interval=60&start=1789732800000&end=1792483199999&limit=1000",
+        "received_ms": 1793002265069,
+        "sha256": "60ded1854f8f702fce2a958e5b1d7d48e6dc87b79f7e33584eec2d49917fe0d8"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "FILUSDT",
+    "start_ms": 1777420800000,
+    "end_exclusive_ms": 1792494000000,
+    "bars": 4187,
+    "first_ms": 1777420800000,
+    "last_ms": 1792490400000,
+    "bars_sha256": "87517c26a365fd251686eab38cdca32eb762c94e9ff5c3f5ec75416bb8014860",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FILUSDT&interval=60&start=1777420800000&end=1781017199999&limit=1000",
+        "received_ms": 1793002264771,
+        "sha256": "b5a23faaa808caf0838d3103d1b2b690f99832b0773ef111255ff8100dead396"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FILUSDT&interval=60&start=1781017200000&end=1784613599999&limit=1000",
+        "received_ms": 1793002265397,
+        "sha256": "42c46d52459efdeb870f7f743830a45146fa9a6fe457ac5fa13003f2f995c9eb"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FILUSDT&interval=60&start=1784613600000&end=1788209999999&limit=1000",
+        "received_ms": 1793002266003,
+        "sha256": "aa6ddc616600800fa205a6989678c0c50ecd71c0cfc5352456385a02e7658967"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FILUSDT&interval=60&start=1788210000000&end=1791806399999&limit=1000",
+        "received_ms": 1793002266601,
+        "sha256": "30c2f65b0c376709275c0d173e30ba774d5a3be72d64eebfc43597b43ea87372"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=FILUSDT&interval=60&start=1791806400000&end=1792493999999&limit=1000",
+        "received_ms": 1793002267198,
+        "sha256": "09500bbb69742d4636d34c3ade4806b327961655ab9f4dcfa63a12e53a89d4ac"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "HEIUSDT",
+    "start_ms": 1775779200000,
+    "end_exclusive_ms": 1792512000000,
+    "bars": 4648,
+    "first_ms": 1775779200000,
+    "last_ms": 1792508400000,
+    "bars_sha256": "c70863c3690bbd303d62bf4cd9f877b603a54999bf4e837444c4c3d6958fc712",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=HEIUSDT&interval=60&start=1775779200000&end=1779375599999&limit=1000",
+        "received_ms": 1793002264887,
+        "sha256": "65f634d6070f9f20fd66c73170ab30b0ca4a32a4c57c77b11541a06f0b3c7bb7"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=HEIUSDT&interval=60&start=1779375600000&end=1782971999999&limit=1000",
+        "received_ms": 1793002265502,
+        "sha256": "3dce9f7fe62dd0290357fe5bce3d8d5eafbe1bde7038cbccbee0f4d464a700f3"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=HEIUSDT&interval=60&start=1782972000000&end=1786568399999&limit=1000",
+        "received_ms": 1793002266107,
+        "sha256": "30d9635dae6f936bd8a0bbe1838f6c3c1b8a7f153d2f7a32f6c19a6f91889176"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=HEIUSDT&interval=60&start=1786568400000&end=1790164799999&limit=1000",
+        "received_ms": 1793002266709,
+        "sha256": "cd2fac7f07d302dc477c3d2c8fe3e43f06c570c68754e3b3164df31d4418adae"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=HEIUSDT&interval=60&start=1790164800000&end=1792511999999&limit=1000",
+        "received_ms": 1793002267309,
+        "sha256": "7c883c231bc05af18e9ccd21d74dba024f683a1b1b6fe75093e680c9a1273fea"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "ICPUSDT",
+    "start_ms": 1775988000000,
+    "end_exclusive_ms": 1792483200000,
+    "bars": 4582,
+    "first_ms": 1775988000000,
+    "last_ms": 1792479600000,
+    "bars_sha256": "d231a541ba4099f83b100153ed28a4fb609371ac3a255dda5d8b7c7df587a8d5",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1775988000000&end=1779584399999&limit=1000",
+        "received_ms": 1793002265679,
+        "sha256": "5f1eeebce614f68dc8646a2e804de211407d3ea4c2f4f455bf5592c664bc03c1"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1779584400000&end=1783180799999&limit=1000",
+        "received_ms": 1793002266289,
+        "sha256": "cdbfe853067ab1243c4d7d697b29f8b6076951d8e90f820e14bf0c37549afe3b"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1783180800000&end=1786777199999&limit=1000",
+        "received_ms": 1793002267037,
+        "sha256": "8c57cf1544a38499cbcfed0906eeb531e163e9c5932a1a4f154acb2b533324f5"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1786777200000&end=1790373599999&limit=1000",
+        "received_ms": 1793002267630,
+        "sha256": "37957db0ba25486bb88f0b9c742c821addeac4ef42536e208c7c8c986f0a1f91"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ICPUSDT&interval=60&start=1790373600000&end=1792483199999&limit=1000",
+        "received_ms": 1793002268230,
+        "sha256": "9043e99271aafad6d123c9281a5d3915338fe94c20d8ffb095ebb93bf2983d24"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "KAITOUSDT",
+    "start_ms": 1775041200000,
+    "end_exclusive_ms": 1792490400000,
+    "bars": 4847,
+    "first_ms": 1775041200000,
+    "last_ms": 1792486800000,
+    "bars_sha256": "2ce6a1bf1280f732f296724670211999cccb05340920cdac51db57d031e686f4",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=KAITOUSDT&interval=60&start=1775041200000&end=1778637599999&limit=1000",
+        "received_ms": 1793002267740,
+        "sha256": "2134f6945ddc3c32150d9e3721bdea0082b3c330aa04a82a868c94c93a3278e7"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=KAITOUSDT&interval=60&start=1778637600000&end=1782233999999&limit=1000",
+        "received_ms": 1793002268352,
+        "sha256": "609131d892a4e635f916712a4b69adf161497945e70a74aa0904f2821ad7a4c4"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=KAITOUSDT&interval=60&start=1782234000000&end=1785830399999&limit=1000",
+        "received_ms": 1793002268956,
+        "sha256": "5d2c4d256a69c95e571d2917da06ca72f522ee17d177a7a076c04b4ff548f3ed"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=KAITOUSDT&interval=60&start=1785830400000&end=1789426799999&limit=1000",
+        "received_ms": 1793002269558,
+        "sha256": "f1346cb71a64c8734810481529bcff14ac08be1b8a3fedf4f1d5853eba635754"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=KAITOUSDT&interval=60&start=1789426800000&end=1792490399999&limit=1000",
+        "received_ms": 1793002270180,
+        "sha256": "cb85998deab469af1941df90c8a4d8e1a928c742c68759b2fe237a9119b9546e"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "OPUSDT",
+    "start_ms": 1775102400000,
+    "end_exclusive_ms": 1792483200000,
+    "bars": 4828,
+    "first_ms": 1775102400000,
+    "last_ms": 1792479600000,
+    "bars_sha256": "0fa273071da508d880615875b1bc7bfa1d510cda2d91a9bcba13242ba68adc0d",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=OPUSDT&interval=60&start=1775102400000&end=1778698799999&limit=1000",
+        "received_ms": 1793002267915,
+        "sha256": "d5e144af0b2d9f6cf723e1843a9977136b0038218368544b062dc1c52208bb39"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=OPUSDT&interval=60&start=1778698800000&end=1782295199999&limit=1000",
+        "received_ms": 1793002268792,
+        "sha256": "f31edcbbd69c3e4dbc48ad33f6a0c09302a8d40cfe27da5ef4a41b0fe01323e2"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=OPUSDT&interval=60&start=1782295200000&end=1785891599999&limit=1000",
+        "received_ms": 1793002269409,
+        "sha256": "6bea4d39c635cd15da4fe9807b6703363631a66d05486f37fd4f3ee39db3ad95"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=OPUSDT&interval=60&start=1785891600000&end=1789487999999&limit=1000",
+        "received_ms": 1793002270017,
+        "sha256": "04e94cda095d81995f497e81717c68fe244f740bd1733d331b73aac1ff7f9a72"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=OPUSDT&interval=60&start=1789488000000&end=1792483199999&limit=1000",
+        "received_ms": 1793002270617,
+        "sha256": "05e6e8d6b682d8deb4d1ba787c2c55e5fcf8050d4af85554cfcb1ced23e17cb6"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "SEIUSDT",
+    "start_ms": 1775692800000,
+    "end_exclusive_ms": 1792501200000,
+    "bars": 4669,
+    "first_ms": 1775692800000,
+    "last_ms": 1792497600000,
+    "bars_sha256": "a15f2a60a2bab6b90e6429674bcb3471cdf05fff561e71a2ed2b08ea6366ff87",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=SEIUSDT&interval=60&start=1775692800000&end=1779289199999&limit=1000",
+        "received_ms": 1793002268780,
+        "sha256": "6c78bec87e0b0e725f2cb24bc99413b573853c03cae9c29f944d29b116685bc5"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=SEIUSDT&interval=60&start=1779289200000&end=1782885599999&limit=1000",
+        "received_ms": 1793002269423,
+        "sha256": "f4151ceb1ddeaab27a85e0dc08145abcde701096305c357cc06f5168cba01ccb"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=SEIUSDT&interval=60&start=1782885600000&end=1786481999999&limit=1000",
+        "received_ms": 1793002270022,
+        "sha256": "efaafc86be53ee485a0e59d03a30407ae124010d7575f5334f9562ec94aca8c8"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=SEIUSDT&interval=60&start=1786482000000&end=1790078399999&limit=1000",
+        "received_ms": 1793002270695,
+        "sha256": "480cde5e85c60b87ef14c0dba6418a5f897df14b349349bcb9f388dcca1b47ac"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=SEIUSDT&interval=60&start=1790078400000&end=1792501199999&limit=1000",
+        "received_ms": 1793002271368,
+        "sha256": "c5a4fb7a1b26e013ef90144b95684c4256e9c80089b886fd515e5a9ebce8b834"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "TAOUSDT",
+    "start_ms": 1775340000000,
+    "end_exclusive_ms": 1792494000000,
+    "bars": 4765,
+    "first_ms": 1775340000000,
+    "last_ms": 1792490400000,
+    "bars_sha256": "6de322649bf4c28f6acd76612252c07f27ee0766117af70fe8b9b55d5f57fc30",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TAOUSDT&interval=60&start=1775340000000&end=1778936399999&limit=1000",
+        "received_ms": 1793002270803,
+        "sha256": "8ffb45240f8962cb3c8855a0ddf63e7c77eb7d3a4a5b486be3e2095b1bf4815d"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TAOUSDT&interval=60&start=1778936400000&end=1782532799999&limit=1000",
+        "received_ms": 1793002271431,
+        "sha256": "37803aec8be98208cc27f9e85b7a727d77bb42eb31646e5591db5cf86caf6c9d"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TAOUSDT&interval=60&start=1782532800000&end=1786129199999&limit=1000",
+        "received_ms": 1793002272156,
+        "sha256": "a3d6035c430fe2d1df7a7b4c56ec431a060221e62067183f53d68187ec1a9c7f"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TAOUSDT&interval=60&start=1786129200000&end=1789725599999&limit=1000",
+        "received_ms": 1793002272756,
+        "sha256": "9a98e2222501325fe55346f2215b8815c07238ba60054247999f140b6ee19ef7"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=TAOUSDT&interval=60&start=1789725600000&end=1792493999999&limit=1000",
+        "received_ms": 1793002273357,
+        "sha256": "37b54aaa3c2c06939841c9809a46c9cf170923cdf1cc8844fecfba4d99a13cb0"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "UBUSDT",
+    "start_ms": 1777874400000,
+    "end_exclusive_ms": 1792641600000,
+    "bars": 4102,
+    "first_ms": 1777874400000,
+    "last_ms": 1792638000000,
+    "bars_sha256": "3e3be4947bfc401dcaea7c0afa102f1a01f7b24ea5bd616ed822958ab8ebcfa3",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UBUSDT&interval=60&start=1777874400000&end=1781470799999&limit=1000",
+        "received_ms": 1793002271230,
+        "sha256": "3fad2f8952e5f7dac0bcc9bc44aca5fe8718737559c8df53dfd8db7ef1657829"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UBUSDT&interval=60&start=1781470800000&end=1785067199999&limit=1000",
+        "received_ms": 1793002271872,
+        "sha256": "64322713c281f9e0321df464cf3dc75f1367bbd3f2c3ee14a02e08bb5da89a0b"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UBUSDT&interval=60&start=1785067200000&end=1788663599999&limit=1000",
+        "received_ms": 1793002272472,
+        "sha256": "baaa1067fbc2fd137b7b19015d92874e276690e28bf08ca84a418ee6dd5db9ce"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UBUSDT&interval=60&start=1788663600000&end=1792259999999&limit=1000",
+        "received_ms": 1793002273074,
+        "sha256": "f6a4e9368eb5b91cf530353cd3d7fda30a29807a6c2973f82c2ccbe7f38af42f"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UBUSDT&interval=60&start=1792260000000&end=1792641599999&limit=1000",
+        "received_ms": 1793002273676,
+        "sha256": "663569f75fa40da64a1f6ec78edb59c02304eabae4e349b90eb25fa631c5a26a"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "UNIUSDT",
+    "start_ms": 1775062800000,
+    "end_exclusive_ms": 1792486800000,
+    "bars": 4840,
+    "first_ms": 1775062800000,
+    "last_ms": 1792483200000,
+    "bars_sha256": "a8df4d78327461a965ab295a60ac5a83a2a99d3ff856129529dd25aa4835d445",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UNIUSDT&interval=60&start=1775062800000&end=1778659199999&limit=1000",
+        "received_ms": 1793002271970,
+        "sha256": "57f2a34851aeab5d5df3e6ac30bc9d9419f8151d7337decbeb99090fc5d398e3"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UNIUSDT&interval=60&start=1778659200000&end=1782255599999&limit=1000",
+        "received_ms": 1793002272590,
+        "sha256": "745588a802cb6fb6ecc0193acf54d2070c884ad575b7299384a3d7bb6a38eb4d"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UNIUSDT&interval=60&start=1782255600000&end=1785851999999&limit=1000",
+        "received_ms": 1793002273199,
+        "sha256": "dc4313da3db8405b3f4174e1eb0d21cbdcdac142a6c376b7885bad4704b0698c"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UNIUSDT&interval=60&start=1785852000000&end=1789448399999&limit=1000",
+        "received_ms": 1793002273792,
+        "sha256": "d87c7bf9966cb4a84584d00ce563121dc614402a2cd417ea6af0f49c5c406c8c"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=UNIUSDT&interval=60&start=1789448400000&end=1792486799999&limit=1000",
+        "received_ms": 1793002274542,
+        "sha256": "a8bec5e55c9919336d4649c5ecffc5e978e529d2e0b43c14c4945fb0a18dba24"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "WLDUSDT",
+    "start_ms": 1776916800000,
+    "end_exclusive_ms": 1792486800000,
+    "bars": 4325,
+    "first_ms": 1776916800000,
+    "last_ms": 1792483200000,
+    "bars_sha256": "f4ddbcc03fc7011d6892699605c9e11c4aeac850fe4ff1ba6ce779683f71084d",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1776916800000&end=1780513199999&limit=1000",
+        "received_ms": 1793002273962,
+        "sha256": "a33136b932606fd80826a01896f973c275eacf455ded90365c33712621b2d0a3"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1780513200000&end=1784109599999&limit=1000",
+        "received_ms": 1793002274575,
+        "sha256": "b1ae517242fc51f9b5ac9afb7f9be604d614bdd759585f42e4b09afea0e9196c"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1784109600000&end=1787705999999&limit=1000",
+        "received_ms": 1793002275180,
+        "sha256": "f36c385ab95ef01a9300e271acd3917eb2f5c9c55f8d7ce0aa8b5c6e77241a71"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1787706000000&end=1791302399999&limit=1000",
+        "received_ms": 1793002275772,
+        "sha256": "9f721d7bfe39b4331023b65354c2974dc33507a15169584b780ffe6ce084fdd0"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=WLDUSDT&interval=60&start=1791302400000&end=1792486799999&limit=1000",
+        "received_ms": 1793002276390,
+        "sha256": "dad549efb6417dabe295805c4ae193f6b6613ab3f733147a2e56a23250542c1f"
+      }
+    ],
+    "historical_capture_at_decision": false
+  },
+  {
+    "symbol": "ZROUSDT",
+    "start_ms": 1773748800000,
+    "end_exclusive_ms": 1792490400000,
+    "bars": 5206,
+    "first_ms": 1773748800000,
+    "last_ms": 1792486800000,
+    "bars_sha256": "678ddb028b4e7dd35abceecc6346c461bbfa7976f0c05c242c5a5da24fe4648c",
+    "requests": [
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1773748800000&end=1777345199999&limit=1000",
+        "received_ms": 1793002274223,
+        "sha256": "3f02e2dfc2c21898b2d33328fd70241292cb06635c1fea179968bab1995f5573"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1777345200000&end=1780941599999&limit=1000",
+        "received_ms": 1793002274841,
+        "sha256": "72da786e80b552ac54fb3c290887f0c8f221d5973fa33395494195a1a8f76b17"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1780941600000&end=1784537999999&limit=1000",
+        "received_ms": 1793002275481,
+        "sha256": "7406aaad887d97b350d871fd78a595725c6bf6f08daa6d322744ebb7c83fd1c7"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1784538000000&end=1788134399999&limit=1000",
+        "received_ms": 1793002276096,
+        "sha256": "952a0101dc8d5cbdb60b2d17c6da4c036aab0d774f6a7d43f11e1c474ddc8a78"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1788134400000&end=1791730799999&limit=1000",
+        "received_ms": 1793002276686,
+        "sha256": "918378693be90958d44060b6809cac65c6d75be0c25a8a938c3f449937089b85"
+      },
+      {
+        "url": "https://api.bybit.com/v5/market/kline?category=linear&symbol=ZROUSDT&interval=60&start=1791730800000&end=1792490399999&limit=1000",
+        "received_ms": 1793002277297,
+        "sha256": "ae9767014e51b6bb3bd859ac19164b50e4c7f7cf6df4f9a7313dd947f7c3bbf9"
+      }
+    ],
+    "historical_capture_at_decision": false
+  }
+]

@@ -330,6 +330,35 @@ class Supervisor:
                     except FileExistsError:need(read(target/'terminal.json')==event,'ALERT_IDENTITY')
                     notify_once(target,event,self.alert)
 
+    def _catchup_reference(self,archive,symbol,context,pin):
+        """Advisory scheduling only; unchanged _symbol still validates producer."""
+        try:
+            raw=stable_bytes(safe(archive/'symbols'/(symbol+'.json')))
+            need(hashlib.sha256(raw).hexdigest()==pin,'PRIORITY_CAPTURE_HASH')
+            row=decode(raw)
+            if row['status']!='READY_H1_BOOTSTRAP_NOT_ENTRY':return None
+            path=safe(self.root/'intake'/(symbol+'.jsonl'))
+            if not path.is_file():return None
+            original=stable_bytes(path);intake=Pump4Intake(path,symbol);events=intake.journal.read()
+            if len(events)<2 or events[-1].get('kind')!='CLOSED_BAR':return None
+            cursor=events[-1]['bar'][0]
+            if row['source']['signal_bar'][0]<=cursor+H:return None
+            need(stable_bytes(path)==original,'PRIORITY_JOURNAL_RACE')
+            expected=intake._context();need(all(all(e.get(k)==v for k,v in expected.items()) for e in events),'PRIORITY_CONTEXT')
+            source=closed_h1(row['captures'],symbol,next_open_ms=context[1]['source_hour_open_ms'],observed_ms=row['source']['observed_ms'])
+            need(source==row['source'],'PRIORITY_SOURCE')
+            known={b[0]:b for b in events[0]['bars']};known.update({e['bar'][0]:e['bar'] for e in events[1:]})
+            bars=[*source['seed'],source['signal_bar']];pending=[b for b in bars if b[0]>cursor]
+            need(len(pending)>1 and pending[0][0]==cursor+H and all(b[0] not in known or known[b[0]]==b for b in bars),'PRIORITY_OVERLAP')
+            ep=safe(self.root/'epochs'/(symbol+'.json'));epoch_raw=stable_bytes(ep);epoch=decode(epoch_raw)
+            need(epoch['schema']=='PUMP4_DATA_EPOCH_V1' and epoch['symbol']==symbol and epoch['financial_authority'] is False
+                and epoch['seed_sha256']==digest(events[0]['bars']) and type(epoch['epoch_started_ms']) is int
+                and events[0]['observed_ms']<epoch['epoch_started_ms'],'PRIORITY_EPOCH')
+            identity=digest(dict(context_sha256=context[0],symbol=symbol,capture_sha256=pin))
+            if (self.root/'batches'/identity/(symbol+'.json')).exists():return None
+            return dict(journal_sha256=hashlib.sha256(original).hexdigest(),epoch_sha256=hashlib.sha256(epoch_raw).hexdigest(),archive_id=identity)
+        except (ValueError,KeyError,TypeError,OSError):return None
+
     def _capture_process(self,archive,on_symbol,hour):
         """Public archive child only; this parent remains the sole journal writer."""
         command=[sys.executable,'-B',str(ROOT/'scripts/capture_pump4_sources_v1.py'),
@@ -340,7 +369,12 @@ class Supervisor:
         before_cpu=usage.ru_utime+usage.ru_stime;deadline=time.monotonic()+CAPTURE_PROCESS_TIMEOUT_SECONDS
         process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
             stdin=subprocess.DEVNULL,env=env,close_fds=True,bufsize=0,cwd=str(ROOT))
-        selector=selectors.DefaultSelector();buffer=b'';seen=set();stderr=b'';stderr_bytes=0;notice_times=[]
+        selector=selectors.DefaultSelector();buffer=b'';seen=set();stderr=b'';stderr_bytes=0;notice_times=[];deferred=[];context=None
+        def run_notice(symbol,pin,received,classified,index,scheduling):
+            begun=self.clock();on_symbol(archive,symbol,expected_sha256=pin)
+            notice_times.append(dict(symbol=symbol,notice_index=index,parent_received_ms=received,
+                classification_completed_ms=classified,parent_processing_started_ms=begun,
+                parent_publication_finished_ms=self.clock(),scheduling=scheduling))
         try:
             for kind,pipe in (('out',process.stdout),('err',process.stderr)):
                 os.set_blocking(pipe.fileno(),False);selector.register(pipe,selectors.EVENT_READ,kind)
@@ -362,22 +396,34 @@ class Supervisor:
                         symbol=notice['symbol'];pin=notice['capture_sha256']
                         need(type(symbol) is str and symbol in universe() and symbol not in seen and len(seen)<137,'CAPTURE_NOTICE_SYMBOL')
                         need(type(pin) is str and len(pin)==64 and all(c in '0123456789abcdef' for c in pin),'CAPTURE_NOTICE_HASH')
-                        begun=self.clock();seen.add(symbol)
-                        on_symbol(archive,symbol,expected_sha256=pin)
-                        notice_times.append(dict(symbol=symbol,parent_received_ms=received,
-                            parent_processing_started_ms=begun,parent_publication_finished_ms=self.clock()))
+                        seen.add(symbol)
+                        if context is None:context=self._stream_context(archive)
+                        need(context[1]['source_hour_open_ms']==hour,'STREAM_PARENT_HOUR')
+                        reference=self._catchup_reference(archive,symbol,context,pin);classified=self.clock();index=len(seen)
+                        if reference is not None:deferred.append((symbol,pin,received,classified,index,reference))
+                        else:run_notice(symbol,pin,received,classified,index,'IMMEDIATE')
                     need(len(buffer)<=1024,'CAPTURE_NOTICE_SIZE')
             need(not buffer,'CAPTURE_NOTICE_TRUNCATED')
             remaining=max(.01,deadline-time.monotonic())
             try:code=process.wait(timeout=remaining)
             except subprocess.TimeoutExpired:raise ValueError('PUMP4_SUPERVISOR_CAPTURE_PROCESS_TIMEOUT')
             need(code==0 and len(seen)==137 and (archive/'receipt.json').is_file(),'CAPTURE_PROCESS_INCOMPLETE')
+            if deferred:
+                _,_,seal,_=self._archive(archive)
+                need(seal['source_hour_open_ms']==hour and seal['source_capture_files'].get('capture-context.json')==context[0]
+                    and all(seal['source_capture_files'].get(n)==h for n,h in context[1]['source_capture_files'].items()),'PRIORITY_FINAL_CONTEXT')
+            for symbol,pin,received,classified,index,reference in deferred:
+                need(time.monotonic()<deadline,'CAPTURE_PROCESS_TIMEOUT')
+                need(hashlib.sha256(stable_bytes(safe(self.root/'intake'/(symbol+'.jsonl')))).hexdigest()==reference['journal_sha256']
+                    and hashlib.sha256(stable_bytes(safe(self.root/'epochs'/(symbol+'.json')))).hexdigest()==reference['epoch_sha256']
+                    and not (self.root/'batches'/reference['archive_id']/(symbol+'.json')).exists(),'PRIORITY_DEFERRED_STATE_CHANGED')
+                run_notice(symbol,pin,received,classified,index,'DEFERRED_CATCHUP_NON_ENTRY')
             usage=resource.getrusage(resource.RUSAGE_CHILDREN)
             publish(self.root/'capture-process'/(str(hour)+'.json'),
                 dict(schema='PUMP4_PUBLIC_CAPTURE_PROCESS_RECEIPT_V1',source_hour_open_ms=hour,
                     child_pid=process.pid,child_returncode=code,child_cpu_seconds=usage.ru_utime+usage.ru_stime-before_cpu,
                     parent_pid=os.getpid(),parent_started_ms=start,parent_completed_ms=self.clock(),
-                    symbols=137,notices=notice_times,stderr_bytes=stderr_bytes,
+                    symbols=137,notices=sorted(notice_times,key=lambda n:n['notice_index']),deferred_catchup_count=len(deferred),stderr_bytes=stderr_bytes,
                     stderr_tail=stderr.decode('utf-8',errors='replace').encode('utf-8')[-65536:].decode('utf-8',errors='ignore'),
                     financial_owner_constructed=False,broker_writes=0))
         except BaseException as exc:

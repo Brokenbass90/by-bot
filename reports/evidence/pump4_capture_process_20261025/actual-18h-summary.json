@@ -1,0 +1,62 @@
+{
+  "memory_peak_seen_bytes": 266661888,
+  "process_proof_present": true,
+  "observed_ms": 1792951307616,
+  "new_h1_ms": 1792951200000,
+  "source_captured": 127,
+  "published": 137,
+  "intake_pass": 127,
+  "published_within60s": 15,
+  "source_within60s": 95,
+  "publication_delay_ms": {
+    "min": 18480,
+    "median": 87974,
+    "max": 107326
+  },
+  "signal_symbols": [],
+  "full_seal_present": true,
+  "blocked": [
+    {
+      "symbol": "ACEUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "AKEUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "ARBUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "BIOUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "BEATUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "CBRSUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "CCUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "COOKIEUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "DEXEUSDT",
+      "reason": "BLOCKED_SOURCE"
+    },
+    {
+      "symbol": "HFTUSDT",
+      "reason": "UNAVAILABLE_INSTRUMENT"
+    }
+  ],
+  "broker_writes": 0,
+  "observer_read_only": true
+}

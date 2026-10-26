@@ -1,0 +1,61 @@
+{
+  "journal": {
+    "path": ".private/pump4_signal_reconcile_20261026/inputs/journal.jsonl",
+    "original_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/ten_pump4.jsonl",
+    "sha256": "d8e53ef1e0ace169715e5fdd4280cf13b72deff689ed393d25b5b8343fbb3239",
+    "bytes": 18064
+  },
+  "diagnostic": {
+    "path": ".private/pump4_signal_reconcile_20261026/inputs/diagnostic.json",
+    "original_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/results/pump4_nevosproizvedeno_20261026T0741Z.json",
+    "sha256": "e2d3b570aacef8897ca665201e60d0f5d0a7142097a36f6f081f6644145294d3",
+    "bytes": 17999
+  },
+  "pereschet": {
+    "path": ".private/pump4_signal_reconcile_20261026/inputs/pereschet.json",
+    "original_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/results/pump4_pereschet_20261025T0639Z.json",
+    "sha256": "f2cde38f268333aaf527cfc6e061c905980aa629a161f8efce0402e0e509a43a",
+    "bytes": 42011
+  },
+  "state_current": {
+    "path": ".private/pump4_signal_reconcile_20261026/inputs/state_current.json",
+    "original_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/ten_pump4_sostoyanie.json",
+    "sha256": "968937b23db69735c5d10d74b78ebb1fa9e600b6da85a3a23b78f74044846b7c",
+    "bytes": 4088
+  },
+  "research_lab/ten_pump4.py": {
+    "git_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+    "sha256": "fc0240935a643eae15be033732a75c61439cc01e01776451cb0a48155c102426",
+    "git_blob": "7f39a47a6998aa3583aeb2377053fd470c47f148"
+  },
+  "research_lab/pump4_pereschet.py": {
+    "git_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+    "sha256": "fabcace4ef0b4d77b19d9b86e718c81d857f9a8e09f537155cc3c977ed8f1b73",
+    "git_blob": "c3c30a9787d3291c54a181854b5e92e0ff1e5c46"
+  },
+  "research_lab/pump4_nevosproizvedeno.py": {
+    "git_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+    "sha256": "4c861e40ca6d0577ce485e3e11e4a3d0f2882b3a0044355e21d3c5d00c71d519",
+    "git_blob": "6377777d77419d67670cde9154801b0d1f03badd"
+  },
+  "research_lab/pump4_zaderzhka.py": {
+    "git_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+    "sha256": "81586f09dc875bddad35b60992169e91cb800ab94fd22a739886dbf7ffeecb2b",
+    "git_blob": "e2dcf599307ba9bc9554355b26bf5791c8386996"
+  },
+  "research_lab/SVODKA_EKONOMIKI_2026_10_26.md": {
+    "git_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+    "sha256": "1b40a6baef638e82e77bf45597ca0e835532311f488c11c2ca82ccc02fa3c0d3",
+    "git_blob": "5613166e27f2d4bce5aeccc5939646dc5aa15a7a"
+  },
+  "strategies/pump_fade_v4r.py": {
+    "git_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+    "sha256": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+    "git_blob": "30d2f06f0a4ffd9eb88fe753970d165234cea530"
+  },
+  "strategies/signals.py": {
+    "git_ref": "5b4a2723687a994b2ed1968c6716e1a84872877c",
+    "sha256": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c",
+    "git_blob": "c1317ec259e9b3de88351efe7136f79daf0f3c79"
+  }
+}

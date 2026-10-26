@@ -1,0 +1,13 @@
+{
+  "reviewed_source_sha256": "385cb48652b7558ad720aadd1aa48ac1de6b1fba6a7dace970abcd4d024d2fde",
+  "reviewed_test_sha256": "fd81edb8cd890af24bab8f994a260978aba152564f492811bdb930439d1b9790",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "high",
+  "critical_findings": 0,
+  "important_findings": 0,
+  "independent_targeted_cases": 24,
+  "actual_new_H1_pending": true,
+  "financial_GO": false,
+  "runtime_metadata_verified": true,
+  "review_session_id": "01a1773f-000b-7161-8779-02a87cf53a63"
+}

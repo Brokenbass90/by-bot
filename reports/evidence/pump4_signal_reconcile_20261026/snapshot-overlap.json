@@ -1,0 +1,104 @@
+[
+  {
+    "sym": "AAVEUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "AEROUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "ALGOUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "BLESSUSDT",
+    "overlap_bars": 3080,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "ESPUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "FARTCOINUSDT",
+    "overlap_bars": 4136,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "FILUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "HEIUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "ICPUSDT",
+    "overlap_bars": 4136,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "KAITOUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "OPUSDT",
+    "overlap_bars": 4136,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "SEIUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "TAOUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "UBUSDT",
+    "overlap_bars": 4060,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "UNIUSDT",
+    "overlap_bars": 4137,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "WLDUSDT",
+    "overlap_bars": 4137,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  },
+  {
+    "sym": "ZROUSDT",
+    "overlap_bars": 4138,
+    "changed_bars": 0,
+    "changed_timestamps": []
+  }
+]

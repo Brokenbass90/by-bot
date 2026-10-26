@@ -1,12 +1,15 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-**25Oct17:32UTC PUMP actual state:** [capture-process deployment](reports/PUMP4_CAPTURE_PROCESS_2026_10_25.md).
-Actual17H1:10/128publications≤60s,median90.8925/max110.562s,0signals;gateNOTPASS.
-Newexistingcollector child+sameparentjournalwriter selected DATA8c00885c;
-275local/same275VPSPASS/actualcriticalreview0Important. OnlyDATA ceiling2cores/
-same768MiB;solefinancialOFFPID2908831/818853/HEALTHY/noGO/Monthlyunchanged.
-NEXT actual18H1 source/publication/childCPU/memory/ownercontinuity, then financial
-OFF/exactTINY. TINY_NOT_READY;cached/synthetic success is not market proof.
+**26Oct08:24UTC PUMP actual state:** [priority deployment](reports/PUMP4_CATCHUP_PRIORITY_2026_10_26.md).
+283local/same283VPS PASS, DATA5882783b selectedOFF,21376historyfiles retained;
+new09H1 timing pending. Actual25Oct18:15/127≤60s,median87.974/max107.326s,0signals.
+[Exact51 reconciliation](reports/PUMP4_SIGNAL_RECONCILIATION_2026_10_26.md):
+all51 reconstructed by research wrapper's seen-bar omission on fixedinputs;
+continuous frozenintake yields cooldown/no signal. Historical run attestations
+missing; economics of correct stream unconfirmed. [300sCR](reports/PUMP4_ENTRY_WINDOW_300_CR_2026_10_26.md)
+NOTapplied; no capital/risk increase. Same solefinancialOFF/818853/noGO/Monthlyunchanged.
+NEXT real09H1 proof + correct signal/state lineage/economics + fresh financialgates;
+TINY_NOT_READY. Engineering PASS does not imply financialGO.
 **Owner reaffirmed North Star:** Brain, Factory, classical strategies and intelligent
 portfolio management stay in this canonical roadmap. Current execution queue
 Monthly→PUMP→Polymarket→KITY supports that goal; no secondroadmap/automaticAI moneyauthority.
@@ -116,7 +119,8 @@ Finish these lines before Polymarket/KITY expansion. No new research/financialGO
 Порядок работ остаётся в единственной активной очереди ниже:
 
 1. Сохранить Monthly;30Oct отбор после закрытия,2Nov свежий допуск/защита.
-2. PUMP: исправить измеренную задержку и подтвердить новую H1; полный OFF-путь,
+2. PUMP: подтвердить новую H1 после исправления очереди, исправить обёртку тени
+   через research-владельца и подтвердить экономику корректного потока; полный OFF-путь,
    точный TINY-пакет, затем только разрешённая одна сделка с защитой и сверкой.
 3. Polymarket: продолжить существующие исследования, проверить независимость
    событий, расхождения PnL, bid/ask/ликвидность, комиссии, settlement и допустимость
@@ -231,7 +235,7 @@ Git ref. Локальный документ без публикации — pub
 |---|---|---|
 | **P0 Preserve — Codex** | NET20Oct scheduled independent GET completed at13:35:23UTC/16:35:23CY; later handoff preflight GET completed; raw financial/unit receipts retained privately | One-shot PAUSED after control; no new financial/units permissions or strategy changes. Current broker amounts/order identifiers/runtime unit state are excluded from public receipts. Future protection remains a separate dated operational obligation |
 | **P0 Money — Codex** | Monthlyv6 personally selected and independently accepted3clean idlecycles; no repeat NET sale/Monthly activation. Existing400capital/280gross/40reserve/loss-admission8/max4 unchanged | Actual30Octclosedselection and2Nov14:30UTCfreshentry/protection; CASH allowed. Historical NET-fee/activation blockers below are superseded by current acceptance |
-| **NEXT Money — Codex** | **PUMP4 V1 engineering ORDERS_OFF**. Latest selected source/config/actual timing in [current delivery](reports/PUMP4_CAPTURE_PROCESS_2026_10_25.md);frozen137/intake/history/oneowner818853 preserved | Actual NEW H1 timeliness/resource/owner gate→fresh per-signal costs/lot/tick/oneway/native OFF→exactTINYproposal. No moneyGO;50/30/20/R1/2/3/6 remain proposals;CASH/NO_SEND allowed |
+| **NEXT Money — Codex** | **PUMP4 V1 engineering ORDERS_OFF**. Latest selected source/config/actual timing in [current delivery](reports/PUMP4_CATCHUP_PRIORITY_2026_10_26.md);frozen137/intake/history/oneowner818853 preserved | Actual NEW H1 timeliness/resource/owner gate→fresh per-signal costs/lot/tick/oneway/native OFF→exactTINYproposal. No moneyGO;50/30/20/R1/2/3/6 remain proposals;CASH/NO_SEND allowed |
 | **AFTER PUMP — Codex** | Existing Polymarket tests/data/prereg acceptance | Resume existing request after PUMP gate, no new framework or automatic financial GO |
 | **AFTER POLYMARKET — Codex** | KITY local4c3b69a DOSIE_READY/C1/C2 evidence; not in observed research origind8706ac | Verify published corrected contract, funding C1.7/weekly executor/authority. Corrected path300/10leg does not grant money; old microGO spent |
 | **P1 Codex** | Существующие DATA_ONLY/journal доставки/QA; следующий bounded fix — Brain receiver capacity, без нового framework |19Oct source22448opps/68878decisions, V2=1534; catchup6136receipts/28.2MB превышает4096/8MiB, BLOCKED до append, старые8 сохранены. Независимый chain/prefix/key audit PASS в узкой границе предоставленных файлов; полный market census/feature PIT UNKNOWN. Нужна controlled continuity/restart/replay в существующем journal. Existing DATA timers поддерживаются; Polymarket global census не отнимает MoneyP0 |
