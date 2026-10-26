@@ -1,0 +1,1031 @@
+{
+ "svod": {
+  "vsego": 85,
+  "klassy": {
+   "NE_VOSPR": 51,
+   "SDVIG_CHASA": 34
+  }
+ },
+ "resheniya": [
+  {
+   "sym": "ZROUSDT",
+   "ts": 1788508800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1788512400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1791129600000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1791144000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1791151200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "BLESSUSDT",
+   "ts": 1788670800000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "BLESSUSDT",
+   "ts": 1788674400000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "BLESSUSDT",
+   "ts": 1788678000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ASTERUSDT",
+   "ts": 1788699600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "ZECUSDT",
+   "ts": 1788789600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "ICPUSDT",
+   "ts": 1790748000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "AAVEUSDT",
+   "ts": 1790787600000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "AAVEUSDT",
+   "ts": 1790791200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "AAVEUSDT",
+   "ts": 1790794800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1790024400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791536400000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791540000000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791547200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791550800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791554400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791558000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791565200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1792173600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1792177200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1792180800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1792198800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "INJUSDT",
+   "ts": 1791975600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "LDOUSDT",
+   "ts": 1790445600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "OPUSDT",
+   "ts": 1789862400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1789819200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1790233200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1789822800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1790236800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "WLDUSDT",
+   "ts": 1791673200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "WLDUSDT",
+   "ts": 1791676800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1790445600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1790452800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1790456400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1790467200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1790478000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1790481600000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "1000PEPEUSDT",
+   "ts": 1790125200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1790100000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1790146800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1790150400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1790154000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "WIFUSDT",
+   "ts": 1789797600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1790287200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1791738000000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1791745200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1791748800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "GRASSUSDT",
+   "ts": 1791248400000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "GRASSUSDT",
+   "ts": 1791252000000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "ACTUSDT",
+   "ts": 1791766800000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "MEUSDT",
+   "ts": 1791014400000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "FARTCOINUSDT",
+   "ts": 1790107200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790535600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790917200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790539200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790938800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790542800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790546400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790553600000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790560800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790564400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790571600000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "KAITOUSDT",
+   "ts": 1789794000000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "KAITOUSDT",
+   "ts": 1789797600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "KAITOUSDT",
+   "ts": 1789801200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "PUMPFUNUSDT",
+   "ts": 1791111600000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1790089200000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1790092800000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1792630800000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1792634400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1792638000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "AKEUSDT",
+   "ts": 1790852400000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "AKEUSDT",
+   "ts": 1790856000000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "ALLOUSDT",
+   "ts": 1790074800000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789866000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789891200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789894800000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789898400000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789902000000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789927200000,
+   "side": "short",
+   "klass": "NE_VOSPR",
+   "klass_okno": {
+    "300": "NET",
+    "1000": "NET",
+    "2000": "NET",
+    "4000": "NET"
+   }
+  },
+  {
+   "sym": "LAUSDT",
+   "ts": 1792630800000,
+   "side": "short",
+   "klass": "SDVIG_CHASA",
+   "klass_okno": {
+    "300": "SDVIG_CHASA",
+    "1000": "SDVIG_CHASA",
+    "2000": "SDVIG_CHASA",
+    "4000": "SDVIG_CHASA"
+   }
+  }
+ ]
+}
