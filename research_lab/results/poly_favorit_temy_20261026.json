@@ -1,0 +1,117 @@
+{
+ "rynkov": 3000,
+ "otbrosheno": {
+  "net_ceny": 669,
+  "net_itoga": 1
+ },
+ "vse": {
+  "stavok": 406,
+  "sobytiy": 364,
+  "sred_pct": -2.44,
+  "t": -1.27
+ },
+ "stress_c2": {
+  "stavok": 406,
+  "sobytiy": 364,
+  "sred_pct": -3.48,
+  "t": -1.83
+ },
+ "polovina1": {
+  "stavok": 203,
+  "sobytiy": 195,
+  "sred_pct": -0.41,
+  "t": -0.17
+ },
+ "polovina2": {
+  "stavok": 203,
+  "sobytiy": 169,
+  "sred_pct": -4.79,
+  "t": -1.58
+ },
+ "po_temam": {
+  "economy": {
+   "sobytiy": 1
+  },
+  "geopolitics": {
+   "stavok": 33,
+   "sobytiy": 33,
+   "sred_pct": 4.01,
+   "t": 0.84
+  },
+  "other": {
+   "stavok": 91,
+   "sobytiy": 77,
+   "sred_pct": 1.56,
+   "t": 0.46
+  },
+  "politics": {
+   "stavok": 36,
+   "sobytiy": 32,
+   "sred_pct": -7.8,
+   "t": -1.06
+  },
+  "sports": {
+   "stavok": 245,
+   "sobytiy": 221,
+   "sred_pct": -4.06,
+   "t": -1.53
+  }
+ },
+ "po_tipu": {
+  "fav_yes": {
+   "stavok": 68,
+   "sobytiy": 65,
+   "sred_pct": 1.13,
+   "t": 0.25
+  },
+  "fav_no": {
+   "stavok": 338,
+   "sobytiy": 303,
+   "sred_pct": -2.99,
+   "t": -1.41
+  }
+ },
+ "kalibrovka": {
+  "0-10c": {
+   "n": 957,
+   "dolya_yes": 0.02
+  },
+  "10-20c": {
+   "n": 200,
+   "dolya_yes": 0.175
+  },
+  "20-30c": {
+   "n": 243,
+   "dolya_yes": 0.342
+  },
+  "30-40c": {
+   "n": 200,
+   "dolya_yes": 0.38
+  },
+  "40-50c": {
+   "n": 210,
+   "dolya_yes": 0.481
+  },
+  "50-60c": {
+   "n": 190,
+   "dolya_yes": 0.584
+  },
+  "60-70c": {
+   "n": 104,
+   "dolya_yes": 0.635
+  },
+  "70-80c": {
+   "n": 90,
+   "dolya_yes": 0.767
+  },
+  "80-90c": {
+   "n": 46,
+   "dolya_yes": 0.848
+  },
+  "90-100c": {
+   "n": 90,
+   "dolya_yes": 1.0
+  }
+ },
+ "verdikt": "NEGATIVE"
+}
