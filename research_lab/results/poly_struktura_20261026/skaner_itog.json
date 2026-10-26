@@ -1,0 +1,787 @@
+{
+ "dney": 27,
+ "raundov": 1935,
+ "proverok_S1": 6400,
+ "par_S2": 366351,
+ "razlichnyh_rashozhdeniy": 60,
+ "po_tipu": {
+  "S1_BUY_ALL": 3,
+  "S2_STRIKE": 57
+ },
+ "zachetnyh_(>=1$,>=2_kruga)": 1,
+ "verdikt": "STRUCTURAL_NONE",
+ "top": [
+  {
+   "tip": "S1_BUY_ALL",
+   "klyuch": "51456",
+   "raundov": 179,
+   "podryad_max": 35,
+   "pribyl_max_usd": 9.881,
+   "pribyl_med_usd": 0.148,
+   "pervyy_t": 1792083007412,
+   "primer": {
+    "t": 1792999648440,
+    "tip": "S1_BUY_ALL",
+    "klyuch": "51456",
+    "n": 13,
+    "pribyl_usd": 9.881,
+    "dolej": 3925.72,
+    "verh_na_nabor": 0.0055
+   }
+  },
+  {
+   "tip": "S1_BUY_ALL",
+   "klyuch": "1068452",
+   "raundov": 1,
+   "podryad_max": 1,
+   "pribyl_max_usd": 5.663,
+   "pribyl_med_usd": 5.663,
+   "pervyy_t": 1791317476972,
+   "primer": {
+    "t": 1791317476972,
+    "tip": "S1_BUY_ALL",
+    "klyuch": "1068452",
+    "n": 3,
+    "pribyl_usd": 5.663,
+    "dolej": 946.06,
+    "verh_na_nabor": 0.0134
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1183354:90000<92000",
+   "raundov": 25,
+   "podryad_max": 17,
+   "pribyl_max_usd": 0.385,
+   "pribyl_med_usd": 0.097,
+   "pervyy_t": 1792259435647,
+   "primer": {
+    "t": 1792261611602,
+    "tip": "S2_STRIKE",
+    "klyuch": "1183354:90000<92000",
+    "vopros1": "Will the price of Bitcoin be above $90,000 on October 20?",
+    "pribyl_usd": 0.385,
+    "dolej": 180.0,
+    "verh_na_nabor": 0.0052,
+    "ask1": [
+     0.003,
+     405.0
+    ],
+    "bid2": [
+     0.009,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S1_BUY_ALL",
+   "klyuch": "79926",
+   "raundov": 58,
+   "podryad_max": 43,
+   "pribyl_max_usd": 0.274,
+   "pribyl_med_usd": 0.079,
+   "pervyy_t": 1792331174350,
+   "primer": {
+    "t": 1792565879259,
+    "tip": "S1_BUY_ALL",
+    "klyuch": "79926",
+    "n": 12,
+    "pribyl_usd": 0.274,
+    "dolej": 20.0,
+    "verh_na_nabor": 0.0212
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1177743:2700<2800",
+   "raundov": 4,
+   "podryad_max": 3,
+   "pribyl_max_usd": 0.196,
+   "pribyl_med_usd": 0.196,
+   "pervyy_t": 1792171828858,
+   "primer": {
+    "t": 1792254187804,
+    "tip": "S2_STRIKE",
+    "klyuch": "1177743:2700<2800",
+    "vopros1": "Will the price of Ethereum be above $2,700 on October 19?",
+    "pribyl_usd": 0.196,
+    "dolej": 510.0,
+    "verh_na_nabor": 0.0014,
+    "ask1": [
+     0.003,
+     5.0
+    ],
+    "bid2": [
+     0.005,
+     667.27
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1177747:88000<92000",
+   "raundov": 3,
+   "podryad_max": 2,
+   "pribyl_max_usd": 0.182,
+   "pribyl_med_usd": 0.063,
+   "pervyy_t": 1792172898750,
+   "primer": {
+    "t": 1792172898750,
+    "tip": "S2_STRIKE",
+    "klyuch": "1177747:88000<92000",
+    "vopros1": "Will the price of Bitcoin be above $88,000 on October 19?",
+    "pribyl_usd": 0.182,
+    "dolej": 150.0,
+    "verh_na_nabor": 0.0022,
+    "ask1": [
+     0.004,
+     650.0
+    ],
+    "bid2": [
+     0.007,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1098529:2200<2300",
+   "raundov": 13,
+   "podryad_max": 8,
+   "pribyl_max_usd": 0.156,
+   "pribyl_med_usd": 0.085,
+   "pervyy_t": 1791063631880,
+   "primer": {
+    "t": 1791097591031,
+    "tip": "S2_STRIKE",
+    "klyuch": "1098529:2200<2300",
+    "vopros1": "Will the price of Ethereum be above $2,200 on October 5?",
+    "pribyl_usd": 0.156,
+    "dolej": 33.26,
+    "verh_na_nabor": 0.0082,
+    "ask1": [
+     0.99,
+     5.0
+    ],
+    "bid2": [
+     0.999,
+     526.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1165150:2000<2100",
+   "raundov": 15,
+   "podryad_max": 7,
+   "pribyl_max_usd": 0.103,
+   "pribyl_med_usd": 0.103,
+   "pervyy_t": 1792169744256,
+   "primer": {
+    "t": 1792169744256,
+    "tip": "S2_STRIKE",
+    "klyuch": "1165150:2000<2100",
+    "vopros1": "Will the price of Ethereum be above $2,000 on October 17?",
+    "pribyl_usd": 0.103,
+    "dolej": 125.0,
+    "verh_na_nabor": 0.0017,
+    "ask1": [
+     0.997,
+     5.0
+    ],
+    "bid2": [
+     0.999,
+     505.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1098529:2200<2400",
+   "raundov": 9,
+   "podryad_max": 7,
+   "pribyl_max_usd": 0.085,
+   "pribyl_med_usd": 0.052,
+   "pervyy_t": 1791078168504,
+   "primer": {
+    "t": 1791097591031,
+    "tip": "S2_STRIKE",
+    "klyuch": "1098529:2200<2400",
+    "vopros1": "Will the price of Ethereum be above $2,200 on October 5?",
+    "pribyl_usd": 0.085,
+    "dolej": 33.26,
+    "verh_na_nabor": 0.0061,
+    "ask1": [
+     0.99,
+     5.0
+    ],
+    "bid2": [
+     0.997,
+     1445.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1230206:88000<90000",
+   "raundov": 17,
+   "podryad_max": 17,
+   "pribyl_max_usd": 0.076,
+   "pribyl_med_usd": 0.034,
+   "pervyy_t": 1792988659515,
+   "primer": {
+    "t": 1792999648440,
+    "tip": "S2_STRIKE",
+    "klyuch": "1230206:88000<90000",
+    "vopros1": "Will the price of Bitcoin be above $88,000 on October 28?",
+    "pribyl_usd": 0.076,
+    "dolej": 25.0,
+    "verh_na_nabor": 0.0049,
+    "ask1": [
+     0.005,
+     685.0
+    ],
+    "bid2": [
+     0.011,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1183354:90000<94000",
+   "raundov": 1,
+   "podryad_max": 1,
+   "pribyl_max_usd": 0.068,
+   "pribyl_med_usd": 0.068,
+   "pervyy_t": 1792281386357,
+   "primer": {
+    "t": 1792281386357,
+    "tip": "S2_STRIKE",
+    "klyuch": "1183354:90000<94000",
+    "vopros1": "Will the price of Bitcoin be above $90,000 on October 20?",
+    "pribyl_usd": 0.068,
+    "dolej": 105.0,
+    "verh_na_nabor": 0.0007,
+    "ask1": [
+     0.002,
+     445.0
+    ],
+    "bid2": [
+     0.003,
+     105.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1124995:88000<90000",
+   "raundov": 2,
+   "podryad_max": 2,
+   "pribyl_max_usd": 0.052,
+   "pribyl_med_usd": 0.052,
+   "pervyy_t": 1791578963691,
+   "primer": {
+    "t": 1791578963691,
+    "tip": "S2_STRIKE",
+    "klyuch": "1124995:88000<90000",
+    "vopros1": "Will the price of Bitcoin be above $88,000 on October 10?",
+    "pribyl_usd": 0.052,
+    "dolej": 60.12,
+    "verh_na_nabor": 0.0017,
+    "ask1": [
+     0.001,
+     2496.69
+    ],
+    "bid2": [
+     0.003,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1098529:2300<2400",
+   "raundov": 1,
+   "podryad_max": 1,
+   "pribyl_max_usd": 0.051,
+   "pribyl_med_usd": 0.051,
+   "pervyy_t": 1791107360657,
+   "primer": {
+    "t": 1791107360657,
+    "tip": "S2_STRIKE",
+    "klyuch": "1098529:2300<2400",
+    "vopros1": "Will the price of Ethereum be above $2,300 on October 5?",
+    "pribyl_usd": 0.051,
+    "dolej": 100.0,
+    "verh_na_nabor": 0.0005,
+    "ask1": [
+     0.996,
+     100.0
+    ],
+    "bid2": [
+     0.997,
+     945.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1177747:88000<90000",
+   "raundov": 6,
+   "podryad_max": 2,
+   "pribyl_max_usd": 0.05,
+   "pribyl_med_usd": 0.03,
+   "pervyy_t": 1792234466960,
+   "primer": {
+    "t": 1792304192135,
+    "tip": "S2_STRIKE",
+    "klyuch": "1177747:88000<90000",
+    "vopros1": "Will the price of Bitcoin be above $88,000 on October 19?",
+    "pribyl_usd": 0.05,
+    "dolej": 15.0,
+    "verh_na_nabor": 0.0052,
+    "ask1": [
+     0.003,
+     680.0
+    ],
+    "bid2": [
+     0.009,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1183351:2800<2900",
+   "raundov": 7,
+   "podryad_max": 6,
+   "pribyl_max_usd": 0.048,
+   "pribyl_med_usd": 0.021,
+   "pervyy_t": 1792344231862,
+   "primer": {
+    "t": 1792344231862,
+    "tip": "S2_STRIKE",
+    "klyuch": "1183351:2800<2900",
+    "vopros1": "Will the price of Ethereum be above $2,800 on October 20?",
+    "pribyl_usd": 0.048,
+    "dolej": 25.21,
+    "verh_na_nabor": 0.0027,
+    "ask1": [
+     0.001,
+     25.21
+    ],
+    "bid2": [
+     0.004,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1200286:74000<76000",
+   "raundov": 3,
+   "podryad_max": 3,
+   "pribyl_max_usd": 0.042,
+   "pribyl_med_usd": 0.042,
+   "pervyy_t": 1792589754669,
+   "primer": {
+    "t": 1792589754669,
+    "tip": "S2_STRIKE",
+    "klyuch": "1200286:74000<76000",
+    "vopros1": "Will the price of Bitcoin be above $74,000 on October 23?",
+    "pribyl_usd": 0.042,
+    "dolej": 440.0,
+    "verh_na_nabor": 0.0001,
+    "ask1": [
+     0.993,
+     440.0
+    ],
+    "bid2": [
+     0.994,
+     469.28
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1205807:1900<2000",
+   "raundov": 2,
+   "podryad_max": 1,
+   "pribyl_max_usd": 0.042,
+   "pribyl_med_usd": 0.042,
+   "pervyy_t": 1792660976332,
+   "primer": {
+    "t": 1792683604635,
+    "tip": "S2_STRIKE",
+    "klyuch": "1205807:1900<2000",
+    "vopros1": "Will the price of Ethereum be above $1,900 on October 24?",
+    "pribyl_usd": 0.042,
+    "dolej": 45.0,
+    "verh_na_nabor": 0.0014,
+    "ask1": [
+     0.995,
+     20.0
+    ],
+    "bid2": [
+     0.997,
+     53.28
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1224341:88000<90000",
+   "raundov": 17,
+   "podryad_max": 9,
+   "pribyl_max_usd": 0.041,
+   "pribyl_med_usd": 0.02,
+   "pervyy_t": 1792900806835,
+   "primer": {
+    "t": 1792907975902,
+    "tip": "S2_STRIKE",
+    "klyuch": "1224341:88000<90000",
+    "vopros1": "Will the price of Bitcoin be above $88,000 on October 27?",
+    "pribyl_usd": 0.041,
+    "dolej": 5.0,
+    "verh_na_nabor": 0.0082,
+    "ask1": [
+     0.008,
+     5.0
+    ],
+    "bid2": [
+     0.018,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1224341:88000<92000",
+   "raundov": 8,
+   "podryad_max": 8,
+   "pribyl_max_usd": 0.041,
+   "pribyl_med_usd": 0.03,
+   "pervyy_t": 1792900806835,
+   "primer": {
+    "t": 1792907975902,
+    "tip": "S2_STRIKE",
+    "klyuch": "1224341:88000<92000",
+    "vopros1": "Will the price of Bitcoin be above $88,000 on October 27?",
+    "pribyl_usd": 0.041,
+    "dolej": 5.0,
+    "verh_na_nabor": 0.0082,
+    "ask1": [
+     0.008,
+     5.0
+    ],
+    "bid2": [
+     0.018,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1183351:2000<2100",
+   "raundov": 1,
+   "podryad_max": 1,
+   "pribyl_max_usd": 0.038,
+   "pribyl_med_usd": 0.038,
+   "pervyy_t": 1792443967346,
+   "primer": {
+    "t": 1792443967346,
+    "tip": "S2_STRIKE",
+    "klyuch": "1183351:2000<2100",
+    "vopros1": "Will the price of Ethereum be above $2,000 on October 20?",
+    "pribyl_usd": 0.038,
+    "dolej": 51.03,
+    "verh_na_nabor": 0.0016,
+    "ask1": [
+     0.996,
+     5.0
+    ],
+    "bid2": [
+     0.998,
+     2182.02
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1230206:92000<94000",
+   "raundov": 5,
+   "podryad_max": 5,
+   "pribyl_max_usd": 0.037,
+   "pribyl_med_usd": 0.016,
+   "pervyy_t": 1793011917565,
+   "primer": {
+    "t": 1793015898752,
+    "tip": "S2_STRIKE",
+    "klyuch": "1230206:92000<94000",
+    "vopros1": "Will the price of Bitcoin be above $92,000 on October 28?",
+    "pribyl_usd": 0.037,
+    "dolej": 35.0,
+    "verh_na_nabor": 0.0042,
+    "ask1": [
+     0.003,
+     260.0
+    ],
+    "bid2": [
+     0.008,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1109111:76000<78000",
+   "raundov": 4,
+   "podryad_max": 4,
+   "pribyl_max_usd": 0.036,
+   "pribyl_med_usd": 0.024,
+   "pervyy_t": 1791229358854,
+   "primer": {
+    "t": 1791230730327,
+    "tip": "S2_STRIKE",
+    "klyuch": "1109111:76000<78000",
+    "vopros1": "Will the price of Bitcoin be above $76,000 on October 7?",
+    "pribyl_usd": 0.036,
+    "dolej": 25.0,
+    "verh_na_nabor": 0.0024,
+    "ask1": [
+     0.994,
+     5.0
+    ],
+    "bid2": [
+     0.997,
+     2009.01
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1177747:90000<92000",
+   "raundov": 2,
+   "podryad_max": 2,
+   "pribyl_max_usd": 0.035,
+   "pribyl_med_usd": 0.035,
+   "pervyy_t": 1792169744256,
+   "primer": {
+    "t": 1792170785203,
+    "tip": "S2_STRIKE",
+    "klyuch": "1177747:90000<92000",
+    "vopros1": "Will the price of Bitcoin be above $90,000 on October 19?",
+    "pribyl_usd": 0.035,
+    "dolej": 130.0,
+    "verh_na_nabor": 0.0012,
+    "ask1": [
+     0.005,
+     448.27
+    ],
+    "bid2": [
+     0.007,
+     5.0
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1098529:2200<2500",
+   "raundov": 4,
+   "podryad_max": 2,
+   "pribyl_max_usd": 0.031,
+   "pribyl_med_usd": 0.014,
+   "pervyy_t": 1791091498866,
+   "primer": {
+    "t": 1791098802968,
+    "tip": "S2_STRIKE",
+    "klyuch": "1098529:2200<2500",
+    "vopros1": "Will the price of Ethereum be above $2,200 on October 5?",
+    "pribyl_usd": 0.031,
+    "dolej": 15.0,
+    "verh_na_nabor": 0.004,
+    "ask1": [
+     0.99,
+     5.0
+    ],
+    "bid2": [
+     0.995,
+     139.32
+    ]
+   }
+  },
+  {
+   "tip": "S2_STRIKE",
+   "klyuch": "1165150:2200<2300",
+   "raundov": 2,
+   "podryad_max": 2,
+   "pribyl_max_usd": 0.031,
+   "pribyl_med_usd": 0.031,
+   "pervyy_t": 1792137729749,
+   "primer": {
+    "t": 1792137729749,
+    "tip": "S2_STRIKE",
+    "klyuch": "1165150:2200<2300",
+    "vopros1": "Will the price of Ethereum be above $2,200 on October 17?",
+    "pribyl_usd": 0.031,
+    "dolej": 50.0,
+    "verh_na_nabor": 0.0016,
+    "ask1": [
+     0.996,
+     850.0
+    ],
+    "bid2": [
+     0.998,
+     5.0
+    ]
+   }
+  }
+ ],
+ "blizost_verha_stakana": {
+  "S1_BUY_ALL|-0.3": 1,
+  "S1_BUY_ALL|-0.26": 4,
+  "S1_BUY_ALL|-0.25": 6,
+  "S1_BUY_ALL|-0.24": 1,
+  "S1_BUY_ALL|-0.19": 1,
+  "S1_BUY_ALL|-0.17": 2,
+  "S1_BUY_ALL|-0.16": 3,
+  "S1_BUY_ALL|-0.15": 8,
+  "S1_BUY_ALL|-0.14": 31,
+  "S1_BUY_ALL|-0.13": 86,
+  "S1_BUY_ALL|-0.12": 59,
+  "S1_BUY_ALL|-0.11": 102,
+  "S1_BUY_ALL|-0.1": 112,
+  "S1_BUY_ALL|-0.09": 25,
+  "S1_BUY_ALL|-0.08": 39,
+  "S1_BUY_ALL|-0.07": 103,
+  "S1_BUY_ALL|-0.06": 161,
+  "S1_BUY_ALL|-0.05": 982,
+  "S1_BUY_ALL|-0.04": 1221,
+  "S1_BUY_ALL|-0.03": 805,
+  "S1_BUY_ALL|-0.02": 723,
+  "S1_BUY_ALL|-0.01": 1102,
+  "S1_BUY_ALL|-0.0": 619,
+  "S1_BUY_ALL|0.0": 105,
+  "S1_BUY_ALL|0.01": 45,
+  "S1_BUY_ALL|0.02": 54,
+  "S1_SELL_ALL|-0.25": 1,
+  "S1_SELL_ALL|-0.21": 2,
+  "S1_SELL_ALL|-0.18": 1,
+  "S1_SELL_ALL|-0.14": 10,
+  "S1_SELL_ALL|-0.12": 2,
+  "S1_SELL_ALL|-0.11": 5,
+  "S1_SELL_ALL|-0.09": 24,
+  "S1_SELL_ALL|-0.08": 50,
+  "S1_SELL_ALL|-0.07": 8,
+  "S1_SELL_ALL|-0.06": 72,
+  "S1_SELL_ALL|-0.05": 485,
+  "S1_SELL_ALL|-0.04": 1015,
+  "S1_SELL_ALL|-0.03": 817,
+  "S1_SELL_ALL|-0.02": 715,
+  "S1_SELL_ALL|-0.01": 251,
+  "S1_SELL_ALL|-0.0": 23,
+  "S2_STRIKE|-1.0": 15756,
+  "S2_STRIKE|-0.99": 44760,
+  "S2_STRIKE|-0.98": 19977,
+  "S2_STRIKE|-0.97": 12574,
+  "S2_STRIKE|-0.96": 8853,
+  "S2_STRIKE|-0.95": 6264,
+  "S2_STRIKE|-0.94": 5532,
+  "S2_STRIKE|-0.93": 5114,
+  "S2_STRIKE|-0.92": 4028,
+  "S2_STRIKE|-0.91": 3631,
+  "S2_STRIKE|-0.9": 3023,
+  "S2_STRIKE|-0.89": 2904,
+  "S2_STRIKE|-0.88": 2843,
+  "S2_STRIKE|-0.87": 2572,
+  "S2_STRIKE|-0.86": 2627,
+  "S2_STRIKE|-0.85": 2246,
+  "S2_STRIKE|-0.84": 2155,
+  "S2_STRIKE|-0.83": 1921,
+  "S2_STRIKE|-0.82": 1919,
+  "S2_STRIKE|-0.81": 1742,
+  "S2_STRIKE|-0.8": 1777,
+  "S2_STRIKE|-0.79": 1732,
+  "S2_STRIKE|-0.78": 1826,
+  "S2_STRIKE|-0.77": 1886,
+  "S2_STRIKE|-0.76": 1694,
+  "S2_STRIKE|-0.75": 1625,
+  "S2_STRIKE|-0.74": 1621,
+  "S2_STRIKE|-0.73": 1469,
+  "S2_STRIKE|-0.72": 1462,
+  "S2_STRIKE|-0.71": 1379,
+  "S2_STRIKE|-0.7": 1346,
+  "S2_STRIKE|-0.69": 1405,
+  "S2_STRIKE|-0.68": 1494,
+  "S2_STRIKE|-0.67": 1313,
+  "S2_STRIKE|-0.66": 1500,
+  "S2_STRIKE|-0.65": 1380,
+  "S2_STRIKE|-0.64": 1505,
+  "S2_STRIKE|-0.63": 1420,
+  "S2_STRIKE|-0.62": 1510,
+  "S2_STRIKE|-0.61": 1676,
+  "S2_STRIKE|-0.6": 1552,
+  "S2_STRIKE|-0.59": 1482,
+  "S2_STRIKE|-0.58": 1590,
+  "S2_STRIKE|-0.57": 1522,
+  "S2_STRIKE|-0.56": 1470,
+  "S2_STRIKE|-0.55": 1483,
+  "S2_STRIKE|-0.54": 1440,
+  "S2_STRIKE|-0.53": 1519,
+  "S2_STRIKE|-0.52": 1493,
+  "S2_STRIKE|-0.51": 1525,
+  "S2_STRIKE|-0.5": 1537,
+  "S2_STRIKE|-0.49": 1512,
+  "S2_STRIKE|-0.48": 1540,
+  "S2_STRIKE|-0.47": 1651,
+  "S2_STRIKE|-0.46": 1648,
+  "S2_STRIKE|-0.45": 1677,
+  "S2_STRIKE|-0.44": 1612,
+  "S2_STRIKE|-0.43": 1537,
+  "S2_STRIKE|-0.42": 1542,
+  "S2_STRIKE|-0.41": 1639,
+  "S2_STRIKE|-0.4": 1610,
+  "S2_STRIKE|-0.39": 1535,
+  "S2_STRIKE|-0.38": 1558,
+  "S2_STRIKE|-0.37": 1280,
+  "S2_STRIKE|-0.36": 1440,
+  "S2_STRIKE|-0.35": 1473,
+  "S2_STRIKE|-0.34": 1395,
+  "S2_STRIKE|-0.33": 1338,
+  "S2_STRIKE|-0.32": 1415,
+  "S2_STRIKE|-0.31": 1406,
+  "S2_STRIKE|-0.3": 1436,
+  "S2_STRIKE|-0.29": 1289,
+  "S2_STRIKE|-0.28": 1441,
+  "S2_STRIKE|-0.27": 1467,
+  "S2_STRIKE|-0.26": 1466,
+  "S2_STRIKE|-0.25": 1532,
+  "S2_STRIKE|-0.24": 1555,
+  "S2_STRIKE|-0.23": 1582,
+  "S2_STRIKE|-0.22": 1580,
+  "S2_STRIKE|-0.21": 1540,
+  "S2_STRIKE|-0.2": 1654,
+  "S2_STRIKE|-0.19": 1725,
+  "S2_STRIKE|-0.18": 1925,
+  "S2_STRIKE|-0.17": 1885,
+  "S2_STRIKE|-0.16": 2145,
+  "S2_STRIKE|-0.15": 1998,
+  "S2_STRIKE|-0.14": 2416,
+  "S2_STRIKE|-0.13": 2294,
+  "S2_STRIKE|-0.12": 2264,
+  "S2_STRIKE|-0.11": 2560,
+  "S2_STRIKE|-0.1": 2575,
+  "S2_STRIKE|-0.09": 3305,
+  "S2_STRIKE|-0.08": 3774,
+  "S2_STRIKE|-0.07": 4189,
+  "S2_STRIKE|-0.06": 5155,
+  "S2_STRIKE|-0.05": 5820,
+  "S2_STRIKE|-0.04": 7074,
+  "S2_STRIKE|-0.03": 9752,
+  "S2_STRIKE|-0.02": 16511,
+  "S2_STRIKE|-0.01": 29824,
+  "S2_STRIKE|-0.0": 15703,
+  "S2_STRIKE|0.01": 33
+ }
+}

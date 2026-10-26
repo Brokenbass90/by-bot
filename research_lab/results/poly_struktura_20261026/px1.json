@@ -1,0 +1,39 @@
+{
+ "M1": {
+  "par": 6556,
+  "beta": 0.03,
+  "t": 0.34,
+  "sred_abs_P": 0.0194,
+  "bolshie_|P|>=2c": {
+   "par": 2042,
+   "beta": 0.027,
+   "t": 0.29
+  }
+ },
+ "PnL": {
+  "sdelok": 2473,
+  "sred_usd_na_10": -1.2103,
+  "t_po_krugam": -23.62,
+  "krugov": 654,
+  "dney": 15,
+  "plyus_dolya": 0.089,
+  "itogo_usd": -2993.19,
+  "s_glubinoy_na_10$": 2113,
+  "sred_s_glubinoy": -1.1781,
+  "po_storone": {
+   "YES": -1.2968,
+   "NO": -1.1606
+  },
+  "po_aktivu": {
+   "BTCUSDT": {
+    "n": 1542,
+    "sred": -1.0506
+   },
+   "ETHUSDT": {
+    "n": 931,
+    "sred": -1.475
+   }
+  }
+ },
+ "verdikt": "FAIL"
+}
