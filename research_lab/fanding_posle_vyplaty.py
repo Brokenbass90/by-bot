@@ -2,8 +2,11 @@
 import collections, datetime as dt, json, math
 from pathlib import Path
 HERE = Path(__file__).resolve().parent; D = HERE / "data" / "bybit_fanding_h1_2025_2026"; H = 3600_000; COST = 16.0
+# вселенная prereg: те же 99 монет, у которых были записи в FANDING_DOZA (загрузчик взял все 137 служебных — 38 лишних отбрасываются)
+MON = {r[0] for r in json.load(open(HERE / "results/fanding_doza_20261026/zapisi.json"))["zapisi"] if r[1] is not None}
 sd, ctrl = [], collections.defaultdict(list)
 for f in sorted(D.glob("*.json")):
+    if f.stem not in MON: continue
     z = json.loads(f.read_text()); h = {r[0]: r for r in z["h1"]}; fu = z["funding"]
     ext_chasy = set()
     for k in range(1, len(fu)):
