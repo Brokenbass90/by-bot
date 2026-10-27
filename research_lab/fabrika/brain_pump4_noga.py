@@ -2,7 +2,7 @@
 """brain_pump4_noga.py — теневая нога PUMP4 в Brain: ТОЛЬКО измерение портфельного риска (20.10.2026, PM «PUMP4 V1 TO TINY»).
 Прав над LIVE, ордерами и риском нет. Замороженные политики brain_shadow_v1 не меняются (это отдельный измеритель).
 
-Входы: последний пересчёт PUMP4 (`results/pump4_pereschet_*.json`: решения, выходы), тени шорт-ног ETS2S (`data/ten_ETS2S.jsonl`)
+Входы: последний непрерывный повтор PUMP4 (`results/pump4_polnyy_povtor_*.json`: sdelki; с 27.10, прежний pump4_pereschet невалиден), тени шорт-ног ETS2S (`data/ten_ETS2S.jsonl`)
 и ATT1 (`data/ten_ATT1.jsonl`). Выход: `data/brain_shadow_v1/pump4_noga.json` (перезаписывается, производный).
 Меры: одновременно открытые шорты PUMP4 (максимум, медиана, доля часов с ≥ 5), сколько решений PUMP4 пришлось на часы с уже
 открытыми ≥ 5 (их бы отрезал лимит 5), совпадения с ETS2S/ATT1 по той же монете в ±24 ч (двойной шорт одной монеты),
@@ -20,10 +20,11 @@ def _jl(p):
 
 
 def prohod():
-    fs = sorted(glob.glob(str(LAB / "results" / "pump4_pereschet_*.json")))
+    # 27.10: источник — непрерывный повтор (pump4_polnyy_povtor); pump4_pereschet читал журнал тени с пропусками свечей → невалиден
+    fs = sorted(glob.glob(str(LAB / "results" / "pump4_polnyy_povtor_*.json")))
     if not fs:
-        return {"status": "NET_PERESCHETA"}
-    rez = json.loads(Path(fs[-1]).read_text())["resheniya"]
+        return {"status": "NET_POVTORA"}
+    rez = json.loads(Path(fs[-1]).read_text())["sdelki"]
     pos = [(x["ts"] + H, x["ts"] + H * (2 + (x.get("barov") if x.get("barov") is not None else 168)), x) for x in rez
            if x.get("status") in ("ZAKRYTA", "OTKRYTA")]
     if not pos:

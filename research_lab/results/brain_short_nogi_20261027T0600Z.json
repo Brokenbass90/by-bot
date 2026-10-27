@@ -1,0 +1,885 @@
+{
+ "prereg_sha256": "a8bc23c54bd1d7f706527b603d6c0975a32e44f324e512bc783f17dc372602d7",
+ "ATT1": {
+  "vse": {
+   "n": 4603,
+   "sred_R": -0.0067,
+   "itog_R": -30.78,
+   "ubytochnyh": 1349,
+   "prosadka_R": 94.5,
+   "pribylnyh": 3254,
+   "summa_pribylnyh_R": 903.86,
+   "kontrol_sred": -0.0279
+  },
+  "po_rezhimam": {
+   "BULL_TREND": {
+    "n": 749,
+    "sred_R": 0.015,
+    "itog_R": 11.27,
+    "ubytochnyh": 200,
+    "prosadka_R": 13.97,
+    "pribylnyh": 549,
+    "summa_pribylnyh_R": 153.78,
+    "kontrol_sred": -0.0255
+   },
+   "BEAR_TREND": {
+    "n": 927,
+    "sred_R": 0.0002,
+    "itog_R": 0.21,
+    "ubytochnyh": 278,
+    "prosadka_R": 30.67,
+    "pribylnyh": 649,
+    "summa_pribylnyh_R": 179.57,
+    "kontrol_sred": -0.0332
+   },
+   "NEUTRAL": {
+    "n": 2921,
+    "sred_R": -0.0128,
+    "itog_R": -37.42,
+    "ubytochnyh": 865,
+    "prosadka_R": 88.96,
+    "pribylnyh": 2056,
+    "summa_pribylnyh_R": 570.51,
+    "kontrol_sred": -0.0274
+   },
+   "UNKNOWN": {
+    "n": 6,
+    "sred_R": -0.8058,
+    "itog_R": -4.83,
+    "ubytochnyh": 6,
+    "prosadka_R": 4.83,
+    "pribylnyh": 0,
+    "summa_pribylnyh_R": 0.0,
+    "kontrol_sred": 0.2363
+   }
+  },
+  "vzyat_ne_bull": {
+   "n": 3854,
+   "sred_R": -0.0109,
+   "itog_R": -42.05,
+   "ubytochnyh": 1149,
+   "prosadka_R": 95.11,
+   "pribylnyh": 2705,
+   "summa_pribylnyh_R": 750.09,
+   "kontrol_sred": -0.0284
+  },
+  "otrezano_bull": {
+   "n": 749,
+   "sred_R": 0.015,
+   "itog_R": 11.27,
+   "ubytochnyh": 200,
+   "prosadka_R": 13.97,
+   "pribylnyh": 549,
+   "summa_pribylnyh_R": 153.78,
+   "kontrol_sred": -0.0255
+  },
+  "dolya_otrezano": 0.163,
+  "butstrap": {
+   "raznica": -0.026,
+   "q05": -0.076,
+   "dolya_le0": 0.7655,
+   "nedel": 143
+  },
+  "raznica_po_godam": {
+   "2023": 0.0117,
+   "2024": -0.0387,
+   "2025": -0.039
+  },
+  "bez_kvartala": {
+   "2023-Q1": -0.0309,
+   "2023-Q2": -0.027,
+   "2023-Q3": -0.0329,
+   "2023-Q4": -0.0241,
+   "2024-Q1": -0.032,
+   "2024-Q2": -0.0354,
+   "2024-Q3": -0.0167,
+   "2024-Q4": -0.0131,
+   "2025-Q1": -0.0259,
+   "2025-Q2": -0.035,
+   "2025-Q3": -0.0114
+  },
+  "po_kvartalam": {
+   "2023-Q1": {
+    "ne_bull": {
+     "n": 179,
+     "sred_R": -0.002,
+     "itog_R": -0.36,
+     "ubytochnyh": 48,
+     "prosadka_R": 10.11,
+     "pribylnyh": 131,
+     "summa_pribylnyh_R": 36.48,
+     "kontrol_sred": -0.0009
+    },
+    "bull": {
+     "n": 20,
+     "sred_R": -0.1489,
+     "itog_R": -2.98,
+     "ubytochnyh": 11,
+     "prosadka_R": 3.88,
+     "pribylnyh": 9,
+     "summa_pribylnyh_R": 2.55,
+     "kontrol_sred": -0.1375
+    }
+   },
+   "2023-Q2": {
+    "ne_bull": {
+     "n": 271,
+     "sred_R": 0.0672,
+     "itog_R": 18.21,
+     "ubytochnyh": 62,
+     "prosadka_R": 5.89,
+     "pribylnyh": 209,
+     "summa_pribylnyh_R": 56.72,
+     "kontrol_sred": -0.0452
+    },
+    "bull": {
+     "n": 46,
+     "sred_R": 0.0895,
+     "itog_R": 4.12,
+     "ubytochnyh": 8,
+     "prosadka_R": 2.44,
+     "pribylnyh": 38,
+     "summa_pribylnyh_R": 10.3,
+     "kontrol_sred": -0.019
+    }
+   },
+   "2023-Q3": {
+    "ne_bull": {
+     "n": 378,
+     "sred_R": 0.0166,
+     "itog_R": 6.27,
+     "ubytochnyh": 101,
+     "prosadka_R": 14.72,
+     "pribylnyh": 277,
+     "summa_pribylnyh_R": 74.41,
+     "kontrol_sred": -0.0499
+    },
+    "bull": {
+     "n": 43,
+     "sred_R": -0.0502,
+     "itog_R": -2.16,
+     "ubytochnyh": 14,
+     "prosadka_R": 5.82,
+     "pribylnyh": 29,
+     "summa_pribylnyh_R": 7.92,
+     "kontrol_sred": 0.0322
+    }
+   },
+   "2023-Q4": {
+    "ne_bull": {
+     "n": 244,
+     "sred_R": -0.1146,
+     "itog_R": -27.95,
+     "ubytochnyh": 97,
+     "prosadka_R": 36.98,
+     "pribylnyh": 147,
+     "summa_pribylnyh_R": 40.5,
+     "kontrol_sred": -0.0468
+    },
+    "bull": {
+     "n": 91,
+     "sred_R": -0.0223,
+     "itog_R": -2.03,
+     "ubytochnyh": 30,
+     "prosadka_R": 7.91,
+     "pribylnyh": 61,
+     "summa_pribylnyh_R": 16.97,
+     "kontrol_sred": -0.0307
+    }
+   },
+   "2024-Q1": {
+    "ne_bull": {
+     "n": 232,
+     "sred_R": -0.0564,
+     "itog_R": -13.08,
+     "ubytochnyh": 80,
+     "prosadka_R": 29.41,
+     "pribylnyh": 152,
+     "summa_pribylnyh_R": 42.6,
+     "kontrol_sred": -0.0375
+    },
+    "bull": {
+     "n": 50,
+     "sred_R": -0.1102,
+     "itog_R": -5.51,
+     "ubytochnyh": 20,
+     "prosadka_R": 8.48,
+     "pribylnyh": 30,
+     "summa_pribylnyh_R": 8.57,
+     "kontrol_sred": -0.0345
+    }
+   },
+   "2024-Q2": {
+    "ne_bull": {
+     "n": 295,
+     "sred_R": 0.1067,
+     "itog_R": 31.47,
+     "ubytochnyh": 50,
+     "prosadka_R": 4.68,
+     "pribylnyh": 245,
+     "summa_pribylnyh_R": 68.22,
+     "kontrol_sred": -0.0022
+    },
+    "bull": {
+     "n": 31,
+     "sred_R": 0.023,
+     "itog_R": 0.71,
+     "ubytochnyh": 6,
+     "prosadka_R": 1.73,
+     "pribylnyh": 25,
+     "summa_pribylnyh_R": 6.88,
+     "kontrol_sred": -0.04
+    }
+   },
+   "2024-Q3": {
+    "ne_bull": {
+     "n": 374,
+     "sred_R": -0.011,
+     "itog_R": -4.13,
+     "ubytochnyh": 120,
+     "prosadka_R": 20.75,
+     "pribylnyh": 254,
+     "summa_pribylnyh_R": 71.3,
+     "kontrol_sred": -0.0271
+    },
+    "bull": {
+     "n": 77,
+     "sred_R": 0.0958,
+     "itog_R": 7.38,
+     "ubytochnyh": 14,
+     "prosadka_R": 6.31,
+     "pribylnyh": 63,
+     "summa_pribylnyh_R": 17.71,
+     "kontrol_sred": -0.0157
+    }
+   },
+   "2024-Q4": {
+    "ne_bull": {
+     "n": 349,
+     "sred_R": -0.0617,
+     "itog_R": -21.54,
+     "ubytochnyh": 130,
+     "prosadka_R": 34.25,
+     "pribylnyh": 219,
+     "summa_pribylnyh_R": 60.57,
+     "kontrol_sred": -0.0532
+    },
+    "bull": {
+     "n": 126,
+     "sred_R": 0.0536,
+     "itog_R": 6.76,
+     "ubytochnyh": 28,
+     "prosadka_R": 13.36,
+     "pribylnyh": 98,
+     "summa_pribylnyh_R": 27.79,
+     "kontrol_sred": -0.0156
+    }
+   },
+   "2025-Q1": {
+    "ne_bull": {
+     "n": 391,
+     "sred_R": 0.0704,
+     "itog_R": 27.53,
+     "ubytochnyh": 80,
+     "prosadka_R": 17.0,
+     "pribylnyh": 311,
+     "summa_pribylnyh_R": 87.99,
+     "kontrol_sred": -0.0379
+    },
+    "bull": {
+     "n": 69,
+     "sred_R": 0.1061,
+     "itog_R": 7.32,
+     "ubytochnyh": 12,
+     "prosadka_R": 2.13,
+     "pribylnyh": 57,
+     "summa_pribylnyh_R": 16.35,
+     "kontrol_sred": -0.0641
+    }
+   },
+   "2025-Q2": {
+    "ne_bull": {
+     "n": 612,
+     "sred_R": -0.0258,
+     "itog_R": -15.82,
+     "ubytochnyh": 191,
+     "prosadka_R": 38.44,
+     "pribylnyh": 421,
+     "summa_pribylnyh_R": 119.52,
+     "kontrol_sred": -0.0072
+    },
+    "bull": {
+     "n": 110,
+     "sred_R": -0.054,
+     "itog_R": -5.94,
+     "ubytochnyh": 34,
+     "prosadka_R": 12.94,
+     "pribylnyh": 76,
+     "summa_pribylnyh_R": 20.92,
+     "kontrol_sred": 0.016
+    }
+   },
+   "2025-Q3": {
+    "ne_bull": {
+     "n": 529,
+     "sred_R": -0.0806,
+     "itog_R": -42.65,
+     "ubytochnyh": 190,
+     "prosadka_R": 57.08,
+     "pribylnyh": 339,
+     "summa_pribylnyh_R": 91.75,
+     "kontrol_sred": -0.0176
+    },
+    "bull": {
+     "n": 86,
+     "sred_R": 0.0418,
+     "itog_R": 3.59,
+     "ubytochnyh": 23,
+     "prosadka_R": 5.86,
+     "pribylnyh": 63,
+     "summa_pribylnyh_R": 17.81,
+     "kontrol_sred": -0.0614
+    }
+   }
+  },
+  "volna_v_bull_opisatelno": {
+   "otrezano": {
+    "n": 110,
+    "sred_R": 0.0645,
+    "itog_R": 7.09,
+    "ubytochnyh": 25,
+    "prosadka_R": 5.99,
+    "pribylnyh": 85,
+    "summa_pribylnyh_R": 24.23,
+    "kontrol_sred": -0.0196
+   },
+   "vzyat": {
+    "n": 4493,
+    "sred_R": -0.0084,
+    "itog_R": -37.87,
+    "ubytochnyh": 1324,
+    "prosadka_R": 97.88,
+    "pribylnyh": 3169,
+    "summa_pribylnyh_R": 879.63,
+    "kontrol_sred": -0.0281
+   }
+  },
+  "verdikt": {
+   "a_n": true,
+   "b_butstrap": false,
+   "v_kazhdyy_god": false,
+   "g_otrez_le0": false,
+   "d_bez_kvartala": false,
+   "itog": "FAIL"
+  }
+ },
+ "ETS2": {
+  "vse": {
+   "n": 46134,
+   "sred_R": -0.0015,
+   "itog_R": -70.82,
+   "ubytochnyh": 14966,
+   "prosadka_R": 1108.55,
+   "pribylnyh": 31168,
+   "summa_pribylnyh_R": 10937.51
+  },
+  "po_rezhimam": {
+   "BULL_TREND": {
+    "n": 7627,
+    "sred_R": -0.0228,
+    "itog_R": -174.06,
+    "ubytochnyh": 2566,
+    "prosadka_R": 423.95,
+    "pribylnyh": 5061,
+    "summa_pribylnyh_R": 1774.57
+   },
+   "BEAR_TREND": {
+    "n": 8927,
+    "sred_R": 0.0115,
+    "itog_R": 102.81,
+    "ubytochnyh": 2874,
+    "prosadka_R": 325.86,
+    "pribylnyh": 6053,
+    "summa_pribylnyh_R": 2129.03
+   },
+   "NEUTRAL": {
+    "n": 29580,
+    "sred_R": 0.0,
+    "itog_R": 0.43,
+    "ubytochnyh": 9526,
+    "prosadka_R": 904.83,
+    "pribylnyh": 20054,
+    "summa_pribylnyh_R": 7033.92
+   },
+   "UNKNOWN": {
+    "n": 0
+   }
+  },
+  "vzyat_ne_bull": {
+   "n": 38507,
+   "sred_R": 0.0027,
+   "itog_R": 103.24,
+   "ubytochnyh": 12400,
+   "prosadka_R": 991.47,
+   "pribylnyh": 26107,
+   "summa_pribylnyh_R": 9162.94
+  },
+  "otrezano_bull": {
+   "n": 7627,
+   "sred_R": -0.0228,
+   "itog_R": -174.06,
+   "ubytochnyh": 2566,
+   "prosadka_R": 423.95,
+   "pribylnyh": 5061,
+   "summa_pribylnyh_R": 1774.57
+  },
+  "dolya_otrezano": 0.165,
+  "butstrap": {
+   "raznica": 0.0255,
+   "q05": -0.0469,
+   "dolya_le0": 0.304,
+   "nedel": 83
+  },
+  "raznica_po_godam": {
+   "2024": 0.0021,
+   "2025": 0.0467
+  },
+  "bez_kvartala": {
+   "2024-Q1": 0.0321,
+   "2024-Q2": 0.0111,
+   "2024-Q3": 0.0235,
+   "2024-Q4": 0.0499,
+   "2025-Q1": 0.0497,
+   "2025-Q2": -0.0346,
+   "2025-Q3": 0.0439
+  },
+  "po_kvartalam": {
+   "2024-Q1": {
+    "ne_bull": {
+     "n": 1364,
+     "sred_R": -0.061,
+     "itog_R": -83.16,
+     "ubytochnyh": 510,
+     "prosadka_R": 238.39,
+     "pribylnyh": 854,
+     "summa_pribylnyh_R": 305.6
+    },
+    "bull": {
+     "n": 161,
+     "sred_R": 0.176,
+     "itog_R": 28.34,
+     "ubytochnyh": 31,
+     "prosadka_R": 2.27,
+     "pribylnyh": 130,
+     "summa_pribylnyh_R": 46.68
+    }
+   },
+   "2024-Q2": {
+    "ne_bull": {
+     "n": 4939,
+     "sred_R": 0.0667,
+     "itog_R": 329.28,
+     "ubytochnyh": 1349,
+     "prosadka_R": 143.57,
+     "pribylnyh": 3590,
+     "summa_pribylnyh_R": 1261.28
+    },
+    "bull": {
+     "n": 758,
+     "sred_R": -0.0684,
+     "itog_R": -51.81,
+     "ubytochnyh": 272,
+     "prosadka_R": 104.4,
+     "pribylnyh": 486,
+     "summa_pribylnyh_R": 171.41
+    }
+   },
+   "2024-Q3": {
+    "ne_bull": {
+     "n": 5140,
+     "sred_R": 0.0193,
+     "itog_R": 99.18,
+     "ubytochnyh": 1575,
+     "prosadka_R": 321.72,
+     "pribylnyh": 3565,
+     "summa_pribylnyh_R": 1262.19
+    },
+    "bull": {
+     "n": 781,
+     "sred_R": -0.018,
+     "itog_R": -14.09,
+     "ubytochnyh": 253,
+     "prosadka_R": 80.87,
+     "pribylnyh": 528,
+     "summa_pribylnyh_R": 185.49
+    }
+   },
+   "2024-Q4": {
+    "ne_bull": {
+     "n": 4931,
+     "sred_R": -0.0364,
+     "itog_R": -179.32,
+     "ubytochnyh": 1770,
+     "prosadka_R": 290.44,
+     "pribylnyh": 3161,
+     "summa_pribylnyh_R": 1085.85
+    },
+    "bull": {
+     "n": 1836,
+     "sred_R": 0.0359,
+     "itog_R": 65.95,
+     "ubytochnyh": 522,
+     "prosadka_R": 152.51,
+     "pribylnyh": 1314,
+     "summa_pribylnyh_R": 459.4
+    }
+   },
+   "2025-Q1": {
+    "ne_bull": {
+     "n": 7092,
+     "sred_R": 0.0283,
+     "itog_R": 200.66,
+     "ubytochnyh": 2140,
+     "prosadka_R": 345.78,
+     "pribylnyh": 4952,
+     "summa_pribylnyh_R": 1755.29
+    },
+    "bull": {
+     "n": 963,
+     "sred_R": 0.1848,
+     "itog_R": 177.97,
+     "ubytochnyh": 153,
+     "prosadka_R": 20.2,
+     "pribylnyh": 810,
+     "summa_pribylnyh_R": 289.35
+    }
+   },
+   "2025-Q2": {
+    "ne_bull": {
+     "n": 7224,
+     "sred_R": 0.064,
+     "itog_R": 462.2,
+     "ubytochnyh": 1918,
+     "prosadka_R": 358.98,
+     "pribylnyh": 5306,
+     "summa_pribylnyh_R": 1874.22
+    },
+    "bull": {
+     "n": 1707,
+     "sred_R": -0.1823,
+     "itog_R": -311.12,
+     "ubytochnyh": 784,
+     "prosadka_R": 344.56,
+     "pribylnyh": 923,
+     "summa_pribylnyh_R": 324.1
+    }
+   },
+   "2025-Q3": {
+    "ne_bull": {
+     "n": 7817,
+     "sred_R": -0.0928,
+     "itog_R": -725.61,
+     "ubytochnyh": 3138,
+     "prosadka_R": 914.6,
+     "pribylnyh": 4679,
+     "summa_pribylnyh_R": 1618.52
+    },
+    "bull": {
+     "n": 1421,
+     "sred_R": -0.0488,
+     "itog_R": -69.3,
+     "ubytochnyh": 551,
+     "prosadka_R": 130.87,
+     "pribylnyh": 870,
+     "summa_pribylnyh_R": 298.15
+    }
+   }
+  },
+  "volna_v_bull_opisatelno": {
+   "otrezano": {
+    "n": 1450,
+    "sred_R": -0.0338,
+    "itog_R": -49.07,
+    "ubytochnyh": 517,
+    "prosadka_R": 100.48,
+    "pribylnyh": 933,
+    "summa_pribylnyh_R": 321.42
+   },
+   "vzyat": {
+    "n": 44684,
+    "sred_R": -0.0005,
+    "itog_R": -21.75,
+    "ubytochnyh": 14449,
+    "prosadka_R": 1094.4,
+    "pribylnyh": 30235,
+    "summa_pribylnyh_R": 10616.1
+   }
+  },
+  "verdikt": {
+   "a_n": true,
+   "b_butstrap": false,
+   "v_kazhdyy_god": true,
+   "g_otrez_le0": true,
+   "d_bez_kvartala": false,
+   "itog": "FAIL"
+  }
+ },
+ "vpered_teni": {
+  "ATT1": {
+   "vse": {
+    "n": 3294,
+    "sred_R": -0.0225,
+    "itog_R": -74.21,
+    "ubytochnyh": 1897,
+    "prosadka_R": 78.97,
+    "pribylnyh": 1396,
+    "summa_pribylnyh_R": 116.32,
+    "kontrol_sred": -0.0182,
+    "izderzhki_sred_R": 0.0125
+   },
+   "BULL_TREND": {
+    "n": 43,
+    "sred_R": -0.0145,
+    "itog_R": -0.62,
+    "ubytochnyh": 28,
+    "prosadka_R": 2.06,
+    "pribylnyh": 15,
+    "summa_pribylnyh_R": 1.84,
+    "kontrol_sred": -0.0862,
+    "izderzhki_sred_R": 0.0099
+   },
+   "BEAR_TREND": {
+    "n": 1121,
+    "sred_R": -0.0273,
+    "itog_R": -30.6,
+    "ubytochnyh": 633,
+    "prosadka_R": 30.84,
+    "pribylnyh": 488,
+    "summa_pribylnyh_R": 36.62,
+    "kontrol_sred": 0.0167,
+    "izderzhki_sred_R": 0.0124
+   },
+   "NEUTRAL": {
+    "n": 2130,
+    "sred_R": -0.0202,
+    "itog_R": -42.99,
+    "ubytochnyh": 1236,
+    "prosadka_R": 46.28,
+    "pribylnyh": 893,
+    "summa_pribylnyh_R": 77.87,
+    "kontrol_sred": -0.0352,
+    "izderzhki_sred_R": 0.0125
+   },
+   "UNKNOWN": {
+    "n": 0
+   },
+   "ne_bull": {
+    "n": 3251,
+    "sred_R": -0.0226,
+    "itog_R": -73.59,
+    "ubytochnyh": 1869,
+    "prosadka_R": 76.92,
+    "pribylnyh": 1381,
+    "summa_pribylnyh_R": 114.48,
+    "kontrol_sred": -0.0173,
+    "izderzhki_sred_R": 0.0125
+   },
+   "po_nedelyam": {
+    "09-03": {
+     "bull": 0.2847,
+     "ne_bull": 0.0061
+    },
+    "09-10": {
+     "bull": null,
+     "ne_bull": -0.0375
+    },
+    "09-17": {
+     "bull": null,
+     "ne_bull": -0.0592
+    },
+    "09-24": {
+     "bull": null,
+     "ne_bull": -0.0781
+    },
+    "10-01": {
+     "bull": -0.0361,
+     "ne_bull": -0.0288
+    },
+    "10-08": {
+     "bull": null,
+     "ne_bull": -0.032
+    },
+    "10-15": {
+     "bull": null,
+     "ne_bull": -0.0101
+    },
+    "10-22": {
+     "bull": -0.1485,
+     "ne_bull": -0.0096
+    }
+   }
+  },
+  "ETS2S": {
+   "vse": {
+    "n": 12175,
+    "sred_R": 0.0862,
+    "itog_R": 1049.84,
+    "ubytochnyh": 2924,
+    "prosadka_R": 903.54,
+    "pribylnyh": 9251,
+    "summa_pribylnyh_R": 3399.34,
+    "kontrol_sred": 0.0022,
+    "izderzhki_sred_R": 0.0061
+   },
+   "BULL_TREND": {
+    "n": 1262,
+    "sred_R": 0.1361,
+    "itog_R": 171.74,
+    "ubytochnyh": 237,
+    "prosadka_R": 14.11,
+    "pribylnyh": 1025,
+    "summa_pribylnyh_R": 374.59,
+    "kontrol_sred": 0.0255,
+    "izderzhki_sred_R": 0.0073
+   },
+   "BEAR_TREND": {
+    "n": 3204,
+    "sred_R": -0.0768,
+    "itog_R": -245.98,
+    "ubytochnyh": 1224,
+    "prosadka_R": 714.55,
+    "pribylnyh": 1980,
+    "summa_pribylnyh_R": 730.25,
+    "kontrol_sred": -0.0294,
+    "izderzhki_sred_R": 0.0051
+   },
+   "NEUTRAL": {
+    "n": 7709,
+    "sred_R": 0.1458,
+    "itog_R": 1124.08,
+    "ubytochnyh": 1463,
+    "prosadka_R": 300.33,
+    "pribylnyh": 6246,
+    "summa_pribylnyh_R": 2294.5,
+    "kontrol_sred": 0.0116,
+    "izderzhki_sred_R": 0.0062
+   },
+   "UNKNOWN": {
+    "n": 0
+   },
+   "ne_bull": {
+    "n": 10913,
+    "sred_R": 0.0805,
+    "itog_R": 878.1,
+    "ubytochnyh": 2687,
+    "prosadka_R": 903.86,
+    "pribylnyh": 8226,
+    "summa_pribylnyh_R": 3024.75,
+    "kontrol_sred": -0.0004,
+    "izderzhki_sred_R": 0.0059
+   },
+   "po_nedelyam": {
+    "09-03": {
+     "bull": -0.0642,
+     "ne_bull": 0.1717
+    },
+    "09-10": {
+     "bull": null,
+     "ne_bull": -0.2307
+    },
+    "09-17": {
+     "bull": 0.0031,
+     "ne_bull": -0.7006
+    },
+    "09-24": {
+     "bull": 0.026,
+     "ne_bull": 0.0746
+    },
+    "10-01": {
+     "bull": 0.1808,
+     "ne_bull": 0.2499
+    },
+    "10-08": {
+     "bull": null,
+     "ne_bull": 0.2981
+    },
+    "10-15": {
+     "bull": 0.2547,
+     "ne_bull": 0.1671
+    },
+    "10-22": {
+     "bull": 0.3698,
+     "ne_bull": 0.2281
+    }
+   }
+  }
+ },
+ "portfel": {
+  "primechanie": "ATT1: длительность в источнике нет → занята 336 ч (верхняя граница)",
+  "proshli": {
+   "ATT1": false,
+   "ETS2": false,
+   "PUMP4": false
+  },
+  "A_vse_vsegda": {
+   "sdelok": 2205,
+   "po_nogam": {
+    "PUMP4": 253,
+    "ATT1": 201,
+    "ETS2": 1751
+   },
+   "propuskov_po_limitu": {
+    "ATT1": 2922,
+    "ETS2": 44383,
+    "PUMP4": 269
+   },
+   "itog_R": -30.7,
+   "prosadka_R": 61.32,
+   "itog_k_prosadke": -0.5
+  },
+  "B_po_kriteriyu": {
+   "sdelok": 2205,
+   "po_nogam": {
+    "PUMP4": 253,
+    "ATT1": 201,
+    "ETS2": 1751
+   },
+   "propuskov_po_limitu": {
+    "ATT1": 2922,
+    "ETS2": 44383,
+    "PUMP4": 269
+   },
+   "itog_R": -30.7,
+   "prosadka_R": 61.32,
+   "itog_k_prosadke": -0.5
+  },
+  "B_minus_A": {
+   "raznica_R": 0.0,
+   "dolya_le0": 1.0,
+   "nedel": 83
+  },
+  "B2_nobull_u_vseh": {
+   "sdelok": 1967,
+   "po_nogam": {
+    "PUMP4": 189,
+    "ATT1": 198,
+    "ETS2": 1580
+   },
+   "propuskov_po_limitu": {
+    "ATT1": 2418,
+    "ETS2": 36927,
+    "PUMP4": 131
+   },
+   "itog_R": -26.37,
+   "prosadka_R": 68.53,
+   "itog_k_prosadke": -0.38
+  },
+  "B2_minus_A": {
+   "raznica_R": 4.33,
+   "dolya_le0": 0.417,
+   "nedel": 83
+  }
+ },
+ "kogda_utc": "2026-10-27T06:00:09Z",
+ "kod_sha256": "569ab5e8f190fdbb9f9db75aaed03ebf5b968166933fdcf1f25abaa0b71a5076"
+}
