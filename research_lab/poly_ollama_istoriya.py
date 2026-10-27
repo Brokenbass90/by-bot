@@ -28,6 +28,7 @@ def zakrytye():
                 if P.ISKL.search(q): continue
                 try: kon = dt.datetime.fromisoformat((m.get("endDate") or "").replace("Z", "+00:00")); obem = float(m.get("volume") or 0)
                 except Exception: continue
+                if not (dt.datetime(2026, 8, 1, tzinfo=dt.timezone.utc) <= kon <= dt.datetime(2026, 10, 26, tzinfo=dt.timezone.utc)): continue   # после обучения модели
                 if obem < P.MIN_OBEM or {str(x) for x in pr} not in ({"1", "0"},): continue
                 out.append(dict(id=m.get("id"), vopros=q, pravila=(m.get("description") or "")[:1500], konec=kon, obem=obem, token=toks[0],
                                 fee=P.fee_rate(teg), ishod=1 if str(pr[0]) == "1" else 0))
