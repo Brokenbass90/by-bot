@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-27T16:17Z",
- "vsego": 161,
+ "kogda": "2026-10-27T16:30Z",
+ "vsego": 162,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -20,7 +20,7 @@
   "PROTIV": 10,
   "NET_SIGNALA": 79,
   "MALO_DANNYH": 23,
-  "IZDERZHKI": 4,
+  "IZDERZHKI": 5,
   "EFFEKTIVNYY_RYNOK": 3,
   "ZAPAZDYVANIE": 2,
   "NAPRAVLENIE": 1,
@@ -3263,6 +3263,15 @@
    "prichina": "NET_SIGNALA",
    "sled": "ни в одном режиме/срезе зрения вклад сигнала не > 0; следующий механизм — ATT1_RETEST: вход на возврате к пробитой линии (ручной стиль владельца)",
    "dokument": "results/att1_karta_brain_*.json"
+  },
+  {
+   "id": "RETEST_SLOPED_H1",
+   "istochnik": "protokol",
+   "mehanizm": "ретест пробитой наклонной, H1 (V1 + вариант значимого пробоя)",
+   "status": "KILL",
+   "prichina": "IZDERZHKI",
+   "sled": "V1: вклад +0.02R (t 0.6), издержки 0.18R при стопе ≈ 1 ATR; V2 (значимый пробой): ХУЖЕ случайного −0.13R (t −1.9) → зеркальная гипотеза «провал значимого пробоя» — только prereg и вперёд; H1 со стопом ≈ 1 % съедается издержками",
+   "dokument": "results/retest_sloped*_20261027*.json"
   },
   {
    "id": "SHORT_HVOST",
