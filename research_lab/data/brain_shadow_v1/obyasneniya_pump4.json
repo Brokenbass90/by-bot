@@ -1,0 +1,84 @@
+{
+ "kogda": "2026-10-27T15:47Z",
+ "sdelok": 84,
+ "istochnik": "pump4_polnyy_povtor_20261027T0618Z.json",
+ "priznaki": {
+  "A_shirina_24ch": {
+   "obyasnenie": "A",
+   "porog_po_ranney": 2.0,
+   "napravlenie": "vysokiy_hudshe",
+   "raznica_rannyaya": -0.0552,
+   "raznica_pozdnyaya": -0.0577,
+   "se_pozdney": 0.1344,
+   "predskazyvaet": true,
+   "silno": false
+  },
+  "A_alt_minus_btc_7d": {
+   "obyasnenie": "A",
+   "porog_po_ranney": 0.0858,
+   "napravlenie": "nizkiy_hudshe",
+   "raznica_rannyaya": 0.1759,
+   "raznica_pozdnyaya": -0.3913,
+   "se_pozdney": 0.1811,
+   "predskazyvaet": false,
+   "silno": false
+  },
+  "B_risk_pct": {
+   "obyasnenie": "B",
+   "porog_po_ranney": 17.486,
+   "napravlenie": "vysokiy_hudshe",
+   "raznica_rannyaya": -0.1238,
+   "raznica_pozdnyaya": -0.1019,
+   "se_pozdney": 0.1077,
+   "predskazyvaet": true,
+   "silno": false
+  },
+  "B_disp_ret": {
+   "obyasnenie": "B",
+   "porog_po_ranney": 0.057,
+   "napravlenie": "vysokiy_hudshe",
+   "raznica_rannyaya": -0.0078,
+   "raznica_pozdnyaya": -0.1116,
+   "se_pozdney": 0.1709,
+   "predskazyvaet": true,
+   "silno": false
+  }
+ },
+ "C_razlozhenie": {
+  "R": {
+   "n": 84,
+   "sred": 0.0607,
+   "se": 0.0513
+  },
+  "kontrol": {
+   "n": 84,
+   "sred": -0.0811,
+   "se": 0.0193
+  },
+  "vklad_signala": {
+   "n": 84,
+   "sred": 0.1418,
+   "se": 0.0558
+  },
+  "ubytochnye": {
+   "n": 24,
+   "kontrol_v_nih": {
+    "n": 24,
+    "sred": -0.0947,
+    "se": 0.0366
+   },
+   "vklad_signala_v_nih": {
+    "n": 24,
+    "sred": -0.5234,
+    "se": 0.0942
+   }
+  }
+ },
+ "vyvod": [
+  "A_shirina_24ch: предсказывает",
+  "A_alt_minus_btc_7d: не предсказывает",
+  "B_risk_pct: предсказывает",
+  "B_disp_ret: предсказывает",
+  "C: убыток от рынка (контроль тоже теряет) или от сигнала — см. C_razlozhenie"
+ ]
+}

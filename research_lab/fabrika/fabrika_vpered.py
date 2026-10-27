@@ -129,10 +129,11 @@ def prohod(kat=None, atom_fn=None, atomy=None, out_dir=None, nazvanie="Фабр�
     top = sorted(out.items(), key=lambda kv: -kv[1]["t"])[:15]
     SV.write_text(json.dumps(dict(kogda=time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()), katalog=N, katalog_sha=sha, dney=len(rows),
                                   porog_t_bonferroni=round(porog, 2), min_dney=MIN_DNEY, kandidatov=sum(1 for v in out.values() if v["status"] == "KANDIDAT"),
-                                  top15_opisatelno=dict(top), vse=out,
-                                  primechanie="до 60 дней — только накопление; top15 описательно, не вердикт"), ensure_ascii=False, indent=1))
+                                  top15_opisatelno=(dict(top) if len(rows) >= MIN_DNEY else "СКРЫТ ДО 60 ДНЕЙ (защита от выбора вчерашнего лидера)"),
+                                  vse=(out if len(rows) >= MIN_DNEY else "СКРЫТО ДО 60 ДНЕЙ"),
+                                  primechanie="до 60 дней результаты гипотез скрыты; вердикт один раз по всему каталогу; лидеров между проверками не выбираем"), ensure_ascii=False, indent=1))
     return dict(novyh_dney=novyh, dney=len(rows), katalog=N, trevogi=[f"{nazvanie}: KANDIDAT {k}" for k, v in out.items() if v["status"] == "KANDIDAT"])
 
 if __name__ == "__main__":
     t0 = time.time(); r = prohod(); print(r, round(time.time() - t0, 1), "с")
-    s = json.loads(SV.read_text()); print("порог t", s["porog_t_bonferroni"]); [print(k, v) for k, v in list(s["top15_opisatelno"].items())[:8]]
+    s = json.loads(SV.read_text()); print("порог t", s["porog_t_bonferroni"], "дней", s["dney"])
