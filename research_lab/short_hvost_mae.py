@@ -25,9 +25,10 @@ def main():
         except Exception as e: rows.append(dict(sym=s, ts=t, oshibka=str(e)[:80])); continue
         if not b: rows.append(dict(sym=s, ts=t, oshibka="нет свечей")); continue
         vh = b[0][1]; mae = max(x[2] for x in b[:17]) / vh - 1
-        net = r["net_btc_hedged_bps"] - F.SHTRAF_BPS
+        hed = r.get("net_btc_hedged_bps")
+        net = (hed if hed is not None else r.get("net_raw_bps", 0.0)) - F.SHTRAF_BPS          # старые записи без хеджа — сырой результат
         net_stop = (-(0.30 * 1.05 + 0.05) * 1e4 - F.SHTRAF_BPS) if mae >= 0.30 else net
-        rows.append(dict(sym=s, ts=t, mae_pct=round(mae * 100, 2), net_bps=round(net, 1), net_so_stopom_bps=round(net_stop, 1), posle_zamorozki=t >= F.ZAMOROZKA_MS))
+        rows.append(dict(sym=s, ts=t, mae_pct=round(mae * 100, 2), net_bps=round(net, 1), net_so_stopom_bps=round(net_stop, 1), posle_zamorozki=t >= F.ZAMOROZKA_MS, s_hedzhem=hed is not None))
     ok = [x for x in rows if "mae_pct" in x]; m = sorted(x["mae_pct"] for x in ok)
     out = dict(sobytiy=len(rows), s_cenami=len(ok), mae_mediana=st.median(m), mae_p90=m[int(0.9 * len(m))], mae_max=m[-1],
                dolya_mae_ge={p: round(sum(1 for v in m if v >= p) / len(m), 3) for p in (10, 20, 30, 50, 100)},
