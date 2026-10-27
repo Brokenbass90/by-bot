@@ -1,0 +1,86 @@
+{
+ "kogda": "2026-10-27T13:53:28Z",
+ "zapisey": 201,
+ "nogi": {
+  "KITY": {
+   "vse": {
+    "n": 1,
+    "sred": 383.6
+   },
+   "edinica": "bps/нед",
+   "po_rezhimu": {
+    "BEAR_TREND": {
+     "n": 1,
+     "sred": 383.6
+    }
+   },
+   "volna_ge3_v_bull": {
+    "n": 0,
+    "sred": null
+   },
+   "ostalnoe": {
+    "n": 1,
+    "sred": 383.6
+   }
+  },
+  "PUMP4": {
+   "vse": {
+    "n": 84,
+    "sred": 0.0607
+   },
+   "edinica": "R",
+   "po_rezhimu": {
+    "BEAR_TREND": {
+     "n": 5,
+     "sred": -0.02
+    },
+    "BULL_TREND": {
+     "n": 29,
+     "sred": -0.028
+    },
+    "NEUTRAL": {
+     "n": 50,
+     "sred": 0.1202
+    }
+   },
+   "volna_ge3_v_bull": {
+    "n": 19,
+    "sred": -0.1107
+   },
+   "ostalnoe": {
+    "n": 65,
+    "sred": 0.1108
+   }
+  },
+  "SHORT_HVOST": {
+   "vse": {
+    "n": 115,
+    "sred": 587.1765
+   },
+   "edinica": "bps",
+   "po_rezhimu": {
+    "BEAR_TREND": {
+     "n": 17,
+     "sred": 420.4235
+    },
+    "BULL_TREND": {
+     "n": 25,
+     "sred": 388.56
+    },
+    "NEUTRAL": {
+     "n": 73,
+     "sred": 694.0288
+    }
+   },
+   "volna_ge3_v_bull": {
+    "n": 7,
+    "sred": 41.9429
+   },
+   "ostalnoe": {
+    "n": 108,
+    "sred": 622.5157
+   }
+  }
+ },
+ "primechanie": "все исходы — model (повтор/тень); real появятся с первыми реальными сделками"
+}
