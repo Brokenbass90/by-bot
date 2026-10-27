@@ -1,0 +1,20 @@
+{
+ "rynkov": 157,
+ "resheno_ii": 1,
+ "oshibok_ii": 0,
+ "ii_za_favorita": 1,
+ "stavki_ii": {
+  "n": 1,
+  "sred": 0.0304
+ },
+ "kontrol_favorit_vse": {
+  "n": 157,
+  "sred": -0.05,
+  "t": -1.64
+ },
+ "kontrol_na_tekh_zhe": {
+  "n": 1,
+  "sred": 0.0304
+ },
+ "vyvod": "FAIL"
+}
