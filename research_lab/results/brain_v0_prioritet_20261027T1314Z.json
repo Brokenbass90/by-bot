@@ -1,0 +1,40 @@
+{
+ "kogda_utc": "2026-10-27T13:14:26Z",
+ "A_bez_brain": {
+  "sdelok": 1810,
+  "po_nogam": {
+   "PUMP4": 382,
+   "ETS2": 1428
+  },
+  "summa_R": 41.4,
+  "prosadka_R": 30.6,
+  "summa_k_prosadke": 1.35,
+  "hudshaya_nedelya_R": -11.7,
+  "propuski": {
+   "limit_nogi": 44846
+  }
+ },
+ "B_brain_v0": {
+  "sdelok": 1211,
+  "po_nogam": {
+   "PUMP4": 376,
+   "ETS2": 835
+  },
+  "summa_R": 22.1,
+  "prosadka_R": 30.6,
+  "summa_k_prosadke": 0.72,
+  "hudshaya_nedelya_R": -10.4,
+  "propuski": {
+   "R2_rezerv_PUMP4": 41824,
+   "R1_moneta_zanyata": 3486,
+   "limit_nogi": 135
+  }
+ },
+ "B_minus_A": {
+  "summa_R": -19.3,
+  "dolya_butstrap_le0": 0.888,
+  "nedel": 83
+ },
+ "verdikt": "NEYTRALEN",
+ "prereg_sha256": "9b75e3774dfdfadb709efd2d37f9e4c99396dcf60ce0f567dd5c1722db9524c9"
+}
