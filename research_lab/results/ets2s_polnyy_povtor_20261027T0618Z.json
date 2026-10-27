@@ -1,0 +1,4156 @@
+{
+ "svod": {
+  "kogda_utc": "2026-10-27T06:18:13Z",
+  "rezhim": "lokalno_138_do_20.10",
+  "monet": 138,
+  "bez_dannyh": 2,
+  "statusy": {
+   "ZAKRYTA": 404,
+   "OTKRYTA": 58,
+   "LIMIT_NE_ISPOLNEN": 21,
+   "LIMIT_NE_ISPOLNEN_ILI_OTKRYTA": 34,
+   "NET_DANNYH": 3
+  },
+  "povtor": {
+   "n": 404,
+   "sred_R": 0.0547,
+   "itog_R": 22.1,
+   "ubytochnyh": 115,
+   "prosadka_R": 40.5,
+   "t_po_dnyam": 1.35,
+   "dney": 42,
+   "prevyshenie_nad_kontrolem": 0.1072
+  },
+  "po_nedelyam": {
+   "09-03": 0.1435,
+   "09-10": -0.2737,
+   "09-17": -0.6425,
+   "09-24": 0.0954,
+   "10-01": 0.166,
+   "10-08": 0.3229,
+   "10-15": 0.3179
+  },
+  "portfel_sloty": {
+   "3": {
+    "n": 27,
+    "sred_R": -0.005,
+    "itog_R": -0.1,
+    "ubytochnyh": 8,
+    "prosadka_R": 4.0,
+    "t_po_dnyam": 0.02,
+    "dney": 19,
+    "prevyshenie_nad_kontrolem": 0.0068
+   },
+   "5": {
+    "n": 44,
+    "sred_R": 0.008,
+    "itog_R": 0.4,
+    "ubytochnyh": 13,
+    "prosadka_R": 5.6,
+    "t_po_dnyam": 0.28,
+    "dney": 22,
+    "prevyshenie_nad_kontrolem": 0.019
+   },
+   "10": {
+    "n": 81,
+    "sred_R": 0.044,
+    "itog_R": 3.6,
+    "ubytochnyh": 22,
+    "prosadka_R": 8.6,
+    "t_po_dnyam": -0.1,
+    "dney": 27,
+    "prevyshenie_nad_kontrolem": 0.0794
+   }
+  },
+  "sverka_s_tenyu": {
+   "ten_v_predelah_povtora": 2282,
+   "obshchih": 278,
+   "max_rashozhdenie_R": 0.0,
+   "sovpalo_R_tochno": 278,
+   "ten_vse": {
+    "n": 2282,
+    "sred_R": 0.1061,
+    "itog_R": 242.1,
+    "ubytochnyh": 532,
+    "prosadka_R": 189.8,
+    "t_po_dnyam": 2.54,
+    "dney": 45,
+    "prevyshenie_nad_kontrolem": 0.1119
+   },
+   "tolko_v_teni": {
+    "n": 2004,
+    "sred_R": 0.106,
+    "itog_R": 212.3,
+    "ubytochnyh": 470,
+    "prosadka_R": 174.6,
+    "t_po_dnyam": 2.49,
+    "dney": 44,
+    "prevyshenie_nad_kontrolem": 0.1071
+   },
+   "tolko_v_povtore": {
+    "n": 126,
+    "sred_R": -0.0606,
+    "itog_R": -7.6,
+    "ubytochnyh": 53,
+    "prosadka_R": 23.3,
+    "t_po_dnyam": 0.62,
+    "dney": 34,
+    "prevyshenie_nad_kontrolem": -0.033
+   }
+  },
+  "parametry": {
+   "nachalo": 1788428128693,
+   "otstup": 0.002,
+   "zhdat": 6,
+   "stop": 4.0,
+   "hold": 336,
+   "fee": [
+    1.5,
+    5.5
+   ]
+  },
+  "kod_sha256": "c5496b02c50445f8ae93ea078b56f88f1c124ec3ee87fa3fbd58de7fe5eabdda"
+ },
+ "sdelki": [
+  {
+   "sym": "1000BONKUSDT",
+   "ts": 1788886800000,
+   "status": "ZAKRYTA",
+   "R": 0.3721,
+   "barov": 42,
+   "plecho": 4.18,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.1483
+  },
+  {
+   "sym": "1000BONKUSDT",
+   "ts": 1789218000000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 76,
+   "plecho": 5.79,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.136
+  },
+  {
+   "sym": "1000BONKUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.2615,
+   "barov": 335,
+   "plecho": 4.36,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.0764
+  },
+  {
+   "sym": "1000BONKUSDT",
+   "ts": 1792087200000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 72,
+   "plecho": 5.84,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.0354
+  },
+  {
+   "sym": "1000PEPEUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -1.0039,
+   "barov": 179,
+   "plecho": 5.57,
+   "zatraty_R": 0.0039,
+   "ctrl": 0.1165
+  },
+  {
+   "sym": "1000PEPEUSDT",
+   "ts": 1790640000000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 230,
+   "plecho": 5.51,
+   "zatraty_R": 0.0039,
+   "ctrl": 0.2805
+  },
+  {
+   "sym": "1000RATSUSDT",
+   "ts": 1788976800000,
+   "status": "ZAKRYTA",
+   "R": 0.3701,
+   "barov": 3,
+   "plecho": 6.99,
+   "zatraty_R": 0.0049,
+   "ctrl": 0.2002
+  },
+  {
+   "sym": "1000RATSUSDT",
+   "ts": 1789419600000,
+   "status": "ZAKRYTA",
+   "R": 0.236,
+   "barov": 335,
+   "plecho": 6.96,
+   "zatraty_R": 0.0049,
+   "ctrl": 0.1914
+  },
+  {
+   "sym": "1000RATSUSDT",
+   "ts": 1790787600000,
+   "status": "ZAKRYTA",
+   "R": 0.37,
+   "barov": 187,
+   "plecho": 7.12,
+   "zatraty_R": 0.005,
+   "ctrl": 0.2635
+  },
+  {
+   "sym": "1000RATSUSDT",
+   "ts": 1791637200000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 58,
+   "plecho": 4.65,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.1039
+  },
+  {
+   "sym": "AAVEUSDT",
+   "ts": 1789074000000,
+   "status": "ZAKRYTA",
+   "R": 0.3693,
+   "barov": 138,
+   "plecho": 8.15,
+   "zatraty_R": 0.0057,
+   "ctrl": 0.1135
+  },
+  {
+   "sym": "AAVEUSDT",
+   "ts": 1791529200000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 85,
+   "plecho": 6.07,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.2217
+  },
+  {
+   "sym": "ACEUSDT",
+   "ts": 1788595200000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 109,
+   "plecho": 5.15,
+   "zatraty_R": 0.0036,
+   "ctrl": 0.0451
+  },
+  {
+   "sym": "ACEUSDT",
+   "ts": 1790762400000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 165,
+   "plecho": 5.26,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.239
+  },
+  {
+   "sym": "ACTUSDT",
+   "ts": 1788919200000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 24,
+   "plecho": 5.66,
+   "zatraty_R": 0.004,
+   "ctrl": -0.0951
+  },
+  {
+   "sym": "ACTUSDT",
+   "ts": 1789542000000,
+   "status": "ZAKRYTA",
+   "R": -1.0049,
+   "barov": 71,
+   "plecho": 6.97,
+   "zatraty_R": 0.0049,
+   "ctrl": -0.0752
+  },
+  {
+   "sym": "ACTUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 229,
+   "plecho": 5.72,
+   "zatraty_R": 0.004,
+   "ctrl": -0.1268
+  },
+  {
+   "sym": "ACTUSDT",
+   "ts": 1791939600000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 24,
+   "plecho": 5.32,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.1077
+  },
+  {
+   "sym": "ACTUSDT",
+   "ts": 1792270800000,
+   "status": "ZAKRYTA",
+   "R": 0.3695,
+   "barov": 21,
+   "plecho": 7.8,
+   "zatraty_R": 0.0055,
+   "ctrl": 0.1976
+  },
+  {
+   "sym": "ADAUSDT",
+   "ts": 1789106400000,
+   "status": "ZAKRYTA",
+   "R": 0.3706,
+   "barov": 114,
+   "plecho": 6.3,
+   "zatraty_R": 0.0044,
+   "ctrl": -0.0826
+  },
+  {
+   "sym": "ADAUSDT",
+   "ts": 1789678800000,
+   "status": "ZAKRYTA",
+   "R": -1.0051,
+   "barov": 26,
+   "plecho": 7.34,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.2471
+  },
+  {
+   "sym": "ADAUSDT",
+   "ts": 1791536400000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 136,
+   "plecho": 6.16,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.1011
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1789556400000,
+   "status": "ZAKRYTA",
+   "R": -1.0045,
+   "barov": 41,
+   "plecho": 6.47,
+   "zatraty_R": 0.0045,
+   "ctrl": -0.3036
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1791381600000,
+   "status": "ZAKRYTA",
+   "R": -1.0043,
+   "barov": 69,
+   "plecho": 6.17,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.1674
+  },
+  {
+   "sym": "AKEUSDT",
+   "ts": 1791288000000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 13,
+   "plecho": 4.26,
+   "zatraty_R": 0.003,
+   "ctrl": 0.1079
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.3783,
+   "barov": 207,
+   "plecho": 4.76,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.0076
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791669600000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 187,
+   "plecho": 5.27,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.1446
+  },
+  {
+   "sym": "ALLOUSDT",
+   "ts": 1789113600000,
+   "status": "ZAKRYTA",
+   "R": -0.3781,
+   "barov": 214,
+   "plecho": 4.49,
+   "zatraty_R": 0.0031,
+   "ctrl": 0.0289
+  },
+  {
+   "sym": "ALLOUSDT",
+   "ts": 1791100800000,
+   "status": "ZAKRYTA",
+   "R": 0.3697,
+   "barov": 63,
+   "plecho": 7.58,
+   "zatraty_R": 0.0053,
+   "ctrl": -0.1156
+  },
+  {
+   "sym": "ALLOUSDT",
+   "ts": 1791507600000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 94,
+   "plecho": 5.83,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.0304
+  },
+  {
+   "sym": "ALLOUSDT",
+   "ts": 1792058400000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 79,
+   "plecho": 5.3,
+   "zatraty_R": 0.0037,
+   "ctrl": 0.1135
+  },
+  {
+   "sym": "APTUSDT",
+   "ts": 1789326000000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 46,
+   "plecho": 5.87,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.3524
+  },
+  {
+   "sym": "APTUSDT",
+   "ts": 1790838000000,
+   "status": "ZAKRYTA",
+   "R": -0.378,
+   "barov": 247,
+   "plecho": 4.23,
+   "zatraty_R": 0.003,
+   "ctrl": 0.2056
+  },
+  {
+   "sym": "ARBUSDT",
+   "ts": 1789279200000,
+   "status": "ZAKRYTA",
+   "R": -0.378,
+   "barov": 78,
+   "plecho": 4.23,
+   "zatraty_R": 0.003,
+   "ctrl": -0.1707
+  },
+  {
+   "sym": "ARBUSDT",
+   "ts": 1790812800000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 145,
+   "plecho": 4.59,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.0192
+  },
+  {
+   "sym": "ATOMUSDT",
+   "ts": 1789311600000,
+   "status": "ZAKRYTA",
+   "R": 0.37,
+   "barov": 62,
+   "plecho": 7.21,
+   "zatraty_R": 0.005,
+   "ctrl": -0.1613
+  },
+  {
+   "sym": "ATOMUSDT",
+   "ts": 1790694000000,
+   "status": "ZAKRYTA",
+   "R": 0.0293,
+   "barov": 335,
+   "plecho": 4.82,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.0323
+  },
+  {
+   "sym": "AVAXUSDT",
+   "ts": 1789110000000,
+   "status": "ZAKRYTA",
+   "R": -0.3809,
+   "barov": 185,
+   "plecho": 8.5,
+   "zatraty_R": 0.0059,
+   "ctrl": 0.1799
+  },
+  {
+   "sym": "AVAXUSDT",
+   "ts": 1791547200000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 133,
+   "plecho": 5.35,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.0312
+  },
+  {
+   "sym": "BANANAS31USDT",
+   "ts": 1789041600000,
+   "status": "ZAKRYTA",
+   "R": -0.0382,
+   "barov": 335,
+   "plecho": 7.34,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.0345
+  },
+  {
+   "sym": "BANANAS31USDT",
+   "ts": 1790683200000,
+   "status": "ZAKRYTA",
+   "R": 0.3702,
+   "barov": 77,
+   "plecho": 6.88,
+   "zatraty_R": 0.0048,
+   "ctrl": 0.0842
+  },
+  {
+   "sym": "BANANAS31USDT",
+   "ts": 1791428400000,
+   "status": "ZAKRYTA",
+   "R": 0.3689,
+   "barov": 11,
+   "plecho": 8.75,
+   "zatraty_R": 0.0061,
+   "ctrl": 0.0564
+  },
+  {
+   "sym": "BANANAS31USDT",
+   "ts": 1791648000000,
+   "status": "ZAKRYTA",
+   "R": 0.3669,
+   "barov": 53,
+   "plecho": 11.6,
+   "zatraty_R": 0.0081,
+   "ctrl": -0.0984
+  },
+  {
+   "sym": "BANANAS31USDT",
+   "ts": 1792299600000,
+   "status": "ZAKRYTA",
+   "R": 0.3669,
+   "barov": 12,
+   "plecho": 11.63,
+   "zatraty_R": 0.0081,
+   "ctrl": -0.1498
+  },
+  {
+   "sym": "BANKUSDT",
+   "ts": 1788480000000,
+   "status": "ZAKRYTA",
+   "R": 0.3664,
+   "barov": 118,
+   "plecho": 12.23,
+   "zatraty_R": 0.0086,
+   "ctrl": 0.1227
+  },
+  {
+   "sym": "BANKUSDT",
+   "ts": 1789185600000,
+   "status": "ZAKRYTA",
+   "R": -0.3788,
+   "barov": 179,
+   "plecho": 5.38,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.0047
+  },
+  {
+   "sym": "BANKUSDT",
+   "ts": 1790640000000,
+   "status": "ZAKRYTA",
+   "R": 0.3694,
+   "barov": 89,
+   "plecho": 8.07,
+   "zatraty_R": 0.0056,
+   "ctrl": 0.2769
+  },
+  {
+   "sym": "BANKUSDT",
+   "ts": 1791169200000,
+   "status": "ZAKRYTA",
+   "R": 0.368,
+   "barov": 46,
+   "plecho": 9.94,
+   "zatraty_R": 0.007,
+   "ctrl": 0.2618
+  },
+  {
+   "sym": "BCHUSDT",
+   "ts": 1789138800000,
+   "status": "ZAKRYTA",
+   "R": -0.3787,
+   "barov": 260,
+   "plecho": 5.33,
+   "zatraty_R": 0.0037,
+   "ctrl": 0.0756
+  },
+  {
+   "sym": "BEATUSDT",
+   "ts": 1788660000000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 86,
+   "plecho": 6.18,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.0191
+  },
+  {
+   "sym": "BEATUSDT",
+   "ts": 1789603200000,
+   "status": "ZAKRYTA",
+   "R": -1.0031,
+   "barov": 223,
+   "plecho": 4.49,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.1198
+  },
+  {
+   "sym": "BEATUSDT",
+   "ts": 1790694000000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 74,
+   "plecho": 4.27,
+   "zatraty_R": 0.003,
+   "ctrl": -0.0501
+  },
+  {
+   "sym": "BEATUSDT",
+   "ts": 1791122400000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 199,
+   "plecho": 5.58,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.0763
+  },
+  {
+   "sym": "BEATUSDT",
+   "ts": 1792018800000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 2,
+   "plecho": 4.96,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.1278
+  },
+  {
+   "sym": "BICOUSDT",
+   "ts": 1788469200000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 144,
+   "plecho": 4.49,
+   "zatraty_R": 0.0031,
+   "ctrl": 0.0515
+  },
+  {
+   "sym": "BICOUSDT",
+   "ts": 1789369200000,
+   "status": "ZAKRYTA",
+   "R": -0.38,
+   "barov": 153,
+   "plecho": 7.13,
+   "zatraty_R": 0.005,
+   "ctrl": 0.0196
+  },
+  {
+   "sym": "BICOUSDT",
+   "ts": 1790694000000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 216,
+   "plecho": 4.47,
+   "zatraty_R": 0.0031,
+   "ctrl": 0.1963
+  },
+  {
+   "sym": "BICOUSDT",
+   "ts": 1791669600000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 45,
+   "plecho": 4.83,
+   "zatraty_R": 0.0034,
+   "ctrl": 0.093
+  },
+  {
+   "sym": "BIOUSDT",
+   "ts": 1789041600000,
+   "status": "ZAKRYTA",
+   "R": -0.6253,
+   "barov": 335,
+   "plecho": 4.38,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.1393
+  },
+  {
+   "sym": "BIOUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 334,
+   "plecho": 5.03,
+   "zatraty_R": 0.0035,
+   "ctrl": -0.0484
+  },
+  {
+   "sym": "BIOUSDT",
+   "ts": 1792112400000,
+   "status": "ZAKRYTA",
+   "R": 0.3712,
+   "barov": 60,
+   "plecho": 5.37,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.0808
+  },
+  {
+   "sym": "BLESSUSDT",
+   "ts": 1789228800000,
+   "status": "ZAKRYTA",
+   "R": -0.3783,
+   "barov": 258,
+   "plecho": 4.75,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.2598
+  },
+  {
+   "sym": "BLESSUSDT",
+   "ts": 1790668800000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 221,
+   "plecho": 5.17,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.041
+  },
+  {
+   "sym": "BLESSUSDT",
+   "ts": 1791622800000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 62,
+   "plecho": 4.98,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.1577
+  },
+  {
+   "sym": "BLUAIUSDT",
+   "ts": 1788613200000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 44,
+   "plecho": 6.05,
+   "zatraty_R": 0.0042,
+   "ctrl": 0.0487
+  },
+  {
+   "sym": "BLUAIUSDT",
+   "ts": 1789549200000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 277,
+   "plecho": 5.18,
+   "zatraty_R": 0.0036,
+   "ctrl": 0.1194
+  },
+  {
+   "sym": "BLUAIUSDT",
+   "ts": 1791090000000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 107,
+   "plecho": 4.75,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.1143
+  },
+  {
+   "sym": "BMTUSDT",
+   "ts": 1788523200000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 128,
+   "plecho": 4.7,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.1632
+  },
+  {
+   "sym": "BMTUSDT",
+   "ts": 1790564400000,
+   "status": "ZAKRYTA",
+   "R": 0.3699,
+   "barov": 21,
+   "plecho": 7.33,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.3273
+  },
+  {
+   "sym": "BMTUSDT",
+   "ts": 1790816400000,
+   "status": "ZAKRYTA",
+   "R": -1.0051,
+   "barov": 57,
+   "plecho": 7.27,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.5032
+  },
+  {
+   "sym": "BMTUSDT",
+   "ts": 1791421200000,
+   "status": "ZAKRYTA",
+   "R": 0.3697,
+   "barov": 168,
+   "plecho": 7.63,
+   "zatraty_R": 0.0053,
+   "ctrl": -0.1369
+  },
+  {
+   "sym": "BMTUSDT",
+   "ts": 1792195200000,
+   "status": "ZAKRYTA",
+   "R": 0.3706,
+   "barov": 42,
+   "plecho": 6.26,
+   "zatraty_R": 0.0044,
+   "ctrl": -0.2141
+  },
+  {
+   "sym": "BNBUSDT",
+   "ts": 1789106400000,
+   "status": "ZAKRYTA",
+   "R": -1.0082,
+   "barov": 226,
+   "plecho": 11.7,
+   "zatraty_R": 0.0082,
+   "ctrl": -0.3279
+  },
+  {
+   "sym": "BNBUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.3653,
+   "barov": 228,
+   "plecho": 13.85,
+   "zatraty_R": 0.0097,
+   "ctrl": -0.0569
+  },
+  {
+   "sym": "BNBUSDT",
+   "ts": 1791630000000,
+   "status": "ZAKRYTA",
+   "R": 0.3658,
+   "barov": 58,
+   "plecho": 13.2,
+   "zatraty_R": 0.0092,
+   "ctrl": -0.3371
+  },
+  {
+   "sym": "BOMEUSDT",
+   "ts": 1788616800000,
+   "status": "ZAKRYTA",
+   "R": -0.5252,
+   "barov": 335,
+   "plecho": 4.18,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.2144
+  },
+  {
+   "sym": "BOMEUSDT",
+   "ts": 1790640000000,
+   "status": "ZAKRYTA",
+   "R": -1.0036,
+   "barov": 296,
+   "plecho": 5.09,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.2353
+  },
+  {
+   "sym": "BOMEUSDT",
+   "ts": 1792126800000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 55,
+   "plecho": 4.22,
+   "zatraty_R": 0.003,
+   "ctrl": -0.2011
+  },
+  {
+   "sym": "BROCCOLIUSDT",
+   "ts": 1788958800000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 8,
+   "plecho": 4.81,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.5867
+  },
+  {
+   "sym": "BROCCOLIUSDT",
+   "ts": 1791306000000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 45,
+   "plecho": 4.78,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.4971
+  },
+  {
+   "sym": "BROCCOLIUSDT",
+   "ts": 1791666000000,
+   "status": "ZAKRYTA",
+   "R": 0.3702,
+   "barov": 42,
+   "plecho": 6.93,
+   "zatraty_R": 0.0048,
+   "ctrl": -0.143
+  },
+  {
+   "sym": "BTCUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.386,
+   "barov": 229,
+   "plecho": 15.73,
+   "zatraty_R": 0.011,
+   "ctrl": -0.137
+  },
+  {
+   "sym": "BTCUSDT",
+   "ts": 1791885600000,
+   "status": "ZAKRYTA",
+   "R": 0.3641,
+   "barov": 39,
+   "plecho": 15.58,
+   "zatraty_R": 0.0109,
+   "ctrl": -0.1028
+  },
+  {
+   "sym": "BTRUSDT",
+   "ts": 1790488800000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 235,
+   "plecho": 4.3,
+   "zatraty_R": 0.003,
+   "ctrl": -0.074
+  },
+  {
+   "sym": "BTRUSDT",
+   "ts": 1792094400000,
+   "status": "ZAKRYTA",
+   "R": 0.3703,
+   "barov": 38,
+   "plecho": 6.72,
+   "zatraty_R": 0.0047,
+   "ctrl": -0.1672
+  },
+  {
+   "sym": "BZUSDT",
+   "ts": 1789624800000,
+   "status": "ZAKRYTA",
+   "R": 0.3672,
+   "barov": 105,
+   "plecho": 11.11,
+   "zatraty_R": 0.0078,
+   "ctrl": -0.2773
+  },
+  {
+   "sym": "BZUSDT",
+   "ts": 1790798400000,
+   "status": "ZAKRYTA",
+   "R": -0.5582,
+   "barov": 335,
+   "plecho": 9.93,
+   "zatraty_R": 0.0069,
+   "ctrl": -0.1752
+  },
+  {
+   "sym": "C98USDT",
+   "ts": 1789106400000,
+   "status": "ZAKRYTA",
+   "R": -0.3794,
+   "barov": 189,
+   "plecho": 6.33,
+   "zatraty_R": 0.0044,
+   "ctrl": 0.0233
+  },
+  {
+   "sym": "C98USDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": -1.0031,
+   "barov": 174,
+   "plecho": 4.45,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.3268
+  },
+  {
+   "sym": "C98USDT",
+   "ts": 1791550800000,
+   "status": "ZAKRYTA",
+   "R": -1.003,
+   "barov": 12,
+   "plecho": 4.34,
+   "zatraty_R": 0.003,
+   "ctrl": -0.3294
+  },
+  {
+   "sym": "C98USDT",
+   "ts": 1792198800000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 41,
+   "plecho": 4.71,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.2884
+  },
+  {
+   "sym": "CBRSUSDT",
+   "ts": 1789149600000,
+   "status": "ZAKRYTA",
+   "R": 0.3688,
+   "barov": 60,
+   "plecho": 8.9,
+   "zatraty_R": 0.0062,
+   "ctrl": 0.082
+  },
+  {
+   "sym": "CBRSUSDT",
+   "ts": 1789552800000,
+   "status": "ZAKRYTA",
+   "R": -1.007,
+   "barov": 120,
+   "plecho": 9.95,
+   "zatraty_R": 0.007,
+   "ctrl": 0.0555
+  },
+  {
+   "sym": "CBRSUSDT",
+   "ts": 1790600400000,
+   "status": "ZAKRYTA",
+   "R": 0.2991,
+   "barov": 0,
+   "plecho": 13.49,
+   "zatraty_R": 0.0094,
+   "ctrl": 0.0026
+  },
+  {
+   "sym": "CBRSUSDT",
+   "ts": 1791007200000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 129,
+   "plecho": 6.13,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.1132
+  },
+  {
+   "sym": "CBRSUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3702,
+   "barov": 16,
+   "plecho": 6.82,
+   "zatraty_R": 0.0048,
+   "ctrl": -0.0751
+  },
+  {
+   "sym": "CCUSDT",
+   "ts": 1788584400000,
+   "status": "ZAKRYTA",
+   "R": 0.3704,
+   "barov": 126,
+   "plecho": 6.61,
+   "zatraty_R": 0.0046,
+   "ctrl": 0.2074
+  },
+  {
+   "sym": "CCUSDT",
+   "ts": 1789369200000,
+   "status": "ZAKRYTA",
+   "R": 0.3688,
+   "barov": 36,
+   "plecho": 8.79,
+   "zatraty_R": 0.0062,
+   "ctrl": 0.1744
+  },
+  {
+   "sym": "CCUSDT",
+   "ts": 1790240400000,
+   "status": "ZAKRYTA",
+   "R": -1.0037,
+   "barov": 32,
+   "plecho": 5.22,
+   "zatraty_R": 0.0037,
+   "ctrl": 0.1049
+  },
+  {
+   "sym": "CCUSDT",
+   "ts": 1790917200000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 308,
+   "plecho": 6.06,
+   "zatraty_R": 0.0042,
+   "ctrl": 0.1134
+  },
+  {
+   "sym": "CLUSDT",
+   "ts": 1789711200000,
+   "status": "ZAKRYTA",
+   "R": 0.3673,
+   "barov": 81,
+   "plecho": 10.94,
+   "zatraty_R": 0.0077,
+   "ctrl": -0.297
+  },
+  {
+   "sym": "CLUSDT",
+   "ts": 1790784000000,
+   "status": "ZAKRYTA",
+   "R": -0.0426,
+   "barov": 335,
+   "plecho": 8.67,
+   "zatraty_R": 0.0061,
+   "ctrl": -0.1992
+  },
+  {
+   "sym": "COAIUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.3791,
+   "barov": 185,
+   "plecho": 5.88,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.1531
+  },
+  {
+   "sym": "COAIUSDT",
+   "ts": 1790240400000,
+   "status": "ZAKRYTA",
+   "R": -0.1466,
+   "barov": 335,
+   "plecho": 4.2,
+   "zatraty_R": 0.0029,
+   "ctrl": 0.1713
+  },
+  {
+   "sym": "COAIUSDT",
+   "ts": 1791939600000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 24,
+   "plecho": 5.09,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.1177
+  },
+  {
+   "sym": "COOKIEUSDT",
+   "ts": 1788483600000,
+   "status": "ZAKRYTA",
+   "R": 0.3691,
+   "barov": 140,
+   "plecho": 8.45,
+   "zatraty_R": 0.0059,
+   "ctrl": -0.2118
+  },
+  {
+   "sym": "COOKIEUSDT",
+   "ts": 1789149600000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 117,
+   "plecho": 5.95,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.2056
+  },
+  {
+   "sym": "COOKIEUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": -1.0039,
+   "barov": 71,
+   "plecho": 5.58,
+   "zatraty_R": 0.0039,
+   "ctrl": 0.0456
+  },
+  {
+   "sym": "COOKIEUSDT",
+   "ts": 1791334800000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 37,
+   "plecho": 5.96,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.0792
+  },
+  {
+   "sym": "COOKIEUSDT",
+   "ts": 1791626400000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 61,
+   "plecho": 6.02,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.0763
+  },
+  {
+   "sym": "COOKIEUSDT",
+   "ts": 1792094400000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 35,
+   "plecho": 5.62,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.0043
+  },
+  {
+   "sym": "COTIUSDT",
+   "ts": 1790553600000,
+   "status": "ZAKRYTA",
+   "R": 0.3712,
+   "barov": 5,
+   "plecho": 5.41,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.0961
+  },
+  {
+   "sym": "COTIUSDT",
+   "ts": 1790787600000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 294,
+   "plecho": 4.7,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.2533
+  },
+  {
+   "sym": "CRCLUSDT",
+   "ts": 1788966000000,
+   "status": "ZAKRYTA",
+   "R": 0.3701,
+   "barov": 146,
+   "plecho": 6.99,
+   "zatraty_R": 0.0049,
+   "ctrl": -0.1049
+  },
+  {
+   "sym": "CRCLUSDT",
+   "ts": 1789653600000,
+   "status": "ZAKRYTA",
+   "R": -1.0034,
+   "barov": 94,
+   "plecho": 4.89,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.0355
+  },
+  {
+   "sym": "CRCLUSDT",
+   "ts": 1790517600000,
+   "status": "ZAKRYTA",
+   "R": 0.3677,
+   "barov": 18,
+   "plecho": 10.43,
+   "zatraty_R": 0.0073,
+   "ctrl": 0.116
+  },
+  {
+   "sym": "CRCLUSDT",
+   "ts": 1790766000000,
+   "status": "ZAKRYTA",
+   "R": 0.3691,
+   "barov": 184,
+   "plecho": 8.42,
+   "zatraty_R": 0.0059,
+   "ctrl": 0.1171
+  },
+  {
+   "sym": "CRVUSDT",
+   "ts": 1789066800000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 137,
+   "plecho": 4.96,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.1447
+  },
+  {
+   "sym": "CRVUSDT",
+   "ts": 1791288000000,
+   "status": "ZAKRYTA",
+   "R": 0.3699,
+   "barov": 50,
+   "plecho": 7.33,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.0603
+  },
+  {
+   "sym": "CRVUSDT",
+   "ts": 1791655200000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 103,
+   "plecho": 4.67,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.0894
+  },
+  {
+   "sym": "CYSUSDT",
+   "ts": 1790694000000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 310,
+   "plecho": 5.28,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.1537
+  },
+  {
+   "sym": "CYSUSDT",
+   "ts": 1792134000000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 28,
+   "plecho": 4.34,
+   "zatraty_R": 0.003,
+   "ctrl": -0.0513
+  },
+  {
+   "sym": "DEXEUSDT",
+   "ts": 1788548400000,
+   "status": "ZAKRYTA",
+   "R": 0.3703,
+   "barov": 122,
+   "plecho": 6.71,
+   "zatraty_R": 0.0047,
+   "ctrl": 0.2055
+  },
+  {
+   "sym": "DEXEUSDT",
+   "ts": 1789149600000,
+   "status": "ZAKRYTA",
+   "R": -0.0017,
+   "barov": 335,
+   "plecho": 4.27,
+   "zatraty_R": 0.003,
+   "ctrl": 0.0239
+  },
+  {
+   "sym": "DEXEUSDT",
+   "ts": 1790791200000,
+   "status": "ZAKRYTA",
+   "R": -1.0059,
+   "barov": 35,
+   "plecho": 8.45,
+   "zatraty_R": 0.0059,
+   "ctrl": 0.1182
+  },
+  {
+   "sym": "DEXEUSDT",
+   "ts": 1791075600000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 272,
+   "plecho": 4.74,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.1813
+  },
+  {
+   "sym": "DOGEUSDT",
+   "ts": 1789110000000,
+   "status": "ZAKRYTA",
+   "R": 0.3695,
+   "barov": 106,
+   "plecho": 7.85,
+   "zatraty_R": 0.0055,
+   "ctrl": 0.0635
+  },
+  {
+   "sym": "DOGEUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.3701,
+   "barov": 218,
+   "plecho": 6.96,
+   "zatraty_R": 0.0049,
+   "ctrl": -0.2354
+  },
+  {
+   "sym": "DOGEUSDT",
+   "ts": 1791612000000,
+   "status": "ZAKRYTA",
+   "R": 0.3694,
+   "barov": 63,
+   "plecho": 8.03,
+   "zatraty_R": 0.0056,
+   "ctrl": 0.0017
+  },
+  {
+   "sym": "DRAMUSDT",
+   "ts": 1790650800000,
+   "status": "ZAKRYTA",
+   "R": 0.3665,
+   "barov": 226,
+   "plecho": 12.2,
+   "zatraty_R": 0.0085,
+   "ctrl": -0.1706
+  },
+  {
+   "sym": "DRAMUSDT",
+   "ts": 1791648000000,
+   "status": "ZAKRYTA",
+   "R": 0.3636,
+   "barov": 41,
+   "plecho": 16.31,
+   "zatraty_R": 0.0114,
+   "ctrl": 0.1839
+  },
+  {
+   "sym": "DRAMUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3695,
+   "barov": 17,
+   "plecho": 7.87,
+   "zatraty_R": 0.0055,
+   "ctrl": 0.1267
+  },
+  {
+   "sym": "ENAUSDT",
+   "ts": 1789110000000,
+   "status": "ZAKRYTA",
+   "R": -0.3781,
+   "barov": 187,
+   "plecho": 4.45,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.0861
+  },
+  {
+   "sym": "ENAUSDT",
+   "ts": 1791028800000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 121,
+   "plecho": 4.64,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.2167
+  },
+  {
+   "sym": "ENAUSDT",
+   "ts": 1791637200000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 58,
+   "plecho": 5.24,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.3003
+  },
+  {
+   "sym": "EPICUSDT",
+   "ts": 1789160400000,
+   "status": "ZAKRYTA",
+   "R": -1.003,
+   "barov": 167,
+   "plecho": 4.27,
+   "zatraty_R": 0.003,
+   "ctrl": -0.2464
+  },
+  {
+   "sym": "EPICUSDT",
+   "ts": 1790694000000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 217,
+   "plecho": 4.59,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.1768
+  },
+  {
+   "sym": "EPICUSDT",
+   "ts": 1791669600000,
+   "status": "ZAKRYTA",
+   "R": 0.3698,
+   "barov": 49,
+   "plecho": 7.38,
+   "zatraty_R": 0.0052,
+   "ctrl": 0.0343
+  },
+  {
+   "sym": "ESPORTSUSDT",
+   "ts": 1788480000000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 121,
+   "plecho": 4.39,
+   "zatraty_R": 0.0031,
+   "ctrl": 0.1914
+  },
+  {
+   "sym": "ESPORTSUSDT",
+   "ts": 1789189200000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 67,
+   "plecho": 4.52,
+   "zatraty_R": 0.0032,
+   "ctrl": 0.1371
+  },
+  {
+   "sym": "ESPORTSUSDT",
+   "ts": 1791334800000,
+   "status": "ZAKRYTA",
+   "R": 0.3685,
+   "barov": 26,
+   "plecho": 9.25,
+   "zatraty_R": 0.0065,
+   "ctrl": 0.1119
+  },
+  {
+   "sym": "ESPORTSUSDT",
+   "ts": 1791601200000,
+   "status": "ZAKRYTA",
+   "R": 0.3705,
+   "barov": 65,
+   "plecho": 6.4,
+   "zatraty_R": 0.0045,
+   "ctrl": 0.177
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789113600000,
+   "status": "ZAKRYTA",
+   "R": -0.3789,
+   "barov": 186,
+   "plecho": 5.62,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.3263
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": -1.003,
+   "barov": 172,
+   "plecho": 4.24,
+   "zatraty_R": 0.003,
+   "ctrl": -0.1379
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3721,
+   "barov": 20,
+   "plecho": 4.2,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.146
+  },
+  {
+   "sym": "ETCUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.3789,
+   "barov": 247,
+   "plecho": 5.6,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.2068
+  },
+  {
+   "sym": "ETCUSDT",
+   "ts": 1790647200000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 228,
+   "plecho": 5.81,
+   "zatraty_R": 0.0041,
+   "ctrl": 0.0066
+  },
+  {
+   "sym": "ETHFIUSDT",
+   "ts": 1789563600000,
+   "status": "ZAKRYTA",
+   "R": -1.0031,
+   "barov": 47,
+   "plecho": 4.43,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.1631
+  },
+  {
+   "sym": "ETHFIUSDT",
+   "ts": 1790236800000,
+   "status": "ZAKRYTA",
+   "R": -1.003,
+   "barov": 125,
+   "plecho": 4.25,
+   "zatraty_R": 0.003,
+   "ctrl": -0.0124
+  },
+  {
+   "sym": "ETHFIUSDT",
+   "ts": 1791669600000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 99,
+   "plecho": 4.42,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.2765
+  },
+  {
+   "sym": "ETHUSDT",
+   "ts": 1789077600000,
+   "status": "ZAKRYTA",
+   "R": -1.0087,
+   "barov": 13,
+   "plecho": 12.48,
+   "zatraty_R": 0.0087,
+   "ctrl": 0.0338
+  },
+  {
+   "sym": "ETHUSDT",
+   "ts": 1789668000000,
+   "status": "ZAKRYTA",
+   "R": -1.0064,
+   "barov": 85,
+   "plecho": 9.13,
+   "zatraty_R": 0.0064,
+   "ctrl": -0.1846
+  },
+  {
+   "sym": "ETHUSDT",
+   "ts": 1791446400000,
+   "status": "ZAKRYTA",
+   "R": 0.3661,
+   "barov": 6,
+   "plecho": 12.66,
+   "zatraty_R": 0.0089,
+   "ctrl": -0.2463
+  },
+  {
+   "sym": "ETHUSDT",
+   "ts": 1791723600000,
+   "status": "ZAKRYTA",
+   "R": 0.3573,
+   "barov": 33,
+   "plecho": 25.33,
+   "zatraty_R": 0.0177,
+   "ctrl": -0.0445
+  },
+  {
+   "sym": "EWYUSDT",
+   "ts": 1789441200000,
+   "status": "ZAKRYTA",
+   "R": -0.3846,
+   "barov": 183,
+   "plecho": 13.69,
+   "zatraty_R": 0.0096,
+   "ctrl": 0.0565
+  },
+  {
+   "sym": "EWYUSDT",
+   "ts": 1790650800000,
+   "status": "ZAKRYTA",
+   "R": 0.3613,
+   "barov": 220,
+   "plecho": 19.62,
+   "zatraty_R": 0.0137,
+   "ctrl": 0.0419
+  },
+  {
+   "sym": "EWYUSDT",
+   "ts": 1791932400000,
+   "status": "ZAKRYTA",
+   "R": 0.3677,
+   "barov": 22,
+   "plecho": 10.4,
+   "zatraty_R": 0.0073,
+   "ctrl": 0.0157
+  },
+  {
+   "sym": "FARTCOINUSDT",
+   "ts": 1788645600000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 91,
+   "plecho": 4.36,
+   "zatraty_R": 0.003,
+   "ctrl": -0.1218
+  },
+  {
+   "sym": "FARTCOINUSDT",
+   "ts": 1790888400000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 150,
+   "plecho": 4.69,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.2151
+  },
+  {
+   "sym": "FARTCOINUSDT",
+   "ts": 1791601200000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 118,
+   "plecho": 4.6,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.0518
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1789149600000,
+   "status": "ZAKRYTA",
+   "R": -1.0036,
+   "barov": 44,
+   "plecho": 5.21,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.0912
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1789664400000,
+   "status": "ZAKRYTA",
+   "R": -1.0037,
+   "barov": 30,
+   "plecho": 5.3,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.0965
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1790964000000,
+   "status": "ZAKRYTA",
+   "R": -1.0032,
+   "barov": 217,
+   "plecho": 4.59,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.2709
+  },
+  {
+   "sym": "GALAUSDT",
+   "ts": 1789138800000,
+   "status": "ZAKRYTA",
+   "R": -0.3779,
+   "barov": 238,
+   "plecho": 4.2,
+   "zatraty_R": 0.0029,
+   "ctrl": 0.1448
+  },
+  {
+   "sym": "GALAUSDT",
+   "ts": 1791428400000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 13,
+   "plecho": 4.71,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.0376
+  },
+  {
+   "sym": "GALAUSDT",
+   "ts": 1791882000000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 40,
+   "plecho": 5.19,
+   "zatraty_R": 0.0036,
+   "ctrl": 0.3091
+  },
+  {
+   "sym": "GALAUSDT",
+   "ts": 1792195200000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 41,
+   "plecho": 5.7,
+   "zatraty_R": 0.004,
+   "ctrl": 0.0666
+  },
+  {
+   "sym": "GRASSUSDT",
+   "ts": 1788433200000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 250,
+   "plecho": 6.17,
+   "zatraty_R": 0.0043,
+   "ctrl": 0.1865
+  },
+  {
+   "sym": "GRASSUSDT",
+   "ts": 1789563600000,
+   "status": "ZAKRYTA",
+   "R": -1.0033,
+   "barov": 117,
+   "plecho": 4.68,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.1217
+  },
+  {
+   "sym": "GUNUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.3782,
+   "barov": 214,
+   "plecho": 4.64,
+   "zatraty_R": 0.0032,
+   "ctrl": 0.023
+  },
+  {
+   "sym": "GUNUSDT",
+   "ts": 1790629200000,
+   "status": "ZAKRYTA",
+   "R": -1.0042,
+   "barov": 124,
+   "plecho": 5.97,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.3225
+  },
+  {
+   "sym": "GUNUSDT",
+   "ts": 1791421200000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 13,
+   "plecho": 6.13,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.038
+  },
+  {
+   "sym": "GUNUSDT",
+   "ts": 1791633600000,
+   "status": "ZAKRYTA",
+   "R": 0.3705,
+   "barov": 59,
+   "plecho": 6.44,
+   "zatraty_R": 0.0045,
+   "ctrl": -0.0936
+  },
+  {
+   "sym": "GUNUSDT",
+   "ts": 1792105200000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 62,
+   "plecho": 5.2,
+   "zatraty_R": 0.0036,
+   "ctrl": 0.2401
+  },
+  {
+   "sym": "GWEIUSDT",
+   "ts": 1789362000000,
+   "status": "ZAKRYTA",
+   "R": 0.3699,
+   "barov": 58,
+   "plecho": 7.24,
+   "zatraty_R": 0.0051,
+   "ctrl": 0.0015
+  },
+  {
+   "sym": "GWEIUSDT",
+   "ts": 1791424800000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 13,
+   "plecho": 6.01,
+   "zatraty_R": 0.0042,
+   "ctrl": 0.0166
+  },
+  {
+   "sym": "HBARUSDT",
+   "ts": 1789106400000,
+   "status": "ZAKRYTA",
+   "R": -0.3818,
+   "barov": 210,
+   "plecho": 9.66,
+   "zatraty_R": 0.0068,
+   "ctrl": 0.0191
+  },
+  {
+   "sym": "HBARUSDT",
+   "ts": 1791457200000,
+   "status": "ZAKRYTA",
+   "R": 0.3695,
+   "barov": 3,
+   "plecho": 7.84,
+   "zatraty_R": 0.0055,
+   "ctrl": -0.2221
+  },
+  {
+   "sym": "HBARUSDT",
+   "ts": 1791626400000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 61,
+   "plecho": 5.84,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.0415
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1788818400000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 47,
+   "plecho": 4.81,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.085
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1789189200000,
+   "status": "ZAKRYTA",
+   "R": -0.3785,
+   "barov": 105,
+   "plecho": 5.01,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.0674
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790395200000,
+   "status": "ZAKRYTA",
+   "R": -1.0044,
+   "barov": 24,
+   "plecho": 6.35,
+   "zatraty_R": 0.0044,
+   "ctrl": -0.0463
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790683200000,
+   "status": "ZAKRYTA",
+   "R": -1.0039,
+   "barov": 47,
+   "plecho": 5.54,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.0771
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1791093600000,
+   "status": "ZAKRYTA",
+   "R": 0.37,
+   "barov": 67,
+   "plecho": 7.1,
+   "zatraty_R": 0.005,
+   "ctrl": -0.2862
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1791561600000,
+   "status": "ZAKRYTA",
+   "R": 0.291,
+   "barov": 129,
+   "plecho": 4.42,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.025
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1792238400000,
+   "status": "ZAKRYTA",
+   "R": 0.3698,
+   "barov": 31,
+   "plecho": 7.39,
+   "zatraty_R": 0.0052,
+   "ctrl": -0.1669
+  },
+  {
+   "sym": "HOMEUSDT",
+   "ts": 1789102800000,
+   "status": "ZAKRYTA",
+   "R": -0.3791,
+   "barov": 191,
+   "plecho": 5.8,
+   "zatraty_R": 0.0041,
+   "ctrl": 0.2029
+  },
+  {
+   "sym": "HOMEUSDT",
+   "ts": 1790640000000,
+   "status": "ZAKRYTA",
+   "R": 0.3705,
+   "barov": 206,
+   "plecho": 6.48,
+   "zatraty_R": 0.0045,
+   "ctrl": 0.0963
+  },
+  {
+   "sym": "HOMEUSDT",
+   "ts": 1791540000000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 85,
+   "plecho": 4.97,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.0521
+  },
+  {
+   "sym": "HOMEUSDT",
+   "ts": 1792105200000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 61,
+   "plecho": 5.78,
+   "zatraty_R": 0.004,
+   "ctrl": 0.2063
+  },
+  {
+   "sym": "HYPEUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.3795,
+   "barov": 170,
+   "plecho": 6.47,
+   "zatraty_R": 0.0045,
+   "ctrl": -0.2124
+  },
+  {
+   "sym": "HYPEUSDT",
+   "ts": 1790604000000,
+   "status": "ZAKRYTA",
+   "R": 0.2383,
+   "barov": 335,
+   "plecho": 7.45,
+   "zatraty_R": 0.0052,
+   "ctrl": -0.0659
+  },
+  {
+   "sym": "ICPUSDT",
+   "ts": 1789542000000,
+   "status": "ZAKRYTA",
+   "R": -1.004,
+   "barov": 81,
+   "plecho": 5.71,
+   "zatraty_R": 0.004,
+   "ctrl": -0.3366
+  },
+  {
+   "sym": "ICPUSDT",
+   "ts": 1791428400000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 12,
+   "plecho": 5.56,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.3086
+  },
+  {
+   "sym": "ICPUSDT",
+   "ts": 1791633600000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 109,
+   "plecho": 5.86,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.1493
+  },
+  {
+   "sym": "INJUSDT",
+   "ts": 1788440400000,
+   "status": "ZAKRYTA",
+   "R": -0.3799,
+   "barov": 84,
+   "plecho": 7.0,
+   "zatraty_R": 0.0049,
+   "ctrl": -0.0161
+  },
+  {
+   "sym": "INJUSDT",
+   "ts": 1789596000000,
+   "status": "ZAKRYTA",
+   "R": -1.0033,
+   "barov": 35,
+   "plecho": 4.7,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.1225
+  },
+  {
+   "sym": "INJUSDT",
+   "ts": 1790647200000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 230,
+   "plecho": 4.8,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.1184
+  },
+  {
+   "sym": "INTCUSDT",
+   "ts": 1789369200000,
+   "status": "ZAKRYTA",
+   "R": 0.3627,
+   "barov": 5,
+   "plecho": 17.51,
+   "zatraty_R": 0.0123,
+   "ctrl": 0.0971
+  },
+  {
+   "sym": "INTCUSDT",
+   "ts": 1790683200000,
+   "status": "ZAKRYTA",
+   "R": 0.3692,
+   "barov": 213,
+   "plecho": 8.34,
+   "zatraty_R": 0.0058,
+   "ctrl": 0.0728
+  },
+  {
+   "sym": "INTCUSDT",
+   "ts": 1791885600000,
+   "status": "ZAKRYTA",
+   "R": 0.3657,
+   "barov": 33,
+   "plecho": 13.31,
+   "zatraty_R": 0.0093,
+   "ctrl": 0.1578
+  },
+  {
+   "sym": "JTOUSDT",
+   "ts": 1789596000000,
+   "status": "ZAKRYTA",
+   "R": -1.0031,
+   "barov": 78,
+   "plecho": 4.44,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.0748
+  },
+  {
+   "sym": "JTOUSDT",
+   "ts": 1791028800000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 277,
+   "plecho": 5.01,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.1167
+  },
+  {
+   "sym": "KAITOUSDT",
+   "ts": 1789146000000,
+   "status": "ZAKRYTA",
+   "R": -0.3785,
+   "barov": 268,
+   "plecho": 4.98,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.0381
+  },
+  {
+   "sym": "KAITOUSDT",
+   "ts": 1790640000000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 230,
+   "plecho": 5.34,
+   "zatraty_R": 0.0037,
+   "ctrl": 0.1363
+  },
+  {
+   "sym": "KAITOUSDT",
+   "ts": 1791633600000,
+   "status": "ZAKRYTA",
+   "R": 0.3694,
+   "barov": 58,
+   "plecho": 7.94,
+   "zatraty_R": 0.0056,
+   "ctrl": 0.0943
+  },
+  {
+   "sym": "LAUSDT",
+   "ts": 1788890400000,
+   "status": "ZAKRYTA",
+   "R": 0.3706,
+   "barov": 27,
+   "plecho": 6.26,
+   "zatraty_R": 0.0044,
+   "ctrl": 0.0519
+  },
+  {
+   "sym": "LAUSDT",
+   "ts": 1790553600000,
+   "status": "ZAKRYTA",
+   "R": 0.3698,
+   "barov": 7,
+   "plecho": 7.42,
+   "zatraty_R": 0.0052,
+   "ctrl": -0.0776
+  },
+  {
+   "sym": "LAUSDT",
+   "ts": 1790737200000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 192,
+   "plecho": 4.87,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.0153
+  },
+  {
+   "sym": "LAUSDT",
+   "ts": 1792105200000,
+   "status": "ZAKRYTA",
+   "R": 0.3712,
+   "barov": 45,
+   "plecho": 5.39,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.294
+  },
+  {
+   "sym": "LDOUSDT",
+   "ts": 1789074000000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 116,
+   "plecho": 5.76,
+   "zatraty_R": 0.004,
+   "ctrl": -0.0524
+  },
+  {
+   "sym": "LDOUSDT",
+   "ts": 1791435600000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 10,
+   "plecho": 4.57,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.0546
+  },
+  {
+   "sym": "LDOUSDT",
+   "ts": 1791637200000,
+   "status": "ZAKRYTA",
+   "R": 0.3721,
+   "barov": 108,
+   "plecho": 4.2,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.1451
+  },
+  {
+   "sym": "LITEUSDT",
+   "ts": 1788523200000,
+   "status": "ZAKRYTA",
+   "R": -1.0059,
+   "barov": 97,
+   "plecho": 8.39,
+   "zatraty_R": 0.0059,
+   "ctrl": 0.075
+  },
+  {
+   "sym": "LITEUSDT",
+   "ts": 1789560000000,
+   "status": "ZAKRYTA",
+   "R": -1.0065,
+   "barov": 24,
+   "plecho": 9.24,
+   "zatraty_R": 0.0065,
+   "ctrl": 0.0687
+  },
+  {
+   "sym": "LITEUSDT",
+   "ts": 1791885600000,
+   "status": "ZAKRYTA",
+   "R": 0.3696,
+   "barov": 26,
+   "plecho": 7.76,
+   "zatraty_R": 0.0054,
+   "ctrl": -0.2207
+  },
+  {
+   "sym": "LITUSDT",
+   "ts": 1789336800000,
+   "status": "ZAKRYTA",
+   "R": -1.0035,
+   "barov": 81,
+   "plecho": 5.05,
+   "zatraty_R": 0.0035,
+   "ctrl": -0.2339
+  },
+  {
+   "sym": "LITUSDT",
+   "ts": 1790467200000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 70,
+   "plecho": 4.7,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.2237
+  },
+  {
+   "sym": "LITUSDT",
+   "ts": 1791050400000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 258,
+   "plecho": 4.37,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.5226
+  },
+  {
+   "sym": "METAUSDT",
+   "ts": 1791475200000,
+   "status": "ZAKRYTA",
+   "R": -1.012,
+   "barov": 115,
+   "plecho": 17.08,
+   "zatraty_R": 0.012,
+   "ctrl": 0.0212
+  },
+  {
+   "sym": "MEUSDT",
+   "ts": 1789077600000,
+   "status": "ZAKRYTA",
+   "R": -0.3797,
+   "barov": 250,
+   "plecho": 6.65,
+   "zatraty_R": 0.0047,
+   "ctrl": 0.1266
+  },
+  {
+   "sym": "MEUSDT",
+   "ts": 1790863200000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 168,
+   "plecho": 5.96,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.0278
+  },
+  {
+   "sym": "MEUSDT",
+   "ts": 1792098000000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 69,
+   "plecho": 5.62,
+   "zatraty_R": 0.0039,
+   "ctrl": 0.1118
+  },
+  {
+   "sym": "MMTUSDT",
+   "ts": 1789149600000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 94,
+   "plecho": 5.1,
+   "zatraty_R": 0.0036,
+   "ctrl": 0.0121
+  },
+  {
+   "sym": "MMTUSDT",
+   "ts": 1791288000000,
+   "status": "ZAKRYTA",
+   "R": 0.3688,
+   "barov": 13,
+   "plecho": 8.86,
+   "zatraty_R": 0.0062,
+   "ctrl": 0.0026
+  },
+  {
+   "sym": "MMTUSDT",
+   "ts": 1791525600000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 139,
+   "plecho": 5.06,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.0157
+  },
+  {
+   "sym": "MNTUSDT",
+   "ts": 1789192800000,
+   "status": "ZAKRYTA",
+   "R": -0.3801,
+   "barov": 229,
+   "plecho": 7.33,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.4385
+  },
+  {
+   "sym": "MNTUSDT",
+   "ts": 1791118800000,
+   "status": "ZAKRYTA",
+   "R": 0.3668,
+   "barov": 49,
+   "plecho": 11.66,
+   "zatraty_R": 0.0082,
+   "ctrl": -0.2269
+  },
+  {
+   "sym": "MNTUSDT",
+   "ts": 1791601200000,
+   "status": "ZAKRYTA",
+   "R": 0.3675,
+   "barov": 68,
+   "plecho": 10.7,
+   "zatraty_R": 0.0075,
+   "ctrl": -0.1164
+  },
+  {
+   "sym": "MONUSDT",
+   "ts": 1788634800000,
+   "status": "ZAKRYTA",
+   "R": 0.3721,
+   "barov": 233,
+   "plecho": 4.18,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.3128
+  },
+  {
+   "sym": "MONUSDT",
+   "ts": 1791446400000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 6,
+   "plecho": 4.83,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.2336
+  },
+  {
+   "sym": "MONUSDT",
+   "ts": 1791626400000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 112,
+   "plecho": 4.54,
+   "zatraty_R": 0.0032,
+   "ctrl": 0.1059
+  },
+  {
+   "sym": "MRVLUSDT",
+   "ts": 1788433200000,
+   "status": "ZAKRYTA",
+   "R": -1.0064,
+   "barov": 108,
+   "plecho": 9.1,
+   "zatraty_R": 0.0064,
+   "ctrl": 0.0097
+  },
+  {
+   "sym": "MRVLUSDT",
+   "ts": 1789362000000,
+   "status": "ZAKRYTA",
+   "R": 0.3631,
+   "barov": 3,
+   "plecho": 17.04,
+   "zatraty_R": 0.0119,
+   "ctrl": -0.1296
+  },
+  {
+   "sym": "MRVLUSDT",
+   "ts": 1791550800000,
+   "status": "ZAKRYTA",
+   "R": 0.2816,
+   "barov": 95,
+   "plecho": 5.13,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.0502
+  },
+  {
+   "sym": "MSFTUSDT",
+   "ts": 1788843600000,
+   "status": "ZAKRYTA",
+   "R": 0.3417,
+   "barov": 7,
+   "plecho": 47.57,
+   "zatraty_R": 0.0333,
+   "ctrl": -0.0125
+  },
+  {
+   "sym": "MSFTUSDT",
+   "ts": 1789063200000,
+   "status": "ZAKRYTA",
+   "R": -1.0204,
+   "barov": 94,
+   "plecho": 29.09,
+   "zatraty_R": 0.0204,
+   "ctrl": -0.4079
+  },
+  {
+   "sym": "MSFTUSDT",
+   "ts": 1789632000000,
+   "status": "ZAKRYTA",
+   "R": -1.0169,
+   "barov": 195,
+   "plecho": 24.17,
+   "zatraty_R": 0.0169,
+   "ctrl": -0.2491
+  },
+  {
+   "sym": "MSFTUSDT",
+   "ts": 1790686800000,
+   "status": "ZAKRYTA",
+   "R": -1.015,
+   "barov": 143,
+   "plecho": 21.45,
+   "zatraty_R": 0.015,
+   "ctrl": -0.2693
+  },
+  {
+   "sym": "MSTRUSDT",
+   "ts": 1788966000000,
+   "status": "ZAKRYTA",
+   "R": 0.3699,
+   "barov": 146,
+   "plecho": 7.32,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.1597
+  },
+  {
+   "sym": "MSTRUSDT",
+   "ts": 1790694000000,
+   "status": "ZAKRYTA",
+   "R": 0.1165,
+   "barov": 335,
+   "plecho": 7.24,
+   "zatraty_R": 0.0051,
+   "ctrl": -0.3423
+  },
+  {
+   "sym": "MUBARAKUSDT",
+   "ts": 1789628400000,
+   "status": "ZAKRYTA",
+   "R": -1.0031,
+   "barov": 23,
+   "plecho": 4.44,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.3953
+  },
+  {
+   "sym": "MUUSDT",
+   "ts": 1789120800000,
+   "status": "ZAKRYTA",
+   "R": 0.3677,
+   "barov": 45,
+   "plecho": 10.39,
+   "zatraty_R": 0.0073,
+   "ctrl": -0.0554
+  },
+  {
+   "sym": "MUUSDT",
+   "ts": 1789444800000,
+   "status": "ZAKRYTA",
+   "R": -1.0085,
+   "barov": 85,
+   "plecho": 12.1,
+   "zatraty_R": 0.0085,
+   "ctrl": 0.2599
+  },
+  {
+   "sym": "MUUSDT",
+   "ts": 1791946800000,
+   "status": "ZAKRYTA",
+   "R": 0.3685,
+   "barov": 17,
+   "plecho": 9.23,
+   "zatraty_R": 0.0065,
+   "ctrl": -0.0064
+  },
+  {
+   "sym": "NBISUSDT",
+   "ts": 1789362000000,
+   "status": "ZAKRYTA",
+   "R": 0.3665,
+   "barov": 6,
+   "plecho": 12.2,
+   "zatraty_R": 0.0085,
+   "ctrl": 0.1086
+  },
+  {
+   "sym": "NBISUSDT",
+   "ts": 1789581600000,
+   "status": "ZAKRYTA",
+   "R": -1.0045,
+   "barov": 138,
+   "plecho": 6.39,
+   "zatraty_R": 0.0045,
+   "ctrl": -0.0908
+  },
+  {
+   "sym": "NBISUSDT",
+   "ts": 1790236800000,
+   "status": "ZAKRYTA",
+   "R": -0.2872,
+   "barov": 335,
+   "plecho": 6.8,
+   "zatraty_R": 0.0048,
+   "ctrl": 0.0742
+  },
+  {
+   "sym": "NBISUSDT",
+   "ts": 1791669600000,
+   "status": "ZAKRYTA",
+   "R": 0.367,
+   "barov": 35,
+   "plecho": 11.46,
+   "zatraty_R": 0.008,
+   "ctrl": 0.0801
+  },
+  {
+   "sym": "NBISUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3702,
+   "barov": 7,
+   "plecho": 6.84,
+   "zatraty_R": 0.0048,
+   "ctrl": 0.0118
+  },
+  {
+   "sym": "NILUSDT",
+   "ts": 1788526800000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 128,
+   "plecho": 4.96,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.036
+  },
+  {
+   "sym": "NILUSDT",
+   "ts": 1789362000000,
+   "status": "ZAKRYTA",
+   "R": 0.3693,
+   "barov": 59,
+   "plecho": 8.17,
+   "zatraty_R": 0.0057,
+   "ctrl": -0.0682
+  },
+  {
+   "sym": "NILUSDT",
+   "ts": 1791075600000,
+   "status": "ZAKRYTA",
+   "R": -1.003,
+   "barov": 24,
+   "plecho": 4.29,
+   "zatraty_R": 0.003,
+   "ctrl": -0.2064
+  },
+  {
+   "sym": "NILUSDT",
+   "ts": 1791612000000,
+   "status": "ZAKRYTA",
+   "R": 0.3721,
+   "barov": 64,
+   "plecho": 4.17,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.23
+  },
+  {
+   "sym": "NVDAUSDT",
+   "ts": 1789124400000,
+   "status": "ZAKRYTA",
+   "R": 0.3602,
+   "barov": 45,
+   "plecho": 21.2,
+   "zatraty_R": 0.0148,
+   "ctrl": 0.0407
+  },
+  {
+   "sym": "NVDAUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3609,
+   "barov": 8,
+   "plecho": 20.16,
+   "zatraty_R": 0.0141,
+   "ctrl": -0.2808
+  },
+  {
+   "sym": "ONDOUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": 0.3702,
+   "barov": 111,
+   "plecho": 6.86,
+   "zatraty_R": 0.0048,
+   "ctrl": -0.0019
+  },
+  {
+   "sym": "ONDOUSDT",
+   "ts": 1790964000000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 295,
+   "plecho": 4.26,
+   "zatraty_R": 0.003,
+   "ctrl": -0.0469
+  },
+  {
+   "sym": "OPUSDT",
+   "ts": 1789138800000,
+   "status": "ZAKRYTA",
+   "R": -0.3783,
+   "barov": 171,
+   "plecho": 4.78,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.1516
+  },
+  {
+   "sym": "OPUSDT",
+   "ts": 1790856000000,
+   "status": "ZAKRYTA",
+   "R": 0.3712,
+   "barov": 170,
+   "plecho": 5.39,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.0327
+  },
+  {
+   "sym": "ORDIUSDT",
+   "ts": 1789092000000,
+   "status": "ZAKRYTA",
+   "R": -0.3789,
+   "barov": 191,
+   "plecho": 5.63,
+   "zatraty_R": 0.0039,
+   "ctrl": 0.0958
+  },
+  {
+   "sym": "ORDIUSDT",
+   "ts": 1790240400000,
+   "status": "ZAKRYTA",
+   "R": 0.1054,
+   "barov": 335,
+   "plecho": 4.39,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.1105
+  },
+  {
+   "sym": "ORDIUSDT",
+   "ts": 1791615600000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 64,
+   "plecho": 5.11,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.1096
+  },
+  {
+   "sym": "ORDIUSDT",
+   "ts": 1792105200000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 62,
+   "plecho": 5.87,
+   "zatraty_R": 0.0041,
+   "ctrl": 0.0867
+  },
+  {
+   "sym": "PAXGUSDT",
+   "ts": 1788944400000,
+   "status": "ZAKRYTA",
+   "R": 0.3575,
+   "barov": 41,
+   "plecho": 25.05,
+   "zatraty_R": 0.0175,
+   "ctrl": 0.0003
+  },
+  {
+   "sym": "PAXGUSDT",
+   "ts": 1790283600000,
+   "status": "ZAKRYTA",
+   "R": 0.3567,
+   "barov": 79,
+   "plecho": 26.14,
+   "zatraty_R": 0.0183,
+   "ctrl": 0.1121
+  },
+  {
+   "sym": "PAXGUSDT",
+   "ts": 1790726400000,
+   "status": "ZAKRYTA",
+   "R": 0.3583,
+   "barov": 174,
+   "plecho": 23.88,
+   "zatraty_R": 0.0167,
+   "ctrl": -0.0595
+  },
+  {
+   "sym": "PAXGUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3491,
+   "barov": 6,
+   "plecho": 37.0,
+   "zatraty_R": 0.0259,
+   "ctrl": -0.0587
+  },
+  {
+   "sym": "PENGUUSDT",
+   "ts": 1788530400000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 165,
+   "plecho": 4.28,
+   "zatraty_R": 0.003,
+   "ctrl": -0.1749
+  },
+  {
+   "sym": "PENGUUSDT",
+   "ts": 1789336800000,
+   "status": "ZAKRYTA",
+   "R": -0.4076,
+   "barov": 138,
+   "plecho": 6.26,
+   "zatraty_R": 0.0044,
+   "ctrl": -0.0512
+  },
+  {
+   "sym": "PENGUUSDT",
+   "ts": 1791075600000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 109,
+   "plecho": 5.16,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.1365
+  },
+  {
+   "sym": "PENGUUSDT",
+   "ts": 1791626400000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 60,
+   "plecho": 5.5,
+   "zatraty_R": 0.0039,
+   "ctrl": 0.2172
+  },
+  {
+   "sym": "PEOPLEUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -1.0036,
+   "barov": 179,
+   "plecho": 5.12,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.0456
+  },
+  {
+   "sym": "PEOPLEUSDT",
+   "ts": 1790888400000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 124,
+   "plecho": 5.0,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.0745
+  },
+  {
+   "sym": "PEOPLEUSDT",
+   "ts": 1791529200000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 224,
+   "plecho": 4.61,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.1059
+  },
+  {
+   "sym": "PLTRUSDT",
+   "ts": 1788678000000,
+   "status": "ZAKRYTA",
+   "R": 0.3574,
+   "barov": 47,
+   "plecho": 25.1,
+   "zatraty_R": 0.0176,
+   "ctrl": 0.2517
+  },
+  {
+   "sym": "PLTRUSDT",
+   "ts": 1789120800000,
+   "status": "ZAKRYTA",
+   "R": -0.3861,
+   "barov": 236,
+   "plecho": 15.82,
+   "zatraty_R": 0.0111,
+   "ctrl": 0.0236
+  },
+  {
+   "sym": "PLTRUSDT",
+   "ts": 1792051200000,
+   "status": "ZAKRYTA",
+   "R": 0.3674,
+   "barov": 30,
+   "plecho": 10.86,
+   "zatraty_R": 0.0076,
+   "ctrl": -0.1136
+  },
+  {
+   "sym": "POLUSDT",
+   "ts": 1788512400000,
+   "status": "ZAKRYTA",
+   "R": -0.0754,
+   "barov": 335,
+   "plecho": 7.66,
+   "zatraty_R": 0.0054,
+   "ctrl": -0.092
+  },
+  {
+   "sym": "POLUSDT",
+   "ts": 1790931600000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 138,
+   "plecho": 5.89,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.1253
+  },
+  {
+   "sym": "POLUSDT",
+   "ts": 1791601200000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 118,
+   "plecho": 6.02,
+   "zatraty_R": 0.0042,
+   "ctrl": 0.0278
+  },
+  {
+   "sym": "PUMPFUNUSDT",
+   "ts": 1788512400000,
+   "status": "ZAKRYTA",
+   "R": 0.3721,
+   "barov": 153,
+   "plecho": 4.17,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.1418
+  },
+  {
+   "sym": "PUMPFUNUSDT",
+   "ts": 1790316000000,
+   "status": "ZAKRYTA",
+   "R": -1.0029,
+   "barov": 56,
+   "plecho": 4.18,
+   "zatraty_R": 0.0029,
+   "ctrl": -0.3648
+  },
+  {
+   "sym": "PUMPFUNUSDT",
+   "ts": 1791802800000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 12,
+   "plecho": 4.26,
+   "zatraty_R": 0.003,
+   "ctrl": 0.0533
+  },
+  {
+   "sym": "PUMPFUNUSDT",
+   "ts": 1792234800000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 31,
+   "plecho": 4.45,
+   "zatraty_R": 0.0031,
+   "ctrl": -0.2462
+  },
+  {
+   "sym": "QQQUSDT",
+   "ts": 1789135200000,
+   "status": "ZAKRYTA",
+   "R": 0.3523,
+   "barov": 64,
+   "plecho": 32.38,
+   "zatraty_R": 0.0227,
+   "ctrl": 0.0436
+  },
+  {
+   "sym": "QQQUSDT",
+   "ts": 1789581600000,
+   "status": "ZAKRYTA",
+   "R": -1.0168,
+   "barov": 115,
+   "plecho": 23.96,
+   "zatraty_R": 0.0168,
+   "ctrl": 0.1485
+  },
+  {
+   "sym": "QQQUSDT",
+   "ts": 1791910800000,
+   "status": "ZAKRYTA",
+   "R": 0.3476,
+   "barov": 21,
+   "plecho": 39.16,
+   "zatraty_R": 0.0274,
+   "ctrl": 0.108
+  },
+  {
+   "sym": "RENDERUSDT",
+   "ts": 1788991200000,
+   "status": "ZAKRYTA",
+   "R": 0.3549,
+   "barov": 139,
+   "plecho": 4.5,
+   "zatraty_R": 0.0031,
+   "ctrl": 0.0321
+  },
+  {
+   "sym": "RKLBUSDT",
+   "ts": 1789056000000,
+   "status": "ZAKRYTA",
+   "R": -0.3791,
+   "barov": 335,
+   "plecho": 5.92,
+   "zatraty_R": 0.0041,
+   "ctrl": 0.2062
+  },
+  {
+   "sym": "RKLBUSDT",
+   "ts": 1790794800000,
+   "status": "ZAKRYTA",
+   "R": 0.3457,
+   "barov": 287,
+   "plecho": 7.1,
+   "zatraty_R": 0.005,
+   "ctrl": 0.0081
+  },
+  {
+   "sym": "ROBOUSDT",
+   "ts": 1789106400000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 56,
+   "plecho": 4.46,
+   "zatraty_R": 0.0031,
+   "ctrl": 0.1155
+  },
+  {
+   "sym": "ROBOUSDT",
+   "ts": 1790503200000,
+   "status": "ZAKRYTA",
+   "R": 0.3703,
+   "barov": 27,
+   "plecho": 6.77,
+   "zatraty_R": 0.0047,
+   "ctrl": -0.095
+  },
+  {
+   "sym": "ROBOUSDT",
+   "ts": 1790776800000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 52,
+   "plecho": 4.6,
+   "zatraty_R": 0.0032,
+   "ctrl": 0.0482
+  },
+  {
+   "sym": "ROBOUSDT",
+   "ts": 1791147600000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 89,
+   "plecho": 4.32,
+   "zatraty_R": 0.003,
+   "ctrl": 0.1697
+  },
+  {
+   "sym": "ROBOUSDT",
+   "ts": 1791637200000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 70,
+   "plecho": 4.88,
+   "zatraty_R": 0.0034,
+   "ctrl": 0.009
+  },
+  {
+   "sym": "ROBOUSDT",
+   "ts": 1792116000000,
+   "status": "ZAKRYTA",
+   "R": 0.3719,
+   "barov": 59,
+   "plecho": 4.42,
+   "zatraty_R": 0.0031,
+   "ctrl": 0.0196
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.3793,
+   "barov": 223,
+   "plecho": 6.15,
+   "zatraty_R": 0.0043,
+   "ctrl": 0.0004
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1791432000000,
+   "status": "ZAKRYTA",
+   "R": 0.3694,
+   "barov": 12,
+   "plecho": 7.95,
+   "zatraty_R": 0.0056,
+   "ctrl": -0.0812
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1791651600000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 53,
+   "plecho": 6.2,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.0503
+  },
+  {
+   "sym": "SHIB1000USDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": 0.3695,
+   "barov": 127,
+   "plecho": 7.9,
+   "zatraty_R": 0.0055,
+   "ctrl": 0.0525
+  },
+  {
+   "sym": "SHIB1000USDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.3706,
+   "barov": 229,
+   "plecho": 6.31,
+   "zatraty_R": 0.0044,
+   "ctrl": 0.0395
+  },
+  {
+   "sym": "SIRENUSDT",
+   "ts": 1788462000000,
+   "status": "ZAKRYTA",
+   "R": 0.3705,
+   "barov": 146,
+   "plecho": 6.48,
+   "zatraty_R": 0.0045,
+   "ctrl": 0.1639
+  },
+  {
+   "sym": "SIRENUSDT",
+   "ts": 1790290800000,
+   "status": "ZAKRYTA",
+   "R": 0.3701,
+   "barov": 75,
+   "plecho": 6.94,
+   "zatraty_R": 0.0049,
+   "ctrl": 0.0017
+  },
+  {
+   "sym": "SIRENUSDT",
+   "ts": 1791014400000,
+   "status": "ZAKRYTA",
+   "R": 0.3697,
+   "barov": 89,
+   "plecho": 7.56,
+   "zatraty_R": 0.0053,
+   "ctrl": -0.1095
+  },
+  {
+   "sym": "SIRENUSDT",
+   "ts": 1791540000000,
+   "status": "ZAKRYTA",
+   "R": 0.3706,
+   "barov": 141,
+   "plecho": 6.27,
+   "zatraty_R": 0.0044,
+   "ctrl": 0.0746
+  },
+  {
+   "sym": "SKYAI1USDT",
+   "ts": 1788832800000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 51,
+   "plecho": 4.93,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.1553
+  },
+  {
+   "sym": "SKYAI1USDT",
+   "ts": 1789185600000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 274,
+   "plecho": 4.51,
+   "zatraty_R": 0.0032,
+   "ctrl": 0.0692
+  },
+  {
+   "sym": "SKYAI1USDT",
+   "ts": 1790726400000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 109,
+   "plecho": 4.22,
+   "zatraty_R": 0.003,
+   "ctrl": 0.1418
+  },
+  {
+   "sym": "SNDKUSDT",
+   "ts": 1789362000000,
+   "status": "ZAKRYTA",
+   "R": 0.3642,
+   "barov": 7,
+   "plecho": 15.4,
+   "zatraty_R": 0.0108,
+   "ctrl": 0.0333
+  },
+  {
+   "sym": "SNDKUSDT",
+   "ts": 1789563600000,
+   "status": "ZAKRYTA",
+   "R": -1.0062,
+   "barov": 48,
+   "plecho": 8.8,
+   "zatraty_R": 0.0062,
+   "ctrl": -0.1059
+  },
+  {
+   "sym": "SNDKUSDT",
+   "ts": 1790694000000,
+   "status": "ZAKRYTA",
+   "R": 0.3684,
+   "barov": 178,
+   "plecho": 9.45,
+   "zatraty_R": 0.0066,
+   "ctrl": 0.0007
+  },
+  {
+   "sym": "SNDKUSDT",
+   "ts": 1791536400000,
+   "status": "ZAKRYTA",
+   "R": 0.3691,
+   "barov": 75,
+   "plecho": 8.41,
+   "zatraty_R": 0.0059,
+   "ctrl": -0.0684
+  },
+  {
+   "sym": "SNDKUSDT",
+   "ts": 1792080000000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 52,
+   "plecho": 5.5,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.0075
+  },
+  {
+   "sym": "SOLUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -0.3817,
+   "barov": 172,
+   "plecho": 9.64,
+   "zatraty_R": 0.0067,
+   "ctrl": -0.121
+  },
+  {
+   "sym": "SOLUSDT",
+   "ts": 1791540000000,
+   "status": "ZAKRYTA",
+   "R": 0.3688,
+   "barov": 85,
+   "plecho": 8.93,
+   "zatraty_R": 0.0062,
+   "ctrl": -0.2252
+  },
+  {
+   "sym": "SOXLUSDT",
+   "ts": 1789311600000,
+   "status": "ZAKRYTA",
+   "R": 0.3695,
+   "barov": 15,
+   "plecho": 7.8,
+   "zatraty_R": 0.0055,
+   "ctrl": 0.1282
+  },
+  {
+   "sym": "SOXLUSDT",
+   "ts": 1789581600000,
+   "status": "ZAKRYTA",
+   "R": -1.0029,
+   "barov": 102,
+   "plecho": 4.18,
+   "zatraty_R": 0.0029,
+   "ctrl": 0.1311
+  },
+  {
+   "sym": "SOXLUSDT",
+   "ts": 1791540000000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 74,
+   "plecho": 4.31,
+   "zatraty_R": 0.003,
+   "ctrl": 0.0282
+  },
+  {
+   "sym": "SQDUSDT",
+   "ts": 1789012800000,
+   "status": "ZAKRYTA",
+   "R": 0.3705,
+   "barov": 123,
+   "plecho": 6.41,
+   "zatraty_R": 0.0045,
+   "ctrl": 0.2508
+  },
+  {
+   "sym": "SQDUSDT",
+   "ts": 1789635600000,
+   "status": "ZAKRYTA",
+   "R": -0.4032,
+   "barov": 335,
+   "plecho": 4.29,
+   "zatraty_R": 0.003,
+   "ctrl": 0.1936
+  },
+  {
+   "sym": "SQDUSDT",
+   "ts": 1791039600000,
+   "status": "ZAKRYTA",
+   "R": 0.3704,
+   "barov": 119,
+   "plecho": 6.63,
+   "zatraty_R": 0.0046,
+   "ctrl": 0.0931
+  },
+  {
+   "sym": "SQDUSDT",
+   "ts": 1791878400000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 36,
+   "plecho": 5.67,
+   "zatraty_R": 0.004,
+   "ctrl": 0.0457
+  },
+  {
+   "sym": "STRKUSDT",
+   "ts": 1789311600000,
+   "status": "ZAKRYTA",
+   "R": -0.3786,
+   "barov": 111,
+   "plecho": 5.14,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.4444
+  },
+  {
+   "sym": "SUIUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 104,
+   "plecho": 6.07,
+   "zatraty_R": 0.0043,
+   "ctrl": 0.1193
+  },
+  {
+   "sym": "SUIUSDT",
+   "ts": 1791432000000,
+   "status": "ZAKRYTA",
+   "R": 0.3695,
+   "barov": 10,
+   "plecho": 7.82,
+   "zatraty_R": 0.0055,
+   "ctrl": -0.0109
+  },
+  {
+   "sym": "SUIUSDT",
+   "ts": 1791633600000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 59,
+   "plecho": 6.04,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.1037
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1788530400000,
+   "status": "ZAKRYTA",
+   "R": -1.0047,
+   "barov": 50,
+   "plecho": 6.74,
+   "zatraty_R": 0.0047,
+   "ctrl": -0.0843
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1789138800000,
+   "status": "ZAKRYTA",
+   "R": -0.3782,
+   "barov": 239,
+   "plecho": 4.6,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.1796
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1791043200000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 118,
+   "plecho": 5.69,
+   "zatraty_R": 0.004,
+   "ctrl": -0.4595
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1791633600000,
+   "status": "ZAKRYTA",
+   "R": 0.3706,
+   "barov": 109,
+   "plecho": 6.29,
+   "zatraty_R": 0.0044,
+   "ctrl": -0.1091
+  },
+  {
+   "sym": "THEUSDT",
+   "ts": 1789149600000,
+   "status": "ZAKRYTA",
+   "R": -1.0032,
+   "barov": 189,
+   "plecho": 4.56,
+   "zatraty_R": 0.0032,
+   "ctrl": 0.0234
+  },
+  {
+   "sym": "THEUSDT",
+   "ts": 1790640000000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 89,
+   "plecho": 5.1,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.0367
+  },
+  {
+   "sym": "THEUSDT",
+   "ts": 1791169200000,
+   "status": "ZAKRYTA",
+   "R": 0.3675,
+   "barov": 54,
+   "plecho": 10.68,
+   "zatraty_R": 0.0075,
+   "ctrl": -0.0949
+  },
+  {
+   "sym": "THEUSDT",
+   "ts": 1791529200000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 77,
+   "plecho": 6.01,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.2308
+  },
+  {
+   "sym": "THEUSDT",
+   "ts": 1792094400000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 70,
+   "plecho": 6.1,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.2265
+  },
+  {
+   "sym": "TIAUSDT",
+   "ts": 1789110000000,
+   "status": "ZAKRYTA",
+   "R": 0.3712,
+   "barov": 102,
+   "plecho": 5.45,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.4753
+  },
+  {
+   "sym": "TRUMPUSDT",
+   "ts": 1788742800000,
+   "status": "ZAKRYTA",
+   "R": 0.3711,
+   "barov": 67,
+   "plecho": 5.51,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.1972
+  },
+  {
+   "sym": "TRUMPUSDT",
+   "ts": 1789160400000,
+   "status": "ZAKRYTA",
+   "R": -0.0219,
+   "barov": 335,
+   "plecho": 4.32,
+   "zatraty_R": 0.003,
+   "ctrl": 0.1721
+  },
+  {
+   "sym": "TRUMPUSDT",
+   "ts": 1790697600000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 177,
+   "plecho": 4.87,
+   "zatraty_R": 0.0034,
+   "ctrl": 0.2438
+  },
+  {
+   "sym": "TRUMPUSDT",
+   "ts": 1791532800000,
+   "status": "ZAKRYTA",
+   "R": 0.3704,
+   "barov": 202,
+   "plecho": 6.57,
+   "zatraty_R": 0.0046,
+   "ctrl": 0.13
+  },
+  {
+   "sym": "TRXUSDT",
+   "ts": 1790535600000,
+   "status": "ZAKRYTA",
+   "R": 0.348,
+   "barov": 313,
+   "plecho": 38.55,
+   "zatraty_R": 0.027,
+   "ctrl": -0.0436
+  },
+  {
+   "sym": "TSLAUSDT",
+   "ts": 1788703200000,
+   "status": "ZAKRYTA",
+   "R": -1.0147,
+   "barov": 67,
+   "plecho": 21.07,
+   "zatraty_R": 0.0147,
+   "ctrl": 0.0237
+  },
+  {
+   "sym": "TSLAUSDT",
+   "ts": 1789581600000,
+   "status": "ZAKRYTA",
+   "R": -1.0094,
+   "barov": 162,
+   "plecho": 13.42,
+   "zatraty_R": 0.0094,
+   "ctrl": -0.3461
+  },
+  {
+   "sym": "TSLAUSDT",
+   "ts": 1790870400000,
+   "status": "ZAKRYTA",
+   "R": -1.0112,
+   "barov": 93,
+   "plecho": 15.93,
+   "zatraty_R": 0.0112,
+   "ctrl": 0.0231
+  },
+  {
+   "sym": "TSLAUSDT",
+   "ts": 1791910800000,
+   "status": "ZAKRYTA",
+   "R": 0.3566,
+   "barov": 18,
+   "plecho": 26.29,
+   "zatraty_R": 0.0184,
+   "ctrl": -0.3878
+  },
+  {
+   "sym": "TUTUSDT",
+   "ts": 1790640000000,
+   "status": "ZAKRYTA",
+   "R": 0.3716,
+   "barov": 335,
+   "plecho": 4.92,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.298
+  },
+  {
+   "sym": "TUTUSDT",
+   "ts": 1792080000000,
+   "status": "ZAKRYTA",
+   "R": 0.3707,
+   "barov": 68,
+   "plecho": 6.09,
+   "zatraty_R": 0.0043,
+   "ctrl": -0.0372
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1788915600000,
+   "status": "ZAKRYTA",
+   "R": -1.0039,
+   "barov": 252,
+   "plecho": 5.5,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.0958
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1791090000000,
+   "status": "ZAKRYTA",
+   "R": 0.3702,
+   "barov": 204,
+   "plecho": 6.91,
+   "zatraty_R": 0.0048,
+   "ctrl": 0.1271
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1792069200000,
+   "status": "ZAKRYTA",
+   "R": -1.0039,
+   "barov": 21,
+   "plecho": 5.59,
+   "zatraty_R": 0.0039,
+   "ctrl": -0.1587
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1789074000000,
+   "status": "ZAKRYTA",
+   "R": -1.0034,
+   "barov": 160,
+   "plecho": 4.85,
+   "zatraty_R": 0.0034,
+   "ctrl": -0.1284
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1790964000000,
+   "status": "ZAKRYTA",
+   "R": 0.3714,
+   "barov": 115,
+   "plecho": 5.12,
+   "zatraty_R": 0.0036,
+   "ctrl": -0.1909
+  },
+  {
+   "sym": "USUSDT",
+   "ts": 1788663600000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 82,
+   "plecho": 4.62,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.0648
+  },
+  {
+   "sym": "USUSDT",
+   "ts": 1789369200000,
+   "status": "ZAKRYTA",
+   "R": -1.0035,
+   "barov": 171,
+   "plecho": 4.96,
+   "zatraty_R": 0.0035,
+   "ctrl": 0.1215
+  },
+  {
+   "sym": "VELODROMEUSDT",
+   "ts": 1789074000000,
+   "status": "ZAKRYTA",
+   "R": -0.3783,
+   "barov": 204,
+   "plecho": 4.66,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.5399
+  },
+  {
+   "sym": "VELODROMEUSDT",
+   "ts": 1791381600000,
+   "status": "ZAKRYTA",
+   "R": -1.0053,
+   "barov": 69,
+   "plecho": 7.58,
+   "zatraty_R": 0.0053,
+   "ctrl": -0.3582
+  },
+  {
+   "sym": "VIRTUALUSDT",
+   "ts": 1789110000000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 106,
+   "plecho": 5.24,
+   "zatraty_R": 0.0037,
+   "ctrl": 0.0579
+  },
+  {
+   "sym": "VIRTUALUSDT",
+   "ts": 1791428400000,
+   "status": "ZAKRYTA",
+   "R": 0.3708,
+   "barov": 10,
+   "plecho": 6.02,
+   "zatraty_R": 0.0042,
+   "ctrl": -0.1507
+  },
+  {
+   "sym": "VIRTUALUSDT",
+   "ts": 1791622800000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 58,
+   "plecho": 5.84,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.2761
+  },
+  {
+   "sym": "VVVUSDT",
+   "ts": 1790816400000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 177,
+   "plecho": 4.5,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.1875
+  },
+  {
+   "sym": "WIFUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": 0.3712,
+   "barov": 104,
+   "plecho": 5.41,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.1065
+  },
+  {
+   "sym": "WIFUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.3718,
+   "barov": 231,
+   "plecho": 4.58,
+   "zatraty_R": 0.0032,
+   "ctrl": -0.0708
+  },
+  {
+   "sym": "WIFUSDT",
+   "ts": 1791633600000,
+   "status": "ZAKRYTA",
+   "R": 0.3706,
+   "barov": 59,
+   "plecho": 6.31,
+   "zatraty_R": 0.0044,
+   "ctrl": -0.3267
+  },
+  {
+   "sym": "WLDUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": 0.3715,
+   "barov": 104,
+   "plecho": 4.99,
+   "zatraty_R": 0.0035,
+   "ctrl": -0.0712
+  },
+  {
+   "sym": "WLDUSDT",
+   "ts": 1791453600000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 6,
+   "plecho": 4.75,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.3507
+  },
+  {
+   "sym": "WLFIUSDT",
+   "ts": 1788832800000,
+   "status": "ZAKRYTA",
+   "R": 0.3666,
+   "barov": 79,
+   "plecho": 12.0,
+   "zatraty_R": 0.0084,
+   "ctrl": 0.1294
+  },
+  {
+   "sym": "WLFIUSDT",
+   "ts": 1790002800000,
+   "status": "ZAKRYTA",
+   "R": 0.3681,
+   "barov": 50,
+   "plecho": 9.9,
+   "zatraty_R": 0.0069,
+   "ctrl": -0.0004
+  },
+  {
+   "sym": "WLFIUSDT",
+   "ts": 1790355600000,
+   "status": "ZAKRYTA",
+   "R": 0.2511,
+   "barov": 335,
+   "plecho": 7.08,
+   "zatraty_R": 0.005,
+   "ctrl": 0.0146
+  },
+  {
+   "sym": "XAGUSDT",
+   "ts": 1789120800000,
+   "status": "ZAKRYTA",
+   "R": 0.0329,
+   "barov": 335,
+   "plecho": 10.52,
+   "zatraty_R": 0.0074,
+   "ctrl": 0.357
+  },
+  {
+   "sym": "XAGUSDT",
+   "ts": 1790668800000,
+   "status": "ZAKRYTA",
+   "R": 0.3628,
+   "barov": 195,
+   "plecho": 17.42,
+   "zatraty_R": 0.0122,
+   "ctrl": 0.1029
+  },
+  {
+   "sym": "XAGUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3623,
+   "barov": 7,
+   "plecho": 18.17,
+   "zatraty_R": 0.0127,
+   "ctrl": 0.1498
+  },
+  {
+   "sym": "XANUSDT",
+   "ts": 1789390800000,
+   "status": "ZAKRYTA",
+   "R": -0.3788,
+   "barov": 301,
+   "plecho": 5.36,
+   "zatraty_R": 0.0038,
+   "ctrl": -0.3164
+  },
+  {
+   "sym": "XANUSDT",
+   "ts": 1790683200000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 218,
+   "plecho": 4.29,
+   "zatraty_R": 0.003,
+   "ctrl": -0.1863
+  },
+  {
+   "sym": "XANUSDT",
+   "ts": 1791878400000,
+   "status": "ZAKRYTA",
+   "R": 0.371,
+   "barov": 41,
+   "plecho": 5.78,
+   "zatraty_R": 0.004,
+   "ctrl": -0.1659
+  },
+  {
+   "sym": "XAUTUSDT",
+   "ts": 1788944400000,
+   "status": "ZAKRYTA",
+   "R": 0.3575,
+   "barov": 41,
+   "plecho": 24.95,
+   "zatraty_R": 0.0175,
+   "ctrl": 0.0124
+  },
+  {
+   "sym": "XAUTUSDT",
+   "ts": 1790283600000,
+   "status": "ZAKRYTA",
+   "R": 0.3562,
+   "barov": 79,
+   "plecho": 26.92,
+   "zatraty_R": 0.0188,
+   "ctrl": 0.1585
+  },
+  {
+   "sym": "XAUTUSDT",
+   "ts": 1790726400000,
+   "status": "ZAKRYTA",
+   "R": 0.3584,
+   "barov": 174,
+   "plecho": 23.68,
+   "zatraty_R": 0.0166,
+   "ctrl": 0.0837
+  },
+  {
+   "sym": "XAUUSDT",
+   "ts": 1788944400000,
+   "status": "ZAKRYTA",
+   "R": 0.3585,
+   "barov": 41,
+   "plecho": 23.52,
+   "zatraty_R": 0.0165,
+   "ctrl": -0.062
+  },
+  {
+   "sym": "XAUUSDT",
+   "ts": 1790305200000,
+   "status": "ZAKRYTA",
+   "R": 0.3571,
+   "barov": 68,
+   "plecho": 25.59,
+   "zatraty_R": 0.0179,
+   "ctrl": -0.0409
+  },
+  {
+   "sym": "XAUUSDT",
+   "ts": 1790726400000,
+   "status": "ZAKRYTA",
+   "R": 0.3594,
+   "barov": 174,
+   "plecho": 22.27,
+   "zatraty_R": 0.0156,
+   "ctrl": -0.0793
+  },
+  {
+   "sym": "XAUUSDT",
+   "ts": 1791954000000,
+   "status": "ZAKRYTA",
+   "R": 0.3514,
+   "barov": 6,
+   "plecho": 33.77,
+   "zatraty_R": 0.0236,
+   "ctrl": 0.1836
+  },
+  {
+   "sym": "XLMUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": -1.0059,
+   "barov": 79,
+   "plecho": 8.38,
+   "zatraty_R": 0.0059,
+   "ctrl": -0.0867
+  },
+  {
+   "sym": "XLMUSDT",
+   "ts": 1789596000000,
+   "status": "ZAKRYTA",
+   "R": -1.0033,
+   "barov": 119,
+   "plecho": 4.72,
+   "zatraty_R": 0.0033,
+   "ctrl": 0.0031
+  },
+  {
+   "sym": "XLMUSDT",
+   "ts": 1791039600000,
+   "status": "ZAKRYTA",
+   "R": 0.3696,
+   "barov": 93,
+   "plecho": 7.67,
+   "zatraty_R": 0.0054,
+   "ctrl": 0.1362
+  },
+  {
+   "sym": "XLMUSDT",
+   "ts": 1791536400000,
+   "status": "ZAKRYTA",
+   "R": 0.3692,
+   "barov": 123,
+   "plecho": 8.25,
+   "zatraty_R": 0.0058,
+   "ctrl": 0.0257
+  },
+  {
+   "sym": "XMRUSDT",
+   "ts": 1788944400000,
+   "status": "ZAKRYTA",
+   "R": -1.0045,
+   "barov": 222,
+   "plecho": 6.36,
+   "zatraty_R": 0.0045,
+   "ctrl": -0.2953
+  },
+  {
+   "sym": "XMRUSDT",
+   "ts": 1790247600000,
+   "status": "ZAKRYTA",
+   "R": -0.0896,
+   "barov": 335,
+   "plecho": 6.38,
+   "zatraty_R": 0.0045,
+   "ctrl": -0.4446
+  },
+  {
+   "sym": "XMRUSDT",
+   "ts": 1791612000000,
+   "status": "ZAKRYTA",
+   "R": -1.0044,
+   "barov": 188,
+   "plecho": 6.27,
+   "zatraty_R": 0.0044,
+   "ctrl": -0.2163
+  },
+  {
+   "sym": "XPLUSDT",
+   "ts": 1789203600000,
+   "status": "ZAKRYTA",
+   "R": -0.378,
+   "barov": 217,
+   "plecho": 4.33,
+   "zatraty_R": 0.003,
+   "ctrl": -0.1292
+  },
+  {
+   "sym": "XPLUSDT",
+   "ts": 1791090000000,
+   "status": "ZAKRYTA",
+   "R": 0.3717,
+   "barov": 68,
+   "plecho": 4.74,
+   "zatraty_R": 0.0033,
+   "ctrl": -0.0956
+  },
+  {
+   "sym": "XPLUSDT",
+   "ts": 1791540000000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 85,
+   "plecho": 5.91,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.1452
+  },
+  {
+   "sym": "XRPUSDT",
+   "ts": 1789117200000,
+   "status": "ZAKRYTA",
+   "R": 0.3686,
+   "barov": 106,
+   "plecho": 9.08,
+   "zatraty_R": 0.0064,
+   "ctrl": 0.1669
+  },
+  {
+   "sym": "XRPUSDT",
+   "ts": 1789668000000,
+   "status": "ZAKRYTA",
+   "R": -1.0038,
+   "barov": 97,
+   "plecho": 5.41,
+   "zatraty_R": 0.0038,
+   "ctrl": 0.0399
+  },
+  {
+   "sym": "XRPUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.3698,
+   "barov": 229,
+   "plecho": 7.38,
+   "zatraty_R": 0.0052,
+   "ctrl": -0.0358
+  },
+  {
+   "sym": "XRPUSDT",
+   "ts": 1791882000000,
+   "status": "ZAKRYTA",
+   "R": 0.3685,
+   "barov": 40,
+   "plecho": 9.33,
+   "zatraty_R": 0.0065,
+   "ctrl": -0.0129
+  },
+  {
+   "sym": "ZBTUSDT",
+   "ts": 1788944400000,
+   "status": "ZAKRYTA",
+   "R": 0.3694,
+   "barov": 11,
+   "plecho": 8.04,
+   "zatraty_R": 0.0056,
+   "ctrl": 0.0194
+  },
+  {
+   "sym": "ZBTUSDT",
+   "ts": 1789336800000,
+   "status": "ZAKRYTA",
+   "R": 0.354,
+   "barov": 43,
+   "plecho": 9.36,
+   "zatraty_R": 0.0066,
+   "ctrl": -0.2393
+  },
+  {
+   "sym": "ZBTUSDT",
+   "ts": 1789664400000,
+   "status": "ZAKRYTA",
+   "R": -1.0059,
+   "barov": 106,
+   "plecho": 8.48,
+   "zatraty_R": 0.0059,
+   "ctrl": 0.2062
+  },
+  {
+   "sym": "ZBTUSDT",
+   "ts": 1790643600000,
+   "status": "ZAKRYTA",
+   "R": 0.3709,
+   "barov": 229,
+   "plecho": 5.84,
+   "zatraty_R": 0.0041,
+   "ctrl": -0.0552
+  },
+  {
+   "sym": "ZBTUSDT",
+   "ts": 1791669600000,
+   "status": "ZAKRYTA",
+   "R": 0.3674,
+   "barov": 46,
+   "plecho": 10.86,
+   "zatraty_R": 0.0076,
+   "ctrl": -0.0811
+  },
+  {
+   "sym": "ZBTUSDT",
+   "ts": 1792155600000,
+   "status": "ZAKRYTA",
+   "R": 0.3704,
+   "barov": 51,
+   "plecho": 6.52,
+   "zatraty_R": 0.0046,
+   "ctrl": 0.0539
+  },
+  {
+   "sym": "ZECUSDT",
+   "ts": 1791061200000,
+   "status": "ZAKRYTA",
+   "R": 0.3713,
+   "barov": 106,
+   "plecho": 5.27,
+   "zatraty_R": 0.0037,
+   "ctrl": -0.4181
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1788602400000,
+   "status": "ZAKRYTA",
+   "R": 0.372,
+   "barov": 242,
+   "plecho": 4.34,
+   "zatraty_R": 0.003,
+   "ctrl": -0.3069
+  }
+ ]
+}
