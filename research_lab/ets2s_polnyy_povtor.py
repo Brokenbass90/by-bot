@@ -61,6 +61,32 @@ def povtor_monety(sym, b, K, rng):
         block = i + ZHDAT + res[1] + 1; out.append(z)
     return out
 
+def fanding_istoriya(sym, t0, t1):
+    """публичная история фандинга Bybit (ставки на 8/4/1 ч), [ (ts, rate) ]"""
+    import urllib.request
+    out, end = [], t1
+    while end > t0:
+        u = f"https://api.bybit.com/v5/market/funding/history?category=linear&symbol={sym}&startTime={t0}&endTime={end}&limit=200"
+        with urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "ets2s/1.0"}), timeout=25) as f:
+            lst = (json.loads(f.read().decode()).get("result") or {}).get("list") or []
+        if not lst: break
+        part = [(int(x["fundingRateTimestamp"]), float(x["fundingRate"])) for x in lst]
+        out += part; nov = min(t for t, _ in part) - 1
+        if nov >= end: break
+        end = nov; time.sleep(0.12)
+    return sorted(set(out))
+
+def dobavit_fanding(sdelki_monety, sym):
+    """шорт ПОЛУЧАЕТ положительный фандинг: R += Σ rate × плечо за выплаты внутри [вход; выход]"""
+    z = [x for x in sdelki_monety if x["status"] == "ZAKRYTA"]
+    if not z: return
+    try: fr = fanding_istoriya(sym, min(x["ts"] for x in z), max(x["ts"] + (x["barov"] + ZHDAT + 2) * H for x in z))
+    except Exception: return
+    for x in z:
+        a, b = x["ts"] + H, x["ts"] + (x["barov"] + ZHDAT + 2) * H
+        f = sum(r for t, r in fr if a <= t < b) * x["plecho"]
+        x["fanding_R"] = round(f, 4); x["R_bez_fandinga"] = x["R"]; x["R"] = round(x["R"] + f, 4)
+
 def svod(g):
     if len(g) < 3: return dict(n=len(g))
     g = sorted(g, key=lambda x: x["ts"]); R = np.array([x["R"] for x in g]); c = np.cumsum(R)
@@ -101,7 +127,9 @@ def main():
         if not b or len(b) < 300: net.append(sym); continue
         if lok: b = [x for x in b if x[0] >= NACHALO - 1000 * H]
         gran = max(gran or 0, b[-1][0])
-        vse += povtor_monety(sym, b, K, rng)
+        sd = povtor_monety(sym, b, K, rng)
+        if not lok: dobavit_fanding(sd, sym)
+        vse += sd
         if n % 50 == 0: print(f"{n}/{len(syms)}", flush=True)
     z = [x for x in vse if x["status"] == "ZAKRYTA"]
     moi = {(x["sym"], x["ts"]): x for x in z}
@@ -114,7 +142,8 @@ def main():
     rasx = [abs(moi[k]["R"] - ten_vnutri[k]["R"]) for k in obshchie]
     out = dict(kogda_utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), rezhim="lokalno_138_do_20.10" if lok else "bybit_seychas",
                monet=len(syms), bez_dannyh=len(net), statusy=dict(collections.Counter(x["status"] for x in vse)),
-               povtor=svod(z), po_nedelyam={time.strftime("%m-%d", time.gmtime((w * 7) * 86400)): svod([x for x in z if x["ts"] // (7 * 86400000) == w]).get("sred_R")
+               povtor=svod(z), fanding_sred_R=round(float(np.mean([x.get("fanding_R", 0) for x in z])), 4) if z else None,
+               s_fandingom=sum(1 for x in z if "fanding_R" in x), po_nedelyam={time.strftime("%m-%d", time.gmtime((w * 7) * 86400)): svod([x for x in z if x["ts"] // (7 * 86400000) == w]).get("sred_R")
                                              for w in sorted({x["ts"] // (7 * 86400000) for x in z})},
                portfel_sloty={str(k): sloty(z, k) for k in SLOTY},
                sverka_s_tenyu=dict(ten_v_predelah_povtora=len(ten_vnutri), obshchih=len(obshchie),
