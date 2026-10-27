@@ -15,8 +15,13 @@ SIS_B = ("You are a careful forecaster. You are given a prediction-market questi
 def zakrytye():
     out = []
     for off in range(0, 3000, 100):
-        evs = P.get_json(f"{P.GAMMA}/events?" + urllib.parse.urlencode(dict(closed="true", limit=100, offset=off, order="volume", ascending="false",
-                                                                          end_date_min="2026-08-01T00:00:00Z", end_date_max="2026-10-26T00:00:00Z"))) or []
+        evs = None
+        for par in (dict(closed="true", limit=100, offset=off, end_date_min="2026-08-01", end_date_max="2026-10-26"),
+                    dict(closed="true", limit=100, offset=off, order="endDate", ascending="false"),
+                    dict(closed="true", limit=100, offset=off)):
+            try: evs = P.get_json(f"{P.GAMMA}/events?" + urllib.parse.urlencode(par)) or []; break
+            except Exception as e: print("  Gamma отказ:", str(e)[:60], "→ другой запрос", flush=True)
+        if evs is None: break
         if not evs: break
         for e in evs:
             teg = [str(t.get("slug") or t.get("label") or "") for t in (e.get("tags") or [])]
