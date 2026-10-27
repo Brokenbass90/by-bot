@@ -18,7 +18,7 @@ VETKA = "research/fabrika-v1"
 def git_commit(put, soobshchenie):
     rel = str(Path(put).resolve().relative_to(ROOT))
     env = dict(os.environ, GIT_INDEX_FILE=tempfile.mktemp(prefix="idx_ai_"))
-    g = lambda *a: subprocess.run(["git", *a], cwd=ROOT, env=env, capture_output=True, text=True, check=True).stdout.strip()
+    g = lambda *a: subprocess.run(["git", *a], cwd=ROOT, env=env, capture_output=True, text=True, check=True, timeout=120).stdout.strip()
     g("read-tree", VETKA); g("update-index", "--add", rel); t = g("write-tree")
     c = g("commit-tree", t, "-p", VETKA, "-m", soobshchenie); g("update-ref", f"refs/heads/{VETKA}", c)
     return c

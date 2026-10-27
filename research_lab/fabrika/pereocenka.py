@@ -12,7 +12,10 @@ LAB = Path(__file__).resolve().parents[1]; D = LAB / "data"; OUT = D / "storozh/
 def _jsonl(p): return [json.loads(s) for s in p.read_text().splitlines() if s.strip()] if p.exists() else []
 
 
-def att1(): return [x["R"] for x in _jsonl(D / "ten_ATT1.jsonl") if "R" in x]
+def att1():
+    # 27.10: журнал тени ATT1 содержит ~21 % наложенных решений (audit_nalozheniy) — оцениваем только решения без наложений
+    from audit_nalozheniy import bez_nalozheniy
+    return [x["R"] for x in bez_nalozheniy([x for x in _jsonl(D / "ten_ATT1.jsonl") if "R" in x])]
 def asm1(): return [x["R"] for x in _jsonl(D / "asm1_fiks/ishody.jsonl")]
 def etf(): return [x["R_bps"] for x in _jsonl(D / "etf_premiya/ishody_ETF_PREMIYA.jsonl") if x.get("vhod") == "isp"]
 def kity():

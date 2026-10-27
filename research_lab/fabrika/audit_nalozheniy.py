@@ -8,6 +8,20 @@ from pathlib import Path
 LAB = Path(__file__).resolve().parents[1]; D = LAB / "data"; OUT = D / "storozh" / "nalozheniya.json"
 H = 3_600_000; POROG = 0.05
 
+def bez_nalozheniy(L, zhdat=0):
+    """Решения, принимаемые по порядку времени, если монета свободна (одна позиция на монету). Для честной оценки журналов
+    с наложениями (ten.py до --blok-zhurnal). Выход позиции ≈ ts + (barov + zhdat + 2) ч."""
+    svob, out = {}, []
+    for x in sorted(L, key=lambda x: int(x["ts"])):
+        if x.get("barov") is None or x.get("R") is None: continue
+        if int(x["ts"]) < svob.get(x["sym"], -1): continue
+        out.append(x); svob[x["sym"]] = int(x["ts"]) + (int(x["barov"]) + zhdat + 2) * H
+    return out
+
+def dolya_nalozheniy(L):
+    L = [x for x in L if x.get("barov") is not None and x.get("R") is not None]
+    return 1 - len(bez_nalozheniy(L)) / len(L) if L else 0.0
+
 def odin(p):
     L = []
     for s in p.open(encoding="utf-8"):

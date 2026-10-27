@@ -178,8 +178,8 @@ def prohod():
         import importlib; sys.path.insert(0, str(LAB / "fabrika"))
         for imya in json.loads((LAB / "fabrika" / "HUKI.json").read_text()):
             try:
-                m = importlib.import_module(imya); importlib.reload(m); r = m.prohod()
-                with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} хук {imya}: {json.dumps(r, ensure_ascii=False, default=str)[:300]}\n")
+                _t0 = time.time(); m = importlib.import_module(imya); importlib.reload(m); r = m.prohod(); _dt = time.time() - _t0
+                with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} хук {imya} ({_dt:.0f} с{', ДОЛГО' if _dt > 600 else ''}): {json.dumps(r, ensure_ascii=False, default=str)[:300]}\n")
             except BaseException as e:
                 with open(OUT / "storozh.log", "a") as f: f.write(f"{rez['kogda']} хук {imya} не прошёл: {type(e).__name__}: {str(e)[:200]}\n")
     except BaseException as e:

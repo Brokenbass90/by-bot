@@ -156,6 +156,18 @@ def otchet(a, zhurnal: Path) -> int:
     if not zakr:
         print("  пока пусто. Тень собирает решения ВПЕРЁД, это недели.")
         return 0
+    # 27.10: журнал с наложениями (одна монета — новое решение при открытой позиции) вердикта не даёт.
+    try:
+        sys.path.insert(0, str(KOREN / "research_lab" / "fabrika"))
+        from audit_nalozheniy import dolya_nalozheniy, bez_nalozheniy
+        _dn = dolya_nalozheniy(zakr)
+    except Exception:
+        _dn, bez_nalozheniy = 0.0, None
+    if _dn > 0.05:
+        print(f"  НАЛОЖЕНИЯ: {_dn:.0%} решений — повторный вход в открытую позицию той же монеты.")
+        print("  ВЕРДИКТ ПО ЭТОМУ ЖУРНАЛУ ЗАБЛОКИРОВАН. Ниже — только решения без наложений (описательно).")
+        zakr = bez_nalozheniy(zakr, a.zhdat)
+        a.porog = 10 ** 9                       # вердикт не выносится
     R = np.array([z["R"] for z in zakr], float)
     cm = np.array([z["ctrl"] for z in zakr if z.get("ctrl") is not None], float)
     cr = np.array([z["ctrl_rezhim"] for z in zakr
