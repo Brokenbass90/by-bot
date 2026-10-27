@@ -1,0 +1,2741 @@
+{
+ "svod": {
+  "kogda_utc": "2026-10-27T10:17:59Z",
+  "propuski": {
+   "net_bara_vhoda": 3,
+   "korotko": 3,
+   "net_cen": 5
+  },
+  "vse": {
+   "n": 262,
+   "dney": 136,
+   "sred": 36.7,
+   "med": 112.7,
+   "t_dni": -0.49,
+   "v_plyuse": 145,
+   "hudshaya": -3692.0,
+   "luchshaya": 7118.6,
+   "bez_5_luchshih": -68.1,
+   "prevyshenie": -125.4,
+   "n_ctrl": 262
+  },
+  "do_2025": {
+   "n": 165,
+   "dney": 97,
+   "sred": 9.5,
+   "med": 177.3,
+   "t_dni": -0.91,
+   "v_plyuse": 96,
+   "hudshaya": -3692.0,
+   "luchshaya": 7118.6,
+   "bez_5_luchshih": -157.4,
+   "prevyshenie": -140.8,
+   "n_ctrl": 165
+  },
+  "god_2026": {
+   "n": 97,
+   "dney": 39,
+   "sred": 83.2,
+   "med": 31.0,
+   "t_dni": 0.82,
+   "v_plyuse": 49,
+   "hudshaya": -3692.0,
+   "luchshaya": 4598.4,
+   "bez_5_luchshih": -95.3,
+   "prevyshenie": -99.2,
+   "n_ctrl": 97
+  },
+  "po_godam": {
+   "2022": {
+    "n": 2
+   },
+   "2023": {
+    "n": 6,
+    "dney": 6,
+    "sred": -16.1,
+    "med": -156.9,
+    "t_dni": -0.03,
+    "v_plyuse": 2,
+    "hudshaya": -1482.9,
+    "luchshaya": 2528.3,
+    "bez_5_luchshih": -1482.9,
+    "prevyshenie": 413.9,
+    "n_ctrl": 6
+   },
+   "2024": {
+    "n": 39,
+    "dney": 26,
+    "sred": 322.5,
+    "med": 312.7,
+    "t_dni": 0.79,
+    "v_plyuse": 26,
+    "hudshaya": -3692.0,
+    "luchshaya": 5603.0,
+    "bez_5_luchshih": -144.8,
+    "prevyshenie": 0.8,
+    "n_ctrl": 39
+   },
+   "2025": {
+    "n": 118,
+    "dney": 64,
+    "sred": -48.2,
+    "med": 170.1,
+    "t_dni": -1.34,
+    "v_plyuse": 68,
+    "hudshaya": -3692.0,
+    "luchshaya": 7118.6,
+    "bez_5_luchshih": -273.0,
+    "prevyshenie": -158.9,
+    "n_ctrl": 118
+   },
+   "2026": {
+    "n": 97,
+    "dney": 39,
+    "sred": 83.2,
+    "med": 31.0,
+    "t_dni": 0.82,
+    "v_plyuse": 49,
+    "hudshaya": -3692.0,
+    "luchshaya": 4598.4,
+    "bez_5_luchshih": -95.3,
+    "prevyshenie": -99.2,
+    "n_ctrl": 97
+   }
+  },
+  "dolya_stopa": 0.134,
+  "verdikt": {
+   "n_ge100": true,
+   "sred_gt0": true,
+   "med_gt0": true,
+   "t_ge2": false,
+   "prev_gt0": false,
+   "znak_ran_poz": true,
+   "itog": "INCONCLUSIVE"
+  },
+  "prereg_sha256": "ebe4ea204828ed0f3a35a937710765793932f53d7b01c73d5514be9c030d7728",
+  "kod_sha256": "f92878e47298daa58944197cb8f9a025babcc910df6afe56a432d9a2f80357d6",
+  "primechanie": "фандинг не учтён (не скачан)"
+ },
+ "sdelki": [
+  {
+   "sym": "VELODROMEUSDT",
+   "t0": 1792573279000,
+   "den": 20747,
+   "god": 2026,
+   "hold_ch": 72,
+   "net": 1580.2,
+   "stop": false,
+   "ctrl": -48.5
+  },
+  {
+   "sym": "PROMPTUSDT",
+   "t0": 1791968883000,
+   "den": 20740,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -365.7,
+   "stop": false,
+   "ctrl": -72.6
+  },
+  {
+   "sym": "SPORTFUNUSDT",
+   "t0": 1791968881000,
+   "den": 20740,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 1505.5,
+   "stop": false,
+   "ctrl": 118.0
+  },
+  {
+   "sym": "STGUSDT",
+   "t0": 1791451806000,
+   "den": 20734,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -170.9,
+   "stop": false,
+   "ctrl": -904.9
+  },
+  {
+   "sym": "BLASTUSDT",
+   "t0": 1791012819000,
+   "den": 20729,
+   "god": 2026,
+   "hold_ch": 20,
+   "net": 4598.4,
+   "stop": false,
+   "ctrl": 597.8
+  },
+  {
+   "sym": "ICXUSDT",
+   "t0": 1789549152000,
+   "den": 20712,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -630.2,
+   "stop": false,
+   "ctrl": 359.4
+  },
+  {
+   "sym": "ASPUSDT",
+   "t0": 1788426034000,
+   "den": 20699,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -152.2,
+   "stop": false,
+   "ctrl": 70.7
+  },
+  {
+   "sym": "SCRTUSDT",
+   "t0": 1788426032000,
+   "den": 20699,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -553.4,
+   "stop": false,
+   "ctrl": 591.4
+  },
+  {
+   "sym": "ACXUSDT",
+   "t0": 1787907847000,
+   "den": 20693,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 31.0,
+   "stop": false,
+   "ctrl": 49.1
+  },
+  {
+   "sym": "VINEUSDT",
+   "t0": 1787129968000,
+   "den": 20684,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -1219.4,
+   "stop": false,
+   "ctrl": 122.1
+  },
+  {
+   "sym": "HFTUSDT",
+   "t0": 1787129962000,
+   "den": 20684,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -440.2,
+   "stop": false,
+   "ctrl": 76.7
+  },
+  {
+   "sym": "VANRYUSDT",
+   "t0": 1786352305000,
+   "den": 20675,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": 1653.1,
+   "stop": false,
+   "ctrl": 356.5
+  },
+  {
+   "sym": "AERGOUSDT",
+   "t0": 1784883516000,
+   "den": 20658,
+   "god": 2026,
+   "hold_ch": 21,
+   "net": 1041.0,
+   "stop": false,
+   "ctrl": 36.3
+  },
+  {
+   "sym": "GIGAUSDT",
+   "t0": 1784883514000,
+   "den": 20658,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -141.9
+  },
+  {
+   "sym": "TSTBSCUSDT",
+   "t0": 1784883512000,
+   "den": 20658,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": -356.8,
+   "stop": false,
+   "ctrl": -435.1
+  },
+  {
+   "sym": "ROAMUSDT",
+   "t0": 1784883512000,
+   "den": 20658,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": 624.4,
+   "stop": false,
+   "ctrl": 2293.7
+  },
+  {
+   "sym": "BOBBOBUSDT",
+   "t0": 1784883509000,
+   "den": 20658,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": 521.9,
+   "stop": false,
+   "ctrl": 42.1
+  },
+  {
+   "sym": "HIGHUSDT",
+   "t0": 1784278711000,
+   "den": 20651,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1149.7
+  },
+  {
+   "sym": "PUMPBTCUSDT",
+   "t0": 1784278707000,
+   "den": 20651,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": -405.6,
+   "stop": false,
+   "ctrl": 5.6
+  },
+  {
+   "sym": "WHITEWHALEUSDT",
+   "t0": 1784278704000,
+   "den": 20651,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": 2782.3,
+   "stop": false,
+   "ctrl": 302.7
+  },
+  {
+   "sym": "ESUSDT",
+   "t0": 1783501186000,
+   "den": 20642,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 350.5,
+   "stop": false,
+   "ctrl": -4.7
+  },
+  {
+   "sym": "SWARMSUSDT",
+   "t0": 1783501184000,
+   "den": 20642,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -786.5,
+   "stop": false,
+   "ctrl": -15.5
+  },
+  {
+   "sym": "SCRUSDT",
+   "t0": 1783501178000,
+   "den": 20642,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -467.5,
+   "stop": false,
+   "ctrl": -33.9
+  },
+  {
+   "sym": "MBOXUSDT",
+   "t0": 1782300720000,
+   "den": 20628,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 1232.6,
+   "stop": false,
+   "ctrl": 479.3
+  },
+  {
+   "sym": "SOLVUSDT",
+   "t0": 1782300680000,
+   "den": 20628,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 549.7,
+   "stop": false,
+   "ctrl": 252.0
+  },
+  {
+   "sym": "MLNUSDT",
+   "t0": 1782300640000,
+   "den": 20628,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -126.9,
+   "stop": false,
+   "ctrl": 96.8
+  },
+  {
+   "sym": "IPUSDT",
+   "t0": 1782197970000,
+   "den": 20627,
+   "god": 2026,
+   "hold_ch": 69,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -317.7
+  },
+  {
+   "sym": "XIONUSDT",
+   "t0": 1781600340000,
+   "den": 20620,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -327.3
+  },
+  {
+   "sym": "TONUSDT",
+   "t0": 1781171930000,
+   "den": 20615,
+   "god": 2026,
+   "hold_ch": 72,
+   "net": -219.4,
+   "stop": false,
+   "ctrl": -497.7
+  },
+  {
+   "sym": "SCUSDT",
+   "t0": 1780995680000,
+   "den": 20613,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -329.3,
+   "stop": false,
+   "ctrl": 506.0
+  },
+  {
+   "sym": "ORBSUSDT",
+   "t0": 1780995630000,
+   "den": 20613,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -541.8,
+   "stop": false,
+   "ctrl": 627.3
+  },
+  {
+   "sym": "GODSUSDT",
+   "t0": 1780995580000,
+   "den": 20613,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 151.6,
+   "stop": false,
+   "ctrl": 452.3
+  },
+  {
+   "sym": "PYRUSDT",
+   "t0": 1780995540000,
+   "den": 20613,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -53.0,
+   "stop": false,
+   "ctrl": 570.4
+  },
+  {
+   "sym": "OLUSDT",
+   "t0": 1780304390000,
+   "den": 20605,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -36.4,
+   "stop": false,
+   "ctrl": -57.1
+  },
+  {
+   "sym": "GNOUSDT",
+   "t0": 1780304360000,
+   "den": 20605,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 101.6,
+   "stop": false,
+   "ctrl": 95.5
+  },
+  {
+   "sym": "REQUSDT",
+   "t0": 1780304320000,
+   "den": 20605,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": 473.7,
+   "stop": false,
+   "ctrl": -612.3
+  },
+  {
+   "sym": "DOGUSDT",
+   "t0": 1779786160000,
+   "den": 20599,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 620.2,
+   "stop": false,
+   "ctrl": -22.8
+  },
+  {
+   "sym": "HPOS10IUSDT",
+   "t0": 1779786120000,
+   "den": 20599,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 701.6,
+   "stop": false,
+   "ctrl": 296.5
+  },
+  {
+   "sym": "1000000CHEEMSUSDT",
+   "t0": 1779786081000,
+   "den": 20599,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 1111.2,
+   "stop": false,
+   "ctrl": -794.3
+  },
+  {
+   "sym": "OXTUSDT",
+   "t0": 1778580240000,
+   "den": 20585,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -391.5,
+   "stop": false,
+   "ctrl": -199.4
+  },
+  {
+   "sym": "DEGENUSDT",
+   "t0": 1778580210000,
+   "den": 20585,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 440.7,
+   "stop": false,
+   "ctrl": -335.3
+  },
+  {
+   "sym": "10000QUBICUSDT",
+   "t0": 1778580170000,
+   "den": 20585,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 489.9,
+   "stop": false,
+   "ctrl": 60.1
+  },
+  {
+   "sym": "SYNUSDT",
+   "t0": 1778058110000,
+   "den": 20579,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -348.2,
+   "stop": false,
+   "ctrl": -165.1
+  },
+  {
+   "sym": "CLOUDUSDT",
+   "t0": 1778058070000,
+   "den": 20579,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 545.4,
+   "stop": false,
+   "ctrl": -195.0
+  },
+  {
+   "sym": "TRUUSDT",
+   "t0": 1777367110000,
+   "den": 20571,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 3283.6,
+   "stop": false,
+   "ctrl": 1337.1
+  },
+  {
+   "sym": "RDNTUSDT",
+   "t0": 1777366990000,
+   "den": 20571,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -303.4,
+   "stop": false,
+   "ctrl": 285.1
+  },
+  {
+   "sym": "FIOUSDT",
+   "t0": 1777366950000,
+   "den": 20571,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 1960.2,
+   "stop": false,
+   "ctrl": 696.7
+  },
+  {
+   "sym": "YZYUSDT",
+   "t0": 1777366910000,
+   "den": 20571,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 183.5,
+   "stop": false,
+   "ctrl": -88.2
+  },
+  {
+   "sym": "CTKUSDT",
+   "t0": 1776679110000,
+   "den": 20563,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -436.4,
+   "stop": false,
+   "ctrl": -322.5
+  },
+  {
+   "sym": "PROMUSDT",
+   "t0": 1776679070000,
+   "den": 20563,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -316.5,
+   "stop": false,
+   "ctrl": -1671.4
+  },
+  {
+   "sym": "LISTAUSDT",
+   "t0": 1776157040000,
+   "den": 20557,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -473.2,
+   "stop": false,
+   "ctrl": 387.4
+  },
+  {
+   "sym": "HIPPOUSDT",
+   "t0": 1776157000000,
+   "den": 20557,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -87.0,
+   "stop": false,
+   "ctrl": 821.2
+  },
+  {
+   "sym": "CAMPUSDT",
+   "t0": 1776156970000,
+   "den": 20557,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": 210.6,
+   "stop": false,
+   "ctrl": 368.6
+  },
+  {
+   "sym": "RLSUSDT",
+   "t0": 1776156940000,
+   "den": 20557,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 256.4,
+   "stop": false,
+   "ctrl": -131.1
+  },
+  {
+   "sym": "ONEUSDT",
+   "t0": 1775541830000,
+   "den": 20550,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -74.6,
+   "stop": false,
+   "ctrl": 36.0
+  },
+  {
+   "sym": "SFPUSDT",
+   "t0": 1775541790000,
+   "den": 20550,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 91.9,
+   "stop": false,
+   "ctrl": -207.8
+  },
+  {
+   "sym": "SPELLUSDT",
+   "t0": 1775541760000,
+   "den": 20550,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -162.6,
+   "stop": false,
+   "ctrl": 79.1
+  },
+  {
+   "sym": "NFPUSDT",
+   "t0": 1775541720000,
+   "den": 20550,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -466.5,
+   "stop": false,
+   "ctrl": -122.2
+  },
+  {
+   "sym": "PONKEUSDT",
+   "t0": 1775541680000,
+   "den": 20550,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -198.2,
+   "stop": false,
+   "ctrl": -7.5
+  },
+  {
+   "sym": "SXPUSDT",
+   "t0": 1775024060000,
+   "den": 20544,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 2168.9,
+   "stop": false,
+   "ctrl": 1889.0
+  },
+  {
+   "sym": "HOOKUSDT",
+   "t0": 1775024030000,
+   "den": 20544,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -227.9,
+   "stop": false,
+   "ctrl": 512.0
+  },
+  {
+   "sym": "NTRNUSDT",
+   "t0": 1775023990000,
+   "den": 20544,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1015.8
+  },
+  {
+   "sym": "L3USDT",
+   "t0": 1775023940000,
+   "den": 20544,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 138.5,
+   "stop": false,
+   "ctrl": 516.4
+  },
+  {
+   "sym": "SYSUSDT",
+   "t0": 1775023900000,
+   "den": 20544,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -626.7,
+   "stop": false,
+   "ctrl": 383.1
+  },
+  {
+   "sym": "COOKUSDT",
+   "t0": 1774431980000,
+   "den": 20537,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -23.4,
+   "stop": false,
+   "ctrl": -49.5
+  },
+  {
+   "sym": "AVLUSDT",
+   "t0": 1774431950000,
+   "den": 20537,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -79.4,
+   "stop": false,
+   "ctrl": 114.1
+  },
+  {
+   "sym": "VFYUSDT",
+   "t0": 1774431920000,
+   "den": 20537,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 838.5,
+   "stop": false,
+   "ctrl": 385.6
+  },
+  {
+   "sym": "CTSIUSDT",
+   "t0": 1773739810000,
+   "den": 20529,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 299.7,
+   "stop": false,
+   "ctrl": -129.3
+  },
+  {
+   "sym": "XCHUSDT",
+   "t0": 1773739770000,
+   "den": 20529,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 534.5,
+   "stop": false,
+   "ctrl": -525.8
+  },
+  {
+   "sym": "TAIUSDT",
+   "t0": 1773739720000,
+   "den": 20529,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 808.2,
+   "stop": false,
+   "ctrl": -349.9
+  },
+  {
+   "sym": "DODOUSDT",
+   "t0": 1772614850000,
+   "den": 20516,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 587.1,
+   "stop": false,
+   "ctrl": 39.0
+  },
+  {
+   "sym": "SDUSDT",
+   "t0": 1772614810000,
+   "den": 20516,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -788.5,
+   "stop": false,
+   "ctrl": 284.6
+  },
+  {
+   "sym": "ALUUSDT",
+   "t0": 1772614770000,
+   "den": 20516,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 917.2,
+   "stop": false,
+   "ctrl": -172.1
+  },
+  {
+   "sym": "SKYAIUSDT",
+   "t0": 1772614690000,
+   "den": 20516,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": 1481.4,
+   "stop": false,
+   "ctrl": -1792.2
+  },
+  {
+   "sym": "AINUSDT",
+   "t0": 1772614570000,
+   "den": 20516,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -327.5,
+   "stop": false,
+   "ctrl": 573.2
+  },
+  {
+   "sym": "DGBUSDT",
+   "t0": 1772017150000,
+   "den": 20509,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -374.4,
+   "stop": false,
+   "ctrl": -42.8
+  },
+  {
+   "sym": "IDEXUSDT",
+   "t0": 1772017120000,
+   "den": 20509,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 223.2
+  },
+  {
+   "sym": "NSUSDT",
+   "t0": 1772017090000,
+   "den": 20509,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -660.5,
+   "stop": false,
+   "ctrl": -249.3
+  },
+  {
+   "sym": "OBTUSDT",
+   "t0": 1772017060000,
+   "den": 20509,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -815.4,
+   "stop": false,
+   "ctrl": 222.7
+  },
+  {
+   "sym": "A2ZUSDT",
+   "t0": 1772017030000,
+   "den": 20509,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": 435.4,
+   "stop": false,
+   "ctrl": 167.8
+  },
+  {
+   "sym": "OMUSDT",
+   "t0": 1770973510000,
+   "den": 20497,
+   "god": 2026,
+   "hold_ch": 72,
+   "net": -538.3,
+   "stop": false,
+   "ctrl": 10.3
+  },
+  {
+   "sym": "1000XUSDT",
+   "t0": 1770627220000,
+   "den": 20493,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": -211.4,
+   "stop": false,
+   "ctrl": 179.3
+  },
+  {
+   "sym": "SAROSUSDT",
+   "t0": 1770627190000,
+   "den": 20493,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -56.2,
+   "stop": false,
+   "ctrl": 712.6
+  },
+  {
+   "sym": "CUDISUSDT",
+   "t0": 1770627160000,
+   "den": 20493,
+   "god": 2026,
+   "hold_ch": 45,
+   "net": 61.2,
+   "stop": false,
+   "ctrl": 959.1
+  },
+  {
+   "sym": "YALAUSDT",
+   "t0": 1770284800000,
+   "den": 20489,
+   "god": 2026,
+   "hold_ch": 43,
+   "net": 718.4,
+   "stop": false,
+   "ctrl": 1495.1
+  },
+  {
+   "sym": "DENTUSDT",
+   "t0": 1770194460000,
+   "den": 20488,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 1351.8,
+   "stop": false,
+   "ctrl": 406.1
+  },
+  {
+   "sym": "ZEUSUSDT",
+   "t0": 1770194420000,
+   "den": 20488,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 727.4
+  },
+  {
+   "sym": "10000ELONUSDT",
+   "t0": 1770194390000,
+   "den": 20488,
+   "god": 2026,
+   "hold_ch": 44,
+   "net": 1878.8,
+   "stop": false,
+   "ctrl": 376.8
+  },
+  {
+   "sym": "COMMONUSDT",
+   "t0": 1769842730000,
+   "den": 20484,
+   "god": 2026,
+   "hold_ch": 46,
+   "net": 3862.3,
+   "stop": false,
+   "ctrl": 2263.2
+  },
+  {
+   "sym": "EPTUSDT",
+   "t0": 1769600370000,
+   "den": 20481,
+   "god": 2026,
+   "hold_ch": 41,
+   "net": 2306.1,
+   "stop": false,
+   "ctrl": -68.6
+  },
+  {
+   "sym": "NKNUSDT",
+   "t0": 1769425430000,
+   "den": 20479,
+   "god": 2026,
+   "hold_ch": 65,
+   "net": 551.1,
+   "stop": false,
+   "ctrl": 358.5
+  },
+  {
+   "sym": "PHBUSDT",
+   "t0": 1769425390000,
+   "den": 20479,
+   "god": 2026,
+   "hold_ch": 65,
+   "net": 373.1,
+   "stop": false,
+   "ctrl": 256.0
+  },
+  {
+   "sym": "VICUSDT",
+   "t0": 1769425360000,
+   "den": 20479,
+   "god": 2026,
+   "hold_ch": 66,
+   "net": 1032.5,
+   "stop": false,
+   "ctrl": 254.1
+  },
+  {
+   "sym": "XNOUSDT",
+   "t0": 1768991740000,
+   "den": 20474,
+   "god": 2026,
+   "hold_ch": 66,
+   "net": 63.1,
+   "stop": false,
+   "ctrl": 110.9
+  },
+  {
+   "sym": "ALEOUSDT",
+   "t0": 1768991620000,
+   "den": 20474,
+   "god": 2026,
+   "hold_ch": 67,
+   "net": 863.6,
+   "stop": false,
+   "ctrl": 91.6
+  },
+  {
+   "sym": "FWOGUSDT",
+   "t0": 1768991510000,
+   "den": 20474,
+   "god": 2026,
+   "hold_ch": 67,
+   "net": -261.8,
+   "stop": false,
+   "ctrl": 1463.6
+  },
+  {
+   "sym": "DAMUSDT",
+   "t0": 1767776460000,
+   "den": 20460,
+   "god": 2026,
+   "hold_ch": 68,
+   "net": 651.2,
+   "stop": false,
+   "ctrl": -812.7
+  },
+  {
+   "sym": "FXSUSDT",
+   "t0": 1766999110000,
+   "den": 20451,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 7.0,
+   "stop": false,
+   "ctrl": -138.8
+  },
+  {
+   "sym": "PRCLUSDT",
+   "t0": 1766567170000,
+   "den": 20446,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 133.5
+  },
+  {
+   "sym": "ZENTUSDT",
+   "t0": 1766567060000,
+   "den": 20446,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -166.6
+  },
+  {
+   "sym": "AIAUSDT",
+   "t0": 1765466550000,
+   "den": 20433,
+   "god": 2025,
+   "hold_ch": 37,
+   "net": 1073.3,
+   "stop": false,
+   "ctrl": 747.2
+  },
+  {
+   "sym": "OBOLUSDT",
+   "t0": 1765357320000,
+   "den": 20432,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 492.4
+  },
+  {
+   "sym": "PIGGYUSDT",
+   "t0": 1764942360000,
+   "den": 20427,
+   "god": 2025,
+   "hold_ch": 40,
+   "net": 4986.9,
+   "stop": false,
+   "ctrl": 993.7
+  },
+  {
+   "sym": "ELXUSDT",
+   "t0": 1764666170000,
+   "den": 20424,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -1012.9,
+   "stop": false,
+   "ctrl": 3876.9
+  },
+  {
+   "sym": "RIFUSDT",
+   "t0": 1764320780000,
+   "den": 20420,
+   "god": 2025,
+   "hold_ch": 68,
+   "net": 823.4,
+   "stop": false,
+   "ctrl": -287.8
+  },
+  {
+   "sym": "MYROUSDT",
+   "t0": 1764320670000,
+   "den": 20420,
+   "god": 2025,
+   "hold_ch": 68,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -605.7
+  },
+  {
+   "sym": "QUICKUSDT",
+   "t0": 1764320540000,
+   "den": 20420,
+   "god": 2025,
+   "hold_ch": 68,
+   "net": 1021.3,
+   "stop": false,
+   "ctrl": 438.3
+  },
+  {
+   "sym": "MILKUSDT",
+   "t0": 1764320410000,
+   "den": 20420,
+   "god": 2025,
+   "hold_ch": 67,
+   "net": 1546.2,
+   "stop": false,
+   "ctrl": -360.0
+  },
+  {
+   "sym": "JOEUSDT",
+   "t0": 1762942150000,
+   "den": 20404,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": 1224.0,
+   "stop": false,
+   "ctrl": -689.7
+  },
+  {
+   "sym": "FORTHUSDT",
+   "t0": 1762942040000,
+   "den": 20404,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 722.3,
+   "stop": false,
+   "ctrl": -289.9
+  },
+  {
+   "sym": "AUDIOUSDT",
+   "t0": 1762941900000,
+   "den": 20404,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 881.6,
+   "stop": false,
+   "ctrl": -319.9
+  },
+  {
+   "sym": "AIUSDT",
+   "t0": 1762941750000,
+   "den": 20404,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": 1036.7,
+   "stop": false,
+   "ctrl": -239.5
+  },
+  {
+   "sym": "AI16ZUSDT",
+   "t0": 1762246810000,
+   "den": 20396,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 104.7,
+   "stop": false,
+   "ctrl": -383.0
+  },
+  {
+   "sym": "FLMUSDT",
+   "t0": 1761815790000,
+   "den": 20391,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -824.0
+  },
+  {
+   "sym": "VOXELUSDT",
+   "t0": 1761642590000,
+   "den": 20389,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": 85.3,
+   "stop": false,
+   "ctrl": -224.5
+  },
+  {
+   "sym": "CHESSUSDT",
+   "t0": 1761642460000,
+   "den": 20389,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 665.5,
+   "stop": false,
+   "ctrl": -237.7
+  },
+  {
+   "sym": "HIFIUSDT",
+   "t0": 1761642300000,
+   "den": 20389,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": -1056.1,
+   "stop": false,
+   "ctrl": -21.8
+  },
+  {
+   "sym": "BADGERUSDT",
+   "t0": 1761209970000,
+   "den": 20384,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 441.6,
+   "stop": false,
+   "ctrl": -20.7
+  },
+  {
+   "sym": "KDAUSDT",
+   "t0": 1761139590000,
+   "den": 20383,
+   "god": 2025,
+   "hold_ch": 45,
+   "net": 1882.7,
+   "stop": false,
+   "ctrl": 808.9
+  },
+  {
+   "sym": "DOGSUSDT",
+   "t0": 1761037210000,
+   "den": 20382,
+   "god": 2025,
+   "hold_ch": 68,
+   "net": 1388.6,
+   "stop": false,
+   "ctrl": 204.4
+  },
+  {
+   "sym": "SERAPHUSDT",
+   "t0": 1760606130000,
+   "den": 20377,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 1750.4,
+   "stop": false,
+   "ctrl": 187.6
+  },
+  {
+   "sym": "MVLUSDT",
+   "t0": 1760605980000,
+   "den": 20377,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 541.4,
+   "stop": false,
+   "ctrl": 325.8
+  },
+  {
+   "sym": "CPOOLUSDT",
+   "t0": 1760605870000,
+   "den": 20377,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 1019.1,
+   "stop": false,
+   "ctrl": 628.6
+  },
+  {
+   "sym": "MASAUSDT",
+   "t0": 1760605700000,
+   "den": 20377,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 3794.5,
+   "stop": false,
+   "ctrl": -135.5
+  },
+  {
+   "sym": "SENDUSDT",
+   "t0": 1760605560000,
+   "den": 20377,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 1294.9,
+   "stop": false,
+   "ctrl": 367.5
+  },
+  {
+   "sym": "RFCUSDT",
+   "t0": 1760605380000,
+   "den": 20377,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": 4035.4,
+   "stop": false,
+   "ctrl": -765.4
+  },
+  {
+   "sym": "XTERUSDT",
+   "t0": 1760605210000,
+   "den": 20377,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 1028.3,
+   "stop": false,
+   "ctrl": 756.2
+  },
+  {
+   "sym": "RHEAUSDT",
+   "t0": 1760533960000,
+   "den": 20376,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 408.6,
+   "stop": false,
+   "ctrl": 439.3
+  },
+  {
+   "sym": "SOLOUSDT",
+   "t0": 1760533820000,
+   "den": 20376,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -124.3,
+   "stop": false,
+   "ctrl": -86.4
+  },
+  {
+   "sym": "10000WENUSDT",
+   "t0": 1760533670000,
+   "den": 20376,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 1025.4,
+   "stop": false,
+   "ctrl": 697.1
+  },
+  {
+   "sym": "VRUSDT",
+   "t0": 1760533540000,
+   "den": 20376,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -54.6,
+   "stop": false,
+   "ctrl": 524.7
+  },
+  {
+   "sym": "1000000PEIPEIUSDT",
+   "t0": 1760533390000,
+   "den": 20376,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 774.6,
+   "stop": false,
+   "ctrl": 565.9
+  },
+  {
+   "sym": "ALPHAUSDT",
+   "t0": 1760346810000,
+   "den": 20374,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 186.6,
+   "stop": false,
+   "ctrl": 904.1
+  },
+  {
+   "sym": "HOTUSDT",
+   "t0": 1760346610000,
+   "den": 20374,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -12.4,
+   "stop": false,
+   "ctrl": 1401.3
+  },
+  {
+   "sym": "DUCKUSDT",
+   "t0": 1760259610000,
+   "den": 20373,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1152.4
+  },
+  {
+   "sym": "REXUSDT",
+   "t0": 1760173220000,
+   "den": 20372,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 2340.3
+  },
+  {
+   "sym": "VTHOUSDT",
+   "t0": 1759914020000,
+   "den": 20369,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 254.2,
+   "stop": false,
+   "ctrl": 48.2
+  },
+  {
+   "sym": "BAKEUSDT",
+   "t0": 1759481970000,
+   "den": 20364,
+   "god": 2025,
+   "hold_ch": 70,
+   "net": 1488.8,
+   "stop": false,
+   "ctrl": -156.0
+  },
+  {
+   "sym": "QIUSDT",
+   "t0": 1759310900000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -265.3,
+   "stop": false,
+   "ctrl": 455.7
+  },
+  {
+   "sym": "XEMUSDT",
+   "t0": 1759310770000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 340.5,
+   "stop": false,
+   "ctrl": 100.7
+  },
+  {
+   "sym": "10000COQUSDT",
+   "t0": 1759310620000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -514.0,
+   "stop": false,
+   "ctrl": 15.2
+  },
+  {
+   "sym": "PRIMEUSDT",
+   "t0": 1759310480000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 800.1,
+   "stop": false,
+   "ctrl": 33.0
+  },
+  {
+   "sym": "10000LADYSUSDT",
+   "t0": 1759310340000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 342.0,
+   "stop": false,
+   "ctrl": -441.5
+  },
+  {
+   "sym": "MYRIAUSDT",
+   "t0": 1759310200000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 859.5,
+   "stop": false,
+   "ctrl": 1.7
+  },
+  {
+   "sym": "ATAUSDT",
+   "t0": 1759310060000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -469.2,
+   "stop": false,
+   "ctrl": 136.6
+  },
+  {
+   "sym": "SPECUSDT",
+   "t0": 1759309860000,
+   "den": 20362,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -408.4,
+   "stop": false,
+   "ctrl": 150.1
+  },
+  {
+   "sym": "SLERFUSDT",
+   "t0": 1759222810000,
+   "den": 20361,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -934.4,
+   "stop": false,
+   "ctrl": 279.4
+  },
+  {
+   "sym": "BSWUSDT",
+   "t0": 1759136410000,
+   "den": 20360,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 2595.4,
+   "stop": false,
+   "ctrl": -455.4
+  },
+  {
+   "sym": "UXLINKUSDT",
+   "t0": 1758705050000,
+   "den": 20355,
+   "god": 2025,
+   "hold_ch": 43,
+   "net": 1057.9,
+   "stop": false,
+   "ctrl": 3112.7
+  },
+  {
+   "sym": "OMNIUSDT",
+   "t0": 1758531580000,
+   "den": 20353,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 162.9,
+   "stop": false,
+   "ctrl": -566.8
+  },
+  {
+   "sym": "SLFUSDT",
+   "t0": 1758099550000,
+   "den": 20348,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 19.6,
+   "stop": false,
+   "ctrl": -268.9
+  },
+  {
+   "sym": "NEIROETHUSDT",
+   "t0": 1756983640000,
+   "den": 20335,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1519.4
+  },
+  {
+   "sym": "10000WHYUSDT",
+   "t0": 1756458390000,
+   "den": 20329,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -117.4,
+   "stop": false,
+   "ctrl": 5.2
+  },
+  {
+   "sym": "FBUSDT",
+   "t0": 1756458210000,
+   "den": 20329,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -276.2,
+   "stop": false,
+   "ctrl": -893.8
+  },
+  {
+   "sym": "MBLUSDT",
+   "t0": 1756458020000,
+   "den": 20329,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -23.6,
+   "stop": false,
+   "ctrl": 189.9
+  },
+  {
+   "sym": "MKRUSDT",
+   "t0": 1754989230000,
+   "den": 20312,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 581.6,
+   "stop": false,
+   "ctrl": -606.1
+  },
+  {
+   "sym": "KOMAUSDT",
+   "t0": 1753780590000,
+   "den": 20298,
+   "god": 2025,
+   "hold_ch": 67,
+   "net": -335.2,
+   "stop": false,
+   "ctrl": -248.6
+  },
+  {
+   "sym": "MOBILEUSDT",
+   "t0": 1753779590000,
+   "den": 20298,
+   "god": 2025,
+   "hold_ch": 69,
+   "net": 1213.2,
+   "stop": false,
+   "ctrl": -80.7
+  },
+  {
+   "sym": "1000APUUSDT",
+   "t0": 1751965370000,
+   "den": 20277,
+   "god": 2025,
+   "hold_ch": 67,
+   "net": -1987.4,
+   "stop": false,
+   "ctrl": 286.4
+  },
+  {
+   "sym": "XRDUSDT",
+   "t0": 1751965210000,
+   "den": 20277,
+   "god": 2025,
+   "hold_ch": 68,
+   "net": -931.2,
+   "stop": false,
+   "ctrl": 116.3
+  },
+  {
+   "sym": "PRAIUSDT",
+   "t0": 1751454470000,
+   "den": 20271,
+   "god": 2025,
+   "hold_ch": 66,
+   "net": 2731.2,
+   "stop": false,
+   "ctrl": 43.6
+  },
+  {
+   "sym": "NCUSDT",
+   "t0": 1751454220000,
+   "den": 20271,
+   "god": 2025,
+   "hold_ch": 65,
+   "net": 152.7,
+   "stop": false,
+   "ctrl": -1970.6
+  },
+  {
+   "sym": "1000CATSUSDT",
+   "t0": 1751454000000,
+   "den": 20271,
+   "god": 2025,
+   "hold_ch": 66,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -107.7
+  },
+  {
+   "sym": "MDTUSDT",
+   "t0": 1751361450000,
+   "den": 20270,
+   "god": 2025,
+   "hold_ch": 67,
+   "net": -494.4,
+   "stop": false,
+   "ctrl": -109.2
+  },
+  {
+   "sym": "LEVERUSDT",
+   "t0": 1751187340000,
+   "den": 20268,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 738.0
+  },
+  {
+   "sym": "DARKUSDT",
+   "t0": 1751015430000,
+   "den": 20266,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 1902.4,
+   "stop": false,
+   "ctrl": 222.8
+  },
+  {
+   "sym": "MICHIUSDT",
+   "t0": 1750669880000,
+   "den": 20262,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -591.0,
+   "stop": false,
+   "ctrl": 944.8
+  },
+  {
+   "sym": "FTNUSDT",
+   "t0": 1750409670000,
+   "den": 20259,
+   "god": 2025,
+   "hold_ch": 68,
+   "net": -181.5,
+   "stop": false,
+   "ctrl": 12.4
+  },
+  {
+   "sym": "ZKJUSDT",
+   "t0": 1750061760000,
+   "den": 20255,
+   "god": 2025,
+   "hold_ch": 51,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1647.0
+  },
+  {
+   "sym": "1000MUMUUSDT",
+   "t0": 1749459630000,
+   "den": 20248,
+   "god": 2025,
+   "hold_ch": 67,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 952.5
+  },
+  {
+   "sym": "GOMININGUSDT",
+   "t0": 1748941850000,
+   "den": 20242,
+   "god": 2025,
+   "hold_ch": 67,
+   "net": 203.1,
+   "stop": false,
+   "ctrl": -137.7
+  },
+  {
+   "sym": "OMGUSDT",
+   "t0": 1748600770000,
+   "den": 20238,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 62.1
+  },
+  {
+   "sym": "FOXYUSDT",
+   "t0": 1747731320000,
+   "den": 20228,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": -2113.6,
+   "stop": false,
+   "ctrl": 458.3
+  },
+  {
+   "sym": "STPTUSDT",
+   "t0": 1747292160000,
+   "den": 20223,
+   "god": 2025,
+   "hold_ch": 44,
+   "net": 177.3,
+   "stop": false,
+   "ctrl": 28.8
+  },
+  {
+   "sym": "MEMEFIUSDT",
+   "t0": 1746808180000,
+   "den": 20217,
+   "god": 2025,
+   "hold_ch": 60,
+   "net": 678.4,
+   "stop": false,
+   "ctrl": -1842.0
+  },
+  {
+   "sym": "VRAUSDT",
+   "t0": 1746808070000,
+   "den": 20217,
+   "god": 2025,
+   "hold_ch": 60,
+   "net": 1521.5,
+   "stop": false,
+   "ctrl": -3618.9
+  },
+  {
+   "sym": "MANEKIUSDT",
+   "t0": 1745571410000,
+   "den": 20203,
+   "god": 2025,
+   "hold_ch": 62,
+   "net": 1175.7,
+   "stop": false,
+   "ctrl": -1202.3
+  },
+  {
+   "sym": "10000000AIDOGEUSDT",
+   "t0": 1745571250000,
+   "den": 20203,
+   "god": 2025,
+   "hold_ch": 62,
+   "net": -1246.6,
+   "stop": false,
+   "ctrl": -780.0
+  },
+  {
+   "sym": "LUCEUSDT",
+   "t0": 1745571090000,
+   "den": 20203,
+   "god": 2025,
+   "hold_ch": 62,
+   "net": 1200.6,
+   "stop": false,
+   "ctrl": -2083.6
+  },
+  {
+   "sym": "MAXUSDT",
+   "t0": 1745484860000,
+   "den": 20202,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 385.8,
+   "stop": false,
+   "ctrl": -537.6
+  },
+  {
+   "sym": "ALPACAUSDT",
+   "t0": 1745484660000,
+   "den": 20202,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -2297.7
+  },
+  {
+   "sym": "BUZZUSDT",
+   "t0": 1744884010000,
+   "den": 20195,
+   "god": 2025,
+   "hold_ch": 37,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -1451.0
+  },
+  {
+   "sym": "VIDTUSDT",
+   "t0": 1744530970000,
+   "den": 20191,
+   "god": 2025,
+   "hold_ch": 63,
+   "net": 7118.6,
+   "stop": false,
+   "ctrl": -1767.5
+  },
+  {
+   "sym": "PROSUSDT",
+   "t0": 1744530840000,
+   "den": 20191,
+   "god": 2025,
+   "hold_ch": 63,
+   "net": 784.8,
+   "stop": false,
+   "ctrl": 4222.3
+  },
+  {
+   "sym": "JAILSTOOLUSDT",
+   "t0": 1744362050000,
+   "den": 20189,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 120.7,
+   "stop": false,
+   "ctrl": -1087.7
+  },
+  {
+   "sym": "TROYUSDT",
+   "t0": 1744189250000,
+   "den": 20187,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1848.7
+  },
+  {
+   "sym": "NULSUSDT",
+   "t0": 1744189130000,
+   "den": 20187,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 3742.7,
+   "stop": false,
+   "ctrl": 1863.1
+  },
+  {
+   "sym": "BLUEUSDT",
+   "t0": 1743576610000,
+   "den": 20180,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -1128.9,
+   "stop": false,
+   "ctrl": 1127.0
+  },
+  {
+   "sym": "RIFSOLUSDT",
+   "t0": 1743498040000,
+   "den": 20179,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 2995.3,
+   "stop": false,
+   "ctrl": -2348.2
+  },
+  {
+   "sym": "COMBOUSDT",
+   "t0": 1742550800000,
+   "den": 20168,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 1481.6,
+   "stop": false,
+   "ctrl": 214.4
+  },
+  {
+   "sym": "LINAUSDT",
+   "t0": 1742550670000,
+   "den": 20168,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 4215.5,
+   "stop": false,
+   "ctrl": -408.1
+  },
+  {
+   "sym": "GMEUSDT",
+   "t0": 1742369780000,
+   "den": 20166,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -1046.1,
+   "stop": false,
+   "ctrl": -355.8
+  },
+  {
+   "sym": "GEMSUSDT",
+   "t0": 1742369670000,
+   "den": 20166,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 288.3
+  },
+  {
+   "sym": "PIRATEUSDT",
+   "t0": 1742369480000,
+   "den": 20166,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -904.1
+  },
+  {
+   "sym": "LAIUSDT",
+   "t0": 1742054330000,
+   "den": 20162,
+   "god": 2025,
+   "hold_ch": 37,
+   "net": 790.7,
+   "stop": false,
+   "ctrl": -2859.5
+  },
+  {
+   "sym": "FIREUSDT",
+   "t0": 1741770280000,
+   "den": 20159,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -568.3,
+   "stop": false,
+   "ctrl": 1506.4
+  },
+  {
+   "sym": "MOTHERUSDT",
+   "t0": 1741769150000,
+   "den": 20159,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -777.9,
+   "stop": false,
+   "ctrl": 2002.0
+  },
+  {
+   "sym": "BNXUSDT",
+   "t0": 1740653220000,
+   "den": 20146,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 1300.2,
+   "stop": false,
+   "ctrl": -597.6
+  },
+  {
+   "sym": "RENUSDT",
+   "t0": 1740652090000,
+   "den": 20146,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 132.2,
+   "stop": false,
+   "ctrl": 258.1
+  },
+  {
+   "sym": "UROUSDT",
+   "t0": 1740649830000,
+   "den": 20146,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -535.9,
+   "stop": false,
+   "ctrl": 2460.2
+  },
+  {
+   "sym": "STMXUSDT",
+   "t0": 1739937690000,
+   "den": 20138,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1005.4
+  },
+  {
+   "sym": "AMBUSDT",
+   "t0": 1739934950000,
+   "den": 20138,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 3132.2
+  },
+  {
+   "sym": "FDUSDUSDT",
+   "t0": 1739356910000,
+   "den": 20131,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -52.0,
+   "stop": false,
+   "ctrl": -40.4
+  },
+  {
+   "sym": "BILLYUSDT",
+   "t0": 1739355560000,
+   "den": 20131,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 35.9,
+   "stop": false,
+   "ctrl": 152.7
+  },
+  {
+   "sym": "NYANUSDT",
+   "t0": 1739353960000,
+   "den": 20131,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -1245.8
+  },
+  {
+   "sym": "BENDOGUSDT",
+   "t0": 1737714460000,
+   "den": 20112,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 2313.9,
+   "stop": false,
+   "ctrl": -2839.8
+  },
+  {
+   "sym": "DOP1USDT",
+   "t0": 1737713680000,
+   "den": 20112,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 795.3
+  },
+  {
+   "sym": "SILLYUSDT",
+   "t0": 1737712880000,
+   "den": 20112,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 3064.3,
+   "stop": false,
+   "ctrl": 1111.6
+  },
+  {
+   "sym": "LTOUSDT",
+   "t0": 1737711980000,
+   "den": 20112,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 1307.6,
+   "stop": false,
+   "ctrl": 1359.0
+  },
+  {
+   "sym": "PENGUSDT",
+   "t0": 1737711290000,
+   "den": 20112,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 2336.7,
+   "stop": false,
+   "ctrl": 1700.2
+  },
+  {
+   "sym": "RONUSDT",
+   "t0": 1737538290000,
+   "den": 20110,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 426.4,
+   "stop": false,
+   "ctrl": 563.3
+  },
+  {
+   "sym": "KEYUSDT",
+   "t0": 1737104270000,
+   "den": 20105,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 2221.8,
+   "stop": false,
+   "ctrl": 300.9
+  },
+  {
+   "sym": "1CATUSDT",
+   "t0": 1737104220000,
+   "den": 20105,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 3695.6,
+   "stop": false,
+   "ctrl": -163.2
+  },
+  {
+   "sym": "REEFUSDT",
+   "t0": 1737104190000,
+   "den": 20105,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": 4813.8,
+   "stop": false,
+   "ctrl": -199.7
+  },
+  {
+   "sym": "DARUSDT",
+   "t0": 1735801210000,
+   "den": 20090,
+   "god": 2025,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -1913.3
+  },
+  {
+   "sym": "FTMUSDT",
+   "t0": 1735207440000,
+   "den": 20083,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 1208.0,
+   "stop": false,
+   "ctrl": 23.5
+  },
+  {
+   "sym": "BONDUSDT",
+   "t0": 1734604200000,
+   "den": 20076,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 2419.9,
+   "stop": false,
+   "ctrl": 2667.5
+  },
+  {
+   "sym": "BLZUSDT",
+   "t0": 1734603160000,
+   "den": 20076,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 596.6,
+   "stop": false,
+   "ctrl": 2666.9
+  },
+  {
+   "sym": "AKROUSDT",
+   "t0": 1734602440000,
+   "den": 20076,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 2815.7,
+   "stop": false,
+   "ctrl": 2007.0
+  },
+  {
+   "sym": "GFTUSDT",
+   "t0": 1732783870000,
+   "den": 20055,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 1429.5
+  },
+  {
+   "sym": "FUNUSDT",
+   "t0": 1731319260000,
+   "den": 20038,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 909.7,
+   "stop": false,
+   "ctrl": -818.0
+  },
+  {
+   "sym": "ZKFUSDT",
+   "t0": 1731318610000,
+   "den": 20038,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 2834.0,
+   "stop": false,
+   "ctrl": -1594.8
+  },
+  {
+   "sym": "PIXFIUSDT",
+   "t0": 1730633940000,
+   "den": 20030,
+   "god": 2024,
+   "hold_ch": 42,
+   "net": 1153.2,
+   "stop": false,
+   "ctrl": -83.4
+  },
+  {
+   "sym": "TOMIUSDT",
+   "t0": 1730633250000,
+   "den": 20030,
+   "god": 2024,
+   "hold_ch": 42,
+   "net": 2117.1,
+   "stop": false,
+   "ctrl": 521.5
+  },
+  {
+   "sym": "FITFIUSDT",
+   "t0": 1730195720000,
+   "den": 20025,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 468.5,
+   "stop": false,
+   "ctrl": 891.8
+  },
+  {
+   "sym": "UNFIUSDT",
+   "t0": 1730109310000,
+   "den": 20024,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 1585.5,
+   "stop": false,
+   "ctrl": -2210.6
+  },
+  {
+   "sym": "KLAYUSDT",
+   "t0": 1729677080000,
+   "den": 20019,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 49.7,
+   "stop": false,
+   "ctrl": -35.9
+  },
+  {
+   "sym": "1000BEERUSDT",
+   "t0": 1729245310000,
+   "den": 20014,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -818.1,
+   "stop": false,
+   "ctrl": 741.0
+  },
+  {
+   "sym": "ORNUSDT",
+   "t0": 1728982340000,
+   "den": 20011,
+   "god": 2024,
+   "hold_ch": 44,
+   "net": 1224.9,
+   "stop": false,
+   "ctrl": -484.3
+  },
+  {
+   "sym": "CEEKUSDT",
+   "t0": 1728035110000,
+   "den": 20000,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -1003.4,
+   "stop": false,
+   "ctrl": 1268.6
+  },
+  {
+   "sym": "DAOUSDT",
+   "t0": 1726740000000,
+   "den": 19985,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -918.8,
+   "stop": false,
+   "ctrl": 400.7
+  },
+  {
+   "sym": "LOOMUSDT",
+   "t0": 1726740000000,
+   "den": 19985,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -461.4
+  },
+  {
+   "sym": "MAPOUSDT",
+   "t0": 1726740000000,
+   "den": 19985,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -120.1,
+   "stop": false,
+   "ctrl": 321.9
+  },
+  {
+   "sym": "VGXUSDT",
+   "t0": 1726740000000,
+   "den": 19985,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -658.5
+  },
+  {
+   "sym": "ZCXUSDT",
+   "t0": 1726740000000,
+   "den": 19985,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 239.5,
+   "stop": false,
+   "ctrl": 411.3
+  },
+  {
+   "sym": "10000NFTUSDT",
+   "t0": 1726209930000,
+   "den": 19979,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 677.8,
+   "stop": false,
+   "ctrl": 38.6
+  },
+  {
+   "sym": "FRONTUSDT",
+   "t0": 1724320620000,
+   "den": 19957,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 451.0,
+   "stop": false,
+   "ctrl": -2864.1
+  },
+  {
+   "sym": "CANTOUSDT",
+   "t0": 1723024210000,
+   "den": 19942,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -621.9,
+   "stop": false,
+   "ctrl": 2177.1
+  },
+  {
+   "sym": "10000STARLUSDT",
+   "t0": 1722246740000,
+   "den": 19933,
+   "god": 2024,
+   "hold_ch": 68,
+   "net": 1111.4,
+   "stop": false,
+   "ctrl": 192.7
+  },
+  {
+   "sym": "ANTUSDT",
+   "t0": 1721728420000,
+   "den": 19927,
+   "god": 2024,
+   "hold_ch": 44,
+   "net": 337.2,
+   "stop": false,
+   "ctrl": -169.2
+  },
+  {
+   "sym": "COVALUSDT",
+   "t0": 1721637240000,
+   "den": 19926,
+   "god": 2024,
+   "hold_ch": 45,
+   "net": -1371.6,
+   "stop": false,
+   "ctrl": 761.7
+  },
+  {
+   "sym": "GALUSDT",
+   "t0": 1721124740000,
+   "den": 19920,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": -445.6
+  },
+  {
+   "sym": "RNDRUSDT",
+   "t0": 1721044910000,
+   "den": 19919,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -181.6,
+   "stop": false,
+   "ctrl": 341.1
+  },
+  {
+   "sym": "PUNDUUSDT",
+   "t0": 1719824450000,
+   "den": 19905,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 2045.7,
+   "stop": false,
+   "ctrl": 125.2
+  },
+  {
+   "sym": "1000IQ50USDT",
+   "t0": 1719823640000,
+   "den": 19905,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 3826.6,
+   "stop": false,
+   "ctrl": 407.0
+  },
+  {
+   "sym": "LFTUSDT",
+   "t0": 1719822460000,
+   "den": 19905,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 341.4,
+   "stop": false,
+   "ctrl": 2741.0
+  },
+  {
+   "sym": "AGIXUSDT",
+   "t0": 1717146000000,
+   "den": 19874,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 75.6,
+   "stop": false,
+   "ctrl": 156.4
+  },
+  {
+   "sym": "FETUSDT",
+   "t0": 1717146000000,
+   "den": 19874,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 27.1,
+   "stop": false,
+   "ctrl": 126.8
+  },
+  {
+   "sym": "OCEANUSDT",
+   "t0": 1717146000000,
+   "den": 19874,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 30.3,
+   "stop": false,
+   "ctrl": 179.0
+  },
+  {
+   "sym": "YFIIUSDT",
+   "t0": 1711710867000,
+   "den": 19811,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -92.5,
+   "stop": false,
+   "ctrl": 125.3
+  },
+  {
+   "sym": "STRAXUSDT",
+   "t0": 1710837408000,
+   "den": 19801,
+   "god": 2024,
+   "hold_ch": 18,
+   "net": 195.2,
+   "stop": false,
+   "ctrl": 249.9
+  },
+  {
+   "sym": "MULTIUSDT",
+   "t0": 1708999200000,
+   "den": 19780,
+   "god": 2024,
+   "hold_ch": 37,
+   "net": 5603.0,
+   "stop": false,
+   "ctrl": -60.7
+  },
+  {
+   "sym": "1000000VINUUSDT",
+   "t0": 1706796521000,
+   "den": 19754,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": -184.9,
+   "stop": false,
+   "ctrl": 220.1
+  },
+  {
+   "sym": "WSMUSDT",
+   "t0": 1706796521000,
+   "den": 19754,
+   "god": 2024,
+   "hold_ch": 72,
+   "net": 312.7,
+   "stop": false,
+   "ctrl": 1238.8
+  },
+  {
+   "sym": "BUSDUSDT",
+   "t0": 1701673016000,
+   "den": 19695,
+   "god": 2023,
+   "hold_ch": 72,
+   "net": -42.0,
+   "stop": false,
+   "ctrl": -40.5
+  },
+  {
+   "sym": "TOMOUSDT",
+   "t0": 1699599416000,
+   "den": 19671,
+   "god": 2023,
+   "hold_ch": 72,
+   "net": -271.8,
+   "stop": false,
+   "ctrl": 180.3
+  },
+  {
+   "sym": "MCUSDT",
+   "t0": 1698993575000,
+   "den": 19664,
+   "god": 2023,
+   "hold_ch": 72,
+   "net": -1482.9,
+   "stop": false,
+   "ctrl": 54.0
+  },
+  {
+   "sym": "BITUSDT",
+   "t0": 1687951714000,
+   "den": 19536,
+   "god": 2023,
+   "hold_ch": 42,
+   "net": 239.7,
+   "stop": false,
+   "ctrl": 228.0
+  },
+  {
+   "sym": "CREAMUSDT",
+   "t0": 1687831200000,
+   "den": 19535,
+   "god": 2023,
+   "hold_ch": 72,
+   "net": 2528.3,
+   "stop": false,
+   "ctrl": -3172.4
+  },
+  {
+   "sym": "COCOSUSDT",
+   "t0": 1685006914000,
+   "den": 19502,
+   "god": 2023,
+   "hold_ch": 26,
+   "net": -1067.9,
+   "stop": false,
+   "ctrl": 170.6
+  },
+  {
+   "sym": "RAYUSDT",
+   "t0": 1668417430000,
+   "den": 19310,
+   "god": 2022,
+   "hold_ch": 15,
+   "net": -1546.4,
+   "stop": false,
+   "ctrl": 951.7
+  },
+  {
+   "sym": "SRMUSDT",
+   "t0": 1668417430000,
+   "den": 19310,
+   "god": 2022,
+   "hold_ch": 13,
+   "net": -3692.0,
+   "stop": true,
+   "ctrl": 795.1
+  }
+ ]
+}
