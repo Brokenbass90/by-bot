@@ -1,0 +1,147 @@
+{
+ "kogda": "2026-10-27T15:18:50Z",
+ "sovetov_vsego": 201,
+ "novyh": 201,
+ "sovetov_do_ishoda": 1,
+ "ocenka_vse": {
+  "KITY": {
+   "sovetov": 1,
+   "propuskov": 0,
+   "effekt_brain_summa": 0,
+   "effekt_na_propusk": {
+    "n": 0
+   },
+   "edinica": "bps/нед"
+  },
+  "PUMP4": {
+   "sovetov": 84,
+   "propuskov": 29,
+   "effekt_brain_summa": 0.81,
+   "effekt_na_propusk": {
+    "n": 29,
+    "sred": 0.028,
+    "se": 0.0949
+   },
+   "edinica": "R"
+  },
+  "SHORT_HVOST": {
+   "sovetov": 115,
+   "propuskov": 0,
+   "effekt_brain_summa": 0,
+   "effekt_na_propusk": {
+    "n": 0
+   },
+   "edinica": "bps"
+  }
+ },
+ "ocenka_vpered_tolko_do_ishoda": {
+  "KITY": {
+   "sovetov": 0,
+   "propuskov": 0,
+   "effekt_brain_summa": 0,
+   "effekt_na_propusk": {
+    "n": 0
+   },
+   "edinica": null
+  },
+  "PUMP4": {
+   "sovetov": 0,
+   "propuskov": 0,
+   "effekt_brain_summa": 0,
+   "effekt_na_propusk": {
+    "n": 0
+   },
+   "edinica": null
+  },
+  "SHORT_HVOST": {
+   "sovetov": 0,
+   "propuskov": 0,
+   "effekt_brain_summa": 0,
+   "effekt_na_propusk": {
+    "n": 0
+   },
+   "edinica": null
+  }
+ },
+ "degradaciya": {
+  "KITY": {
+   "n": 1,
+   "status": "MALO_DANNYH"
+  },
+  "PUMP4": {
+   "n": 84,
+   "posl20": 0.3519,
+   "vsya": 0.0607,
+   "se20": 0.1052,
+   "status": "NORMA"
+  },
+  "SHORT_HVOST": {
+   "n": 115,
+   "posl20": 372.035,
+   "vsya": 587.1765,
+   "se20": 279.7802,
+   "status": "NORMA"
+  }
+ },
+ "prichinnyy_test": {
+  "volna3_BULL": {
+   "PUMP4": {
+    "v_uslovii": {
+     "n": 19,
+     "sred": -0.1107,
+     "se": 0.119
+    },
+    "vne": {
+     "n": 65,
+     "sred": 0.1108,
+     "se": 0.0555
+    },
+    "raznica": -0.2215
+   },
+   "SHORT_HVOST": {
+    "v_uslovii": {
+     "n": 7,
+     "sred": 41.9429,
+     "se": 121.5584
+    },
+    "vne": {
+     "n": 108,
+     "sred": 622.5157,
+     "se": 123.2826
+    },
+    "raznica": -580.5729
+   },
+   "vyvod": "OBSHEE_DLYA_SHORTOV (описательно, n малы — только гипотеза для проверки вперёд)"
+  },
+  "BULL": {
+   "PUMP4": {
+    "v_uslovii": {
+     "n": 29,
+     "sred": -0.028,
+     "se": 0.0949
+    },
+    "vne": {
+     "n": 55,
+     "sred": 0.1075,
+     "se": 0.0601
+    },
+    "raznica": -0.1355
+   },
+   "SHORT_HVOST": {
+    "v_uslovii": {
+     "n": 25,
+     "sred": 388.56,
+     "se": 239.1563
+    },
+    "vne": {
+     "n": 90,
+     "sred": 642.3478,
+     "se": 133.5643
+    },
+    "raznica": -253.7878
+   },
+   "vyvod": "OBSHEE_DLYA_SHORTOV (описательно, n малы — только гипотеза для проверки вперёд)"
+  }
+ },
+ "primechanie": "Brain read-only; эффект — что дал бы совет против торговли без Brain. Честная оценка — только советы, записанные до исхода."
+}

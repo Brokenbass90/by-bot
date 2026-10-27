@@ -1,0 +1,31 @@
+{
+ "rynkov": 1190,
+ "plus_1ch": {
+  "n": 103,
+  "sred": -0.0562,
+  "t": -1.82,
+  "proigryshey": 10,
+  "dolya_proigr": 0.0971,
+  "uderzh_med_dney": 0.18,
+  "dohod_v_sutki": -0.3053
+ },
+ "plus_6ch": {
+  "n": 46,
+  "sred": -0.1008,
+  "t": -1.93,
+  "proigryshey": 6,
+  "dolya_proigr": 0.1304,
+  "uderzh_med_dney": 1.2,
+  "dohod_v_sutki": -0.0841
+ },
+ "plus_24ch": {
+  "n": 35,
+  "sred": -0.1112,
+  "t": -1.78,
+  "proigryshey": 5,
+  "dolya_proigr": 0.1429,
+  "uderzh_med_dney": 0.72,
+  "dohod_v_sutki": -0.1545
+ },
+ "vyvod": "FAIL"
+}
