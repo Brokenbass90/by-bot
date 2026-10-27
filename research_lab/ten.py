@@ -240,6 +240,25 @@ def prohod(a, K, zhurnal: Path, sost: dict) -> tuple:
     varianty = {}
     dozrelo = 0
     zhdut_ranshe = {(x["sym"], x["ts"]) for x in sost.get("ozhidaet", [])}
+    # 27.10 (--blok-zhurnal): занятость монеты по журналу этой тени и ждущим решениям — сквозь проходы.
+    # Дефект без флага: блок жил только внутри прохода, а виденные сигналы пропускались, не ставя блок →
+    # у ETS2S 78 % решений наложены на ещё открытую позицию той же монеты (ETS2S_POVTOR_ITOG_2026_10_27.md).
+    zanyato = {}
+    if getattr(a, "blok_zhurnal", False):
+        BESK = 10 ** 15
+        if zhurnal.exists():
+            for _s in zhurnal.open(encoding="utf-8"):
+                try: _z = json.loads(_s)
+                except Exception: continue
+                if "R" in _z and _z.get("barov") is not None:
+                    zanyato.setdefault(_z["sym"], []).append((int(_z["ts"]), int(_z["ts"]) + (int(_z["barov"]) + a.zhdat + 2) * 3600000))
+        for _w in sost.get("ozhidaet", []):
+            zanyato.setdefault(_w["sym"], []).append((int(_w["ts"]), BESK))
+    _okno = (a.hold + a.zhdat + 2) * 3600000
+    def _zanyata(_sym, _t):
+        # занята, если внутри уже принятой позиции ИЛИ если уже есть решение в пределах удержания ПОСЛЕ _t
+        # (сдвиг окна 1000 баров может «найти» сигнал задним числом раньше уже принятого)
+        return any(a0 < _t < b0 or _t < a0 < _t + _okno for a0, b0 in zanyato.get(_sym, ()))
     f = zhurnal.open("a", encoding="utf-8")
     for sym in syms:
         b = svechi(sym)
@@ -282,6 +301,9 @@ def prohod(a, K, zhurnal: Path, sost: dict) -> tuple:
                 if bl is None or not btc_ok[bl]:
                     continue
             bylo_zhdushchim = (sym, int(r_[0])) in zhdut_ranshe
+            if zanyato is not None and not bylo_zhdushchim and _zanyata(sym, int(r_[0])):
+                vidennye.add(klyuch)          # монета занята открытой позицией этой тени — сигнал не решение
+                continue
             if not bylo_zhdushchim:
                 novyh += 1
             vidennye.add(klyuch)
@@ -464,6 +486,9 @@ def prohod(a, K, zhurnal: Path, sost: dict) -> tuple:
                     dozrelo += 1
             if res is not None or not bylo_zhdushchim:
                 f.write(json.dumps(zap, ensure_ascii=False) + "\n")
+                if getattr(a, "blok_zhurnal", False) and not bylo_zhdushchim:
+                    _b = (int(res[1]) + a.zhdat + 2) * 3600000 if res is not None else 10 ** 15
+                    zanyato.setdefault(sym, []).append((int(r_[0]), int(r_[0]) + _b))
     f.close()
     sost["vidennye"] = sorted(vidennye)[-40000:]
     sost["ozhidaet"] = ozhidaet[-20000:]
@@ -562,6 +587,9 @@ def main() -> int:
     ap.add_argument("--storona", choices=["long", "short", "любая"], default="любая",
                     help="ЗАМОРОЖЕННАЯ сторона. ETS2S по предрегистрации "
                          "торгует ТОЛЬКО ШОРТ, и тень обязана делать то же.")
+    ap.add_argument("--blok-zhurnal", dest="blok_zhurnal", action="store_true",
+                    help="27.10: одна позиция на монету СКВОЗЬ проходы — новое решение по монете не принимается, пока "
+                         "предыдущее (из журнала или ждущее) не вышло. Без флага — прежнее поведение (замороженные тени).")
     ap.add_argument("--porog", type=int, default=1300)
     ap.add_argument("--simvolov", type=int, default=0, help="0 = все монеты")
     ap.add_argument("--minut", type=int, default=0)
