@@ -1,0 +1,29 @@
+{
+  "actual_reviewer_effort": "high",
+  "actual_reviewer_model": "gpt-6-astra",
+  "clock_finding": "Local reservation compared to exchange fill timestamps could block custody",
+  "fix": "Persist verified pre-dispatch exchange time in immutable observation; per-CID lower bound linked by reservation observation hash",
+  "focused_fix_tests": 22,
+  "initial_important": 1,
+  "initial_tests": 28,
+  "limitations": [
+    "No actual H1 timeliness proof for new prefix",
+    "No actual account admission or broker write",
+    "10bps reference drift is an OFF proposal requiring new exact owner scope and GO"
+  ],
+  "remaining_critical": 0,
+  "remaining_important": 0,
+  "review_scope": "new explicit entry contract and single locked replay only",
+  "reviewed_source_files": {
+    "research_lab/pump4_account_adapter_v1.py": "0a1969c472a6ae4f3247cc354295a8f0edbee88048fd9aecbd98b2914d44fee5",
+    "research_lab/pump4_account_owner_v1.py": "f324e286dfe1852cda0f0b8e938aa69c92518e51d011488cc89fac3442c14283",
+    "research_lab/pump4_entry_binding_v1.py": "65a228b98b25138303238f22fda2db38124746003afc3cb4b21af02d6fe791a2",
+    "research_lab/pump4_execution_lifecycle_v1.py": "1eed66c19b79f98302cf70febfead2c012681825b4019d0aa1dc8a098f256819",
+    "research_lab/pump4_runtime_sources_v1.py": "1eabce74a27795a32cb9d641ae232843b4c261cc0f6e9245cb34e2bae3657184",
+    "research_lab/pump4_selected_runner_v1.py": "b6f605fba89b40f357a7785a04fdb69dedfff86ff5e77ba5087a59a2179235a2",
+    "research_lab/pump4_supervisor_v1.py": "448757110ffb10dfebdc5cf4960079429d72c97e53eeefad28000d3a53e45584",
+    "tests/test_pump4_entry_binding_v1.py": "f8044467d6d4bf77d84d60047287ef3bee6a836f181f8c82e74e9a6dad9be3ab",
+    "tests/test_pump4_warm_publication_v1.py": "3c9eab91124708d48ab108923672c1a7e603c212ee0137202ca00c1262f66681"
+  },
+  "runtime_metadata_verified": true
+}

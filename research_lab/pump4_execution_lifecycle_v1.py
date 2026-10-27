@@ -15,6 +15,7 @@ from research_lab.att1_lifecycle_journal import LifecycleJournal, SCHEMA
 from research_lab.kity_micro_physical_owner_v1 import AccountLease, publish
 from research_lab.pump4_execution_plan_v1 import HOUR_MS, frozen_sources
 from research_lab.pump4_native_stop_v1 import verify_mapping
+from research_lab.pump4_entry_binding_v1 import verify_binding
 
 DOMAIN='PUMP4_BYBIT_EXECUTION_ORDERS_OFF_V1'
 TERMINAL={'Filled','Cancelled','Rejected','Deactivated','PartiallyFilledCanceled'}
@@ -38,7 +39,7 @@ class Pump4Lifecycle:
     global single-writer ownership, risk/fee/funding policy and send-once gateway.
     This module deliberately cannot activate that authority or spend money.
     """
-    def __init__(self,root,plan,*,qty,qty_step,min_qty,min_notional,tick_size,native_stop_mapping=None):
+    def __init__(self,root,plan,*,qty,qty_step,min_qty,min_notional,tick_size,native_stop_mapping=None,entry_binding=None):
         self.root=Path(root).absolute()
         need('..' not in self.root.parts and not any(p.is_symlink() for p in (self.root,*self.root.parents)),'ROOT_CUSTODY')
         frozen_sources()
@@ -55,6 +56,10 @@ class Pump4Lifecycle:
         self.config=dict(domain=DOMAIN,plan=plan,qty=str(q),qty_step=str(step),min_qty=str(mq),
             min_notional=str(mn),tick_size=str(tick),orders_allowed=False,money_authority=False)
         if native_stop_mapping is not None:self.config['native_stop_mapping']=json.loads(json.dumps(native_stop_mapping))
+        if entry_binding is not None:
+            verify_binding(plan,entry_binding,now_ms=entry_binding['observed_ms'])
+            need(number(entry_binding['native_stop'])==number(native_stop_mapping['native_stop'] if native_stop_mapping is not None else plan['stop']),'ENTRY_NATIVE_BINDING')
+            self.config['entry_binding']=json.loads(json.dumps(entry_binding))
         self.root.mkdir(mode=0o700,parents=True,exist_ok=True)
         p=self.root/'execution-config.json'
         try:publish(p,self.config)
@@ -66,7 +71,20 @@ class Pump4Lifecycle:
     def resume(cls,root):
         c=json.loads((Path(root)/'execution-config.json').read_bytes())
         return cls(root,c['plan'],**{k:c[k] for k in ('qty','qty_step','min_qty','min_notional','tick_size')},
-            **({'native_stop_mapping':c['native_stop_mapping']} if 'native_stop_mapping' in c else {}))
+            **{k:c[k] for k in ('native_stop_mapping','entry_binding') if k in c})
+
+    def check_entry(self,observation,now_ms):
+        p=self.config['plan'];price=number(observation['price']);stored=self.config.get('entry_binding')
+        intended=number(self.config['native_stop_mapping']['native_stop'] if 'native_stop_mapping' in self.config else p['stop'])
+        if stored is None:
+            need(p['entry_bar_open_ms']<=now_ms<=p['entry_bar_open_ms']+5000,'NEXT_OPEN_WINDOW')
+            need(price==number(p['entry']),'NEXT_OPEN_PRICE_CONFLICT')
+        else:
+            fresh=observation.get('entry_binding');need(isinstance(fresh,dict),'FRESH_ENTRY_BINDING_REQUIRED')
+            verify_binding(p,fresh,now_ms=now_ms)
+            need(fresh['policy_sha256']==stored['policy_sha256'] and fresh['valid_until_ms']==stored['valid_until_ms']
+                and number(fresh['native_stop'])==intended and number(fresh['last_price'])==price,'ENTRY_BINDING_CONFLICT')
+        need(price<intended if p['side']=='short' else intended<price,'NATIVE_TRIGGER_GEOMETRY')
 
     def _events(self):
         rows=self.journal.read();pin=digest(self.config)
@@ -203,9 +221,7 @@ class Pump4Lifecycle:
                 actual_fees_usdt=str(fee) if fees_known else None,funding_usdt=str(funding_sum),
                 finality_provenance='CALLER_DECLARED_NOT_BROKER_FINALITY')
         if not events:
-            need(p['entry_bar_open_ms']<=now<=p['entry_bar_open_ms']+5000,'NEXT_OPEN_WINDOW')
-            need(price==number(p['entry']),'NEXT_OPEN_PRICE_CONFLICT')
-            need(price<intended if short else intended<price,'NATIVE_TRIGGER_GEOMETRY')
+            self.check_entry(o,now)
             role='ENTRY';qty=number(c['qty'])
         else:
             role=None;qty=D(0)

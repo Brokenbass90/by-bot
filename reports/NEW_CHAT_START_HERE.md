@@ -1,4 +1,4 @@
-# START HERE — Trading OS, 26 October 2026
+# START HERE — Trading OS, 27 October 2026
 
 Repo `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`.
 Branch `codex/recovery-20260824`. Read AGENTS.md, checkpoint TOP and the current reports
@@ -17,26 +17,30 @@ reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
 single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
 2Novfreshentry/protection checks remain actual future gates; CASHpossible.
 
-## Current19:30 — continue native/prefix acceptance, do not restart
+## Current27Oct — explicit entry and prefix SELECTED ORDERS_OFF
 
-Read `PUMP4_NATIVE_STOP_AND_CURRENT_2026_10_26.md` FIRST. Code native mapping +84
-memory protocol PASS;303local networkdeniedPASS, candidate70d4a1009c13eccf staged
-UNSELECTED/303VPS network-deniedPASS. Prefix advisory bounded-tail fix accepted
-81tests; actualnewH1 pending. No brokerwrites/financialGO/Monthlychange.
-Same activefinancialapp306/config125b0ae6/scopea527f12c/PID2955754 until explicit
-legacyappOFF rebind; oldroots/epochs/journals preserved. Don't repeat acceptance.
-Native source tree saved; exact84 source-sizing remains2fixturePASS/82BLOCK, not
-84financialadmissions. Same-input84parity staysPASS;actual09timelinessFAIL history.
-Originb3516e34 nowcontains29366fb,76c9041,99da9ef; funding arithmetic unified,
-2/5/10bpsperSIDE net scenario .06030/.05656/.05031R withobservedfees,NOTactualcashflow.
-0.45reporttypo only;code.60. Mark/boundary/coverage caveats in currentreport.
-KITY status `KITY_BOUNDED_MONEY_STATUS_2026_10_26.md`,noeconomicsPASS/noswitch.
-NEXT exactVPSacceptance->sameDATA/legacyownerOFFhandoff->actual20H1 andquote delay.
-Existinglifecycle5s/exactopen gate remains separateversionedentry-contract task;
-no silentrelaxation or monetaryGO. KeepfinancialOFF. Technicalmicro ownerreview
-canremain economicallyINCONCLUSIVE aftertechnicalPASS; don'tclaimincomeLIVE.
+Read `PUMP4_ENTRY_AND_H1_2026_10_27.md` FIRST; older sections below are history.
+No new audit/research/evaluator/funding download. Native84 memory protocol retained;
+new explicit source/risk-bound <=60s entry policy, original risk/plan/qty basis,
+exchange-clock fill guard, deadline-at-wire and owned exits accepted/reviewed.
+326local/same326VPS network-deniedPASS; candidateffb31e24c703d9ed now SELECTED for
+DATA AND financialownerOFF. Config19f9cd74…57d4c/scope9acdeac6…dd172/PID3023060,
+original818853/0restarts/noGO/0brokerwrites.32,843 historical files preserved.
+New reference-drift10bps is an OFF proposal, not approved monetary risk or GO.
+Monthly v6 untouched; no reactivation or KITY switch.
+Actual26Oct20H1:118intakePASS,46by60s;114CURRENT allsourcesby60 but only46published,
+4catchup afterCURRENT,18API10006,1unavailable. TimelinessFAIL. Later70hours alsoFAIL.
+New single locked replay benchmarkPASS, actual newH1 **PENDING**, notTINY_READY.
+NEXT: existing27Oct06:00:02UTC timer (08:00:02Nicosia), hour1793080800000, rootffb;
+read its immutable proof, classify rate-limit/timing losses; no same-hour retry.
+One read-only observer already waits for06H1: SSH42219/output.private/pump4_entry_20261027/actual06-progress.jsonl;
+ends06:06UTC, quotesonlyonactualsignal, never duplicatecollector/observer.
+EconomicsINCONCLUSIVE; unified dated-fee/funding scenario at2/5/10bps-side
++.06030/+.05656/+.05031R, notactualcashflows/forwardincome. Same-input84parityPASS.
+Technicalmicro may be considered separately after technical/account gates and a
+new exact personalGO; no live packet/owner action yet while latency unresolved.
 
-## NEXT PUMP — five-gate decision BLOCKED;84 parity PASS; no new audit
+## Historical26Oct13:26 — superseded by the27Oct receipt
 
 Read `PUMP4_OWNER_DECISION_2026_10_26.md` FIRST, then only linked evidence needed.
 Actual26Oct09:00:02UTC installed5882783b path:137outcomes/133intakePASS,

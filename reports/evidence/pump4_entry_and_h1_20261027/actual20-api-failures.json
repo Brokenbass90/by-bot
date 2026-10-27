@@ -1,0 +1,582 @@
+{
+  "cases": 18,
+  "compressed_sha256": "2eec9dbe41d28b9f2dbcc1b35756201797a8ac772b93f91e9acee1807abe40fa",
+  "failure_page_counts": {
+    "1": 11,
+    "2": 7
+  },
+  "full_raw_artifact": "actual20-api-failures.json.gz",
+  "rows": {
+    "AAVEUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "AAVEUSDT"
+          },
+          "raw_sha256": "f43921b4671c2a6b3171aa183f5a187aaa541336edfa6ec72c37dbab87237a3a",
+          "receive_ms": 1793044809378,
+          "request_ms": 1793044808277,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "ACTUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ACTUSDT"
+          },
+          "raw_sha256": "21819b493565ebe1d95b1d3705fb3916681a71d9ce3e90897794feef07c0b759",
+          "receive_ms": 1793044809356,
+          "request_ms": 1793044808251,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "ALLOUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ALLOUSDT"
+          },
+          "raw_sha256": "3ea7f7eb03db1ef8b5cb3693f8706ec94e4d936d085003aa6ca86165698b58ab",
+          "receive_ms": 1793044812376,
+          "request_ms": 1793044810421,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "ARBUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ARBUSDT"
+          },
+          "raw_sha256": "ce434754ff9a558442cf98264a9840bd06061bf70054414f9d5de3cefcc1e371",
+          "receive_ms": 1793044813510,
+          "request_ms": 1793044812243,
+          "retCode": 0,
+          "retMsg": "OK"
+        },
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1789448399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ARBUSDT"
+          },
+          "raw_sha256": "2f5292a7ae95b5e32611db666562d21692f7f5c38d1753fd3fafbdc6c36fe459",
+          "receive_ms": 1793044814722,
+          "request_ms": 1793044813628,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        0,
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "ATOMUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ATOMUSDT"
+          },
+          "raw_sha256": "60a4ba592082da1275aa4217502ab2da66a422a6726886d835291774e647441d",
+          "receive_ms": 1793044813079,
+          "request_ms": 1793044812234,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "BLUAIUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "BLUAIUSDT"
+          },
+          "raw_sha256": "152f9d3dc125b41259b13610aa7cdab5e576907210e8a8e74bf94024c18aca41",
+          "receive_ms": 1793044816354,
+          "request_ms": 1793044815453,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "BNBUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "BNBUSDT"
+          },
+          "raw_sha256": "ae228dfb7f241402248a423fe946a5adeacbfc9685c0207c47bc913e1951a74e",
+          "receive_ms": 1793044816316,
+          "request_ms": 1793044815579,
+          "retCode": 0,
+          "retMsg": "OK"
+        },
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1789448399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "BNBUSDT"
+          },
+          "raw_sha256": "086f308d85837f485676962377bc73e9a8286c1156fa95b37c2bd0fe04f35c77",
+          "receive_ms": 1793044817214,
+          "request_ms": 1793044816369,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        0,
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "BZUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "BZUSDT"
+          },
+          "raw_sha256": "3825b8419a98d54555028ebbc79b4ded98f727340e345c506522f54711d20074",
+          "receive_ms": 1793044817989,
+          "request_ms": 1793044817135,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "COOKIEUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "COOKIEUSDT"
+          },
+          "raw_sha256": "20daf03e250a798076aa280d0e8405e113dc16ae56174fe85e5ccfeb980b1cc1",
+          "receive_ms": 1793044819208,
+          "request_ms": 1793044818201,
+          "retCode": 0,
+          "retMsg": "OK"
+        },
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1789448399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "COOKIEUSDT"
+          },
+          "raw_sha256": "f51e4c4fcb5c660ea33eab4953da69eb380f7b5cbc81a2b57ecaa2bd1fd88bb6",
+          "receive_ms": 1793044819904,
+          "request_ms": 1793044819265,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        0,
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "CRVUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "CRVUSDT"
+          },
+          "raw_sha256": "9853954e1d0a089f00258bc79d70a55b78d5d8608b1711157265c473bfaddde9",
+          "receive_ms": 1793044821318,
+          "request_ms": 1793044819698,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "DOGEUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "DOGEUSDT"
+          },
+          "raw_sha256": "c6bf8bd8e8d3855954f5060f282d1023fd1212a61bdf23c993bb10e59d6b78c0",
+          "receive_ms": 1793044822053,
+          "request_ms": 1793044820068,
+          "retCode": 0,
+          "retMsg": "OK"
+        },
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1789448399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "DOGEUSDT"
+          },
+          "raw_sha256": "f1f4f6a7d0a6099576906435aa3a17437e74dab0feeb9a3959228069d5fa4e03",
+          "receive_ms": 1793044822704,
+          "request_ms": 1793044822208,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        0,
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "ETCUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ETCUSDT"
+          },
+          "raw_sha256": "cf48749c637fef237792d6017e18b19880394c6c5eeb5fb065e893180f92be2b",
+          "receive_ms": 1793044824007,
+          "request_ms": 1793044822760,
+          "retCode": 0,
+          "retMsg": "OK"
+        },
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1789448399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ETCUSDT"
+          },
+          "raw_sha256": "03701b2e66f7b90ac4cdf2b041a4a93db1b65e00d076d92ea794e2f77f1f7f8e",
+          "receive_ms": 1793044825769,
+          "request_ms": 1793044824157,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        0,
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "ICPUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ICPUSDT"
+          },
+          "raw_sha256": "f1938e41a880bdbc38e0e1230ab8b5dab0abb649fd5c0cc27dc2f809fa42d7c4",
+          "receive_ms": 1793044830721,
+          "request_ms": 1793044829521,
+          "retCode": 0,
+          "retMsg": "OK"
+        },
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1789448399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "ICPUSDT"
+          },
+          "raw_sha256": "9decc30c15a859f066bada3047da8d3da90fa51c6440ae40a3ad03dfd55653c6",
+          "receive_ms": 1793044832207,
+          "request_ms": 1793044830811,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        0,
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "INTCUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "INTCUSDT"
+          },
+          "raw_sha256": "92ea14700d3be26cdc4cb25c5d5f61f8bf4d86c41fa77c396fb27e52df6cc602",
+          "receive_ms": 1793044831690,
+          "request_ms": 1793044830317,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "LITEUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "LITEUSDT"
+          },
+          "raw_sha256": "c2231c8423fa9752aa8b2895f74d04d91ae147dfcb8fb2354a8af5dfb79b9d44",
+          "receive_ms": 1793044833095,
+          "request_ms": 1793044832510,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "MEUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "MEUSDT"
+          },
+          "raw_sha256": "b2945037c5a2a541060e9db04e38525b99736b716ca4258a03e3a57d667d28a2",
+          "receive_ms": 1793044833501,
+          "request_ms": 1793044832753,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "MSTRUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "MSTRUSDT"
+          },
+          "raw_sha256": "bc7e33212eb63c35e001d4ffc2a1eec7290ab62e4af4c0e25b5dfb9e48c0b07b",
+          "receive_ms": 1793044835713,
+          "request_ms": 1793044834789,
+          "retCode": 0,
+          "retMsg": "OK"
+        },
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1789448399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "MSTRUSDT"
+          },
+          "raw_sha256": "0901ea77ca31b73d8975cc417aa56a92b9e99d9368d273e5598ca6b02eecb462",
+          "receive_ms": 1793044836715,
+          "request_ms": 1793044835758,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        0,
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    },
+    "TRUMPUSDT": {
+      "captures": [
+        {
+          "endpoint": "/v5/market/kline",
+          "params": {
+            "category": "linear",
+            "end": 1793048399999,
+            "interval": "60",
+            "limit": 1000,
+            "start": 1789441200000,
+            "symbol": "TRUMPUSDT"
+          },
+          "raw_sha256": "98c058aa10d11bb0d3ab4b70d8dbf817ff1eed990c31e4337c324729ac2067dd",
+          "receive_ms": 1793044846751,
+          "request_ms": 1793044844722,
+          "retCode": 10006,
+          "retMsg": "Too many visits. Exceeded the API Rate Limit."
+        }
+      ],
+      "reason": "PUMP4_SOURCE_API_RESULT",
+      "retCodes": [
+        10006
+      ],
+      "status": "BLOCKED_SOURCE"
+    }
+  },
+  "schema": "PUMP4_H1_API_FAILURE_INDEX_V1",
+  "uncompressed_sha256": "443bfc2a6cf2fb872568e0762cb8165c71af345747fbf8fbbec18101e02dac0f"
+}

@@ -158,8 +158,21 @@ class Supervisor:
         epoch_path=safe(self.root/'epochs'/(symbol+'.json'))
         need(not events or epoch_path.exists(), 'EPOCH_MISSING_NO_RESET')
         bootstrap=not events
+        batch_path=safe(self.root/'batches'/archive_id/(symbol+'.json'))
         if events:
-            snapshot=intake._replay(events);cursor=snapshot['cursor_ms']
+            # For one contiguous current bar, the locked append below replays
+            # and validates the ENTIRE producer prefix before any journal write.
+            # Only scheduling/overlap/epoch inputs are derived here; no cached
+            # strategy result, decision or source clock can authorize admission.
+            tail=events[-1]
+            cursor=tail['bar'][0] if tail.get('kind')=='CLOSED_BAR' else None
+            one_current=(type(cursor) is int and not batch_path.exists()
+                and source['signal_bar'][0]==cursor+H
+                and sum(b[0]>cursor for b in bars)==1)
+            if one_current:
+                snapshot=dict(cursor_ms=cursor,seed_bars_sha256=digest(events[0]['bars']))
+            else:
+                snapshot=intake._replay(events);cursor=snapshot['cursor_ms']
             known={b[0]:b for b in events[0]['bars']}
             known.update({e['bar'][0]:e['bar'] for e in events[1:]})
             need(all(b[0] not in known or known[b[0]]==b for b in bars), 'SOURCE_HISTORY_CONFLICT')
@@ -180,7 +193,6 @@ class Supervisor:
             and type(epoch['epoch_started_ms']) is int
             and (events[0]['observed_ms'] if events else source['observed_ms'])<epoch['epoch_started_ms'], 'EPOCH_IDENTITY')
         mode='BOOTSTRAP_REPLAY' if bootstrap else ('CATCHUP_REPLAY' if len(pending)>1 else 'CURRENT_CLOSED_BAR')
-        batch_path=safe(self.root/'batches'/archive_id/(symbol+'.json'))
         recovered=batch_path.exists()
         if recovered:
             batch=read(batch_path)

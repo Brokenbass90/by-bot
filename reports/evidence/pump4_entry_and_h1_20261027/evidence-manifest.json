@@ -1,0 +1,30 @@
+{
+  "broker_writes": 0,
+  "contains_private_account_raw": false,
+  "files": {
+    "actual20-api-failures.json": "54c29d44532a718ab351950d68f57f824aacaf38b1421ea8f83a5260648b8eaa",
+    "actual20-api-failures.json.gz": "2eec9dbe41d28b9f2dbcc1b35756201797a8ac772b93f91e9acee1807abe40fa",
+    "actual20-publication.json": "cca1832b07bab60ee195dbe19f736c5a1861688b305ab10276d64a27d3deff3a",
+    "actual20-quote-links.json": "56bd7a07945a89d724b13ffe3335ed1756c9c9c01a7e986e68dd91f52cfd0ade",
+    "benchmark-driver.py": "fa195b8ecef11f7b18cefbdb0f2ada05e53eed7d90bf0db5c5bf72fe5a06cfbe",
+    "continuity-before.json": "632d0f0a124eb58ab1f3994969196f05363a23f64853b486657953aef71c7c9f",
+    "data-selected.json": "280a56b5f36002714e4790c90202fed19a4e70e636710224f4eaecdf89e0bb19",
+    "entry-review.json": "0365c8e8bf342ea36ad3155f560d3ff598f52e53a406895ea2614494adc8156b",
+    "handoff-review.json": "7f2cef02e3dae5ef86f028f4cac75b86796918de468cd673506365b509110058",
+    "independent-readback.py": "59cc6b9cf0af7b67a8cd3e02ab82d053ac9a7b9e61453d3334502ba7fb9de2a9",
+    "later-selected70-hours.json": "e705d614ce0992e07b9ab88a16f1e21e4436abfddeca27caa3a6c52afb1d2d97",
+    "local-acceptance.json": "c45d90a944adf40be1de267562c941e879c8bb24044eec82e53a52f6c85829dc",
+    "local-manifest.json": "5f96887bcade49634a9b5c6ab27d86cd71d2a32b115bc6a3435f8e1f477dde5c",
+    "observe06_readonly.py": "85838698b1590f3beefee16d48899872f29232f7f0f881d266802b27a6738764",
+    "off-handoff-ops.py": "f7c70e2461baa2daf2938d42e46ee19594632baac1c71080fdfb722003658b52",
+    "off-handoff-test_handoff.py": "c2c56f1f9094cb66ca4bf9d8389a6b3b85e13db53fbf47197877b03b80ded942",
+    "owner-selected.json": "1669e6cf22fb391a2c02c793c235fe390b3373cd68f96f4146b8a5e5db73ce75",
+    "profile-case.json": "2836ec259df00a1a0fe3c239d251c5ee799d8d24acb7c4be0f82997d041cd594",
+    "profile-single.py": "f22a1c96e9c0d30299529f5a3382d8eab3f82f791accecb02c8dd2282fb4b714",
+    "readback-after.json": "51fa427d721fed80c1744e6ed345562533c45235775942b6e72870194ef60383",
+    "readback-final.json": "a55c034a3b46db19c38112fde81b991227f1c482b168882be85bd474b11b9dfe",
+    "vps-acceptance.json": "1e07e35bbdccf1de8ac87d325daa7024ae8e1fa091989512823325b2b04cbeed",
+    "vps-prefix-benchmark.json": "d2653459804effcdbf44068212be42adaf522102835d3c844b56b5937863e639"
+  },
+  "schema": "PUMP4_ENTRY_H1_PUBLIC_EVIDENCE_V1"
+}

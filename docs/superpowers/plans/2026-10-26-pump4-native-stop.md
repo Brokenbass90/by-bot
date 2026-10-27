@@ -39,4 +39,12 @@ Files: new research_lab/pump4_native_stop_v1.py; pump4_execution_lifecycle_v1.py
 - [x] Source-only sync29366fb/76c9041/publication; consume Claude funding result only when ready, do not duplicate running download.
 - [ ] Narrow measured CURRENT prefix work, retain full existing acceptance validation and new-H1 proof; no300s.
 - [x] Bounded KITY status from existing evidence, no backtest/runtime selection.
-- [ ] Update canonical checkpoint and commit measured outcomes.
+- [x] Update canonical checkpoint with measured20H1 FAIL/new326testOFF deployment; actualnew06H1 remains pending.
+
+## Continuation27Oct: explicit entry and measured prefix
+
+- [x] Implement optional source/risk-bound <=60s entry contract, separate reference-drift proposal, fresh quote and untouched current interval; legacy5s/open contract unchanged. New exact human GO required for monetary dispatch; current runtimeOFF.
+- [x] Add deadline-at-wire, old-GO rejection, exit-after-deadline, provider, malformed interval, source/risk and compression evidence tests.
+- [x] Complete critical independent entry review after the allowance reset; fix/review exchange-clock finding,22testsPASS.
+- [x] Remove duplicate pre-append producer replay only for exactly one contiguous current bar; retain full locked producer validation and byte-identical evidence; no frozen intake/source edits.
+- [x] Freeze/test326local/VPS, select DATA and financial app strictlyOFF with reviewed reversible handoff; actual27Oct06H1 remains necessary.

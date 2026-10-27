@@ -56,7 +56,7 @@ def _unique(rows,key):
     return list(out.values()),duplicates
 
 
-def owned_observation(bundle,plan,requests,*,first_send_ms,expected_fingerprint,now_ms,known_native_ids=()):
+def owned_observation(bundle,plan,requests,*,first_send_ms,expected_fingerprint,now_ms,known_native_ids=(),reserved_exchange_ms=None):
     frozen_plan(plan)
     view=account_view(bundle,expected_fingerprint=expected_fingerprint,now_ms=now_ms)
     need(bundle['history_start_ms']==first_send_ms and bundle['history_end_ms']<=now_ms,'OWNED_HISTORY_ANCHOR')
@@ -116,6 +116,8 @@ def owned_observation(bundle,plan,requests,*,first_send_ms,expected_fingerprint,
         if r.get('orderLinkId') not in owned and r['orderId'] not in native_ids:
             need(False,'FOREIGN_SAME_SYMBOL_EXECUTION')
         need(r['execType']=='Trade' and first_send_ms<=int(r['execTime'])<=bundle['history_end_ms'],'OWNED_EXECUTION_TYPE_OR_TIME')
+        if reserved_exchange_ms is not None and r.get('orderLinkId') in owned:
+            need(r['orderLinkId'] in reserved_exchange_ms and int(r['execTime'])>=reserved_exchange_ms[r['orderLinkId']],'EXECUTION_BEFORE_RESERVATION')
         number(r['execQty']);number(r['execPrice']);fee=D(r['execFee']);need(fee.is_finite() and r.get('feeCurrency')=='USDT','EXECUTION_FEE_UNKNOWN')
         executions.append({k:r[k] for k in ('execId','orderId','orderLinkId','symbol','side','execQty','execPrice','execFee','feeCurrency')})
     transactions,_=_unique(transactions,'id');funding=[]
@@ -129,7 +131,7 @@ def owned_observation(bundle,plan,requests,*,first_send_ms,expected_fingerprint,
     ticks=checked(quote,'/v5/market/tickers',now_ms=now_ms,private=False)['list']
     need(now_ms-quote['request_ms']<=5000 and now_ms-quote['body']['time']<=5000,'STALE_LAST_PRICE')
     ticker=[t for t in ticks if t['symbol']==symbol];need(len(ticker)==1,'LAST_PRICE_REQUIRED');price=number(ticker[0]['lastPrice'])
-    return dict(schema='PUMP4_BYBIT_OBSERVATION_V1',observed_ms=now_ms,
+    observation=dict(schema='PUMP4_BYBIT_OBSERVATION_V1',observed_ms=now_ms,
         source_ms=min([view['source_ms'],quote['body']['time'],*[c['body']['time'] for w in groups for g in w['groups'].values() for c in g['pages']]]),
         symbol=symbol,positionIdx=0,position_side=side,held_qty=str(held),price=str(price),
         orders=sorted(orders,key=lambda r:r['orderId']),executions=sorted(executions,key=lambda r:r['execId']),
@@ -138,6 +140,11 @@ def owned_observation(bundle,plan,requests,*,first_send_ms,expected_fingerprint,
         source_provenance='BOUND_AUTHENTICATED_GET_CAPTURES_NOT_BROKER_SIGNATURE',source_capture_sha256=digest(bundle),
         foreign_positions=[p['symbol'] for p in positions if p['symbol']!=symbol],borrowed_funds=view['borrowed_funds'],
         source_duplicate_execution_rows=duplicates,orders_allowed=False,money_authority=False)
+    if reserved_exchange_ms is not None:
+        # This verified Bybit response preceded dispatch. Compare execTime to
+        # the same exchange clock, never to local journal reservation time.
+        observation['pre_dispatch_exchange_ms']=quote['body']['time']
+    return observation
 
 
 def execution_feasibility(plan,instrument,ticker,fee,account,policy,*,now_ms):

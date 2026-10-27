@@ -1,0 +1,10 @@
+{
+  "critical": 0,
+  "important": 0,
+  "monthly_changed": false,
+  "ops_sha256": "f7c70e2461baa2daf2938d42e46ee19594632baac1c71080fdfb722003658b52",
+  "owner_go_created": false,
+  "reviewed_source_pins": 74,
+  "scope": "OFF handoff and frozen package consistency only",
+  "tests": 20
+}

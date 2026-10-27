@@ -17,6 +17,7 @@ from research_lab.kity_oct15_deadline_v1 import stable_bytes,decode
 from research_lab.pump4_account_adapter_v1 import owned_observation,execution_feasibility,checked_order_ack,frozen_plan
 from research_lab.pump4_bybit_sources_v1 import account_view,checked,number,H
 from research_lab.pump4_execution_lifecycle_v1 import Pump4Lifecycle
+from research_lab.pump4_entry_binding_v1 import bind_entry,verify_binding,verify_policy
 
 DOMAIN='PUMP4_ACCOUNT_OWNER_V1'
 
@@ -27,7 +28,7 @@ def safe(p):
     p=Path(p).absolute();need('..' not in p.parts and not any(x.is_symlink() for x in (p,*p.parents)),'PATH_CUSTODY')
     return p
 
-def source_sizing(plan,bundle,public,policy,*,fingerprint,now_ms):
+def source_sizing(plan,bundle,public,policy,*,fingerprint,now_ms,execution_policy=None):
     """Fully bound conservative scenario sizing; still not financial authority."""
     frozen_plan(plan);view=account_view(bundle,expected_fingerprint=fingerprint,now_ms=now_ms)
     symbol=plan['symbol'];cap=bundle['captures']['symbol_position']
@@ -75,6 +76,9 @@ def source_sizing(plan,bundle,public,policy,*,fingerprint,now_ms):
         guaranteed_loss_bound=False,source_ms=min(*stamps,quote['body']['time'],quote['request_ms']),source_bundle_sha256=digest(dict(bundle=bundle,public=public)),
         orders_allowed=False,money_authority=False)
     if 'native_stop_mapping' in diagnostic:result['native_stop_mapping']=diagnostic['native_stop_mapping']
+    if execution_policy is not None:
+        verify_policy(execution_policy,policy)
+        result['entry_binding']=bind_entry(plan,execution_policy,public,diagnostic['native_stop'],now_ms=now_ms)
     return result
 
 
@@ -133,14 +137,20 @@ class Pump4AccountOwner:
         need(flow.root==self.flows/flow.config['plan']['plan_sha256'],'FLOW_CUSTODY')
         need(digest(flow.config)==digest(decode(stable_bytes(flow.root/'execution-config.json'))),'FLOW_SOURCE_DRIFT')
 
+    def _execution_policy(self,*,required=False):
+        policy=self.scope.get('execution_policy')
+        if policy is None:
+            need(not required,'NATIVE_MAPPING_ORDERS_OFF_ONLY');return None
+        return verify_policy(policy,self.scope['policy'])
+
     def prepare(self,plan,bundle,public):
         self._exclusive();frozen_plan(plan);path=self.flows/plan['plan_sha256']
         if (path/'execution-config.json').exists():
             flow=Pump4Lifecycle.resume(path);need(flow.config['plan']==plan,'PLAN_CHANGED');return flow
-        sizing=source_sizing(plan,bundle,public,self.scope['policy'],fingerprint=self.scope['account_fingerprint'],now_ms=self.clock())
-        need('native_stop_mapping' not in sizing or self.scope['mode']=='ORDERS_OFF','NATIVE_MAPPING_ORDERS_OFF_ONLY')
+        sizing=source_sizing(plan,bundle,public,self.scope['policy'],fingerprint=self.scope['account_fingerprint'],now_ms=self.clock(),execution_policy=self._execution_policy())
+        if 'native_stop_mapping' in sizing and self.scope['mode']!='ORDERS_OFF':self._execution_policy(required=True)
         return Pump4Lifecycle(path,plan,**{k:sizing[k] for k in ('quantity','qty_step','min_qty','min_notional','tick_size') if k!='quantity'},qty=sizing['quantity'],
-            **({'native_stop_mapping':sizing['native_stop_mapping']} if 'native_stop_mapping' in sizing else {}))
+            **{k:sizing[k] for k in ('native_stop_mapping','entry_binding') if k in sizing})
 
     def _risk_rows(self):
         rows=self.risk.read()
@@ -177,21 +187,29 @@ class Pump4AccountOwner:
 
     def cycle(self,flow,bundle,public,*,apply=False):
         self._exclusive();self._flow(flow);now=self.clock();plan=flow.config['plan'];new=not flow.requests()
-        need(not apply or 'native_stop_mapping' not in flow.config,'NATIVE_MAPPING_ORDERS_OFF_ONLY')
+        if apply and any(k in flow.config for k in ('native_stop_mapping','entry_binding')):self._execution_policy(required=True)
         if apply:self._authority('ENTRY' if new else 'CUSTODY')
         else:need(self.scope['mode']=='ORDERS_OFF','ISOLATED_ORDERS_OFF_ROOT_REQUIRED')
+        exchange_times={digest(r['observation']):r['observation']['pre_dispatch_exchange_ms']
+            for r in flow.observations.read()} if 'entry_binding' in flow.config else None
         observation=owned_observation(bundle,plan,flow.requests(),first_send_ms=plan['entry_bar_open_ms'],expected_fingerprint=self.scope['account_fingerprint'],now_ms=now,
-            known_native_ids=[e['verified_native_stop_id'] for e in flow.observations.read() if e['verified_native_stop_id']])
+            known_native_ids=[e['verified_native_stop_id'] for e in flow.observations.read() if e['verified_native_stop_id']],
+            reserved_exchange_ms={e['request']['orderLinkId']:exchange_times[e['observation_sha256']]
+                for e in flow._events()} if exchange_times is not None else None)
         admission=self.root/'admitted-lifecycle.json'
         identity=dict(scope_sha256=self.scope_sha256,plan_sha256=plan['plan_sha256'],flow_root=str(flow.root),execution_config_sha256=digest(flow.config))
         if new:
             self._risk_rows();need(not os.path.lexists(self.root/'entry-loss-stop.json'),'ENTRY_LOSS_LATCHED')
             need(not os.path.lexists(admission),'ACCOUNT_LIFECYCLE_ALREADY_RESERVED')
-            size=source_sizing(plan,bundle,public,self.scope['policy'],fingerprint=self.scope['account_fingerprint'],now_ms=now)
+            size=source_sizing(plan,bundle,public,self.scope['policy'],fingerprint=self.scope['account_fingerprint'],now_ms=now,execution_policy=self._execution_policy())
             need(D(size['quantity'])==D(flow.config['qty']),'SOURCE_SIZING_CHANGED')
             original=flow.config.get('native_stop_mapping');fresh=size.get('native_stop_mapping')
             need((original is None and fresh is None) or (original is not None and fresh is not None
                 and all(original[k]==fresh[k] for k in ('schema','plan_sha256','symbol','side','tick_size','native_stop','reference_stop','quantity_basis'))),'NATIVE_MAPPING_SOURCE_CHANGED')
+            if 'entry_binding' in flow.config:
+                need('entry_binding' in size,'FRESH_ENTRY_BINDING_REQUIRED')
+                observation['entry_binding']=size['entry_binding'];flow.check_entry(observation,now)
+            else:need('entry_binding' not in size,'ENTRY_CONTRACT_CHANGED')
             publish(admission,identity) # Before reservation/POST: never a second lifecycle on reply loss.
         else:need(decode(stable_bytes(admission))==identity,'OWNED_LIFECYCLE_REQUIRED')
         result=flow.advance(observation,now_ms=now)
@@ -229,7 +247,12 @@ class Pump4AccountOwner:
             need(stable_bytes(ticket_path)==ticket_raw,'DISPATCH_TICKET_CHANGED')
             need(method=='POST' and url=='https://api.bybit.com/v5/order/create' and json.loads(data)==request,'WIRE_SCOPE')
             need(0<=self.clock()-source_ms<=2000,'FINAL_WIRE_SOURCE_EXPIRED')
-            if role=='ENTRY':need(not os.path.lexists(self.root/'entry-loss-stop.json'),'ENTRY_LOSS_LATCHED')
+            if role=='ENTRY':
+                need(not os.path.lexists(self.root/'entry-loss-stop.json'),'ENTRY_LOSS_LATCHED')
+                if 'entry_binding' in flow.config:
+                    self._execution_policy(required=True)
+                    verify_binding(flow.config['plan'],sizing['entry_binding'],now_ms=self.clock())
+                    need(sizing['entry_binding']['policy_sha256']==flow.config['entry_binding']['policy_sha256'],'ENTRY_CONTRACT_CHANGED')
             return self.wire(method,url,headers,data,timeout)
         self._barrier_custody()
         sender=SignedPostOnce(self.key,self.secret,self.barrier_path,wire=guarded_wire,clock=self.clock)

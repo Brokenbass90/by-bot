@@ -1,5 +1,16 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**27Oct current PUMP receipt:** [explicit entry/OFF deployment and actual H1](reports/PUMP4_ENTRY_AND_H1_2026_10_27.md).
+Native84 protocol retained; explicit <=60s entry/risk/source policy +exchange-clock
+custody fix reviewed;326local/same326VPS PASS. DATA and sole owner selectffb31e24
+ORDERS_OFF, preserved32,843 files, original818853/noGO/0writes; Monthly unchanged.
+Actual20H1 FAIL46/118by60 with18API10006; new prefix actualH1PENDING on existing
+27Oct06UTC timer. EconomicsINCONCLUSIVE; noTINY/liverun/300s/riskincrease.
+Next measured DATA gate precedes exact owner micro review. Monthly→PUMP→Polymarket→
+KITY remains the intake sequence; Brain/Factory/portfolio development follows
+costed execution evidence and preserves human financial authority.
+Earlier dated PUMP technical blockers below are historical, superseded here.
+
 **26Oct13:26UTC PUMP decision:** [five owner gates](reports/PUMP4_OWNER_DECISION_2026_10_26.md).
 H1priorityPASS/current-before12catchup;60sFAIL20/133,median87.514/max115.140s.
 Exact84closed+open1 same-input frozenproducer/intake parityPASS;correct-stream

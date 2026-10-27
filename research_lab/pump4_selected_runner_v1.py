@@ -20,6 +20,7 @@ SOURCE_FILES=('backtest/__init__.py', 'backtest/alpaca_bakeoff_v2_contract.py', 
 
 
 SOURCE_FILES += ('research_lab/pump4_native_stop_v1.py',)
+SOURCE_FILES += ('research_lab/pump4_entry_binding_v1.py',)
 
 
 def need(ok,reason):

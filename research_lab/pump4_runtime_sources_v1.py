@@ -31,6 +31,7 @@ class TrustedSources:
         self.reader=BybitReadTransport(owner.key,owner.secret,wire=self.get_wire,
             clock=self.clock,symbols=universe())
         need(self.reader.account_fingerprint==owner.scope['account_fingerprint'],'ACCOUNT_BINDING')
+        need(config.get('execution_policy')==owner.scope.get('execution_policy'),'EXECUTION_POLICY_BINDING')
         self._candidate_consumed=set()
 
     def get_wire(self,method,url,headers,data,timeout):
@@ -99,6 +100,10 @@ class TrustedSources:
         account_view(bundle,expected_fingerprint=self.reader.account_fingerprint,now_ms=end)
         public=dict(quote=caps['quote'])
         if metadata is not None:public['instruments']=metadata
+        if not custody and self.config.get('execution_policy') is not None:
+            public['entry_interval']=public_get('/v5/market/kline',dict(category='linear',symbol=symbol,interval='60',start=begin,end=begin+H-1,limit=1),wire=self.get_wire,clock=self.clock)
+            end=self.clock();bundle['completed_ms']=end
+            account_view(bundle,expected_fingerprint=self.reader.account_fingerprint,now_ms=end)
         stored=dict(bundle=bundle,public=public,custody=custody,broker_writes=0)
         target=safe(self.owner.root/'source-captures'/(str(end)+'-'+digest(stored)+'.json'))
         if target.exists():need(decode(stable_bytes(target))==stored,'IMMUTABLE_SOURCE_CONFLICT')

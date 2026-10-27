@@ -1,0 +1,29 @@
+[
+  {
+    "hour": 1793070000000,
+    "max": 106478,
+    "median": 79183.0,
+    "passes": 128,
+    "rows": 137,
+    "signals": [],
+    "within60s": 21
+  },
+  {
+    "hour": 1793073600000,
+    "max": 94001,
+    "median": 71863.5,
+    "passes": 120,
+    "rows": 137,
+    "signals": [],
+    "within60s": 24
+  },
+  {
+    "hour": 1793077200000,
+    "max": 106231,
+    "median": 82158,
+    "passes": 129,
+    "rows": 137,
+    "signals": [],
+    "within60s": 18
+  }
+]

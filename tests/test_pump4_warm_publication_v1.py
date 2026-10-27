@@ -47,12 +47,12 @@ def test_warm_result_and_journal_equal_frozen_accept_path(tmp_path,kind):
     if kind=='cooldown':assert outputs[1][0]['decisions'][0]['decision']['cooldown_remaining']>0
 
 
-def test_plain_warm_path_runs_two_frozen_replays_not_four(tmp_path,monkeypatch):
+def test_plain_warm_path_runs_one_full_locked_frozen_replay(tmp_path,monkeypatch):
     root,row,header,s=setup(tmp_path,'plain');original=Pump4Intake._replay;calls=[]
     def counted(self,events):calls.append(len(events));return original(self,events)
     monkeypatch.setattr(Pump4Intake,'_replay',counted)
     out=s._symbol('ZROUSDT',row,header,'one-warm-bar')
-    assert out['mode']=='CURRENT_CLOSED_BAR' and len(calls)==2
+    assert out['mode']=='CURRENT_CLOSED_BAR' and len(calls)==1
 
 
 def test_crash_after_batch_keeps_existing_recovery_and_no_promotion(tmp_path,monkeypatch):
@@ -74,3 +74,15 @@ def test_locked_replay_selects_requested_duplicate_before_later_bar(tmp_path):
     result,cursor=s._warm_accept(i,bar,**kw)
     assert result==dict(new=False,decision=requested) and cursor==later[0]
     with pytest.raises(ValueError):s._warm_accept(i,bar,available_ms=kw['available_ms'],observed_ms=kw['observed_ms']+1)
+
+
+def test_fast_prefix_still_rejects_hash_valid_foreign_domain_before_append(tmp_path):
+    from research_lab.alpaca_dynamic_v1 import digest
+    from research_lab.att1_lifecycle_journal import LifecycleJournal
+    root,row,header,s=setup(tmp_path,'plain');path=root/'intake/ZROUSDT.jsonl'
+    events=Pump4Intake(path,'ZROUSDT').journal.read();events[0]['domain_schema']='FOREIGN'
+    path.unlink();journal=LifecycleJournal(path)
+    for event in events:journal.append(event)
+    before=path.read_bytes()
+    with pytest.raises(ValueError,match='DOMAIN_OR_SOURCE_CONFLICT'):s._symbol('ZROUSDT',row,header,'bad-prefix')
+    assert path.read_bytes()==before
