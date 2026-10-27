@@ -1,0 +1,29 @@
+..........FF                                                             [100%]
+=================================== FAILURES ===================================
+________ test_bad_wire_frame_and_rejected_ack_are_logged_and_classified ________
+
+    def test_bad_wire_frame_and_rejected_ack_are_logged_and_classified():
+     s=script_module()
+     class Log:
+      def __init__(self):self.rows=[]
+      def add(self,kind,**values):self.rows.append((kind,values))
+     log=Log();p=m.Probe(T,['BTCUSDT']);acks=[];errors=[];request=dict(req_id='expected')
+>    for raw in ('{invalid',json.dumps(dict(op='subscribe',success=False,req_id='expected'))):s.consume_frame(log,p,raw,connection=1,received=T+100,request=request,acked=acks,errors=errors)
+                                                                                              ^^^^^^^^^^^^^^^
+E    AttributeError: module 'source_script' has no attribute 'consume_frame'
+
+tests/test_pump4_source_probe_v1.py:57: AttributeError
+_ test_successful_pairs_followed_by_failed_reconnect_do_not_support_hypothesis _
+
+    def test_successful_pairs_followed_by_failed_reconnect_do_not_support_hypothesis():
+     s=script_module();symbols={str(i):dict(timely_pair=True,same_connection=True) for i in range(8)}
+     r=dict(symbols=symbols,comparison=dict(status='SEALED_REFERENCE_COMPARED',symbols={k:dict(closed_decimal_equal=True,next_open_equal=True,closed_float_projection_equal=True) for k in symbols}),subscription_acks=[dict(connection=1,received_ms=T-100)],validation_errors=[],connection_attempts=1,connection_errors=[],reconnected=False)
+>    assert s.supported(r,T)
+            ^^^^^^^^^^^
+E    AttributeError: module 'source_script' has no attribute 'supported'
+
+tests/test_pump4_source_probe_v1.py:64: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_source_probe_v1.py::test_bad_wire_frame_and_rejected_ack_are_logged_and_classified
+FAILED tests/test_pump4_source_probe_v1.py::test_successful_pairs_followed_by_failed_reconnect_do_not_support_hypothesis
+2 failed, 10 passed in 0.14s

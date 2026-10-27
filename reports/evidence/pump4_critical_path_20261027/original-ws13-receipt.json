@@ -1,0 +1,177 @@
+{
+  "boundary_ms": 1793106000000,
+  "broker_private_requests": 0,
+  "broker_writes": 0,
+  "comparison": {
+    "status": "SEALED_REFERENCE_COMPARED",
+    "symbols": {
+      "AAVEUSDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      },
+      "ACTUSDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      },
+      "APTUSDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      },
+      "BANANAS31USDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      },
+      "BTCUSDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      },
+      "ETHUSDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      },
+      "SOLUSDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      },
+      "ZROUSDT": {
+        "closed_decimal_equal": false,
+        "closed_float_projection_equal": false,
+        "next_open_equal": true
+      }
+    }
+  },
+  "connection_attempts": 1,
+  "connection_errors": [],
+  "connection_ids": [
+    1
+  ],
+  "money_authority": false,
+  "orders_allowed": false,
+  "production_admission": false,
+  "quote_or_fill_not_measured": true,
+  "raw_log_sha256": "bf64c3bbc86c4689b715c09475ef0dbd3c55bccd81dc5a033d21bf1529b0908c",
+  "reconnected": false,
+  "schema": "PUMP4_ISOLATED_SOURCE_PROBE_V1",
+  "source_delivery_hypothesis_supported": false,
+  "subscription_acks": [
+    {
+      "connection": 1,
+      "received_ms": 1793105880769
+    }
+  ],
+  "symbols": {
+    "AAVEUSDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106001720,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    },
+    "ACTUSDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106018627,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    },
+    "APTUSDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106004779,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    },
+    "BANANAS31USDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106012337,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    },
+    "BTCUSDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106001768,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    },
+    "ETHUSDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106001721,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    },
+    "SOLUSDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106001384,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    },
+    "ZROUSDT": {
+      "closed_first_received_ms": null,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106002035,
+      "pair_first_received_ms": null,
+      "same_connection": false,
+      "timely_pair": false
+    }
+  },
+  "validation_errors": [
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000338
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000381
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000631
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000660
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000662
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000753
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000773
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106001025
+    }
+  ]
+}

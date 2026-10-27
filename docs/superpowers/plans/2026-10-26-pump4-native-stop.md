@@ -56,3 +56,16 @@ Actual06H1:124intakePASS/23by60s;12API10006,1unavailable,7catchupafterCURRENT. N
 - [x] Profile the negative-only consumer scan; test metadata-keyed skip of validated immutable NO_SIGNAL/expired observations, never positive cache admission. Validate observation-directory custody each tick; changed identity rereads/fails and clock reversal reconsiders expired candidates. Keep fresh source/journal/causal guards.
 - [x] DATA collector only: preserve raw error attempts and whitelisted rate headers; maximum3 same-query reads only onHTTP200/10006, coordinated bounded cooldown. No retry after originalH1+60s or of a completed/failed hourly census, no403/non-rate retry, no masking source identity. Failed attempts do not enter successful candle input.
 - [x] RED→GREEN,355local/VPS and critical source/authority review; exact local/VPS package and same one-owner OFF handoff only after PASS. Record new actual H1 separately.
+
+## Continuation27Oct08: full-path failure and bounded architecture test
+
+Actual08H1:136ready/noAPI losses,129CURRENT only48timely; parent28.47CPU seconds and49.29s runnable queue wait, zero cgroup throttling. Retain original60s/producer/intake/risk/OFF. No random strategy optimization.
+
+- [x] Capture source/parent/child/financialCPU/queue/IO clocks and complete original08H1; classify scheduler contention separately from API/source delay.
+- [x] Critical independent review of DATA-only one-H1 CPUWeight1000 trial; no financial unit/config/scope orMonthly change, same200%/768M/app/root/timer. Guard Monthly existingreceipt age<=90s/sourcePASS/issues[]/maintenance; PUMP PID/lease/OFF/heartbeat. Restore original DATA unit and liveweight100 on guard failure or unconditional expiry after09H1.
+- [x] Test exact unit-byte transformation/CAS rollback/health predicates, select reversible one-H1 trial outside capture, monitorprotectedreceipt latencies andactualeffectiveweights.
+- [x] Freeze isolated8symbol incrementalREST/WS probe, nostrategy/intake/account/positions/writer access. REST diagnostic outside entrywindow only, no repeat137census; WSsubscribe before13H1, confirmclosed+nextopen evidence, original receiveclocks, no reconnect rebase; compare againstsealed13H1 thereafter. Evidence is notproductionreadiness.
+- [x] Review bounded probe/code/guards; record actual09H1, restore trial and confirm expiry; update canonicalcheckpoint. NofinancialGO.
+- [x] Complete isolated13H1 source comparison and ordinary-priority resource measurement; no production WS/prefix admission inferred.
+
+Actual13H1:normal50/135by60sFAIL; originalprobeV1timestampvalidationFAIL preserved. CorrectedV2offline rawreprocessing8/8exactclosed/open,338–1025ms, reviewed15probe+9rollbacktestsPASS. Notcleanprospective/productionPASS; nextversionedprefixsourcecontract, nofinancialGO.

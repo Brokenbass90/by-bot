@@ -1,0 +1,253 @@
+[
+  {
+    "archive_files_hashes_pass": true,
+    "archive_receipt_sha256": "26db8936a0694a0c529400567b5e0d7caaf75094666d3390e2e7ca5e7206a9cd",
+    "classification_wall_ms": 1881,
+    "groups": {
+      "CATCHUP_REPLAY": {
+        "count": 7,
+        "publication_delays_ms_summary": {
+          "max": 89020,
+          "median": 87336,
+          "min": 85204
+        },
+        "source_delays_ms_summary": {
+          "max": 41612,
+          "median": 30505,
+          "min": 10949
+        },
+        "within60s": 0
+      },
+      "CURRENT_CLOSED_BAR": {
+        "count": 129,
+        "publication_delays_ms_summary": {
+          "max": 82931,
+          "median": 67239,
+          "min": 13114
+        },
+        "source_delays_ms_summary": {
+          "max": 62475,
+          "median": 44833,
+          "min": 10888
+        },
+        "within60s": 48
+      },
+      "UNAVAILABLE_INSTRUMENT": {
+        "count": 1,
+        "publication_delays_ms_summary": {
+          "max": 60965,
+          "median": 60965,
+          "min": 60965
+        },
+        "source_delays_ms_summary": null,
+        "within60s": 0
+      }
+    },
+    "literal_readback_sha256": "00774b21faaa131de2392f58838327dd03afef6f9672b11773014af66e58006c",
+    "parent_processing_ms": 73771,
+    "priority_pass": true,
+    "signal_symbols": [],
+    "source_hour_open_ms": 1793088000000
+  },
+  {
+    "archive_files_hashes_pass": true,
+    "archive_receipt_sha256": "da713c93e70e80157a36303979f4c27b8c207bd87a2e86c5e2c65f81275f2923",
+    "classification_wall_ms": 318,
+    "groups": {
+      "CURRENT_CLOSED_BAR": {
+        "count": 135,
+        "publication_delays_ms_summary": {
+          "max": 56265,
+          "median": 37895,
+          "min": 9414
+        },
+        "source_delays_ms_summary": {
+          "max": 46598,
+          "median": 30981,
+          "min": 8644
+        },
+        "within60s": 135
+      },
+      "UNAVAILABLE_INSTRUMENT": {
+        "count": 2,
+        "publication_delays_ms_summary": {
+          "max": 51608,
+          "median": 41365.5,
+          "min": 31123
+        },
+        "source_delays_ms_summary": null,
+        "within60s": 2
+      }
+    },
+    "literal_readback_sha256": "c86fcd19dae81c476c4f04e54344fd109062e419132e78ab705fe134636d5e47",
+    "parent_processing_ms": 45053,
+    "priority_pass": true,
+    "signal_symbols": [],
+    "source_hour_open_ms": 1793091600000
+  },
+  {
+    "archive_files_hashes_pass": true,
+    "archive_receipt_sha256": "d7be7013329bc861e9c0fba4c7734286e05415d54c96b43547cc630105b0393f",
+    "classification_wall_ms": 577,
+    "groups": {
+      "BLOCKED_SOURCE": {
+        "count": 1,
+        "publication_delays_ms_summary": {
+          "max": 42576,
+          "median": 42576,
+          "min": 42576
+        },
+        "source_delays_ms_summary": null,
+        "within60s": 1
+      },
+      "CURRENT_CLOSED_BAR": {
+        "count": 134,
+        "publication_delays_ms_summary": {
+          "max": 86450,
+          "median": 69048.5,
+          "min": 11776
+        },
+        "source_delays_ms_summary": {
+          "max": 63905,
+          "median": 46028.0,
+          "min": 10515
+        },
+        "within60s": 45
+      },
+      "UNAVAILABLE_INSTRUMENT": {
+        "count": 2,
+        "publication_delays_ms_summary": {
+          "max": 80365,
+          "median": 72881.0,
+          "min": 65397
+        },
+        "source_delays_ms_summary": null,
+        "within60s": 0
+      }
+    },
+    "parent_processing_ms": 73838,
+    "priority_pass": true,
+    "signal_symbols": [],
+    "source_hour_open_ms": 1793095200000
+  },
+  {
+    "archive_files_hashes_pass": true,
+    "archive_receipt_sha256": "169340cf2c96dc78d205bee5cb8a85abfd59c00f9d55de91aa09478092dd18fe",
+    "classification_wall_ms": 1053,
+    "groups": {
+      "CATCHUP_REPLAY": {
+        "count": 1,
+        "publication_delays_ms_summary": {
+          "max": 87074,
+          "median": 87074,
+          "min": 87074
+        },
+        "source_delays_ms_summary": {
+          "max": 24528,
+          "median": 24528.0,
+          "min": 24528
+        },
+        "within60s": 0
+      },
+      "CURRENT_CLOSED_BAR": {
+        "count": 134,
+        "publication_delays_ms_summary": {
+          "max": 84828,
+          "median": 67446.5,
+          "min": 12565
+        },
+        "source_delays_ms_summary": {
+          "max": 60306,
+          "median": 43680.5,
+          "min": 10805
+        },
+        "within60s": 43
+      },
+      "UNAVAILABLE_INSTRUMENT": {
+        "count": 2,
+        "publication_delays_ms_summary": {
+          "max": 79565,
+          "median": 71745.0,
+          "min": 63925
+        },
+        "source_delays_ms_summary": null,
+        "within60s": 0
+      }
+    },
+    "parent_processing_ms": 71263,
+    "priority_pass": true,
+    "signal_symbols": [],
+    "source_hour_open_ms": 1793098800000
+  },
+  {
+    "archive_files_hashes_pass": true,
+    "archive_receipt_sha256": "b834ac322c71a4ab39bd6d0d028594f0f739aaad7040e88ad0faf6d5bcea8c26",
+    "classification_wall_ms": 611,
+    "groups": {
+      "CURRENT_CLOSED_BAR": {
+        "count": 135,
+        "publication_delays_ms_summary": {
+          "max": 83547,
+          "median": 67242,
+          "min": 11953
+        },
+        "source_delays_ms_summary": {
+          "max": 63153,
+          "median": 45033,
+          "min": 10346
+        },
+        "within60s": 51
+      },
+      "UNAVAILABLE_INSTRUMENT": {
+        "count": 2,
+        "publication_delays_ms_summary": {
+          "max": 78134,
+          "median": 69713.5,
+          "min": 61293
+        },
+        "source_delays_ms_summary": null,
+        "within60s": 0
+      }
+    },
+    "parent_processing_ms": 72214,
+    "priority_pass": true,
+    "signal_symbols": [],
+    "source_hour_open_ms": 1793102400000
+  },
+  {
+    "archive_files_hashes_pass": true,
+    "archive_receipt_sha256": "c0989900bc6e5105adffe1c2e0e37f4034f6554a058f0bf4aa53d68ff06f3082",
+    "classification_wall_ms": 343,
+    "groups": {
+      "CURRENT_CLOSED_BAR": {
+        "count": 135,
+        "publication_delays_ms_summary": {
+          "max": 85587,
+          "median": 67717,
+          "min": 9665
+        },
+        "source_delays_ms_summary": {
+          "max": 61110,
+          "median": 41101,
+          "min": 8085
+        },
+        "within60s": 50
+      },
+      "UNAVAILABLE_INSTRUMENT": {
+        "count": 2,
+        "publication_delays_ms_summary": {
+          "max": 79064,
+          "median": 70535.5,
+          "min": 62007
+        },
+        "source_delays_ms_summary": null,
+        "within60s": 0
+      }
+    },
+    "literal_readback_sha256": "31de21a2d8ca3a7f81245ee4f67705d04145c60b589467f6cfc2114dea98d0f0",
+    "parent_processing_ms": 75026,
+    "priority_pass": true,
+    "signal_symbols": [],
+    "source_hour_open_ms": 1793106000000
+  }
+]

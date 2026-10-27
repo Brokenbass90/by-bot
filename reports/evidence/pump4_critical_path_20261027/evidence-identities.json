@@ -1,0 +1,15 @@
+{
+  ".private/pump4_cpu_trial_20261027/monitor.jsonl": "fad3d09d7c08027e89ca584909f6638ae7e7ea05d55f44d76073af8aaedba910",
+  ".private/pump4_cpu_trial_20261027/priority_ops.py": "ac163c2db33bb8aa30a3310560b54088999c4683cae18c950d1f516a7e8337b7",
+  ".private/pump4_cpu_trial_20261027/spec.json": "08e4446fa8b9012e3e7282b870598f63bd5de2baefb416a0e021ba9341673c7b",
+  ".private/pump4_cpu_trial_20261027/test_priority.py": "815dac844cfa12f09c1018b32c7218c6e5b74ef38766035ec1a19af13584c962",
+  ".private/pump4_h1_actual08_20261027/resources-progress.jsonl": "1071d029b7b5e173931165bd5260d5eb4305ec22e2362d938145e351c53beeef",
+  ".private/pump4_resume_20261027_1245/continuity.json": "411167166d7c9900777391474d075861b486b4b1e16dc5665ddaade693583b08",
+  ".private/pump4_resume_20261027_1245/monthly-health.json": "8e758d10d92b912272d90aa66a013560821fc9cf7229a809b9815e803eebbcf2",
+  ".private/pump4_source_arch_20261027/final-continuity.json": "3eda76e607afb3e39bc2ca097f554a748084c16e16ac782c9530dcf1476c461c",
+  ".private/pump4_source_arch_20261027/final-monthly-health.json": "558d87687aadf40c96700654e43bf813df5f10607c4256f946cf9cf100a8187f",
+  ".private/pump4_source_arch_20261027/reprocess13.py": "53e22ce1bd48f7c4e702a7ef7f02a69c54aca14f02115013feb002a9cbdfd7d9",
+  "research_lab/pump4_source_probe_v1.py": "d599d4d91d3849d9ac5f4606b67211a680811991302a9973057d52d193d1f5e4",
+  "scripts/probe_pump4_source_architecture_v1.py": "d59b568f9eac033c4eab1407405950b6cb212163636b2584b315aad7ee6f3da6",
+  "tests/test_pump4_source_probe_v1.py": "3fff725defbbd5116e0f476933d2dc48a387d02b56018dfee4a8c8b9f34bfa78"
+}

@@ -1,0 +1,26 @@
+............F.                                                           [100%]
+=================================== FAILURES ===================================
+______ test_confirmed_and_forming_pair_can_share_post_boundary_timestamp _______
+
+    def test_confirmed_and_forming_pair_can_share_post_boundary_timestamp():
+     p=m.Probe(T,['BTCUSDT']);v=msg(T-m.H,True);v['data'][0]['timestamp']=T+200;v['data'].append(msg(T,False)['data'][0]);v['data'][1]['timestamp']=T+200
+>    p.add(json.dumps(v),received_ms=T+338,connection=1)
+
+tests/test_pump4_source_probe_v1.py:71:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_lab/pump4_source_probe_v1.py:33: in add
+    values=projection(row);need(type(row['timestamp']) is int and 0<=row['timestamp']<=min(row['end'],ts),'LAST_TRADE_CLOCK')
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, why = 'LAST_TRADE_CLOCK'
+
+    def need(ok,why):
+>    if not ok:raise ValueError('PUMP4_PROBE_'+why)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    ValueError: PUMP4_PROBE_LAST_TRADE_CLOCK
+
+research_lab/pump4_source_probe_v1.py:7: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_source_probe_v1.py::test_confirmed_and_forming_pair_can_share_post_boundary_timestamp
+1 failed, 13 passed in 0.16s

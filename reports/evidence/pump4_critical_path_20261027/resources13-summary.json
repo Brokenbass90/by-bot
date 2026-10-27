@@ -1,0 +1,16 @@
+{
+  "broker_writes": 0,
+  "cgroup_throttled_delta_usec": 0,
+  "cgroup_usage_delta_seconds": 54.273559,
+  "child_completed_cpu_seconds": 29.013466,
+  "child_pid": 3058789,
+  "first_parent_sample_ms": 1793106003072,
+  "last_parent_sample_ms": 1793106090480,
+  "owner_sampled_cpu_seconds": 6.94,
+  "parent_pid": 3058786,
+  "parent_total_cpu_seconds": 25.55,
+  "parent_total_runqueue_wait_seconds": 52.060387105,
+  "process_completed_ms": 1793106085593,
+  "resources_raw_sha256": "9d9a032c74e3c029d74391d036097ca54cc28aaa83338bf78a720cbfdfdb2118",
+  "sampled_rows": 95
+}

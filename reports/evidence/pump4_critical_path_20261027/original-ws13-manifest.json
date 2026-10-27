@@ -1,0 +1,27 @@
+{
+  "money_authority": false,
+  "orders_allowed": false,
+  "production_admission": false,
+  "rest_boundary_ms": 1793102400000,
+  "rest_mode": "LATE_DIAGNOSTIC_ONLY_ONE_READ_PER_SYMBOL",
+  "schema": "PUMP4_EIGHT_SYMBOL_SOURCE_EXPERIMENT_V1",
+  "selection": "three majors plus fixed mid/late operational examples; no signal outcomes",
+  "source_files": {
+    "research_lab/pump4_source_probe_v1.py": "5fc225f926ff55407249e1fbed9f461830bf065f04aac1f07c18beb17d16f00f",
+    "scripts/probe_pump4_source_architecture_v1.py": "d59b568f9eac033c4eab1407405950b6cb212163636b2584b315aad7ee6f3da6"
+  },
+  "stop_ms": 1793106120000,
+  "symbols": [
+    "AAVEUSDT",
+    "ACTUSDT",
+    "APTUSDT",
+    "BANANAS31USDT",
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "ZROUSDT"
+  ],
+  "target_ms": 1793106000000,
+  "universe_sha256": "935880315e2450e03e1df0beb43a8598a9e5440d86036a5469e436f76f6bd71a",
+  "ws_connect_ms": 1793105880000
+}

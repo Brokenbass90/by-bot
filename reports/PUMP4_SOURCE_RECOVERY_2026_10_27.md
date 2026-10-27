@@ -1,5 +1,7 @@
 # PUMP4 — measured source recovery, 27 October2026
 
+**Superseded actual status:** read `PUMP4_CRITICAL_PATH_2026_10_27.md` first.08H1 failed,09H1 guarded priority timing passed but protected-health guard failed/rolled back; normal10–12H1 failed. The pending08H1 section below is dated history.
+
 Continue the installed source/consumer candidate and these receipts. No strategy audit, evaluator, PnL/judge rerun, new funding download, Monthly change or financial GO.
 
 ## Actual06H1: last candidateffb, FAIL

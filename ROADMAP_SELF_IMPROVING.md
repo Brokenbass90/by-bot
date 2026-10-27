@@ -1,13 +1,17 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-**27Oct07:18UTC current:** [source recovery and selected OFF receipt](reports/PUMP4_SOURCE_RECOVERY_2026_10_27.md).
-355local/same355VPS PASS; DATA+sole financial owner selecte4feca49OFF. History33,935files,
-818853/0restarts/26cleanactualcycles/noGO/0writes; Monthly unchanged. Negative-only
-consumer cache and bounded10006 recovery accepted; old06/07H1FAIL. Next actualnewpath
-08UTC/10Nicosia observer alreadyrunning; H1PENDING/TINYBLOCKED/economicsINCONCLUSIVE.
-PUMP technicalmicro requires actualgates+exactownermoneyGO, no incomeclaim. Existing
-Polymarket design is next intake, no newjudge/researchduplication/wallet/order.
-Earlier27Oct05:30/26Oct rows below are dated history, superseded by this receipt.
+**27Oct13:06UTC current:** [full critical path and isolated source experiment](reports/PUMP4_CRITICAL_PATH_2026_10_27.md).
+E4sameOFF/355productiontests;08H1FAIL48/129 and measured49.29sCPUqueue.
+GuardedDATAweighttrial09H1timing135/135by60s butMonthlyageguardFAIL; auto-restored
+normalpriority09:00:57, expiryconfirmed. Normal10–12H1FAIL45/134,43/134,51/135.
+13H1 ordinarypathFAIL50/135; detached8symbolV1probeFAIL(schema), V2offline8/8exact
+closed/opencontent withoriginal338–1025msreceipts. No cleanprospectivePASS inferred.
+LateREST+prefixcontent8/8match; reviewed15probe+9rollbacktestsPASS.
+No productionadapterchange, noMonthlyselection/financialGO. Original818853/PID3029723/
+0restarts/3458actualOFFcycles/0writes; economicsINCONCLUSIVE/TINYBLOCKED.
+Next gate: sourcecontent/timing -> versionedprefixcustody/parity -> installedH1,
+then account/sizing/protection and exact ownertechnicalmicrodecision. PUMPfirst.
+Earlier27Oct07:18/05:30 and26Oct rows below are dated history.
 
 **27Oct current PUMP receipt:** [explicit entry/OFF deployment and actual H1](reports/PUMP4_ENTRY_AND_H1_2026_10_27.md).
 Native84 protocol retained; explicit <=60s entry/risk/source policy +exchange-clock

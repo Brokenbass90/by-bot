@@ -1,0 +1,182 @@
+{
+  "boundary_ms": 1793106000000,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "clean_prospective_pass": false,
+  "comparison": {
+    "status": "SEALED_REFERENCE_COMPARED",
+    "symbols": {
+      "AAVEUSDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      },
+      "ACTUSDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      },
+      "APTUSDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      },
+      "BANANAS31USDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      },
+      "BTCUSDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      },
+      "ETHUSDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      },
+      "SOLUSDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      },
+      "ZROUSDT": {
+        "closed_decimal_equal": true,
+        "closed_float_projection_equal": true,
+        "next_open_equal": true
+      }
+    }
+  },
+  "connection_attempts": 1,
+  "connection_errors": [],
+  "connection_ids": [
+    1
+  ],
+  "corrected_content_and_receive_hypothesis_supported": true,
+  "corrected_parser_sha256": "d599d4d91d3849d9ac5f4606b67211a680811991302a9973057d52d193d1f5e4",
+  "max_wall_monotonic_divergence_ms": 7.262586000026204,
+  "money_authority": false,
+  "orders_allowed": false,
+  "original_receipt_sha256": "d9c91d5a58c2a2db668debd8668215c285f12397fc3368582719394572667d32",
+  "original_v1_status": "VALIDATION_FAILED",
+  "original_v1_validation_errors": [
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000338
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000381
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000631
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000660
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000662
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000753
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106000773
+    },
+    {
+      "connection": 1,
+      "error_type": "ValueError",
+      "received_ms": 1793106001025
+    }
+  ],
+  "production_admission": false,
+  "raw_log_sha256": "bf64c3bbc86c4689b715c09475ef0dbd3c55bccd81dc5a033d21bf1529b0908c",
+  "reconnected": false,
+  "schema": "PUMP4_DERIVED_OFFLINE_SOURCE_CLASSIFICATION_V2",
+  "subscription_acks": [
+    {
+      "connection": 1,
+      "received_ms": 1793105880769
+    }
+  ],
+  "symbols": {
+    "AAVEUSDT": {
+      "closed_first_received_ms": 1793106000660,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106000660,
+      "pair_first_received_ms": 1793106000660,
+      "same_connection": true,
+      "timely_pair": true
+    },
+    "ACTUSDT": {
+      "closed_first_received_ms": 1793106000631,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106000631,
+      "pair_first_received_ms": 1793106000631,
+      "same_connection": true,
+      "timely_pair": true
+    },
+    "APTUSDT": {
+      "closed_first_received_ms": 1793106000773,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106000773,
+      "pair_first_received_ms": 1793106000773,
+      "same_connection": true,
+      "timely_pair": true
+    },
+    "BANANAS31USDT": {
+      "closed_first_received_ms": 1793106000338,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106000338,
+      "pair_first_received_ms": 1793106000338,
+      "same_connection": true,
+      "timely_pair": true
+    },
+    "BTCUSDT": {
+      "closed_first_received_ms": 1793106000753,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106000753,
+      "pair_first_received_ms": 1793106000753,
+      "same_connection": true,
+      "timely_pair": true
+    },
+    "ETHUSDT": {
+      "closed_first_received_ms": 1793106000662,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106000662,
+      "pair_first_received_ms": 1793106000662,
+      "same_connection": true,
+      "timely_pair": true
+    },
+    "SOLUSDT": {
+      "closed_first_received_ms": 1793106000381,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106000381,
+      "pair_first_received_ms": 1793106000381,
+      "same_connection": true,
+      "timely_pair": true
+    },
+    "ZROUSDT": {
+      "closed_first_received_ms": 1793106001025,
+      "conflict": false,
+      "new_open_first_received_ms": 1793106001025,
+      "pair_first_received_ms": 1793106001025,
+      "same_connection": true,
+      "timely_pair": true
+    }
+  },
+  "validation_errors": []
+}

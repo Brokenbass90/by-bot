@@ -1,27 +1,32 @@
 # Codex session checkpoint — 2026-09-06
 
-CURRENT27Oct07:18UTC — source recovery SELECTED ORDERS_OFF
+Current27Oct13:06UTC — critical path and source alternative measured; OFF unchanged
 
-Read `PUMP4_SOURCE_RECOVERY_2026_10_27.md` FIRST. Continue exact installed path;
-no new audit/judge/PnL/funding download. Candidatee4feca498f37e27d selected for DATA
-AND sole financialownerOFF,355local/same355VPS network-deniedPASS,0 fallback.
-New negative-only observation cache (never eligible admission), bounded same-query
-10006 recovery with durable failed attempts/original60s/monotonic budget,403 halt.
-Frozen producer/intake/reference/risk/caps unchanged. Independent critical reviewPASS.
-Actual9240-observation scan8–10s→warm.373–.466s (cold4.643), NOT actualH1 proof.
-Config1a5a4eac…caf470/scope855fd45c…ce90b3/PID3029723, original818853 held,
-0restarts/26cleanactualOFFcycles/noGO/0writes;33,935 historical files preserved.
-Monthly v6 unchanged; no reactivation/NETexit/KITY switch or financialGO.
-Actual06H1 OLDffb:23/124by60s,12API10006,0signals;07H1OLDffb:22/129,7blocked,
-0signals. BothFAIL; never label them newcandidateproof or retry those hours.
-NEXT existing27Oct08:00:02UTC =10:00:02Nicosia, sourcehour1793088000000, roote4.
-One read-only observer already runningSSH67826; output.private/pump4_source_20261027/actual08-progress.jsonl,
-ends08:06UTC, quotesonlyactualsignals. Read immutableproof aftercompletion,
-no duplicatecollector/observer. NewactualH1PENDING, notTINY_READY.
-EconomicsINCONCLUSIVE; same-input84+open1parity/native84memoryprotocol retained.
-Technicalmicro separatefrom incomeLIVE, stillneedsactualgates andnewexacthumanGO.
-NextcontourPolymarket: existing22Oct design read-only intake, no sealedoutcome/newjudge,
-no approveddollars/keys/orders/currentresearchPASS inferred. Keep one roadmap.
+Read `PUMP4_CRITICAL_PATH_2026_10_27.md` FIRST. No new audit/judge/PnL/funding download.
+Installed e4feca498f37e27d stays DATA+sole financialownerORDERS_OFF;355local/same355VPS
+production acceptance retained; all117packagefiles unchanged. Frozen producer/intake/
+risk/60s unchanged.08H1 FAIL48/129CURRENT<=60s,14API10006 recovered/0BLOCKED_SOURCE;
+parent49.29s runnable queue wait.13H1 confirms52.06squeue,50/135timely,max85.587s.
+Guarded DATA CPUWeight1000 trial09H1 timing135/135,max56.265s; Monthlyage>90s
+triggered rollback09:00:57.314. Protected-healthFAIL, notproductionPASS. Normalunit
+6acbf62f…dc424/weight100 restored; expiry09:03 succeeded. No repeattrial or guardrelax.
+Normal10/11/12H1 FAIL45/134,43/134,51/135; allsixarchivehashes/CURRENTpriorityPASS.
+No signals.13:06 readbackPID3029723/0restarts/original818853/3458OFFcycles,
+emptyfinancialhistories/noGO/0writes. Monthlyv6 unchanged/sourcePASS/issues[].
+Detached8symbol public13H1probe COMPLETE; originalV1FAIL8validationerrors preserved.
+Probe mistakenly bounded closedrow.timestamp byrow.end; actual combinedclosed/open
+frames carrypostboundarytimestamp. CorrectedV2schema reviewed,15probe+9rollbacktestsPASS.
+OFFLINE reprocessing:8/8closedOHLCV/turnover+nextopen exact vs sealed13H1; original
+pairreceiveT+338..1025ms, oneconnection/preH1ACK/nochangedduplicates. This supports
+engineeringhypothesis only; originalV1notupgraded, no cleanprospectivePASS/admission.
+Eight lateREST pairs and sealed1001closed-prefix content8/8match; notfreshness/entryPASS.
+Probe/root /opt/bybot-research/pump4-server-orders-off-20261023/source-architecture-probe-20261027-13;
+local .private/pump4_source_arch_20261027. Probe andCPUobserver bothfinished; no duplicate.
+Currentproductionclosed_h1/causal_plan still1002freshrows; no directWSadmission.
+LIVEBLOCKED/TINY_READYfalse/economicsINCONCLUSIVE. Next onebounded engineeringstep:
+versioned sealed-prefix+newbar sourcecustody/admission, preserveoriginalclocks/epochs/
+5ssourcefreshness/60sentry; exactparity/cleanprospective fullinstalledH1 before account/
+sizing/protection and exacthumanmoneyGO. NoPolymarketdiversion orMonthlyactivation.
 
 ---
 Earlier dated checkpoints below are history.
