@@ -1,0 +1,892 @@
+{
+ "etap": "E0",
+ "btc_chasov": 4301,
+ "btc_dyr": 0,
+ "sverka_m5": {
+  "chasov_peresecheniya": 1154,
+  "maks_rashozhdenie_close": 0.0
+ },
+ "btc_do": 1793073600000,
+ "otchet": {
+  "vse": {
+   "n": 84,
+   "sred_R": 0.063,
+   "itog_R": 5.3,
+   "ubytochnyh": 25,
+   "hudshiy": -1.018,
+   "prosadka_R": 8.81,
+   "kontrol_sred": -0.0665,
+   "prevyshenie": 0.1296
+  },
+  "po_rezhimam": {
+   "BULL_TREND": {
+    "n": 29,
+    "sred_R": -0.0243,
+    "itog_R": -0.7,
+    "ubytochnyh": 12,
+    "hudshiy": -1.006,
+    "prosadka_R": 5.83,
+    "kontrol_sred": -0.055,
+    "prevyshenie": 0.0307
+   },
+   "BEAR_TREND": {
+    "n": 5,
+    "sred_R": -0.0197,
+    "itog_R": -0.1,
+    "ubytochnyh": 2,
+    "hudshiy": -1.018,
+    "prosadka_R": 1.16,
+    "kontrol_sred": -0.1121,
+    "prevyshenie": 0.0924
+   },
+   "NEUTRAL": {
+    "n": 50,
+    "sred_R": 0.122,
+    "itog_R": 6.1,
+    "ubytochnyh": 11,
+    "hudshiy": -1.01,
+    "prosadka_R": 3.16,
+    "kontrol_sred": -0.0686,
+    "prevyshenie": 0.1906
+   },
+   "UNKNOWN": {
+    "n": 0
+   }
+  },
+  "filtr_ne_bull": {
+   "n": 55,
+   "sred_R": 0.1091,
+   "itog_R": 6.0,
+   "ubytochnyh": 13,
+   "hudshiy": -1.018,
+   "prosadka_R": 4.32,
+   "kontrol_sred": -0.0726,
+   "prevyshenie": 0.1817
+  },
+  "otrezano": {
+   "n": 29,
+   "sred_R": -0.0243,
+   "itog_R": -0.7,
+   "ubytochnyh": 12,
+   "hudshiy": -1.006,
+   "prosadka_R": 5.83,
+   "kontrol_sred": -0.055,
+   "prevyshenie": 0.0307
+  },
+  "dolya_otrezano": 0.345,
+  "epizody": {
+   "BULL_TREND": 6,
+   "NEUTRAL": 11,
+   "BEAR_TREND": 3
+  },
+  "butstrap": {
+   "raznica": 0.151,
+   "q05": -0.3044,
+   "dolya_le0": 0.3542,
+   "nedel": 9
+  }
+ },
+ "po_mesyacam": {
+  "2026-09": {
+   "BULL_TREND": {
+    "n": 22,
+    "sred_R": -0.1291,
+    "itog_R": -2.84,
+    "ubytochnyh": 11,
+    "hudshiy": -1.006,
+    "prosadka_R": 5.83,
+    "kontrol_sred": -0.0474,
+    "prevyshenie": -0.0817
+   },
+   "BEAR_TREND": {
+    "n": 3,
+    "sred_R": -0.2671,
+    "itog_R": -0.8,
+    "ubytochnyh": 2,
+    "hudshiy": -1.018,
+    "prosadka_R": 1.16,
+    "kontrol_sred": -0.0377,
+    "prevyshenie": -0.2294
+   },
+   "NEUTRAL": {
+    "n": 31,
+    "sred_R": -0.0025,
+    "itog_R": -0.08,
+    "ubytochnyh": 10,
+    "hudshiy": -1.01,
+    "prosadka_R": 3.16,
+    "kontrol_sred": -0.0672,
+    "prevyshenie": 0.0647
+   },
+   "UNKNOWN": {
+    "n": 0
+   }
+  },
+  "2026-10": {
+   "BULL_TREND": {
+    "n": 7,
+    "sred_R": 0.3051,
+    "itog_R": 2.14,
+    "ubytochnyh": 1,
+    "hudshiy": -0.004,
+    "prosadka_R": 0.0,
+    "kontrol_sred": -0.0788,
+    "prevyshenie": 0.3839
+   },
+   "BEAR_TREND": {
+    "n": 2,
+    "sred_R": 0.3513,
+    "itog_R": 0.7,
+    "ubytochnyh": 0,
+    "hudshiy": 0.345,
+    "prosadka_R": 0.0,
+    "kontrol_sred": -0.2238,
+    "prevyshenie": 0.5752
+   },
+   "NEUTRAL": {
+    "n": 19,
+    "sred_R": 0.325,
+    "itog_R": 6.18,
+    "ubytochnyh": 1,
+    "hudshiy": -0.203,
+    "prosadka_R": 0.2,
+    "kontrol_sred": -0.071,
+    "prevyshenie": 0.396
+   },
+   "UNKNOWN": {
+    "n": 0
+   }
+  }
+ },
+ "rezhim_btc_po_dnyam": {
+  "09-02": "NEUT",
+  "09-03": "NEUT",
+  "09-04": "BULL",
+  "09-05": "NEUT",
+  "09-06": "NEUT",
+  "09-07": "NEUT",
+  "09-08": "NEUT",
+  "09-09": "NEUT",
+  "09-10": "BEAR",
+  "09-11": "BEAR",
+  "09-12": "NEUT",
+  "09-13": "NEUT",
+  "09-14": "NEUT",
+  "09-15": "NEUT",
+  "09-16": "BEAR",
+  "09-17": "NEUT",
+  "09-18": "NEUT",
+  "09-19": "BULL",
+  "09-20": "BULL",
+  "09-21": "NEUT",
+  "09-22": "BULL",
+  "09-23": "NEUT",
+  "09-24": "NEUT",
+  "09-25": "NEUT",
+  "09-26": "NEUT",
+  "09-27": "NEUT",
+  "09-28": "NEUT",
+  "09-29": "NEUT",
+  "09-30": "NEUT",
+  "10-01": "BULL",
+  "10-02": "BULL",
+  "10-03": "NEUT",
+  "10-04": "NEUT",
+  "10-05": "BULL",
+  "10-06": "NEUT",
+  "10-07": "NEUT",
+  "10-08": "BEAR",
+  "10-09": "BEAR",
+  "10-10": "NEUT",
+  "10-11": "NEUT",
+  "10-12": "NEUT",
+  "10-13": "NEUT",
+  "10-14": "NEUT",
+  "10-15": "BEAR",
+  "10-16": "NEUT",
+  "10-17": "BEAR",
+  "10-18": "NEUT",
+  "10-19": "NEUT",
+  "10-20": "NEUT",
+  "10-21": "BULL",
+  "10-22": "BULL"
+ },
+ "sdelki": [
+  {
+   "sym": "1000PEPEUSDT",
+   "ts": 1790121600000,
+   "mesyac": "2026-09",
+   "R": 0.3482,
+   "ctrl": 0.1857,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "AAVEUSDT",
+   "ts": 1790776800000,
+   "mesyac": "2026-09",
+   "R": -1.0012,
+   "ctrl": 0.0759,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ACEUSDT",
+   "ts": 1788890400000,
+   "mesyac": "2026-09",
+   "R": 0.2717,
+   "ctrl": 0.0782,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ACEUSDT",
+   "ts": 1790240400000,
+   "mesyac": "2026-09",
+   "R": -0.515,
+   "ctrl": -0.3051,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ACEUSDT",
+   "ts": 1790499600000,
+   "mesyac": "2026-09",
+   "R": 0.3563,
+   "ctrl": -0.2763,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ACTUSDT",
+   "ts": 1791763200000,
+   "mesyac": "2026-10",
+   "R": 0.3515,
+   "ctrl": 0.1748,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1790283600000,
+   "mesyac": "2026-09",
+   "R": -1.005,
+   "ctrl": 0.026,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "AEROUSDT",
+   "ts": 1791734400000,
+   "mesyac": "2026-10",
+   "R": 0.3521,
+   "ctrl": -0.4987,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "AKEUSDT",
+   "ts": 1788332400000,
+   "mesyac": "2026-09",
+   "R": -0.5162,
+   "ctrl": 0.0926,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "AKEUSDT",
+   "ts": 1790848800000,
+   "mesyac": "2026-10",
+   "R": 0.3707,
+   "ctrl": 0.1803,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "AKEUSDT",
+   "ts": 1791540000000,
+   "mesyac": "2026-10",
+   "R": 0.3577,
+   "ctrl": -0.3852,
+   "rezhim": "BEAR_TREND"
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1790006400000,
+   "mesyac": "2026-09",
+   "R": -0.5109,
+   "ctrl": -0.118,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ALGOUSDT",
+   "ts": 1791532800000,
+   "mesyac": "2026-10",
+   "R": 0.3449,
+   "ctrl": -0.0625,
+   "rezhim": "BEAR_TREND"
+  },
+  {
+   "sym": "ALLOUSDT",
+   "ts": 1790071200000,
+   "mesyac": "2026-09",
+   "R": -1.0065,
+   "ctrl": 0.1135,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "ALLOUSDT",
+   "ts": 1790254800000,
+   "mesyac": "2026-09",
+   "R": 0.1604,
+   "ctrl": 0.166,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "APTUSDT",
+   "ts": 1789858800000,
+   "mesyac": "2026-09",
+   "R": -1.0058,
+   "ctrl": -0.0055,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "ARBUSDT",
+   "ts": 1788307200000,
+   "mesyac": "2026-09",
+   "R": -1.0046,
+   "ctrl": 0.1003,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ASTERUSDT",
+   "ts": 1788696000000,
+   "mesyac": "2026-09",
+   "R": 0.3544,
+   "ctrl": -0.0963,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "BLESSUSDT",
+   "ts": 1788667200000,
+   "mesyac": "2026-09",
+   "R": 0.3495,
+   "ctrl": -0.0475,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "BOMEUSDT",
+   "ts": 1790010000000,
+   "mesyac": "2026-09",
+   "R": 0.2141,
+   "ctrl": -0.0697,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "BROCCOLIUSDT",
+   "ts": 1790035200000,
+   "mesyac": "2026-09",
+   "R": -1.0054,
+   "ctrl": -0.4289,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "CCUSDT",
+   "ts": 1790445600000,
+   "mesyac": "2026-09",
+   "R": 0.3579,
+   "ctrl": -0.0278,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "COAIUSDT",
+   "ts": 1788498000000,
+   "mesyac": "2026-09",
+   "R": 0.3725,
+   "ctrl": -0.1661,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "COAIUSDT",
+   "ts": 1791136800000,
+   "mesyac": "2026-10",
+   "R": 0.3578,
+   "ctrl": -0.1114,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "COTIUSDT",
+   "ts": 1789081200000,
+   "mesyac": "2026-09",
+   "R": 0.3553,
+   "ctrl": -0.1148,
+   "rezhim": "BEAR_TREND"
+  },
+  {
+   "sym": "CRVUSDT",
+   "ts": 1788336000000,
+   "mesyac": "2026-09",
+   "R": 0.1442,
+   "ctrl": -0.0116,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ENAUSDT",
+   "ts": 1788714000000,
+   "mesyac": "2026-09",
+   "R": 0.351,
+   "ctrl": -0.0969,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ESPORTSUSDT",
+   "ts": 1788307200000,
+   "mesyac": "2026-09",
+   "R": 0.4037,
+   "ctrl": 0.1056,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ESPORTSUSDT",
+   "ts": 1790316000000,
+   "mesyac": "2026-09",
+   "R": -0.4999,
+   "ctrl": 0.1022,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1789848000000,
+   "mesyac": "2026-09",
+   "R": -0.3778,
+   "ctrl": 0.0137,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "ESPUSDT",
+   "ts": 1790856000000,
+   "mesyac": "2026-10",
+   "R": -0.0041,
+   "ctrl": -0.2765,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "FARTCOINUSDT",
+   "ts": 1790085600000,
+   "mesyac": "2026-09",
+   "R": 0.3586,
+   "ctrl": -0.3735,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "FILUSDT",
+   "ts": 1792170000000,
+   "mesyac": "2026-10",
+   "R": 0.3525,
+   "ctrl": 0.0428,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "GALAUSDT",
+   "ts": 1790042400000,
+   "mesyac": "2026-09",
+   "R": 0.3541,
+   "ctrl": 0.2682,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "GRASSUSDT",
+   "ts": 1791244800000,
+   "mesyac": "2026-10",
+   "R": 0.3549,
+   "ctrl": 0.1019,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "GWEIUSDT",
+   "ts": 1791648000000,
+   "mesyac": "2026-10",
+   "R": 0.3551,
+   "ctrl": 0.0416,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "GWEIUSDT",
+   "ts": 1792404000000,
+   "mesyac": "2026-10",
+   "R": 0.3585,
+   "ctrl": 0.216,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790528400000,
+   "mesyac": "2026-09",
+   "R": 0.3613,
+   "ctrl": -0.5889,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "HEIUSDT",
+   "ts": 1790913600000,
+   "mesyac": "2026-10",
+   "R": 0.358,
+   "ctrl": -0.0065,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "ICPUSDT",
+   "ts": 1788836400000,
+   "mesyac": "2026-09",
+   "R": 0.3552,
+   "ctrl": -0.0754,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ICPUSDT",
+   "ts": 1790733600000,
+   "mesyac": "2026-09",
+   "R": 0.1853,
+   "ctrl": -0.1638,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ICPUSDT",
+   "ts": 1791806400000,
+   "mesyac": "2026-10",
+   "R": 0.3536,
+   "ctrl": -0.1612,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "INJUSDT",
+   "ts": 1791702000000,
+   "mesyac": "2026-10",
+   "R": 0.3548,
+   "ctrl": 0.1843,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "INJUSDT",
+   "ts": 1791972000000,
+   "mesyac": "2026-10",
+   "R": 0.3543,
+   "ctrl": -0.0221,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "JTOUSDT",
+   "ts": 1790488800000,
+   "mesyac": "2026-09",
+   "R": 0.355,
+   "ctrl": 0.0687,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "KAITOUSDT",
+   "ts": 1789790400000,
+   "mesyac": "2026-09",
+   "R": 0.3502,
+   "ctrl": 0.1227,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "LAUSDT",
+   "ts": 1792627200000,
+   "mesyac": "2026-10",
+   "R": 0.3543,
+   "ctrl": 0.0535,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "LDOUSDT",
+   "ts": 1790442000000,
+   "mesyac": "2026-09",
+   "R": 0.3515,
+   "ctrl": -0.0472,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "LITEUSDT",
+   "ts": 1788980400000,
+   "mesyac": "2026-09",
+   "R": 0.3525,
+   "ctrl": -0.016,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "MEUSDT",
+   "ts": 1791010800000,
+   "mesyac": "2026-10",
+   "R": 0.3552,
+   "ctrl": -0.1256,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "MMTUSDT",
+   "ts": 1789797600000,
+   "mesyac": "2026-09",
+   "R": -0.5262,
+   "ctrl": 0.0925,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "MSTRUSDT",
+   "ts": 1788512400000,
+   "mesyac": "2026-09",
+   "R": 0.3458,
+   "ctrl": -0.065,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "MUBARAKUSDT",
+   "ts": 1788742800000,
+   "mesyac": "2026-09",
+   "R": 0.3546,
+   "ctrl": -0.3885,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "MUBARAKUSDT",
+   "ts": 1789268400000,
+   "mesyac": "2026-09",
+   "R": -0.1711,
+   "ctrl": -0.5942,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "MUBARAKUSDT",
+   "ts": 1791907200000,
+   "mesyac": "2026-10",
+   "R": 0.3529,
+   "ctrl": -0.2787,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "NILUSDT",
+   "ts": 1790834400000,
+   "mesyac": "2026-10",
+   "R": 0.3561,
+   "ctrl": -0.4643,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "NILUSDT",
+   "ts": 1791734400000,
+   "mesyac": "2026-10",
+   "R": 0.3559,
+   "ctrl": -0.2272,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "OPUSDT",
+   "ts": 1789848000000,
+   "mesyac": "2026-09",
+   "R": -1.0014,
+   "ctrl": -0.0784,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "ORDIUSDT",
+   "ts": 1788516000000,
+   "mesyac": "2026-09",
+   "R": 0.2238,
+   "ctrl": -0.0719,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "PEOPLEUSDT",
+   "ts": 1789725600000,
+   "mesyac": "2026-09",
+   "R": -1.0095,
+   "ctrl": -0.1476,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "PUMPFUNUSDT",
+   "ts": 1791108000000,
+   "mesyac": "2026-10",
+   "R": 0.3584,
+   "ctrl": 0.1311,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "RENDERUSDT",
+   "ts": 1790056800000,
+   "mesyac": "2026-09",
+   "R": -0.0785,
+   "ctrl": -0.4298,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1790442000000,
+   "mesyac": "2026-09",
+   "R": -0.5196,
+   "ctrl": 0.0048,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "SEIUSDT",
+   "ts": 1792195200000,
+   "mesyac": "2026-10",
+   "R": 0.3554,
+   "ctrl": 0.1185,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "TAOUSDT",
+   "ts": 1790089200000,
+   "mesyac": "2026-09",
+   "R": 0.3557,
+   "ctrl": -0.1279,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "TRUMPUSDT",
+   "ts": 1788505200000,
+   "mesyac": "2026-09",
+   "R": 0.3528,
+   "ctrl": -0.1351,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "TUTUSDT",
+   "ts": 1788728400000,
+   "mesyac": "2026-09",
+   "R": 0.3458,
+   "ctrl": 0.2178,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "TUTUSDT",
+   "ts": 1789549200000,
+   "mesyac": "2026-09",
+   "R": -1.0183,
+   "ctrl": 0.0945,
+   "rezhim": "BEAR_TREND"
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1790085600000,
+   "mesyac": "2026-09",
+   "R": -0.0738,
+   "ctrl": -0.1482,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "UBUSDT",
+   "ts": 1792623600000,
+   "mesyac": "2026-10",
+   "R": 0.3455,
+   "ctrl": -0.14,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1789812000000,
+   "mesyac": "2026-09",
+   "R": -0.5139,
+   "ctrl": -0.1094,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "UNIUSDT",
+   "ts": 1790226000000,
+   "mesyac": "2026-09",
+   "R": 0.3462,
+   "ctrl": 0.0859,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "USUSDT",
+   "ts": 1789135200000,
+   "mesyac": "2026-09",
+   "R": -0.1383,
+   "ctrl": -0.0927,
+   "rezhim": "BEAR_TREND"
+  },
+  {
+   "sym": "USUSDT",
+   "ts": 1792699200000,
+   "mesyac": "2026-10",
+   "R": 0.3566,
+   "ctrl": -0.4285,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "VIRTUALUSDT",
+   "ts": 1790042400000,
+   "mesyac": "2026-09",
+   "R": -0.5117,
+   "ctrl": 0.153,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "WIFUSDT",
+   "ts": 1789794000000,
+   "mesyac": "2026-09",
+   "R": -0.5138,
+   "ctrl": -0.0611,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "WLDUSDT",
+   "ts": 1788890400000,
+   "mesyac": "2026-09",
+   "R": 0.3546,
+   "ctrl": -0.2171,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "WLDUSDT",
+   "ts": 1791666000000,
+   "mesyac": "2026-10",
+   "R": 0.3501,
+   "ctrl": -0.0618,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "WLDUSDT",
+   "ts": 1792573200000,
+   "mesyac": "2026-10",
+   "R": 0.3488,
+   "ctrl": -0.2807,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "XPLUSDT",
+   "ts": 1790067600000,
+   "mesyac": "2026-09",
+   "R": 0.3543,
+   "ctrl": 0.2889,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "ZECUSDT",
+   "ts": 1788786000000,
+   "mesyac": "2026-09",
+   "R": 0.3517,
+   "ctrl": 0.0806,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1788498000000,
+   "mesyac": "2026-09",
+   "R": 0.3588,
+   "ctrl": -0.0804,
+   "rezhim": "BULL_TREND"
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1791118800000,
+   "mesyac": "2026-10",
+   "R": -0.2035,
+   "ctrl": 0.0151,
+   "rezhim": "NEUTRAL"
+  },
+  {
+   "sym": "ZROUSDT",
+   "ts": 1792159200000,
+   "mesyac": "2026-10",
+   "R": 0.3551,
+   "ctrl": -0.0768,
+   "rezhim": "NEUTRAL"
+  }
+ ],
+ "kogda_utc": "2026-10-27T05:09:46Z",
+ "sekund": 0,
+ "prereg_sha256": "6699dd41491eaafd2882f6795beafc2c356df38bef756b1d4e0d2be414efd1b4",
+ "kod_sha256": "214d0c5b1088aa1cde3335c5ce34db68c2657fc4210006b363c5b5ba0df34ae3"
+}
