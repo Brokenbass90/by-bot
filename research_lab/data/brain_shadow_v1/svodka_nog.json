@@ -1,5 +1,5 @@
 {
- "kogda": "2026-10-27T13:53:28Z",
+ "kogda": "2026-10-27T14:39:51Z",
  "zapisey": 201,
  "nogi": {
   "KITY": {
@@ -81,6 +81,61 @@
     "sred": 622.5157
    }
   }
+ },
+ "pravila_brain": {
+  "P1_PUMP4_volna3_BULL": {
+   "noga": "PUMP4",
+   "propuskov": 19,
+   "nezavisimyh_dney": 7,
+   "edinica": "R",
+   "effekt_na_propusk": 0.1107,
+   "ci90": [
+    -0.2776,
+    0.383
+   ],
+   "effekt_summa": 2.1,
+   "status": "INCONCLUSIVE",
+   "pravilo_statusa": "INCONCLUSIVE если дней < 15 или 90 % интервал (бутстрап по дням) накрывает 0"
+  },
+  "P2_PUMP4_BULL": {
+   "noga": "PUMP4",
+   "propuskov": 29,
+   "nezavisimyh_dney": 9,
+   "edinica": "R",
+   "effekt_na_propusk": 0.028,
+   "ci90": [
+    -0.3197,
+    0.2291
+   ],
+   "effekt_summa": 0.81,
+   "status": "INCONCLUSIVE",
+   "pravilo_statusa": "INCONCLUSIVE если дней < 15 или 90 % интервал (бутстрап по дням) накрывает 0"
+  },
+  "P3_zapret_dvoynoy_SHORT_HVOST": {
+   "noga": "SHORT_HVOST",
+   "propuskov": 0,
+   "nezavisimyh_dney": 0,
+   "edinica": null,
+   "effekt_na_propusk": null,
+   "ci90": [
+    null,
+    null
+   ],
+   "effekt_summa": 0.0,
+   "status": "INCONCLUSIVE",
+   "pravilo_statusa": "INCONCLUSIVE если дней < 15 или 90 % интервал (бутстрап по дням) накрывает 0"
+  }
+ },
+ "karta_riska": {
+  "pozicyy_s_vremenem": 200,
+  "pik_odnovremennyh_shortov": 15,
+  "pik_kogda": "2026-09-22T15:00Z",
+  "dvoynye_po_monete": 1,
+  "monety_dvoynyh": [
+   "BLESSUSDT"
+  ],
+  "nominal_v_pike_pri_50usd": 750,
+  "primechanie": "ETS2S2 без времени выхода и KITY (нейтральная корзина) в пике шортов не учитываются"
  },
  "primechanie": "все исходы — model (повтор/тень); real появятся с первыми реальными сделками"
 }
