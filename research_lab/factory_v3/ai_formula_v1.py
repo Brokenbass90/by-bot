@@ -294,6 +294,13 @@ def iz_otveta_menyu(obj, men, okno=OKNO_II):
             "izderzhki_ocenka_bps": 30, "formula": f, "znak": zn, "normirovka": "xs_z", "okno": okno}
 
 
+def _uroki():
+    """Память провалов из реестра гипотез (fabrika/reestr_gipotez.py), ≤ 450 знаков; нет файла — пусто."""
+    p = LAB / "data" / "factory_v3" / "uroki_dlya_ii.txt"
+    try: return p.read_text()[:450]
+    except Exception: return ""
+
+
 def prompt_menyu(men):
     """Короткий промпт (≤ ~1500 знаков): num_ctx 2048 — длинный промпт обрезался бы, и модель видела бы только хвост."""
     at = sorted({a for f in men for a in f[1:]})
@@ -302,7 +309,7 @@ def prompt_menyu(men):
     return ("Крипто, топ-50 монет, раз в неделю ранжируем по формуле. znak 1: купить верх, продать низ; -1: наоборот.\n"
             "Атомы: " + sl + "\nminus(a,b)=a-b, plus=a+b, proizv=a*b (всё в z-оценках внутри недели).\n"
             "Выбери ОДНУ формулу, у которой есть экономическая причина (кто вынужден торговать, почему цена отклоняется):\n"
-            + spisok + "\nОтвет строго JSON: {\"nomer\": N, \"znak\": 1 или -1, \"mehanizm\": \"2-4 предложения\", "
+            + spisok + "\n" + _uroki() + "\nОтвет строго JSON: {\"nomer\": N, \"znak\": 1 или -1, \"mehanizm\": \"2-4 предложения\", "
             "\"pochemu_ne_arbitrazhirovano\": \"1-2 предложения\"}")
 
 
