@@ -1,0 +1,2470 @@
+{
+ "kogda": "2026-10-27T15:26Z",
+ "katalog": 292,
+ "katalog_sha": "e368c3920b7fe533",
+ "dney": 25,
+ "porog_t_bonferroni": 3.58,
+ "min_dney": 60,
+ "kandidatov": 0,
+ "top15_opisatelno": {
+  "minus(mom1,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 87.07,
+   "t": 2.21,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 74.29,
+   "t": 1.52,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 35.19,
+   "t": 1.48,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,spot_minus_perp)|-1": {
+   "dney": 25,
+   "sred_bps_den": 36.1,
+   "t": 1.3,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 30.92,
+   "t": 1.27,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 50.97,
+   "t": 1.2,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 29.47,
+   "t": 1.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 27.35,
+   "t": 1.14,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 38.44,
+   "t": 1.13,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 28.99,
+   "t": 1.09,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "mom28|-1": {
+   "dney": 25,
+   "sred_bps_den": 48.32,
+   "t": 1.08,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "diapazon|-1": {
+   "dney": 25,
+   "sred_bps_den": 51.13,
+   "t": 1.04,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "minus(mom1,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 45.0,
+   "t": 1.04,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,m3_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 26.24,
+   "t": 1.01,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 32.51,
+   "t": 1.01,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  }
+ },
+ "vse": {
+  "m3_perp|+1": {
+   "dney": 25,
+   "sred_bps_den": -20.21,
+   "t": -0.72,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "m3_perp|-1": {
+   "dney": 25,
+   "sred_bps_den": 0.21,
+   "t": 0.01,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "spot|+1": {
+   "dney": 25,
+   "sred_bps_den": -25.04,
+   "t": -1.26,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "spot|-1": {
+   "dney": 25,
+   "sred_bps_den": 5.04,
+   "t": 0.25,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "spot_minus_perp|+1": {
+   "dney": 25,
+   "sred_bps_den": 1.48,
+   "t": 0.07,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "spot_minus_perp|-1": {
+   "dney": 25,
+   "sred_bps_den": -21.48,
+   "t": -0.97,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "m3_vsplesk|+1": {
+   "dney": 25,
+   "sred_bps_den": -22.7,
+   "t": -0.74,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "m3_vsplesk|-1": {
+   "dney": 25,
+   "sred_bps_den": 2.7,
+   "t": 0.09,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "vyhodnye|+1": {
+   "dney": 25,
+   "sred_bps_den": -29.15,
+   "t": -0.45,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "vyhodnye|-1": {
+   "dney": 25,
+   "sred_bps_den": 9.15,
+   "t": 0.14,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "mom1|+1": {
+   "dney": 25,
+   "sred_bps_den": 16.11,
+   "t": 0.35,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "mom1|-1": {
+   "dney": 25,
+   "sred_bps_den": -36.11,
+   "t": -0.78,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "mom7|+1": {
+   "dney": 25,
+   "sred_bps_den": -30.94,
+   "t": -0.95,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "mom7|-1": {
+   "dney": 25,
+   "sred_bps_den": 10.94,
+   "t": 0.34,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "mom28|+1": {
+   "dney": 25,
+   "sred_bps_den": -68.32,
+   "t": -1.53,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "mom28|-1": {
+   "dney": 25,
+   "sred_bps_den": 48.32,
+   "t": 1.08,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "volat28|+1": {
+   "dney": 25,
+   "sred_bps_den": -43.78,
+   "t": -0.95,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "volat28|-1": {
+   "dney": 25,
+   "sred_bps_den": 23.78,
+   "t": 0.52,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "obem_vsplesk|+1": {
+   "dney": 25,
+   "sred_bps_den": -27.82,
+   "t": -0.61,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "obem_vsplesk|-1": {
+   "dney": 25,
+   "sred_bps_den": 7.82,
+   "t": 0.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "diapazon|+1": {
+   "dney": 25,
+   "sred_bps_den": -71.13,
+   "t": -1.45,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "diapazon|-1": {
+   "dney": 25,
+   "sred_bps_den": 51.13,
+   "t": 1.04,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "spot_dolya|+1": {
+   "dney": 25,
+   "sred_bps_den": 13.67,
+   "t": 0.52,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "spot_dolya|-1": {
+   "dney": 25,
+   "sred_bps_den": -33.67,
+   "t": -1.29,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": true
+  },
+  "plus(m3_perp,spot)|+1": {
+   "dney": 25,
+   "sred_bps_den": -26.4,
+   "t": -1.09,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,spot)|-1": {
+   "dney": 25,
+   "sred_bps_den": 6.4,
+   "t": 0.26,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,spot)|+1": {
+   "dney": 25,
+   "sred_bps_den": -37.0,
+   "t": -1.29,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,spot)|-1": {
+   "dney": 25,
+   "sred_bps_den": 17.0,
+   "t": 0.59,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,spot_minus_perp)|+1": {
+   "dney": 25,
+   "sred_bps_den": -12.26,
+   "t": -0.46,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,spot_minus_perp)|-1": {
+   "dney": 25,
+   "sred_bps_den": -7.74,
+   "t": -0.29,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,spot_minus_perp)|+1": {
+   "dney": 25,
+   "sred_bps_den": -56.1,
+   "t": -2.02,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,spot_minus_perp)|-1": {
+   "dney": 25,
+   "sred_bps_den": 36.1,
+   "t": 1.3,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,m3_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -27.11,
+   "t": -0.88,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,m3_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 7.11,
+   "t": 0.23,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,m3_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -8.5,
+   "t": -0.22,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,m3_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -11.5,
+   "t": -0.3,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": -24.03,
+   "t": -0.87,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": 4.03,
+   "t": 0.15,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": -13.68,
+   "t": -0.26,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": -6.32,
+   "t": -0.12,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": 4.91,
+   "t": 0.14,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": -24.91,
+   "t": -0.73,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": -33.4,
+   "t": -0.76,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": 13.4,
+   "t": 0.31,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -42.77,
+   "t": -1.4,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": 22.77,
+   "t": 0.75,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -12.61,
+   "t": -0.3,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": -7.39,
+   "t": -0.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -50.92,
+   "t": -2.1,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 30.92,
+   "t": 1.27,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 5.36,
+   "t": 0.11,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -25.36,
+   "t": -0.53,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -47.35,
+   "t": -1.98,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 27.35,
+   "t": 1.14,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -1.64,
+   "t": -0.04,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -18.36,
+   "t": -0.4,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -58.44,
+   "t": -1.72,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 38.44,
+   "t": 1.13,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 4.5,
+   "t": 0.11,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -24.5,
+   "t": -0.58,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -43.53,
+   "t": -1.5,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 23.53,
+   "t": 0.81,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 19.6,
+   "t": 0.43,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -39.6,
+   "t": -0.86,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -32.89,
+   "t": -1.11,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_perp,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 12.89,
+   "t": 0.44,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -38.06,
+   "t": -1.16,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_perp,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 18.06,
+   "t": 0.55,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,spot_minus_perp)|+1": {
+   "dney": 25,
+   "sred_bps_den": -4.01,
+   "t": -0.19,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,spot_minus_perp)|-1": {
+   "dney": 25,
+   "sred_bps_den": -15.99,
+   "t": -0.76,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,spot_minus_perp)|+1": {
+   "dney": 25,
+   "sred_bps_den": -39.74,
+   "t": -1.5,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,spot_minus_perp)|-1": {
+   "dney": 25,
+   "sred_bps_den": 19.74,
+   "t": 0.75,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,m3_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -34.78,
+   "t": -1.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,m3_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 14.78,
+   "t": 0.5,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,m3_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -4.21,
+   "t": -0.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,m3_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -15.79,
+   "t": -0.64,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": 16.15,
+   "t": 0.39,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": -36.15,
+   "t": -0.87,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": -51.36,
+   "t": -1.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": 31.36,
+   "t": 0.71,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": -21.79,
+   "t": -0.62,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": 1.79,
+   "t": 0.05,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": 5.78,
+   "t": 0.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": -25.78,
+   "t": -0.74,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": 2.26,
+   "t": 0.07,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": -22.26,
+   "t": -0.7,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -37.36,
+   "t": -1.13,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": 17.36,
+   "t": 0.52,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -50.76,
+   "t": -1.33,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 30.76,
+   "t": 0.8,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 18.49,
+   "t": 0.45,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -38.49,
+   "t": -0.94,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -44.27,
+   "t": -1.1,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 24.27,
+   "t": 0.61,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 14.79,
+   "t": 0.34,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -34.79,
+   "t": -0.8,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -9.84,
+   "t": -0.31,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -10.16,
+   "t": -0.32,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -20.08,
+   "t": -0.58,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 0.08,
+   "t": 0.0,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -42.31,
+   "t": -0.97,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 22.31,
+   "t": 0.51,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 11.63,
+   "t": 0.26,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -31.63,
+   "t": -0.71,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": 13.09,
+   "t": 0.48,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -33.09,
+   "t": -1.2,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -48.99,
+   "t": -1.84,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 28.99,
+   "t": 1.09,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,m3_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -9.43,
+   "t": -0.41,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,m3_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -10.57,
+   "t": -0.46,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,m3_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 26.24,
+   "t": 1.01,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,m3_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -46.24,
+   "t": -1.78,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": 14.5,
+   "t": 0.31,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": -34.5,
+   "t": -0.75,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": -26.15,
+   "t": -0.64,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": 6.15,
+   "t": 0.15,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": -8.65,
+   "t": -0.19,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": -11.35,
+   "t": -0.25,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": 18.09,
+   "t": 0.58,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": -38.09,
+   "t": -1.23,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": 29.17,
+   "t": 0.85,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": -49.17,
+   "t": -1.43,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -19.17,
+   "t": -0.68,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": -0.83,
+   "t": -0.03,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -43.23,
+   "t": -1.09,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 23.23,
+   "t": 0.59,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 26.38,
+   "t": 0.68,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -46.38,
+   "t": -1.19,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -47.33,
+   "t": -1.33,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 27.33,
+   "t": 0.77,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 36.42,
+   "t": 0.98,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -56.42,
+   "t": -1.51,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -7.22,
+   "t": -0.2,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -12.78,
+   "t": -0.35,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 19.35,
+   "t": 0.57,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -39.35,
+   "t": -1.15,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -46.9,
+   "t": -0.98,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 26.9,
+   "t": 0.56,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 19.14,
+   "t": 0.48,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -39.14,
+   "t": -0.99,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": 10.89,
+   "t": 0.45,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(spot_minus_perp,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -30.89,
+   "t": -1.27,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -14.56,
+   "t": -0.6,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(spot_minus_perp,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -5.44,
+   "t": -0.23,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": -12.67,
+   "t": -0.35,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": -7.33,
+   "t": -0.2,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,vyhodnye)|+1": {
+   "dney": 25,
+   "sred_bps_den": -9.41,
+   "t": -0.21,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,vyhodnye)|-1": {
+   "dney": 25,
+   "sred_bps_den": -10.59,
+   "t": -0.23,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": 5.72,
+   "t": 0.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": -25.72,
+   "t": -0.77,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": -48.34,
+   "t": -1.29,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": 28.34,
+   "t": 0.75,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -26.39,
+   "t": -0.87,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": 6.39,
+   "t": 0.21,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -0.59,
+   "t": -0.02,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": -19.41,
+   "t": -0.55,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -55.19,
+   "t": -2.31,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 35.19,
+   "t": 1.48,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 15.2,
+   "t": 0.37,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -35.2,
+   "t": -0.86,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -49.47,
+   "t": -1.96,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 29.47,
+   "t": 1.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 13.0,
+   "t": 0.42,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -33.0,
+   "t": -1.08,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -40.62,
+   "t": -1.47,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 20.62,
+   "t": 0.74,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 16.26,
+   "t": 0.37,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -36.26,
+   "t": -0.83,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -38.49,
+   "t": -1.21,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 18.49,
+   "t": 0.58,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 14.26,
+   "t": 0.35,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -34.26,
+   "t": -0.85,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -7.22,
+   "t": -0.31,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(m3_vsplesk,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -12.78,
+   "t": -0.55,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -50.83,
+   "t": -1.48,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(m3_vsplesk,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 30.83,
+   "t": 0.9,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": -18.77,
+   "t": -0.42,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": -1.23,
+   "t": -0.03,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,mom1)|+1": {
+   "dney": 25,
+   "sred_bps_den": -32.29,
+   "t": -0.74,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,mom1)|-1": {
+   "dney": 25,
+   "sred_bps_den": 12.29,
+   "t": 0.28,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -26.72,
+   "t": -0.69,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": 6.72,
+   "t": 0.17,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -43.3,
+   "t": -0.76,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": 23.3,
+   "t": 0.41,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -40.21,
+   "t": -0.73,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 20.21,
+   "t": 0.37,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 35.64,
+   "t": 0.81,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -55.64,
+   "t": -1.26,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -33.07,
+   "t": -0.67,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 13.07,
+   "t": 0.27,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 33.22,
+   "t": 0.86,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -53.22,
+   "t": -1.37,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -67.43,
+   "t": -1.29,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 47.43,
+   "t": 0.91,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 34.63,
+   "t": 0.67,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -54.63,
+   "t": -1.06,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -36.75,
+   "t": -0.68,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 16.75,
+   "t": 0.31,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 24.56,
+   "t": 0.73,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -44.56,
+   "t": -1.32,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": 31.55,
+   "t": 0.89,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(vyhodnye,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -51.55,
+   "t": -1.45,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": 37.57,
+   "t": 0.84,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(vyhodnye,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -57.57,
+   "t": -1.28,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": -3.91,
+   "t": -0.12,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": -16.09,
+   "t": -0.49,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,mom7)|+1": {
+   "dney": 25,
+   "sred_bps_den": 8.18,
+   "t": 0.16,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,mom7)|-1": {
+   "dney": 25,
+   "sred_bps_den": -28.18,
+   "t": -0.55,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -55.23,
+   "t": -1.28,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 35.23,
+   "t": 0.82,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 50.97,
+   "t": 1.2,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -70.97,
+   "t": -1.67,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -54.63,
+   "t": -1.28,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 34.63,
+   "t": 0.81,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 32.51,
+   "t": 1.01,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -52.51,
+   "t": -1.64,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -38.03,
+   "t": -0.84,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 18.03,
+   "t": 0.4,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 45.0,
+   "t": 1.04,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -65.0,
+   "t": -1.5,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -14.0,
+   "t": -0.28,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -6.0,
+   "t": -0.12,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 87.07,
+   "t": 2.21,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -107.07,
+   "t": -2.71,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": 0.57,
+   "t": 0.02,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom1,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -20.57,
+   "t": -0.59,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -30.99,
+   "t": -0.7,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom1,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 10.99,
+   "t": 0.25,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -45.61,
+   "t": -1.08,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 25.61,
+   "t": 0.61,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,mom28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 41.2,
+   "t": 0.94,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,mom28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -61.2,
+   "t": -1.4,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -44.88,
+   "t": -0.92,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 24.88,
+   "t": 0.51,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": 6.14,
+   "t": 0.19,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -26.14,
+   "t": -0.81,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -34.42,
+   "t": -0.95,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 14.42,
+   "t": 0.4,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 8.27,
+   "t": 0.16,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -28.27,
+   "t": -0.56,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -29.15,
+   "t": -0.71,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 9.15,
+   "t": 0.22,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 6.98,
+   "t": 0.15,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -26.98,
+   "t": -0.57,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": 3.91,
+   "t": 0.16,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom7,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -23.91,
+   "t": -0.99,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": 12.68,
+   "t": 0.42,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom7,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -32.68,
+   "t": -1.09,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -58.93,
+   "t": -1.23,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": 38.93,
+   "t": 0.81,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,volat28)|+1": {
+   "dney": 25,
+   "sred_bps_den": -12.85,
+   "t": -0.35,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,volat28)|-1": {
+   "dney": 25,
+   "sred_bps_den": -7.15,
+   "t": -0.2,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -94.29,
+   "t": -1.93,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 74.29,
+   "t": 1.52,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -0.26,
+   "t": -0.01,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -19.74,
+   "t": -0.54,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -53.76,
+   "t": -1.02,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 33.76,
+   "t": 0.64,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -43.76,
+   "t": -1.09,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 23.76,
+   "t": 0.59,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -28.55,
+   "t": -0.74,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(mom28,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 8.55,
+   "t": 0.22,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -51.67,
+   "t": -1.15,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(mom28,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 31.67,
+   "t": 0.7,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(volat28,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": -68.82,
+   "t": -1.39,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(volat28,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": 48.82,
+   "t": 0.99,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(volat28,obem_vsplesk)|+1": {
+   "dney": 25,
+   "sred_bps_den": 12.62,
+   "t": 0.32,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(volat28,obem_vsplesk)|-1": {
+   "dney": 25,
+   "sred_bps_den": -32.62,
+   "t": -0.82,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(volat28,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -68.03,
+   "t": -1.36,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(volat28,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 48.03,
+   "t": 0.96,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(volat28,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -7.46,
+   "t": -0.18,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(volat28,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -12.54,
+   "t": -0.3,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(volat28,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -39.71,
+   "t": -1.15,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(volat28,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 19.71,
+   "t": 0.57,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(volat28,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -48.11,
+   "t": -1.14,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(volat28,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 28.11,
+   "t": 0.67,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(obem_vsplesk,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": -58.88,
+   "t": -1.22,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(obem_vsplesk,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": 38.88,
+   "t": 0.81,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(obem_vsplesk,diapazon)|+1": {
+   "dney": 25,
+   "sred_bps_den": 6.21,
+   "t": 0.16,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(obem_vsplesk,diapazon)|-1": {
+   "dney": 25,
+   "sred_bps_den": -26.21,
+   "t": -0.66,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(obem_vsplesk,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -22.01,
+   "t": -0.82,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(obem_vsplesk,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 2.01,
+   "t": 0.07,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(obem_vsplesk,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -14.35,
+   "t": -0.37,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(obem_vsplesk,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": -5.65,
+   "t": -0.14,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(diapazon,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -28.07,
+   "t": -0.74,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "plus(diapazon,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 8.07,
+   "t": 0.21,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(diapazon,spot_dolya)|+1": {
+   "dney": 25,
+   "sred_bps_den": -45.82,
+   "t": -0.87,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "minus(diapazon,spot_dolya)|-1": {
+   "dney": 25,
+   "sred_bps_den": 25.82,
+   "t": 0.49,
+   "status": "NAKOPLENIE",
+   "avtor": "setka",
+   "kontrol": false
+  },
+  "AI_FOMO_VYHODNYH|-1": {
+   "dney": 25,
+   "sred_bps_den": -7.33,
+   "t": -0.2,
+   "status": "NAKOPLENIE",
+   "avtor": "ii",
+   "kontrol": false
+  },
+  "AI_M3_PERP_M3_VSPLE_MIN_P|+1": {
+   "dney": 25,
+   "sred_bps_den": -8.5,
+   "t": -0.22,
+   "status": "NAKOPLENIE",
+   "avtor": "ii",
+   "kontrol": false
+  },
+  "AI_PLECHEVOY_PEREKOS|-1": {
+   "dney": 25,
+   "sred_bps_den": 26.24,
+   "t": 1.01,
+   "status": "NAKOPLENIE",
+   "avtor": "ii",
+   "kontrol": false
+  },
+  "AI_SPOT_MIN_VYHODNYE_PLU_P|+1": {
+   "dney": 25,
+   "sred_bps_den": 14.5,
+   "t": 0.31,
+   "status": "NAKOPLENIE",
+   "avtor": "ii",
+   "kontrol": false
+  }
+ },
+ "primechanie": "до 60 дней — только накопление; top15 описательно, не вердикт"
+}
