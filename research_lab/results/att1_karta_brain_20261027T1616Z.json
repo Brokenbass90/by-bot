@@ -1,0 +1,278 @@
+{
+ "vsego_v_teni": 3355,
+ "bez_nalozheniy": 2732,
+ "vse": {
+  "R": {
+   "n": 2732,
+   "dney": 37,
+   "sred": -0.0244,
+   "se_dni": 0.0118
+  },
+  "vklad_signala": {
+   "n": 2732,
+   "dney": 37,
+   "sred": -0.0059,
+   "se_dni": 0.0154
+  },
+  "rabotaet": false
+ },
+ "vovremya": {
+  "R": {
+   "n": 1970,
+   "dney": 36,
+   "sred": -0.0199,
+   "se_dni": 0.005
+  },
+  "vklad_signala": {
+   "n": 1970,
+   "dney": 36,
+   "sred": -0.0067,
+   "se_dni": 0.0116
+  },
+  "rabotaet": false
+ },
+ "pozdno": {
+  "R": {
+   "n": 762,
+   "dney": 36,
+   "sred": -0.0362,
+   "se_dni": 0.0176
+  },
+  "vklad_signala": {
+   "n": 762,
+   "dney": 36,
+   "sred": -0.0038,
+   "se_dni": 0.0204
+  },
+  "rabotaet": false
+ },
+ "po_rezhimu": {
+  "BEAR_TREND": {
+   "R": {
+    "n": 928,
+    "dney": 14,
+    "sred": -0.0313,
+    "se_dni": 0.0183
+   },
+   "vklad_signala": {
+    "n": 928,
+    "dney": 14,
+    "sred": -0.0432,
+    "se_dni": 0.0221
+   },
+   "rabotaet": false
+  },
+  "BULL_TREND": {
+   "R": {
+    "n": 42,
+    "dney": 3,
+    "sred": -0.0127,
+    "se_dni": 0.1283
+   },
+   "vklad_signala": {
+    "n": 42,
+    "dney": 3,
+    "sred": 0.068,
+    "se_dni": 0.1013
+   },
+   "rabotaet": false
+  },
+  "NEUTRAL": {
+   "R": {
+    "n": 1762,
+    "dney": 28,
+    "sred": -0.0211,
+    "se_dni": 0.0066
+   },
+   "vklad_signala": {
+    "n": 1762,
+    "dney": 28,
+    "sred": 0.012,
+    "se_dni": 0.0143
+   },
+   "rabotaet": false
+  }
+ },
+ "po_zreniyu": {
+  "shirota_rosta": {
+   "granicy": [
+    0.26,
+    0.57
+   ],
+   "niz": {
+    "R": {
+     "n": 915,
+     "dney": 12,
+     "sred": -0.0319,
+     "se_dni": 0.022
+    },
+    "vklad_signala": {
+     "n": 915,
+     "dney": 12,
+     "sred": -0.0203,
+     "se_dni": 0.0234
+    },
+    "rabotaet": false
+   },
+   "verh": {
+    "R": {
+     "n": 898,
+     "dney": 13,
+     "sred": -0.0266,
+     "se_dni": 0.0254
+    },
+    "vklad_signala": {
+     "n": 898,
+     "dney": 13,
+     "sred": 0.001,
+     "se_dni": 0.0291
+    },
+    "rabotaet": false
+   }
+  },
+  "alt_minus_btc_7d": {
+   "granicy": [
+    -0.032,
+    -0.0035
+   ],
+   "niz": {
+    "R": {
+     "n": 937,
+     "dney": 10,
+     "sred": -0.0232,
+     "se_dni": 0.027
+    },
+    "vklad_signala": {
+     "n": 937,
+     "dney": 10,
+     "sred": -0.0194,
+     "se_dni": 0.0294
+    },
+    "rabotaet": false
+   },
+   "verh": {
+    "R": {
+     "n": 903,
+     "dney": 15,
+     "sred": -0.0272,
+     "se_dni": 0.0229
+    },
+    "vklad_signala": {
+     "n": 903,
+     "dney": 15,
+     "sred": 0.0402,
+     "se_dni": 0.0239
+    },
+    "rabotaet": false
+   }
+  },
+  "sinhron_tejker": {
+   "granicy": [
+    -0.0048,
+    0.0021
+   ],
+   "niz": {
+    "R": {
+     "n": 991,
+     "dney": 13,
+     "sred": -0.0271,
+     "se_dni": 0.021
+    },
+    "vklad_signala": {
+     "n": 991,
+     "dney": 13,
+     "sred": 0.0083,
+     "se_dni": 0.0277
+    },
+    "rabotaet": false
+   },
+   "verh": {
+    "R": {
+     "n": 894,
+     "dney": 12,
+     "sred": -0.0244,
+     "se_dni": 0.0277
+    },
+    "vklad_signala": {
+     "n": 894,
+     "dney": 12,
+     "sred": 0.0008,
+     "se_dni": 0.0323
+    },
+    "rabotaet": false
+   }
+  },
+  "shirota_obema": {
+   "granicy": [
+    0.07,
+    0.15
+   ],
+   "niz": {
+    "R": {
+     "n": 931,
+     "dney": 10,
+     "sred": -0.0169,
+     "se_dni": 0.0083
+    },
+    "vklad_signala": {
+     "n": 931,
+     "dney": 10,
+     "sred": -0.0192,
+     "se_dni": 0.0268
+    },
+    "rabotaet": false
+   },
+   "verh": {
+    "R": {
+     "n": 868,
+     "dney": 13,
+     "sred": -0.016,
+     "se_dni": 0.0249
+    },
+    "vklad_signala": {
+     "n": 868,
+     "dney": 13,
+     "sred": 0.0237,
+     "se_dni": 0.0294
+    },
+    "rabotaet": false
+   }
+  },
+  "disp_ret": {
+   "granicy": [
+    0.0396,
+    0.0518
+   ],
+   "niz": {
+    "R": {
+     "n": 966,
+     "dney": 11,
+     "sred": -0.0153,
+     "se_dni": 0.0074
+    },
+    "vklad_signala": {
+     "n": 966,
+     "dney": 11,
+     "sred": -0.0171,
+     "se_dni": 0.0152
+    },
+    "rabotaet": false
+   },
+   "verh": {
+    "R": {
+     "n": 879,
+     "dney": 12,
+     "sred": -0.0427,
+     "se_dni": 0.0355
+    },
+    "vklad_signala": {
+     "n": 879,
+     "dney": 12,
+     "sred": -0.0077,
+     "se_dni": 0.0383
+    },
+    "rabotaet": false
+   }
+  }
+ }
+}

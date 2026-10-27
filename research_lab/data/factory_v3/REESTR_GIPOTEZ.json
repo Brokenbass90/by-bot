@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-27T15:52Z",
- "vsego": 160,
+ "kogda": "2026-10-27T16:17Z",
+ "vsego": 161,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -18,7 +18,7 @@
   "REZHIM": 15,
   "TEHNIKA": 16,
   "PROTIV": 10,
-  "NET_SIGNALA": 78,
+  "NET_SIGNALA": 79,
   "MALO_DANNYH": 23,
   "IZDERZHKI": 4,
   "EFFEKTIVNYY_RYNOK": 3,
@@ -3254,6 +3254,15 @@
    "prichina": "NET_SIGNALA",
    "sled": "защита шортов — гипотеза",
    "dokument": "DELIST_FORCED_ITOG"
+  },
+  {
+   "id": "ATT1_PROBOY_VPERED",
+   "istochnik": "protokol",
+   "mehanizm": "шорт на пробое наклонной (тень вперёд 09–10.2026)",
+   "status": "NEGATIVE",
+   "prichina": "NET_SIGNALA",
+   "sled": "ни в одном режиме/срезе зрения вклад сигнала не > 0; следующий механизм — ATT1_RETEST: вход на возврате к пробитой линии (ручной стиль владельца)",
+   "dokument": "results/att1_karta_brain_*.json"
   },
   {
    "id": "SHORT_HVOST",
