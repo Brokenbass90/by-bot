@@ -163,10 +163,11 @@ def otchet(a, zhurnal: Path) -> int:
         _dn = dolya_nalozheniy(zakr)
     except Exception:
         _dn, bez_nalozheniy = 0.0, None
+    if bez_nalozheniy is not None:
+        _n0 = len(zakr); zakr = bez_nalozheniy(zakr, a.zhdat)      # ВСЕГДА: оценка только по решениям без наложений (PM 27.10)
+        print(f"  без наложений: {len(zakr)} из {_n0} закрытых решений (наложено {_dn:.0%})")
     if _dn > 0.05:
-        print(f"  НАЛОЖЕНИЯ: {_dn:.0%} решений — повторный вход в открытую позицию той же монеты.")
-        print("  ВЕРДИКТ ПО ЭТОМУ ЖУРНАЛУ ЗАБЛОКИРОВАН. Ниже — только решения без наложений (описательно).")
-        zakr = bez_nalozheniy(zakr, a.zhdat)
+        print("  ТРЕВОГА КАЧЕСТВА ДАННЫХ: наложений > 5 % — движок тени дефектен, ВЕРДИКТ ЗАБЛОКИРОВАН (ниже — описание).")
         a.porog = 10 ** 9                       # вердикт не выносится
     R = np.array([z["R"] for z in zakr], float)
     cm = np.array([z["ctrl"] for z in zakr if z.get("ctrl") is not None], float)
