@@ -1,0 +1,186 @@
+{
+ "kogda": "2026-10-27T15:27Z",
+ "dney": 56,
+ "nogi": {
+  "KITY": {
+   "n": 1
+  },
+  "PUMP4": {
+   "n": 84,
+   "shirota_rosta": {
+    "nizhnyaya_tret": {
+     "n": 28,
+     "sred": 0.0385,
+     "se": 0.0947
+    },
+    "verhnyaya_tret": {
+     "n": 28,
+     "sred": 0.0493,
+     "se": 0.0936
+    },
+    "granicy": [
+     0.51,
+     0.78
+    ],
+    "raznica": 0.0108
+   },
+   "alt_minus_btc_7d": {
+    "nizhnyaya_tret": {
+     "n": 28,
+     "sred": 0.1729,
+     "se": 0.0746
+    },
+    "verhnyaya_tret": {
+     "n": 28,
+     "sred": -0.019,
+     "se": 0.0924
+    },
+    "granicy": [
+     0.012,
+     0.0858
+    ],
+    "raznica": -0.1919
+   },
+   "sinhron_tejker": {
+    "nizhnyaya_tret": {
+     "n": 28,
+     "sred": 0.0575,
+     "se": 0.095
+    },
+    "verhnyaya_tret": {
+     "n": 28,
+     "sred": 0.0664,
+     "se": 0.0921
+    },
+    "granicy": [
+     -0.0,
+     0.0045
+    ],
+    "raznica": 0.0089
+   },
+   "shirota_obema": {
+    "nizhnyaya_tret": {
+     "n": 28,
+     "sred": 0.1288,
+     "se": 0.0857
+    },
+    "verhnyaya_tret": {
+     "n": 28,
+     "sred": -0.0188,
+     "se": 0.0923
+    },
+    "granicy": [
+     0.14,
+     0.26
+    ],
+    "raznica": -0.1476
+   },
+   "disp_ret": {
+    "nizhnyaya_tret": {
+     "n": 28,
+     "sred": 0.2353,
+     "se": 0.0568
+    },
+    "verhnyaya_tret": {
+     "n": 28,
+     "sred": -0.0174,
+     "se": 0.0954
+    },
+    "granicy": [
+     0.0496,
+     0.057
+    ],
+    "raznica": -0.2526
+   }
+  },
+  "SHORT_HVOST": {
+   "n": 62,
+   "shirota_rosta": {
+    "nizhnyaya_tret": {
+     "n": 20,
+     "sred": 334.305,
+     "se": 170.7227
+    },
+    "verhnyaya_tret": {
+     "n": 20,
+     "sred": 106.135,
+     "se": 174.7873
+    },
+    "granicy": [
+     0.34,
+     0.69
+    ],
+    "raznica": -228.17
+   },
+   "alt_minus_btc_7d": {
+    "nizhnyaya_tret": {
+     "n": 20,
+     "sred": 260.075,
+     "se": 202.9507
+    },
+    "verhnyaya_tret": {
+     "n": 20,
+     "sred": 383.7,
+     "se": 195.7692
+    },
+    "granicy": [
+     -0.0143,
+     0.0568
+    ],
+    "raznica": 123.625
+   },
+   "sinhron_tejker": {
+    "nizhnyaya_tret": {
+     "n": 20,
+     "sred": 529.485,
+     "se": 237.783
+    },
+    "verhnyaya_tret": {
+     "n": 20,
+     "sred": 304.91,
+     "se": 118.2714
+    },
+    "granicy": [
+     -0.0023,
+     0.0045
+    ],
+    "raznica": -224.575
+   },
+   "shirota_obema": {
+    "nizhnyaya_tret": {
+     "n": 20,
+     "sred": 168.915,
+     "se": 102.3186
+    },
+    "verhnyaya_tret": {
+     "n": 20,
+     "sred": 227.525,
+     "se": 204.7853
+    },
+    "granicy": [
+     0.11,
+     0.19
+    ],
+    "raznica": 58.61
+   },
+   "disp_ret": {
+    "nizhnyaya_tret": {
+     "n": 20,
+     "sred": 203.585,
+     "se": 84.426
+    },
+    "verhnyaya_tret": {
+     "n": 20,
+     "sred": 205.65,
+     "se": 185.3494
+    },
+    "granicy": [
+     0.0376,
+     0.0552
+    ],
+    "raznica": 2.065
+   }
+  }
+ },
+ "primechanie": "описательно; |разница| > 2×√(se²+se²) — кандидат в prereg, проверка только вперёд"
+}
