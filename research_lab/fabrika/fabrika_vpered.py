@@ -81,9 +81,11 @@ def atomy_dnya(r, t):
     v["_oborot28"] = st.mean(ob) if ob else 0
     return v
 
-def prohod():
-    OUT.mkdir(parents=True, exist_ok=True)
-    kat = katalog(); sha = hashlib.sha256(json.dumps(kat, sort_keys=True).encode()).hexdigest()[:16]
+def prohod(kat=None, atom_fn=None, atomy=None, out_dir=None, nazvanie="Фабрика вперёд"):
+    atom_fn = atom_fn or atomy_dnya; atomy = atomy or ATOMY; out_dir = out_dir or OUT
+    DNI, SV = out_dir / "dni.jsonl", out_dir / "svodka.json"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    kat = kat or katalog(); sha = hashlib.sha256(json.dumps(kat, sort_keys=True).encode()).hexdigest()[:16]
     gotovo = {json.loads(l)["d"] for l in DNI.open()} if DNI.exists() else set()
     dan = zagruzka()
     posl = max((max(r["klines"]) for r in dan.values()), default=0)
@@ -92,12 +94,12 @@ def prohod():
     while t + DEN <= posl:                                       # сигнал на закрытии t, доход дня t+DEN
         d = time.strftime("%Y-%m-%d", time.gmtime((t + DEN) / 1000))
         if d in gotovo: t += DEN; continue
-        A = {s: atomy_dnya(r, t) for s, r in dan.items()}
+        A = {s: atom_fn(r, t) for s, r in dan.items()}
         A = {s: v for s, v in A.items() if v and t + DEN in dan[s]["klines"]}
         liq = sorted(A, key=lambda s: -A[s]["_oborot28"])[:TOP]
         ret = {s: dan[s]["klines"][t + DEN][4] / dan[s]["klines"][t][4] - 1 for s in liq if dan[s]["klines"][t][4]}
         Z = {}
-        for a in ATOMY:
+        for a in atomy:
             xs = [A[s][a] for s in liq if A[s].get(a) is not None]
             if len(xs) < 30: continue
             m, sd = st.mean(xs), st.pstdev(xs) or 1.0
@@ -129,7 +131,7 @@ def prohod():
                                   porog_t_bonferroni=round(porog, 2), min_dney=MIN_DNEY, kandidatov=sum(1 for v in out.values() if v["status"] == "KANDIDAT"),
                                   top15_opisatelno=dict(top), vse=out,
                                   primechanie="до 60 дней — только накопление; top15 описательно, не вердикт"), ensure_ascii=False, indent=1))
-    return dict(novyh_dney=novyh, dney=len(rows), katalog=N, trevogi=[f"Фабрика вперёд: KANDIDAT {k}" for k, v in out.items() if v["status"] == "KANDIDAT"])
+    return dict(novyh_dney=novyh, dney=len(rows), katalog=N, trevogi=[f"{nazvanie}: KANDIDAT {k}" for k, v in out.items() if v["status"] == "KANDIDAT"])
 
 if __name__ == "__main__":
     t0 = time.time(); r = prohod(); print(r, round(time.time() - t0, 1), "с")
