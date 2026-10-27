@@ -1,0 +1,19 @@
+{
+  "allowance": "Operational reviewer initially unavailable; one retry after reported reset completed the review; no model substitution",
+  "critical": 0,
+  "followup_tests": 21,
+  "handoff_tests": 20,
+  "important": 0,
+  "ops_sha256": "991a37f4bdd224ee50457775a060e907531d44be20fca44b5bccf6878b591bd7",
+  "reviewed_files": {
+    "research_lab/pump4_public_retry_v1.py": "db0ae5ce8476398a178614de513ca4e9099eac13e4694f801c6adaf9cfd531cf",
+    "research_lab/pump4_runtime_sources_v1.py": "97f0ac97984cf624115cdff09511f789c068245da1fed95605ec0d2d03c4b833",
+    "research_lab/pump4_selected_runner_v1.py": "cf4e50d011e0d59f41e600bf5cd3eb58a4ddcf9f09642256e87b67ac68005032",
+    "scripts/capture_pump4_sources_v1.py": "91639b795e18724e6492eebf0b2336a2f28aae89e1feb1eb1f1155e960b1747a",
+    "tests/test_pump4_public_retry_v1.py": "641f02e9d338b46617d6bafbdc68c2d2a50ca60356568ded7a7c8ae4df8fc1fd",
+    "tests/test_pump4_runtime_sources_v1.py": "6452288684c487f8db1ceb7b86f3c5987203bb667b958d0952ad68ab717a586e"
+  },
+  "reviewer_effort": "high",
+  "reviewer_model": "gpt-6-astra",
+  "source_tests": 40
+}

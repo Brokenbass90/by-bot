@@ -6,7 +6,7 @@ The existing DATA journal is read without repair; real closed-H1 GETs must repla
 its exact decision before selected_tick can admit any new entry.
 """
 from concurrent.futures import ThreadPoolExecutor
-import copy,hashlib,os,time
+import copy,hashlib,os,stat,time
 from pathlib import Path
 from research_lab.alpaca_dynamic_v1 import digest
 from research_lab.kity_micro_transport_v1 import BybitReadTransport,wire_get
@@ -23,6 +23,28 @@ def need(ok,why):
     if not ok:raise ValueError('PUMP4_RUNTIME_SOURCE_'+why)
 
 
+def observation_identity(st):
+    need(stat.S_ISREG(st.st_mode) and st.st_nlink==1 and st.st_uid==os.getuid(),'OBSERVATION_CUSTODY')
+    return tuple(getattr(st,k) for k in ('st_dev','st_ino','st_size','st_mtime_ns','st_ctime_ns','st_uid','st_gid','st_mode','st_nlink'))
+
+
+def observation_bytes(path):
+    # Identity comes from the SAME open file as the bytes, including a final
+    # path comparison. Replacement during the read cannot prime the cache.
+    fd=os.open(safe(path),os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
+    try:
+        before=observation_identity(os.fstat(fd));need(before[2]<=5000000,'OBSERVATION_BOUND')
+        raw=bytearray()
+        while True:
+            chunk=os.read(fd,min(1048576,5000001-len(raw)))
+            if not chunk:break
+            raw.extend(chunk);need(len(raw)<=5000000,'OBSERVATION_BOUND')
+        need(before==observation_identity(os.fstat(fd))==observation_identity(path.lstat())
+            and len(raw)==before[2],'OBSERVATION_CHANGED')
+        return bytes(raw),before
+    finally:os.close(fd)
+
+
 class TrustedSources:
     def __init__(self,config,owner,*,wire=None,clock=None):
         self.config=copy.deepcopy(config);self.config_sha=digest(config)
@@ -33,6 +55,7 @@ class TrustedSources:
         need(self.reader.account_fingerprint==owner.scope['account_fingerprint'],'ACCOUNT_BINDING')
         need(config.get('execution_policy')==owner.scope.get('execution_policy'),'EXECUTION_POLICY_BINDING')
         self._candidate_consumed=set()
+        self._negative_observations={};self._negative_clock=None
 
     def get_wire(self,method,url,headers,data,timeout):
         need(method=='GET' and data is None,'GET_ONLY')
@@ -131,15 +154,27 @@ class TrustedSources:
     def candidate(self):
         root=self._data();now=self.clock();epoch=self.config['epoch_started_ms'];delay=self.config['entry_max_delay_ms']
         need(type(epoch) is int and type(delay) is int and 0<delay<=60000,'EPOCH_OR_DELAY')
-        files=list((root/'observations').glob('*.json'));need(len(files)<=20000,'OBSERVATION_BOUND')
+        directory=safe(root/'observations')
+        files=list(directory.glob('*.json'));need(len(files)<=20000,'OBSERVATION_BOUND')
+        if self._negative_clock is not None and now<self._negative_clock:self._negative_observations.clear()
+        self._negative_clock=now
+        present=set(files);self._negative_observations={p:v for p,v in self._negative_observations.items() if p in present}
         eligible=[]
         for path in files:
-            row=decode(stable_bytes(safe(path)));d=row['decision']
+            identity=observation_identity(path.lstat());cached=self._negative_observations.get(path)
+            if cached is not None and cached[0]==identity and (cached[1] is None or now>cached[1]):continue
+            raw,identity=observation_bytes(path);row=decode(raw);d=row['decision']
             need(row['orders_allowed'] is False and row['money_authority'] is False,'OBSERVATION_AUTHORITY')
             entry=d['bar_open_ms']+H
             if (row['mode']!='CURRENT_CLOSED_BAR' or d['signal'] is None
                 or d['decision_id'] in self._candidate_consumed or not epoch<=d['first_observed_ms']<=now
-                or not epoch<=entry or not 0<=now-entry<=delay):continue
+                or not epoch<=entry or not 0<=now-entry<=delay):
+                # A cache hit may ONLY suppress a fully validated negative.
+                # Current/future/consumed positive signals are never admitted
+                # or permanently hidden using metadata instead of source reads.
+                if d.get('signal',False) is None or now>entry+delay:
+                    self._negative_observations[path]=(identity,None if d.get('signal',False) is None else entry+delay)
+                continue
             need(d['symbol'] in universe() and path.name==d['decision_id']+'.json','OBSERVATION_IDENTITY')
             eligible.append(d)
         if not eligible:return None

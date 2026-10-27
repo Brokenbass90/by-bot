@@ -1,5 +1,14 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**27Oct07:18UTC current:** [source recovery and selected OFF receipt](reports/PUMP4_SOURCE_RECOVERY_2026_10_27.md).
+355local/same355VPS PASS; DATA+sole financial owner selecte4feca49OFF. History33,935files,
+818853/0restarts/26cleanactualcycles/noGO/0writes; Monthly unchanged. Negative-only
+consumer cache and bounded10006 recovery accepted; old06/07H1FAIL. Next actualnewpath
+08UTC/10Nicosia observer alreadyrunning; H1PENDING/TINYBLOCKED/economicsINCONCLUSIVE.
+PUMP technicalmicro requires actualgates+exactownermoneyGO, no incomeclaim. Existing
+Polymarket design is next intake, no newjudge/researchduplication/wallet/order.
+Earlier27Oct05:30/26Oct rows below are dated history, superseded by this receipt.
+
 **27Oct current PUMP receipt:** [explicit entry/OFF deployment and actual H1](reports/PUMP4_ENTRY_AND_H1_2026_10_27.md).
 Native84 protocol retained; explicit <=60s entry/risk/source policy +exchange-clock
 custody fix reviewed;326local/same326VPS PASS. DATA and sole owner selectffb31e24

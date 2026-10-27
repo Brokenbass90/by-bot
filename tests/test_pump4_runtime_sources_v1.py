@@ -160,3 +160,74 @@ def test_flat_handoff_uses_recent_account_capture_not_historical_strategy_plan(t
   assert not any(p=='/v5/market/instruments-info' or 'symbol' in q for p,q in calls)
   assert e.state['calls']==0 and not (o.root/'admitted-lifecycle.json').exists()
  finally:lease.close()
+
+
+def negative_provider(tmp_path):
+ m=mod();s=create(tmp_path);o,e,t,_,f,lease=s
+ c,candidate,wire,journal=bound_candidate(tmp_path);root=Path(c['data_source']['root']);obs=next((root/'observations').glob('*.json'))
+ r=json.loads(obs.read_bytes());r['decision']['signal']=None;obs.write_text(json.dumps(r))
+ return m,m.TrustedSources(c,o,wire=wire,clock=lambda:t[0]),obs,t,lease
+
+
+def test_immutable_negative_observation_is_not_decoded_every_poll(tmp_path,monkeypatch):
+ m,p,obs,t,lease=negative_provider(tmp_path)
+ try:
+  calls=[];original=m.decode
+  def counted(raw):
+   if raw==obs.read_bytes():calls.append(1)
+   return original(raw)
+  monkeypatch.setattr(m,'decode',counted)
+  assert p.candidate() is None and p.candidate() is None
+  assert len(calls)==1
+ finally:lease.close()
+
+
+@pytest.mark.parametrize('fault',['replace','overwrite','permissions','directory_symlink'])
+def test_negative_cache_rechecks_changed_custody(tmp_path,fault):
+ m,p,obs,t,lease=negative_provider(tmp_path)
+ try:
+  assert p.candidate() is None
+  r=json.loads(obs.read_bytes());r['orders_allowed']=True;raw=json.dumps(r)
+  if fault=='replace':
+   new=obs.with_suffix('.new');new.write_text(raw);new.replace(obs)
+  elif fault=='overwrite':obs.write_text(raw)
+  elif fault=='permissions':obs.write_text(raw);obs.chmod(0o644)
+  else:
+   directory=obs.parent;other=directory.with_name('moved-observations');directory.rename(other);directory.symlink_to(other,target_is_directory=True)
+  with pytest.raises(ValueError):p.candidate()
+ finally:lease.close()
+
+
+def test_expired_cache_reconsiders_signal_after_clock_rollback(tmp_path):
+ m=mod();s=create(tmp_path);o,e,t,_,f,lease=s
+ try:
+  c,candidate,wire,path=bound_candidate(tmp_path);p=m.TrustedSources(c,o,wire=wire,clock=lambda:t[0]);now=t[0]
+  t[0]+=60001;assert p.candidate() is None and p.candidate() is None
+  t[0]=now;got=p.candidate();assert got['decision_id']==candidate['decision_id']
+ finally:lease.close()
+
+
+def test_observation_replaced_during_fd_read_is_not_cached(tmp_path,monkeypatch):
+ m,p,obs,t,lease=negative_provider(tmp_path)
+ try:
+  original=m.os.read;changed=[];inode=obs.stat().st_ino
+  def raced(fd,n):
+   raw=original(fd,n)
+   if m.os.fstat(fd).st_ino==inode and not changed:
+    changed.append(True);new=obs.with_suffix('.replacement');new.write_bytes(obs.read_bytes());new.replace(obs)
+   return raw
+  monkeypatch.setattr(m.os,'read',raced)
+  with pytest.raises(ValueError,match='OBSERVATION_(CHANGED|CUSTODY)'):p.candidate()
+  assert not p._negative_observations
+ finally:lease.close()
+
+
+def test_replacing_cached_negative_with_signal_still_verifies_live_journal(tmp_path):
+ m=mod();s=create(tmp_path);o,e,t,_,f,lease=s
+ try:
+  c,candidate,wire,journal=bound_candidate(tmp_path);obs=next((Path(c['data_source']['root'])/'observations').glob('*.json'));original=obs.read_bytes();r=json.loads(original);r['decision']['signal']=None;obs.write_text(json.dumps(r))
+  p=m.TrustedSources(c,o,wire=wire,clock=lambda:t[0]);assert p.candidate() is None
+  obs.write_bytes(original);journal.write_bytes(b'changed journal')
+  with pytest.raises(ValueError):p.candidate()
+  assert not p._candidate_consumed and e.state['calls']==0
+ finally:lease.close()

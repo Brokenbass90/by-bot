@@ -5,7 +5,8 @@ from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
-from research_lab.pump4_bybit_sources_v1 import public_get,checked,closed_h1,universe,UNIVERSE_SHA,H,need
+from research_lab.pump4_bybit_sources_v1 import checked,closed_h1,universe,UNIVERSE_SHA,H,need
+from research_lab.pump4_public_retry_v1 import observed_public_get as public_get,PublicRetry
 from research_lab.kity_micro_physical_owner_v1 import publish
 
 
@@ -14,11 +15,15 @@ def capture(root,*,on_symbol=None):
     need(root.is_relative_to(ROOT/'.private') and not root.exists() and '..' not in root.parts
         and not any(p.is_symlink() for p in (root,*root.parents)),'EXCLUSIVE_PRIVATE_ROOT')
     root.mkdir(mode=0o700,parents=True);start=time.time_ns()//1000000
-    clock=public_get('/v5/market/time',{});checked(clock,'/v5/market/time',now_ms=time.time_ns()//1000000,private=False)
+    def failed_attempt(value):
+        publish(root/'http-attempts'/('failed-'+str(value['request_serial'])+'.json'),value)
+    reader=PublicRetry(getter=lambda path,params,**kw:public_get(path,params,**kw),persist=failed_attempt)
+    clock=reader.get('/v5/market/time',{});checked(clock,'/v5/market/time',now_ms=time.time_ns()//1000000,private=False)
     next_open=clock['body']['time']//H*H;publish(root/'clock.json',clock)
+    reader.anchor(next_open+60000)
     pages=[];cursor='';seen=set();instruments={}
     for _ in range(8):
-        c=public_get('/v5/market/instruments-info',dict(category='linear',limit=1000,**({'cursor':cursor} if cursor else {})))
+        c=reader.get('/v5/market/instruments-info',dict(category='linear',limit=1000,**({'cursor':cursor} if cursor else {})))
         b=checked(c,'/v5/market/instruments-info',now_ms=time.time_ns()//1000000,private=False);pages.append(c)
         for row in b['list']:
             need(row['symbol'] not in instruments,'DUPLICATE_INSTRUMENT');instruments[row['symbol']]=row
@@ -27,7 +32,7 @@ def capture(root,*,on_symbol=None):
         seen.add(cursor)
     else:raise ValueError('INSTRUMENT_PAGE_BOUND')
     publish(root/'instrument-pages.json',dict(complete=True,pages=pages))
-    tickers=public_get('/v5/market/tickers',dict(category='linear'))
+    tickers=reader.get('/v5/market/tickers',dict(category='linear'))
     checked(tickers,'/v5/market/tickers',now_ms=time.time_ns()//1000000,private=False);publish(root/'tickers.json',tickers)
     # This immutable prefix permits per-symbol processing before full coverage.
     # The final receipt still proves the complete137 census separately.
@@ -45,7 +50,7 @@ def capture(root,*,on_symbol=None):
             try:
                 first=next_open-1001*H;end=next_open+H-1
                 for _ in range(3):
-                    c=public_get('/v5/market/kline',dict(category='linear',symbol=symbol,interval='60',start=first,end=end,limit=1000));caps.append(c)
+                    c=reader.get('/v5/market/kline',dict(category='linear',symbol=symbol,interval='60',start=first,end=end,limit=1000));caps.append(c)
                     b=checked(c,'/v5/market/kline',now_ms=time.time_ns()//1000000,private=False)
                     if not b['list']:break
                     end=min(int(row[0]) for row in b['list'])-1
@@ -68,7 +73,9 @@ def capture(root,*,on_symbol=None):
         universe_sha256=UNIVERSE_SHA,census=len(results),ready=sum(r['status']=='READY_H1_BOOTSTRAP_NOT_ENTRY' for r in results),
         blocked=[{k:v for k,v in r.items() if k not in ('source','captures')} for r in results if r['status']!='READY_H1_BOOTSTRAP_NOT_ENTRY'],
         source_hour_open_ms=next_open,started_ms=start,completed_ms=time.time_ns()//1000000,
-        public_get_requests=1+len(pages)+1+sum(len(r['captures']) for r in results),
+        public_get_requests=reader.http_attempts,
+        public_capture_pages=1+len(pages)+1+sum(len(r['captures']) for r in results),
+        failed_http_attempts=len(list((root/'http-attempts').glob('*.json'))),
         source_capture_files={str(p.relative_to(root)):__import__('hashlib').sha256(p.read_bytes()).hexdigest() for p in root.rglob('*.json')},
         bootstrap_only=True,prospective_decisions_credited=0,
         strategy_calls=0 if on_symbol is None else None,data_intake_callback_used=on_symbol is not None,

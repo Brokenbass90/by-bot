@@ -1,0 +1,29 @@
+{
+  "broker_writes": 0,
+  "files": {
+    "actual06.json": "1e7369082e96bf2e957af7952fa7f3cbc82066e8d7615a944ca0bdba2cbc9814",
+    "actual07-final.json": "ffbad36a25487761361d2a94a0202918e96274289a3132aef50907a41d2ebb92",
+    "benchmark-consumer.py": "917798cfdb0e6824e34d0c74bff4bfde01023e7a5ce73b9fac3f368b109dfa37",
+    "busy-processes.json": "665fd3814bb98cb9fe24d659e907372452b8916f24196f9c74f0dd864d718511",
+    "consumer-before.json": "426f48f11adad8bc287974b6145dc2a29adc32f148724c61d2017cbb4ad165f9",
+    "consumer-benchmark.json": "f096be9a914bf0b57ca42c26dcbd5a18197a99695e9dcb47f37aba87e513bc55",
+    "critical-review.json": "b5280056017012ac51648beee9bccadde1981aca5eefe9beecad9c23b8f65daf",
+    "data-selected.json": "17c155bb827be1ae7100d7c6d93378e9d378cd83e88110d3f1cf02bbd829b9ea",
+    "independent-readback.py": "df74c191763e6b7f27a1e11999f9f75f0b9e36156f48ea120377b0abcdb057a6",
+    "local-acceptance.json": "8eb118b702a7b98c870a41ea09f9db3f8f23eb30bc15aa10ab9932f8159cadff",
+    "local-manifest.json": "05b07e3c27644737778a17c8b566f2749b7b4d87c800842b96da98b4f262bd78",
+    "observe08_readonly.py": "fe524265ebb22daa7289af7ab98e6a1d4fbee52e6f942cf552f6db7472e487c3",
+    "ops.py": "991a37f4bdd224ee50457775a060e907531d44be20fca44b5bccf6878b591bd7",
+    "owner-selected.json": "b17061897f34e72c83877c6dbd9fa12a451bf4546d600e60534adf4dc3965ff1",
+    "read-hour08.py": "7bfda09e1a783a626ef43d67d9442ff4095cde1b15d397cb20b2dd3c5133e77c",
+    "readback-after.json": "c760fa48b679e982c21a920f8991c5df35958c3d919deea603e48bdc66126287",
+    "readback-final.json": "79a618b4a7e3c04f0421b5e8a3622aa0f347659ca8de22e9f9c0df7d59d58277",
+    "resources.json": "88fa0d442f54f871900ce8fa2f8f6a0137e6b57370423b9ee99e62e28eb935aa",
+    "shadow-cadence.json": "28c116e9bcc1138bcf26d044f050182c93bae9f0f734066840436c03f61fbf60",
+    "slow-cases-profile.json": "e95bac64ca954951d85cfbefd12495fbae29737a9549c2965483441244b33e3e",
+    "test_handoff.py": "c2c56f1f9094cb66ca4bf9d8389a6b3b85e13db53fbf47197877b03b80ded942",
+    "vps-acceptance.json": "6c4c2af55121a6a7f664a917994ccc8625a93c09cd8321ce1e65d2e64ee9cfaa"
+  },
+  "private_account_raw_included": false,
+  "schema": "PUMP4_SOURCE_RECOVERY_PUBLIC_EVIDENCE_V1"
+}

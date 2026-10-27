@@ -17,28 +17,28 @@ reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
 single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
 2Novfreshentry/protection checks remain actual future gates; CASHpossible.
 
-## Current27Oct — explicit entry and prefix SELECTED ORDERS_OFF
+## Current27Oct07:18UTC — source recovery SELECTED ORDERS_OFF
 
-Read `PUMP4_ENTRY_AND_H1_2026_10_27.md` FIRST; older sections below are history.
-No new audit/research/evaluator/funding download. Native84 memory protocol retained;
-new explicit source/risk-bound <=60s entry policy, original risk/plan/qty basis,
-exchange-clock fill guard, deadline-at-wire and owned exits accepted/reviewed.
-326local/same326VPS network-deniedPASS; candidateffb31e24c703d9ed now SELECTED for
-DATA AND financialownerOFF. Config19f9cd74…57d4c/scope9acdeac6…dd172/PID3023060,
-original818853/0restarts/noGO/0brokerwrites.32,843 historical files preserved.
-New reference-drift10bps is an OFF proposal, not approved monetary risk or GO.
-Monthly v6 untouched; no reactivation or KITY switch.
-Actual26Oct20H1:118intakePASS,46by60s;114CURRENT allsourcesby60 but only46published,
-4catchup afterCURRENT,18API10006,1unavailable. TimelinessFAIL. Later70hours alsoFAIL.
-New single locked replay benchmarkPASS, actual newH1 **PENDING**, notTINY_READY.
-NEXT: existing27Oct06:00:02UTC timer (08:00:02Nicosia), hour1793080800000, rootffb;
-read its immutable proof, classify rate-limit/timing losses; no same-hour retry.
-One read-only observer already waits for06H1: SSH42219/output.private/pump4_entry_20261027/actual06-progress.jsonl;
-ends06:06UTC, quotesonlyonactualsignal, never duplicatecollector/observer.
-EconomicsINCONCLUSIVE; unified dated-fee/funding scenario at2/5/10bps-side
-+.06030/+.05656/+.05031R, notactualcashflows/forwardincome. Same-input84parityPASS.
-Technicalmicro may be considered separately after technical/account gates and a
-new exact personalGO; no live packet/owner action yet while latency unresolved.
+Read `PUMP4_SOURCE_RECOVERY_2026_10_27.md` FIRST. Continue exact installed path;
+no new audit/judge/PnL/funding download. Candidatee4feca498f37e27d selected for DATA
+AND sole financialownerOFF,355local/same355VPS network-deniedPASS,0 fallback.
+New negative-only observation cache (never eligible admission), bounded same-query
+10006 recovery with durable failed attempts/original60s/monotonic budget,403 halt.
+Frozen producer/intake/reference/risk/caps unchanged. Independent critical reviewPASS.
+Actual9240-observation scan8–10s→warm.373–.466s (cold4.643), NOT actualH1 proof.
+Config1a5a4eac…caf470/scope855fd45c…ce90b3/PID3029723, original818853 held,
+0restarts/26cleanactualOFFcycles/noGO/0writes;33,935 historical files preserved.
+Monthly v6 unchanged; no reactivation/NETexit/KITY switch or financialGO.
+Actual06H1 OLDffb:23/124by60s,12API10006,0signals;07H1OLDffb:22/129,7blocked,
+0signals. BothFAIL; never label them newcandidateproof or retry those hours.
+NEXT existing27Oct08:00:02UTC =10:00:02Nicosia, sourcehour1793088000000, roote4.
+One read-only observer already runningSSH67826; output.private/pump4_source_20261027/actual08-progress.jsonl,
+ends08:06UTC, quotesonlyactualsignals. Read immutableproof aftercompletion,
+no duplicatecollector/observer. NewactualH1PENDING, notTINY_READY.
+EconomicsINCONCLUSIVE; same-input84+open1parity/native84memoryprotocol retained.
+Technicalmicro separatefrom incomeLIVE, stillneedsactualgates andnewexacthumanGO.
+NextcontourPolymarket: existing22Oct design read-only intake, no sealedoutcome/newjudge,
+no approveddollars/keys/orders/currentresearchPASS inferred. Keep one roadmap.
 
 ## Historical26Oct13:26 — superseded by the27Oct receipt
 

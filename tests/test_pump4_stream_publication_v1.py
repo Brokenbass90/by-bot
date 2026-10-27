@@ -107,7 +107,7 @@ def test_public_collector_calls_back_on_completion_not_input_order(tmp_path,monk
     monkeypatch.setattr(collector,'ROOT',tmp_path)
     monkeypatch.setattr(collector.time,'time_ns',lambda:(NOW+3)*1000000)
     released=threading.Event();seen=[]
-    def get(path,params):
+    def get(path,params,**_):
         if path=='/v5/market/time':return capture(path,params,{},at=NOW+2)
         if path=='/v5/market/instruments-info':
             return capture(path,params,dict(list=[dict(symbol=n,status='Trading',quoteCoin='USDT',contractType='LinearPerpetual') for n in ['BLESSUSDT','ZROUSDT']],nextPageCursor=''),at=NOW+2)

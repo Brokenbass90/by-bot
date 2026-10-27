@@ -48,3 +48,11 @@ Files: new research_lab/pump4_native_stop_v1.py; pump4_execution_lifecycle_v1.py
 - [x] Complete critical independent entry review after the allowance reset; fix/review exchange-clock finding,22testsPASS.
 - [x] Remove duplicate pre-append producer replay only for exactly one contiguous current bar; retain full locked producer validation and byte-identical evidence; no frozen intake/source edits.
 - [x] Freeze/test326local/VPS, select DATA and financial app strictlyOFF with reviewed reversible handoff; actual27Oct06H1 remains necessary.
+
+## Continuation27Oct06: measured source/consumer bottlenecks
+
+Actual06H1:124intakePASS/23by60s;12API10006,1unavailable,7catchupafterCURRENT. No signal. Keep all sealed evidence and existing60s/strategy/risk/Monthly.
+
+- [x] Profile the negative-only consumer scan; test metadata-keyed skip of validated immutable NO_SIGNAL/expired observations, never positive cache admission. Validate observation-directory custody each tick; changed identity rereads/fails and clock reversal reconsiders expired candidates. Keep fresh source/journal/causal guards.
+- [x] DATA collector only: preserve raw error attempts and whitelisted rate headers; maximum3 same-query reads only onHTTP200/10006, coordinated bounded cooldown. No retry after originalH1+60s or of a completed/failed hourly census, no403/non-rate retry, no masking source identity. Failed attempts do not enter successful candle input.
+- [x] RED→GREEN,355local/VPS and critical source/authority review; exact local/VPS package and same one-owner OFF handoff only after PASS. Record new actual H1 separately.
