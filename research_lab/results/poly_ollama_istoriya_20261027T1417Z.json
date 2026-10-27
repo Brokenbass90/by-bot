@@ -1,0 +1,16 @@
+{
+ "rynkov": 120,
+ "brier_rynok": 0.1614,
+ "brier_A": 0.3357,
+ "brier_B": 0.1634,
+ "stavki_A": {
+  "n": 92,
+  "sred_na_1": 0.302,
+  "t": 0.81
+ },
+ "stavki_B": {
+  "n": 1
+ },
+ "dolya_A_045": 0.08,
+ "vyvod": "NE_DOKAZANO"
+}
