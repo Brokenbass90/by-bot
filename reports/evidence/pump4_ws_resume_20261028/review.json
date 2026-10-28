@@ -1,0 +1,13 @@
+{
+  "status": "NO_REMAINING_CRITICAL_OR_IMPORTANT",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "runtime_metadata_verified": true,
+  "review_tests": 46,
+  "closed": [
+    "resident_warm_state_reused_across_hours",
+    "durable_attempt_before_first_metadata_request",
+    "new_open_server_and_receive_clocks_not_before_boundary"
+  ],
+  "financial_authority_changed": false
+}

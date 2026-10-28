@@ -1,3 +1,11 @@
+# Current entry — 28 October 2026
+
+Read `PUMP4_WS_WARM_RESUME_2026_10_28.md` and checkpoint TOP.
+406 local/same406 VPS exact network-denied tests PASS; installed source stille4
+until reviewed OFF handoff. Next: resident WS preload and actual full137 H1<=60s;
+no new audit, no Monthly reactivation, no PUMP4 moneyGO.
+
+---
 # START HERE — Trading OS, 27 October 2026
 
 Repo `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`.

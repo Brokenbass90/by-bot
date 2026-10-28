@@ -1,5 +1,19 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT28Oct08:25UTC — WS/warm exact package COMPONENT PASS, selection PENDING
+
+Read `PUMP4_WS_WARM_RESUME_2026_10_28.md` FIRST. Resumed interrupted dirty tree.
+Warm/original journal/WS time and one-attempt guards reviewed;36 focused and46
+independent PASS. Exact7d8ae05dab162ec5:406local/same406VPS network-denied PASS,
+129files/no fallback/0brokerrequests or writes. No remainingCritical/Important.
+Installed e4 DATA/sole financialownerOFF unchanged at this commit; next bounded
+gate reviewed resident source handoff +actual full137 H1<=60s. Monthlyv6 untouched,
+originalBybit818853/policy preserved/noGO/TINY_READYfalse/economicsINCONCLUSIVE.
+Monthly58 26/27 andLIQ28 delivered immutable; nojudge/researchstrategy changes.
+
+---
+Earlier dated checkpoints below are history.
+
 Current27Oct13:06UTC — critical path and source alternative measured; OFF unchanged
 
 Read `PUMP4_CRITICAL_PATH_2026_10_27.md` FIRST. No new audit/judge/PnL/funding download.

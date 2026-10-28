@@ -1,0 +1,22 @@
+{
+  "schema": "PUMP4_SIZING_READINESS_MANIFEST_V1",
+  "base_commit": "32dc0be",
+  "verification_command": ".venv/bin/python -m pytest -q tests/test_pump4_sizing_readiness_v1.py",
+  "verification_result": "5 passed in 0.27s",
+  "production_comparisons": 84,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "source_hashes": {
+    "tests/fixtures/pump4_native_reference_84_20261026.json": "a7b31b26303687d948d12729a498a2e5b703b3f499241101e84d9ef30354b575",
+    "research_lab/pump4_sizing_readiness_v1.py": "26b9701114b0f40782bfbd910f0a1eab76cb71fe0cfb33fb6a2c1ad25e2a7be7",
+    "tests/test_pump4_sizing_readiness_v1.py": "cf72cd6a93c94a19b81a8cd88bb8d10407b92c66143e826fac95e6fbc9445fbb",
+    "research_lab/pump4_account_owner_v1.py": "f324e286dfe1852cda0f0b8e938aa69c92518e51d011488cc89fac3442c14283",
+    "research_lab/pump4_account_adapter_v1.py": "0a1969c472a6ae4f3247cc354295a8f0edbee88048fd9aecbd98b2914d44fee5",
+    "tests/pump4_native_84_harness.py": "37b442f81ffdedc0de7903360cd0ab1bc0845fa043758145268ec8402f9ca15f",
+    "reports/evidence/pump4_native_off_20261026/cases84-memory-receipt.json": "e7e8cbb0c96f3c0fb4c31f12e9a8788fd72fb9bf572dbe73aac9dd9b75a2369a",
+    "reports/evidence/pump4_entry_and_h1_20261027/readback-final.json": "a55c034a3b46db19c38112fde81b991227f1c482b168882be85bd474b11b9dfe",
+    "reports/evidence/pump4_sizing_readiness_20261027/attribution.json": "697edc9df4aa0c2d36d55c6e015117cc81fc089d54b0a83b2b7195dccb4f65e0",
+    "reports/evidence/pump4_sizing_readiness_20261027/cases84.csv": "5b716e3fc0aa6bf272c38519de17116ffcfaa426834b527c24a4a23fc3f3ebe7",
+    "reports/PUMP4_SIZING_READINESS_2026_10_27.md": "dbdc3ae15d4c60ed763a2317ad1895911ab0f9c7b571ce05ba21a38d23f95445"
+  }
+}
