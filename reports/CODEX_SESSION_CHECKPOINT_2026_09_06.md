@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT28Oct — exact PUMP4 technical TINY packet READY_FOR_EXACT_OWNER_GO
+
+Read PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md FIRST. Packet66a7be9c…8e6340
+stagedINERT at /opt/bybot-research/pump4-server-orders-off-20261023/tiny-activation-20261028-v1.
+Corebfbd987d:450local/same450VPS PASS;activationhelper b64ab4a:19local/VPS/independent
+PASS. Verifiedastra/high finalscopedreviewCLEAR; actualGET/unselectedunitrehearsalPASS.
+Proposal50allocation/30gross/20reserve/risk-scenario1/oneentry, validuntil1Nov19:26UTC.
+REGULAR_MARGIN is cross;50notisolated/1notguaranteedlosscap. EconomicsINCONCLUSIVE.
+Currentactual financiale4ORDERS_OFF/original818853, residentDATA7d andMonthlyv6unchanged;
+NO_GO/NO_ACTIVATION/NO_ORDERS. Genericlaunchintent confirmed, finalconcretenumeric
+scope/cross-margin owner confirmation still required. Agent-safe NEW helper may be
+executedONCE after that exact approval, NOT old personalKITY/Monthly wrappers.
+Activation path .../activation.py --packet .../packet.json --packet-sha256 [full66a...]
+--activate-once --owner-go-text [exact GO PUMP4_TINY_PACKET full66a...]. Neverrepeat
+onerror;readbackonly, preservenewlivecustody/Go/claims. Dynamicfinancialepoch atarm
+excludesoldsignals; noDATAepochreset/no automaticadditionalentries.
+
+---
+Earlier dated checkpoints below are history.
+
 CURRENT28Oct — TINY health/storage CORE accepted, activation helper in progress
 
 Read PUMP4_TINY_HEALTH_STORAGE_2026_10_28.md and prior actual7H1 report.

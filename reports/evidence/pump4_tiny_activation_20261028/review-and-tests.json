@@ -1,0 +1,16 @@
+{
+  "closed": [
+    "go_0600_independent_of_umask",
+    "optimized_python_cannot_remove_go_gate"
+  ],
+  "effort": "high",
+  "financial_go": false,
+  "helper_sha256": "b64ab4a177de3dc88e28e972966849547022e2a4bab57a503de8a90cd5d2dd16",
+  "independent_tests": 19,
+  "local_tests": 19,
+  "model": "gpt-6-astra",
+  "reviewer_session": "01a18368-e23b-7e72-a867-1ce077dc282a",
+  "runtime_metadata_verified": true,
+  "status": "NO_REMAINING_CRITICAL_IMPORTANT_WITHIN_REVIEWED_SCOPE",
+  "vps_tests": 19
+}

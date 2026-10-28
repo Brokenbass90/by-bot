@@ -1,5 +1,12 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+28Oct exact TINY packet READY_FOR_EXACT_OWNER_GO: [review](PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md).
+450/450core +19/19activation,actualunselectedGET/unitrehearsalPASS. Packet66a7be9c…8e6340.
+Proposal50/30/20/risk1/oneentry;REGULAR_MARGIN cross, noisolatedlossguarantee.
+CurrentPUMP ORDERS_OFF/noGO/noactivation; exactnumericownerconfirmation laststep.
+Monthlyv6/Data7d unchanged. Neverrepeatoldpersonalcommands. EconomicsINCONCLUSIVE.
+
+---
 **28Oct15:30UTC actual:** [seven installed H1 and independent parity](reports/PUMP4_ACTUAL_WS_7H1_2026_10_28.md).
 SOURCE_GATE_PASS for09–15UTC:7x135/135available<=60s,max43.218s/full137census;
 945frozen decisions/23,289rawpins verified. FirstH1protectedhealthPASS; Monthly

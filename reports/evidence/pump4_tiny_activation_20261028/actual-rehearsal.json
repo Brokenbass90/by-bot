@@ -1,0 +1,34 @@
+{
+  "actual_financial_mode": "ORDERS_OFF",
+  "broker_writes": 0,
+  "financial_owner_constructed": false,
+  "financial_units_changed": 0,
+  "go_created": false,
+  "lease_claimed": false,
+  "live_root_created": false,
+  "observed_ms": 1793209204826,
+  "packet_sha256": "66a7be9cbb134524ee43785e46c79920b05a06a1429a9eeb47e69c25eb8e6340",
+  "policy": {
+    "allocation_usdt": "50",
+    "day_loss_usdt": "2",
+    "drawdown_usdt": "6",
+    "gross_usdt": "30",
+    "max_entries": 1,
+    "max_positions": 1,
+    "reserve_usdt": "20",
+    "risk_usdt": "1",
+    "slippage_bps": "10",
+    "week_loss_usdt": "3"
+  },
+  "schema": "PUMP4_EXACT_UNSELECTED_ACTIVATION_REHEARSAL_V1",
+  "status": "PASS",
+  "unit_template_verified": true,
+  "would_be_live_health": {
+    "actual_protection_proven": false,
+    "broker_writes": 0,
+    "financial_trading_proven": false,
+    "orders_allowed": false,
+    "source_ms": 1793209204168,
+    "status": "LIVE_FLAT_WAITING_SIGNAL"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "activation_executed": false,
+  "allocation_is_not_isolated_collateral": true,
+  "current_mode": "ORDERS_OFF",
+  "data_material": "7d8ae05dab162ec5eaded17a7ed779c14d092880553dcd96345cf3d3198e6cf0",
+  "economics": "INCONCLUSIVE",
+  "entry_until_ms": 1793561192774,
+  "financial_material": "bfbd987d6137f81921c04f243b9fe2466186bf4457f84d29b771843440052b8b",
+  "go_created": false,
+  "guaranteed_loss_bound": false,
+  "helper_sha256": "b64ab4a177de3dc88e28e972966849547022e2a4bab57a503de8a90cd5d2dd16",
+  "margin_mode": "REGULAR_MARGIN",
+  "one_lifecycle_only": true,
+  "packet_sha256": "66a7be9cbb134524ee43785e46c79920b05a06a1429a9eeb47e69c25eb8e6340",
+  "policy": {
+    "allocation_usdt": "50",
+    "day_loss_usdt": "2",
+    "drawdown_usdt": "6",
+    "gross_usdt": "30",
+    "max_entries": 1,
+    "max_positions": 1,
+    "reserve_usdt": "20",
+    "risk_usdt": "1",
+    "slippage_bps": "10",
+    "week_loss_usdt": "3"
+  },
+  "remote_packet_dir": "/opt/bybot-research/pump4-server-orders-off-20261023/tiny-activation-20261028-v1",
+  "schema": "PUMP4_TINY_OWNER_REVIEW_CARD_V1",
+  "status": "READY_FOR_EXACT_OWNER_GO"
+}

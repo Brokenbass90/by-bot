@@ -35,3 +35,8 @@ fee/ticker requests to the owned symbol, retain account-wide positions/orders/
 wallet/borrow/pagination, archive losslessly with explicit version+backward reader.
 No raw hashes/clocks/history deletion, risk change or DATA source change. Add RED
 query/capture invariants and exact candidate acceptance before the TINY packet.
+
+Completion:450local/VPS core;19local/VPS/independentactivation;actual unselected
+GET/unit rehearsalPASS. Exactmoneyapproval pending; liveactivation NOT performed.
+Ruling: new helper is agent-safe after exactownerconfirmation, not an invented
+personalTTY requirement. Existing human-only KITY/Monthly wrappers remain unused.
