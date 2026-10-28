@@ -1,4 +1,4 @@
-# Current entry — 28Oct15:30UTC, actual PUMP4 source gate PASS
+# Current entry — PUMP4 exact TINY owner decision, 28 October 2026
 
 28Oct exact TINY packet READY_FOR_EXACT_OWNER_GO: [review](PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md).
 450/450core +19/19activation,actualunselectedGET/unitrehearsalPASS. Packet66a7be9c…8e6340.

@@ -1,6 +1,6 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-28Oct exact TINY packet READY_FOR_EXACT_OWNER_GO: [review](PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md).
+28Oct exact TINY packet READY_FOR_EXACT_OWNER_GO: [review](reports/PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md).
 450/450core +19/19activation,actualunselectedGET/unitrehearsalPASS. Packet66a7be9c…8e6340.
 Proposal50/30/20/risk1/oneentry;REGULAR_MARGIN cross, noisolatedlossguarantee.
 CurrentPUMP ORDERS_OFF/noGO/noactivation; exactnumericownerconfirmation laststep.
