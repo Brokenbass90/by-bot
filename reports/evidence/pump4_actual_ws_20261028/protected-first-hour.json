@@ -1,0 +1,49 @@
+{
+  "ack": {
+    "preboundary": true,
+    "received_ms": 1793177881836
+  },
+  "broker_writes": 0,
+  "data_state": {
+    "ActiveState": "active",
+    "MainPID": "3152955",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "monthly_age_ms": 1919,
+  "monthly_healthy": true,
+  "observed_ms": 1793178091009,
+  "owner_state": {
+    "ActiveState": "active",
+    "MainPID": "3152851",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "preloaded": {
+    "active": 135,
+    "broker_writes": 0,
+    "completed_ms": 1793176817722,
+    "target_ms": 1793178000000
+  },
+  "published": 135,
+  "pump_age_ms": 878,
+  "receipt": {
+    "broker_writes": 0,
+    "census": 137,
+    "complete_pairs": 135,
+    "disconnected": false,
+    "expected_trading": 135,
+    "financial_owner_constructed": false,
+    "hour_pass": true,
+    "money_authority": false,
+    "orders_allowed": false,
+    "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+    "source_hour_open_ms": 1793178000000,
+    "within60s": 135
+  },
+  "receipt_sha256": "c88cb3e7f3ccc43b8d1756729ec5c83d0aceb5ed408e6ec17557c0b32a261b6e",
+  "status": "PASS",
+  "target_ms": 1793178000000,
+  "worst_monthly_age_ms": 80491,
+  "worst_pump_age_ms": 7109
+}

@@ -1,5 +1,24 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT28Oct15:30UTC — seven actual WS H1 PASS; source gate closed for this cohort
+
+Read `PUMP4_ACTUAL_WS_7H1_2026_10_28.md` FIRST.09–15UTC seven consecutive
+full137receipts:135available<=60s each;HFT/VELODROME explicit unavailable. Max43.218s.
+Independent945/945frozen replay +23,289rawpins/epochs/prefixes PASS, nojudge/PnL.
+First09H1 protectedguardPASS:Monthlymax80.491s<=90s,owner7.109s. CurrentMonthly
+sourcePASS/issues[]/sameunit;PUMP DATA3152955/financial3152851/0restarts/original818853.
+Configef4c9c7a…2691b/scope9dbe072f…7ecd/noGO/0orders; sevenhours0signals.
+15:23freshGETflat/orders0/no borrowing/cash covers50proposal. Sourcefees varybycoin.
+Historical84 sizing82blocked/2fixturepasses unchanged; economicsINCONCLUSIVE.
+Next bounded PUMPblock: LIVE-aware existing health/alerts +exactone-lifecycle
+activation/rollback packet, criticalreview, unselected until exactownerGO. Current
+monitor is OFF-only; do not flip --dispatch or mintGO blindly. Actual positive
+signal/freshHTTPS/account/qty/native gates remain. Monthlyv6 no repeatactivation.
+Noarchitecture/researchdiversion. Full prior handoff: PUMP4_RESIDENT_WS_HANDOFF_2026_10_28.md.
+
+---
+Earlier dated checkpoints below are history.
+
 CURRENT28Oct08:48UTC — resident WS DATA and original financial consumer selected OFF
 
 Read `PUMP4_RESIDENT_WS_HANDOFF_2026_10_28.md` FIRST; implementation/test report

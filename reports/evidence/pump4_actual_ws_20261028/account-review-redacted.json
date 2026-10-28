@@ -1,0 +1,17 @@
+{
+  "allocation_is_proposal_only": true,
+  "available_balance_covers_off_allocation_50": true,
+  "borrowed_funds": false,
+  "broker_writes": 0,
+  "capture_sha256": "9224d207fae9d1cdacb80acc5ffd1f9e0b3d29ff175cd7521cf022ceee0f9b04",
+  "fee_rows": 954,
+  "financial_admission_proven": false,
+  "financial_owner_constructed": false,
+  "lease_claimed": false,
+  "margin_mode": "REGULAR_MARGIN",
+  "observed_ms": 1793201009336,
+  "open_orders_empty": true,
+  "positions_flat": true,
+  "schema": "PUMP4_FRESH_ACCOUNT_REVIEW_ONLY_V1",
+  "source_ms": 1793201008590
+}

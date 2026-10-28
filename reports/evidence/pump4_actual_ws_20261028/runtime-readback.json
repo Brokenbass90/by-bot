@@ -1,0 +1,353 @@
+{
+  "config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+  "data_recent_journal": "Started pump4-data-supervisor.service - PUMP4 frozen137 DATA-only persistent intake (no trading).\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793178000000, \"active\": 135, \"observed_ms\": 1793176817726}\n{\"schema\": \"PUMP4_WS_FULL137_DATA_RECEIPT_V1\", \"source_hour_open_ms\": 1793178000000, \"census\": 137, \"complete_pairs\": 135, \"within60s\": 135, \"broker_writes\": 0, \"financial_owner_constructed\": false, \"orders_allowed\": false, \"money_authority\": false, \"expected_trading\": 135, \"disconnected\": false, \"hour_pass\": true}\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793181600000, \"active\": 135, \"observed_ms\": 1793178184309}\n{\"schema\": \"PUMP4_WS_FULL137_DATA_RECEIPT_V1\", \"source_hour_open_ms\": 1793181600000, \"census\": 137, \"complete_pairs\": 135, \"within60s\": 135, \"broker_writes\": 0, \"financial_owner_constructed\": false, \"orders_allowed\": false, \"money_authority\": false, \"expected_trading\": 135, \"disconnected\": false, \"hour_pass\": true}\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793185200000, \"active\": 135, \"observed_ms\": 1793181780991}\n{\"schema\": \"PUMP4_WS_FULL137_DATA_RECEIPT_V1\", \"source_hour_open_ms\": 1793185200000, \"census\": 137, \"complete_pairs\": 135, \"within60s\": 135, \"broker_writes\": 0, \"financial_owner_constructed\": false, \"orders_allowed\": false, \"money_authority\": false, \"expected_trading\": 135, \"disconnected\": false, \"hour_pass\": true}\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793188800000, \"active\": 135, \"observed_ms\": 1793185379579}\n{\"schema\": \"PUMP4_WS_FULL137_DATA_RECEIPT_V1\", \"source_hour_open_ms\": 1793188800000, \"census\": 137, \"complete_pairs\": 135, \"within60s\": 135, \"broker_writes\": 0, \"financial_owner_constructed\": false, \"orders_allowed\": false, \"money_authority\": false, \"expected_trading\": 135, \"disconnected\": false, \"hour_pass\": true}\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793192400000, \"active\": 135, \"observed_ms\": 1793188979849}\n{\"schema\": \"PUMP4_WS_FULL137_DATA_RECEIPT_V1\", \"source_hour_open_ms\": 1793192400000, \"census\": 137, \"complete_pairs\": 135, \"within60s\": 135, \"broker_writes\": 0, \"financial_owner_constructed\": false, \"orders_allowed\": false, \"money_authority\": false, \"expected_trading\": 135, \"disconnected\": false, \"hour_pass\": true}\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793196000000, \"active\": 135, \"observed_ms\": 1793192582969}\n{\"schema\": \"PUMP4_WS_FULL137_DATA_RECEIPT_V1\", \"source_hour_open_ms\": 1793196000000, \"census\": 137, \"complete_pairs\": 135, \"within60s\": 135, \"broker_writes\": 0, \"financial_owner_constructed\": false, \"orders_allowed\": false, \"money_authority\": false, \"expected_trading\": 135, \"disconnected\": false, \"hour_pass\": true}\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793199600000, \"active\": 135, \"observed_ms\": 1793196182200}\n{\"schema\": \"PUMP4_WS_FULL137_DATA_RECEIPT_V1\", \"source_hour_open_ms\": 1793199600000, \"census\": 137, \"complete_pairs\": 135, \"within60s\": 135, \"broker_writes\": 0, \"financial_owner_constructed\": false, \"orders_allowed\": false, \"money_authority\": false, \"expected_trading\": 135, \"disconnected\": false, \"hour_pass\": true}\n{\"status\": \"STREAM_PRELOADED_ORDERS_OFF\", \"hour\": 1793203200000, \"active\": 135, \"observed_ms\": 1793199788301}\n",
+  "data_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1",
+  "financial_app": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-e4feca498f37e27d/app",
+  "hours": [
+    {
+      "attempt_sha256": "28fdd27a964e9fd47b5b024f46cd5db387571fb1e0f34c639ee7778e9c928d51",
+      "broker_writes": 0,
+      "census": 137,
+      "complete_pairs": 135,
+      "disconnected": false,
+      "expected_trading": 135,
+      "financial_owner_constructed": false,
+      "hour_pass": true,
+      "max_publication_delay_ms": 38380,
+      "money_authority": false,
+      "orders_allowed": false,
+      "published_count": 135,
+      "receipt_exists": true,
+      "receipt_sha256": "c88cb3e7f3ccc43b8d1756729ec5c83d0aceb5ed408e6ec17557c0b32a261b6e",
+      "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+      "signals": [],
+      "source_hour_open_ms": 1793178000000,
+      "statuses": {
+        "CLOSED_H1_INTAKE_PASS": 135,
+        "UNAVAILABLE_INSTRUMENT": 2
+      },
+      "target_ms": 1793178000000,
+      "within60s": 135
+    },
+    {
+      "attempt_sha256": "1b9668f3a471949ca24d8abf17e66653faaecf6fd9cf4460baefb593f35f1347",
+      "broker_writes": 0,
+      "census": 137,
+      "complete_pairs": 135,
+      "disconnected": false,
+      "expected_trading": 135,
+      "financial_owner_constructed": false,
+      "hour_pass": true,
+      "max_publication_delay_ms": 38564,
+      "money_authority": false,
+      "orders_allowed": false,
+      "published_count": 135,
+      "receipt_exists": true,
+      "receipt_sha256": "5c62aed3123ea7c04da32f0559d2c398c74a2dd0fb13ae12f4a152c270fcf58e",
+      "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+      "signals": [],
+      "source_hour_open_ms": 1793181600000,
+      "statuses": {
+        "CLOSED_H1_INTAKE_PASS": 135,
+        "UNAVAILABLE_INSTRUMENT": 2
+      },
+      "target_ms": 1793181600000,
+      "within60s": 135
+    },
+    {
+      "attempt_sha256": "fd5a58b5182982b94ee484e75348046f4edc615837b08d182f56e225d6e79097",
+      "broker_writes": 0,
+      "census": 137,
+      "complete_pairs": 135,
+      "disconnected": false,
+      "expected_trading": 135,
+      "financial_owner_constructed": false,
+      "hour_pass": true,
+      "max_publication_delay_ms": 42670,
+      "money_authority": false,
+      "orders_allowed": false,
+      "published_count": 135,
+      "receipt_exists": true,
+      "receipt_sha256": "eac143fb5d67fe9bb7fc5449f918c50d71307fa0bb36f5e4d51526f6fb4b69bd",
+      "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+      "signals": [],
+      "source_hour_open_ms": 1793185200000,
+      "statuses": {
+        "CLOSED_H1_INTAKE_PASS": 135,
+        "UNAVAILABLE_INSTRUMENT": 2
+      },
+      "target_ms": 1793185200000,
+      "within60s": 135
+    },
+    {
+      "attempt_sha256": "f5ad99b56328654e9b2fae9b28e604f79ee2703902db875d00f51a1ab3c11589",
+      "broker_writes": 0,
+      "census": 137,
+      "complete_pairs": 135,
+      "disconnected": false,
+      "expected_trading": 135,
+      "financial_owner_constructed": false,
+      "hour_pass": true,
+      "max_publication_delay_ms": 41535,
+      "money_authority": false,
+      "orders_allowed": false,
+      "published_count": 135,
+      "receipt_exists": true,
+      "receipt_sha256": "a9c600a2908b294ca56609d8b6be537d2f48b4df57994be5e73db19a20f71ebd",
+      "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+      "signals": [],
+      "source_hour_open_ms": 1793188800000,
+      "statuses": {
+        "CLOSED_H1_INTAKE_PASS": 135,
+        "UNAVAILABLE_INSTRUMENT": 2
+      },
+      "target_ms": 1793188800000,
+      "within60s": 135
+    },
+    {
+      "attempt_sha256": "39b6b77868313cd805583724a3d759ee8b8aab4ec6ed9ba4b4b90faa95b2c76a",
+      "broker_writes": 0,
+      "census": 137,
+      "complete_pairs": 135,
+      "disconnected": false,
+      "expected_trading": 135,
+      "financial_owner_constructed": false,
+      "hour_pass": true,
+      "max_publication_delay_ms": 38633,
+      "money_authority": false,
+      "orders_allowed": false,
+      "published_count": 135,
+      "receipt_exists": true,
+      "receipt_sha256": "599bd1c39006ccbe59d9ff217fd9f3145cf984660d9b9b16c95bc5ff62825539",
+      "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+      "signals": [],
+      "source_hour_open_ms": 1793192400000,
+      "statuses": {
+        "CLOSED_H1_INTAKE_PASS": 135,
+        "UNAVAILABLE_INSTRUMENT": 2
+      },
+      "target_ms": 1793192400000,
+      "within60s": 135
+    },
+    {
+      "attempt_sha256": "96ad8d80d62d3a6096db894de8d04b89b79c1990fa1d355ddec6e6e3c1aaead7",
+      "broker_writes": 0,
+      "census": 137,
+      "complete_pairs": 135,
+      "disconnected": false,
+      "expected_trading": 135,
+      "financial_owner_constructed": false,
+      "hour_pass": true,
+      "max_publication_delay_ms": 39734,
+      "money_authority": false,
+      "orders_allowed": false,
+      "published_count": 135,
+      "receipt_exists": true,
+      "receipt_sha256": "cb298d36b53b90194e3f933b3eaaf06fb49bdcc96ae6f0ee46881cdffc40b650",
+      "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+      "signals": [],
+      "source_hour_open_ms": 1793196000000,
+      "statuses": {
+        "CLOSED_H1_INTAKE_PASS": 135,
+        "UNAVAILABLE_INSTRUMENT": 2
+      },
+      "target_ms": 1793196000000,
+      "within60s": 135
+    },
+    {
+      "attempt_sha256": "4c11a91e39822b2d3d3e95c1ce2699fff22c09d998ce433dd41160544916b78d",
+      "broker_writes": 0,
+      "census": 137,
+      "complete_pairs": 135,
+      "disconnected": false,
+      "expected_trading": 135,
+      "financial_owner_constructed": false,
+      "hour_pass": true,
+      "max_publication_delay_ms": 43218,
+      "money_authority": false,
+      "orders_allowed": false,
+      "published_count": 135,
+      "receipt_exists": true,
+      "receipt_sha256": "7d68ce012b73a9ba3af3229f6c5cd8602b0b19da81de2f26f5253595a898448d",
+      "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+      "signals": [],
+      "source_hour_open_ms": 1793199600000,
+      "statuses": {
+        "CLOSED_H1_INTAKE_PASS": 135,
+        "UNAVAILABLE_INSTRUMENT": 2
+      },
+      "target_ms": 1793199600000,
+      "within60s": 135
+    },
+    {
+      "attempt_sha256": "28c8af2b9fe64b170c0d6d3b4690a6c91726769117168f764fc3aaa3c656f550",
+      "published_count": 0,
+      "receipt_exists": false,
+      "target_ms": 1793203200000
+    }
+  ],
+  "latest_owner_receipts": [
+    {
+      "broker_writes": 0,
+      "final_costs_proven": false,
+      "mode": "ORDERS_OFF",
+      "observed_ms": 1793200649918,
+      "pid": 3152851,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "159cf33db34b4f24a412006db0184576",
+      "runner_config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+      "tick": 3661
+    },
+    {
+      "broker_writes": 0,
+      "final_costs_proven": false,
+      "mode": "ORDERS_OFF",
+      "observed_ms": 1793200656117,
+      "pid": 3152851,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "159cf33db34b4f24a412006db0184576",
+      "runner_config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+      "tick": 3662
+    },
+    {
+      "broker_writes": 0,
+      "final_costs_proven": false,
+      "mode": "ORDERS_OFF",
+      "observed_ms": 1793200662525,
+      "pid": 3152851,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "159cf33db34b4f24a412006db0184576",
+      "runner_config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+      "tick": 3663
+    }
+  ],
+  "mode": "ORDERS_OFF",
+  "monthly_latest": {
+    "issues": [],
+    "maintenance": {
+      "money_authority": false,
+      "orders_allowed": false,
+      "production_writer_installed": false,
+      "status": "MONTHLY_NATIVE_PROTECTED",
+      "stop_order_ids": []
+    },
+    "observed_ms": 1793200646671,
+    "source_status": "ORDERS_OFF_OPERATIONAL_PASS",
+    "status": "MONTHLY_STANDING_DISPATCH_TICK"
+  },
+  "monthly_unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+  "observed_ms": 1793200666790,
+  "owner_go_present": false,
+  "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+  "selected_config_path": "/opt/bybot-research/pump4-server-orders-off-20261023/ws-handoff-20261028/owner-review-stream-v1/runner.json",
+  "units": {
+    "alpaca-monthly-owned.service": {
+      "ActiveState": "inactive",
+      "DropInPaths": "",
+      "Job": "",
+      "MainPID": "0",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "alpaca-monthly-owned.timer": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "Job": "",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    "pump4-data-supervisor.service": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "Job": "",
+      "MainPID": "3152955",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "pump4-data-supervisor.timer": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "Job": "",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "pump4-execution-owner.service": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "Job": "",
+      "MainPID": "3152851",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "running"
+    }
+  },
+  "watcher_failures": {},
+  "watchers": {
+    "actual-h1-1793178000000-v2/final.json": {
+      "ack": {
+        "preboundary": true,
+        "received_ms": 1793177881836
+      },
+      "broker_writes": 0,
+      "data_state": {
+        "ActiveState": "active",
+        "MainPID": "3152955",
+        "NRestarts": "0",
+        "SubState": "running"
+      },
+      "monthly_age_ms": 1919,
+      "monthly_healthy": true,
+      "observed_ms": 1793178091009,
+      "owner_state": {
+        "ActiveState": "active",
+        "MainPID": "3152851",
+        "NRestarts": "0",
+        "SubState": "running"
+      },
+      "preloaded": {
+        "active": 135,
+        "broker_writes": 0,
+        "completed_ms": 1793176817722,
+        "target_ms": 1793178000000
+      },
+      "published": 135,
+      "pump_age_ms": 878,
+      "receipt": {
+        "broker_writes": 0,
+        "census": 137,
+        "complete_pairs": 135,
+        "disconnected": false,
+        "expected_trading": 135,
+        "financial_owner_constructed": false,
+        "hour_pass": true,
+        "money_authority": false,
+        "orders_allowed": false,
+        "schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1",
+        "source_hour_open_ms": 1793178000000,
+        "within60s": 135
+      },
+      "receipt_sha256": "c88cb3e7f3ccc43b8d1756729ec5c83d0aceb5ed408e6ec17557c0b32a261b6e",
+      "status": "PASS",
+      "target_ms": 1793178000000,
+      "worst_monthly_age_ms": 80491,
+      "worst_pump_age_ms": 7109
+    }
+  }
+}
