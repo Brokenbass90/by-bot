@@ -1,0 +1,104 @@
+{
+  "actual_new_h1_status": "PENDING",
+  "broker_writes": 0,
+  "clean_off_cycles": 50,
+  "config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+  "data_app": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app",
+  "data_binding_sha256": "bdb527f47605928e0d075caafe1bb20d366da5a8e7469a310d4992c1681752cf",
+  "data_state": {
+    "ActiveState": "active",
+    "CPUQuotaPerSecUSec": "2s",
+    "CPUWeight": "[not set]",
+    "DropInPaths": "",
+    "Job": "",
+    "MainPID": "3152955",
+    "MemoryMax": "805306368",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "financial_app": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-e4feca498f37e27d/app",
+  "financial_history_empty": true,
+  "financial_policy_unchanged": true,
+  "last_receipts": [
+    {
+      "broker_writes": 0,
+      "final_costs_proven": false,
+      "mode": "ORDERS_OFF",
+      "observed_ms": 1793177065650,
+      "pid": 3152851,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "159cf33db34b4f24a412006db0184576",
+      "runner_config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+      "tick": 48
+    },
+    {
+      "broker_writes": 0,
+      "final_costs_proven": false,
+      "mode": "ORDERS_OFF",
+      "observed_ms": 1793177071919,
+      "pid": 3152851,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "159cf33db34b4f24a412006db0184576",
+      "runner_config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+      "tick": 49
+    },
+    {
+      "broker_writes": 0,
+      "final_costs_proven": false,
+      "mode": "ORDERS_OFF",
+      "observed_ms": 1793177078337,
+      "pid": 3152851,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "159cf33db34b4f24a412006db0184576",
+      "runner_config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+      "tick": 50
+    }
+  ],
+  "monthly_receipt_age_ms": 18095,
+  "monthly_source_status": "PASS",
+  "monthly_unit_unchanged": true,
+  "observed_ms": 1793177083210,
+  "original_lock_held": true,
+  "original_lock_inode": 818853,
+  "owner_go_created": false,
+  "owner_state": {
+    "ActiveState": "active",
+    "CPUQuotaPerSecUSec": "400ms",
+    "CPUWeight": "[not set]",
+    "DropInPaths": "",
+    "Job": "",
+    "MainPID": "3152851",
+    "MemoryMax": "805306368",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "preloads": [
+    {
+      "active": 135,
+      "broker_writes": 0,
+      "completed_ms": 1793176817722,
+      "target_ms": 1793178000000
+    }
+  ],
+  "preserved_history_files": 48114,
+  "schema": "PUMP4_RESIDENT_WS_OFF_READBACK_V1",
+  "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+  "started_ms": 1793176983653,
+  "status": "PASS",
+  "tiny_ready": false
+}

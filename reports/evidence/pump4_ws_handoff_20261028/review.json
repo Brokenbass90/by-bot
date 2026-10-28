@@ -1,0 +1,13 @@
+{
+  "broker_writes": 0,
+  "closed": [
+    "rollback_recheck_under_both_DATA_locks_before_copy_forward"
+  ],
+  "effort": "high",
+  "independent_tests": 24,
+  "local_tests": 24,
+  "model": "gpt-6-astra",
+  "runtime_metadata_verified": true,
+  "status": "NO_REMAINING_CRITICAL_IMPORTANT",
+  "vps_tests": 24
+}

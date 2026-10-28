@@ -1,0 +1,23 @@
+[Unit]
+Description=PUMP4 frozen137 DATA-only persistent intake (no trading)
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app
+Environment=PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+ExecStartPre=/root/by-bot/.venv/bin/python -B -c "import shutil; assert shutil.disk_usage('/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1').free >= 3221225472, 'PUMP4_DATA_DISK_RESERVE'"
+ExecStart=/root/by-bot/.venv/bin/python -B /opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/scripts/run_pump4_stream_v1.py --root /opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1 --run --dependencies /opt/bybot-research/pump4-server-orders-off-20261023/ws-handoff-20261028/dependencies.json --dependencies-sha256 2b7366e35534938e9c2b7f770093464076ffef207e88a637ac77f927bc2c7ced
+TimeoutStartSec=900
+TimeoutStopSec=90
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ReadWritePaths=/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1
+InaccessiblePaths=/root/by-bot/configs /opt/bybot-research/kity-micro-owner-20261015/runtime
+MemoryMax=768M
+CPUQuota=200%

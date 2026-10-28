@@ -1,5 +1,15 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**28Oct08:48UTC current:** [resident WS OFF handoff](reports/PUMP4_RESIDENT_WS_HANDOFF_2026_10_28.md).
+Exact406local/same406VPS PASS;24local/VPS/independenthandoff PASS. DATA7d8ae05d
+resident selected at normalpriority;financiale4/policyunchanged, original818853,
+48,114files/epochs preserved,2freshGETflat, noGO/0writes. Monthlyv6 unchanged.
+135/137preloaded (HFT/VELODROME explicit unavailable), actual09UTC H1PENDING.
+Next actual<=60s+protectedhealth, thenfresh eligible-signal sizing/protection and
+exacthumanTINYdecision; economicsINCONCLUSIVE. QueueMonthly→PUMP→Polymarket→KITY;
+Brain/Factory/classical strategies/intelligent portfolio remain NorthStar.
+Earlier dated entries below are history.
+
 **27Oct13:06UTC current:** [full critical path and isolated source experiment](reports/PUMP4_CRITICAL_PATH_2026_10_27.md).
 E4sameOFF/355productiontests;08H1FAIL48/129 and measured49.29sCPUqueue.
 GuardedDATAweighttrial09H1timing135/135by60s butMonthlyageguardFAIL; auto-restored

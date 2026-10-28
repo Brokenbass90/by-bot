@@ -1,5 +1,22 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT28Oct08:48UTC — resident WS DATA and original financial consumer selected OFF
+
+Read `PUMP4_RESIDENT_WS_HANDOFF_2026_10_28.md` FIRST; implementation/test report
+`PUMP4_WS_WARM_RESUME_2026_10_28.md` supports it. Exact406local/same406VPS PASS.
+24handofflocal/VPS/independent PASS; rollback race fixed/reviewed. DATA7d8ae05d
+PID3152955, financiale4PID3152851,0restarts/original818853/NO_GO/0writes.
+Configef4c9c7a…2691b/scope9dbe072f…7ecd;48,114oldfiles preserved. Twofresh GETflat.
+Independent50cyclesPASS; Monthlyv6unit/sourcePASS unchanged. Preloaded135/137
+(HFT/VELODROME unavailable) for09UTC target1793178000000; actualH1PENDING.
+Bounded observer root ws-handoff-20261028/actual-h1-1793178000000-v2; no personal
+commands/retries. Next actual full137receipt +protectedMonthly health, thenfresh
+signal/account/sizing/protection/ownerTINYpacket. Risk unchanged/TINYfalse/economics
+INCONCLUSIVE. No new audit/judge/fundingdownload/Polymarketdiversion.
+
+---
+Earlier dated checkpoints below are history.
+
 CURRENT28Oct08:25UTC — WS/warm exact package COMPONENT PASS, selection PENDING
 
 Read `PUMP4_WS_WARM_RESUME_2026_10_28.md` FIRST. Resumed interrupted dirty tree.

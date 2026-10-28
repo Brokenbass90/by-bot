@@ -1,3 +1,12 @@
+# Current entry — 28 October, resident PUMP4 selected OFF
+
+Read `PUMP4_RESIDENT_WS_HANDOFF_2026_10_28.md` and checkpoint TOP.
+406/406 exact package;24/24 OFF-handoff acceptance. DATAnew/financiale4, original
+818853, configef4c9c7a…2691b, noGO/noorders. Monthlyv6 remains unchanged.
+Next read actual09UTC full137 WS receipt and protected-health observer before any
+TINY decision. Do not repeat handoff or old personal commands.
+
+---
 # Current entry — 28 October 2026
 
 Read `PUMP4_WS_WARM_RESUME_2026_10_28.md` and checkpoint TOP.

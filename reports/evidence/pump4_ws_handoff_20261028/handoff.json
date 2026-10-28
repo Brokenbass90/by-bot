@@ -1,0 +1,62 @@
+{
+  "data_applied": {
+    "binding_sha256": "bdb527f47605928e0d075caafe1bb20d366da5a8e7469a310d4992c1681752cf",
+    "broker_writes": 0,
+    "data_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1",
+    "observed_ms": 1793176569839,
+    "original_lock_inode": 818853,
+    "owner_go_created": false,
+    "owner_pid": "3029723",
+    "preserved_files": 48114,
+    "status": "STREAM_DATA_SELECTED"
+  },
+  "data_unit": "[Unit]\nDescription=PUMP4 frozen137 DATA-only persistent intake (no trading)\nAfter=network-online.target\nWants=network-online.target\n[Service]\nType=simple\nUser=root\nWorkingDirectory=/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app\nEnvironment=PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1\nExecStartPre=/root/by-bot/.venv/bin/python -B -c \"import shutil; assert shutil.disk_usage('/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1').free >= 3221225472, 'PUMP4_DATA_DISK_RESERVE'\"\nExecStart=/root/by-bot/.venv/bin/python -B /opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/scripts/run_pump4_stream_v1.py --root /opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1 --run --dependencies /opt/bybot-research/pump4-server-orders-off-20261023/ws-handoff-20261028/dependencies.json --dependencies-sha256 2b7366e35534938e9c2b7f770093464076ffef207e88a637ac77f927bc2c7ced\nTimeoutStartSec=900\nTimeoutStopSec=90\nKillMode=control-group\nUMask=0077\nNoNewPrivileges=true\nProtectSystem=strict\nProtectHome=read-only\nPrivateTmp=true\nReadWritePaths=/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1\nInaccessiblePaths=/root/by-bot/configs /opt/bybot-research/kity-micro-owner-20261015/runtime\nMemoryMax=768M\nCPUQuota=200%\n",
+  "original_observer_retired": [
+    {
+      "data_process_changed": false,
+      "financial_process_changed": false,
+      "observer_pid": 3153173,
+      "reason": "SNAPSHOT_CLOCK_MOVED_AFTER_READ_ONLY_IO",
+      "retired_ms": 1793177033147,
+      "started_ms": 1793176854800.0
+    }
+  ],
+  "owner_applied": {
+    "broker_writes": 0,
+    "config_path": "/opt/bybot-research/pump4-server-orders-off-20261023/ws-handoff-20261028/owner-review-stream-v1/runner.json",
+    "config_sha256": "ef4c9c7a4f5d47c2e48ba39f1c42da9d9ca1c29747b9e3bd92cafc92cae2691b",
+    "fresh_flat_before": {
+      "bundle_sha256": "fba52354a061a054545665d4f3373e28ddb6347da983dee9f72bfc2940f78f5d",
+      "observed_ms": 1793176745586,
+      "open_orders_empty": true,
+      "positions_flat": true,
+      "source_ms": 1793176744892
+    },
+    "fresh_flat_stopped": {
+      "bundle_sha256": "6d04528a907dda43bbea4fd6a174522c550ded2343689da02387d93a9559d38a",
+      "observed_ms": 1793176747940,
+      "open_orders_empty": true,
+      "positions_flat": true,
+      "source_ms": 1793176747239
+    },
+    "monthly_health": {
+      "age_ms": 2399,
+      "observed_ms": 1793176764636,
+      "status": "PASS",
+      "unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d"
+    },
+    "new_pid": 3152851,
+    "new_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/runtime/financial-orders-off-stream-v1",
+    "observed_ms": 1793176767154,
+    "old_root": "/opt/bybot-research/pump4-server-orders-off-20261023/candidate-e4feca498f37e27d/runtime/financial-orders-off-stream-v1",
+    "original_lock_inode": 818853,
+    "owner_go_created": false,
+    "scope_sha256": "9dbe072fd754ce995da433214dd592a6e282bb55f398af3caee136efe8727ecd",
+    "source_result": {
+      "broker_writes": 0,
+      "status": "NO_NEW_SIGNAL"
+    },
+    "status": "STREAM_CONSUMER_ORDERS_OFF_SELECTED"
+  },
+  "source_ops_sha256": "3f3efc987041f755219b3c241ca3048a22eec5a6fa02f26ce47f2210dec825d7"
+}
