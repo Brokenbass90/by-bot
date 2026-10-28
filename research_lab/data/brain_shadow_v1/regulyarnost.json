@@ -1,0 +1,78 @@
+{
+ "kogda": "2026-10-28T08:23Z",
+ "razmer": "депозит $1000; PUMP4 риск $10; SHORT_HVOST $100/позиция",
+ "PUMP4": {
+  "n": 85,
+  "net_usd": 40.9,
+  "net_pct": 4.09,
+  "mesyacy": {
+   "2026-09": -35.5,
+   "2026-10": 76.4
+  },
+  "mesyacev_plus": 1,
+  "mesyacev_minus": 1,
+  "hudshiy_mesyac": -35.5,
+  "nedel_plus": 5,
+  "nedel_minus": 4,
+  "hudshaya_nedelya": -69.3,
+  "dney_s_sdelkami": 36,
+  "dney_plus": 23,
+  "max_prosadka_usd": 84.5,
+  "dolgoe_vosstanovlenie_dney": 40.5,
+  "bez_5_luchshih_usd": 23.2,
+  "dolya_luchshey_monety": 0.067,
+  "luchshaya_moneta": "WLDUSDT",
+  "dolya_luchshego_dnya": 0.148,
+  "vklad_k_sluchaynomu_usd": 1.32
+ },
+ "SHORT_HVOST": {
+  "n": 112,
+  "net_usd": 632.7,
+  "net_pct": 63.27,
+  "mesyacy": {
+   "2026-07": 39.3,
+   "2026-08": 468.6,
+   "2026-09": 44.7,
+   "2026-10": 80.0
+  },
+  "mesyacev_plus": 4,
+  "mesyacev_minus": 0,
+  "hudshiy_mesyac": 39.3,
+  "nedel_plus": 11,
+  "nedel_minus": 3,
+  "hudshaya_nedelya": -18.5,
+  "dney_s_sdelkami": 58,
+  "dney_plus": 38,
+  "max_prosadka_usd": 39.1,
+  "dolgoe_vosstanovlenie_dney": 16.7,
+  "bez_5_luchshih_usd": 424.5,
+  "dolya_luchshey_monety": 0.296,
+  "luchshaya_moneta": "BLESSUSDT",
+  "dolya_luchshego_dnya": 0.147,
+  "vklad_k_sluchaynomu_usd": null
+ },
+ "PORTFEL_s_01_09": {
+  "n": 144,
+  "net_usd": 165.7,
+  "net_pct": 16.57,
+  "mesyacy": {
+   "2026-09": 9.2,
+   "2026-10": 156.4
+  },
+  "mesyacev_plus": 2,
+  "mesyacev_minus": 0,
+  "hudshiy_mesyac": 9.2,
+  "nedel_plus": 6,
+  "nedel_minus": 3,
+  "hudshaya_nedelya": -71.1,
+  "dney_s_sdelkami": 49,
+  "dney_plus": 29,
+  "max_prosadka_usd": 89.4,
+  "dolgoe_vosstanovlenie_dney": 26.4,
+  "bez_5_luchshih_usd": 75.2,
+  "dolya_luchshey_monety": 0.136,
+  "luchshaya_moneta": "IRYSUSDT",
+  "dolya_luchshego_dnya": 0.13,
+  "vklad_k_sluchaynomu_usd": 1.32
+ }
+}
