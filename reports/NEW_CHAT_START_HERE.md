@@ -1,3 +1,17 @@
+# Current entry — PUMP4 armed LIVE, independent readback complete, 28 October 2026
+
+Read [actual activation](PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md) FIRST.
+Owner exact66a7be9c GO executedONCE; LIVE_ARMED_HEALTHY / LIVE_FLAT_WAITING_SIGNAL
+confirmed independently18:10 and20:20UTC. PID3198429/0restarts/original818853;
+Monthlyv6/DATA7d unchanged. 50/30/20/risk-scenario1/oneentry, cross notisolated;
+ENTRY expiry1Nov19:26:32.774UTC. No firsttrade yet, economicsINCONCLUSIVE.
+Neverreactivate/repeathumancommands; use existing read-onlyhealth and preservecustody.
+Next factualgate entry/native/exit/costs; Monthly30Octsource→2Nov14:30UTC conditional.
+Canonical next engineeringPolymarket→KITY; SHORT_HVOST needs publishedfullverdict.
+
+---
+Earlier dated entries below are history.
+
 # Current entry — PUMP4 exact TINY owner decision, 28 October 2026
 
 28Oct exact TINY packet READY_FOR_EXACT_OWNER_GO: [review](PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md).

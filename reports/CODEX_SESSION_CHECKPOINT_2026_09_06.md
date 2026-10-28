@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT28Oct20:20UTC — PUMP4 technical TINY LIVE_ARMED_HEALTHY; independent readback CLOSED
+
+Read PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md FIRST. Exact owner GO66a7be9c accepted;
+new agent-safe helper executedONCE. Financialbfbd OWNER_TINY_LIVE/PID3198429/0restarts,
+original818853; scopefec235e3…fcf794/configfa0b3b2e…53014a/GO0600. Independent18:10
+and20:20UTC GET HEALTHY/LIVE_FLAT_WAITING_SIGNAL; no actualentry proven. Postcheck
+noadmission/tickets/flows; Monthlyunit/timer and DATA7d unit/binding unchanged.
+50allocation/30gross/20reserve/risk-scenario1/maxoneentry+position+lifecycle;
+REGULAR_MARGINcross/notisolated; newentriesuntil1Nov19:26:32.774UTC thenownedcustody
+continues. Neverrepeatactivation/oldpersonalcommands; no extension/additionalGO.
+Existinghealth/alerts; nextactualentry/native40-60/exit/cost receipts, economicsINCONCLUSIVE.
+Monthlyv6 unchanged30Octsource→2Nov14:30UTC conditionalentry/CASH. Nextindependent
+engineeringqueuePolymarket→KITY; SHORT_HVOST user27/30notverified/PASS. Brain/Factory
+remainroadmap; noV2changesintoV1. Full receipts in reports/evidence/pump4_actual_tiny_activation_20261028.
+
+---
+Earlier dated entries below are history.
+
 CURRENT28Oct — exact PUMP4 technical TINY packet READY_FOR_EXACT_OWNER_GO
 
 Read PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md FIRST. Packet66a7be9c…8e6340

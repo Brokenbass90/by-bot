@@ -1,5 +1,12 @@
 # Trading OS — единая доска доведения до первой версии
 
+**28Oct20:20UTC actual:** [PUMP4 live activation and independent GET](../reports/PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md).
+Exact OWNER_GO executedONCE; LIVE_ARMED_HEALTHY/flat/no firstentry, original818853,
+Monthlyv6/DATA unchanged. One-lifecycle50/30/20/risk-scenario1/cross/notisolated,
+ENTRYuntil1Nov19:26UTC. No repeatactivation/economicPASS. Next actual trade evidence;
+canonical independentqueuePolymarket→KITY; SHORT_HVOST needs publishedfullverdict.
+Earlier dated entries below are history.
+
 **25Oct PUMP publication component:** [existing intake streams completed symbols](../reports/PUMP4_STREAM_PUBLICATION_2026_10_25.md).
 253local/same253VPS exactPASS; independentcriticalreview0Important. UNSELECTED,
 actualnextH1latencyUNVERIFIED/TINY_NOT_READY. Next boundedDATA/confighandoff with

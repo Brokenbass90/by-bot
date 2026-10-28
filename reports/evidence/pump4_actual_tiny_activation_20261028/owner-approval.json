@@ -1,0 +1,24 @@
+{
+  "schema": "PUMP4_EXACT_OWNER_CHAT_APPROVAL_V1",
+  "owner_answer": "GO на этот пакет PUMP4",
+  "packet_sha256": "66a7be9cbb134524ee43785e46c79920b05a06a1429a9eeb47e69c25eb8e6340",
+  "policy": {
+    "allocation_usdt": "50",
+    "day_loss_usdt": "2",
+    "drawdown_usdt": "6",
+    "gross_usdt": "30",
+    "max_entries": 1,
+    "max_positions": 1,
+    "reserve_usdt": "20",
+    "risk_usdt": "1",
+    "slippage_bps": "10",
+    "week_loss_usdt": "3"
+  },
+  "cross_margin_disclosure_accepted": true,
+  "one_lifecycle_only": true,
+  "new_entries_until_ms": 1793561192774,
+  "source": "Explicit human answer to exact packet question in this chat before the single activation",
+  "activation_executed_once": true,
+  "activation_scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+  "not_a_standing_or_additional_entry_authorization": true
+}

@@ -1,3 +1,5 @@
+> **Superseded by actual owner-approved activation:** [LIVE readbacks and receipts](PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md). The preparation state below is historical; do not activate again.
+
 # PUMP4: точный пакет включения технического TINY — 28 октября
 
 **READY_FOR_EXACT_OWNER_GO. Сейчас ORDERS_OFF; активация и реальные ордера не выполнялись.**

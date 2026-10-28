@@ -1,0 +1,10 @@
+{
+  "schema": "PUMP4_ACTUAL_TINY_PUBLIC_EVIDENCE_V1",
+  "files": {
+    "activation-receipt.json": "0136c66b3b8f3d8737878a49ff0967aebcbe4a6110e13e81e2882b36fa9324f7",
+    "independent-readback.json": "35ea15e33169cfc26746e6ace118544195da500c2df1964cd8548e7a7954a6e1",
+    "latest-readback.json": "d54ec90022a0a7137520d32cde024afa1d054b310461ed91a9e35672da745d11",
+    "owner-approval.json": "26092b9d22266e0db179f2bce987bee9a5f32f5ed29e047bd601627f55ca8717",
+    "postcheck.json": "796faa9d47e2b370de18f70a3a3b511a4b78edb5f9bfbd0396b1bf162ae36618"
+  }
+}
