@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT28Oct — TINY health/storage CORE accepted, activation helper in progress
+
+Read PUMP4_TINY_HEALTH_STORAGE_2026_10_28.md and prior actual7H1 report.
+Corebfbd987d6137f819:450local/same450VPS network-deniedPASS,131files,26modules.
+Independentastra/high runtimeverified190focusedPASS/3findingsfixed. Newcore
+UNSELECTED; installedfinanciale4OFF +residentDATA7d unchanged, Monthlyunchanged.
+HealthsupportsLIVE GETnative/ownership, no financialconstructors; fixedmeasured
+3.2MB-per-tick storage with scopedfee/quote+lossless archival, noaccountfilters.
+Current working helper .private/pump4_live_activation_20261028/activation/activation.py
+12puretestsPASS; NOTfinalcriticalreviewed/executableGO. Finish fault/partialrollback
+acceptance and exactpacket (dynamicfinancialepochatarm, noDATAepochreset), fresh
+actualGET/OFFrehearsal and owner review. Do notactivate basedon genericintent alone;
+exact50/30/20/risk1 one-lifecycle policy and reviewedstaticpacketmustbeconfirmed.
+Source7H1/945parityPASS/economicsINCONCLUSIVE/historical82of84sizingblocked retained.
+
+---
+Earlier dated checkpoints below are history.
+
 CURRENT28Oct15:30UTC — seven actual WS H1 PASS; source gate closed for this cohort
 
 Read `PUMP4_ACTUAL_WS_7H1_2026_10_28.md` FIRST.09–15UTC seven consecutive

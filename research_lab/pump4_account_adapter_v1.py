@@ -7,7 +7,7 @@ off-tick native geometry uses an explicit versioned ORDERS_OFF mapping.
 """
 from decimal import Decimal as D,ROUND_CEILING,ROUND_FLOOR
 from research_lab.alpaca_dynamic_v1 import digest
-from research_lab.pump4_bybit_sources_v1 import account_view,checked,paged,number,need,H
+from research_lab.pump4_bybit_sources_v1 import account_view,checked,paged,number,need,H,quote_for
 from research_lab.pump4_execution_plan_v1 import frozen_sources
 from research_lab.pump4_native_stop_v1 import native_mapping
 
@@ -127,10 +127,9 @@ def owned_observation(bundle,plan,requests,*,first_send_ms,expected_fingerprint,
             and first_send_ms<=int(r['transactionTime'])<=bundle['history_end_ms'],'FUNDING_SCOPE')
         value=D(r['funding']);need(value.is_finite(),'FUNDING_UNKNOWN')
         funding.append(dict(id=r['id'],amount=str(value),currency='USDT'))
-    quote=bundle['captures']['quote'];need(quote['params']==dict(category='linear'),'LAST_PRICE_QUERY')
-    ticks=checked(quote,'/v5/market/tickers',now_ms=now_ms,private=False)['list']
+    quote=bundle['captures']['quote'];ticker=quote_for(quote,symbol,now_ms=now_ms)
     need(now_ms-quote['request_ms']<=5000 and now_ms-quote['body']['time']<=5000,'STALE_LAST_PRICE')
-    ticker=[t for t in ticks if t['symbol']==symbol];need(len(ticker)==1,'LAST_PRICE_REQUIRED');price=number(ticker[0]['lastPrice'])
+    price=number(ticker['lastPrice'])
     observation=dict(schema='PUMP4_BYBIT_OBSERVATION_V1',observed_ms=now_ms,
         source_ms=min([view['source_ms'],quote['body']['time'],*[c['body']['time'] for w in groups for g in w['groups'].values() for c in g['pages']]]),
         symbol=symbol,positionIdx=0,position_side=side,held_qty=str(held),price=str(price),

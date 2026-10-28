@@ -15,7 +15,7 @@ from research_lab.att1_lifecycle_journal import LifecycleJournal,SCHEMA
 from research_lab.kity_micro_physical_owner_v1 import SignedPostOnce,publish
 from research_lab.kity_oct15_deadline_v1 import stable_bytes,decode
 from research_lab.pump4_account_adapter_v1 import owned_observation,execution_feasibility,checked_order_ack,frozen_plan
-from research_lab.pump4_bybit_sources_v1 import account_view,checked,number,H
+from research_lab.pump4_bybit_sources_v1 import account_view,checked,number,H,quote_for
 from research_lab.pump4_execution_lifecycle_v1 import Pump4Lifecycle
 from research_lab.pump4_entry_binding_v1 import bind_entry,verify_binding,verify_policy
 
@@ -48,11 +48,11 @@ def source_sizing(plan,bundle,public,policy,*,fingerprint,now_ms,execution_polic
         cursor=result['nextPageCursor'];need(type(cursor) is str and cursor not in seen,'INSTRUMENT_CURSOR')
         if cursor:seen.add(cursor)
         need(bool(cursor)==(index<len(pages['pages'])-1),'INSTRUMENT_INCOMPLETE')
-    quote=public['quote'];need(quote['params']==dict(category='linear') and quote==bundle['captures']['quote'],'QUOTE_SOURCE_IDENTITY')
-    quotes=checked(quote,'/v5/market/tickers',now_ms=now_ms,private=False)['list']
+    quote=public['quote'];need(quote==bundle['captures']['quote'],'QUOTE_SOURCE_IDENTITY')
+    ticker=quote_for(quote,symbol,now_ms=now_ms)
     need(0<=now_ms-quote['request_ms']<=5000 and 0<=now_ms-quote['body']['time']<=5000,'QUOTE_STALE')
-    ticks=[r for r in quotes if r['symbol']==symbol];need(len(ticks)==1 and symbol in instruments and symbol in view['fees'],'SYMBOL_COVERAGE')
-    instrument=instruments[symbol];ticker=ticks[0]
+    need(symbol in instruments and symbol in view['fees'],'SYMBOL_COVERAGE')
+    instrument=instruments[symbol]
     diagnostic=execution_feasibility(plan,instrument,ticker,view['fees'][symbol],view,
         dict(policy,schema='PUMP4_TINY_PROPOSAL_ONLY_V1',orders_allowed=False),now_ms=now_ms)
     need(diagnostic['status']=='FEASIBLE_PROPOSAL_ONLY',diagnostic.get('blocker','FEASIBILITY'))

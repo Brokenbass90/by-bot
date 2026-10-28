@@ -184,3 +184,10 @@ def test_api_error_preserves_real_send_once_barrier_across_sender_restart(tmp_pa
     sender=SignedPostOnce('NONFINANCIAL_KEY','NONFINANCIAL_SECRET',tmp_path,wire=wire)
     with pytest.raises(SourceError,match='SEND_ALREADY_RECORDED'):sender.post('/v5/order/create',req)
     assert len(calls)==1 and len(list(tmp_path.glob('send-*.json')))==1
+
+
+def test_symbol_specific_last_price_keeps_identical_owned_observation():
+ b,p,requests=fixture();expected=convert(b,p,requests);b['captures']['quote']['params']['symbol']='ZROUSDT'
+ assert convert(b,p,requests)==dict(expected,source_capture_sha256=__import__('research_lab.alpaca_dynamic_v1',fromlist=['digest']).digest(b))
+ b['captures']['quote']['params']['symbol']='ADAUSDT'
+ with pytest.raises(ValueError):convert(b,p,requests)

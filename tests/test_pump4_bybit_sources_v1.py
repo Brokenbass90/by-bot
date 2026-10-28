@@ -121,3 +121,10 @@ def test_account_admission_never_trusts_false_complete_or_unbound_sources(fault)
         for v in x['captures'].values():
             for c in v.get('pages',[v]):c['raw']=json.dumps(c['body']);c['raw_sha256']=hashlib.sha256(c['raw'].encode()).hexdigest()
     with pytest.raises(ValueError):flat_account(x,expected_fingerprint='a'*64,now_ms=NOW+2)
+
+
+def test_symbol_specific_fee_capture_is_bound_to_response_symbol():
+ x=account();c=x['captures']['fees'];c['params']['symbol']='ZROUSDT'
+ assert flat_account(x,expected_fingerprint='a'*64,now_ms=NOW+2)['fees']['ZROUSDT']['takerFeeRate']=='.00055'
+ c['params']['symbol']='ADAUSDT'
+ with pytest.raises(ValueError):flat_account(x,expected_fingerprint='a'*64,now_ms=NOW+2)

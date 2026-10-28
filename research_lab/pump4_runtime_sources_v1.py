@@ -6,9 +6,9 @@ The existing DATA journal is read without repair; real closed-H1 GETs must repla
 its exact decision before selected_tick can admit any new entry.
 """
 from concurrent.futures import ThreadPoolExecutor
-import copy,hashlib,os,stat,time
+import copy,hashlib,os,stat,time,base64,gzip,io,json
 from pathlib import Path
-from research_lab.alpaca_dynamic_v1 import digest
+from research_lab.alpaca_dynamic_v1 import digest,canonical
 from research_lab.kity_micro_transport_v1 import BybitReadTransport,wire_get
 from research_lab.kity_micro_physical_owner_v1 import publish
 from research_lab.kity_oct15_deadline_v1 import stable_bytes,decode
@@ -21,6 +21,31 @@ from research_lab.pump4_selected_runner_v1 import causal_plan
 
 def need(ok,why):
     if not ok:raise ValueError('PUMP4_RUNTIME_SOURCE_'+why)
+
+
+def publish_capture(path,value):
+    raw=canonical(value)
+    publish(path,dict(schema='PUMP4_LOSSLESS_GET_ARCHIVE_V1',codec='gzip-base64',uncompressed_bytes=len(raw),uncompressed_sha256=hashlib.sha256(raw).hexdigest(),payload=base64.b64encode(gzip.compress(raw,compresslevel=3,mtime=0)).decode()))
+
+def load_capture(path,*,max_bytes=20000000):
+    need(type(max_bytes) is int and 0<max_bytes<=20000000,'ARCHIVE_CONFIG_BOUND')
+    path=safe(path);limit=2*max_bytes+4096
+    fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
+    try:
+        before=observation_identity(os.fstat(fd));need(before[2]<=limit,'ARCHIVE_INPUT_BOUND')
+        with os.fdopen(os.dup(fd),'rb') as f:encoded=f.read(limit+1)
+        need(len(encoded)==before[2] and len(encoded)<=limit and before==observation_identity(os.fstat(fd))==observation_identity(path.lstat()),'ARCHIVE_CHANGED_OR_OVERSIZED')
+    finally:os.close(fd)
+    value=decode(encoded)
+    if value.get('schema')!='PUMP4_LOSSLESS_GET_ARCHIVE_V1':
+        need(len(encoded)<=max_bytes,'ARCHIVE_LEGACY_BOUND');return value
+    need(value['codec']=='gzip-base64' and type(value['uncompressed_bytes']) is int and 0<value['uncompressed_bytes']<=max_bytes,'ARCHIVE_DECODE_BOUND')
+    try:
+        compressed=base64.b64decode(value['payload'],validate=True)
+        with gzip.GzipFile(fileobj=io.BytesIO(compressed),mode='rb') as f:raw=f.read(max_bytes+1)
+    except (ValueError,OSError,EOFError) as e:raise ValueError('PUMP4_RUNTIME_SOURCE_ARCHIVE_DECODE') from e
+    need(len(raw)==value['uncompressed_bytes'] and len(raw)<=max_bytes and hashlib.sha256(raw).hexdigest()==value['uncompressed_sha256'],'ARCHIVE_HASH_OR_SIZE')
+    return decode(raw)
 
 
 def observation_identity(st):
@@ -87,22 +112,25 @@ class TrustedSources:
         frozen_plan(plan);symbol=plan['symbol'];need(symbol in universe(),'SYMBOL')
         return self._capture(symbol,plan['entry_bar_open_ms'],custody=custody)
 
-    def flat(self):
+    def flat(self,*,metadata_symbol=None):
         """Recent account-only handoff evidence, never a relabelled signal plan."""
         from research_lab.pump4_bybit_sources_v1 import flat_account
-        bundle,public=self._capture(None,self.clock()-H,custody=True)
+        bundle,public=self._capture(None,self.clock()-H,custody=True,metadata_symbol=metadata_symbol)
         flat_account(bundle,expected_fingerprint=self.reader.account_fingerprint,now_ms=self.clock())
         return bundle,public
 
-    def _capture(self,symbol,begin,*,custody):
+    def _capture(self,symbol,begin,*,custody,metadata_symbol=None):
         need(digest(self.config)==self.config_sha,'CONFIG_OR_MODE')
+        selected=symbol if symbol is not None else metadata_symbol
+        need(selected is None or selected in universe(),'METADATA_SYMBOL_SCOPE')
+        params=dict(category='linear',**({'symbol':selected} if selected else {}))
         start=self.clock();windows=time_windows(begin,start)
         specs=[('account','/v5/account/info',{},False),
             ('wallet','/v5/account/wallet-balance',dict(accountType='UNIFIED'),False),
-            ('fees','/v5/account/fee-rate',dict(category='linear'),False),
+            ('fees','/v5/account/fee-rate',params,False),
             ('positions','/v5/position/list',dict(category='linear',settleCoin='USDT',limit='200'),True),
             ('orders','/v5/order/realtime',dict(category='linear',settleCoin='USDT',openOnly='0',limit='50'),True),
-            ('quote','/v5/market/tickers',dict(category='linear'),False)]
+            ('quote','/v5/market/tickers',params,False)]
         if not custody:specs.append(('symbol_position','/v5/position/list',dict(category='linear',symbol=symbol),False))
         for index,(lo,hi) in enumerate(windows):
             for key,path,limit,extra in [('history','/v5/order/history','50',{}),
@@ -129,8 +157,8 @@ class TrustedSources:
             account_view(bundle,expected_fingerprint=self.reader.account_fingerprint,now_ms=end)
         stored=dict(bundle=bundle,public=public,custody=custody,broker_writes=0)
         target=safe(self.owner.root/'source-captures'/(str(end)+'-'+digest(stored)+'.json'))
-        if target.exists():need(decode(stable_bytes(target))==stored,'IMMUTABLE_SOURCE_CONFLICT')
-        else:publish(target,stored)
+        if target.exists():need(load_capture(target)==stored,'IMMUTABLE_SOURCE_CONFLICT')
+        else:publish_capture(target,stored)
         return bundle,public
 
     def _data(self):

@@ -7,7 +7,7 @@ import copy,sys,base64,zlib,json
 from pathlib import Path
 from decimal import Decimal as D
 from research_lab.alpaca_dynamic_v1 import digest
-from research_lab.pump4_bybit_sources_v1 import checked,number,H
+from research_lab.pump4_bybit_sources_v1 import checked,number,H,quote_for
 from research_lab.pump4_native_stop_v1 import SCHEMA as MAPPER_SCHEMA
 
 POLICY='PUMP4_EXPLICIT_ENTRY_EXECUTION_POLICY_V1'
@@ -57,8 +57,8 @@ def _bind(plan,policy,public,native_stop,now,*,verify_sources):
     need(plan['plan_sha256']==digest({k:v for k,v in plan.items() if k!='plan_sha256'}),'PLAN_HASH')
     entry_ms=plan['entry_bar_open_ms'];need(type(now) is int and 0<=now-entry_ms<=policy['max_delay_ms'],'DEADLINE')
     quote=public['quote'];path=public['entry_interval'];symbol=plan['symbol'];short=plan['side']=='short'
-    need(plan['side'] in ('short','long') and quote['params']==dict(category='linear'),'QUOTE_SCOPE')
-    ticks=checked(quote,'/v5/market/tickers',now_ms=now,private=False)['list'];rows=[r for r in ticks if r['symbol']==symbol];need(len(rows)==1,'QUOTE_IDENTITY');ticker=rows[0]
+    need(plan['side'] in ('short','long'),'QUOTE_SCOPE')
+    ticker=quote_for(quote,symbol,now_ms=now)
     body=checked(path,'/v5/market/kline',now_ms=now,private=False)
     need(len(path['raw'].encode())<=65536,'INTERVAL_EVIDENCE_BOUND')
     need(path['params']==dict(category='linear',symbol=symbol,interval='60',start=entry_ms,end=entry_ms+H-1,limit=1)

@@ -28,6 +28,8 @@ def wire_fixture(exchange,now,*,fail=None,partial=False):
   else:
    key=next(k for k,v in bundle['captures'].items() if v.get('pages',[v])[0].get('endpoint')==path and (k!='symbol_position' or 'symbol' in q)) if path!='/v5/position/list' else ('symbol_position' if 'symbol' in q else 'positions')
    cap=bundle['captures'][key];body=copy.deepcopy(cap.get('pages',[cap])[0]['body'])
+  if path in ('/v5/account/fee-rate','/v5/market/tickers') and q.get('symbol'):
+   body['result']['list']=[r for r in body['result']['list'] if r['symbol']==q['symbol']]
   return 200,json.dumps(body).encode()
  return wire,calls
 
@@ -231,3 +233,50 @@ def test_replacing_cached_negative_with_signal_still_verifies_live_journal(tmp_p
   with pytest.raises(ValueError):p.candidate()
   assert not p._candidate_consumed and e.state['calls']==0
  finally:lease.close()
+
+
+@pytest.mark.parametrize('custody',[False,True])
+def test_owned_capture_scopes_only_quote_and_fee_not_account_exposure(tmp_path,custody):
+ m=mod();s=create(tmp_path);o,e,t,_,f,lease=s
+ try:
+  wire,calls=wire_fixture(e,t[0]);p=m.TrustedSources({},o,wire=wire,clock=lambda:t[0]);bundle,public=p.account(f.config['plan'],custody=custody)
+  for path in ('/v5/account/fee-rate','/v5/market/tickers'):
+   assert any(route==path and q==dict(category='linear',symbol='ZROUSDT') for route,q in calls)
+  assert any(route=='/v5/position/list' and q==dict(category='linear',settleCoin='USDT',limit='200') for route,q in calls)
+  assert any(route=='/v5/order/realtime' and q.get('settleCoin')=='USDT' and 'symbol' not in q for route,q in calls)
+  stored=next((o.root/'source-captures').glob('*.json'));cap=m.load_capture(stored)
+  assert cap['bundle']==bundle and cap['public']==public and cap['custody']==custody
+ finally:lease.close()
+
+def test_health_flat_metadata_hint_does_not_filter_positions(tmp_path):
+ m=mod();s=create(tmp_path);o,e,t,_,f,lease=s
+ try:
+  wire,calls=wire_fixture(e,t[0]);p=m.TrustedSources({},o,wire=wire,clock=lambda:t[0]);b,_=p.flat(metadata_symbol='ZROUSDT')
+  assert account_view(b,expected_fingerprint=FP,now_ms=t[0])['positions_flat']
+  assert any(route=='/v5/account/fee-rate' and q.get('symbol')=='ZROUSDT' for route,q in calls)
+  assert not any('symbol' in q for route,q in calls if route in ('/v5/order/realtime','/v5/account/wallet-balance'))
+ finally:lease.close()
+
+def test_capture_archive_is_lossless_versioned_and_keeps_legacy_files(tmp_path):
+ m=mod();payload=dict(bundle=dict(captures=dict(raw='original raw bytes '*10000),source_ms=1234),public={},custody=True)
+ path=tmp_path/'archive.json';m.publish_capture(path,payload)
+ assert path.stat().st_size<len(json.dumps(payload).encode())//10
+ assert m.load_capture(path)==payload
+ with pytest.raises(FileExistsError):m.publish_capture(path,payload)
+ legacy=tmp_path/'legacy.json';legacy.write_text(json.dumps(payload));assert m.load_capture(legacy)==payload
+ bad=json.loads(path.read_bytes());bad['uncompressed_sha256']='0'*64;path.write_text(json.dumps(bad))
+ with pytest.raises(ValueError):m.load_capture(path)
+
+def test_capture_archive_refuses_oversized_decoded_bytes(tmp_path):
+ m=mod();p=tmp_path/'archive.json';m.publish_capture(p,dict(raw='a'*10000))
+ with pytest.raises(ValueError):m.load_capture(p,max_bytes=100)
+
+
+def test_archive_legacy_and_encoded_input_are_bounded_before_decode(tmp_path,monkeypatch):
+ m=mod();p=tmp_path/'legacy.json';p.write_text(json.dumps(dict(raw='a'*10000)))
+ with pytest.raises(ValueError):m.load_capture(p,max_bytes=100)
+ q=tmp_path/'envelope.json';q.write_text(json.dumps(dict(schema='PUMP4_LOSSLESS_GET_ARCHIVE_V1',payload='A'*100000)))
+ calls=[];original=m.decode
+ monkeypatch.setattr(m,'decode',lambda raw:(calls.append(True) or original(raw)))
+ with pytest.raises(ValueError):m.load_capture(q,max_bytes=100)
+ assert not calls

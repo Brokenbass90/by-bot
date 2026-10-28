@@ -126,13 +126,15 @@ def account_view(bundle,*,expected_fingerprint,now_ms):
     caps=bundle['captures']
     positions=paged(caps['positions'],'/v5/position/list',dict(category='linear',settleCoin='USDT',limit='200'),now_ms=now_ms,fingerprint=expected_fingerprint)
     orders=paged(caps['orders'],'/v5/order/realtime',dict(category='linear',settleCoin='USDT',openOnly='0',limit='50'),now_ms=now_ms,fingerprint=expected_fingerprint)
-    for k,path,params in [('fees','/v5/account/fee-rate',dict(category='linear')),
+    fee_params=caps['fees']['params'];need(fee_params==dict(category='linear') or (set(fee_params)=={'category','symbol'} and fee_params['category']=='linear' and fee_params['symbol'] in universe()),'FEE_QUERY_SCOPE')
+    for k,path,params in [('fees','/v5/account/fee-rate',fee_params),
         ('wallet','/v5/account/wallet-balance',dict(accountType='UNIFIED')),('account','/v5/account/info',{})]:
         need(caps[k]['params']==params,'ACCOUNT_CAPTURE_QUERY')
     rates=checked(caps['fees'],'/v5/account/fee-rate',now_ms=now_ms,private=True,fingerprint=expected_fingerprint)['list'];fees={}
     for r in rates:
         need(r['symbol'] not in fees,'DUPLICATE_FEE_SYMBOL');number(r['takerFeeRate'],zero=True)
         maker=D(r['makerFeeRate']);need(maker.is_finite(),'FEE_NUMBER');fees[r['symbol']]=r
+    if 'symbol' in fee_params:need(len(rates)<=1 and all(x['symbol']==fee_params['symbol'] for x in rates),'FEE_RESPONSE_SCOPE')
     wallet=checked(caps['wallet'],'/v5/account/wallet-balance',now_ms=now_ms,private=True,fingerprint=expected_fingerprint)['list']
     need(len(wallet)==1 and wallet[0]['accountType']=='UNIFIED','WALLET_IDENTITY');w=wallet[0]
     usdt=[r for r in w['coin'] if r['coin']=='USDT'];need(len(usdt)==1,'USDT_BALANCE_REQUIRED')
@@ -145,6 +147,14 @@ def account_view(bundle,*,expected_fingerprint,now_ms):
         source_ms=min(c['body']['time'] for v in caps.values() for c in v.get('pages',[v]) if 'time' in c['body']),observed_ms=now_ms,
         account_metadata_clock_basis='SERVER_RESPONSE_TIME' if 'time' in caps['account']['body'] else 'AUTHENTICATED_REQUEST_RECEIVE_BRACKET_ONLY',
         cost_finality='UNKNOWN_NOT_INFERRED_FROM_EMPTY_ACCOUNT',orders_allowed=False,money_authority=False)
+
+
+def quote_for(cap,symbol,*,now_ms):
+    need(cap['params'] in (dict(category='linear'),dict(category='linear',symbol=symbol)),'QUOTE_QUERY_SCOPE')
+    rows=checked(cap,'/v5/market/tickers',now_ms=now_ms,private=False)['list']
+    if 'symbol' in cap['params']:need(len(rows)==1 and rows[0]['symbol']==symbol,'QUOTE_RESPONSE_SCOPE')
+    found=[r for r in rows if r['symbol']==symbol];need(len(found)==1,'QUOTE_SYMBOL_COVERAGE')
+    return found[0]
 
 
 def flat_account(bundle,*,expected_fingerprint,now_ms):

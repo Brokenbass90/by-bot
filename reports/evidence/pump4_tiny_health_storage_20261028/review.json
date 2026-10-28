@@ -1,0 +1,14 @@
+{
+  "status": "NO_REMAINING_CRITICAL_IMPORTANT_CORE_ONLY",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "runtime_metadata_verified": true,
+  "session_id": "01a18368-e23b-7e72-a867-1ce077dc282a",
+  "independent_focused_pass": 190,
+  "closed": [
+    "account_wide_foreign_orders",
+    "fill_exchange_order_id_side_and_order_presence",
+    "encoded_and_legacy_archive_bounds"
+  ],
+  "activation_helper_not_yet_accepted": true
+}
