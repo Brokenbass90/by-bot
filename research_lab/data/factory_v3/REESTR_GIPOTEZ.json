@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-27T16:30Z",
- "vsego": 162,
+ "kogda": "2026-10-28T07:50Z",
+ "vsego": 165,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -18,7 +18,7 @@
   "REZHIM": 15,
   "TEHNIKA": 16,
   "PROTIV": 10,
-  "NET_SIGNALA": 79,
+  "NET_SIGNALA": 80,
   "MALO_DANNYH": 23,
   "IZDERZHKI": 5,
   "EFFEKTIVNYY_RYNOK": 3,
@@ -3274,6 +3274,33 @@
    "dokument": "results/retest_sloped*_20261027*.json"
   },
   {
+   "id": "DUMP_OTSKOK_H1",
+   "istochnik": "protokol",
+   "mehanizm": "лонг отскока после дампа ≥ 8 % за 24 ч (зеркало PUMP4)",
+   "status": "KILL",
+   "prichina": "NET_SIGNALA",
+   "sled": "V1: вклад +0.06R (t 0.18) на падающем рынке; V2 вне BEAR: вклад −0.005R → асимметрия: пампы альтов перегреваются, дампы — нет",
+   "dokument": "results/dump_otskok*_20261028*.json"
+  },
+  {
+   "id": "PUMP4_FILTR_ROST24",
+   "istochnik": "protokol",
+   "mehanizm": "PUMP4 только на настоящем пампе (рост ≥ 6 % за 24 ч)",
+   "status": "VPERED",
+   "prichina": null,
+   "sled": "судья fabrika/pump4_v2_vpered.py ночью, вердикт с 30 сделок",
+   "dokument": "PREREG_PUMP4_FILTR_ROST24_VPERED"
+  },
+  {
+   "id": "POLY_95",
+   "istochnik": "protokol",
+   "mehanizm": "купить сторону, дошедшую до 0.95 у нас на глазах",
+   "status": "VPERED",
+   "prichina": null,
+   "sled": "судья fabrika/poly_95_sudya.py, вердикт с 150 сделок",
+   "dokument": "PREREG_POLY_95_VPERED"
+  },
+  {
    "id": "SHORT_HVOST",
    "istochnik": "protokol",
    "mehanizm": "шорт перегретого хвоста с фандингом",
@@ -3306,7 +3333,7 @@
    "mehanizm": "каталог 292 гипотез на новых днях",
    "status": "NAKOPLENIE",
    "prichina": null,
-   "sled": "вердикт с 60 дней, сейчас 25"
+   "sled": "вердикт с 60 дней, сейчас 26"
   },
   {
    "id": "FABRIKA_VPERED_V2",
@@ -3314,7 +3341,7 @@
    "mehanizm": "каталог 290 гипотез на новых днях",
    "status": "NAKOPLENIE",
    "prichina": null,
-   "sled": "вердикт с 60 дней, сейчас 25"
+   "sled": "вердикт с 60 дней, сейчас 26"
   }
  ]
 }
