@@ -35,7 +35,7 @@ def main():
         if not k: continue
         dan.append(dict(x, vhod=float(k[0][1]), fund=sum(float(z["fundingRate"]) for z in fd)))
     print("сделок с данными:", len(dan), "из", len(S), "период дней:", round((max(d["ts"] for d in dan) - min(d["ts"] for d in dan)) / 864e5, 1))
-    for X in (3, 5, 10):
+    for X in (1, 3, 5, 10):
         for slip in (5, 15):
             dep = 1000.0; otkr = []; ev = []; isp = prop_lot = prop_marzh = 0; fund_usd = slip_usd = 0.0; pik_m = 0
             for d in dan:
@@ -43,7 +43,10 @@ def main():
                 if not ii: prop_lot += 1; continue
                 stop_usd = d["vhod"] * d["risk_pct"] / 100; qty = math.floor(X / stop_usd / ii["step"]) * ii["step"]
                 nom = qty * d["vhod"]
-                if qty < ii["minq"] or nom < ii["minnot"] or qty <= 0: prop_lot += 1; continue
+                if qty < ii["minq"] or nom < ii["minnot"] or qty <= 0:
+                    prop_lot += 1
+                    if X == 1 and slip == 5: print(f"  $1 мимо: {d['sym']} стоп ${stop_usd:.6f} qty {qty} (мин {ii['minq']}, шаг {ii['step']}) номинал ${nom:.2f} (мин ${ii['minnot']})")
+                    continue
                 lev = min(10.0, ii["lev"]); m = nom / lev
                 otkr = [o for o in otkr if o[0] > d["ts"]]
                 if sum(o[1] for o in otkr) + m > dep: prop_marzh += 1; continue

@@ -11,10 +11,11 @@ def prohod():
     if not (M / "knigi.jsonl").exists(): return {"status": "net_monitora"}
     kn = collections.defaultdict(list)
     for l in (M / "knigi.jsonl").open(): z = json.loads(l); kn[z["id"]].append(z)
-    ish, vop = {}, {}
+    ish, vop, vyb = {}, {}, {}
     for l in (M / "rynki.jsonl").open():
         z = json.loads(l)
         if z["sob"] == "dobavlen": vop[z["id"]] = z.get("vopros", "")
+        if z["sob"] == "vybyl": vyb[z["id"]] = dt.datetime.fromisoformat(z["t"]).timestamp()
         if z["sob"] == "vybyl" and z.get("closed") and dt.datetime.fromisoformat(z["t"]) >= OT:
             try: pr = json.loads(z["outcomePrices"]) if isinstance(z["outcomePrices"], str) else z["outcomePrices"]; ish[z["id"]] = 1 if str(pr[0]) == "1" else 0
             except Exception: pass
@@ -31,13 +32,18 @@ def prohod():
             if ask > 0.985: break
             q = vop.get(i, "").lower(); rate = 0.04 if any(w in q for w in ("elect", "president", "senate", "governor", "party")) else 0.05
             win = side == y; sd.append(dict(id=i, cena=ask, win=win, dohod=(1 if win else 0) / ask - 1 - rate * (1 - ask),
-                                            glubina=z["gl_ask"] if side == 1 else z["gl_bid"]))
+                                            glubina=z["gl_ask"] if side == 1 else z["gl_bid"], t_vhod=z["t"], t_vybyl=vyb.get(i)))
             break
     out = dict(kogda=time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()), sdelok=len(sd), proigryshey=sum(not x["win"] for x in sd))
     if sd:
         d = [x["dohod"] for x in sd]; m = st.mean(d); t = m / (st.stdev(d) / math.sqrt(len(d))) if len(d) > 2 and st.stdev(d) > 0 else None
         cena = st.mean(x["cena"] for x in sd)
-        out.update(sred_dohod=round(m, 4), t=round(t, 2) if t else None, sred_cena=round(cena, 4), glubina_med=sorted(x["glubina"] or 0 for x in sd)[len(sd) // 2])
+        ud = sorted((x["t_vybyl"] - x["t_vhod"]) / 3600 for x in sd if x.get("t_vybyl"))
+        gl = sorted(x["glubina"] or 0 for x in sd)
+        out.update(do_vybytiya_ch_med=round(ud[len(ud) // 2], 2) if ud else None, glubina_p25=gl[len(gl) // 4], dolya_glubina_ge_100usd=round(sum(g >= 100 for g in gl) / len(gl), 3),
+                   dohod_v_usd_pri_100=round(sum(x["dohod"] * min(100, x["glubina"] or 0) for x in sd), 2),
+                   primechanie="вход — первый снимок стакана монитора, где середина ≥ 0.95, ask на этом снимке (без будущих данных); исход — из Gamma после выбытия рынка",
+                   sred_dohod=round(m, 4), t=round(t, 2) if t else None, sred_cena=round(cena, 4), glubina_med=sorted(x["glubina"] or 0 for x in sd)[len(sd) // 2])
         ok = len(sd) >= MIN_N and m > 0 and (t or 0) >= 2 and out["proigryshey"] / len(sd) < 1 - cena
         out["status"] = "NAKOPLENIE" if len(sd) < MIN_N else ("PASS_V_TEN" if ok else "FAIL")
     else: out["status"] = "NAKOPLENIE"
