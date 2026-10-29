@@ -1,0 +1,27 @@
+{
+ "prereg_sha": "2858f6df212f946114d7d95fd6ff7e6a3db59db54be0d15247c30575c33c69fb",
+ "A_rubezh_mesyaca": {
+  "dnevnaya_raznica_bps": 3.17,
+  "t": 0.73,
+  "polovina_2015_2020_bps": 3.72,
+  "polovina_2021_2026_bps": 2.58,
+  "dney_v_okne_dolya": 0.287,
+  "ruka_godovyh_pct": 4.56,
+  "ruka_prosadka_pct": 15.5,
+  "spy_godovyh_pct": 12.02,
+  "spy_prosadka_pct": 34.1,
+  "godovaya_v_okne_pct": 18.6,
+  "sluchaynye_okna_godovaya_pct_med": 10.6,
+  "vyvod": "FAIL"
+ },
+ "B_nedelnyy_otkat": {
+  "nedel": 586,
+  "izbytok_bps_v_nedelyu": -3.54,
+  "t": -0.31,
+  "polovina1_bps": -3.64,
+  "polovina2_bps": -3.44,
+  "godovoy_izbytok_pct": -1.8,
+  "dolya_nedel_plus": 0.457,
+  "vyvod": "FAIL"
+ }
+}

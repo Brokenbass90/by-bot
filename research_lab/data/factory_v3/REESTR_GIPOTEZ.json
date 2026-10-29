@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-29T08:02Z",
- "vsego": 172,
+ "kogda": "2026-10-29T08:03Z",
+ "vsego": 174,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -18,8 +18,8 @@
   "REZHIM": 17,
   "TEHNIKA": 16,
   "PROTIV": 10,
-  "NET_SIGNALA": 80,
-  "MALO_DANNYH": 24,
+  "NET_SIGNALA": 81,
+  "MALO_DANNYH": 25,
   "IZDERZHKI": 7,
   "EFFEKTIVNYY_RYNOK": 3,
   "ZAPAZDYVANIE": 2,
@@ -3362,6 +3362,24 @@
    "prichina": "IZDERZHKI",
    "sled": "1 507 сделок, −23 bps, 0/9 мес: разница ≥ 5 bps не держится (собрано +2 bps за ~2 окна) против 25 bps издержек 4 сделок; даже без издержек ≈ 0",
    "dokument": "results/fanding_mezhbirzhevoy_*.json"
+  },
+  {
+   "id": "ALPACA_RUBEZH_MESYACA",
+   "istochnik": "protokol",
+   "mehanizm": "SPY только в окне рубежа месяца (−4…+3 торговых дня)",
+   "status": "FAIL",
+   "prichina": "MALO_DANNYH",
+   "sled": "2015–2026: +3.2 bps/день к остальным дням, обе половины в плюсе, но t 0.73; в окне 18.6 % годовых против 10.6 % у случайных окон — слабый, не доказан",
+   "dokument": "results/alpaca_aktivnaya_*.json"
+  },
+  {
+   "id": "ALPACA_NEDELNYY_OTKAT",
+   "istochnik": "protokol",
+   "mehanizm": "лонг 5 худших крупных бумаг недели",
+   "status": "KILL",
+   "prichina": "NET_SIGNALA",
+   "sled": "586 недель, −3.5 bps/нед к вселенной, обе половины в минусе",
+   "dokument": "results/alpaca_aktivnaya_*.json"
   },
   {
    "id": "SHORT_HVOST",
