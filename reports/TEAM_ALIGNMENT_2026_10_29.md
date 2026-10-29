@@ -1,5 +1,15 @@
 # Trading OS — общее согласование и приём PM-ревью
 
+**Позднее29Oct: фактическое продолжение реализации.**
+[PUMP4 serial model gate](PUMP4_TINY2_SERIAL_GATE_2026_10_29.md): два последовательных
+memory-lifecycle с рестартом,89targetedPASS; независимыйastra/highreview2Important
+исправлены primary с регрессией, не второе независимое одобрение. Production
+serial binding/finality/actual-source acceptance/точныйGO остаютсяOPEN. Текущий
+LIVE/Monthly не менялись. Исходные записи DESIGN_NOT_STARTED/capacity ниже —
+история первой передачиe4a0c15, не последнее состояние реализации. ClaudeACK
+по-прежнемуPENDING; публикация и результаты кода не означают его согласия.
+
+
 29 октября 2026. DRAFT_FOR_TEAM_ACK. Публикация не равна согласию Claude/PM и не
 является финансовым GO. Прямой доступный канал к Claude не найден среди доступных
 чатов; согласующие сообщения внешним участникам и пользовательским чатам не

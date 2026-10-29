@@ -1,5 +1,29 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — PUMP4 serial MODEL gate implemented; existing LIVE healthy, no expansion
+
+Read PUMP4_TINY2_SERIAL_GATE_2026_10_29.md. Newfixture-only serial coordinator
+composesunchangedV1owner/lifecycle/lease/journal; fixedfictionalfingerprint/OFF,
+no_wire/noGO.2modelcycles/6uniquerequests/restart/nooverlap;89targetedPASSincl
+16newcases/V1regressions. RED→GREEN source/losslatch labels separated; explicit
+modelpendingreserve0.10, nofakebrokerfinality/actualtrade/serialproductionPASS.
+CLIcreate-exclusive rerunrejected/evidencehash+mtimeunchanged. Independentastra/high
+review2Important reproduced4RED/fixed/89PASS, actualcontextverified; nosecond
+signoff. Beforefirstrequestscope/latchrechecked; stale riskrowcannot settle,
+reduce-onlymodelcustodyretainedunderunknownrisk. Remaining real
+serialowner/source-backedcumulativecost+cooldown/supervisor/singlewriterhandoff/
+actualOFF/review/exactGO. ExistingTINY-2numbers proposalonly, no scope armed.
+Fresh19:17:29UTCexisting--readback LIVE_ARMED_HEALTHY/flatwaiting/noentry,
+PID3198429/0restarts/lock818853/samescope; readbackwritesnullkeptUNKNOWN.
+Monthlyunchanged; currententryexpiry1Nov19:26:32.774UTC notextended. Financial
+snapshotnetUNKNOWN/opcostPARTIAL/ownerhoursNOTMEASURED, no0riskfrommissingfields.
+Existingprojectcontract amendedowner2026goal/expensesperiods/commonriskvs50%rule,
+no percentage-maturityclaims/newroadmap/framework/strategy/Claudeproducer/judge.
+Only model/local artifacts+one existing GET readback; no LIVE changes or newGO.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — shared project contract linked to original goal; TINY-2 design prepared
 
 Read docs/PROJECT_MAP.md (existingmap updated) + ROADMAP_SELF_IMPROVING top active

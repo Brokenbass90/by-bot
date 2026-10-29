@@ -1,0 +1,39 @@
+{
+  "schema": "PUMP4_TINY2_SERIAL_DELIVERY_V1",
+  "base_commit": "e4a0c1559cb340f38ef0374af62744e993f42307",
+  "status": "MODEL_SERIAL_GATE_PASS_PRODUCTION_INTEGRATION_OPEN",
+  "new_source_sha256": {
+    "research_lab/pump4_serial_orders_off_v1.py": "f8a17060ff465303d4fe084009c4b5b59b43467823b24eb96106c3ff44174503",
+    "scripts/rehearse_pump4_serial_orders_off_v1.py": "7fed9488edb14170ce56cf5729adcd21f45f2b6b92b58b503a4ac14a00d4f7b4",
+    "tests/test_pump4_serial_orders_off_v1.py": "b88a2440c6ce844592e62aa4bbe3eb56d891419e467a4371e0ba465d24ffe776"
+  },
+  "unchanged_v1_source_sha256": {
+    "research_lab/pump4_account_owner_v1.py": "f47b8471017d38c40e88476c757f97da89594eb3034aeb0c9a9b1663c8128baf",
+    "research_lab/pump4_execution_lifecycle_v1.py": "1eed66c19b79f98302cf70febfead2c012681825b4019d0aa1dc8a098f256819",
+    "research_lab/pump4_supervisor_v1.py": "448757110ffb10dfebdc5cf4960079429d72c97e53eeefad28000d3a53e45584",
+    "research_lab/pump4_execution_supervisor_v1.py": "5c061f975180cbe27a60f72be98fa749b1cb227752067cf71bcd4e9412ef8673",
+    "scripts/pull_pump4_observer_capture_v1.py": "e4379015b5a20f6f8655a4d13c73b517b308c24284cfbc7c28b98bc26996c38d",
+    "scripts/import_pump4_live_observer_v1.py": "08230b3e7dbdb5b57d58e61dd916171b775d96253af8f05b98abc616eb1b8f13",
+    "research_lab/pump4_live_observer_v1.py": "b2bf93b357d76a345150319ac3ce31e7872d7c7f06344153e8a636d080949285"
+  },
+  "targeted_tests": 89,
+  "new_serial_cases": 16,
+  "model_lifecycles": 2,
+  "real_exchange_execution": false,
+  "actual_source_serial_acceptance": false,
+  "new_scope_armed": false,
+  "new_money_go": false,
+  "independent_review": "COMPLETED_2_IMPORTANT_PRIMARY_FIXED_NO_SECOND_SIGNOFF",
+  "attachment_sha256": [
+    "fea2455ce443af280e2b05ef554067c46615e5ccc8706b365ef5941e4c78b336",
+    "726c5af3e527b13eef8e77d6b269fc0279a823a65c133fc17e238f49bd40d76a"
+  ],
+  "verification": {
+    "red_initial": "10 missing-module failures",
+    "review_red": "4 boundary failures",
+    "final_targeted_command": ".venv/bin/python -B -m pytest -q tests/test_pump4_serial_orders_off_v1.py tests/test_pump4_account_owner_v1.py tests/test_pump4_supervisor_v1.py tests/test_pump4_execution_supervisor_v1.py --basetemp=/private/tmp/pump4_serial_review_green_20261029 --tb=short",
+    "final_passed": 89,
+    "cli_final_destination": "/private/tmp/pump4_serial_e2e_20261029_r3",
+    "real_exchange_writes_in_rehearsal": 0
+  }
+}

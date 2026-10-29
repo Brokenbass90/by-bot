@@ -1,0 +1,31 @@
+{
+  "schema": "PUMP4_TINY2_SERIAL_REVIEW_V1",
+  "reviewer_model": "gpt-6-astra",
+  "reviewer_effort": "high",
+  "runtime_session_id": "01a188ef-4441-72f0-9bc4-1ed9dbb9eb92",
+  "runtime_context_verified": true,
+  "scope": "static review of fixture-only serial coordinator, tests and CLI; no financial constructors or tests by reviewer",
+  "findings": [
+    {
+      "severity": "Important",
+      "issue": "reserved-but-unsent admission bypassed expiry/safety latch",
+      "status": "REPRODUCED_RED_FIXED_PRIMARY_REGRESSION_PASS",
+      "tests": [
+        "test_unsent_reservation_cannot_bypass_source_latch",
+        "test_unsent_reservation_cannot_bypass_expiry"
+      ]
+    },
+    {
+      "severity": "Important",
+      "issue": "child risk append failure allowed stale accounting/settlement",
+      "status": "REPRODUCED_RED_FIXED_PRIMARY_REGRESSION_PASS",
+      "tests": [
+        "test_terminal_cannot_settle_stale_risk_after_child_append_failure",
+        "test_unknown_risk_does_not_suppress_reduce_only_model_exit"
+      ]
+    }
+  ],
+  "second_independent_signoff": false,
+  "live_readiness_proven": false,
+  "real_transport_path_found": false
+}

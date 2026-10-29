@@ -1,6 +1,6 @@
 # PUMP4 TINY-2 — проект серийного пилота ORDERS_OFF
 
-29 октября 2026. Статус DESIGN_PREPARED / IMPLEMENTATION_NOT_STARTED /
+29 октября 2026. Статус MODEL_SERIAL_GATE_PASS / PRODUCTION_SERIAL_INTEGRATION_OPEN /
 NOT_READY_FOR_OWNER_GO. Основание — запрос владельца подготовить продолжение
 работы и переданное PM-ревью. Текущий pilot66a7be9c неизменён и не продлевается.
 
@@ -92,3 +92,18 @@ pump4_execution_supervisor_v1/lifecycle/source adapters; конкретный di
 его лишь после подтверждённого terminal первого; restart не открывает дубликат.
 Затем targeted suite tests/test_pump4_account_owner_v1.py и supervisor regressions
 по затронутым путям, один независимый review. Существующий LIVE V1 не переключать.
+
+## Выполненный первый инженерный этап —29Oct
+
+Реализован отдельный fixture-only `research_lab/pump4_serial_orders_off_v1.py`,
+переиспользующий неизменный V1 owner/lifecycle/journal/lease. Он намеренно не
+принимает реальные account fingerprints/LIVE и не содержит отправки ордеров.
+Два memory-exchange lifecycle последовательно +restart +89targetedPASS; нет
+реальной broker acceptance/finality или готового LIVE scope. Это локальная
+модель серийного admission, а не исполненный production handoff.
+
+Ruling: неизвестные расходы остаются неизвестными; только явная синтетическая
+оценка/reserve разрешает завершить МОДЕЛЬНЫЙ цикл. Она не может быть перенесена
+в финансовый GO или автоматически освобождать реальный бюджет. Next: versioned
+production owner/source accounting +supervisor intake binding; существующий V1
+не изменялся. Evidence: reports/PUMP4_TINY2_SERIAL_GATE_2026_10_29.md.

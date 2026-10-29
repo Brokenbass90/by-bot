@@ -1,3 +1,16 @@
+# Current entry —29Oct: serial model gate closed, production integration next
+
+Read PUMP4_TINY2_SERIAL_GATE_2026_10_29.md, checkpoint TOP and active roadmap.
+89targetedPASS;2memorylifecycles/restart/samefictionallease; newcoordinator accepts
+onlyOFF/fakeaccount/no_wire. V1/bridge byte-unchanged, no serialproductionGO.
+Next implement versioned source-backed serialowner accounting+supervisor binding;
+model settlement cannot release real fee liabilities. ExistingLIVE healthy19:17UTC,
+noentry, originalscope/expiry/Monthlyunchanged. Do not re-arm or reset claims.
+Sharedgoal/roles in ../docs/PROJECT_MAP.md; ClaudeACK stillPENDING.
+
+---
+Earlier entries below are history.
+
 # Current entry —29 October: common project contract + serial PUMP4 preparation
 
 Read ../docs/PROJECT_MAP.md → ../ROADMAP_SELF_IMPROVING.md top active queue →

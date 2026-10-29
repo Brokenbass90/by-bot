@@ -1,0 +1,54 @@
+{
+  "schema": "TRADING_OS_FINANCIAL_CONTROL_SNAPSHOT_V1",
+  "observed_ms": 1793301449796,
+  "observed_local": "2026-10-29T21:17:29.796000+02:00",
+  "raw_readback_sha256": "41d2f614e317cdaca93f11d3c76bf3f30b71fdbb0741ab0e92bbf6a16aad7570",
+  "pump4": {
+    "status": "LIVE_ARMED_HEALTHY",
+    "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+    "config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+    "actual_entry_executed": false,
+    "one_lifecycle_only": true,
+    "original_lock_inode": 818853,
+    "health_status": "HEALTHY",
+    "source_age_ms": 135,
+    "reason": "LIVE_FLAT_WAITING_SIGNAL",
+    "unit": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "MainPID": "3198429",
+      "NRestarts": "0"
+    },
+    "reported_broker_writes": null,
+    "broker_write_counter_status": "UNKNOWN_NULL_NOT_ZERO"
+  },
+  "project_cash_net": {
+    "status": "UNKNOWN",
+    "reason": "Full multi-account realized ledger and period operating expense inputs unavailable"
+  },
+  "verified_trading_realized_net": {
+    "status": "UNKNOWN_NOT_RECONCILED_PROJECT_WIDE"
+  },
+  "operating_costs": {
+    "status": "PARTIAL_NO_PERIOD_LEDGER",
+    "cash_basis": "Use actual payments in reporting period; one-off and recurring separately; accruals separate"
+  },
+  "owner_hours_last_7d": {
+    "status": "NOT_MEASURED"
+  },
+  "days_since_last_fill": {
+    "status": "UNKNOWN_ACCOUNT_COMPLETE_HISTORY_NOT_CAPTURED"
+  },
+  "live_edge_verdict": {
+    "status": "NOT_PROVEN_IN_VERIFIED_PACKETS",
+    "model_e2e_not_economic_evidence": true
+  },
+  "portfolio_risk": {
+    "status": "PARTIAL_PUMP_HEALTH_ONLY",
+    "gross_and_margin": "UNKNOWN_NOT_INCLUDED_IN_READBACK",
+    "cross_venue_stress": "UNKNOWN_NO_JOINT_CAPTURE",
+    "mechanical_50_percent_concentration_limit": false
+  },
+  "live_changes": 0,
+  "financial_go_created": false
+}
