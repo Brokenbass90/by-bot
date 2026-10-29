@@ -1,5 +1,12 @@
 # Trading OS — единая доска доведения до первой версии
 
+**29Oct active-sleeve owner clarification:** canonical [roadmap](../ROADMAP_SELF_IMPROVING.md)
+now records research beyond Monthly/PUMP4: Polymarket executablefairvalue,
+crypto forcedflow/liquidation and goldmacro venue/cost feasibility. Allresearch,
+notnewstrategyPASS/GO. KITYengineeringHOLD; existingLIVE unchanged. RawLIQactivity
+and goldvolatility do not establish a tradable edge. No secondpriority queue.
+
+
 **29Oct economic decision supersedes engineering priority:** [KITY passport](../reports/KITY_ECONOMIC_DECISION_2026_10_29.md).
 KITYBybit ECONOMIC_INCONCLUSIVE per direct26/27OctClaude passports; existingSHADOW
 continues, NEWENGINEERING_ON_HOLD/code retained. TwoC1/C2weeks not moneyproof;

@@ -1,5 +1,37 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**29Oct owner clarification — seek an active profit sleeve, separate from the accumulation sleeve.**
+Owner explicitly wants recurring opportunities beyond Monthly/PUMP4/KITY, with
+Polymarket, crypto and gold as research targets. This supersedes treating another
+slow turnover variant as the answer. It is a research priority, not new money GO.
+
+Research selection now:
+- Polymarket: complete existing NO/maker forward gates and executable fair-value
+  evidence; no automatic revival of failed favorite/structure/hourly-lag/LLM arms.
+  FINAL alone has no proven executable window. Rank net on tied capital/holding
+  time, actual ask/depth/fees, independent event clusters and adverse selection.
+- Crypto: prioritize causal forced-flow/liquidation/crowded-position mechanisms
+  through existing Factory, not a new executor. Reuse LIQ_V2.1; latest local29Oct
+  seal73031rawrecords still coverageUNKNOWN/source_gate_passFALSE. Raw records
+  are not independent signals/trades. Source eligibility/gap treatment precedes
+  economic use; existing prereg/forward/outcome boundaries preserved. SHORT_HVOST
+  remains a published-verdict candidate, not an assumed frequent/profitable leg.
+- Gold: first resolve actual venue/cost feasibility for the existing26Oct macro
+  mechanism. Consensus-surprise sourceBLOCKED, release spread/slippageUNKNOWN;
+  historicalH1/M5 exists, only demo venue confirmed. Owner broker/type asked,
+  unanswered so far; no credentials requested. Macro reaction is a hypothesis,
+  not the already-failed generic indicator/Elder gold arm.
+
+Every candidate must report executable independent opportunities per week,
+net after all legs/fees/slippage/funding, capital tied and capacity, losing
+periods/drawdown and venue constraints before an execution build. Frequency and
+larger backtest returns alone do not qualify it. No new framework/collector,
+judges, sealed outcomes, live strategy changes or financial scope in this step.
+KITY staysSHADOW/newengineeringON_HOLD. Monthly/PUMP4 remain existing production
+maintenance/first-lifecycle tasks; this active-sleeve goal is additional research,
+not an instruction to retrofit or re-arm them.
+
+
 **29Oct economic decision supersedes engineering priority:** [KITY passport](reports/KITY_ECONOMIC_DECISION_2026_10_29.md).
 KITYBybit ECONOMIC_INCONCLUSIVE per direct26/27OctClaude passports; existingSHADOW
 continues, NEWENGINEERING_ON_HOLD/code retained. TwoC1/C2weeks not moneyproof;

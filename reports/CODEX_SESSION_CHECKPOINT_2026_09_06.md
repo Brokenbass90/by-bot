@@ -1,5 +1,20 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — owner seeks active crypto/Polymarket/gold sleeve beyond accumulation
+
+Read canonicalROADMAP_SELF_IMPROVING.md ownerclarification FIRST. Researchfocus
+Polymarket existingNO/maker forward+execution, crypto forcedflow/liquidation,
+gold macro mechanism onlyafter venue/news-cost gate. No newmoney/code/collectors
+orjudges. LIQ29local73031raw/UNKNOWNcoverage/source_gateFALSE; nottradecount/PASS.
+Polyfavorite/structure/hourlylag/LLM failed arms notrevived. Gold actualbroker/type
+UNKNOWN(askedoptional), consensusarchives missing/releasecosts unmeasured; no
+credentials. Screeningnet/tiedcapital/holdingtime/frequency/independentclusters/
+drawdown/capacity beforebuild. Currentresearchref30951f9 unchanged, noClaude message.
+KITYSHADOW/engineeringHOLD; PUMP4+Monthlyproductionfirst-cycle tasks preserved.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — KITY economic passport resolved; SHADOW_ONLY/new engineering ON_HOLD
 
 Read KITY_ECONOMIC_DECISION_2026_10_29.md FIRST. DirectClaude26/27Octpassports
