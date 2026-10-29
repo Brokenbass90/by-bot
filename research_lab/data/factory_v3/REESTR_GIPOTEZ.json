@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-29T06:10Z",
- "vsego": 170,
+ "kogda": "2026-10-29T07:49Z",
+ "vsego": 171,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -19,7 +19,7 @@
   "TEHNIKA": 16,
   "PROTIV": 10,
   "NET_SIGNALA": 80,
-  "MALO_DANNYH": 23,
+  "MALO_DANNYH": 24,
   "IZDERZHKI": 6,
   "EFFEKTIVNYY_RYNOK": 3,
   "ZAPAZDYVANIE": 2,
@@ -3344,6 +3344,15 @@
    "prichina": "REZHIM",
    "sled": "пробой −0.02R, ретест −0.09R; Элдер +0.12R (вклад +0.17, издержки 0.08R) но t 1.4 и 4/8 мес; V2 с трендом BTC t 1.57, 4/8 мес: фев–май плюс, июн–сен минус → кандидат для карты режимов Brain, не нога",
    "dokument": "results/h4_*_2025*.json"
+  },
+  {
+   "id": "RAZLOKI_TOKENOV",
+   "istochnik": "protokol",
+   "mehanizm": "шорт перед крупным разлоком токенов",
+   "status": "BLOCKED_DATA",
+   "prichina": "MALO_DANNYH",
+   "sled": "бесплатной истории разлоков нет: Mobula 403 без ключа; Tokenomist/Messari/The TIE платные — ждём источник",
+   "dokument": "razloki_proba_istochnika.py"
   },
   {
    "id": "SHORT_HVOST",
