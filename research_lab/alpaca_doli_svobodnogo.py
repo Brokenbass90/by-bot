@@ -26,7 +26,7 @@ def main():
     cfg = json.loads(Path("configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json").read_text())
     clusters = [{str(x) for x in g} for g in cfg["clusters"]]
     U = U2M.zagruzit_u58(Path(a.dannye), bez_sektorov=False)
-    BIL = H5.fond(Path(a.fondy) / "all" / "BIL.json"); SPY = {r.session_date: H5.Bar(float(r.open), float(r.close)) for r in U.p["SPY"]}
+    BIL = H5.fond(Path(a.fondy) / "all" / "bars" / "BIL.json"); SPY = {r.session_date: H5.Bar(float(r.open), float(r.close)) for r in U.p["SPY"]}
     o0, o1 = date.fromisoformat(U2M.OKNO[0]), date.fromisoformat(U2M.OKNO[1])
     okno = [s for s in U.sessii if o0 <= s <= o1 and s in BIL and s in SPY]
     resh = U2M.mesyachnye(U, U2M.raspisanie(U.sessii, okno), clusters)

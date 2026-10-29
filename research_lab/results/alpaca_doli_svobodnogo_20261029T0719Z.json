@@ -1,0 +1,156 @@
+{
+ "kogda_utc": "2026-10-29T07:19:58Z",
+ "period": [
+  "2016-06-01",
+  "2026-09-04"
+ ],
+ "sessiy": 2581,
+ "dannye": "/sessions/rcw-01gdrcutk9nb3nbtjbf5esrc/mnt/alpaca-wt-20260907/data_cache/equities_daily_10y",
+ "rezultat": {
+  "M (кэш)": {
+   "cagr_pct": 8.515870077721166,
+   "maxDD_pct": 16.16723784912224,
+   "calmar": 0.5267362401168307,
+   "vosstanovlenie_max_sessiy": 776,
+   "itog": 2.312680452149024,
+   "oborot_dol_kapitala": 0.0,
+   "sdelok_overleya": 0,
+   "svobodno_srednee": 0.7493314441606066,
+   "ekspoziciya_srednyaya": 0.25066855583939335,
+   "potrebnost_likvidnosti_max": 0.0
+  },
+  "M+BIL": {
+   "cagr_pct": 9.69873436629487,
+   "maxDD_pct": 15.434477496801847,
+   "calmar": 0.6283811271424334,
+   "vosstanovlenie_max_sessiy": 422,
+   "itog": 2.5847432487324244,
+   "dolya_v_fonde_srednyaya": 0.7348296075564986,
+   "oborot_dol_kapitala": 105.07604398018694,
+   "sdelok_overleya": 319,
+   "potrebnost_likvidnosti_max": 0.7008103503016421,
+   "sessiy_prodazha_fonda": 99,
+   "dohod_overleya_po_godam_usd": {
+    "2016": -1.45,
+    "2017": 1.67,
+    "2018": 11.41,
+    "2019": 15.81,
+    "2020": -0.44,
+    "2021": -6.93,
+    "2022": 20.01,
+    "2023": 62.48,
+    "2024": 62.54,
+    "2025": 66.02,
+    "2026": 40.95
+   }
+  },
+  "M+25/75": {
+   "cagr_pct": 11.238753165006155,
+   "maxDD_pct": 14.404882735929226,
+   "calmar": 0.7802044189484455,
+   "vosstanovlenie_max_sessiy": 421,
+   "itog": 2.982145467044322,
+   "dolya_v_fonde_srednyaya": 0.7513683318796214,
+   "oborot_dol_kapitala": 98.05799709656056,
+   "sdelok_overleya": 318,
+   "potrebnost_likvidnosti_max": 0.7000917174133505,
+   "sessiy_prodazha_fonda": 99,
+   "dohod_overleya_po_godam_usd": {
+    "2016": 6.18,
+    "2017": 27.45,
+    "2018": -20.97,
+    "2019": 95.45,
+    "2020": 24.44,
+    "2021": 45.73,
+    "2022": -38.33,
+    "2023": 146.56,
+    "2024": 146.63,
+    "2025": 127.88,
+    "2026": 108.45
+   }
+  },
+  "M+50/50": {
+   "cagr_pct": 12.807555552539807,
+   "maxDD_pct": 19.370437069068046,
+   "calmar": 0.6611908397767509,
+   "vosstanovlenie_max_sessiy": 421,
+   "itog": 3.4428902788875386,
+   "dolya_v_fonde_srednyaya": 0.7662039337587849,
+   "oborot_dol_kapitala": 91.7917250665649,
+   "sdelok_overleya": 318,
+   "potrebnost_likvidnosti_max": 0.700129833527087,
+   "sessiy_prodazha_fonda": 99,
+   "dohod_overleya_po_godam_usd": {
+    "2016": 13.65,
+    "2017": 54.68,
+    "2018": -55.39,
+    "2019": 179.35,
+    "2020": 48.81,
+    "2021": 114.09,
+    "2022": -118.23,
+    "2023": 241.51,
+    "2024": 250.14,
+    "2025": 204.98,
+    "2026": 196.63
+   }
+  },
+  "M+75/25": {
+   "cagr_pct": 14.374402724090896,
+   "maxDD_pct": 27.24229343362786,
+   "calmar": 0.5276502420441278,
+   "vosstanovlenie_max_sessiy": 422,
+   "itog": 3.9662458542428265,
+   "dolya_v_fonde_srednyaya": 0.7792059475146126,
+   "oborot_dol_kapitala": 86.16094460393008,
+   "sdelok_overleya": 317,
+   "potrebnost_likvidnosti_max": 0.7002674193236145,
+   "sessiy_prodazha_fonda": 99,
+   "dohod_overleya_po_godam_usd": {
+    "2016": 20.95,
+    "2017": 83.37,
+    "2018": -92.0,
+    "2019": 267.58,
+    "2020": 70.87,
+    "2021": 199.31,
+    "2022": -222.07,
+    "2023": 346.42,
+    "2024": 373.7,
+    "2025": 297.2,
+    "2026": 308.23
+   }
+  },
+  "M+SPY": {
+   "cagr_pct": 15.992771642188597,
+   "maxDD_pct": 34.5834269983159,
+   "calmar": 0.46244033718715594,
+   "vosstanovlenie_max_sessiy": 422,
+   "itog": 4.581200229058579,
+   "dolya_v_fonde_srednyaya": 0.7921909401065415,
+   "oborot_dol_kapitala": 80.815987689497,
+   "sdelok_overleya": 314,
+   "potrebnost_likvidnosti_max": 0.7005053656551112,
+   "sessiy_prodazha_fonda": 99,
+   "dohod_overleya_po_godam_usd": {
+    "2016": 28.08,
+    "2017": 113.57,
+    "2018": -127.61,
+    "2019": 368.24,
+    "2020": 90.37,
+    "2021": 305.87,
+    "2022": -355.02,
+    "2023": 465.13,
+    "2024": 524.53,
+    "2025": 406.41,
+    "2026": 448.97
+   }
+  },
+  "SPY 100 %": {
+   "cagr_pct": 13.49065172402366,
+   "maxDD_pct": 34.10474689324394,
+   "calmar": 0.395565220473638,
+   "vosstanovlenie_max_sessiy": 512,
+   "itog": 3.6628619717124247
+  }
+ },
+ "prereg_sha256": "e29a5ba0860c1eac1eecd19efd84b44e23e7232fca8ce353ce95337c135f60f4"
+}
