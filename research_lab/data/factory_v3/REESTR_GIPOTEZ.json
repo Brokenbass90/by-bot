@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-29T07:49Z",
- "vsego": 171,
+ "kogda": "2026-10-29T08:02Z",
+ "vsego": 172,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -20,7 +20,7 @@
   "PROTIV": 10,
   "NET_SIGNALA": 80,
   "MALO_DANNYH": 24,
-  "IZDERZHKI": 6,
+  "IZDERZHKI": 7,
   "EFFEKTIVNYY_RYNOK": 3,
   "ZAPAZDYVANIE": 2,
   "NAPRAVLENIE": 1,
@@ -3353,6 +3353,15 @@
    "prichina": "MALO_DANNYH",
    "sled": "бесплатной истории разлоков нет: Mobula 403 без ключа; Tokenomist/Messari/The TIE платные — ждём источник",
    "dokument": "razloki_proba_istochnika.py"
+  },
+  {
+   "id": "FANDING_MEZHBIRZHEVOY_HVOST",
+   "istochnik": "protokol",
+   "mehanizm": "разница фандинга Bybit↔Binance на 150 альтах, 2025",
+   "status": "KILL",
+   "prichina": "IZDERZHKI",
+   "sled": "1 507 сделок, −23 bps, 0/9 мес: разница ≥ 5 bps не держится (собрано +2 bps за ~2 окна) против 25 bps издержек 4 сделок; даже без издержек ≈ 0",
+   "dokument": "results/fanding_mezhbirzhevoy_*.json"
   },
   {
    "id": "SHORT_HVOST",

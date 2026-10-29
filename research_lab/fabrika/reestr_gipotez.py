@@ -50,6 +50,8 @@ RUCHNYE = [  # закрыто протоколом / проверено вне �
      "пробой −0.02R, ретест −0.09R; Элдер +0.12R (вклад +0.17, издержки 0.08R) но t 1.4 и 4/8 мес; V2 с трендом BTC t 1.57, 4/8 мес: фев–май плюс, июн–сен минус → кандидат для карты режимов Brain, не нога", "results/h4_*_2025*.json"),
     ("RAZLOKI_TOKENOV", "шорт перед крупным разлоком токенов", "BLOCKED_DATA", "MALO_DANNYH",
      "бесплатной истории разлоков нет: Mobula 403 без ключа; Tokenomist/Messari/The TIE платные — ждём источник", "razloki_proba_istochnika.py"),
+    ("FANDING_MEZHBIRZHEVOY_HVOST", "разница фандинга Bybit↔Binance на 150 альтах, 2025", "KILL", "IZDERZHKI",
+     "1 507 сделок, −23 bps, 0/9 мес: разница ≥ 5 bps не держится (собрано +2 bps за ~2 окна) против 25 bps издержек 4 сделок; даже без издержек ≈ 0", "results/fanding_mezhbirzhevoy_*.json"),
     ("SHORT_HVOST", "шорт перегретого хвоста с фандингом", "KANDIDAT", None, "вердикт на 30 событиях, вариант B", "SHORT_HVOST_VARIANT_B"),
     ("PUMP4", "шорт после пампа", "LIVE_PODGOTOVKA", None, "Codex; вклад сигнала +0.14R к случайному входу", "obyasneniya_pump4.json"),
     ("POLY_NO_PEREPLATA", "NO при переоценённом YES крипто-страйков", "NAKOPLENIE", None, "вердикт на 30 событиях", "POLY_PUT_K_LIVE"),
