@@ -1,0 +1,15 @@
+{
+  "actual_exchange_or_money_approval": false,
+  "effort": "high",
+  "findings": [
+    "bijective CID/orderId for lost acknowledgements",
+    "Limit price/timeInForce material fields",
+    "terminal cumulative vs full execution totals",
+    "signed maker rebate through model fees"
+  ],
+  "model": "gpt-6-astra",
+  "resolution": "PRIMARY_RED_GREEN_FIXES_103_TARGETED_PASS",
+  "rollout_id": "01a18806-174e-7640-834d-a22fe3e582b7",
+  "schema": "KITY_BYBIT_ADAPTER_REVIEW_V1",
+  "second_independent_signoff": false
+}

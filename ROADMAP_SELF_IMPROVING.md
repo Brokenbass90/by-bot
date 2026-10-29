@@ -1,5 +1,14 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**29Oct next-LIVE / completed KITY API-format gate:** [evidence](reports/KITY_BYBIT_ORDERS_OFF_AND_NEXT_LIVE_2026_10_29.md).
+5API-format snapshots/285model events→existingweeklyjournal,103tests; independent
+review4Important fixed, notactualexchange/moneyPASS. FreshPUMP4waithealthy,
+Monthlytimer/sourcehealthy→2Novconditionalopening. KITYengineering next;
+PolymarketNO published≈3Novverdictreference/FINALneedsrealwindow; SHORTdraft27/30.
+KITYnative/admissionversion/account/sharedowner/newexactGOOPEN; noLIVEchanges.
+Canonical priorities are ROADMAP_SELF_IMPROVING.md; dated earlier rows are history.
+
+
 **29Oct owner priority / implemented KITY fixes:** [weekly engineering](reports/KITY_WEEKLY_ENGINEERING_2026_10_29.md).
 Research30951f9: actual10leg dossier/C2 bindings repaired,15/22accepted;252event7day
 isolated modelPASS,98tests. Independentreview4Important fixed; actual Bybit executor,

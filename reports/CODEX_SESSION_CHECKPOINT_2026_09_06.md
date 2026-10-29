@@ -1,5 +1,24 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — KITY Bybit raw-format adapter/CLI E2E completed; nearest-LIVE ranking verified
+
+Read KITY_BYBIT_ORDERS_OFF_AND_NEXT_LIVE_2026_10_29.md FIRST. Newpureadapter reuses
+checked/paged/ACK validators;5rawAPI-format snapshots→existingweeklyjournal,
+285events/partial+lostACK/10stops/funding/exit/latefee/restartPASS. AllSYNTHETIC,
+noactualexchangeacceptance/newfinancialauthority.103targetedPASS; independent
+astra/highreview4Important reproduced+fixedbyprimary, nosecondsignoff. Nativepolicy
+unapproved=>entry_readyFALSE eventechnicalcoverage; flatnativeN/A. Datedqtyfloor
+removesonlyMNT/LTCfloatdust, notcurrentaccount/sizepermission.
+FreshPUMP4LIVE_ARMED_HEALTHY/flatwait/PID3198429/0restarts/samescope/expiry;
+Monthlysameunit9d94467d…cc1d/activewaiting/latest2dispatchissues[]sourcePASS.
+Nearestrealtrade=PUMPsignal; conditionalMonthly2Nov. KITYnewcryptoengineeringcase,
+notfirm5/6Novlaunch; PolyNO≈3Novpublishedverdictreference/FINALnoprovengap;
+SHORTlatestpublished27/30draft, noearlyjudge. ActualKITYaccount/native/admission
+26wvs2C1C2/commonowner/exactGO remainOPEN. ExistingLIVE and research unchanged.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — KITY dossier fixed/published; seven-day model lifecycle completed
 
 Read KITY_WEEKLY_ENGINEERING_2026_10_29.md FIRST. Research30951f9 fast-forward,

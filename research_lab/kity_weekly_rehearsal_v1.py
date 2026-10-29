@@ -23,6 +23,11 @@ def need(ok,reason):
     if not ok:raise ValueError('KITY_WEEKLY_'+reason)
 
 
+def fee_number(value):
+    need(not isinstance(value,bool) and value not in (None,''),'UNKNOWN_FEE')
+    fee=D(str(value));need(fee.is_finite(),'NONFINITE_FEE');return fee
+
+
 def make_profile(session,legs,source_pins,*,funding_intervals=None):
     day=datetime.strptime(session,'%Y-%m-%d').replace(tzinfo=timezone.utc)
     start=int(day.timestamp()*1000)+DAY
@@ -107,8 +112,11 @@ class WeeklyRehearsal:
             elif kind in ('MODEL_ENTRY_FILL','MODEL_EXIT_FILL','MODEL_EMERGENCY_EXIT_FILL','MODEL_NATIVE_STOP_FILL'):
                 need(s in legs,'FILL_SYMBOL');xid=row['exec_id'];need(isinstance(xid,str) and xid,'EXECUTION_ID')
                 qty=numeric(row['qty']);price=numeric(row['price']);fee=row['fee_usdt']
-                if fee is not None:fee=numeric(fee,zero=True)
-                fp=canonical({k:row[k] for k in ('kind','symbol','exec_id','qty','price','fee_usdt')})
+                if fee is not None:fee=fee_number(fee)
+                fp=canonical({**{k:row[k] for k in ('kind','symbol','exec_id','qty','price','fee_usdt')},
+                              'source_execution_ms':row.get('source_execution_ms')})
+                fill_t=row.get('source_execution_ms',t)
+                need(type(fill_t) is int and p['entry_reference_ms']<=fill_t<=t,'SOURCE_EXECUTION_CLOCK')
                 if xid in fills:
                     need(fills[xid]==fp,'CONFLICTING_EXECUTION');seen[eid]=pin;continue
                 if kind=='MODEL_ENTRY_FILL':
@@ -116,20 +124,20 @@ class WeeklyRehearsal:
                     need(not failed and not emergency and not cost_final and not last_exit,'ENTRY_AFTER_CLOSE_OR_FAILURE')
                     need(t<p['exit_reference_ms'] and entered[s]+qty<=numeric(legs[s]['qty']),'ENTRY_SIZE_OR_WINDOW')
                     average[s]=(average[s]*held[s]+qty*price)/(held[s]+qty)
-                    held[s]+=qty;entered[s]+=qty;timeline[s].append((t,qty));cash-=D(legs[s]['side'])*qty*price
+                    held[s]+=qty;entered[s]+=qty;timeline[s].append((fill_t,qty));cash-=D(legs[s]['side'])*qty*price
                 else:
                     need(qty<=held[s],'EXIT_EXCEEDS_HELD')
-                    if kind=='MODEL_EXIT_FILL':need(t>=p['exit_reference_ms'],'EARLY_STRATEGY_EXIT')
+                    if kind=='MODEL_EXIT_FILL':need(fill_t>=p['exit_reference_ms'],'EARLY_STRATEGY_EXIT')
                     else:
                         if kind=='MODEL_NATIVE_STOP_FILL':
                             need(protected.get(s)==held[s] and s in stop_prices and
                                  (price<=stop_prices[s] if legs[s]['side']==1 else price>=stop_prices[s]),'STOP_TRIGGER_OR_COVERAGE')
                         emergency=True
                     realized+=D(legs[s]['side'])*qty*(price-average[s]);held[s]-=qty
-                    cash+=D(legs[s]['side'])*qty*price;timeline[s].append((t,-qty));last_exit[s]=t
+                    cash+=D(legs[s]['side'])*qty*price;timeline[s].append((fill_t,-qty));last_exit[s]=fill_t
                 fills[xid]=fp;fees[xid]=fee;cost_final=False
             elif kind=='MODEL_FEE':
-                xid=row['exec_id'];need(xid in fees,'UNKNOWN_FEE_EXECUTION');fee=numeric(row['fee_usdt'],zero=True)
+                xid=row['exec_id'];need(xid in fees,'UNKNOWN_FEE_EXECUTION');fee=fee_number(row['fee_usdt'])
                 need(fees[xid] is None or fees[xid]==fee,'CONFLICTING_FEE')
                 if fees[xid] is None:fees[xid]=fee;cost_final=False
             elif kind=='PROTECTION':

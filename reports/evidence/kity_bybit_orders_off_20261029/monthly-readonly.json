@@ -1,0 +1,19 @@
+{
+  "broker_calls_by_this_check": 0,
+  "dispatch_observations": [
+    {
+      "issues": [],
+      "observed_ms": 1793283925764,
+      "source_status": "ORDERS_OFF_OPERATIONAL_PASS"
+    },
+    {
+      "issues": [],
+      "observed_ms": 1793283985408,
+      "source_status": "ORDERS_OFF_OPERATIONAL_PASS"
+    }
+  ],
+  "financial_changes": 0,
+  "schema": "MONTHLY_UNCHANGED_READONLY_SUMMARY_V1",
+  "timer": "active/waiting/enabled",
+  "unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d"
+}

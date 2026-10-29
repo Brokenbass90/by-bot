@@ -1,0 +1,13 @@
+# KITY Bybit ORDERS_OFF adapter and nearest-LIVE decision
+
+Goal: progress existing KITY7d model to documented Bybit raw response formats, not a new trading engine or money scope. Reuse checked/paged/ACK validators and WeeklyRehearsal. Preserve PUMP4/Monthly.
+
+1. Verify published research statuses without judges/outcomes: Monthly first conditional2Nov; PUMP4 existingLIVE waiting; KITY C1/C2ready but admission/protection contract unresolved; SHORTlatestpublished27/30draft; Poly no provenFINAL executablewindow. No fabricated probability/date of profit.
+2. RED tests for10-leg manifest/material order identity, asyncACK≠fill, full pagination/rawhash/sourceclock/account, partial/rejected/duplicate/lost replies, exact native full coverage, signed fee/funding/cash identities, reduce-only/one-way,7dclose and no inference of finality.
+3. New pure kity_weekly_bybit_adapter_v1 normalizes existing GET capture envelopes with explicit provenance. Accept already-declared request/native bindings, never adopt unknown account holdings/IDs. No sender/credentials/financial constructors or live imports. Unknown/nonapproved stop contract blocks admission even if technical fixture consistency passes.
+4. Precise API-format fixtures drive the existing seven-day rehearsal; all responses are labelled SYNTHETIC_API_FORMAT_FIXTURE, not real exchange acknowledgements. Actual saved read-only capture may validate empty account/schema separately; no fake actual10-position trading proof. Decimal floor saved reference qty to dated steps, report the adjustment and sourceprecision; no rounding up/budget invention.
+5. Source-cited technical report, actual file-only CLIE2E, one bounded critical review and targeted fixes, source hashes, canonical checkpoint/commit/push. No renewed full architecture audit or research changes. Externalresearchconflict and futureaccountscope remain exact gates, not covered by mocks.
+
+Ruling: use a proposal-only protection binding to exercise native-order fields and failed coverage, not an invented approved stop rule. The existingweekly model remains the state/accounting reducer. All trade confirmations in the E2E are fixture assertions, not actualPOSTs.
+
+Completion ledger: file-only adapter and5snapshot API-format CLIE2E/285events delivered. Final103testsPASS; Astra/high independent review4Important fixed once withRED/GREEN; no second signoff. ActualPUMP4/Monthly freshread-only healthy/unchanged. Rawfixture archive compressed/hashmanifested; no actual brokeracceptance, stop-policy or money approval. Ruling: use SOURCE execution clock for7dclose; observationarrival cannot repair early execution. Signed rebates retained; terminalcumulative/rawfill contradictions block instead of guessedfills. Flat native coverage isN/A.

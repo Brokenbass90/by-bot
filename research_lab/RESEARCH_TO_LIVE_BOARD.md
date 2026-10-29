@@ -1,5 +1,14 @@
 # Trading OS — единая доска доведения до первой версии
 
+**29Oct next-LIVE / completed KITY API-format gate:** [evidence](../reports/KITY_BYBIT_ORDERS_OFF_AND_NEXT_LIVE_2026_10_29.md).
+5API-format snapshots/285model events→existingweeklyjournal,103tests; independent
+review4Important fixed, notactualexchange/moneyPASS. FreshPUMP4waithealthy,
+Monthlytimer/sourcehealthy→2Novconditionalopening. KITYengineering next;
+PolymarketNO published≈3Novverdictreference/FINALneedsrealwindow; SHORTdraft27/30.
+KITYnative/admissionversion/account/sharedowner/newexactGOOPEN; noLIVEchanges.
+Canonical priorities are ROADMAP_SELF_IMPROVING.md; dated earlier rows are history.
+
+
 29Oct [three production-first decisions](../reports/PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md):
 Poly NO_PROVEN_ENTRY/notglobalKILL;fundingREPAIR_ACK_PENDING;Alpaca25/75 positive
 pairedresearch/cost-riskcontractOPEN. PUMP4/Monthly unchanged. No newfinancialGO.

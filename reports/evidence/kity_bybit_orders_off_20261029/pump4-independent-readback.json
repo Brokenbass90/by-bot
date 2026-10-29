@@ -1,0 +1,30 @@
+{
+  "actual_entry_executed": false,
+  "config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+  "health": {
+    "actual_protection_proven": false,
+    "age_ms": 7643,
+    "financial_trading_proven": false,
+    "observed_ms": 1793283899363,
+    "orders_allowed": false,
+    "owner": "PUMP4",
+    "pid": 3198429,
+    "reason": "LIVE_FLAT_WAITING_SIGNAL",
+    "restart_allowed": false,
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "source_age_ms": 178,
+    "status": "HEALTHY"
+  },
+  "observed_ms": 1793283899369,
+  "owner_state": {
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "Job": "",
+    "MainPID": "3198429",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "schema": "PUMP4_TINY_ACTIVATION_READBACK_V1",
+  "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+  "status": "LIVE_ARMED_HEALTHY"
+}
