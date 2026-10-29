@@ -1,5 +1,18 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — gold broker owner-reportedBullwaves; copier located, MT5 readback unavailable
+
+Existingproject ../bybit-bot-clean-v28/signal_copy. Web8766listening/statusokfalse;
+localMT5MCP22346connectionrefused. DBqueriedread-only, onlyserver/type/symbol/time:
+60MetaQuotesDemo/democards,last15Oct07:32:55UTC +1olddemo. No login/token/config
+read, no project/terminal startup, no trading/copy/approval calls or changes.
+Next restoreexistingMT5Bullwavesconnection, then read-only account/XAUUSD contract,
+lot/margin/spread/swap metadata. Ownerbrokeridentified, currenttype/costsUNKNOWN.
+ExistingLIVE/research priorities untouched; no new modules/tests or financialGO.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — owner seeks active crypto/Polymarket/gold sleeve beyond accumulation
 
 Read canonicalROADMAP_SELF_IMPROVING.md ownerclarification FIRST. Researchfocus

@@ -1,5 +1,18 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**29Oct gold venue clarification:** owner identifies Bullwaves via existing
+Telegram→MT5 project. Active sibling module is
+`/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/signal_copy`;
+README/client available in recovery `signal_copy/`. Existingweb8766 responds,
+GET /api/status ok:false; local MT5 MCP22346 refusesconnection. No terminal/app
+started, credentials/config opened, trade/copy/approval endpoint called.
+Read-only existingSQLite metadata:60cards MetaQuotes-Demo/demo through15Oct07:32UTC,
+1olderdemo/serverunknown. Historicalcopier does not verify currentBullwavesaccount.
+Broker nowOWNER_REPORTED_BULLWAVES, currentaccounttype/XAUUSDcontract/costs UNKNOWN
+until existingterminalconnection is restored and read-only metadata captured.
+Do not change demo/live allowlists or enable automaticcopying for this inspection.
+
+
 **29Oct owner clarification — seek an active profit sleeve, separate from the accumulation sleeve.**
 Owner explicitly wants recurring opportunities beyond Monthly/PUMP4/KITY, with
 Polymarket, crypto and gold as research targets. This supersedes treating another
