@@ -43,16 +43,16 @@ def assess_kity(signal, c2, entry, *, dossier_legs, active_owner):
                             'current_step_minimum_margin_fees_funding':'NOT_VERIFIED'})
         need(seen == set(sides), 'missing_entry_legs')
         need(type(dossier_legs) is int and dossier_legs>0, 'dossier_leg_contract')
-        blockers=['ECONOMIC_INCONCLUSIVE','FRESH_ACCOUNT_MARGIN_QUOTES_COSTS_REQUIRED',
+        blockers=['BYBIT_ECONOMIC_ADMISSION_CONTRACT_UNRESOLVED','FRESH_ACCOUNT_MARGIN_QUOTES_COSTS_REQUIRED',
                   'WEEKLY_NATIVE_STOP_RECOVERY_AND_EXIT_ACCEPTANCE_REQUIRED','NEW_EXACT_OWNER_GO_REQUIRED']
         if dossier_legs != len(legs): blockers.insert(0,f'DOSSIER_LEG_COUNT_DRIFT_{dossier_legs}_VS_{len(legs)}')
         if active_owner != 'NONE': blockers.append(f'BYBIT_SINGLE_OWNER_CONFLICT_{active_owner}')
         if not all(x['metadata_lot_check'] is True for x in checked): blockers.append('RESEARCH_STEP_MINIMUM_NOT_PASS')
         if not all(x['research_lot_check'] for x in checked): blockers.append('RESEARCH_LOT_CHECK_NOT_PASS')
-        return dict(schema='RESEARCH_TINY_KITY_INTAKE_V1',candidate='KITY_ORIGINAL_WEEKLY',
+        return dict(schema='RESEARCH_TINY_KITY_INTAKE_V1',candidate='KITY_BYBIT_WEEKLY',
                     session=signal['d'],signal_parity='C2_PASS_MATCH_ONLY',leg_count=len(legs),legs=checked,
                     research_gross_usdt=str(gross),costs='UNKNOWN_FRESH_FEES_FUNDING_SLIPPAGE_REQUIRED',
-                    economic_status='INCONCLUSIVE',blockers=blockers,ready_for_tiny=False,
+                    economic_status='BYBIT_PREREG_26W_VS_CANARY_C1_C2_SCOPE_UNRESOLVED',blockers=blockers,ready_for_tiny=False,
                     money_authority=False,orders_allowed=False,broker_writes=0,
                     reuse=['existing KITY frozen selector and C2','Bybit native-stop/reconcile/recovery primitives',
                            'existing account-owner lock; never start a second writer'],

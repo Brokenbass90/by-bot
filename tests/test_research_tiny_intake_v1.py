@@ -20,7 +20,7 @@ def test_parity_not_economic_or_money_pass():
     assert report['signal_parity'] == 'C2_PASS_MATCH_ONLY'
     assert 'DOSSIER_LEG_COUNT_DRIFT_8_VS_10' in report['blockers']
     assert 'BYBIT_SINGLE_OWNER_CONFLICT_PUMP4' in report['blockers']
-    assert 'ECONOMIC_INCONCLUSIVE' in report['blockers']
+    assert 'BYBIT_ECONOMIC_ADMISSION_CONTRACT_UNRESOLVED' in report['blockers']
     assert report['research_gross_usdt'] == '1000'
     assert report['orders_allowed'] is False
 

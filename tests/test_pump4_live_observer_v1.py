@@ -173,3 +173,20 @@ def test_legacy_advice_does_not_become_causal_v11_v12(tmp_path):
     assert result['comparison_status']=='UNKNOWN_NO_CAUSAL_VERSIONED_ADVICE'
     p.write_bytes(p.read_bytes()+b'{')
     with pytest.raises(ObserverBlocked,match='partial'):audit_advice(p)
+
+
+def test_lifecycle_import_parses_pinned_bytes_not_reopened_path(capture,monkeypatch):
+    import research_lab.pump4_live_observer_v1 as module
+    from research_lab.att1_lifecycle_journal import LifecycleJournal
+    root,m,_=capture;p=root/'life.jsonl'
+    journal=LifecycleJournal(p)
+    journal.append({'schema_id':'att1_lifecycle_event_v1','event_id':'obs-1','observed_ms':1200})
+    raw=p.read_bytes();m['files'].append({'name':p.name,'sha256':sha(raw),'kind':'lifecycle'})
+    original=module.read_file
+    def interleaving(path):
+        data=original(path)
+        if Path(path)==p:
+            journal.append({'schema_id':'att1_lifecycle_event_v1','event_id':'obs-2','observed_ms':1300})
+        return data
+    monkeypatch.setattr(module,'read_file',interleaving)
+    assert run(capture)['lifecycle_events']==1

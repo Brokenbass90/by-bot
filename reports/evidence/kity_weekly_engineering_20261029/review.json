@@ -1,0 +1,16 @@
+{
+  "effort": "high",
+  "financial_or_production_integration_approved": false,
+  "findings": [
+    "parse pinned lifecycle bytes instead of reopening source",
+    "reject unsupported C2 PASS aliases without source bindings",
+    "require configured funding settlement grid",
+    "duplicate funding must not revoke established model finality"
+  ],
+  "model": "gpt-6-astra",
+  "rollout_id": "01a1871e-02b7-70f3-898d-86b5fc91295c",
+  "schema": "KITY_AND_BRIDGE_INDEPENDENT_REVIEW_V1",
+  "second_independent_signoff": false,
+  "status": "REVIEW_COMPLETED_FOUR_IMPORTANT_FINDINGS_FIXED_BY_PRIMARY",
+  "targeted_final_tests": 98
+}

@@ -11,6 +11,7 @@ import hashlib
 import os
 from pathlib import Path
 import stat
+import tempfile
 
 from research_lab.brain_shadow_readonly_bridge_v1 import (
     BrainEventJournal, _preflight_capacity, require, sha, timestamp,
@@ -146,7 +147,12 @@ def import_capture(manifest_path, manifest_sha256, target, *, expected_scope, ex
                 require(type(info.get('partial_tail_bytes', 0)) is int and info.get('partial_tail_bytes',0) >= 0,
                         'partial_tail_contract')
                 partial |= bool(info.get('partial_tail_bytes', 0))
-                rows = LifecycleJournal(source / info['name'], max_bytes=MAX_FILE_BYTES).read()
+                # Parse the already-pinned snapshot, never reopen a mutable
+                # source path. Existing journal validator operates on a private
+                # unlinked tempfile descriptor; no source repair/write occurs.
+                with tempfile.TemporaryFile() as snapshot:
+                    snapshot.write(data);snapshot.flush()
+                    rows = LifecycleJournal(source / info['name'], max_bytes=MAX_FILE_BYTES)._load(snapshot.fileno())[0]
                 for row in rows:
                     ts = row.get('observed_ms', row.get('observation', {}).get('observed_ms'))
                     require(timestamp(ts) and ts <= m['observed_ms'], 'lifecycle_clock')

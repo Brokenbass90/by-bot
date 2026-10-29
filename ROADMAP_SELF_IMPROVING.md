@@ -1,5 +1,14 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**29Oct owner priority / implemented KITY fixes:** [weekly engineering](reports/KITY_WEEKLY_ENGINEERING_2026_10_29.md).
+Research30951f9: actual10leg dossier/C2 bindings repaired,15/22accepted;252event7day
+isolated modelPASS,98tests. Independentreview4Important fixed; actual Bybit executor,
+sharedowner/aggregate risk/native-policy remainOPEN. Earlier genericBinanceM3
+INCONCLUSIVE label does not classify Bybit-native: published26w vs2C1C2canary scope
+clarification pending. EngineeringnowKITY; Polyresearch/executability untilproof.
+PUMP4LIVE/Monthlyv6 and broaderBrain/Factory/portfolio goal preserved, no newmoneyGO.
+
+
 **29Oct actual read-only intake:** [PUMP4 facts / one KITY case](reports/READ_ONLY_TINY_BRIDGE_2026_10_29.md).
 192sampled receipts/replay0, existing durable Brain journal, six-hour local delivery;
 versioned causal advice UNKNOWN, no policy/order/gate authority. KITY C2/datedlots

@@ -1,0 +1,15 @@
+{
+  "commit": "30951f9abcdcf56ae4bf853d9168d2ac2d24a34e",
+  "dirty_sibling_touched": false,
+  "files": {
+    "research_lab/KITY_BYBIT_CANARY_DOSIE_KARKAS_2026_10_12.md": "5fa6a09fce39e031b70c1dc3777957c4228007c894057f64206d4eb1f29b1774",
+    "research_lab/KITY_BYBIT_CANARY_USLOVIYA_2026_10_11.md": "2a90a4963977cb0a90e0e5e5e0d047b2439a46d66423e0ef1ca7eea73ef93366",
+    "research_lab/ZAPROS_KITY_ADMISSION_SCOPE_2026_10_29.md": "2c041a749bdd5c4b6635ce5529293a44fd8e8ccd3e6112226c7d4a042d12f24f",
+    "research_lab/kity_dosie.py": "d05b644c9dee64784d91b5f9b950e8ad8e74c83d1a6ec3a2bde0c029636f4060",
+    "tests/test_kity_dosie_contract.py": "a1295be587150bc2c441f5cfe0b3375aa017aec9773c675b2a562bbd83390218"
+  },
+  "frozen_strategy_files_changed": false,
+  "parent": "5c71a9a30e2c7584d18ef3c40cf9d345502ea05d",
+  "push": "FAST_FORWARD_ONLY",
+  "schema": "KITY_RESEARCH_NARROW_CORRECTION_V1"
+}

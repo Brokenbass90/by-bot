@@ -1,0 +1,9 @@
+{
+  "active_owner": "PUMP4_ACCOUNT_OWNER_SCOPE_V1",
+  "admitted": false,
+  "live_scope_change_required": true,
+  "next_gate": "versioned common-owner dispatcher with separate exact scopes and union custody; separate GO",
+  "orders_allowed": false,
+  "reason": "CURRENT_PUMP4_SCOPE_SINGLE_LIFECYCLE_NOT_KITY_AUTHORITY",
+  "schema": "KITY_EXISTING_OWNER_ROUTE_CHECK_V1"
+}

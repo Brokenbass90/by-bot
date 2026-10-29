@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — KITY dossier fixed/published; seven-day model lifecycle completed
+
+Read KITY_WEEKLY_ENGINEERING_2026_10_29.md FIRST. Research30951f9 fast-forward,
+helper/docs/tests only, Claude dirtycheckout/index and frozenstrategy untouched.
+Actual15/22C1/C2 source-bound dossierDOSIE_READY now10legs;6/8/10derivedn//10.
+BarePASS/C2_PASS bypass closed. Isolated saved22packet252events/7virtualdays,
+all10entries/fixtureprotection/funding/exit/latefees/restart→modelterminalPASS,
+notBybitexecutor/market/economicPASS.98finaltargeted+regressionPASS incl12research.
+Independentastra/highreview completed;4Important reproduced+fixed byprimary,
+no secondindependentsignoff. Pinnedlifecyclebytes race/offgrid+duplicatefunding fixed;
+bridgeold192events0lifecycle unaffected/replay0; DATA sourcehashmanifest updated.
+Correction: Bybit-native is distinct from BinanceM3 INCONCLUSIVE; historicalBybit
+CROSS_VENUE_PASS vs26w moneyprereg/twoC1C2canary scope conflict published exactrequest,
+BYBIT_ECONOMIC_ADMISSION_CONTRACT_UNRESOLVED, nojudges/outcomes/producer edits.
+CurrentPUMP4scope refusesKITY; no newdispatcher/secondowner/financialauthority.
+Remaining weeklyBybitpayload/native-policy/sourcecosts/unioncustody+aggregate-risk
+bindings and newexactGO; don'tconflate model with actualORDERS_OFF acceptance.
+LatestownerpriorityKITYengineering, Polyresearch untilactualexecwindow; existing
+PUMP4LIVE/Monthlyv6/expiry/calendar/risk preserved. No financialcommands/restarts.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — actual PUMP4 read-only Brain receipt bridge / one KITY intake delivered
 
 Read READ_ONLY_TINY_BRIDGE_2026_10_29.md FIRST.192actual sampled receipts imported,

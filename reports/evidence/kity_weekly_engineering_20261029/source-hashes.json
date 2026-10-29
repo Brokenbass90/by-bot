@@ -1,0 +1,9 @@
+{
+  "research_lab/kity_weekly_rehearsal_v1.py": "6751972a8d12d47e516469ae1bed0d3b72ee7609ca8469c60647deb43c54ad9c",
+  "research_lab/pump4_live_observer_v1.py": "b2bf93b357d76a345150319ac3ce31e7872d7c7f06344153e8a636d080949285",
+  "research_lab/research_tiny_intake_v1.py": "d5ecfb0f15dca47d9de368b8b49069d5c7918c3b7c48a77f3f1e9b056f2be8ac",
+  "scripts/rehearse_kity_weekly_v1.py": "5f79e7b72ba9d05c9510a6f52be72d0f013e4179c35de73b9de817418a3e5d35",
+  "tests/test_kity_weekly_rehearsal_v1.py": "f8d50cc970ab10fab9c359b21e9e6a396c9a0d52a97b6bd634ddddb91816ae4c",
+  "tests/test_pump4_live_observer_v1.py": "f9eb3710edcb325a80bfc17aa39202f3dc03fb321d93c49c0778774b944ae802",
+  "tests/test_research_tiny_intake_v1.py": "6faee6b180c7a9e57223aa26c55eaef8b6d112cb003c46552569a17015e0512f"
+}
