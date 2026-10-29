@@ -1,5 +1,15 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**29Oct gold research reuse/data acceptance:** [intake](reports/GOLD_MACRO_EXISTING_DATA_INTAKE_2026_10_29.md).
+Actual45684H1/87439M5 basicQA; calendar63/62/32 is not sample size: H1publishedUTC
+join51CPI/49NFP/22FOMC, fullhold/independence eligibility stillrequired. Existing
+source/time conflictMetaQuotes-server vs26OctFxPro/UTC recorded; use pinned
+mt5_v_utc lineage, M5clockproofOPEN. Gold-specificprereg absent inverifiedorigin;
+17OctBTCmacro preregs notgoldapproval. Claudeeconomicprereg/run; CodexQA/venue
+costs with existingMT5readers, no newcollector/strategy/orders. Event-onlygold
+notdailyincome. ExistingLIVE and KITYengineeringHOLD unchanged.
+
+
 **29Oct gold demo restored:** [actual preflight](reports/GOLD_MT5_DEMO_PREFLIGHT_2026_10_29.md).
 Owner opened MetaQuotes-Demo; existing Telegram→MT5 sibling signal_copy now
 connected, accountdemo/EUR/hedging/build6259, XAUUSDquoted/min0.01lot. Native

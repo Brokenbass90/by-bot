@@ -1,0 +1,14 @@
+{
+  "ref": "30951f9abcdcf56ae4bf853d9168d2ac2d24a34e",
+  "sha256": {
+    "research_lab/ZOLOTO_MAKRO_OSUSHCHESTVIMOST_2026_10_26.md": "3ab7d308f567ee01f34c9e41f47d0b9885629ad3b4835d972926e79056cd1c87",
+    "research_lab/DANNYE_ZOLOTO_FX_ZAVEZENY_2026_09_30.md": "f0663e886165da9c7fc5781b2b39e5b8312db61b7ab205cba5534629b9190ad9",
+    "research_lab/DEFEKT_VREMYA_MT5_2026_09_30.md": "735bc6dc34dbc32f83e3e847a0d85ea688803d6f480175ee8692531fb319a491",
+    "research_lab/fabrika/mehanizmy.py": "bffcfc3b55eea4272e9ce1a105248346313a467fca6a52f5116960a75a8e1963",
+    "research_lab/data/makro/kalendar_v2.json": "cee6e62d73d2b1a34ca75b3bde6f9c3c3b9ec671f5ead0484519840ee931ee11",
+    "research_lab/data/makro/MANIFEST.json": "dc2ba04acb433a6240b1ed7c2dcdb15fe1bfdcfdb006f1fa8e0a616e7e78c429",
+    "research_lab/PREREG_MAKRO_2026_10_17.md": "97d178f58c7ac65b05c246888af7a444beede0fcfc826d45ab45c708e67cb0de",
+    "research_lab/PREREG_MAKRO_SHOK_VSE_2026_10_17.md": "6d485fa0e79c77f1c7382332b5242e3b14de3aaad33e5bd013c19ed847593db4",
+    "research_lab/fabrika/atlas_izderzhek.py": "8c4194de5f6dac9347f3fc774d29cd88bf6d88a4d5fc5c7698def3835f922d0f"
+  }
+}

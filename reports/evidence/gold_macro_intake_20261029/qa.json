@@ -1,0 +1,102 @@
+{
+  "schema": "GOLD_MACRO_DATA_INTAKE_QA_V1",
+  "research_ref": "30951f9abcdcf56ae4bf853d9168d2ac2d24a34e",
+  "calendar_sha256": "cee6e62d73d2b1a34ca75b3bde6f9c3c3b9ec671f5ead0484519840ee931ee11",
+  "calendar_manifest_v2_match": true,
+  "profiles": {
+    "H1": {
+      "file": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/zoloto_h1/XAUUSD.npz",
+      "sha256": "6751d617e4836b8198c90bb95dbf06736e5066a76b6cc3dc08bb3e27901aec45",
+      "keys": [
+        "ts",
+        "ohlcv"
+      ],
+      "rows": 45684,
+      "first_utc_assuming_epoch_ms": "2018-01-02T09:00:00+00:00",
+      "last_utc_assuming_epoch_ms": "2025-09-29T23:00:00+00:00",
+      "duplicate_timestamps": 0,
+      "non_increasing_steps": 0,
+      "off_grid": 0,
+      "non_finite_ohlcv": 0,
+      "invalid_ohlc_geometry": 0,
+      "gaps_larger_than_one_step": 2004,
+      "timezone_proven": false
+    },
+    "M5": {
+      "file": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/gold_m5/XAUUSD.npz",
+      "sha256": "ee187ba2f14d367df189b221a56e8484c29084dbcfc455e7e6956ed49f1a0ecf",
+      "keys": [
+        "ts",
+        "ohlcv"
+      ],
+      "rows": 87439,
+      "first_utc_assuming_epoch_ms": "2024-07-08T00:00:00+00:00",
+      "last_utc_assuming_epoch_ms": "2025-09-30T23:55:00+00:00",
+      "duplicate_timestamps": 0,
+      "non_increasing_steps": 0,
+      "off_grid": 0,
+      "non_finite_ohlcv": 0,
+      "invalid_ohlc_geometry": 0,
+      "gaps_larger_than_one_step": 332,
+      "timezone_proven": false,
+      "matches_published_blob": true
+    }
+  },
+  "event_coverage": {
+    "cpi": {
+      "calendar_dates": 63,
+      "unique_dates": 63,
+      "first_date": "2021-07-13",
+      "last_date": "2026-10-14",
+      "H1_event_bar_present_assuming_UTC": 51,
+      "M5_event_bar_present_assuming_UTC": 15,
+      "M5_complete_containing_hour_assuming_UTC": 15,
+      "H1_event_bar_present_using_published_conversion": 51,
+      "H1_post_event_hour_open_present_using_published_conversion": 51
+    },
+    "nfp": {
+      "calendar_dates": 62,
+      "unique_dates": 62,
+      "first_date": "2021-08-06",
+      "last_date": "2026-10-02",
+      "H1_event_bar_present_assuming_UTC": 49,
+      "M5_event_bar_present_assuming_UTC": 14,
+      "M5_complete_containing_hour_assuming_UTC": 14,
+      "H1_event_bar_present_using_published_conversion": 49,
+      "H1_post_event_hour_open_present_using_published_conversion": 49
+    },
+    "fomc": {
+      "calendar_dates": 32,
+      "unique_dates": 32,
+      "first_date": "2023-02-01",
+      "last_date": "2026-12-09",
+      "H1_event_bar_present_assuming_UTC": 22,
+      "M5_event_bar_present_assuming_UTC": 10,
+      "M5_complete_containing_hour_assuming_UTC": 10,
+      "H1_event_bar_present_using_published_conversion": 22,
+      "H1_post_event_hour_open_present_using_published_conversion": 22
+    }
+  },
+  "economic_results_computed": false,
+  "strategy_or_outcome_code_run": false,
+  "join_status": "H1_USE_PUBLISHED_SERVER_TO_UTC_CONVERSION; M5_TIMEZONE_UNVERIFIED; FULL_RESEARCH_ELIGIBILITY_NOT_PROVEN",
+  "gaps_note": "Counts include normal market closures; unexpected missing bars not separated.",
+  "H1_published_time_transformation": {
+    "source": "research_lab/fabrika/mehanizmy.py:mt5_v_utc",
+    "source_sha256": "bffcfc3b55eea4272e9ce1a105248346313a467fca6a52f5116960a75a8e1963",
+    "raw_timestamp_semantics": "MetaQuotes server EET/EEST according to published source/defect record",
+    "applied_only_in_memory": true,
+    "first_corrected_utc": "2018-01-02T07:00:00+00:00",
+    "last_corrected_utc": "2025-09-29T20:00:00+00:00",
+    "duplicate_corrected_timestamps": 0,
+    "non_increasing_corrected_steps": 0,
+    "broker_clock_independent_crosscheck": "NOT_REPEATED"
+  },
+  "source_conflict": "26Oct feasibility says FxPro/UTC; 30Sep delivery says MetaQuotes-Demo; published loader explicitly applies mt5_v_utc to the raw H1 file.",
+  "H1_intermediate_crosscheck": {
+    "intermediate_exists": true,
+    "intermediate_sha256": "6751d617e4836b8198c90bb95dbf06736e5066a76b6cc3dc08bb3e27901aec45",
+    "timestamps_identical": true,
+    "ohlcv_identical": true
+  }
+}

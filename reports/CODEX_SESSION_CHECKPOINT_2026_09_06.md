@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — gold macro existing Claude data reused; source/time/sample corrections
+
+Read GOLD_MACRO_EXISTING_DATA_INTAKE_2026_10_29.md. Origin30951f9 current; no new
+goldmacro prereg/verdict found (17Octmacro preregs BTC). ActualH145684/M587439
+basicQA PASS/no PnL. Calendar63CPI/62NFP/32FOMC != usable122H1events: published
+mt5_v_utc joins51/49/22 event+nextbar, not fullstrategyeligibility. H1local pinned
+6751d617…aec45 equals intermediate; source deliveryMetaQuotes vs26OctFxPro/UTC
+conflict, existingloader explicitly convertsserverEET/EEST. No secondconversion;
+M5clockprovenanceOPEN/provisional15/14/10matches.08:30release H1mixespre30min,
+not purefirst60min; freezegold-specificrule beforeeconomicrun. Existing hourly
+atlas notnewsbidask/slippage proof, hasaddsymbol/writes=>NOTRUN. NativeMT5demo
+calcs acceptedpreviously; noorders/collector/schedule/researchcode/judges/messages.
+Claudeowns prereg/economics; Codex data/cost/read-onlycapture. Macro notdailyincome.
+PUMP4/Monthly unchanged; KITYSHADOW/newengineeringHOLD. Evidence/sourcehashes saved.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — MT5 demo restored; actual gold readback/native calculations PASS
 
 Read GOLD_MT5_DEMO_PREFLIGHT_2026_10_29.md. Owner opened MetaQuotes-Demo, not
