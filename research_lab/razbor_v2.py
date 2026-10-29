@@ -29,7 +29,7 @@ def priznaki(z, t):
     c = lambda d, k: d[k][4] if k in d else None
     def izm(d, a, b): return (c(d, a) / c(d, b) - 1) * 100 if c(d, a) and c(d, b) else None
     t_ = t - H                                                    # последний закрытый час до входа
-    v = dict(rost24=izm(P, t_, t_ - 24 * H), rost72=izm(P, t_, t_ - 72 * H), btc24=izm(B, t_, t_ - 24 * H))
+    v = dict(rost24=izm(P, t_, t_ - 24 * H), rost72=izm(P, t_, t_ - 71 * H), btc24=izm(B, t_, t_ - 24 * H))
     o1, o0 = O.get(t_), O.get(t_ - 24 * H)
     v["oi_izm24"] = (o1 / o0 - 1) * 100 if o1 and o0 else None
     v["oi_minus_cena"] = v["oi_izm24"] - v["rost24"] if v["oi_izm24"] is not None and v["rost24"] is not None else None
