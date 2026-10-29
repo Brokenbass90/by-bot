@@ -1,0 +1,35 @@
+{
+  "schema": "MONTHLY_PREOPEN_OFFLINE_CASH_CHECK_V1",
+  "status": "PASS",
+  "actual_observed_ms": 1793258489793,
+  "calendar_from_session": "2026-10-28",
+  "calendar_diagnostic": {
+    "signal_session": "2026-10-30",
+    "entry_session": "2026-11-02",
+    "entry_open_ms": 1793629800000,
+    "daily_due": true,
+    "monthly_selection_due": true,
+    "month_end": true,
+    "next_source_run_ms": 1793654400000,
+    "orders_allowed": false,
+    "money_authority": false
+  },
+  "fixture_cases": [
+    {
+      "gate_ok": false,
+      "empty_selection": true,
+      "new_symbols": [],
+      "status": "MONTHLY_PLAN_ORDERS_OFF"
+    },
+    {
+      "gate_ok": true,
+      "empty_selection": true,
+      "new_symbols": [],
+      "status": "MONTHLY_PLAN_ORDERS_OFF"
+    }
+  ],
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "future_selection_pass": false,
+  "first_harness_attempt": "REJECTED_SYMLINK_TEMP_DIRECTORY_NO_PRODUCTION_CHANGE"
+}

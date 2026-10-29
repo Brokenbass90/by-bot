@@ -1,0 +1,241 @@
+{
+  "schema": "TRADING_OPERATIONAL_READ_ONLY_CHECK_V1",
+  "observed_ms": 1793258300000,
+  "broker_get_requests": 6,
+  "broker_writes": 0,
+  "financial_commands_repeated": false,
+  "monthly": {
+    "source_pins_pass": true,
+    "scope_sha256": "af7a11594367e3532a1e448e212c2dbafbda4df868c3b1a7be13d157b686f12e",
+    "scope_valid_from_ms": 1793629800000,
+    "scope_valid_until_ms": 1801440000000,
+    "unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+    "manager_parameters": {
+      "capital": "400"
+    },
+    "account_before": {
+      "status": "ACTIVE",
+      "currency": "USD",
+      "cash": "496.31",
+      "equity": "496.31",
+      "buying_power": "496.31",
+      "accrued_fees": "0",
+      "pending_reg_taf_fees": "0",
+      "trading_blocked": false,
+      "account_blocked": false,
+      "transfers_blocked": false
+    },
+    "account_after": {
+      "status": "ACTIVE",
+      "currency": "USD",
+      "cash": "496.31",
+      "equity": "496.31",
+      "buying_power": "496.31",
+      "accrued_fees": "0",
+      "pending_reg_taf_fees": "0",
+      "trading_blocked": false,
+      "account_blocked": false,
+      "transfers_blocked": false
+    },
+    "positions": [],
+    "open_orders": [],
+    "clock_before": {
+      "is_open": false,
+      "next_close": "2026-10-29T16:00:00-04:00",
+      "next_open": "2026-10-29T09:30:00-04:00",
+      "timestamp": "2026-10-29T03:18:17.695915056-04:00"
+    },
+    "clock_after": {
+      "is_open": false,
+      "next_close": "2026-10-29T16:00:00-04:00",
+      "next_open": "2026-10-29T09:30:00-04:00",
+      "timestamp": "2026-10-29T03:18:19.130853202-04:00"
+    },
+    "last_dispatch": {
+      "identity_sha256": "57d0a3baaee5620e2f5517d4d8b12204aa134f0c2ad6e4a39ba4eeca556cd9b6",
+      "observed_ms": 1793258247522,
+      "operation": "DISPATCH_TICK",
+      "result": {
+        "accounting": [],
+        "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+        "issues": [],
+        "maintenance": {
+          "money_authority": false,
+          "orders_allowed": false,
+          "production_writer_installed": false,
+          "status": "MONTHLY_WAITING_REGULAR_SESSION"
+        },
+        "money_authority": false,
+        "notifications": {
+          "health": {
+            "status": "QUIET"
+          },
+          "trades": []
+        },
+        "opening": null,
+        "orders_allowed": false,
+        "recovered": [],
+        "source": {
+          "already_bound": true,
+          "broker_writes": 0,
+          "daily_status": "NO_OWNED_MONTHLY_POSITIONS",
+          "money_authority": false,
+          "next_schedule": {
+            "daily_due": true,
+            "entry_open_ms": 1793280600000,
+            "entry_session": "2026-10-29",
+            "money_authority": false,
+            "month_end": false,
+            "monthly_selection_due": false,
+            "next_source_run_ms": 1793305200000,
+            "orders_allowed": false,
+            "signal_session": "2026-10-28"
+          },
+          "orders_allowed": false,
+          "receipt_sha256": "cc62c0892a0c710e004cf6224c210aaba8e1917d2fc123682118e1ae37ea0d24",
+          "schema": "ALPACA_SOURCE_OPERATION_RECEIPT_V1",
+          "selection_id": null,
+          "signal_session": "2026-10-28",
+          "source_id": "91fa97d605d335172615f03928f9ed417289be50de17ec2792497a503f7e8c1d",
+          "status": "ORDERS_OFF_OPERATIONAL_PASS"
+        },
+        "status": "MONTHLY_STANDING_DISPATCH_TICK"
+      },
+      "schema": "ALPACA_MONTHLY_OWNED_CYCLE_V1"
+    },
+    "timer": {
+      "NextElapseUSecRealtime": "",
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    "source_timer": {
+      "NextElapseUSecRealtime": "Thu 2026-10-29 13:00:45 UTC",
+      "ActiveState": "active",
+      "SubState": "waiting"
+    },
+    "original_lock_inode": 813893
+  },
+  "pump4_data": {
+    "unit": {
+      "MainPID": "3152955",
+      "NRestarts": "0",
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    "last_16_actual_h1": [
+      {
+        "source_hour_open_ms": 1793203200000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793206800000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793210400000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793214000000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793217600000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793221200000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793224800000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793228400000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793232000000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793235600000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793239200000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793242800000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793246400000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793250000000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793253600000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      },
+      {
+        "source_hour_open_ms": 1793257200000,
+        "hour_pass": true,
+        "census": 137,
+        "expected_trading": 135,
+        "within60s": 135
+      }
+    ]
+  },
+  "remote_writes": 0
+}

@@ -1,5 +1,22 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct07:20UTC — live operations verified; SHORT_HVOST draft reviewed, NOT_LIVE_READY
+
+Read TRADING_OPERATIONS_AND_SHORT_HVOST_INTAKE_2026_10_29.md FIRST.
+PUMP4sameLIVE/PID3198429/0restarts/818853, freshGETflat, latest3NO_NEW_SIGNAL,
+noadmission/latches; last16H1actualreceipts135/135timely. NoGO/restart/codechange.
+Automaticflow/riskjournals exist; source-backed terminalcostfinality stillunproven.
+Monthlyv6samepins/813893/sourcePASS/issues[],6GETflat/cash496.31/pending0,
+active timers. Offlinecalendar30Octclose+20m→2Nov14:30UTC;2isolatedCASHcasesPASS.
+Actualfutureselection/entry/native remainfuture, notsimulatedmarketPASS.
+Publishedresearchorigin e1e173e reviewed: SHORTdraft27/30notverdict, approximate2025
+negativeSOURCE_REPORTED. OPENmarginmode/sharedowner conflict, stop89%not84%,
+gross300/margin200assumesBTC3x, twolegexecution/risk. No newfinancialscope orimplementation.
+Canonical independentengineeringPolymarket→KITY; SHORTnotpromotedautomatically.
+
+---
+Earlier dated entries below are history.
+
 CURRENT28Oct20:20UTC — PUMP4 technical TINY LIVE_ARMED_HEALTHY; independent readback CLOSED
 
 Read PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md FIRST. Exact owner GO66a7be9c accepted;

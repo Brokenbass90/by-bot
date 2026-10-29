@@ -1,3 +1,15 @@
+# Current entry — 29 October: LIVE health, Monthly readiness, SHORT_HVOST intake
+
+[Actual checks and six draft findings](TRADING_OPERATIONS_AND_SHORT_HVOST_INTAKE_2026_10_29.md).
+PUMP4sameLIVE/0restarts/flat/NO_NEW_SIGNAL;16H1receipts135/135timely.
+Monthlysamev6/6GETflat/cash496.31/pending0;2offlineCASHcasesPASS,30Oct→2Novcalendar.
+Noauthority/risk/unit/codechanges. SHORT_HVOST NOT_LIVE_READY:mode/ownerconflict,
+stopmath/hedgecapital/twolegrecovery andfullverdictOPEN; approximate2025negative.
+NoautomaticSHORTpromotion; canonicalnextengineeringPolymarket→KITY. ExistingLIVEstable.
+
+---
+Earlier dated entries below are history.
+
 # Current entry — PUMP4 armed LIVE, independent readback complete, 28 October 2026
 
 Read [actual activation](PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md) FIRST.

@@ -1,0 +1,52 @@
+{
+  "schema": "SHORT_HVOST_DRAFT_ENGINEERING_REVIEW_V1",
+  "status": "NOT_LIVE_READY",
+  "research_ref": "e1e173efb773b6b27640bb867f0c348ade854c23",
+  "source_hashes": {
+    "SHORT_HVOST_PAKET_CODEX_CHERNOVIK_2026_10_28.md": "9a0cb41e8fd51c0b119f5c1d0534c0c5902056fc413ed35facb4e45ac9cd3c1e",
+    "SHORT_HVOST_VARIANT_B_2026_10_27.md": "ad8a1173ccc3fed527764b5b5a501211eeb9087654f7047777b58821c28b0a9a",
+    "PREREG_SHORT_HVOST_FANDING_2026_09_30.md": "53d6e58cbf9edfbe5b273c25dd14a5e58b993f2936b9545e9d35133fd9f57419",
+    "ISTORIYA_2025_ITOG_2026_10_29.md": "e2c54da38ac08177c00a6951b773a0b60674f2b9793d5d92cbde8a7008c5acb7"
+  },
+  "findings": [
+    {
+      "id": "SH1",
+      "status": "OPEN",
+      "severity": "BLOCKER",
+      "finding": "ISOLATED_MARGIN proposal conflicts with active PUMP4 REGULAR_MARGIN account binding; no margin-mode change or second owner allowed"
+    },
+    {
+      "id": "SH2",
+      "status": "OPEN",
+      "severity": "BLOCKER",
+      "finding": "PUMP4 rejects foreign account positions, not just same-coin overlap; two-leg multi-position custody cannot be added by another independent runner"
+    },
+    {
+      "id": "SH3",
+      "status": "OPEN",
+      "severity": "IMPORTANT",
+      "finding": "Draft +80% then 5% price slippage gives 1.80*1.05=1.89: loss 89% short notional before costs, not 84%; neither stop nor theoretical -150 is guaranteed total-account loss bound"
+    },
+    {
+      "id": "SH4",
+      "status": "OPEN",
+      "severity": "IMPORTANT",
+      "finding": "Three short50 plus matching BTC150 means gross300. Draft margin200 assumes short1x and BTC3x, not all legs1x. Hedge leverage and risks unapproved"
+    },
+    {
+      "id": "SH5",
+      "status": "OPEN",
+      "severity": "BLOCKER",
+      "finding": "No complete n>=30 forward verdict supplied; approximate 2025 reconstruction reports negative mean and survivorship/execution limitations; no independent judge rerun"
+    },
+    {
+      "id": "SH6",
+      "status": "OPEN",
+      "severity": "IMPORTANT",
+      "finding": "Need frozen event parity, two-leg partial/lost-response/restart recovery, exact lot/rounding, both-leg fee/funding attribution, actual per-symbol margin/liquidation/MarkPrice checks, correlated portfolio loss limits"
+    }
+  ],
+  "research_numbers_independently_reproduced": false,
+  "broker_writes": 0,
+  "research_code_changes": 0
+}

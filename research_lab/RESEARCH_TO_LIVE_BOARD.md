@@ -1,5 +1,12 @@
 # Trading OS — единая доска доведения до первой версии
 
+**29Oct07:20UTC actual:** [LIVE/Monthly checks and SHORT_HVOST draft review](../reports/TRADING_OPERATIONS_AND_SHORT_HVOST_INTAKE_2026_10_29.md).
+PUMP4sameLIVE/0restarts/NO_NEW_SIGNAL/flat,16H1receipts135/135timely; Monthlysamev6,
+6GETcash496.31/flat/pending0,2offlineCASHcasesPASS. SHORT NOT_LIVE_READY: sixOPEN
+items, cross/isolated+sharedowner conflict andapprox2025negativeSOURCE_REPORTED.
+No newcode/authority/risk/units; canonicalnextengineeringPolymarket→KITY unchanged.
+Earlier dated entries below are history.
+
 **28Oct20:20UTC actual:** [PUMP4 live activation and independent GET](../reports/PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md).
 Exact OWNER_GO executedONCE; LIVE_ARMED_HEALTHY/flat/no firstentry, original818853,
 Monthlyv6/DATA unchanged. One-lifecycle50/30/20/risk-scenario1/cross/notisolated,

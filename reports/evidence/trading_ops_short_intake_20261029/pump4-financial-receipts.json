@@ -1,0 +1,63 @@
+{
+  "observed_ms": 1793258423316,
+  "latest_receipts": [
+    {
+      "broker_writes": null,
+      "final_costs_proven": false,
+      "mode": "OWNER_TINY_LIVE",
+      "observed_ms": 1793258418816,
+      "pid": 3198429,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "15acb3f3490f42de8c50ff37b8bae7e5",
+      "runner_config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+      "tick": 7211
+    },
+    {
+      "broker_writes": null,
+      "final_costs_proven": false,
+      "mode": "OWNER_TINY_LIVE",
+      "observed_ms": 1793258412304,
+      "pid": 3198429,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "15acb3f3490f42de8c50ff37b8bae7e5",
+      "runner_config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+      "tick": 7210
+    },
+    {
+      "broker_writes": null,
+      "final_costs_proven": false,
+      "mode": "OWNER_TINY_LIVE",
+      "observed_ms": 1793258405492,
+      "pid": 3198429,
+      "result": {
+        "broker_writes": 0,
+        "status": "NO_NEW_SIGNAL"
+      },
+      "run_id": "15acb3f3490f42de8c50ff37b8bae7e5",
+      "runner_config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+      "schema": "PUMP4_EXECUTION_SUPERVISOR_RECEIPT_V1",
+      "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+      "tick": 7209
+    }
+  ],
+  "financial_file_counts": {
+    "tickets": 0,
+    "send-barriers": 0,
+    "supervisor/attempts": 0,
+    "flows": 0
+  },
+  "admission_exists": false,
+  "loss_latch": false,
+  "entry_revoked": false,
+  "risk_journal_exists": false
+}
