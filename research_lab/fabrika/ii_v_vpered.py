@@ -36,15 +36,21 @@ def generaciya(now):
            "покупаем верхние 20 %, продаём нижние 20 %, держим сутки. Атомы: " + "; ".join(f"{k} — {v}" for k, v in OPIS.items()) +
            ". Операции: plus, minus, proizv (произведение), neg, abs. Глубина ≤ 3, атомов ≤ 3, НЕ простая пара атомов (их уже проверяем) — "
            "нужна формула сложнее, с экономической причиной: кто вынужден торговать и почему цена отклонится. " + uroki +
-           ' Ответ JSON: {"formula": [...], "znak": 1 или -1, "mehanizm": "2-3 предложения", "kto_vynuzhden": "1 предложение"}')
-    nov = []
+           ' Ответ строго JSON, formula — вложенный массив, пример формы (не копируй): {"formula": ["minus", ["proizv", "oi_izm7", "fanding_den"], "mom7"], '
+           '"znak": -1, "mehanizm": "2-3 предложения", "kto_vynuzhden": "1 предложение"}')
+    OUT.mkdir(parents=True, exist_ok=True); nov, otk = [], []
     for _ in range(8):
         if len(nov) >= 5: break
         try: o = kl(sis, "Предложи одну новую формулу.")
-        except Exception as e: continue
+        except Exception as e: otk.append(dict(prichina="oshibka_modeli", detal=str(e)[:120])); continue
         f, z = o.get("formula"), int(o.get("znak", 1)) if str(o.get("znak", "1")).lstrip("-").isdigit() else 1
-        if z not in (1, -1) or not _ok(f) or _gl(f) > 3 or len(FV._atomy(f)) > 3 or len(set(FV._atomy(f))) < 2: continue
-        if _gl(f) == 1 and f[0] in ("plus", "minus"): continue                     # простая пара — уже в сетке
+        if isinstance(f, str):
+            try: f = json.loads(f)
+            except Exception: pass
+        prich = ("znak" if z not in (1, -1) else "ne_derevo_ili_chuzhoy_atom" if not _ok(f) else "glubina" if _gl(f) > 3 else
+                 "atomov_bolshe_3" if len(FV._atomy(f)) > 3 else "odin_atom" if len(set(FV._atomy(f))) < 2 else
+                 "prostaya_para" if (_gl(f) == 1 and f[0] in ("plus", "minus")) else None)
+        if prich: otk.append(dict(prichina=prich, otvet=json.dumps(o, ensure_ascii=False)[:300])); continue
         k = _klyuch(f, z)
         if k in bylo: continue
         z_ = dict(klyuch=k, formula=f, znak=z, mehanizm=str(o.get("mehanizm", ""))[:400], kto_vynuzhden=str(o.get("kto_vynuzhden", ""))[:200],
@@ -53,7 +59,9 @@ def generaciya(now):
     OUT.mkdir(parents=True, exist_ok=True)
     with PR.open("a") as fh:
         for z_ in nov: fh.write(json.dumps(z_, ensure_ascii=False) + "\n")
-    return dict(status="ok", novyh=len(nov), model=m)
+    with (OUT / "otkloneno.jsonl").open("a") as fh:
+        for z_ in otk: fh.write(json.dumps(dict(z_, kogda=time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime(now))), ensure_ascii=False) + "\n")
+    return dict(status="ok", novyh=len(nov), model=m, otkloneno={k: sum(1 for x in otk if x["prichina"] == k) for k in {x["prichina"] for x in otk}})
 
 def prohod(sila=False):
     now = time.time(); g = time.gmtime(now); s = json.loads(SOST.read_text()) if SOST.exists() else {}
