@@ -1,0 +1,21 @@
+{
+  "schema": "RESEARCH_NEXT_LIVE_STATIC_INTAKE_V1",
+  "research_ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+  "published_commits": [
+    "bb496fc",
+    "88b68b4",
+    "3cf44a9",
+    "47b9028"
+  ],
+  "source_sha256": {
+    "research_lab/fanding_mezhbirzhevoy.py": "e8e09383b55fe260f81eb87b573f266ea146d0980eef31b064a255b0e280135e",
+    "research_lab/poly_espn_sbor.py": "b3137a186f9087f922e59319ccb18fdc5a8d1cbe9fec22e853ac95b0b2ca36af",
+    "research_lab/prereg/PREREG_FANDING_MEZHBIRZHEVOY_HVOST_2026_10_29.md": "e9b5cbd1d663be3e0d63ca0df1ad3785788e6ed71ec7c025b3305af7c904a6bb"
+  },
+  "review_kind": "STATIC_SOURCE_AND_OFFICIAL_API_DOCS_ONLY",
+  "funding_judge_run": false,
+  "ESPN_network_probe": false,
+  "live_changes": false,
+  "research_code_changes": false,
+  "orders_allowed": false
+}

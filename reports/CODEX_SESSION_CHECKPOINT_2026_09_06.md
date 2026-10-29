@@ -1,5 +1,11 @@
 # Codex session checkpoint — 2026-09-06
 
+29Oct research intake delta — read RESEARCH_NEXT_LIVE_INTAKE_2026_10_29.md.
+Publishedorigin47b9028 nowverified; pendingpublicationoldclaim superseded.
+StaticfundingH4close/starttime mismatch and ESPNclock/QA gaps OPEN; nojudgerun,
+producerchange ornewcollector. Polymarket fact→executablebook is proposed next
+boundedDATAgate, existingLIVE/Monthly and financial queue remainunchanged.
+
 CURRENT29Oct07:20UTC — live operations verified; SHORT_HVOST draft reviewed, NOT_LIVE_READY
 
 Read TRADING_OPERATIONS_AND_SHORT_HVOST_INTAKE_2026_10_29.md FIRST.
