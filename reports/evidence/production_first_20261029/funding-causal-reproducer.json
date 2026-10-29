@@ -1,0 +1,32 @@
+{
+  "schema": "FUNDING_PUBLISHED_TIME_DEFECT_REPRODUCER_V1",
+  "status": "DEFECT_REPRODUCED",
+  "source_ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+  "synthetic_only": true,
+  "bar_open_ms": 0,
+  "close_available_after_ms": 14400000,
+  "known_open_price": 100,
+  "perturbed_future_closes": [
+    120,
+    150
+  ],
+  "returned_entry_price_map": [
+    [
+      [
+        0,
+        120.0
+      ]
+    ],
+    [
+      [
+        0,
+        150.0
+      ]
+    ]
+  ],
+  "interpretation": "Changing H4 future close changes price stored at the same bar-open key used by published main for entry",
+  "producer_changed": false,
+  "prereg_changed": false,
+  "judge_run": false,
+  "network_requests": 0
+}

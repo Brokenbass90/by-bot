@@ -1,0 +1,579 @@
+{
+  "schema": "ALPACA_SAME_DATA_PAIRED_REPLAY_V1",
+  "status": "PASS_RESEARCH_REPLAY_NOT_PRODUCTION_ACCEPTANCE",
+  "observed_ms": 1793262794443,
+  "period": [
+    "2023-10-13",
+    "2026-09-04"
+  ],
+  "sessions": 726,
+  "universe": [
+    "AAPL",
+    "ABBV",
+    "ABNB",
+    "ADBE",
+    "ADSK",
+    "AMD",
+    "AMZN",
+    "AVGO",
+    "BAC",
+    "CAT",
+    "COIN",
+    "COST",
+    "CRM",
+    "CRWD",
+    "CVX",
+    "DDOG",
+    "GE",
+    "GOOGL",
+    "GS",
+    "HD",
+    "INTU",
+    "ISRG",
+    "JNJ",
+    "JPM",
+    "KO",
+    "LLY",
+    "LMT",
+    "MA",
+    "MDB",
+    "META",
+    "MRK",
+    "MSFT",
+    "NET",
+    "NFLX",
+    "NKE",
+    "NOW",
+    "NVDA",
+    "ORCL",
+    "PANW",
+    "PG",
+    "PLTR",
+    "QCOM",
+    "REGN",
+    "SBUX",
+    "SCHW",
+    "SHOP",
+    "SNOW",
+    "SPY",
+    "TSLA",
+    "TSM",
+    "TXN",
+    "UBER",
+    "UNH",
+    "V",
+    "WFC",
+    "WMT",
+    "XOM",
+    "XYZ"
+  ],
+  "universe_sha256": "d88f7598819afa8b2cc2fabec197f45a7bcd9dfb8f50d30c1bf2698d671295fa",
+  "stock_cost_bps_per_side": 20,
+  "fund_cost_bps_per_side": 3,
+  "arms": {
+    "monthly_cash": {
+      "cagr_pct": 8.89235712465435,
+      "maxDD_pct": 7.884257001261819,
+      "calmar": 1.127862412809627,
+      "vosstanovlenie_max_sessiy": 210,
+      "itog": 1.279578925882501,
+      "oborot_dol_kapitala": 0.0,
+      "sdelok_overleya": 0,
+      "svobodno_srednee": 0.8098007236388807,
+      "ekspoziciya_srednyaya": 0.1901992763611194,
+      "potrebnost_likvidnosti_max": 0.0,
+      "worst_month_pct": -4.3352180400152545,
+      "months": 36,
+      "negative_months": 9
+    },
+    "monthly_idle_25_75": {
+      "cagr_pct": 15.508797300558118,
+      "maxDD_pct": 8.198298016997086,
+      "calmar": 1.8917093850948785,
+      "vosstanovlenie_max_sessiy": 189,
+      "itog": 1.5177570060357155,
+      "dolya_v_fonde_srednyaya": 0.8171612760856122,
+      "oborot_dol_kapitala": 22.182508403902432,
+      "sdelok_overleya": 70,
+      "potrebnost_likvidnosti_max": 0.6388352159286675,
+      "sessiy_prodazha_fonda": 22,
+      "dohod_overleya_po_godam_usd": {
+        "2023": 30.94,
+        "2024": 92.44,
+        "2025": 61.31,
+        "2026": 53.49
+      },
+      "worst_month_pct": -4.357796606053732,
+      "months": 36,
+      "negative_months": 9
+    },
+    "monthly_idle_25_75_fund10bps": {
+      "cagr_pct": 14.912168611004617,
+      "maxDD_pct": 8.317994469243528,
+      "calmar": 1.792760101746111,
+      "vosstanovlenie_max_sessiy": 193,
+      "itog": 1.4951808540551643,
+      "dolya_v_fonde_srednyaya": 0.8159096565351506,
+      "oborot_dol_kapitala": 22.354911963428187,
+      "sdelok_overleya": 71,
+      "potrebnost_likvidnosti_max": 0.6392836606461662,
+      "sessiy_prodazha_fonda": 23,
+      "dohod_overleya_po_godam_usd": {
+        "2023": 30.22,
+        "2024": 88.0,
+        "2025": 52.44,
+        "2026": 44.94
+      }
+    }
+  },
+  "months": {
+    "monthly_cash": {
+      "2023-10": 0.0,
+      "2023-11": 0.0,
+      "2023-12": 0.0,
+      "2024-01": 0.0,
+      "2024-02": 0.0,
+      "2024-03": 0.0,
+      "2024-04": 0.0,
+      "2024-05": 0.0,
+      "2024-06": 0.0,
+      "2024-07": 0.0,
+      "2024-08": -0.7369092118117537,
+      "2024-09": 1.4356144284301653,
+      "2024-10": -0.8444119584249843,
+      "2024-11": 4.72803300626643,
+      "2024-12": 6.423407462615183,
+      "2025-01": -4.3352180400152545,
+      "2025-02": 8.137530349950062,
+      "2025-03": -3.728639525037336,
+      "2025-04": 0.0,
+      "2025-05": 0.0,
+      "2025-06": 8.22958814156074,
+      "2025-07": 4.444565985059823,
+      "2025-08": 1.2072455102843938,
+      "2025-09": 1.96153117732345,
+      "2025-10": 3.754330194024602,
+      "2025-11": -0.13101794992431692,
+      "2025-12": -1.7201120446247997,
+      "2026-01": -2.631466396975668,
+      "2026-02": 0.983440354279419,
+      "2026-03": -3.9286024008937104,
+      "2026-04": 0.014870624267593335,
+      "2026-05": 2.042587149253028,
+      "2026-06": 0.7265831182552418,
+      "2026-07": 0.30809956056410126,
+      "2026-08": 2.02972430673245,
+      "2026-09": -2.197759272781674
+    },
+    "monthly_idle_25_75": {
+      "2023-10": -0.8439464784678496,
+      "2023-11": 2.5727985948198917,
+      "2023-12": 1.3636829927324845,
+      "2024-01": 0.718583929562211,
+      "2024-02": 1.6258754567757938,
+      "2024-03": 1.0476039538810378,
+      "2024-04": -0.6783203323998954,
+      "2024-05": 1.5947278968271528,
+      "2024-06": 1.0892328576839194,
+      "2024-07": 0.6362702431726541,
+      "2024-08": 0.7869018003622275,
+      "2024-09": 2.055789181896084,
+      "2024-10": -0.957538234629074,
+      "2024-11": 5.283286250774899,
+      "2024-12": 5.2910108601797345,
+      "2025-01": -3.400782810127667,
+      "2025-02": 6.696490840719438,
+      "2025-03": -4.010126809186209,
+      "2025-04": 0.2539818351273704,
+      "2025-05": 1.8434862289910425,
+      "2025-06": 7.803368344535766,
+      "2025-07": 4.441092240517164,
+      "2025-08": 1.7203186908935297,
+      "2025-09": 2.218673050662523,
+      "2025-10": 4.007654649057191,
+      "2025-11": 0.16078776811681017,
+      "2025-12": -1.4248518972675317,
+      "2026-01": -1.899342430086215,
+      "2026-02": 0.668794377404347,
+      "2026-03": -4.357796606053732,
+      "2026-04": 2.7620796137074244,
+      "2026-05": 2.7000981579821115,
+      "2026-06": 0.5284469498424205,
+      "2026-07": 0.43515477506064215,
+      "2026-08": 2.2943672854844444,
+      "2026-09": -1.7941899306188724
+    }
+  },
+  "selection_count": 35,
+  "trade_count": 70,
+  "inputs": {
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/AAPL_M5.csv": {
+      "sha256": "0987701653eec6fd483c23d3bfcb02e7de99aa5aec5236c529ddb0665a8a560e",
+      "size": 422313,
+      "mtime_ns": 1789383745894778585,
+      "inode": 485465548
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/ABBV_M5.csv": {
+      "sha256": "4e3962cb57d71de0ad84f8fdac62f20d289275816e6b9303028825177cf8635a",
+      "size": 417267,
+      "mtime_ns": 1789383746467626356,
+      "inode": 485465562
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/ABNB_M5.csv": {
+      "sha256": "9e3b81f9613fd327e7ff19654e2b354f347edee58a70214c2f3ec10f008eff2e",
+      "size": 417102,
+      "mtime_ns": 1789383747037515151,
+      "inode": 485465568
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/ADBE_M5.csv": {
+      "sha256": "e24bb0511295fe2e1a9894d4c4325de5bd60b89963d0881ce7df8258c6f037dd",
+      "size": 416976,
+      "mtime_ns": 1789383747650494782,
+      "inode": 485465571
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/ADSK_M5.csv": {
+      "sha256": "de97ec9b273be14732982bc14583779c5ff2069deccce0a1af3c42e6dfbaa5b8",
+      "size": 415233,
+      "mtime_ns": 1789383748228313206,
+      "inode": 485465585
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/AMD_M5.csv": {
+      "sha256": "46ac4838d384a684f17ef8bdaf68b6ba3722dc7a4c9ea8329f139e42327ef29e",
+      "size": 421488,
+      "mtime_ns": 1789383748828439928,
+      "inode": 485465588
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/AMZN_M5.csv": {
+      "sha256": "bfc033f689f25dae0cd54522561276a3a689ccbc8ecba88d617cbe85e85ab30e",
+      "size": 422210,
+      "mtime_ns": 1789383749466885625,
+      "inode": 485465630
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/AVGO_M5.csv": {
+      "sha256": "7e2856337134d9a3cb0ce19e1f4c8ac91a272811e6aea0c3d5a657e2f1f02407",
+      "size": 419189,
+      "mtime_ns": 1789383750666001771,
+      "inode": 485465725
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/BAC_M5.csv": {
+      "sha256": "44742f102e455ce196ab17139a8b6bb675c77d20ce8301a7c13565d062cda834",
+      "size": 401674,
+      "mtime_ns": 1789383751258796533,
+      "inode": 485465753
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/CAT_M5.csv": {
+      "sha256": "4f9cdf0adff4b685ab63b520fdf5745292799d166125133eacd060769453258e",
+      "size": 416848,
+      "mtime_ns": 1789383751912242984,
+      "inode": 485465776
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/COIN_M5.csv": {
+      "sha256": "29eb34f3be5633dae787b99e22a999295935198ea537b4940eb45781fd592ba1",
+      "size": 418408,
+      "mtime_ns": 1789383752548970004,
+      "inode": 485465798
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/COST_M5.csv": {
+      "sha256": "9e3e7ae55a131609d27ffd37db2ae5b759c394e2cdd8dc573a4815ca9d58e1a5",
+      "size": 418776,
+      "mtime_ns": 1789383753179554321,
+      "inode": 485465813
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/CRM_M5.csv": {
+      "sha256": "a193919b20e19b08c1666a103f57e86ba2ec54f795d43e578135cdbe41cacb99",
+      "size": 418376,
+      "mtime_ns": 1789383753831811265,
+      "inode": 485465822
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/CRWD_M5.csv": {
+      "sha256": "05975bcc254fb1029e671489131271997238bf3bc79d1039758fb515132eb2ca",
+      "size": 406242,
+      "mtime_ns": 1789383754931938207,
+      "inode": 485465825
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/CVX_M5.csv": {
+      "sha256": "de75db4eaa9f2edf43d4b93abc05a7f04b971611392a396ce6c878c3bfe787bc",
+      "size": 418598,
+      "mtime_ns": 1789383755576617398,
+      "inode": 485465831
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/DDOG_M5.csv": {
+      "sha256": "7e613408e5390e6252313353bf677cfd1de0c2f90819aacffe88a63ef744b13d",
+      "size": 416261,
+      "mtime_ns": 1789383756318936994,
+      "inode": 485465836
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/GE_M5.csv": {
+      "sha256": "5311f4259a7ca17d015a35c6fcedaae640ed2196cc15a927b0345aecd424e56f",
+      "size": 415961,
+      "mtime_ns": 1789383757173725458,
+      "inode": 485465840
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/GOOGL_M5.csv": {
+      "sha256": "dc40036d4645ad865cb23e644c5c7a2433bec1f7edc245150b8eb695a0c19cd9",
+      "size": 421858,
+      "mtime_ns": 1789383757806828956,
+      "inode": 485465864
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/GS_M5.csv": {
+      "sha256": "2b901f979dd74f4b3a49467e6adb4b03b11bafdd4c46d0e13ecf5915a099bcc7",
+      "size": 418440,
+      "mtime_ns": 1789383758388354319,
+      "inode": 485465869
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/HD_M5.csv": {
+      "sha256": "c9e0b8174509877f0369a5353472661495b43dc8c9c037d3078e04ad36a58ead",
+      "size": 416841,
+      "mtime_ns": 1789383758999152396,
+      "inode": 485465872
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/INTU_M5.csv": {
+      "sha256": "a710994d55fa544ea31486bef61871bb6822681cc9e74014ab73a39f9dd8b71a",
+      "size": 415635,
+      "mtime_ns": 1789383759643380001,
+      "inode": 485465877
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/ISRG_M5.csv": {
+      "sha256": "1ab468ee9a5ed85427f60ac1444a64c9bdcb5fb620ba5c2b9b8bf1e3a833d53f",
+      "size": 415631,
+      "mtime_ns": 1789383760240925500,
+      "inode": 485465885
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/JNJ_M5.csv": {
+      "sha256": "71e31420401ba04615479428d0def0d5ca6db79578d619d6bbc24f6bf80da2c6",
+      "size": 417940,
+      "mtime_ns": 1789383761684575869,
+      "inode": 485465912
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/JPM_M5.csv": {
+      "sha256": "dec58aa68ea28c7bfc166e81707fb9fa0a620b58294ef15cc6608561a8d3db92",
+      "size": 418411,
+      "mtime_ns": 1789383762382851833,
+      "inode": 485465920
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/KO_M5.csv": {
+      "sha256": "660e429b40f04b6b7df306aaa5baa957e383be6ff3e195dabd17356131d564ee",
+      "size": 400041,
+      "mtime_ns": 1789383762980987460,
+      "inode": 485465925
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/LLY_M5.csv": {
+      "sha256": "b9255fc8eaa04f7c655b7b5fb941eeb3b26714a94926adda83dbf0f62288b66b",
+      "size": 421264,
+      "mtime_ns": 1789383763563177910,
+      "inode": 485465929
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/LMT_M5.csv": {
+      "sha256": "5abd76b42ea7999651a97bc3d7e1c0566ec0541ea6962d021584c8b2c2abce97",
+      "size": 414868,
+      "mtime_ns": 1789383764174398822,
+      "inode": 485465932
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/MA_M5.csv": {
+      "sha256": "0819b2b8f1d0b1bb3b878aad39db819b28ff7feea5b4333ba391ac83527a467b",
+      "size": 416723,
+      "mtime_ns": 1789383764864535821,
+      "inode": 485465938
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/MDB_M5.csv": {
+      "sha256": "096132ace7d4c3549cd06a0fc382b544656dae57d72813d70cc93bcefb55691b",
+      "size": 415661,
+      "mtime_ns": 1789383765446765980,
+      "inode": 485465942
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/META_M5.csv": {
+      "sha256": "355791bdf3fd91f723d20cc763a5043edea76851239cf2ac6333509961af5c9e",
+      "size": 420240,
+      "mtime_ns": 1789383766045912863,
+      "inode": 485465945
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/MRK_M5.csv": {
+      "sha256": "92c2f5626bcad22e93ba9a15e386ce04ac9f1f5967f5b8a54c78113fff7cf917",
+      "size": 412293,
+      "mtime_ns": 1789383766631206707,
+      "inode": 485465949
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/MSFT_M5.csv": {
+      "sha256": "63e30ae101b46fc456a87891e1cdf1629d439974290ccc849af7eac36f2eb62f",
+      "size": 421384,
+      "mtime_ns": 1789383767213417991,
+      "inode": 485465957
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/NET_M5.csv": {
+      "sha256": "4d37acbb1971aedafd3facf7f36940f49a3ea79357e443f95e3cf771b30aef68",
+      "size": 409253,
+      "mtime_ns": 1789383767812640749,
+      "inode": 485465962
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/NFLX_M5.csv": {
+      "sha256": "775c83e3f4318f583a5951b9eb4873f84ba88291a0c153cf12edcc6bb0e1c281",
+      "size": 402976,
+      "mtime_ns": 1789383768795684172,
+      "inode": 485465980
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/NKE_M5.csv": {
+      "sha256": "b1dc5c47588122bb612a38ca1a0d062cb292c953259696db694518bb9cada8d3",
+      "size": 402703,
+      "mtime_ns": 1789383769388616394,
+      "inode": 485465985
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/NOW_M5.csv": {
+      "sha256": "252517dca38538b715492b28a9694400fc7566aa0bfc649bb85c3daff1437660",
+      "size": 415645,
+      "mtime_ns": 1789383771733377747,
+      "inode": 485466011
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/NVDA_M5.csv": {
+      "sha256": "488f2076838487116c3695b14ba38c9dacdc17a7d70ee6e19e812ce04291e284",
+      "size": 421097,
+      "mtime_ns": 1789383772951223170,
+      "inode": 485466025
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/ORCL_M5.csv": {
+      "sha256": "0e79a32cfbbc4340f19a738ee1620a569f55d4a673841caae31feb0c27adf36e",
+      "size": 419741,
+      "mtime_ns": 1789383773559987484,
+      "inode": 485466032
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/PANW_M5.csv": {
+      "sha256": "022a689ddf94af3fd91feeb5ee7acf44f83615718db6347eb208980c60ffc986",
+      "size": 417412,
+      "mtime_ns": 1789383774484009436,
+      "inode": 485466043
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/PG_M5.csv": {
+      "sha256": "96e4e7f06bf28878357b424f28c1a9850b55cb4d74b2ea68bffba340ff112bbe",
+      "size": 417938,
+      "mtime_ns": 1789383775095574308,
+      "inode": 485466046
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/PLTR_M5.csv": {
+      "sha256": "4e8a0ecfee111b2c2eefc84e209f0eea05a5a0826aa085beb33c22bfb967871e",
+      "size": 412683,
+      "mtime_ns": 1789383776556357028,
+      "inode": 485466071
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/QCOM_M5.csv": {
+      "sha256": "f95cd77ecd6ed83dc8f9b67971b5377251c7fef03f9c7843256737a53d4dd374",
+      "size": 418491,
+      "mtime_ns": 1789383777187113471,
+      "inode": 485466081
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/QQQ_M5.csv": {
+      "sha256": "aada8890dcba03e796821c6e93dd341175774c7153bfdd1fadac56c95ade0586",
+      "size": 422198,
+      "mtime_ns": 1789383777860619039,
+      "inode": 485466093
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/REGN_M5.csv": {
+      "sha256": "5941530b184da095de0266f50f5ea99ba214e8180db18fba8a9f12bb87a3708f",
+      "size": 415449,
+      "mtime_ns": 1789383778552718884,
+      "inode": 485466099
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/SBUX_M5.csv": {
+      "sha256": "332fd6be74aeed8f70610c950855c7bf6a28de9f88682734f29ba710a2deeba1",
+      "size": 402333,
+      "mtime_ns": 1789383779144505223,
+      "inode": 485466107
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/SCHW_M5.csv": {
+      "sha256": "eace6adfd5f5e33f84a1b783904dcdff27842668c9ba3f305dc41fe7bf43d453",
+      "size": 400488,
+      "mtime_ns": 1789383779726734966,
+      "inode": 485466110
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/SHOP_M5.csv": {
+      "sha256": "897265e8b88d78bd935a9587c96c8ae9951595dd345a4abc0fbbe03eb261392c",
+      "size": 410259,
+      "mtime_ns": 1789383780367107090,
+      "inode": 485466114
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/SNOW_M5.csv": {
+      "sha256": "18cb3c9990f89a90128b6248100fe2ce671702c4903d369de3c881fb621e6751",
+      "size": 417666,
+      "mtime_ns": 1789383780968762905,
+      "inode": 485466122
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/SPY_M5.csv": {
+      "sha256": "57f5636abc47d199ad3a13ce531b2570908b01968e0884f9fd50450842d95f5b",
+      "size": 423143,
+      "mtime_ns": 1789383781615301815,
+      "inode": 485466130
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/TSLA_M5.csv": {
+      "sha256": "1462ace79fdaa6d85b85f0a1f9bc803034b5351b1688f698f813e0a65a8cfb72",
+      "size": 423926,
+      "mtime_ns": 1789383782205809314,
+      "inode": 485466133
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/TSM_M5.csv": {
+      "sha256": "48547a3563aa1ac44733a441be4278a8eadac54ebec8c2d5a8970723b6e9d0c0",
+      "size": 419061,
+      "mtime_ns": 1789383782801333801,
+      "inode": 485466136
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/TXN_M5.csv": {
+      "sha256": "2e153dbdc95068fd466f0418211af16721875ed7bcc15dad3503e839246c4d4b",
+      "size": 417442,
+      "mtime_ns": 1789383783395149070,
+      "inode": 485466139
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/UBER_M5.csv": {
+      "sha256": "c87b5dc28f57bba5a0374a701e015ab5b1f65f27e1ff0749f2bd8cc02894bc24",
+      "size": 401197,
+      "mtime_ns": 1789383783975319633,
+      "inode": 485466158
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/UNH_M5.csv": {
+      "sha256": "7c21c3f27fb3feacaff395a6735f04d305b2f978f69082a26afca11def5c82a1",
+      "size": 417913,
+      "mtime_ns": 1789383784568888901,
+      "inode": 485466161
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/V_M5.csv": {
+      "sha256": "2d023ba8d6697049fa8e97324ef641b9cba4799770df5e53a80bf8bececf84e0",
+      "size": 417471,
+      "mtime_ns": 1789383785182630911,
+      "inode": 485466165
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/WFC_M5.csv": {
+      "sha256": "6b1e9364a72606b91def1d088f0c6bf73d5fd1f84a851488f7aad655711aa775",
+      "size": 400673,
+      "mtime_ns": 1789383785824203250,
+      "inode": 485466168
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/WMT_M5.csv": {
+      "sha256": "fb6191af937abe741f0aa297ee224c81e4fbff1e5bbc05cd06c3d693c1566751",
+      "size": 408070,
+      "mtime_ns": 1789383786985835927,
+      "inode": 485466194
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/XOM_M5.csv": {
+      "sha256": "1b3f35c2dbeaea16aae209924d3a2e35b798cd58f3a239181ad8abebb009e917",
+      "size": 420356,
+      "mtime_ns": 1789383787586793904,
+      "inode": 485466197
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/equities_1h_parity_20260914/XYZ_M5.csv": {
+      "sha256": "86903b5232f3a7a501d5b6e1f6b045e143e60cb7127a07fd565ada5143f723e2",
+      "size": 225428,
+      "mtime_ns": 1789383788073892089,
+      "inode": 485466201
+    },
+    "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/alpaca_bil_sgov_20261019/all/bars/BIL.json": {
+      "sha256": "fc099e17a78ae37d814631ebe9a8213833adbdc913b447dab9b6f78f59d67dfe",
+      "size": 254245,
+      "mtime_ns": 1792391818008909627,
+      "inode": 501733620
+    }
+  },
+  "production_400_280_40_loss_latch_simulated": false,
+  "internal_synthetic_rebalance_cost_charged": false,
+  "source_refs": [
+    "47b90288c55114ad7e730377c2265b54c5a97406",
+    "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6"
+  ],
+  "broker_requests": 0,
+  "broker_writes": 0
+}

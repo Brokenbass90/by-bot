@@ -1,0 +1,36 @@
+{
+  "schema": "PRODUCTION_FIRST_EXECUTION_LIMITS_V1",
+  "polymarket": {
+    "executable_positive_case_proven": false,
+    "market_universe_covered": "13 matched NBA/NHL finished games; not exhaustive sports universe",
+    "current_rejections_proven": 13,
+    "historical_absence_of_alpha_proven": false,
+    "first_final_capture_required": true,
+    "net_pnl": "NOT_ESTIMABLE_NO_PROVEN_ENTRY"
+  },
+  "funding": {
+    "status": "BLOCKED_MEASUREMENT_REPAIR_AND_CLAUDE_ACK",
+    "request_delivered": true,
+    "agreement_received": false,
+    "producer_modified": false,
+    "new_backtest_run": false
+  },
+  "alpaca": {
+    "status": "RESEARCH_CANDIDATE_NOT_PRODUCTION_APPROVED",
+    "same_inputs_two_arms": true,
+    "warmup_sessions": 200,
+    "internal_rebalance_costs_missing": true,
+    "live_reserve_and_loss_latch_not_simulated": true,
+    "source_pair": "Yahoo cached stock/SPY bars + previously delivered Alpaca SIP all-adjusted BIL",
+    "new_holdout_or_independent_edge_proof": false,
+    "ten_year_numbers_reproduced": false
+  },
+  "harness_setup_notes": [
+    "Alpaca staging initially lacked forex dependency; added exact published package before calculation",
+    "Own paired harness initially imported absent Codex helper; read identical57+SPY list from frozen config instead",
+    "Funding isolated function fixture initially omitted W; supplied published global to reproduce defect"
+  ],
+  "production_changes": 0,
+  "new_financial_authority": 0,
+  "new_services": 0
+}

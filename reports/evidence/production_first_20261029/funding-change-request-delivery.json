@@ -1,0 +1,9 @@
+{
+  "status": "DELIVERED_TO_EXISTING_RESEARCH_DATA_FOLDER_ACK_PENDING",
+  "path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/CODEX_FUNDING_TIME_CHANGE_REQUEST_20261029.md",
+  "sha256": "0e15fb582be353a6f723dca69838a2735fd343c0aef99ebff08a8f91c5f793a6",
+  "research_ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+  "producer_changes": 0,
+  "research_judge_runs": 0,
+  "owner_authorization": "Explicit current request to coordinate the H4 correction with Claude"
+}

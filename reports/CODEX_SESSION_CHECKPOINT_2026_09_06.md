@@ -1,5 +1,23 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — production-first three decisions completed to external gates
+
+Read PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md FIRST. Poly54publicGET/45sWS,
+13matchedclosed/notaccepting/books404;0observedFINALtransitions/0afterfactbooks.
+NO_PROVEN_EXECUTABLE_OPPORTUNITY, notstructuralKILL; netN/A. No newcollector/executor.
+Fundingpublished47bH4time defect syntheticREPRODUCED; exactrequest delivered toClaude
+DATAfolder ACK_PENDING, noproducer/prereg/cache/judge edits or agreedrepair yet.
+Alpaca57+SPY/QQQexcluded paired526sessions after200warmup2024Aug→2026Sep:
+cash12.51%CAGR/DD7.88 vsidle25/75 17.70/DD8.51;fund10bps16.85/DD8.79.
+Researchproxyonly: internalrebalancecosts/live400/280/40/8 notmodeled, no newholdout
+or10yearreplay. Shadowcandidate, no automaticproduction switch afterfirstcycle.
+Verifiedastra/high criticalreviewCLEAR; exactsavedcurves/hashes checked. PUMP4sameLIVE
+flat/0restarts/818853, Monthlyunit/sourcehealthy unchanged; noGO/risk/unit changes.
+Nextexternalgates: cleanprospectiveFINAL, ClaudeACK+repair, ETFaccount/risk acceptance.
+
+---
+Earlier dated entries below are history.
+
 29Oct research intake delta — read RESEARCH_NEXT_LIVE_INTAKE_2026_10_29.md.
 Publishedorigin47b9028 nowverified; pendingpublicationoldclaim superseded.
 StaticfundingH4close/starttime mismatch and ESPNclock/QA gaps OPEN; nojudgerun,

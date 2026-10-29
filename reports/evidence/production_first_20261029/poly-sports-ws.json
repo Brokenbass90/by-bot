@@ -1,0 +1,55 @@
+{
+  "url": "wss://sports-api.polymarket.com/ws",
+  "started_ms": 1793262425898,
+  "connected_ms": 1793262426168,
+  "finished_ms": 1793262471245,
+  "bounded_seconds": 45,
+  "messages": [
+    {
+      "received_ms": 1793262427998,
+      "raw": "{\"gameId\":1753682,\"leagueAbbreviation\":\"cs2\",\"homeTeam\":\"FUT Esports\",\"awayTeam\":\"Nemiga\",\"status\":\"running\",\"score\":\"000-000|0-0|Bo3\",\"period\":\"1/3\",\"live\":true,\"ended\":false}",
+      "sha256": "ac24bbfdd436bbfedb69785fae3673192d442c68c01b20c77649f41405b2120c"
+    },
+    {
+      "received_ms": 1793262439768,
+      "raw": "{\"gameId\":1758275,\"leagueAbbreviation\":\"mlbb\",\"homeTeam\":\"Team Rey\",\"awayTeam\":\"Team Vamos\",\"status\":\"running\",\"score\":\"000-000|2-0|Bo5\",\"period\":\"3/5\",\"live\":true,\"ended\":false}",
+      "sha256": "a086d555cf7906ad9b5381d3ecf6ebf23bcf9260da89fcd8d0218f3dc79b2898"
+    },
+    {
+      "received_ms": 1793262448133,
+      "raw": "{\"gameId\":1753682,\"leagueAbbreviation\":\"cs2\",\"homeTeam\":\"FUT Esports\",\"awayTeam\":\"Nemiga\",\"status\":\"running\",\"score\":\"000-000|0-0|Bo3\",\"period\":\"1/3\",\"live\":true,\"ended\":false}",
+      "sha256": "ac24bbfdd436bbfedb69785fae3673192d442c68c01b20c77649f41405b2120c"
+    },
+    {
+      "received_ms": 1793262459846,
+      "raw": "{\"gameId\":1758275,\"leagueAbbreviation\":\"mlbb\",\"homeTeam\":\"Team Rey\",\"awayTeam\":\"Team Vamos\",\"status\":\"running\",\"score\":\"000-000|2-0|Bo5\",\"period\":\"3/5\",\"live\":true,\"ended\":false}",
+      "sha256": "a086d555cf7906ad9b5381d3ecf6ebf23bcf9260da89fcd8d0218f3dc79b2898"
+    },
+    {
+      "received_ms": 1793262462267,
+      "raw": "{\"gameId\":6524097,\"leagueAbbreviation\":\"challenger\",\"homeTeam\":\"Naoya Honda\",\"awayTeam\":\"Liam Broady\",\"status\":\"inprogress\",\"score\":\"1-6, 7-6(7-3), 2-2\",\"period\":\"S3\",\"live\":true,\"ended\":false}",
+      "sha256": "681fe6e38292d24c9c6b53e01ca87fa72af205e9b396f67d5adb4b775cc81871"
+    },
+    {
+      "received_ms": 1793262462339,
+      "raw": "{\"gameId\":6523140,\"leagueAbbreviation\":\"challenger\",\"homeTeam\":\"Yi Zhou\",\"awayTeam\":\"Jake Delaney\",\"status\":\"inprogress\",\"score\":\"3-1\",\"period\":\"S1\",\"live\":true,\"ended\":false}",
+      "sha256": "ba837d86d796e4d0fe06eddc2ee6ac959ad69231281abd0b54f20963210b0fa2"
+    },
+    {
+      "received_ms": 1793262462438,
+      "raw": "{\"gameId\":6520171,\"leagueAbbreviation\":\"wta\",\"homeTeam\":\"Elena Rybakina\",\"awayTeam\":\"Yulia Putintseva\",\"status\":\"inprogress\",\"score\":\"4-1\",\"period\":\"S1\",\"live\":true,\"ended\":false}",
+      "sha256": "fb364b248fad496d8a9827f505415364dfb091613e19e01f0d7c55c4fc19d2c5"
+    },
+    {
+      "received_ms": 1793262462444,
+      "raw": "{\"gameId\":6523560,\"leagueAbbreviation\":\"wta\",\"homeTeam\":\"Maria Timofeeva\",\"awayTeam\":\"Xinran Sun\",\"status\":\"inprogress\",\"score\":\"3-6, 2-3\",\"period\":\"S2\",\"live\":true,\"ended\":false}",
+      "sha256": "c38be1a297d293d3657848f55798e919908df6b01e9e34439407e7f90d7cba34"
+    },
+    {
+      "received_ms": 1793262468239,
+      "raw": "{\"gameId\":1753682,\"leagueAbbreviation\":\"cs2\",\"homeTeam\":\"FUT Esports\",\"awayTeam\":\"Nemiga\",\"status\":\"running\",\"score\":\"000-000|0-0|Bo3\",\"period\":\"1/3\",\"live\":true,\"ended\":false}",
+      "sha256": "ac24bbfdd436bbfedb69785fae3673192d442c68c01b20c77649f41405b2120c"
+    }
+  ],
+  "error": null
+}

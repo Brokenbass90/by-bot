@@ -1,0 +1,177 @@
+{
+  "poly_monitor/knigi.jsonl": {
+    "rows": 25710,
+    "parse_errors": 0,
+    "keys": [
+      "ask",
+      "bid",
+      "gl_ask",
+      "gl_bid",
+      "id",
+      "t"
+    ],
+    "first": [
+      {
+        "id": "2589812",
+        "t": 1793115958,
+        "bid": 0.944,
+        "ask": 0.945,
+        "gl_bid": 519347.72,
+        "gl_ask": 447298.19
+      }
+    ],
+    "last": [
+      {
+        "id": "5170742",
+        "t": 1793262081,
+        "bid": 0.005,
+        "ask": 0.006,
+        "gl_bid": 126.16,
+        "gl_ask": 647.68
+      }
+    ]
+  },
+  "poly_monitor/rynki.jsonl": {
+    "rows": 519,
+    "parse_errors": 0,
+    "keys": [
+      "cid",
+      "closed",
+      "closedTime",
+      "id",
+      "konec",
+      "obem",
+      "outcomePrices",
+      "sob",
+      "t",
+      "token",
+      "umaResolutionStatus",
+      "vopros"
+    ],
+    "first": [
+      {
+        "sob": "dobavlen",
+        "t": "2026-10-27T15:45:58+00:00",
+        "id": "2589812",
+        "cid": "0xdf9bf27ee5757c55b44b8b9826ddc9ec3a8809aa3278634c45edbb7fc8f1a3e3",
+        "vopros": "Will there be no change in Fed interest rates after the October 2026 meeting?",
+        "konec": "2026-10-29T03:59:00+00:00",
+        "obem": 24983750.467400003,
+        "token": "111061902544814266207267295505639408607400625795891618462682726460921782993748"
+      }
+    ],
+    "last": [
+      {
+        "sob": "vybyl",
+        "t": "2026-10-29T06:36:01+00:00",
+        "id": "1235549",
+        "closed": true,
+        "outcomePrices": "[\"0\", \"1\"]",
+        "umaResolutionStatus": "resolved",
+        "closedTime": "2026-10-29 06:15:00.846247+00"
+      }
+    ]
+  },
+  "poly_monitor/novosti.jsonl": {
+    "rows": 6519,
+    "parse_errors": 0,
+    "keys": [
+      "id",
+      "kl",
+      "pub",
+      "uvideli",
+      "zagolovok"
+    ],
+    "first": [
+      {
+        "kl": "2589812|The Fed raised rates for the first time since 2023. What it means for car loans - West Hawaii Today",
+        "id": "2589812",
+        "pub": "2026-10-27T15:30:50+00:00",
+        "uvideli": "2026-10-27T15:45:58+00:00",
+        "zagolovok": "The Fed raised rates for the first time since 2023. What it means for car loans - West Hawaii Today"
+      }
+    ],
+    "last": [
+      {
+        "kl": "4118937|The Council of Europe’s support for Ukraine - Council of Europe",
+        "id": "4118937",
+        "pub": "2026-10-29T06:55:55+00:00",
+        "uvideli": "2026-10-29T08:16:58+00:00",
+        "zagolovok": "The Council of Europe’s support for Ukraine - Council of Europe"
+      }
+    ]
+  },
+  "poly_espn/matchi.jsonl": {
+    "rows": 84,
+    "parse_errors": 0,
+    "keys": [
+      "clock",
+      "completed",
+      "detal",
+      "id",
+      "komandy",
+      "liga",
+      "nazvanie",
+      "period",
+      "start",
+      "state",
+      "t"
+    ],
+    "first": [
+      {
+        "t": 1793259742,
+        "liga": "basketball/nba",
+        "id": "401909881",
+        "nazvanie": "Miami Heat at Atlanta Hawks",
+        "start": "2026-10-28T23:00Z",
+        "state": "post",
+        "completed": true,
+        "detal": "Final",
+        "period": 4,
+        "clock": "12:00",
+        "komandy": [
+          [
+            "Atlanta Hawks",
+            "117",
+            "home",
+            false
+          ],
+          [
+            "Miami Heat",
+            "129",
+            "away",
+            true
+          ]
+        ]
+      }
+    ],
+    "last": [
+      {
+        "t": 1793259753,
+        "liga": "soccer/usa.1",
+        "id": "761923",
+        "nazvanie": "Chicago Fire FC at Colorado Rapids",
+        "start": "2026-11-01T01:30Z",
+        "state": "pre",
+        "completed": false,
+        "detal": "Scheduled",
+        "period": null,
+        "clock": "0'",
+        "komandy": [
+          [
+            "Colorado Rapids",
+            "0",
+            "home",
+            false
+          ],
+          [
+            "Chicago Fire FC",
+            "0",
+            "away",
+            false
+          ]
+        ]
+      }
+    ]
+  }
+}

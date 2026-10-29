@@ -1,0 +1,42 @@
+{
+  "poly_monitor/knigi.jsonl": {
+    "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/poly_monitor/knigi.jsonl",
+    "source_inode": 506734896,
+    "source_mtime_ns": 1793262104321318719,
+    "source_prefix_bytes": 2528612,
+    "sha256": "aaa717ecde1b4906ffab23b597f467e7d100cd2ae607449ab0bcda42741249f1",
+    "complete_newline_bytes": 2528612,
+    "partial_tail_bytes": 0,
+    "observed_ms": 1793262120925
+  },
+  "poly_monitor/rynki.jsonl": {
+    "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/poly_monitor/rynki.jsonl",
+    "source_inode": 506734894,
+    "source_mtime_ns": 1793255774310265905,
+    "source_prefix_bytes": 149689,
+    "sha256": "1525205b276bd901a86f6fd9d74c918c31e908303c1bc2bcbe617367740cbe13",
+    "complete_newline_bytes": 149689,
+    "partial_tail_bytes": 0,
+    "observed_ms": 1793262120939
+  },
+  "poly_monitor/novosti.jsonl": {
+    "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/poly_monitor/novosti.jsonl",
+    "source_inode": 506735251,
+    "source_mtime_ns": 1793261899786249137,
+    "source_prefix_bytes": 2059453,
+    "sha256": "45cb5e9bdd70b290c10bd201164f1e3fd6c09c3e9f96a8c59c3a4dfe19dddfb7",
+    "complete_newline_bytes": 2059453,
+    "partial_tail_bytes": 0,
+    "observed_ms": 1793262120962
+  },
+  "poly_espn/matchi.jsonl": {
+    "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/poly_espn/matchi.jsonl",
+    "source_inode": 507956405,
+    "source_mtime_ns": 1793259753309770786,
+    "source_prefix_bytes": 27822,
+    "sha256": "50b1c66dc4c9f201d682a6f868c43d7dc36b619ba8788e0215edc9103fe0a41d",
+    "complete_newline_bytes": 27822,
+    "partial_tail_bytes": 0,
+    "observed_ms": 1793262120966
+  }
+}

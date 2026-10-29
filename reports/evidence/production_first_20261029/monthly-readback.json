@@ -1,0 +1,14 @@
+{
+  "schema": "MONTHLY_READ_ONLY_CONTINUATION_CHECK_V1",
+  "observed_ms": 1793263380083,
+  "unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+  "unit_unchanged": true,
+  "dispatcher_observed_ms": 1793263344025,
+  "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+  "source_status": "ORDERS_OFF_OPERATIONAL_PASS",
+  "issues": [],
+  "timer_active": true,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "remote_state_writes": 0
+}

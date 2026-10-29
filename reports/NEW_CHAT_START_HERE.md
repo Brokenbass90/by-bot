@@ -1,3 +1,16 @@
+# Current entry — 29 October: three production-first decisions
+
+[Polymarket / funding / Alpaca evidence](PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md).
+Poly13currentmarketsclosed;54GET/45sWS;0observedFINALtransitions => no provenentry,
+notglobalKILL. Fundingdefectreproduced; deliveredClaudechange-request, ACK_PENDING.
+Alpaca526sessions fullwarmup:12.51/DD7.88 vs25/75 17.70/DD8.51 researchonly;
+internalcosts/currentmoneycontract missing. No productionchange/newfinancialGO.
+PUMP4sameLIVE/flat/0restarts, Monthlysamev6 healthy. Existingexpiry/calendar unchanged.
+Verifiedastra/high reviewCLEAR. Nextfuturedata/ClaudeACK/ETFfinancialacceptance gates.
+
+---
+Earlier dated entries below are history.
+
 # Current entry — 29 October: LIVE health, Monthly readiness, SHORT_HVOST intake
 
 [Actual checks and six draft findings](TRADING_OPERATIONS_AND_SHORT_HVOST_INTAKE_2026_10_29.md).

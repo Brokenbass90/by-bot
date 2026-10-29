@@ -1,0 +1,27 @@
+{
+  "schema": "PRODUCTION_FIRST_EVIDENCE_MANIFEST_V1",
+  "files": {
+    "alpaca-equity-curves.json": "994b812512a8575bfd2d13d09a9ef2178d5fec8f4e589404e56edf45c48b82cd",
+    "alpaca-paired-cache-start.json": "a288272a7f72940f87ab3043cdd04ec191eadca1ca8c6f4b05c1fa6b88558e40",
+    "alpaca-paired-full-warmup.json": "4533a2d2e9417a66aac0e04ad04deb771580b196ad5f7e905b59379ee782ac99",
+    "alpaca-paired-replay.py": "70808a0c29838ff80a8626f4eec506d989493dbf4104795a9434739e4f1eedc4",
+    "alpaca-source-closure.json": "d86ae62f3468c00fe25109b8d93835ced1d8c0003938bd22fab09191158169f3",
+    "decisions.json": "968f79ac69da585725ca6f76e3b65ceca1471968e0c16344a4e3b82c88948f00",
+    "funding-causal-reproducer.json": "2bf2575e34c39bc3ad299a8be2d7b0f747df0cef6aff5eabd3ced94bb1cea0cd",
+    "funding-causal-reproducer.py": "ef177a6428d1ee2633231bde526b4b23177593c5302b9f8abba048d820aa8e7a",
+    "funding-change-request-delivery.json": "3d7fc68843009fd3da9bdd72825f315a6d87769fd0b5ceef1e36b77fef06ad37",
+    "monthly-readback.json": "b136c9acdb990f43801bc93ba690f74e8167b64b085b2300b5879cd8365fbc68",
+    "poly-analysis.json": "c45214a8df02cd0eebf38b9cfc3c7a5a8f0fd2f78a13306da14b1ec89a8dab5c",
+    "poly-analysis.py": "d49bfab1e61691fad5590fb2f6ca7df9e197d2713a3f8b695f7740e8f2373612",
+    "poly-current-market-state.json": "e2ef177f42ddb4c433ee53033923a46ccdf06ef03f52bd9255a48ec7bff8ff31",
+    "poly-freeze-inputs.py": "999cb6ce58eda98c29034691adf762a115fc969b78502c8ad637d25748357ae8",
+    "poly-input-manifest.json": "b6d4cffc0bb2ed5e29b9d3fb5d798b42501d6247636338acf700ccdac92926e8",
+    "poly-input-profile.json": "80bdac7032f0fde6f037646a209cb11ebf3cf6f46a29e70dbb0d831f8bfa31e4",
+    "poly-observations.csv": "e2f611b703c5438ab9ac3ef51ae5b128f84f4c65d4685df1ea27431d0130b9fe",
+    "poly-public-probe.py": "a8f1e352de2ea6307ce205c38bdb9617596d7a9441b6a3a35408e5c38aeb253c",
+    "poly-public-requests.json": "e1a8a8aadb6c017ea261c197f4e9e2df60f87d87109f8e9ff33f032414935eb9",
+    "poly-sports-ws.json": "9254323e3cdb4938da10dde277a3c988b6ea5d28a0219b47c91456feb12a2467",
+    "pump4-readback.json": "142535bbda834aaa8ad6216bbe68963a9386134a9c7c50f8e967e08891cea8da",
+    "review.json": "bdd2582949e240730dd9c4098a8234dbc56da1583f8b9ee9db309a016559e609"
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "primary_ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+  "legacy_dependency_ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+  "full_private_manifest_sha256": "d1d4f423c200af842c9ec1a1428e8e1d4a954ae4f31ecfe560366182700f2ec8",
+  "full_private_manifest_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/alpaca_25_75_20261029/source-manifest.json",
+  "paired_core_files": {
+    "backtest/alpaca_adaptive_backtest.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "b4c11acc212a6d37d394c30e3e42119e25db631b841fd5893b3da527e247783d"
+    },
+    "backtest/alpaca_bakeoff_v2_contract.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee"
+    },
+    "backtest/alpaca_bakeoff_wf.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "3ececac872b214d132e3727c83b7ab45bc6514c8d558cb4141de69a451c8a644"
+    },
+    "backtest/alpaca_exact_parity_contract.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50"
+    },
+    "backtest/alpaca_honest_portfolio.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "21c83fe9bff1659990a869a40bd2f62b8f8c3a359f88d4b398291b4096f978b8"
+    },
+    "backtest/alpaca_leverage_probe.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "5321ed475a5b25f0d7f82dd099741f4b03f21b147a584822ea6d4d332b3a2d71"
+    },
+    "backtest/alpaca_param_robustness.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "994ebe3f56fd3750345fc3e5803e3f7dc6bb71854daf55af4f9ac89a4addabd6"
+    },
+    "backtest/alpaca_scenarios.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "d30e8b2c6a65da0e8fac80686660d8bbdacbd18ba2d34e84b5e2502ca3317d50"
+    },
+    "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "7b1022ce47933e1de579ca4ebb950cf84675958ba62c3aee9d8337534ad6b245"
+    },
+    "research_lab/alpaca_clean_v38_proxy_v1.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "78e431f96248c2f016df5060853272cd8998d2e8f48fe26cfb7a48cc2d477b10"
+    },
+    "research_lab/alpaca_diagnoz_gorizont.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "1dacde2ab171b8998700a0336886233c1a49f52cd1c9c24cc38d1235129b299c"
+    },
+    "research_lab/alpaca_doli_svobodnogo.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "ecdc09591fc7340fba90cc16f81ce9cf7239409cff5ccdb50592b893411e51cc"
+    },
+    "research_lab/alpaca_free_capital_index.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "750f2c7b0dd50029801cbab2b90b54d6831bda27720dad494d30cdcf41b46afc"
+    },
+    "research_lab/alpaca_h3.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "a37f4d62d7aade8c0df4158bf73f609104e21fdb0cb5c595b4d7b36589ce2453"
+    },
+    "research_lab/alpaca_h4.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "8675a7d2531e00f7c3de7d6cb995b032ae77a2e826e8f3b0382da40f6422a54d"
+    },
+    "research_lab/alpaca_h5_bil.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "c0161e3cc278d8d9f6d8048b84993507eb6e4f9feda0dcfbebd67961d49db7db"
+    },
+    "research_lab/alpaca_h6_treyl.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "0735006b0ce4595a27d7203a262e1c8a09b3063e34656e9b043e0b36bff0b823"
+    },
+    "research_lab/alpaca_protection_challenger_v2.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "37720cff16aa1861e563dcd3fe934cc90794721a4478e19406477fe38f7dbc02"
+    },
+    "research_lab/alpaca_razbor_sdelok.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "3e3bbf9e159652d9b1a81e37b045a16812f4ab597a7a81c3228f5d710905ba1d"
+    },
+    "research_lab/alpaca_sektora_monthly_diag.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "e8319226e00128233066c7f21dc8963231173585d02a6bcbbd69b96b1ee9486f"
+    },
+    "research_lab/alpaca_smart_v1.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "0c244b34ff26d9ea3a1524496220ebf350a5fedbba0c49eafa860a963b153df0"
+    },
+    "research_lab/alpaca_smart_v1_diag.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "98d0ddedfb435e641e05d066921c8fd04945569211a05d2d2c29ea248813d1ae"
+    },
+    "research_lab/alpaca_smart_v1_inferencija.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "76041a4d98cb6292cdc6ffe0cb9c32816b7f6bce622dffb4ec5c4e8c3189f60c"
+    },
+    "research_lab/alpaca_smart_v1_sklejki.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "d197c956c75506137f6d405d48c314548b322a0488d7ff2fd6e5aa4f1771d9ec"
+    },
+    "research_lab/alpaca_sravnenie_dinamiki.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "bcad5bf67930477b3ea5ba796b127f11ea841d7f6f04ce4017f8a6bef145e464"
+    },
+    "research_lab/alpaca_u2.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "baa50cb3ba2f29d5091f9bf0ff541d0d7f6e7c547fd9a89a28af9037ba69b91d"
+    },
+    "research_lab/alpaca_weekly_fill.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "c3e4dcbe3d34d2e310b2f33bb5e78b98b77d0328b95bda6c39f9b6f2fdeef7d1"
+    },
+    "scripts/build_equities_monthly_live_cycle.py": {
+      "ref": "47b90288c55114ad7e730377c2265b54c5a97406",
+      "sha256": "36fa73e2f6868f87a512f9c9f7196df9365657ecb60d1304d6986288942d51c2"
+    },
+    "research_lab/alpaca_avtolab_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "daaa0422741a819dd4da491fe886df35ba9b1b474d3c2cc718c7250cced70796"
+    },
+    "research_lab/alpaca_chistaya_komnata_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "c04c2863ddb6d3e19d836c24455b20b6bbe5ce83d55b4d1b7e09755b710c061b"
+    },
+    "research_lab/alpaca_dannye.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "0c480947b7829632223c7876097c86fe179bb59ee75df67b903c893d047858d1"
+    },
+    "research_lab/alpaca_dvizhok_x_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "b744bb591cd3d7479a7c6bf2e372acb8335f87d29fc791a1cf49a07080ee86c9"
+    },
+    "research_lab/alpaca_glubokaya_istoriya.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "cd31efa14ecdcbda296a7d13e1207257a7f8ff467ceb0137ecedf6ed2d756dc7"
+    },
+    "research_lab/alpaca_governor_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "f383d1a9551e894ba3d6a0490516f4bb4aa3018d2bc7f836f1ecb797a0eeeb2f"
+    },
+    "research_lab/alpaca_kontrakt_paper_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "df8684b564128b639e49150da5ec84b605ed29f1ed8d68b133179b8089eafbd9"
+    },
+    "research_lab/alpaca_kontur_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "e850ad77a231ecfcef4480e02c23eacb6d3bbda42e2a8368a9cc573631013c1a"
+    },
+    "research_lab/alpaca_korp_audit_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "dd8674066aa3ac0f46e2c37e3fc386c64f7fdfdee881daf1ab6caeac114b9bb2"
+    },
+    "research_lab/alpaca_krizisy_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "2f08294cd6fd07729519f09479492262101c9302f37f1f876cc2bbcf4b5452ae"
+    },
+    "research_lab/alpaca_mehaniki_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "34662b4dff5a41f893d8a3e5c6e5709d0fc580f828a7cd11b3a13909480ad07a"
+    },
+    "research_lab/alpaca_ollama_uzel_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "6ffc0a2fc92e997cae7d0644035e1b7a599f7a4818686f960445ddb836e35c20"
+    },
+    "research_lab/alpaca_paper_ready_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "6e41f1601b92bd9ca44d98a922c30e5fbcc45b025522620db335a5c21704c86a"
+    },
+    "research_lab/alpaca_reviewer_paket_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "0dac92b11c1c1b54738375a27e33d12337c2c9e5e2076cfbcd53cd1812619115"
+    },
+    "research_lab/alpaca_shadow_spec_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "258e029fc99c5010ae87e1f61705a5e385501db3e29ed3c4deb99064116553c7"
+    },
+    "research_lab/alpaca_sravnenie_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "7856766e5f788e6ae9546bd546f81e21a475daa2d94361386220fa234e85b0c2"
+    },
+    "research_lab/alpaca_stop_floor.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "e6befab3a80d475e8cc861c0c69002f937518249c818f60561bc786aa757e627"
+    },
+    "research_lab/alpaca_sverka_dvizhkov_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "bae39ac454d9f22e86ab693b957df212c9408ea6dc22dd5fcb5464bd31aa8e87"
+    },
+    "research_lab/alpaca_tozhdestvo_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "40c3451d91cdca3ec025af3f83bc936dda55e7c23a862af0e454a189f48f6e98"
+    },
+    "research_lab/alpaca_upushchennoe_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "79a6536f5e5435c213a6f41553c2683dfae2715e7fcad3b86574b3572b558e8c"
+    },
+    "research_lab/alpaca_ustoychivost_v1.py": {
+      "ref": "2e68b1f5ba6d2767c2144c5dafd8f10a6d2908c6",
+      "sha256": "60af98aa065add86db4e694a14ec4bc5dc8550f565f5104cb52f1b65df9cd5b4"
+    }
+  },
+  "source_notes": "Published research modules plus pinned legacy base dependencies; no production source changed"
+}

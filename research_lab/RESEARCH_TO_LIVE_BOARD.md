@@ -1,5 +1,10 @@
 # Trading OS — единая доска доведения до первой версии
 
+29Oct [three production-first decisions](../reports/PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md):
+Poly NO_PROVEN_ENTRY/notglobalKILL;fundingREPAIR_ACK_PENDING;Alpaca25/75 positive
+pairedresearch/cost-riskcontractOPEN. PUMP4/Monthly unchanged. No newfinancialGO.
+Earlier dated entries below are history.
+
 **29Oct07:20UTC actual:** [LIVE/Monthly checks and SHORT_HVOST draft review](../reports/TRADING_OPERATIONS_AND_SHORT_HVOST_INTAKE_2026_10_29.md).
 PUMP4sameLIVE/0restarts/NO_NEW_SIGNAL/flat,16H1receipts135/135timely; Monthlysamev6,
 6GETcash496.31/flat/pending0,2offlineCASHcasesPASS. SHORT NOT_LIVE_READY: sixOPEN
