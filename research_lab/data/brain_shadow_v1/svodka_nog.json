@@ -1,7 +1,28 @@
 {
- "kogda": "2026-10-27T14:39:51Z",
- "zapisey": 201,
+ "kogda": "2026-10-29T07:15:44Z",
+ "zapisey": 217,
  "nogi": {
+  "ETS2S2": {
+   "vse": {
+    "n": 13,
+    "sred": -0.017
+   },
+   "edinica": "R",
+   "po_rezhimu": {
+    "NEUTRAL": {
+     "n": 13,
+     "sred": -0.017
+    }
+   },
+   "volna_ge3_v_bull": {
+    "n": 0,
+    "sred": null
+   },
+   "ostalnoe": {
+    "n": 13,
+    "sred": -0.017
+   }
+  },
   "KITY": {
    "vse": {
     "n": 1,
@@ -25,8 +46,8 @@
   },
   "PUMP4": {
    "vse": {
-    "n": 84,
-    "sred": 0.0607
+    "n": 85,
+    "sred": 0.0482
    },
    "edinica": "R",
    "po_rezhimu": {
@@ -39,8 +60,8 @@
      "sred": -0.028
     },
     "NEUTRAL": {
-     "n": 50,
-     "sred": 0.1202
+     "n": 51,
+     "sred": 0.0982
     }
    },
    "volna_ge3_v_bull": {
@@ -48,14 +69,14 @@
     "sred": -0.1107
    },
    "ostalnoe": {
-    "n": 65,
-    "sred": 0.1108
+    "n": 66,
+    "sred": 0.0939
    }
   },
   "SHORT_HVOST": {
    "vse": {
-    "n": 115,
-    "sred": 587.1765
+    "n": 118,
+    "sred": 535.8754
    },
    "edinica": "bps",
    "po_rezhimu": {
@@ -68,8 +89,8 @@
      "sred": 388.56
     },
     "NEUTRAL": {
-     "n": 73,
-     "sred": 694.0288
+     "n": 76,
+     "sred": 610.1592
     }
    },
    "volna_ge3_v_bull": {
@@ -77,8 +98,8 @@
     "sred": 41.9429
    },
    "ostalnoe": {
-    "n": 108,
-    "sred": 622.5157
+    "n": 111,
+    "sred": 567.0243
    }
   }
  },
@@ -111,26 +132,40 @@
    "status": "INCONCLUSIVE",
    "pravilo_statusa": "INCONCLUSIVE если дней < 15 или 90 % интервал (бутстрап по дням) накрывает 0"
   },
+  "P4_PUMP4_V1_2_5_za_sutki": {
+   "noga": "PUMP4",
+   "propuskov": 9,
+   "nezavisimyh_dney": 4,
+   "edinica": "R",
+   "effekt_na_propusk": 0.0466,
+   "ci90": [
+    -0.3484,
+    0.3303
+   ],
+   "effekt_summa": 0.42,
+   "status": "INCONCLUSIVE",
+   "pravilo_statusa": "INCONCLUSIVE если дней < 15 или 90 % интервал (бутстрап по дням) накрывает 0"
+  },
   "P3_zapret_dvoynoy_SHORT_HVOST": {
    "noga": "SHORT_HVOST",
-   "propuskov": 0,
-   "nezavisimyh_dney": 0,
-   "edinica": null,
-   "effekt_na_propusk": null,
+   "propuskov": 6,
+   "nezavisimyh_dney": 5,
+   "edinica": "bps",
+   "effekt_na_propusk": 524.8,
    "ci90": [
-    null,
-    null
+    21.9,
+    1352.75
    ],
-   "effekt_summa": 0.0,
+   "effekt_summa": 3148.8,
    "status": "INCONCLUSIVE",
    "pravilo_statusa": "INCONCLUSIVE если дней < 15 или 90 % интервал (бутстрап по дням) накрывает 0"
   }
  },
  "karta_riska": {
-  "pozicyy_s_vremenem": 200,
+  "pozicyy_s_vremenem": 203,
   "pik_odnovremennyh_shortov": 15,
   "pik_kogda": "2026-09-22T15:00Z",
-  "dvoynye_po_monete": 1,
+  "dvoynye_po_monete": 7,
   "monety_dvoynyh": [
    "BLESSUSDT"
   ],

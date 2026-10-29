@@ -81,6 +81,16 @@ def atomy_dnya(r, t):
     v["_oborot28"] = st.mean(ob) if ob else 0
     return v
 
+def _pump4_po_dnyam():
+    """Дневной PnL PUMP4 (повтор, R) — для корреляции кандидата с действующей ногой."""
+    f = sorted(glob.glob(str(LAB / "results" / "pump4_polnyy_povtor_*.json")))
+    out = {}
+    if f:
+        for x in json.load(open(f[-1]))["sdelki"]:
+            if x.get("R") is not None:
+                d = time.strftime("%Y-%m-%d", time.gmtime((x["ts"] + (x.get("barov", 0) + 2) * 3600000) / 1000)); out[d] = out.get(d, 0) + x["R"]
+    return out
+
 def prohod(kat=None, atom_fn=None, atomy=None, out_dir=None, nazvanie="Фабрика вперёд"):
     atom_fn = atom_fn or atomy_dnya; atomy = atomy or ATOMY; out_dir = out_dir or OUT
     DNI, SV = out_dir / "dni.jsonl", out_dir / "svodka.json"
@@ -126,6 +136,18 @@ def prohod(kat=None, atom_fn=None, atomy=None, out_dir=None, nazvanie="Фабр�
         hlf = len(x) // 2
         status = "NAKOPLENIE" if len(x) < MIN_DNEY else ("KANDIDAT" if tt >= porog and st.mean(x[:hlf]) > 0 and st.mean(x[hlf:]) > 0 else "NET")
         out[key] = dict(dney=len(x), sred_bps_den=round(m, 2), t=round(tt, 2), status=status, avtor=h["avtor"], kontrol=h["kontrol"])
+    # портфельная оценка и режимные срезы (PM 29.10) — считаются только с 60 дней и только для KANDIDAT; срезы умножают число проверок ×3
+    if len(rows) >= MIN_DNEY:
+        porog3 = NormalDist().inv_cdf(1 - 0.05 / max(3 * N, 1))
+        p4 = _pump4_po_dnyam()
+        for key, v in out.items():
+            if v["status"] != "KANDIDAT": continue
+            ser = {r["d"]: r["spread_bps"][key] - KOM_BPS for r in rows if key in r["spread_bps"]}
+            obshie = [d for d in ser if d in p4]
+            if len(obshie) > 5:
+                import numpy as _np
+                v["korr_s_PUMP4"] = round(float(_np.corrcoef([ser[d] for d in obshie], [p4[d] for d in obshie])[0, 1]), 2)
+            v["porog_srezov_rezhima"] = round(porog3, 2)
     top = sorted(out.items(), key=lambda kv: -kv[1]["t"])[:15]
     SV.write_text(json.dumps(dict(kogda=time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()), katalog=N, katalog_sha=sha, dney=len(rows),
                                   porog_t_bonferroni=round(porog, 2), min_dney=MIN_DNEY, kandidatov=sum(1 for v in out.values() if v["status"] == "KANDIDAT"),

@@ -1,12 +1,15 @@
 {
- "kogda": "2026-10-27T15:27Z",
- "dney": 56,
+ "kogda": "2026-10-29T07:15Z",
+ "dney": 58,
  "nogi": {
+  "ETS2S2": {
+   "n": 13
+  },
   "KITY": {
    "n": 1
   },
   "PUMP4": {
-   "n": 84,
+   "n": 85,
    "shirota_rosta": {
     "nizhnyaya_tret": {
      "n": 28,
@@ -15,20 +18,20 @@
     },
     "verhnyaya_tret": {
      "n": 28,
-     "sred": 0.0493,
-     "se": 0.0936
+     "sred": 0.0008,
+     "se": 0.1001
     },
     "granicy": [
      0.51,
      0.78
     ],
-    "raznica": 0.0108
+    "raznica": -0.0376
    },
    "alt_minus_btc_7d": {
     "nizhnyaya_tret": {
      "n": 28,
-     "sred": 0.1729,
-     "se": 0.0746
+     "sred": 0.1244,
+     "se": 0.0853
     },
     "verhnyaya_tret": {
      "n": 28,
@@ -39,7 +42,7 @@
      0.012,
      0.0858
     ],
-    "raznica": -0.1919
+    "raznica": -0.1434
    },
    "sinhron_tejker": {
     "nizhnyaya_tret": {
@@ -49,14 +52,14 @@
     },
     "verhnyaya_tret": {
      "n": 28,
-     "sred": 0.0664,
-     "se": 0.0921
+     "sred": 0.0179,
+     "se": 0.099
     },
     "granicy": [
      -0.0,
      0.0045
     ],
-    "raznica": 0.0089
+    "raznica": -0.0396
    },
    "shirota_obema": {
     "nizhnyaya_tret": {
@@ -78,8 +81,8 @@
    "disp_ret": {
     "nizhnyaya_tret": {
      "n": 28,
-     "sred": 0.2353,
-     "se": 0.0568
+     "sred": 0.1867,
+     "se": 0.0718
     },
     "verhnyaya_tret": {
      "n": 28,
@@ -90,97 +93,109 @@
      0.0496,
      0.057
     ],
-    "raznica": -0.2526
+    "raznica": -0.2041
    }
   },
   "SHORT_HVOST": {
-   "n": 62,
+   "n": 65,
    "shirota_rosta": {
     "nizhnyaya_tret": {
-     "n": 20,
-     "sred": 334.305,
-     "se": 170.7227
+     "n": 21,
+     "sred": 499.1048,
+     "se": 231.3641
     },
     "verhnyaya_tret": {
-     "n": 20,
-     "sred": 106.135,
-     "se": 174.7873
+     "n": 21,
+     "sred": 96.8714,
+     "se": 166.5138
     },
     "granicy": [
      0.34,
-     0.69
+     0.68
     ],
-    "raznica": -228.17
+    "raznica": -402.2333
    },
    "alt_minus_btc_7d": {
     "nizhnyaya_tret": {
-     "n": 20,
-     "sred": 260.075,
-     "se": 202.9507
+     "n": 21,
+     "sred": -5.019,
+     "se": 250.3435
     },
     "verhnyaya_tret": {
-     "n": 20,
-     "sred": 383.7,
-     "se": 195.7692
+     "n": 21,
+     "sred": 386.7143,
+     "se": 186.238
     },
     "granicy": [
      -0.0143,
-     0.0568
+     0.0488
     ],
-    "raznica": 123.625
+    "raznica": 391.7333
    },
    "sinhron_tejker": {
     "nizhnyaya_tret": {
-     "n": 20,
-     "sred": 529.485,
-     "se": 237.783
+     "n": 21,
+     "sred": 506.8286,
+     "se": 227.3087
     },
     "verhnyaya_tret": {
-     "n": 20,
-     "sred": 304.91,
-     "se": 118.2714
+     "n": 21,
+     "sred": 77.3476,
+     "se": 201.3871
     },
     "granicy": [
-     -0.0023,
-     0.0045
+     -0.0012,
+     0.0062
     ],
-    "raznica": -224.575
+    "raznica": -429.481
    },
    "shirota_obema": {
     "nizhnyaya_tret": {
-     "n": 20,
-     "sred": 168.915,
-     "se": 102.3186
+     "n": 21,
+     "sred": -34.3143,
+     "se": 187.0657
     },
     "verhnyaya_tret": {
-     "n": 20,
-     "sred": 227.525,
-     "se": 204.7853
+     "n": 21,
+     "sred": 215.3905,
+     "se": 195.1673
     },
     "granicy": [
-     0.11,
+     0.09,
      0.19
     ],
-    "raznica": 58.61
+    "raznica": 249.7048
    },
    "disp_ret": {
     "nizhnyaya_tret": {
-     "n": 20,
-     "sred": 203.585,
-     "se": 84.426
+     "n": 21,
+     "sred": 198.3,
+     "se": 80.4788
     },
     "verhnyaya_tret": {
-     "n": 20,
-     "sred": 205.65,
-     "se": 185.3494
+     "n": 21,
+     "sred": 71.0048,
+     "se": 221.8376
     },
     "granicy": [
      0.0376,
      0.0552
     ],
-    "raznica": 2.065
+    "raznica": -127.2952
    }
   }
+ },
+ "neopredelennost_rezhima": {
+  "den": "2026-10-28",
+  "z": {
+   "shirota_rosta": 0.54,
+   "alt_minus_btc_7d": -0.51,
+   "sinhron_tejker": 1.29,
+   "shirota_obema": 0.16,
+   "disp_ret": -1.11
+  },
+  "status": "IZVESTNYY",
+  "pravilo": "|z| ≥ 3 хоть по одному признаку → Brain не даёт советов по режиму (только наблюдение); 2–3 → пограничный"
  },
  "primechanie": "описательно; |разница| > 2×√(se²+se²) — кандидат в prereg, проверка только вперёд"
 }

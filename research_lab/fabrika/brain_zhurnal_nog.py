@@ -30,6 +30,7 @@ def metki_btc():
 PRAVILA = {  # правило → (нога, условие пропуска). Ни одно не применяется к ордерам: Brain read-only.
     "P1_PUMP4_volna3_BULL": ("PUMP4", lambda z, ctx: z["rezhim_btc"] == "BULL_TREND" and z["shirina_24ch"] >= 3),
     "P2_PUMP4_BULL": ("PUMP4", lambda z, ctx: z["rezhim_btc"] == "BULL_TREND"),
+    "P4_PUMP4_V1_2_5_za_sutki": ("PUMP4", lambda z, ctx: z["shirina_24ch"] >= 5),   # V1.2 (prereg 29.10): ≥ 5 сигналов за 24 ч до этого
     "P3_zapret_dvoynoy_SHORT_HVOST": ("SHORT_HVOST", lambda z, ctx: z["sym"] in ctx["otkryty_pump4"]),
 }
 MIN_DNEY = 15

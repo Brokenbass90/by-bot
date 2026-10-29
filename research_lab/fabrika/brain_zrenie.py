@@ -54,9 +54,19 @@ def prohod():
             def m(a): return dict(n=len(a), sred=round(st.mean(a), 4), se=round(st.stdev(a) / math.sqrt(len(a)), 4) if len(a) > 2 else None)
             sv[noga][p] = dict(nizhnyaya_tret=m(niz), verhnyaya_tret=m(verh), granicy=[h[k - 1][0], h[-k][0]],
                                raznica=round(st.mean(verh) - st.mean(niz), 4))
-    (D / "zrenie_svodka.json").write_text(json.dumps(dict(kogda=time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()), dney=len(Z), nogi=sv,
+    # детектор новизны (PM/DeepSeek 29.10): признаки последнего дня против 60 предыдущих; |z| ≥ 3 хоть по одному → режим НОВЫЙ, Brain «не знает»
+    ks_ = sorted(Z, key=int); nov = {}
+    if len(ks_) > 20:
+        posl = Z[ks_[-1]]; ist = [Z[k] for k in ks_[-61:-1]]
+        for p_ in PRIZNAKI:
+            h = [v[p_] for v in ist if v.get(p_) is not None]
+            if len(h) > 10 and posl.get(p_) is not None and st.pstdev(h) > 0: nov[p_] = round((posl[p_] - st.mean(h)) / st.pstdev(h), 2)
+    neopr = dict(den=time.strftime("%Y-%m-%d", time.gmtime(int(ks_[-1]) / 1000)) if ks_ else None, z=nov,
+                 status=("NOVYY_REZHIM_NE_ZNAYU" if any(abs(v) >= 3 for v in nov.values()) else ("POGRANICHNYY" if any(abs(v) >= 2 for v in nov.values()) else "IZVESTNYY")),
+                 pravilo="|z| ≥ 3 хоть по одному признаку → Brain не даёт советов по режиму (только наблюдение); 2–3 → пограничный")
+    (D / "zrenie_svodka.json").write_text(json.dumps(dict(kogda=time.strftime("%Y-%m-%dT%H:%MZ", time.gmtime()), dney=len(Z), nogi=sv, neopredelennost_rezhima=neopr,
         primechanie="описательно; |разница| > 2×√(se²+se²) — кандидат в prereg, проверка только вперёд"), ensure_ascii=False, indent=1))
-    return dict(dney=len(Z), nogi={k: v["n"] for k, v in sv.items()})
+    return dict(dney=len(Z), nogi={k: v["n"] for k, v in sv.items()}, rezhim=neopr["status"], trevogi=["Brain: новый режим рынка — советы по режиму отключены"] if neopr["status"] == "NOVYY_REZHIM_NE_ZNAYU" else [])
 
 if __name__ == "__main__":
     print(prohod()); s = json.loads((D / "zrenie_svodka.json").read_text())
