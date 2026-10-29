@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-28T07:50Z",
- "vsego": 165,
+ "kogda": "2026-10-29T05:43Z",
+ "vsego": 167,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -15,7 +15,7 @@
   "TEHNIKA": "техническая ошибка теста"
  },
  "prichiny_schet": {
-  "REZHIM": 15,
+  "REZHIM": 16,
   "TEHNIKA": 16,
   "PROTIV": 10,
   "NET_SIGNALA": 80,
@@ -25,7 +25,7 @@
   "ZAPAZDYVANIE": 2,
   "NAPRAVLENIE": 1,
   "SLABYY_II": 2,
-  "KONCENTRACIYA": 1
+  "KONCENTRACIYA": 2
  },
  "zapisi": [
   {
@@ -3286,10 +3286,28 @@
    "id": "PUMP4_FILTR_ROST24",
    "istochnik": "protokol",
    "mehanizm": "PUMP4 только на настоящем пампе (рост ≥ 6 % за 24 ч)",
-   "status": "VPERED",
+   "status": "HISTORY_AGAINST",
+   "prichina": "REZHIM",
+   "sled": "2025: отфильтрованные +0.02R хуже остальных +0.095R — подгонка под 09–10.2026; вперёд дособирается по prereg",
+   "dokument": "ISTORIYA_2025_ITOG"
+  },
+  {
+   "id": "PUMP4_V1_2025",
+   "istochnik": "protokol",
+   "mehanizm": "PUMP4 V1 на 9 мес 2025",
+   "status": "PODTVERZHDEN",
    "prichina": null,
-   "sled": "судья fabrika/pump4_v2_vpered.py ночью, вердикт с 30 сделок",
-   "dokument": "PREREG_PUMP4_FILTR_ROST24_VPERED"
+   "sled": "+0.067R, t 2.4, 6/9 мес; кандидат V1.1 пауза в BULL_TREND (7/9 мес)",
+   "dokument": "ISTORIYA_2025_ITOG"
+  },
+  {
+   "id": "SHORT_HVOST_2025",
+   "istochnik": "protokol",
+   "mehanizm": "реконструкция SHORT_HVOST на 2025 (V1 + перегрев)",
+   "status": "NE_REGULYAREN",
+   "prichina": "KONCENTRACIYA",
+   "sled": "режимный плюс 2026; левый хвост сквизов; только TINY после PASS",
+   "dokument": "ISTORIYA_2025_ITOG"
   },
   {
    "id": "POLY_95",
@@ -3333,7 +3351,7 @@
    "mehanizm": "каталог 292 гипотез на новых днях",
    "status": "NAKOPLENIE",
    "prichina": null,
-   "sled": "вердикт с 60 дней, сейчас 26"
+   "sled": "вердикт с 60 дней, сейчас 27"
   },
   {
    "id": "FABRIKA_VPERED_V2",
@@ -3341,7 +3359,7 @@
    "mehanizm": "каталог 290 гипотез на новых днях",
    "status": "NAKOPLENIE",
    "prichina": null,
-   "sled": "вердикт с 60 дней, сейчас 26"
+   "sled": "вердикт с 60 дней, сейчас 27"
   }
  ]
 }
