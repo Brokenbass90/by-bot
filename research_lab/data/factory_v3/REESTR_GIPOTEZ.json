@@ -1,6 +1,6 @@
 {
- "kogda": "2026-10-29T05:43Z",
- "vsego": 167,
+ "kogda": "2026-10-29T06:08Z",
+ "vsego": 169,
  "prichiny_slovar": {
   "NET_SIGNALA": "сигнал неотличим от случайного входа",
   "IZDERZHKI": "информация есть, её съедают спред/комиссии",
@@ -20,7 +20,7 @@
   "PROTIV": 10,
   "NET_SIGNALA": 80,
   "MALO_DANNYH": 23,
-  "IZDERZHKI": 5,
+  "IZDERZHKI": 6,
   "EFFEKTIVNYY_RYNOK": 3,
   "ZAPAZDYVANIE": 2,
   "NAPRAVLENIE": 1,
@@ -3317,6 +3317,24 @@
    "prichina": null,
    "sled": "судья fabrika/poly_95_sudya.py, вердикт с 150 сделок",
    "dokument": "PREREG_POLY_95_VPERED"
+  },
+  {
+   "id": "FLET_SETKA_H1",
+   "istochnik": "protokol",
+   "mehanizm": "сетка с усреднением во флэте (V1 + по тренду 30 дн)",
+   "status": "KILL",
+   "prichina": "IZDERZHKI",
+   "sled": "2026: ≈ случайному; 2025 (137 монет, 9 мес): V1 −0.19 %, 0/9 мес; V2 по тренду −0.23 %, 2/9 мес — выходы из флэта и издержки частей",
+   "dokument": "results/flet_setka*_2026*.json"
+  },
+  {
+   "id": "PUMP4_V1_1_BULL_PAUZA",
+   "istochnik": "protokol",
+   "mehanizm": "PUMP4 без сделок в BULL_TREND",
+   "status": "SHADOW",
+   "prichina": null,
+   "sled": "2025: net +167 против +163, просадка 80 против 93, худший мес −65 против −72, 7/9 мес; 2026: просадка 44 против 89, худший мес −9 против −39; пропущено 73 сделки (47 прибыльных, в сумме −$3.7)",
+   "dokument": "ISTORIYA_2025_ITOG"
   },
   {
    "id": "SHORT_HVOST",
