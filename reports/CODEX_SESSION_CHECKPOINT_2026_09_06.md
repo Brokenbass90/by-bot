@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — shared project contract linked to original goal; TINY-2 design prepared
+
+Read docs/PROJECT_MAP.md (existingmap updated) + ROADMAP_SELF_IMPROVING top active
+queue + TEAM_ALIGNMENT_2026_10_29.md. Originalgoal alreadyexists6OctCEL_SISTEMY
+on verifiedorigin30951f9; notrewritten. Research/production/owner roles, truth
+hierarchy, projectrealizednet/operatingcost/FX/pending definitions explicit.
+Oneactivequeue replacespriorityinterpretationofold datedCURRENTnotes; historykept.
+TINY-2 docs/superpowers/specs/2026-10-29-pump4-tiny2-design.md preparedonly,
+NOT_IMPLEMENTED/NOT_READY_FOR_GO. V1max_entries==1 + immutableadmittedlifecycle
+hardcoded; noclaimreset/config20shortcut. Proposed10entries/7d/lifetime3 with
+50/30/20/risk1/day2week3DD6 are proposalonly, noapprovedextension. Nextisolated
+serialadmissionRED/E2E+restart/V1regression, then source-backedfinancialacceptance.
+ExistingBrainbrain_povtor+policies andFactorydubl_proverka confirmed inpublishedcode;
+3/227and96/64sourcecountsnotverified. No duplicatecounterfactual/enginewritten.
+ClaudeACKPENDING; noavailableClaudechatfound, noexternalmessages, nofalseagreement.
+PUMP4currentGO/expiry/onewriter/Monthlyv6/calendars unchanged; KITYengineeringHOLD.
+Onlydocs/evidence changed, nobroker/VPS/credentials/research/judges/financialcalls.
+Primarysource/link/diffchecksPASS; oneastra/highreviewcapacitybeforefindings,
+independentPASSnotclaimed/noretry. Financialacceptancenotperformed.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — gold macro existing Claude data reused; source/time/sample corrections
 
 Read GOLD_MACRO_EXISTING_DATA_INTAKE_2026_10_29.md. Origin30951f9 current; no new

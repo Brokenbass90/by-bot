@@ -1,3 +1,20 @@
+# Current entry —29 October: common project contract + serial PUMP4 preparation
+
+Read ../docs/PROJECT_MAP.md → ../ROADMAP_SELF_IMPROVING.md top active queue →
+CODEX_SESSION_CHECKPOINT_2026_09_06.md TOP. Original research CEL_SISTEMY exists;
+map/roles updated, no new competing roadmap. TEAM_ALIGNMENT_2026_10_29.md has
+review/source corrections and Claude ACK request; ACK is PENDING, not agreement.
+PUMP4TINY2 design ../docs/superpowers/specs/2026-10-29-pump4-tiny2-design.md:
+DESIGN_PREPARED/NOT_IMPLEMENTED/NO_NEW_GO. Existing V1 owner hardcodes one lifecycle;
+do not raise max_entries in config/delete claims/replay activation. Next write
+isolated RED tests for serial candidate and preserve V1 admission/restart semantics.
+Monthly30Oct→2Nov unchanged; existingPUMPexpiry1Nov19:26:32.774UTC unchanged.
+KITYengineeringHOLD; GOLD/POLY/LIQ research gates; existingBraincounterfactual and
+Factoryduplicate checks reused. No runtime, service, risk, scope or broker change.
+
+---
+Earlier entries below are history; priority comes only from active roadmap table.
+
 # Current entry — 29 October: three production-first decisions
 
 [Polymarket / funding / Alpaca evidence](PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md).

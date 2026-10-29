@@ -1,5 +1,31 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+## Активная очередь —29 октября 2026
+
+Общее описание/роли/метрики: [PROJECT_MAP](docs/PROJECT_MAP.md).
+Исходная цель6Oct сохраняется. Эта таблица — единственная текущая очередь;
+датированные записи ниже — evidence/history, не параллельные приоритеты.
+[Согласование](reports/TEAM_ALIGNMENT_2026_10_29.md): Codex подготовка принята,
+Claude/PM ACK_PENDING. Документ не расширяет подписанные финансовые scopes.
+
+| Приоритет / владелец | Работа | Условие завершения / текущая граница |
+|---|---|---|
+| P0 операционный / Codex | Сохранить Monthly v6 и действующий PUMP4, актуальные health/factual lifecycle | Monthly30Octclosedselection→2Nov14:30UTC/16:30CYentry/CASH; PUMP4первая сделка+fees/native/reconcile, новые входы только в исходном сроке1Nov19:26:32.774UTC |
+| P0 инженерный / Codex | [PUMP4 TINY-2](docs/superpowers/specs/2026-10-29-pump4-tiny2-design.md): отдельный versioned serial admission в существующем owner | СейчасDESIGN_PREPARED/NOT_IMPLEMENTED; следующий gate два изолированных lifecycle+restart/no duplicates/V1regression. После полного пакета независимая приёмка и новый exactGO; текущий LIVE не меняется |
+| P1 / Codex | Execution quality и минимальный read-only portfolio risk через имеющиеся receipts+brokerGET | NO_LIVE_TRADES до фактическихfills; подписанныеscopes, timestamps, gross/margin/защита/пересечения; неизвестноеUNKNOWN. Без новогоriskengine и автопримененияBrain |
+| Исследования / Claude, CodexQA | GOLDодин экономический эксперимент; POLYреальноеFINAL/существующийforward; LIQsourceeligibility | Опубликованные source/spec/window/verdict. Goldclock+preregдоPnL; Polyask/depth/fees/accepting; LIQcoverageUNKNOWNнеPASS. Codex не запускает чужих judges/producer |
+| Обслуживание / Claude, Codexread-onlybridge | Brain/Factory готовые функции и измеримость | Причинные советы/парное сравнение/uniqueэкономическиеverdict; переиспользованиеcounterfactual/dubl_proverka, цифры3/227 и96/64PENDING_SOURCE, никакой новойплатформы |
+| HOLD | KITY новаяинженерия; SHORTдоqualifyingverdict; новыеуниверсальныеframeworks | СуществующаяSHADOW/evidenceсохраняются; ни автоматическогоLIVE, ни rescueподбора |
+
+$500/меспослеоперационныхрасходов — предложенныйPMориентир, не forecast/budget/срок.
+Project net измеряется с явной полнотой расходов по определению в PROJECT_MAP.
+Однаглавная инженернаяработа на исполнителя +однанезависимаяP1, moneyhealthпрерывает
+при реальноминциденте. Повторные большиеаудиты и принятые test suites безизменения
+кода не являются задачей. Новыйpipeline не создаётся, пока непроверено имеющееся.
+
+## Датированный журнал доказательств — читать как историю изменений
+
+
 **29Oct gold research reuse/data acceptance:** [intake](reports/GOLD_MACRO_EXISTING_DATA_INTAKE_2026_10_29.md).
 Actual45684H1/87439M5 basicQA; calendar63/62/32 is not sample size: H1publishedUTC
 join51CPI/49NFP/22FOMC, fullhold/independence eligibility stillrequired. Existing

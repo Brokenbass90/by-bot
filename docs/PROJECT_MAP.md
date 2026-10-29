@@ -1,136 +1,127 @@
-# Trading Station — canonical project map
+# Trading OS — карта и контракт проекта
 
-Updated: 2026-09-06.
+Обновлено 29 октября 2026. Статус: частично реализованная система исследований и
+исполнения; устойчивый доход и полезность автоматического распределения не доказаны.
 
-Canonical workspace: `bybit-bot-recovery-20260824`.
+## Назначение и иерархия документов
 
-Current handoff: `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md`.
+Цель владельца уже записана 6 октября в исследовательском
+[`research_lab/CEL_SISTEMY.md`](https://github.com/Brokenbass90/by-bot/blob/30951f9abcdcf56ae4bf853d9168d2ac2d24a34e/research_lab/CEL_SISTEMY.md).
+Эта карта связывает исходный замысел с текущим исполнением. Она не заменяет цель,
+не вводит новую очередь приоритетов и не предоставляет финансовых полномочий.
 
-Current critical path: unchanged ATT1/ETS2S L1 VPS shadow burn-in through
-`2026-09-08 08:02 UTC`, then L2 execution lifecycle parity and L3
-fees/funding/accounting parity. `LAB_AI_V0` is a parallel read-only project and
-cannot block or promote the money path.
+| Вопрос | Единственный управляющий источник |
+|---|---|
+| Зачем система и как должна работать | CEL_SISTEMY + эта карта: актуальные границы и роли |
+| Что выполняем следующим, кем и до какого результата | [ROADMAP_SELF_IMPROVING.md](../ROADMAP_SELF_IMPROVING.md), верхняя активная таблица |
+| Последняя передача работы и воспроизводимые квитанции | [checkpoint TOP](../reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md) |
+| Экономический контракт/вердикт гипотезы | Опубликованный паспорт Claude на проверенном research/fabrika-v1, исходные hashes |
+| Кто вправе торговать, сколько и когда | Точный подписанный scope/GO и фактический broker/runtime readback |
+| Что читать в новом чате | [NEW_CHAT_START_HERE](../reports/NEW_CHAT_START_HERE.md) |
 
-## Product objective
+Датированные старые карты и записи CURRENT — история. Если описание расходится
+со scope, оно не расширяет разрешение. Если broker/runtime расходится с журналом,
+статус UNKNOWN/NOT_CONFIRMED, а не предположение о нулевом риске.
 
-Build a multi-market station in which strategy research, live execution and
-capital control share one reproducible contract. The system may adapt by
-proposing and testing changes, but no model or research job can grant itself
-money authority.
-
-## End-to-end lifecycle
+## Конечная работа системы
 
 ```text
-idea intake
-  -> preregistration
-  -> causal replay
-  -> random/matched control
-  -> costs, stress, concentration and PIT checks
-  -> zero-risk shadow
-  -> broker paper lifecycle
-  -> tiny canary
-  -> allocator + regime governor
-  -> degradation monitor
-  -> scale, reduce or disable through a new receipt
+рыночные данные + проверка источника/времени/покрытия
+  → причинно доступные возможности принятых стратегий
+  → проверенные правила режима/портфеля в утверждённых пределах
+  → один финансовый исполнитель на счёт
+  → native protection / reconcile / custody / exit
+  → фактические fills + fees + funding/swap + стоимость капитала
+  → диагностика → версия гипотезы → prereg → проверка → предложение владельцу
 ```
 
-## Layer map
+Factory непрерывно ведёт ограниченную очередь независимых экономических механизмов,
+сохраняя отрицательные результаты, ограничения данных и бюджет попыток. Brain
+сначала наблюдает и сравнивает одинаковые возможности; доказанная версия может
+получить только отдельно утверждённую роль. Владелец сможет согласовать конечную
+карту «режим → стратегия → пределы», после чего разрешённые переключения будут
+автоматическими. Сейчас общей исполняемой ORCHESTRATOR_POLICY для этих рукавов нет.
+Исходный пункт цели о самостоятельном ремонте/сборе данных — целевое поведение,
+а не право менять действующие сборщики, sealed evidence или LIVE без их процедуры.
 
-| Layer | Main locations | Contract |
+## Что реально имеется — по проверенным отчётам 29 октября
+
+| Компонент | Готовая часть | Граница доказательства |
 |---|---|---|
-| Money runtime | `smart_pump_reversal_bot.py`, `bot/` | Orders only through explicit live authority |
-| Strategy logic | `strategies/` | Pure signal/event geometry where possible |
-| Research/live parity | `research_lab/live_native_*`, `research_lab/adapter_parity.py` | Same decision, fill, exit and cost semantics |
-| Research factory | `research_lab/`, `backtest/`, `configs/research/` | Frozen inputs, prereg, controls and receipts |
-| Canonical station | `research_lab/canonical_station.py`, `scripts/canonical_station_migration.py` | One evidence epoch, exact process parity, fail-closed migration |
-| Regime/router/allocator | `scripts/build_regime_state.py`, `scripts/build_symbol_router.py`, `scripts/build_portfolio_allocator.py` | Enable/reduce/disable sleeves; no silent risk increase |
-| Broker integrations | Alpaca/Bybit/MT5 adapters and deploy scripts | Broker truth overrides UI and Markdown |
-| Observability | `web/`, Telegram, `runtime/`, `reports/receipts/` | Explain state; never invent money truth |
-| AI analysis | Ollama/DeepSeek/Codex proposal paths | Secret-free and proposal-only |
+| Monthly | Лично выбранный v6, расписание, учёт, ограниченный бюджет400/gross280/reserve40 | Реальная30Oct selection и2Nov entry/CASH ещё впереди; idle PASS не торговый цикл |
+| PUMP4 | Активирован точный pilot50/30/20, один вход/позиция/lifecycle, cross margin | На последнем readback ожидал сигнал; первая фактическая сделка не доказана; entry scope до1Nov19:26:32.774UTC |
+| KITY | Досье и модель/API-format lifecycle; существующая SHADOW | Bybit ECONOMIC_INCONCLUSIVE, новая инженерия ON_HOLD |
+| Polymarket | Источники и несколько отдельных shadow/forward механизмов | Исполнимый FINAL-gap не доказан; чужие промежуточные цифры не новый PASS |
+| Gold/MT5 | История45684H1/87439M5, календарь, настоящий demo readback и native расчёты | Данные требуют единой time/source lineage; edge, Bullwaves и новостные расходы не доказаны |
+| Factory | Реестры, контрольные образцы, проверки дубликатов/бюджетов/провалов | Наличие модулей не доказывает непрерывный успешный поиск новых edge |
+| Brain | Журналы, политики, counterfactual replay, мост реальных PUMP receipts | Своевременность и прирост net к baseline ещё не доказаны; LIVE risk authority нет |
 
-## Market sleeves
+Это состояние отчётов, а не новая проверка брокеров при чтении карты.
+Точные свидетельства: [PUMP activation](../reports/PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md),
+[KITY economics](../reports/KITY_ECONOMIC_DECISION_2026_10_29.md),
+[Brain receipt bridge](../reports/READ_ONLY_TINY_BRIDGE_2026_10_29.md),
+[gold intake](../reports/GOLD_MACRO_EXISTING_DATA_INTAKE_2026_10_29.md).
 
-### Crypto
+## Повторное использование вместо параллельных систем
 
-- ATT1 current frozen configuration: OOS `FAIL_CLOSED`; not eligible for risk
-  expansion.
-- SBR1 current frozen configuration: `INCONCLUSIVE_LOW_N` and negative; no
-  money integration.
-- Bull Continuation V1: approved implementation plan, research-only.
-- XSEC PIT V5: approved plan, currently blocked on delisted-contract history.
-- Order blocks, imbalances, horizontal/sloped levels and pattern atlas are
-  feature/research infrastructure, not independent money authority.
+- Исполнение PUMP4: research_lab/pump4_account_owner_v1.py,
+  pump4_execution_lifecycle_v1.py, pump4_execution_supervisor_v1.py и существующие
+  Bybit/account adapters. Единственный lock и ownership сохраняются.
+- Execution quality: существующие supervisor/flow/account journals и
+  research_lab/pump4_live_observer_v1.py; отдельный дублирующий журнал не нужен.
+- Brain в research ref: factory_v3/{opportunity_v2,brain_shadow_v1,brain_povtor}.py.
+  Политики и replay уже есть; registry code != фактически загруженные политики.
+- Factory в research ref: factory_v3/{reestr_v1,ferma_v1,dubl_proverka,kontrol_fermy}.py.
+  Проверка дубликатов уже есть; её показатели требуют точного датированного отчёта.
+- Risk view: broker GET + действующие owner scopes + существующие наблюдения.
+  Только чтение; никакого второго allocator/financial writer.
+- Режим/контекст: bot/{regime_orchestrator,regime_hmm,range_filter,market_context,
+  elder_filter,regime_side_gate,strategy_regime_gate,adaptive_context}.py.
+  Наличие файлов не означает, что их новая версия подключена к Monthly/PUMP4.
 
-### Alpaca
+## Ответственность и согласование
 
-- Protective management is a separate contour from entry selection.
-- New entries remain gated by PIT selector, stress, SHA reconciliation and a
-  complete paper lifecycle.
-- Any current live statement requires a fresh broker/service read.
+| Участник | Владеет | Не подменяет |
+|---|---|---|
+| Владелец | Цель, капитал, точные финансовые GO | Статистический/брокерский факт |
+| PM / внешние аудиторы | Предложения приоритетов, проверка результатов | Подписанный money scope |
+| Codex | Production/data/execution, единый roadmap, интеграция и проверка evidence | Исследовательский verdict или разрешение владельца |
+| Claude | Research KARTA/паспорта/prereg/экономические результаты/версии исследовательского кода | Production, общий roadmap и активация денег |
+| DeepSeek/Ollama/Brain | Гипотезы, объяснения, shadow advice | Финансовый исполнитель или самостоятельное изменение LIVE |
 
-### XAU/Forex
+Передача: component → status → SHA/spec → source/window → проверка → runtime
+facts → blocker → один следующий gate → owner. Codex проверяет опубликованную
+status delta и обновляет roadmap. Claude связывает KARTA с ним; карта не создаёт
+вторую очередь. Подтверждение сторон фиксируется отдельно от публикации документа.
+Текущий запрос согласования: [TEAM_ALIGNMENT](../reports/TEAM_ALIGNMENT_2026_10_29.md).
 
-- XAU unchanged-replication plan exists.
-- Use shared controls, causal data, costs and demo/paper lifecycle before MT5
-  authority.
+## Что считаем приближением к цели
 
-### Future lanes
+1. Проверенные денежные lifecycle и качество исполнения: задержка, заполнение,
+   защита, отклонение цены, комиссии/funding, предварительный и окончательный net.
+2. Независимые исполнимые возможности и их доступность текущему капиталу.
+3. Уникальные механизмы, дошедшие до квалифицированного независимого результата.
+4. Дополнительная полезность Brain на одинаковых своевременных возможностях.
+5. Чистый денежный результат проекта и полная стоимость его эксплуатации.
 
-- Polymarket, DeFi and cross-exchange arbitrage remain idea/backlog lanes until
-  data provenance, execution costs, operational/legal constraints and controls
-  are explicit.
+Для отчётного периода в единой документированной валюте:
+project cash net = verified realized trading net − attributable operating costs.
+Trading net уже включает фактические комиссии/funding/swap по их знаку. Slippage,
+отражённый в fill price, не вычитается второй раз; его отдельно сравнивают с
+зафиксированным benchmark. Unrealized PnL, незавершённые расходы и economic
+counterfactual показываются отдельно. Transfers/deposits не прибыль. Источник,
+время и правило FX-конверсии явные. Подписка и включённые в неё credits не
+вычитаются дважды. Неизвестные расходы не ноль; оценка имеет статус PARTIAL.
+Рабочее время владельца/агентов показывается отдельно, если нет денежной оценки.
 
-## Truth hierarchy
+$500/месяц после расходов — предложенный ориентир из переданного PM-документа,
+а не прогноз, срок достижения, подтверждённая доходность или новый бюджет.
 
-For a live claim, reconcile all four layers:
+## Следующий этап развития
 
-1. Git source SHA and release bundle;
-2. deployed file hashes and deploy receipt;
-3. service, heartbeat and effective authority;
-4. direct broker positions, orders, fills and accounting.
-
-Conflicts are labelled `NOT_CONFIRMED`. Research, shadow, paper and UI state do
-not override broker truth.
-
-## Canonical migration state
-
-Task 5 is commit `482a536`. It can stop only an exact legacy screen after a
-fresh actual canonical launch, independently replayed process-kind comparator,
-current evidence hashes, exact authorization scope and immediate OS identity
-recheck. The completed dry-run is `NOT_CONFIRMED`; no screen was stopped.
-
-Canonical Station Task 6 still needs to connect this gate to status/audit and
-write the operator runbook. It must not perform a live migration.
-
-## Current execution queue
-
-```text
-XSEC shared controls (first shared dependency)
-  +-- XSEC PIT V5 preflight and delisted-data blocker
-  +-- Bull frozen contract
-  +-- XAU unchanged replication controls
-
-Bull event detector + execution model (parallel, no shared-file conflict)
-
-Canonical Station Task 6 (parallel, research infrastructure only)
-
-Dirty-tree preservation (isolated groups, never blind staging)
-```
-
-## Repository boundary
-
-- Canonical integration: `bybit-bot-recovery-20260824`.
-- Legacy/active evidence source: `bybit-bot-clean-v28`.
-- Do not patch both trees in parallel.
-- Do not commit `_snimki/`, `_to_delete/`, `*.bak*`, env files, sessions, logs
-  or bulk raw/generated data.
-- Move unique legacy work by explicit file list, secret scan, tests, review and
-  one scoped commit at a time.
-
-## Non-negotiable gates
-
-- No reuse of consumed ATT1/SBR1 OOS v1.
-- No current-137 substitution for XSEC closed-contract PIT.
-- No money/risk/slot change from a research finding alone.
-- No legacy stop from a dry-run or self-declared PASS.
-- No AI authority to trade, promote or restore risk.
+Действующий money path продолжает получать фактические receipts. Подготовка
+серийного PUMP4 TINY-2 отделена от его активации и не ждёт завершения чужих
+исследований. Gold/Polymarket/LIQ дают экономические ответы в своих рамках.
+Brain/Factory улучшаются там, где выявлен конкретный дефект или недостающая
+измеримость; переобучение и новые live filters не назначаются автоматически.
+Реальная очередь и критерий завершения каждой работы — только в roadmap.

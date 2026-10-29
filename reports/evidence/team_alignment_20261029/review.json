@@ -1,0 +1,41 @@
+{
+  "schema": "TRADING_OS_TEAM_ALIGNMENT_REVIEW_V1",
+  "base_commit": "b8c9b821d72d3a7be511e9ea51951f0e13570016",
+  "research_ref": "30951f9abcdcf56ae4bf853d9168d2ac2d24a34e",
+  "research_sha256": {
+    "research_lab/CEL_SISTEMY.md": "afdd8af0ce36cd7bd5fb2f829441fe66779e1b083f9850b47bfb949542f91d91",
+    "research_lab/factory_v3/brain_shadow_v1.py": "2d9c24b8e8399abcd212c4835eb1d3193a3e76e8d3416d6a08904c352e90b928",
+    "research_lab/factory_v3/brain_povtor.py": "b547dc9e7dcf642d9246930b7e5ce6a12396f064b567d16d3e9fbc49a0be448d",
+    "research_lab/factory_v3/dubl_proverka.py": "82451b44806523825602d2f2f0cd9928859f6d79f7d79a064522b6be0bf9c0aa",
+    "research_lab/factory_v3/kontrol_fermy.py": "31079e1bddfe54ffc79668b6d5db725cf0298197443b3317c3bfe89cd7c903ee",
+    "research_lab/KARTA.md": "1324049534291df271137f9c988652eb133a34607dad5a42a7445fc238001359"
+  },
+  "local_code_sha256": {
+    "research_lab/pump4_account_owner_v1.py": "f47b8471017d38c40e88476c757f97da89594eb3034aeb0c9a9b1663c8128baf",
+    "research_lab/pump4_live_observer_v1.py": "b2bf93b357d76a345150319ac3ce31e7872d7c7f06344153e8a636d080949285",
+    "scripts/pull_pump4_observer_capture_v1.py": "e4379015b5a20f6f8655a4d13c73b517b308c24284cfbc7c28b98bc26996c38d",
+    "scripts/import_pump4_live_observer_v1.py": "08230b3e7dbdb5b57d58e61dd916171b775d96253af8f05b98abc616eb1b8f13"
+  },
+  "external_attachment_sha256": "333244e75383c5b516d67a9ae1115f6331733daa868c0f918cb906679c6bf643",
+  "ack": {
+    "codex": "ADOPTED_FOR_PREPARATION",
+    "claude": "PENDING",
+    "pm": "PENDING",
+    "tiny2_owner_go": "NOT_GRANTED"
+  },
+  "tiny2_implementation": "NOT_STARTED",
+  "external_messages_sent": 0,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "runtime_changes": 0,
+  "research_code_changes": 0,
+  "review": {
+    "primary": "SOURCE_PINS_LOCAL_LINKS_DIFF_AND_AUTHORITY_LABELS_CHECKED",
+    "independent": "UNAVAILABLE_CAPACITY_NO_FINDINGS",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "high",
+    "actual_model_execution_verified": false,
+    "retries": 0,
+    "financial_acceptance": false
+  }
+}

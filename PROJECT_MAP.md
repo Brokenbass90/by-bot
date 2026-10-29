@@ -2,11 +2,13 @@
 
 *Онбординг для человека и любого ИИ. Визуал: `reports/PROJECT_MAP.svg`. Машиночитаемая карта кода: `reports/AI_CODEMAP.json` (через `bot.ai_tools.get_codemap`).*
 
-> **CURRENT START HERE (2026-09-06):**
-> `reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md` →
-> `reports/CURRENT_PROJECT_ROADMAP.md` → `docs/PROJECT_MAP.md`.
-> Разделы ниже с датой 2026-06-30 являются исторической картой и не должны
-> использоваться как текущая live-истина.
+> **CURRENT START HERE (2026-10-29):**
+> [Карта и контракт проекта](docs/PROJECT_MAP.md) →
+> [единственный активный roadmap](ROADMAP_SELF_IMPROVING.md) →
+> [checkpoint TOP](reports/CODEX_SESSION_CHECKPOINT_2026_09_06.md).
+> Исходная цель: research/fabrika-v1:research_lab/CEL_SISTEMY.md от6Oct;
+> роли и границы актуализированы в карте. Разделы ниже с датой2026-06-30 —
+> историческая карта, не текущие приоритеты или финансовые разрешения.
 
 **ARCHIVED START POINT (2026-06-30; history only):**
 `CODEX_HANDOFF_2026_06_29.md` →
