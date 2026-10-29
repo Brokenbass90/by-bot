@@ -1,0 +1,12 @@
+{
+  "independent_pass": false,
+  "limitations": "Independent critical code review remains pending before any broader integration; no financial deployment in this change.",
+  "no_retry_or_expensive_fallback": true,
+  "primary_review": "file-only imports; pins; stable replay; no financial constructors or policy execution; tests executed",
+  "requested_model": "gpt-6-astra",
+  "rollout_id": "01a1871e-02b7-70f3-898d-86b5fc91295c",
+  "runtime_effort": "high",
+  "runtime_model": "gpt-6-astra",
+  "schema": "BOUNDED_CRITICAL_REVIEW_STATUS_V1",
+  "status": "NOT_COMPLETED_USAGE_LIMIT"
+}

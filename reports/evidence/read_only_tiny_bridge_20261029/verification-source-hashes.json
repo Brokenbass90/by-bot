@@ -1,0 +1,19 @@
+{
+  "files": {
+    "research_lab/att1_lifecycle_journal.py": "48b9465eaf1c09bb9ef87160610eac57cb2afb62f206b1b5c18c75c196f681eb",
+    "research_lab/brain_shadow_readonly_bridge_v1.py": "7d17be0a5e6359038cfca815b816a59f2cb2ea086056a94102366a41c6cdc5ac",
+    "research_lab/os2_shadow_bridge.py": "6c42b5dbeb4fc4b4e0aeea2fcfd16885f035c645bc8374c2272cc94fc56cd788",
+    "research_lab/os2_shadow_journal.py": "31cdf364dd39849c92d65c4ba4c166a092a93661d4af8b311def1f988efedfd5",
+    "research_lab/pump4_live_observer_v1.py": "e01df12f15e4efaa0c7d150dc985b2868233664967e9b98020e88a7e85e1d74f",
+    "research_lab/research_tiny_intake_v1.py": "c22db908d23cd7cd4c34fe274ee6c1c8a961f5e23caa5fcd91d2fa5ffb8ed607",
+    "scripts/import_pump4_live_observer_v1.py": "08230b3e7dbdb5b57d58e61dd916171b775d96253af8f05b98abc616eb1b8f13",
+    "scripts/prepare_research_tiny_intake_v1.py": "a41d71a536576848f5d098cdc915de0630cc14f51e7bb57461a8cd7cb3851430",
+    "scripts/pull_pump4_observer_capture_v1.py": "e4379015b5a20f6f8655a4d13c73b517b308c24284cfbc7c28b98bc26996c38d"
+  },
+  "research_ref": "5c71a9a30e2c7584d18ef3c40cf9d345502ea05d",
+  "research_sources": {
+    "research_lab/KITY_M3_KRIPTO_ITOG_2026_10_18.md": "3db66c90aaa9c260a7f08aa5e03d596adeec57af034109ac25593ef2ac9a7d43",
+    "research_lab/kity_dosie.py": "407073fb7105c74c1c9686aee0dbbeb02c24704a4f957a1c32263368779cf4de"
+  },
+  "schema": "READ_ONLY_TINY_BRIDGE_SOURCE_HASHES_V1"
+}

@@ -1,5 +1,13 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**29Oct actual read-only intake:** [PUMP4 facts / one KITY case](reports/READ_ONLY_TINY_BRIDGE_2026_10_29.md).
+192sampled receipts/replay0, existing durable Brain journal, six-hour local delivery;
+versioned causal advice UNKNOWN, no policy/order/gate authority. KITY C2/datedlots
+match, published8vsactual10 dossier drift; economics/account/weekly lifecycle OPEN.
+75testsPASS; independent review usage-blocked, no independentPASS. PUMP4/Monthly
+unchanged; original expiry preserved; canonical Polymarket→KITY queue retained.
+
+
 **Current — 29 October: three production-first decisions**
 
 [Polymarket / funding / Alpaca evidence](reports/PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md).

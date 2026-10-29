@@ -1,0 +1,11 @@
+{
+  "chain_records": 225,
+  "comparison_status": "UNKNOWN_NO_CAUSAL_VERSIONED_ADVICE",
+  "missing_contract": "version+policy_sha+stable_signal_id+independent_predecision_availability_receipt",
+  "money_authority": false,
+  "orders_allowed": false,
+  "pump4_rows": 87,
+  "schema": "PUMP4_BRAIN_ADVICE_SOURCE_AUDIT_V1",
+  "source_sha256": "96af9a341a4c4568812537f43fb9c5e48444fc105009c479ba084712f46945fe",
+  "version_label_rows": 0
+}

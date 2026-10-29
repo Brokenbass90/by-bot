@@ -1,5 +1,26 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — actual PUMP4 read-only Brain receipt bridge / one KITY intake delivered
+
+Read READ_ONLY_TINY_BRIDGE_2026_10_29.md FIRST.192actual sampled receipts imported,
+both replays0new; lifecycle0/noactualtrade. Existingjournal reused, separateDATA,
+no brokerwrites/policy/financial constructors.225advicechain/87PUMP4/0versioned;
+V1.1/V1.2 comparisonUNKNOWN until independent predecision source contract.
+6h local-app quiet heartbeat pump4-read-only-brain-receipts ACTIVE; firstscheduled
+run future/Macdependent, nativeVPSsafety unchanged.75targeted+regressionPASS;
+independentastra/highreview hitusage before result, NOTindependentPASS/no retry.
+PUMP4sameLIVE/PID3198429/0restarts/currenthealthy;latest96oneSourceError→42normal,
+rootcauseUNKNOWN preserved. Sameexpiry1Nov19:26:32.774UTC/noextension; freshcomplete
+history+brokerproof needed forNO_TRADE. MonthlysameunitSHA9d94467d…cc1d/active.
+KITY22actual5L5S vs publisheddossier4L4S mismatch, C2match/datedlotsPASS only;
+economicINCONCLUSIVE/freshcosts/margin/singleownerPUMP4/weeklylifecycle/newGOOPEN.
+CanonicalPoly→KITY queue unchanged; existingliverules/risks/financialpins unchanged.
+Initialbroadcapture auto-reviewrejected beforeexecution; approved replacement only
+explicit evidenceallowlist, no credential_source/source_files traversal.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — production-first three decisions completed to external gates
 
 Read PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md FIRST. Poly54publicGET/45sWS,

@@ -1,0 +1,61 @@
+{
+  "actual_entry_executed": false,
+  "config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+  "entry_deadline_ms": 1793561192774,
+  "expiry_status": "WAITING_WITHIN_ENTRY_PERIOD",
+  "final_costs_proven": false,
+  "health": {
+    "actual_protection_proven": false,
+    "age_ms": 9637,
+    "financial_trading_proven": false,
+    "observed_ms": 1793276409793,
+    "orders_allowed": false,
+    "owner": "PUMP4",
+    "pid": 3198429,
+    "reason": "LIVE_FLAT_WAITING_SIGNAL",
+    "restart_allowed": false,
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "source_age_ms": 629,
+    "status": "HEALTHY"
+  },
+  "manifest_sha256": "47c34f6407692dbb26260582cbb3a01514cee78f74f04f90e911d25b3390bd36",
+  "no_trade_inventory_complete": false,
+  "normal_ticks_after_last_block": 42,
+  "observed_ms": 1793276409800,
+  "observer_broker_writes": 0,
+  "owner_state": {
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "Job": "",
+    "MainPID": "3198429",
+    "NRestarts": "0",
+    "SubState": "running"
+  },
+  "sampled_receipts": 96,
+  "schema": "PUMP4_READONLY_OPERATIONAL_EVIDENCE_V1",
+  "scope_or_risk_changes": 0,
+  "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+  "scope_unchanged": true,
+  "source_receipt_max_ms": 1793276400156,
+  "source_receipt_min_ms": 1793275741709,
+  "status": "LIVE_ARMED_HEALTHY",
+  "statuses": [
+    "BLOCKED_OBSERVATION",
+    "NO_NEW_SIGNAL"
+  ],
+  "ticks_max": 9874,
+  "ticks_min": 9779,
+  "transient_blocked_observations": [
+    {
+      "observed_ms": 1793276105528,
+      "result": {
+        "custody_required": true,
+        "error_type": "SourceError",
+        "finality_proven": false,
+        "status": "BLOCKED_OBSERVATION"
+      },
+      "tick": 9832
+    }
+  ],
+  "transient_source_error_root_cause": "UNKNOWN_NOT_DIAGNOSED_NO_PRODUCTION_CHANGE"
+}

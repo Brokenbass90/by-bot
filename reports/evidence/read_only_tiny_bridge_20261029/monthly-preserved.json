@@ -1,0 +1,7 @@
+{
+  "broker_calls_by_this_check": 0,
+  "scope_or_risk_changes": 0,
+  "scope_status": "existing v6 preserved; no reactivation",
+  "timer": "active/waiting/enabled",
+  "unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d"
+}

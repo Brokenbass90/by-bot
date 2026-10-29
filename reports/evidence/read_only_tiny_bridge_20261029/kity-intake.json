@@ -1,0 +1,125 @@
+{
+  "blockers": [
+    "DOSSIER_LEG_COUNT_DRIFT_8_VS_10",
+    "ECONOMIC_INCONCLUSIVE",
+    "FRESH_ACCOUNT_MARGIN_QUOTES_COSTS_REQUIRED",
+    "WEEKLY_NATIVE_STOP_RECOVERY_AND_EXIT_ACCEPTANCE_REQUIRED",
+    "NEW_EXACT_OWNER_GO_REQUIRED",
+    "BYBIT_SINGLE_OWNER_CONFLICT_PUMP4"
+  ],
+  "broker_writes": 0,
+  "candidate": "KITY_ORIGINAL_WEEKLY",
+  "costs": "UNKNOWN_FRESH_FEES_FUNDING_SLIPPAGE_REQUIRED",
+  "economic_status": "INCONCLUSIVE",
+  "leg_count": 10,
+  "legs": [
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "0.6262",
+      "research_qty": "159.0",
+      "side": 1,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "4028.85",
+      "research_qty": "0.024",
+      "side": 1,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "54.71",
+      "research_qty": "1.827",
+      "side": 1,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "0.5298",
+      "research_qty": "188.70000000000002",
+      "side": 1,
+      "symbol": "MNTUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "1.1115",
+      "research_qty": "89.9",
+      "side": 1,
+      "symbol": "DOTUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "58.82",
+      "research_qty": "1.7000000000000002",
+      "side": -1,
+      "symbol": "LTCUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "144.94",
+      "research_qty": "0.68",
+      "side": -1,
+      "symbol": "MSTRUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "80.76",
+      "research_qty": "1.23",
+      "side": -1,
+      "symbol": "SOXLUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "4032.14",
+      "research_qty": "0.024",
+      "side": -1,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "current_step_minimum_margin_fees_funding": "NOT_VERIFIED",
+      "metadata_lot_check": true,
+      "research_lot_check": true,
+      "research_price": "0.5454",
+      "research_qty": "183.3",
+      "side": -1,
+      "symbol": "WLDUSDT"
+    }
+  ],
+  "money_authority": false,
+  "next_independent_gate": "resolve published dossier cardinality and versioned weekly lifecycle contract",
+  "orders_allowed": false,
+  "ready_for_tiny": false,
+  "research_gross_usdt": "990.741660000000022360",
+  "reuse": [
+    "existing KITY frozen selector and C2",
+    "Bybit native-stop/reconcile/recovery primitives",
+    "existing account-owner lock; never start a second writer"
+  ],
+  "schema": "RESEARCH_TINY_KITY_INTAKE_V1",
+  "session": "2026-10-22",
+  "signal_parity": "C2_PASS_MATCH_ONLY",
+  "source_sha256": {
+    "c2": "27b0c365889c01652a010e2ec12192f3e8c0c205dfddbbc084a97556be21684d",
+    "entry": "fff7a599710de24a66211b16b6ff05a5c30ca2c3a564ab265cea2dc92ce54541",
+    "signal": "e80208a6e60f26bb46ab9060e60a9d1c3bf82affc12cb1ac564346cc262c9a76"
+  }
+}
