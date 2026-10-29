@@ -1,0 +1,75 @@
+{
+  "schema": "MT5_GOLD_DEMO_READONLY_PREFLIGHT_V1",
+  "observed_utc": "2026-10-29T16:45:22.577750+00:00",
+  "status": "DEMO_READBACK_PASS_EXECUTION_NOT_TESTED",
+  "account": {
+    "server": "MetaQuotes-Demo",
+    "type": "demo",
+    "currency": "EUR",
+    "margin_mode": "hedging"
+  },
+  "terminal": {
+    "build": 6259,
+    "server_connected": true,
+    "mcp_trade_allowed": true
+  },
+  "symbol": {
+    "symbol": "XAUUSD",
+    "description": "Gold vs US Dollar",
+    "bid": 4016.66,
+    "ask": 4016.96,
+    "update_time": "2026-10-29T18:45:21",
+    "point": 0.01,
+    "digits": 2,
+    "tick_size": 0.01,
+    "tick_value": 0.1,
+    "contract_size": 100.0,
+    "volume_min": 0.01,
+    "volume_max": 100,
+    "volume_step": 0.01,
+    "currency_profit": "USD",
+    "currency_margin": "USD",
+    "trade_mode_name": "full",
+    "trade_stops_level": 0,
+    "trade_freeze_level": 0,
+    "swap_mode": 1,
+    "swap_long": -12.6,
+    "swap_short": -4.6,
+    "swap_rollover3day": 3.0,
+    "margin_initial": 0.0,
+    "margin_maintenance": 0.0,
+    "trade_calculation_mode": "cfd leverage"
+  },
+  "spread_price": 0.3,
+  "history": {
+    "ok": true,
+    "symbol": "XAUUSD",
+    "period": "H1",
+    "bars_returned": 10,
+    "last_bar": {
+      "time": 1793286000,
+      "open": 4026.17,
+      "high": 4027.72,
+      "low": 4018.99,
+      "close": 4023.47
+    },
+    "closed_bar_freshness_proven": false
+  },
+  "sizing_diagnostic": {
+    "scenario": "ARITHMETIC_ONLY_1_USD_PRICE_MOVE_PER_1_LOT_NOT_A_TRADE",
+    "account_currency": "EUR",
+    "loss_per_lot": 89.58727144047374,
+    "existing_sizing_reason": "⚠терминал отдаёт странную цену тика: 0.1 вместо расчётных 0.89587 (USD→EUR). Считаю по contract_size — это 89.59 EUR на лот вместо 10.00, так риск не занижен",
+    "tick_contract_consistency_proven": false
+  },
+  "limitations": [
+    "MetaQuotes-Demo is not Bullwaves account or live execution proof",
+    "No strategy edge or signal accepted",
+    "No margin requirement proven from zero margin_initial/maintenance",
+    "Quiet instantaneous spread does not prove news spread or slippage",
+    "No order lifecycle or native stop tested"
+  ],
+  "broker_writes": 0,
+  "configuration_changes": 0,
+  "order_calls": 0
+}

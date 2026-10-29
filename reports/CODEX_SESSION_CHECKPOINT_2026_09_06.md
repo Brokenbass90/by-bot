@@ -1,5 +1,21 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — MT5 demo restored; actual gold readback/native calculations PASS
+
+Read GOLD_MT5_DEMO_PREFLIGHT_2026_10_29.md. Owner opened MetaQuotes-Demo, not
+Bullwaves. Existing8766/statusoktrue/22346listening/build6259/demoEURhedging;
+XAUUSDmin/step0.01,contract100,H1tenbars readable (closedtime/freshness notaccepted).
+Tickvalue0.1 disagrees with contract; existing sibling conservative fallback
+~89.59EUR/lot per$1move agrees with native calc0.01lot:-0.90EUR BUY/SELL;
+native margin35.99EUR at4017.38, notzero from margin_initial0. Fees/slippage extra.
+0orders/writes/settingschanges; configured authentication used without key output.
+Demo lifecycle/native stop/restart nottested; frozen scenario needed, no arbitrary
+trade/strategyPASS. Bullwavesactual venue/news cost and macro PIT gates remain.
+PUMP4/Monthly unchanged, KITYnewengineeringHOLD. Receipts inreport/evidence.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — gold broker owner-reportedBullwaves; copier located, MT5 readback unavailable
 
 Existingproject ../bybit-bot-clean-v28/signal_copy. Web8766listening/statusokfalse;

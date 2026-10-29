@@ -1,16 +1,16 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-**29Oct gold venue clarification:** owner identifies Bullwaves via existing
-Telegram→MT5 project. Active sibling module is
-`/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/signal_copy`;
-README/client available in recovery `signal_copy/`. Existingweb8766 responds,
-GET /api/status ok:false; local MT5 MCP22346 refusesconnection. No terminal/app
-started, credentials/config opened, trade/copy/approval endpoint called.
-Read-only existingSQLite metadata:60cards MetaQuotes-Demo/demo through15Oct07:32UTC,
-1olderdemo/serverunknown. Historicalcopier does not verify currentBullwavesaccount.
-Broker nowOWNER_REPORTED_BULLWAVES, currentaccounttype/XAUUSDcontract/costs UNKNOWN
-until existingterminalconnection is restored and read-only metadata captured.
-Do not change demo/live allowlists or enable automaticcopying for this inspection.
+**29Oct gold demo restored:** [actual preflight](reports/GOLD_MT5_DEMO_PREFLIGHT_2026_10_29.md).
+Owner opened MetaQuotes-Demo; existing Telegram→MT5 sibling signal_copy now
+connected, accountdemo/EUR/hedging/build6259, XAUUSDquoted/min0.01lot. Native
+profit/margin calculations agree with conservative contract sizing: hypothetical
+0.01lot/$1adverse move≈-0.90EUR, margin35.99EUR. Rawtickvalue0.1 inconsistent;
+not an instruction to trust it or silently change sizing. H1readable but closed
+bar timing/freshness not accepted. Order lifecycle/native stops not yet tested.
+BrokerBullwaves remains owner-reported; demo is engineering venue only, not its
+live costs/profitability. No orders/settings/allowlist/autocopy changes. Next
+frozen demo scenario + closedtime/preflight/lifecycle checks; actual venue/news
+cost and macrodata gates stay distinct. Existing LIVE untouched.
 
 
 **29Oct owner clarification — seek an active profit sleeve, separate from the accumulation sleeve.**
@@ -31,8 +31,8 @@ Research selection now:
   remains a published-verdict candidate, not an assumed frequent/profitable leg.
 - Gold: first resolve actual venue/cost feasibility for the existing26Oct macro
   mechanism. Consensus-surprise sourceBLOCKED, release spread/slippageUNKNOWN;
-  historicalH1/M5 exists, only demo venue confirmed. Owner broker/type asked,
-  unanswered so far; no credentials requested. Macro reaction is a hypothesis,
+  historicalH1/M5 exists, only demo venue confirmed. Bullwaves owner-reported,
+  current confirmed connection MetaQuotes-Demo only; no credentials requested. Macro reaction is a hypothesis,
   not the already-failed generic indicator/Elder gold arm.
 
 Every candidate must report executable independent opportunities per week,

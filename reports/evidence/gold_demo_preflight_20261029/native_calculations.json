@@ -1,0 +1,38 @@
+{
+  "schema": "MT5_GOLD_DEMO_NATIVE_CALC_V1",
+  "observed_utc": "2026-10-29T16:46:02.081037+00:00",
+  "server": "MetaQuotes-Demo",
+  "currency": "EUR",
+  "volume": 0.01,
+  "reference_open_price": 4017.38,
+  "scenario": "1_USD_ADVERSE_PRICE_MOVE_NOT_A_SIGNAL_OR_ORDER",
+  "calculations": {
+    "buy": {
+      "profit": {
+        "ok": true,
+        "profit": -0.9,
+        "currency": "EUR"
+      },
+      "margin": {
+        "ok": true,
+        "margin": 35.99,
+        "currency": "EUR"
+      }
+    },
+    "sell": {
+      "profit": {
+        "ok": true,
+        "profit": -0.9,
+        "currency": "EUR"
+      },
+      "margin": {
+        "ok": true,
+        "margin": 35.99,
+        "currency": "EUR"
+      }
+    }
+  },
+  "fees_swap_slippage_included": false,
+  "order_calls": 0,
+  "broker_writes": 0
+}
