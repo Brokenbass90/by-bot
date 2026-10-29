@@ -1,0 +1,71 @@
+{
+  "arithmetic_only": {
+    "embedded_roundtrip_cost_usdt": "0.36",
+    "historical_worst_usdt": "-42.15",
+    "mean_week_usdt": "0.69",
+    "week_sd_usdt": "15.75"
+  },
+  "decision": "SHADOW_ONLY_ENGINEERING_ON_HOLD",
+  "economic_status": "ECONOMIC_INCONCLUSIVE",
+  "financial_actions": 0,
+  "intermediate_shadow_pnl_read": false,
+  "judges_run": 0,
+  "new_strategy_modules": 0,
+  "next_money_priority": "30Oct causal Monthly frozen selection and 2Nov conditional execution; preserve existing PUMP4 pilot",
+  "no_forecast_or_guaranteed_loss_bound": true,
+  "proposed_reference_capital_usdt": "300",
+  "pump4_current_pilot": {
+    "auto_extension": false,
+    "max_entries": 1,
+    "max_positions": 1
+  },
+  "recent_mean_bps_per_week": "23.0",
+  "recent_t_newey_west": "0.26",
+  "recent_week_sd_bps": "525",
+  "recent_window_weeks": 27,
+  "reference_is_approved_weekly_budget": false,
+  "research_ref": "30951f9abcdcf56ae4bf853d9168d2ac2d24a34e",
+  "schema": "KITY_ECONOMIC_PASSPORT_DECISION_V1",
+  "source_status": "PUBLISHED_RESEARCH_NOT_INDEPENDENT_RECALCULATION",
+  "sources": {
+    "research_lab/ALPACA_SRAVNENIE_DINAMIKI_ITOG_2026_10_18.md": {
+      "git_blob": "e8d68f060d2e1845c20c3fecbd9a9148a0cad6be",
+      "sha256": "a8c1f7900ab66c0ca59cc46d26bd0114f2873a5923547c08ea15a037d35e832a"
+    },
+    "research_lab/KITY_BYBIT_CANARY_USLOVIYA_2026_10_11.md": {
+      "git_blob": "427d109a0c31c740870d8a889c21080ef93f924e",
+      "sha256": "2a90a4963977cb0a90e0e5e5e0d047b2439a46d66423e0ef1ca7eea73ef93366"
+    },
+    "research_lab/KITY_EKONOMICHESKAYA_IDENTICHNOST_2026_10_18.md": {
+      "git_blob": "470ba049dfd50867b02a2b8a4fb12b1bf3e0418b",
+      "sha256": "c7780e610d54e85b5149d3dff0968089facfb64de01b917cc89ceaf2deb9ad6d"
+    },
+    "research_lab/KITY_EKONOMIKA_DLYA_CODEX_2026_10_26.md": {
+      "git_blob": "3b38031356f22bf664c1dc22ff804e2d98e91ff9",
+      "sha256": "55c80741805ab3f83efb3927d1292f11b694f95caaf2a7b9e403939b5753a011"
+    },
+    "research_lab/KITY_PAKET_RESHENIYA_300_2026_10_27.md": {
+      "git_blob": "adcf7c224ea35302664a5d1f46d9c394206bcb2a",
+      "sha256": "dcc70d0d04d4813f150ef22dab50e15a306bc1cdd2b7914964112066d3e71d02"
+    },
+    "research_lab/PREREG_KITY_BYBIT_TEN_2026_10_11.md": {
+      "git_blob": "ebe56e3fb2f82b780a17da091489525f0580fdc8",
+      "sha256": "ab47e6ea020d4515633cbb8d6793add2e3805725aac627efe277a55e3b891aec"
+    },
+    "research_lab/PUMP4_EKONOMIKA_S_FANDINGOM_2026_10_26.md": {
+      "git_blob": "b21c5916f9c1730a6f31d40af332fc73c2a40e58",
+      "sha256": "d16441982c24e9b30d396410a8ef911a4448e535052a52c05544cc4c0423d621"
+    },
+    "research_lab/PUMP4_POLNYY_POVTOR_ITOG_2026_10_26.md": {
+      "git_blob": "f8835a0861c23047c659b7bc90681b7b63eb142f",
+      "sha256": "395eff5d8f1592bef942dfd7f9064c63b7b4f0b6ec49e46a52ab632c1d2f4656"
+    },
+    "research_lab/TREND_TREYL_D1_ITOG_2026_10_22.md": {
+      "git_blob": "1f1419b0ccacceeb9f6d4fdc15ecee2076182fa5",
+      "sha256": "0ad1904cce0cd7bc67d91fe587567a58d24458575e748d4095cf431e73468062"
+    }
+  },
+  "strategy": "BYBIT_NATIVE_KITY_MIXED_UNIVERSE_10_LEG",
+  "twentysix_weeks": "RESEARCH_PROSPECTIVE_ECONOMIC_VERDICT_GATE",
+  "two_weeks": "C1_C2_OPERATIONAL_CHECKPOINT_FOR_EXECUTION_TEST_ONLY"
+}

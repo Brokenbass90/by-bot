@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT29Oct — KITY economic passport resolved; SHADOW_ONLY/new engineering ON_HOLD
+
+Read KITY_ECONOMIC_DECISION_2026_10_29.md FIRST. DirectClaude26/27Octpassports
+explicitlyBybit-native: ECONOMIC_INCONCLUSIVE, latest27mean23bps/t0.26/SD525bps;
+300reference=>historicalmean0.69USD/week/SD15.75, NOTforecast/budget/lossbound.
+187weekfunding+12bps included; no newjudge/rawoutcome/recalculation. EarlierCodex
+missed directpassports and overstated admissionambiguity; source-selectionerror
+corrected.2C1C2weeks=executiontest checkpoint,26weeks=prospectiveeconomicgate;
+no shortcut/intermediatePnL/newGO. KeepexistingSHADOW, stopnewKITYengineering,
+retainallpublishedcode/evidence. No collector/units/financialstate changes.
+CurrentPUMP4pilot1entry/1position/lifecycle is notserialregulartrading; noautomatic
+expiryextension. Monthly strongestcurrentresearchcandidate butlowfrequency/CASH.
+Nextmoneytask=actual30Oct frozenMonthlyselection→2Nov14:30UTC conditionalexecution;
+PUMP4health/opportunity+actualexecutionevidence alongside. No otherundeployed
+candidatewithsuperioracceptedproof found; Poly/SHORTresearchonly untilverdict.
+Classicmomentum existsinMonthly; projectD1trendFAIL/InPlayINCONCLUSIVE notrescued.
+
+---
+Earlier dated entries below are history.
+
 CURRENT29Oct — KITY Bybit raw-format adapter/CLI E2E completed; nearest-LIVE ranking verified
 
 Read KITY_BYBIT_ORDERS_OFF_AND_NEXT_LIVE_2026_10_29.md FIRST. Newpureadapter reuses

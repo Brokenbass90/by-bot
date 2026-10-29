@@ -1,5 +1,14 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
+**29Oct economic decision supersedes engineering priority:** [KITY passport](reports/KITY_ECONOMIC_DECISION_2026_10_29.md).
+KITYBybit ECONOMIC_INCONCLUSIVE per direct26/27OctClaude passports; existingSHADOW
+continues, NEWENGINEERING_ON_HOLD/code retained. TwoC1/C2weeks not moneyproof;
+26weeks remain prereg forwardverdict, execution-onlycanary a separateunapprovedpurpose.
+Nextmoneyfocusactual30OctMonthlyselection→2Novconditionalopening + existingPUMP4
+one-lifecyclepilot; noautomaticextension/serialauthority. ClassicD1/InPlay notpromoted.
+No newmodules/tests/strategy/financialactions; latestsource selection correction inreport.
+
+
 **29Oct next-LIVE / completed KITY API-format gate:** [evidence](reports/KITY_BYBIT_ORDERS_OFF_AND_NEXT_LIVE_2026_10_29.md).
 5API-format snapshots/285model events→existingweeklyjournal,103tests; independent
 review4Important fixed, notactualexchange/moneyPASS. FreshPUMP4waithealthy,
