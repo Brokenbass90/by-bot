@@ -1,3 +1,29 @@
+# Latest —30Oct DATA clock recovery / published PUMP4 patch
+
+CURRENT30Oct14:04Cyprus — DATA Brain clock-guard recovery; PUMP4 patch published
+
+PUMP4 accounting/OFF patch2efcd79 published,177local/same177VPS; no serialfinancialGO.
+Read PUMP4_TINY2_SOURCE_ACCOUNTING_2026_10_30.md for exact remaining cost-release
+policy, actual-sourceOFF/handoff and firstV1receipt gates. ExistingLIVE unchanged.
+
+Read BRAIN_CONTEXT_CLOCK_RECOVERY_2026_10_30.md. Owner reported scheduled tasks lost.
+Monthly58/LIQ/PUMPfilebridge actually ACTIVE (no duplicates); prior completionbrain
+heartbeat intentionally deleted. Native contextworker had failed10:21:57UTC on
+CONTEXT_CLOCK_STEP, originofclockchangeUNKNOWN. Verified11pins/originalepoch/journal
+chain,NTPyes,8sstability0.008ms,Bybitoffset160.5ms. ONE start of only failedDATAunit;
+independent12:04:32UTCreadback activePID3397056,14events(old10prefixunchanged), original
+7daydeadline6Nov07:46:18.164UTC unchanged/source+unitbytesunchanged. New4events include
+causal durabilitywitness; descriptive outcomes nottradePnL. PUMPowner3198429/DATA3152955
+unchanged/Monthlytimerwaiting. Native LIQ/Monthlyexporttimers active. No financial
+code/unit/GO/risk or Brain policy change. OldNET2Novpreflight pause rejected by
+appauto-review; leftACTIVE, no workaround. Weekly97%used atcheck/reset4Nov09:47CY.
+Mac nativeDATA delivery remains proposed, notinstalled; appimports stilldependon
+allowance/Macawake. Do not rerun finished suites absent changes. Today'sMonthly
+close20UTC/sourceafter20:20UTC/selection staysoperationalP0; PUMPcost-release next.
+
+---
+Earlier entries below are history.
+
 # Latest —30Oct source accounting / selected OFF wiring
 
 CURRENT30Oct — PUMP4 source accounting and isolated owner wiring PASS; serial GO BLOCKED

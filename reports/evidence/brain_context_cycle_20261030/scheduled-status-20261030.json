@@ -1,0 +1,43 @@
+{
+  "observed_at_utc": "2026-10-30T12:05:51.310919+00:00",
+  "automations": [
+    {
+      "id": "monthly58-daily-data-delivery",
+      "name": "Monthly58 daily data delivery",
+      "status": "ACTIVE",
+      "kind": "heartbeat",
+      "rrule": "FREQ=DAILY;BYHOUR=23;BYMINUTE=40;BYSECOND=0",
+      "target_thread_id": "01a14947-6074-7252-b20e-667be0acf3e6"
+    },
+    {
+      "id": "liq-claude",
+      "name": "LIQ — ежедневная доставка данных Claude",
+      "status": "ACTIVE",
+      "kind": "heartbeat",
+      "rrule": "FREQ=DAILY;BYHOUR=3;BYMINUTE=40;BYSECOND=0",
+      "target_thread_id": "01a14947-6074-7252-b20e-667be0acf3e6"
+    },
+    {
+      "id": "pump4-read-only-brain-receipts",
+      "name": "PUMP4 — read-only Brain receipts",
+      "status": "ACTIVE",
+      "kind": "heartbeat",
+      "rrule": "RRULE:FREQ=HOURLY;INTERVAL=6",
+      "target_thread_id": "01a14947-6074-7252-b20e-667be0acf3e6"
+    },
+    {
+      "id": "net-2-preflight",
+      "name": "NET 2 ноября — один preflight выхода",
+      "status": "ACTIVE",
+      "kind": "heartbeat",
+      "rrule": "FREQ=YEARLY;BYMONTH=11;BYMONTHDAY=2;BYHOUR=16;BYMINUTE=20;BYSECOND=0;COUNT=1",
+      "target_thread_id": "01a0f86b-2ee7-7d23-9bda-00a144085086"
+    }
+  ],
+  "duplicates_created": false,
+  "brain_completion_heartbeat_deleted_intentionally": true,
+  "net_pause_rejected_by_auto_review": true,
+  "net_preflight_left_active": true,
+  "weekly_used_percent_at_check": 97,
+  "weekly_reset_cyprus": "2026-11-04T09:47:49+02:00"
+}
