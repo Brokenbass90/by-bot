@@ -1,0 +1,132 @@
+{
+  "actual_current_pump_readback": {
+    "actual_entry_executed": false,
+    "config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+    "health": {
+      "actual_protection_proven": false,
+      "age_ms": 6670,
+      "financial_trading_proven": false,
+      "observed_ms": 1793354229989,
+      "orders_allowed": false,
+      "owner": "PUMP4",
+      "pid": 3198429,
+      "reason": "LIVE_FLAT_WAITING_SIGNAL",
+      "restart_allowed": false,
+      "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+      "source_age_ms": 268,
+      "status": "HEALTHY"
+    },
+    "observed_ms": 1793354230012,
+    "one_lifecycle_only": true,
+    "original_lock_inode": 818853,
+    "owner_state": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "Job": "",
+      "MainPID": "3198429",
+      "NRestarts": "0",
+      "SubState": "running"
+    },
+    "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+    "status": "LIVE_ARMED_HEALTHY"
+  },
+  "actual_readback_broker_writes": "UNKNOWN_COUNTER_NULL",
+  "actual_readback_sha256": "9801551143812c642958f5a3dee05bbe895486fbac218ff0caa9747438597258",
+  "blockers": [
+    "COST_RELEASE_POLICY_NOT_IMPLEMENTED_NOT_APPROVED",
+    "ACTUAL_SOURCE_SERIAL_OFF_AND_PHYSICAL_HANDOFF_NOT_PERFORMED",
+    "FIRST_V1_ACTUAL_LIFECYCLE_UNOBSERVED"
+  ],
+  "code_files": {
+    "research_lab/pump4_serial_accounting_v1.py": "096782ded7cdd31cbe6e5ee7bed166d7a59c7fe3d2daa3d2089d571f3530ba7b",
+    "research_lab/pump4_serial_source_supervisor_v1.py": "be81ef24114e9d1ec43fb2832b1681a3cef32fcb4969a91efdbfd4ad0b05052f",
+    "scripts/run_pump4_serial_source_off_v1.py": "35f4f3fce1a432ec99beedd2ff6b695dbefc23e33985ac5e491b22e6a38d8f2f",
+    "tests/test_pump4_serial_accounting_v1.py": "af1a0434ae93c9d59dddf963068e5ce175cd5e4029f31183125151360b917d83",
+    "tests/test_pump4_serial_source_supervisor_v1.py": "eba88cc12671a12ded014b618b8709dee9783c263a4f5eb55f507889af7a34c6"
+  },
+  "entry_expiry_unchanged": "2026-11-01T19:26:32.774Z",
+  "existing_owner_sources_unchanged": true,
+  "financial_mutations_performed": false,
+  "new_financial_go": false,
+  "observed_at_utc": "2026-10-30T10:09:29.169691+00:00",
+  "primary_full_cycle_schema_fix": "NATIVE_STOP_WITNESS_USES_EXISTING_NORMALIZED_FIELDS",
+  "review": {
+    "effort": "high",
+    "findings": 1,
+    "fixed_by_primary": true,
+    "model": "gpt-6-astra",
+    "red_regressions": 2,
+    "runtime_verified": true,
+    "second_independent_signoff": false,
+    "session": "01a18c3d-039a-7b93-9e75-848210221fb5",
+    "severity": "P1"
+  },
+  "schema": "PUMP4_SERIAL_SOURCE_OFF_DELIVERY_V1",
+  "source_files": 191,
+  "source_manifest_sha256": "06cb58e310805b5babf951b83dace2545c9b0d2bef8b0d066aa40df738c2b5e7",
+  "staged_candidate": "/opt/bybot-research/pump4-serial-source-off-20261030/candidate-06cb58e310805b5b",
+  "staged_selected": false,
+  "status": "SOURCE_ACCOUNTING_AND_ISOLATED_OWNER_WIRING_PASS_SERIAL_GO_BLOCKED",
+  "tests": {
+    "independent_tests": false,
+    "local": 177,
+    "real_private_broker_calls_in_tests": 0,
+    "vps": 177,
+    "vps_network_namespace_disabled": true
+  },
+  "tiny_ready": false,
+  "unchanged_live_units": {
+    "observed_ms": 1793354883698,
+    "unit_hashes": {
+      "alpaca-monthly-owned.service": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+      "alpaca-monthly-owned.timer": "33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb",
+      "pump4-data-supervisor.service": "cb9de84027ee8d42e72068ce9f66fbbdb6fcf433cc27f435883f52c01d495a35",
+      "pump4-execution-owner.service": "78a3b337ac6dfcea5b50b23824c6ee4beda16a1cf89353d355a0d7b594c7a970"
+    },
+    "units": {
+      "alpaca-monthly-owned.service": {
+        "ActiveState": "activating",
+        "ExecMainStatus": "0",
+        "Id": "alpaca-monthly-owned.service",
+        "Job": "9446160",
+        "MainPID": "3388156",
+        "NRestarts": "0",
+        "NeedDaemonReload": "no",
+        "Result": "success",
+        "SubState": "start"
+      },
+      "alpaca-monthly-owned.timer": {
+        "ActiveState": "active",
+        "Id": "alpaca-monthly-owned.timer",
+        "Job": "",
+        "LastTriggerUSec": "Fri 2026-10-30 10:08:00 UTC",
+        "NeedDaemonReload": "no",
+        "NextElapseUSecRealtime": "",
+        "Result": "success",
+        "SubState": "running"
+      },
+      "pump4-data-supervisor.service": {
+        "ActiveState": "active",
+        "ExecMainStatus": "0",
+        "Id": "pump4-data-supervisor.service",
+        "Job": "",
+        "MainPID": "3152955",
+        "NRestarts": "0",
+        "NeedDaemonReload": "no",
+        "Result": "success",
+        "SubState": "running"
+      },
+      "pump4-execution-owner.service": {
+        "ActiveState": "active",
+        "ExecMainStatus": "0",
+        "Id": "pump4-execution-owner.service",
+        "Job": "",
+        "MainPID": "3198429",
+        "NRestarts": "0",
+        "NeedDaemonReload": "no",
+        "Result": "success",
+        "SubState": "running"
+      }
+    }
+  }
+}

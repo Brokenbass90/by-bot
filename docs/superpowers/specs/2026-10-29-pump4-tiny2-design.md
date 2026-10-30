@@ -1,5 +1,9 @@
 # PUMP4 TINY-2 — проект серийного пилота ORDERS_OFF
 
+30Oct COMPONENT_PASS / SERIAL_GO_BLOCKED: source accounting + selected OFF wiring
+implemented,177local/same177VPS. Actual cost-release policy/handoff/firstV1cycle
+OPEN. Read reports/PUMP4_TINY2_SOURCE_ACCOUNTING_2026_10_30.md. No new financial GO.
+
 29 октября 2026. Статус MODEL_SERIAL_GATE_PASS / PRODUCTION_SERIAL_INTEGRATION_OPEN /
 NOT_READY_FOR_OWNER_GO. Основание — запрос владельца подготовить продолжение
 работы и переданное PM-ревью. Текущий pilot66a7be9c неизменён и не продлевается.

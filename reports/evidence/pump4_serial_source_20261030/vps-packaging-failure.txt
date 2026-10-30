@@ -1,0 +1,267 @@
+............................FFFFFFFFFFFFFFFF............................ [ 40%]
+......................................................F................. [ 81%]
+.................................                                        [100%]
+=================================== FAILURES ===================================
+_______ test_two_full_cycles_restart_and_duplicate_signal_never_reenter ________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_two_full_cycles_restart_a0')
+
+    def test_two_full_cycles_restart_and_duplicate_signal_never_reenter(tmp_path):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:94: ModuleNotFoundError
+_____ test_reservation_before_first_send_blocks_second_plan_after_restart ______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_reservation_before_first_0')
+
+    def test_reservation_before_first_send_blocks_second_plan_after_restart(tmp_path):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:121: ModuleNotFoundError
+__________ test_lost_entry_response_restart_reconciles_without_resend __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_lost_entry_response_resta0')
+
+    def test_lost_entry_response_restart_reconciles_without_resend(tmp_path):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:134: ModuleNotFoundError
+_____ test_no_live_scope_or_actual_account_can_be_instantiated[override0] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_no_live_scope_or_actual_a0')
+override = {'mode': 'OWNER_TINY_LIVE'}
+
+    @pytest.mark.parametrize('override', [dict(mode='OWNER_TINY_LIVE'),dict(fixture_only=False),dict(account_fingerprint='a'*64)])
+    def test_no_live_scope_or_actual_account_can_be_instantiated(tmp_path,override):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:148: ModuleNotFoundError
+_____ test_no_live_scope_or_actual_account_can_be_instantiated[override1] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_no_live_scope_or_actual_a1')
+override = {'fixture_only': False}
+
+    @pytest.mark.parametrize('override', [dict(mode='OWNER_TINY_LIVE'),dict(fixture_only=False),dict(account_fingerprint='a'*64)])
+    def test_no_live_scope_or_actual_account_can_be_instantiated(tmp_path,override):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:148: ModuleNotFoundError
+_____ test_no_live_scope_or_actual_account_can_be_instantiated[override2] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_no_live_scope_or_actual_a2')
+override = {'account_fingerprint': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'}
+
+    @pytest.mark.parametrize('override', [dict(mode='OWNER_TINY_LIVE'),dict(fixture_only=False),dict(account_fingerprint='a'*64)])
+    def test_no_live_scope_or_actual_account_can_be_instantiated(tmp_path,override):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:148: ModuleNotFoundError
+_________ test_lifetime_loss_is_persistent_across_new_flow_and_utc_day _________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_lifetime_loss_is_persiste0')
+
+    def test_lifetime_loss_is_persistent_across_new_flow_and_utc_day(tmp_path):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:157: ModuleNotFoundError
+_________ test_expiry_blocks_new_entries_but_keeps_owned_model_custody _________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_expiry_blocks_new_entries0')
+
+    def test_expiry_blocks_new_entries_but_keeps_owned_model_custody(tmp_path):
+>       o,e,t,l,s=setup_case(tmp_path,valid_period_ms=H)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_expiry_blocks_new_entries0')
+valid_period_ms = 3600000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+_______________ test_missing_fee_bound_cannot_release_flat_cycle _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_missing_fee_bound_cannot_0')
+
+    def test_missing_fee_bound_cannot_release_flat_cycle(tmp_path):
+>       o,e,t,l,s=setup_case(tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_missing_fee_bound_cannot_0')
+valid_period_ms = 604800000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+_________ test_partial_journal_never_repairs_or_accepts_another_entry __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_partial_journal_never_rep0')
+
+    def test_partial_journal_never_repairs_or_accepts_another_entry(tmp_path):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:192: ModuleNotFoundError
+____ test_source_failure_latches_entries_but_does_not_abandon_model_custody ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_source_failure_latches_en0')
+
+    def test_source_failure_latches_entries_but_does_not_abandon_model_custody(tmp_path):
+>       o,e,t,l,s=setup_case(tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_source_failure_latches_en0')
+valid_period_ms = 604800000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+______________ test_a_go_file_inside_child_never_enables_a_sender ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_a_go_file_inside_child_ne0')
+
+    def test_a_go_file_inside_child_never_enables_a_sender(tmp_path):
+>       o,e,t,l,s=setup_case(tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_a_go_file_inside_child_ne0')
+valid_period_ms = 604800000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+______________ test_unsent_reservation_cannot_bypass_source_latch ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_unsent_reservation_cannot0')
+
+    def test_unsent_reservation_cannot_bypass_source_latch(tmp_path):
+>       o,e,t,l,s=setup_case(tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:233: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_unsent_reservation_cannot0')
+valid_period_ms = 604800000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+_________________ test_unsent_reservation_cannot_bypass_expiry _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_unsent_reservation_cannot1')
+
+    def test_unsent_reservation_cannot_bypass_expiry(tmp_path):
+>       o,e,t,l,s=setup_case(tmp_path,valid_period_ms=1000)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:245: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_unsent_reservation_cannot1')
+valid_period_ms = 1000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+______ test_terminal_cannot_settle_stale_risk_after_child_append_failure _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_terminal_cannot_settle_st0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7de9a07c8c50>
+
+    def test_terminal_cannot_settle_stale_risk_after_child_append_failure(tmp_path,monkeypatch):
+        from research_lab.att1_lifecycle_journal import LifecycleJournal
+>       o,e,t,l,s=setup_case(tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_terminal_cannot_settle_st0')
+valid_period_ms = 604800000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+__________ test_unknown_risk_does_not_suppress_reduce_only_model_exit __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_unknown_risk_does_not_sup0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7de9a0761b80>
+
+    def test_unknown_risk_does_not_suppress_reduce_only_model_exit(tmp_path,monkeypatch):
+        from research_lab.att1_lifecycle_journal import LifecycleJournal
+>       o,e,t,l,s=setup_case(tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pump4_serial_orders_off_v1.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_unknown_risk_does_not_sup0')
+valid_period_ms = 604800000, overrides = {}
+
+    def setup_case(tmp_path, *, valid_period_ms=7*24*H, **overrides):
+>       from research_lab.pump4_serial_orders_off_v1 import Pump4SerialOrdersOff
+E       ModuleNotFoundError: No module named 'research_lab.pump4_serial_orders_off_v1'
+
+tests/test_pump4_serial_orders_off_v1.py:18: ModuleNotFoundError
+___ test_api_adapter_drives_existing_lifecycle_and_restart_without_new_order ___
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-33/test_api_adapter_drives_existi0')
+
+    def test_api_adapter_drives_existing_lifecycle_and_restart_without_new_order(tmp_path):
+        from research_lab.pump4_execution_lifecycle_v1 import Pump4Lifecycle
+>       from test_pump4_execution_lifecycle_v1 import observation
+E       ModuleNotFoundError: No module named 'test_pump4_execution_lifecycle_v1'
+
+tests/test_pump4_account_adapter_v1.py:110: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_two_full_cycles_restart_and_duplicate_signal_never_reenter
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_reservation_before_first_send_blocks_second_plan_after_restart
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_lost_entry_response_restart_reconciles_without_resend
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_no_live_scope_or_actual_account_can_be_instantiated[override0]
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_no_live_scope_or_actual_account_can_be_instantiated[override1]
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_no_live_scope_or_actual_account_can_be_instantiated[override2]
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_lifetime_loss_is_persistent_across_new_flow_and_utc_day
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_expiry_blocks_new_entries_but_keeps_owned_model_custody
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_missing_fee_bound_cannot_release_flat_cycle
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_partial_journal_never_repairs_or_accepts_another_entry
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_source_failure_latches_entries_but_does_not_abandon_model_custody
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_a_go_file_inside_child_never_enables_a_sender
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_unsent_reservation_cannot_bypass_source_latch
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_unsent_reservation_cannot_bypass_expiry
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_terminal_cannot_settle_stale_risk_after_child_append_failure
+FAILED tests/test_pump4_serial_orders_off_v1.py::test_unknown_risk_does_not_suppress_reduce_only_model_exit
+FAILED tests/test_pump4_account_adapter_v1.py::test_api_adapter_drives_existing_lifecycle_and_restart_without_new_order
+17 failed, 160 passed in 27.28s

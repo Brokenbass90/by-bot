@@ -1,5 +1,31 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT30Oct — PUMP4 source accounting and isolated owner wiring PASS; serial GO BLOCKED
+
+Read PUMP4_TINY2_SOURCE_ACCOUNTING_2026_10_30.md. Root actual-capture fee/funding/
+risk ledger + existing selected_owner/provider/originallease/V1child OFF wiring
+implemented. Full MEMORY-source native/40-60/flat/restart blocks next admission
+on UNKNOWN costs.177local/same177VPS,191-file candidate06cb58e310805b5b UNSELECTED.
+One verifiedastra/high review1P1 reproduced2RED/fixed; primary native normalized
+witness fix; no second independent signoff or actual serialbroker acceptance.
+Initial VPS17fail missing2testdeps retained; new immutable package177PASS.
+
+Exact remaining softwaregate COST_RELEASE_POLICY_NOT_IMPLEMENTED_NOT_APPROVED:
+finish source completeness/justified pending-liability policy, not emptylog=zero.
+Then actual-source serialOFF/singlewriter handoff and complete separateGO packet.
+FirstV1actualcycle unobserved, currentLIVE unchanged/expiry1Nov19:26:32.774UTC.
+Do not restart accepted accounting/model work or repeat activation. No personal
+command now. TodayMonthlyclose20UTC/sourceafter20:20UTC/selection P0;2Nov14:30UTC
+conditionalentry/CASH unchanged. Brain contextjoin done; nativeMac DATA delivery
+and versionedMac learning/Ollamafactguard P1 remain not installed in this patch.
+Fresh09:57UTC readback V1healthy/flatwaiting/noentry/PID3198429/0restarts/lock818853;
+10:08UTC fourunitpins unchanged/DATA3152955 unchanged/Monthlytimeractive, service
+observedduringnormaldispatch (not new completed-cyclePASS). WritesnullUNKNOWN.
+Foreignallowlist365ff7d6…cc2e0e preserveduntracked. No research/producer/judge change.
+
+---
+Earlier dated entries below are history.
+
 CURRENT30Oct — first native context future join independently confirmed
 
 30Oct first future join independently CONFIRMED: native recorded09:00:38.567UTC/11:00:38.567Cyprus; checked11:08Cyprus. Original141event prefix/11source pins/durable witness/futureBTCbar verified, no partialtails. BTC08–09UTC return−0.1694574673%, descriptive only, both policiesWAIT/0tradeopportunities; strategyPnLNOT_APPLICABLE/BrainedgeNOT_PROVEN. Immutable localreceiptSHA5c803f7bc03027cc60da0fae1624d4d922e4957950d170124f73374b45f5fb84. Completionheartbeatbrain deleted; nativeworkerPID3377501/0restarts continues under original7daybound. No broker calls/unit/scopes/risk changes.
