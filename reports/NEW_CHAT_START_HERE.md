@@ -1,3 +1,8 @@
+# Current continuation —30Oct2026
+
+Read reports/PUMP4_BRAIN_TIMELY_2026_10_30.md then checkpoint TOP. New DATA-only Brain observer is running, actual11H1 timing proved, but no PUMP signals/context-learning proof. Do not reinstall/re-activate it or financial runners. Continue user-approved real context assessment and future outcome joining, native DATA catch-up, todayMonthly close/selection P0. Current PUMP GO expiry1Nov19:26:32.774UTC unchanged; TINY2notGO. Preserve foreign configs/allowlist_change_log.json. Published report/status, not this old chat, controls continuation.
+
+---
 # Current entry —29Oct: serial model gate closed, production integration next
 
 Read PUMP4_TINY2_SERIAL_GATE_2026_10_29.md, checkpoint TOP and active roadmap.

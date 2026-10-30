@@ -1,0 +1,215 @@
+{
+  "cap_eff": "0000000000000000",
+  "etc_names": [],
+  "example": {
+    "brain_version": "BRAIN_V3",
+    "comparison": {
+      "baseline": {
+        "action": "NO_OPPORTUNITY",
+        "allocation_units": 0,
+        "reasons": [
+          "no_frozen_signal"
+        ]
+      },
+      "brain": {
+        "action": "NO_OPPORTUNITY",
+        "allocation_units": 0,
+        "reasons": [
+          "no_frozen_signal"
+        ]
+      },
+      "net_economics_qualified": false
+    },
+    "context_status": "REGIME_UNKNOWN_NOT_USED_BY_PINNED_POLICY",
+    "domain": "PUMP4_BRAIN_TIMELY_SHADOW_V1",
+    "epoch_ms": 1793305156130,
+    "event_id": "brain-pump4:1793307600000:PAXGUSDT:pair",
+    "hour_ms": 1793307600000,
+    "kind": "NO_OPPORTUNITY",
+    "mode": "SHADOW",
+    "money_authority": false,
+    "observed_ms": 1793307651582,
+    "orders_allowed": false,
+    "policy_sha": "3a236149edeec0cf44ec7680d56f4b80186ca54afeed5783640e9a50c176ac0f",
+    "policy_source_sha256": "2d9c24b8e8399abcd212c4835eb1d3193a3e76e8d3416d6a08904c352e90b928",
+    "pre_live_decision_proven": "UNKNOWN",
+    "reference_plan": null,
+    "schema_id": "att1_lifecycle_event_v1",
+    "source_decision_id": "pump4-715d0000cede8e3c9d60c966348801ef1be4df05620a9573f301fadbceff89c3",
+    "source_publication_ms": 1793307644716,
+    "source_sha256": "511e88dfbd6a11ed1c5a7b04b979985332c7db68be925bb51aa75b16c0a51fd4",
+    "symbol": "PAXGUSDT"
+  },
+  "existing": {
+    "alpaca-monthly-owned.service": {
+      "state": {
+        "ActiveState": "inactive",
+        "MainPID": "0",
+        "NRestarts": "0"
+      },
+      "unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+      "unit_unchanged": true
+    },
+    "alpaca-monthly-owned.timer": {
+      "state": {
+        "ActiveState": "active"
+      },
+      "unit_sha256": "33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb",
+      "unit_unchanged": true
+    },
+    "pump4-data-supervisor.service": {
+      "state": {
+        "ActiveState": "active",
+        "MainPID": "3152955",
+        "NRestarts": "0"
+      },
+      "unit_sha256": "cb9de84027ee8d42e72068ce9f66fbbdb6fcf433cc27f435883f52c01d495a35",
+      "unit_unchanged": true
+    },
+    "pump4-execution-owner.service": {
+      "state": {
+        "ActiveState": "active",
+        "MainPID": "3198429",
+        "NRestarts": "0"
+      },
+      "unit_sha256": "78a3b337ac6dfcea5b50b23824c6ee4beda16a1cf89353d355a0d7b594c7a970",
+      "unit_unchanged": true
+    }
+  },
+  "hours": [
+    {
+      "hour_ms": 1793304000000,
+      "max_delay_ms": 1159844,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 0,
+      "shadow_pairs": 0,
+      "timely": 0
+    },
+    {
+      "hour_ms": 1793307600000,
+      "max_delay_ms": 52458,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793311200000,
+      "max_delay_ms": 52630,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793314800000,
+      "max_delay_ms": 49858,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793318400000,
+      "max_delay_ms": 58474,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793322000000,
+      "max_delay_ms": 52561,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793325600000,
+      "max_delay_ms": 48314,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793329200000,
+      "max_delay_ms": 47645,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793332800000,
+      "max_delay_ms": 44554,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793336400000,
+      "max_delay_ms": 52905,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793340000000,
+      "max_delay_ms": 50779,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    },
+    {
+      "hour_ms": 1793343600000,
+      "max_delay_ms": 51814,
+      "no_opportunity": 135,
+      "observations": 135,
+      "prospective": 135,
+      "shadow_pairs": 0,
+      "timely": 135
+    }
+  ],
+  "mounts": {
+    "/app": "ro,nosuid,relatime",
+    "/root": "ro,nosuid,nodev,noexec,relatime",
+    "/runtime": "rw,nosuid,relatime",
+    "/source": "ro,nosuid,relatime"
+  },
+  "no_new_privs": "1",
+  "observed_ms": 1793344959647,
+  "observer_pid": 3325018,
+  "opt_exists": false,
+  "root_names": [],
+  "visible_top_dirs": [
+    "app",
+    "proc",
+    "dev",
+    "etc",
+    "source",
+    "lib",
+    "var",
+    "sys",
+    "usr",
+    "run",
+    "root",
+    "runtime",
+    "lib64"
+  ]
+}
