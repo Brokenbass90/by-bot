@@ -1,6 +1,12 @@
 # Brain: first actual context assessment / automatic future join —30Oct2026
 
-**ACTUAL_CAUSAL_CONTEXT_RECORDED / PENDING_OUTCOME.** Separate native DATA worker is running on VPS, independent of model availability and Mac. This is a descriptive market assessment and observation loop. It is not a new trading strategy, a learned allocator or a profitability claim.
+**FIRST_FUTURE_JOIN_CONFIRMED — descriptive market annotation, no economic PASS.** Separate native DATA worker is running on VPS, independent of model availability and Mac. This is a descriptive market assessment and observation loop. It is not a new trading strategy, a learned allocator or a profitability claim.
+
+## First future join — verified30Oct
+
+30Oct first future join independently CONFIRMED: native recorded09:00:38.567UTC/11:00:38.567Cyprus; checked11:08Cyprus. Original141event prefix/11source pins/durable witness/futureBTCbar verified, no partialtails. BTC08–09UTC return−0.1694574673%, descriptive only, both policiesWAIT/0tradeopportunities; strategyPnLNOT_APPLICABLE/BrainedgeNOT_PROVEN. Immutable localreceiptSHA5c803f7bc03027cc60da0fae1624d4d922e4957950d170124f73374b45f5fb84. Completionheartbeatbrain deleted; nativeworkerPID3377501/0restarts continues under original7daybound. No broker calls/unit/scopes/risk changes.
+
+Earlier PENDING statements below describe evidence at the time of installation.
 
 ## Actual first assessment
 
