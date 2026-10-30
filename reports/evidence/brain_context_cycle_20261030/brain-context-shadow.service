@@ -1,0 +1,44 @@
+[Unit]
+Description=Existing Brain context and strictly future market annotation (DATA only)
+After=local-fs.target
+[Service]
+Type=simple
+User=root
+RootDirectory=/opt/bybot-research/brain-context-shadow-20261030-v1/jail
+WorkingDirectory=/app
+BindReadOnlyPaths=/usr:/usr /usr/lib:/lib /usr/lib64:/lib64
+BindReadOnlyPaths=/opt/bybot-research/brain-context-shadow-20261030-v1/app:/app
+BindReadOnlyPaths=/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1/ws-hours:/source
+BindReadOnlyPaths=/opt/bybot-research/pump4-server-orders-off-20261023/candidate-7d8ae05dab162ec5/app/.private/pump4-supervisor-v1/intake/BTCUSDT.jsonl:/btc.jsonl
+BindPaths=/opt/bybot-research/brain-context-shadow-20261030-v1/runtime:/runtime
+ExecStart=/usr/bin/python3 -I -B /app/scripts/run_brain_context_cycle_v1.py --btc /btc.jsonl --source /source --runtime /runtime --manifest /app/reports/evidence/brain_context_cycle_20261030/source-manifest.json --manifest-sha256 ddd62974ffcc79997163d989d3703e0ce1383bf350406e7a6a34ec358732f007
+Restart=no
+RuntimeMaxSec=7d
+TimeoutStopSec=10
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateNetwork=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ReadWritePaths=/runtime
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+MemoryMax=128M
+CPUQuota=10%
+CPUWeight=10
+IOSchedulingClass=idle
+TasksMax=8
+StandardOutput=journal
+StandardError=journal
+[Install]
+WantedBy=multi-user.target

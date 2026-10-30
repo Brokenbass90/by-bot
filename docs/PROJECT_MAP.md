@@ -54,10 +54,10 @@ Factory непрерывно ведёт ограниченную очередь 
 | Polymarket | Источники и несколько отдельных shadow/forward механизмов | Исполнимый FINAL-gap не доказан; чужие промежуточные цифры не новый PASS |
 | Gold/MT5 | История45684H1/87439M5, календарь, настоящий demo readback и native расчёты | Данные требуют единой time/source lineage; edge, Bullwaves и новостные расходы не доказаны |
 | Factory | Реестры, контрольные образцы, проверки дубликатов/бюджетов/провалов | Наличие модулей не доказывает непрерывный успешный поиск новых edge |
-| Brain | Журналы, политики, counterfactual replay, мост реальных PUMP receipts | Своевременность и прирост net к baseline ещё не доказаны; LIVE risk authority нет |
+| Brain | Журналы/политики/replay, native timely PUMP observer и реальный контекстный проход с будущим join | 11H1*135 timely no-opportunity; два реальных context WAIT. Приростnet/обучение не доказаны, экономических opportunities0; LIVE risk authority нет |
 
 Это состояние отчётов, а не новая проверка брокеров при чтении карты.
-Точные свидетельства: [PUMP activation](../reports/PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md),
+Точные свидетельства: [Brain context30Oct](../reports/BRAIN_CONTEXT_CAUSAL_CYCLE_2026_10_30.md), [PUMP activation](../reports/PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md),
 [KITY economics](../reports/KITY_ECONOMIC_DECISION_2026_10_29.md),
 [Brain receipt bridge](../reports/READ_ONLY_TINY_BRIDGE_2026_10_29.md),
 [gold intake](../reports/GOLD_MACRO_EXISTING_DATA_INTAKE_2026_10_29.md).

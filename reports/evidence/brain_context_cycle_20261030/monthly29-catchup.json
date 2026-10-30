@@ -1,0 +1,487 @@
+{
+  "coverage": {
+    "by_symbol": {
+      "AAPL": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ABBV": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ABNB": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ADBE": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ADSK": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "AMD": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "AMZN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "AVGO": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "BAC": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CAT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "COIN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "COST": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CRM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CRWD": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "CVX": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "DDOG": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "GE": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "GOOGL": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "GS": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "HD": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "INTU": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ISRG": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "JNJ": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "JPM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "KO": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "LLY": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "LMT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MA": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MDB": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "META": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MRK": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "MSFT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NET": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NFLX": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NKE": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NOW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "NVDA": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "ORCL": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "PANW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "PG": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "PLTR": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "QCOM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "REGN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SBUX": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SCHW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SHOP": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SNOW": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "SPY": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "TSLA": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "TSM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "TXN": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "UBER": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "UNH": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "V": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "WFC": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "WMT": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "XOM": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      },
+      "XYZ": {
+        "exported_sessions": 260,
+        "fully_checked_sessions": 258,
+        "incomplete_older_sessions": [
+          "2025-11-28",
+          "2025-12-24"
+        ]
+      }
+    },
+    "core200_complete": true,
+    "earlier_warmup_policy": "PRESERVE_AND_FLAG_NEVER_FILL_OR_REBASE",
+    "exported_sessions": 260,
+    "first_session": "2025-10-17",
+    "fully_checked_sessions": 258,
+    "last_session": "2026-10-29",
+    "observed_hourly_rows": 105096,
+    "symbols": 58
+  },
+  "first_local_seal_mtime_ms": 1793345082908,
+  "historical_warmup_prospective_credit": 0,
+  "observed_ms": 1793346968464,
+  "old_seals_unchanged": 9,
+  "seal_byte_sha256": "14b4151c5ef9ed44d78bc1a50ab5bee46d28fa7ee4af95112c0bce6157c45f63",
+  "session": "2026-10-29",
+  "source_available_ms": 1793305276622,
+  "status": "MONTHLY29_CATCHUP_VERIFIED",
+  "universe_sha256": "d88f7598819afa8b2cc2fabec197f45a7bcd9dfb8f50d30c1bf2698d671295fa"
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "BRAIN_OLLAMA_DIAGNOSTIC_V1",
+  "role": "COMMENTARY_NOT_POLICY",
+  "decision_id": "context:1793343600000:1793346378164",
+  "input_sha256": "144c35197fb8b3f1a9221a73fc517ae55beb00724da3eb794902ffbb8ff84545",
+  "prompt_sha256": "70410bf65a0b0888e7f4ad20b69eeb090e50df40fd9cb62bf4f6f0b2d04e8342",
+  "model": "qwen3:4b",
+  "model_digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+  "started_ms": 1793346485368,
+  "completed_ms": 1793346493644,
+  "available_before_target_bar": true,
+  "raw_response_sha256": "a828fb46fc87182bd757be5421b5894a9ef847012338010a06094acefe028a99",
+  "response": {
+    "model": "qwen3:4b",
+    "created_at": "2026-10-30T07:48:13.639169Z",
+    "message": {
+      "role": "assistant",
+      "content": "{\n  \"summary\": \"The system is in a WAIT_NO_FROZEN_SIGNAL state with a PUMP4 signal active. The BTC market is in a 'тренд-' (trend-) state with a negative 24h return (-1.64%) and a negative 168h return (-3.956%). The BTC EMA200 divergence is -0.02528 (indicating a slight downward trend). The context version is EXISTING_CONTEXT_WAIT_V1, and the source is bybit_kline_60 BTCUSDT. Funding and OI are unknown. The outcome status is PENDING_OUTCOME with the bar opening at 1793347200000 and closing at 1793350800000.\",\n  \"limitations\": \"The system does not have a PUMP4 signal that is frozen. The PUMP4 signal is active but not frozen. The context version is EXISTING_CONTEXT_WAIT_V1, which may"
+    },
+    "done": true,
+    "done_reason": "length",
+    "total_duration": 8233859250,
+    "load_duration": 2808474667,
+    "prompt_eval_count": 394,
+    "prompt_eval_cached_count": 0,
+    "prompt_eval_duration": 719046000,
+    "eval_count": 220,
+    "eval_duration": 4699865000
+  },
+  "money_authority": false,
+  "applied_to_policy": false,
+  "validation_status": "REJECTED_OUTPUT_CONTRACT",
+  "validation_findings": [
+    "Truncated response is not valid JSON",
+    "Response says PUMP4 signal active despite captured signals=0/WAIT_NO_FROZEN_SIGNAL"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "decision": {
+    "action": "WAIT_NO_FROZEN_SIGNAL",
+    "adapter_sha256": "2c019b62051ce7e8ba555a4ed130003e9197bd729b491b91379266470e877176",
+    "comparison": {
+      "baseline": {
+        "action": "NO_OPPORTUNITY",
+        "allocation_units": 0,
+        "reasons": [
+          "no_frozen_signal"
+        ]
+      },
+      "brain": {
+        "action": "NO_OPPORTUNITY",
+        "allocation_units": 0,
+        "reasons": [
+          "no_frozen_signal"
+        ]
+      },
+      "net_economics_qualified": false
+    },
+    "context": {
+      "bar_ts": 1793340000000,
+      "btc_otkl_ema200": -0.02528,
+      "btc_ret_168h": -0.03956,
+      "btc_ret_24h": -0.0164,
+      "btc_rezhim": "\u0442\u0440\u0435\u043d\u0434-",
+      "funding": "UNKNOWN",
+      "oi": "UNKNOWN",
+      "rezhim_v1": "UNKNOWN",
+      "schema": "ContextRecord v1",
+      "source": "bybit_kline_60 BTCUSDT"
+    },
+    "context_version": "EXISTING_CONTEXT_WAIT_V1",
+    "covered_sleeve": "PUMP4",
+    "domain": "BRAIN_CONTEXT_CAUSAL_CYCLE_V1",
+    "economic_pass": false,
+    "epoch_ms": 1793346378164,
+    "event_id": "context:1793343600000:1793346378164",
+    "kind": "MARKET_CONTEXT_DECISION",
+    "money_authority": false,
+    "observed_ms": 1793346378192,
+    "orders_allowed": false,
+    "other_sleeves": "NOT_ASSESSED",
+    "outcome_bar_close_ms": 1793350800000,
+    "outcome_bar_open_ms": 1793347200000,
+    "outcome_contract": "NEXT_FULL_FUTURE_BTC_H1_RETURN_DESCRIPTIVE_NOT_TRADE_PNL",
+    "outcome_status": "PENDING_OUTCOME",
+    "policy_sha": "3a236149edeec0cf44ec7680d56f4b80186ca54afeed5783640e9a50c176ac0f",
+    "policy_source_sha256": "2d9c24b8e8399abcd212c4835eb1d3193a3e76e8d3416d6a08904c352e90b928",
+    "schema_id": "att1_lifecycle_event_v1",
+    "source_census": {
+      "expected_trading": 135,
+      "hour_ms": 1793343600000,
+      "observations": 135,
+      "signals": 0,
+      "source_complete": true,
+      "source_sha256": "cc0b83d75ce54735c8b25f0ee5af7c6932661c7598779637c83b42ab55b4547a"
+    },
+    "source_closed_ms": 1793343600000,
+    "source_events_sha256": "faafd046b0c52adb53fc428242514e1d866a836aff54340cd76e05bd29282686",
+    "source_prefix_events": 141
+  },
+  "decision_durable_by_ms": 1793346379596,
+  "status": "CAUSAL_CONTEXT_RECORDED"
+}

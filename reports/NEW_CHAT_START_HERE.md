@@ -1,3 +1,8 @@
+# Current continuation —30Oct first causal context / native future join
+
+Read reports/BRAIN_CONTEXT_CAUSAL_CYCLE_2026_10_30.md and checkpointTOP. Two separate DATA-only workers already installed: PUMP timelyobserver3325018 and context3377501. DO NOT reinstall/activate financial or these workers. First context07:46UTC WAIT/0signals; BTC08–09UTC descriptive annotation pendinguntilclosedsource, heartbeatbrain11:05Cyprus verifiesonce. Modelprofitability/learnedallocationnotproved.67local/VPS tests. Today'sMonthlyclose20UTC/sourceafter20:20UTC/monthendselection P0; existing23:40Cyprusdeliveryupdated. LIQ30delivered88833raw;Monthly29catchupverifiedactual30Octmorning. NativeMacdelivery replacementproposedonly, notinstalled. Polymarketboundedreportnotes separateprice/depth/coverage/matching; sourcecode notchanged. Resume PUMP4 productionTINY2afterthisgate; oldGOexpires1Nov19:26:32.774UTC,noautomaticextension. Preserveforeign configs/allowlist_change_log.json.
+
+---
 # Current continuation —30Oct2026
 
 Read reports/PUMP4_BRAIN_TIMELY_2026_10_30.md then checkpoint TOP. New DATA-only Brain observer is running, actual11H1 timing proved, but no PUMP signals/context-learning proof. Do not reinstall/re-activate it or financial runners. Continue user-approved real context assessment and future outcome joining, native DATA catch-up, todayMonthly close/selection P0. Current PUMP GO expiry1Nov19:26:32.774UTC unchanged; TINY2notGO. Preserve foreign configs/allowlist_change_log.json. Published report/status, not this old chat, controls continuation.

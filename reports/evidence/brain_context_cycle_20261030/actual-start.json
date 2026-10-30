@@ -1,0 +1,69 @@
+[
+  {
+    "observed_ms": 1793346380502,
+    "recent_logs": "Started brain-context-shadow.service - Existing Brain context and strictly future market annotation (DATA only).\n{\"status\": \"CAUSAL_CONTEXT_RECORDED\", \"decision\": {\"schema_id\": \"att1_lifecycle_event_v1\", \"event_id\": \"context:1793343600000:1793346378164\", \"domain\": \"BRAIN_CONTEXT_CAUSAL_CYCLE_V1\", \"kind\": \"MARKET_CONTEXT_DECISION\", \"observed_ms\": 1793346378192, \"epoch_ms\": 1793346378164, \"source_closed_ms\": 1793343600000, \"source_events_sha256\": \"faafd046b0c52adb53fc428242514e1d866a836aff54340cd76e05bd29282686\", \"source_prefix_events\": 141, \"source_census\": {\"hour_ms\": 1793343600000, \"expected_trading\": 135, \"observations\": 135, \"signals\": 0, \"source_complete\": true, \"source_sha256\": \"cc0b83d75ce54735c8b25f0ee5af7c6932661c7598779637c83b42ab55b4547a\"}, \"policy_source_sha256\": \"2d9c24b8e8399abcd212c4835eb1d3193a3e76e8d3416d6a08904c352e90b928\", \"policy_sha\": \"3a236149edeec0cf44ec7680d56f4b80186ca54afeed5783640e9a50c176ac0f\", \"context_version\": \"EXISTING_CONTEXT_WAIT_V1\", \"adapter_sha256\": \"2c019b62051ce7e8ba555a4ed130003e9197bd729b491b91379266470e877176\", \"context\": {\"schema\": \"ContextRecord v1\", \"rezhim_v1\": \"UNKNOWN\", \"btc_rezhim\": \"\\u0442\\u0440\\u0435\\u043d\\u0434-\", \"btc_otkl_ema200\": -0.02528, \"btc_ret_24h\": -0.0164, \"btc_ret_168h\": -0.03956, \"bar_ts\": 1793340000000, \"source\": \"bybit_kline_60 BTCUSDT\", \"funding\": \"UNKNOWN\", \"oi\": \"UNKNOWN\"}, \"action\": \"WAIT_NO_FROZEN_SIGNAL\", \"comparison\": {\"baseline\": {\"action\": \"NO_OPPORTUNITY\", \"allocation_units\": 0, \"reasons\": [\"no_frozen_signal\"]}, \"brain\": {\"action\": \"NO_OPPORTUNITY\", \"allocation_units\": 0, \"reasons\": [\"no_frozen_signal\"]}, \"net_economics_qualified\": false}, \"covered_sleeve\": \"PUMP4\", \"other_sleeves\": \"NOT_ASSESSED\", \"outcome_status\": \"PENDING_OUTCOME\", \"outcome_bar_open_ms\": 1793347200000, \"outcome_bar_close_ms\": 1793350800000, \"outcome_contract\": \"NEXT_FULL_FUTURE_BTC_H1_RETURN_DESCRIPTIVE_NOT_TRADE_PNL\", \"money_authority\": false, \"orders_allowed\": false, \"economic_pass\": false}, \"decision_durable_by_ms\": 1793346379596}\n{\"action\": \"WAIT_NO_FROZEN_SIGNAL\", \"context\": {\"bar_ts\": 1793340000000, \"btc_otkl_ema200\": -0.02528, \"btc_ret_168h\": -0.03956, \"btc_ret_24h\": -0.0164, \"btc_rezhim\": \"\\u0442\\u0440\\u0435\\u043d\\u0434-\", \"funding\": \"UNKNOWN\", \"oi\": \"UNKNOWN\", \"rezhim_v1\": \"UNKNOWN\", \"schema\": \"ContextRecord v1\", \"source\": \"bybit_kline_60 BTCUSDT\"}, \"context_version\": \"EXISTING_CONTEXT_WAIT_V1\", \"decision_id\": \"context:1793343600000:1793346378164\", \"economic_pass\": false, \"money_authority\": false, \"new_outcome_joins\": 0, \"observed_ms\": 1793346379661, \"orders_allowed\": false, \"outcome_status\": \"PENDING_OUTCOME\", \"policy_sha\": \"3a236149edeec0cf44ec7680d56f4b80186ca54afeed5783640e9a50c176ac0f\", \"status\": \"CONTEXT_SHADOW_RUNNING\"}\n",
+    "state": {
+      "ActiveState": "active",
+      "MainPID": "3377501",
+      "NRestarts": "0",
+      "Result": "success",
+      "SubState": "running"
+    },
+    "status": "OBSERVER_START_READBACK"
+  },
+  {
+    "actual_new_h1_acceptance": "PENDING",
+    "cap_eff": "0000000000000000",
+    "existing": {
+      "alpaca-monthly-owned.service": {
+        "state": {
+          "ActiveState": "activating",
+          "MainPID": "3377266",
+          "NRestarts": "0"
+        },
+        "unit_sha256": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d"
+      },
+      "alpaca-monthly-owned.timer": {
+        "state": {
+          "ActiveState": "active"
+        },
+        "unit_sha256": "33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb"
+      },
+      "pump4-brain-shadow.service": {
+        "state": {
+          "ActiveState": "active",
+          "MainPID": "3325018",
+          "NRestarts": "0"
+        },
+        "unit_sha256": "c6b9376507ebe988049a58f1034501b24b010d76086bccb9f06345e377eb4f04"
+      },
+      "pump4-data-supervisor.service": {
+        "state": {
+          "ActiveState": "active",
+          "MainPID": "3152955",
+          "NRestarts": "0"
+        },
+        "unit_sha256": "cb9de84027ee8d42e72068ce9f66fbbdb6fcf433cc27f435883f52c01d495a35"
+      },
+      "pump4-execution-owner.service": {
+        "state": {
+          "ActiveState": "active",
+          "MainPID": "3198429",
+          "NRestarts": "0"
+        },
+        "unit_sha256": "78a3b337ac6dfcea5b50b23824c6ee4beda16a1cf89353d355a0d7b594c7a970"
+      }
+    },
+    "mounts": {
+      "/app": "ro,nosuid,relatime",
+      "/runtime": "rw,nosuid,relatime",
+      "/source": "ro,nosuid,relatime"
+    },
+    "new_financial_authority": false,
+    "no_new_privs": "1",
+    "observed_ms": 1793346380609,
+    "observer_pid": 3377501,
+    "root_etc_empty_opt_absent": true,
+    "status": "ISOLATED_OBSERVER_RUNNING"
+  }
+]

@@ -1,6 +1,6 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-## Активная очередь —29 октября 2026
+## Активная очередь —30 октября 2026
 
 Общее описание/роли/метрики: [PROJECT_MAP](docs/PROJECT_MAP.md).
 Исходная цель6Oct сохраняется. Эта таблица — единственная текущая очередь;
@@ -12,9 +12,11 @@ Claude/PM ACK_PENDING. Документ не расширяет подписан
 |---|---|---|
 | P0 операционный / Codex | Сохранить Monthly v6 и действующий PUMP4, актуальные health/factual lifecycle | Monthly30Octclosedselection→2Nov14:30UTC/16:30CYentry/CASH; PUMP4первая сделка+fees/native/reconcile, новые входы только в исходном сроке1Nov19:26:32.774UTC |
 | P0 инженерный / Codex | [PUMP4 TINY-2](docs/superpowers/specs/2026-10-29-pump4-tiny2-design.md): отдельный versioned serial admission в существующем owner | MODEL_SERIAL_GATE_PASS: два изолированных lifecycle+restart/no duplicates,89targetedPASS; [evidence](reports/PUMP4_TINY2_SERIAL_GATE_2026_10_29.md). Следующий gate versioned production serial owner/source-cost accounting+supervisor binding, actual-source ORDERS_OFF. После полного пакета независимая приёмка и новый exactGO; текущий LIVE не меняется |
+| Завершённый контекстный этап / Codex | [Первый native Brain context](reports/BRAIN_CONTEXT_CAUSAL_CYCLE_2026_10_30.md): реальные признаки/WAIT/версия/будущий join | ACTUAL07:46UTC30Oct; targetBTC08–09UTC, PENDING_OUTCOME; heartbeatbrain11:05CY. Дескриптивный исход не PnL/learningPASS. Приёмка67local/VPS; LIVEнеизменён. После фактическогоjoin продолжать основнойPUMP4TINY2, не расширять Brain в новуюплатформу |
+| P1 доставка / Codex | [Native transport proposal](reports/NATIVE_DATA_DELIVERY_PROPOSAL_2026_10_30.md), существующие export/pull | VPSexporttimers native; LIQ30/Monthly29catchupverified. Local launchd replacement PROPOSED_NOT_INSTALLED; отдельная bounded реализация и только после actualproofзаменаAI-import heartbeats наnotification-only |
 | P1 / Codex | Execution quality и минимальный read-only portfolio risk через имеющиеся receipts+brokerGET | NO_LIVE_TRADES до фактическихfills; подписанныеscopes, timestamps, gross/margin/защита/пересечения; неизвестноеUNKNOWN. Без новогоriskengine и автопримененияBrain |
 | Исследования / Claude, CodexQA | GOLDодин экономический эксперимент; POLYреальноеFINAL/существующийforward; LIQsourceeligibility | Опубликованные source/spec/window/verdict. Goldclock+preregдоPnL; Polyask/depth/fees/accepting; LIQcoverageUNKNOWNнеPASS. Codex не запускает чужих judges/producer |
-| Обслуживание / Claude, Codexread-onlybridge | Brain/Factory готовые функции и измеримость | Причинные советы/парное сравнение/uniqueэкономическиеverdict; переиспользованиеcounterfactual/dubl_proverka, цифры3/227 и96/64PENDING_SOURCE, никакой новойплатформы |
+| Обслуживание / Claude, Codexread-onlybridge | Brain/Factory готовые функции и измеримость | Native contextassessment+futurejoin delivered; торговыхвозможностей0/экономическоеулучшениеUNKNOWN. Причинные советы/парное сравнение/uniqueэкономическиеverdict; переиспользованиеcounterfactual/dubl_proverka, цифры3/227 и96/64PENDING_SOURCE, никакой новойплатформы |
 | HOLD | KITY новаяинженерия; SHORTдоqualifyingverdict; новыеуниверсальныеframeworks | СуществующаяSHADOW/evidenceсохраняются; ни автоматическогоLIVE, ни rescueподбора |
 
 $500/меспослеоперационныхрасходов — предложенныйPMориентир, не forecast/budget/срок.

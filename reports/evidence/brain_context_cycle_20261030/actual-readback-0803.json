@@ -1,0 +1,175 @@
+{
+  "event_count": 4,
+  "events": [
+    {
+      "action": "WAIT_NO_FROZEN_SIGNAL",
+      "adapter_sha256": "2c019b62051ce7e8ba555a4ed130003e9197bd729b491b91379266470e877176",
+      "comparison": {
+        "baseline": {
+          "action": "NO_OPPORTUNITY",
+          "allocation_units": 0,
+          "reasons": [
+            "no_frozen_signal"
+          ]
+        },
+        "brain": {
+          "action": "NO_OPPORTUNITY",
+          "allocation_units": 0,
+          "reasons": [
+            "no_frozen_signal"
+          ]
+        },
+        "net_economics_qualified": false
+      },
+      "context": {
+        "bar_ts": 1793340000000,
+        "btc_otkl_ema200": -0.02528,
+        "btc_ret_168h": -0.03956,
+        "btc_ret_24h": -0.0164,
+        "btc_rezhim": "\u0442\u0440\u0435\u043d\u0434-",
+        "funding": "UNKNOWN",
+        "oi": "UNKNOWN",
+        "rezhim_v1": "UNKNOWN",
+        "schema": "ContextRecord v1",
+        "source": "bybit_kline_60 BTCUSDT"
+      },
+      "context_version": "EXISTING_CONTEXT_WAIT_V1",
+      "covered_sleeve": "PUMP4",
+      "domain": "BRAIN_CONTEXT_CAUSAL_CYCLE_V1",
+      "economic_pass": false,
+      "epoch_ms": 1793346378164,
+      "event_id": "context:1793343600000:1793346378164",
+      "kind": "MARKET_CONTEXT_DECISION",
+      "money_authority": false,
+      "observed_ms": 1793346378192,
+      "orders_allowed": false,
+      "other_sleeves": "NOT_ASSESSED",
+      "outcome_bar_close_ms": 1793350800000,
+      "outcome_bar_open_ms": 1793347200000,
+      "outcome_contract": "NEXT_FULL_FUTURE_BTC_H1_RETURN_DESCRIPTIVE_NOT_TRADE_PNL",
+      "outcome_status": "PENDING_OUTCOME",
+      "policy_sha": "3a236149edeec0cf44ec7680d56f4b80186ca54afeed5783640e9a50c176ac0f",
+      "policy_source_sha256": "2d9c24b8e8399abcd212c4835eb1d3193a3e76e8d3416d6a08904c352e90b928",
+      "schema_id": "att1_lifecycle_event_v1",
+      "source_census": {
+        "expected_trading": 135,
+        "hour_ms": 1793343600000,
+        "observations": 135,
+        "signals": 0,
+        "source_complete": true,
+        "source_sha256": "cc0b83d75ce54735c8b25f0ee5af7c6932661c7598779637c83b42ab55b4547a"
+      },
+      "source_closed_ms": 1793343600000,
+      "source_events_sha256": "faafd046b0c52adb53fc428242514e1d866a836aff54340cd76e05bd29282686",
+      "source_prefix_events": 141
+    },
+    {
+      "before_outcome_open": true,
+      "decision_id": "context:1793343600000:1793346378164",
+      "decision_sha256": "ddef71a166cdec502c4389370b9b705deed7903ea9743e69c76ca9e3f0cb8384",
+      "domain": "BRAIN_CONTEXT_CAUSAL_CYCLE_V1",
+      "economic_pass": false,
+      "event_id": "context:1793343600000:1793346378164:durable",
+      "kind": "CONTEXT_DURABILITY_WITNESS",
+      "money_authority": false,
+      "observed_ms": 1793346379596,
+      "orders_allowed": false,
+      "recovered": false,
+      "schema_id": "att1_lifecycle_event_v1"
+    },
+    {
+      "action": "WAIT_NO_FROZEN_SIGNAL",
+      "adapter_sha256": "2c019b62051ce7e8ba555a4ed130003e9197bd729b491b91379266470e877176",
+      "comparison": {
+        "baseline": {
+          "action": "NO_OPPORTUNITY",
+          "allocation_units": 0,
+          "reasons": [
+            "no_frozen_signal"
+          ]
+        },
+        "brain": {
+          "action": "NO_OPPORTUNITY",
+          "allocation_units": 0,
+          "reasons": [
+            "no_frozen_signal"
+          ]
+        },
+        "net_economics_qualified": false
+      },
+      "context": {
+        "bar_ts": 1793343600000,
+        "btc_otkl_ema200": -0.03094,
+        "btc_ret_168h": -0.04173,
+        "btc_ret_24h": -0.02099,
+        "btc_rezhim": "\u0442\u0440\u0435\u043d\u0434-",
+        "funding": "UNKNOWN",
+        "oi": "UNKNOWN",
+        "rezhim_v1": "UNKNOWN",
+        "schema": "ContextRecord v1",
+        "source": "bybit_kline_60 BTCUSDT"
+      },
+      "context_version": "EXISTING_CONTEXT_WAIT_V1",
+      "covered_sleeve": "PUMP4",
+      "domain": "BRAIN_CONTEXT_CAUSAL_CYCLE_V1",
+      "economic_pass": false,
+      "epoch_ms": 1793346378164,
+      "event_id": "context:1793347200000:1793346378164",
+      "kind": "MARKET_CONTEXT_DECISION",
+      "money_authority": false,
+      "observed_ms": 1793347299870,
+      "orders_allowed": false,
+      "other_sleeves": "NOT_ASSESSED",
+      "outcome_bar_close_ms": 1793354400000,
+      "outcome_bar_open_ms": 1793350800000,
+      "outcome_contract": "NEXT_FULL_FUTURE_BTC_H1_RETURN_DESCRIPTIVE_NOT_TRADE_PNL",
+      "outcome_status": "PENDING_OUTCOME",
+      "policy_sha": "3a236149edeec0cf44ec7680d56f4b80186ca54afeed5783640e9a50c176ac0f",
+      "policy_source_sha256": "2d9c24b8e8399abcd212c4835eb1d3193a3e76e8d3416d6a08904c352e90b928",
+      "schema_id": "att1_lifecycle_event_v1",
+      "source_census": {
+        "expected_trading": 135,
+        "hour_ms": 1793347200000,
+        "observations": 135,
+        "signals": 0,
+        "source_complete": true,
+        "source_sha256": "6fac5851fdb02e805d309b48059d33e2e56326394dcdc095abca96117287903e"
+      },
+      "source_closed_ms": 1793347200000,
+      "source_events_sha256": "a96e246318b56eea328d19edba063671428388a3a1caf2d2fc20f73b87a5ba70",
+      "source_prefix_events": 142
+    },
+    {
+      "before_outcome_open": true,
+      "decision_id": "context:1793347200000:1793346378164",
+      "decision_sha256": "79364d9f67330327e048decce43e0dedd6c5bec34c18b3efcbe5962814d55d40",
+      "domain": "BRAIN_CONTEXT_CAUSAL_CYCLE_V1",
+      "economic_pass": false,
+      "event_id": "context:1793347200000:1793346378164:durable",
+      "kind": "CONTEXT_DURABILITY_WITNESS",
+      "money_authority": false,
+      "observed_ms": 1793347300984,
+      "orders_allowed": false,
+      "recovered": false,
+      "schema_id": "att1_lifecycle_event_v1"
+    }
+  ],
+  "journal_sha256": "8b389fa40a9d32471a4d86378610626ca1c96ac5fa02353d86b6cb501e02af3f",
+  "mounts": {
+    "/app": "ro,nosuid,relatime",
+    "/btc.jsonl": "ro,nosuid,relatime",
+    "/runtime": "rw,nosuid,relatime",
+    "/source": "ro,nosuid,relatime"
+  },
+  "net_namespace_separate": true,
+  "observed_ms": 1793347388391,
+  "schema": "BRAIN_CONTEXT_ACTUAL_READBACK_V1",
+  "state": {
+    "ActiveState": "active",
+    "MainPID": "3377501",
+    "NRestarts": "0",
+    "PrivateNetwork": "yes",
+    "RestrictAddressFamilies": "AF_UNIX",
+    "SubState": "running"
+  }
+}
