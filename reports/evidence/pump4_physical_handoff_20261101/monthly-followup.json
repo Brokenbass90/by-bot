@@ -1,0 +1,10 @@
+{
+  "id": "monthly-2",
+  "status": "ACTIVE",
+  "kind": "heartbeat",
+  "scheduled_local": "2026-11-02T16:40:00+02:00",
+  "timezone": "Asia/Nicosia",
+  "scheduled_utc": "2026-11-02T14:40:00Z",
+  "scope": "One read-only postwindow result and independent broker/protection check; no activation/replay; delete only this automation after check",
+  "future_result": "PENDING"
+}

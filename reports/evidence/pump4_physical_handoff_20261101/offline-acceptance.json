@@ -1,0 +1,16 @@
+{
+  "actual_engine": "EXISTING_ROOT_BY_BOT_VENV_PYTEST_SAME_AS_PRIOR_210",
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "copied_pytest_initialization": "INCOMPLETE_TEST_ONLY_DEPENDENCIES_NO_TESTS_EXECUTED",
+  "local_output_sha256": "ed904baef0867d609da1c5850dab38caaec190fe96439597669f932e7c6a5e74",
+  "local_tests": 50,
+  "material_sha256": "d3c3b7325b91f97281cfe23e4206204f0624c9b91dd31ba979272a4d20453611",
+  "network_denied": true,
+  "schema": "PUMP4_HANDOFF_OFFLINE_ACCEPTANCE_V1",
+  "status": "PASS",
+  "systemctl_stubbed": true,
+  "vps_output_sha256": "afac6fdca9a2778c56388ae527ce014654f236b95711009ce2494240cbb4589f",
+  "vps_same_tests": 50,
+  "vps_test_manifest_sha256": "ce31eb411e347c8a8a92061e69f3e31c2af14962b79b612f6ac541e5c7c6f460"
+}

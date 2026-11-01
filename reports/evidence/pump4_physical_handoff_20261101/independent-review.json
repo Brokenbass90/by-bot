@@ -1,0 +1,16 @@
+{
+  "effort": "high",
+  "findings_closed": [
+    "OPTIMIZATION_ASSERT_BYPASS",
+    "PRIMARY_CONFIRMED_OWNER_CHANGED_BEFORE_OBSERVER_LOCK"
+  ],
+  "material_sha256": "d3c3b7325b91f97281cfe23e4206204f0624c9b91dd31ba979272a4d20453611",
+  "model": "gpt-6-astra",
+  "original_report_sha256": "44122d43957e1ecbe796c5d8b345b0ca350f55cbd6a31e9fba58b082bd733681",
+  "report_sha256": "01ea87fc48fbe0d278474cdc69ff768a6f375b353b0cc2f413c2cdbfca721cf2",
+  "runtime_model_verified": true,
+  "schema": "PUMP4_HANDOFF_INDEPENDENT_ACCEPTANCE_V1",
+  "session_id": "01a197ee-baf5-79c2-a40a-a75ce96dcab1",
+  "status": "PASS",
+  "unresolved_important": 0
+}

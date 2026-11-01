@@ -1,0 +1,94 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_ test_optimized_interpreter_rejected_before_any_operation[flag-pump4_source_handoff_v1.py] _
+
+script = 'pump4_source_handoff_v1.py', mode = 'flag'
+
+    @pytest.mark.parametrize("script",["pump4_source_handoff_v1.py","pump4_source_repair_health_v1.py"])
+    @pytest.mark.parametrize("mode",["flag","environment"])
+    def test_optimized_interpreter_rejected_before_any_operation(script,mode):
+        import subprocess,sys,os
+        args=[sys.executable,"-B"]+(["-O"] if mode=="flag" else [])+[str(Path(M.__file__).with_name(script))]
+        env=dict(os.environ)
+        if mode=="environment":env["PYTHONOPTIMIZE"]="1"
+        run=subprocess.run(args,env=env,capture_output=True,text=True)
+>       assert run.returncode!=0 and "OPTIMIZED_PYTHON_FORBIDDEN" in run.stderr+run.stdout
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...source_handoff_v1.py'], returncode=0, stdout='{"status": "NO_REQUESTS_NO_AUTHORITY", "broker_writes": 0}\n', stderr='').returncode
+
+tests/test_pump4_source_handoff_v1.py:183: AssertionError
+_ test_optimized_interpreter_rejected_before_any_operation[flag-pump4_source_repair_health_v1.py] _
+
+script = 'pump4_source_repair_health_v1.py', mode = 'flag'
+
+    @pytest.mark.parametrize("script",["pump4_source_handoff_v1.py","pump4_source_repair_health_v1.py"])
+    @pytest.mark.parametrize("mode",["flag","environment"])
+    def test_optimized_interpreter_rejected_before_any_operation(script,mode):
+        import subprocess,sys,os
+        args=[sys.executable,"-B"]+(["-O"] if mode=="flag" else [])+[str(Path(M.__file__).with_name(script))]
+        env=dict(os.environ)
+        if mode=="environment":env["PYTHONOPTIMIZE"]="1"
+        run=subprocess.run(args,env=env,capture_output=True,text=True)
+>       assert run.returncode!=0 and "OPTIMIZED_PYTHON_FORBIDDEN" in run.stderr+run.stdout
+E       AssertionError: assert (2 != 0 and 'OPTIMIZED_PYTHON_FORBIDDEN' in ('usage: pump4_source_repair_health_v1.py [-h] --spec SPEC --spec-sha256\n                                        SPEC_... [--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n' + ''))
+E        +  where 2 = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...[--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n').returncode
+E        +  and   'usage: pump4_source_repair_health_v1.py [-h] --spec SPEC --spec-sha256\n                                        SPEC_... [--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n' = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...[--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n').stderr
+E        +  and   '' = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...[--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n').stdout
+
+tests/test_pump4_source_handoff_v1.py:183: AssertionError
+_ test_optimized_interpreter_rejected_before_any_operation[environment-pump4_source_handoff_v1.py] _
+
+script = 'pump4_source_handoff_v1.py', mode = 'environment'
+
+    @pytest.mark.parametrize("script",["pump4_source_handoff_v1.py","pump4_source_repair_health_v1.py"])
+    @pytest.mark.parametrize("mode",["flag","environment"])
+    def test_optimized_interpreter_rejected_before_any_operation(script,mode):
+        import subprocess,sys,os
+        args=[sys.executable,"-B"]+(["-O"] if mode=="flag" else [])+[str(Path(M.__file__).with_name(script))]
+        env=dict(os.environ)
+        if mode=="environment":env["PYTHONOPTIMIZE"]="1"
+        run=subprocess.run(args,env=env,capture_output=True,text=True)
+>       assert run.returncode!=0 and "OPTIMIZED_PYTHON_FORBIDDEN" in run.stderr+run.stdout
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...source_handoff_v1.py'], returncode=0, stdout='{"status": "NO_REQUESTS_NO_AUTHORITY", "broker_writes": 0}\n', stderr='').returncode
+
+tests/test_pump4_source_handoff_v1.py:183: AssertionError
+_ test_optimized_interpreter_rejected_before_any_operation[environment-pump4_source_repair_health_v1.py] _
+
+script = 'pump4_source_repair_health_v1.py', mode = 'environment'
+
+    @pytest.mark.parametrize("script",["pump4_source_handoff_v1.py","pump4_source_repair_health_v1.py"])
+    @pytest.mark.parametrize("mode",["flag","environment"])
+    def test_optimized_interpreter_rejected_before_any_operation(script,mode):
+        import subprocess,sys,os
+        args=[sys.executable,"-B"]+(["-O"] if mode=="flag" else [])+[str(Path(M.__file__).with_name(script))]
+        env=dict(os.environ)
+        if mode=="environment":env["PYTHONOPTIMIZE"]="1"
+        run=subprocess.run(args,env=env,capture_output=True,text=True)
+>       assert run.returncode!=0 and "OPTIMIZED_PYTHON_FORBIDDEN" in run.stderr+run.stdout
+E       AssertionError: assert (2 != 0 and 'OPTIMIZED_PYTHON_FORBIDDEN' in ('usage: pump4_source_repair_health_v1.py [-h] --spec SPEC --spec-sha256\n                                        SPEC_... [--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n' + ''))
+E        +  where 2 = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...[--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n').returncode
+E        +  and   'usage: pump4_source_repair_health_v1.py [-h] --spec SPEC --spec-sha256\n                                        SPEC_... [--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n' = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...[--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n').stderr
+E        +  and   '' = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...[--no-notify]\npump4_source_repair_health_v1.py: error: the following arguments are required: --spec, --spec-sha256\n').stdout
+
+tests/test_pump4_source_handoff_v1.py:183: AssertionError
+______ test_wrapper_rejects_modified_health_even_with_python_optimization ______
+
+shape = ({'base_ops_source': '"""One bounded ORDERS_OFF handoff. No broker POST or owner GO path."""\nfrom pathlib import Path... type(exc).__name__,broker_writes=None)));raise SystemExit(2)\n', ...}, <function shape.<locals>.build at 0x10a4dfe20>)
+
+    def test_wrapper_rejects_modified_health_even_with_python_optimization(shape):
+        _,build=shape;folder,_,_=build()
+        (folder/'health.py').write_text('print("UNSAFE_EXECUTION")\n')
+        run=subprocess.run([sys.executable,'-O','-B',str(folder/'new-wrapper.py')],capture_output=True,text=True)
+>       assert run.returncode!=0 and 'UNSAFE_EXECUTION' not in run.stdout
+E       AssertionError: assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.venv/bin/python', ...test-868/test_wrapper_rejects_modified_0/packet/new-wrapper.py'], returncode=0, stdout='UNSAFE_EXECUTION\n', stderr='').returncode
+
+tests/test_pump4_source_handoff_packet_v1.py:86: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_source_handoff_v1.py::test_optimized_interpreter_rejected_before_any_operation[flag-pump4_source_handoff_v1.py]
+FAILED tests/test_pump4_source_handoff_v1.py::test_optimized_interpreter_rejected_before_any_operation[flag-pump4_source_repair_health_v1.py]
+FAILED tests/test_pump4_source_handoff_v1.py::test_optimized_interpreter_rejected_before_any_operation[environment-pump4_source_handoff_v1.py]
+FAILED tests/test_pump4_source_handoff_v1.py::test_optimized_interpreter_rejected_before_any_operation[environment-pump4_source_repair_health_v1.py]
+FAILED tests/test_pump4_source_handoff_packet_v1.py::test_wrapper_rejects_modified_health_even_with_python_optimization
+5 failed, 36 deselected in 0.99s

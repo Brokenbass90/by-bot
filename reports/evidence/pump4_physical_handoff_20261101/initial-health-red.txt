@@ -1,0 +1,83 @@
+FF.FFF..                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_pending_source_never_reports_fully_healthy_or_notifies_owner[WAITING_H1_PUBLICATION_PREFIX] _
+
+status = 'WAITING_H1_PUBLICATION_PREFIX'
+
+    @pytest.mark.parametrize('status',['WAITING_H1_PUBLICATION_PREFIX','WAITING_H1_CENSUS_FINALIZATION'])
+    def test_pending_source_never_reports_fully_healthy_or_notifies_owner(status):
+        r=H.assess(sample(status,False),1001)
+        assert r['status']=='PENDING_SOURCE' and r['reason']==status
+>       assert H.notify_required(r,{}) is False
+               ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'scripts.pump4_source_repair_health_v1' has no attribute 'notify_required'
+
+tests/test_pump4_source_repair_health_v1.py:22: AttributeError
+_ test_pending_source_never_reports_fully_healthy_or_notifies_owner[WAITING_H1_CENSUS_FINALIZATION] _
+
+status = 'WAITING_H1_CENSUS_FINALIZATION'
+
+    @pytest.mark.parametrize('status',['WAITING_H1_PUBLICATION_PREFIX','WAITING_H1_CENSUS_FINALIZATION'])
+    def test_pending_source_never_reports_fully_healthy_or_notifies_owner(status):
+        r=H.assess(sample(status,False),1001)
+        assert r['status']=='PENDING_SOURCE' and r['reason']==status
+>       assert H.notify_required(r,{}) is False
+               ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'scripts.pump4_source_repair_health_v1' has no attribute 'notify_required'
+
+tests/test_pump4_source_repair_health_v1.py:22: AttributeError
+_ test_process_alive_and_flat_account_do_not_mask_source_failure[missing_scan] _
+
+fault = 'missing_scan'
+
+    @pytest.mark.parametrize('fault',['missing_scan','wrong_semantics','blocked'])
+    def test_process_alive_and_flat_account_do_not_mask_source_failure(fault):
+        v=sample()
+        if fault=='missing_scan':v['receipt']['result']=dict(status='NO_NEW_SIGNAL')
+        elif fault=='wrong_semantics':v['receipt']['result']['source_scan']['coverage_complete']=False
+        else:v['receipt']['result']=dict(status='BLOCKED_NEW_INPUTS')
+        r=H.assess(v,1001)
+>       assert r['status']=='UNHEALTHY' and H.notify_required(r,{}) is True
+                                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'scripts.pump4_source_repair_health_v1' has no attribute 'notify_required'
+
+tests/test_pump4_source_repair_health_v1.py:35: AttributeError
+_ test_process_alive_and_flat_account_do_not_mask_source_failure[wrong_semantics] _
+
+fault = 'wrong_semantics'
+
+    @pytest.mark.parametrize('fault',['missing_scan','wrong_semantics','blocked'])
+    def test_process_alive_and_flat_account_do_not_mask_source_failure(fault):
+        v=sample()
+        if fault=='missing_scan':v['receipt']['result']=dict(status='NO_NEW_SIGNAL')
+        elif fault=='wrong_semantics':v['receipt']['result']['source_scan']['coverage_complete']=False
+        else:v['receipt']['result']=dict(status='BLOCKED_NEW_INPUTS')
+        r=H.assess(v,1001)
+>       assert r['status']=='UNHEALTHY' and H.notify_required(r,{}) is True
+                                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'scripts.pump4_source_repair_health_v1' has no attribute 'notify_required'
+
+tests/test_pump4_source_repair_health_v1.py:35: AttributeError
+___ test_process_alive_and_flat_account_do_not_mask_source_failure[blocked] ____
+
+fault = 'blocked'
+
+    @pytest.mark.parametrize('fault',['missing_scan','wrong_semantics','blocked'])
+    def test_process_alive_and_flat_account_do_not_mask_source_failure(fault):
+        v=sample()
+        if fault=='missing_scan':v['receipt']['result']=dict(status='NO_NEW_SIGNAL')
+        elif fault=='wrong_semantics':v['receipt']['result']['source_scan']['coverage_complete']=False
+        else:v['receipt']['result']=dict(status='BLOCKED_NEW_INPUTS')
+        r=H.assess(v,1001)
+>       assert r['status']=='UNHEALTHY' and H.notify_required(r,{}) is True
+                                            ^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'scripts.pump4_source_repair_health_v1' has no attribute 'notify_required'
+
+tests/test_pump4_source_repair_health_v1.py:35: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_source_repair_health_v1.py::test_pending_source_never_reports_fully_healthy_or_notifies_owner[WAITING_H1_PUBLICATION_PREFIX]
+FAILED tests/test_pump4_source_repair_health_v1.py::test_pending_source_never_reports_fully_healthy_or_notifies_owner[WAITING_H1_CENSUS_FINALIZATION]
+FAILED tests/test_pump4_source_repair_health_v1.py::test_process_alive_and_flat_account_do_not_mask_source_failure[missing_scan]
+FAILED tests/test_pump4_source_repair_health_v1.py::test_process_alive_and_flat_account_do_not_mask_source_failure[wrong_semantics]
+FAILED tests/test_pump4_source_repair_health_v1.py::test_process_alive_and_flat_account_do_not_mask_source_failure[blocked]
+5 failed, 3 passed in 1.56s

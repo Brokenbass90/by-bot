@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+____________ ERROR collecting tests/test_pump4_source_handoff_v1.py ____________
+ImportError while importing test module '/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/tests/test_pump4_source_handoff_v1.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.12/3.12.8/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_pump4_source_handoff_v1.py:7: in <module>
+    from scripts import pump4_source_handoff_v1 as M
+E   ImportError: cannot import name 'pump4_source_handoff_v1' from 'scripts' (unknown location)
+=========================== short test summary info ============================
+ERROR tests/test_pump4_source_handoff_v1.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.15s

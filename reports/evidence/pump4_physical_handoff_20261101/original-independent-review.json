@@ -1,0 +1,88 @@
+{
+  "schema": "PUMP4_PHYSICAL_HANDOFF_FINAL_CRITICAL_REVIEW_V1",
+  "reviewed_utc": "2026-11-01T16:29:21.244105+00:00",
+  "base": "aef951d1637fa59dc5efdca177011e78aaa9a8a7",
+  "status": "CHANGES_REQUIRED",
+  "verdict": "ONE_P2_FINDING",
+  "unresolved_important": 1,
+  "scope": "One bounded local read-only review of new installer, health, builder, three focused test files and nonsecret owner-packet-v4; only presence verification of prior 120-second finalization/non-trading fixes. No whole reader re-audit.",
+  "material_sha256": "d4eb0e65eea66bd944e9d0a666bd5ed9eaecce63f47eea48f9f1f41867979167",
+  "material_hash_matches": true,
+  "candidate_sha256": "ff12661dcf59f581bd53b6e3fff6016c2778f082335f130bac8ce50bc6267db5",
+  "reviewed_sha256": {
+    "scripts/pump4_source_handoff_v1.py": "c9a8f11a4adcedd4f7b7b5d2fb36614cdf9f1d3d6314419a9de107bcfe7d03dc",
+    "scripts/pump4_source_repair_health_v1.py": "96024eed3dea3fe9664c9076946308724b073eb4a9d5c7b13c43f838656633dc",
+    "scripts/build_pump4_source_handoff_v1.py": "02b74642dc7d0350d149a5afa4e858285d1a4a37c6feaba43e6659d5e0cc6b94",
+    "tests/test_pump4_source_handoff_v1.py": "cb09c6ae86ccf9e30b82f2046d4e065163708c207631ffb1bf04bac270b81687",
+    "tests/test_pump4_source_handoff_packet_v1.py": "a8781ff7f3d1f3849f75327ddf7ffaf868ea51a4c1ca0d378fe0080aac15d0cf",
+    "tests/test_pump4_source_repair_health_v1.py": "419bb62906c9a41519a3b3d0cbe391632859e61e92b202f3af6199d6e27e5a90",
+    "research_lab/pump4_runtime_sources_v1.py": "10e496ea2d5671ac867bfbe902680724230c554600eea7c2466367a52966d9b7"
+  },
+  "packet_file_pin_matches": {
+    "base_ops.py": true,
+    "before.json": true,
+    "handoff.py": true,
+    "health-legacy-immutable.py": true,
+    "health.py": true,
+    "new-owner.service": true,
+    "new-wrapper.py": true,
+    "notifications.json": true,
+    "old-notifications.json": true,
+    "old-original-owner.json": true,
+    "old-owner.service": true,
+    "old-wrapper.py": true,
+    "runner.json": true,
+    "scope.json": true
+  },
+  "installer_matches_packet": true,
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "Keep the stop and executable-health integrity checks active under optimized Python",
+      "file": "scripts/pump4_source_handoff_v1.py",
+      "start_line": 291,
+      "end_line": 291,
+      "related_locations": [
+        "scripts/pump4_source_handoff_v1.py:219",
+        "scripts/pump4_source_handoff_v1.py:352",
+        "scripts/pump4_source_handoff_v1.py:369",
+        "scripts/build_pump4_source_handoff_v1.py:43",
+        "owner-packet-v4/base_ops.py:83-85"
+      ],
+      "trigger": "An owner invokes the installer or existing health wrapper with python -O/-OO or inherited PYTHONOPTIMIZE. The new entrypoints do not reject optimized execution.",
+      "defect": "The otherwise explicit need-based installer calls pinned base.quiet/quiet_state, whose stopped-owner checks are Python assert statements and vanish under optimization. Its generated new-wrapper also uses assert as its only hash gate before runpy executes health.py, allowing changed health code to execute under optimization. Account flock and other guards still exist; this is a bypass of mandatory stopped-state and pre-execution code-binding checks, not evidence of a live double writer.",
+      "evidence": "Static inspection: base_ops.py lines 83-85 contains only assertions; handoff lines 291/352/369 call those checks without a sys.flags.optimize guard. Builder line 43 and loader line 219 require an assert-based wrapper. Current new-wrapper.py has that exact form. The 44 tests run in ordinary Python and do not exercise optimized execution.",
+      "narrow_fix": "Add an unconditional optimized-interpreter rejection before operational imports/reads/claims (including the SystemOps entrypoint) while reusing the accepted pinned base, or implement the few quiet-state checks with need locally. Generate and validate a wrapper with an unconditional if/hash-mismatch raise before runpy. Rebuild/rebind packet hashes and material; keep accepted reader unchanged.",
+      "targeted_regression": "Use only temporary fictional fixtures: python -O/PYTHONOPTIMIZE must reject an operational installer mode before SystemOps actions; a generated wrapper with modified temporary health bytes must fail before executing a marker under normal and optimized Python. If using explicit quiet-state checks, test active/deactivating/nonzero-PID and override states remain rejected."
+    }
+  ],
+  "confirmed": [
+    "Prior completed-source grace is bounded to 120 seconds, with original 60000 ms entry cutoff preserved.",
+    "Prior unavailable-instrument predicate accepts producer-defined non-Trading metadata only with matching symbol; a healthy Trading/USDT/LinearPerpetual instrument cannot be falsely unavailable.",
+    "Exact owner packet GO and material-bound independent/offline proof checks precede apply authority.",
+    "Claim and durable old entry revoke precede stop; original lock and wholly unused root rechecked after stop and fresh GET.",
+    "No old spent-state reset/copy; original DATA epoch, same Bybit UID across separately bound key rotation, original account lock, one-entry/risk policy and preserved units are enforced.",
+    "Finite key must last through new scope end plus eight days; no-fixed-expiry sentinel requires exact VPS IP.",
+    "Before a new start attempt, compensation restores only old entry-revoked custody; after a start attempt, ambiguity is readback-only with no automatic retry or switch.",
+    "Revoke-entry preserves selected custody and history; default makes no requests, verify/readback do not grant monetary authority.",
+    "Health distinguishes pending source from completed verified source and protected custody; unknown execution is not reported as false."
+  ],
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -p no:cacheprovider tests/test_pump4_source_handoff_v1.py tests/test_pump4_source_handoff_packet_v1.py tests/test_pump4_source_repair_health_v1.py",
+    "result": "44 passed in 1.99s",
+    "additional_runtime_reproducer": "Not executed; bounded review permits only the three named tests."
+  },
+  "runtime_model_verified": "Primary must verify runtime metadata; reviewer does not self-attest.",
+  "live_readiness": "NOT_GRANTED: candidate remains UNSEALED; final review P2 and separately owned actual GET/key lifetime gates remain. No owner GO or activation.",
+  "boundary": {
+    "network_calls": 0,
+    "broker_calls": 0,
+    "credential_source_reads": 0,
+    "systemops_constructed": false,
+    "financial_runtime_constructors": 0,
+    "ssh_calls": 0,
+    "source_edits": 0,
+    "production_mutations": 0,
+    "tests_only_fictional_temporary_operations": true
+  }
+}

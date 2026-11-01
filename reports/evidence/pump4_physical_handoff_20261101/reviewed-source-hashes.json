@@ -1,0 +1,9 @@
+{
+  "research_lab/pump4_runtime_sources_v1.py": "10e496ea2d5671ac867bfbe902680724230c554600eea7c2466367a52966d9b7",
+  "scripts/build_pump4_source_handoff_v1.py": "d55ad7933e847b52e782881f06492771dd07549b39f6a7f5ca0ae0e125a0b7e3",
+  "scripts/pump4_source_handoff_v1.py": "d8a3003d8cbfe254ee81a45fb477b56b1895969b5ba309358834e687bd8613ba",
+  "scripts/pump4_source_repair_health_v1.py": "396c6d21413217a664b26516dd55e9bf72ebcc530fd33ffc119cea2ff1444370",
+  "tests/test_pump4_source_handoff_packet_v1.py": "040bd03a8be8f05752e358f5eef2a3f2467b50fdb6afc11ac6ce4d8debace1bf",
+  "tests/test_pump4_source_handoff_v1.py": "0b18d01efb89a831274784cad1568b4bfda6cf8b4046a600e40a4b46b715c417",
+  "tests/test_pump4_source_repair_health_v1.py": "419bb62906c9a41519a3b3d0cbe391632859e61e92b202f3af6199d6e27e5a90"
+}

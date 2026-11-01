@@ -1,5 +1,7 @@
 # PUMP4 source handoff — 1 November 2026
 
+Later1Nov update: [physical installer/final acceptance](PUMP4_PHYSICAL_HANDOFF_ACCEPTANCE_2026_11_01.md) supersedes OPEN installer/review below.50local/same50VPS + independentPASS; actual verify-only reaches sole KEY_EXPIRES_DURING_CUSTODY. No LIVE selection. The rest of this report is the earlier source-stage record.
+
 **SOURCE_COVERAGE_PASS / FINANCIAL_HANDOFF_BLOCKED.** New candidate is staged,
 not selected. Existing financial owner remains SOURCE_BLOCKED. This is not
 READY_FOR_OWNER_GO and no financial command is issued to the owner.

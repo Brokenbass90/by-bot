@@ -1,5 +1,28 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT1Nov17:30UTC — physical handoff ACCEPTED; sole actual blocker KEY_LIFETIME
+
+Read PUMP4_PHYSICAL_HANDOFF_ACCEPTANCE_2026_11_01.md and NEW_CHAT_START_HERE.md.
+Installer/health/builder50local/same50VPS; independentAstra/high finalPASS after
+optimizationP2 and primaryowner-change-race fixes. Acceptedreader210unchanged.
+Exactpacket5dcdcb20abb1220f066a4819c3f93e9a341658b8cd28dcfd42424ceb8f6bb9fe
+stagedowner-packet-v5; NOapply/GO/runtimeclaim/restart/credentialchange.
+ActualVPS17:13:38UTC13GET0writes flat/fullpilotmoneyhistoryempty/allocation50;
+physical/source/account pass thenKEY_EXPIRES_DURING_CUSTODY. Key6Nov08:43UTC,
+proposednewpilot1–8Nov19:26UTC requireskeythrough16Nov19:26UTC orverifiednofixed
+expiry+exactVPSIP. Ownerarrangesaccess; noactiveenvhotreplace/deleteoldkey/secrets.
+Newkeysource=>rebuildexactenvelope, freshverify-only then separateexactfinancialGO.
+Oldfinancial3198429/DATA3152955/sourceepoch/lock818853/oldmoneyanchors unchanged;
+legacySOURCE_BLOCKED. OldGOexpiresTODAY19:26:32.774UTC; at17:30deadlinefuture.
+Existingmonitor freshpostexpiryGET+fullhistory beforeNO_TRADE, otherwiseUNKNOWN.
+Monthlyunchanged400/280/40;2Nov14:30UTCconditionalBUY/CASH; read-onlypostwindow
+jobmonthly-2scheduled16:40CY. Currenttimeractive is notfuturemarketexecutionPASS.
+ThenexistingTINY2actualOFF/cost-release; nonewreader/engine/Brainexpansion.
+Foreignallowlist365ff7d6…cc2e0e untouched. Published commit viaGitHEAD.
+
+---
+Earlier dated entries below are history.
+
 CURRENT1Nov afternoon — source coverage tested on actualVPS; financial handoff BLOCKED
 
 Read PUMP4_SOURCE_REPAIR_HANDOFF_2026_11_01.md and NEW_CHAT_START_HERE.md.

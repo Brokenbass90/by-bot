@@ -1,0 +1,82 @@
+{
+  "schema": "PUMP4_PHYSICAL_HANDOFF_FINAL_TARGETED_RECHECK_V1",
+  "reviewed_utc": "2026-11-01T16:42:04.470849+00:00",
+  "status": "PASS",
+  "verdict": "FINAL_BOUNDED_REVIEW_PASS_AFTER_TARGETED_FIXES",
+  "unresolved_important": 0,
+  "scope": "Targeted continuation of original bounded final review: optimization P2 closure, primary discovered owner-change concurrency race, final v5 code/packet binding. No new full reader audit or broad tests.",
+  "material_sha256": "d3c3b7325b91f97281cfe23e4206204f0624c9b91dd31ba979272a4d20453611",
+  "candidate_sha256": "7bd6ef1b4298bc29de55469383328b23a85749c53c29be77e272b17930c0a525",
+  "original_review": "/private/tmp/pump4-final-handoff-review-20261101.json",
+  "original_review_sha256": "44122d43957e1ecbe796c5d8b345b0ca350f55cbd6a31e9fba58b082bd733681",
+  "reviewed_sha256": {
+    "scripts/pump4_source_handoff_v1.py": "d8a3003d8cbfe254ee81a45fb477b56b1895969b5ba309358834e687bd8613ba",
+    "scripts/pump4_source_repair_health_v1.py": "396c6d21413217a664b26516dd55e9bf72ebcc530fd33ffc119cea2ff1444370",
+    "scripts/build_pump4_source_handoff_v1.py": "d55ad7933e847b52e782881f06492771dd07549b39f6a7f5ca0ae0e125a0b7e3",
+    "tests/test_pump4_source_handoff_v1.py": "0b18d01efb89a831274784cad1568b4bfda6cf8b4046a600e40a4b46b715c417",
+    "tests/test_pump4_source_handoff_packet_v1.py": "040bd03a8be8f05752e358f5eef2a3f2467b50fdb6afc11ac6ce4d8debace1bf",
+    "tests/test_pump4_source_repair_health_v1.py": "419bb62906c9a41519a3b3d0cbe391632859e61e92b202f3af6199d6e27e5a90",
+    "research_lab/pump4_runtime_sources_v1.py": "10e496ea2d5671ac867bfbe902680724230c554600eea7c2466367a52966d9b7"
+  },
+  "packet_files_sha256": {
+    "base_ops.py": "3f3efc987041f755219b3c241ca3048a22eec5a6fa02f26ce47f2210dec825d7",
+    "before.json": "620223ed8abb5773f71afc162fd57181235abf314a24672e7bbd064cb8cf373a",
+    "handoff.py": "d8a3003d8cbfe254ee81a45fb477b56b1895969b5ba309358834e687bd8613ba",
+    "health-legacy-immutable.py": "4c1674865daf0e2da2014642d2d474f8e206c2c885f14f0cc40bc16b65654ed8",
+    "health.py": "996b57c8461968584e5e0a81a07dab3e90af30d7b0f673508cf12340e1bdd37c",
+    "new-owner.service": "0aa4aeaabc96f69cc9a3d469d745812676e7cb3450b6305f3b740fc459a7e4fe",
+    "new-wrapper.py": "a89b92cea28971550976715b0dd8a9778a71a96b38cf303bb14f8de37f842637",
+    "notifications.json": "b978eff2f8ad57d32af9001ce0a2ccb625fc46f7b75815f2fd42ad6ac92706c3",
+    "old-notifications.json": "cd130fd16476edd572ea2c296bc0abce4a65f7a40c224f8c5f4dc800f968fd5d",
+    "old-original-owner.json": "ff249e081eb9e07d7e482615c440786e550332ff17c2de5b35572af89c2047ef",
+    "old-owner.service": "78a3b337ac6dfcea5b50b23824c6ee4beda16a1cf89353d355a0d7b594c7a970",
+    "old-wrapper.py": "3c628751e068ceeb20aa7fe3c35aa5f939d3d99123f9022be19be956c1142232",
+    "runner.json": "8c54485df57f70b2b366ac65941fd454755791e85c7bb0302101a6891bfc63d8",
+    "scope.json": "84fc6a55d8897d576a474e0ffe6be3a1a3dd5ece0e73f62766e77c01974bffcf"
+  },
+  "checks": {
+    "expected_final_material": true,
+    "recomputed_material_matches": true,
+    "all_packet_files_match": true,
+    "installer_matches_packet": true,
+    "health_template_matches_current": true,
+    "accepted_reader_unchanged": true,
+    "original_review_retained": true,
+    "new_unit_forces_nonoptimized_python": true,
+    "new_wrapper_explicit_hash_gate": true
+  },
+  "findings": [],
+  "closed_findings": [
+    {
+      "id": "REVIEW_P2_OPTIMIZED_PYTHON",
+      "status": "CLOSED",
+      "evidence": "Installer and health fail unconditionally at import when sys.flags.optimize is nonzero, before operational imports/reads/constructors. Generated wrapper uses explicit if/raise before runpy and exact validator binds that form. Derived unit explicitly sets PYTHONOPTIMIZE=0. Four optimized-entrypoint regressions and one modified-health wrapper regression pass."
+    },
+    {
+      "id": "PRIMARY_OWNER_CHANGE_DURING_FIRST_GET",
+      "status": "FIX_ADEQUATE",
+      "evidence": "Inside the shared observer lock, selected-owner verify, wholly unused old-root check and first-snapshot freshness now run before claim/revoke/stop. A cooperating handoff completed during initial GET is therefore detected while the observer lock prevents another handoff transition; the new regression proves no stop, restoration, claim or old revocation on that drift. Existing post-stop checks and no-retry behavior remain unchanged."
+    }
+  ],
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -p no:cacheprovider tests/test_pump4_source_handoff_v1.py tests/test_pump4_source_handoff_packet_v1.py -k 'optimized or optimization or changed_owner or exact_built or rehashed or model_only or separate_key'",
+    "result": "14 passed, 28 deselected in 1.03s",
+    "prior_red_evidence": [
+      "/private/tmp/pump4-optimized-review-red-20261101.txt",
+      "/private/tmp/pump4-handoff-concurrency-red-20261101.txt"
+    ],
+    "diff_inspection": "Current installer versus reviewed v4 payload and normalized health versus reviewed v4 payload contain only the stated optimization/lock-revalidation changes and corresponding pins."
+  },
+  "runtime_model_verified": "Primary must verify runtime metadata; reviewer does not self-attest.",
+  "financial_readiness": "Review PASS does not grant owner GO or attest actual GET/key lifetime. Packet remains UNSEALED; existing financial owner unchanged by this review.",
+  "boundary": {
+    "network_calls": 0,
+    "broker_calls": 0,
+    "credential_source_reads": 0,
+    "systemops_constructed": false,
+    "ssh_calls": 0,
+    "source_edits": 0,
+    "production_mutations": 0,
+    "tests_only_fictional_temporary_operations": true
+  }
+}

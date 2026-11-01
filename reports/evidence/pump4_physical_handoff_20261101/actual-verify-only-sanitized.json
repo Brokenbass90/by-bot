@@ -1,0 +1,25 @@
+{
+  "broker_writes": 0,
+  "observed_ms": 1793553218248,
+  "raw_private_sha256": "f5b466dca92933819833ec56524bb9d7c789c17b4ad36fa26c3bf9d924b9799a",
+  "reason": "KEY_EXPIRES_DURING_CUSTODY",
+  "redactions": [
+    "snapshot.available_usdt"
+  ],
+  "snapshot": {
+    "account_fingerprint": "2907b16ced6f29d2f74f0139d09f548b3af5428564dab8b19f6677b400789629",
+    "account_identity_sha256": "4a67566b52682b7089213b24bb7d562686486c365d6adcad9cbc6cac1a2bec87",
+    "available_allocation_50_proven": true,
+    "evidence_sha256": "5f591206f36b6ef0ed2726636d1eb79cf9028a222082041215956a01f01cc595",
+    "flat": true,
+    "get_requests": 13,
+    "history_cutoff_ms": 1793553217070,
+    "history_empty": true,
+    "key_exact_vps_ip": false,
+    "key_no_fixed_expiry": false,
+    "key_valid_until_ms": 1793954617000,
+    "observed_ms": 1793553218240,
+    "terminal_cost_finality_proven": false
+  },
+  "status": "BLOCKED_PREFLIGHT"
+}

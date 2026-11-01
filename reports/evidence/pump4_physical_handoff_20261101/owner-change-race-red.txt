@@ -1,0 +1,24 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_changed_owner_while_waiting_for_observer_lock_is_not_stopped _______
+
+case = (PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-870/test_change...e845f809d76158a89fcf9b6cb96cbbcd35b534c', ...}, <test_pump4_source_handoff_v1.case.<locals>.Ops object at 0x10b2d5460>)
+
+    def test_changed_owner_while_waiting_for_observer_lock_is_not_stopped(case):
+        f,e,o=case;changed=[False];original=o.verify
+        @contextmanager
+        def contested(e):
+            o.events.append('observer-lock');changed[0]=True;yield
+        def verify(e,*,stopped=False):
+            if changed[0]:raise M.HandoffError('OLD_UNIT_WRAPPER_DRIFT')
+            original(e,stopped=stopped)
+        o.observer_lock=contested;o.verify=verify
+        with pytest.raises(M.HandoffError,match='DRIFT'):apply(case)
+>       assert 'stop' not in o.events and 'restore-old' not in o.events
+E       AssertionError: assert ('stop' not in ['verify', 'GET', 'observer-lock', 'stop', 'account-lock', 'restore-old'])
+E        +  where ['verify', 'GET', 'observer-lock', 'stop', 'account-lock', 'restore-old'] = <test_pump4_source_handoff_v1.case.<locals>.Ops object at 0x10b2d5460>.events
+
+tests/test_pump4_source_handoff_v1.py:196: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_source_handoff_v1.py::test_changed_owner_while_waiting_for_observer_lock_is_not_stopped
+1 failed, 32 deselected in 0.19s
