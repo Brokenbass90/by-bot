@@ -1,0 +1,10 @@
+{
+  "automation_id": "pump4-read-only-brain-receipts",
+  "change": "post-expiry pinned GET-only preflight; no new automation, no financial scope extension",
+  "observed_utc": "2026-11-01T14:43:17.240514+00:00",
+  "preflight_sha256": "f647a97b66dc9a07473e094e421dd3fd7301e007dcf26ae9113696464c657068",
+  "prompt_sha256": "d443c8a31caedaf848e965cece96f22b208dd54eb4ae9b8d7baa075404eda62b",
+  "rrule_unchanged": "RRULE:FREQ=HOURLY;INTERVAL=6",
+  "status": "ACTIVE",
+  "target_thread_id": "01a14947-6074-7252-b20e-667be0acf3e6"
+}

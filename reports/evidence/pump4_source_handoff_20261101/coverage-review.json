@@ -1,0 +1,57 @@
+{
+  "schema": "PUMP4_NEW_COVERAGE_GUARD_INDEPENDENT_REVIEW_V1",
+  "reviewed_utc": "2026-11-01T10:21:03.532657+00:00",
+  "base": "ef0a3df",
+  "scope": "Only new completed-hour coverage guard, scan status and supervisor forwarding; prior parser review not repeated",
+  "verdict": "TWO_P2_FINDINGS",
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "Account for the existing 90-second source finalization before requiring the full receipt",
+      "file": "research_lab/pump4_runtime_sources_v1.py",
+      "start_line": 198,
+      "end_line": 200,
+      "trigger": "Every healthy current H1 at elapsed 60001..90000ms, before unchanged producer calls finish()",
+      "defect": "The entry-window-closed branch immediately opens receipt.json. Existing hour_stream deliberately continues through hour+90000 and main only calls s.finish afterwards. A missing receipt at +60s is therefore normal lifecycle, but the new guard raises and selected_tick reports BLOCKED_NEW_INPUTS; existing owner health marks any BLOCKED status unhealthy.",
+      "evidence": [
+        "scripts/run_pump4_stream_v1.py:84 loop until hour+90000",
+        "scripts/run_pump4_stream_v1.py:125-127 calls finish only after hour_stream returns",
+        "tests/test_pump4_current_hour_coverage_v1.py missing_receipt case passes by raising at hour+60001",
+        "scripts/pump4_owner_health_v1.py:103 rejects BLOCKED supervisor statuses"
+      ],
+      "remediation": "Distinguish closed entry window/source finalization pending from failed completed coverage using an explicit bounded settlement interval consistent with existing producer. Keep the 60-second entry deadline unchanged, and block when the bounded completion deadline is missed or a completed receipt fails."
+    },
+    {
+      "priority": "P2",
+      "title": "Accept source-proven unavailable instruments with non-trading metadata",
+      "file": "research_lab/pump4_runtime_sources_v1.py",
+      "start_line": 268,
+      "end_line": 270,
+      "trigger": "A frozen-universe instrument remains in metadata with status Settled or another producer-defined unavailable condition",
+      "defect": "The guard accepts UNAVAILABLE_INSTRUMENT only when instrument is exactly None. The existing producer explicitly stores the nonempty instrument dict for non-Trading/wrong quote/wrong contract instruments and includes such rows in a passing full-hour receipt. A valid unavailable instrument therefore makes every completed H1 BLOCKED even though source coverage passed.",
+      "evidence": [
+        "research_lab/pump4_stream_intake_v1.py:35-38 producer emits UNAVAILABLE_INSTRUMENT with original instrument value",
+        "research_lab/pump4_stream_intake_v1.py:116 hour_pass accepts UNAVAILABLE_INSTRUMENT regardless of null metadata",
+        "Bounded standalone reproducer: status Settled, quoteCoin USDT, contractType LinearPerpetual yields producer_emits_unavailable=true, producer_finish_accepts_status=true, guard raises PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_INSTRUMENT_COVERAGE"
+      ],
+      "remediation": "Validate the existing producer unavailable predicate and instrument symbol/scope instead of demanding null; continue rejecting a Trading/USDT/LinearPerpetual instrument falsely marked unavailable."
+    }
+  ],
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -p no:cacheprovider tests/test_pump4_current_hour_coverage_v1.py",
+    "result": "11 passed in 2.18s",
+    "standalone_nontrading_reproducer": "REPRODUCED"
+  },
+  "reviewed_sha256": {
+    "research_lab/pump4_runtime_sources_v1.py": "10e496ea2d5671ac867bfbe902680724230c554600eea7c2466367a52966d9b7",
+    "research_lab/pump4_execution_supervisor_v1.py": "8441077ac3742fa832217fa712b17bcb2a6ee991ccce736c0509b877ecd175f2",
+    "tests/test_pump4_current_hour_coverage_v1.py": "faf235c766d9a53a08dbc15c998ca09792d983ca9316a45b4fd45ee8c3d33b93",
+    "tests/test_pump4_current_hour_candidate_v1.py": "b23439d9c4fb87454166c204ca7651fff91dba69b86d6cd2adb58b59b6410cb3"
+  },
+  "diff_sha256": "320fd0bcec9590674451756421b6134ada4ca340be5f133a1c9268b6b3d53254",
+  "custody_review": "selected_tick still reconciles admitted lifecycle before calling candidate; forwarding only rewrites NO_NEW_SIGNAL, no custody ordering regression found",
+  "network_calls": 0,
+  "broker_calls": 0,
+  "implementation_edits": 0,
+  "source_or_authority_changes": 0
+}

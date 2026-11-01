@@ -99,9 +99,10 @@ def test_outside_entry_window_does_not_read_archive_or_send_http(tmp_path,monkey
     owner, exchange, tick, _, _, lease = create(tmp_path)
     try:
         config,_,wire,root,obs,target,pub = index_case(tmp_path/'data')
-        tick[0]+=60001
-        monkeypatch.setattr(Path,'glob',lambda *a:pytest.fail('outside-window directory scan'))
-        assert R.TrustedSources(config,owner,wire=lambda *a:pytest.fail('late HTTP'),clock=lambda:tick[0]).candidate() is None
+        tick[0]+=120001
+        monkeypatch.setattr(Path,'glob',lambda *a:pytest.fail('no scan before missing coverage is rejected'))
+        with pytest.raises(FileNotFoundError):
+            R.TrustedSources(config,owner,wire=lambda *a:pytest.fail('late HTTP'),clock=lambda:tick[0]).candidate()
     finally:lease.close()
 
 

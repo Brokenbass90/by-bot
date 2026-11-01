@@ -1,0 +1,34 @@
+{
+  "api_key_rotated": false,
+  "artifacts": {
+    "account-readback.json": "8f4d4ad4d6fff201eef3b62f8867443260ae6a5c616fb3b064858dec1318c367",
+    "coverage-review.json": "10dd36d8b8e1358df89806ff9bfd06db1bb9acbec35a069e9504f7a73967c9ec",
+    "current-source-coverage.json": "5bca5fa69cac725bcf2b83903f2b162c34f99ee19b3c6053a633beea9bcd5b64",
+    "five-signals-independent.json": "3ad9a8641b099b069db7e81e6ef3422ce58d9844d2f478dc022a18136b3f239b",
+    "local-tests.txt": "ea8f3c8f7318374f504e2d0c6de2bc780bf3488ead419abb2ce8ebe8e3b6ca5a",
+    "public-preflight.py": "c3f121f88d1ab97bf7a072fed751748267fc568cac801b243916ffb1ecc58043",
+    "read-only-preflight.py": "f647a97b66dc9a07473e094e421dd3fd7301e007dcf26ae9113696464c657068",
+    "review-dossier.json": "59c105f4bb294f8db0c3a4eb22781d36d4bf1059efa825694bfd5edf3902b2af",
+    "verification-source-hashes.json": "05f89618d8550664cf2d914f000ef9f7b101d32176032adb78a6d7bbbdb03dfd",
+    "vps-tests.txt": "0174c8c15020e085b5c232aadf73ec861950be04613736b4345e13589130a2d0"
+  },
+  "candidate_root": "/opt/bybot-research/pump4-current-hour-repair-20261101/candidate-05f89618d8550664",
+  "files": 194,
+  "final_independent_signoff": false,
+  "financial_installed": false,
+  "go_created": false,
+  "local_tests": 210,
+  "monthly_changed": false,
+  "review_status": "TWO_P2_FIXED_BY_PRIMARY_FINAL_FOLLOWUP_USAGE_LIMIT",
+  "reviewer": {
+    "effort": "high",
+    "model": "gpt-6-astra",
+    "runtime_verified": true,
+    "session_id": "01a19698-2e1e-7010-8cd3-79cb631a3dec"
+  },
+  "schema": "PUMP4_SOURCE_HANDOFF_DELIVERY_V1",
+  "scope_extended": false,
+  "source_manifest_sha256": "05f89618d8550664cf2d914f000ef9f7b101d32176032adb78a6d7bbbdb03dfd",
+  "status": "SOURCE_COVERAGE_PASS_FINANCIAL_HANDOFF_BLOCKED",
+  "vps_same_tests": 210
+}

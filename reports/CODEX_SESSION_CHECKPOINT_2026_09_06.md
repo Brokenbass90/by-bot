@@ -1,5 +1,26 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT1Nov afternoon — source coverage tested on actualVPS; financial handoff BLOCKED
+
+Read PUMP4_SOURCE_REPAIR_HANDOFF_2026_11_01.md and NEW_CHAT_START_HERE.md.
+New candidate194files05f89618,210local/same210VPS networkdenied; actual14:29UTC
+fullH1index134/3unavailable/0rawsignals. Added honestprefix/finalization/coverage
+statuses and completed-source failure gate, legacyLIVEunchangedSOURCE_BLOCKED.
+Independent5rawsignals audit completed, historicalfinancialadmissionUNKNOWN;
+publication_completed_ms before indexfsync, never claimdurableindexwindow proof.
+Coverage review2P2 primaryfixed/regressed; finalfollowupreview allowance limit.
+GET14:31:47UTCflat0/orders0/emptylinearUSDTpilotmoneyhistory; notfuture/fee finality.
+Exactprivate reviewdraft59c105f4 prepared, NO installer/GO; healthdraftnotaccepted.
+Keyvalid6Nov08:43UTC but168hholdoutlivesit. Need keylifetime/rotation thenactual
+physicalhandoff withoriginallease818853/oldunusedproof/nohistoryreset/exactGO.
+OldscopeexpiresTODAY19:26:32.774UTC; existingmonitorACTIVE/noextension, afterexpiry
+freshGETbeforeNO_TRADE,otherwiseUNKNOWN. Monthlyunchanged2Nov14:30UTCwindow.
+DiagnosticsV1DRAFT/LIQcompatibilityNOTTESTED; noengine/Brainexpansioninthisrepair.
+Foreignallowlist365ff7d6…cc2e0e unchanged. Publishedcommit recorded by Git HEAD.
+
+---
+Earlier dated entries below are history.
+
 CURRENT1Nov — API valid; five raw PUMP signals; source repair CODE_PASS / NOT_SELECTED
 
 Read PUMP4_SOURCE_BOUND_REPAIR_2026_11_01.md. Source failure confirmed25671archive

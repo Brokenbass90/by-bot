@@ -179,7 +179,7 @@ class TrustedSources:
             src=safe(app/name);need(src.is_relative_to(app) and hashlib.sha256(stable_bytes(src)).hexdigest()==pin,'DATA_SOURCE_DRIFT')
         return root
 
-    def _candidate_files(self,root,now):
+    def _candidate_files(self,root,now,*,coverage_only=False):
         """Opt-in current-hour index; old scopes retain their legacy behavior.
 
         ws-hours publications already exist in the accepted DATA producer. They
@@ -195,8 +195,9 @@ class TrustedSources:
             need(len(files)<=20000,'OBSERVATION_BOUND')
             return files,{}
         hour=now//H*H
-        if not 0<=now-hour<=self.config['entry_max_delay_ms']:
-            return [],{}  # No fresh H1 entry is admissible outside this window.
+        if not coverage_only and not 0<=now-hour<=self.config['entry_max_delay_ms']:
+            self._completed_hour_coverage(root,hour,now)
+            return [],{}  # Coverage is checked; no late entry becomes fresh.
         folder=safe(root/'ws-hours'/str(hour)/'published')
         need(not folder.exists() or folder.is_dir(),'CURRENT_HOUR_DIRECTORY')
         from research_lab.pump4_execution_plan_v1 import frozen_sources
@@ -236,10 +237,64 @@ class TrustedSources:
             archived,archive_identity=observation_bytes(original)
             need(decode(archived)==observation,'CURRENT_OBSERVATION_CONFLICT')
             need(original not in expected,'CURRENT_DUPLICATE_DECISION')
-            expected[original]=dict(observation=observation,observation_identity=archive_identity,
+            expected[original]=dict(publication=publication,observation=observation,observation_identity=archive_identity,
                                     publication_path=path,publication_identity=publication_identity)
         self._current_index_stable(expected)
+        if not coverage_only:
+            self.candidate_scan=dict(status='WAITING_H1_PUBLICATION_PREFIX',
+                hour_open_ms=hour,coverage_complete=False,checked_publications=len(expected))
         return list(expected),expected
+
+    def _completed_hour_coverage(self,root,hour,now):
+        """A sealed census plus exact index/observations, never process liveness.
+
+        This proves coverage at THIS read, not durability inside the historical
+        entry window. Producer publication_completed_ms precedes index fsync.
+        An unavailable instrument remains explicitly unavailable, not negative.
+        """
+        path=safe(root/'ws-hours'/str(hour)/'receipt.json')
+        # Producer receives until +90s, then closes its socket (3s configured).
+        # This bounded +120s health grace never changes the <=60s entry cutoff.
+        if not path.exists() and 60000<now-hour<=120000:
+            self.candidate_scan=dict(status='WAITING_H1_CENSUS_FINALIZATION',
+                hour_open_ms=hour,coverage_complete=False,entry_window_closed=True)
+            return
+        raw,identity=observation_bytes(path);r=decode(raw)
+        need(r.get('schema')=='PUMP4_WS_FULL137_DATA_RECEIPT_V1'
+             and r.get('source_hour_open_ms')==hour and r.get('census')==137
+             and r.get('hour_pass') is True and r.get('disconnected') is False
+             and r.get('orders_allowed') is False and r.get('money_authority') is False
+             and r.get('financial_owner_constructed') is False
+             and type(r.get('broker_writes')) is int and r['broker_writes']==0,
+             'CURRENT_HOUR_COVERAGE_UNVERIFIED')
+        rows=r.get('rows');symbols=set(universe())
+        need(isinstance(rows,list) and len(rows)==137 and all(isinstance(x,dict) for x in rows)
+             and {x.get('symbol') for x in rows}==symbols,'CURRENT_HOUR_CENSUS')
+        live=[x for x in rows if x.get('status')=='CLOSED_H1_INTAKE_PASS']
+        def unavailable(x):
+            if set(x)!={'symbol','status','instrument'} or x['status']!='UNAVAILABLE_INSTRUMENT':return False
+            i=x['instrument']
+            return i is None or (isinstance(i,dict) and i.get('symbol')==x['symbol']
+                and not all(i.get(k)==v for k,v in dict(status='Trading',quoteCoin='USDT',contractType='LinearPerpetual').items()))
+        need(live and all(x.get('status')=='CLOSED_H1_INTAKE_PASS'
+             or unavailable(x) for x in rows),'CURRENT_HOUR_INSTRUMENT_COVERAGE')
+        count=len(live)
+        need(all(type(r.get(k)) is int and r[k]==count
+             for k in ('expected_trading','complete_pairs','within60s')),'CURRENT_HOUR_COUNT')
+        _,index=self._candidate_files(root,now,coverage_only=True)
+        actual={v['publication']['symbol']:v['publication'] for v in index.values()}
+        need(len(actual)==count and all(actual.get(x['symbol'])==x
+             and type(x.get('publication_completed_ms')) is int
+             and 0<=x['publication_completed_ms']-hour<=self.config['entry_max_delay_ms']
+             for x in live),'CURRENT_HOUR_INDEX_COVERAGE')
+        self._current_index_stable(index)
+        need(observation_identity(path.lstat())==identity,'CURRENT_HOUR_RECEIPT_CHANGED')
+        self.candidate_scan=dict(status='ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED',
+            hour_open_ms=hour,coverage_complete=True,checked_publications=count,
+            unavailable_instruments=137-count,
+            raw_signals=sum(v['observation']['decision']['signal'] is not None for v in index.values()),
+            receipt_sha256=hashlib.sha256(raw).hexdigest(),observed_ms=now,
+            historical_index_durability_proven=False)
 
     @staticmethod
     def _current_index_stable(index):

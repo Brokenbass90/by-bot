@@ -1,5 +1,7 @@
 # PUMP4 archive bound incident / current-hour repair —1Nov2026
 
+**Later1Nov update:** [coverage guard/current source proof + blocked handoff](PUMP4_SOURCE_REPAIR_HANDOFF_2026_11_01.md).210local/same210VPS,194file05f89618 candidate supersedes source-only stage below. Earlier196/193file details remain dated evidence, not current selection. Timing caveat: publication_completed_ms precedes index fsync; historical index availability remains UNKNOWN.
+
 **CODE_AND_PUBLIC_SOURCE_PARSER_PASS / NOT_SELECTED.** No LIVE source/config/unit,
 GO, risk or epoch was changed. The deployed legacy reader remains blocked.
 This is a bounded execution-source repair, not a new strategy or TINY-2 activation.

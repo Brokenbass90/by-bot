@@ -35,3 +35,20 @@ Result:196local/same196VPS and actualpublicparserreplay PASS; no LIVE selection.
 NEXT exactfinancialrepair envelope/GO/handoff before deployment. APIvalid6Nov but
 7daycustody mayoutliveit; existing1Noventryexpiry unchanged. Full report in
 reports/PUMP4_SOURCE_BOUND_REPAIR_2026_11_01.md.
+
+## 1Nov bounded follow-up requested by owner
+
+- [x] Independent five-signal source/prefix/frozen/scope audit; historical admission
+  UNKNOWN, original-observation timestamp does not witness durable index.
+- [x] RED missing coverage, distinguish partial prefix/finalization/complete source;
+  preserve<=60sentry. Existingproducer90s accounted for; unavailablemetadata retained.
+- [x] Same210local/VPS + actualcurrent-source134pair check with network denied.
+- [x] Independent review2P2 fixed/regressed by primary; follow-up allowance limit
+  explicitly recorded, not a final independent financial signoff.
+- [x] Fresh GET account/pilot-history proof, key deadline/custody and draft envelope.
+- [ ] Accepted key lifetime/rotation; exact financial installer/failure acceptance
+  and final critical review/owner approval. Review draft is not an executable GO.
+- [ ] Future post-expiry freshreadback; Monthly2Nov actualBUY/CASH check.
+
+See PUMP4_SOURCE_REPAIR_HANDOFF_2026_11_01.md. Manager diagnostics standard remains
+DRAFT; secondLIQcompatibility and currentfinancialtrace are not yet delivered.

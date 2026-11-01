@@ -82,6 +82,10 @@ def run(config_path=None, config_sha256=None, *, dispatch=False, orders_off=Fals
                 if sources is None:raise RuntimeError(source_error)
                 result=selected_tick(owner,sources.account,candidate,
                     epoch_started_ms=epoch,max_delay_ms=delay,apply=dispatch)
+                if result.get('status')=='NO_NEW_SIGNAL' and config.get('candidate_source')=='CURRENT_H1_PUBLICATIONS_V1':
+                    scan=sources.candidate_scan
+                    need(scan['status'] in {'WAITING_H1_PUBLICATION_PREFIX','WAITING_H1_CENSUS_FINALIZATION','ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED'},'SOURCE_SCAN_STATE')
+                    result=dict(result,status=scan['status'],source_scan=scan)
             except Exception as exc:
                 result=dict(status='BLOCKED_OBSERVATION',error_type=type(exc).__name__,
                     custody_required=True,finality_proven=False)

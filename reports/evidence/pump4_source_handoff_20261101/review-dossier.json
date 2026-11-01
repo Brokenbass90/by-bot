@@ -1,0 +1,42 @@
+{
+  "activation_code_included": false,
+  "api_expires_at": "2026-11-06T08:43:37Z",
+  "blockers": [
+    "KEY_EXPIRES_BEFORE_POSSIBLE_CUSTODY_END",
+    "REVIEW_DRAFT_NOT_FINANCIAL_HANDOFF_INSTALLER",
+    "FINAL_INDEPENDENT_REVIEW_INTERRUPTED_USAGE_LIMIT"
+  ],
+  "epoch_changed": false,
+  "files": {
+    "health-legacy-immutable.py": "4c1674865daf0e2da2014642d2d474f8e206c2c885f14f0cc40bc16b65654ed8",
+    "health.py": "5d063470fb1f07757d43c8422d3763df8735bf827de333b014f2463956fa432d",
+    "new-owner.service": "1d9b5cff6bb04b08810c4fcbcbadae7d474cb21b3a5f570199222dbdbd5e5785",
+    "notifications.json": "f43e461ce932ae2104ac621b46b0fb65bc98c289a400b4caca7210b8667d167e",
+    "runner.json": "7ae4b11b4e80440db006ca5bb845662c5952abd4ec714888097dac130b3c4c75",
+    "scope.json": "9abf3c7fad3325fa597402e91ba96ac366036a7560bbe75a622b985f83638b97",
+    "wrapper.py": "9f9bfe632369d15c50eab0d33de23d4dfe28dc36fd48868f414f71243379df3d"
+  },
+  "financial_parameters_changed": false,
+  "go_created": false,
+  "installed": false,
+  "old_config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+  "old_scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+  "proposed_config_sha256": "7ae4b11b4e80440db006ca5bb845662c5952abd4ec714888097dac130b3c4c75",
+  "proposed_scope_sha256": "a989d05bd13f7bad2c275e8dedc96af8d4499ff3ccc7d579beddd8d216a9fd4d",
+  "proposed_unit_sha256": "1d9b5cff6bb04b08810c4fcbcbadae7d474cb21b3a5f570199222dbdbd5e5785",
+  "required_handoff": [
+    "fresh complete account GET before and after original lease",
+    "prove old lifecycle/risk/attempts/barriers/flows all unused; otherwise do not migrate",
+    "explicit exact owner approval after final key identity and source pins",
+    "hold existing observer lock; stop existing owner once; hold original lock inode818853",
+    "revoke old entries before any new GO; preserve all old scope/GO/history bytes",
+    "never restart/retry financial transition on ambiguity; custody reconciliation first"
+  ],
+  "required_key_lifetime_until_ms": 1794165992774,
+  "schema": "PUMP4_SOURCE_REPAIR_REVIEW_DOSSIER_V1",
+  "source_candidate": "/opt/bybot-research/pump4-current-hour-repair-20261101/candidate-05f89618d8550664",
+  "source_envelope_directory": "/opt/bybot-research/pump4-current-hour-repair-20261101/source-envelope-review-v1",
+  "source_manifest_sha256": "05f89618d8550664cf2d914f000ef9f7b101d32176032adb78a6d7bbbdb03dfd",
+  "status": "BLOCKED_NOT_EXECUTABLE_NOT_GO_READY",
+  "valid_until_ms": 1793561192774
+}
