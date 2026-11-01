@@ -1,0 +1,63 @@
+{
+  "actual_verification_ms": 1793526976678,
+  "broker_admission_proven": false,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "core200_complete": true,
+  "data_sha256": "f9f327bb2b155687419aeb44be830b8735463c2e563b0d02133a082fc4a6381d",
+  "entry_session": "2026-11-02",
+  "exported_sessions": 260,
+  "financial_units_changed": false,
+  "first_local_seal_mtime_ns": 1793525231647429453,
+  "fully_checked_sessions": 258,
+  "monthly_calendar_due": true,
+  "old_files_unchanged": 40,
+  "picks": [
+    {
+      "atr20": 44.35018920898,
+      "atr20_pct": 3.130881442527527,
+      "rawscore": 0.3741377102064199,
+      "score": 0.36219250807555897,
+      "signal_close": 1416.5400390625,
+      "stop_price": 1327.83966064454,
+      "symbol": "LLY",
+      "weight": 0.36219250807555897
+    },
+    {
+      "atr20": 17.147789001459998,
+      "atr20_pct": 2.6917070711040303,
+      "rawscore": 0.3652151037548238,
+      "score": 0.38130818004676204,
+      "signal_close": 637.0599975586,
+      "stop_price": 602.76441955568,
+      "symbol": "LMT",
+      "weight": 0.38130818004676204
+    },
+    {
+      "atr20": 12.526417541499999,
+      "atr20_pct": 3.671713391674927,
+      "rawscore": 0.2869322085107849,
+      "score": 0.25649931187767894,
+      "signal_close": 341.1600036621,
+      "stop_price": 316.1071685791,
+      "symbol": "INTU",
+      "weight": 0.25649931187767894
+    }
+  ],
+  "schema": "MONTHLY58_SESSION30_DATA_DELIVERY_V1",
+  "seal_sha256": "7a8739b511c29ac9d64de648399b6f191ae3dec16dbba9c1d56d7540561773d5",
+  "session_date": "2026-10-30",
+  "source_available_ms": 1793391679076,
+  "source_session_close_ms": 1793390400000,
+  "spy_gate": {
+    "close": 755.7100219727,
+    "extra_regime_veto": "NONE_IN_FROZEN_MONTHLY",
+    "gate_ok": true,
+    "sma200": 728.820050354002,
+    "sma50_observation_only": 767.4852014160119
+  },
+  "status": "DATA_ONLY_DIAGNOSTIC_SELECTION_READY_IMPORTED_LATE",
+  "universe_sha256": "d88f7598819afa8b2cc2fabec197f45a7bcd9dfb8f50d30c1bf2698d671295fa",
+  "universe_symbols": 58,
+  "warmup_prospective_credit": 0
+}

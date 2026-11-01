@@ -1,5 +1,41 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT1Nov — API valid; five raw PUMP signals; source repair CODE_PASS / NOT_SELECTED
+
+Read PUMP4_SOURCE_BOUND_REPAIR_2026_11_01.md. Source failure confirmed25671archive
+files>20000; not APIexpiration. ExistingpublicDATA87H1/11692timelyrows includes5raw
+signals HYPE/ESP/XPL/HEI/GWEI;3nonpassinghours, not completeopportunity/trade/PnLproof.
+Opt-in candidate_source=CURRENT_H1_PUBLICATIONS_V1 usesexistingcurrenthourindex<=137,
+exactpublication+observation+times/pins/identity; unchangedcausalH1/accountguards.
+196local/same196VPS, realparserreplay4hours/5signals PASS; candidatebadb0d4afd158e3a
+UNSELECTED. Oneverifiedastra/high review1P2race RED/fixed with2regressions; nosecond
+independentsignoff. No LIVE/source/unit/GO/epoch change, noarchivecleanup.
+
+Actual1Nov09:47UTC query-apiHTTP200/retCode0, existingkeyVALID until6Nov08:43:37UTC
+/10:43Cyprus. Fresh authenticatedUSDTpositions0/openorders0; not fullhistory/no-trade
+or finalfeeproof. No financialownerconstructors/lease/POST; secretsnotpublished.
+Sincehold168h canoutliveAPI, NEWpilot needs long-livedkey oracceptedrotation/custody
+plan. Do not hotreplaceactivecredentialfile: sourcehash+keyFP are envelopebound.
+OldPUMPentryGO stillendsTODAY1Nov19:26:32.774UTC/21:26Cyprus. Noautoextension.
+
+NEXT: prepare exactfinancialsource-repair envelope/config/scope/unit hashes and
+ownerprocedure through existinghandoff/originallock818853. That package is NOTYET
+PREPARED/APPLIED; don't claim live recovery from196tests. Retainclaims/barriers/loss
+state/custody/expiry; freshaccounttruth before switch. Then TINY2cost-release policy
+andactualfinancialOFF/handoff/newGO. Do not redo accepted2efcd79accounting or expand
+intoBrain/Factory/newstrategy. Strongly prefer freshchat from THIS checkpoint.
+
+Read ALPACA_MONTHLY_SELECTION_2026_10_30.md:30Octsource20:21UTC, firstlocalimport
+LATE1Nov09:27UTC, old40fileshash/inode/mtimepreserved. FrozenDATApicks LLY36.2193%,
+LMT38.1308%,INTU25.6499%,58symbols/core200PASS/calendarTRUE/SPYgateTRUE. Native
+30Octdispatcher boundsession/2Novwindow/issues[]; DATA selection notBUY. Existing
+Monthly400/280/40 standingGO/calendar untouched,2Nov14:30UTC/16:30CYconditionalentry
+/CASH operationalP0. No newMonthly activation. Mac nativeDATA and Brainlearning
+stillP1, notinstalledbythisrepair. Foreignallowlist365ff7d6…cc2e0e preserved.
+
+---
+Earlier dated entries below are history.
+
 CURRENT30Oct14:04Cyprus — DATA Brain clock-guard recovery; PUMP4 patch published
 
 PUMP4 accounting/OFF patch2efcd79 published,177local/same177VPS; no serialfinancialGO.

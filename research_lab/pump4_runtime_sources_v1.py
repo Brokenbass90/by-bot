@@ -179,11 +179,79 @@ class TrustedSources:
             src=safe(app/name);need(src.is_relative_to(app) and hashlib.sha256(stable_bytes(src)).hexdigest()==pin,'DATA_SOURCE_DRIFT')
         return root
 
+    def _candidate_files(self,root,now):
+        """Opt-in current-hour index; old scopes retain their legacy behavior.
+
+        ws-hours publications already exist in the accepted DATA producer. They
+        are an index, never new signal authority: each must agree with the exact
+        immutable observation and the candidate still replays the frozen journal
+        against fresh HTTPS below. No archival scan, deletion, mtime-based causal
+        inference, epoch reset or new producer is needed.
+        """
+        mode=self.config.get('candidate_source','LEGACY_ARCHIVE_V1')
+        need(mode in {'LEGACY_ARCHIVE_V1','CURRENT_H1_PUBLICATIONS_V1'},'CANDIDATE_SOURCE_MODE')
+        if mode=='LEGACY_ARCHIVE_V1':
+            files=list(safe(root/'observations').glob('*.json'))
+            need(len(files)<=20000,'OBSERVATION_BOUND')
+            return files,{}
+        hour=now//H*H
+        if not 0<=now-hour<=self.config['entry_max_delay_ms']:
+            return [],{}  # No fresh H1 entry is admissible outside this window.
+        folder=safe(root/'ws-hours'/str(hour)/'published')
+        need(not folder.exists() or folder.is_dir(),'CURRENT_HOUR_DIRECTORY')
+        from research_lab.pump4_execution_plan_v1 import frozen_sources
+        pins=frozen_sources();symbols=set(universe());expected={};count=0
+        for path in folder.glob('*.json'):
+            count+=1;need(count<=137,'CURRENT_HOUR_PUBLICATION_BOUND')
+            raw,publication_identity=observation_bytes(path);publication=decode(raw)
+            need(publication.get('status')=='CLOSED_H1_INTAKE_PASS'
+                 and publication.get('mode')=='CURRENT_CLOSED_BAR'
+                 and publication.get('source_kind')=='CONFIRMED_WS_WITH_FROZEN_JOURNAL_PREFIX'
+                 and publication.get('orders_allowed') is False
+                 and publication.get('money_authority') is False
+                 and type(publication.get('broker_writes')) is int
+                 and publication['broker_writes']==0,'CURRENT_PUBLICATION_SCOPE')
+            rows=publication.get('decisions')
+            need(isinstance(rows,list) and len(rows)==1 and isinstance(rows[0],dict),'CURRENT_PUBLICATION_DECISIONS')
+            observation=rows[0];d=observation.get('decision')
+            need(isinstance(d,dict),'CURRENT_DECISION_SCHEMA')
+            symbol=d.get('symbol');bar=d.get('bar_open_ms')
+            need(symbol in symbols and publication.get('symbol')==symbol
+                 and path.name==symbol+'.json' and type(bar) is int and bar==hour-H
+                 and publication.get('cursor_ms')==bar,'CURRENT_PUBLICATION_IDENTITY')
+            need(observation.get('schema')=='PUMP4_DATA_DECISION_OBSERVATION_V1'
+                 and observation.get('mode')=='CURRENT_CLOSED_BAR'
+                 and observation.get('orders_allowed') is False and observation.get('money_authority') is False
+                 and d.get('orders_allowed') is False and d.get('money_authority') is False
+                 and d.get('source_pins')==pins,'CURRENT_OBSERVATION_SCOPE')
+            core={k:d[k] for k in ('domain_schema','symbol','bar_open_ms','history_sha256','source_pins','signal')}
+            need(core['domain_schema']=='PUMP4_CLOSED_H1_INTAKE_V1'
+                 and d.get('decision_id')=='pump4-'+digest(core),'CURRENT_DECISION_HASH')
+            stamps=[hour,d.get('available_ms'),d.get('first_observed_ms'),publication.get('publication_completed_ms'),now]
+            need(all(type(t) is int for t in stamps) and stamps==sorted(stamps)
+                 and publication.get('pair_received_ms')==d['available_ms'],'CURRENT_PUBLICATION_CLOCK')
+            need(observation.get('status')==('NO_SIGNAL' if d['signal'] is None else 'STREAM_SIGNAL_REQUIRES_FRESH_HTTPS'),
+                 'CURRENT_SIGNAL_STATUS')
+            original=safe(root/'observations'/(d['decision_id']+'.json'))
+            archived,archive_identity=observation_bytes(original)
+            need(decode(archived)==observation,'CURRENT_OBSERVATION_CONFLICT')
+            need(original not in expected,'CURRENT_DUPLICATE_DECISION')
+            expected[original]=dict(observation=observation,observation_identity=archive_identity,
+                                    publication_path=path,publication_identity=publication_identity)
+        self._current_index_stable(expected)
+        return list(expected),expected
+
+    @staticmethod
+    def _current_index_stable(index):
+        for path,proof in index.items():
+            need(observation_identity(path.lstat())==proof['observation_identity']
+                 and observation_identity(proof['publication_path'].lstat())==proof['publication_identity'],
+                 'CURRENT_SOURCE_CHANGED')
+
     def candidate(self):
         root=self._data();now=self.clock();epoch=self.config['epoch_started_ms'];delay=self.config['entry_max_delay_ms']
         need(type(epoch) is int and type(delay) is int and 0<delay<=60000,'EPOCH_OR_DELAY')
-        directory=safe(root/'observations')
-        files=list(directory.glob('*.json'));need(len(files)<=20000,'OBSERVATION_BOUND')
+        files,current_index=self._candidate_files(root,now)
         if self._negative_clock is not None and now<self._negative_clock:self._negative_observations.clear()
         self._negative_clock=now
         present=set(files);self._negative_observations={p:v for p,v in self._negative_observations.items() if p in present}
@@ -192,6 +260,8 @@ class TrustedSources:
             identity=observation_identity(path.lstat());cached=self._negative_observations.get(path)
             if cached is not None and cached[0]==identity and (cached[1] is None or now>cached[1]):continue
             raw,identity=observation_bytes(path);row=decode(raw);d=row['decision']
+            need(path not in current_index or (row==current_index[path]['observation']
+                 and identity==current_index[path]['observation_identity']),'CURRENT_OBSERVATION_CHANGED')
             need(row['orders_allowed'] is False and row['money_authority'] is False,'OBSERVATION_AUTHORITY')
             entry=d['bar_open_ms']+H
             if (row['mode']!='CURRENT_CLOSED_BAR' or d['signal'] is None
@@ -205,6 +275,7 @@ class TrustedSources:
                 continue
             need(d['symbol'] in universe() and path.name==d['decision_id']+'.json','OBSERVATION_IDENTITY')
             eligible.append(d)
+        self._current_index_stable(current_index)
         if not eligible:return None
         decision=min(eligible,key=lambda d:(d['first_observed_ms'],d['symbol'],d['decision_id']))
         symbol=decision['symbol'];entry=decision['bar_open_ms']+H
@@ -218,6 +289,7 @@ class TrustedSources:
         with ThreadPoolExecutor(max_workers=2) as pool:
             captures=list(pool.map(lambda q:public_get('/v5/market/kline',q,wire=self.get_wire,clock=self.clock),requests))
         causal_plan(intake,decision['decision_id'],captures,epoch_started_ms=epoch,max_delay_ms=delay,now_ms=self.clock())
+        self._current_index_stable(current_index)
         self._candidate_consumed.add(decision['decision_id'])
         return dict(intake=intake,decision_id=decision['decision_id'],captures=captures)
 

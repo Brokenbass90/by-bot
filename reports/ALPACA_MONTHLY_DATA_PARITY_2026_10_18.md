@@ -1,5 +1,11 @@
 # Alpaca Monthly58 — доставка одинаковых данных и диагностический отбор
 
+Latest1Nov: session30Oct imported LATE1Nov09:27UTC; frozen diagnostic LLY/LMT/INTU,
+core200complete/58symbols PASS. Read ALPACA_MONTHLY_SELECTION_2026_10_30.md and
+evidence/alpaca_monthly_data_parity_20261018/delivery-20261030.json. Native30Oct
+source/2Noventry calendar unchanged; not broker admission or timely local delivery.
+Earlier dated text below is historical.
+
 18 октября 2026. **DONE / DATA_ONLY**: действующий Monthly source → его же daily
 view → frozen ranking/selection → immutable VPS export → фактический импорт Claude.
 Обновление19Oct: отдельный снимок после закрытия **доставлен23:40Asia/Nicosia**;

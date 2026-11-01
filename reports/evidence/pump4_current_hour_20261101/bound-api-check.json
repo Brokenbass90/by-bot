@@ -1,0 +1,20 @@
+{
+  "account_flat_verified": true,
+  "broker_writes": 0,
+  "credential_values_published": false,
+  "financial_owner_constructed": false,
+  "http_status": 200,
+  "key_authentication_proven": true,
+  "key_expiry_fields": {
+    "deadlineDay": 4,
+    "expiredAt": "2026-11-06T08:43:37Z"
+  },
+  "minimum_get_requests": 3,
+  "observed_ms": 1793526427850,
+  "open_orders": 0,
+  "open_positions": 0,
+  "page_count_not_recorded": true,
+  "retCode": 0,
+  "schema": "PUMP4_BOUND_API_READ_ONLY_CHECK_V1",
+  "scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794"
+}

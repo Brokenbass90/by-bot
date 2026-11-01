@@ -1,6 +1,6 @@
 # Roadmap: Self-Improving Algobot / Trading OS
 
-## Активная очередь —30 октября 2026
+## Активная очередь —1 ноября 2026
 
 Общее описание/роли/метрики: [PROJECT_MAP](docs/PROJECT_MAP.md).
 Исходная цель6Oct сохраняется. Эта таблица — единственная текущая очередь;
@@ -10,8 +10,9 @@ Claude/PM ACK_PENDING. Документ не расширяет подписан
 
 | Приоритет / владелец | Работа | Условие завершения / текущая граница |
 |---|---|---|
-| P0 операционный / Codex | Сохранить Monthly v6 и действующий PUMP4, актуальные health/factual lifecycle | Monthly30Octclosedselection→2Nov14:30UTC/16:30CYentry/CASH; PUMP4первая сделка+fees/native/reconcile, новые входы только в исходном сроке1Nov19:26:32.774UTC |
-| P0 инженерный / Codex | [PUMP4 TINY-2](docs/superpowers/specs/2026-10-29-pump4-tiny2-design.md): отдельный versioned serial admission в существующем owner | [Root source accounting + selected OFF wiring](reports/PUMP4_TINY2_SOURCE_ACCOUNTING_2026_10_30.md) COMPONENT_PASS,177local/same177VPS; full memory-source lifecycle/restart. COST_RELEASE_POLICY_NOT_IMPLEMENTED_NOT_APPROVED: UNKNOWN costs block next real entry. Actual-source serialOFF/handoff and firstV1actualcycle OPEN; NOT_READY_FOR_GO. Existing LIVE unchanged |
+| P0 инженерный / Codex | [PUMP4 source repair](reports/PUMP4_SOURCE_BOUND_REPAIR_2026_11_01.md): archive25671>20000, five rawsignals observed | CODE/parserPASS/196local+same196VPS,193file candidateUNSELECTED. Prepare exactfinancialsource/config envelope + singlewriterhandoff/owner authority; currentLIVE stilllegacyBLOCKED. APIvaliduntil6Nov08:43UTC,168h custody requires key/rotation coverage. No expiry extension; oldGOends1Nov19:26UTC |
+| P0 операционный / Codex | Сохранить Monthly v6 и действующий PUMP4, актуальные health/factual lifecycle | [Monthly30](reports/ALPACA_MONTHLY_SELECTION_2026_10_30.md) LLY/LMT/INTU DATA/QAPASS, localimportLATE1Nov;2Nov14:30UTC/16:30CYconditionalentry/CASH. PUMP currentlySOURCE_BLOCKED, oldGOends1Nov19:26:32.774UTC; no autoextension |
+| После source-ремонта / Codex | [PUMP4 TINY-2](docs/superpowers/specs/2026-10-29-pump4-tiny2-design.md): отдельный versioned serial admission в существующем owner | [Root source accounting + selected OFF wiring](reports/PUMP4_TINY2_SOURCE_ACCOUNTING_2026_10_30.md) COMPONENT_PASS,177local/same177VPS; full memory-source lifecycle/restart. COST_RELEASE_POLICY_NOT_IMPLEMENTED_NOT_APPROVED: UNKNOWN costs block next real entry. Actual-source serialOFF/handoff and firstV1actualcycle OPEN; NOT_READY_FOR_GO. Existing LIVE unchanged |
 | Завершённый контекстный этап / Codex | [Первый native Brain context](reports/BRAIN_CONTEXT_CAUSAL_CYCLE_2026_10_30.md): реальные признаки/WAIT/версия/будущий join | FIRST_JOIN_CONFIRMED:decision07:46UTC→futureBTC08–09UTC→nativejoin09:00:38.567UTC; independent11:08CYreadback, heartbeatbrain deleted. Дескриптивный исход не PnL/learningPASS. Приёмка67local/VPS; LIVEнеизменён. После фактическогоjoin продолжать основнойPUMP4TINY2, не расширять Brain в новуюплатформу |
 | P1 доставка / Codex | [Native transport proposal](reports/NATIVE_DATA_DELIVERY_PROPOSAL_2026_10_30.md), существующие export/pull | VPSexporttimers native; LIQ30/Monthly29catchupverified. Local launchd replacement PROPOSED_NOT_INSTALLED; отдельная bounded реализация и только после actualproofзаменаAI-import heartbeats наnotification-only |
 | P1 / Codex | Execution quality и минимальный read-only portfolio risk через имеющиеся receipts+brokerGET | NO_LIVE_TRADES до фактическихfills; подписанныеscopes, timestamps, gross/margin/защита/пересечения; неизвестноеUNKNOWN. Без новогоriskengine и автопримененияBrain |

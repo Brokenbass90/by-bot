@@ -1,0 +1,15 @@
+{
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "runtime_verified": true,
+  "session": "01a19676-d17a-7ec3-8f3f-7dfea67ebcce",
+  "findings": 1,
+  "severity": "P2",
+  "issue": "publication changed after read could escape validation",
+  "red_reproduced": 1,
+  "race_regression_cases": 2,
+  "fixed_by_primary": true,
+  "initial_independent_tests": 13,
+  "final_targeted_tests": 196,
+  "second_independent_signoff": false
+}

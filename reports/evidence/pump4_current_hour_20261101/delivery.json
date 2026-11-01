@@ -1,0 +1,27 @@
+{
+  "api_key_expires_at": "2026-11-06T08:43:37Z",
+  "candidate_root": "/opt/bybot-research/pump4-current-hour-repair-20261101/candidate-badb0d4afd158e3a",
+  "epoch_changed": false,
+  "existing_scope_entry_expiry": "2026-11-01T19:26:32.774Z",
+  "financial_mutations_performed": false,
+  "history_deleted": false,
+  "manifest_sha256": "badb0d4afd158e3a0a8321a36b84de6acf28f79c3d5d5388168874ca3c272e6c",
+  "new_financial_go": false,
+  "new_runtime_source_sha256": "a34b98cee89155e23a1790b311f0eb9e6c529e7ccf3cb96f02991f048acde52b",
+  "observed_ms": 1793526976679,
+  "old_live_config_sha256": "fa0b3b2ec893f5167d79e71ef7fcf5a1d3788075105a2732663a8dafec53014a",
+  "old_runtime_source_sha256": "b00417a6497ea9a2f36e96a9441b1af9fb18fcbe5177991c5ff6433cf5580293",
+  "old_scope_sha256": "fec235e3dea12245d96859a6786d811551f9341d9a860ee4fac88dea4bfcf794",
+  "proposed_runner_patch": {
+    "candidate_source": "CURRENT_H1_PUBLICATIONS_V1"
+  },
+  "schema": "PUMP4_CURRENT_HOUR_SOURCE_REPAIR_V1",
+  "scope_extended": false,
+  "source_envelope_handoff": "NOT_PREPARED_NOT_APPLIED",
+  "status": "CODE_AND_PUBLIC_SOURCE_PARSER_PASS_NOT_SELECTED",
+  "tests": {
+    "local": 196,
+    "same_tests_not_independent": true,
+    "vps": 196
+  }
+}

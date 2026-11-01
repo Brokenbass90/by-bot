@@ -1,266 +1,50 @@
-# Latest —30Oct DATA clock recovery / published PUMP4 patch
+# Start here —1 November 2026
 
-CURRENT30Oct14:04Cyprus — DATA Brain clock-guard recovery; PUMP4 patch published
+Repo: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`.
+Branch `codex/recovery-20260824`. Read this page and linked current reports; read
+only the TOP entry of CODEX_SESSION_CHECKPOINT_2026_09_06.md. Do not reconstruct
+this long chat or rerun unchanged accepted suites. One queue: ROADMAP_SELF_IMPROVING.md.
 
-PUMP4 accounting/OFF patch2efcd79 published,177local/same177VPS; no serialfinancialGO.
-Read PUMP4_TINY2_SOURCE_ACCOUNTING_2026_10_30.md for exact remaining cost-release
-policy, actual-sourceOFF/handoff and firstV1receipt gates. ExistingLIVE unchanged.
+## Current actual truth
 
-Read BRAIN_CONTEXT_CLOCK_RECOVERY_2026_10_30.md. Owner reported scheduled tasks lost.
-Monthly58/LIQ/PUMPfilebridge actually ACTIVE (no duplicates); prior completionbrain
-heartbeat intentionally deleted. Native contextworker had failed10:21:57UTC on
-CONTEXT_CLOCK_STEP, originofclockchangeUNKNOWN. Verified11pins/originalepoch/journal
-chain,NTPyes,8sstability0.008ms,Bybitoffset160.5ms. ONE start of only failedDATAunit;
-independent12:04:32UTCreadback activePID3397056,14events(old10prefixunchanged), original
-7daydeadline6Nov07:46:18.164UTC unchanged/source+unitbytesunchanged. New4events include
-causal durabilitywitness; descriptive outcomes nottradePnL. PUMPowner3198429/DATA3152955
-unchanged/Monthlytimerwaiting. Native LIQ/Monthlyexporttimers active. No financial
-code/unit/GO/risk or Brain policy change. OldNET2Novpreflight pause rejected by
-appauto-review; leftACTIVE, no workaround. Weekly97%used atcheck/reset4Nov09:47CY.
-Mac nativeDATA delivery remains proposed, notinstalled; appimports stilldependon
-allowance/Macawake. Do not rerun finished suites absent changes. Today'sMonthly
-close20UTC/sourceafter20:20UTC/selection staysoperationalP0; PUMPcost-release next.
+- **PUMP4 LIVE still legacy SOURCE_BLOCKED**, not recovered by the local code fix.
+  Archive25671>20000. Five raw DATA signals confirmed; not five approved trades or
+  proven missed profit. [Repair/status](PUMP4_SOURCE_BOUND_REPAIR_2026_11_01.md).
+- Opt-in `candidate_source=CURRENT_H1_PUBLICATIONS_V1` repair CODE_PASS:196local /
+  same196VPS, independentastra/high oneP2race RED/fixed, realpublicparserreplay PASS.
+  Staged UNSELECTED193files at
+  `/opt/bybot-research/pump4-current-hour-repair-20261101/candidate-badb0d4afd158e3a/app`.
+  ManifestSHA badb0d4afd158e3a0a8321a36b84de6acf28f79c3d5d5388168874ca3c272e6c.
+- Authenticated1Nov09:47UTC GET: currentAPI VALID / account0positions,0openorders.
+  Key expires **6Nov08:43:37UTC /10:43Cyprus**. A168hhold can outlive it: next pilot
+  needs sufficient key lifetime or accepted rotation/custody plan. No secret in chat
+  or ad-hoc credential replacement; active envelope pins key fingerprint/file hash.
+- Old PUMP new-entry scope ends **TODAY1Nov19:26:32.774UTC /21:26Cyprus**. Same
+ 50allocation/30gross/20reserve, one entry/position. No extension/newGO granted.
+- **Monthly** accepted standing400/280/40 scope unchanged. Diagnostic30Oct picks
+  LLY36.2193%,LMT38.1308%,INTU25.6499%;58symbols/core200PASS, source30Oct20:21UTC.
+  First local import LATE1Nov09:27UTC; old40filesunchanged. [Exact report](ALPACA_MONTHLY_SELECTION_2026_10_30.md).
+  First conditional entry/CASH **2Nov14:30UTC /16:30Cyprus**, existingfresh money gates.
+  DATA selection is not BUY. Do not reactivate Monthly or change its frozen rules.
 
----
-Earlier entries below are history.
+## One next work package
 
-# Latest —30Oct source accounting / selected OFF wiring
+Prepare the exact financial SOURCE-REPAIR envelope/config/scope/unit hashes and
+owner procedure through the EXISTING selected-owner handoff/original lock818853.
+That package is **NOT PREPARED / NOT APPLIED**. Preserve scopes/claims/barriers/loss
+state and any custody, fresh broker truth before switching, no second writer.
+No financial source substitution/restart/GO replay until exact required authority.
+Do not present196fixture/source tests as deployed recovery. If old scope expires,
+do not extend automatically; separate owner decision is needed for further entries.
 
-CURRENT30Oct — PUMP4 source accounting and isolated owner wiring PASS; serial GO BLOCKED
+After repair handoff: finish TINY-2 real cost-release policy and actual-account
+ORDERS_OFF/newfinancialpacket. Root source accounting/selected OFF wiring already
+accepted in2efcd79; do not reimplement it. API lifetime is a new financial-packet
+dependency, not the cause of the archive failure.
 
-Read PUMP4_TINY2_SOURCE_ACCOUNTING_2026_10_30.md. Root actual-capture fee/funding/
-risk ledger + existing selected_owner/provider/originallease/V1child OFF wiring
-implemented. Full MEMORY-source native/40-60/flat/restart blocks next admission
-on UNKNOWN costs.177local/same177VPS,191-file candidate06cb58e310805b5b UNSELECTED.
-One verifiedastra/high review1P1 reproduced2RED/fixed; primary native normalized
-witness fix; no second independent signoff or actual serialbroker acceptance.
-Initial VPS17fail missing2testdeps retained; new immutable package177PASS.
+Brain context/native workers exist; learned policy/Ollama fact guard and native
+Mac DATA delivery remain later P1. KITY engineeringHOLD; no new universal engine,
+research retuning/judge/sealed outcomes or Claude messages. Preserve foreign
+untracked `configs/allowlist_change_log.json` SHA365ff7d6…cc2e0e; never stage it.
 
-Exact remaining softwaregate COST_RELEASE_POLICY_NOT_IMPLEMENTED_NOT_APPROVED:
-finish source completeness/justified pending-liability policy, not emptylog=zero.
-Then actual-source serialOFF/singlewriter handoff and complete separateGO packet.
-FirstV1actualcycle unobserved, currentLIVE unchanged/expiry1Nov19:26:32.774UTC.
-Do not restart accepted accounting/model work or repeat activation. No personal
-command now. TodayMonthlyclose20UTC/sourceafter20:20UTC/selection P0;2Nov14:30UTC
-conditionalentry/CASH unchanged. Brain contextjoin done; nativeMac DATA delivery
-and versionedMac learning/Ollamafactguard P1 remain not installed in this patch.
-Fresh09:57UTC readback V1healthy/flatwaiting/noentry/PID3198429/0restarts/lock818853;
-10:08UTC fourunitpins unchanged/DATA3152955 unchanged/Monthlytimeractive, service
-observedduringnormaldispatch (not new completed-cyclePASS). WritesnullUNKNOWN.
-Foreignallowlist365ff7d6…cc2e0e preserveduntracked. No research/producer/judge change.
-
----
-Earlier entries below are history.
-
-# Latest verified status —30Oct first future annotation confirmed
-
-30Oct first future join independently CONFIRMED: native recorded09:00:38.567UTC/11:00:38.567Cyprus; checked11:08Cyprus. Original141event prefix/11source pins/durable witness/futureBTCbar verified, no partialtails. BTC08–09UTC return−0.1694574673%, descriptive only, both policiesWAIT/0tradeopportunities; strategyPnLNOT_APPLICABLE/BrainedgeNOT_PROVEN. Immutable localreceiptSHA5c803f7bc03027cc60da0fae1624d4d922e4957950d170124f73374b45f5fb84. Completionheartbeatbrain deleted; nativeworkerPID3377501/0restarts continues under original7daybound. No broker calls/unit/scopes/risk changes.
-
-Read checkpointTOP and BRAIN_CONTEXT_CAUSAL_CYCLE_2026_10_30.md. PreserveexistingLIVE. Resume productionPUMP4TINY2 and todayMonthlyselection; no automaticpilotextension/newfinancialGO.
-
----
-# Current continuation —30Oct first causal context / native future join
-
-Read reports/BRAIN_CONTEXT_CAUSAL_CYCLE_2026_10_30.md and checkpointTOP. Two separate DATA-only workers already installed: PUMP timelyobserver3325018 and context3377501. DO NOT reinstall/activate financial or these workers. First context07:46UTC WAIT/0signals; BTC08–09UTC descriptive annotation pendinguntilclosedsource, heartbeatbrain11:05Cyprus verifiesonce. Modelprofitability/learnedallocationnotproved.67local/VPS tests. Today'sMonthlyclose20UTC/sourceafter20:20UTC/monthendselection P0; existing23:40Cyprusdeliveryupdated. LIQ30delivered88833raw;Monthly29catchupverifiedactual30Octmorning. NativeMacdelivery replacementproposedonly, notinstalled. Polymarketboundedreportnotes separateprice/depth/coverage/matching; sourcecode notchanged. Resume PUMP4 productionTINY2afterthisgate; oldGOexpires1Nov19:26:32.774UTC,noautomaticextension. Preserveforeign configs/allowlist_change_log.json.
-
----
-# Current continuation —30Oct2026
-
-Read reports/PUMP4_BRAIN_TIMELY_2026_10_30.md then checkpoint TOP. New DATA-only Brain observer is running, actual11H1 timing proved, but no PUMP signals/context-learning proof. Do not reinstall/re-activate it or financial runners. Continue user-approved real context assessment and future outcome joining, native DATA catch-up, todayMonthly close/selection P0. Current PUMP GO expiry1Nov19:26:32.774UTC unchanged; TINY2notGO. Preserve foreign configs/allowlist_change_log.json. Published report/status, not this old chat, controls continuation.
-
----
-# Current entry —29Oct: serial model gate closed, production integration next
-
-Read PUMP4_TINY2_SERIAL_GATE_2026_10_29.md, checkpoint TOP and active roadmap.
-89targetedPASS;2memorylifecycles/restart/samefictionallease; newcoordinator accepts
-onlyOFF/fakeaccount/no_wire. V1/bridge byte-unchanged, no serialproductionGO.
-Next implement versioned source-backed serialowner accounting+supervisor binding;
-model settlement cannot release real fee liabilities. ExistingLIVE healthy19:17UTC,
-noentry, originalscope/expiry/Monthlyunchanged. Do not re-arm or reset claims.
-Sharedgoal/roles in ../docs/PROJECT_MAP.md; ClaudeACK stillPENDING.
-
----
-Earlier entries below are history.
-
-# Current entry —29 October: common project contract + serial PUMP4 preparation
-
-Read ../docs/PROJECT_MAP.md → ../ROADMAP_SELF_IMPROVING.md top active queue →
-CODEX_SESSION_CHECKPOINT_2026_09_06.md TOP. Original research CEL_SISTEMY exists;
-map/roles updated, no new competing roadmap. TEAM_ALIGNMENT_2026_10_29.md has
-review/source corrections and Claude ACK request; ACK is PENDING, not agreement.
-PUMP4TINY2 design ../docs/superpowers/specs/2026-10-29-pump4-tiny2-design.md:
-DESIGN_PREPARED/NOT_IMPLEMENTED/NO_NEW_GO. Existing V1 owner hardcodes one lifecycle;
-do not raise max_entries in config/delete claims/replay activation. Next write
-isolated RED tests for serial candidate and preserve V1 admission/restart semantics.
-Monthly30Oct→2Nov unchanged; existingPUMPexpiry1Nov19:26:32.774UTC unchanged.
-KITYengineeringHOLD; GOLD/POLY/LIQ research gates; existingBraincounterfactual and
-Factoryduplicate checks reused. No runtime, service, risk, scope or broker change.
-
----
-Earlier entries below are history; priority comes only from active roadmap table.
-
-# Current entry — 29 October: three production-first decisions
-
-[Polymarket / funding / Alpaca evidence](PRODUCTION_FIRST_THREE_DECISIONS_2026_10_29.md).
-Poly13currentmarketsclosed;54GET/45sWS;0observedFINALtransitions => no provenentry,
-notglobalKILL. Fundingdefectreproduced; deliveredClaudechange-request, ACK_PENDING.
-Alpaca526sessions fullwarmup:12.51/DD7.88 vs25/75 17.70/DD8.51 researchonly;
-internalcosts/currentmoneycontract missing. No productionchange/newfinancialGO.
-PUMP4sameLIVE/flat/0restarts, Monthlysamev6 healthy. Existingexpiry/calendar unchanged.
-Verifiedastra/high reviewCLEAR. Nextfuturedata/ClaudeACK/ETFfinancialacceptance gates.
-
----
-Earlier dated entries below are history.
-
-# Current entry — 29 October: LIVE health, Monthly readiness, SHORT_HVOST intake
-
-[Actual checks and six draft findings](TRADING_OPERATIONS_AND_SHORT_HVOST_INTAKE_2026_10_29.md).
-PUMP4sameLIVE/0restarts/flat/NO_NEW_SIGNAL;16H1receipts135/135timely.
-Monthlysamev6/6GETflat/cash496.31/pending0;2offlineCASHcasesPASS,30Oct→2Novcalendar.
-Noauthority/risk/unit/codechanges. SHORT_HVOST NOT_LIVE_READY:mode/ownerconflict,
-stopmath/hedgecapital/twolegrecovery andfullverdictOPEN; approximate2025negative.
-NoautomaticSHORTpromotion; canonicalnextengineeringPolymarket→KITY. ExistingLIVEstable.
-
----
-Earlier dated entries below are history.
-
-# Current entry — PUMP4 armed LIVE, independent readback complete, 28 October 2026
-
-Read [actual activation](PUMP4_ACTUAL_TINY_ACTIVATION_2026_10_28.md) FIRST.
-Owner exact66a7be9c GO executedONCE; LIVE_ARMED_HEALTHY / LIVE_FLAT_WAITING_SIGNAL
-confirmed independently18:10 and20:20UTC. PID3198429/0restarts/original818853;
-Monthlyv6/DATA7d unchanged. 50/30/20/risk-scenario1/oneentry, cross notisolated;
-ENTRY expiry1Nov19:26:32.774UTC. No firsttrade yet, economicsINCONCLUSIVE.
-Neverreactivate/repeathumancommands; use existing read-onlyhealth and preservecustody.
-Next factualgate entry/native/exit/costs; Monthly30Octsource→2Nov14:30UTC conditional.
-Canonical next engineeringPolymarket→KITY; SHORT_HVOST needs publishedfullverdict.
-
----
-Earlier dated entries below are history.
-
-# Current entry — PUMP4 exact TINY owner decision, 28 October 2026
-
-28Oct exact TINY packet READY_FOR_EXACT_OWNER_GO: [review](PUMP4_EXACT_TINY_ACTIVATION_2026_10_28.md).
-450/450core +19/19activation,actualunselectedGET/unitrehearsalPASS. Packet66a7be9c…8e6340.
-Proposal50/30/20/risk1/oneentry;REGULAR_MARGIN cross, noisolatedlossguarantee.
-CurrentPUMP ORDERS_OFF/noGO/noactivation; exactnumericownerconfirmation laststep.
-Monthlyv6/Data7d unchanged. Neverrepeatoldpersonalcommands. EconomicsINCONCLUSIVE.
-
----
-Read `PUMP4_ACTUAL_WS_7H1_2026_10_28.md` and checkpoint TOP.
-Seven09–15UTC H1:135/135available timely,max43.218s;945frozen replay exact.
-Resident DATA/sole financialowner OFF healthy; Monthlyv6 unchanged.
-Next LIVE-aware health/alert adaptation and exact one-lifecycle owner packet;
-noGO/noorders/TINY_READYfalse. Do not repeat handoff or old personal commands.
-
----
-# Current entry — 28 October, resident PUMP4 selected OFF
-
-Read `PUMP4_RESIDENT_WS_HANDOFF_2026_10_28.md` and checkpoint TOP.
-406/406 exact package;24/24 OFF-handoff acceptance. DATAnew/financiale4, original
-818853, configef4c9c7a…2691b, noGO/noorders. Monthlyv6 remains unchanged.
-Next read actual09UTC full137 WS receipt and protected-health observer before any
-TINY decision. Do not repeat handoff or old personal commands.
-
----
-# Current entry — 28 October 2026
-
-Read `PUMP4_WS_WARM_RESUME_2026_10_28.md` and checkpoint TOP.
-406 local/same406 VPS exact network-denied tests PASS; installed source stille4
-until reviewed OFF handoff. Next: resident WS preload and actual full137 H1<=60s;
-no new audit, no Monthly reactivation, no PUMP4 moneyGO.
-
----
-# START HERE — Trading OS, 27 October 2026
-
-Repo `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824`.
-Branch `codex/recovery-20260824`. Read AGENTS.md, checkpoint TOP and the current reports
-below. Continue current code and receipts; do not reconstruct this long chat or
-start an architecture/strategy audit. Old START bytes are preserved in
-`evidence/pump4_stream_20261025/start-here-before.md` (history only).
-
-## Monthly — personally selected, idle acceptance CLOSED
-
-`ALPACA_MONTHLY_DEFAULT_CLI_CLOCK_2026_10_25.md`, latest superseding actual section.
-Owner personally ran v6 once; independent3clean realcycles +freshGETflat/cash496.31/
-pending0/orders0 accepted59bd50a. Scopeaf7a1159…86f12e/speca78d9472…bd30f;
-unit9d94467d…32cc1d, enabledtimer, original813893. No entrylatches.
-NO OWNER ACTION NEEDED: never repeat activation/NETexit, alter strategy/budget or
-reopen the clock defect. Same400capital/280gross/40reserve/lossadmission8/max4/
-single168/no newmargin;2Nov14:30UTC→1Feb00UTC.30Octafterclose monthlyselection,
-2Novfreshentry/protection checks remain actual future gates; CASHpossible.
-
-## Current27Oct13:06UTC — critical path and source alternative measured; OFF unchanged
-
-Read `PUMP4_CRITICAL_PATH_2026_10_27.md` FIRST. No new audit/judge/PnL/funding download.
-Installed e4feca498f37e27d stays DATA+sole financialownerORDERS_OFF;355local/same355VPS
-production acceptance retained; all117packagefiles unchanged. Frozen producer/intake/
-risk/60s unchanged.08H1 FAIL48/129CURRENT<=60s,14API10006 recovered/0BLOCKED_SOURCE;
-parent49.29s runnable queue wait.13H1 confirms52.06squeue,50/135timely,max85.587s.
-Guarded DATA CPUWeight1000 trial09H1 timing135/135,max56.265s; Monthlyage>90s
-triggered rollback09:00:57.314. Protected-healthFAIL, notproductionPASS. Normalunit
-6acbf62f…dc424/weight100 restored; expiry09:03 succeeded. No repeattrial or guardrelax.
-Normal10/11/12H1 FAIL45/134,43/134,51/135; allsixarchivehashes/CURRENTpriorityPASS.
-No signals.13:06 readbackPID3029723/0restarts/original818853/3458OFFcycles,
-emptyfinancialhistories/noGO/0writes. Monthlyv6 unchanged/sourcePASS/issues[].
-Detached8symbol public13H1probe COMPLETE; originalV1FAIL8validationerrors preserved.
-Probe mistakenly bounded closedrow.timestamp byrow.end; actual combinedclosed/open
-frames carrypostboundarytimestamp. CorrectedV2schema reviewed,15probe+9rollbacktestsPASS.
-OFFLINE reprocessing:8/8closedOHLCV/turnover+nextopen exact vs sealed13H1; original
-pairreceiveT+338..1025ms, oneconnection/preH1ACK/nochangedduplicates. This supports
-engineeringhypothesis only; originalV1notupgraded, no cleanprospectivePASS/admission.
-Eight lateREST pairs and sealed1001closed-prefix content8/8match; notfreshness/entryPASS.
-Probe/root /opt/bybot-research/pump4-server-orders-off-20261023/source-architecture-probe-20261027-13;
-local .private/pump4_source_arch_20261027. Probe andCPUobserver bothfinished; no duplicate.
-Currentproductionclosed_h1/causal_plan still1002freshrows; no directWSadmission.
-LIVEBLOCKED/TINY_READYfalse/economicsINCONCLUSIVE. Next onebounded engineeringstep:
-versioned sealed-prefix+newbar sourcecustody/admission, preserveoriginalclocks/epochs/
-5ssourcefreshness/60sentry; exactparity/cleanprospective fullinstalledH1 before account/
-sizing/protection and exacthumanmoneyGO. NoPolymarketdiversion orMonthlyactivation.
-
-## Historical26Oct13:26 — superseded by the27Oct receipt
-
-Read `PUMP4_OWNER_DECISION_2026_10_26.md` FIRST, then only linked evidence needed.
-Actual26Oct09:00:02UTC installed5882783b path:137outcomes/133intakePASS,
-20publications≤60s,median87.514/max115.140s,112sources≤60s,0signals.
-Priority fixed:121CURRENT before12CATCHUP;CURRENTmedian85.475/max106.047s.
-Publication gate FAIL; same-hour neverretry/reseed. Native scheduling tested283
-local/VPS;actualresult archived. LongSSHobserver didnotdeliverusable09stream,
-used direct immutablefiles/processproof/unitstats instead. Observer nowended.
-
-Owner supplied exactlocalClaude29366fb26f3992e8d3d2f96f92a7b5391969b3a7:
-origin36e7e96 didnotcontain it atfetch, publication NOTCONFIRMED; no blindmerge.
-84closed+1open,through22Oct (not19Oct). Same frozenproducer +identicalfresh
-H1 snapshots:84/84closed andopen1 fullsignal/cooldown/init parityPASS;noexceptions/
-strategychange/evaluator/PnL rerun. Not137census or historicalprocessattestation.
-Currentfees+10bps/side scenario+.04796Rbeforefunding; funding/slippageactualUNKNOWN,
-current-cap stressnegative -> economicsINCONCLUSIVE. ALL84 reference stops off
-currenttick -> nativecompatibilityFAIL; fullfinancialend-to-endNOTPROVEN.
-TINYBLOCKED/noGO/command. No risk increase or rule60→300.
-
-ONE nextboundedOFF engineeringblock: native-stop tickmapping separate from
-referenceplan/hash, non-widening, rejectinvalidtriggergeometry, keeporiginalrisk
-basis/no qtyincrease, bindtickmetadata andtestlifecycle/restart/reconcile on84.
-This alone doesnot close latency/funding gates. Do not start newstrategy/audit.
-
-DATA5882783b99ca5c48 selected26Oct08:18UTC; same timer/2cores/768MiB/60s.
-Bindingea4c8699…0ab23. SAMEfinancialunit/app30677ce6 ORDERS_OFF,
-config125b0ae6…69b16/scopea527f12c…bb28/PID2955754/original818853,
-21376historyfiles retained;oldroots/scopes/claims preserved. Latestreadback13:26
-NO_NEW_SIGNAL/0restarts/noGO/pinsPASS;GETflat/noorders13:19. Monthlyunitunchanged.
-Config `/opt/bybot-research/pump4-server-orders-off-20261023/priority-handoff-20261026/owner-review-stream-v1/runner.json`.
-DATA `/opt/bybot-research/pump4-server-orders-off-20261023/candidate-5882783b99ca5c48/app/.private/pump4-supervisor-v1`.
-Privatepriority-handoff-20261026/ops.py exacttestedrollback, noautomaticretry.
-Prior51 seen-bar-omission proof/CR300 remain history in their26Oct reports.
-Monthly v6 neverreselect/NETexit;WeeklyFillbelongsClaude perlatestownerattachment.
-
-## Broader goal and ownership
-
-Owner reaffirmed Brain, Factory, classical strategies, intelligent portfolio
-management. Canonical ROADMAP_SELF_IMPROVING.md remains the ONE roadmap, Codex sole
-integratingwriter; Claude owns research/KARTA/prereg/evidence, no blindmerge/judge/
-sealedoutcome reruns. QueueMonthly→PUMP→Polymarket→KITY; no new research detours.
-Daily LIQ/Monthly58 exports remain; don't reinstall collectors/timers/epochs.
-Foreignuntracked configs/allowlist_change_log.json untouched/excluded.
-No secrets/private broker payloads in Git. Freshly verify only drift-prone runtime.
-Every bounded cycle ends with evidence, commit and updated checkpoint.
+[Previous handoff/history at098722e](https://github.com/Brokenbass90/by-bot/blob/098722e/reports/NEW_CHAT_START_HERE.md).
