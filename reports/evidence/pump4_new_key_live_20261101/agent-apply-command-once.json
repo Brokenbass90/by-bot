@@ -1,0 +1,26 @@
+{
+  "schema": "PUMP4_OWNER_AUTHORIZED_AGENT_APPLY_COMMAND_V1",
+  "recorded_ms": 1793563334635,
+  "owner_message": "Давай! Погнали доделывать, старт. И кстати даю го на запуск",
+  "scope": "New key binding and accepted source-repair pilot; unchanged disclosed50/30/20/max1/1-8Nov/cross-margin terms",
+  "packet_sha256": "3aa49421dfb628dc6703986cc9c988f394d0fa94e4955f496db1a3a39f8fec7b",
+  "terms": {
+    "allocation_usdt": "50",
+    "cross_margin": true,
+    "guaranteed_loss_bound": false,
+    "isolated_allocation": false,
+    "max_entries": 1,
+    "max_gross_usdt": "30",
+    "max_positions": 1,
+    "no_automatic_extension": true,
+    "required_key_until_ms": 1794857192774,
+    "reserve_usdt": "20",
+    "rollback": "REVOKE_ENTRIES_KEEP_CUSTODY_AFTER_START",
+    "scenario_risk_usdt": "1",
+    "source_epoch_unchanged": true,
+    "valid_from_ms": 1793561192774,
+    "valid_until_ms": 1794165992774
+  },
+  "command_once": true,
+  "no_retry": true
+}

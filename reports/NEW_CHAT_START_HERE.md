@@ -1,42 +1,45 @@
-# Start here — 1 November 2026, physical handoff accepted
+# Start here — 1 November 2026, PUMP4 new-key LIVE selected
 
 Repo /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824.
-Branch codex/recovery-20260824. Read this and checkpoint TOP; one queue
-ROADMAP_SELF_IMPROVING.md. Do not reconstruct the long chat or repeat accepted
-suites without code changes. Foreign configs/allowlist_change_log.json untouched.
+Branch codex/recovery-20260824. Read this/checkpoint TOP and ROADMAP_SELF_IMPROVING.md.
+Do not reconstruct long chat, rerun accepted suites or repeat any activation.
+Foreign configs/allowlist_change_log.json untouched.
 
-## Current truth and one next action
+## Current operational truth
 
-- Read [physical handoff acceptance](PUMP4_PHYSICAL_HANDOFF_ACCEPTANCE_2026_11_01.md).
-  Installer+health+builder COMPLETE:50local/same50VPS, independentAstra/high PASS,
-  original optimized-Python P2 and primary owner-change race closed. Source reader
-  aef951d/194files05f89618/210tests unchanged. No financial activation by this work.
-- Actual VPS verify-only1Nov17:13:38UTC:13GET/0writes, flat/fullpilotmoneyhistoryempty,
-  allocation50available, physical/source/account gates passed then exactly
-  KEY_EXPIRES_DURING_CUSTODY. Not READY_FOR_OWNER_GO or fee finality.
-- Packet5dcdcb20abb1220f066a4819c3f93e9a341658b8cd28dcfd42424ceb8f6bb9fe,
-  materiald3c3b7325b91f97281cfe23e4206204f0624c9b91dd31ba979272a4d20453611,
-  local.private/pump4_physical_handoff_20261101/owner-packet-v5 and same VPSpacket
-  under/opt/bybot-research/pump4-current-hour-repair-20261101. Staged, not applied;
-  no claim/new runtime/newGO. Older packets v2–v4 are superseded unselected drafts.
-- Sole observed external blocker: keyvaliduntil6Nov08:43:37UTC. Proposed NEW one-entry
-  pilot1Nov19:26:32.774–8Nov19:26:32.774UTC requires keylife through16Nov19:26UTC or
-  verified no-fixed-expiry+exactVPSIP. Owner arranges sameUID access; no secrets in
-  chat, no hotreplace activeenv/deleteoldkey. Separate keysource means rebuild
-  exactpins/envelope with accepted builder, not editing sealed packet. Fresh
-  verify-only before separate exactnewGO. NO activation on broad old permission.
-- OldPUMP owner3198429/DATA3152955 unchanged0restarts, legacySOURCE_BLOCKED;
-  accountlock818853/observerlock819480/oldhistory preserved. OldGOexpiresTODAY
-  19:26:32.774UTC /21:26Cyprus, not extended. At17:30UTC expiry was future.
-  Existing6hmonitor must freshGET+fullmoneyhistory afterexpiry before NO_TRADE;
-  otherwiseUNKNOWN, retaincustody. No fee finality inferred from absence of fees.
-- Proposed terms remain50/30/20/risk1/max1entry+position/crossmargin, not isolated,
-  risk not guaranteed loss cap. This is source repair, NOT serialTINY2 activation.
-- Monthlyv6 untouched400/280/40; timeractive,2Nov14:30UTC/16:30CYconditionalwindow.
-  DiagnosticLLY/LMT/INTU QApass notBUY. One postwindowread-onlyjobmonthly-2 is
-  scheduled2Nov16:40CY, futureexecutionPENDING. No Monthly reactivation.
+- [New key activation](PUMP4_NEW_KEY_LIVE_ACTIVATION_2026_11_01.md): owner supplied
+  keys and explicit launchGO; one apply20:02:32UTC, independent20:03:06UTC
+  LIVE_ARMED_HEALTHY. NewownerPID3669955, old3198429 absent, original lock818853
+  held, observerlock819480. Repaired194-file05f89618 financial source selected.
+- Exactpacket3aa49421dfb628dc6703986cc9c988f394d0fa94e4955f496db1a3a39f8fec7b,
+  scope2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970,
+  configf715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa.
+  VPS /opt/bybot-research/pump4-current-hour-repair-20261101/owner-packet-v6-new-key.
+  Claim/GO/receipt exist: NEVER apply/repeat. Only exact--readback for observation.
+- New IP-bound key sameUID, accepted no-fixed-expiry metadata, Wallet[]; separate
+  0600source. Original activeenv/key/history unchanged; no secrets inchat/Git.
+  Key lifetime blocker CLOSED. Baseline50local/same50VPS+newbinding1local/same1VPS,
+  exactnewcandidateOFF and bounded independentAstra/high reviewPASS; codeunchanged.
+- Same50allocation/30gross/20reserve/risk1/max1entry+position, crossmargin NOTisolated,
+  risk not guaranteed loss bound. Newentries stop8Nov19:26:32.774UTC/21:26CY,
+  custodycontinues. NOT serialTINY2 authority. Actualentry/fill=false atreadback.
+- Source19UTC oneof134late=>correctBLOCKED/no financialattempt.20UTC134timely,
+  3unavailable,0rawsignals, completecensus. Realnewticks9–11 correctly report
+  ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED; no lateentry/no-opportunityprofitclaim.
+- Oldpilot NO_TRADE_IN_PUMP4_PILOT confirmedfresh19:59:57UTC:flat/fullmoneyhistoryempty
+  /oldrootunused; notterminalfeefinality. Oldanchorspreserved/entryrevoked;
+  completedoldpump4-read-only-brain-receipts automationdeleted, DATAjournalretained.
+- Native scheduledHEALTHY/LIVE_FLAT_WAITING_SIGNAL20:06:05UTC independentlyGET
+  confirmed20:07:49UTC; cron every2minutes, health/Telegramconfigurationpreserved.
+  One newH1read-onlyfollowuppump4-h1 scheduled1Nov23:03CY/21:03UTC; notifyonly
+  meaningfulchange/firstfinancialevent, deleteitselfaftercheck, no apply/restart.
+- DATA3152955 unchanged0restarts. Monthlyv6 unchanged400/280/40 andunit/timerpins;
+  2Nov14:30UTC/16:30CYconditionalBUY/CASH. monthly-2postwindowcheck16:40CYpreserved.
 
-After external key readiness: accepted physical packet+freshGET+separate exactGO;
-then existingTINY2 cost-release/actual-sourceOFF, no reimplementation of2efcd79.
-Brain/Factory/LIQ/Gold/Polymarket remain roadmap/research; no new engine or LIVE
-retuning. Research/KARTA/judges/producer epochs/Claude checkout untouched.
+## Next existing engineering gate
+
+Preserve newLIVE and record first actual lifecycle. Continue existingTINY2
+cost-release/actual-sourcefinancialOFF, not reimplementationof2efcd79 and no new
+LIVE/serialGO. Oldv2–v5packets supersededUNSELECTED; no rollback to expiredscope.
+Brain/Factory/LIQ/Gold/Polymarket stayroadmap/research; no newengine/LIVEretuning.
+Research/KARTA/judges/producer epoch/Claude checkout untouched.

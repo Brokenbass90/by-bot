@@ -1,0 +1,23 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "matching_cron": [
+    {
+      "references_health_py": true,
+      "references_monitor_path": true,
+      "schedule": [
+        "*/2",
+        "*",
+        "*",
+        "*",
+        "*"
+      ]
+    }
+  ],
+  "native_observer_state": {
+    "observed_ms": 1793563565336,
+    "reason": "LIVE_FLAT_WAITING_SIGNAL",
+    "status": "HEALTHY"
+  },
+  "observed_ms": 1793563669402
+}

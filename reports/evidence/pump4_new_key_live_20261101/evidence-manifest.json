@@ -1,0 +1,18 @@
+{
+  "agent-apply-command-once.json": "50058d01ade02b49afb2580cc83de6e1f34c9a78409756d01482676600bcf472",
+  "apply-sanitized.json": "fdc25e2fb5f6a5394c2c4b128b9cc449622c12b2f2682ea0361b6844ed7aad36",
+  "before-metadata.json": "44511275ef32181595e5c55905b6ec704ef17e75a9361a082ef041ff216a77fa",
+  "final-preflight-sanitized.json": "f052d3177f476c08824f65993c4e2114679636eb00bee1fb74cfe2ec1e05a140",
+  "first-source-diagnostic.json": "b41b143cdd050a30942a4d2ee3bdcd05659ea51fd33269d38faa13f04e2c2454",
+  "followup.json": "772a06d6a7c71d080f3f72ae045e215503d071337686ef0d1fe36045be8eb10e",
+  "independent-envelope-review.json": "0cb23f0bfc93fe1bf0ea23ad01d5780ff34777e4a7bc7a502e4fba8dc802738e",
+  "independent-readback.json": "9f5a61c1660b48db60f74728841a44ad1db8a66c45945c30db04c9d4f4c8332a",
+  "independent-review.json": "50f5ed275754edb10addc74d6e624fb4fa73150bbabb5c627afb72130decd3fd",
+  "key-metadata.json": "3d5379804eab096640746e6acac1942a9b38d542ef63b8f3152619a3ee77c2fd",
+  "native-safety-scheduler-readback.json": "31239d1a5bad1f4fddc612d614a7b21da3abd281f2b9158e63672abe3eea793a",
+  "offline-acceptance.json": "ac4518a1e5b24e40be6490589b122fcf92551a5d46a4e1e96bcc1ef3bfd8b83e",
+  "old-pilot-closure.json": "d7a7830ec3f50482d022c13933846d8b4ed687683dce5edb25c02f8c7d059b88",
+  "packet.json": "3aa49421dfb628dc6703986cc9c988f394d0fa94e4955f496db1a3a39f8fec7b",
+  "physical-readback.json": "876122448956101b6ea8551fe07a698c6fc51513f45c25760344eda47f5ab071",
+  "vps-targeted-offline-pass.txt": "23a9ab9de18de4a4401bfee652961c30a43b6801403c233af4a455ce48d0a234"
+}

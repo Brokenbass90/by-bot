@@ -1,5 +1,7 @@
 # PUMP4 physical handoff acceptance — 1 November 2026
 
+Later20:03UTC: [new-key LIVE activation](PUMP4_NEW_KEY_LIVE_ACTIVATION_2026_11_01.md) closes the key blocker and records ONE authorized apply + independentLIVE_ARMED_HEALTHY. Packetv5 below remains superseded/unselected; do not run it. Earlier evidence preserved.
+
 The installer, generated health observer, immutable packet builder and independent
 acceptance are complete. **Actual VPS verify-only is BLOCKED_PREFLIGHT:
 KEY_EXPIRES_DURING_CUSTODY.** This is the one observed operational blocker before

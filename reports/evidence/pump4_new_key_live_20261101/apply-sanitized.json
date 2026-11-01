@@ -1,0 +1,72 @@
+{
+  "actual_entry_executed": false,
+  "available_allocation_50_proven": true,
+  "broker_writes": null,
+  "config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+  "financial_command_repeated": false,
+  "first_snapshot": {
+    "account_fingerprint": "b7c70793ed9b88c496450a4ee901e5a3fa5a66fa408ba81a155153373a98d82a",
+    "account_identity_sha256": "4a67566b52682b7089213b24bb7d562686486c365d6adcad9cbc6cac1a2bec87",
+    "evidence_sha256": "833b821517e00ab0fbc2fd804530d5284e002e7bbc4448a93f1e01cf29e73dfa",
+    "flat": true,
+    "get_requests": 13,
+    "history_cutoff_ms": 1793563338561,
+    "history_empty": true,
+    "key_exact_vps_ip": true,
+    "key_no_fixed_expiry": true,
+    "key_valid_until_ms": 0,
+    "observed_ms": 1793563340259,
+    "terminal_cost_finality_proven": false
+  },
+  "health": {
+    "actual_protection_proven": false,
+    "age_ms": 1202,
+    "financial_trading_proven": false,
+    "observed_ms": 1793563352769,
+    "orders_allowed": false,
+    "owner": "PUMP4",
+    "pid": 3669955,
+    "reason": "LIVE_FLAT_WAITING_SIGNAL",
+    "restart_allowed": false,
+    "schema": "BYBIT_ACCOUNT_HEALTH_V1",
+    "source_age_ms": 180,
+    "source_coverage": {
+      "checked_publications": 134,
+      "coverage_complete": true,
+      "historical_index_durability_proven": false,
+      "hour_open_ms": 1793563200000,
+      "observed_ms": 1793563350899,
+      "raw_signals": 0,
+      "receipt_sha256": "0402311eef58a0b05d9a40b5e81cbdb79082c79546e9dcaae5b0bda9dcc15776",
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+      "unavailable_instruments": 3
+    },
+    "status": "HEALTHY"
+  },
+  "installer_broker_writes": 0,
+  "observed_ms": 1793563352769,
+  "packet_sha256": "3aa49421dfb628dc6703986cc9c988f394d0fa94e4955f496db1a3a39f8fec7b",
+  "raw_private_sha256": "7cc3ab305bdf243982bd7085ec91caefade1d92ceaf503c4f571c43923a7ff8c",
+  "redactions": [
+    "snapshot.available_usdt",
+    "first_snapshot.available_usdt",
+    "second_snapshot.available_usdt"
+  ],
+  "schema": "PUMP4_SOURCE_HANDOFF_READBACK_V1",
+  "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+  "second_snapshot": {
+    "account_fingerprint": "b7c70793ed9b88c496450a4ee901e5a3fa5a66fa408ba81a155153373a98d82a",
+    "account_identity_sha256": "4a67566b52682b7089213b24bb7d562686486c365d6adcad9cbc6cac1a2bec87",
+    "evidence_sha256": "931be69e76c66f237eda1624cde9f26b546eaa358c70af99ff48313be3c6a0be",
+    "flat": true,
+    "get_requests": 13,
+    "history_cutoff_ms": 1793563344182,
+    "history_empty": true,
+    "key_exact_vps_ip": true,
+    "key_no_fixed_expiry": true,
+    "key_valid_until_ms": 0,
+    "observed_ms": 1793563345829,
+    "terminal_cost_finality_proven": false
+  },
+  "status": "LIVE_ARMED_HEALTHY"
+}

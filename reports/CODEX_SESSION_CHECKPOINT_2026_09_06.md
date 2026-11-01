@@ -1,5 +1,27 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT1Nov20:03UTC — PUMP4 new-key repaired LIVE; independent readbackPASS
+
+Read PUMP4_NEW_KEY_LIVE_ACTIVATION_2026_11_01.md / NEW_CHAT_START_HERE.md.
+Ownernewkeys+explicitlaunchGO; acceptedcodeunchanged, separateIPboundnewkey
+sameUID/nofixedexpiry=>keyblockerclosed. Packet3aa49421dfb628dc6703986cc9c988f394d0fa94e4955f496db1a3a39f8fec7b
+ONEapply20:02:32UTC; independent20:03:06UTC LIVE_ARMED_HEALTHY/flat/noentry.
+NewPID3669955/originallock818853; old3198429absent/oldentryrevoked/anchorsunchanged.
+Scope2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970,
+configf715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa.
+Repaired05f89618sourceSELECTED;20UTC134timely/3unavailable/0raw; ticks9–11complete.
+19UTC133/134timelywasblocked, waitednewhourwithout weakeningguard/replay.
+OldpilotpostexpiryNO_TRADEconfirmed19:59:57UTC fullGET+emptyroot; oldmonitor deleted,
+BrainDATApreserved. Newoneentry50/30/20/risk1/cross NOTserialTINY2; entryend8Nov
+19:26:32.774UTC/custodycontinues. ClaimGOreceipt exist=>NEVERrepeatapply/oldGO.
+Nativecron2min scheduledHEALTHY20:06UTC confirmedGET20:07; oneH1followuppump4-h1at23:03CY.
+DATA3152955/Monthlyv6unitsunchanged. Monthly2Nov16:30CYconditionalwindow and
+monthly-2postwindow16:40CYcheckpreserved. ContinueexistingTINY2actualOFF/cost-release;
+no newreader/framework/research/Claudechanges. Foreignallowlistunchanged.
+
+---
+Earlier dated entries below are history.
+
 CURRENT1Nov17:30UTC — physical handoff ACCEPTED; sole actual blocker KEY_LIFETIME
 
 Read PUMP4_PHYSICAL_HANDOFF_ACCEPTANCE_2026_11_01.md and NEW_CHAT_START_HERE.md.

@@ -1,0 +1,13 @@
+{
+  "status": "NO_TRADE_IN_PUMP4_PILOT",
+  "observed_ms": 1793563197733,
+  "flat_now": true,
+  "full_linear_usdt_history_empty": true,
+  "history_pages_complete": true,
+  "old_root_wholly_unused": true,
+  "source_sha256": "f647a97b66dc9a07473e094e421dd3fd7301e007dcf26ae9113696464c657068",
+  "raw_private_sha256": "36d4a19799218c2425e2db9e1a6dadad030303e732dcd8caa627fa15dd8c79b0",
+  "broker_writes": 0,
+  "terminal_cost_finality_proven": false,
+  "custody_required": false
+}

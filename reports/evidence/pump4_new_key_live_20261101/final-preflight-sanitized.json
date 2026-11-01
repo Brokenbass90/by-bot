@@ -1,0 +1,26 @@
+{
+  "available_allocation_50_proven": true,
+  "broker_writes": 0,
+  "observed_ms": 1793563324384,
+  "raw_private_sha256": "d295de2cb150c09e93e4cf18940f3eb60539c814da2d36e7de3631d989688d13",
+  "redactions": [
+    "snapshot.available_usdt",
+    "first_snapshot.available_usdt",
+    "second_snapshot.available_usdt"
+  ],
+  "snapshot": {
+    "account_fingerprint": "b7c70793ed9b88c496450a4ee901e5a3fa5a66fa408ba81a155153373a98d82a",
+    "account_identity_sha256": "4a67566b52682b7089213b24bb7d562686486c365d6adcad9cbc6cac1a2bec87",
+    "evidence_sha256": "89feae1fbbb1f7da2ac0d69ec83a7300244f2bf14a8b1da6293335426e0ece7d",
+    "flat": true,
+    "get_requests": 13,
+    "history_cutoff_ms": 1793563322527,
+    "history_empty": true,
+    "key_exact_vps_ip": true,
+    "key_no_fixed_expiry": true,
+    "key_valid_until_ms": 0,
+    "observed_ms": 1793563324379,
+    "terminal_cost_finality_proven": false
+  },
+  "status": "READY_FOR_OWNER_GO_PREFLIGHT"
+}

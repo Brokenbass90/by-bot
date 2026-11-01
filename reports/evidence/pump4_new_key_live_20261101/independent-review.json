@@ -1,0 +1,13 @@
+{
+  "baseline_material_sha256": "d3c3b7325b91f97281cfe23e4206204f0624c9b91dd31ba979272a4d20453611",
+  "effort": "high",
+  "material_sha256": "6f59bccf3392913adb0a334b8d86e5aa1f881fe8ea37f80b0e13e80016fc453d",
+  "model": "gpt-6-astra",
+  "report_sha256": "0cb23f0bfc93fe1bf0ea23ad01d5780ff34777e4a7bc7a502e4fba8dc802738e",
+  "runtime_model_verified": true,
+  "schema": "PUMP4_HANDOFF_INDEPENDENT_ACCEPTANCE_V1",
+  "scope": "Bounded credential-envelope derivation; prior critical code review retained",
+  "session_id": "01a197ee-baf5-79c2-a40a-a75ce96dcab1",
+  "status": "PASS",
+  "unresolved_important": 0
+}

@@ -1,0 +1,12 @@
+{
+  "id": "pump4-h1",
+  "status": "ACTIVE",
+  "kind": "heartbeat",
+  "scheduled_utc": "2026-11-01T21:03:00Z",
+  "scheduled_local": "2026-11-01T23:03:00+02:00",
+  "scope": "One new-H1 readback, notify only meaningful change; delete only itself after check",
+  "future_result": "PENDING",
+  "old_monitor_deleted": "pump4-read-only-brain-receipts",
+  "old_journal_preserved": true,
+  "monthly_automation_preserved": "monthly-2"
+}

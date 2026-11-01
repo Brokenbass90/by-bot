@@ -1,0 +1,18 @@
+{
+  "accepted_code_unchanged": true,
+  "baseline_local_tests": 50,
+  "baseline_material_sha256": "d3c3b7325b91f97281cfe23e4206204f0624c9b91dd31ba979272a4d20453611",
+  "baseline_vps_same_tests": 50,
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "exact_new_candidate_load_packet_validated": true,
+  "local_reviewer_targeted_binding_tests": 1,
+  "material_sha256": "6f59bccf3392913adb0a334b8d86e5aa1f881fe8ea37f80b0e13e80016fc453d",
+  "network_denied": true,
+  "no_full_suite_rerun": true,
+  "schema": "PUMP4_HANDOFF_OFFLINE_ACCEPTANCE_V1",
+  "status": "PASS",
+  "systemctl_stubbed": true,
+  "vps_output_sha256": "23a9ab9de18de4a4401bfee652961c30a43b6801403c233af4a455ce48d0a234",
+  "vps_targeted_binding_tests": 1
+}

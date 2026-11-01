@@ -1,0 +1,59 @@
+{
+  "candidate_root": "/opt/bybot-research/pump4-current-hour-repair-20261101/candidate-05f89618d8550664",
+  "files": {
+    "base_ops.py": "3f3efc987041f755219b3c241ca3048a22eec5a6fa02f26ce47f2210dec825d7",
+    "before.json": "620223ed8abb5773f71afc162fd57181235abf314a24672e7bbd064cb8cf373a",
+    "handoff.py": "d8a3003d8cbfe254ee81a45fb477b56b1895969b5ba309358834e687bd8613ba",
+    "health-legacy-immutable.py": "4c1674865daf0e2da2014642d2d474f8e206c2c885f14f0cc40bc16b65654ed8",
+    "health.py": "818a20f27a379f3b5bbc0ffb3e74e85b71f86c3fb330ca7fc1c29fe5a28e3864",
+    "independent-review.json": "50f5ed275754edb10addc74d6e624fb4fa73150bbabb5c627afb72130decd3fd",
+    "new-owner.service": "991211ed5db0c9dd163193141179eefe9a266298d9bdde1491dc0904793fb843",
+    "new-wrapper.py": "3e3c017fb1525167c1914556e1916ce19d2c09770e40f5bfbe444026efaba3a5",
+    "notifications.json": "b978eff2f8ad57d32af9001ce0a2ccb625fc46f7b75815f2fd42ad6ac92706c3",
+    "offline-acceptance.json": "ac4518a1e5b24e40be6490589b122fcf92551a5d46a4e1e96bcc1ef3bfd8b83e",
+    "old-notifications.json": "cd130fd16476edd572ea2c296bc0abce4a65f7a40c224f8c5f4dc800f968fd5d",
+    "old-original-owner.json": "ff249e081eb9e07d7e482615c440786e550332ff17c2de5b35572af89c2047ef",
+    "old-owner.service": "78a3b337ac6dfcea5b50b23824c6ee4beda16a1cf89353d355a0d7b594c7a970",
+    "old-wrapper.py": "3c628751e068ceeb20aa7fe3c35aa5f939d3d99123f9022be19be956c1142232",
+    "original-owner.json": "045eb4ef6d35ab0709f5023d759701d190037513464a283118e5184c114258d4",
+    "runner.json": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+    "scope.json": "f409d0365e9a4dcb026b061f079e475f043d56ca08705cecff10e2d4f7d896ca"
+  },
+  "material_sha256": "6f59bccf3392913adb0a334b8d86e5aa1f881fe8ea37f80b0e13e80016fc453d",
+  "observer_lock": "/opt/bybot-research/kity-micro-owner-20261015/runtime/account-health.lock",
+  "observer_lock_inode": 819480,
+  "old_account_identity_sha256": "4a67566b52682b7089213b24bb7d562686486c365d6adcad9cbc6cac1a2bec87",
+  "old_barrier_inode": 4298765,
+  "old_money_anchors": {
+    "owner-go.json": "4c2b2b665e0c918ae616bfba3fad8eecb5e0c3b6af8a80f1292f6dbed369b8a5",
+    "owner-scope.json": "e7a3411e98148c67fc13f29bc12b36785c13f6a3330669b62bcb79db350e0740",
+    "send-barrier-binding.json": "09f3e60d101786c34394e7281509d29a4fe99f5feb2049b0e72563a8cdd364ee"
+  },
+  "old_owner_pid": 3198429,
+  "packet_dir": "/opt/bybot-research/pump4-current-hour-repair-20261101/owner-packet-v6-new-key",
+  "preserved_units": {
+    "alpaca-monthly-owned.service": "9d94467d301cf5f545bee18e50b838623c061b72f46a2fbdd9b7d1991932cc1d",
+    "alpaca-monthly-owned.timer": "33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb",
+    "pump4-data-supervisor.service": "cb9de84027ee8d42e72068ce9f66fbbdb6fcf433cc27f435883f52c01d495a35"
+  },
+  "schema": "PUMP4_SOURCE_REPAIR_OWNER_PACKET_V1",
+  "source_manifest_sha256": "05f89618d8550664cf2d914f000ef9f7b101d32176032adb78a6d7bbbdb03dfd",
+  "terms": {
+    "allocation_usdt": "50",
+    "cross_margin": true,
+    "guaranteed_loss_bound": false,
+    "isolated_allocation": false,
+    "max_entries": 1,
+    "max_gross_usdt": "30",
+    "max_positions": 1,
+    "no_automatic_extension": true,
+    "required_key_until_ms": 1794857192774,
+    "reserve_usdt": "20",
+    "rollback": "REVOKE_ENTRIES_KEEP_CUSTODY_AFTER_START",
+    "scenario_risk_usdt": "1",
+    "source_epoch_unchanged": true,
+    "valid_from_ms": 1793561192774,
+    "valid_until_ms": 1794165992774
+  },
+  "wrapper_path": "/opt/bybot-research/kity-micro-owner-20261015/monitor-v1/health.py"
+}
