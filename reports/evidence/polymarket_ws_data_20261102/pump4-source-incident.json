@@ -2,6 +2,7 @@
   "account_as_of_ms": 1793629085154,
   "account_capture_file": "1793629085154-237cfd8cb631f81ee410e1d577504be6a29d7ce59c7062a6f678e172efd23807.json",
   "account_capture_sha256": "d95e8a22428619d27a6ee17db63b05961b5aff00dc9d5d345b95fd049adb6b2b",
+  "account_position_order_scope": "BYBIT_LINEAR_USDT_NOT_OTHER_ACCOUNT_PRODUCTS",
   "admitted_lifecycle_present": false,
   "complete_pairs": 134,
   "existing_capture_classified_no_new_api": true,

@@ -173,7 +173,8 @@ The existing pinned observer already collected a complete broker capture at
 confirmed positions_flat=true/open_orders_empty=true/admitted_lifecycle absent.
 The classification used the capture's original timestamp, not a retimed current
 GET; balances/keys remain private. This establishes account flatness as of that
-capture, not a healthy signal source or future finality.
+capture, not a healthy signal source or future finality. This position/order
+flatness applies to the captured Bybit linear USDT scope, not other account products.
 
 [Incident evidence](evidence/polymarket_ws_data_20261102/pump4-source-incident.json).
 No PUMP4/collector restart, cutoff relaxation, old-signal replay or new order was
@@ -222,7 +223,7 @@ Polymarket. Старые judges ещё требуют версионного а�
 
 При финальной сверке обнаружен отдельный P0 PUMP4:14H1получен полностью, но7из134
 публикаций вышли за60с; источник блокирует новые входы. Счёт по уже записанному
-GET14:18UTC пуст,0открытых ордеров; API/GO не переактивировались. Нужна диагностика
+GET14:18UTC вlinearUSDT безпозиций/открытыхордеров; API/GO не переактивировались. Нужна диагностика
 задержек без ослабления cutoff; вклад новой DATA-нагрузки ещё не исключён.
 Monthly16:30Кипр и read-onlyконтроль16:40сохранены. Brain — отдельный следующий
 этап после этих операционных P0, не новый универсальный движок прямо сейчас.
