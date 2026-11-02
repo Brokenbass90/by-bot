@@ -1,0 +1,8 @@
+{
+  "files": 67,
+  "manifest_sha256": "0f337c1798e0697523422c429c398d86327fe8f4e288f4bd96edca48db6f167a",
+  "packet_sha256": "610c70fa52a8a6d9dd99ac6f35643a701c16f1511f8f727fc112a787f14d7792",
+  "spec_sha256": "9040c6287d7a7af22751f5c640f321590ad1e05d3ded2f7f09b3ab3a273c2f1b",
+  "stage": "/opt/bybot-research/polymarket-ws-data-20261102/candidate-0f337c1798e06975",
+  "test_manifest_sha256": "c529d583aa1cbdfcd3ad2c6bd5d0e76679a8256509030be5b0b713c3a7b6a297"
+}

@@ -1,0 +1,42 @@
+{
+  "canonical_ws_processes_remaining": 0,
+  "financial_commands": 0,
+  "locks": [
+    {
+      "held_by_selector": true,
+      "inode": 510704870,
+      "inode_unchanged": true,
+      "mode_unchanged": true,
+      "role": "sportsws"
+    },
+    {
+      "held_by_selector": true,
+      "inode": 510714693,
+      "inode_unchanged": true,
+      "mode_unchanged": true,
+      "role": "clobws"
+    }
+  ],
+  "observed_ms": 1793625814679,
+  "old": [
+    {
+      "pid": 37395,
+      "role": "sportsws",
+      "screen": "37372.sportsws",
+      "script": "poly_sports_ws_sbor.py"
+    },
+    {
+      "pid": 39740,
+      "role": "clobws",
+      "screen": "39706.clobws",
+      "script": "poly_clob_ws_sbor.py"
+    }
+  ],
+  "roles": [
+    "sportsws",
+    "clobws"
+  ],
+  "schema": "POLY_WS_MAC_CUTOVER_PROOF_V1",
+  "screen_children_reconciled": true,
+  "selector_pid": 90664
+}

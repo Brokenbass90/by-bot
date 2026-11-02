@@ -1,0 +1,106 @@
+{
+  "first": {
+    "error_type": "TimeoutExpired",
+    "last_pull": {
+      "actual_observed_ms": 1793626883325,
+      "archived_source_segments": 4,
+      "data_health": {
+        "free_bytes": 8844484608,
+        "observed_ms": 1793626882703,
+        "roles": {
+          "catalog": {
+            "max_bytes": 134217728,
+            "oldest_unarchived_ms": null,
+            "sealed_backlog": 0,
+            "used_bytes": 280395
+          },
+          "clob": {
+            "max_bytes": 536870912,
+            "oldest_unarchived_ms": null,
+            "sealed_backlog": 0,
+            "used_bytes": 1757
+          },
+          "sports": {
+            "max_bytes": 134217728,
+            "oldest_unarchived_ms": 1793626882765,
+            "sealed_backlog": 1,
+            "used_bytes": 53681
+          }
+        },
+        "schema": "POLY_WS_DATA_HEALTH_V1",
+        "warnings": []
+      },
+      "existing_segments_verified": 0,
+      "freed_source_bytes": 7713,
+      "last_source_received_ms": 1793626813770,
+      "new_segments": 4,
+      "orders_allowed": false,
+      "status": "DATA_ONLY_DELIVERED"
+    },
+    "last_pull_exit": 0,
+    "last_pull_ms": 1793626883521,
+    "locks_held": true,
+    "mode": "MAC_CONSUMER_VPS_PRODUCER",
+    "observed_ms": 1793626883570,
+    "orders_allowed": false,
+    "pid": 93194,
+    "roles": [
+      "sportsws",
+      "clobws"
+    ],
+    "schema": "POLY_WS_MAC_SELECTOR_STATUS_V1",
+    "warnings": []
+  },
+  "second": {
+    "error_type": "TimeoutExpired",
+    "last_pull": {
+      "actual_observed_ms": 1793627206219,
+      "archived_source_segments": 6,
+      "data_health": {
+        "free_bytes": 8843816960,
+        "observed_ms": 1793627205683,
+        "roles": {
+          "catalog": {
+            "max_bytes": 134217728,
+            "oldest_unarchived_ms": null,
+            "sealed_backlog": 0,
+            "used_bytes": 280395
+          },
+          "clob": {
+            "max_bytes": 536870912,
+            "oldest_unarchived_ms": null,
+            "sealed_backlog": 0,
+            "used_bytes": 1757
+          },
+          "sports": {
+            "max_bytes": 134217728,
+            "oldest_unarchived_ms": null,
+            "sealed_backlog": 0,
+            "used_bytes": 45353
+          }
+        },
+        "schema": "POLY_WS_DATA_HEALTH_V1",
+        "warnings": []
+      },
+      "existing_segments_verified": 0,
+      "freed_source_bytes": 11069,
+      "last_source_received_ms": 1793627176010,
+      "new_segments": 6,
+      "orders_allowed": false,
+      "status": "DATA_ONLY_DELIVERED"
+    },
+    "last_pull_exit": 0,
+    "last_pull_ms": 1793627206258,
+    "locks_held": true,
+    "mode": "MAC_CONSUMER_VPS_PRODUCER",
+    "observed_ms": 1793627206260,
+    "orders_allowed": false,
+    "pid": 93194,
+    "roles": [
+      "sportsws",
+      "clobws"
+    ],
+    "schema": "POLY_WS_MAC_SELECTOR_STATUS_V1",
+    "warnings": []
+  }
+}

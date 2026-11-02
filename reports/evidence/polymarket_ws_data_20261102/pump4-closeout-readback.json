@@ -1,0 +1,18 @@
+{
+  "actual_entry_executed": "UNKNOWN",
+  "config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+  "health": {
+    "actual_protection_proven": false,
+    "financial_trading_proven": false,
+    "observed_ms": 1793628516808,
+    "orders_allowed": false,
+    "pid": null,
+    "source_age_ms": null,
+    "source_coverage": null,
+    "status": "UNHEALTHY"
+  },
+  "observed_ms": 1793628516808,
+  "schema": "PUMP4_SOURCE_HANDOFF_READBACK_V1",
+  "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+  "status": "OWNER_ACTION_REQUIRED"
+}

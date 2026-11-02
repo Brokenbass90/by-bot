@@ -1,0 +1,12 @@
+{
+  "delivery_package": "/opt/bybot-research/polymarket-ws-data-20261102/candidate-0f337c1798e06975",
+  "delivery_pin": "0f337c1798e0697523422c429c398d86327fe8f4e288f4bd96edca48db6f167a",
+  "duplicate_producers": 0,
+  "financial_commands": 0,
+  "locks_unchanged": true,
+  "new_pid": 93194,
+  "observed_ms": 1793626310714,
+  "old_pid": 90664,
+  "source_files": 67,
+  "worker_package_unchanged": "candidate-b79fcd827bea31cc"
+}

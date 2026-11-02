@@ -1,5 +1,47 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT2Nov14:06UTC — Polymarket VPS_DATA_LIVE_PASS; native archive/cache cleanup accepted
+
+Read POLYMARKET_WS_VPS_DATA_2026_11_02.md / NEW_CHAT_START_HERE.md.
+CLOSEOUT14:08UTC NEWP0: PUMP4 OWNER_ACTION_REQUIRED/SUPERVISOR_SOURCE_BLOCKED,
+CURRENT_HOUR_COVERAGE_UNVERIFIED.14H1full134/3unavailable but127within60s;7late
+60.051–62.742s,0rawsignals. Process3669955active/NRestarts0; notcurrentHEALTHY.
+ExistingpinnedobserverbrokerGET14:18:05UTC purefileclassificationflat0/openorders0/
+admittedabsent, notnewGETorretimedproof. TimingcauseUNKNOWN(exchange/queue/host),
+newDATAloadinteractionnotruledout. No restart/cutoffrelaxation/replay. SourceP0
+beforeBrainexpansion; Monthly14:30UTCwindow remainsuntouched. Seereportincident.
+Both canonical Sports/CLOB WS are physically onVPS; frozen150/top1000/timefilter
+unchanged/bothoutcomes. Worker/catalogueb79fcd827bea31cc67pins; deliveryONLY
+0f337c1798e0697567pins. NativeMacLaunchAgent holds originaltwoDATAlocks, oldtwo
+Macproducersstopped/oldjournals preserved; normaldummylaunchesrefused. Bothactual
+streams+catalogue+nativeperiodicdelivery+verifiedMACACKeviction are accepted;
+notresearchPASS/edge/trade/learning. CLOBnatural14:00:04UTC twoone-sidedbooks,
+MACcopied14:06UTC.284segments allcompressed/raw/seal/receipt/firstmtime match
+VPSACK;809SportsRECV/61CLOBRECV/4books !=284trades/opportunities. Actualreceipt
+reports/evidence/polymarket_ws_data_20261102/actual-acceptance.json.
+DATA-onlySportsrestart/consumerrestarttested, gapsUNKNOWN/crashpartialuntouched;
+physicalMacsleep/rebootNOTtested. Datasetpoly_ws_vps_v1 separate; researchjudges
+NOTrepointed/run. Needversionedresearchadapter beforeattributingnewjudgeverdicts.
+Source128/512/128MiB/2GiBfloor/75%warning; MAC20GiBcap/10GiBfloor/15GiBwarning.
+ACKonlynewcacheeviction, detailedACK7d→dailyhash. Catalogue~22.7MB/capture means
+only2–3hsourcebuffer ifMacoffline; thenquotaSTOP+honestgap, no unlimitedoffline
+continuityclaim. PrincipalMacfullarchive, NOTindependentbackup; nopaidstorage.
+AggregateDATA192MiB/CPU30%onecore, actualpeak128.8MiB; oldfinancialunits/PIDs/lock
+unchanged.43local/same43VPSnetworkdenied PASS; oneverifiedAstra/high review4fixes
+RED/GREEN, lateractualGamma/batchfixesprimaryonly. No repeatedfinancialcommands.
+PUMPpinnedGET13:38UTC healthy/noentry/sameauthority; closeoutGET inreport.
+Monthlyv6400/280/40unchanged; TODAY14:30UTC/16:30CYwindowstillfuture atDATAacceptance;
+monthly-2ACTIVE16:40CY pinnedread-onlyBUY/CASH/NO_ADMISSION+protection. Noactivation.
+TINY2OFF189/sourcepolicy acceptedbutfirstactualV1cycle/nonemptycostqualification/
+serialhandoff+separateownerGO remainOPEN; no newserialauthority. OldBraincontext
+failedsince30Oct, NOTrestarted; separatefuturestage, distinctfromClaudeMacadvisor.
+7unexpectedmissingPUMP/DATAscripts restoredonlymissingHEADbytes/exclusive/noexec
+(owner didnotdelete),causeUNKNOWN. Foreignallowlist365ff7d6…cc2e0e unchanged.
+Do not repeat spent DATA installers/cutovers or financial owner packets.
+
+---
+Earlier dated entries below are history.
+
 CURRENT2Nov08:53UTC — TINY-2 cost policy OFF + actual flat-source VPS replay delivered
 
 Read PUMP4_TINY2_COST_RELEASE_ORDERS_OFF_2026_11_02.md and NEW_CHAT_START_HERE.md.

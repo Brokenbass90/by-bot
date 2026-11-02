@@ -1,0 +1,25 @@
+{
+  "actual_receipt_sha256": "c7b64dff7d2e9424e013a1c1cd5272eb0601cc74843c801a3e12e25a1c1c0b00",
+  "capture_package": {
+    "files": 67,
+    "manifest_sha256": "b79fcd827bea31ccaf21217ab1e590f3024d971813ccdc5f124bc748d7791eca",
+    "packet_sha256": "c51b3c6dfbc1530bd1f498dcb14d11866b121ae4cec0d90ab8f90e78c5153644",
+    "spec_sha256": "44213d37bb639eac592dc5498b5cfb97d6b90174f06c59db1673f80968639391",
+    "stage": "/opt/bybot-research/polymarket-ws-data-20261102/candidate-b79fcd827bea31cc",
+    "test_manifest_sha256": "c529d583aa1cbdfcd3ad2c6bd5d0e76679a8256509030be5b0b713c3a7b6a297"
+  },
+  "delivery_package": {
+    "files": 67,
+    "manifest_sha256": "0f337c1798e0697523422c429c398d86327fe8f4e288f4bd96edca48db6f167a",
+    "packet_sha256": "610c70fa52a8a6d9dd99ac6f35643a701c16f1511f8f727fc112a787f14d7792",
+    "spec_sha256": "9040c6287d7a7af22751f5c640f321590ad1e05d3ded2f7f09b3ab3a273c2f1b",
+    "stage": "/opt/bybot-research/polymarket-ws-data-20261102/candidate-0f337c1798e06975",
+    "test_manifest_sha256": "c529d583aa1cbdfcd3ad2c6bd5d0e76679a8256509030be5b0b713c3a7b6a297"
+  },
+  "epoch": "poly-ws-data-20261102",
+  "financial_authority_changed": false,
+  "observed_ms": 1793628383728,
+  "previous_applying_commands_spent_do_not_repeat": true,
+  "schema": "POLY_WS_DATA_DEPLOYMENT_SELECTION_V1",
+  "status": "VPS_DATA_LIVE_PASS"
+}

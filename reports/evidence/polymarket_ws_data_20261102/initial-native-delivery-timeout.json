@@ -1,0 +1,1 @@
+{"error_type":"TimeoutExpired","last_pull":null,"last_pull_exit":-1,"last_pull_ms":1793626054470,"locks_held":true,"mode":"MAC_CONSUMER_VPS_PRODUCER","observed_ms":1793626054471,"orders_allowed":false,"pid":90664,"roles":["sportsws","clobws"],"schema":"POLY_WS_MAC_SELECTOR_STATUS_V1","warnings":["DATA_DELIVERY_FAILED"]}

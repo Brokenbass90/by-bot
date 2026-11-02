@@ -1,0 +1,27 @@
+{
+  "dummy_launches": [
+    {
+      "exit_code": 1,
+      "refusal": "ОТКАЗ: замок sportsws.lock занят — второй экземпляр не запускаю",
+      "role": "sportsws"
+    },
+    {
+      "exit_code": 1,
+      "refusal": "ОТКАЗ: замок clobws.lock занят — второй экземпляр не запускаю",
+      "role": "clobws"
+    }
+  ],
+  "locks": [
+    {
+      "held": true,
+      "inode": 510704870,
+      "role": "sportsws"
+    },
+    {
+      "held": true,
+      "inode": 510714693,
+      "role": "clobws"
+    }
+  ],
+  "observed_ms": 1793627447683
+}

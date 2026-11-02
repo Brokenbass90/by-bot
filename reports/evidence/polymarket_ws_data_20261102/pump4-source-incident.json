@@ -1,0 +1,61 @@
+{
+  "account_as_of_ms": 1793629085154,
+  "account_capture_file": "1793629085154-237cfd8cb631f81ee410e1d577504be6a29d7ce59c7062a6f678e172efd23807.json",
+  "account_capture_sha256": "d95e8a22428619d27a6ee17db63b05961b5aff00dc9d5d345b95fd049adb6b2b",
+  "admitted_lifecycle_present": false,
+  "complete_pairs": 134,
+  "existing_capture_classified_no_new_api": true,
+  "expected_trading": 134,
+  "health_readback_ms": 1793628516808,
+  "health_status": "OWNER_ACTION_REQUIRED",
+  "hour_pass": false,
+  "late": [
+    {
+      "publication_delay_ms": 60606,
+      "receive_delay_ms": 60075,
+      "symbol": "C98USDT"
+    },
+    {
+      "publication_delay_ms": 62115,
+      "receive_delay_ms": 61501,
+      "symbol": "ENAUSDT"
+    },
+    {
+      "publication_delay_ms": 60911,
+      "receive_delay_ms": 60618,
+      "symbol": "MSFTUSDT"
+    },
+    {
+      "publication_delay_ms": 60051,
+      "receive_delay_ms": 59822,
+      "symbol": "NBISUSDT"
+    },
+    {
+      "publication_delay_ms": 61192,
+      "receive_delay_ms": 60933,
+      "symbol": "PAXGUSDT"
+    },
+    {
+      "publication_delay_ms": 62742,
+      "receive_delay_ms": 62136,
+      "symbol": "TSLAUSDT"
+    },
+    {
+      "publication_delay_ms": 61491,
+      "receive_delay_ms": 61199,
+      "symbol": "WLFIUSDT"
+    }
+  ],
+  "observed_ms": 1793629109980,
+  "open_orders_empty": true,
+  "positions_flat": true,
+  "raw_signal_symbols": [],
+  "reason": "SUPERVISOR_SOURCE_BLOCKED",
+  "receipt_sha256": "10f3ab07a2f856c74da0318e319ba30bcea4c295a5a98bd8e205d429fc771a1b",
+  "restart_or_gate_relaxation_performed": false,
+  "source_hour_open_ms": 1793628000000,
+  "status": "PUMP4_SOURCE_TIMING_BLOCKED_ACCOUNT_FLAT_AS_OF_CAPTURE",
+  "supervisor_reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+  "timing_cause": "UNKNOWN_EXCHANGE_VS_HANDLER_QUEUE_OR_HOST_RESOURCE",
+  "within60s": 127
+}

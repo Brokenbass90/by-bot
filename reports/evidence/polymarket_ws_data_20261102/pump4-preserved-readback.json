@@ -1,0 +1,29 @@
+{
+  "actual_entry_executed": false,
+  "config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+  "financial_readback_only": true,
+  "health": {
+    "actual_protection_proven": false,
+    "financial_trading_proven": false,
+    "observed_ms": 1793626715369,
+    "orders_allowed": false,
+    "pid": 3669955,
+    "source_age_ms": 597,
+    "source_coverage": {
+      "checked_publications": 134,
+      "coverage_complete": true,
+      "historical_index_durability_proven": false,
+      "hour_open_ms": 1793624400000,
+      "observed_ms": 1793626710515,
+      "raw_signals": 0,
+      "receipt_sha256": "158e2ec996df9f4e179bad4dd726120cc80b28ea0aaa16c329ddfd22979fe2e3",
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+      "unavailable_instruments": 3
+    },
+    "status": "HEALTHY"
+  },
+  "observed_ms": 1793626715369,
+  "schema": "PUMP4_SOURCE_HANDOFF_READBACK_V1",
+  "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+  "status": "LIVE_ARMED_HEALTHY"
+}
