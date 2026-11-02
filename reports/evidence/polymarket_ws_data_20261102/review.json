@@ -1,0 +1,38 @@
+{
+  "effort": "high",
+  "financial_approval": false,
+  "findings": [
+    {
+      "fixed": true,
+      "kind": "MAC_DIRECTORY_CHAIN_DURABILITY",
+      "severity": "P1"
+    },
+    {
+      "fixed": true,
+      "kind": "TERMINAL_STOP_STATUS_LOST",
+      "severity": "P2"
+    },
+    {
+      "fixed": true,
+      "kind": "STALE_MAC_PULL_SUCCESS",
+      "severity": "P2"
+    },
+    {
+      "fixed": true,
+      "kind": "TRANSFER_OUTSIDE_RESOURCE_SLICE",
+      "severity": "P2"
+    }
+  ],
+  "independent_tests": 35,
+  "initial_dispatch_allowance_failure": true,
+  "model": "gpt-6-astra",
+  "network_denied": true,
+  "primary_final_local": 39,
+  "primary_final_vps": 39,
+  "primary_red_regressions": 4,
+  "resumed_after_reported_reset_at_owner_request": true,
+  "runtime_verified": true,
+  "schema": "POLY_WS_BOUNDED_REVIEW_V1",
+  "second_independent_signoff": false,
+  "session": "01a19bb3-4f50-73e1-b647-18b2333962ed"
+}

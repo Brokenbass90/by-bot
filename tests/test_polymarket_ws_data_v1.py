@@ -118,3 +118,30 @@ def test_each_frame_does_not_rescan_the_entire_archive(tmp_path,monkeypatch):
     for n in range(10):s.append('RECV',str(n))
     assert len(calls)<=2
     s.close()
+
+
+def test_immutable_publication_is_invisible_until_file_fsync(tmp_path,monkeypatch):
+    m=mod();target=tmp_path/'sealed.json';seen=[];original=os.fsync
+    def sync(fd):seen.append(target.exists());return original(fd)
+    monkeypatch.setattr(os,'fsync',sync)
+    m.once(target,b'complete\n')
+    assert seen[0] is False and target.read_bytes()==b'complete\n'
+    with pytest.raises(FileExistsError):m.once(target,b'replace')
+    assert target.read_bytes()==b'complete\n'
+
+
+def test_status_fsync_is_throttled_during_burst(tmp_path):
+    s=store(tmp_path);s.append('RECV','a');s.checkpoint();p=tmp_path/'sports/status.json';before=p.stat()
+    for _ in range(10):s.append('RECV','b');s.checkpoint()
+    assert (p.stat().st_ino,p.stat().st_mtime_ns)==(before.st_ino,before.st_mtime_ns)
+    s.close()
+
+
+def test_budget_terminal_state_survives_final_seal_and_remains_visible_after_archive(tmp_path):
+    from scripts import pull_polymarket_ws_data_v1 as delivery
+    s=store(tmp_path/'source');s.append('RECV','small');s.status('STOPPED_DISK_OR_BUDGET');seal=s.seal();s.close()
+    status=json.loads((tmp_path/'source/sports/status.json').read_bytes())
+    assert status['state']=='STOPPED_DISK_OR_BUDGET'
+    raw=(tmp_path/'source'/seal['file']).read_bytes();dest=tmp_path/'archive'
+    delivery.import_segment(dest,seal,raw);delivery.archive_ack(tmp_path/'source',[delivery.make_archive_ack(dest,seal)])
+    assert 'SPORTS_COLLECTOR_STOPPED' in delivery.data_health(tmp_path/'source')['warnings']

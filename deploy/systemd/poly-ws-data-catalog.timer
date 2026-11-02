@@ -1,0 +1,9 @@
+[Unit]
+Description=Public Polymarket frozen catalogue refresh
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=30min
+AccuracySec=30s
+Unit=poly-ws-data-catalog.service
+[Install]
+WantedBy=timers.target

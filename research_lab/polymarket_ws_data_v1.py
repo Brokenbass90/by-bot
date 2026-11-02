@@ -14,11 +14,30 @@ def need(ok,why):
 def clock():return time.time_ns()//1000000
 def encoded(x):return (json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False)+'\n').encode()
 def sha(b):return hashlib.sha256(b).hexdigest()
+def sync_dir(path):
+    fd=os.open(path,os.O_RDONLY)
+    try:os.fsync(fd)
+    finally:os.close(fd)
+def mkdirs_durable(path):
+    path=Path(path)
+    if path.exists():need(path.is_dir() and not path.is_symlink(),'DIRECTORY_CUSTODY');return
+    mkdirs_durable(path.parent)
+    try:path.mkdir(mode=0o700)
+    except FileExistsError:need(path.is_dir() and not path.is_symlink(),'DIRECTORY_CUSTODY')
+    sync_dir(path);sync_dir(path.parent)
+def sync_ancestors(path):
+    path=Path(path).absolute()
+    for folder in (path,*path.parents):sync_dir(folder)
+
 def once(path,raw):
-    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True,mode=0o700)
-    fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
-    with os.fdopen(fd,'wb') as f:f.write(raw);f.flush();os.fsync(f.fileno())
-    fd=os.open(path.parent,os.O_RDONLY);os.fsync(fd);os.close(fd)
+    path=Path(path);mkdirs_durable(path.parent)
+    temp=path.with_name('.publish-'+uuid.uuid4().hex)
+    fd=os.open(temp,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+    try:
+        with os.fdopen(fd,'wb') as f:f.write(raw);f.flush();os.fsync(f.fileno())
+        os.link(temp,path,follow_symlinks=False)
+        fd=os.open(path.parent,os.O_RDONLY);os.fsync(fd);os.close(fd)
+    finally:temp.unlink()
 def replace(path,value):
     path=Path(path);tmp=path.with_name(path.name+'.'+uuid.uuid4().hex)
     once(tmp,encoded(value));os.replace(tmp,path)
@@ -41,15 +60,23 @@ class SegmentStore:
         self.fd=os.open(self.folder/'data.lock',os.O_RDWR|os.O_CREAT|os.O_NOFOLLOW,0o600)
         try:fcntl.flock(self.fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BaseException:os.close(self.fd);raise
-        self.file=None;self.session=uuid.uuid4().hex;self.index=0;self.rows=0;self.start=None;self.last=None;self.size=0;self.opened=self.clock();self.completed=0
+        self.file=None;self.session=uuid.uuid4().hex;self.index=0;self.rows=0;self.start=None;self.last=None;self.size=0;self.opened=self.clock();self.completed=0;self.status_clock=None;self.status_state=None;self.retention_mtime=None;self.terminal_state=None
         self.used=sum(p.stat().st_size for p in self.folder.rglob('*') if p.is_file())
         try:self._budget(0)
         except BaseException:os.close(self.fd);raise
     def _budget(self,extra):
+        marker=self.folder/'retention-generation.json';stamp=marker.stat().st_mtime_ns if marker.exists() else None
+        if stamp!=self.retention_mtime:
+            self.used=sum(p.stat().st_size for p in self.folder.rglob('*') if p.is_file());self.retention_mtime=stamp
         if shutil.disk_usage(self.root).free<self.min_free or self.used+extra>self.max_total:
             raise DataStop('DATA_DISK_BUDGET_STOP')
     def status(self,state,**extra):
-        replace(self.folder/'status.json',dict(schema='POLY_WS_DATA_STATUS_V1',role=self.role,epoch=self.epoch,pid=os.getpid(),session=self.session,observed_ms=self.clock(),state=state,completed_segments=self.completed,unsealed_rows=self.rows,last_received_ms=self.last,venue_sequence_coverage='UNKNOWN',orders_allowed=False,**extra))
+        if state.startswith('STOPPED'):self.terminal_state=state
+        state=self.terminal_state or state
+        self.status_clock=self.clock();self.status_state=state
+        warning=['BACKLOG_75_PERCENT'] if self.used>=.75*self.max_total else []
+        if shutil.disk_usage(self.root).free<3*2**30:warning.append('FREE_DISK_BELOW_3_GIB')
+        replace(self.folder/'status.json',dict(schema='POLY_WS_DATA_STATUS_V1',role=self.role,epoch=self.epoch,pid=os.getpid(),session=self.session,observed_ms=self.clock(),state=state,warnings=warning,used_bytes=self.used,max_bytes=self.max_total,completed_segments=self.completed,unsealed_rows=self.rows,last_received_ms=self.last,venue_sequence_coverage='UNKNOWN',orders_allowed=False,**extra))
     def append(self,kind,payload,*,received_ms=None,monotonic_ns=None):
         now=self.clock();recv=now if received_ms is None else received_ms
         need(type(recv) is int and recv>0 and recv<=now,'RECEIVE_CLOCK')
@@ -79,7 +106,7 @@ class SegmentStore:
         return seal
     def checkpoint(self,state='RUNNING'):
         if self.file is not None and self.clock()-self.opened>=60000:self.seal()
-        self.status(state)
+        if self.status_clock is None or self.clock()-self.status_clock>=5000 or self.status_state!=state:self.status(state)
     def close(self,*,seal=True):
         try:
             if seal:self.seal()
@@ -167,7 +194,9 @@ def update_catalogue(root,selection):
         need(len({str(m['id']) for m in rows})==len(rows),'CATALOGUE_DUPLICATE_ID')
         for m in rows:m['tokens']=meta[str(m['id'])]
         value=dict(schema='POLY_WS_CATALOG_V1',epoch=EPOCH,selection_started_ms=start,generated_ms=clock(),markets=rows,selection='UNCHANGED_PINNED_SPISOK_150',coverage='LIMITED_TOP1000_EVENTS_NOT_EXHAUSTIVE',orders_allowed=False)
-        s.append('CATALOGUE',value);s.seal();replace(Path(root)/'catalog/current.json',value);return value
+        s.append('CATALOGUE',value);s.seal();replace(Path(root)/'catalog/current.json',value);s.status('CATALOGUE_CAPTURED');return value
+    except Exception:
+        s.status('STOPPED_CATALOGUE_SOURCE_ERROR');raise
     finally:s.close()
 
 

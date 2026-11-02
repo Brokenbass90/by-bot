@@ -1,0 +1,6 @@
+SYSTEMD_VERIFY_EXIT 0
+
+.......................................                                  [100%]
+39 passed in 1.36s
+
+{"wall_seconds": 2.398406140971929, "max_child_rss_kib": 36360, "network_denied": true}

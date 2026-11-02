@@ -1,0 +1,9 @@
+[Unit]
+Description=Bounded public Polymarket DATA-only research
+[Slice]
+CPUQuota=30%
+CPUWeight=10
+MemoryHigh=128M
+MemoryMax=192M
+TasksMax=48
+IOWeight=10

@@ -1,0 +1,32 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_____ test_import_and_ack_fsync_new_directory_chain_before_source_eviction _____
+tests/test_polymarket_ws_delivery_v1.py:153: in test_import_and_ack_fsync_new_directory_chain_before_source_eviction
+    assert p.stat().st_ino in seen,str(p)
+E   AssertionError: /private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-911/test_import_and_ack_fsync_new_0
+E   assert 510879913 in [510879934, 510879934, 510879941]
+E    +  where 510879913 = os.stat_result(st_mode=16832, st_ino=510879913, st_dev=16777234, st_nlink=4, st_uid=502, st_gid=20, st_size=128, st_atime=1793623448, st_mtime=1793623448, st_ctime=1793623448).st_ino
+E    +    where os.stat_result(st_mode=16832, st_ino=510879913, st_dev=16777234, st_nlink=4, st_uid=502, st_gid=20, st_size=128, st_atime=1793623448, st_mtime=1793623448, st_ctime=1793623448) = stat()
+E    +      where stat = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-911/test_import_and_ack_fsync_new_0').stat
+______________ test_failed_mac_pull_cannot_reuse_previous_success ______________
+tests/test_polymarket_ws_delivery_v1.py:174: in test_failed_mac_pull_cannot_reuse_previous_success
+    assert status['last_pull_exit']==-1 and status['last_pull'] is None
+E   AssertionError: assert (-1 == -1 and {'data_health': {'warnings': []}} is None)
+_______ test_remote_export_verification_and_work_use_data_resource_slice _______
+tests/test_polymarket_ws_delivery_v1.py:185: in test_remote_export_verification_and_work_use_data_resource_slice
+    for x in ('systemd-run','Slice=poly-ws-data.slice','MemoryMax=96M','CPUQuota=10%','DynamicUser=yes','ProtectHome=yes'):assert x in command
+                                                                                                                           ^^^^^^^^^^^^^^^^^^^
+E   assert 'systemd-run' in 'python3 -B -c \'import pathlib,hashlib,json,subprocess,sys\nr=pathlib.Path(sys.argv[1]);raw=(r/\'"\'"\'verification-s...ata-20261102/candidate-aaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb --export-list'
+_ test_budget_terminal_state_survives_final_seal_and_remains_visible_after_archive _
+tests/test_polymarket_ws_data_v1.py:144: in test_budget_terminal_state_survives_final_seal_and_remains_visible_after_archive
+    assert status['state']=='STOPPED_DISK_OR_BUDGET'
+E   AssertionError: assert 'RUNNING' == 'STOPPED_DISK_OR_BUDGET'
+E     
+E     - STOPPED_DISK_OR_BUDGET
+E     + RUNNING
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_ws_delivery_v1.py::test_import_and_ack_fsync_new_directory_chain_before_source_eviction
+FAILED tests/test_polymarket_ws_delivery_v1.py::test_failed_mac_pull_cannot_reuse_previous_success
+FAILED tests/test_polymarket_ws_delivery_v1.py::test_remote_export_verification_and_work_use_data_resource_slice
+FAILED tests/test_polymarket_ws_data_v1.py::test_budget_terminal_state_survives_final_seal_and_remains_visible_after_archive
+4 failed, 31 deselected in 0.46s
