@@ -4,10 +4,9 @@ Uses the existing selected_owner for physical verification, credentials and the
 original account lease. Child V1 owners share that lease and have an unconditional
 rejecting wire. No installed unit, current LIVE selection, GO or risk is changed.
 
-Complete source accounting is implemented; a real cost-release policy is NOT.
-Closing a child therefore records COSTS_PENDING and cannot release a second
-real-account entry. This deliberate blocker cannot be bypassed by a caller's
-``costs_complete`` flag, fixture settlement or an empty transaction log.
+The opt-in closed-cost reconciliation policy is exercised only ORDERS_OFF.
+Missing source evidence or policy keeps new entries blocked; financial finality
+and money authority are never inferred from an empty transaction log.
 """
 import copy
 from decimal import Decimal
@@ -27,7 +26,8 @@ from research_lab.pump4_execution_supervisor_v1 import trusted_sources
 from research_lab.pump4_selected_runner_v1 import selected_owner, pinned, config_sha, causal_plan
 from research_lab.pump4_account_adapter_v1 import frozen_plan
 from research_lab.pump4_supervisor_v1 import selected_tick
-from research_lab.pump4_serial_accounting_v1 import SeriesAccounting, source_view
+from research_lab.pump4_serial_accounting_v1 import (SeriesAccounting, source_view,
+    with_cost_release, COST_RELEASE_POLICY_SHA)
 
 ROOT = Path(__file__).resolve().parents[1]
 DOMAIN = 'PUMP4_SERIAL_SOURCE_OFF_V1'
@@ -77,7 +77,10 @@ class SerialSourceOwner:
         self.events = LifecycleJournal(self.root/'series.jsonl')
         risk = {k: carrier.scope['policy'][k] for k in ('day_loss_usdt', 'week_loss_usdt', 'drawdown_usdt')}
         risk['lifetime_loss_usdt'] = s['lifetime_loss_usdt']
-        self.ledger = SeriesAccounting(self.root/'accounting', carrier.scope['account_fingerprint'], risk)
+        self.cost_policy = s.get('cost_release_policy_sha256')
+        need(self.cost_policy is None or self.cost_policy == COST_RELEASE_POLICY_SHA, 'COST_POLICY')
+        self.ledger = SeriesAccounting(self.root/'accounting', carrier.scope['account_fingerprint'], risk,
+                                       cost_policy_sha256=self.cost_policy)
         self._state()
 
     def _check(self):
@@ -172,8 +175,12 @@ class SerialSourceOwner:
             # Reuse the already selected provider, credentials and transport;
             # capture ALL earlier slots, not only the newest signal window.
             bundle, _ = sources._capture(None, self.spec['history_start_ms'], custody=True)
+            closed = sources.serial_closed_pnl(bundle['history_start_ms'], bundle['history_end_ms']) if self.cost_policy else None
+            # Observe AFTER all GETs, retaining every request's actual timestamps.
             view = source_view(bundle, self.registry(state),
                 expected_fingerprint=self.carrier.scope['account_fingerprint'], now_ms=self.carrier.clock())
+            if self.cost_policy is not None:
+                view = with_cost_release(view, closed)
             self.ledger.record(view)
             accounting = dict(self.ledger.summary(), status='SOURCE_ACCOUNTING_RECORDED')
         except (ValueError, KeyError, TypeError, OSError, ArithmeticError) as exc:
@@ -199,9 +206,13 @@ class SerialSourceOwner:
             return result, accounting
         if view is None or not view['entry_inputs_complete'] or self.ledger.summary()['entry_loss_latched']:
             return dict(status='BLOCKED_SOURCE_ACCOUNTING'), accounting
-        if state['admissions']:
+        if state['admissions'] and self.cost_policy is None:
             return dict(status='BLOCKED_COST_RELEASE_POLICY_NOT_APPROVED',
                         pending_costs='UNKNOWN', finality_proven=False), accounting
+        if self.cost_policy is not None:
+            capacity = self.ledger.can_reserve_entry(self.carrier.scope['policy']['risk_usdt'])
+            if not capacity['allowed']:
+                return dict(status='BLOCKED_CONSERVATIVE_RISK', capacity=capacity), accounting
         need(len(state['admissions']) < self.spec['max_entries'], 'SERIAL_ENTRY_LIMIT')
         now = self.carrier.clock()
         need(self.spec['history_start_ms'] <= now <= self.spec['valid_until_ms'], 'SERIAL_ENTRY_WINDOW')
@@ -210,6 +221,9 @@ class SerialSourceOwner:
             return dict(status='NO_NEW_SIGNAL'), accounting
         plan = causal_plan(**candidate, epoch_started_ms=epoch_started_ms,
                            max_delay_ms=max_delay_ms, now_ms=now)
+        key = (plan['symbol'], plan['side'], plan['signal_bar_open_ms'])
+        if key in state['signals'] or plan['entry_bar_open_ms'] <= state['cursor']:
+            return dict(status='ALREADY_SEEN_SIGNAL'), accounting
         admission = self._append(state, 'RESERVATION', ordinal=len(state['admissions'])+1, plan=plan)
         child = self._child(admission, create=True)
         child_bundle, public = sources.account(plan, custody=False)
@@ -248,7 +262,8 @@ def run(config_path=None, config_sha256=None, *, orders_off=False, once=False,
             receipt = dict(schema='PUMP4_SERIAL_SOURCE_OFF_RECEIPT_V1', result=result,
                 source_accounting=accounting, observed_ms=carrier.clock(), run_id=run_id,
                 tick=ticks, mode='ORDERS_OFF', broker_writes=0, carrier_scope_sha256=carrier.scope_sha256,
-                serial_binding_sha256=serial.pin, cost_release_policy='NOT_IMPLEMENTED_NOT_APPROVED')
+                serial_binding_sha256=serial.pin, cost_release_policy=(serial.cost_policy or 'NOT_IMPLEMENTED_NOT_APPROVED'),
+                orders_allowed=False, money_authority=False)
             publish(serial.root/'receipts'/(run_id+'-'+str(ticks)+'.json'), receipt)
             if once or max_ticks is not None:
                 receipts.append(receipt)

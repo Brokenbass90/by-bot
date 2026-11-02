@@ -22,6 +22,7 @@ ALLOW={
  '/v5/account/fee-rate':{'category','symbol'},
  '/v5/account/instruments-info':{'category','symbol','limit','cursor'},
  '/v5/account/transaction-log':{'accountType','category','currency','startTime','endTime','limit','cursor'},
+ '/v5/position/closed-pnl':{'category','symbol','startTime','endTime','limit','cursor'},
  '/v5/position/list':{'category','symbol','settleCoin','limit','cursor'},
  '/v5/order/realtime':{'category','symbol','orderId','orderLinkId','settleCoin','openOnly','limit','cursor'},
  '/v5/order/history':{'category','symbol','orderId','orderLinkId','startTime','endTime','limit','cursor'},

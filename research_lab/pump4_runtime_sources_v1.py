@@ -95,6 +95,27 @@ class TrustedSources:
             if row['signed']:row['account_fingerprint']=self.reader.account_fingerprint
         return name,cap
 
+    def serial_closed_pnl(self, begin, end):
+        """Explicit serial-OFF cost evidence, never called by the LIVE path."""
+        need(digest(self.config) == self.config_sha and type(begin) is int
+             and type(end) is int and 0 < begin <= end <= self.clock(), 'CLOSED_PNL_WINDOW')
+        windows = time_windows(begin, end)
+        specs = [(str(i), '/v5/position/closed-pnl', dict(category='linear',
+            startTime=str(lo), endTime=str(hi), limit='100'), True)
+            for i, (lo, hi) in enumerate(windows)]
+        with ThreadPoolExecutor(max_workers=10) as pool:
+            groups = dict(pool.map(self._read, specs))
+        result = [dict(start_ms=lo, end_ms=hi, group=groups[str(i)])
+                  for i, (lo, hi) in enumerate(windows)]
+        stored = dict(schema='PUMP4_SERIAL_CLOSED_PNL_CAPTURE_V1', groups=result,
+                      completed_ms=self.clock(), broker_writes=0)
+        target = safe(self.owner.root/'source-captures'/('closed-pnl-'+digest(stored)+'.json'))
+        if target.exists():
+            need(load_capture(target) == stored, 'IMMUTABLE_SOURCE_CONFLICT')
+        else:
+            publish_capture(target, stored)
+        return result
+
     def _instruments(self):
         pages=[];cursor='';seen=set()
         for _ in range(8):

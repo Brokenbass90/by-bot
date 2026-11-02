@@ -280,3 +280,22 @@ def test_archive_legacy_and_encoded_input_are_bounded_before_decode(tmp_path,mon
  monkeypatch.setattr(m,'decode',lambda raw:(calls.append(True) or original(raw)))
  with pytest.raises(ValueError):m.load_capture(q,max_bytes=100)
  assert not calls
+
+
+def test_serial_cost_capture_is_explicit_get_only_and_preserves_exact_windows(tmp_path):
+ from test_pump4_bybit_sources_v1 import NOW
+ m=mod();s=create(tmp_path);o,e,t,_,f,lease=s
+ try:
+  calls=[]
+  def wire(method,url,headers,data,timeout):
+   q=dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query));calls.append((method,url,data,q))
+   return 200,json.dumps(dict(retCode=0,result=dict(category='linear',list=[],nextPageCursor=''),time=t[0])).encode()
+  p=m.TrustedSources({},o,wire=wire,clock=lambda:t[0])
+  out=p.serial_closed_pnl(NOW-8*24*H,NOW)
+  assert len(out)==2 and len(calls)==2 and all(x[0]=='GET' and x[2] is None for x in calls)
+  assert out[0]['start_ms']==NOW-8*24*H and out[-1]['end_ms']==NOW
+  assert all(w['group']['complete'] and w['group']['pages'][0]['account_fingerprint']==FP for w in out)
+  assert len(list((o.root/'source-captures').glob('closed-pnl-*.json')))==1
+  with pytest.raises(ValueError):p.serial_closed_pnl(NOW,NOW+10000)
+  assert len(calls)==2 and e.state['calls']==0
+ finally:lease.close()
