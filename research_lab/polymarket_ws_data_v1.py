@@ -180,15 +180,24 @@ def update_catalogue(root,selection):
         try:
             req=urllib.request.Request(url,headers={'User-Agent':'TradingOS-DATA_ONLY/1'})
             with urllib.request.build_opener(NoRedirect()).open(req,timeout=12) as response:
-                need(response.status==200,'GAMMA_STATUS');raw=response.read(4*2**20+1)
-            need(len(raw)<=4*2**20,'GAMMA_BODY_BOUND');receive=clock();body=json.loads(raw);need(isinstance(body,list),'GAMMA_SCHEMA')
-            s.append('GET_RESPONSE',dict(url=url,request_ms=request,receive_ms=receive,raw=raw.decode()),received_ms=receive)
+                need(response.status==200,'GAMMA_STATUS');raw=response.read(16*2**20+1)
+            need(len(raw)<=16*2**20,'GAMMA_BODY_BOUND');receive=clock();body=json.loads(raw);need(isinstance(body,list),'GAMMA_SCHEMA')
+            # Gamma's 100-event page can exceed 10 MiB. Preserve exact bytes in
+            # bounded chunks without widening the sealed-segment/import limits.
+            body_sha=sha(raw);chunk_size=2**20;count=(len(raw)+chunk_size-1)//chunk_size
+            for i in range(count):
+                s.append('GET_RESPONSE_CHUNK',dict(url=url,request_ms=request,receive_ms=receive,
+                    body_sha256=body_sha,body_bytes=len(raw),chunk_index=i,chunk_count=count,
+                    raw_base64=base64.b64encode(raw[i*chunk_size:(i+1)*chunk_size]).decode()),received_ms=receive)
             for event in body:
                 for m in event.get('markets') or []:
                     toks=m.get('clobTokenIds');toks=json.loads(toks) if isinstance(toks,str) else toks
                     if isinstance(toks,list) and len(toks)==2:meta[str(m.get('id'))]=[str(t) for t in toks]
             return body
-        except Exception:failed.append(True);raise
+        except Exception as error:
+            failed.append(True)
+            s.append('GET_ERROR',dict(url=url,request_ms=request,error_type=type(error).__name__,error=str(error)[:512]))
+            raise
     try:
         rows=selection.markets(start,fetch);need(not failed,'CATALOGUE_PARTIAL_SOURCE')
         need(len({str(m['id']) for m in rows})==len(rows),'CATALOGUE_DUPLICATE_ID')

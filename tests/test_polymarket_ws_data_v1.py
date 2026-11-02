@@ -145,3 +145,46 @@ def test_budget_terminal_state_survives_final_seal_and_remains_visible_after_arc
     raw=(tmp_path/'source'/seal['file']).read_bytes();dest=tmp_path/'archive'
     delivery.import_segment(dest,seal,raw);delivery.archive_ack(tmp_path/'source',[delivery.make_archive_ack(dest,seal)])
     assert 'SPORTS_COLLECTOR_STOPPED' in delivery.data_health(tmp_path/'source')['warnings']
+
+
+def test_large_actual_gamma_page_is_losslessly_chunked_under_segment_bounds(tmp_path,monkeypatch):
+    m=mod();blob=json.dumps([dict(markets=[dict(id='m1',clobTokenIds='["11","22"]')],padding='x'*(10*2**20))]).encode()
+    class Response:
+        status=200
+        def __enter__(self):return self
+        def __exit__(self,*a):pass
+        def read(self,n):return blob[:n]
+    class Selection:
+        def markets(self,now,fetch):
+            data=fetch('https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100&offset=0&order=volume&ascending=false')
+            assert len(data[0]['padding'])==10*2**20
+            return [dict(id='m1',token='11')]
+    monkeypatch.setattr(m.urllib.request,'build_opener',lambda *_:type('Opener',(),{'open':lambda *a,**k:Response()})())
+    result=m.update_catalogue(tmp_path,Selection());assert result['markets'][0]['tokens']==['11','22']
+    rows=[]
+    for p in (tmp_path/'catalog/sealed').glob('*.gz'):
+        plain=gzip.decompress(p.read_bytes());assert len(plain)<=8*2**20;rows.extend(json.loads(x) for x in plain.splitlines())
+    chunks=sorted((x['payload'] for x in rows if x['kind']=='GET_RESPONSE_CHUNK'),key=lambda x:x['chunk_index'])
+    import base64
+    assert b''.join(base64.b64decode(x['raw_base64']) for x in chunks)==blob
+    assert {x['body_sha256'] for x in chunks}=={hashlib.sha256(blob).hexdigest()}
+    assert {x['body_bytes'] for x in chunks}=={len(blob)} and len(chunks)==chunks[0]['chunk_count']
+
+
+def test_oversized_gamma_response_records_reason_without_publishing_catalogue(tmp_path,monkeypatch):
+    m=mod()
+    class Response:
+        status=200
+        def __enter__(self):return self
+        def __exit__(self,*a):pass
+        def read(self,n):return b'x'*n
+    class Selection:
+        def markets(self,now,fetch):
+            try:fetch('https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100&offset=0&order=volume&ascending=false')
+            except Exception:pass
+            return []
+    monkeypatch.setattr(m.urllib.request,'build_opener',lambda *_:type('Opener',(),{'open':lambda *a,**k:Response()})())
+    with pytest.raises(ValueError,match='CATALOGUE_PARTIAL_SOURCE'):m.update_catalogue(tmp_path,Selection())
+    assert not (tmp_path/'catalog/current.json').exists()
+    rows=[json.loads(x) for p in (tmp_path/'catalog/sealed').glob('*.gz') for x in gzip.decompress(p.read_bytes()).splitlines()]
+    assert any(x['kind']=='GET_ERROR' and 'GAMMA_BODY_BOUND' in x['payload']['error'] for x in rows)

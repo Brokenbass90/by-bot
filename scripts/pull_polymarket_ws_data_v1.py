@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Immutable DATA-only SSH delivery, never financial commands or old log writes."""
-import argparse,datetime as dt,fcntl,gzip,hashlib,io,json,os,re,shlex,shutil,subprocess,sys,time,uuid
+import argparse,base64,datetime as dt,fcntl,gzip,hashlib,io,json,os,re,shlex,shutil,subprocess,sys,time,uuid
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
@@ -68,6 +68,17 @@ def export_file(root,name,pin):
     name=checked_name(name);root=Path(root).resolve();seal=json.loads(read(root/(name+'.delivery.json'),16384));raw=read(root/name)
     need(seal['file']==name and seal['sha256']==pin,'EXPORT_PIN');validate_segment(seal,raw);return raw
 
+
+
+def export_batch(root,requests):
+    need(isinstance(requests,list) and 0<len(requests)<=16,'EXPORT_BATCH_COUNT')
+    out=[];total=0
+    for request in requests:
+        need(isinstance(request,dict) and set(request)=={'file','sha256'},'EXPORT_BATCH_REQUEST')
+        raw=export_file(root,request['file'],request['sha256']);total+=len(raw)
+        need(total<=8*2**20,'EXPORT_BATCH_BYTES')
+        out.append(dict(file=request['file'],sha256=request['sha256'],raw_base64=base64.b64encode(raw).decode()))
+    return out
 
 
 def make_archive_ack(destination,seal):
@@ -237,10 +248,13 @@ def run_mac_consumer(config_path,pin):
 
 def main(argv=None):
     p=argparse.ArgumentParser();p.add_argument('--pull',action='store_true');p.add_argument('--destination',type=Path);p.add_argument('--identity',type=Path);p.add_argument('--package-root');p.add_argument('--package-sha256')
-    p.add_argument('--hold-mac-selector',action='store_true');p.add_argument('--selector-config',type=Path);p.add_argument('--selector-config-sha256');p.add_argument('--archive-ack',action='store_true');p.add_argument('--data-health',action='store_true');p.add_argument('--export-list',action='store_true');p.add_argument('--export-file');p.add_argument('--export-sha256');a=p.parse_args(argv)
-    need(sum(bool(x) for x in (a.pull,a.hold_mac_selector,a.export_list,a.export_file,a.archive_ack,a.data_health))<=1,'EXCLUSIVE_DATA_MODE')
+    p.add_argument('--hold-mac-selector',action='store_true');p.add_argument('--selector-config',type=Path);p.add_argument('--selector-config-sha256');p.add_argument('--archive-ack',action='store_true');p.add_argument('--data-health',action='store_true');p.add_argument('--export-list',action='store_true');p.add_argument('--export-batch',action='store_true');p.add_argument('--export-file');p.add_argument('--export-sha256');a=p.parse_args(argv)
+    need(sum(bool(x) for x in (a.pull,a.hold_mac_selector,a.export_list,a.export_file,a.export_batch,a.archive_ack,a.data_health))<=1,'EXCLUSIVE_DATA_MODE')
     if a.hold_mac_selector:
         need(a.selector_config and a.selector_config_sha256 and not a.pull and not a.export_list and not a.export_file,'MAC_SELECTOR_MODE');run_mac_consumer(a.selector_config,a.selector_config_sha256);return 0
+    if a.export_batch:
+        body=sys.stdin.buffer.read(65537);need(len(body)<=65536,'BATCH_REQUEST_BOUND')
+        sys.stdout.buffer.write(encoded(export_batch(REMOTE,json.loads(body))));return 0
     if a.archive_ack:
         body=sys.stdin.buffer.read(1024*1024+1);need(len(body)<=1024*1024,'ACK_BODY_BOUND');acks=json.loads(body)
         need(all(x['destination']=='/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/poly_ws_vps_v1' for x in acks),'CANONICAL_ARCHIVE_DESTINATION')
@@ -257,20 +271,39 @@ def main(argv=None):
     new=existing=0;last=None;acks=[];evicted=freed=0
     a.destination.mkdir(parents=True,exist_ok=True,mode=0o700)
     archive_used=sum(p.stat().st_size for p in a.destination.rglob('*') if p.is_file())
+    # One bounded SSH/cgroup operation for up to sixteen segments, rather than
+    # a fresh SSH authentication and systemd service for every small file.
+    batches=[];batch=[];size=0
     for seal in seals:
-        name=checked_name(seal['file']);local=a.destination/name
-        # Recheck existing bytes/seals; conflicts are never overwritten.
-        if not local.exists():
-            need(shutil.disk_usage(a.destination).free>=10*2**30,'MAC_ARCHIVE_FREE_BELOW_10_GIB')
-            need(archive_used+seal['bytes']+4096<=20*2**30,'MAC_ARCHIVE_20_GIB_CAP')
-        raw=read(local) if local.exists() else remote(a.identity,a.package_root,a.package_sha256,['--export-file',name,'--export-sha256',seal['sha256']])
-        before=local.exists();receipt=import_segment(a.destination,seal,raw);existing+=int(before);new+=int(not before);last=max(last or 0,receipt['source_last_received_ms'])
-        if not before:archive_used+=len(raw)+4096
-        acks.append(make_archive_ack(a.destination,seal))
-        if len(acks)>=64:
-            result=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--archive-ack'],input_bytes=encoded(acks)));evicted+=result['evicted_files'];freed+=result['freed_bytes'];acks=[]
-    if acks:
-        result=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--archive-ack'],input_bytes=encoded(acks)));evicted+=result['evicted_files'];freed+=result['freed_bytes']
+        if batch and (len(batch)>=16 or size+seal['bytes']>8*2**20):batches.append(batch);batch=[];size=0
+        batch.append(seal);size+=seal['bytes']
+    if batch:batches.append(batch)
+    for batch in batches:
+        wanted=[]
+        for seal in batch:
+            name=checked_name(seal['file']);local=a.destination/name
+            if not local.exists():
+                need(shutil.disk_usage(a.destination).free>=10*2**30,'MAC_ARCHIVE_FREE_BELOW_10_GIB')
+                need(archive_used+seal['bytes']+4096<=20*2**30,'MAC_ARCHIVE_20_GIB_CAP')
+                wanted.append(dict(file=name,sha256=seal['sha256']))
+        fetched=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--export-batch'],input_bytes=encoded(wanted))) if wanted else []
+        need(isinstance(fetched,list) and len(fetched)==len(wanted),'EXPORT_BATCH_RESPONSE')
+        payloads={}
+        for expected,item in zip(wanted,fetched):
+            need(item['file']==expected['file'] and item['sha256']==expected['sha256'],'EXPORT_BATCH_IDENTITY')
+            payloads[item['file']]=base64.b64decode(item['raw_base64'],validate=True)
+        acks=[]
+        for seal in batch:
+            name=checked_name(seal['file']);local=a.destination/name;before=local.exists()
+            if not before:
+                need(shutil.disk_usage(a.destination).free>=10*2**30,'MAC_ARCHIVE_FREE_BELOW_10_GIB')
+                need(archive_used+seal['bytes']+4096<=20*2**30,'MAC_ARCHIVE_20_GIB_CAP')
+            raw=read(local) if before else payloads[name]
+            receipt=import_segment(a.destination,seal,raw);existing+=int(before);new+=int(not before);last=max(last or 0,receipt['source_last_received_ms'])
+            if not before:archive_used+=len(raw)+4096
+            acks.append(make_archive_ack(a.destination,seal))
+        if acks:
+            result=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--archive-ack'],input_bytes=encoded(acks)));evicted+=result['evicted_files'];freed+=result['freed_bytes']
     health=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--data-health']))
     if archive_used>=15*2**30:health['warnings'].append('MAC_ARCHIVE_75_PERCENT')
     if shutil.disk_usage(a.destination).free<15*2**30:health['warnings'].append('MAC_FREE_BELOW_15_GIB')

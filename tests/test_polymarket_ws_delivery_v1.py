@@ -183,3 +183,40 @@ def test_remote_export_verification_and_work_use_data_resource_slice(monkeypatch
     assert m.remote(Path('fictional-key'),'/opt/bybot-research/polymarket-ws-data-20261102/candidate-'+'a'*16,'b'*64,['--export-list'])==b'[]'
     command=calls[0][-1]
     for x in ('systemd-run','Slice=poly-ws-data.slice','MemoryMax=96M','CPUQuota=10%','DynamicUser=yes','ProtectHome=yes'):assert x in command
+
+
+def test_export_batch_verifies_each_segment_and_bounds_the_ssh_body(tmp_path):
+    import base64
+    from research_lab.polymarket_ws_data_v1 import SegmentStore
+    from scripts import pull_polymarket_ws_data_v1 as m
+    s=SegmentStore(tmp_path,'sports',min_free=0);s.append('RECV','one');a=s.seal();s.append('RECV','two');b=s.seal();s.close()
+    request=[dict(file=x['file'],sha256=x['sha256']) for x in (a,b)]
+    result=m.export_batch(tmp_path,request)
+    assert len(result)==2 and all(m.validate_segment(x,base64.b64decode(y['raw_base64'])) for x,y in zip((a,b),result))
+    with pytest.raises(ValueError):m.export_batch(tmp_path,request*9)
+    with pytest.raises(ValueError):m.export_batch(tmp_path,[dict(file=a['file'],sha256='0'*64)])
+
+
+def test_actual_pull_batches_new_files_and_rechecks_existing_before_eviction(tmp_path,monkeypatch,capsys):
+    from research_lab.polymarket_ws_data_v1 import SegmentStore,encoded
+    from scripts import pull_polymarket_ws_data_v1 as m
+    import shutil
+    original_usage=shutil.disk_usage(tmp_path)
+    monkeypatch.setattr(shutil,'disk_usage',lambda _:type(original_usage)(100*2**30,30*2**30,70*2**30))
+    source=tmp_path/'source';dest=tmp_path/'mac';s=SegmentStore(source,'sports',min_free=0);s.append('RECV','first');a=s.seal();s.append('RECV','second');b=s.seal();s.close()
+    m.import_segment(dest,a,(source/a['file']).read_bytes());before=(dest/a['file']).stat();calls=[]
+    def remote(identity,package,pin,args,*,input_bytes=None):
+        calls.append((args,input_bytes))
+        if args==['--export-list']:return encoded(m.export_listing(source))
+        if args==['--export-batch']:return encoded(m.export_batch(source,json.loads(input_bytes)))
+        if args==['--archive-ack']:return encoded(m.archive_ack(source,json.loads(input_bytes)))
+        if args==['--data-health']:return encoded(m.data_health(source))
+        raise AssertionError(args)
+    monkeypatch.setattr(m,'remote',remote)
+    assert m.main(['--pull','--identity','fictional-key','--destination',str(dest),'--package-root','fictional-package','--package-sha256','fixture'])==0
+    result=json.loads(capsys.readouterr().out)
+    assert result['new_segments']==1 and result['existing_segments_verified']==1 and result['archived_source_segments']==2
+    requests=[json.loads(raw) for args,raw in calls if args==['--export-batch']]
+    assert requests==[[dict(file=b['file'],sha256=b['sha256'])]]
+    after=(dest/a['file']).stat();assert (after.st_ino,after.st_mtime_ns)==(before.st_ino,before.st_mtime_ns)
+    assert not m.export_listing(source)
