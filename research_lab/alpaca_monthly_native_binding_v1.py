@@ -5,10 +5,12 @@ provided here. An activated caller must still hold the original account lock,
 pass the native LIVE binding/approval checks and supply its explicit client.
 The disabled source CLI cannot call the applying methods.
 """
+from contextlib import contextmanager
 from datetime import datetime,timezone
 from functools import lru_cache
 import json
 import hashlib
+import fcntl
 import os
 import sqlite3
 import time
@@ -402,7 +404,62 @@ class MonthlyNativeBinding:
     def _require_exit_accounting(self):
         self._accounting_net()
 
+    @contextmanager
+    def _cost_capture_lock(self,fd):
+        previous=getattr(self,'_cost_account_fd',None)
+        self._cost_account_fd=fd
+        try:yield
+        finally:self._cost_account_fd=previous
+
+    @contextmanager
+    def cost_snapshot_guard(self):
+        fd=getattr(self,'_cost_account_fd',None)
+        if fd is None:
+            with account_lock(dict(lock_path=str(self.lock_path))):yield
+            return
+        actual=os.fstat(fd);expected=self.lock_path.stat()
+        if (actual.st_dev,actual.st_ino)!=(expected.st_dev,expected.st_ino):
+            raise ValueError('MONTHLY_COST_ACCOUNT_LOCK_CHANGED')
+        # Reuse the original open description. A competing writer still fails;
+        # this guard neither unlocks nor closes its caller's account descriptor.
+        fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        yield
+
+    @contextmanager
+    def admission_cost_refresh(self,callback):
+        """Scoped existing cost capture, never an order retry or new authority."""
+        if not callable(callback):raise ValueError('MONTHLY_ADMISSION_REFRESH_CALLBACK')
+        previous=getattr(self,'_admission_cost_refresher',None)
+        self._admission_cost_refresher=callback
+        try:yield
+        finally:self._admission_cost_refresher=previous
+
     def _accounting_for_admission(self,*,account,now_ms):
+        started=time.monotonic()
+        try:return self._accounting_for_admission_once(account=account,now_ms=now_ms)
+        except ValueError as exc:
+            refresh=getattr(self,'_admission_cost_refresher',None)
+            if (str(exc)!='MONTHLY_PENDING_FEE_STALE_SOURCE' or not callable(refresh)
+                or getattr(self,'_admission_refreshing',False)):raise
+        # Recollect only evidence, using the existing finality callback. Its
+        # inner freshness check may re-enter here; it must not recurse/retry.
+        self._admission_refreshing=True
+        try:
+            refresh()
+            fresh_account=self.client.get_account()
+            # Keep the earlier full-admission account and immutable cash anchor
+            # coherent with the refreshed proof. Any money/status change must
+            # fail closed, not silently replace only the fee-classifier input.
+            fields=('id','currency','cash','equity','non_marginable_buying_power',
+                'accrued_fees','pending_reg_taf_fees','trading_blocked','account_blocked')
+            if any((key in account)!=(key in fresh_account)
+                or account.get(key)!=fresh_account.get(key) for key in fields):
+                raise ValueError('MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH')
+            effective=now_ms+int((time.monotonic()-started)*1000)
+            return self._accounting_for_admission_once(account=account,now_ms=effective)
+        finally:self._admission_refreshing=False
+
+    def _accounting_for_admission_once(self,*,account,now_ms):
         liabilities=[]
         if self.pending_fee_admission:
             try:liabilities=[dec(account[k]) for k in ('accrued_fees','pending_reg_taf_fees')]
@@ -468,7 +525,7 @@ class MonthlyNativeBinding:
         p=exited['retired_position'];now=instant(now_ms)
         identity=digest(dict(schema=CONTRACT['schema'],entry_id=entry_id))
         source=lifecycle.safe_path(str(cost_source_path),exists=True)
-        with account_lock(dict(lock_path=str(self.lock_path))):
+        with self.cost_snapshot_guard():
             execution_identity_v1(p['raw_entry'],self.client.get_order(entry_id))
             orders=[self.client.get_order(o['id']) for o in exited['orders']]
             for old,current in zip(exited['orders'],orders):execution_identity_v1(old,current)
@@ -541,7 +598,7 @@ class MonthlyNativeBinding:
         if not apply:return result('MONTHLY_NATIVE_ENTRY_REHEARSAL_ORDERS_OFF',ticket_sha256=ticket['ticket_sha256'])
         s=self._selection(ticket['selection_id']);gate=ticket['entry_gate'];now=instant(now_ms)
         if ticket['client_order_id']!=entry_cid(s,ticket['symbol']):raise ValueError('MONTHLY_TICKET_OWNER_CONFLICT')
-        with account_lock(dict(lock_path=str(self.lock_path))):
+        with account_lock(dict(lock_path=str(self.lock_path))) as fd,self._cost_capture_lock(fd):
             self._native_authority()
             self._state()
             entries=json.loads(self.reentry.read_text()).get('entry_intents',{}) if self.reentry.exists() else {}

@@ -5,7 +5,7 @@ StartLimitIntervalSec=0
 StartLimitBurst=3
 [Service]
 Type=oneshot
-TimeoutStartSec=180
+TimeoutStartSec=600
 User=bybot-polydata
 DynamicUser=yes
 StateDirectory=bybot-polydata-20261102

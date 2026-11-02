@@ -277,7 +277,7 @@ def account_lock(binding):
     fd=os.open(p,os.O_CREAT|os.O_RDWR|os.O_NOFOLLOW,0o600)
     try:
         if not native._acquire_account_writer_lock(fd,0): raise BlockingIOError('ACCOUNT_WRITER_BUSY')
-        yield
+        yield fd  # optional descriptor reuse; ownership/lifetime remain here
     finally: os.close(fd)
 
 

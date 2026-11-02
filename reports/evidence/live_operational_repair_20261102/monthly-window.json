@@ -1,0 +1,92 @@
+{
+  "actual_recorded_at": "2026-11-02T18:18:20.468924+00:00",
+  "automation_delete": "monthly-2 only; native timer preserved",
+  "broker_mode": "LIVE",
+  "broker_observed_at": "2026-11-02T17:39:59.079632+00:00",
+  "heartbeat_late": true,
+  "heartbeat_trigger_utc": "2026-11-02T16:40:13.281Z",
+  "history_coverage": "Existing reader recent-order bound; not full account-history or terminal-cost finality",
+  "identity_proof": {
+    "account_matches_manager": true,
+    "account_matches_scope": true,
+    "live_endpoint": "https://api.alpaca.markets"
+  },
+  "open_order_count": 0,
+  "opening_attempts": [
+    {
+      "entry_status": "BLOCKED",
+      "issues": [
+        {
+          "code": "ValueError",
+          "phase": "OPENING",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        }
+      ],
+      "native_stop_order_ids": [],
+      "status": "MONTHLY_STANDING_DISPATCH_TICK",
+      "trades_notified": []
+    },
+    {
+      "entry_status": "BLOCKED",
+      "issues": [
+        {
+          "code": "ValueError",
+          "phase": "OPENING",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        }
+      ],
+      "native_stop_order_ids": [],
+      "status": "MONTHLY_STANDING_DISPATCH_TICK",
+      "trades_notified": []
+    },
+    {
+      "entry_status": "BLOCKED",
+      "issues": [
+        {
+          "code": "ValueError",
+          "phase": "OPENING",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        }
+      ],
+      "native_stop_order_ids": [],
+      "status": "MONTHLY_STANDING_DISPATCH_TICK",
+      "trades_notified": []
+    },
+    {
+      "entry_status": "BLOCKED",
+      "issues": [
+        {
+          "code": "ValueError",
+          "phase": "OPENING",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        }
+      ],
+      "native_stop_order_ids": [],
+      "status": "MONTHLY_STANDING_DISPATCH_TICK",
+      "trades_notified": []
+    },
+    {
+      "entry_status": "BLOCKED",
+      "issues": [
+        {
+          "code": "ValueError",
+          "phase": "OPENING",
+          "reason": "MONTHLY_PENDING_FEE_STALE_SOURCE"
+        }
+      ],
+      "native_stop_order_ids": [],
+      "status": "MONTHLY_STANDING_DISPATCH_TICK",
+      "trades_notified": []
+    }
+  ],
+  "position_count": 0,
+  "private_broker_sha256": "a8cdc91da8b9de236d7be5bb52f4b3f44bfaf0dc8aba85fbb1163219cc0becfa",
+  "recent_order_count": 0,
+  "schema": "MONTHLY_WINDOW_RECONCILIATION_20261102_V1",
+  "window_replayed": false,
+  "window_status": "NO_ADMISSION",
+  "window_utc": [
+    "2026-11-02T14:30:00Z",
+    "2026-11-02T14:35:00Z"
+  ]
+}

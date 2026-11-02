@@ -1,0 +1,19 @@
+{
+  "files": {
+    "deploy/systemd/poly-ws-data-catalog.service": "e3c71dc6f8d27bca3464cd9271eb8e52a4753e51279f4961f853155057401cbd",
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "1ca374ab872a389ff23fe5af8172c8186290f35cbef5ccb726ffc4cdb14a6734",
+    "research_lab/alpaca_monthly_cost_source_v1.py": "841dfd4670ecb51b60df62f02c7766230d1adf36493ab77adbd6f99c8816ee6c",
+    "research_lab/alpaca_monthly_cycle_v1.py": "24fdabef248ed0a0b7c8d548b0ceb8c16de42d4cf9707c937333524a9f0e703c",
+    "research_lab/alpaca_monthly_native_binding_v1.py": "a40d521f5d345ef2a548491b8abf885414632104acb9c59fe3b5931128ca5a01",
+    "research_lab/polymarket_ws_data_v1.py": "aae870dfdd5a9aef7216e090f34ec9e5b193cd487123516b05b016efc9d321e9",
+    "scripts/pull_polymarket_ws_data_v1.py": "52dc13d490d22f411e9b88881a6e1c50c11dd96afcafdd4d475e74a707c96c70",
+    "tests/test_alpaca_monthly_admission_refresh_v1.py": "e9ea6d297bc16d06eee967c09307a45015de5d9886036c190cea2a55a01b331f",
+    "tests/test_polymarket_ws_data_v1.py": "3bd5d47d1744d6175f3fbdec822789b43bfaedacdfd6f5b0a3ea0acf36ec3b03",
+    "tests/test_polymarket_ws_delivery_v1.py": "af62fda77f9f5590be2f9478e6efd4cc6c9bc7c3445601f6c4259396cefe8081",
+    "tests/test_polymarket_ws_units_v1.py": "dd30748ebb3f6d1e4b12d0c7dd8fee7f0da1032eea6e90dc7053eef12b95106c"
+  },
+  "financial_commands_sent": 0,
+  "monthly_deployed": false,
+  "polymarket_data_only_deployed": true,
+  "schema": "OPERATIONAL_REPAIR_SOURCE_PINS_V1"
+}

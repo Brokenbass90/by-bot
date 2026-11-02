@@ -1,0 +1,40 @@
+2026-11-02T17:50:17.109844+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Failed to start poly-ws-data-catalog.service.
+2026-11-02T17:50:17.110125+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Consumed 17.923s CPU time, 88.7M memory peak, 852.0K memory swap peak.
+2026-11-02T17:51:17.121683+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Scheduled restart job, restart counter is at 7.
+2026-11-02T17:51:17.134396+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Starting poly-ws-data-catalog.service...
+2026-11-02T17:54:17.370607+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: start operation timed out. Terminating.
+2026-11-02T17:54:17.593751+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Main process exited, code=killed, status=15/TERM
+2026-11-02T17:54:17.593886+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Failed with result 'timeout'.
+2026-11-02T17:54:17.594309+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Failed to start poly-ws-data-catalog.service.
+2026-11-02T17:54:17.594567+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Consumed 17.650s CPU time.
+2026-11-02T17:55:17.621910+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Scheduled restart job, restart counter is at 8.
+2026-11-02T17:55:17.636417+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Starting poly-ws-data-catalog.service...
+2026-11-02T17:57:55.302476+00:00 ubuntu-s-1vcpu-1gb-fra1-01 python3[3806776]: {"status": "DATA_BUDGET_STOP", "role": "catalog"}
+2026-11-02T17:57:56.962033+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Main process exited, code=exited, status=78/CONFIG
+2026-11-02T17:57:56.962313+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Failed with result 'exit-code'.
+2026-11-02T17:57:56.963375+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Failed to start poly-ws-data-catalog.service.
+2026-11-02T17:57:56.964404+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Consumed 14.613s CPU time.
+2026-11-02T17:58:57.099728+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Scheduled restart job, restart counter is at 9.
+2026-11-02T17:58:57.107827+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Starting poly-ws-data-catalog.service...
+2026-11-02T17:59:05.758893+00:00 ubuntu-s-1vcpu-1gb-fra1-01 python3[3807262]: {"status": "DATA_BUDGET_STOP", "role": "catalog"}
+2026-11-02T17:59:06.153005+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Main process exited, code=exited, status=78/CONFIG
+2026-11-02T17:59:06.153650+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Failed with result 'exit-code'.
+2026-11-02T17:59:06.154624+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Failed to start poly-ws-data-catalog.service.
+2026-11-02T18:00:06.374295+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Scheduled restart job, restart counter is at 10.
+2026-11-02T18:00:06.394835+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Starting poly-ws-data-catalog.service...
+2026-11-02T18:00:15.009535+00:00 ubuntu-s-1vcpu-1gb-fra1-01 python3[3807436]: {"status": "DATA_BUDGET_STOP", "role": "catalog"}
+2026-11-02T18:00:15.414967+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Main process exited, code=exited, status=78/CONFIG
+2026-11-02T18:00:15.415351+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Failed with result 'exit-code'.
+2026-11-02T18:00:15.416085+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Failed to start poly-ws-data-catalog.service.
+2026-11-02T18:01:15.425679+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Scheduled restart job, restart counter is at 11.
+2026-11-02T18:01:15.437710+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Starting poly-ws-data-catalog.service...
+2026-11-02T18:01:24.606201+00:00 ubuntu-s-1vcpu-1gb-fra1-01 python3[3807696]: {"status": "DATA_BUDGET_STOP", "role": "catalog"}
+2026-11-02T18:01:24.911375+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Main process exited, code=exited, status=78/CONFIG
+2026-11-02T18:01:24.911666+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Failed with result 'exit-code'.
+2026-11-02T18:01:24.913544+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Failed to start poly-ws-data-catalog.service.
+2026-11-02T18:02:24.969819+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Scheduled restart job, restart counter is at 12.
+2026-11-02T18:02:24.983668+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Starting poly-ws-data-catalog.service...
+2026-11-02T18:02:33.600225+00:00 ubuntu-s-1vcpu-1gb-fra1-01 python3[3808018]: {"status": "DATA_BUDGET_STOP", "role": "catalog"}
+2026-11-02T18:02:33.997102+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Main process exited, code=exited, status=78/CONFIG
+2026-11-02T18:02:34.001565+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: poly-ws-data-catalog.service: Failed with result 'exit-code'.
+2026-11-02T18:02:34.002203+00:00 ubuntu-s-1vcpu-1gb-fra1-01 systemd[1]: Failed to start poly-ws-data-catalog.service.

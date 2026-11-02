@@ -1,0 +1,14 @@
+{
+  "actual_observed_ms": 1793643096609,
+  "config_sha256": "13f2c66763d1e0deddb112ddd0785dcd2c971d1479a97180dc28c0e18ad8397f",
+  "financial_changes": 0,
+  "lock_bytes_unchanged": true,
+  "lock_inodes": [
+    510704870,
+    510714693
+  ],
+  "package": "/opt/bybot-research/polymarket-ws-data-20261102/candidate-998a72ddb80e0337",
+  "package_sha256": "998a72ddb80e0337b1f7b0292c092f463e333815eac7c236d98e118f092c6aa1",
+  "schema": "POLY_MAC_CONSUMER_BACKLOG_SWITCH_V1",
+  "ws_restart_requested": false
+}

@@ -197,7 +197,8 @@ def test_export_batch_verifies_each_segment_and_bounds_the_ssh_body(tmp_path):
     with pytest.raises(ValueError):m.export_batch(tmp_path,[dict(file=a['file'],sha256='0'*64)])
 
 
-def test_actual_pull_batches_new_files_and_rechecks_existing_before_eviction(tmp_path,monkeypatch,capsys):
+@pytest.mark.parametrize('late_arrival',[False,True])
+def test_actual_pull_batches_new_files_and_rechecks_existing_before_eviction(tmp_path,monkeypatch,capsys,late_arrival):
     from research_lab.polymarket_ws_data_v1 import SegmentStore,encoded
     from scripts import pull_polymarket_ws_data_v1 as m
     import shutil
@@ -210,7 +211,10 @@ def test_actual_pull_batches_new_files_and_rechecks_existing_before_eviction(tmp
         if args==['--export-list']:return encoded(m.export_listing(source))
         if args==['--export-batch']:return encoded(m.export_batch(source,json.loads(input_bytes)))
         if args==['--archive-ack']:return encoded(m.archive_ack(source,json.loads(input_bytes)))
-        if args==['--data-health']:return encoded(m.data_health(source))
+        if args==['--data-health']:
+            if late_arrival:
+                fresh=SegmentStore(source,'catalog',min_free=0);fresh.append('RECV','arrived while importing');fresh.seal();fresh.close()
+            return encoded(m.data_health(source))
         raise AssertionError(args)
     monkeypatch.setattr(m,'remote',remote)
     assert m.main(['--pull','--identity','fictional-key','--destination',str(dest),'--package-root','fictional-package','--package-sha256','fixture'])==0
@@ -219,4 +223,36 @@ def test_actual_pull_batches_new_files_and_rechecks_existing_before_eviction(tmp
     requests=[json.loads(raw) for args,raw in calls if args==['--export-batch']]
     assert requests==[[dict(file=b['file'],sha256=b['sha256'])]]
     after=(dest/a['file']).stat();assert (after.st_ino,after.st_mtime_ns)==(before.st_ino,before.st_mtime_ns)
-    assert not m.export_listing(source)
+    assert len(m.export_listing(source))==int(late_arrival)
+    assert result['remaining_segments']==int(late_arrival)
+
+
+@pytest.mark.parametrize('slow_preflight',[False,True])
+def test_backlog_pull_bounds_one_round_and_drains_oldest_roles_without_timeout(tmp_path,monkeypatch,capsys,slow_preflight):
+    from research_lab.polymarket_ws_data_v1 import SegmentStore,encoded
+    from scripts import pull_polymarket_ws_data_v1 as m
+    import shutil
+    usage=shutil.disk_usage(tmp_path);monkeypatch.setattr(shutil,'disk_usage',lambda _:type(usage)(100*2**30,30*2**30,70*2**30))
+    source=tmp_path/'source';dest=tmp_path/'mac'
+    for role in ('sports','clob','catalog'):
+        s=SegmentStore(source,role,min_free=0,clock=lambda:NOW+(0 if role=='catalog' else 1000))
+        for k in range(48):s.append('RECV',str(k));s.seal()
+        s.close()
+    elapsed=[0.];calls=[]
+    monkeypatch.setattr(m.time,'monotonic',lambda:elapsed[0])
+    def remote(identity,package,pin,args,*,input_bytes=None):
+        elapsed[0]+=(110 if not calls else 115) if slow_preflight else 20;calls.append((args,input_bytes))
+        if args==['--export-list']:return encoded(m.export_listing(source))
+        if args==['--export-batch']:return encoded(m.export_batch(source,json.loads(input_bytes)))
+        if args==['--archive-ack']:return encoded(m.archive_ack(source,json.loads(input_bytes)))
+        if args==['--data-health']:return encoded(m.data_health(source))
+        raise AssertionError(args)
+    monkeypatch.setattr(m,'remote',remote)
+    m.main(['--pull','--identity','fictional-key','--destination',str(dest),'--package-root','fictional-package','--package-sha256','fixture'])
+    result=json.loads(capsys.readouterr().out)
+    assert result['remaining_segments']>0 and result['archived_source_segments']>0
+    assert elapsed[0]<(720 if slow_preflight else 240), 'A backlog round must finish before the selector kills it'
+    assert len(m.export_listing(source))==result['remaining_segments']
+    first=json.loads(next(raw for args,raw in calls if args==['--export-batch']))
+    # No permanent sports/clob-before-catalogue ordering with an old backlog.
+    assert first[0]['file'].startswith('catalog/')

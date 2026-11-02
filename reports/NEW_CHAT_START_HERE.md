@@ -1,3 +1,43 @@
+# Start here — 2 November 2026, operational repair
+
+Read [current repair](LIVE_OPERATIONAL_REPAIR_2026_11_02.md), checkpoint TOP and
+ROADMAP_SELF_IMPROVING.md. Branch codex/recovery-20260824. No broad re-audit.
+
+- Monthly actual outcome is NO_ADMISSION, all five OPENING attempts stale-fee
+  source;17:39:59UTC independent LIVE GET matched scope+manager, positions/orders0.
+  The apparent Telegram purchase was not a BUY. No window replay/CASH claim.
+- Minimal scoped fee refresh, held writer FD and account-change rejection are
+  source-pinned in UNSELECTED candidate4bb6b9e8cefc8a10-ta1a4f4e1;281 exact local / same281 VPS
+  PASS; acceptance artifacts in current report. Not installed and not
+  READY_FOR_OWNER_GO. Original v6 terms400/280/40 and native timer remain.
+- PUMP timing cause: serial synchronous receive/feed takes56–61s for134 symbols;
+  queue already existed before Polymarket.13/15/18UTC timely;14/16/17 had6–7late.
+  No source/gate/risk/financialowner change. Pinned18:13:18UTC readback healthy/flat,
+  same scope2de0b6ec/configf715e676/PID3669955/lock818853, noentry, expiry8Nov19:26UTC.
+  This does not prove sustained H1 reliability. Next repair is this exact DATA
+  throughput path, preserving raw-before-use durability and60s, not a newengine.
+- Polymarket actual delivery timeout/catalogue retry incident fixed DATA-only.
+  Delivery candidate998a72ddb80e0337; catalogue4c00ff6a26760e7a; WS keepb79fcd827bea31cc.
+  Catalogue600s/64MiB headroom, same10%CPU/128MiBmemory/diskcap. NativeMac PID28782
+  holds original DATA locks510704870/510714693; oldconsumer93194 replaced once.
+  BothWS3763433/3759160 neverrestarted.48local/same48VPSPASS. New full150catalogue
+  completed18:19:52UTC (258.421s);18:23 bothWSrunning, newactualtwo-outcome books.
+  Backlog remains catch-up, gapsUNKNOWN; no unacknowledged deletion/partialrepair.
+- Current Claude adapter does read all valid frames on the fixed snapshot:
+  Sports10133/CLOB32379,98gameIDs != opportunities. Remaining causality/depth/
+  both-side/seal/runtime-version issues in reader contract. Do not edit Claude's
+  dirty checkout or run judges. Origin research/fabrika-v1 verified30951f9;
+  localfiles/quotedcommitcommand are not proof of publication or runtime reload.
+- monthly-2 one-shot deleted after durable late reconciliation; nativeMonthly,
+  other tasks and NET preserved. ForeignNETclosure/allowlist remain unstaged.
+- Preserve accepted TINY-2 cost/source OFF; no serial GO. Brain/Factory/LIQ/gold
+  roadmap stays, but operational money/source reliability preempts new modules.
+
+Earlier acceptance and exact legacy pointers follow as history. Never repeat
+spent owner/physical handoff/DATA installers from them.
+
+---
+
 # Start here — 2 November 2026: Polymarket DATA migrated and archived
 
 Repo /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824.

@@ -1,0 +1,33 @@
+{
+  "actual_runtime": {
+    "effort": "high",
+    "model": "gpt-6-astra",
+    "session_id": "01a19d6b-1695-7531-9c77-f860c6944778",
+    "verified_from": "session_meta and turn_context"
+  },
+  "catalogue_headroom_followup": "No confirmed problem; >64MiB unarchivable data would remain blocker",
+  "data_findings": [
+    {
+      "finding": "Initial-list remainder omits new seals",
+      "fix": "Use final health backlog too; late-arrival fixture",
+      "priority": "P2"
+    },
+    {
+      "finding": "Initial listing/scan excluded from timing budget",
+      "fix": "Clock starts before preflight and parent720s; slow-preflight fixture",
+      "priority": "P2"
+    }
+  ],
+  "final_fix_review": "Primary checked final changes; no second financial signoff",
+  "monthly_findings": [
+    {
+      "finding": "Refreshed fees could use new account while cash anchor/caps kept old account",
+      "fix": "Fail closed on identity/financial/status changes; refreshed proof validated against original account",
+      "fixture_rejection": "cash/status before reservation or POST",
+      "priority": "P1",
+      "red_cases": 8
+    }
+  ],
+  "no_deployment_authority_from_review": true,
+  "schema": "BOUNDED_REVIEW_RECEIPT_20261102_V1"
+}

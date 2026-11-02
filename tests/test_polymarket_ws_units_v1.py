@@ -14,3 +14,9 @@ def test_public_data_units_have_no_financial_privileges_or_unbounded_resources(r
 def test_slice_budget_covers_all_research_children():
     raw=(ROOT/'deploy/systemd/poly-ws-data.slice').read_text()
     assert 'CPUQuota=30%' in raw and 'MemoryMax=192M' in raw and 'TasksMax=48' in raw
+
+
+def test_catalogue_timeout_allows_cpu_throttled_capture_without_retry_storm():
+    raw=(ROOT/'deploy/systemd/poly-ws-data-catalog.service').read_text()
+    assert 'TimeoutStartSec=600' in raw
+    assert 'CPUQuota=10%' in raw and 'MemoryMax=128M' in raw

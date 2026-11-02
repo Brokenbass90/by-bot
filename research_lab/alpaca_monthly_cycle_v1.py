@@ -4,7 +4,7 @@ The installed CLI invokes only source and preview. Applying methods require an
 explicit native client and its existing native/Monthly owner checks; tests pass
 a broker whose HTTP implementation never leaves memory.
 """
-from contextlib import contextmanager
+from contextlib import contextmanager,nullcontext
 import fcntl
 import json
 import os
@@ -250,8 +250,11 @@ class MonthlyManager:
                                 if stamp is None:raise ValueError('CYCLE_QUOTE_CLOCK')
                                 q[pick['symbol']]=dict(ask=float(positive(actual['ap'])),
                                     quote_ts=int(stamp.timestamp()*1000),received_ms=clock(),source='ALPACA_IEX_LATEST_QUOTE')
-                        return self.opening(native,load_history(bundle['history']),selection['selection_id'],
-                            quotes=q,now_ms=clock(),apply=True,before_entry=lambda:finality(guarded=True))
+                        refresh=(native.admission_cost_refresh(lambda:finality(guarded=True))
+                            if native.pending_fee_admission and callable(cost_sources) else nullcontext())
+                        with refresh:
+                            return self.opening(native,load_history(bundle['history']),selection['selection_id'],
+                                quotes=q,now_ms=clock(),apply=True,before_entry=lambda:finality(guarded=True))
                     out['opening']=attempt('OPENING',opening)
                     out['entry_status']='OPENING_PROCESSED' if out['opening'] else 'BLOCKED'
                 else:out['entry_status']='OUTSIDE_MONTHLY_WINDOW'

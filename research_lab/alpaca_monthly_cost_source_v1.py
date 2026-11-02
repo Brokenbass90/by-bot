@@ -486,7 +486,8 @@ def produce_cost_sources(native, *, source_path, protocol_path, calendar_path, a
     source = read_json(inputs['source']['path'])
     if (source['account_id'] != native.account or type(now_ms) is not int
         or not source['observed_ms'] <= now_ms): raise ValueError('MONTHLY_COST_SOURCE_ACCOUNT_OR_TIME')
-    with account_lock(dict(lock_path=str(native.lock_path))):
+    guard=getattr(native,'cost_snapshot_guard',None)
+    with (guard() if callable(guard) else account_lock(dict(lock_path=str(native.lock_path)))):
         positions = deepcopy(native.book.rows('positions')); exits = deepcopy(native.book.rows('exits'))
         if not exits and legacy_transition is None: return {}
         for p in positions + [e['retired_position'] for e in exits]:

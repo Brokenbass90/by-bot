@@ -234,14 +234,15 @@ def run_mac_consumer(config_path,pin):
         while True:
             try:
                 args=['--pull','--identity',c['identity'],'--destination',c['destination'],'--package-root',c['package_root'],'--package-sha256',c['package_sha256']]
-                child=subprocess.run([sys.executable,'-B',str(Path(__file__)),*args],capture_output=True,text=True,timeout=240)
+                child=subprocess.run([sys.executable,'-B',str(Path(__file__)),*args],capture_output=True,text=True,timeout=720)
                 result.update(last_pull_ms=clock(),last_pull_exit=child.returncode,last_pull=json.loads(child.stdout) if child.returncode==0 else None)
             except Exception as exc:result.update(last_pull_ms=clock(),last_pull_exit=-1,last_pull=None,error_type=type(exc).__name__)
             warnings=result.get('last_pull',{}).get('data_health',{}).get('warnings',[]) if result.get('last_pull_exit')==0 and result.get('last_pull') else ['DATA_DELIVERY_FAILED']
             result['warnings']=warnings;result['observed_ms']=clock();replace(status,result)
             try:notify_storage(warnings,status)
             except (OSError,ValueError,subprocess.TimeoutExpired):pass
-            time.sleep(300)
+            pending=(result.get('last_pull') or {}).get('remaining_segments',0)
+            time.sleep(2 if result.get('last_pull_exit')==0 and pending else 300)
     finally:
         for fd in fds:os.close(fd)
 
@@ -267,18 +268,25 @@ def main(argv=None):
         return 0
     if not a.pull:print(json.dumps(dict(status='DATA_ONLY_NO_REQUESTS')));return 0
     need(a.destination and a.identity and a.package_root and a.package_sha256,'PULL_SCOPE')
+    round_started=time.monotonic()
     seals=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--export-list']));need(isinstance(seals,list) and len(seals)<=30000,'PULL_LIST_BOUND')
     new=existing=0;last=None;acks=[];evicted=freed=0
     a.destination.mkdir(parents=True,exist_ok=True,mode=0o700)
     archive_used=sum(p.stat().st_size for p in a.destination.rglob('*') if p.is_file())
     # One bounded SSH/cgroup operation for up to sixteen segments, rather than
     # a fresh SSH authentication and systemd service for every small file.
+    # Oldest-first across roles: a catalogue backlog must not starve behind
+    # newly produced sports/CLOB segments. Bound each catch-up round; its
+    # durable ACKs survive interruption and the selector resumes immediately.
+    seals.sort(key=lambda x:(x['first_received_ms'],x['file']))
+    processed=0
     batches=[];batch=[];size=0
     for seal in seals:
         if batch and (len(batch)>=16 or size+seal['bytes']>8*2**20):batches.append(batch);batch=[];size=0
         batch.append(seal);size+=seal['bytes']
     if batch:batches.append(batch)
     for batch in batches:
+        if processed and time.monotonic()-round_started>=120:break
         wanted=[]
         for seal in batch:
             name=checked_name(seal['file']);local=a.destination/name
@@ -304,9 +312,11 @@ def main(argv=None):
             acks.append(make_archive_ack(a.destination,seal))
         if acks:
             result=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--archive-ack'],input_bytes=encoded(acks)));evicted+=result['evicted_files'];freed+=result['freed_bytes']
+        processed+=len(batch)
     health=json.loads(remote(a.identity,a.package_root,a.package_sha256,['--data-health']))
+    remaining=max(len(seals)-processed,sum(x['sealed_backlog'] for x in health['roles'].values()))
     if archive_used>=15*2**30:health['warnings'].append('MAC_ARCHIVE_75_PERCENT')
     if shutil.disk_usage(a.destination).free<15*2**30:health['warnings'].append('MAC_FREE_BELOW_15_GIB')
-    print(json.dumps(dict(status='DATA_ONLY_DELIVERED',new_segments=new,existing_segments_verified=existing,last_source_received_ms=last,actual_observed_ms=clock(),archived_source_segments=evicted,freed_source_bytes=freed,data_health=health,orders_allowed=False)));return 0
+    print(json.dumps(dict(status='DATA_ONLY_DELIVERED',new_segments=new,existing_segments_verified=existing,remaining_segments=remaining,last_source_received_ms=last,actual_observed_ms=clock(),archived_source_segments=evicted,freed_source_bytes=freed,data_health=health,orders_allowed=False)));return 0
 
 if __name__=='__main__':raise SystemExit(main())

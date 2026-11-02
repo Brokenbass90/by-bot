@@ -199,6 +199,10 @@ def update_catalogue(root,selection):
             s.append('GET_ERROR',dict(url=url,request_ms=request,error_type=type(error).__name__,error=str(error)[:512]))
             raise
     try:
+        # A measured catalogue capture uses ~23 MiB plus transient raw files.
+        # Do not refill a nearly full cache with another incomplete retry while
+        # the verified Mac archiver is draining it. Leave all old bytes intact.
+        s._budget(64*2**20)
         rows=selection.markets(start,fetch);need(not failed,'CATALOGUE_PARTIAL_SOURCE')
         need(len({str(m['id']) for m in rows})==len(rows),'CATALOGUE_DUPLICATE_ID')
         for m in rows:m['tokens']=meta[str(m['id'])]

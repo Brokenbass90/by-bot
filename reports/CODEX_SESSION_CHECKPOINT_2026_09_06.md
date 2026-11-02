@@ -1,5 +1,39 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT2Nov18:23UTC — actual Monthly NO_ADMISSION; PUMP serial queue identified; Polymarket delivery repaired
+
+Read LIVE_OPERATIONAL_REPAIR_2026_11_02.md and current NEW_CHAT_START_HERE.md.
+Monthly five actual14:30–14:34UTC OPENING attempts stale-fee BLOCKED; independent
+LIVE GET17:39:59UTC identity matches scope+manager,positions0/openorders0/recent0.
+Not BUY/CASH/full-history/finality. monthly-2 late one-shot reconciled/deleted;
+native Monthly unchanged, no window replay/date carry/GO. New scoped refresh/
+held-FD/account-change rejection LOCAL+INERT candidate4bb6b9e8cefc8a10-ta1a4f4e1;
+53source/19tests/40imports/281exactlocal/same281VPSPASS, nofallback/network/realbroker.
+No fixture PASS implies liveOPENING or READY_FOR_GO. One Astra/high review found
+and fixed stale-account sizing regression; exact source/TTL/risk preserved.
+PUMP actual H1:13beforePoly58.368s,14late7,15PASS,16late6,17late7,18PASS57.696s,
+all134complete/3unavailable/0raw. Synchronous receive/feed consumes56–61s across134;
+server timestamps separate notnetworkarrivalproof. Catalogueperiodic:20/:50 did
+not overlap14/16bursts; backgroundcontributionnotquantified. No shutdown/60schange.
+Pinned18:13:18readback LIVE_ARMED_HEALTHY/flat/noentry/sameowner3669955/lock818853;
+not multi-hour timelinessPASS. Next existingDATAthroughputrepair, no newengine.
+Polymarket Mac240s timeout/catalogue180s timeout+quota retry incident diagnosed.
+Selected delivery998a72ddb80e0337; catalogueheadroom4c00ff6a26760e7a; WSb79fcd unchanged.
+Boundedoldestcatchup/actualremaining/720sparent/2scontinuation; catalogue600s plus
+64MiB headroom, same10%CPU/128MiB memory/disk128MiB. ACK/hash-only cachecleanup.
+48exactlocal/same48VPS networkdeniedPASS. Actualcatalogue18:19:52UTC completed
+258.421s afterstart,150markets; CLOB auto-recovered.18:23UTC bothWSsamePIDsrunning,
+new8books/309pricechanges/oneboth-outcome pair, not opportunities. Backlogcatchup
+stillrunning; sourcegapsUNKNOWN, notcontinuoushealthyhistory/unlimitedMacsleep.
+Adaptercompletenessfixed snapshot:10133/10133Sports,32379/32379validCLOBframes,
+98gameIDs != trades. Venue-time/depth/tokenB/seal/error/runtimeversion issues OPEN;
+contract docs/POLYMARKET_WS_RESEARCH_READER_CONTRACT_V1.md. Nojudge/researchedits/messages.
+Allcheckedfinancial/source/WSunitpins/PIDs/locksinodes preserved. ForeignNETclosure
+and allowlist untouched/excluded. No repeated installers/GO or old broad audits.
+
+---
+Earlier dated entries below are history.
+
 CURRENT2Nov14:06UTC — Polymarket VPS_DATA_LIVE_PASS; native archive/cache cleanup accepted
 
 Read POLYMARKET_WS_VPS_DATA_2026_11_02.md / NEW_CHAT_START_HERE.md.

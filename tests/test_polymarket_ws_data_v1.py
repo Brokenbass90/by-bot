@@ -188,3 +188,18 @@ def test_oversized_gamma_response_records_reason_without_publishing_catalogue(tm
     assert not (tmp_path/'catalog/current.json').exists()
     rows=[json.loads(x) for p in (tmp_path/'catalog/sealed').glob('*.gz') for x in gzip.decompress(p.read_bytes()).splitlines()]
     assert any(x['kind']=='GET_ERROR' and 'GAMMA_BODY_BOUND' in x['payload']['error'] for x in rows)
+
+
+def test_catalogue_reserves_headroom_before_download_instead_of_refilling_quota(tmp_path,monkeypatch):
+    m=mod();original=m.SegmentStore
+    def small_store(root,role):return original(root,role,min_free=0,max_total=128*2**20)
+    monkeypatch.setattr(m,'SegmentStore',small_store)
+    folder=tmp_path/'catalog';folder.mkdir();partial=folder/'historic-crash.partial'
+    # Sparse fixture preserves an unsealed crash artifact; no cleanup or seal.
+    with partial.open('wb') as f:f.truncate(80*2**20)
+    before=partial.stat()
+    class Selection:
+        def markets(self,*args):pytest.fail('Do not download while a catalogue capture cannot fit')
+    with pytest.raises(m.DataStop):m.update_catalogue(tmp_path,Selection())
+    after=partial.stat();assert (before.st_ino,before.st_size,before.st_mtime_ns)==(after.st_ino,after.st_size,after.st_mtime_ns)
+    assert not list((folder/'sealed').glob('*'))

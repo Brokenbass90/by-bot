@@ -1,0 +1,212 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+____________ test_refresh_rejects_changed_admission_account[cash-1] ____________
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1086ddfd0>
+field = 'cash', value = '1'
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'
+E             Actual message: 'MONTHLY_PENDING_FEE_CASH_OR_LIABILITY_CHANGED'
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: AssertionError
+___________ test_refresh_rejects_changed_admission_account[equity-1] ___________
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1086f5d60>
+field = 'equity', value = '1'
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE ValueError
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: Failed
+_ test_refresh_rejects_changed_admission_account[non_marginable_buying_power-1] _
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108715640>
+field = 'non_marginable_buying_power', value = '1'
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE ValueError
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: Failed
+________ test_refresh_rejects_changed_admission_account[accrued_fees-9] ________
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108714d70>
+field = 'accrued_fees', value = '9'
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'
+E             Actual message: 'MONTHLY_PENDING_FEE_CASH_OR_LIABILITY_CHANGED'
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: AssertionError
+____ test_refresh_rejects_changed_admission_account[pending_reg_taf_fees-9] ____
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10865cd10>
+field = 'pending_reg_taf_fees', value = '9'
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'
+E             Actual message: 'MONTHLY_PENDING_FEE_CASH_OR_LIABILITY_CHANGED'
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: AssertionError
+_____ test_refresh_rejects_changed_admission_account[trading_blocked-True] _____
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10865d580>
+field = 'trading_blocked', value = True
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE ValueError
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: Failed
+_____ test_refresh_rejects_changed_admission_account[account_blocked-True] _____
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108715c40>
+field = 'account_blocked', value = True
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE ValueError
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: Failed
+_________ test_refresh_rejects_changed_admission_account[currency-EUR] _________
+
+case = {'fills': [{'id': 'f1', 'activity_type': 'FILL', 'order_id': 'buy-a', 'symbol': 'AAA', ...}, {'id': 'f2', 'activity_ty...0000, 'close_ms': 1790884800000}, {'session': '2026-10-02', 'open_ms': 1790947800000, 'close_ms': 1790971200000}], ...}
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-930/test_refresh_rejects_changed_a7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1086ddc40>
+field = 'currency', value = 'EUR'
+
+    @pytest.mark.parametrize('field,value', [
+        ('cash','1'),('equity','1'),('non_marginable_buying_power','1'),
+        ('accrued_fees','9'),('pending_reg_taf_fees','9'),
+        ('trading_blocked',True),('account_blocked',True),('currency','EUR'),
+    ])
+    def test_refresh_rejects_changed_admission_account(case,tmp_path,monkeypatch,field,value):
+        c,n,paths,source,elapsed=prepared(case,tmp_path,monkeypatch);elapsed[0]=6.
+        original=copy.deepcopy(source['account_after'])
+        def refresh():
+            refresh_source(c,n,paths,source,elapsed,tmp_path)
+            n.client.get_account=lambda:dict(original,**{field:value})
+        with n.admission_cost_refresh(refresh):
+>           with pytest.raises(ValueError,match='MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'MONTHLY_ADMISSION_ACCOUNT_CHANGED_DURING_REFRESH'
+E             Actual message: 'MONTHLY_PENDING_FEE_LIABILITY_UNKNOWN'
+
+tests/test_alpaca_monthly_admission_refresh_v1.py:88: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[cash-1]
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[equity-1]
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[non_marginable_buying_power-1]
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[accrued_fees-9]
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[pending_reg_taf_fees-9]
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[trading_blocked-True]
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[account_blocked-True]
+FAILED tests/test_alpaca_monthly_admission_refresh_v1.py::test_refresh_rejects_changed_admission_account[currency-EUR]
+8 failed, 5 deselected in 0.59s
