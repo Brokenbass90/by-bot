@@ -270,6 +270,114 @@ def source_view(bundle, slots, *, expected_fingerprint, now_ms):
     return dict(value, view_sha256=digest(value))
 
 
+# An ORDERS_OFF policy candidate. Exchange corrections can invalidate this
+# observed accrual envelope; they latch entries rather than rewrite history.
+COST_RELEASE_POLICY = dict(schema='PUMP4_CLOSED_COST_RECONCILIATION_POLICY_V1',
+    source='/v5/position/closed-pnl', arithmetic_tolerance_usdt='0.000001',
+    padding_per_closing_order_usdt='0.000001', positive_pending_credit_spendable=False,
+    cost_finality_proven=False, monetary_approval=False)
+COST_RELEASE_POLICY_SHA = digest(COST_RELEASE_POLICY)
+
+
+def _closed_rows(view, groups):
+    windows = time_windows(view['history_start_ms'], view['history_end_ms'])
+    need(isinstance(groups, list) and len(groups) == len(windows), 'CLOSED_PNL_WINDOWS')
+    rows = []
+    for group, (begin, end) in zip(groups, windows):
+        need(group['start_ms'] == begin and group['end_ms'] == end, 'CLOSED_PNL_ANCHOR')
+        params = dict(category='linear', startTime=str(begin), endTime=str(end), limit='100')
+        rows.extend(paged(group['group'], '/v5/position/closed-pnl', params,
+            now_ms=view['observed_ms'], fingerprint=view['account_fingerprint']))
+    return unique(rows, 'orderId')
+
+
+def _cost_details(view, records):
+    need(view['entry_inputs_complete'] and view['account_exposure_matches'], 'COST_ACCOUNT_UNKNOWN')
+    known_orders = view['source_records']['history']
+    for oid, row in records.items():
+        need(oid in known_orders and known_orders[oid]['reduceOnly'] is True, 'CLOSED_PNL_FOREIGN_ORDER')
+        order = known_orders[oid]
+        need(row['symbol'] == order['symbol'] and row['side'] == order['side']
+            and row['execType'] == 'Trade', 'CLOSED_PNL_ORDER_SCOPE')
+        created, updated = int(row['createdTime']), int(row['updatedTime'])
+        need(0 < created <= updated <= view['observed_ms'], 'CLOSED_PNL_CLOCK')
+        for key in ('qty','closedSize','cumEntryValue','cumExitValue'):
+            amount(row[key], nonnegative=True)
+        need(amount(row['qty']) >= amount(row['closedSize']) > 0, 'CLOSED_PNL_QUANTITY')
+        for key in ('closedPnl','openFee','closeFee'): amount(row[key])
+    details = []
+    reserve = D(0)
+    for slot, net in zip(view['registry'], view['slots']):
+        need(slot['ordinal'] == net['ordinal'], 'COST_SLOT_BINDING')
+        if slot['closed_ms'] is None:
+            continue  # Own custody continues; this can never release another entry.
+        req = {r['orderLinkId']: r for r in slot['requests']}
+        native = set(slot['verified_native_ids'])
+        fills = [x for x in view['source_records']['executions'].values()
+                 if x.get('orderLinkId') in req or x['orderId'] in native]
+        entry_side = 'Buy' if slot['side'] == 'long' else 'Sell'
+        entry = [x for x in fills if x['side'] == entry_side]
+        exits = [x for x in fills if x['side'] != entry_side]
+        exit_ids = {x['orderId'] for x in exits}
+        need(exit_ids <= set(records), 'CLOSED_PNL_MISSING_ORDER')
+        reported = [records[oid] for oid in sorted(exit_ids)]
+        need(all(slot['first_send_ms'] <= int(x['createdTime']) <= slot['closed_ms']
+                 for x in reported), 'CLOSED_PNL_SLOT_CLOCK')
+        for row in reported:
+            q = sum((amount(x['execQty']) for x in exits if x['orderId'] == row['orderId']), D(0))
+            need(amount(row['closedSize']) == q, 'CLOSED_PNL_FILL_QUANTITY')
+        sums = lambda rs, key: sum((amount(x[key]) for x in rs), D(0))
+        entry_value = sum((amount(x['execQty'])*amount(x['execPrice']) for x in entry), D(0))
+        exit_value = sum((amount(x['execQty'])*amount(x['execPrice']) for x in exits), D(0))
+        residuals = [abs(sums(reported,'cumEntryValue')-entry_value),
+                     abs(sums(reported,'cumExitValue')-exit_value),
+                     abs(sums(reported,'openFee')-sums(entry,'execFee')),
+                     abs(sums(reported,'closeFee')-sums(exits,'execFee'))]
+        tolerance = D(COST_RELEASE_POLICY['arithmetic_tolerance_usdt'])*len(reported)
+        need(all(x <= tolerance for x in residuals), 'CLOSED_PNL_ARITHMETIC_CONFLICT')
+        venue = sums(reported,'closedPnl')
+        known = amount(net['known_net_usdt'])
+        padding = D(COST_RELEASE_POLICY['padding_per_closing_order_usdt'])*len(reported)
+        residual = sum(residuals, D(0))
+        pending = max(known-venue, D(0))+residual+padding
+        reserve += pending
+        details.append(dict(ordinal=slot['ordinal'], known_net_usdt=str(known),
+            venue_closed_net_usdt=str(venue), pending_reserve_usdt=str(pending),
+            arithmetic_residual_usdt=str(residual), reporting_padding_usdt=str(padding),
+            conservative_net_usdt=str(known-pending), closing_order_ids=sorted(exit_ids)))
+    closed = all(slot['closed_ms'] is not None for slot in view['registry'])
+    flat = all(amount(x['signed_inventory']) == 0 for x in view['slots'])
+    return dict(status='BOUNDED_UNDER_SOURCE_POLICY' if closed and flat and view['account_open_orders_empty']
+                else 'ACTIVE_CUSTODY_NO_RELEASE', policy_sha256=COST_RELEASE_POLICY_SHA,
+                pending_cost_reserve_usdt=str(reserve),
+                conservative_net_usdt=str(amount(view['known_net_usdt'])-reserve),
+                closed_slots=details, cost_finality_proven=False, monetary_approval=False)
+
+
+def with_cost_release(view, groups):
+    """Reconcile observed closed-cost rows. Never grant financial authority."""
+    out = copy.deepcopy(view)
+    for k in ('view_sha256','closed_pnl_sources','cost_release','pending_cost_reserve_usdt','conservative_net_usdt'):
+        out.pop(k, None)
+    out['source_records'].pop('closed_pnl', None)
+    out['closed_pnl_sources'] = copy.deepcopy(groups)
+    records = {}
+    try:
+        records = _closed_rows(out, groups)
+        result = _cost_details(out, records)
+    except (ValueError,KeyError,TypeError,ArithmeticError) as exc:
+        result = dict(status='UNKNOWN', policy_sha256=COST_RELEASE_POLICY_SHA,
+                      reason=str(exc) if isinstance(exc,ValueError) else type(exc).__name__,
+                      cost_finality_proven=False, monetary_approval=False, closed_slots=[])
+    out['source_records']['closed_pnl'] = records
+    out['cost_release'] = result
+    out['pending_cost_reserve_usdt'] = result.get('pending_cost_reserve_usdt','UNKNOWN')
+    out['conservative_net_usdt'] = result.get('conservative_net_usdt','UNKNOWN')
+    # These old financial fields deliberately remain false, even on OFF PASS.
+    need(out['release_next_entry_allowed'] is False and out['cost_finality_proven'] is False, 'NO_FINANCIAL_RELEASE')
+    return dict(out, view_sha256=digest(out))
+
+
 class SeriesAccounting:
     """Append-only partial source-risk evidence, never a next-entry permit.
 
@@ -277,7 +385,7 @@ class SeriesAccounting:
     the complete candidate prefix under the existing nonblocking journal lock.
     Binding/policy cannot reset at a child restart or change of day/week.
     """
-    def __init__(self, root, account_fingerprint, policy):
+    def __init__(self, root, account_fingerprint, policy, *, cost_policy_sha256=None):
         need(re.fullmatch('[0-9a-f]{64}', account_fingerprint) is not None, 'ACCOUNT_FINGERPRINT')
         keys = {'day_loss_usdt', 'week_loss_usdt', 'drawdown_usdt', 'lifetime_loss_usdt'}
         need(set(policy) == keys and all(amount(policy[k]) > 0 for k in keys), 'LOSS_POLICY')
@@ -286,6 +394,10 @@ class SeriesAccounting:
         self.policy = copy.deepcopy(policy)
         self.binding = dict(schema='PUMP4_SERIAL_SOURCE_BINDING_V1', account_fingerprint=account_fingerprint,
                             policy=self.policy)
+        self.cost_policy_sha256 = cost_policy_sha256
+        if cost_policy_sha256 is not None:
+            need(cost_policy_sha256 == COST_RELEASE_POLICY_SHA, 'COST_POLICY_IDENTITY')
+            self.binding['cost_policy_sha256'] = cost_policy_sha256
         self.binding_sha256 = digest(self.binding)
         target = self.root / 'accounting-binding.json'
         try:
@@ -308,6 +420,11 @@ class SeriesAccounting:
             need(v['account_fingerprint'] == self.binding['account_fingerprint']
                  and v['view_sha256'] == digest({k: x for k, x in v.items() if k != 'view_sha256'})
                  and v['release_next_entry_allowed'] is False and v['cost_finality_proven'] is False, 'VIEW_IDENTITY')
+            if self.cost_policy_sha256 is not None:
+                need(v.get('cost_release',{}).get('policy_sha256') == self.cost_policy_sha256
+                     and with_cost_release(v, v['closed_pnl_sources']) == v, 'COST_PROOF_REPLAY')
+            else:
+                need('cost_release' not in v, 'COST_POLICY_NOT_BOUND')
             if old is not None:
                 before = old['view']
                 need(v['observed_ms'] >= before['observed_ms'] and v['history_start_ms'] == before['history_start_ms']
@@ -332,6 +449,9 @@ class SeriesAccounting:
                         elif group == 'transactions':
                             need({k: x for k, x in a.items() if k != 'funding'} ==
                                  {k: x for k, x in b.items() if k != 'funding'}, 'TRANSACTION_ID_REWRITTEN')
+                        elif group == 'closed_pnl':
+                            immutable = ('orderId','symbol','side','closedSize','cumEntryValue','cumExitValue','execType','qty','createdTime')
+                            need(all(a.get(k) == b.get(k) for k in immutable), 'CLOSED_COST_ID_REWRITTEN')
                         else:
                             immutable = ('orderId', 'orderLinkId', 'symbol', 'side', 'positionIdx', 'reduceOnly')
                             need(all(a.get(k) == b.get(k) for k in immutable)
@@ -343,10 +463,11 @@ class SeriesAccounting:
         return old
 
     def _event(self, view, old):
-        total = amount(view['known_net_usdt'])
+        bounded = view.get('cost_release',{}).get('status') in {'BOUNDED_UNDER_SOURCE_POLICY','ACTIVE_CUSTODY_NO_RELEASE'}
+        total = amount(view['conservative_net_usdt'] if bounded else view['known_net_usdt'])
         time = datetime.fromtimestamp(view['observed_ms'] / 1000, timezone.utc)
         day, week = time.date().isoformat(), list(time.isocalendar()[:2])
-        previous_total = amount(old['known_net_usdt']) if old else D(0)
+        previous_total = amount(old.get('risk_net_usdt',old['known_net_usdt'])) if old else D(0)
         daybase = amount(old['day_baseline_usdt']) if old and old['day'] == day else previous_total
         weekbase = amount(old['week_baseline_usdt']) if old and old['week'] == week else previous_total
         high = max(D(0), amount(old['high_water_usdt']) if old else D(0), total)
@@ -354,21 +475,31 @@ class SeriesAccounting:
             ('DAY', total - daybase, 'day_loss_usdt'), ('WEEK', total - weekbase, 'week_loss_usdt'),
             ('DRAWDOWN', total - high, 'drawdown_usdt'), ('LIFETIME', total, 'lifetime_loss_usdt'),
         ) if loss <= -amount(self.policy[key])]
+        certificates = copy.deepcopy(old.get('cost_certificates',{})) if old else {}
+        for slot in view.get('cost_release',{}).get('closed_slots',[]):
+            key = str(slot['ordinal']);lower = amount(slot['conservative_net_usdt'])
+            if key in certificates and lower+amount(slot['reporting_padding_usdt']) < amount(certificates[key]):
+                reasons.append('COST_SOURCE_REVISION')
+            certificates[key] = str(max(amount(certificates[key]),lower)) if key in certificates else str(lower)
         revisions = []
         if old:
-            for group, field in (('executions', 'execFee'), ('transactions', 'funding')):
+            fields = [('executions','execFee'),('transactions','funding')]
+            if 'closed_pnl' in view['source_records']:
+                fields += [('closed_pnl',f) for f in ('closedPnl','openFee','closeFee')]
+            for group, field in fields:
                 for key, row in view['source_records'][group].items():
-                    before = old['view']['source_records'][group].get(key)
+                    before = old['view']['source_records'].get(group,{}).get(key)
                     if before is not None and before.get(field) != row.get(field):
                         revisions.append(dict(group=group, source_id=key, field=field,
                                               before=before.get(field), after=row.get(field)))
+        extra = dict(risk_net_usdt=str(total),cost_certificates=certificates) if self.cost_policy_sha256 else {}
         return dict(schema_id=SCHEMA, event_id='source-' + view['view_sha256'], domain=DOMAIN,
             binding_sha256=self.binding_sha256, observed_ms=view['observed_ms'], view=view,
-            known_net_usdt=str(total), day=day, week=week, day_baseline_usdt=str(daybase),
+            known_net_usdt=view['known_net_usdt'], day=day, week=week, day_baseline_usdt=str(daybase),
             week_baseline_usdt=str(weekbase), high_water_usdt=str(high), loss_reasons=reasons,
             entry_loss_latched=bool(reasons) or bool(old and old['entry_loss_latched']),
             cost_revisions=revisions, cost_finality_proven=False, release_next_entry_allowed=False,
-            recognition_basis='SOURCE_OBSERVED_UTC_DAY_WEEK_NO_BACKDATED_RISK_RESET')
+            recognition_basis='SOURCE_OBSERVED_UTC_DAY_WEEK_NO_BACKDATED_RISK_RESET', **extra)
 
     def record(self, view):
         self._check_binding()
@@ -388,4 +519,29 @@ class SeriesAccounting:
         last = self._validate(rows)
         return dict(source_observations=len(rows), entry_loss_latched=bool(last and last['entry_loss_latched']),
                     known_net_usdt=last['known_net_usdt'] if last else 'UNKNOWN',
+                    conservative_net_usdt=last.get('risk_net_usdt','UNKNOWN') if last else 'UNKNOWN',
+                    cost_release_status=last['view'].get('cost_release',{}).get('status','NOT_BOUND') if last else 'UNKNOWN',
                     cost_finality_proven=False, release_next_entry_allowed=False)
+
+    def can_reserve_entry(self, risk_usdt):
+        """Hypothetical OFF admission capacity, never a permission to send."""
+        risk = amount(risk_usdt);need(risk > 0, 'NEXT_ENTRY_RISK')
+        self._check_binding();last = self._validate(self.journal.read())
+        reason = None
+        if self.cost_policy_sha256 is None or last is None:
+            reason = 'COST_POLICY_NOT_BOUND'
+        elif last['view']['cost_release']['status'] != 'BOUNDED_UNDER_SOURCE_POLICY':
+            reason = 'COSTS_UNKNOWN_OR_CUSTODY_ACTIVE'
+        elif last['entry_loss_latched']:
+            reason = 'ROOT_LOSS_LATCHED'
+        if reason is not None:
+            return dict(allowed=False,reason=reason,orders_allowed=False,money_authority=False)
+        total = amount(last['risk_net_usdt'])
+        remaining = min(amount(self.policy[k])+value for k,value in (
+            ('day_loss_usdt',total-amount(last['day_baseline_usdt'])),
+            ('week_loss_usdt',total-amount(last['week_baseline_usdt'])),
+            ('drawdown_usdt',total-amount(last['high_water_usdt'])),
+            ('lifetime_loss_usdt',total)))
+        return dict(allowed=remaining >= risk,reason='CAPACITY_AVAILABLE' if remaining >= risk else 'NEXT_RISK_EXCEEDS_REMAINING_BUDGET',
+                    remaining_loss_budget_usdt=str(remaining),next_scenario_risk_usdt=str(risk),
+                    orders_allowed=False,money_authority=False,cost_finality_proven=False)
