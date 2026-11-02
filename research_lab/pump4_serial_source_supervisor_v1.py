@@ -14,6 +14,8 @@ import hashlib
 import os
 from pathlib import Path
 import threading
+import time
+import re
 import uuid
 
 from research_lab.alpaca_dynamic_v1 import digest
@@ -234,6 +236,45 @@ class SerialSourceOwner:
         need(self.carrier.clock()-view['observed_ms'] <= 5000, 'ROOT_SOURCE_EXPIRED')
         flow = child.prepare(plan, child_bundle, public)
         return child.cycle(flow, child_bundle, public, apply=False), accounting
+
+
+
+def audit_capture(path, pin, output, *, clock=None):
+    """Pinned file-only replay at original source time; no lease/owner/GET.
+
+    The collector's authenticity and current sole-owner checks are external
+    evidence. Empty actual history qualifies transport/schema only, never the
+    nonempty cost formula, a real lifecycle, future readiness or financial GO.
+    """
+    from research_lab.pump4_runtime_sources_v1 import observation_bytes
+    raw, _ = observation_bytes(path)
+    need(isinstance(pin, str) and hashlib.sha256(raw).hexdigest() == pin, 'AUDIT_CAPTURE_PIN')
+    value = decode(raw)
+    need(value['schema'] == 'PUMP4_SERIAL_READ_ONLY_CAPTURE_V1' and value['registry'] == []
+         and all(isinstance(value[k], str) and re.fullmatch('[0-9a-f]{64}', value[k])
+                 for k in ('account_fingerprint','selected_packet_sha256','collector_sha256')),
+         'AUDIT_FLAT_CAPTURE_CONTRACT')
+    observed = value['source_observed_ms']
+    need(type(observed) is int and observed > 0, 'AUDIT_SOURCE_CLOCK')
+    view = source_view(value['bundle'], [], expected_fingerprint=value['account_fingerprint'], now_ms=observed)
+    view = with_cost_release(view, value['closed_pnl_sources'])
+    need(view['entry_inputs_complete'] and view['account_exposure_matches']
+         and view['account_open_orders_empty']
+         and all(not rows for rows in view['source_records'].values())
+         and view['cost_release']['status'] == 'BOUNDED_UNDER_SOURCE_POLICY', 'AUDIT_NONEMPTY_OR_UNKNOWN')
+    replayed = (clock or (lambda: time.time_ns()//1000000))()
+    need(type(replayed) is int and replayed >= observed, 'AUDIT_REPLAY_CLOCK')
+    receipt = dict(schema='PUMP4_SERIAL_CAPTURE_AUDIT_V1',
+        status='FLAT_SOURCE_REPLAY_PASS_NO_LIFECYCLE', capture_sha256=pin,
+        source_observed_ms=observed, replayed_ms=replayed,
+        account_fingerprint=value['account_fingerprint'],
+        selected_packet_sha256=value['selected_packet_sha256'], collector_sha256=value['collector_sha256'],
+        source_view_sha256=view['view_sha256'], cost_policy_sha256=COST_RELEASE_POLICY_SHA,
+        original_source_cutoff_preserved=True, source_authenticity='EXTERNAL_PINNED_COLLECTOR_REQUIRED',
+        broker_writes=0, orders_allowed=False, money_authority=False, cost_finality_proven=False,
+        nonempty_cost_contract_qualified=False, actual_traded_cycles=0)
+    publish(safe(output), receipt)
+    return receipt
 
 
 def run(config_path=None, config_sha256=None, *, orders_off=False, once=False,

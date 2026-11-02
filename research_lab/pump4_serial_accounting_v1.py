@@ -304,6 +304,9 @@ def _cost_details(view, records):
         for key in ('qty','closedSize','cumEntryValue','cumExitValue'):
             amount(row[key], nonnegative=True)
         need(amount(row['qty']) >= amount(row['closedSize']) > 0, 'CLOSED_PNL_QUANTITY')
+        actual_qty = sum((amount(x['execQty']) for x in view['source_records']['executions'].values()
+                          if x['orderId'] == oid), D(0))
+        need(amount(row['closedSize']) == actual_qty, 'CLOSED_PNL_ALL_FILL_QUANTITY')
         for key in ('closedPnl','openFee','closeFee'): amount(row[key])
     details = []
     reserve = D(0)
@@ -328,13 +331,20 @@ def _cost_details(view, records):
             need(amount(row['closedSize']) == q, 'CLOSED_PNL_FILL_QUANTITY')
         sums = lambda rs, key: sum((amount(x[key]) for x in rs), D(0))
         entry_value = sum((amount(x['execQty'])*amount(x['execPrice']) for x in entry), D(0))
-        exit_value = sum((amount(x['execQty'])*amount(x['execPrice']) for x in exits), D(0))
-        residuals = [abs(sums(reported,'cumEntryValue')-entry_value),
-                     abs(sums(reported,'cumExitValue')-exit_value),
-                     abs(sums(reported,'openFee')-sums(entry,'execFee')),
-                     abs(sums(reported,'closeFee')-sums(exits,'execFee'))]
-        tolerance = D(COST_RELEASE_POLICY['arithmetic_tolerance_usdt'])*len(reported)
-        need(all(x <= tolerance for x in residuals), 'CLOSED_PNL_ARITHMETIC_CONFLICT')
+        # Reconcile EACH closing order: opposing discrepancies cannot cancel.
+        residuals = []
+        entry_qty = sums(entry, 'execQty')
+        tolerance = D(COST_RELEASE_POLICY['arithmetic_tolerance_usdt'])
+        for row in reported:
+            closing = [x for x in exits if x['orderId'] == row['orderId']]
+            fraction = amount(row['closedSize'])/entry_qty
+            expected_exit = sum((amount(x['execQty'])*amount(x['execPrice']) for x in closing), D(0))
+            differences = [abs(amount(row['cumEntryValue'])-entry_value*fraction),
+                abs(amount(row['cumExitValue'])-expected_exit),
+                abs(amount(row['openFee'])-sums(entry,'execFee')*fraction),
+                abs(amount(row['closeFee'])-sums(closing,'execFee'))]
+            need(all(x <= tolerance for x in differences), 'CLOSED_PNL_ARITHMETIC_CONFLICT')
+            residuals.extend(differences)
         venue = sums(reported,'closedPnl')
         known = amount(net['known_net_usdt'])
         padding = D(COST_RELEASE_POLICY['padding_per_closing_order_usdt'])*len(reported)
@@ -450,7 +460,12 @@ class SeriesAccounting:
                             need({k: x for k, x in a.items() if k != 'funding'} ==
                                  {k: x for k, x in b.items() if k != 'funding'}, 'TRANSACTION_ID_REWRITTEN')
                         elif group == 'closed_pnl':
-                            immutable = ('orderId','symbol','side','closedSize','cumEntryValue','cumExitValue','execType','qty','createdTime')
+                            immutable = ('orderId','symbol','side','execType','createdTime')
+                            # Cross-endpoint provisional rows may converge while
+                            # admission remains blocked. Once certified, their
+                            # quantities/notionals can never be rewritten.
+                            if key in old.get('certified_closed_order_ids', []):
+                                immutable += ('closedSize','cumEntryValue','cumExitValue','qty')
                             need(all(a.get(k) == b.get(k) for k in immutable), 'CLOSED_COST_ID_REWRITTEN')
                         else:
                             immutable = ('orderId', 'orderLinkId', 'symbol', 'side', 'positionIdx', 'reduceOnly')
@@ -476,7 +491,9 @@ class SeriesAccounting:
             ('DRAWDOWN', total - high, 'drawdown_usdt'), ('LIFETIME', total, 'lifetime_loss_usdt'),
         ) if loss <= -amount(self.policy[key])]
         certificates = copy.deepcopy(old.get('cost_certificates',{})) if old else {}
+        certified_ids = set(old.get('certified_closed_order_ids', [])) if old else set()
         for slot in view.get('cost_release',{}).get('closed_slots',[]):
+            certified_ids.update(slot['closing_order_ids'])
             key = str(slot['ordinal']);lower = amount(slot['conservative_net_usdt'])
             if key in certificates and lower+amount(slot['reporting_padding_usdt']) < amount(certificates[key]):
                 reasons.append('COST_SOURCE_REVISION')
@@ -492,7 +509,8 @@ class SeriesAccounting:
                     if before is not None and before.get(field) != row.get(field):
                         revisions.append(dict(group=group, source_id=key, field=field,
                                               before=before.get(field), after=row.get(field)))
-        extra = dict(risk_net_usdt=str(total),cost_certificates=certificates) if self.cost_policy_sha256 else {}
+        extra = dict(risk_net_usdt=str(total),cost_certificates=certificates,
+                     certified_closed_order_ids=sorted(certified_ids)) if self.cost_policy_sha256 else {}
         return dict(schema_id=SCHEMA, event_id='source-' + view['view_sha256'], domain=DOMAIN,
             binding_sha256=self.binding_sha256, observed_ms=view['observed_ms'], view=view,
             known_net_usdt=view['known_net_usdt'], day=day, week=week, day_baseline_usdt=str(daybase),

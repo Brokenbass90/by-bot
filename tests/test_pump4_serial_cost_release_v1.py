@@ -142,3 +142,52 @@ def test_initial_proven_unused_series_can_reserve_without_inventing_closed_pnl(t
     b=sync(b);v=release(b,[],closed_groups(b,[]));l=ledger(tmp_path);l.record(v)
     assert D(v['conservative_net_usdt'])==0 and D(v['pending_cost_reserve_usdt'])==0
     assert l.can_reserve_entry('1')['allowed'] is True
+
+
+def test_extra_owned_closed_row_without_matching_fills_cannot_release(tmp_path):
+    b,s=case(tmp_path)
+    req=copy.deepcopy(s[0]['requests'][-1]);req['orderLinkId']='cancelled-extra-close'
+    s[0]['requests'].append(req)
+    order=copy.deepcopy(rows(b,'history')[1]);order.update(orderId='cancelled-extra-order',
+        orderLinkId=req['orderLinkId'],orderStatus='Cancelled',cumExecQty='0')
+    rows(b,'history').append(order);sync(b)
+    groups=closed_groups(b,s)
+    extra=copy.deepcopy(groups[0]['group']['pages'][0]['body']['result']['list'][0])
+    extra.update(orderId=order['orderId'],closedPnl='-10')
+    groups[0]['group']['pages'][0]['body']['result']['list'].append(extra);fix(groups)
+    v=release(b,s,groups)
+    assert v['cost_release']['status']=='UNKNOWN'
+    l=ledger(tmp_path);l.record(v);assert not l.can_reserve_entry('1')['allowed']
+
+
+def test_provisional_closed_quantities_can_converge_before_certification(tmp_path):
+    b,s=case(tmp_path);s=s[:1]
+    for key in ('history','executions'):
+        rr=rows(b,key);rr[:]=[r for r in rr if r['orderLinkId'].startswith('serial-1-')]
+    sync(b);closed=s[0]['closed_ms'];s[0]['closed_ms']=None
+    full=closed_groups(b,s);partial=copy.deepcopy(full)
+    row=partial[0]['group']['pages'][0]['body']['result']['list'][0]
+    for key in ('closedSize','cumEntryValue','cumExitValue','openFee','closeFee','closedPnl'):
+        row[key]=str(D(row[key])/2)
+    fix(partial);v=release(b,s,partial);l=ledger(tmp_path);l.record(v)
+    assert not l.can_reserve_entry('1')['allowed']
+    s[0]['closed_ms']=closed
+    qualified=release(b,s,full);assert qualified['cost_release']['status']=='BOUNDED_UNDER_SOURCE_POLICY'
+    l.record(qualified)
+    assert ledger(tmp_path).can_reserve_entry('1')['allowed']
+
+
+def test_opposing_closing_order_arithmetic_errors_cannot_cancel(tmp_path):
+    b,s=case(tmp_path);slot=s[0];slot['requests'][-1]['qty']='.1'
+    oldorder=rows(b,'history')[1];oldorder.update(qty='.1',cumExecQty='.1')
+    oldfill=rows(b,'executions')[1];oldfill.update(execQty='.1',execFee='.005')
+    req=copy.deepcopy(slot['requests'][-1]);req['orderLinkId']='serial-1-3';slot['requests'].append(req)
+    order=copy.deepcopy(oldorder);order.update(orderId='order-1-3',orderLinkId=req['orderLinkId']);rows(b,'history').append(order)
+    fill=copy.deepcopy(oldfill);fill.update(orderId=order['orderId'],orderLinkId=req['orderLinkId'],execId='exec-serial-1-3',execTime=str(int(oldfill['execTime'])+10));rows(b,'executions').append(fill)
+    sync(b);groups=closed_groups(b,s);rr=groups[0]['group']['pages'][0]['body']['result']['list']
+    first=[r for r in rr if r['orderId'].startswith('order-1-')]
+    for r in first:r.update(cumEntryValue='10',openFee='.005',closedPnl='.19')
+    first[0]['cumExitValue']='8.8';first[1]['cumExitValue']='10.8';fix(groups)
+    v=release(b,s,groups)
+    assert v['cost_release']['status']=='UNKNOWN'
+    l=ledger(tmp_path);l.record(v);assert not l.can_reserve_entry('1')['allowed']

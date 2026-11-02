@@ -8,7 +8,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from research_lab.pump4_serial_source_supervisor_v1 import run
+from research_lab.pump4_serial_source_supervisor_v1 import run, audit_capture
 
 
 def main(argv=None):
@@ -17,13 +17,22 @@ def main(argv=None):
     parser.add_argument('--config', type=Path)
     parser.add_argument('--config-sha256')
     parser.add_argument('--once', action='store_true')
+    parser.add_argument('--audit-capture', type=Path)
+    parser.add_argument('--audit-sha256')
+    parser.add_argument('--audit-output', type=Path)
     args = parser.parse_args(argv)
     if not args.orders_off:
         print(json.dumps(dict(status='ORDERS_OFF_NO_REQUESTS', broker_writes=0)))
         return 0
-    if not args.config or not args.config_sha256:
+    auditing = any((args.audit_capture, args.audit_sha256, args.audit_output))
+    if auditing and (not all((args.audit_capture, args.audit_sha256, args.audit_output)) or args.config or args.config_sha256):
+        parser.error('Audit needs capture/pin/output and forbids selected-owner config')
+    if not auditing and (not args.config or not args.config_sha256):
         parser.error('Explicit config and config-sha256 required')
     try:
+        if auditing:
+            print(json.dumps(audit_capture(args.audit_capture, args.audit_sha256, args.audit_output), sort_keys=True))
+            return 0
         receipts = run(args.config, args.config_sha256, orders_off=True, once=args.once)
         print(json.dumps(receipts[-1], sort_keys=True))
         return int(receipts[-1]['result']['status'].startswith('BLOCKED'))

@@ -29,24 +29,24 @@
 ### Task 1: Closed-cost policy and cumulative lower-bound risk
 **Files:** research_lab/pump4_serial_accounting_v1.py; tests/test_pump4_serial_cost_release_v1.py.
 **Interfaces:** consumes existing source_view, registry, complete /v5/position/closed-pnl pages; produces fixed COST_RELEASE_POLICY_SHA, with_cost_release(view,groups), SeriesAccounting(...,cost_policy_sha256=None), conservative summary.
-- [ ] Write RED cases for matched/missing/foreign/partial rows, pending debit/credit, source revisions/UNKNOWN restart and prospective risk capacity.
-- [ ] Implement fixed opt-in pure reducer and immutable policy binding; preserve old fields/default blockers and append-only accounting.
-- [ ] Run new cost tests + affected existing accounting tests; save RED/GREEN evidence; commit.
+- [x] Write RED cases for matched/missing/foreign/partial rows, pending debit/credit, source revisions/UNKNOWN restart and prospective risk capacity.
+- [x] Implement fixed opt-in pure reducer and immutable policy binding; preserve old fields/default blockers and append-only accounting.
+- [x] Run new cost tests + affected existing accounting tests; save RED/GREEN evidence; commit.
 
 ### Task 2: Existing source and serial OFF integration
 **Files:** research_lab/kity_micro_transport_v1.py; research_lab/pump4_runtime_sources_v1.py; research_lab/pump4_serial_source_supervisor_v1.py; affected tests.
 **Interfaces:** source.serial_closed_pnl(begin) returns exact paged closed-PnL groups; supervisor passes opt-in policy SHA, applies conservative admission and durable duplicate guard.
-- [ ] RED two full memory-source lifecycles with late costs/restart; no-policy remains blocked; same plan not reserved again; source failure retains custody.
-- [ ] Add allowlisted GET and parallel source capture, bind policy only to OFF spec. No changes to live immutable copies.
-- [ ] Run only affected risk/source/supervisor regressions, save evidence; commit.
+- [x] RED two full memory-source lifecycles with late costs/restart; no-policy remains blocked; same plan not reserved again; source failure retains custody.
+- [x] Add allowlisted GET and parallel source capture, bind policy only to OFF spec. No changes to live immutable copies.
+- [x] Run only affected risk/source/supervisor regressions, save evidence; commit.
 
 ### Task 3: Actual-source read-only replay and server acceptance
 **Files:** scripts/run_pump4_serial_source_off_v1.py; research_lab/pump4_serial_source_supervisor_v1.py; CLI tests and reports.
 **Interfaces:** explicit file-only audit mode consumes pinned raw capture/registry/policy and writes only isolated DATA output; separate pinned VPS collector uses existing bound credential loader + GET, no owner/lease. Default CLI remains NO_REQUESTS.
-- [ ] RED explicit mode/input pin/default side effects; live config never passed as an OFF selected owner.
-- [ ] Implement bounded capture/audit path in existing components; actual nonempty lifecycle requires independently proven registry, never fictitious rebind.
-- [ ] Stage immutable unselected candidate on VPS; network-denied affected suite/model2cycle acceptance + fresh real-account capture/audit. Report original-owner conflict as protected handoff gate, not a second writer.
-- [ ] One fresh Astra/high final critical review, fix important findings RED→GREEN; source/unit/lock preservation readback; publish sanitized report/checkpoint/commit. No new LIVE packet activation.
+- [x] RED explicit mode/input pin/default side effects; live config never passed as an OFF selected owner.
+- [x] Implement bounded capture/audit path in existing components; actual nonempty lifecycle requires independently proven registry, never fictitious rebind.
+- [x] Stage immutable unselected candidate on VPS; network-denied affected suite/model2cycle acceptance + fresh real-account capture/audit. Report original-owner conflict as protected handoff gate, not a second writer.
+- [x] One fresh Astra/high final critical review, fix important findings RED→GREEN; source/unit/lock preservation readback; publish sanitized report/checkpoint/commit. No new LIVE packet activation.
 
 ## Execution rulings
 

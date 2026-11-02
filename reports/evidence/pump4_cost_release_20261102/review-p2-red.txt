@@ -1,0 +1,29 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_____ test_provisional_closed_quantities_can_converge_before_certification _____
+tests/test_pump4_serial_cost_release_v1.py:176: in test_provisional_closed_quantities_can_converge_before_certification
+    l.record(qualified)
+research_lab/pump4_serial_accounting_v1.py:513: in record
+    self.journal.append_checked(event, self._validate)
+research_lab/att1_lifecycle_journal.py:198: in append_checked
+    return self._append(event, validate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_lab/att1_lifecycle_journal.py:219: in _append
+    result = validate(tuple(events) + (value,)) if validate else None
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_lab/pump4_serial_accounting_v1.py:454: in _validate
+    need(all(a.get(k) == b.get(k) for k in immutable), 'CLOSED_COST_ID_REWRITTEN')
+research_lab/pump4_serial_accounting_v1.py:27: in need
+    raise ValueError('PUMP4_SERIAL_SOURCE_' + reason)
+E   ValueError: PUMP4_SERIAL_SOURCE_CLOSED_COST_ID_REWRITTEN
+_________ test_opposing_closing_order_arithmetic_errors_cannot_cancel __________
+tests/test_pump4_serial_cost_release_v1.py:192: in test_opposing_closing_order_arithmetic_errors_cannot_cancel
+    assert v['cost_release']['status']=='UNKNOWN'
+E   AssertionError: assert 'BOUNDED_UNDER_SOURCE_POLICY' == 'UNKNOWN'
+E     
+E     - UNKNOWN
+E     + BOUNDED_UNDER_SOURCE_POLICY
+=========================== short test summary info ============================
+FAILED tests/test_pump4_serial_cost_release_v1.py::test_provisional_closed_quantities_can_converge_before_certification
+FAILED tests/test_pump4_serial_cost_release_v1.py::test_opposing_closing_order_arithmetic_errors_cannot_cancel
+2 failed, 21 deselected in 1.32s

@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT2Nov08:53UTC — TINY-2 cost policy OFF + actual flat-source VPS replay delivered
+
+Read PUMP4_TINY2_COST_RELEASE_ORDERS_OFF_2026_11_02.md and NEW_CHAT_START_HERE.md.
+Existingaccounting/supervisor nowopt-inclosed-PnLperordercostreconciliation, conservative
+lateexpense+prospective1riskcapacity, durablecertification/revisionlatch/duplicateguard.
+Two modelsourcecycles/restarts/latefunding;189local/same189VPS networkdeniedPASS.
+IndependentAstra/high runtimeverified1P1/2P2 reproducedRED/fixed; finalprimary49targeted
+and189/189PASS. Candidate561filesdb2eb8583301289dUNSELECTED; nofinancialowner onLIVE.
+Actual11GET08:48:55UTC sameUID/key/flat/fullnewpilothistoryempty/closedPnLempty;
+independentfileCLIreplaynetworkdenied08:49:39UTC preservesoriginalcutoff. Not2realtrades,
+nonemptycostqualification, terminalfinality orphysicalserialhandoff. ExactGOconditions:
+firstV1actualcycle, qualifyclosedcostsource/policy, versionedserialhandoff+separateownerGO.
+PriorNOT_IMPLEMENTEDcostblockerclosedengineeringonly; no serialrisk/scope/GOactivated.
+ExistingLIVEreadback08:44:21UTC healthyflat/noentry/134complete3unavailable0raw/sourceage122ms.
+PID3669955/lock818853/scope2de0b6ec/configf715e676/source194pins/MonthlyDATAunitsunchanged;
+collectoragainverified08:48:55UTC. Entryend8Nov19:26UTC/max1/custodycontinues.
+Monthlyv6400/280/40windowTODAY14:30UTC/16:30CY stillfuture; monthly-2ACTIVE16:40CY;
+actualBUY/CASH/NO_ADMISSION+brokerprotectionreadback onlyafterwindow. Noreactivation.
+MinimalBraincausalpaircontract addedexistingdiagnosticsdraft; notworker/pairednetPASS.
+NoClaude/research/judge/epoch/Polymarket/LIVEchanges. Foreignallowlistpreserved.
+
+---
+Earlier dated entries below are history.
+
+
 CURRENT1Nov20:03UTC — PUMP4 new-key repaired LIVE; independent readbackPASS
 
 Read PUMP4_NEW_KEY_LIVE_ACTIVATION_2026_11_01.md / NEW_CHAT_START_HERE.md.

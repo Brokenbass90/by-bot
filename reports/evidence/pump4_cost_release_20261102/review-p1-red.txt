@@ -1,0 +1,12 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_extra_owned_closed_row_without_matching_fills_cannot_release _______
+tests/test_pump4_serial_cost_release_v1.py:159: in test_extra_owned_closed_row_without_matching_fills_cannot_release
+    assert v['cost_release']['status']=='UNKNOWN'
+E   AssertionError: assert 'BOUNDED_UNDER_SOURCE_POLICY' == 'UNKNOWN'
+E     
+E     - UNKNOWN
+E     + BOUNDED_UNDER_SOURCE_POLICY
+=========================== short test summary info ============================
+FAILED tests/test_pump4_serial_cost_release_v1.py::test_extra_owned_closed_row_without_matching_fills_cannot_release
+1 failed, 20 deselected in 0.39s

@@ -1,0 +1,65 @@
+{
+  "actual_source_observed_ms": 1793609335100,
+  "actual_source_requests": 11,
+  "blockers": [
+    "FIRST_V1_ACTUAL_LIFECYCLE_UNOBSERVED",
+    "NONEMPTY_CLOSED_COST_SOURCE_CONTRACT_UNQUALIFIED",
+    "SERIAL_POLICY_FINANCIAL_APPROVAL_AND_VERSIONED_PHYSICAL_HANDOFF_PACKET_REQUIRED"
+  ],
+  "broker_writes": 0,
+  "capture_sha256": "41b3596f4eabe11dc777edc1cffb97aa07eaacce3cbb14204d1370c5a555549d",
+  "cost_policy_sha256": "45aa24a6f0d61811cfcec8fcc4b6c68f9b81df3861661f4aef4a888d317295a5",
+  "current_live_unchanged": true,
+  "financial_go_created": false,
+  "monthly_unchanged": true,
+  "review": {
+    "effort": "high",
+    "financial_signoff": false,
+    "findings": [
+      {
+        "fixed": true,
+        "reason": "EXTRA_OWNED_CLOSED_ROW_WITHOUT_MATCHED_FILLS",
+        "severity": "P1"
+      },
+      {
+        "fixed": true,
+        "reason": "PROVISIONAL_COST_ROW_CANNOT_CONVERGE",
+        "severity": "P2"
+      },
+      {
+        "fixed": true,
+        "reason": "OPPOSING_PER_ORDER_ARITHMETIC_ERRORS_CANCEL",
+        "severity": "P2"
+      }
+    ],
+    "independent_network_denied": true,
+    "independent_new_tests_pass": 29,
+    "model": "gpt-6-astra",
+    "primary_final_local": 189,
+    "primary_final_vps": 189,
+    "primary_red_regressions": 3,
+    "primary_targeted_green": 49,
+    "reviewed_base": "1f3709aeec57759d8d8b1f76ca50b4a69ff857eb",
+    "runtime_metadata_verified": true,
+    "schema": "BOUNDED_CRITICAL_REVIEW_V1",
+    "second_independent_review": false,
+    "session": "01a19b6a-4d8e-7440-b8a8-c5294fcebba5",
+    "unresolved_important": 0
+  },
+  "schema": "PUMP4_SERIAL_COST_OFF_DELIVERY_V1",
+  "selected": false,
+  "source_files": 561,
+  "source_manifest_sha256": "db2eb8583301289dc778983802b47f064a1959241935d84c58e393bc058c02fe",
+  "source_replay_is_physical_handoff": false,
+  "staged_candidate": "/opt/bybot-research/pump4-serial-cost-off-20261102/candidate-db2eb8583301289d",
+  "status": "COST_POLICY_OFF_AND_ACTUAL_FLAT_SOURCE_REPLAY_PASS_FINANCIAL_GO_BLOCKED",
+  "tests": {
+    "actual_trading_cycles": 0,
+    "independent_tests": false,
+    "local": 189,
+    "simulated_trading_cycles": 2,
+    "vps": 189,
+    "vps_network_denied": true
+  },
+  "tiny_ready": false
+}

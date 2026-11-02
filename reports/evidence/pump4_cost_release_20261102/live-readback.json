@@ -1,0 +1,24 @@
+{
+  "actual_entry_executed": false,
+  "config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+  "health": {
+    "observed_ms": 1793609061384,
+    "reason": "LIVE_FLAT_WAITING_SIGNAL",
+    "source_age_ms": 122,
+    "source_coverage": {
+      "checked_publications": 134,
+      "coverage_complete": true,
+      "historical_index_durability_proven": false,
+      "hour_open_ms": 1793606400000,
+      "observed_ms": 1793609059314,
+      "raw_signals": 0,
+      "receipt_sha256": "ec84e61bb70a11f040636557fef13ba3d151df979e48c6ee3c4ec26603d5258c",
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+      "unavailable_instruments": 3
+    },
+    "status": "HEALTHY"
+  },
+  "observed_ms": 1793609061385,
+  "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+  "status": "LIVE_ARMED_HEALTHY"
+}

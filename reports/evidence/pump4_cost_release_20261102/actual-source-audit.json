@@ -1,0 +1,33 @@
+{
+  "account_fingerprint": "b7c70793ed9b88c496450a4ee901e5a3fa5a66fa408ba81a155153373a98d82a",
+  "actual_traded_cycles": 0,
+  "broker_writes": 0,
+  "capture_path": "/opt/bybot-research/pump4-serial-cost-off-20261102/candidate-db2eb8583301289d/runtime/capture-1793609333665-d44337b1c6d34c8e9523eee471ee984e/capture.json",
+  "capture_receipt_path": "/opt/bybot-research/pump4-serial-cost-off-20261102/candidate-db2eb8583301289d/runtime/capture-1793609333665-d44337b1c6d34c8e9523eee471ee984e/audit-receipt.json",
+  "capture_sha256": "41b3596f4eabe11dc777edc1cffb97aa07eaacce3cbb14204d1370c5a555549d",
+  "collector_sha256": "bb71585d453eac3a355811636c5161f1d4d428980bb7912c8f0348cd7d515e16",
+  "cost_finality_proven": false,
+  "cost_policy_sha256": "45aa24a6f0d61811cfcec8fcc4b6c68f9b81df3861661f4aef4a888d317295a5",
+  "live_preserved": {
+    "account_lock_inode": 818853,
+    "live_source_files": 194,
+    "no_admission_or_money_history": true,
+    "observed_ms": 1793609335183,
+    "pid": 3669955,
+    "preserved_units": true,
+    "selected_config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+    "selected_scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970"
+  },
+  "money_authority": false,
+  "nonempty_cost_contract_qualified": false,
+  "orders_allowed": false,
+  "original_source_cutoff_preserved": true,
+  "replayed_ms": 1793609335191,
+  "schema": "PUMP4_SERIAL_CAPTURE_AUDIT_V1",
+  "selected_packet_sha256": "3aa49421dfb628dc6703986cc9c988f394d0fa94e4955f496db1a3a39f8fec7b",
+  "source_authenticity": "EXTERNAL_PINNED_COLLECTOR_REQUIRED",
+  "source_observed_ms": 1793609335100,
+  "source_requests": 11,
+  "source_view_sha256": "e78069329d74a0d27fc1e3226adac911faf80e9a1166f930fbf533b9ec4c8c23",
+  "status": "FLAT_SOURCE_REPLAY_PASS_NO_LIFECYCLE"
+}
