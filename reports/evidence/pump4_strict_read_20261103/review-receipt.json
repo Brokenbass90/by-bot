@@ -1,0 +1,15 @@
+{
+  "actual_future_h1": "PENDING",
+  "material_findings_remaining": 0,
+  "model_effort": "existing gpt-6-astra/high task; runtime metadata checked earlier in this session",
+  "overlay_fresh_tests": 5,
+  "parser_fresh_tests": 50,
+  "review_scope": [
+    "strict read parser",
+    "DATA-only bootstrap injection",
+    "delta from accepted V3 quiet handoff"
+  ],
+  "reviewer_implemented_or_deployed": false,
+  "reviewer_task": "/root/pump4_throughput_rootcause_20261102",
+  "schema": "BOUNDED_CRITICAL_REVIEW_RECEIPT_V1"
+}

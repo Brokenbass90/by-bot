@@ -1,0 +1,16 @@
+{
+  "files": {
+    "bootstrap.py": "f6836cc7b31167f44e741c0dd6592ba62ebdebceaf5d11bec7ed61abaed71a08",
+    "new-data-final.service": "9c7ff89367ba1a69c419fc5ffc8260f078e998a2886bbc6373148bc06f7bbcbe",
+    "old-data-exact.service": "0e227ab316240795ba73bc3ec81d513b12b579327d691ecaac84ad5b8efff8c1",
+    "patch-manifest.json": "746f35af071b7383f387afc9ca9ec1766a185cf74d2a10de1ec0e9145c016ba8",
+    "pump4_strict_read_journal_v1.py": "6f65581e0f6615de7ee52ae1acca60471bd76e61020aa2c7131f66f1fb639967",
+    "quiet-handoff.py": "5be1055772b51f94562540be6fe57bb4b632974cfbfb74b4a2e686f6dea26e7b",
+    "test-handoff.py": "2487b6644c8d9c24c96acd8a04037d4ac898a4e11a0e23cc49a7d47edb3f77e7"
+  },
+  "folder": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/pump4_strict_read_20261103/strict-read-6f65581e0f6615de",
+  "helper_sha256": "5be1055772b51f94562540be6fe57bb4b632974cfbfb74b4a2e686f6dea26e7b",
+  "manifest_sha256": "746f35af071b7383f387afc9ca9ec1766a185cf74d2a10de1ec0e9145c016ba8",
+  "new_data_unit_sha256": "9c7ff89367ba1a69c419fc5ffc8260f078e998a2886bbc6373148bc06f7bbcbe",
+  "remote": "/opt/bybot-research/pump4-data-throughput-20261103/strict-read-6f65581e0f6615de"
+}

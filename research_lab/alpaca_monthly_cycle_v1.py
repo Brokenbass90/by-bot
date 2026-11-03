@@ -201,7 +201,12 @@ class MonthlyManager:
         def attempt(phase,fn):
             try:return fn()
             except Exception as exc:
-                out['issues'].append(dict(phase=phase,code=type(exc).__name__,reason=str(exc)))
+                issue=dict(phase=phase,code=type(exc).__name__,reason=str(exc))
+                evidence=getattr(exc,'http_error_evidence',None)
+                if isinstance(evidence,dict) and evidence.get('schema')=='ALPACA_HTTP_ERROR_EVIDENCE_V1':
+                    try:issue['http_error_evidence']=json.loads(json.dumps(evidence,sort_keys=True,allow_nan=False))
+                    except (TypeError,ValueError):issue['http_error_evidence_capture']='UNAVAILABLE'
+                out['issues'].append(issue)
                 return None
         with self.guard('dispatch.lock'):
             out['recovered']=attempt('RECOVERY',lambda:self.recover(native,now_ms=clock(),apply=True)) or []

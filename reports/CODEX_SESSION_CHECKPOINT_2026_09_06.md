@@ -1,5 +1,51 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT3Nov18:40UTC — PUMPstrictDATArepairscheduled19UTC→actual20H; Monthly422LOCAL
+
+Read PUMP4_STRICT_READ_THROUGHPUT_2026_11_03.md. PriorWarmactual15/16Hpassed,
+17H123timely/66.274s,18H127/63.500sfailed: notstable. NewDATA-onlystrictparser
+keepsfullchain/no cache/basewriter+fsync, originalsourcepins/financialbindings.
+Local/sameVPS133injectedPASS, finalportable38local/33VPS,10handoffboth, bounded
+criticalreviewsresolved. SameWarm/BTC224row VPS133.354→95.958ms(28.04%)benchmark,
+NOTactualH1. Versionedoverlay manifest746f35af…16ba8/helper5be10557…26e7b;
+DATAunit9c7ff893…bbcbe onlyafterfuturequietboundary. Nativepump4-data-strict-
+handoff-20261103.timer19:00:30UTC(21CY)alreadyactive; no manualhelper/apply/rerun.
+Checksfull19H+65..80s/currentDATA4126455/oldunit0e227/unusedstrict-v1claim;
+900spreload/rollbacktoacceptedWarm. Actual20Hproofafter20:02:05UTC(22:02CY).
+Appheartbeatpump4-strict-h1 GET-only/pendingquiet/resultonce+deletesitself.
+Samefinancialowner3669955/NRestarts0/lock818853/Monthly125unitf167c6cc/scopes/
+keys/60s/deadlineunchanged; Polymarketnotstopped. NotyetDEPLOYED/SOURCEPASS.
+Monthly original422reasonUNKNOWN/bodylost;209PASSdiagnosticfixLOCALnotdeployed,
+18:04GETflat/open0/CID404 notfullhistory. Oldreservation+expiredscopepreserve,
+noPOST/apply/GO/datecarry. PrivatebrokersupportrequestpreparedNOTsent.
+ForeignNETsixlines/allowlist/evidencepreservedandexcludedfromcommit.
+
+---
+Earlierdatedentriesbelowarehistory.
+
+
+CURRENT3Nov18:24UTC — Monthly422diagnosticrepairLOCAL209PASS; PUMP2/4timelyhours
+
+Read MONTHLY_HTTP422_DIAGNOSIS_2026_11_03.md. Current18:04LIVEGETsame125account,
+flat/open0/recent0/CID404/accountACTIVE+no blocks/fractionaltrue/LLYfractionable.
+These arecurrentnot14:30conditions. Oldreservationpreserved; noPOST/apply/GO/retry.
+Original422body/requestIDlost. Reconstructedpayload101.413902261 passeswireformat;
+API9dpvsBrokerFAQ2dpnotdefinitiverootcause. No speculativewireprecisionchange.
+Localexistingtransport+Monthlyissuecapturefix safelyretainsfutureerror details,
+no financialsemanticchange;11new+198existing=209PASS, boundedreviewprivacygapsfixed
+and11focusedrecheckresolved. NOTDEPLOYED/NOTMONTHLY_FIXED; newsourceGO/handoffneeded.
+Private .private/monthly_http422_20261103/broker-support-request.txt ready, NOTsent.
+PUMPactual15H134/58.750s,16H134/56.629s;17H123/66.274s,18H127/63.500swithin60.
+All134complete/nodisconnect/0rawsignals, sameDATA4126455/owner3669955NRestarts0.
+Firstrepairpartiallyeffective, notstable. One-shotmonitorpump4-data-h1-handoff-v3
+deleted; nativeunits/health/archivekept. NextboundedP0fulljournalCPUverification
+analysis(no cache/chainweakening/60s/strategy/financialGOchange), notinstalled.
+Attachmentresearchideasinfoonly/Claudeowns; no newBrain/Factory/V2worknow.
+ForeignNETblock/allowlist/evidencepreserve/exclude. Sourcefilefixeslocalonly.
+
+---
+Earlierdatedentriesbelowarehistory.
+
 CURRENT3Nov14:44UTC — actualMonthlywindowUNKNOWN/HTTP422; PUMPinstalled15Hpending
 
 Actual postwindow receipt3Nov14:40:02.406UTC /16:40:02Cyprus: independentLIVE

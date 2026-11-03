@@ -1,0 +1,80 @@
+{
+  "private_evidence": ".private/monthly_http422_20261103/20261103T180415Z-d640ea584375499ca7d5ccea9b483a1f.json",
+  "observed_at": "2026-11-03T18:04:15.644962+00:00",
+  "positions": 0,
+  "open_orders": 0,
+  "recent_orders": 0,
+  "identity": {
+    "account_matches": true,
+    "live_endpoint": true
+  },
+  "account_flags": {
+    "status": "ACTIVE",
+    "trading_blocked": false,
+    "account_blocked": false,
+    "trade_suspended_by_user": false,
+    "pattern_day_trader": null
+  },
+  "asset_status": 200,
+  "asset": {
+    "symbol": "LLY",
+    "status": "active",
+    "tradable": true,
+    "fractionable": true,
+    "asset_class": null
+  },
+  "configuration_status": 200,
+  "configuration": {
+    "fractional_trading": true,
+    "no_shorting": false,
+    "suspend_trade": false
+  },
+  "exact_cid": {
+    "http_status": 404,
+    "error_type": "AlpacaHttpError"
+  },
+  "native_intent_status": "reserved",
+  "wire_notional": "101.413902261",
+  "pump_actual15": {
+    "actual_data_pid": 4126455,
+    "actual_data_unit_sha256": "0e227ab316240795ba73bc3ec81d513b12b579327d691ecaac84ad5b8efff8c1",
+    "actual_hour": {
+      "complete": 134,
+      "disconnected": false,
+      "expected": 134,
+      "hour_open_ms": 1793718000000,
+      "hour_pass": true,
+      "last_publication_offset_ms": 58750,
+      "raw_signals": 0,
+      "receipt_sha256": "7be867208e11c5587aeb6ab3501a60a4e1358ada8141baea699095a9736ebb76",
+      "within60": 134
+    },
+    "actual_new_h1": "PASS",
+    "financial_continuity": {
+      "account_lock_inode": 818853,
+      "pump_owner": {
+        "ActiveState": "active",
+        "DropInPaths": "",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "Job": "",
+        "MainPID": "3669955",
+        "NRestarts": "0",
+        "Result": "success",
+        "SubState": "running"
+      },
+      "units": {
+        "alpaca-monthly-owned.service": "f167c6ccf922902d5bee874ca4946bfb6d5c8bf227df31f2144f595e2ad0a81c",
+        "alpaca-monthly-owned.timer": "33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb",
+        "pump4-execution-owner.service": "991211ed5db0c9dd163193141179eefe9a266298d9bdde1491dc0904793fb843"
+      }
+    },
+    "observed_ms": 1793718126678,
+    "patch_manifest_sha256": "59f6639e8c70015391e756bb1d5a217904dc6b2c204f750d6e52e254522d4e15"
+  },
+  "units": {
+    "pump4-data-supervisor.service": "MainPID=4126455\nNRestarts=0\nActiveState=active\n",
+    "pump4-execution-owner.service": "MainPID=3669955\nNRestarts=0\nActiveState=active\n"
+  },
+  "broker_writes": 0
+}

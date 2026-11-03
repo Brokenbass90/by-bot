@@ -1,0 +1,12 @@
+{
+  "base_patch": "/opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153",
+  "base_patch_sha256": "59f6639e8c70015391e756bb1d5a217904dc6b2c204f750d6e52e254522d4e15",
+  "files": {
+    "bootstrap.py": "f6836cc7b31167f44e741c0dd6592ba62ebdebceaf5d11bec7ed61abaed71a08",
+    "old-data-exact.service": "0e227ab316240795ba73bc3ec81d513b12b579327d691ecaac84ad5b8efff8c1",
+    "pump4_strict_read_journal_v1.py": "6f65581e0f6615de7ee52ae1acca60471bd76e61020aa2c7131f66f1fb639967"
+  },
+  "financial_authority": false,
+  "orders_allowed": false,
+  "schema": "PUMP4_STRICT_READ_OVERLAY_V1"
+}

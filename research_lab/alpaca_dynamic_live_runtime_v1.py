@@ -107,6 +107,59 @@ class DynamicLiveClient(native.AlpacaClient):
             if kind[1]=='stop':positive(payload['stop_price'])
         else:raise ValueError('MONTHLY_ORDER_TYPE_REFUSED')
 
+    def _http_error_evidence(self,exc,method,url,payload,body):
+        """Bounded safe rejection data, never headers/raw account balances/keys.
+
+        The status-only exception string stays stable. Existing Monthly records
+        may persist this structure; no retry/permit or financial state changes.
+        """
+        def scrub(value):
+            text=str(value)
+            for name,key in self._headers().items():
+                if name.upper() in {'APCA-API-KEY-ID','APCA-API-SECRET-KEY'} and key:
+                    text=text.replace(str(key),'[credential]')
+            text=re.sub(r'(?i)\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b','[identifier]',text)
+            text=re.sub(r'(?i)\b[0-9a-f]{24,}\b','[identifier]',text)
+            text=re.sub(r'(?i)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}','[email]',text)
+            amount=r'[+-]?(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?'
+            context=r'(?i)(\b(?:available|cash|equity|balance|buying[ _-]*power|funds|margin)\b\s*(?:is\s*)?[:=]?\s*(?:(?:USD|USDC|USDT|EUR|GBP)\s*|[$€£]\s*)?)'
+            text=re.sub(context+amount,lambda m:m.group(1)+'[amount]',text)
+            text=re.sub(r'(?<![\w])\$?[0-9]+\.[0-9]+(?:[eE][+-]?[0-9]+)?(?![\w])','[amount]',text)
+            text=re.sub(r'\b[0-9]{10,}\b','[number]',text)
+            if re.search(r'(?i)\b(?:available|cash|equity|balance|buying[ _-]*power|funds|margin)\b',text):
+                # Monetary messages can use formats not anticipated above. Keep
+                # their wording, remove every numeric value, then fail closed.
+                text=re.sub(r'(?<![A-Za-z0-9_])[+-]?\$?[0-9]+(?:,[0-9]{3})*(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?','[amount]',text)
+                if any(c.isdigit() for c in text):text='[monetary response omitted; broker code retained]'
+            return text[:2000]
+        rid=exc.headers.get('X-Request-ID') if exc.headers is not None else None
+        if not isinstance(rid,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,128}',rid):rid=None
+        if rid is not None and any(secret and str(secret) in rid for secret in (self.key_id,self.secret_key)):rid=None
+        safe_payload={k:v for k,v in (payload or {}).items() if k in
+            {'symbol','side','type','time_in_force','notional','qty','stop_price','limit_price'}}
+        cid=(payload or {}).get('client_order_id')
+        out=dict(schema='ALPACA_HTTP_ERROR_EVIDENCE_V1',http_status=exc.code,
+            method=method,path=urlsplit(url).path,request_id=rid,
+            request_payload=safe_payload,request_payload_sha256=hashlib.sha256(body).hexdigest() if body is not None else None,
+            client_order_id_sha256=hashlib.sha256(cid.encode()).hexdigest() if isinstance(cid,str) else None,
+            body_capture_status='UNAVAILABLE',body_prefix_sha256=None,body_prefix_bytes=0,
+            body_truncated=None,body_format='UNKNOWN',broker_code=None,message=None)
+        try:
+            with exc:raw=exc.read(8193)
+            prefix=raw[:8192];out.update(body_capture_status='CAPTURED',
+                body_prefix_sha256=hashlib.sha256(prefix).hexdigest(),body_prefix_bytes=len(prefix),body_truncated=len(raw)>8192)
+            try:value=json.loads(prefix)
+            except (ValueError,UnicodeError):value=None
+            if isinstance(value,dict):
+                code=value.get('code');code=code if type(code) is int and abs(code)<10**20 else None
+                out.update(body_format='JSON_OBJECT',broker_code=code,
+                    message=scrub(value['message']) if isinstance(value.get('message'),str) else None)
+            else:out['body_format']='NON_JSON'
+        except Exception:
+            # Diagnostics cannot turn a rejected/unknown request into a retry.
+            pass
+        return out
+
     def _http(self,url,method,payload=None):
         body=canonical(payload) if payload is not None else None
         req=request.Request(url,data=body,headers=self._headers(),method=method)
@@ -115,7 +168,10 @@ class DynamicLiveClient(native.AlpacaClient):
             if len(raw)>2_000_000:raise ValueError('LIVE_RESPONSE_TOO_LARGE')
             return json.loads(raw) if raw else {}
         except error.HTTPError as exc:
-            raise native.AlpacaAPIError(exc.code,'ALPACA_HTTP_'+str(exc.code)) from exc
+            rejected=native.AlpacaAPIError(exc.code,'ALPACA_HTTP_'+str(exc.code))
+            try:rejected.http_error_evidence=self._http_error_evidence(exc,method,url,payload,body)
+            except Exception:pass
+            raise rejected from exc
 
     def cost_get(self,route,params):
         """Bounded raw GET evidence, retaining fee rows and unsuccessful bodies.

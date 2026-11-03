@@ -1,0 +1,19 @@
+{
+  "source": "RECONSTRUCTED_FROM_DURABLE_INTENT_AND_UNCHANGED_PINNED_SERIALIZER_NOT_RAW_WIRE_CAPTURE",
+  "method": "POST",
+  "path": "/v2/orders",
+  "payload": {
+    "symbol": "LLY",
+    "notional": "101.413902261",
+    "side": "buy",
+    "type": "market",
+    "time_in_force": "day"
+  },
+  "client_order_id_sha256": "3ee324830546c072256afd6036cd89c4134f75a87738bf2861679d7347a20523",
+  "canonical_payload_sha256": "a6ad6a2c8c0e91e2e4592d7d73f841a8ed939c47d119ef2e2f6d09ec4087aa60",
+  "strict_monthly_wire_shape_passed": true,
+  "submitted_again": false,
+  "actual_response_body_available": false,
+  "original_broker_rejection_reason": "UNKNOWN",
+  "note": "Current GET asset/account/config flags are not historical evidence of original opening conditions; no POST is used for diagnosis."
+}

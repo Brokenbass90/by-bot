@@ -1,0 +1,45 @@
+......FFF                                                                [100%]
+=================================== FAILURES ===================================
+_ test_monetary_contexts_redact_integer_single_decimal_exponent_and_comma_amounts _
+
+    def test_monetary_contexts_redact_integer_single_decimal_exponent_and_comma_amounts():
+     body=json.dumps({'code':42210000,'message':'available 4321, cash 814.5, equity 1e4, balance EUR 4,321.00; notional must have at most 2 decimal places'}).encode()
+     _,_,exc=rejected(body);s=exc.http_error_evidence['message']
+>    for amount in ['4321','814.5','1e4','4,321.00']:assert amount not in s
+                                                     ^^^^^^^^^^^^^^^^^^^^^^
+E    AssertionError: assert '4321' not in 'available 4...cimal places'
+E      
+E      '4321' is contained here:
+E        available 4321, cash 814.5, equity 1e4, balance EUR 4,[amount]; notional must have at most 2 decimal places
+E      ?           ++++
+
+tests/test_alpaca_http_rejection_evidence_v1.py:80: AssertionError
+______ test_request_id_containing_credential_is_omitted[fixture-key-123] _______
+
+credential = 'fixture-key-123'
+
+    @pytest.mark.parametrize('credential',[KEY,SECRET])
+    def test_request_id_containing_credential_is_omitted(credential):
+     h=Message();h['X-Request-ID']='request-'+credential
+     _,_,exc=rejected(b'{"code":42210000,"message":"rejected"}',h)
+>    assert exc.http_error_evidence['request_id'] is None
+E    AssertionError: assert 'request-fixture-key-123' is None
+
+tests/test_alpaca_http_rejection_evidence_v1.py:87: AssertionError
+_____ test_request_id_containing_credential_is_omitted[fixture-secret-456] _____
+
+credential = 'fixture-secret-456'
+
+    @pytest.mark.parametrize('credential',[KEY,SECRET])
+    def test_request_id_containing_credential_is_omitted(credential):
+     h=Message();h['X-Request-ID']='request-'+credential
+     _,_,exc=rejected(b'{"code":42210000,"message":"rejected"}',h)
+>    assert exc.http_error_evidence['request_id'] is None
+E    AssertionError: assert 'request-fixture-secret-456' is None
+
+tests/test_alpaca_http_rejection_evidence_v1.py:87: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_monetary_contexts_redact_integer_single_decimal_exponent_and_comma_amounts
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_request_id_containing_credential_is_omitted[fixture-key-123]
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_request_id_containing_credential_is_omitted[fixture-secret-456]
+3 failed, 6 passed in 0.34s

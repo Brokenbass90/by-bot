@@ -1,0 +1,75 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_____ test_real_http422_preserves_sanitized_body_request_id_and_wire_hash ______
+
+    def test_real_http422_preserves_sanitized_body_request_id_and_wire_hash():
+     body=b'{"code":42210000,"message":"notional must have at most 2 decimal places"}'
+     h=Message();h['X-Request-ID']='request-fixture-1';c,e,exc=rejected(body,h)
+>    d=exc.http_error_evidence
+       ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'AlpacaAPIError' object has no attribute 'http_error_evidence'
+
+tests/test_alpaca_http_rejection_evidence_v1.py:28: AttributeError
+______ test_error_evidence_never_contains_keys_headers_or_balance_values _______
+
+    def test_error_evidence_never_contains_keys_headers_or_balance_values():
+     body=json.dumps({'code':42210000,'message':f'{KEY} {SECRET} balance $487.42 account 123e4567-e89b-12d3-a456-426614174000','secret':'OTHER_SECRET','buying_power':'487.42'}).encode()
+>    _,_,exc=rejected(body);s=json.dumps(exc.http_error_evidence)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'AlpacaAPIError' object has no attribute 'http_error_evidence'
+
+tests/test_alpaca_http_rejection_evidence_v1.py:43: AttributeError
+_________ test_http_error_body_is_bounded_and_prefix_hash_is_explicit __________
+
+    def test_http_error_body_is_bounded_and_prefix_hash_is_explicit():
+>    body=b'x'*20000;_,_,exc=rejected(body);d=exc.http_error_evidence
+                                              ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'AlpacaAPIError' object has no attribute 'http_error_evidence'
+
+tests/test_alpaca_http_rejection_evidence_v1.py:48: AttributeError
+______ test_body_read_failure_preserves_original_http_error_without_retry ______
+
+    def test_body_read_failure_preserves_original_http_error_without_retry():
+     _,e,exc=rejected(b'',broken=True)
+     assert exc.status_code==422 and len(e.requests)==1
+>    assert exc.http_error_evidence['body_capture_status']=='UNAVAILABLE'
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'AlpacaAPIError' object has no attribute 'http_error_evidence'
+
+tests/test_alpaca_http_rejection_evidence_v1.py:56: AttributeError
+_______________ test_unknown_json_body_fields_are_not_persisted ________________
+
+    def test_unknown_json_body_fields_are_not_persisted():
+     _,_,exc=rejected(b'{"code":42210000,"message":"rejected","account":{"cash":"999"},"unknown":"secret"}')
+>    s=json.dumps(exc.http_error_evidence);assert '999' not in s and 'unknown' not in s and 'secret' not in s
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'AlpacaAPIError' object has no attribute 'http_error_evidence'
+
+tests/test_alpaca_http_rejection_evidence_v1.py:60: AttributeError
+___ test_existing_monthly_observation_retains_error_evidence_without_resend ____
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106bbeb10>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106bce420>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x10641ef30>, 1793629800000)
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-964/test_existing_monthly_observat0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106bbed80>
+
+    def test_existing_monthly_observation_retains_error_evidence_without_resend(setup,tmp_path,monkeypatch):
+     from test_alpaca_monthly_cycle_custody_v1 import wired
+     m,n,s,broker,now=wired(setup,tmp_path)
+     _,_,exc=rejected(b'{"code":42210000,"message":"fixture rejected"}')
+     def failed(**kwargs):raise exc
+     monkeypatch.setattr(m,'recover',lambda *a,**kw:failed())
+     out=m.tick(n,now_ms=now,apply=True)
+     issue=next(i for i in out['issues'] if i['phase']=='RECOVERY')
+>    assert issue['http_error_evidence']['broker_code']==42210000
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    KeyError: 'http_error_evidence'
+
+tests/test_alpaca_http_rejection_evidence_v1.py:70: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_real_http422_preserves_sanitized_body_request_id_and_wire_hash
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_error_evidence_never_contains_keys_headers_or_balance_values
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_http_error_body_is_bounded_and_prefix_hash_is_explicit
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_body_read_failure_preserves_original_http_error_without_retry
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_unknown_json_body_fields_are_not_persisted
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_existing_monthly_observation_retains_error_evidence_without_resend
+6 failed in 0.35s

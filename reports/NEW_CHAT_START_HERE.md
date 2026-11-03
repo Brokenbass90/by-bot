@@ -1,3 +1,19 @@
+# Current3Nov18:40UTC — PUMP DATA repair scheduled; Monthly422 unresolved
+
+Start checkpointTOP, PUMP4_STRICT_READ_THROUGHPUT_2026_11_03.md and
+MONTHLY_HTTP422_DIAGNOSIS_2026_11_03.md. Native strictDATAhandoff19:00:30UTC
+alreadyarmed, doNOTmanuallyrun/replay. Actualnew20Hreceipt after20:02:05UTC;
+appheartbeatpump4-strict-h1 GET-only. Previous15/16Hpass,17/18Hlate; notstable.
+133sameinjectedlocal/VPSPASS; benchmark28.04%operationgain notactualH1.
+Currentfinancialowner3669955/Monthly125/scopes/keys/60s/locks preserved.
+Monthly original422bodylost; exactcauseUNKNOWN. Localerrorcapture209PASS,
+notdeployed/notMonthlyfixed. PrivatebrokersupportdraftNOTsent. NoPOST/oldGO/
+apply/claimreset/datecarry; expiredwindowcannotbereplayed. ResearchClaude.
+ForeignNET/allowlist/otherworkpreserve. See currentreportfor exactpins.
+
+---
+Previousdatedcheckpointbelowishistory.
+
 # Current after3Nov16:40Cyprus — MonthlyHTTP422, no confirmedBUY
 
 Read checkpointTOP/MONTHLY_CACHE_SOURCE_REPAIR_2026_11_03.md. NativepostwindowGET

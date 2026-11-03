@@ -1,0 +1,30 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_monetary_message_fails_closed_for_unrecognized_amount_format[cash balance of 4321 is insufficient] _
+
+message = 'cash balance of 4321 is insufficient'
+
+    @pytest.mark.parametrize('message',['cash balance of 4321 is insufficient','available balance: -$4,321'])
+    def test_monetary_message_fails_closed_for_unrecognized_amount_format(message):
+     _,_,exc=rejected(json.dumps({'code':42210000,'message':message}).encode())
+>    assert not any(c.isdigit() for c in exc.http_error_evidence['message'])
+E    assert not True
+E     +  where True = any(<generator object test_monetary_message_fails_closed_for_unrecognized_amount_format.<locals>.<genexpr> at 0x10a6c0e10>)
+
+tests/test_alpaca_http_rejection_evidence_v1.py:92: AssertionError
+_ test_monetary_message_fails_closed_for_unrecognized_amount_format[available balance: -$4,321] _
+
+message = 'available balance: -$4,321'
+
+    @pytest.mark.parametrize('message',['cash balance of 4321 is insufficient','available balance: -$4,321'])
+    def test_monetary_message_fails_closed_for_unrecognized_amount_format(message):
+     _,_,exc=rejected(json.dumps({'code':42210000,'message':message}).encode())
+>    assert not any(c.isdigit() for c in exc.http_error_evidence['message'])
+E    assert not True
+E     +  where True = any(<generator object test_monetary_message_fails_closed_for_unrecognized_amount_format.<locals>.<genexpr> at 0x10b105560>)
+
+tests/test_alpaca_http_rejection_evidence_v1.py:92: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_monetary_message_fails_closed_for_unrecognized_amount_format[cash balance of 4321 is insufficient]
+FAILED tests/test_alpaca_http_rejection_evidence_v1.py::test_monetary_message_fails_closed_for_unrecognized_amount_format[available balance: -$4,321]
+2 failed in 0.21s
