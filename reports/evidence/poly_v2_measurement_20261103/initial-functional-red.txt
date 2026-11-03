@@ -1,0 +1,290 @@
+FFFFFFFFFFFFFFF.                                                         [100%]
+=================================== FAILURES ===================================
+_______ test_selected_no_token_walks_its_own_asks_and_never_synthesizes ________
+
+    def test_selected_no_token_walks_its_own_asks_and_never_synthesizes():
+>    r=p.measure(*inputs(),decision_ms=1010)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+________________ test_ladder_depth_excludes_levels_above_limit _________________
+
+    def test_ladder_depth_excludes_levels_above_limit():
+     s,b,m=inputs();b['asks']=[{'price':'0.98','size':'20'},{'price':'0.99','size':'99999'}]
+>    r=p.measure(s,b,m,decision_ms=1010)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+___________ test_wrong_token_is_unknown_with_no_counterfactual_fill ____________
+
+    def test_wrong_token_is_unknown_with_no_counterfactual_fill():
+>    s,b,m=inputs();b['asset_id']='A';r=p.measure(s,b,m,decision_ms=1010)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_______ test_missing_book_timestamp_or_hash_never_qualified[received_ms] _______
+
+field = 'received_ms'
+
+    @pytest.mark.parametrize('field',['received_ms','source_sha256'])
+    def test_missing_book_timestamp_or_hash_never_qualified(field):
+>    s,b,m=inputs();del b[field];assert p.measure(s,b,m,decision_ms=1010)['status']=='UNKNOWN'
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'RESPONSE_RECEIVED', ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+______ test_missing_book_timestamp_or_hash_never_qualified[source_sha256] ______
+
+field = 'source_sha256'
+
+    @pytest.mark.parametrize('field',['received_ms','source_sha256'])
+    def test_missing_book_timestamp_or_hash_never_qualified(field):
+>    s,b,m=inputs();del b[field];assert p.measure(s,b,m,decision_ms=1010)['status']=='UNKNOWN'
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+__________ test_request_start_timestamp_is_not_response_availability ___________
+
+    def test_request_start_timestamp_is_not_response_availability():
+>    s,b,m=inputs();b['time_origin']='MONITOR_LOOP_START';r=p.measure(s,b,m,decision_ms=1010)
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+________________________ test_future_quote_is_not_used _________________________
+
+    def test_future_quote_is_not_used():
+>    s,b,m=inputs();b['received_ms']=1011;r=p.measure(s,b,m,decision_ms=1010)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1011, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_____________ test_missing_fee_is_unknown_not_zero_or_positive_net _____________
+
+    def test_missing_fee_is_unknown_not_zero_or_positive_net():
+>    s,b,m=inputs();del m['fee_rate'];r=p.measure(s,b,m,decision_ms=1010)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_________ test_market_not_accepting_orders_is_not_an_executable_signal _________
+
+    def test_market_not_accepting_orders_is_not_an_executable_signal():
+>    s,b,m=inputs();m['accepting_orders']=False;r=p.measure(s,b,m,decision_ms=1010)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': False, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+___________________ test_disconnected_book_has_unknown_depth ___________________
+
+    def test_disconnected_book_has_unknown_depth():
+>    s,b,m=inputs();b['continuity']='GAP';r=p.measure(s,b,m,decision_ms=1010)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_____________ test_malformed_or_duplicate_depth_is_rejected[asks0] _____________
+
+asks = [{'price': 'NaN', 'size': '5'}]
+
+    @pytest.mark.parametrize('asks',[[{'price':'NaN','size':'5'}],[{'price':'0.97','size':'-1'}],[{'price':'0.97','size':'5'},{'price':'0.97','size':'5'}]])
+    def test_malformed_or_duplicate_depth_is_rejected(asks):
+>    s,b,m=inputs();b['asks']=asks;assert p.measure(s,b,m,decision_ms=1010)['status']=='UNKNOWN'
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_____________ test_malformed_or_duplicate_depth_is_rejected[asks1] _____________
+
+asks = [{'price': '0.97', 'size': '-1'}]
+
+    @pytest.mark.parametrize('asks',[[{'price':'NaN','size':'5'}],[{'price':'0.97','size':'-1'}],[{'price':'0.97','size':'5'},{'price':'0.97','size':'5'}]])
+    def test_malformed_or_duplicate_depth_is_rejected(asks):
+>    s,b,m=inputs();b['asks']=asks;assert p.measure(s,b,m,decision_ms=1010)['status']=='UNKNOWN'
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_____________ test_malformed_or_duplicate_depth_is_rejected[asks2] _____________
+
+asks = [{'price': '0.97', 'size': '5'}, {'price': '0.97', 'size': '5'}]
+
+    @pytest.mark.parametrize('asks',[[{'price':'NaN','size':'5'}],[{'price':'0.97','size':'-1'}],[{'price':'0.97','size':'5'},{'price':'0.97','size':'5'}]])
+    def test_malformed_or_duplicate_depth_is_rejected(asks):
+>    s,b,m=inputs();b['asks']=asks;assert p.measure(s,b,m,decision_ms=1010)['status']=='UNKNOWN'
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_______________ test_fee_and_win_loss_are_estimates_not_real_pnl _______________
+
+    def test_fee_and_win_loss_are_estimates_not_real_pnl():
+>    s,b,m=inputs();b['asks']=[{'price':'0.97','size':'100'}];r=p.measure(s,b,m,decision_ms=1010)
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+_________ test_join_preserves_original_and_never_infers_funds_release __________
+
+    def test_join_preserves_original_and_never_infers_funds_release():
+>    r=p.measure(*inputs(),decision_ms=1010);before=copy.deepcopy(r);j=p.join_outcome(r,'B',resolved_ms=2000,joined_ms=2001)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_v2_orders_off_v1.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'market_id': 'm', 'token_id': 'B', 'policy_sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...'received_ms': 1001, ...}, {'market_id': 'm', 'tokens': ['A', 'B'], 'accepting_orders': True, 'received_ms': 999, ...})
+kwargs = {'decision_ms': 1010}
+
+>   def measure(*args,**kwargs):raise NotImplementedError('selected-token measurement not implemented')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   NotImplementedError: selected-token measurement not implemented
+
+research_lab/polymarket_v2_orders_off_v1.py:2: NotImplementedError
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_selected_no_token_walks_its_own_asks_and_never_synthesizes
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_ladder_depth_excludes_levels_above_limit
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_wrong_token_is_unknown_with_no_counterfactual_fill
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_missing_book_timestamp_or_hash_never_qualified[received_ms]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_missing_book_timestamp_or_hash_never_qualified[source_sha256]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_request_start_timestamp_is_not_response_availability
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_future_quote_is_not_used
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_missing_fee_is_unknown_not_zero_or_positive_net
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_market_not_accepting_orders_is_not_an_executable_signal
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_disconnected_book_has_unknown_depth
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_malformed_or_duplicate_depth_is_rejected[asks0]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_malformed_or_duplicate_depth_is_rejected[asks1]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_malformed_or_duplicate_depth_is_rejected[asks2]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_fee_and_win_loss_are_estimates_not_real_pnl
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_join_preserves_original_and_never_infers_funds_release
+15 failed, 1 passed in 0.16s

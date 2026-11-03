@@ -1,3 +1,15 @@
+# Current3Nov14:37UTC — openingHTTP422; BUY notconfirmed, reservation preserved
+
+ActualOPENING ALPACA_HTTP_422 thenUNCERTAIN_ENTRY_NO_RESEND. LiveindependentGET
+14:34:11.701UTC flat0/open0/recent0/bookpositions0/accountmatches, boundedhistory.
+Nativeintentreserved/no stop422marker/no nativefloor. NoCASHorBUYclaim; no retry,
+newGO/windowcarry orreservationdeletion. Exacterrorbodynotretained by transport;
+reasonUNKNOWN. NativepostwindowGET14:40UTC alreadyassigned, readitsactualreceipt.
+Fullsync LIVE_P0_AND_POLY_MEASUREMENT_2026_11_03.md. 125sourceinstalled, not successful
+execution. DoNOTrepeatapply/oldGO. Originalwindow3Nov14:30–14:35UTC hasclosed.
+
+Earlier preparation andactivation below are history.
+
 # Monthly technical source repair — 3 November 2026
 
 **INSTALLED / ARMED_NO_BUY — actual independent GET 3Nov12:48:59UTC.**

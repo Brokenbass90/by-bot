@@ -1,3 +1,29 @@
+# Current3Nov14:37UTC — V3 physically INSTALLED; actual15H stillpending
+
+Nativehandoff completed14:04:27.646UTC; DATA4126455, data-lock4294867,136epochs/
+136journals preserved. Samefinancialowner3669955/NRestarts0/lock818853 andMonthly125
+unitpins. Independent14:33GET confirmsbothPUMPprocessesactive. Actualold14H134/
+114timely+70.916s,0raw; noactualoptimized15Hclaim. Nativeproofexpected15:02:05UTC.
+DoNOTrepeatanyinstaller/GO; sourceabilityafterpatchneedsactualH1.
+
+Earlier dated state below is history.
+
+# Current3Nov13:55UTC — V3 DATA repair scheduled; actualpatchedH1 pending
+
+Latest13H SOURCE_BLOCKED:134complete,108within60,last73.203s. Financialowner
+3669955/NRestarts0/originalDATA4063038 unchanged. Latestowner renewedthroughput
+repairpriority. Acceptedpatch59f663 unchanged; V3 fixes147s coldpreload vs120s
+watchdog with bounded900s/nextsubscriptionheadroom and explicitpreloadedmarker.
+Oneimportantreviewcleanup-timerdefectfixed/regressed,10local/same10VPSPASS;
+focusedreviewresolved. Nativeworkerpump4-data-warm-handoff-v3-20261103 scheduled
+14:00:30UTC, waitsfull14H+65..80s, then DATA-onlyswitch. Helperd7f86949…6e0e47b,
+claim/resultsv3distinct; oldfailurespreserved. No financialGO/key/60s/restartchange.
+First actualnewH115UTC, nativeproofafter15:02:05; monitorpump4-data-h1-handoff-v3
+readsonly. DoNOTrepeatapply. NoactualpatchedH1PASSyet. Monthly12514:30windowkept.
+Fullreport LIVE_P0_AND_POLY_MEASUREMENT_2026_11_03.md.
+
+Earlier dated state below is history.
+
 # Current3Nov12:25UTC — ORIGINAL DATA RESTORED; optimization NOT selected
 
 Restored known original unitcb9de840…95a35 at08:48:12UTC, DATA PID4063038 and

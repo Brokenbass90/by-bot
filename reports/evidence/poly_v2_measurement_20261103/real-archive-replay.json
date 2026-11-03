@@ -1,0 +1,70 @@
+{
+  "measurement": {
+    "actual_fees": null,
+    "actual_net_pnl": null,
+    "assumption": "DISPLAYED_LEVELS_ONLY_NOT_FILL_OR_QUEUE_PROOF",
+    "best_ask": "0.001",
+    "book_age_ms": 0,
+    "book_source_sha256": "7e137ae21ae2cac2ebb2f7a9f262101c85c3b3485bf52bd967def0f4a4821499",
+    "capital_available_again_ms": null,
+    "capture_mode": "HISTORICAL_REPLAY",
+    "captured_fee_rate": null,
+    "decision_ms": 1793628004853,
+    "depth_sufficient_for_model_100": true,
+    "depth_to_limit": "8350.80769",
+    "estimated_fee": null,
+    "estimated_loss_net": null,
+    "estimated_win_net": null,
+    "fee_estimate_assumption": "CAPTURED_RATE_C_P_ONE_MINUS_P_ROUNDED_PER_DISPLAYED_LEVEL_NOT_ACTUAL_MATCHES",
+    "fee_source_sha256": null,
+    "issues": [
+      "ACCEPTING_STATUS_UNKNOWN",
+      "FEE_SCHEDULE_UNKNOWN"
+    ],
+    "limit_price": "0.985",
+    "market_id": "6388992",
+    "market_source_sha256": "5dd74ba245ace21957cd311689b4807fa680ba84ad735fdfd157a75ff80eba04",
+    "market_tokens": [
+      "26213893361856933438807998014722825570854909929695931897284701280963647561017",
+      "113184201687091566520461239883473648895877739612495969769119750062194464232816"
+    ],
+    "measurement_id": "ff4760a8343a60382bdb043b7e7fd79fddd8f8b2eab00b972d4a3c5a365a281f",
+    "model_budget": "100",
+    "model_gross": null,
+    "model_price": null,
+    "model_shares": null,
+    "money_authority": false,
+    "observed_vwap": null,
+    "orders_allowed": false,
+    "policy_sha256": "7ba7af0cd23fd1f9792b7593844ab9a9c85ec0e23b94c1b03e342ea0fb07221f",
+    "prospective_durability_witness": false,
+    "quote_currency": "MODEL_QUOTE_UNITS",
+    "real_fill": false,
+    "schema": "POLY_V2_READ_ONLY_MEASUREMENT_V1",
+    "signal_rule_verified": false,
+    "signal_to_decision_ms": 0,
+    "status": "UNKNOWN",
+    "token_id": "26213893361856933438807998014722825570854909929695931897284701280963647561017",
+    "vwap_minus_model_price": null
+  },
+  "source_proof": {
+    "book": {
+      "file": "clob/sealed/1793628001474-bca086606c3e49479f0c2df32d362a67-1.jsonl.gz",
+      "seal_sha256": "cd9c645e9e57e87af99c432e3e0c68b06a7cdc467eef4a388a2c2ee645473416",
+      "compressed_sha256": "f254e617be67788d53c6bb4ac5b5598182564b7a628770746e60132610bc051c",
+      "import_receipt_sha256": "01bb8b73a82d54b86a0f945633b12969b09b84dd26afdfaaf6e031387b2f485d"
+    },
+    "catalogue": {
+      "file": "catalog/sealed/1793625753478-5969fec040fd4b6db309ce1c3955b8fe-78.jsonl.gz",
+      "seal_sha256": "6be7a4c23b0965abf15b71a95504c5b542f082cfcb46b87173b6345b3fd3575c",
+      "compressed_sha256": "b6b51da29478b6c4cbf0ec6dc71a6c3c552be6b010ae1d85b3df69598c3b19ac",
+      "import_receipt_sha256": "089726d42a5d0bc8ae1ab5a3b23754637c2e6051b54c9cddf1c4a34f6a2b31de"
+    },
+    "full_snapshot_only": true,
+    "venue_sequence_coverage": "UNKNOWN",
+    "historical_replay": true,
+    "actual_observed_ms": 1793713984516
+  },
+  "not_a_trade_signal": true,
+  "network_denied": true
+}

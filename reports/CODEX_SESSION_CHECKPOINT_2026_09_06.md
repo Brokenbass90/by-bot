@@ -1,5 +1,58 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT3Nov14:37UTC — PUMPV3 physicallyinstalled; Monthlyopening422/NO_BUYconfirmedyet
+
+PUMP actualV3handoff14:04:27.646UTC/newDATA4126455/data-lock4294867/136epochs+
+136journalspreserved; sameowner3669955/NRestarts0/accountlock818853/Monthly125pins.
+Independent14:33GETprocessesactive. Actualold14H134/114timely,last70.916s,0raw.
+Firstoptimized15HstillPENDING, proofafter15:02:05; donotrerunworker/apply/GO.
+Monthly125OPENINGfirstALPACA_HTTP_422, thenUNCERTAIN_ENTRY_NO_RESEND. Independent
+14:34:11.701UTC LIVEGETaccountmatches/positions0/open0/recent0/bookpositions0;
+boundedhistorynotCASHorfullhistory. Nativeintentreserved/no stop422marker/floor.
+TransportdiscardedoriginalHTTPerrorbody; exact422reasonUNKNOWN. NoPOSTreplay/
+claimreset/GO/windowcarry. Approvedwindow14:30–14:35UTCclosed; nativeGET14:40UTC
+andmonthly-3nov-12509204heartbeatstay. Readactualreceiptforfinalwindowstatus.
+Read LIVE_P0_AND_POLY_MEASUREMENT_2026_11_03.md +currentMonthly/PUMP reports.
+PreviousautomaticreviewcapacityblockedpublicationandfreshGET; thisturnGETworks.
+Publish onlyownedpendingwork+sanitizednewproof; foreignNETblock/allowlistpreserve.
+V2localmeasurement23+48WS=71PASS/sourcehashesunchanged; no newresearch/Brainstrategy.
+
+---
+Earlier dated entries below are history.
+
+CURRENT3Nov13:55UTC — PUMPV3 scheduled14UTC→actual15UTC; Monthlyarmed; V2measurementlocal
+
+MoneyP0 unchanged: Monthly125installed12:44/source68451851, oneLLY<=101.4139
+TODAY14:30–14:35UTC; alreadyGO/applied, NEVERrepeat. ActualBUY/STOPpendingfuture;
+nativeGET14:40 andheartbeatmonthly-3nov-12509204 alreadyarmed. No datecarry.
+PUMP13H full134but108within60,last73.203s/sourceblocked. OriginalDATA4063038 and
+owner3669955/NRestarts0 unchanged. Userlatestexplicitlyrequestscontinuedthroughput
+repair, supersedesearlierholdonoptimizedinstall. Acceptedpatch59f663 unchanged.
+V3fixcoldpreload147vs120s usesbounded900/reservednextWSboundary,preloadedmarker,
+currentMonthly125unitpins/originallock. Timer-cleanupreviewfindingfixed3red→green;
+10local/same10VPSPASS, focusedreviewresolved. Nativeunitpump4-data-warm-handoff-v3-
+20261103.timer14:00:30UTC waitsfull14H+65..80s; helperd7f86949f685c776acbfd2cf33a991f
+238bf5dd437d54f8aff91482826e0e47b. Actualpatched15Hpending, nativeproofafter15:02:05.
+Monitorpump4-data-h1-handoff-v3readsonly; nofinancialGO/restart/60s/keychange.
+Read LIVE_P0_AND_POLY_MEASUREMENT_2026_11_03.md andPUMP4_THROUGHPUT_REPAIR report.
+
+V2independent20published/19matches audit:20net/outcomesmatch,10syntheticNOprices,
+20executionUNKNOWN. Source20frozen/rawhashesheldprivate+sanitizedevidence. Owner
+communicatedhistoryFAIL2121/840(mean−1.26%,t−2.12); distinctdatasets/rules, noTINY.
+Localresearch12d2b5f/task531a29e notconfirmedorigin30951f9; noClaudecheckoutedit/push.
+Newfileonlypolymarket_v2_orders_off_v1 localmeasurement+CLI:actualselectedtokenask
+ladder<=.985/model100/latency/VWAP/capturedfees/versionSHA; no wallet/network/orders/
+financialconstructor. Outcomejoin NOTactualPnL/capitalrelease.23new+48WS=71PASS,
+networkdeniedactualsealedbook+priorcatalogreplayUNKNOWNcorrectlymissingfee/status.
+Oneboundedreview2measurementfindingsfixed4red→green; nosecondbroadreview.
+Causalruntimeadapter/metadata/regularsignalcomparisonremainOPEN; NOTfullV2ORDERS_OFF.
+Brain/Factory/newscoremodelClaude; Codexdoesnotrunjudges/changefrozenrules.
+Foreignallowlist/NETcheckpointblock/evidencepreserved/excluded. Newgoals/DDproposals
+notfinanciallimits. Read-onlyexposuresummarytimestamps/unknownsinthefullreport.
+
+---
+Earlier dated entries below are history.
+
 CURRENT3Nov12:51UTC — Monthly125 INSTALLED/ARMED_NO_BUY; today16:30Cyprus window
 
 Owner explicitly GO technical12509204. New apply ONCE completed12:44:43.249UTC;

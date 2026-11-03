@@ -1,0 +1,1 @@
+{"exit": 0, "stderr": "Running timer as unit: pump4-data-warm-handoff-v3-20261103.timer\nWill run service as unit: pump4-data-warm-handoff-v3-20261103.service\n", "actual_next": "NextElapseUSecRealtime=Tue 2026-11-03 14:00:30 UTC\nActiveState=active\n", "helper_sha256": "d7f86949f685c776acbfd2cf33a991f238bf5dd437d54f8aff91482826e0e47b", "financial_changes": false}

@@ -1,0 +1,41 @@
+.EE.EE.
+======================================================================
+ERROR: test_late_handoff_is_rejected_before_stop (__main__.ColdPreload.test_late_handoff_is_rejected_before_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/test_pump4_handoff_v3.py", line 13, in test_late_handoff_is_rejected_before_stop
+    with self.assertRaisesRegex(ValueError,'INSUFFICIENT_PRELOAD_HEADROOM'):h.preload_deadline(3600000,123.0,7040000)
+                                                                            ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'handoff_v3' has no attribute 'preload_deadline'
+
+======================================================================
+ERROR: test_measured_147_second_cold_preload_is_allowed (__main__.ColdPreload.test_measured_147_second_cold_preload_is_allowed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/test_pump4_handoff_v3.py", line 7, in test_measured_147_second_cold_preload_is_allowed
+    self.assertGreater(h.preload_deadline(3600000,123.0,3690000)-123.0,147)
+                       ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'handoff_v3' has no attribute 'preload_deadline'
+
+======================================================================
+ERROR: test_preload_cannot_consume_next_subscription_boundary (__main__.ColdPreload.test_preload_cannot_consume_next_subscription_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/test_pump4_handoff_v3.py", line 11, in test_preload_cannot_consume_next_subscription_boundary
+    self.assertEqual(h.preload_deadline(3600000,123.0,6900000),303.0)
+                     ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'handoff_v3' has no attribute 'preload_deadline'
+
+======================================================================
+ERROR: test_timeout_is_bounded_to_fifteen_minutes (__main__.ColdPreload.test_timeout_is_bounded_to_fifteen_minutes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/test_pump4_handoff_v3.py", line 9, in test_timeout_is_bounded_to_fifteen_minutes
+    self.assertEqual(h.preload_deadline(3600000,123.0,3690000),1023.0)
+                     ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'handoff_v3' has no attribute 'preload_deadline'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+FAILED (errors=4)

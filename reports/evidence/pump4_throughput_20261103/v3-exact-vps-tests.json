@@ -1,0 +1,1 @@
+{"exit": 0, "stdout": "", "stderr": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.010s\n\nOK\n", "pins": {"quiet-handoff-v3.py": "d7f86949f685c776acbfd2cf33a991f238bf5dd437d54f8aff91482826e0e47b", "test-handoff-v3.py": "2487b6644c8d9c24c96acd8a04037d4ac898a4e11a0e23cc49a7d47edb3f77e7"}}

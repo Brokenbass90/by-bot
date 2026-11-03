@@ -1,0 +1,57 @@
+{
+  "independent_read_ms": 1793716409465,
+  "source_sha256": "ef47d608821b888dc7c14dc8337f3d6795bc9999ca825d5f6a3a7d8beefc3567",
+  "result": {
+    "actual_new_h1": "PENDING",
+    "before_hour": {
+      "complete": 134,
+      "disconnected": false,
+      "expected": 134,
+      "hour_open_ms": 1793714400000,
+      "hour_pass": false,
+      "last_publication_offset_ms": 70916,
+      "raw_signals": 0,
+      "receipt_sha256": "0d4ef17e73ee0eabbb52d59ab911208007a92e47c878bce2dea5fe342e7de056",
+      "within60": 114
+    },
+    "broker_requests": 0,
+    "broker_writes": 0,
+    "data_lock_inode": 4294867,
+    "epochs_preserved": 136,
+    "financial_changes": false,
+    "financial_continuity": {
+      "account_lock_inode": 818853,
+      "pump_owner": {
+        "ActiveState": "active",
+        "DropInPaths": "",
+        "ExecMainCode": "0",
+        "ExecMainStatus": "0",
+        "Job": "",
+        "MainPID": "3669955",
+        "NRestarts": "0",
+        "Result": "success",
+        "SubState": "running"
+      },
+      "units": {
+        "alpaca-monthly-owned.service": "f167c6ccf922902d5bee874ca4946bfb6d5c8bf227df31f2144f595e2ad0a81c",
+        "alpaca-monthly-owned.timer": "33a1bd34d3a99a92d8273717f43c49f178309f263656a8f67c44b6cbd55c3bcb",
+        "pump4-execution-owner.service": "991211ed5db0c9dd163193141179eefe9a266298d9bdde1491dc0904793fb843"
+      }
+    },
+    "journals_preserved": 136,
+    "new_data_pid": 4126455,
+    "next_hour_ms": 1793718000000,
+    "observed_ms": 1793714667646,
+    "old_data_pid": 4063038,
+    "patch_manifest_sha256": "59f6639e8c70015391e756bb1d5a217904dc6b2c204f750d6e52e254522d4e15",
+    "schema": "PUMP4_WARM_PATCH_PHYSICAL_HANDOFF_V1"
+  },
+  "independent_units": {
+    "pump4-data-warm-handoff-v3-20261103.service": "MainPID=4126073\nResult=success\nNRestarts=0\nActiveState=activating\nSubState=start\n",
+    "pump4-data-supervisor.service": "MainPID=4126455\nResult=success\nNRestarts=0\nActiveState=active\nSubState=running\n",
+    "pump4-execution-owner.service": "MainPID=3669955\nResult=success\nNRestarts=0\nActiveState=active\nSubState=running\n",
+    "alpaca-monthly-owned.timer": "NextElapseUSecRealtime=Tue 2026-11-03 14:34:00 UTC\nResult=success\nActiveState=active\nSubState=waiting\n",
+    "alpaca-monthly-owned.service": "MainPID=0\nResult=exit-code\nNRestarts=0\nActiveState=failed\nSubState=failed\n",
+    "monthly-12509204-postwindow-get-20261103.timer": "NextElapseUSecRealtime=Tue 2026-11-03 14:40:00 UTC\nResult=success\nActiveState=active\nSubState=waiting\n"
+  }
+}

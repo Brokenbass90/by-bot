@@ -1,0 +1,21 @@
+{
+  "status": "OPENING_HTTP422_THEN_UNCERTAIN_ENTRY_NO_RESEND",
+  "broker_observed_at": "2026-11-03T14:34:11.701457+00:00",
+  "identity": {
+    "live_endpoint": "https://api.alpaca.markets",
+    "account_matches_manager": true,
+    "account_matches_scope": true
+  },
+  "position_count": 0,
+  "open_order_count": 0,
+  "recent_order_count": 0,
+  "history_complete": false,
+  "initial_error_phase": "OPENING",
+  "initial_error": "ALPACA_HTTP_422",
+  "native_entry_status": "reserved",
+  "stop_rejection_marker_present": false,
+  "exact_http_response_body_preserved": false,
+  "exact_rejection_reason": "UNKNOWN",
+  "not_cash_verdict": true,
+  "no_manual_resend": true
+}

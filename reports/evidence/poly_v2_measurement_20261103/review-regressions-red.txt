@@ -1,0 +1,62 @@
+..................FFFF                                                   [100%]
+=================================== FAILURES ===================================
+_______ test_missing_or_invalid_token_cannot_be_measured_or_joined[None] _______
+
+token = None
+
+    @pytest.mark.parametrize('token',[None,'',' B '])
+    def test_missing_or_invalid_token_cannot_be_measured_or_joined(token):
+     s,b,m=inputs();s['token_id']=token;b['asset_id']=token;m['tokens']=['A',token]
+     r=p.measure(s,b,m,decision_ms=1010)
+>    assert r['status']=='UNKNOWN' and 'TOKEN_MISMATCH' in r['issues']
+E    AssertionError: assert ('MEASURED_ORDERS_OFF' == 'UNKNOWN'
+E      
+E      - UNKNOWN
+E      + MEASURED_ORDERS_OFF)
+
+tests/test_polymarket_v2_orders_off_v1.py:105: AssertionError
+_________ test_missing_or_invalid_token_cannot_be_measured_or_joined[] _________
+
+token = ''
+
+    @pytest.mark.parametrize('token',[None,'',' B '])
+    def test_missing_or_invalid_token_cannot_be_measured_or_joined(token):
+     s,b,m=inputs();s['token_id']=token;b['asset_id']=token;m['tokens']=['A',token]
+     r=p.measure(s,b,m,decision_ms=1010)
+>    assert r['status']=='UNKNOWN' and 'TOKEN_MISMATCH' in r['issues']
+E    AssertionError: assert ('MEASURED_ORDERS_OFF' == 'UNKNOWN'
+E      
+E      - UNKNOWN
+E      + MEASURED_ORDERS_OFF)
+
+tests/test_polymarket_v2_orders_off_v1.py:105: AssertionError
+_______ test_missing_or_invalid_token_cannot_be_measured_or_joined[ B ] ________
+
+token = ' B '
+
+    @pytest.mark.parametrize('token',[None,'',' B '])
+    def test_missing_or_invalid_token_cannot_be_measured_or_joined(token):
+     s,b,m=inputs();s['token_id']=token;b['asset_id']=token;m['tokens']=['A',token]
+     r=p.measure(s,b,m,decision_ms=1010)
+>    assert r['status']=='UNKNOWN' and 'TOKEN_MISMATCH' in r['issues']
+E    AssertionError: assert ('MEASURED_ORDERS_OFF' == 'UNKNOWN'
+E      
+E      - UNKNOWN
+E      + MEASURED_ORDERS_OFF)
+
+tests/test_polymarket_v2_orders_off_v1.py:105: AssertionError
+_______ test_fee_capture_lineage_and_rate_are_bound_by_receipt_identity ________
+
+    def test_fee_capture_lineage_and_rate_are_bound_by_receipt_identity():
+     s,b,m=inputs();r=p.measure(s,b,m,decision_ms=1010)
+>    assert r['fee_source_sha256']==PIN and Decimal(r['captured_fee_rate'])==Decimal('.05')
+            ^^^^^^^^^^^^^^^^^^^^^^
+E    KeyError: 'fee_source_sha256'
+
+tests/test_polymarket_v2_orders_off_v1.py:110: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_missing_or_invalid_token_cannot_be_measured_or_joined[None]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_missing_or_invalid_token_cannot_be_measured_or_joined[]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_missing_or_invalid_token_cannot_be_measured_or_joined[ B ]
+FAILED tests/test_polymarket_v2_orders_off_v1.py::test_fee_capture_lineage_and_rate_are_bound_by_receipt_identity
+4 failed, 18 passed in 0.37s

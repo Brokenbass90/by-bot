@@ -1,0 +1,32 @@
+EEE.......
+======================================================================
+ERROR: test_failure_after_timer_started_stops_timer_before_candidate_cleanup (__main__.CleanupTimer.test_failure_after_timer_started_stops_timer_before_candidate_cleanup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/test_pump4_handoff_v3.py", line 29, in test_failure_after_timer_started_stops_timer_before_candidate_cleanup
+    self.assertEqual(h.reconcile_failure(None,b'o',b'n',{},0,True,True),'SPENT')
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'handoff_v3' has no attribute 'reconcile_failure'
+
+======================================================================
+ERROR: test_safe_original_restores_timer_after_reconciliation (__main__.CleanupTimer.test_safe_original_restores_timer_after_reconciliation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/test_pump4_handoff_v3.py", line 33, in test_safe_original_restores_timer_after_reconciliation
+    h.reconcile_failure(None,b'o',b'n',{},0,True,True)
+    ^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'handoff_v3' has no attribute 'reconcile_failure'
+
+======================================================================
+ERROR: test_uncertain_timer_stop_does_not_stop_candidate (__main__.CleanupTimer.test_uncertain_timer_stop_does_not_stop_candidate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/test_pump4_handoff_v3.py", line 37, in test_uncertain_timer_stop_does_not_stop_candidate
+    with self.assertRaisesRegex(ValueError,'TIMER_STOP_UNCONFIRMED'):h.reconcile_failure(None,b'o',b'n',{},0,True,True)
+                                                                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'handoff_v3' has no attribute 'reconcile_failure'
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.002s
+
+FAILED (errors=3)

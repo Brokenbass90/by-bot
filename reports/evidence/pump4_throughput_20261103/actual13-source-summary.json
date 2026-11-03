@@ -1,0 +1,14 @@
+{
+  "observed_ms": 1793712538986,
+  "hour_open_ms": 1793710800000,
+  "complete_pairs": 134,
+  "expected_trading": 134,
+  "within60s": 108,
+  "last_publication_offset_ms": 73203,
+  "receipt_sha256": "00ee244164e7b22944aeca55d6449dc53343c6b10b43d27c6b58ce0995bba32f",
+  "owner_pid": 3669955,
+  "owner_nrestarts": 0,
+  "data_pid": 4063038,
+  "broker_requests": 0,
+  "status": "SOURCE_BLOCKED"
+}
