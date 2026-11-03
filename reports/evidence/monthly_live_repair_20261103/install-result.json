@@ -1,0 +1,26 @@
+{
+  "account_lock_inode": 813893,
+  "broker_writes": 0,
+  "execution_window_changed": false,
+  "financial_parameters_changed": false,
+  "financial_process_killed": false,
+  "observed_ms": 1793685957398,
+  "probe_proof_checks": [
+    {
+      "coverage_age_ms": 2189,
+      "observed_ms": 1793685954414,
+      "source_age_ms": 1272
+    },
+    {
+      "coverage_age_ms": 3638,
+      "observed_ms": 1793685955863,
+      "source_age_ms": 2721
+    }
+  ],
+  "probe_status": "GET_PREPOST_FEES_PASS_WINDOW_BLOCKED",
+  "schema": "MONTHLY_SOURCE_PATCH_V7_RECEIPT",
+  "scope_sha256": "df537c12abb3889cbd526529f004e50b4071d7b853d1f2aca50737bfe56cb9b9",
+  "source_only_owner_go_rebound": true,
+  "spec_sha256": "bf8857c3c58e3f6087c0168b3e62596107b33df2fb38127a4ccd15d50be9fd4b",
+  "status": "MONTHLY_SOURCE_PATCH_V7_INSTALLED_NO_BUY"
+}

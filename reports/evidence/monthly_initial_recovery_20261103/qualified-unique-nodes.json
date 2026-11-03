@@ -1,0 +1,11 @@
+{
+  "initial_pass": 300,
+  "network_denied": true,
+  "original_failure_retained": true,
+  "real_broker_writes": 0,
+  "resource_rerun_pass": 2,
+  "skipped": 0,
+  "source_material_sha256": "0709fccba0d97cc6c5b9c8178ec253d8aceee062cc44dc71925e45daa1aff3af",
+  "status": "EXACT_302_QUALIFIED_WITH_TWO_RESOURCE_RERUNS",
+  "unique_tests": 302
+}

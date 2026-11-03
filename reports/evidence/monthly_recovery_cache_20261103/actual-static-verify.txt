@@ -1,0 +1,2 @@
+{"broker_writes": 0, "capital_or_risk_limits_changed": false, "execution_window_changed": true, "observed_ms": 1793708311741, "qualification": {"initial_pass": 306, "network_denied": true, "original_failure_retained": true, "real_broker_writes": 0, "status": "EXACT_307_QUALIFIED_WITH_ONE_TIMING_RERUN", "timing_rerun_pass": 1, "unique_tests": 307}, "schema": "MONTHLY_INITIAL_RECOVERY_HANDOFF_V1", "status": "INITIAL_RECOVERY_STATIC_VERIFIED_ORDERS_OFF"}
+MISSING_TECHNICAL_GO_REJECTED; NO_GO_CREATED; NO_BROKER_WRITES

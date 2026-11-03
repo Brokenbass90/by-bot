@@ -4,6 +4,7 @@ Native order readbacks are inputs, never discovered/adopted by ticker. This book
 is separate from the installed NET ledger and cannot enable its own dispatcher.
 """
 from contextlib import contextmanager
+from functools import lru_cache
 from copy import deepcopy
 from dataclasses import asdict
 from datetime import date,datetime,timedelta,timezone
@@ -17,6 +18,7 @@ from research_lab.alpaca_dynamic_v1 import canonical,dec,digest,instant,pin,posi
 from research_lab import alpaca_strategy_parity_v1 as baseline
 from research_lab.alpaca_live_readiness_v1 import execution_identity_v1
 from research_lab.alpaca_dynamic_live_intake_v1 import _Readbacks
+from scripts.run_alpaca_dynamic_v1_orders_off import load_history
 from scripts.alpaca_adaptive_paper import prepare_intended_report
 from scripts import equities_alpaca_paper_bridge as native
 
@@ -53,6 +55,92 @@ def strategy_identity():
         reference_trades_core_sha16=baseline.REFERENCE_CORE,
         files={**baseline.source_pins(),**{n:hashlib.sha256((root/n).read_bytes()).hexdigest() for n in files}})
     return dict(strategy_id='ALPACA_MONTHLY_BASELINE_'+digest(material),material=material)
+
+
+RECOVERY_SCHEMA='ALPACA_MONTHLY_INITIAL_ENTRY_RECOVERY_V1'
+RECOVERY_SELECTION_POLICY='EXISTING_SEALED_FROZEN_MONTHLY_PLUS_EXACT_INITIAL_RECOVERY_V1'
+
+
+def validate_initial_recovery(policy,original,ticket):
+    """Explicit operator exception, never a relaxation of the frozen calendar.
+
+    The prior sealed selection and unsubmitted ticket remain immutable inputs.
+    The separately signed policy can name only the immediately following session,
+    the same symbol and no larger size. It never changes future monthly rules.
+    """
+    fields={'schema','original_selection_id','original_selection_sha256',
+        'original_ticket_sha256','entry_session','open_ms','close_ms','symbol',
+        'max_notional_usd','max_entries','created_ms','frozen_history'}
+    if (not isinstance(policy,dict) or set(policy)!=fields
+        or policy['schema']!=RECOVERY_SCHEMA or original.get('initial_recovery') is not None
+        or policy['original_selection_id']!=original['selection_id']
+        or policy['original_selection_sha256']!=digest(original)
+        or policy['original_ticket_sha256']!=ticket.get('ticket_sha256')
+        or ticket.get('ticket_sha256')!=digest({k:v for k,v in ticket.items() if k!='ticket_sha256'})
+        or ticket.get('selection_id')!=original['selection_id']
+        or ticket.get('client_order_id')!=entry_cid(original,policy['symbol'])
+        or ticket.get('symbol')!=policy['symbol']
+        or ticket.get('status')!='MONTHLY_NATIVE_ENTRY_PREPARED_ORDERS_OFF'
+        or type(policy['max_entries']) is not int or policy['max_entries']!=1):
+        raise ValueError('MONTHLY_RECOVERY_SOURCE_OR_POLICY')
+    baseline._calendar(original['calendar'])
+    days=original['calendar'];old=next(r for r in days if r['session']==original['entry_session'])
+    later=[r for r in days if r['open_ms']>old['open_ms']]
+    if not later:raise ValueError('MONTHLY_RECOVERY_NEXT_SESSION_UNKNOWN')
+    actual=later[0]
+    if (policy['entry_session']!=actual['session']
+        or instant(policy['open_ms'])!=actual['open_ms']
+        or instant(policy['close_ms'])!=actual['open_ms']+300000
+        or not old['open_ms']+300000<=instant(policy['created_ms'])<policy['close_ms']
+        or not 0<positive(policy['max_notional_usd'])<=positive(ticket['notional'])):
+        raise ValueError('MONTHLY_RECOVERY_WINDOW_OR_CAP')
+    gate=ticket['entry_gate'];chosen=next((p for p in original['picks'] if p['symbol']==policy['symbol']),None)
+    if (not original['gate_ok'] or not chosen
+        or gate.get('receipt_sha256')!=digest({k:v for k,v in gate.items() if k!='receipt_sha256'})
+        or gate.get('entry_session')!=original['entry_session']
+        or gate.get('signal_session')!=original['signal_session']
+        or gate.get('causal_history_sha256')!=original['causal_history_sha256']
+        or gate.get('selection')!=original['picks']
+        or gate.get('atr20')!=chosen['atr20'] or gate.get('weight')!=chosen['weight']
+        or gate.get('signal_close')!=chosen['signal_close']):
+        raise ValueError('MONTHLY_RECOVERY_ORIGINAL_GATE')
+    initial_recovery_history(policy,original)
+    return actual
+
+
+def initial_recovery_history(policy,original):
+    """Read exact original public history; a rolling window is not that source."""
+    ref=policy['frozen_history']
+    if not isinstance(ref,dict) or set(ref)!={'path','sha256'}:
+        raise ValueError('MONTHLY_RECOVERY_HISTORY_REFERENCE')
+    p=Path(ref['path']);pin(ref['sha256'])
+    if (not p.is_absolute() or p.name!='frozen-history.json' or '..' in p.parts
+        or any(x.is_symlink() for x in (p,*p.parents)) or not p.is_file()
+        or p.stat().st_size>8_000_000 or p.stat().st_nlink!=1):
+        raise ValueError('MONTHLY_RECOVERY_HISTORY_PATH')
+    raw=p.read_bytes()
+    if hashlib.sha256(raw).hexdigest()!=ref['sha256']:raise ValueError('MONTHLY_RECOVERY_HISTORY_PIN')
+    doc,causal_sha,frozen=_recovery_history_document(raw,original['signal_session'])
+    if (set(doc)!={'schema','original_selection_sha256','source_sha256','source_available_ms','history'}
+        or doc['schema']!='MONTHLY_INITIAL_RECOVERY_FROZEN_HISTORY_V1'
+        or doc['original_selection_sha256']!=digest(original)
+        or doc['source_sha256']!=original['source_sha256']
+        or doc['source_available_ms']!=original['source_available_ms']):
+        raise ValueError('MONTHLY_RECOVERY_HISTORY_PROVENANCE')
+    if causal_sha!=original['causal_history_sha256']:
+        raise ValueError('MONTHLY_RECOVERY_CAUSAL_HISTORY_CHANGED')
+    # Return independent objects. The cached document is never exposed to callers.
+    return {name:list(bars) for name,bars in frozen}
+
+
+@lru_cache(maxsize=4)
+def _recovery_history_document(raw,signal_session):
+    """Memoize only immutable source bytes; no account/GO/clock/proof cache."""
+    import json
+    doc=json.loads(raw);history=load_history(doc['history'])
+    causal={name:[{**asdict(b),'session_date':b.session_date.isoformat()} for b in bars
+            if b.session_date<=date.fromisoformat(signal_session)] for name,bars in history.items()}
+    return doc,digest(causal),tuple((name,tuple(bars)) for name,bars in history.items())
 
 
 class MonthlyBook:
@@ -138,6 +226,33 @@ class MonthlyBook:
                  'source_code_sha256':baseline.source_pins()}
             self._save(db,'selections',key,out);self._event(db,'MONTHLY_SELECTION_SEALED',out)
         return out
+
+    def seal_initial_recovery(self,policy,original_ticket,*,now_ms):
+        """Append a new actual-date selection only after a separate owner scope.
+
+        This method has no broker transport and cannot create its own authority.
+        The applying installer must hold the original account/cycle locks and
+        independently confirm no native intent, position or live open order.
+        """
+        now=instant(now_ms)
+        with self.db() as db:
+            original=self._selection(db,policy['original_selection_id'])
+            validate_initial_recovery(policy,original,original_ticket)
+            if not policy['created_ms']<=now<policy['close_ms']:
+                raise ValueError('MONTHLY_RECOVERY_WINDOW_EXPIRED')
+            key=digest(dict(original_selection_id=original['selection_id'],initial_recovery=policy))
+            prior=[r for r in self._rows(db,'selections') if r['entry_session']==policy['entry_session']]
+            if prior:
+                if len(prior)!=1 or prior[0]['selection_id']!=key:
+                    raise ValueError('MONTHLY_RECOVERY_SELECTION_CONFLICT')
+                return prior[0]
+            if any(self._rows(db,t) for t in ('positions','exits','dispatches','rotations')):
+                raise ValueError('MONTHLY_RECOVERY_NOT_INITIAL')
+            out={**deepcopy(original),'selection_id':key,'entry_session':policy['entry_session'],
+                'selection_kind':RECOVERY_SCHEMA,'initial_recovery':deepcopy(policy),
+                'original_entry_ticket':deepcopy(original_ticket),'sealed_ms':now}
+            self._save(db,'selections',key,out);self._event(db,'OPERATOR_INITIAL_RECOVERY_SEALED',out)
+            return out
 
     def _selection(self,db,key):
         found=next((r for r in self._rows(db,'selections') if r['selection_id']==key),None)

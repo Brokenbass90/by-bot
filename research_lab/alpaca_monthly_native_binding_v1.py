@@ -6,7 +6,9 @@ pass the native LIVE binding/approval checks and supply its explicit client.
 The disabled source CLI cannot call the applying methods.
 """
 from contextlib import contextmanager
-from datetime import datetime,timezone
+from datetime import date,datetime,timezone
+from copy import deepcopy
+from dataclasses import asdict
 from functools import lru_cache
 import json
 import hashlib
@@ -23,7 +25,7 @@ from research_lab.alpaca_dynamic_v1 import dec,digest,instant,positive
 from research_lab.alpaca_dynamic_live_runtime_v1 import account_lock,permit_write
 from research_lab.alpaca_live_readiness_v1 import execution_identity_v1
 from research_lab import alpaca_dynamic_live_runtime_v1 as lifecycle
-from research_lab.alpaca_monthly_binding_v1 import CONTRACT,entry_cid,result,monthly_picks,strategy_identity
+from research_lab.alpaca_monthly_binding_v1 import CONTRACT,entry_cid,result,monthly_picks,strategy_identity,validate_initial_recovery,initial_recovery_history,RECOVERY_SELECTION_POLICY
 from scripts import equities_alpaca_paper_bridge as native
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -162,11 +164,13 @@ class MonthlyNativeBinding:
             expected_files={str(ROOT/n):h for n,h in standing_source_pins().items()}
             if (len(actual)!=len(scope['source_files']) or actual!=expected_files
                 or scope.get('universe_sha256')!=digest(list(monthly_universe()))
-                or scope.get('selection_policy')!='EXISTING_SEALED_FROZEN_MONTHLY_ONLY'
+                or not ((scope.get('selection_policy')=='EXISTING_SEALED_FROZEN_MONTHLY_ONLY' and 'initial_recovery' not in scope)
+                        or (scope.get('selection_policy')==RECOVERY_SELECTION_POLICY and isinstance(scope.get('initial_recovery'),dict)))
                 or scope.get('legacy_NET_adoption') is not False
                 or scope.get('legacy_entry_authority') is not False
                 or any(k in scope for k in ('selection_id','symbol'))):
                 raise ValueError('MONTHLY_STANDING_SOURCE_OR_POLICY_CONFLICT')
+            if scope.get('initial_recovery') is not None:self._recovery_source(scope)
             start,end=scope.get('valid_from_ms'),scope.get('valid_until_ms')
             if (type(start) is not int or type(end) is not int or not 0<start<end
                 or not 0<positive(scope['max_cumulative_net_loss_usd'])<=dec(self.capital)):
@@ -180,6 +184,29 @@ class MonthlyNativeBinding:
                     owner_go_text=('GO ALPACA_MONTHLY_STANDING ' if standing else 'GO ALPACA_MONTHLY ')+self.live_scope_sha256):
             raise ValueError('MONTHLY_SEPARATE_OWNER_GO_REQUIRED')
         return scope
+
+    def _recovery_source(self,scope):
+        policy=scope['initial_recovery'];original=self._selection(policy['original_selection_id'])
+        path=self.runtime.parent/'tickets'/(entry_cid(original,policy['symbol'])+'.json')
+        ticket=lifecycle.read_json(path)
+        validate_initial_recovery(policy,original,ticket)
+        return original,ticket
+
+    def _recovery_entry_authority(self,scope,selection,ticket,now):
+        policy=selection.get('initial_recovery')
+        if policy is None:return
+        if (scope.get('selection_policy')!=RECOVERY_SELECTION_POLICY
+            or scope.get('initial_recovery')!=policy):
+            raise ValueError('MONTHLY_RECOVERY_SEPARATE_SCOPE_REQUIRED')
+        original,prior=self._recovery_source(scope)
+        if (selection['selection_id']!=digest(dict(original_selection_id=original['selection_id'],initial_recovery=policy))
+            or selection['entry_session']!=policy['entry_session']
+            or selection['picks']!=original['picks'] or selection.get('original_entry_ticket')!=prior
+            or ticket['symbol']!=policy['symbol']
+            or not policy['open_ms']<=now<policy['close_ms']
+            or positive(ticket['notional'])>positive(policy['max_notional_usd'])
+            or ticket['entry_gate'].get('initial_recovery_policy_sha256')!=digest(policy)):
+            raise ValueError('MONTHLY_RECOVERY_ENTRY_SCOPE_CONFLICT')
 
     @staticmethod
     def _revocation_path(scope):
@@ -216,6 +243,7 @@ class MonthlyNativeBinding:
         self._loss_latch_guard()
         if scope['schema']==STANDING_SCHEMA:
             self._standing_entry_state(scope,now)
+            self._recovery_entry_authority(scope,selection,ticket,now)
             if (selection['source_code_sha256']!=baseline.source_pins()
                 or ticket['symbol'] not in set(monthly_universe())-{'SPY'}
                 or ticket['symbol'] not in {p['symbol'] for p in selection['picks']}):
@@ -571,9 +599,34 @@ class MonthlyNativeBinding:
         s=self._selection(selection_id)
         actions=self.book.monthly_actions(selection_id,now_ms=now_ms)
         if symbol not in actions.get('new_symbols',[]):return result('NO_SEND',reason='MONTHLY_NOT_ADMITTED')
-        gate=baseline.entry_gate(history,s['calendar'],signal_session=s['signal_session'],
-            intended_entry_session=s['entry_session'],entry_session=s['entry_session'],symbol=symbol,
-            history_available_ms=s['source_available_ms'],quote=quote,now_ms=now_ms)
+        if s.get('initial_recovery') is not None:
+            policy=s['initial_recovery'];original=self._selection(policy['original_selection_id'])
+            validate_initial_recovery(policy,original,s['original_entry_ticket'])
+            history=initial_recovery_history(policy,original)
+            if symbol!=policy['symbol']:return result('NO_SEND',reason='MONTHLY_RECOVERY_SYMBOL_NOT_APPROVED')
+            cts,received=instant(quote['quote_ts']),instant(quote['received_ms']);now=instant(now_ms)
+            if (not policy['open_ms']<=now<policy['close_ms'] or not cts<=received<=now
+                or now-cts>300000 or not isinstance(quote['source'],str) or not quote['source'].strip()):
+                raise ValueError('MONTHLY_RECOVERY_QUOTE_OR_WINDOW')
+            positive(quote['ask'])
+            report=baseline.prepare_intended_report(history,signal_session=date.fromisoformat(s['signal_session']),
+                entry_session=date.fromisoformat(s['entry_session']))
+            causal={name:[{**asdict(b),'session_date':b.session_date.isoformat()} for b in bars
+                    if b.session_date<=date.fromisoformat(s['signal_session'])] for name,bars in history.items()}
+            if (not report['gate_ok'] or monthly_picks(report['picks'])!=original['picks']
+                or digest(causal)!=original['causal_history_sha256'] or baseline.source_pins()!=original['source_code_sha256']):
+                raise ValueError('MONTHLY_RECOVERY_ORIGINAL_SOURCE_CHANGED')
+            gate=deepcopy(s['original_entry_ticket']['entry_gate'])
+            gate.update(entry_session=s['entry_session'],intended_entry_session=s['entry_session'],
+                intended_entry_at=policy['open_ms'],signal_age_ms=now-gate['signal_at'],
+                quote_ts=cts,quote_source=quote['source'],quote_sha256=digest(quote),
+                selection_cadence='OPERATOR_INITIAL_ENTRY_RECOVERY_V1',
+                initial_recovery_policy_sha256=digest(policy),
+                original_entry_gate_sha256=s['original_entry_ticket']['entry_gate']['receipt_sha256'])
+        else:
+            gate=baseline.entry_gate(history,s['calendar'],signal_session=s['signal_session'],
+                intended_entry_session=s['entry_session'],entry_session=s['entry_session'],symbol=symbol,
+                history_available_ms=s['source_available_ms'],quote=quote,now_ms=now_ms)
         if gate['status']!='ENTRY_PARITY_CANDIDATE':return gate
         gate['selection']=monthly_picks(gate['selection'])
         gate['receipt_sha256']=digest({k:v for k,v in gate.items() if k!='receipt_sha256'})
@@ -583,6 +636,7 @@ class MonthlyNativeBinding:
         # limits executable size. No cap renormalization or replacement symbol.
         equity=min(float(positive(open_equity)),self.capital)
         notional=min(float(positive(cash)),equity*.70*gate['weight'])
+        if s.get('initial_recovery') is not None:notional=min(notional,float(positive(s['initial_recovery']['max_notional_usd'])))
         if not 0<gate['weight']<=.60 or notional>self.capital*.70*.60+1e-9:
             raise ValueError('MONTHLY_WEIGHT_OR_NOTIONAL_CAP')
         out=result('MONTHLY_NATIVE_ENTRY_PREPARED_ORDERS_OFF',selection_id=selection_id,

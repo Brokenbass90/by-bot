@@ -54,16 +54,16 @@ class WarmIntake:
   pending=[]
   def validate(events):
    need(self.intake._context()==self.context,'LOCKED_CONTEXT_DRIFT')
-   if canonical(events)==self.prefix:return self.snapshot()
+   if len(events)==len(self.events) and canonical(events)==self.prefix:return self.snapshot()
    need(len(events)==len(self.events)+1 and canonical(events[:-1])==self.prefix and events[-1]==event,'LOCKED_PREFIX_DRIFT')
    strategy=copy.deepcopy(self.strategy);history=self.history.copy();history.update(canonical(bar));signal=strategy.maybe_signal(self.intake.symbol,*bar)
-   state=self.snapshot();state.update(cursor_ms=bar[0],cooldown_remaining=strategy._cooldown);state['decisions'].append(self._decision(event,signal,strategy,history));pending.append((strategy,history,state));return state
+   state={**self.state,'decisions':list(self.state['decisions'])};state.update(cursor_ms=bar[0],cooldown_remaining=strategy._cooldown);state['decisions'].append(self._decision(event,signal,strategy,history));pending.append((strategy,history,state));return state
   try:new,state=self.intake.journal.append_checked(event,validate)
   except BaseException:
    self.broken=True;raise
   if not new and not duplicate:
    self.broken=True;raise ValueError('PUMP4_WARM_EXTERNAL_DUPLICATE_REBUILD_REQUIRED')
   if new:
-   need(len(pending)==1,'VALIDATOR_COMMIT_IDENTITY');self.strategy,self.history,self.state=pending[0];self.events=(*self.events,copy.deepcopy(event));self.prefix=canonical(self.events)
+   need(len(pending)==1,'VALIDATOR_COMMIT_IDENTITY');self.strategy,self.history,self.state=pending[0];self.events=(*self.events,copy.deepcopy(event));self.prefix=self.prefix[:-1]+b','+canonical(event)+b']'
   decision=next(d for d in state['decisions'] if d['bar_open_ms']==bar[0])
   return dict(new=new,decision=copy.deepcopy(decision))

@@ -1,0 +1,434 @@
+.FFFFFFFFFFFFFFFFFFF                                                     [100%]
+=================================== FAILURES ===================================
+__ test_recovery_is_new_append_only_selection_actual_entry_day_and_idempotent __
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e18290>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e1aba0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e1a720>, 1793629800000)
+
+    def test_recovery_is_new_append_only_selection_actual_entry_day_and_idempotent(setup):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);before=copy.deepcopy(b.rows('selections'))
+>    r=b.seal_initial_recovery(p,t,now_ms=at-1000)
+       ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:31: AttributeError
+_________ test_recovery_policy_cannot_widen_date_size_or_identity[day] _________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e1b9e0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e1bc80>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e1ba10>, 1793629800000)
+fault = 'day'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+________ test_recovery_policy_cannot_widen_date_size_or_identity[start] ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8e000>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8f4d0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8c770>, 1793629800000)
+fault = 'start'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+_________ test_recovery_policy_cannot_widen_date_size_or_identity[end] _________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8fad0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8dca0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8eff0>, 1793629800000)
+fault = 'end'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+_______ test_recovery_policy_cannot_widen_date_size_or_identity[symbol] ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8d1f0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8cb00>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8eea0>, 1793629800000)
+fault = 'symbol'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+________ test_recovery_policy_cannot_widen_date_size_or_identity[size] _________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8d790>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8e090>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8d8b0>, 1793629800000)
+fault = 'size'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+______ test_recovery_policy_cannot_widen_date_size_or_identity[original] _______
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8f710>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8fc20>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8f770>, 1793629800000)
+fault = 'original'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+_______ test_recovery_policy_cannot_widen_date_size_or_identity[ticket] ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e97bf0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e97e60>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e952b0>, 1793629800000)
+fault = 'ticket'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+_______ test_recovery_policy_cannot_widen_date_size_or_identity[entries] _______
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e97470>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e94650>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e949b0>, 1793629800000)
+fault = 'entries'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+________ test_recovery_policy_cannot_widen_date_size_or_identity[extra] ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e947d0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e965a0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e94230>, 1793629800000)
+fault = 'extra'
+
+    @pytest.mark.parametrize('fault',['day','start','end','symbol','size','original','ticket','entries','extra'])
+    def test_recovery_policy_cannot_widen_date_size_or_identity(setup,fault):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     if fault=='day':p['entry_session']='2026-11-04'
+     elif fault=='start':p['open_ms']+=1
+     elif fault=='end':p['close_ms']+=1
+     elif fault=='symbol':p['symbol']='OTHER'
+     elif fault=='size':p['max_notional_usd']=str(float(p['max_notional_usd'])+1)
+     elif fault=='original':p['original_selection_sha256']='0'*64
+     elif fault=='ticket':p['original_ticket_sha256']='0'*64
+     elif fault=='entries':p['max_entries']=2
+     else:p['automatic_retry']=True
+>    with pytest.raises(ValueError):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:51: AttributeError
+________________ test_expired_recovery_never_moves_to_later_day ________________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8da60>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8e630>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8e270>, 1793629800000)
+
+    def test_expired_recovery_never_moves_to_later_day(setup):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+>    with pytest.raises(ValueError,match='RECOVERY_WINDOW'):b.seal_initial_recovery(p,t,now_ms=at+300000)
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:57: AttributeError
+__________________ test_recovery_requires_initial_empty_book ___________________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8c620>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8ccb0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8ee10>, 1793629800000)
+
+    def test_recovery_requires_initial_empty_book(setup):
+     b,s,a,io,now=setup;p,t,at=recovery(setup)
+     with b.db() as db:b._save(db,'dispatches','old',{'status':'unknown'})
+>    with pytest.raises(ValueError,match='RECOVERY_NOT_INITIAL'):b.seal_initial_recovery(p,t,now_ms=at-1000)
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:64: AttributeError
+________________ test_old_standing_go_cannot_authorize_recovery ________________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8fb00>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8d400>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8da90>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e8e4b0>
+
+    def test_old_standing_go_cannot_authorize_recovery(setup,monkeypatch):
+>    b,s,a,io,p,t,at,saved,writes,r,scope=prepared(setup,monkeypatch,False)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8fb00>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e8d400>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e8da90>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e8e4b0>
+approved = False
+
+    def prepared(setup,monkeypatch,approved):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);client,writes,lose=connect_wire(setup,monkeypatch);scope=standing(a,now,limit=1)
+     path=a.runtime.parent/'tickets';path.mkdir(exist_ok=True);(path/(t['client_order_id']+'.json')).write_bytes(canonical(t))
+     if approved:scope.update(selection_policy=mod.RECOVERY_SELECTION_POLICY,initial_recovery=p);resign(a,scope)
+>    r=b.seal_initial_recovery(p,t,now_ms=at-1000)
+       ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: 'MonthlyBook' object has no attribute 'seal_initial_recovery'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:71: AttributeError
+_______ test_separate_recovery_full_native_fill_stop_restart_actual_day ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8e7b0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9f6e0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9eba0>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e8fd70>
+
+    def test_separate_recovery_full_native_fill_stop_restart_actual_day(setup,monkeypatch):
+>    b,s,a,io,p,t,at,saved,writes,r,scope=prepared(setup,monkeypatch,True)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e8e7b0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9f6e0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9eba0>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e8fd70>
+approved = True
+
+    def prepared(setup,monkeypatch,approved):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);client,writes,lose=connect_wire(setup,monkeypatch);scope=standing(a,now,limit=1)
+     path=a.runtime.parent/'tickets';path.mkdir(exist_ok=True);(path/(t['client_order_id']+'.json')).write_bytes(canonical(t))
+>    if approved:scope.update(selection_policy=mod.RECOVERY_SELECTION_POLICY,initial_recovery=p);resign(a,scope)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.alpaca_monthly_native_binding_v1' has no attribute 'RECOVERY_SELECTION_POLICY'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:70: AttributeError
+______ test_recovery_ticket_and_freshness_enforced_before_wire[notional] _______
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e9c6b0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9e990>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9f590>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e9da30>
+fault = 'notional'
+
+    @pytest.mark.parametrize('fault',['notional','symbol','policy','quote','expired'])
+    def test_recovery_ticket_and_freshness_enforced_before_wire(setup,monkeypatch,fault):
+>    b,s,a,io,p,t,at,saved,writes,r,scope=prepared(setup,monkeypatch,True)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e9c6b0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9e990>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9f590>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e9da30>
+approved = True
+
+    def prepared(setup,monkeypatch,approved):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);client,writes,lose=connect_wire(setup,monkeypatch);scope=standing(a,now,limit=1)
+     path=a.runtime.parent/'tickets';path.mkdir(exist_ok=True);(path/(t['client_order_id']+'.json')).write_bytes(canonical(t))
+>    if approved:scope.update(selection_policy=mod.RECOVERY_SELECTION_POLICY,initial_recovery=p);resign(a,scope)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.alpaca_monthly_native_binding_v1' has no attribute 'RECOVERY_SELECTION_POLICY'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:70: AttributeError
+_______ test_recovery_ticket_and_freshness_enforced_before_wire[symbol] ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106ea1730>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106ea18b0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106ea3110>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106ea1c10>
+fault = 'symbol'
+
+    @pytest.mark.parametrize('fault',['notional','symbol','policy','quote','expired'])
+    def test_recovery_ticket_and_freshness_enforced_before_wire(setup,monkeypatch,fault):
+>    b,s,a,io,p,t,at,saved,writes,r,scope=prepared(setup,monkeypatch,True)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106ea1730>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106ea18b0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106ea3110>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106ea1c10>
+approved = True
+
+    def prepared(setup,monkeypatch,approved):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);client,writes,lose=connect_wire(setup,monkeypatch);scope=standing(a,now,limit=1)
+     path=a.runtime.parent/'tickets';path.mkdir(exist_ok=True);(path/(t['client_order_id']+'.json')).write_bytes(canonical(t))
+>    if approved:scope.update(selection_policy=mod.RECOVERY_SELECTION_POLICY,initial_recovery=p);resign(a,scope)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.alpaca_monthly_native_binding_v1' has no attribute 'RECOVERY_SELECTION_POLICY'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:70: AttributeError
+_______ test_recovery_ticket_and_freshness_enforced_before_wire[policy] ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106ea2900>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106ea36e0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106ea3590>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106ea23c0>
+fault = 'policy'
+
+    @pytest.mark.parametrize('fault',['notional','symbol','policy','quote','expired'])
+    def test_recovery_ticket_and_freshness_enforced_before_wire(setup,monkeypatch,fault):
+>    b,s,a,io,p,t,at,saved,writes,r,scope=prepared(setup,monkeypatch,True)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106ea2900>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106ea36e0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106ea3590>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106ea23c0>
+approved = True
+
+    def prepared(setup,monkeypatch,approved):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);client,writes,lose=connect_wire(setup,monkeypatch);scope=standing(a,now,limit=1)
+     path=a.runtime.parent/'tickets';path.mkdir(exist_ok=True);(path/(t['client_order_id']+'.json')).write_bytes(canonical(t))
+>    if approved:scope.update(selection_policy=mod.RECOVERY_SELECTION_POLICY,initial_recovery=p);resign(a,scope)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.alpaca_monthly_native_binding_v1' has no attribute 'RECOVERY_SELECTION_POLICY'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:70: AttributeError
+________ test_recovery_ticket_and_freshness_enforced_before_wire[quote] ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e9d5e0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9f0b0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9ec00>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e9ec30>
+fault = 'quote'
+
+    @pytest.mark.parametrize('fault',['notional','symbol','policy','quote','expired'])
+    def test_recovery_ticket_and_freshness_enforced_before_wire(setup,monkeypatch,fault):
+>    b,s,a,io,p,t,at,saved,writes,r,scope=prepared(setup,monkeypatch,True)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e9d5e0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9f0b0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9ec00>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e9ec30>
+approved = True
+
+    def prepared(setup,monkeypatch,approved):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);client,writes,lose=connect_wire(setup,monkeypatch);scope=standing(a,now,limit=1)
+     path=a.runtime.parent/'tickets';path.mkdir(exist_ok=True);(path/(t['client_order_id']+'.json')).write_bytes(canonical(t))
+>    if approved:scope.update(selection_policy=mod.RECOVERY_SELECTION_POLICY,initial_recovery=p);resign(a,scope)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.alpaca_monthly_native_binding_v1' has no attribute 'RECOVERY_SELECTION_POLICY'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:70: AttributeError
+_______ test_recovery_ticket_and_freshness_enforced_before_wire[expired] _______
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e9fe60>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9ede0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9e060>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e9f9b0>
+fault = 'expired'
+
+    @pytest.mark.parametrize('fault',['notional','symbol','policy','quote','expired'])
+    def test_recovery_ticket_and_freshness_enforced_before_wire(setup,monkeypatch,fault):
+>    b,s,a,io,p,t,at,saved,writes,r,scope=prepared(setup,monkeypatch,True)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x106e9fe60>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x106e9ede0>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x106e9e060>, 1793629800000)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e9f9b0>
+approved = True
+
+    def prepared(setup,monkeypatch,approved):
+     b,s,a,io,now=setup;p,t,at=recovery(setup);client,writes,lose=connect_wire(setup,monkeypatch);scope=standing(a,now,limit=1)
+     path=a.runtime.parent/'tickets';path.mkdir(exist_ok=True);(path/(t['client_order_id']+'.json')).write_bytes(canonical(t))
+>    if approved:scope.update(selection_policy=mod.RECOVERY_SELECTION_POLICY,initial_recovery=p);resign(a,scope)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.alpaca_monthly_native_binding_v1' has no attribute 'RECOVERY_SELECTION_POLICY'
+
+tests/test_alpaca_monthly_initial_recovery_v1.py:70: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_is_new_append_only_selection_actual_entry_day_and_idempotent
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[day]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[start]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[end]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[symbol]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[size]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[original]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[ticket]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[entries]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_policy_cannot_widen_date_size_or_identity[extra]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_expired_recovery_never_moves_to_later_day
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_requires_initial_empty_book
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_old_standing_go_cannot_authorize_recovery
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_separate_recovery_full_native_fill_stop_restart_actual_day
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_ticket_and_freshness_enforced_before_wire[notional]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_ticket_and_freshness_enforced_before_wire[symbol]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_ticket_and_freshness_enforced_before_wire[policy]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_ticket_and_freshness_enforced_before_wire[quote]
+FAILED tests/test_alpaca_monthly_initial_recovery_v1.py::test_recovery_ticket_and_freshness_enforced_before_wire[expired]
+19 failed, 1 passed in 1.36s

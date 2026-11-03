@@ -1,0 +1,7 @@
+{
+  "compare_sha256": "906f5abbf2787827917cccfdf4b426030614381ff6a9de661ed570c84dfbe079",
+  "handoff_sha256": "0eb093c974d151481a7f7824b948ff78ecfbeea55db1bcb1df453d7ec2fc44af",
+  "packet_sha256": "23eb48b7703decbb0836e8b8bf2fad19fd5cd1a81163f4f2ab523f0654fcb865",
+  "probe_sha256": "07ecbd4e553b2dadc8f85f79deee2e247c6dbc564f419ac0fe2bfc61a600215c",
+  "qualification_sha256": "4c0cb0d692408e8a8558a64e2632c988370dea26d3cd0d1b024c9dc148578f13"
+}

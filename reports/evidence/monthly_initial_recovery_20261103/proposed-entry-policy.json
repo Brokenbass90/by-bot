@@ -1,0 +1,17 @@
+{
+  "close_ms": 1793716500000,
+  "created_ms": 1793689226221,
+  "entry_session": "2026-11-03",
+  "frozen_history": {
+    "path": "/opt/bybot-research/monthly-initial-recovery-20261103/candidate-0709fccba0d97cc6-t659a61b8/owner-review-initial-recovery-v1/frozen-history.json",
+    "sha256": "f028521bec52dfd0adce82dd96f1f84477574d456603b63195e32849e7e3bde6"
+  },
+  "max_entries": 1,
+  "max_notional_usd": "101.41390226115651",
+  "open_ms": 1793716200000,
+  "original_selection_id": "768a6421d3ac4c47f23fb0437dcdd54b6d6409c8bebf48200744653cecfda2c8",
+  "original_selection_sha256": "6063f186373c9f73b1369d749007ba60a42582c262a933c7c8f10fa87ca008b4",
+  "original_ticket_sha256": "2d8ac0ee09f4c3c22eb6db1a59459955300744e92c6c50e9e05c339a9962406c",
+  "schema": "ALPACA_MONTHLY_INITIAL_ENTRY_RECOVERY_V1",
+  "symbol": "LLY"
+}

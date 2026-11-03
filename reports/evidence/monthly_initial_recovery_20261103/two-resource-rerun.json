@@ -1,0 +1,23 @@
+{
+  "checkout_fallback": [],
+  "counts": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 2
+  },
+  "elapsed_seconds": 176.132444745861,
+  "network_denied": true,
+  "nodes": [
+    "test_full_frozen_rotation_runs_through_production_cli",
+    "test_default_cli_clock_is_sampled_after_slow_authority_checks"
+  ],
+  "original_acceptance_sha256": "f4aa30401276fd9b7e4760a9ae687d34a52b4b174c8888eb70449c0c63b16d1b",
+  "original_xml_sha256": "8986a98c00f1133d5733755e4a0f412698a83f81f026bfcddabe8f3e9f60954a",
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "rerun_xml_sha256": "03c350bb84a8403e34f79a969019ba50d4e0e2016117d97f5353e1ab2074f426",
+  "schema": "MONTHLY_EXACT_TWO_RESOURCE_RERUN_V1",
+  "source_material_sha256": "0709fccba0d97cc6c5b9c8178ec253d8aceee062cc44dc71925e45daa1aff3af",
+  "status": "PASS"
+}

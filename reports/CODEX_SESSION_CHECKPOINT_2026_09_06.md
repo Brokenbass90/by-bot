@@ -1,5 +1,110 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT3Nov12:25UTC — Original PUMP DATA restored/12H1 PASS; Monthly125 technical GO pending
+
+MoneyP0 only. Read MONTHLY_CACHE_SOURCE_REPAIR_2026_11_03.md and
+PUMP4_THROUGHPUT_REPAIR_2026_11_03.md. PUMP original DATA RESTORED08:48:12UTC,
+unitcb9de840…95a35/129originalsources verified/PID4063038/timeractive;275sourcefiles
+preserved. Financialowner3669955/NRestarts0/lock818853/unit991211ed…fb843 unchanged.
+09H1abort0 preserved;10H1incomplete131/134,11H1late2(last60.515s),12H1PASS
+134/134within60,last57.373s. No skipped hour credited as success. Optimized code
+NOTselected/reinstalled. Nativepinned12:18readback LIVE_ARMED_HEALTHY/sourcecoverage
+complete; notprofitproof. BoundGET12:23:53 selectedkey exactVPSIP/no_fixed_expiry
+true/expiry_ms0,flat/historyempty,13GET; nofeesfinality. Legacyglobalmainmonitor
+12:00warnNov6(2.9d) is a different credential source; no keyrotation performed.
+
+Monthly v7 installed06:05 source repair still selected. Owner explicitly approved
+1d6a09ad07:57UTC. Originalapply and separate continuation STOPPEDinGETprobe before
+book/source selection: originalclaims+GO/failures retained, noBUY/nativeintents.
+Do NOT rerun either. Redundant history parsing in approvedscope checks2–3s made
+fee/handoff stale; even observerfixalone didnotrepairactualguard. Codefix caches
+only exact immutable bytes/signaldate+frozenDailyBars; eachcall freshfileSHA and
+originalprovenance/causal checks, freshcontainers, noauthority/account/proof cache.
+Actual explicit in-memory GETproposal (not deployed-sourceclaim) passed max5s:
+source1.365/2.503s,handoff3.347/4.200s; scopehot0.235–0.376s. Needactualnewsource
+qualification after separatecode-boundGO. Newfinancialterms EXACTsameas1d6:
+onlyLLY<=101.41390226115651USD,oneCID,3Nov14:30–14:35UTC/16:30–16:35Cyprus,
+400/280/40/8losslatch,standingfuturemax4 unchanged; originalOct30sealeddata.
+
+READY newtechnicalscope12509204a44a59b71212565618a690cb15bd48c60bdef6e1622326cdfc5ec3cb,
+packet5f828ca8a22b256c0cff202082bed75f4ce337af34e85def6dbb224902182e79;
+source684518513910cd6e-t01be717f stagednotselected, newGO/claim ABSENT.
+307localexactPASS;VPS306initialPASS+1fixtureclockfailure,onlythatnode rerunPASS;
+307uniquequalified explicitoriginalFAIL/XML preserved,no fallback/network/broker.
+Actualstaticverify+missingGO rejection PASS; actual12:20GETflat0/open0/LLYasset
+andcash/reserve/grossPASS,nextopen14:30UTC; quoteoldIEX requiresopeningfreshcheck.
+Private .private/monthly_recovery_cache_20261103/owner-review-cache-v2,
+owner_gateway.py default --readback. New --apply-once ONLYafter explicit owner
+GO on125 technicalpacket (questionpending). NEVER derive newGO fromold1d6.
+AfternewGO waitMonthlyidle, applyONCE/newprobe, independentreadback and idlecycles;
+retireoldv7+unused1d6 onlyafterverifiednewselection. NoBUYoutsideapprovedwindow.
+NoPUMPfinancialrestart/GO/key/60schange, noPolymarket/research/Brain work.
+
+---
+Earlier dated entries below are history.
+
+CURRENT3Nov07:54UTC — Monthly recovery READY_FOR_OWNER_GO; PUMP v2 DATA handoff scheduled08UTC
+
+Money P0 only. Monthly v7 source repair INSTALLED06:05:57UTC, three actual idle
+cycles clean; noBUY. Read MONTHLY_LIVE_REPAIR_2026_11_03.md and
+MONTHLY_INITIAL_ENTRY_RECOVERY_2026_11_03.md. New date exception NOTARMED/NO GO,
+owner asked separately: onlyLLY<=101.41390226115651USD, one recoveryCID,
+3Nov14:30–14:35UTC/16:30–16:35Cyprus, originalOct30selection/ticket immutable.
+Newscope1d6a09ade66fc0ec6b1cff403d8fb327c176d31305851082023ec3084118110a,
+packet23eb48b7703decbb0836e8b8bf2fad19fd5cd1a81163f4f2ab523f0654fcb865.
+400capital/280gross/40reserve/8losslatch and future standingmax4 unchanged;
+added recovery onlyoneboundselection/CID, no automaticbasket/datecarry.
+Actual07:49:36GET LIVE identitymatches/flat0/open0/LLYasset+capsPASS; quote2Nov
+21UTC stale forentry, realopeningfreshquote/fees/clock/protection stillmandatory.
+Private ownerfolder .private/monthly_initial_recovery_20261103/owner-review-initial-recovery-v1;
+owner-monthly-initial-recovery-v1.sh default --readback. --apply-once ONLY after
+new explicit ownerGO; never repeat uncertainapply. HelperdoesnotitselfBUY.
+Disabledsource0709fccba0d97cc6-t659a61b8 staged, exact302localPASS; VPS300initial
+PASS+2resource failures retained, onlysame2rerunCPU100 PASS. Explicit302unique
+qualified verifier pinsbothXML/receipts, not fakefirst-run302PASS. Actual clean
+staticVPSverify07:45:50 andmissingGO rejectionPASS;8handoffguards+scope4/CIDguard.
+Actualpublichistory/prodCLI OFFonebuy/onestop/restartno duplicate; notrealtrade.
+FrozenOct30source_id exact; rollingNov2history differs, guardNOTweakened.
+OneboundedAstra/highreview importorderfindingfixed; laterqualification rootreview.
+
+PUMP read PUMP4_THROUGHPUT_REPAIR_2026_11_03.md. Warm-onlypatch47local/VPSPASS,
+VPSpublic-prefixmedian243.900→203.671ms(-16.494%), byte/restartparity, notactualH1.
+V1physicalhandoff07UTCstoppedatincorrectstatusguard; journalclean/full134/134,
+lastpub56.967s; originalDATArestoredPID4040874 and08preload134, nosetupdeletion.
+Originalfinancialowner3669955/NRestarts0/lock818853/scope/config preserved.
+V2distinctclaim scheduled08UTC+65..80s completequietboundary; DATA-timerheldonly
+while source switched. FirstpatchedH109UTC, actualreadbackafter09:02:05.
+Nativejob pump4-data-warm-handoff-v2-20261103.service alreadyrunning(waiting);
+never rerunitsapply. Read-onlyappheartbeat pump4-data-h1 exactlytwohourly:05
+checks; pendingquiet, actualresult/failureonce thenonlythatmonitorremoved.
+Polymarket/keys/60s/financialPUMPGO unchanged. No newresearch/Brain/Factory work.
+Reports/evidence onlyourpaths staged; foreign NETclosure/allowlist preserved.
+
+---
+Earlier dated entries below are history.
+
+CURRENT3Nov06:19UTC — Monthly OPENING source repair INSTALLED, no BUY; PUMP DATA optimization staged
+
+Read MONTHLY_LIVE_REPAIR_2026_11_03.md. Actual source-only handoff installed
+06:05:57.398UTC, scope df537c12…cb9b9/spec bf8857c3…e9fd4b, original account-lock
+813893/book/caps/calendar preserved. No broker writes or financial-process kill.
+Actual GET-only prePOST closure: refreshed cost age1.272/2.721s under unchanged5s;
+final actual clock/window correctlyBLOCKED (premarket/2Nov expired), not BUY-ready.
+Three actual idle cycles OUTSIDE_MONTHLY_WINDOW/issues[]; independent06:18:54UTC
+LIVE account matches scope+manager,positions0/openorders0/recent0. Not fullhistory.
+Old scope entry-revoked only after new unit verified; consumed apply never repeat.
+Frozen rules forbid automatic3Nov carry. Separate exact initial-entry recovery
+scope/source acceptance+OWNER GO required; not yet prepared/armed, no wait-month
+decision imposed and no historical strategy edge transferred to that exception.
+PUMP minimal WarmIntake optimization local+staged only;47local/exactVPSPASS,
+public-prefix median VPS243.90→203.67ms(-16.49%), fullbytes/restart/cache parity.
+Not actual H1 proof. Quiet DATA-only handoff under final bounded review; original
+financial owner3669955/config/scope/lock818853 and Polymarket unchanged.
+Evidence monthly_live_repair_20261103; foreign NET/allowlist changes preserved.
+
+---
+Earlier dated entries below are history.
+
 CURRENT2Nov18:23UTC — actual Monthly NO_ADMISSION; PUMP serial queue identified; Polymarket delivery repaired
 
 Read LIVE_OPERATIONAL_REPAIR_2026_11_02.md and current NEW_CHAT_START_HERE.md.
@@ -33,6 +138,7 @@ and allowlist untouched/excluded. No repeated installers/GO or old broad audits.
 
 ---
 Earlier dated entries below are history.
+
 
 CURRENT2Nov14:06UTC — Polymarket VPS_DATA_LIVE_PASS; native archive/cache cleanup accepted
 

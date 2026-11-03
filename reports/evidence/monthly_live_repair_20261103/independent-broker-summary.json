@@ -1,0 +1,14 @@
+{
+  "broker_mode": "LIVE",
+  "broker_writes": 0,
+  "generated_at_utc": "2026-11-03T06:18:54.926364+00:00",
+  "history_complete": false,
+  "identity_proof": {
+    "account_matches_manager": true,
+    "account_matches_scope": true,
+    "live_endpoint": "https://api.alpaca.markets"
+  },
+  "open_order_count": 0,
+  "position_count": 0,
+  "recent_order_count": 0
+}

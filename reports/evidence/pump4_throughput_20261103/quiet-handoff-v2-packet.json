@@ -1,0 +1,14 @@
+{
+  "actual_patched_hour_ms": 1793696400000,
+  "broker_writes": 0,
+  "financial_changes": false,
+  "first_attempt_status": "STOP_GUARD_REJECTED_ORIGINAL_DATA_RESTORED",
+  "first_hour_complete": 134,
+  "first_hour_within60": 134,
+  "helper_sha256": "7bcce99faced7c908634c6daa25af395ea98448d2ea35303741a6a2871fbc689",
+  "old_data_pid": 4040874,
+  "patch_manifest_sha256": "59f6639e8c70015391e756bb1d5a217904dc6b2c204f750d6e52e254522d4e15",
+  "schema": "PUMP4_DATA_QUIET_HANDOFF_V2",
+  "target_hour_ms": 1793692800000,
+  "timer_sha256": "d31f4ba785c56b0dda7b15f2060578effd9d10a2fab89df8f1457b2411fbca98"
+}

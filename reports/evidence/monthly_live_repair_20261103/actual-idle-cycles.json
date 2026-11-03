@@ -1,0 +1,15 @@
+{
+  "observed_at": "2026-11-03T06:18:10.330572+00:00",
+  "completed_cycles": 3,
+  "entry_statuses": [
+    "OUTSIDE_MONTHLY_WINDOW",
+    "OUTSIDE_MONTHLY_WINDOW",
+    "OUTSIDE_MONTHLY_WINDOW"
+  ],
+  "issues": [
+    [],
+    [],
+    []
+  ],
+  "market_execution_pass": false
+}

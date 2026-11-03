@@ -58,3 +58,30 @@ def test_continuation_positive_cooldown_negative_duplicate_and_restart_match(tmp
   if index==8:w=warm(intake)
  assert w.accept(nextbar,available_ms=available+500,observed_ms=available+500)['new'] is False
  assert w.snapshot()==reference.snapshot()
+
+
+def test_new_bar_does_not_reencode_committed_history_for_duplicate_check_or_prefix_commit(tmp_path,monkeypatch):
+ from research_lab import pump4_warm_reducer_v1 as m
+ _,intake,bar=seed(tmp_path);w=warm(intake)
+ for index in range(12):
+  b=copy.deepcopy(bar);b[0]+=index*H;at=b[0]+H+1
+  w.accept(b,available_ms=at,observed_ms=at)
+ original=m.canonical;full=[];before=len(w.events)
+ def measured(value):
+  if isinstance(value,(list,tuple)) and len(value)>=before and value and isinstance(value[0],dict) and 'bars' in value[0]:full.append(len(value))
+  return original(value)
+ monkeypatch.setattr(m,'canonical',measured)
+ b=copy.deepcopy(bar);b[0]+=12*H;at=b[0]+H+1
+ w.accept(b,available_ms=at,observed_ms=at)
+ assert len(full)<=2, 'Only memory-drift and locked-prefix checks need full history serialization'
+ assert w.prefix==original(w.events)
+
+
+def test_next_accept_preserves_old_decisions_and_returned_snapshots(tmp_path):
+ _,intake,bar=seed(tmp_path);w=warm(intake)
+ at=bar[0]+H+1;w.accept(bar,available_ms=at,observed_ms=at)
+ before=w.snapshot();old=w.state;nextbar=copy.deepcopy(bar);nextbar[0]+=H
+ w.accept(nextbar,available_ms=at+H,observed_ms=at+H)
+ assert old==before and len(w.snapshot()['decisions'])==len(before['decisions'])+1
+ before['decisions'][0]['symbol']='changed-outside'
+ assert w.snapshot()['decisions'][0]['symbol']=='ZROUSDT'

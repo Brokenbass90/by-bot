@@ -1,0 +1,40 @@
+{
+  "account_lock_inode": 813893,
+  "actual_open_orders": 0,
+  "actual_positions": 0,
+  "broker_writes": 0,
+  "clock": {
+    "is_open": false,
+    "next_close": "2026-11-03T16:00:00-05:00",
+    "next_open": "2026-11-03T09:30:00-05:00",
+    "timestamp": "2026-11-03T01:05:54.646319011-05:00"
+  },
+  "elapsed_ms": 14138,
+  "final_flat_started_ms": 1793685954992,
+  "final_gate": "MONTHLY_FINAL_DISPATCH_WINDOW_OR_CLOCK",
+  "financial_journal_constructors": false,
+  "fresh_cash_and_gross_caps_pass": true,
+  "legacy_handoff_fresh_after_fee_refresh": true,
+  "non_get_methods": [],
+  "observational_wrapper_only": true,
+  "observed_end_ms": 1793685955865,
+  "observed_start_ms": 1793685941726,
+  "orders_disabled_at_transport": true,
+  "original_book_and_ticket_unchanged": true,
+  "proof_checks": [
+    {
+      "coverage_age_ms": 2189,
+      "observed_ms": 1793685954414,
+      "source_age_ms": 1272
+    },
+    {
+      "coverage_age_ms": 3638,
+      "observed_ms": 1793685955863,
+      "source_age_ms": 2721
+    }
+  ],
+  "refreshes": 1,
+  "schema": "MONTHLY_ACTUAL_GET_PREPOST_PROBE_V7",
+  "source_identity_verified": true,
+  "status": "GET_PREPOST_FEES_PASS_WINDOW_BLOCKED"
+}

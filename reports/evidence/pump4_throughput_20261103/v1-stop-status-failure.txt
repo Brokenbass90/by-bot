@@ -1,0 +1,27 @@
+Stopping pump4-data-supervisor.service - PUMP4 frozen137 DATA-only persistent intake (no trading)...
+{"schema": "PUMP4_WS_FULL137_DATA_RECEIPT_V1", "source_hour_open_ms": 1793689200000, "census": 137, "complete_pairs": 134, "within60s": 134, "broker_writes": 0, "financial_owner_constructed": false, "orders_allowed": false, "money_authority": false, "expected_trading": 134, "disconnected": false, "hour_pass": true}
+pump4-data-supervisor.service: Deactivated successfully.
+Stopped pump4-data-supervisor.service - PUMP4 frozen137 DATA-only persistent intake (no trading).
+pump4-data-supervisor.service: Consumed 2h 42min 28.993s CPU time, 386.2M memory peak, 314.8M memory swap peak.
+Starting pump4-data-supervisor.service - PUMP4 frozen137 DATA-only persistent intake (no trading)...
+Started pump4-data-supervisor.service - PUMP4 frozen137 DATA-only persistent intake (no trading).
+Starting pump4-data-warm-handoff-20261103.service - /root/by-bot/.venv/bin/python -B /opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153/quiet-handoff.py --folder /opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153 --manifest-sha256 59f6639e8c70015391e756bb1d5a217904dc6b2c204f750d6e52e254522d4e15 --target-hour-ms 1793689200000...
+Started pump4-data-warm-handoff-20261103.service - /root/by-bot/.venv/bin/python -B /opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153/quiet-handoff.py --folder /opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153 --manifest-sha256 59f6639e8c70015391e756bb1d5a217904dc6b2c204f750d6e52e254522d4e15 --target-hour-ms 1793689200000.
+Stopping 'pump4-data-supervisor.service', but its triggering units are still active:
+pump4-data-supervisor.timer
+Traceback (most recent call last):
+  File "/opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153/quiet-handoff.py", line 108, in <module>
+    a=argparse.ArgumentParser();a.add_argument('--folder',required=True);a.add_argument('--manifest-sha256',required=True);a.add_argument('--target-hour-ms',type=int,required=True);v=a.parse_args();run(v.folder,v.manifest_sha256,v.target_hour_ms)
+                                                                                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153/quiet-handoff.py", line 70, in run
+    stop_requested=True;control('stop',UNIT);s=get(UNIT);need(s['MainPID']=='0' and s['ExecMainCode']=='1' and s['ExecMainStatus']=='0','DATA_DID_NOT_STOP_CLEANLY')
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/bybot-research/pump4-data-throughput-20261103/patch-59f6639e8c700153/quiet-handoff.py", line 8, in need
+    if not v:raise ValueError(e)
+             ^^^^^^^^^^^^^^^^^^^
+ValueError: DATA_DID_NOT_STOP_CLEANLY
+pump4-data-warm-handoff-20261103.service: Main process exited, code=exited, status=1/FAILURE
+pump4-data-warm-handoff-20261103.service: Failed with result 'exit-code'.
+MainPID=3669955
+NRestarts=0
+ActiveState=active

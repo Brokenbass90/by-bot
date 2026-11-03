@@ -1,0 +1,137 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_ test_selection_verified_before_retirement_and_rollback_keeps_old_rights[write] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-941/test_selection_verified_before0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b4fe960>
+fault = 'write'
+
+    @pytest.mark.parametrize('fault',['write','reload','retire','none'])
+    def test_selection_verified_before_retirement_and_rollback_keeps_old_rights(tmp_path,monkeypatch,fault):
+     m=load('handoff','/private/tmp/monthly-v7-handoff-v2.py');target=tmp_path/'unit';target.write_bytes(b'old');revocation=tmp_path/'revoked';calls=[]
+     original_put=m.put
+     def put(p,b,*a):
+      if fault=='write' and bytes(b)==b'new':raise OSError('write failed')
+      return original_put(p,b,*a)
+     def ctl(*args):
+      calls.append(args)
+      if args==('daemon-reload',) and fault=='reload' and target.read_bytes()==b'new':raise OSError('reload failed')
+      return 'ExecStart=new\nNeedDaemonReload=no\n'
+     def retire():
+      assert target.read_bytes()==b'new' and ('daemon-reload',) in calls
+      if fault=='retire':raise OSError('retire failed')
+      revocation.write_bytes(b'yes')
+     monkeypatch.setattr(m,'put',put);monkeypatch.setattr(m,'ctl',ctl)
+     if fault=='none':m.select_unit(target,b'old',b'new',revocation,retire)
+     else:
+>     with pytest.raises(OSError):m.select_unit(target,b'old',b'new',revocation,retire)
+                                  ^^^^^^^^^^^^^
+E     AttributeError: module 'handoff' has no attribute 'select_unit'
+
+/private/tmp/test_monthly_v7_handoff.py:30: AttributeError
+_ test_selection_verified_before_retirement_and_rollback_keeps_old_rights[reload] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-941/test_selection_verified_before1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b48ad20>
+fault = 'reload'
+
+    @pytest.mark.parametrize('fault',['write','reload','retire','none'])
+    def test_selection_verified_before_retirement_and_rollback_keeps_old_rights(tmp_path,monkeypatch,fault):
+     m=load('handoff','/private/tmp/monthly-v7-handoff-v2.py');target=tmp_path/'unit';target.write_bytes(b'old');revocation=tmp_path/'revoked';calls=[]
+     original_put=m.put
+     def put(p,b,*a):
+      if fault=='write' and bytes(b)==b'new':raise OSError('write failed')
+      return original_put(p,b,*a)
+     def ctl(*args):
+      calls.append(args)
+      if args==('daemon-reload',) and fault=='reload' and target.read_bytes()==b'new':raise OSError('reload failed')
+      return 'ExecStart=new\nNeedDaemonReload=no\n'
+     def retire():
+      assert target.read_bytes()==b'new' and ('daemon-reload',) in calls
+      if fault=='retire':raise OSError('retire failed')
+      revocation.write_bytes(b'yes')
+     monkeypatch.setattr(m,'put',put);monkeypatch.setattr(m,'ctl',ctl)
+     if fault=='none':m.select_unit(target,b'old',b'new',revocation,retire)
+     else:
+>     with pytest.raises(OSError):m.select_unit(target,b'old',b'new',revocation,retire)
+                                  ^^^^^^^^^^^^^
+E     AttributeError: module 'handoff' has no attribute 'select_unit'
+
+/private/tmp/test_monthly_v7_handoff.py:30: AttributeError
+_ test_selection_verified_before_retirement_and_rollback_keeps_old_rights[retire] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-941/test_selection_verified_before2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b48b920>
+fault = 'retire'
+
+    @pytest.mark.parametrize('fault',['write','reload','retire','none'])
+    def test_selection_verified_before_retirement_and_rollback_keeps_old_rights(tmp_path,monkeypatch,fault):
+     m=load('handoff','/private/tmp/monthly-v7-handoff-v2.py');target=tmp_path/'unit';target.write_bytes(b'old');revocation=tmp_path/'revoked';calls=[]
+     original_put=m.put
+     def put(p,b,*a):
+      if fault=='write' and bytes(b)==b'new':raise OSError('write failed')
+      return original_put(p,b,*a)
+     def ctl(*args):
+      calls.append(args)
+      if args==('daemon-reload',) and fault=='reload' and target.read_bytes()==b'new':raise OSError('reload failed')
+      return 'ExecStart=new\nNeedDaemonReload=no\n'
+     def retire():
+      assert target.read_bytes()==b'new' and ('daemon-reload',) in calls
+      if fault=='retire':raise OSError('retire failed')
+      revocation.write_bytes(b'yes')
+     monkeypatch.setattr(m,'put',put);monkeypatch.setattr(m,'ctl',ctl)
+     if fault=='none':m.select_unit(target,b'old',b'new',revocation,retire)
+     else:
+>     with pytest.raises(OSError):m.select_unit(target,b'old',b'new',revocation,retire)
+                                  ^^^^^^^^^^^^^
+E     AttributeError: module 'handoff' has no attribute 'select_unit'
+
+/private/tmp/test_monthly_v7_handoff.py:30: AttributeError
+_ test_selection_verified_before_retirement_and_rollback_keeps_old_rights[none] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-941/test_selection_verified_before3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b48b8c0>
+fault = 'none'
+
+    @pytest.mark.parametrize('fault',['write','reload','retire','none'])
+    def test_selection_verified_before_retirement_and_rollback_keeps_old_rights(tmp_path,monkeypatch,fault):
+     m=load('handoff','/private/tmp/monthly-v7-handoff-v2.py');target=tmp_path/'unit';target.write_bytes(b'old');revocation=tmp_path/'revoked';calls=[]
+     original_put=m.put
+     def put(p,b,*a):
+      if fault=='write' and bytes(b)==b'new':raise OSError('write failed')
+      return original_put(p,b,*a)
+     def ctl(*args):
+      calls.append(args)
+      if args==('daemon-reload',) and fault=='reload' and target.read_bytes()==b'new':raise OSError('reload failed')
+      return 'ExecStart=new\nNeedDaemonReload=no\n'
+     def retire():
+      assert target.read_bytes()==b'new' and ('daemon-reload',) in calls
+      if fault=='retire':raise OSError('retire failed')
+      revocation.write_bytes(b'yes')
+     monkeypatch.setattr(m,'put',put);monkeypatch.setattr(m,'ctl',ctl)
+>    if fault=='none':m.select_unit(target,b'old',b'new',revocation,retire)
+                      ^^^^^^^^^^^^^
+E    AttributeError: module 'handoff' has no attribute 'select_unit'
+
+/private/tmp/test_monthly_v7_handoff.py:28: AttributeError
+________ test_real_guard_ast_valid_window_has_globals_and_never_submits ________
+
+setup = (<research_lab.alpaca_monthly_binding_v1.MonthlyBook object at 0x10b48bfe0>, {'signal_session': '2026-10-30', 'entry_s...iveBinding object at 0x10b48a690>, <test_alpaca_monthly_native_adapter_v1.Broker object at 0x10b48bcb0>, 1793629800000)
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-941/test_real_guard_ast_valid_wind0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b489370>
+
+    def test_real_guard_ast_valid_window_has_globals_and_never_submits(setup,tmp_path,monkeypatch):
+     p=load('probe','/private/tmp/monthly-v7-readonly-probe-v2.py');b,s,n,io,now=setup
+     connect_wire(setup,monkeypatch);standing(n,now);t=ticket(setup);folder=tmp_path/'anchors';folder.mkdir()
+>    fn=p.load_final_guard(n,t,next(r for r in s['calendar'] if r['session']==s['entry_session']),folder,now,time.monotonic())
+        ^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'probe' has no attribute 'load_final_guard'
+
+/private/tmp/test_monthly_v7_handoff.py:37: AttributeError
+=========================== short test summary info ============================
+FAILED ../../../../../../private/tmp/test_monthly_v7_handoff.py::test_selection_verified_before_retirement_and_rollback_keeps_old_rights[write]
+FAILED ../../../../../../private/tmp/test_monthly_v7_handoff.py::test_selection_verified_before_retirement_and_rollback_keeps_old_rights[reload]
+FAILED ../../../../../../private/tmp/test_monthly_v7_handoff.py::test_selection_verified_before_retirement_and_rollback_keeps_old_rights[retire]
+FAILED ../../../../../../private/tmp/test_monthly_v7_handoff.py::test_selection_verified_before_retirement_and_rollback_keeps_old_rights[none]
+FAILED ../../../../../../private/tmp/test_monthly_v7_handoff.py::test_real_guard_ast_valid_window_has_globals_and_never_submits
+5 failed in 0.72s

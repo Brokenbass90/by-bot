@@ -1,0 +1,23 @@
+{
+  "checkout_fallback": [],
+  "counts": {
+    "errors": 0,
+    "failures": 1,
+    "skipped": 0,
+    "tests": 307
+  },
+  "elapsed_seconds": 549.854,
+  "money_authority": false,
+  "network_denied": true,
+  "orders_allowed": false,
+  "real_broker_requests": 0,
+  "real_broker_writes": 0,
+  "receipt_count": 2,
+  "schema": "ALPACA_MONTHLY_INITIAL_RECOVERY_EXACT_ACCEPTANCE_V1",
+  "source_file_count": 53,
+  "source_import_count": 40,
+  "source_material_sha256": "684518513910cd6ed80a4b8a39e7425b970cd213ae07dbeafa37ee45e3cf4797",
+  "status": "FAIL",
+  "test_file_count": 21,
+  "whole_live_handoff": "OPEN"
+}
