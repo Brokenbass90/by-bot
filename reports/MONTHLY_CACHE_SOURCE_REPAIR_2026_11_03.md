@@ -1,3 +1,17 @@
+# Actual3Nov16:40Cyprus — no confirmedBUY; HTTP422, preservedreservation
+
+Actual postwindow receipt3Nov14:40:02.406UTC /16:40:02Cyprus: independentLIVE
+accountmatchesmanager/scope125, positions0/openorders0/recentorders0/book0.
+Nativeobserver serviceResultsuccess/ExecMainStatus0, immutable receiptSHA
+b4fde9e85f5b5819d1a3ae3a4af92a57cad13e2204994b60af71941f0c3c6bf9.
+Window14:30–14:35 hadinitialOPENINGALPACA_HTTP_422 thenreserved/UNCERTAIN_ENTRY_
+NO_RESEND. Verdict UNKNOWN_NO_CONFIRMED_BUY_OPENING_422: notCASH/completehistory/
+terminalcostproof. No order/GO/apply replay orscopeextension. One-shotappmonitor
+monthly-3nov-12509204 removed after resultread; nativeMonthly/timers/archiveskept.
+ExactHTTPbodylost, specificrejectionreasonUNKNOWN. Evidence actual-postwindow-1440-get.json.
+
+Earlierdatedentriesarehistory.
+
 # Current3Nov14:37UTC — openingHTTP422; BUY notconfirmed, reservation preserved
 
 ActualOPENING ALPACA_HTTP_422 thenUNCERTAIN_ENTRY_NO_RESEND. LiveindependentGET

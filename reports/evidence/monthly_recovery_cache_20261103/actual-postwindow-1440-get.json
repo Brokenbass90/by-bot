@@ -1,0 +1,164 @@
+{
+  "private_evidence": ".private/live_p0_sync_20261103/monthly-native-postwindow-20261103T144302Z-2d9557d937c5451d954c874840772bce.json",
+  "readback_ms": 1793716981993,
+  "unit": "Result=success\nExecMainStatus=0\nActiveState=inactive\n",
+  "receipts": [
+    {
+      "name": "receipt-20261103T144005Z-e048c08a84dd4521b4ca596875ba94a3.json",
+      "sha256": "b4fde9e85f5b5819d1a3ae3a4af92a57cad13e2204994b60af71941f0c3c6bf9",
+      "status": "ACTUAL_POSTWINDOW_GET_CAPTURED_NOT_A_VERDICT",
+      "observed_ms": 1793716800554,
+      "broker_observed_at": "2026-11-03T14:40:02.406010+00:00",
+      "identity": {
+        "account_matches_manager": true,
+        "account_matches_scope": true,
+        "live_endpoint": "https://api.alpaca.markets"
+      },
+      "selected_source": "INITIAL_RECOVERY_CACHE_V2",
+      "positions": 0,
+      "open_orders": 0,
+      "recent_orders": 0,
+      "book_positions": 0,
+      "history_complete": false,
+      "ticks": [
+        {
+          "observed_ms": 1793715927393,
+          "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+          "issues": []
+        },
+        {
+          "observed_ms": 1793715988837,
+          "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+          "issues": []
+        },
+        {
+          "observed_ms": 1793716045205,
+          "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+          "issues": []
+        },
+        {
+          "observed_ms": 1793716106606,
+          "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+          "issues": []
+        },
+        {
+          "observed_ms": 1793716165376,
+          "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+          "issues": []
+        },
+        {
+          "observed_ms": 1793716259552,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "AlpacaAPIError",
+              "phase": "OPENING",
+              "reason": "ALPACA_HTTP_422"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716294381,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716355574,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716409122,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716468095,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716529927,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716591384,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716649188,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716706452,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        },
+        {
+          "observed_ms": 1793716766055,
+          "entry_status": "BLOCKED",
+          "issues": [
+            {
+              "code": "ValueError",
+              "phase": "RECOVERY",
+              "reason": "UNCERTAIN_ENTRY_NO_RESEND"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "window_verdict": "UNKNOWN_NO_CONFIRMED_BUY_OPENING_422",
+  "full_history_or_terminal_costs_proven": false
+}

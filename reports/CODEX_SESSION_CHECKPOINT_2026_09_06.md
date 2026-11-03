@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT3Nov14:44UTC — actualMonthlywindowUNKNOWN/HTTP422; PUMPinstalled15Hpending
+
+Actual postwindow receipt3Nov14:40:02.406UTC /16:40:02Cyprus: independentLIVE
+accountmatchesmanager/scope125, positions0/openorders0/recentorders0/book0.
+Nativeobserver serviceResultsuccess/ExecMainStatus0, immutable receiptSHA
+b4fde9e85f5b5819d1a3ae3a4af92a57cad13e2204994b60af71941f0c3c6bf9.
+Window14:30–14:35 hadinitialOPENINGALPACA_HTTP_422 thenreserved/UNCERTAIN_ENTRY_
+NO_RESEND. Verdict UNKNOWN_NO_CONFIRMED_BUY_OPENING_422: notCASH/completehistory/
+terminalcostproof. No order/GO/apply replay orscopeextension. One-shotappmonitor
+monthly-3nov-12509204 removed after resultread; nativeMonthly/timers/archiveskept.
+ExactHTTPbodylost, specificrejectionreasonUNKNOWN. Evidence actual-postwindow-1440-get.json.
+
+PUMPV3installed14:04:27UTC/DATA4126455/financial3669955NRestarts0; actual15H
+proofafter15:02:05/monitorpump4-data-h1-handoff-v3 retained. Newworkpublished
+origin c99b9b7308858cc7f62953e2efce57001548aa98; priorapprovalcapacityresolved.
+Source/GO/claims/reservationskeep; no newmoney/Brain/Factory/researchactions.
+
+---
+Earlierdatedentriesbelowarehistory.
+
 CURRENT3Nov14:37UTC — PUMPV3 physicallyinstalled; Monthlyopening422/NO_BUYconfirmedyet
 
 PUMP actualV3handoff14:04:27.646UTC/newDATA4126455/data-lock4294867/136epochs+

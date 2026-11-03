@@ -1,14 +1,13 @@
-# Continue Monthly422 diagnosis / actualPUMP15H — NEVERrepeatGO/apply
+# Current after3Nov16:40Cyprus — MonthlyHTTP422, no confirmedBUY
 
-Read checkpointTOP / LIVE_P0_AND_POLY_MEASUREMENT_2026_11_03.md.
-PUMPV3 physicallyinstalled14:04:27UTC/newDATA4126455, originalfinancial3669955/
-NRestarts0/dataepochjournals preserved. Independent14:33GETactive. Actual15H
-throughputstillpending; nativeproofafter15:02:05/monitorpump4-data-h1-handoff-v3.
-Monthly125alreadyapplied, actualopeningALPACA_HTTP_422, thenreservedintent/UNCERTAIN_
-ENTRY_NO_RESEND. GET14:34:11LIVEflat/open0/recent0/accountmatches, notCASH/fullhistory.
-Original3Nov14:30–14:35UTCwindowclosed. NoBUYconfirmed; nativeGET14:40 andmonitor
-monthly-3nov-12509204. Preserveclaims/reservations; noPOST/retry/datecarry/GO.
-Exact422HTTPbodydiscardedbytransport, reasonUNKNOWN. Don'tguessprecisionfix:
-officialTrading9dp/BrokerFAQ2dpconflict, needactualevidence/safesourceversionrepair.
-V2fileonlymeasurement23new/71focusedPASS/noTINY, runtimeadapterOPEN; Claudeowns
-scoremodel/Brain/Factory/research. Foreignallowlist/NETblock/evidencepreserve.
+Read checkpointTOP/MONTHLY_CACHE_SOURCE_REPAIR_2026_11_03.md. NativepostwindowGET
+14:40:02UTCidentitymatches125, flat/open0/recent0/book0, boundedhistoryUNKNOWN.
+Windowexpired, initial422thenreserved/UNCERTAIN_ENTRY_NO_RESEND. Exactbodylost;
+noresend/claimreset/replay/GO/datecarry. Oneshotmonthly-3nov-12509204 removed;
+nativeMonthly/timers/archivekept. Need exactrejectionevidence/safeversionedrepair,
+notautomaticDecemberwaitornewBUY. Currentcode/scopesunchanged.
+PUMPV3physical14:04UTCnewDATA4126455/samefinancial3669955NRestarts0. Firstactual
+patched15Hpending/nativeproofafter15:02:05; monitorpump4-data-h1-handoff-v3 stays.
+Publishedc99b9b7 includesV2filemeasurement71PASS/sourceaudit20/10syntheticNO;
+noV2TINY, runtimeadapterOPEN; Claudeownsscoremodel/Brain/Factory/research.
+ForeignNET/allowlist/claims/seals preserved. No moreoldactivationwrappers.
