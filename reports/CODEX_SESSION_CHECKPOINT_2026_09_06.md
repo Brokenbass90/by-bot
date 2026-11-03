@@ -1,5 +1,30 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT3Nov12:51UTC — Monthly125 INSTALLED/ARMED_NO_BUY; today16:30Cyprus window
+
+Owner explicitly GO technical12509204. New apply ONCE completed12:44:43.249UTC;
+independent12:44:44/12:48:59GET confirms INITIAL_RECOVERY_CACHE_V2/scope12509204,
+recoveryselection256aac80…f88d0, LIVE accountmatchesmanager/scope,flat0/open0.
+Originallock813893 preserved; no financialkill. Exactsame1d6 financialterms:
+onlyLLY<=101.41390226115651USD/oneCID, TODAY3Nov14:30–14:35UTC/16:30–16:35Cyprus,
+400/280/40/loss8 andnativeSTOP. No BUY yet; openingfreshguards stillmandatory.
+ActualdeployedGET prePOST feeage1.125/2.258s,coverage2.038/3.171s under5s; three
+nativecycles12:46:29/12:47:26/12:48:25UTC OUTSIDE_MONTHLY_WINDOW/issues[].
+Oldv7+unused1d6 entryrevokedonlyafterselectedsourceverified. Allapplyclaims spent;
+NEVER repeat any apply/GO/continuation. Read MONTHLY_CACHE_SOURCE_REPAIR_2026_11_03.md.
+NativeGETobserver scheduled3Nov14:40UTC, unitmonthly-12509204-postwindow-get-20261103;
+scriptSHAe5d96fc55db7c267da67b1d7f78435b6efda7d8f63a0923ef8bac2964cf29b04.
+Private /opt/bybot-research/monthly-recovery-cache-20261103/read-only-window-check-v1.
+Appheartbeatmonthly-3nov-12509204 readsactualreceipt/notrerun, reportsBUY/NO_ADMISSION/
+UNKNOWN/protection anddeletesonlyitself. No datecarry/replay/missingfeesassumedzero.
+PUMP originalDATA4063038/financial3669955/NRestarts0 unchanged12:49UTC. Latest12H1
+134/134within60,last57.373s;09abort10incomplete11late retained. Nooptimizedredeploy.
+Boundkey12:23GETno_fixed_expiry/exactIP; legacyglobalmain2.9d alertisdifferentkey.
+Foreign NETblock/allowlist preservedandexcluded. No otherwork/Claude messages.
+
+---
+Earlier dated entries below are history.
+
 CURRENT3Nov12:25UTC — Original PUMP DATA restored/12H1 PASS; Monthly125 technical GO pending
 
 MoneyP0 only. Read MONTHLY_CACHE_SOURCE_REPAIR_2026_11_03.md and

@@ -1,0 +1,91 @@
+{
+  "actual_broker_get_at": "2026-11-03T12:48:59.930557+00:00",
+  "actual_idle_cycles": [
+    {
+      "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+      "issues": [],
+      "observed_ms": 1793709989317,
+      "source_sha256": "dc8fde40a08e85de05f9517316c20e4d2acf0c87249d85d0a62748ff4eb2e338",
+      "status": "MONTHLY_STANDING_DISPATCH_TICK"
+    },
+    {
+      "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+      "issues": [],
+      "observed_ms": 1793710046295,
+      "source_sha256": "52e62d4daa06f0503a1adc8c0a5949876ae229a4b3ec757c7a9385989f28e677",
+      "status": "MONTHLY_STANDING_DISPATCH_TICK"
+    },
+    {
+      "entry_status": "OUTSIDE_MONTHLY_WINDOW",
+      "issues": [],
+      "observed_ms": 1793710105195,
+      "source_sha256": "e955ee5fb3afad7484474ea62c8ae85d7df11ede7789e1ba8d9b40b72aeda3a7",
+      "status": "MONTHLY_STANDING_DISPATCH_TICK"
+    }
+  ],
+  "heartbeat": "monthly-3nov-12509204",
+  "history_complete": false,
+  "identity_proof": {
+    "account_matches_manager": true,
+    "account_matches_scope": true,
+    "live_endpoint": "https://api.alpaca.markets"
+  },
+  "install_result": {
+    "sha256": "27bd8f2228d664b361597aa74f6174456b7afd7eecf7e8bad6ac77ac0252dfc9",
+    "value": {
+      "account_lock_inode": 813893,
+      "broker_writes": 0,
+      "capital_or_risk_limits_changed": false,
+      "execution_window_changed": true,
+      "financial_process_killed": false,
+      "financial_terms_same_as_approved_1d6a09ad": true,
+      "initial_recovery_selection_id": "256aac805e37c7ee26ffe5f29a24331c3c06dec94c08efc48a6c1b58587f88d0",
+      "observed_ms": 1793709883249,
+      "probe_proof_checks": [
+        {
+          "coverage_age_ms": 2038,
+          "observed_ms": 1793709880839,
+          "source_age_ms": 1125
+        },
+        {
+          "coverage_age_ms": 3171,
+          "observed_ms": 1793709881972,
+          "source_age_ms": 2258
+        }
+      ],
+      "probe_status": "GET_PREPOST_FEES_PASS_WINDOW_BLOCKED",
+      "qualification": {
+        "initial_pass": 306,
+        "network_denied": true,
+        "original_failure_retained": true,
+        "real_broker_writes": 0,
+        "status": "EXACT_307_QUALIFIED_WITH_ONE_TIMING_RERUN",
+        "timing_rerun_pass": 1,
+        "unique_tests": 307
+      },
+      "schema": "MONTHLY_INITIAL_RECOVERY_HANDOFF_V1",
+      "scope_sha256": "12509204a44a59b71212565618a690cb15bd48c60bdef6e1622326cdfc5ec3cb",
+      "separate_initial_recovery_go_verified": true,
+      "spec_sha256": "44a903bdc7da6bab3c5d6428f24d170fb5bc92a932b18d8ceccd5c95e499d9f5",
+      "status": "MONTHLY_INITIAL_RECOVERY_CACHE_REPAIR_ARMED_NO_BUY"
+    }
+  },
+  "native_window_check": {
+    "exit": 0,
+    "observer_sha256": "e5d96fc55db7c267da67b1d7f78435b6efda7d8f63a0923ef8bac2964cf29b04",
+    "stderr": "Running timer as unit: monthly-12509204-postwindow-get-20261103.timer\nWill run service as unit: monthly-12509204-postwindow-get-20261103.service\n",
+    "stdout": "",
+    "timer": "NextElapseUSecRealtime=Tue 2026-11-03 14:40:00 UTC\nActiveState=active\n"
+  },
+  "no_financial_pump_restart": true,
+  "open_orders": 0,
+  "original_data_pid": "4063038",
+  "positions": 0,
+  "pump_nrestarts": 0,
+  "raw_evidence_sha256": "871cb0491dd4b2dc0d65fc431d8e0c31ec7d220edf93d3d14f14c592715f9ddd",
+  "recovery_selection_present": true,
+  "scope_sha256": "12509204a44a59b71212565618a690cb15bd48c60bdef6e1622326cdfc5ec3cb",
+  "selected_source": "INITIAL_RECOVERY_CACHE_V2",
+  "sole_pump_owner_pid": "3669955",
+  "status": "MONTHLY_ARMED_NO_BUY"
+}

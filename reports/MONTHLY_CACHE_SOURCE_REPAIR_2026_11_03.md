@@ -1,6 +1,45 @@
 # Monthly technical source repair — 3 November 2026
 
-**READY_FOR_EXPLICIT_TECHNICAL_GO; NOT_ARMED.**
+**INSTALLED / ARMED_NO_BUY — actual independent GET 3Nov12:48:59UTC.**
+
+## Owner-approved activation — actual result
+
+The owner explicitly approved technical packet12509204. Its new apply ran ONCE,
+completed12:44:43.249UTC, status MONTHLY_INITIAL_RECOVERY_CACHE_REPAIR_ARMED_NO_BUY.
+Independent12:44:44 and12:48:59UTC GETs confirm selected INITIAL_RECOVERY_CACHE_V2,
+exactscope12509204, recoveryselection256aac80…f88d0, liveaccount matches manager
+and scope, positions0/openorders0. No BUY has occurred at these observations.
+Original accountlock813893 preserved; no financial process killed. Oldv7/unused1d6
+entry scopes retired only after new source selection was verified. Never repeat
+any apply, continuation or create another grant from the old approvals.
+
+Actual deployed-source GET prePOST probe passed unchanged freshness limits:
+fee ages1.125/2.258s; handoff coverage ages2.038/3.171s. Window correctly blocked
+because market was closed. Three subsequent native dispatch receipts at
+12:46:29.317 /12:47:26.295 /12:48:25.195UTC: OUTSIDE_MONTHLY_WINDOW, issues[].
+This proves installation and premaket operation, not execution or profitability.
+
+Approved entry remains TODAY3Nov14:30–14:35UTC /16:30–16:35Cyprus, onlyLLY,
+max101.41390226115651USD/oneCID, nativefullqtySTOP and budgets400/280/40/loss8.
+Opening still requires actual fresh quote/fees/account/clock/protection checks.
+No automatic December wait was imposed, no BUY outside this exceptional window.
+
+One native GET-only observer is scheduled **3Nov14:40:00UTC**, timer
+monthly-12509204-postwindow-get-20261103, ActiveState=active and actualsystemd
+NextElapseUSecRealtime verified. It does NOT submit/retry orders or run financial
+constructors. ScriptSHA e5d96fc55db7c267da67b1d7f78435b6efda7d8f63a0923ef8bac2964cf29b04,
+public source evidence/postwindow-readonly.py. Runtime private receipt directory:
+/opt/bybot-research/monthly-recovery-cache-20261103/read-only-window-check-v1.
+App followup monthly-3nov-12509204 reads the receipt, reports actualBUY/NO_ADMISSION/
+UNKNOWN/protection and removes only itself. No replay if late. Readback has bounded
+recent history; empty account is not CASH, missing fees are not zero/final costs.
+
+Evidence: evidence/monthly_recovery_cache_20261103/actual-owner-go-activation.json.
+PUMP financialowner3669955/NRestarts0 and originalDATA4063038 unchanged at12:49GET.
+PUMP12H1PASS does not erase09aborted/10incomplete/11late; timing remains marginal.
+
+Earlier preparation below is history, including former pending-GO statements.
+
 The owner approved1d6a09ad07:57UTC; both installation attempts stopped in GET-only
 qualification BEFORE selection/book changes or BUY. Existing v7 repair stays
 selected. Original claim/continuation/GO and failed evidence remain immutable.
