@@ -1,3 +1,26 @@
+# Current4Nov13:25UTC — boundedSIRENUNKNOWN / E2WAIT / Monthlyexternal
+
+CURRENT4Nov13:25UTC — SIREN HTTPS verdictUNKNOWN; E2WAIT; Monthly no newreply
+
+Read PUMP4_HTTPS_FRESHNESS_VERDICT_2026_11_04.md/actual-verdict.json.
+Historical03Nov03:00:15.697 ENTRY_SOURCE_STALE confirmed; failedrawHTTPmissing,
+which0..5s guard(server/localreceive) failedUNKNOWN; notVALID_BLOCK/notDEFECT.
+PinnedactualVPS6publicGET3pairs4Nov13:17UTC:324–982msfetch/serverage87–406ms,
+localage0–8ms/allPASS. ExactSIREN233rowfullnewline/chainprefix onmemfd/no source
+flock/repair;91.953msverify,3replays80–117ms,after3sourceage434ms. Notstrategy/PnL/
+financialreplay;historicaldecisionIDmatches. RepeatedplanchecksaroundaccountGET
+arecodefact,notdefectproof;fullaccount/instruments pathnotprofiled. No LIVEchange.
+Owner3669955active/NRestarts0. BoundedhistoricalinvestigationclosedUNKNOWN; next
+useful evidence is nextfailurestage/timestamps/rawSHA,notblindrepair/5s/60schange.
+E2latestactual13:22UTCbothWAITING_REAL_SIGNAL,0measurements/joins/orderposts.
+Monthlymailsearch13:15onlypriorautoack,exact422UNKNOWN;mailmetadataprivateonly.
+FundingPolymarketnotneededforORDERSOFF;originalV2notmoneycandidate,newTINYpacket/
+economicapprovalandownerGOOPEN. No profit/startdatepromises orfundrequest.
+Miniqueueupdated;source/runtimeunchangedfrome678b2b. ForeignNET/privateackretain.
+
+---
+Earlierdatedentriesbelowarehistory.
+
 # Current4Nov12:50UTC — E2 actual hook and eight PUMP4 source decisions
 
 CURRENT4Nov12:50UTC — actual Polymarket E2 hook PASS; PUMP8raw stages proven; no newmoney

@@ -1,0 +1,62 @@
+{
+  "financial_posts": 0,
+  "first_real_signal_measured": false,
+  "hook_log_sha256": "42e0e68c7e70f3a2652ef665d99b18386975eede72a1a4b738e28ac1cecbabf6",
+  "last_automatic_runs": [
+    {
+      "journals": {
+        "POLY_95_V2_SHIROKO.jsonl": {
+          "blocked": 0,
+          "issues": [],
+          "joined": 0,
+          "measured": 0,
+          "money_authority": false,
+          "order_posts": 0,
+          "status": "WAITING_REAL_SIGNAL"
+        },
+        "POLY_SCHET_V3.jsonl": {
+          "blocked": 0,
+          "issues": [],
+          "joined": 0,
+          "measured": 0,
+          "money_authority": false,
+          "order_posts": 0,
+          "status": "WAITING_REAL_SIGNAL"
+        }
+      },
+      "money_authority": false,
+      "observed_ms": 1793798557915,
+      "order_posts": 0,
+      "status": "CYCLE_CHECKED"
+    },
+    {
+      "journals": {
+        "POLY_95_V2_SHIROKO.jsonl": {
+          "blocked": 0,
+          "issues": [],
+          "joined": 0,
+          "measured": 0,
+          "money_authority": false,
+          "order_posts": 0,
+          "status": "WAITING_REAL_SIGNAL"
+        },
+        "POLY_SCHET_V3.jsonl": {
+          "blocked": 0,
+          "issues": [],
+          "joined": 0,
+          "measured": 0,
+          "money_authority": false,
+          "order_posts": 0,
+          "status": "WAITING_REAL_SIGNAL"
+        }
+      },
+      "money_authority": false,
+      "observed_ms": 1793798579625,
+      "order_posts": 0,
+      "status": "CYCLE_CHECKED"
+    }
+  ],
+  "observed_utc": "2026-11-04T13:26:59.211258+00:00",
+  "official_model_outcome_joined": false,
+  "schema": "POLY_E2_FRESH_STATUS_V1"
+}
