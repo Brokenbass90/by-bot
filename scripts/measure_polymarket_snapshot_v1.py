@@ -57,7 +57,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def get_capture(url):
-    need(re.fullmatch(r'https://gamma-api\.polymarket\.com/markets/[0-9]{1,32}|https://clob\.polymarket\.com/book\?token_id=[0-9]{1,100}', url), 'PUBLIC_GET_ALLOWLIST')
+    need(re.fullmatch(r'https://data-api\.polymarket\.com/v2/resolutions\?condition=0x[0-9a-fA-F]{64}|https://gamma-api\.polymarket\.com/markets/[0-9]{1,32}|https://clob\.polymarket\.com/book\?token_id=[0-9]{1,100}', url), 'PUBLIC_GET_ALLOWLIST')
     started = time.time_ns() // 1000000
     mono = time.monotonic_ns()
     req = urllib.request.Request(url, headers={'User-Agent': 'TradingOS-ORDERS-OFF-measurement'}, method='GET')
@@ -79,9 +79,14 @@ def get_capture(url):
 
 
 def run(archive, seal, market_id, destination, *, signal=None, repeat=1, interval=10):
+    member, proof = membership(archive, seal, market_id)
+    return run_member(member, proof, destination, signal=signal, repeat=repeat, interval=interval)
+
+
+def run_member(member, proof, destination, *, signal=None, repeat=1, interval=10):
+    market_id = member['id']
     need(type(repeat) is int and 1 <= repeat <= 3 and 1 <= interval <= 60, 'BOUNDED_MEASUREMENT_ONLY')
     need(isinstance(market_id, str) and re.fullmatch(r'[0-9]{1,32}', market_id), 'MARKET_ID')
-    member, proof = membership(archive, seal, market_id)
     tokens = member['tokens']
     need(isinstance(tokens, list) and len(tokens) == 2 and all(isinstance(t, str) and re.fullmatch(r'[0-9]{1,100}', t) for t in tokens) and len(set(tokens)) == 2, 'CATALOGUE_TOKEN_PAIR')
     if signal is not None:
@@ -112,18 +117,21 @@ def run(archive, seal, market_id, destination, *, signal=None, repeat=1, interva
             decision_ms = time.time_ns() // 1000000
             m = market_input(gamma, market_id, decision_ms=decision_ms)
             books = [book_input(c, m, token, decision_ms=decision_ms) for c, token in zip(captures, tokens)]
+            if signal is not None:
+                for stamp in (signal['received_ms'], signal.get('signal_ms', signal['received_ms']), signal.get('score_on_mac_ms', decision_ms)):
+                    need(measurement._ms(stamp) and 0 <= decision_ms - stamp <= 120000, 'STALE_SIGNAL_AT_MEASUREMENT')
             results = []
             for b in books:
                 supplied = signal is not None and signal['token_id'] == b['asset_id']
                 s = signal if supplied else dict(market_id=market_id, token_id=b['asset_id'],
                     policy_sha256=hashlib.sha256(Path(measurement.__file__).read_bytes()).hexdigest(),
                     received_ms=decision_ms, model_price=None, kind='NON_STRATEGIC_DEPTH_PROBE')
-                r = measurement.measure(s, b, m, decision_ms=decision_ms)
+                r = measurement.measure(s, b, m, decision_ms=decision_ms, model_budget=s.get('stake_model_usd', 100), limit_price=s.get('price_limit', '.985'))
                 results.append(dict(measurement=r, normalized_book=b, supplied_signal=supplied))
             out = dict(schema='POLY_PUBLIC_SNAPSHOT_MEASUREMENT_V1', sample_index=index,
                 decision_ms=decision_ms, market_id=market_id, metadata=m, outcomes=results,
                 source_membership=proof, supplied_signal_sha256=measurement.sha(signal) if signal else None,
-                signal_observation_id=measurement.sha(signal) if signal is not None else None,
+                signal_observation_id=signal.get('signal_observation_id', measurement.sha(signal)) if signal is not None else None,
                 independent_opportunities=0, independence_qualified=False,
                 real_strategy_signal_verified=False,
                 full_rest_snapshots=True, stream_continuity_proven=False, simultaneous_pair=False,
@@ -156,7 +164,13 @@ def run(archive, seal, market_id, destination, *, signal=None, repeat=1, interva
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--capture', action='store_true')
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument('--capture', action='store_true')
+    modes.add_argument('--cycle-once', action='store_true')
+    parser.add_argument('--research-root', type=Path)
+    parser.add_argument('--signal-journal')
+    parser.add_argument('--signal-epoch', choices=['E2_20261104'])
+    parser.add_argument('--state-root', type=Path)
     parser.add_argument('--archive', type=Path)
     parser.add_argument('--catalogue-seal', type=Path)
     parser.add_argument('--market-id')
@@ -165,6 +179,13 @@ def main(argv=None):
     parser.add_argument('--repeat', type=int, default=1)
     parser.add_argument('--interval-seconds', type=float, default=10)
     args = parser.parse_args(argv)
+    if args.cycle_once:
+        from research_lab.polymarket_signal_cycle_v1 import cycle_once, cycle_many
+        root = args.research_root if args.research_root is not None else Path.cwd() / 'research_lab'
+        state = args.state_root if args.state_root is not None else ROOT / '.private/poly_signal_cycle_20261104'
+        result = cycle_many(root, state, journals=(args.signal_journal,) if args.signal_journal else None, epoch=args.signal_epoch)
+        print(json.dumps(result), flush=True)
+        return 2 if result['status'] == 'UNKNOWN' else 0
     if not args.capture:
         print(json.dumps(dict(status='NO_NETWORK_ORDERS_OFF', order_posts=0, money_authority=False)))
         return 0

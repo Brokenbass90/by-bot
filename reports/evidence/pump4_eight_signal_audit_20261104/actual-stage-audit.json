@@ -1,0 +1,514 @@
+{
+  "candidates": [
+    {
+      "bar_open_ms": 1793199600000,
+      "decision_hour_ms": 1793203200000,
+      "decision_hour_utc": "2026-10-28T16:00:00+00:00",
+      "decision_id": "pump4-bc5afe1a314dceccdb299011fa551be18c7b37060e7674ae8a51b69086500ebc",
+      "financial_receipts": [],
+      "first_proven_blocker": "BEFORE_ORIGINAL_SCOPE_VALID_FROM",
+      "history_sha256": "60f2556764dc50ae01d23bbd53e16668bebe4da81a5544f9818c3785ce5eb676",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "4155642c4a525dc4d0e99a926e39062e8b093e6810c0ad62e8224eeb1032abbe",
+      "publication_offset_ms": 36862,
+      "publication_sha256": "faa07f2e6365131fc8dbba6a64eefd6b40ebbbed19e1545287b6e1f3dca4bd47",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "bar_open_ms": 1793199600000,
+      "decision_hour_ms": 1793203200000,
+      "decision_hour_utc": "2026-10-28T16:00:00+00:00",
+      "decision_id": "pump4-46f8544406b2a0602b59f8ec197564e72079931592dfc8334f8acd7c0d3f9bc0",
+      "financial_receipts": [],
+      "first_proven_blocker": "BEFORE_ORIGINAL_SCOPE_VALID_FROM",
+      "history_sha256": "2f1db0d2c5feb37603e237865bd3b8dc38b0a7d09b9839fd846d1a0206cd6efc",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "a916c96049efd18948b412e39a11f17c7b74e669ae498d1e03bdbb38e56ebae3",
+      "publication_offset_ms": 37154,
+      "publication_sha256": "0b4d74a3bc80ce22783d35347bbe860dae91df40b545ddf0392aa5179d54583e",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "TUTUSDT"
+    },
+    {
+      "bar_open_ms": 1793379600000,
+      "decision_hour_ms": 1793383200000,
+      "decision_hour_utc": "2026-10-30T18:00:00+00:00",
+      "decision_id": "pump4-5d5ddde7a23386d00fd052ef6e138f23514719b0583ea629c26fd20fb7054a34",
+      "financial_receipts": [
+        {
+          "observed_ms": 1793383202389,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "14e86ec143cb52f37cbd0ce7b33ba1f69b423530ae74c89f836f1fc4f10c7c10",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793383209138,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "c8dbe8d9e641901828b3401081e327994c6b6776c87d2e9f1dfaf58b77fad02d",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793383215092,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "5443b7f2f2c3cdbb798d080ed64194c3c4c6986f53e8d3e9b508690714687fce",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793383221847,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "c03031f24397efa3948d1f8512f0f97c630c4f5f76c80c5e26662b76f2a99dad",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793383228523,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "69677ffc7c23b0b230d463abfd294efc42272a9bd72d32ffc428e0e77c6a7670",
+          "status": "BLOCKED_NEW_INPUTS"
+        }
+      ],
+      "first_proven_blocker": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "history_sha256": "678589efeb257c12ebd0e38e656ff978ffe519886c7158f6f60aeac13c329acd",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "6b80d9d0479f49a124f151837d1de5e6477e7c72a50ab5df484ee8cae69c80b1",
+      "publication_offset_ms": 15767,
+      "publication_sha256": "dfef9ac05954c9b8654623b06d7fa8057fe53b419e654dc1bfbe97c18889e66d",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "bar_open_ms": 1793437200000,
+      "decision_hour_ms": 1793440800000,
+      "decision_hour_utc": "2026-10-31T10:00:00+00:00",
+      "decision_id": "pump4-b55074621fe41058aa3a8aa5f2087e8cd911bd5c32b3ed2c4c5f79a089646917",
+      "financial_receipts": [
+        {
+          "observed_ms": 1793440806515,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "1bf5274b9675be36a708f96026c09bc898e05920c48e7503b24437a962a69798",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440812870,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "d3b5df773c7ded86f15638e540cdfeb485c94fc2aad28510f1b6e22df7b232bd",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440819231,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "c111eef203111a557b81e531a4cc1c5ef87eefaed268bc22ecb328f500fa0d50",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440825616,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "3db411aaea1fc387a03487d91d17ad8ccbe678bb8eab81f63121a0e5244b652b",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440831850,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "7528dc70d39cae8134891523b3f7071cb6e806bd996d35d9028c11f36399a2f5",
+          "status": "BLOCKED_NEW_INPUTS"
+        }
+      ],
+      "first_proven_blocker": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "history_sha256": "2ac06484034df80f3c39b07fc0ecbf7570fe041b68d030206e9a24a3563ea1eb",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "9a4cd3e25ca73a2786b75f5ea8cabe76d9a977436cd4659b13867694ed422e36",
+      "publication_offset_ms": 8286,
+      "publication_sha256": "a852eafdc2d217f091f92ca9d6b3698a0c4d02ba511335e92ee77986187f0c51",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "XPLUSDT"
+    },
+    {
+      "bar_open_ms": 1793437200000,
+      "decision_hour_ms": 1793440800000,
+      "decision_hour_utc": "2026-10-31T10:00:00+00:00",
+      "decision_id": "pump4-c08865f94f27834599689c17929591e839a31588f77940219ddc5fd36113fbb3",
+      "financial_receipts": [
+        {
+          "observed_ms": 1793440806515,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "1bf5274b9675be36a708f96026c09bc898e05920c48e7503b24437a962a69798",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440812870,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "d3b5df773c7ded86f15638e540cdfeb485c94fc2aad28510f1b6e22df7b232bd",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440819231,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "c111eef203111a557b81e531a4cc1c5ef87eefaed268bc22ecb328f500fa0d50",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440825616,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "3db411aaea1fc387a03487d91d17ad8ccbe678bb8eab81f63121a0e5244b652b",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793440831850,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "7528dc70d39cae8134891523b3f7071cb6e806bd996d35d9028c11f36399a2f5",
+          "status": "BLOCKED_NEW_INPUTS"
+        }
+      ],
+      "first_proven_blocker": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "history_sha256": "9feb0701ae400ab0a837c4c5387b8868352ce491a8ac4b75e3634cab845620aa",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "e41579d512188d1eae2198c028cbd7d59466e03f4841c2b7745186db4a2e3dfb",
+      "publication_offset_ms": 30506,
+      "publication_sha256": "b8aacfc1e5819c7b5f8a855f5b5f5fcb71a82fa7f39e19480f5a43d837cd4b7b",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "ESPUSDT"
+    },
+    {
+      "bar_open_ms": 1793440800000,
+      "decision_hour_ms": 1793444400000,
+      "decision_hour_utc": "2026-10-31T11:00:00+00:00",
+      "decision_id": "pump4-eac6ba05ce69454dd6e767d1eb4594daa3d574d77fdd84b7d3296d3e8a2f8f61",
+      "financial_receipts": [
+        {
+          "observed_ms": 1793444405146,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "7401cfcc89df74660182eeea8490e127b1e46be1d52bb9c484d3074d1b246d13",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793444411675,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "9bf37a95edc1c8d2c79ed5b924dc4c6e385a4a166c3cc58005e7e5f95e6009fc",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793444418009,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "8b09d4063b6fb35bfacfd004ae2f08c9b09e2d6aeca4f561aea26a88734affa8",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793444424385,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "f1e6f0c47c433b16ba2998796d7cdff6a9267175cb6753d0e5949f48d9d0fb32",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793444430524,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "0c3b6275c15c95b311781dfbad46b3743e973e943924153f97bdcfa3f1efa748",
+          "status": "BLOCKED_NEW_INPUTS"
+        }
+      ],
+      "first_proven_blocker": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "history_sha256": "39a8fd1864ff8320151509113edc86e437b13d6d8fbc919beb682c06067aef12",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "0defd9fc7a5acb82dc88c0ec255559d22ae422fbc28e2f0e6d9720b3f3fd6d12",
+      "publication_offset_ms": 45026,
+      "publication_sha256": "d8db1aa98ce250702f73491a38b8ee65b23ecd400c3a561078d21d1cb0cac396",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "HEIUSDT"
+    },
+    {
+      "bar_open_ms": 1793494800000,
+      "decision_hour_ms": 1793498400000,
+      "decision_hour_utc": "2026-11-01T02:00:00+00:00",
+      "decision_id": "pump4-953a65eea3141fc0b21ea43126121af9b172b84053e2d170becbe737fa3809f3",
+      "financial_receipts": [
+        {
+          "observed_ms": 1793498400827,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "3e864d736655afd9daebf23f2905d4a15a25928cda21a7eaea189b8e5649547e",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793498407656,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "df55b715135fcb3959886aa3cc5fe053ddbab70c7de1371a564bc8e06b8d3c54",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793498413983,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "e96ab3d90e8de5b5a8c73d73e0fe6e494e666f1becd94b114c44e122ed77fb67",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793498420198,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "57420d10c23d579902935895b0b22bf871355c92c785e56f15c3812a2df8f71e",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793498426660,
+          "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+          "sha256": "3771fcb5d999ce12485e769749152fbfd4a1a8d23673cab5721faa3056ce3d76",
+          "status": "BLOCKED_NEW_INPUTS"
+        }
+      ],
+      "first_proven_blocker": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "history_sha256": "8253706d646b7727ff2f22563fb51f0b555a7d7b7f539b2ee46d840a3d98c086",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "201cf26066c3702fb6ea12f59e9060948336267103dcbbbb91c12fcf1a327bb6",
+      "publication_offset_ms": 37631,
+      "publication_sha256": "4cae0b7487742dd4a3b0eda9e742091384d04b78e782d4361922a75d2e6ba8dc",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "GWEIUSDT"
+    },
+    {
+      "bar_open_ms": 1793671200000,
+      "decision_hour_ms": 1793674800000,
+      "decision_hour_utc": "2026-11-03T03:00:00+00:00",
+      "decision_id": "pump4-3b46c8af791af96011ec9661ae749b0734119bdc472c3afe4b83dcf0f740ea1a",
+      "financial_receipts": [
+        {
+          "observed_ms": 1793674801040,
+          "reason": null,
+          "sha256": "610bae5d0f848ef1ac0e5ddbdd945383d7fa321cdaf78faec24679552d0703af",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674815697,
+          "reason": "PUMP4_RUNNER_ENTRY_SOURCE_STALE",
+          "sha256": "6eeeae264c46a87a8131aa31edf4107bf5cae6b373130c0387e2ef4c4537fd81",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674822377,
+          "reason": null,
+          "sha256": "3d9890548645ed0c2175a3fa99fe067c835b5007b63614345dcb304ddc8918c4",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674828362,
+          "reason": null,
+          "sha256": "f68ddb2732f9db2f47f36d953d5e61f90b9989e5257c846a506a0c997e6dd564",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674834156,
+          "reason": null,
+          "sha256": "99a49af1e1bd0f048dc998f8194a3b72de9c972dd1de69452500d67462eedd36",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674839979,
+          "reason": null,
+          "sha256": "826882401c46a49e4e597da6ba9ba74d668dabcb21616b71c3601b7e01898ba7",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674845696,
+          "reason": null,
+          "sha256": "ba59d02b393fae1bd308b7498ada222eb1bcd317a6b3b9816e2af79304f74d28",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674851481,
+          "reason": null,
+          "sha256": "1e15d564411ece6f09f139d2d4cea6ce4ddddf71fddd3da03c56a9d0978687c5",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674857310,
+          "reason": null,
+          "sha256": "6b1634fc7ec7d556f870213d55a71e8ac3f5d92210ad4377d2d24da22c3cd55a",
+          "status": "WAITING_H1_PUBLICATION_PREFIX"
+        },
+        {
+          "observed_ms": 1793674863059,
+          "reason": null,
+          "sha256": "34be0b90acc059330bda51d7101152fc104161fce88e8fff686c7f1b23ce3bae",
+          "status": "WAITING_H1_CENSUS_FINALIZATION"
+        },
+        {
+          "observed_ms": 1793674868610,
+          "reason": null,
+          "sha256": "5d2d06d89e7e522054d0c28d9a7fee390c48abec9129b2441f475a223035d624",
+          "status": "WAITING_H1_CENSUS_FINALIZATION"
+        },
+        {
+          "observed_ms": 1793674874033,
+          "reason": null,
+          "sha256": "460b8f4359b41f1cf032e6c313bdd28e6dd56524a0a2a946b3602c78bf618d68",
+          "status": "WAITING_H1_CENSUS_FINALIZATION"
+        },
+        {
+          "observed_ms": 1793674879574,
+          "reason": null,
+          "sha256": "67aa792673cdf043634cf15b343111957861c3b4bdf940de95baae52c685c66e",
+          "status": "WAITING_H1_CENSUS_FINALIZATION"
+        },
+        {
+          "observed_ms": 1793674885061,
+          "reason": null,
+          "sha256": "909b33240c7515d4ab30981aa74c6c5c34a82b4e6a072827d018e2e9be58cad6",
+          "status": "WAITING_H1_CENSUS_FINALIZATION"
+        },
+        {
+          "observed_ms": 1793674890624,
+          "reason": null,
+          "sha256": "0493e32db63a7ee6cfe6a7e431ee3611beef25fa87c70259daae7f896d412838",
+          "status": "WAITING_H1_CENSUS_FINALIZATION"
+        },
+        {
+          "observed_ms": 1793674896006,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "4781c9be23db45f52778a9268f0ed0201e333ec257e7c405941cd0900d3aad7a",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674901333,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "0faf92b369eb458c65dc21c9e01e86fb7c720437cefcbe938e7b2cb4143f3efa",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674906661,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "8c52dde42ad5b76b52326ae19a812c0367b45b27462464bd9f2458d9ed25e6c6",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674912020,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "da9788b9430579d1732c60721cd4f6dad079274f24a0a3483de47908f775568d",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674917324,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "c5fc0bc15b570d9cb602d5c93a46c80358ac09c919600cf7aad31108e5de530f",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674923291,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "5759116c057412f7799b78f69ae360cb0f23134b171bedc2fe7df3218e6377de",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674930058,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "95d1f5876628900c9b36c817f4bc1b0d731567f6db6b97bbf4956b58c0985e1f",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674935708,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "cf70820fe960614943448fd165f218c1ec725a58e6b1ee621ee690dbc6bc51ad",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674941792,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "d348a064f73a4171eb0824666baeaeee1709a191e89c22e260f6b894ca2c226b",
+          "status": "BLOCKED_NEW_INPUTS"
+        },
+        {
+          "observed_ms": 1793674948008,
+          "reason": "PUMP4_RUNTIME_SOURCE_CURRENT_HOUR_COVERAGE_UNVERIFIED",
+          "sha256": "56be501395893301685e1b5ba8a263eb8be0d3dab9e8be4fcdc480c7a040b6fe",
+          "status": "BLOCKED_NEW_INPUTS"
+        }
+      ],
+      "first_proven_blocker": "ENTRY_SOURCE_STALE then CURRENT_HOUR_COVERAGE_UNVERIFIED",
+      "history_sha256": "47382e2074d16982ee8189b7ef14dd51a9cf1c252156da5d605aea61790eb04b",
+      "mode": "CURRENT_CLOSED_BAR",
+      "observation_equal": true,
+      "original_observation_sha256": "51a9152652c85349b64c0c6bcd2dddfe0e71269fd24a13d8793b83b5e7441605",
+      "publication_offset_ms": 2482,
+      "publication_sha256": "80ea3459f74e9d26c531c995dcf2642730fa960e36d6873c51709835980aac9d",
+      "raw_signal_detected": true,
+      "source_pins": {
+        "strategies/pump_fade_v4r.py": "cea7a2cc9151d22ddaf620428dc6b7734f6aa4051819145821a76cda2381792a",
+        "strategies/signals.py": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"
+      },
+      "symbol": "SIRENUSDT"
+    }
+  ],
+  "confirmed_trades_from_this_audit": 0,
+  "execution_contract": {
+    "exit_fractions": [
+      0.4,
+      0.6
+    ],
+    "stop_multiplier": 4,
+    "target3_used": false,
+    "targets_signal_R": [
+      0.9,
+      1.8
+    ]
+  },
+  "financial_owner_state": "MainPID=3669955\nNRestarts=0\nActiveState=active\n",
+  "first_failed_HTTPS_capture_available": false,
+  "full30day_coverage_proven": false,
+  "legacy_warning": {
+    "alias": "main",
+    "checked_at_utc": "2026-11-04T12:00:09.391748+00:00",
+    "days_left": 1.9,
+    "expires_on": "2026-11-06"
+  },
+  "lost_profit_proven": false,
+  "observed_ms": 1793795169920,
+  "old_scope_times": {
+    "valid_from_ms": 1793210978340,
+    "valid_until_ms": 1793561192774
+  },
+  "pinned_plan_sha256": "57b4923d5209385d09243c07ee2a243063dc74ac95a2ee9c44c5d73825cc9eb4",
+  "schema": "PUMP4_EIGHT_SIGNAL_STAGE_AUDIT_V1",
+  "selected_key": {
+    "key_exact_vps_ip": true,
+    "key_no_fixed_expiry": true,
+    "key_valid_until_ms": 0,
+    "observed_ms": 1793795169914,
+    "same_bound_account": true
+  },
+  "siren_hour": {
+    "complete": 134,
+    "disconnected": false,
+    "expected": 134,
+    "within60": 122
+  },
+  "source_signals": 8
+}

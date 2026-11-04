@@ -1,0 +1,17 @@
+{
+  "independent_postfix_acceptance": false,
+  "material_findings": [
+    "unanchored manifest/token substitution",
+    "relative path traversal",
+    "pending starvation at600s and failedGET",
+    "freshness recheck atactualdecision",
+    "selector/default duplicate namespace"
+  ],
+  "remaining_limitations": [
+    "No real E2signal yet",
+    "Sports raw-frame provenance not supplied by V3; before-sports-FINAL not proven",
+    "SourcePIT quote/hash integrity is not actual fill/queue/finality"
+  ],
+  "resolution": "all reproduced RED and fixed; final88focusedPASS",
+  "review": "gpt-6-astra/high bounded critical review; first attempt usage-limited, resumed after reset"
+}

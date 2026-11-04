@@ -1,0 +1,131 @@
+........................FF.FFFF                                          [100%]
+=================================== FAILURES ===================================
+_________ test_manifest_token_reversal_cannot_reverse_official_winner __________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_manifest_token_reversal_c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1095a65d0>
+
+    def test_manifest_token_reversal_cannot_reverse_official_winner(tmp_path,monkeypatch):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);run(m,r,j,state);p=state/'signals'/s['signal_observation_id'];f=p/'measurement-manifest.json'
+     obj=json.loads(f.read_bytes());obj['tokens'].reverse();f.write_text(json.dumps(obj));n[0]=T+200000;monkeypatch.setattr(m.snap,'get_capture',transport(n,True))
+>    with pytest.raises(ValueError,match='MANIFEST|IDENTITY'):run(m,r,j,state)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    Failed: DID NOT RAISE ValueError
+
+tests/test_polymarket_signal_cycle_v1.py:172: Failed
+----------------------------- Captured stdout call -----------------------------
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+____________ test_local_evidence_cannot_escape_its_root[../outside] ____________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_local_evidence_cannot_esc0')
+relative = '../outside'
+
+    @pytest.mark.parametrize('relative',['../outside','/tmp/outside','capture/../../outside'])
+    def test_local_evidence_cannot_escape_its_root(tmp_path,relative):
+>    with pytest.raises(ValueError,match='PATH_CUSTODY'):module().safe(tmp_path,relative)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    Failed: DID NOT RAISE ValueError
+
+tests/test_polymarket_signal_cycle_v1.py:177: Failed
+______ test_local_evidence_cannot_escape_its_root[capture/../../outside] _______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_local_evidence_cannot_esc2')
+relative = 'capture/../../outside'
+
+    @pytest.mark.parametrize('relative',['../outside','/tmp/outside','capture/../../outside'])
+    def test_local_evidence_cannot_escape_its_root(tmp_path,relative):
+>    with pytest.raises(ValueError,match='PATH_CUSTODY'):module().safe(tmp_path,relative)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    Failed: DID NOT RAISE ValueError
+
+tests/test_polymarket_signal_cycle_v1.py:177: Failed
+_________ test_slow_get_invalidates_signal_at_actual_measurement_time __________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_slow_get_invalidates_sign0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109532870>
+
+    def test_slow_get_invalidates_signal_at_actual_measurement_time(tmp_path,monkeypatch):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);n[0]=T+119000;original=transport(n)
+     def slow(url):n[0]+=1000;return original(url)
+     monkeypatch.setattr(m.snap,'get_capture',slow);out=run(m,r,j,state)
+>    assert out['measured']==0 and out['blocked']==1
+E    assert (1 == 0)
+
+tests/test_polymarket_signal_cycle_v1.py:184: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{"sample": 0, "decision_ms": 1793782922000, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1001, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+__________ test_selector_and_default_share_namespace_and_global_lock ___________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_selector_and_default_shar0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109531130>
+
+    def test_selector_and_default_share_namespace_and_global_lock(tmp_path,monkeypatch):
+     import fcntl,os
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch)
+     args=['--cycle-once','--research-root',str(r),'--state-root',str(state)]
+     assert m.snap.main(args+['--signal-journal',j.name])==0
+>    assert (state/j.stem/'signals'/s['signal_observation_id']/'measurement-manifest.json').exists()
+E    AssertionError: assert False
+E     +  where False = exists()
+E     +    where exists = ((((PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_selector_and_default_shar0/state') / 'POLY_95_V2_SHIROKO') / 'signals') / '734d955ff74b6da44c5c7d6d') / 'measurement-manifest.json').exists
+E     +      where 'POLY_95_V2_SHIROKO' = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_selector_and_default_shar0/lab/data/poly_signaly/POLY_95_V2_SHIROKO.jsonl').stem
+
+tests/test_polymarket_signal_cycle_v1.py:192: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+{"status": "SIGNAL_MEASURED_PENDING_OUTCOME", "measured": 1, "joined": 0, "blocked": 0, "issues": [], "order_posts": 0, "money_authority": false, "observed_ms": 1793782800100}
+_____ test_real_ten_minute_schedule_and_failed_gets_do_not_starve_pending ______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-988/test_real_ten_minute_schedule_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109531370>
+
+    def test_real_ten_minute_schedule_and_failed_gets_do_not_starve_pending(tmp_path,monkeypatch):
+     import copy
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);rows=[];prev='0'*64
+     for i in range(6):
+      x=copy.deepcopy(s);x['policy']+= '_'+str(i);(r/'prereg'/(x['policy']+'.md')).write_bytes(b'frozen control policy')
+      x['signal_observation_id']=digest((x['policy']+'|123|11').encode())[:24];x['prev_sha256']=prev;raw=line(x);rows.append(raw);prev=digest(raw)
+     j.write_bytes(b'\n'.join(rows)+b'\n');run(m,r,j,state);run(m,r,j,state)
+     attempted=set()
+     def failure(url):
+      attempted.add(url);raise OSError('read timeout')
+     monkeypatch.setattr(m.snap,'get_capture',failure)
+>    for i in range(3):n[0]+=600000;run(m,r,j,state)
+                                    ^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_signal_cycle_v1.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_polymarket_signal_cycle_v1.py:41: in run
+    def run(m,r,j,state):return m.cycle_once(r,j.name,state)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_lab/polymarket_signal_cycle_v1.py:257: in cycle_once
+    if outcome(file.parent, now_ms()) == 'JOINED_MODEL_OUTCOME':result['joined'] += 1
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_lab/polymarket_signal_cycle_v1.py:168: in outcome
+    capture = snap.get_capture(url)
+              ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+url = 'https://data-api.polymarket.com/v2/resolutions?condition=0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+    def failure(url):
+>    attempted.add(url);raise OSError('read timeout')
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    OSError: read timeout
+
+tests/test_polymarket_signal_cycle_v1.py:211: OSError
+----------------------------- Captured stdout call -----------------------------
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+{"sample": 0, "decision_ms": 1793782800100, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.97", "estimated_fee": "0.14550", "book_age_ms": 1, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "194.00", "vwap": "0.9700000000000000000000000000000000000004", "estimated_fee": "0.15000", "book_age_ms": 1, "issues": []}]}
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_manifest_token_reversal_cannot_reverse_official_winner
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_local_evidence_cannot_escape_its_root[../outside]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_local_evidence_cannot_escape_its_root[capture/../../outside]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_slow_get_invalidates_signal_at_actual_measurement_time
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_selector_and_default_share_namespace_and_global_lock
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_real_ten_minute_schedule_and_failed_gets_do_not_starve_pending
+6 failed, 25 passed in 0.89s

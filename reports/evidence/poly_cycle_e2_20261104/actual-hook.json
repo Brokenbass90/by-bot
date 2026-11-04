@@ -1,0 +1,34 @@
+{
+  "actual_hook_log": "--- 2026-11-04T12:42:36Z запуск (плановый) pid producer 26905\n{\"status\": \"CYCLE_CHECKED\", \"observed_ms\": 1793796157071, \"journals\": {\"POLY_95_V2_SHIROKO.jsonl\": {\"status\": \"WAITING_REAL_SIGNAL\", \"measured\": 0, \"joined\": 0, \"blocked\": 0, \"issues\": [], \"order_posts\": 0, \"money_authority\": false}, \"POLY_SCHET_V3.jsonl\": {\"status\": \"WAITING_REAL_SIGNAL\", \"measured\": 0, \"joined\": 0, \"blocked\": 0, \"issues\": [], \"order_posts\": 0, \"money_authority\": false}}, \"order_posts\": 0, \"money_authority\": false}\n2026-11-04T12:42:51Z код выхода 0\n--- 2026-11-04T12:42:53Z запуск (плановый) pid producer 26906\n{\"status\": \"CYCLE_CHECKED\", \"observed_ms\": 1793796173849, \"journals\": {\"POLY_95_V2_SHIROKO.jsonl\": {\"status\": \"WAITING_REAL_SIGNAL\", \"measured\": 0, \"joined\": 0, \"blocked\": 0, \"issues\": [], \"order_posts\": 0, \"money_authority\": false}, \"POLY_SCHET_V3.jsonl\": {\"status\": \"WAITING_REAL_SIGNAL\", \"measured\": 0, \"joined\": 0, \"blocked\": 0, \"issues\": [], \"order_posts\": 0, \"money_authority\": false}}, \"order_posts\": 0, \"money_authority\": false}\n2026-11-04T12:43:23Z код выхода 0\n",
+  "financial_changes": false,
+  "first_real_signal_measured": false,
+  "hook_log_sha256": "393ae6d05a686437a95d11cc4ba8add23a5b4f1d1273f994ddeabe50bae0dbd0",
+  "installation": {
+    "actual_installed_utc": "2026-11-04T12:42:25.979469+00:00",
+    "financial_changes": false,
+    "launcher": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/measure_polymarket_snapshot_v1.py",
+    "launcher_sha256": "57babb0eeb5cdc5a9dc887d3a49f628fa753ef94585b364c5f7806ee5c75efa4",
+    "new_service_installed": false,
+    "producer_files_modified": false,
+    "runtime_bundle": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/poly_signal_cycle_20261104/runtime-838279bf47392cde",
+    "runtime_manifest_sha256": "838279bf47392cded2d9fda25a515bbd63d1f7aa997f355236494478da12466b",
+    "schema": "POLY_CYCLE_HOOK_INSTALLED_V1",
+    "source_epoch": "E2_20261104",
+    "source_pins": {
+      "research_lab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "research_lab/polymarket_signal_cycle_v1.py": "8352b9552005f0e08799fed5713121a4687bead4d51147229877be7539ea3d9c",
+      "research_lab/polymarket_v2_orders_off_v1.py": "d78a08bbbc4ddbc03f50c0a10b8a0e12fb0962c428c3cc615e6a02972864fa6b",
+      "research_lab/polymarket_v2_snapshot_inputs_v1.py": "5d03624ca8e251f5813040fd2b96727e29558bc4764075ea2842b84d244bead7",
+      "research_lab/polymarket_ws_data_v1.py": "aae870dfdd5a9aef7216e090f34ec9e5b193cd487123516b05b016efc9d321e9",
+      "scripts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scripts/measure_polymarket_snapshot_v1.py": "7be24caf64aa92cf5931068317152d381113e1e66afae72f2897c5e592e741ee",
+      "scripts/pull_polymarket_ws_data_v1.py": "52dc13d490d22f411e9b88881a6e1c50c11dd96afcafdd4d475e74a707c96c70"
+    },
+    "state": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/poly_signal_cycle_20261104/runtime-state"
+  },
+  "new_service_installed": false,
+  "observed_utc": "2026-11-04T12:49:22.524722+00:00",
+  "official_model_outcome_joined": false,
+  "schema": "POLY_E2_HOOK_ACTUAL_PROOF_V1",
+  "source_commit_owner_reported": "33176e9"
+}

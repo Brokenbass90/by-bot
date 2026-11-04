@@ -1,0 +1,62 @@
+..................F...FF                                                 [100%]
+=================================== FAILURES ===================================
+____ test_v3_null_token_resolves_by_official_pair_and_preserves_original_id ____
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-986/test_v3_null_token_resolves_by0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106bb7500>
+
+    def test_v3_null_token_resolves_by_official_pair_and_preserves_original_id(tmp_path,monkeypatch):
+     m,r,j,s,n,state=v3_fixture(tmp_path,monkeypatch);out=run(m,r,j,state)
+>    assert out['measured']==1
+E    assert 0 == 1
+
+tests/test_polymarket_signal_cycle_v1.py:141: AssertionError
+________ test_killed_after_intake_never_replays_or_disappears_silently _________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-986/test_killed_after_intake_never0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106bac770>
+
+    def test_killed_after_intake_never_replays_or_disappears_silently(tmp_path,monkeypatch):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch)
+     monkeypatch.setattr(m.snap,'run_member',lambda *a,**k:(_ for _ in ()).throw(KeyboardInterrupt()))
+     with pytest.raises(KeyboardInterrupt):run(m,r,j,state)
+     monkeypatch.setattr(m.snap,'get_capture',lambda _:pytest.fail('interrupted observation replayed'))
+>    out=run(m,r,j,state);assert out['status']=='UNKNOWN' and any('INTERRUPTED' in x for x in out['issues'])
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    AssertionError: assert ('WAITING_REAL_SIGNAL' == 'UNKNOWN'
+E      
+E      - UNKNOWN
+E      + WAITING_REAL_SIGNAL)
+
+tests/test_polymarket_signal_cycle_v1.py:158: AssertionError
+__________ test_cycle_no_extra_args_processes_both_confirmed_journals __________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-986/test_cycle_no_extra_args_proce0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106bacf80>
+capsys = <_pytest.capture.CaptureFixture object at 0x106bac440>
+
+    def test_cycle_no_extra_args_processes_both_confirmed_journals(tmp_path,monkeypatch,capsys):
+     m=module();repo=tmp_path/'repo';(repo/'research_lab').mkdir(parents=True);monkeypatch.chdir(repo)
+     monkeypatch.setattr(m.snap,'get_capture',lambda _:pytest.fail('no source signal'))
+>    assert m.snap.main(['--cycle-once'])==0
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/tests/test_polymarket_signal_cycle_v1.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/scripts/measure_polymarket_snapshot_v1.py:179: in main
+    need(all(x is not None for x in (args.research_root, args.signal_journal, args.state_root)), 'EXPLICIT_CYCLE_PATHS_REQUIRED')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ok = False, why = 'EXPLICIT_CYCLE_PATHS_REQUIRED'
+
+    def need(ok, why):
+        if not ok:
+>           raise ValueError(why)
+E           ValueError: EXPLICIT_CYCLE_PATHS_REQUIRED
+
+/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/scripts/measure_polymarket_snapshot_v1.py:29: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_v3_null_token_resolves_by_official_pair_and_preserves_original_id
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_killed_after_intake_never_replays_or_disappears_silently
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_cycle_no_extra_args_processes_both_confirmed_journals
+3 failed, 21 passed in 0.56s

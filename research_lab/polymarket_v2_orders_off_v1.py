@@ -39,9 +39,11 @@ def _levels(rows):
   seen.add(price);out.append((price,size))
  return out
 
-def measure(signal,book,market,*,decision_ms):
+def measure(signal,book,market,*,decision_ms,model_budget=MODEL_BUDGET,limit_price=LIMIT):
  """Assess actual token asks using captured metadata; return no order or fill."""
  if not all(isinstance(x,dict) for x in (signal,book,market)) or not _ms(decision_ms):raise ValueError('INPUT_SCHEMA')
+ budget,limit=_number(model_budget),_number(limit_price)
+ if not 0<budget<=MODEL_BUDGET or not 0<limit<=LIMIT:raise ValueError('MODEL_BOUNDS')
  issues=[];fatal=[]
  def problem(name,blocks=True):
   issues.append(name)
@@ -57,7 +59,7 @@ def measure(signal,book,market,*,decision_ms):
   model_gross=None,model_shares=None,observed_vwap=None,best_ask=None,depth_to_limit=None,
   estimated_fee=None,estimated_win_net=None,estimated_loss_net=None,vwap_minus_model_price=None,
   book_age_ms=None,signal_to_decision_ms=None,depth_sufficient_for_model_100=None,
-  model_price=signal.get('model_price'),limit_price=str(LIMIT),model_budget=str(MODEL_BUDGET),
+  model_price=signal.get('model_price'),limit_price=str(limit),model_budget=str(budget),
   assumption='DISPLAYED_LEVELS_ONLY_NOT_FILL_OR_QUEUE_PROOF')
  tokens=market.get('tokens')
  if not _token(signal.get('token_id')) or not _token(book.get('asset_id')) or not isinstance(tokens,list) or len(tokens)!=2 or not all(_token(t) for t in tokens) or len(set(tokens))!=2 or signal.get('token_id') not in tokens or book.get('asset_id')!=signal.get('token_id'):problem('TOKEN_MISMATCH')
@@ -89,10 +91,10 @@ def measure(signal,book,market,*,decision_ms):
  if not set(fatal)-{'MARKET_NOT_ACCEPTING','ACCEPTING_STATUS_UNKNOWN'}:
   with localcontext() as ctx:
    ctx.prec=40
-   eligible=[(p,s) for p,s in asks if p<=LIMIT];depth=sum((p*s for p,s in eligible),Decimal(0))
-   out.update(best_ask=str(asks[0][0]) if asks else None,depth_to_limit=str(depth),depth_sufficient_for_model_100=depth>=MODEL_BUDGET)
+   eligible=[(p,s) for p,s in asks if p<=limit];depth=sum((p*s for p,s in eligible),Decimal(0))
+   out.update(best_ask=str(asks[0][0]) if asks else None,depth_to_limit=str(depth),depth_sufficient_for_model_100=depth>=MODEL_BUDGET,depth_sufficient_for_model_budget=depth>=budget)
    if not fatal:
-    remaining=min(MODEL_BUDGET,depth);gross=remaining;quantity=Decimal(0);fee=Decimal(0)
+    remaining=min(budget,depth);gross=remaining;quantity=Decimal(0);fee=Decimal(0)
     for price,size in eligible:
      spent=min(remaining,price*size);shares=spent/price;quantity+=shares;remaining-=spent
      if fee_rate is not None:fee+=(shares*fee_rate*price*(1-price)).quantize(Decimal('.00001'),rounding=ROUND_HALF_UP)

@@ -1,3 +1,34 @@
+# Current4Nov12:50UTC — E2 actual hook and eight PUMP4 source decisions
+
+CURRENT4Nov12:50UTC — actual Polymarket E2 hook PASS; PUMP8raw stages proven; no newmoney
+
+Reports POLY_SIGNAL_CYCLE_E2_2026_11_04.md/PUMP4_EIGHT_SIGNAL_AUDIT_2026_11_04.md;
+mini next gates CODEX_NEXT_GATES_2026_11_04.md (derived canonicalroadmap, notsecondqueue).
+PUMP8canonicaldecisions/sourcepins match:PEPE/TUTbeforeoldscope18:09UTC28Oct;
+HYPE/XPL/ESP/HEI/GWEI actualoldfinancialOBSERVATION_BOUND. SIRENbar02UTC→03UTC,
+publication+2.482s;solehourrawsignal;firstowner03:00:15.697 ENTRY_SOURCE_STALE,
+then03:01:36coverageblocked134complete/122timely. Rawdetectorwasnotzero.
+Chosenexecutionplan actualpinned stop×4/.4+.6/first2targets. No missedprofitclaim.
+12:26:09UTCboundkeyGET sameaccount/exactVPSIP/nofixedexpiry/expiry0. mainlegacy
+warning12UTCexpires6Nov isdifferentbinding; doNOTreloadPUMPkey/silencewithoutinventory.
+Owner3669955active/NRestarts0 unchanged. NextboundedPUMP publicHTTPS→replay→5sfreshness
+profile; oldfailedcaptureslost,exactstaletimestampUNKNOWN. No5s/60s/GO/risk/keychanges.
+Polymarket E1actual9rows/3IDs/8badchainlinks preservedPRIVATE,notrepaired/replayed.
+OwnerrelayedClaude33176e9/E2,actualSHAverified. E2singlewriter manifests26905/26906.
+Pinnedconsumer bundle838279bf47392cde;newownlauncher in sibling scripts path,
+launcher57babb0e…efa4. Existinghookcalled12:42:36/53UTC,exit0;bothWAITING_REAL_SIGNAL.
+88focusedPASS;5independentreviewfindingsRED→GREENfixed;nonewservice/produceredit.
+ActualfirstfreshE2measurement+officialfuturejoinOPEN. V3token nullable indexresolved
+byGamma+sourceA/pair;sourcequote1−bidnotactualask. SportsframeSHAproofmissing,
+beforeSPORTSFINALfalse;modelnetnotfill/PnL. Miniqueuepreservesremaininggates.
+Monthly12:46mailsearchonlyexistingautoack;exact422UNKNOWN,209captureLOCALnotdeployed.
+Mailmetadata/supportreceiptPRIVATE/local-only; doNOTstage itspriorcheckpointnote.
+No financialPOST/constructors/GO/restart/unit/claim/HALT/epochfinancialmutations.
+ForeignNETsixlines/allowlist/evidencepreservedandexcluded. No researchjudge/Claude messages.
+
+---
+Earlierdatedentriesbelowarehistory.
+
 # Current4Nov08:03UTC — fresh Polymarket snapshot measurements; Monthly broker reply pending
 
 CURRENT4Nov08:03UTC — Polymarket actual fresh snapshot PASS; regular causal signal hook OPEN
