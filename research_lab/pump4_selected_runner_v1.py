@@ -77,7 +77,7 @@ def selected_owner(path,pin,*,dispatch=False,clock=None):
     finally:lease.close()
 
 
-def causal_plan(intake,decision_id,captures,*,epoch_started_ms,max_delay_ms,now_ms):
+def causal_plan(intake,decision_id,captures,*,epoch_started_ms,max_delay_ms,now_ms,stage="CAUSAL_PLAN"):
     """Recompute from the exact journal and closed HTTPS bars, never a ready flag.
 
     Raw hashes prove integrity, not a broker signature. A selected trusted source
@@ -94,7 +94,18 @@ def causal_plan(intake,decision_id,captures,*,epoch_started_ms,max_delay_ms,now_
     need(0<=now_ms-entry<=max_delay_ms and snapshot['cursor_ms']==decision['bar_open_ms'],'ENTRY_WINDOW_OR_OLD_DECISION')
     need(decision['signal'] is not None,'NO_SIGNAL')
     source=closed_h1(captures,intake.symbol,next_open_ms=entry,observed_ms=now_ms)
-    need(0<=now_ms-source['source_ms']<=5000 and 0<=now_ms-source['available_ms']<=5000,'ENTRY_SOURCE_STALE')
+    source_age=now_ms-source['source_ms'];available_age=now_ms-source['available_ms']
+    if not (0<=source_age<=5000 and 0<=available_age<=5000):
+        exc=ValueError('PUMP4_RUNNER_ENTRY_SOURCE_STALE')
+        exc.source_failure_capture=dict(schema='PUMP4_ENTRY_SOURCE_FAILURE_V1',stage=stage,decision_id=decision_id,
+            source_ms=source['source_ms'],available_ms=source['available_ms'],check_ms=now_ms,
+            source_age_ms=source_age,available_age_ms=available_age,
+            violated_boundaries=[name for failed,name in ((source_age<0,'SOURCE_FUTURE'),
+                (source_age>5000,'SOURCE_OLDER_THAN_5000'),(available_age<0,'AVAILABLE_FUTURE'),
+                (available_age>5000,'AVAILABLE_OLDER_THAN_5000')) if failed],
+            captures=[dict(endpoint=c.get('endpoint'),raw_sha256=c.get('raw_sha256'),
+                request_ms=c.get('request_ms'),receive_ms=c.get('receive_ms'),body_time_ms=c.get('body',{}).get('time')) for c in captures])
+        raise exc
     known={b[0]:b for b in events[0]['bars']};known.update({e['bar'][0]:e['bar'] for e in events[1:]})
     need(all(known.get(b[0])==b for b in [*source['seed'],source['signal_bar']]),'SOURCE_JOURNAL_CONFLICT')
     return build_plan(TradeSignal(**decision['signal']),signal_bar_open_ms=decision['bar_open_ms'],next_open_ms=entry,next_open=source['next_open'])

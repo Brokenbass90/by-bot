@@ -2,6 +2,8 @@
 import datetime as dt
 import fcntl
 import hashlib
+import gzip
+import io
 import json
 import os
 from pathlib import Path
@@ -17,7 +19,7 @@ from .polymarket_ws_data_v1 import once, encoded, read, mkdirs_durable
 
 PRODUCERS = {
     'POLY_95_V2_SHIROKO.jsonl': ('poly_signaly.py', '0f7e5f9dbc2e409ec634f2d6f8ea127feadbf06d4605bc54b11a55ec58f306fa'),
-    'POLY_SCHET_V3.jsonl': ('poly_signaly_v3.py', '858ac43676941e1cc02201ad941a062c6bfa4a82b859a9f0dba6130759dd98e3'),
+    'POLY_SCHET_V3.jsonl': ('poly_signaly_v3.py', 'cb6c6bd18d46a8d61be7ab0e8e44e5a0e28ad896004457efbb206f2b34a9d04a'),
 }
 JOURNAL_MODULE_PIN = 'a2b3a0f34f4c9a28ec604e2f0496775c39dc3be56400b87859783d5afa294b30'
 
@@ -129,6 +131,55 @@ def qualify(s, root, observed):
     return normalized, member, provenance
 
 
+def verify_sports_witness(s, root):
+    """Verify existing sealed DATA bytes and local availability, without replaying a producer."""
+    score = s['score']; w = score['source_witness']
+    segment = w.get('segment')
+    prefix = 'research_lab/data/poly_ws_vps_v1/'
+    need(isinstance(segment, str) and re.fullmatch(re.escape(prefix) + r'sports/sealed/[0-9]+-[0-9a-f]{32}-[0-9]+\.jsonl\.gz', segment), 'SCORE_SOURCE_PATH')
+    archive = safe(root, 'data/poly_ws_vps_v1')
+    name = segment[len(prefix):]
+    file = safe(archive, name); sealfile = safe(archive, name + '.delivery.json')
+    raw = read(file); sealraw = read(sealfile, 16384); seal = load(sealraw)
+    need(seal.get('file') == name and sha(raw) == w.get('segment_sha256') == seal.get('sha256'), 'SCORE_SEGMENT_HASH')
+    snap.validate_segment(seal, raw)
+    receiptfile = safe(archive, 'receipts/' + sha(encoded(seal)) + '.json')
+    receiptraw = read(receiptfile, 16384); receipt = load(receiptraw)
+    need(receipt.get('schema') == 'POLY_WS_DATA_IMPORT_V1' and receipt.get('epoch') == seal['epoch']
+         and receipt.get('orders_allowed') is False and receipt.get('file') == name
+         and receipt.get('file_sha256') == sha(raw) and receipt.get('seal_sha256') == sha(sealraw)
+         and receipt.get('first_local_mtime_ns') == file.stat().st_mtime_ns, 'SCORE_IMPORT_RECEIPT')
+    imported = receipt.get('actual_import_ms')
+    need(model._ms(imported) and imported >= seal['closed_ms'], 'SCORE_IMPORT_TIME')
+    available = max(imported, *(p.stat().st_mtime_ns // 1_000_000 for p in (file, sealfile, receiptfile)))
+    need(available <= s['signal_ms'], 'SCORE_AVAILABLE_AFTER_DECISION')
+    delivery = sealfile.stat().st_mtime_ns // 1_000_000
+    need(w.get('delivery_mtime_ms') == delivery == score.get('score_on_mac_ms'), 'SCORE_DELIVERY_TIME')
+    seen = w.get('segment_first_seen_by_producer_ms')
+    need(model._ms(seen) and available <= seen <= s['signal_ms'], 'SCORE_FIRST_SEEN_TIME')
+    with gzip.GzipFile(fileobj=io.BytesIO(raw)) as stream:plain = stream.read(8 * 2**20 + 1)
+    need(len(plain) <= 8 * 2**20, 'SCORE_FRAME_BOUND')
+    lines = plain.splitlines(); index = w.get('line_index')
+    need(type(index) is int and 0 <= index < len(lines), 'SCORE_FRAME_INDEX')
+    line = lines[index]; need(sha(line) == w.get('line_sha256'), 'SCORE_FRAME_HASH')
+    row = load(line)
+    need(row.get('kind') == 'RECV' and row.get('received_ms') == w.get('received_ms') == score.get('score_received_ms'), 'SCORE_FRAME_TIME')
+    need(type(w.get('monotonic_ns')) is int and row.get('monotonic_ns') == w['monotonic_ns'], 'SCORE_MONOTONIC')
+    need(w.get('book_received_ms') == s['received_ms'] and row['received_ms'] < s['received_ms'] <= s['signal_ms'], 'SCORE_CAUSAL_TIME')
+    frame = load(row['payload']['frame'])
+    games = frame if isinstance(frame, list) else [frame]
+    matches = [g for g in games if isinstance(g, dict) and g.get('gameId') == score.get('gameId')]
+    need(len(matches) == 1, 'SCORE_GAME_IDENTITY'); game = matches[0]
+    need(game.get('score') == score.get('score_away_home') and game.get('period') == score.get('period')
+         and game.get('elapsed') == score.get('clock'), 'SCORE_FRAME_MISMATCH')
+    return dict(sports_frame_provenance_verified=True, score_available_by_decision=True,
+        score_available_before_book=available <= s['received_ms'], score_available_ms=available,
+        raw_frame_reports_live=(game.get('live') is True or game.get('status') in ('inprogress', 'in_progress', 'live')) and game.get('ended') is not True,
+        before_sports_final_proven=False, segment_sha256=sha(raw), line_sha256=sha(line),
+        import_receipt_sha256=sha(receiptraw), claimed_producer_first_seen_ms=seen,
+        limitation='SEALED_FRAME_AND_LOCAL_IMPORT_VERIFIED_NOT_A_MATCH_FINALITY_OR_FILL_PROOF')
+
+
 def qualify_v3(s, root, observed):
     # Caller already checked policy, identity, SHADOW scope, source/decision clocks.
     src = s.get('source')
@@ -164,6 +215,7 @@ def qualify_v3(s, root, observed):
         source_quote_is_execution_price=False, sports_frame_provenance_verified=False,
         limitation='SCORE_TIMESTAMPS_ASSERTED_NO_IMMUTABLE_FRAME_REFERENCE',
         model_budget_unspecified_by_producer=s.get('stake_model_usd') is None)
+    if 'source_witness' in score:provenance.update(verify_sports_witness(s, root))
     return signal, dict(id=s['market_id'], tokens=tokens), provenance
 
 

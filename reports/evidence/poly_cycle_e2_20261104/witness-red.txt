@@ -1,0 +1,111 @@
+................................FFFFFF                                   [100%]
+=================================== FAILURES ===================================
+____ test_sports_witness_verifies_original_bytes_and_import_before_decision ____
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-992/test_sports_witness_verifies_o0')
+
+    def test_sports_witness_verifies_original_bytes_and_import_before_decision(tmp_path):
+     m=module();root,signal,archive,seal=score_witness_fixture(tmp_path)
+>    proof=m.verify_sports_witness(signal,root)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.polymarket_signal_cycle_v1' has no attribute 'verify_sports_witness'
+
+tests/test_polymarket_signal_cycle_v1.py:251: AttributeError
+_ test_sports_witness_rejects_forged_or_late_evidence[path-SCORE_SOURCE_PATH] __
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-992/test_sports_witness_rejects_fo0')
+change = 'path', reason = 'SCORE_SOURCE_PATH'
+
+    @pytest.mark.parametrize('change,reason', [('path','SCORE_SOURCE_PATH'),('frame','SCORE_FRAME_HASH'),('mono','SCORE_MONOTONIC'),('score','SCORE_FRAME_MISMATCH'),('import','SCORE_AVAILABLE_AFTER_DECISION')])
+    def test_sports_witness_rejects_forged_or_late_evidence(tmp_path,change,reason):
+     m=module();root,signal,archive,seal=score_witness_fixture(tmp_path);w=signal['score']['source_witness']
+     if change=='path':w['segment']='../../configs/secret.env'
+     if change=='frame':w['line_sha256']='b'*64
+     if change=='mono':w['monotonic_ns']+=1
+     if change=='score':signal['score']['score_away_home']='99-82'
+     if change=='import':signal['signal_ms']=signal['score']['score_received_ms']
+>    with pytest.raises(ValueError,match=reason):m.verify_sports_witness(signal,root)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.polymarket_signal_cycle_v1' has no attribute 'verify_sports_witness'
+
+tests/test_polymarket_signal_cycle_v1.py:264: AttributeError
+_ test_sports_witness_rejects_forged_or_late_evidence[frame-SCORE_FRAME_HASH] __
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-992/test_sports_witness_rejects_fo1')
+change = 'frame', reason = 'SCORE_FRAME_HASH'
+
+    @pytest.mark.parametrize('change,reason', [('path','SCORE_SOURCE_PATH'),('frame','SCORE_FRAME_HASH'),('mono','SCORE_MONOTONIC'),('score','SCORE_FRAME_MISMATCH'),('import','SCORE_AVAILABLE_AFTER_DECISION')])
+    def test_sports_witness_rejects_forged_or_late_evidence(tmp_path,change,reason):
+     m=module();root,signal,archive,seal=score_witness_fixture(tmp_path);w=signal['score']['source_witness']
+     if change=='path':w['segment']='../../configs/secret.env'
+     if change=='frame':w['line_sha256']='b'*64
+     if change=='mono':w['monotonic_ns']+=1
+     if change=='score':signal['score']['score_away_home']='99-82'
+     if change=='import':signal['signal_ms']=signal['score']['score_received_ms']
+>    with pytest.raises(ValueError,match=reason):m.verify_sports_witness(signal,root)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.polymarket_signal_cycle_v1' has no attribute 'verify_sports_witness'
+
+tests/test_polymarket_signal_cycle_v1.py:264: AttributeError
+__ test_sports_witness_rejects_forged_or_late_evidence[mono-SCORE_MONOTONIC] ___
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-992/test_sports_witness_rejects_fo2')
+change = 'mono', reason = 'SCORE_MONOTONIC'
+
+    @pytest.mark.parametrize('change,reason', [('path','SCORE_SOURCE_PATH'),('frame','SCORE_FRAME_HASH'),('mono','SCORE_MONOTONIC'),('score','SCORE_FRAME_MISMATCH'),('import','SCORE_AVAILABLE_AFTER_DECISION')])
+    def test_sports_witness_rejects_forged_or_late_evidence(tmp_path,change,reason):
+     m=module();root,signal,archive,seal=score_witness_fixture(tmp_path);w=signal['score']['source_witness']
+     if change=='path':w['segment']='../../configs/secret.env'
+     if change=='frame':w['line_sha256']='b'*64
+     if change=='mono':w['monotonic_ns']+=1
+     if change=='score':signal['score']['score_away_home']='99-82'
+     if change=='import':signal['signal_ms']=signal['score']['score_received_ms']
+>    with pytest.raises(ValueError,match=reason):m.verify_sports_witness(signal,root)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.polymarket_signal_cycle_v1' has no attribute 'verify_sports_witness'
+
+tests/test_polymarket_signal_cycle_v1.py:264: AttributeError
+_ test_sports_witness_rejects_forged_or_late_evidence[score-SCORE_FRAME_MISMATCH] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-992/test_sports_witness_rejects_fo3')
+change = 'score', reason = 'SCORE_FRAME_MISMATCH'
+
+    @pytest.mark.parametrize('change,reason', [('path','SCORE_SOURCE_PATH'),('frame','SCORE_FRAME_HASH'),('mono','SCORE_MONOTONIC'),('score','SCORE_FRAME_MISMATCH'),('import','SCORE_AVAILABLE_AFTER_DECISION')])
+    def test_sports_witness_rejects_forged_or_late_evidence(tmp_path,change,reason):
+     m=module();root,signal,archive,seal=score_witness_fixture(tmp_path);w=signal['score']['source_witness']
+     if change=='path':w['segment']='../../configs/secret.env'
+     if change=='frame':w['line_sha256']='b'*64
+     if change=='mono':w['monotonic_ns']+=1
+     if change=='score':signal['score']['score_away_home']='99-82'
+     if change=='import':signal['signal_ms']=signal['score']['score_received_ms']
+>    with pytest.raises(ValueError,match=reason):m.verify_sports_witness(signal,root)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.polymarket_signal_cycle_v1' has no attribute 'verify_sports_witness'
+
+tests/test_polymarket_signal_cycle_v1.py:264: AttributeError
+_ test_sports_witness_rejects_forged_or_late_evidence[import-SCORE_AVAILABLE_AFTER_DECISION] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-992/test_sports_witness_rejects_fo4')
+change = 'import', reason = 'SCORE_AVAILABLE_AFTER_DECISION'
+
+    @pytest.mark.parametrize('change,reason', [('path','SCORE_SOURCE_PATH'),('frame','SCORE_FRAME_HASH'),('mono','SCORE_MONOTONIC'),('score','SCORE_FRAME_MISMATCH'),('import','SCORE_AVAILABLE_AFTER_DECISION')])
+    def test_sports_witness_rejects_forged_or_late_evidence(tmp_path,change,reason):
+     m=module();root,signal,archive,seal=score_witness_fixture(tmp_path);w=signal['score']['source_witness']
+     if change=='path':w['segment']='../../configs/secret.env'
+     if change=='frame':w['line_sha256']='b'*64
+     if change=='mono':w['monotonic_ns']+=1
+     if change=='score':signal['score']['score_away_home']='99-82'
+     if change=='import':signal['signal_ms']=signal['score']['score_received_ms']
+>    with pytest.raises(ValueError,match=reason):m.verify_sports_witness(signal,root)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E    AttributeError: module 'research_lab.polymarket_signal_cycle_v1' has no attribute 'verify_sports_witness'
+
+tests/test_polymarket_signal_cycle_v1.py:264: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_sports_witness_verifies_original_bytes_and_import_before_decision
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_sports_witness_rejects_forged_or_late_evidence[path-SCORE_SOURCE_PATH]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_sports_witness_rejects_forged_or_late_evidence[frame-SCORE_FRAME_HASH]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_sports_witness_rejects_forged_or_late_evidence[mono-SCORE_MONOTONIC]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_sports_witness_rejects_forged_or_late_evidence[score-SCORE_FRAME_MISMATCH]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_sports_witness_rejects_forged_or_late_evidence[import-SCORE_AVAILABLE_AFTER_DECISION]
+6 failed, 32 passed in 1.17s

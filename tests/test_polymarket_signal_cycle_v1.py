@@ -227,3 +227,52 @@ def test_epoch_two_uses_pinned_manifest_and_never_reads_broken_e1(tmp_path,monke
  assert (state/epoch/j.stem/'signals'/s['signal_observation_id']/'measurement-manifest.json').exists()
  (r/'poly_signaly.py').write_bytes(b'changed');out=m.cycle_many(r,state,journals=(j.name,),epoch=epoch)
  assert out['status']=='UNKNOWN' and 'PRODUCER_DRIFT' in out['journals'][j.name]['reason']
+
+
+def score_witness_fixture(tmp_path):
+ import time
+ from research_lab.polymarket_ws_data_v1 import SegmentStore,encoded
+ from scripts.pull_polymarket_ws_data_v1 import import_segment
+ root=tmp_path/'lab';native=tmp_path/'native';at=time.time_ns()//1000000-1000
+ game=dict(gameId=123,leagueAbbreviation='nba',score='88-82',period='Q4',elapsed='4:00',live=True,ended=False)
+ store=SegmentStore(native,'sports',clock=lambda:at,min_free=0)
+ store.append('RECV',dict(frame=json.dumps(game)),received_ms=at);store.close()
+ sealpath=next((native/'sports/sealed').glob('*.delivery.json'));seal=json.loads(sealpath.read_bytes());raw=(native/seal['file']).read_bytes()
+ archive=root/'data/poly_ws_vps_v1';receipt=import_segment(archive,seal,raw,observed_ms=at+1000)
+ segment=archive/seal['file'];import gzip
+ rowbytes=gzip.decompress(raw).splitlines()[0];row=json.loads(rowbytes);delivery=(segment.with_name(segment.name+'.delivery.json')).stat().st_mtime_ns//1000000
+ signal=dict(received_ms=at+2000,signal_ms=at+3000,score=dict(gameId=123,score_away_home='88-82',period='Q4',clock='4:00',score_received_ms=at,score_on_mac_ms=delivery))
+ signal['score']['source_witness']=dict(segment='research_lab/data/poly_ws_vps_v1/'+seal['file'],segment_sha256=digest(raw),line_index=0,line_sha256=digest(rowbytes),received_ms=at,monotonic_ns=row['monotonic_ns'],delivery_mtime_ms=delivery,segment_first_seen_by_producer_ms=at+2000,book_received_ms=at+2000)
+ return root,signal,archive,seal
+
+
+def test_sports_witness_verifies_original_bytes_and_import_before_decision(tmp_path):
+ m=module();root,signal,archive,seal=score_witness_fixture(tmp_path)
+ proof=m.verify_sports_witness(signal,root)
+ assert proof['sports_frame_provenance_verified'] is True and proof['score_available_by_decision'] is True
+ assert proof['raw_frame_reports_live'] is True and proof['before_sports_final_proven'] is False
+ assert proof['segment_sha256']==signal['score']['source_witness']['segment_sha256']
+
+@pytest.mark.parametrize('change,reason', [('path','SCORE_SOURCE_PATH'),('frame','SCORE_FRAME_HASH'),('mono','SCORE_MONOTONIC'),('score','SCORE_FRAME_MISMATCH'),('import','SCORE_AVAILABLE_AFTER_DECISION')])
+def test_sports_witness_rejects_forged_or_late_evidence(tmp_path,change,reason):
+ m=module();root,signal,archive,seal=score_witness_fixture(tmp_path);w=signal['score']['source_witness']
+ if change=='path':w['segment']='../../configs/secret.env'
+ if change=='frame':w['line_sha256']='b'*64
+ if change=='mono':w['monotonic_ns']+=1
+ if change=='score':signal['score']['score_away_home']='99-82'
+ if change=='import':signal['signal_ms']=signal['score']['score_received_ms']
+ with pytest.raises(ValueError,match=reason):m.verify_sports_witness(signal,root)
+
+
+def test_sports_witness_distinguishes_import_after_old_quote(tmp_path):
+ m=module();root,s,archive,seal=score_witness_fixture(tmp_path)
+ s['received_ms']=s['score']['score_received_ms']+1
+ s['score']['source_witness']['book_received_ms']=s['received_ms']
+ proof=m.verify_sports_witness(s,root)
+ assert proof['score_available_by_decision'] is True and proof['score_available_before_book'] is False
+
+
+def test_sports_witness_rejects_future_claimed_first_observation(tmp_path):
+ m=module();root,s,archive,seal=score_witness_fixture(tmp_path)
+ s['score']['source_witness']['segment_first_seen_by_producer_ms']=s['signal_ms']+1
+ with pytest.raises(ValueError,match='SCORE_FIRST_SEEN_TIME'):m.verify_sports_witness(s,root)

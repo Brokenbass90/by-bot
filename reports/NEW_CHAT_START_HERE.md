@@ -1,3 +1,26 @@
+# Current4Nov13:52UTC — real E2 measurements / V3 witness / PUMP diagnostic local
+
+CURRENT4Nov13:52UTC — FIRST_REAL_E2_MEASUREMENTS / V3WITNESS_CHECKED / PUMPdiagnosticLOCAL
+
+Polymarket E2 automatically measured2new signals13:42:23/13:50:53UTC, same Buriram–Kashima
+match, not2independent opportunities. Exact manifests/anchors verified; freshselected
+VWAP.96/.967581 from sourcequote.96, feeestimates.20/.162 permodel100. NoPOST/fill.
+OfficialfuturejoinPENDING; existinghook polls, no newservice. V3WAITING_REAL_SIGNAL.
+NewV3producer owner-confirmedcb6c6bd… actualbytes+manifestmatch. Verified5existing
+historical witnesses64fabe4… independently (no producer/judge rerun); allraw/import
+bindingsPASS,4/5 imported AFTER oldbook, historical signal_ms=dryrun4Nov: no economics/
+prospectivecredit. Own consumer updated immutablebundle4e276ab0474dbcfc/launcher36240f94…,
+actualautomaticnewsignal invocation13:50:53exit0. Producer/hook/financialnativeunchanged.
+PUMP nextfailure capture(stage/source/available/check/rawSHA/exactboundary) prepared
+LOCAL_ONLY/NOT_DEPLOYED; same5s/60s/error/owner/GO. HistoricalSIREN remainsUNKNOWN.
+157targetedPASS;boundedindependentreviewPASS. Reports POLY_SIGNAL_CYCLE_E2 and
+PUMP4_SOURCE_FAILURE_CAPTURE_2026_11_04. Monthly external422block unchanged/noPOST.
+Next: automaticfutureofficialjoin, freshV3signal, separateeconomicadmission beforeTINY.
+Fundingnotneededforcurrentwork; no datedLIVE/profitpromise. Canonicalqueue updated.
+
+---
+Earlierdatedentriesbelowarehistory.
+
 # Current4Nov13:25UTC — boundedSIRENUNKNOWN / E2WAIT / Monthlyexternal
 
 CURRENT4Nov13:25UTC — SIREN HTTPS verdictUNKNOWN; E2WAIT; Monthly no newreply

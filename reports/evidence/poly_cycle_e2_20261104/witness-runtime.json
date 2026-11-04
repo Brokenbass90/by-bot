@@ -1,0 +1,11 @@
+{
+  "actual_observed_ms": 1793800212051,
+  "financial_changes": false,
+  "hook_changed": false,
+  "launcher_sha256": "36240f94cdca19b7e26eaef62d7c3e947d10ae00fcf3ee0cfa680060a64e7fcb",
+  "order_posts": 0,
+  "previous_launcher_sha256": "57babb0eeb5cdc5a9dc887d3a49f628fa753ef94585b364c5f7806ee5c75efa4",
+  "producer_changed": false,
+  "runtime_manifest_sha256": "4e276ab0474dbcfcf80912add06fc6410bf88271cc268c4ffb6d871761509b8e",
+  "schema": "POLY_READ_ONLY_WITNESS_INSTALL_V1"
+}

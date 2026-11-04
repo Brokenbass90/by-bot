@@ -273,3 +273,15 @@ def test_committed_cycle_recovers_alert_delivery_before_claim_without_duplicate(
     s=m.Supervisor(tmp_path/'state',clock=lambda:NOW+300,alert=alert)
     s.process_archive(tmp_path/'source');s.process_archive(tmp_path/'source')
     assert len(events)==1
+
+
+def test_selected_tick_preserves_safe_candidate_failure_capture(tmp_path):
+ from types import SimpleNamespace
+ from research_lab.pump4_supervisor_v1 import selected_tick
+ proof=dict(schema='PUMP4_ENTRY_SOURCE_FAILURE_V1',stage='CANDIDATE_PUBLIC_PRECHECK',violated_boundaries=['SOURCE_OLDER_THAN_5000'])
+ def candidate():
+  error=ValueError('PUMP4_RUNNER_ENTRY_SOURCE_STALE');error.source_failure_capture=proof;raise error
+ def account(*a,**kw):pytest.fail('account GET must not run after failed candidate')
+ owner=SimpleNamespace(root=tmp_path,_exclusive=lambda:None)
+ result=selected_tick(owner,account,candidate,epoch_started_ms=1,max_delay_ms=60000)
+ assert result==dict(status='BLOCKED_NEW_INPUTS',reason='PUMP4_RUNNER_ENTRY_SOURCE_STALE',broker_writes=0,source_failure_capture=proof)

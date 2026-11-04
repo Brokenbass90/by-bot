@@ -1,0 +1,76 @@
+........FFFF                                                             [100%]
+=================================== FAILURES ===================================
+_ test_stale_capture_identifies_exact_clock_boundary_without_changing_error[-1-0-SOURCE_FUTURE] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ad8e7e0>
+source_delta = -1, available_delta = 0, boundary = 'SOURCE_FUTURE'
+
+    @pytest.mark.parametrize('source_delta,available_delta,boundary', [(-1,0,'SOURCE_FUTURE'),(5001,0,'SOURCE_OLDER_THAN_5000'),(0,-1,'AVAILABLE_FUTURE'),(0,5001,'AVAILABLE_OLDER_THAN_5000')])
+    def test_stale_capture_identifies_exact_clock_boundary_without_changing_error(monkeypatch,source_delta,available_delta,boundary):
+     from types import SimpleNamespace
+     m=module();at=20*3600000;decision=dict(decision_id='d',bar_open_ms=at-3600000,first_observed_ms=at+1,signal={'present':True})
+     intake=SimpleNamespace(symbol='TESTUSDT',journal=SimpleNamespace(read=lambda:[dict(observed_ms=at-10,bars=[])]),snapshot=lambda:dict(decisions=[decision],cursor_ms=at-3600000))
+     monkeypatch.setattr(m,'closed_h1',lambda *a,**kw:dict(source_ms=at+100-source_delta,available_ms=at+100-available_delta))
+     captures=[dict(endpoint='/v5/market/kline',raw_sha256='a'*64,request_ms=at,receive_ms=at+2,body={'time':at+1},secret='must-not-copy')]
+     with pytest.raises(ValueError,match='^PUMP4_RUNNER_ENTRY_SOURCE_STALE$') as caught:
+>     m.causal_plan(intake,'d',captures,epoch_started_ms=at-1,max_delay_ms=60000,now_ms=at+100,stage='POST_ACCOUNT')
+E     TypeError: causal_plan() got an unexpected keyword argument 'stage'
+
+tests/test_pump4_selected_runner_v1.py:130: TypeError
+_ test_stale_capture_identifies_exact_clock_boundary_without_changing_error[5001-0-SOURCE_OLDER_THAN_5000] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ad8d9d0>
+source_delta = 5001, available_delta = 0, boundary = 'SOURCE_OLDER_THAN_5000'
+
+    @pytest.mark.parametrize('source_delta,available_delta,boundary', [(-1,0,'SOURCE_FUTURE'),(5001,0,'SOURCE_OLDER_THAN_5000'),(0,-1,'AVAILABLE_FUTURE'),(0,5001,'AVAILABLE_OLDER_THAN_5000')])
+    def test_stale_capture_identifies_exact_clock_boundary_without_changing_error(monkeypatch,source_delta,available_delta,boundary):
+     from types import SimpleNamespace
+     m=module();at=20*3600000;decision=dict(decision_id='d',bar_open_ms=at-3600000,first_observed_ms=at+1,signal={'present':True})
+     intake=SimpleNamespace(symbol='TESTUSDT',journal=SimpleNamespace(read=lambda:[dict(observed_ms=at-10,bars=[])]),snapshot=lambda:dict(decisions=[decision],cursor_ms=at-3600000))
+     monkeypatch.setattr(m,'closed_h1',lambda *a,**kw:dict(source_ms=at+100-source_delta,available_ms=at+100-available_delta))
+     captures=[dict(endpoint='/v5/market/kline',raw_sha256='a'*64,request_ms=at,receive_ms=at+2,body={'time':at+1},secret='must-not-copy')]
+     with pytest.raises(ValueError,match='^PUMP4_RUNNER_ENTRY_SOURCE_STALE$') as caught:
+>     m.causal_plan(intake,'d',captures,epoch_started_ms=at-1,max_delay_ms=60000,now_ms=at+100,stage='POST_ACCOUNT')
+E     TypeError: causal_plan() got an unexpected keyword argument 'stage'
+
+tests/test_pump4_selected_runner_v1.py:130: TypeError
+_ test_stale_capture_identifies_exact_clock_boundary_without_changing_error[0--1-AVAILABLE_FUTURE] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ad5e210>
+source_delta = 0, available_delta = -1, boundary = 'AVAILABLE_FUTURE'
+
+    @pytest.mark.parametrize('source_delta,available_delta,boundary', [(-1,0,'SOURCE_FUTURE'),(5001,0,'SOURCE_OLDER_THAN_5000'),(0,-1,'AVAILABLE_FUTURE'),(0,5001,'AVAILABLE_OLDER_THAN_5000')])
+    def test_stale_capture_identifies_exact_clock_boundary_without_changing_error(monkeypatch,source_delta,available_delta,boundary):
+     from types import SimpleNamespace
+     m=module();at=20*3600000;decision=dict(decision_id='d',bar_open_ms=at-3600000,first_observed_ms=at+1,signal={'present':True})
+     intake=SimpleNamespace(symbol='TESTUSDT',journal=SimpleNamespace(read=lambda:[dict(observed_ms=at-10,bars=[])]),snapshot=lambda:dict(decisions=[decision],cursor_ms=at-3600000))
+     monkeypatch.setattr(m,'closed_h1',lambda *a,**kw:dict(source_ms=at+100-source_delta,available_ms=at+100-available_delta))
+     captures=[dict(endpoint='/v5/market/kline',raw_sha256='a'*64,request_ms=at,receive_ms=at+2,body={'time':at+1},secret='must-not-copy')]
+     with pytest.raises(ValueError,match='^PUMP4_RUNNER_ENTRY_SOURCE_STALE$') as caught:
+>     m.causal_plan(intake,'d',captures,epoch_started_ms=at-1,max_delay_ms=60000,now_ms=at+100,stage='POST_ACCOUNT')
+E     TypeError: causal_plan() got an unexpected keyword argument 'stage'
+
+tests/test_pump4_selected_runner_v1.py:130: TypeError
+_ test_stale_capture_identifies_exact_clock_boundary_without_changing_error[0-5001-AVAILABLE_OLDER_THAN_5000] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ad5c830>
+source_delta = 0, available_delta = 5001, boundary = 'AVAILABLE_OLDER_THAN_5000'
+
+    @pytest.mark.parametrize('source_delta,available_delta,boundary', [(-1,0,'SOURCE_FUTURE'),(5001,0,'SOURCE_OLDER_THAN_5000'),(0,-1,'AVAILABLE_FUTURE'),(0,5001,'AVAILABLE_OLDER_THAN_5000')])
+    def test_stale_capture_identifies_exact_clock_boundary_without_changing_error(monkeypatch,source_delta,available_delta,boundary):
+     from types import SimpleNamespace
+     m=module();at=20*3600000;decision=dict(decision_id='d',bar_open_ms=at-3600000,first_observed_ms=at+1,signal={'present':True})
+     intake=SimpleNamespace(symbol='TESTUSDT',journal=SimpleNamespace(read=lambda:[dict(observed_ms=at-10,bars=[])]),snapshot=lambda:dict(decisions=[decision],cursor_ms=at-3600000))
+     monkeypatch.setattr(m,'closed_h1',lambda *a,**kw:dict(source_ms=at+100-source_delta,available_ms=at+100-available_delta))
+     captures=[dict(endpoint='/v5/market/kline',raw_sha256='a'*64,request_ms=at,receive_ms=at+2,body={'time':at+1},secret='must-not-copy')]
+     with pytest.raises(ValueError,match='^PUMP4_RUNNER_ENTRY_SOURCE_STALE$') as caught:
+>     m.causal_plan(intake,'d',captures,epoch_started_ms=at-1,max_delay_ms=60000,now_ms=at+100,stage='POST_ACCOUNT')
+E     TypeError: causal_plan() got an unexpected keyword argument 'stage'
+
+tests/test_pump4_selected_runner_v1.py:130: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_pump4_selected_runner_v1.py::test_stale_capture_identifies_exact_clock_boundary_without_changing_error[-1-0-SOURCE_FUTURE]
+FAILED tests/test_pump4_selected_runner_v1.py::test_stale_capture_identifies_exact_clock_boundary_without_changing_error[5001-0-SOURCE_OLDER_THAN_5000]
+FAILED tests/test_pump4_selected_runner_v1.py::test_stale_capture_identifies_exact_clock_boundary_without_changing_error[0--1-AVAILABLE_FUTURE]
+FAILED tests/test_pump4_selected_runner_v1.py::test_stale_capture_identifies_exact_clock_boundary_without_changing_error[0-5001-AVAILABLE_OLDER_THAN_5000]
+4 failed, 8 passed in 2.76s

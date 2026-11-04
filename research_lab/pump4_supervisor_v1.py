@@ -71,14 +71,16 @@ def selected_tick(owner, read_account_provider, fresh_candidate_provider, *,
         if candidate is None:
             return dict(status='NO_NEW_SIGNAL', broker_writes=0)
         need(set(candidate) == {'intake','decision_id','captures'}, 'CAUSAL_CANDIDATE_REQUIRED')
-        def plan_now():
+        def plan_now(stage):
             return causal_plan(candidate['intake'],candidate['decision_id'],candidate['captures'],
-                epoch_started_ms=epoch_started_ms,max_delay_ms=max_delay_ms,now_ms=owner.clock())
-        plan = plan_now()
+                epoch_started_ms=epoch_started_ms,max_delay_ms=max_delay_ms,now_ms=owner.clock(),stage=stage)
+        plan = plan_now('PRE_ACCOUNT')
         bundle, public = read_account_provider(plan, custody=False)
-        need(plan_now() == plan, 'CAUSAL_PLAN_CHANGED')
+        need(plan_now('POST_ACCOUNT') == plan, 'CAUSAL_PLAN_CHANGED')
     except (ValueError, KeyError, TypeError, OSError) as exc:
-        return dict(status='BLOCKED_NEW_INPUTS',reason=str(exc),broker_writes=0)
+        result=dict(status='BLOCKED_NEW_INPUTS',reason=str(exc),broker_writes=0)
+        if hasattr(exc,'source_failure_capture'):result['source_failure_capture']=exc.source_failure_capture
+        return result
     return owner_cycle(owner, plan, bundle, public, apply=apply)
 
 

@@ -1,71 +1,62 @@
-# Polymarket E2: consumer и действующий hook,4Nov2026
+# Polymarket: два настоящих E2 измерения и V3 source witness —4Nov2026
 
-**HOOK_RUNTIME_PASS / WAITING_REAL_SIGNAL.** Consumer размещён там, где его
-вызывают producer; полный реальный signal→quote→future outcome ещё НЕ завершён.
+**FIRST_REAL_SIGNALS_MEASURED / FUTURE_OFFICIAL_OUTCOME_PENDING.**
+Новый сигнал E2 `592477964f4c96c66c32290e` автоматически обработан4Nov13:42:23UTC.
+Market6627581, Buriram United–Kashima Antlers, Under2.5: signal13:42:23.322,
+consumer first observation after fsync13:42:23.563, actual measurement13:42:23.960.
+Оба token REST books и feeSchedule сохранены; выбранный ask0.96, book age1ms,
+модельный бюджет100, displayed-depth VWAP0.96, оценка комиссии0.20.
+Это новый своевременно прочитанный сигнал, не replay истории. Независимое
+доказательство, что матч ещё не завершился, отсутствует; official join PENDING.
 
-Реальный автоматический вызов psig(pid26905)4Nov12:42:36UTC, cycle observed
-12:42:37.071UTC, exit0 зафиксирован12:42:51. Второй producer psig3(pid26906)
-вызвал тот же consumer12:42:53UTC, observed12:42:53.849UTC, exit0 в12:43:23.
-Оба журнала E2 вернули WAITING_REAL_SIGNAL, measured0/joined0/order_posts0.
-Это фактический hook, не ручная имитация сигнала. Процессы Python3.13, целевые
-тесты Python3.12; новый полноценный финансовый контур не включён.
+Второй сигнал `ce56e3243a151baec5a0697e` того же матча (Both Teams to Score)
+автоматически обработан уже новым bundle13:50:53UTC, exit0 в13:51:08UTC.
+Исходная quote0.96; displayed-depth VWAP0.9675810474 на model100, fee estimate0.162.
+Это фиксируемое ухудшение доступной цены, а не реальное проскальзывание fill.
+Два разных рынка одного матча не засчитаны как независимые возможности.
+Проверены исходные строки, SHA всех manifest files и отдельные after-fsync anchors.
+Повторный hook сохранил прежние measurement, joined0/order_posts0.
 
-## Что исправлено и связано
+## V3: независимая проверка готовых пяти строк
 
-- Принят POLY_SIGNAL_V1/V1.1: chain/prefix/prereg/source quoteSHA, own first observation
-  после fsync, one signal identity, immutable source/intake/actual book captures,
-  manifest и отдельный after-fsync anchor. Повторный запуск не переоценивает старый вход.
-- V3 token_id=null разрешается только через exact Gamma market+outcome_index и
-  сравнение известной пары/токенаA из registry. Неоднозначность→UNKNOWN.
-- Синтетический1−bid остаётся ценой producer для сравнения; actual ask/depth обоих
-  токенов берутся заново из CLOB. Комиссия только из captured feeSchedule.
-- Freshness120s перепроверяется на actual decision, не только перед HTTP.
-- Официальный future join: condition selector DataAPI resolutions, status resolved,
-  aware resolved_at, one-hot positive payouts, identity/manifest/frame hashes.
-  Цена1/closed/endDate сами по себе не resolution. До исхода PENDING, без replay.
-- Fair pending polling по давности попытки, включая ошибки GET; один global
-  consumer flock и одинаковые namespace у default/selector. Outer hook300s не
-  блокирует producer; после прерывания intake без полного manifest не переигрывается.
-- **88 focusedPASS**. Независимое ограниченное ревью нашло5материальныхдефектов;
-  все воспроизведены RED и исправлены. Post-fix тесты/root-review, не отдельный
-  повторный independent signoff. Финансовых импортов/POST/кошелька/ключей нет.
+Вход SHA64fabe4ea75257784790edc81879bcc9e9fe1a0a543a8279cbf0e21230ed79f5,
+5строк из `V3_SVIDETEL_ISTORIYA_31_10_03_11.jsonl`. Producer/judge не запускались.
+Все5 проверены собственным verifier: allowlisted path, sealed compressed/raw hash,
+полный newline prefix/seq/epoch, native local import receipt, exact frame hash,
+monotonic/receive clocks, gameId/score/period/clock, доступность до signal_ms.
+**У4/5 импорт позже старой book timestamp.** Это отдельно отмечено
+score_available_before_book=false. signal_ms относится к сухому прогону4Nov,
+поэтому5/5 — компонентная проверка provenance, не историческая исполнимость,
+не E2/live-сигналы и не экономический PASS. Claimed first_seen не объявлен
+независимым внешним timestamp; SPORTS FINAL/fill не доказаны.
 
-## E1 → E2
+## Установленная совместимая версия
 
-Реальный E1 journal имел9строк/3ID,8нарушенийprev-chain, первое настроке2;
-буквальныеbytes сохранены приватно, источник не ремонтировался. Claude подтвердил
-три старых писателя и реализовал E2_20261104 сflock+IDdedup. Коммит33176e9 сообщён
-владельцем; SHA обоих producer и writer module независимо проверены на диске и
-в двух MANIFEST. Consumer привязан к этим exactSHA; drift→UNKNOWN, без repin.
-E1 не подмешивается в новую эпоху. Старые поздно увиденные строки не стали входами.
+Файл producer V3 и E2 manifest проверены по подтверждённому владельцем SHA
+cb6c6bd18d46a8d61be7ab0e8e44e5a0e28ad896004457efbb206f2b34a9d04a.
+Прежний consumer корректно выдавал PRODUCER_DRIFT; после проверки bytes обновлена
+только собственная закреплённая версия ORDERS_OFF consumer. Producer/hook неизменны.
+Новый immutable runtime manifest
+4e276ab0474dbcfcf80912add06fc6410bf88271cc268c4ffb6d871761509b8e,
+launcher36240f94cdca19b7e26eaef62d7c3e947d10ae00fcf3ee0cfa680060a64e7fcb.
+Старый bundle и launcher backup сохранены; замена собственного launcher атомарная.
+Установка13:50:12UTC, ручной GET-only check CYCLE_CHECKED, затем реальный
+автоматический вызов13:50:53 подтвердил работу с прежним состоянием/без дублей.
+V3 пока WAITING_REAL_SIGNAL. Нового сервиса, ордеров, кошельков, keys/env нет.
 
-## Развёртывание
+157 целевых dependency tests PASS (96Poly+61PUMP); RED сохранены. Один ограниченный
+независимый astra/high review нового diff: PASS, подтверждённых P0/P1/P2 нет,
+reviewer12targetedPASS. Полный project suite не запускался.
 
-Собственный launcher (create-exclusive, чужиефайлы не перезаписывались):
-../bybit-bot-clean-v28/scripts/measure_polymarket_snapshot_v1.py
-При --cycle-once он проверяет immutable runtime package и подставляет явные
-research-root, source epochE2, state-root; без флага сеть не вызывается.
-Package .private/poly_signal_cycle_20261104/runtime-838279bf47392cde,
-manifestSHA838279bf47392cded2d9fda25a515bbd63d1f7aa997f355236494478da12466b;
-launcherSHA57babb0eeb5cdc5a9dc887d3a49f628fa753ef94585b364c5f7806ee5c75efa4.
-State .private/poly_signal_cycle_20261104/runtime-state/E2_20261104/<journal>/.
-Существующий huk_codex_izmeritel.py/producer не менялся Codex; новыйservice/daemon
-не устанавливался. Внешний lock hook сам по себе не atomic; нашglobalflock
-проверен против параллельного selector/default и защищает именно обработку.
+## Следующая граница
 
-## Не закрытые ограничения
+Существующий hook сам проверяет official resolution и сохранит model outcome
+с первоначальным signal ID/manifest. Полный цикл пока PENDING; старое правило
+V2 остаётся контрольным источником, снятым с денежной очереди. Ни два измерения,
+ни будущий модельный net не дают TINY/LIVE или основания обещать прибыль.
+Для текущей ORDERS_OFF работы пополнять Polymarket не требуется.
 
-Новому E2 сигналу ещё предстоит actual measurement и будущий официальный join.
-V3 source_sha покрывает исходную котировку, но не исходный sports frame. Пока
-проверяются заявленные score/VPS/Mac timestamps; immutable frame reference отсутствует.
-Поэтому sports_frame_provenance_verified=false и before_sports_FINAL=false;
-открытый рынок не доказательство незавершённого матча. Rule/economicPASS не заявлен.
-Модельныйnet не fill, не реальные комиссии/доходность/доступный заново капитал.
-
-API отдельно проверен publicGET: известный ранее закрытый6668287 дал resolved,
-ISOresolved_at и payouts[1000000,0]. Это проверка настоящей схемы API, не первый
-реальный цикл и не подмена входа историей. Raw ответы сохранены приватно.
-
-[Runtime/test/review evidence](evidence/poly_cycle_e2_20261104/actual-hook.json).
-Официальные спецификации: [resolution state](https://docs.polymarket.com/api-reference/markets/get-resolution-state),
-[market IDs/order](https://docs.polymarket.com/market-data/market-details).
+Доказательства: [первое измерение](evidence/poly_cycle_e2_20261104/first-real-e2-measurement.json),
+[новый автоматический hook](evidence/poly_cycle_e2_20261104/witness-actual-hook.json),
+[пять witness](evidence/poly_cycle_e2_20261104/v3-witness-check.json),
+[runtime](evidence/poly_cycle_e2_20261104/witness-runtime.json).

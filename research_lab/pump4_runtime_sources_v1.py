@@ -364,7 +364,7 @@ class TrustedSources:
             dict(category='linear',symbol=symbol,interval='60',start=first,end=entry-999*H-1,limit=1000)]
         with ThreadPoolExecutor(max_workers=2) as pool:
             captures=list(pool.map(lambda q:public_get('/v5/market/kline',q,wire=self.get_wire,clock=self.clock),requests))
-        causal_plan(intake,decision['decision_id'],captures,epoch_started_ms=epoch,max_delay_ms=delay,now_ms=self.clock())
+        causal_plan(intake,decision['decision_id'],captures,epoch_started_ms=epoch,max_delay_ms=delay,now_ms=self.clock(),stage='CANDIDATE_PUBLIC_PRECHECK')
         self._current_index_stable(current_index)
         self._candidate_consumed.add(decision['decision_id'])
         return dict(intake=intake,decision_id=decision['decision_id'],captures=captures)

@@ -118,3 +118,17 @@ def test_failed_physical_verifier_never_loads_profile_or_opens_owner(tmp_path,mo
  with pytest.raises(ValueError,match='KITY_OWNER_ACTIVE'):
   with m.selected_owner(path,pin,dispatch=False):pytest.fail('must not construct')
  assert called==[] and not Path(scope['root']).exists()
+
+@pytest.mark.parametrize('source_delta,available_delta,boundary', [(-1,0,'SOURCE_FUTURE'),(5001,0,'SOURCE_OLDER_THAN_5000'),(0,-1,'AVAILABLE_FUTURE'),(0,5001,'AVAILABLE_OLDER_THAN_5000')])
+def test_stale_capture_identifies_exact_clock_boundary_without_changing_error(monkeypatch,source_delta,available_delta,boundary):
+ from types import SimpleNamespace
+ m=module();at=20*3600000;decision=dict(decision_id='d',bar_open_ms=at-3600000,first_observed_ms=at+1,signal={'present':True})
+ intake=SimpleNamespace(symbol='TESTUSDT',journal=SimpleNamespace(read=lambda:[dict(observed_ms=at-10,bars=[])]),snapshot=lambda:dict(decisions=[decision],cursor_ms=at-3600000))
+ monkeypatch.setattr(m,'closed_h1',lambda *a,**kw:dict(source_ms=at+100-source_delta,available_ms=at+100-available_delta))
+ captures=[dict(endpoint='/v5/market/kline',raw_sha256='a'*64,request_ms=at,receive_ms=at+2,body={'time':at+1},secret='must-not-copy')]
+ with pytest.raises(ValueError,match='^PUMP4_RUNNER_ENTRY_SOURCE_STALE$') as caught:
+  m.causal_plan(intake,'d',captures,epoch_started_ms=at-1,max_delay_ms=60000,now_ms=at+100,stage='POST_ACCOUNT')
+ proof=caught.value.source_failure_capture
+ assert proof['stage']=='POST_ACCOUNT' and proof['violated_boundaries']==[boundary]
+ assert proof['check_ms']==at+100 and proof['captures'][0]['raw_sha256']=='a'*64
+ assert 'secret' not in json.dumps(proof) and 'must-not-copy' not in json.dumps(proof)
