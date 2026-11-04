@@ -1,3 +1,27 @@
+# Polymarket: первые полные автоматические модельные циклы,4Nov2026
+
+**FIRST_REAL_FULL_MODEL_CYCLES_VERIFIED.** Три сигнала одного матча Buriram–Kashima
+автоматически сопоставлены с будущими официальными resolutions16:07:30/16:08:04UTC;
+join сохранён16:11:53–54UTC (18:11Cyprus). Нет нового сервиса или ручного replay.
+По первым двум ID592477… иce56… модельный net после captured fee estimate:
+3.9666667 и3.1885155 на budget100 каждый; третий1e82… —2.9427835. Это неactualPnL.
+Независимо перепроверены все3parent manifests/files/after-fsync anchors, raw SHA
+официального ответа, exactcondition/tokens/payouts, порядок времён и арифметика net.
+Три рынка одного матча не три независимых возможности; SPORTS-before-final не
+доказан. real_fill=false,actual_fees/net=null. V2 остаётся контрольным FAIL-правилом.
+
+Снимок4Nov17:56UTC:9complete measurements/3joins/2BLOCKED. По двум отказам не
+создана новая попытка; один captured book имеет NO_ASK_AT_LIMIT, другой complete
+fresh measurement не получен. Это неопределённость исполнимости, не нулевая цена.
+V3по последнему штатному hook WAITING_REAL_SIGNAL. Новый E2 код не разрабатывался.
+
+[Проверка полных циклов](evidence/poly_cycle_e2_20261104/official-joins-20261104.json),
+[reproduction](evidence/poly_cycle_e2_20261104/verify-official-joins.py).
+Денежного допуска/экономическогоPASS по этим результатам нет. Ниже — более ранние
+измерения и приёмка V3 witness, сохранённые как датированная история.
+
+---
+
 # Polymarket: два настоящих E2 измерения и V3 source witness —4Nov2026
 
 **FIRST_REAL_SIGNALS_MEASURED / FUTURE_OFFICIAL_OUTCOME_PENDING.**

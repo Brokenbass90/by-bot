@@ -1,0 +1,12 @@
+{
+  "actual_account_fees": "UNKNOWN_NO_PRIVATE_FEE_GET",
+  "actual_recorded_ms": 1793815078411,
+  "economic_numbers_owner_supplied_not_recomputed": true,
+  "files": {
+    "KRIPTO_KANDIDATY_EKONOMIKA_2026_11_04.md": "d55f7a9a3593eb71183331a2fa7f3e248ba26d9bad11d910cd09c801d6d0e705",
+    "SHORT_HVOST_PAKET_CODEX_CHERNOVIK_2026_10_28.md": "9a0cb41e8fd51c0b119f5c1d0534c0c5902056fc413ed35facb4e45ac9cd3c1e",
+    "SHORT_HVOST_VARIANT_B_2026_10_27.md": "ad8a1173ccc3fed527764b5b5a501211eeb9087654f7047777b58821c28b0a9a"
+  },
+  "research_judge_run": false,
+  "snapshot_raw_location": ".private/short_hvost_execution_20261104/20261104T174823Z-19f18b5e1de54a349dc2f6ce68697dbc.json"
+}

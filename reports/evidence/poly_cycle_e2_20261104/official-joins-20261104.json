@@ -1,0 +1,63 @@
+{
+  "blocked_count": 2,
+  "independent_opportunities_qualified": 0,
+  "measurement_count": 9,
+  "money_authority": false,
+  "observed_ms": 1793814969441,
+  "real_fills": 0,
+  "rows": [
+    {
+      "actual_net": null,
+      "before_sports_final_proven": false,
+      "joined_ms": 1793808713721,
+      "manifest_sha256": "d6577eca5fa35f505fe932fd7f7e79f07872f9dea951dc600f38d77cf54af6b7",
+      "market_id": "6627580",
+      "measurement_anchored_ms": 1793800704364,
+      "model_net": "2.9427835051546391752577319587628865979",
+      "model_only": true,
+      "official_capture_sha256": "d670adfd7f1d7e6551cba1f68fb87f2f716a8599aa9b027c65dcfb4407780c26",
+      "official_resolution_ms": 1793808484000,
+      "outcome_received_ms": 1793808713721,
+      "question": "Buriram United vs. Kashima Antlers: O/U 1.5",
+      "signal_observation_id": "1e82df0131cffc0897753080",
+      "source_sha256": "a9bcfa3e3b778b6b85597bd153eb715b8820fb241361e3bbe026fdc07215ee0b",
+      "won": true
+    },
+    {
+      "actual_net": null,
+      "before_sports_final_proven": false,
+      "joined_ms": 1793808714238,
+      "manifest_sha256": "2b10851205db90fc051e40e3bd3b96e5251f2c804e8d4fbcd266813ba04ece75",
+      "market_id": "6627581",
+      "measurement_anchored_ms": 1793799743965,
+      "model_net": "3.9666666666666666666666666666666666667",
+      "model_only": true,
+      "official_capture_sha256": "4af17c7506c712739381ab902dca0129b9ed4a740e44125e7eb6b4339e611be1",
+      "official_resolution_ms": 1793808450000,
+      "outcome_received_ms": 1793808714238,
+      "question": "Buriram United vs. Kashima Antlers: O/U 2.5",
+      "signal_observation_id": "592477964f4c96c66c32290e",
+      "source_sha256": "98dad05f8faef88b92a50e9f6bd2332f790c871cf6cfec485bceae9cbec3f035",
+      "won": true
+    },
+    {
+      "actual_net": null,
+      "before_sports_final_proven": false,
+      "joined_ms": 1793808713989,
+      "manifest_sha256": "bda151ed1b28a9d0848f2d0734c4f498055d8bbd410ea2cce5ef56b9f7fe5253",
+      "market_id": "6627588",
+      "measurement_anchored_ms": 1793800254209,
+      "model_net": "3.1885154639175257731958762886597938144",
+      "model_only": true,
+      "official_capture_sha256": "f9491223d56e041b7691282074a2d106006fc4d290928f1d68dcfc4ec6efa3b1",
+      "official_resolution_ms": 1793808484000,
+      "outcome_received_ms": 1793808713989,
+      "question": "Buriram United vs. Kashima Antlers: Both Teams to Score",
+      "signal_observation_id": "ce56e3243a151baec5a0697e",
+      "source_sha256": "52c8ad18b633bbfe7664ef6faa803d9b29891decc5e6b16f92fa02be68db741b",
+      "won": true
+    }
+  ],
+  "same_completed_match": true,
+  "schema": "POLY_FIRST_REAL_FULL_CYCLES_VERIFIED_V1"
+}

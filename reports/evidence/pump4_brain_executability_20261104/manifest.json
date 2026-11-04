@@ -1,0 +1,162 @@
+{
+  "absent_record_status": "UNKNOWN",
+  "active_claude_reader_installed": false,
+  "actual_export_ms": 1793815078411,
+  "consumer_requirement": "Use status only when known_since_ms <= comparison_decision_ms; never infer EXECUTABLE from absent row",
+  "coverage": "ONLY_EIGHT_AUDITED_CANDIDATES_NOT_COMPLETE_LIVE_HISTORY",
+  "details": [
+    {
+      "decision_id": "pump4-bc5afe1a314dceccdb299011fa551be18c7b37060e7674ae8a51b69086500ebc",
+      "decision_ms": 1793203200000,
+      "financial_receipt_hashes": [],
+      "known_since_ms": 1793815078411,
+      "reason": "BEFORE_ORIGINAL_SCOPE_VALID_FROM",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "1000PEPEUSDT",
+      "ts_ms": 1793199600000
+    },
+    {
+      "decision_id": "pump4-46f8544406b2a0602b59f8ec197564e72079931592dfc8334f8acd7c0d3f9bc0",
+      "decision_ms": 1793203200000,
+      "financial_receipt_hashes": [],
+      "known_since_ms": 1793815078411,
+      "reason": "BEFORE_ORIGINAL_SCOPE_VALID_FROM",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "TUTUSDT",
+      "ts_ms": 1793199600000
+    },
+    {
+      "decision_id": "pump4-5d5ddde7a23386d00fd052ef6e138f23514719b0583ea629c26fd20fb7054a34",
+      "decision_ms": 1793383200000,
+      "financial_receipt_hashes": [
+        "14e86ec143cb52f37cbd0ce7b33ba1f69b423530ae74c89f836f1fc4f10c7c10",
+        "c8dbe8d9e641901828b3401081e327994c6b6776c87d2e9f1dfaf58b77fad02d",
+        "5443b7f2f2c3cdbb798d080ed64194c3c4c6986f53e8d3e9b508690714687fce",
+        "c03031f24397efa3948d1f8512f0f97c630c4f5f76c80c5e26662b76f2a99dad",
+        "69677ffc7c23b0b230d463abfd294efc42272a9bd72d32ffc428e0e77c6a7670"
+      ],
+      "known_since_ms": 1793815078411,
+      "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "HYPEUSDT",
+      "ts_ms": 1793379600000
+    },
+    {
+      "decision_id": "pump4-b55074621fe41058aa3a8aa5f2087e8cd911bd5c32b3ed2c4c5f79a089646917",
+      "decision_ms": 1793440800000,
+      "financial_receipt_hashes": [
+        "1bf5274b9675be36a708f96026c09bc898e05920c48e7503b24437a962a69798",
+        "d3b5df773c7ded86f15638e540cdfeb485c94fc2aad28510f1b6e22df7b232bd",
+        "c111eef203111a557b81e531a4cc1c5ef87eefaed268bc22ecb328f500fa0d50",
+        "3db411aaea1fc387a03487d91d17ad8ccbe678bb8eab81f63121a0e5244b652b",
+        "7528dc70d39cae8134891523b3f7071cb6e806bd996d35d9028c11f36399a2f5"
+      ],
+      "known_since_ms": 1793815078411,
+      "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "XPLUSDT",
+      "ts_ms": 1793437200000
+    },
+    {
+      "decision_id": "pump4-c08865f94f27834599689c17929591e839a31588f77940219ddc5fd36113fbb3",
+      "decision_ms": 1793440800000,
+      "financial_receipt_hashes": [
+        "1bf5274b9675be36a708f96026c09bc898e05920c48e7503b24437a962a69798",
+        "d3b5df773c7ded86f15638e540cdfeb485c94fc2aad28510f1b6e22df7b232bd",
+        "c111eef203111a557b81e531a4cc1c5ef87eefaed268bc22ecb328f500fa0d50",
+        "3db411aaea1fc387a03487d91d17ad8ccbe678bb8eab81f63121a0e5244b652b",
+        "7528dc70d39cae8134891523b3f7071cb6e806bd996d35d9028c11f36399a2f5"
+      ],
+      "known_since_ms": 1793815078411,
+      "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "ESPUSDT",
+      "ts_ms": 1793437200000
+    },
+    {
+      "decision_id": "pump4-eac6ba05ce69454dd6e767d1eb4594daa3d574d77fdd84b7d3296d3e8a2f8f61",
+      "decision_ms": 1793444400000,
+      "financial_receipt_hashes": [
+        "7401cfcc89df74660182eeea8490e127b1e46be1d52bb9c484d3074d1b246d13",
+        "9bf37a95edc1c8d2c79ed5b924dc4c6e385a4a166c3cc58005e7e5f95e6009fc",
+        "8b09d4063b6fb35bfacfd004ae2f08c9b09e2d6aeca4f561aea26a88734affa8",
+        "f1e6f0c47c433b16ba2998796d7cdff6a9267175cb6753d0e5949f48d9d0fb32",
+        "0c3b6275c15c95b311781dfbad46b3743e973e943924153f97bdcfa3f1efa748"
+      ],
+      "known_since_ms": 1793815078411,
+      "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "HEIUSDT",
+      "ts_ms": 1793440800000
+    },
+    {
+      "decision_id": "pump4-953a65eea3141fc0b21ea43126121af9b172b84053e2d170becbe737fa3809f3",
+      "decision_ms": 1793498400000,
+      "financial_receipt_hashes": [
+        "3e864d736655afd9daebf23f2905d4a15a25928cda21a7eaea189b8e5649547e",
+        "df55b715135fcb3959886aa3cc5fe053ddbab70c7de1371a564bc8e06b8d3c54",
+        "e96ab3d90e8de5b5a8c73d73e0fe6e494e666f1becd94b114c44e122ed77fb67",
+        "57420d10c23d579902935895b0b22bf871355c92c785e56f15c3812a2df8f71e",
+        "3771fcb5d999ce12485e769749152fbfd4a1a8d23673cab5721faa3056ce3d76"
+      ],
+      "known_since_ms": 1793815078411,
+      "reason": "PUMP4_RUNTIME_SOURCE_OBSERVATION_BOUND",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "GWEIUSDT",
+      "ts_ms": 1793494800000
+    },
+    {
+      "decision_id": "pump4-3b46c8af791af96011ec9661ae749b0734119bdc472c3afe4b83dcf0f740ea1a",
+      "decision_ms": 1793674800000,
+      "financial_receipt_hashes": [
+        "610bae5d0f848ef1ac0e5ddbdd945383d7fa321cdaf78faec24679552d0703af",
+        "6eeeae264c46a87a8131aa31edf4107bf5cae6b373130c0387e2ef4c4537fd81",
+        "3d9890548645ed0c2175a3fa99fe067c835b5007b63614345dcb304ddc8918c4",
+        "f68ddb2732f9db2f47f36d953d5e61f90b9989e5257c846a506a0c997e6dd564",
+        "99a49af1e1bd0f048dc998f8194a3b72de9c972dd1de69452500d67462eedd36",
+        "826882401c46a49e4e597da6ba9ba74d668dabcb21616b71c3601b7e01898ba7",
+        "ba59d02b393fae1bd308b7498ada222eb1bcd317a6b3b9816e2af79304f74d28",
+        "1e15d564411ece6f09f139d2d4cea6ce4ddddf71fddd3da03c56a9d0978687c5",
+        "6b1634fc7ec7d556f870213d55a71e8ac3f5d92210ad4377d2d24da22c3cd55a",
+        "34be0b90acc059330bda51d7101152fc104161fce88e8fff686c7f1b23ce3bae",
+        "5d2d06d89e7e522054d0c28d9a7fee390c48abec9129b2441f475a223035d624",
+        "460b8f4359b41f1cf032e6c313bdd28e6dd56524a0a2a946b3602c78bf618d68",
+        "67aa792673cdf043634cf15b343111957861c3b4bdf940de95baae52c685c66e",
+        "909b33240c7515d4ab30981aa74c6c5c34a82b4e6a072827d018e2e9be58cad6",
+        "0493e32db63a7ee6cfe6a7e431ee3611beef25fa87c70259daae7f896d412838",
+        "4781c9be23db45f52778a9268f0ed0201e333ec257e7c405941cd0900d3aad7a",
+        "0faf92b369eb458c65dc21c9e01e86fb7c720437cefcbe938e7b2cb4143f3efa",
+        "8c52dde42ad5b76b52326ae19a812c0367b45b27462464bd9f2458d9ed25e6c6",
+        "da9788b9430579d1732c60721cd4f6dad079274f24a0a3483de47908f775568d",
+        "c5fc0bc15b570d9cb602d5c93a46c80358ac09c919600cf7aad31108e5de530f",
+        "5759116c057412f7799b78f69ae360cb0f23134b171bedc2fe7df3218e6377de",
+        "95d1f5876628900c9b36c817f4bc1b0d731567f6db6b97bbf4956b58c0985e1f",
+        "cf70820fe960614943448fd165f218c1ec725a58e6b1ee621ee690dbc6bc51ad",
+        "d348a064f73a4171eb0824666baeaeee1709a191e89c22e260f6b894ca2c226b",
+        "56be501395893301685e1b5ba8a263eb8be0d3dab9e8be4fcdc480c7a040b6fe"
+      ],
+      "known_since_ms": 1793815078411,
+      "reason": "ENTRY_SOURCE_STALE then CURRENT_HOUR_COVERAGE_UNVERIFIED",
+      "scope_context": "AUDITED_PILOT_ONLY_NOT_ALL_ACCOUNT_PRODUCTS",
+      "status_is_observed_block_not_proof_gate_was_correct": true,
+      "sym": "SIRENUSDT",
+      "ts_ms": 1793671200000
+    }
+  ],
+  "export_sha256": "11078a5e6f671d1a11b39c9dfb8d0992d171f9e1b0d49948bbdccd6e51b0e001",
+  "known_since_ms": 1793815078411,
+  "prospective_credit": 0,
+  "rows": 8,
+  "schema": "PUMP4_EXECUTABILITY_EXPORT_V1",
+  "source_audit_observed_ms": 1793795169920,
+  "source_audit_sha256": "37d39d18742e6023aeb406a702e0f952538d9642ee493f431a71dc47d244c4d0",
+  "status_semantics": "ACTUAL_BLOCK_OR_OUTSIDE_EXACT_PILOT_SCOPE_NOT_ECONOMIC_VERDICT",
+  "ts_ms_semantics": "SIGNAL_CANDLE_OPEN_MS_NOT_DECISION_HOUR"
+}

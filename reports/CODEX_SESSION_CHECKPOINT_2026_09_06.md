@@ -1,5 +1,31 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT4Nov18:02UTC — POLY_FIRST_FULL_CYCLES / SHORT_HVOST_READONLY_BLOCKED / BRAINDATA_PREPARED
+
+Polymarket existinghook automatically joined3markets same Buriram–Kashima match
+16:11:53–54UTC to futureofficialresolutions16:07/08. Parentmanifests/rawSHA/tokens/
+payouts/times and modelnet independentlyverified;first2modelnet3.966667/3.188515
+per100,third2.942784;notfills/actualfees/net/independentopportunities/economicPASS.
+Actual17:56snapshot9complete measurement/3joins/2BLOCKED;no replay. V3WAITlastcycle.
+No newE2code/service. Report POLY_SIGNAL_CYCLE_E2_2026_11_04.md updated.
+SHORT_HVOST read-only recon DONE BLOCKED:56publicGET/10books×4symbols17:48UTC;
+BTCmin.001=80.3472>50hedge. Aggregate150 rounds80.3472/160.6944;no mismatchpolicy.
+Packet200usesBTC3x;both1x modelIM300beforecost. Illustrative317.329 with currentcap
+funding+scenariofee isNOTsafe minimum;actualaccountfee/custody/signal-timep90UNKNOWN.
+PUMPexistingREGULAR_MARGIN/oneposition/168h incompatible;no scope/margin/ownerchange.
+Stop80no gap/liqguarantee;old1.8×1.05=-84%arithwrong(actual-89%). Independentbounded
+reviewreproduced56hashes/numbers, no economicsjudged. LIQnext/AbsorptionafterNOT_ASSESSED.
+Brain requested8BLOCKED rowswithknown_since preparedinrecovery/data+evidence;partial
+only8knowncandidates,notcompletehistory. No row=>UNKNOWN. Claudeexistingreaderignores
+known_since;ownerwillrelayfix. No active siblingreader/data install/Brain/judgerun.
+FreshPUMPreceipt17:53UTCsamePID3669955/scope2de/configf715,134checked/coveragecomplete/
+raw0;NRestarts0at17:48unitGET. MonthlyWAITexternal422/no newPOST;private mail notpublished.
+Reports SHORT_HVOST_EXECUTION_RECON / PUMP4_BRAIN_EXECUTABILITY_EXPORT_2026_11_04.
+No new moneyauthority/orders/keys/nativeunit/risk changes. Canonicalqueue updated.
+
+---
+Earlier dated entries below are history.
+
 CURRENT4Nov13:52UTC — FIRST_REAL_E2_MEASUREMENTS / V3WITNESS_CHECKED / PUMPdiagnosticLOCAL
 
 Polymarket E2 automatically measured2new signals13:42:23/13:50:53UTC, same Buriram–Kashima

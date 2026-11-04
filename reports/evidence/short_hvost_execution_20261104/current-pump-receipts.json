@@ -1,0 +1,107 @@
+{
+  "broker_requests": 0,
+  "mutations": 0,
+  "observed_ms": 1793814828668,
+  "rows": [
+    {
+      "file": "571bce68cf02437cb335edff1708fb43-44086.json",
+      "observed_ms": 1793814805340,
+      "pid": 3669955,
+      "reason": null,
+      "runner_config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+      "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+      "source_scan": {
+        "checked_publications": 134,
+        "coverage_complete": true,
+        "historical_index_durability_proven": false,
+        "hour_open_ms": 1793811600000,
+        "observed_ms": 1793814805039,
+        "raw_signals": 0,
+        "receipt_sha256": "6e4d201cd3694e9766404e064215888f224fdf6abd34195a1a4e04610edf1c59",
+        "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+        "unavailable_instruments": 3
+      },
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED"
+    },
+    {
+      "file": "571bce68cf02437cb335edff1708fb43-44087.json",
+      "observed_ms": 1793814811008,
+      "pid": 3669955,
+      "reason": null,
+      "runner_config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+      "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+      "source_scan": {
+        "checked_publications": 134,
+        "coverage_complete": true,
+        "historical_index_durability_proven": false,
+        "hour_open_ms": 1793811600000,
+        "observed_ms": 1793814810710,
+        "raw_signals": 0,
+        "receipt_sha256": "6e4d201cd3694e9766404e064215888f224fdf6abd34195a1a4e04610edf1c59",
+        "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+        "unavailable_instruments": 3
+      },
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED"
+    },
+    {
+      "file": "571bce68cf02437cb335edff1708fb43-44088.json",
+      "observed_ms": 1793814816601,
+      "pid": 3669955,
+      "reason": null,
+      "runner_config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+      "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+      "source_scan": {
+        "checked_publications": 134,
+        "coverage_complete": true,
+        "historical_index_durability_proven": false,
+        "hour_open_ms": 1793811600000,
+        "observed_ms": 1793814816227,
+        "raw_signals": 0,
+        "receipt_sha256": "6e4d201cd3694e9766404e064215888f224fdf6abd34195a1a4e04610edf1c59",
+        "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+        "unavailable_instruments": 3
+      },
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED"
+    },
+    {
+      "file": "571bce68cf02437cb335edff1708fb43-44089.json",
+      "observed_ms": 1793814822223,
+      "pid": 3669955,
+      "reason": null,
+      "runner_config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+      "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+      "source_scan": {
+        "checked_publications": 134,
+        "coverage_complete": true,
+        "historical_index_durability_proven": false,
+        "hour_open_ms": 1793811600000,
+        "observed_ms": 1793814821914,
+        "raw_signals": 0,
+        "receipt_sha256": "6e4d201cd3694e9766404e064215888f224fdf6abd34195a1a4e04610edf1c59",
+        "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+        "unavailable_instruments": 3
+      },
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED"
+    },
+    {
+      "file": "571bce68cf02437cb335edff1708fb43-44090.json",
+      "observed_ms": 1793814827809,
+      "pid": 3669955,
+      "reason": null,
+      "runner_config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+      "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+      "source_scan": {
+        "checked_publications": 134,
+        "coverage_complete": true,
+        "historical_index_durability_proven": false,
+        "hour_open_ms": 1793811600000,
+        "observed_ms": 1793814827501,
+        "raw_signals": 0,
+        "receipt_sha256": "6e4d201cd3694e9766404e064215888f224fdf6abd34195a1a4e04610edf1c59",
+        "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED",
+        "unavailable_instruments": 3
+      },
+      "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED"
+    }
+  ]
+}

@@ -1,0 +1,798 @@
+{
+  "account_mutations": 0,
+  "actual_account_fee_known": false,
+  "capture_sha256": "e92674ef799c87a1c92356b95594b97ab77191f360cfc981f98271e5289b5dbc",
+  "economic_pass": false,
+  "errors": [],
+  "exact_50usd_pairs_executable": false,
+  "finite_safe_minimum_capital_proven": false,
+  "hedge_rounding": [
+    {
+      "ceil_exceeds_target": true,
+      "ceil_notional": "80.34720",
+      "ceil_qty": "0.001",
+      "exact_nominal_possible": false,
+      "floor_legal": false,
+      "floor_notional": "0.00000",
+      "floor_qty": "0.000",
+      "target_hedge_notional": 50
+    },
+    {
+      "ceil_exceeds_target": true,
+      "ceil_notional": "160.69440",
+      "ceil_qty": "0.002",
+      "exact_nominal_possible": false,
+      "floor_legal": true,
+      "floor_notional": "80.34720",
+      "floor_qty": "0.001",
+      "target_hedge_notional": 100
+    },
+    {
+      "ceil_exceeds_target": true,
+      "ceil_notional": "160.69440",
+      "ceil_qty": "0.002",
+      "exact_nominal_possible": false,
+      "floor_legal": true,
+      "floor_notional": "80.34720",
+      "floor_qty": "0.001",
+      "target_hedge_notional": 150
+    }
+  ],
+  "illustrative_1x_capital_with_scenario_fees_and_funding": "317.32900",
+  "illustrative_fee_rate_per_side": ".00055",
+  "margin_only_three_pairs_1x_1x": "300",
+  "margin_only_three_pairs_alt1x_btc3x": "200",
+  "observed_ms": 1793814534569,
+  "order_posts": 0,
+  "public_get_requests": 56,
+  "schema": "SHORT_HVOST_EXECUTION_RECON_RESULT_V1",
+  "sixteen_hour_current_cap_constant_notional_funding_reserve": "16.99900",
+  "symbols": [
+    {
+      "actual_account_fee_rate": null,
+      "ask": "0.0027600",
+      "bid": "0.0027580",
+      "current_predicted_funding_rate": "-0.00253312",
+      "funding_interval_minutes": 240,
+      "history_last8": [
+        {
+          "fundingRate": "-0.00018487",
+          "fundingRateTimestamp": "1793808000000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793793600000"
+        },
+        {
+          "fundingRate": "0.00085154",
+          "fundingRateTimestamp": "1793779200000"
+        },
+        {
+          "fundingRate": "0.00079942",
+          "fundingRateTimestamp": "1793764800000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793750400000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793736000000"
+        },
+        {
+          "fundingRate": "0.00073519",
+          "fundingRateTimestamp": "1793721600000"
+        },
+        {
+          "fundingRate": "-0.00101538",
+          "fundingRateTimestamp": "1793707200000"
+        }
+      ],
+      "maintenance_margin": "0.02",
+      "mark": "0.0027607",
+      "min_leverage": "1",
+      "min_qty": "1900",
+      "min_trade_notional_at_ask": "5.2440000",
+      "minimum_notional_filter": "5",
+      "qty_step": "100",
+      "samples": [
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.002759790055248618784530386740",
+          "displayed_roundtrip_bps": "10.11806073841807626613504986",
+          "quantity": "18100",
+          "quote_to_receive_ms": 200,
+          "received_ms": 1793814505442,
+          "request_ms": 1793814505252,
+          "sample": 0,
+          "sell_vwap": "0.0027570",
+          "spread_bps": "3.626473254759746146872166818",
+          "venue_ms": 1793814505242
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027420",
+          "displayed_roundtrip_bps": "7.296607077708865377599416271",
+          "quantity": "18200",
+          "quote_to_receive_ms": 197,
+          "received_ms": 1793814508639,
+          "request_ms": 1793814508461,
+          "sample": 1,
+          "sell_vwap": "0.0027400",
+          "spread_bps": "7.296607077708865377599416271",
+          "venue_ms": 1793814508442
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027430",
+          "displayed_roundtrip_bps": "7.293946024799416484318016047",
+          "quantity": "18200",
+          "quote_to_receive_ms": 172,
+          "received_ms": 1793814511814,
+          "request_ms": 1793814511640,
+          "sample": 2,
+          "sell_vwap": "0.0027410",
+          "spread_bps": "7.293946024799416484318016047",
+          "venue_ms": 1793814511642
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.002758381215469613259668508287",
+          "displayed_roundtrip_bps": "5.008940959612909042641113327",
+          "quantity": "18100",
+          "quote_to_receive_ms": 188,
+          "received_ms": 1793814515030,
+          "request_ms": 1793814514840,
+          "sample": 3,
+          "sell_vwap": "0.0027570",
+          "spread_bps": "3.626473254759746146872166818",
+          "venue_ms": 1793814514842
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027600",
+          "displayed_roundtrip_bps": "7.249003262051467923160565422",
+          "quantity": "18100",
+          "quote_to_receive_ms": 188,
+          "received_ms": 1793814518230,
+          "request_ms": 1793814518045,
+          "sample": 4,
+          "sell_vwap": "0.0027580",
+          "spread_bps": "7.249003262051467923160565422",
+          "venue_ms": 1793814518042
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027590",
+          "displayed_roundtrip_bps": "9.134651981778773152136026106",
+          "quantity": "18100",
+          "quote_to_receive_ms": 178,
+          "received_ms": 1793814521420,
+          "request_ms": 1793814521234,
+          "sample": 5,
+          "sell_vwap": "0.002756480662983425414364640884",
+          "spread_bps": "7.251631617113850616388687455",
+          "venue_ms": 1793814521242
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027700",
+          "displayed_roundtrip_bps": "4.633808750075224168020700487",
+          "quantity": "18000",
+          "quote_to_receive_ms": 175,
+          "received_ms": 1793814524617,
+          "request_ms": 1793814524427,
+          "sample": 6,
+          "sell_vwap": "0.002768716666666666666666666667",
+          "spread_bps": "3.610760064993681169886261058",
+          "venue_ms": 1793814524442
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027700",
+          "displayed_roundtrip_bps": "7.222824124232574936800288913",
+          "quantity": "18000",
+          "quote_to_receive_ms": 176,
+          "received_ms": 1793814527818,
+          "request_ms": 1793814527623,
+          "sample": 7,
+          "sell_vwap": "0.0027680",
+          "spread_bps": "7.222824124232574936800288913",
+          "venue_ms": 1793814527642
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027710",
+          "displayed_roundtrip_bps": "7.220216606498194945848375451",
+          "quantity": "18000",
+          "quote_to_receive_ms": 157,
+          "received_ms": 1793814530999,
+          "request_ms": 1793814530823,
+          "sample": 8,
+          "sell_vwap": "0.0027690",
+          "spread_bps": "7.220216606498194945848375451",
+          "venue_ms": 1793814530842
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.0027490",
+          "displayed_roundtrip_bps": "3.638348189921775513916681826",
+          "quantity": "18100",
+          "quote_to_receive_ms": 107,
+          "received_ms": 1793814534549,
+          "request_ms": 1793814534027,
+          "sample": 9,
+          "sell_vwap": "0.0027480",
+          "spread_bps": "3.638348189921775513916681826",
+          "venue_ms": 1793814534442
+        }
+      ],
+      "short_1x_liquidation_ratio_ignoring_fee_extra_margin": "1.960784313725490196078431373",
+      "short_window_p90_roundtrip_spread_depth_bps": "9.134651981778773152136026106",
+      "signal_time_p90_qualified": false,
+      "sixteen_hour_current_cap_constant_notional_reserve": "4.00",
+      "stop80_buffer_entry_percentage_points": "16.07843137254901960784313730",
+      "symbol": "AKEUSDT"
+    },
+    {
+      "actual_account_fee_rate": null,
+      "ask": "0.13137",
+      "bid": "0.13133",
+      "current_predicted_funding_rate": "0.00005028",
+      "funding_interval_minutes": 240,
+      "history_last8": [
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793808000000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793793600000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793779200000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793764800000"
+        },
+        {
+          "fundingRate": "0.00010516",
+          "fundingRateTimestamp": "1793750400000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793736000000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793721600000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793707200000"
+        }
+      ],
+      "maintenance_margin": "0.02",
+      "mark": "0.13137",
+      "min_leverage": "1",
+      "min_qty": "38.1",
+      "min_trade_notional_at_ask": "5.005197",
+      "minimum_notional_filter": "5",
+      "qty_step": "0.1",
+      "samples": [
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.1314197503941145559642669469",
+          "displayed_roundtrip_bps": "6.832919232170229483589409973",
+          "quantity": "380.6",
+          "quote_to_receive_ms": 132,
+          "received_ms": 1793814505450,
+          "request_ms": 1793814505252,
+          "sample": 0,
+          "sell_vwap": "0.13133",
+          "spread_bps": "3.045298819946707270650932623",
+          "venue_ms": 1793814505318
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.1314026642143983184445612191",
+          "displayed_roundtrip_bps": "5.532106158988842372380593833",
+          "quantity": "380.6",
+          "quote_to_receive_ms": 318,
+          "received_ms": 1793814508637,
+          "request_ms": 1793814508462,
+          "sample": 1,
+          "sell_vwap": "0.13133",
+          "spread_bps": "3.045298819946707270650932623",
+          "venue_ms": 1793814508319
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.1314252916447714135575407252",
+          "displayed_roundtrip_bps": "7.254512182361810174011282403",
+          "quantity": "380.6",
+          "quote_to_receive_ms": 315,
+          "received_ms": 1793814511834,
+          "request_ms": 1793814511641,
+          "sample": 2,
+          "sell_vwap": "0.13133",
+          "spread_bps": "3.806478626622511514597845533",
+          "venue_ms": 1793814511519
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.1314252916447714135575407252",
+          "displayed_roundtrip_bps": "7.254512182361810174011282403",
+          "quantity": "380.6",
+          "quote_to_receive_ms": 124,
+          "received_ms": 1793814515043,
+          "request_ms": 1793814514841,
+          "sample": 3,
+          "sell_vwap": "0.13133",
+          "spread_bps": "3.806478626622511514597845533",
+          "venue_ms": 1793814514919
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.1314397031003678402522333158",
+          "displayed_roundtrip_bps": "7.817685454660664647076256090",
+          "quantity": "380.6",
+          "quote_to_receive_ms": 514,
+          "received_ms": 1793814518233,
+          "request_ms": 1793814518045,
+          "sample": 4,
+          "sell_vwap": "0.1313370099842354177614293221",
+          "spread_bps": "3.045066991473812423873325213",
+          "venue_ms": 1793814517719
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.1314397031003678402522333158",
+          "displayed_roundtrip_bps": "8.045305412378557351908617540",
+          "quantity": "380.6",
+          "quote_to_receive_ms": 702,
+          "received_ms": 1793814521421,
+          "request_ms": 1793814521234,
+          "sample": 5,
+          "sell_vwap": "0.1313340199684708355228586442",
+          "spread_bps": "3.045066991473812423873325213",
+          "venue_ms": 1793814520719
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.1314067997898055701523909616",
+          "displayed_roundtrip_bps": "10.17331760355149705530595265",
+          "quantity": "380.6",
+          "quote_to_receive_ms": 297,
+          "received_ms": 1793814524616,
+          "request_ms": 1793814524428,
+          "sample": 6,
+          "sell_vwap": "0.1312731529164477141355754073",
+          "spread_bps": "1.522417599147446144477430159",
+          "venue_ms": 1793814524319
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.13136",
+          "displayed_roundtrip_bps": "7.525861259088410626736937897",
+          "quantity": "380.7",
+          "quote_to_receive_ms": 103,
+          "received_ms": 1793814527821,
+          "request_ms": 1793814527623,
+          "sample": 7,
+          "sell_vwap": "0.1312611741528762805358550039",
+          "spread_bps": "6.853748619731180748581654800",
+          "venue_ms": 1793814527718
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.13137",
+          "displayed_roundtrip_bps": "7.093648714174911295637989720",
+          "quantity": "380.7",
+          "quote_to_receive_ms": 496,
+          "received_ms": 1793814531014,
+          "request_ms": 1793814530823,
+          "sample": 8,
+          "sell_vwap": "0.1312768426582610979774100341",
+          "spread_bps": "6.853226727584237578526556254",
+          "venue_ms": 1793814530518
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.13137",
+          "displayed_roundtrip_bps": "7.093648714174911295637989720",
+          "quantity": "380.7",
+          "quote_to_receive_ms": 482,
+          "received_ms": 1793814534201,
+          "request_ms": 1793814534027,
+          "sample": 9,
+          "sell_vwap": "0.1312768426582610979774100341",
+          "spread_bps": "6.853226727584237578526556254",
+          "venue_ms": 1793814533719
+        }
+      ],
+      "short_1x_liquidation_ratio_ignoring_fee_extra_margin": "1.960784313725490196078431373",
+      "short_window_p90_roundtrip_spread_depth_bps": "8.045305412378557351908617540",
+      "signal_time_p90_qualified": false,
+      "sixteen_hour_current_cap_constant_notional_reserve": "4.00",
+      "stop80_buffer_entry_percentage_points": "16.07843137254901960784313730",
+      "symbol": "ACEUSDT"
+    },
+    {
+      "actual_account_fee_rate": null,
+      "ask": "0.008191",
+      "bid": "0.008183",
+      "current_predicted_funding_rate": "0.00005",
+      "funding_interval_minutes": 240,
+      "history_last8": [
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793808000000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793793600000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793779200000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793764800000"
+        },
+        {
+          "fundingRate": "0.00007597",
+          "fundingRateTimestamp": "1793750400000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793736000000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793721600000"
+        },
+        {
+          "fundingRate": "0.00005",
+          "fundingRateTimestamp": "1793707200000"
+        }
+      ],
+      "maintenance_margin": "0.04",
+      "mark": "0.008186",
+      "min_leverage": "1",
+      "min_qty": "620",
+      "min_trade_notional_at_ask": "5.078420",
+      "minimum_notional_filter": "5",
+      "qty_step": "10",
+      "samples": [
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008191747540983606557377049180",
+          "displayed_roundtrip_bps": "10.68467202101692607432414804",
+          "quantity": "6100",
+          "quote_to_receive_ms": 251,
+          "received_ms": 1793814505444,
+          "request_ms": 1793814505254,
+          "sample": 0,
+          "sell_vwap": "0.008183",
+          "spread_bps": "9.771589104678148283864663491",
+          "venue_ms": 1793814505193
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008191373770491803278688524590",
+          "displayed_roundtrip_bps": "13.89502228550886163157362409",
+          "quantity": "6100",
+          "quote_to_receive_ms": 245,
+          "received_ms": 1793814508638,
+          "request_ms": 1793814508462,
+          "sample": 1,
+          "sell_vwap": "0.008180",
+          "spread_bps": "13.43839716571987050271822124",
+          "venue_ms": 1793814508393
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008191373770491803278688524590",
+          "displayed_roundtrip_bps": "13.89502228550886163157362409",
+          "quantity": "6100",
+          "quote_to_receive_ms": 1847,
+          "received_ms": 1793814511840,
+          "request_ms": 1793814511641,
+          "sample": 2,
+          "sell_vwap": "0.008180",
+          "spread_bps": "13.43839716571987050271822124",
+          "venue_ms": 1793814509993
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008191373770491803278688524590",
+          "displayed_roundtrip_bps": "13.89502228550886163157362409",
+          "quantity": "6100",
+          "quote_to_receive_ms": 1036,
+          "received_ms": 1793814515029,
+          "request_ms": 1793814514842,
+          "sample": 3,
+          "sell_vwap": "0.008180",
+          "spread_bps": "13.43839716571987050271822124",
+          "venue_ms": 1793814513993
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008191373770491803278688524590",
+          "displayed_roundtrip_bps": "13.89502228550886163157362409",
+          "quantity": "6100",
+          "quote_to_receive_ms": 238,
+          "received_ms": 1793814518231,
+          "request_ms": 1793814518045,
+          "sample": 4,
+          "sell_vwap": "0.008180",
+          "spread_bps": "13.43839716571987050271822124",
+          "venue_ms": 1793814517993
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008191186885245901639344262295",
+          "displayed_roundtrip_bps": "13.66670972561436606714592267",
+          "quantity": "6100",
+          "quote_to_receive_ms": 418,
+          "received_ms": 1793814521411,
+          "request_ms": 1793814521235,
+          "sample": 5,
+          "sell_vwap": "0.008180",
+          "spread_bps": "13.43839716571987050271822124",
+          "venue_ms": 1793814520993
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008191186885245901639344262295",
+          "displayed_roundtrip_bps": "13.66670972561436606714592267",
+          "quantity": "6100",
+          "quote_to_receive_ms": 228,
+          "received_ms": 1793814524621,
+          "request_ms": 1793814524428,
+          "sample": 6,
+          "sell_vwap": "0.008180",
+          "spread_bps": "13.43839716571987050271822124",
+          "venue_ms": 1793814524393
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008182",
+          "displayed_roundtrip_bps": "16.18946477785574262113800037",
+          "quantity": "6110",
+          "quote_to_receive_ms": 209,
+          "received_ms": 1793814527802,
+          "request_ms": 1793814527624,
+          "sample": 7,
+          "sell_vwap": "0.008168762684124386252045826514",
+          "spread_bps": "13.45318901730569314498868709",
+          "venue_ms": 1793814527593
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008181",
+          "displayed_roundtrip_bps": "15.59592404098379032800484222",
+          "quantity": "6110",
+          "quote_to_receive_ms": 414,
+          "received_ms": 1793814531007,
+          "request_ms": 1793814530824,
+          "sample": 8,
+          "sell_vwap": "0.008168248772504091653027823241",
+          "spread_bps": "12.23091976516634050880626223",
+          "venue_ms": 1793814530593
+        },
+        {
+          "at_50_usd_legal": true,
+          "buy_vwap": "0.008172519607843137254901960784",
+          "displayed_roundtrip_bps": "12.91743048777706147664478051",
+          "quantity": "6120",
+          "quote_to_receive_ms": 221,
+          "received_ms": 1793814534214,
+          "request_ms": 1793814534028,
+          "sample": 9,
+          "sell_vwap": "0.008161970588235294117647058824",
+          "spread_bps": "11.02063307414437029327129125",
+          "venue_ms": 1793814533993
+        }
+      ],
+      "short_1x_liquidation_ratio_ignoring_fee_extra_margin": "1.923076923076923076923076923",
+      "short_window_p90_roundtrip_spread_depth_bps": "15.59592404098379032800484222",
+      "signal_time_p90_qualified": false,
+      "sixteen_hour_current_cap_constant_notional_reserve": "8.00",
+      "stop80_buffer_entry_percentage_points": "12.30769230769230769230769230",
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "actual_account_fee_rate": null,
+      "ask": "80347.20",
+      "bid": "80347.10",
+      "current_predicted_funding_rate": "-0.00000805",
+      "funding_interval_minutes": 480,
+      "history_last8": [
+        {
+          "fundingRate": "0.0001",
+          "fundingRateTimestamp": "1793808000000"
+        },
+        {
+          "fundingRate": "0.00006259",
+          "fundingRateTimestamp": "1793779200000"
+        },
+        {
+          "fundingRate": "0.0001",
+          "fundingRateTimestamp": "1793750400000"
+        },
+        {
+          "fundingRate": "0.0000747",
+          "fundingRateTimestamp": "1793721600000"
+        },
+        {
+          "fundingRate": "0.0001",
+          "fundingRateTimestamp": "1793692800000"
+        },
+        {
+          "fundingRate": "0.0001",
+          "fundingRateTimestamp": "1793664000000"
+        },
+        {
+          "fundingRate": "0.00009346",
+          "fundingRateTimestamp": "1793635200000"
+        },
+        {
+          "fundingRate": "0.00005216",
+          "fundingRateTimestamp": "1793606400000"
+        }
+      ],
+      "maintenance_margin": "0.0033",
+      "mark": "80350.61",
+      "min_leverage": "1",
+      "min_qty": "0.001",
+      "min_trade_notional_at_ask": "80.34720",
+      "minimum_notional_filter": "5",
+      "qty_step": "0.001",
+      "samples": [
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80347.20",
+          "displayed_roundtrip_bps": "0.01244599217271552257920784994",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 100,
+          "received_ms": 1793814505459,
+          "request_ms": 1793814505254,
+          "sample": 0,
+          "sell_vwap": "80347.10",
+          "spread_bps": "0.01244599217271552257920784994",
+          "venue_ms": 1793814505359
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80347.20",
+          "displayed_roundtrip_bps": "0.01244599217271552257920784994",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 280,
+          "received_ms": 1793814508639,
+          "request_ms": 1793814508462,
+          "sample": 1,
+          "sell_vwap": "80347.10",
+          "spread_bps": "0.01244599217271552257920784994",
+          "venue_ms": 1793814508359
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80350.70",
+          "displayed_roundtrip_bps": "0.01244545003680741848385794017",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 277,
+          "received_ms": 1793814511836,
+          "request_ms": 1793814511641,
+          "sample": 2,
+          "sell_vwap": "80350.60",
+          "spread_bps": "0.01244545003680741848385794017",
+          "venue_ms": 1793814511559
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80364.10",
+          "displayed_roundtrip_bps": "0.01244337486724474438508263334",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 269,
+          "received_ms": 1793814515028,
+          "request_ms": 1793814514843,
+          "sample": 3,
+          "sell_vwap": "80364.00",
+          "spread_bps": "0.01244337486724474438508263334",
+          "venue_ms": 1793814514759
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80364.70",
+          "displayed_roundtrip_bps": "0.01244328196539149986965662141",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 266,
+          "received_ms": 1793814518225,
+          "request_ms": 1793814518046,
+          "sample": 4,
+          "sell_vwap": "80364.60",
+          "spread_bps": "0.01244328196539149986965662141",
+          "venue_ms": 1793814517959
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80364.70",
+          "displayed_roundtrip_bps": "0.01244328196539149986965662141",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 268,
+          "received_ms": 1793814521427,
+          "request_ms": 1793814521235,
+          "sample": 5,
+          "sell_vwap": "80364.60",
+          "spread_bps": "0.01244328196539149986965662141",
+          "venue_ms": 1793814521159
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80364.10",
+          "displayed_roundtrip_bps": "0.01244337486724474438508263334",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 246,
+          "received_ms": 1793814524605,
+          "request_ms": 1793814524429,
+          "sample": 6,
+          "sell_vwap": "80364.00",
+          "spread_bps": "0.01244337486724474438508263334",
+          "venue_ms": 1793814524359
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80364.10",
+          "displayed_roundtrip_bps": "0.01244337486724474438508263334",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 259,
+          "received_ms": 1793814527818,
+          "request_ms": 1793814527624,
+          "sample": 7,
+          "sell_vwap": "80364.00",
+          "spread_bps": "0.01244337486724474438508263334",
+          "venue_ms": 1793814527559
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80356.10",
+          "displayed_roundtrip_bps": "0.01244461369119064463721151052",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 267,
+          "received_ms": 1793814531026,
+          "request_ms": 1793814530824,
+          "sample": 8,
+          "sell_vwap": "80356.00",
+          "spread_bps": "0.01244461369119064463721151052",
+          "venue_ms": 1793814530759
+        },
+        {
+          "at_50_usd_legal": false,
+          "buy_vwap": "80348.50",
+          "displayed_roundtrip_bps": "0.01244579080243613909166884987",
+          "quantity": "0.001",
+          "quote_to_receive_ms": 245,
+          "received_ms": 1793814534204,
+          "request_ms": 1793814534030,
+          "sample": 9,
+          "sell_vwap": "80348.40",
+          "spread_bps": "0.01244579080243613909166884987",
+          "venue_ms": 1793814533959
+        }
+      ],
+      "short_1x_liquidation_ratio_ignoring_fee_extra_margin": "1.993421708362404066580285059",
+      "short_window_p90_roundtrip_spread_depth_bps": "0.01244599217271552257920784994",
+      "signal_time_p90_qualified": false,
+      "sixteen_hour_current_cap_constant_notional_reserve": "0.99900",
+      "stop80_buffer_entry_percentage_points": "19.34217083624040665802850590",
+      "symbol": "BTCUSDT"
+    }
+  ],
+  "three_pair_roundtrip_fees_constant_notional_scenario": ".33",
+  "verdict": "BLOCKED"
+}
