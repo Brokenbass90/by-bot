@@ -62,3 +62,36 @@ App heartbeat `pump4-strict-h1` читает только эти факты/пр
 GO/scope2de0b6ec…d0970, 50/30/20, max1entry и deadline8Nov19:26:32.774UTC
 не меняются. Polymarket не отключён. Broker requests/orders=0 для этого этапа.
 SOURCE_PASS не означает сделку, PnL, экономическое преимущество или TINY-2 GO.
+
+## Фактическое переключение и серия — обновление3Nov19:04UTC
+
+Nativehandoff завершён19:03:53.875UTC/21:03:53.875Кипр. Независимый GET19:04:42UTC
+подтвердил DATA4191832/unit9c7ff893,136epochs+136journals/data-lock4294867,
+финансовыйowner3669955/NRestarts0/lock818853, прежниеMonthlyunits.
+HandoffreceiptSHA6a86a107ecfd3cba7983ad9adcce2a1158b13da45f65dc120060d1d2cf7a840e.
+Последний19H ЕЩЁ СТАРОГО Warm:134/134,last57.145s,0rawsignals; он не засчитывается
+новому strict-parser. Первыйactual20H остаётся будущим, SOURCE_PASS не заявлен.
+
+По принятому PM дополнению первичная инженерная проверка —6фиксированных часов:
+20/21/22/23UTC3Nov и00/01UTC4Nov; после01:02:05UTC(03:02Кипр)полнаясерия доступна.
+Первыйfailed/missing/UNKNOWN останавливает эту приёмку и новые слепые journal
+оптимизации; следующий шаг — ограниченный профиль всего критического пути.
+Это не изменение финансовых gates/GO, сроков входов или стратегии.
+GET-only observe-series-readonly.py проверяет pinned overlay/helper, исходный
+handoff/nativeactual20H proof, текущиеunit/PID/lock и immutableчасовыеreceipts.
+Не запускает helper/стратегию/судей/брокерские API и не исправляет источники.
+Существующий heartbeat pump4-strict-h1 расширяется на эту серию: первыйactualH1
+и окончательнаясерия/новыйсбой сообщаютсяоднократно, промежуточныеожиданиятихо;
+послеитога удаляетсятолькоэтотheartbeat, исходныеслужбы/журналысохраняются.
+
+## Итог фиксированной серии —4 ноября01:07:55UTC
+
+SERIES_SIX_H1_PASS.20/21/22/23UTC3Nov и00/01UTC4Nov: каждый134/134within60,
+безdisconnect; последниеpublication offsets41.730/44.372/44.076/39.939/47.648/
+45.700s. Максимум47.648s, минимальныйнаблюдавшийсязапас12.352s. Rawsignals0.
+ТотжеDATA4191832/unit9c7ff893, финансовыйowner3669955/NRestarts0/lock818853.
+Immutableactualreceipt сохранён; appheartbeatpump4-strict-h1 удалён послеитога,
+nativeDATA/PUMP/Monthly/Polymarket/таймеры/журналы сохранены. Первичнаяинженерная
+приёмказакрыта; это не гарантия будущейбезотказности/сделка/экономическийPASS.
+Новые слепые локальныеоптимизации не продолжать. При новомопоздании—ограниченный
+профильполного criticalpath. Текущийфинансовыйscope/deadline не изменялся.

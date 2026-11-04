@@ -1,5 +1,33 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT4Nov07:18UTC — PUMP six-H1PASS; Monthly owner support action explicit; PolyP1next
+
+Read MONTHLY_MAIL_REVIEW_2026_11_04.md/PUMP4_STRICT_READ_THROUGHPUT report.
+Fixed20..01UTCsixH1 actual134/134each, last41.730/44.372/44.076/39.939/47.648/
+45.700s;raw0. SameDATA4191832/unit9c7ff893/owner3669955NRestarts0/lock818853.
+Observed4Nov01:07:55UTC; immutableprivate+publicreceipt. pump4-strict-h1deleted,
+nativeunits/health/archivepreserved; acceptedrepairclosed, nofinancialextension.
+Futurelateness→oneboundedfullcriticalpathprofile, no blindjournalmicrooptimization.
+Monthly freshapprovedGET4Nov07:18:01UTC identitymatches125/managerLIVE/positions0/
+open0/recoveryselectionpresent/history_completefalse. Oldscopeexpired, noapply/
+POST/reservationreset/datecarry. Exact422bodylost/reasonUNKNOWN. Capture209PASS
+LOCALnotdeployed. Ownerconfirmed requestNOTsent; explicitinchat sendprepared
+.private/monthly_http422_20261103/broker-support-request-20261104.txt through
+https://alpaca.markets/support/request or officialsupportemail. No mailssent.
+Mailtopics+targetedin:anywhere search: noLLYrejection/restriction/actionrequired;
+maintenance31Oct/7Nov+security23Octnoaction; oldAMDbuy1Oct/NETbuy15Octconfirmed.
+Private readback held; no accountID/balance/key inpublicevidence. Screenshots
+confirmcash/emptypositions only, notneworderadmission.
+Poly yesterday19:08actualRESTpair+Gammaaccepting/feeSchedule=.05/exponent1 found;
+no defaultfrombase_fee1000; measurementUNKNOWNcontinuity+feemappingstillopen.
+NextboundedexistingORDERS_OFFnormalizer/runtime capture, no secondWS/newresearch.
+Claude positive-recoveryhandoffpreparedNOTsent; no Claudecheckoutchanges.
+ForeignNETsixlines/allowlist/evidencepreservedandexcludedfromcommit.
+
+---
+Earlierdatedentriesbelowarehistory.
+
+
 CURRENT3Nov18:40UTC — PUMPstrictDATArepairscheduled19UTC→actual20H; Monthly422LOCAL
 
 Read PUMP4_STRICT_READ_THROUGHPUT_2026_11_03.md. PriorWarmactual15/16Hpassed,

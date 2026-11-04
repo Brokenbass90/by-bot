@@ -1,3 +1,22 @@
+# Current4Nov07:18UTC — PUMP primaryDATAacceptancePASS; Monthly422supportaction
+
+Read checkpointTOP/MONTHLY_MAIL_REVIEW_2026_11_04.md.
+PUMPfixedsixactualH1PASS134/134each/max47.648s,raw0; sameDATA4191832/
+financial3669955NRestarts0/lock818853. Monitorpump4-strict-h1deleted; nativekept.
+No moreblindjournalrepair; newfailure→boundedfullcriticalpathprofile.
+MonthlyfreshLIVEGET07:18identitymatches/positions0/open0, historyincomplete.
+Old125scope/POST/applySPENT/expired; exact422UNKNOWN, localcapture209PASSnotdeployed.
+OwnerdidNOTsendsupportrequest andneeds explicitchataction; readyprivatefile
+.private/monthly_http422_20261103/broker-support-request-20261104.txt, officialform
+https://alpaca.markets/support/request. No mails/GO/POST/retry sentbyCodex.
+Mailboxreview foundnoLLY/restrictionletters; maintenance/security noactionrequired.
+LimitedPolyP1next: normalizecapturedGammafeeSchedule+realbook intoexistingORDERS_OFF;
+publicRESTsnapshotpair from3NovnotcontinuousWS/qualifyingstrategy/fills.
+ResearchClaude, no foreigncheckout/messages. PreserveforeignNET/allowlist/seals.
+
+---
+Previousdatedcheckpointbelowishistory.
+
 # Current3Nov18:40UTC — PUMP DATA repair scheduled; Monthly422 unresolved
 
 Start checkpointTOP, PUMP4_STRICT_READ_THROUGHPUT_2026_11_03.md and
