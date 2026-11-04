@@ -1,0 +1,28 @@
+{
+  "complete_rows": 22,
+  "fields": [
+    "ask_glubina_usd",
+    "cena",
+    "derzhat_ch",
+    "dohod",
+    "glubina",
+    "match",
+    "minut_ot_nachala",
+    "t_vhod",
+    "vopros",
+    "win"
+  ],
+  "judge_run": false,
+  "matching_by_question_or_posthoc_outcome": false,
+  "observed_utc": "2026-11-04T08:02:20.872162+00:00",
+  "partial_tail_bytes": 0,
+  "rows_with_embedded_outcome": 22,
+  "rows_with_market_id": 0,
+  "rows_with_receive_ms": 0,
+  "rows_with_token_id": 0,
+  "schema": "POLY_JUDGE_SIGNAL_SCHEMA_AUDIT_V1",
+  "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/poly_95_v2_sdelki.jsonl",
+  "source_rewritten": false,
+  "source_sha256": "5c87fb34d9af5fa373d7520e033587c3387506155ec4a5ac756c7ef2566e33bd",
+  "verdict": "NO_CAUSAL_SIGNAL_INTERFACE_IN_THIS_OUTPUT"
+}

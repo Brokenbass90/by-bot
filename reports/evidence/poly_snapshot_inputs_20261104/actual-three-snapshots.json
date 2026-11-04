@@ -1,0 +1,151 @@
+{
+  "actual_strategy_trades": 0,
+  "continuous_worker_installed": false,
+  "fee_estimate_not_actual_fees": true,
+  "independent_opportunities": 0,
+  "market": {
+    "cid": "0xf0c72a15637720f75ae899f49d56a4f38f66405df409a4e13b9164228e062d45",
+    "id": "6490417",
+    "konec": "2026-11-05T17:30:00+00:00",
+    "obem": 457748.9452439999,
+    "token": "28930172048538290565601624677387156784910845830507840921607855091407962691823",
+    "tokens": [
+      "28930172048538290565601624677387156784910845830507840921607855091407962691823",
+      "33719020671104047926410348605274542866197562672580753853735855739362713148440"
+    ],
+    "vopros": "Will Al Qadisiyah Saudi Club vs. Al Fayha Saudi Club end in a draw?"
+  },
+  "matching_strategy_signal_available": false,
+  "membership": {
+    "catalogue_received_ms": 1793777378353,
+    "import_receipt_sha256": "d50c537706b5af1febc019dc04a00f434e296dbafdc2340c3f32ba8210500e55",
+    "raw_sha256": "7d562874604a02cfb1330b347f470a149331b795b9424f773e99d37bbde12f87",
+    "seal_sha256": "ba98e5739f6f4a132f616b1069104f4c1c41895858523858f19fa1fa7e404811"
+  },
+  "observed_ms": 1793779163650,
+  "observed_utc": "2026-11-04T07:59:23.650000+00:00",
+  "order_posts": 0,
+  "private_receipt": ".private/poly_v2_execution_20261104/final-20261104T075902Z-ba7cac43-eb0b-4604-a55a-4bf3d778ba10",
+  "real_fills": 0,
+  "receipt_hashes": {
+    "input-signal.json": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+    "invocation.json": "f288dc4b50cd6a1e6b5f5ffb165bd75ee7562ec1555f740a8044046ce59c5435",
+    "sample-0/book-0.json": "f2f5467932faae7f4085cb0d48b2761bd6ce67125a8f5c79216bd95f356112f0",
+    "sample-0/book-1.json": "bf8d30ade8e8ca4de37e551043136af5caf68670b0fb853eb8f512ae85e10e39",
+    "sample-0/gamma.json": "a48325a9abd39b98b2bbc69b77f43dc4b4b8f3f6e496e7c51d933fabdfddbcf0",
+    "sample-0/measurement.json": "629d0d4cec38ee1b0ee5beb1c6419e98fc6f47566b8aba0d5d1b135c3f0a895d",
+    "sample-0/summary.json": "4f34761529242bff799c0e5da5f5322f66537975459e0e8c751a6645ba332863",
+    "sample-1/book-0.json": "0e7ee5e16a086ace5e4d18d5a3e1f2f9d42d7aca38132db6a26bbb3acd16a733",
+    "sample-1/book-1.json": "381cad90bba63cd756a14b083e0b5c8bc956813f414fe69405e539ccc06915e5",
+    "sample-1/gamma.json": "61d66e8c493b4a212c243d44b78412e2988735b1f1c2ffb97abb13bf812f56ad",
+    "sample-1/measurement.json": "002e888a98ba1b8b1b7bfcb4c8b3cb834315c47688dda9bae2cf848bbe3c50ac",
+    "sample-1/summary.json": "98918b77ce3883b426104d57c59a5f90bc5913d9f616dd2aae2a5a9ada51b136",
+    "sample-2/book-0.json": "f12d463f60c289b72e1dc93a4c656707dd428be991fc46ce6a0915a62e5d5ffe",
+    "sample-2/book-1.json": "d45386cdbb815da85b5a61e54c2d2f3520fad2d424b0c3650d72a3569b7902ba",
+    "sample-2/gamma.json": "a9f1aed0471d38f8ab3c9007348677e245e720c01c0ed5920394901efee34cd4",
+    "sample-2/measurement.json": "1fccfa3eb305ddbc0818279ffbc1a877453c251a7ea558e0dfc661d2b5778c23",
+    "sample-2/summary.json": "feb5218b7ee52604cf05795b8b8ad02fa78c767cd76e9de209db83a81f697bf8",
+    "source-membership.json": "f05c075976b4ea784f1556e0ec77c701b43e2ffa668f800f5671cf0c4b80ff15",
+    "summary.json": "cab395c51e941fdf5f548a1178560586d8e48f6a51cbcf83c2cb3d9842437e79"
+  },
+  "samples": [
+    {
+      "accepting_orders": true,
+      "decision_ms": 1793779142858,
+      "fee_issues": [],
+      "fee_rate": "0.05",
+      "outcomes": [
+        {
+          "best_ask": "0.957",
+          "book_age_ms": 97,
+          "depth_to_limit": "11411.67734",
+          "estimated_fee": "0.21382",
+          "issues": [],
+          "status": "MEASURED_ORDERS_OFF",
+          "token": "28930172048538290565601624677387156784910845830507840921607855091407962691823",
+          "vwap": "0.9572342126298960831334932054356514788171"
+        },
+        {
+          "best_ask": "0.064",
+          "book_age_ms": 1,
+          "depth_to_limit": "11205.83731",
+          "estimated_fee": "4.67606",
+          "issues": [],
+          "status": "MEASURED_ORDERS_OFF",
+          "token": "33719020671104047926410348605274542866197562672580753853735855739362713148440",
+          "vwap": "0.06478645090054163466382111284783097952530"
+        }
+      ],
+      "sample": 0,
+      "status": "MEASURED_SNAPSHOTS"
+    },
+    {
+      "accepting_orders": true,
+      "decision_ms": 1793779153240,
+      "fee_issues": [],
+      "fee_rate": "0.05",
+      "outcomes": [
+        {
+          "best_ask": "0.957",
+          "book_age_ms": 100,
+          "depth_to_limit": "11411.67734",
+          "estimated_fee": "0.21382",
+          "issues": [],
+          "status": "MEASURED_ORDERS_OFF",
+          "token": "28930172048538290565601624677387156784910845830507840921607855091407962691823",
+          "vwap": "0.9572342126298960831334932054356514788171"
+        },
+        {
+          "best_ask": "0.064",
+          "book_age_ms": 3,
+          "depth_to_limit": "10529.55731",
+          "estimated_fee": "4.67606",
+          "issues": [],
+          "status": "MEASURED_ORDERS_OFF",
+          "token": "33719020671104047926410348605274542866197562672580753853735855739362713148440",
+          "vwap": "0.06478645090054163466382111284783097952530"
+        }
+      ],
+      "sample": 1,
+      "status": "MEASURED_SNAPSHOTS"
+    },
+    {
+      "accepting_orders": true,
+      "decision_ms": 1793779163645,
+      "fee_issues": [],
+      "fee_rate": "0.05",
+      "outcomes": [
+        {
+          "best_ask": "0.957",
+          "book_age_ms": 107,
+          "depth_to_limit": "11411.67734",
+          "estimated_fee": "0.21382",
+          "issues": [],
+          "status": "MEASURED_ORDERS_OFF",
+          "token": "28930172048538290565601624677387156784910845830507840921607855091407962691823",
+          "vwap": "0.9572342126298960831334932054356514788171"
+        },
+        {
+          "best_ask": "0.064",
+          "book_age_ms": 3,
+          "depth_to_limit": "10066.80979",
+          "estimated_fee": "4.67606",
+          "issues": [],
+          "status": "MEASURED_ORDERS_OFF",
+          "token": "33719020671104047926410348605274542866197562672580753853735855739362713148440",
+          "vwap": "0.06478645090054163466382111284783097952530"
+        }
+      ],
+      "sample": 2,
+      "status": "MEASURED_SNAPSHOTS"
+    }
+  ],
+  "schema": "POLY_FINAL_BOUNDED_SNAPSHOT_PROOF_V1",
+  "simultaneous_pair": false,
+  "source_sha256": {
+    "research_lab/polymarket_v2_orders_off_v1.py": "6903ed7e513a0da2ae7cea25722eeb7cc8dc511649da9a33bac28881e479274d",
+    "research_lab/polymarket_v2_snapshot_inputs_v1.py": "5d03624ca8e251f5813040fd2b96727e29558bc4764075ea2842b84d244bead7",
+    "scripts/measure_polymarket_snapshot_v1.py": "11cd283a68348e6fb82ebe0e7542f0a26c2ba6638a18c86d6069d71be73526dc"
+  },
+  "stream_continuity_proven": false
+}

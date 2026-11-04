@@ -1,7 +1,8 @@
 # Monthly: проверка почты и следующий шаг —4 ноября2026
 
-Владелец подтвердил: запрос в поддержку НЕ отправлялся; необходимое действие
-должно быть явно сообщено в чате. Codex не отправлял писем/форм и не создавал
+Обновление4Nov: владелец сообщил «Письмо написал» — OWNER_REPORTED_SENT.
+Независимое подтверждение доставки/номер обращения пока UNKNOWN. Повторное письмо
+Codex не отправляет. Ранее запрос не был отправлен; действие явно сообщено в чате. Codex не отправлял писем/форм и не создавал
 нового финансового разрешения.
 
 Проверены темы Alpaca с1Oct2026 и отдельный поиск LLY/rejected/restriction/
@@ -27,12 +28,13 @@ positions0/openorders0, oldrecoveryselectionpresent, history_completefalse.
 Это не CASH/полная история/допуск новой покупки. Старое окно3Novзакрыто;
 никакихPOST/apply/replay/claimreset/ротацииключей не выполнено.
 
-Действие владельца: отправить готовый приватный текст
+Сохранённый текст обращения (владелец сообщил об отправке):
 .private/monthly_http422_20261103/broker-support-request-20261104.txt
 через https://alpaca.markets/support/request (официальнаяформа проверена4Nov)
 или с зарегистрированной почты наsupport@alpaca.markets, указанный в письмеAlpaca.
 Запрос содержит CID/время/реконструированныйpayload, не ключи и не пароль.
-Состояние BLOCKED_EXTERNAL_REQUEST_NOT_SENT до фактического подтверждения отправки.
+Текущее состояние WAITING_BROKER_REPLY_OWNER_REPORTED_SENT. Тело исходного422
+по-прежнему утрачено, причина UNKNOWN; нового разрешённого пакета нет.
 После ответа: подтверждённыйминимальныйремонт/независимаяпроверка→урегулирование
 старогоuncertainintentпоотдельнойпроцедуре→новыйпакет→отдельныйownerGO.
 
@@ -44,3 +46,20 @@ Polymarket остаётся ограниченнымP1 на время внеш�
 пока это отдельныеRESTснимки, не регулярныйWSadapter/реальныйсигнал/исполнение.
 Следующийшаг — проверяемое преобразование rawGamma/fullbook в существующий
 ORDERS_OFF; без новогоWSсборщика/измененияисследований/денежныхполномочий.
+
+## Сравнение сериализации с успешными AMD/NET (read-only)
+
+| Путь | Тип / time_in_force | Количество / сумма | JSON | Доказательство |
+|---|---|---|---|---|
+| AMD1Oct | market BUY / day | notional строка с2знаками f"{notional:.2f}" | json.dumps(...).encode UTF8 | Код развёрнутого74b7214b, scripts/equities_alpaca_paper_bridge.py:581–590; ALPACA_LIVE_LAUNCH_2026_10_01.json + письмо исполнения |
+| NET15Oct | limit BUY / day | qty; limit_price2dp; принятый лимит328.22 | canonical compact sorted JSON | ALPACA_OCT15_FINAL_LIVE_PREFLIGHT.md и evidence/alpaca_oct15_actual_opening_20261015/live_fill_and_guard.json |
+| LLY3Nov | market BUY / day | notional="101.413902261",9dp | canonical compact sorted JSON | Реконструированный запрос, HTTP422, исходные response body/request ID утрачены |
+
+Подтверждено различие контрактов: старый AMD2dp против LLY9dp; NET был qty+limit,
+а не такой же market-notional запрос. Старый source и последующие fill не являются
+сырым wire capture; filled_qty с9знаками не доказывает допустимую точность notional.
+Изменение JSON whitespace/key order само по себе не установлено причиной.
+Точная причина422UNKNOWN; precision наугад не менялась. Код захвата HTTPError
+уже209PASS локально, НЕ установлен в финансовый runtime; не заявлен ремонтом422.
+По ответу брокера: конкретный фикс/проверка → отдельно разрешённое урегулирование
+uncertain intent → новый датированный пакет/GO. Старое окно не переносится.

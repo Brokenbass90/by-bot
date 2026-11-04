@@ -1,0 +1,51 @@
+.....FF                                                                  [100%]
+=================================== FAILURES ===================================
+________ test_redirect_never_sends_a_request_outside_the_get_allowlist _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ad9ae40>
+
+    def test_redirect_never_sends_a_request_outside_the_get_allowlist(monkeypatch):
+     import urllib.response,io,email.message
+     calls=[];original_build=cli.urllib.request.build_opener
+     class FakeHTTPS(cli.urllib.request.HTTPSHandler):
+      def https_open(self,req):
+       calls.append(req.full_url);headers=email.message.Message()
+       code=302 if len(calls)==1 else 200
+       if code==302:headers['Location']='https://outside-allowlist.invalid/private'
+       r=urllib.response.addinfourl(io.BytesIO(b'{}'),headers,req.full_url,code);r.msg='Found' if code==302 else 'OK';return r
+     def builder(*handlers):return original_build(*handlers,FakeHTTPS())
+     monkeypatch.setattr(cli.urllib.request,'build_opener',builder);monkeypatch.setattr(cli.urllib.request,'_opener',builder())
+     try:cli.get_capture('https://clob.polymarket.com/book?token_id=22')
+     except ValueError:pass
+>    assert calls==['https://clob.polymarket.com/book?token_id=22']
+E    AssertionError: assert ['https://clo...alid/private'] == ['https://clo...?token_id=22']
+E      
+E      Left contains one more item: 'https://outside-allowlist.invalid/private'
+E      Use -v to get more diff
+
+tests/test_polymarket_snapshot_cli_v1.py:89: AssertionError
+_ test_repeated_quotes_share_one_signal_identity_and_do_not_claim_independence _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-978/test_repeated_quotes_share_one0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ae75cd0>
+
+    def test_repeated_quotes_share_one_signal_identity_and_do_not_claim_independence(tmp_path,monkeypatch):
+     a,seal=archive(tmp_path);monkeypatch.setattr(cli.time,'time_ns',lambda:1010*1000000);monkeypatch.setattr(cli.time,'sleep',lambda x:None)
+     monkeypatch.setattr(cli,'get_capture',lambda url:gamma() if '/markets/' in url else book(url.rsplit('=',1)[1]))
+     signal=dict(market_id='123',token_id='22',policy_sha256='b'*64,received_ms=999,model_price='.97');dest=tmp_path/'run'
+     result=cli.run(a,seal,'123',dest,signal=signal,repeat=3,interval=1)
+     receipts=[json.loads(p.read_bytes()) for p in sorted(dest.glob('sample-*/measurement.json'))]
+>    assert len(receipts)==3 and sum(r['independent_opportunities'] for r in receipts)==0
+E    AssertionError: assert (3 == 3 and 3 == 0)
+E     +  where 3 = len([{'actual_fees': None, 'actual_net_pnl': None, 'decision_ms': 1010, 'displayed_depth_not_fill': True, ...}, {'actual_f... True, ...}, {'actual_fees': None, 'actual_net_pnl': None, 'decision_ms': 1010, 'displayed_depth_not_fill': True, ...}])
+E     +  and   3 = sum(<generator object test_repeated_quotes_share_one_signal_identity_and_do_not_claim_independence.<locals>.<genexpr> at 0x10ad669b0>)
+
+tests/test_polymarket_snapshot_cli_v1.py:98: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{"sample": 0, "decision_ms": 1010, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "244.50", "vwap": "0.9751243781094527363184079601990049751243", "estimated_fee": "0.12425", "book_age_ms": 9, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "244.50", "vwap": "0.9751243781094527363184079601990049751243", "estimated_fee": "0.12425", "book_age_ms": 9, "issues": []}]}
+{"sample": 1, "decision_ms": 1010, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "244.50", "vwap": "0.9751243781094527363184079601990049751243", "estimated_fee": "0.12425", "book_age_ms": 9, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "244.50", "vwap": "0.9751243781094527363184079601990049751243", "estimated_fee": "0.12425", "book_age_ms": 9, "issues": []}]}
+{"sample": 2, "decision_ms": 1010, "status": "MEASURED_SNAPSHOTS", "fee_rate": "0.05", "fee_issues": [], "accepting_orders": true, "outcomes": [{"token": "11", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "244.50", "vwap": "0.9751243781094527363184079601990049751243", "estimated_fee": "0.12425", "book_age_ms": 9, "issues": []}, {"token": "22", "status": "MEASURED_ORDERS_OFF", "best_ask": "0.97", "depth_to_limit": "244.50", "vwap": "0.9751243781094527363184079601990049751243", "estimated_fee": "0.12425", "book_age_ms": 9, "issues": []}]}
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_snapshot_cli_v1.py::test_redirect_never_sends_a_request_outside_the_get_allowlist
+FAILED tests/test_polymarket_snapshot_cli_v1.py::test_repeated_quotes_share_one_signal_identity_and_do_not_claim_independence
+2 failed, 5 passed in 0.28s

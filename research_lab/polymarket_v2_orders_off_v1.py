@@ -49,6 +49,7 @@ def measure(signal,book,market,*,decision_ms):
  out=dict(schema='POLY_V2_READ_ONLY_MEASUREMENT_V1',decision_ms=decision_ms,
   market_id=signal.get('market_id'),token_id=signal.get('token_id'),policy_sha256=signal.get('policy_sha256'),
   capture_mode='CALLER_SUPPLIED_DECISION_TIME_NO_WITNESS',
+  book_continuity=book.get('continuity'),stream_continuity_proven=False,
   market_tokens=market.get('tokens'),fee_source_sha256=market.get('fee_source_sha256'),captured_fee_rate=None,book_source_sha256=book.get('source_sha256'),market_source_sha256=market.get('source_sha256'),
   orders_allowed=False,money_authority=False,real_fill=False,actual_fees=None,actual_net_pnl=None,
   signal_rule_verified=False,prospective_durability_witness=False,
@@ -70,7 +71,7 @@ def measure(signal,book,market,*,decision_ms):
  if _ms(book.get('received_ms')):out['book_age_ms']=decision_ms-book['received_ms']
  if _ms(signal.get('received_ms')):out['signal_to_decision_ms']=decision_ms-signal['received_ms']
  if book.get('time_origin') not in {'RESPONSE_RECEIVED','VPS_WS_RECEIVED'}:problem('RECEIVE_TIME_UNPROVEN')
- if book.get('continuity')!='VERIFIED':problem('BOOK_CONTINUITY_UNKNOWN')
+ if book.get('continuity') not in {'VERIFIED','VERIFIED_FULL_REST_SNAPSHOT'}:problem('BOOK_CONTINUITY_UNKNOWN')
  if market.get('accepting_orders') is False:problem('MARKET_NOT_ACCEPTING')
  elif market.get('accepting_orders') is not True:problem('ACCEPTING_STATUS_UNKNOWN')
  try:

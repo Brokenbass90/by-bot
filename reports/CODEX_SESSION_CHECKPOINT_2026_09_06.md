@@ -1,5 +1,26 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT4Nov08:03UTC — Polymarket actual fresh snapshot PASS; regular causal signal hook OPEN
+
+Read POLY_FRESH_SNAPSHOT_MEASUREMENT_2026_11_04.md/MONTHLY_MAIL_REVIEW_2026_11_04.md.
+Final-source bounded public GET CLI:3actual pairs07:59:02/13/23UTC, market6490417
+from existing catalogue; actual asks .957/.064, captured feeSchedule rate.05/exponent1,
+acceptingtrue, received-book ages1..107ms.56focusedPASS + bounded review2fixes;
+saved-input offline replay6/6exact/0network. Not3trades/independentopportunities,
+not continuous WS/installedworker/strategyprofit/TINY. No financial code/scopes changed.
+Existing Claude judge output22resolvedrows lacks market_id/token_id/received_ms;
+no matching by question/history replacement. Need prospective source signal contract
+before automatic hook/judge comparison; current CLI supplied-signal interface unverified.
+Monthly owner now reports support letter SENT; independent ack/reply UNKNOWN.
+OldAMD deployed market-notional2dp vs LLY9dp; NETqty+limit, not same payload.
+Exact422cause UNKNOWN/bodylost;209PASS capture LOCAL/notdeployed; no oldGO/retry/
+claimreset/datecarry. PUMPaccepted6H134/134 max47.648s remains closed/monitor only;
+no new runtime claim. Claude research/prereg checkpoints informational, no moneyGO.
+ForeignNETsixlines/allowlist/evidence retained/excluded; private raw receipts untracked.
+
+---
+Earlierdatedentriesbelowarehistory.
+
 CURRENT4Nov07:18UTC — PUMP six-H1PASS; Monthly owner support action explicit; PolyP1next
 
 Read MONTHLY_MAIL_REVIEW_2026_11_04.md/PUMP4_STRICT_READ_THROUGHPUT report.
