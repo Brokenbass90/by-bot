@@ -1,5 +1,21 @@
 # Current4Nov13:52UTC — real E2 measurements / V3 witness / PUMP diagnostic local
 
+CURRENT5Nov — MONTHLY_CENTS_PROPOSAL_DRAFT_NOT_READY_FOR_GO
+
+Owner relayed Claude proposal: futureMonthly cents format, mandatory exact rejection
+capture, POST only newownerGO. Offline actualnative serializer emits101.41 for old
+101.413902261 cap/ROUND_DOWN;0.003902261 unused,0network/POST. Existing Monthlyguard
+correctly rejects2dp as frozen9dp. Need coherent future serialization/permit/intent/
+reconciliation change, not isolated formatting. No app/runtime/source edits.
+Existing local errorcapture8192prefix+scrub is NOT fullbody and NOTDEPLOYED; explicit
+private exactbody/hash/requestID acceptance remains. No claimed cause for old422,
+no newdate/scope/GO/order or automaticDecemberwait. Report
+MONTHLY_CENTS_NEXT_PACKET_DRAFT_2026_11_05.md; evidence monthly_cents_proposal_20261105.
+PrimaryPoly mixedresolutiondecoder/freshsignal work remains next; no new strategy.
+
+---
+Earlier dated entries below are history.
+
 CURRENT5Nov06:01UTC — V2_TRANSITION_ACCEPTED / MONTHLY_PRECISION_NOT_PROVEN
 
 Actual06:00:45UTC V2manifest PID1879/start05:58:57/count115 matches producer0f7e…

@@ -25,3 +25,5 @@
 5Nov versionacceptance: [V3+AlpacaGET](POLY_V3_VERSION_AND_ALPACA_ACCESS_2026_11_05.md). NewV3pins/historyselected,old11kept;V2requiresClaudecontrolledwritertransition. AlpacaGETACTIVE/unblocked, no newkeys/manualBUY;422UNKNOWN/mixedresolutiondecoderOPEN.
 
 5Nov06:01UTC update: [V2 transition + precision](POLY_V2_TRANSITION_AND_MONTHLY_PRECISION_2026_11_05.md). V2writer/currentmodule accepted;115uniquechainrows/100oldanchors preserved. Hook4priorjoins/3oldno-replay blocks, notfreshmeasurements. Nextmixedresolutiondecoder/freshsignal; MonthlycentsfixUNPROVEN (9dpdocumented, originalbodylost), nofinancialactions. Supersedes previous V2transitionpending note.
+
+5Nov cents proposal: [local draft](MONTHLY_CENTS_NEXT_PACKET_DRAFT_2026_11_05.md),101.41 offline only, existing9dptransport intentionally rejects. Coherent permit/intent/reconciliation + private full-body rejection capture remain before newdatedownerpacket/GO; no app/LIVEchanges and no claimed422cause.

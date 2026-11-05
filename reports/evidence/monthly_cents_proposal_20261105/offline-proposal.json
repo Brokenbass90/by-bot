@@ -1,0 +1,32 @@
+{
+  "application_sources_changed": false,
+  "broker_posts": 0,
+  "broker_requests": 0,
+  "existing_capture_deployed": false,
+  "existing_capture_limit_bytes": 8192,
+  "existing_monthly_transport_result": "MONTHLY_NOTIONAL_MARKET_WIRE_REQUIRED",
+  "full_rejection_body_capture_ready": false,
+  "observed_utc": "2026-11-05T06:07:25.718294+00:00",
+  "old_422_reason": "UNKNOWN",
+  "old_scope_reusable": false,
+  "original_notional": "101.413902261",
+  "payload_fixture": {
+    "client_order_id": "abm-00000000000000000000000000000000",
+    "notional": "101.41",
+    "side": "buy",
+    "symbol": "LLY",
+    "time_in_force": "day",
+    "type": "market"
+  },
+  "payload_fixture_only": true,
+  "proposed_notional": "101.41",
+  "rounding": "DOWN",
+  "schema": "MONTHLY_CENTS_PROPOSAL_NOT_AN_ORDER",
+  "serializer_exercised_with_in_memory_sink": true,
+  "source_sha256": {
+    "research_lab/alpaca_dynamic_live_runtime_v1.py": "f922672bde6e0f999744ae69abe8140a4cc7d7f6283756ad0d7435f9f1de0ea5",
+    "scripts/equities_alpaca_paper_bridge.py": "c73a5e091e5dc324f7f701ef127e1db0cc2887173c4d7ac932cc9048ba774025"
+  },
+  "status": "DRAFT_NOT_READY_FOR_GO",
+  "unused_cap": "0.003902261"
+}
