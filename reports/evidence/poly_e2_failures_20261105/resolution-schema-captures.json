@@ -1,0 +1,112 @@
+{
+  "actual_observed_ms": 1793855925046,
+  "consumer_code_modified": false,
+  "entry_replayed": false,
+  "keyerror_occurrences": 34,
+  "log_sha256": "bb3616836d9fff7a3155f88731dbd744b7b4560dd523ff30ae33cca1d6edf4d9",
+  "markets_with_missing_fields": 5,
+  "orders": 0,
+  "polls_missing_fields": 34,
+  "variants": [
+    {
+      "count": 5,
+      "first": {
+        "capture_sha256": "394ffe8ce9aad5dab312d35f816f221ac718eb266c8db4f7d980d78da63f1c10",
+        "file": "1793852896807-21568a19eaa44719886c1893f57c9f63.json",
+        "observed_ms": 1793852896807,
+        "raw_text": "{\"data\":[{\"question_id\":\"0x4723a0855b00bde699b8fa4b71577258de23f15b4b7e546abd7c4b561e6db606\",\"condition_id\":\"0x37b584e2e4e00159bdcaa586c2568997cc13fa108866e119a02127855838a1f2\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"0\",\"reproposed_price\":\"69\",\"price\":\"0\",\"transaction_hash\":\"0x7145185ab1a02b939aeda3bafa009f05d05d33a6dba7d5cc95868cde08d9de6f\",\"log_index\":\"659\",\"last_update_timestamp\":\"1793852457\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x37b584e2e4e00159bdcaa586c2568997cc13fa108866e119a02127855838a1f2"
+      },
+      "last": {
+        "capture_sha256": "394ffe8ce9aad5dab312d35f816f221ac718eb266c8db4f7d980d78da63f1c10",
+        "file": "1793855162979-603ea9fbd9a747459558c8ffb4af1b27.json",
+        "observed_ms": 1793855162979,
+        "raw_text": "{\"data\":[{\"question_id\":\"0x4723a0855b00bde699b8fa4b71577258de23f15b4b7e546abd7c4b561e6db606\",\"condition_id\":\"0x37b584e2e4e00159bdcaa586c2568997cc13fa108866e119a02127855838a1f2\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"0\",\"reproposed_price\":\"69\",\"price\":\"0\",\"transaction_hash\":\"0x7145185ab1a02b939aeda3bafa009f05d05d33a6dba7d5cc95868cde08d9de6f\",\"log_index\":\"659\",\"last_update_timestamp\":\"1793852457\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x37b584e2e4e00159bdcaa586c2568997cc13fa108866e119a02127855838a1f2"
+      },
+      "market_id": "6373394",
+      "question": "Longwood Lancers vs. Saint Joseph's Hawks",
+      "signal_observation_id": "08b3adb73732251c161c43a3"
+    },
+    {
+      "count": 2,
+      "first": {
+        "capture_sha256": "e03cfba21bfc9e09fa1bf9814d1428ef1f384b94b0939e7fb272b290bc909ec7",
+        "file": "1793834021331-43f0a24a78014124be2bba8a08dc37dd.json",
+        "observed_ms": 1793834021331,
+        "raw_text": "{\"data\":[{\"question_id\":\"0xd6d49a1a71153a7945941fbfd99fca48222e527995c2bc05158aa8a928fac3ea\",\"condition_id\":\"0x2b996729a3514f5631568d87c67b60f34337a48db067dfbd7ae5c6598c0d6d74\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"1000000000000000000\",\"reproposed_price\":\"69\",\"price\":\"1000000000000000000\",\"transaction_hash\":\"0x14c135ee4febeaadf636d97c7a4e621ca85e0f5d88a3d5457be3fde86ebadff3\",\"log_index\":\"235\",\"last_update_timestamp\":\"1793833899\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x2b996729a3514f5631568d87c67b60f34337a48db067dfbd7ae5c6598c0d6d74"
+      },
+      "last": {
+        "capture_sha256": "e03cfba21bfc9e09fa1bf9814d1428ef1f384b94b0939e7fb272b290bc909ec7",
+        "file": "1793834316064-c62e5b987fd4477bb3aef8734db43c6e.json",
+        "observed_ms": 1793834316064,
+        "raw_text": "{\"data\":[{\"question_id\":\"0xd6d49a1a71153a7945941fbfd99fca48222e527995c2bc05158aa8a928fac3ea\",\"condition_id\":\"0x2b996729a3514f5631568d87c67b60f34337a48db067dfbd7ae5c6598c0d6d74\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"1000000000000000000\",\"reproposed_price\":\"69\",\"price\":\"1000000000000000000\",\"transaction_hash\":\"0x14c135ee4febeaadf636d97c7a4e621ca85e0f5d88a3d5457be3fde86ebadff3\",\"log_index\":\"235\",\"last_update_timestamp\":\"1793833899\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x2b996729a3514f5631568d87c67b60f34337a48db067dfbd7ae5c6598c0d6d74"
+      },
+      "market_id": "6658586",
+      "question": "Counter-Strike: UNiTY esports vs Thousand (BO1) - MČR Group A",
+      "signal_observation_id": "16cf258e575a8e5e437ab114"
+    },
+    {
+      "count": 25,
+      "first": {
+        "capture_sha256": "b4a2de1a65eb98537b2c94039dc40a2955ae1fd7d954589eaf57ccf62bfe4424",
+        "file": "1793837058390-efa210a134824d64b47a3f51cc8e7dce.json",
+        "observed_ms": 1793837058390,
+        "raw_text": "{\"data\":[{\"question_id\":\"0x416a0f513b7c889d2f9e0ac2db734dae7e9f4326305439e3f2bd24ff6808e7e6\",\"condition_id\":\"0xc00cbbd94ca58251560e1479c7ff8eea9effae3488dfb7bc07378718bdcdb53c\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"0\",\"reproposed_price\":\"69\",\"price\":\"0\",\"transaction_hash\":\"0x3ad5bf71000bcfb4ad05496d7d37ba661c16fc2826f90b778ec3687559264319\",\"log_index\":\"918\",\"last_update_timestamp\":\"1793836927\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0xc00cbbd94ca58251560e1479c7ff8eea9effae3488dfb7bc07378718bdcdb53c"
+      },
+      "last": {
+        "capture_sha256": "b4a2de1a65eb98537b2c94039dc40a2955ae1fd7d954589eaf57ccf62bfe4424",
+        "file": "1793855162804-04c0fd932a9e4f068f0c2a0bbb6a07df.json",
+        "observed_ms": 1793855162804,
+        "raw_text": "{\"data\":[{\"question_id\":\"0x416a0f513b7c889d2f9e0ac2db734dae7e9f4326305439e3f2bd24ff6808e7e6\",\"condition_id\":\"0xc00cbbd94ca58251560e1479c7ff8eea9effae3488dfb7bc07378718bdcdb53c\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"0\",\"reproposed_price\":\"69\",\"price\":\"0\",\"transaction_hash\":\"0x3ad5bf71000bcfb4ad05496d7d37ba661c16fc2826f90b778ec3687559264319\",\"log_index\":\"918\",\"last_update_timestamp\":\"1793836927\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0xc00cbbd94ca58251560e1479c7ff8eea9effae3488dfb7bc07378718bdcdb53c"
+      },
+      "market_id": "6387348",
+      "question": "Real Madrid vs. Panathinaikos",
+      "signal_observation_id": "288198ebe6329ae7196813df"
+    },
+    {
+      "count": 1,
+      "first": {
+        "capture_sha256": "1bb9336c21f969bddb823912f7dfac513bac81896de7ff6847b9069f3619a86c",
+        "file": "1793822567470-c0b34793af40462aa92b5a578a2b1633.json",
+        "observed_ms": 1793822567470,
+        "raw_text": "{\"data\":[{\"question_id\":\"0x6d78a57e461cbc1e8ce42731cd2e943c4c9c4c86bd4936e89207d8286a98cb10\",\"condition_id\":\"0x2cdf2ba3625a8ef942f00cd1bd6c09025cfb8f579d0dce3d3e386316bbf44247\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"0\",\"reproposed_price\":\"69\",\"price\":\"0\",\"transaction_hash\":\"0x5b3093d0483cb5577ab652b9bedef1ce8eadffa574d66c6f05a1bab9918748f6\",\"log_index\":\"1216\",\"last_update_timestamp\":\"1793822146\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x2cdf2ba3625a8ef942f00cd1bd6c09025cfb8f579d0dce3d3e386316bbf44247"
+      },
+      "last": {
+        "capture_sha256": "1bb9336c21f969bddb823912f7dfac513bac81896de7ff6847b9069f3619a86c",
+        "file": "1793822567470-c0b34793af40462aa92b5a578a2b1633.json",
+        "observed_ms": 1793822567470,
+        "raw_text": "{\"data\":[{\"question_id\":\"0x6d78a57e461cbc1e8ce42731cd2e943c4c9c4c86bd4936e89207d8286a98cb10\",\"condition_id\":\"0x2cdf2ba3625a8ef942f00cd1bd6c09025cfb8f579d0dce3d3e386316bbf44247\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"0\",\"reproposed_price\":\"69\",\"price\":\"0\",\"transaction_hash\":\"0x5b3093d0483cb5577ab652b9bedef1ce8eadffa574d66c6f05a1bab9918748f6\",\"log_index\":\"1216\",\"last_update_timestamp\":\"1793822146\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x2cdf2ba3625a8ef942f00cd1bd6c09025cfb8f579d0dce3d3e386316bbf44247"
+      },
+      "market_id": "6018964",
+      "question": "Will AEK vs. Real Madrid CF end in a draw?",
+      "signal_observation_id": "323c7082a2bc6864407f32fa"
+    },
+    {
+      "count": 1,
+      "first": {
+        "capture_sha256": "ad11487c6f4b791d3f0fa86867dbc48a52dfebbeaa835315ddf30ad2adb29789",
+        "file": "1793846653538-cae3ca4cd3554a939680421596f7857a.json",
+        "observed_ms": 1793846653538,
+        "raw_text": "{\"data\":[{\"question_id\":\"0xb4c5b80b54c7251e7f795e2121f14eb273a5d076ec551da969bcd71bedf96b96\",\"condition_id\":\"0x8f097e91950aedef3070948ea5a777474f1d1f78e82796b3fe4b34afe0eb53f3\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"1000000000000000000\",\"reproposed_price\":\"69\",\"price\":\"1000000000000000000\",\"transaction_hash\":\"0xcd3ebd610f0dbf18bbb9b4988a099dc70c84f576ee5fc5155161d7e0e875073b\",\"log_index\":\"574\",\"last_update_timestamp\":\"1793846442\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x8f097e91950aedef3070948ea5a777474f1d1f78e82796b3fe4b34afe0eb53f3"
+      },
+      "last": {
+        "capture_sha256": "ad11487c6f4b791d3f0fa86867dbc48a52dfebbeaa835315ddf30ad2adb29789",
+        "file": "1793846653538-cae3ca4cd3554a939680421596f7857a.json",
+        "observed_ms": 1793846653538,
+        "raw_text": "{\"data\":[{\"question_id\":\"0xb4c5b80b54c7251e7f795e2121f14eb273a5d076ec551da969bcd71bedf96b96\",\"condition_id\":\"0x8f097e91950aedef3070948ea5a777474f1d1f78e82796b3fe4b34afe0eb53f3\",\"status\":\"resolved\",\"extended_review\":false,\"was_disputed\":false,\"new_version_q\":true,\"proposed_price\":\"1000000000000000000\",\"reproposed_price\":\"69\",\"price\":\"1000000000000000000\",\"transaction_hash\":\"0xcd3ebd610f0dbf18bbb9b4988a099dc70c84f576ee5fc5155161d7e0e875073b\",\"log_index\":\"574\",\"last_update_timestamp\":\"1793846442\"}]}",
+        "url": "https://data-api.polymarket.com/v2/resolutions?condition=0x8f097e91950aedef3070948ea5a777474f1d1f78e82796b3fe4b34afe0eb53f3"
+      },
+      "market_id": "6374092",
+      "question": "Hawks vs. Wizards",
+      "signal_observation_id": "7ba33a3ed4540396c546b7e1"
+    }
+  ]
+}

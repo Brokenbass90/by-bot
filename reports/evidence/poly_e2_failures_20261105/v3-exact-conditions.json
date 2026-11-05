@@ -1,0 +1,237 @@
+{
+  "actual_observed_ms": 1793855782954,
+  "producer_or_judge_run": false,
+  "rows": [
+    {
+      "blocked_ms": 1793838772816,
+      "declared_source": "poly_sport_shiroko",
+      "expected_received_ms": 1793838694000,
+      "expected_sha256": "953f7f167f3bb9ef169cd5baf3ff7193c29353b5235652de5b675075f56ebbbd",
+      "id": "1136ba6f4eb17d2559ef174b",
+      "market_id": "6374092",
+      "matches": [
+        {
+          "byte_offset": 12156584,
+          "bytes_behind_current_eof": 896731,
+          "directory": "poly_monitor",
+          "market_id": "6374092",
+          "raw_sha256": "953f7f167f3bb9ef169cd5baf3ff7193c29353b5235652de5b675075f56ebbbd",
+          "t": 1793838694,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "Hawks vs. Wizards",
+      "reason": "ValueError:SOURCE_PROVENANCE",
+      "score_age_at_block_ms": 28423,
+      "score_age_at_signal_ms": 26534,
+      "score_on_mac_ms": 1793838744393,
+      "signal_ms": 1793838770927,
+      "source_signal_sha256": "20f32dfd680a72036fa114b65cffe672c63ec1e084fd5f2ad6cc50b160592c12",
+      "sports_witness_stage_reached": false
+    },
+    {
+      "blocked_ms": 1793848890173,
+      "declared_source": "poly_sport_shiroko",
+      "expected_received_ms": 1793848862000,
+      "expected_sha256": "5affdc21afff73cfb07173a334d81ec0607c4993f9bad7fb63318addf0b81d67",
+      "id": "162f354a2e5b274913d6ae0d",
+      "market_id": "6380798",
+      "matches": [
+        {
+          "byte_offset": 15345496,
+          "bytes_behind_current_eof": 1571765,
+          "directory": "poly_sport_shiroko",
+          "market_id": "6380798",
+          "raw_sha256": "5affdc21afff73cfb07173a334d81ec0607c4993f9bad7fb63318addf0b81d67",
+          "t": 1793848862,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "Lakers vs. Kings",
+      "reason": "ValueError:STALE_SCORE",
+      "score_age_at_block_ms": 173427,
+      "score_age_at_signal_ms": 171890,
+      "score_on_mac_ms": 1793848716746,
+      "signal_ms": 1793848888636,
+      "source_signal_sha256": "591f4debe84e215a97719c88ee9f098eac3a896b62fe1173c3723e184fddcb45",
+      "sports_witness_stage_reached": "NOT_REACHED_STALE_SCORE"
+    },
+    {
+      "blocked_ms": 1793838832279,
+      "declared_source": "poly_monitor",
+      "expected_received_ms": 1793838806000,
+      "expected_sha256": "f48debd7f514b0d7d9e2180873fabbc5ca7c680e538206edf5ada08346aada7d",
+      "id": "40c8850fc3d53b64956125a9",
+      "market_id": "6374089",
+      "matches": [
+        {
+          "byte_offset": 10413211,
+          "bytes_behind_current_eof": 6504050,
+          "directory": "poly_sport_shiroko",
+          "market_id": "6374089",
+          "raw_sha256": "f48debd7f514b0d7d9e2180873fabbc5ca7c680e538206edf5ada08346aada7d",
+          "t": 1793838806,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "76ers vs. Pistons",
+      "reason": "ValueError:SOURCE_PROVENANCE",
+      "score_age_at_block_ms": 23305,
+      "score_age_at_signal_ms": 22084,
+      "score_on_mac_ms": 1793838808974,
+      "signal_ms": 1793838831058,
+      "source_signal_sha256": "2083cdb381b63ad5655fa75a06c88a110d51c89c4669f0f8f498fb118012d142",
+      "sports_witness_stage_reached": false
+    },
+    {
+      "blocked_ms": 1793841728043,
+      "declared_source": "poly_monitor",
+      "expected_received_ms": 1793841692000,
+      "expected_sha256": "68446aa6a93607d96d7a836bc50394e22bd5a8f0f2d9b5f2dc59a4492ca31d1c",
+      "id": "6200f17478b884d7e3ca80ba",
+      "market_id": "6380777",
+      "matches": [
+        {
+          "byte_offset": 12309527,
+          "bytes_behind_current_eof": 743788,
+          "directory": "poly_monitor",
+          "market_id": "6380777",
+          "raw_sha256": "68446aa6a93607d96d7a836bc50394e22bd5a8f0f2d9b5f2dc59a4492ca31d1c",
+          "t": 1793841692,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "Pacers vs. Grizzlies",
+      "reason": "ValueError:STALE_SCORE",
+      "score_age_at_block_ms": 262837,
+      "score_age_at_signal_ms": 261426,
+      "score_on_mac_ms": 1793841465206,
+      "signal_ms": 1793841726632,
+      "source_signal_sha256": "23c10acd948ff4c88462452148237167ff07bcb8d94cdc608874faa6c77c4e53",
+      "sports_witness_stage_reached": "NOT_REACHED_STALE_SCORE"
+    },
+    {
+      "blocked_ms": 1793841848060,
+      "declared_source": "poly_sport_shiroko",
+      "expected_received_ms": 1793841812000,
+      "expected_sha256": "2dc99a28f1cbb97d90b980c3948932f1ac225f5d1a845bcc055dd4cf442116d5",
+      "id": "673cf68fddf2f69f5ac48055",
+      "market_id": "6380780",
+      "matches": [
+        {
+          "byte_offset": 12318057,
+          "bytes_behind_current_eof": 735258,
+          "directory": "poly_monitor",
+          "market_id": "6380780",
+          "raw_sha256": "2dc99a28f1cbb97d90b980c3948932f1ac225f5d1a845bcc055dd4cf442116d5",
+          "t": 1793841812,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "Jazz vs. Pelicans",
+      "reason": "ValueError:SOURCE_PROVENANCE",
+      "score_age_at_block_ms": 9635,
+      "score_age_at_signal_ms": 8411,
+      "score_on_mac_ms": 1793841838425,
+      "signal_ms": 1793841846836,
+      "source_signal_sha256": "57adfe40821b900fdfef74d9bd30ab7a614dc5c39a69142ccaf1de3fba003cdb",
+      "sports_witness_stage_reached": false
+    },
+    {
+      "blocked_ms": 1793850876684,
+      "declared_source": "poly_sport_shiroko",
+      "expected_received_ms": 1793850859000,
+      "expected_sha256": "6c4e4b35483c6306d24514ea7150e6044b39b55862e4eb4f1c08023c5cd18cfb",
+      "id": "6a7d5cd2664419b9dda2d1ad",
+      "market_id": "6380801",
+      "matches": [
+        {
+          "byte_offset": 12844506,
+          "bytes_behind_current_eof": 208809,
+          "directory": "poly_monitor",
+          "market_id": "6380801",
+          "raw_sha256": "6c4e4b35483c6306d24514ea7150e6044b39b55862e4eb4f1c08023c5cd18cfb",
+          "t": 1793850859,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "Heat vs. Clippers",
+      "reason": "ValueError:SOURCE_PROVENANCE",
+      "score_age_at_block_ms": 58659,
+      "score_age_at_signal_ms": 57317,
+      "score_on_mac_ms": 1793850818025,
+      "signal_ms": 1793850875342,
+      "source_signal_sha256": "ab5b45bc564507654ca88cd3a577dcd2226871e5005949866431a96a050635e9",
+      "sports_witness_stage_reached": false
+    },
+    {
+      "blocked_ms": 1793847985564,
+      "declared_source": "poly_sport_shiroko",
+      "expected_received_ms": 1793847943000,
+      "expected_sha256": "a50b2fdb3ebc926cfd48cc8c3d34d75eb6f458697be1b167f83c5aa1649d3f33",
+      "id": "bb21cf3117133e7e48cf3450",
+      "market_id": "6380795",
+      "matches": [
+        {
+          "byte_offset": 12699823,
+          "bytes_behind_current_eof": 353492,
+          "directory": "poly_monitor",
+          "market_id": "6380795",
+          "raw_sha256": "a50b2fdb3ebc926cfd48cc8c3d34d75eb6f458697be1b167f83c5aa1649d3f33",
+          "t": 1793847943,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "Mavericks vs. Spurs",
+      "reason": "ValueError:SOURCE_PROVENANCE",
+      "score_age_at_block_ms": 29881,
+      "score_age_at_signal_ms": 28996,
+      "score_on_mac_ms": 1793847955683,
+      "signal_ms": 1793847984679,
+      "source_signal_sha256": "7d4e650f85d24ca7503c3012c44cf9c25cdf63f37e4f4d9addca152dcdb9e757",
+      "sports_witness_stage_reached": false
+    },
+    {
+      "blocked_ms": 1793843080406,
+      "declared_source": "poly_sport_shiroko",
+      "expected_received_ms": 1793843046000,
+      "expected_sha256": "dcbbfc0985dd254db53fdc9d1d7c3cb9962432704c9b546e59a9d56e8d619512",
+      "id": "fd46e85d7aec8cc62c84a433",
+      "market_id": "6380786",
+      "matches": [
+        {
+          "byte_offset": 12393632,
+          "bytes_behind_current_eof": 659683,
+          "directory": "poly_monitor",
+          "market_id": "6380786",
+          "raw_sha256": "dcbbfc0985dd254db53fdc9d1d7c3cb9962432704c9b546e59a9d56e8d619512",
+          "t": 1793843046,
+          "timestamp_equal": true
+        }
+      ],
+      "question": "Timberwolves vs. Rockets",
+      "reason": "ValueError:SOURCE_PROVENANCE",
+      "score_age_at_block_ms": 64568,
+      "score_age_at_signal_ms": 63675,
+      "score_on_mac_ms": 1793843015838,
+      "signal_ms": 1793843079513,
+      "source_signal_sha256": "d79a48ee95be092c96372f0c74b7b15a183df2fabe3b02c0e338a959b5ba6cd5",
+      "sports_witness_stage_reached": false
+    }
+  ],
+  "source_files_mutated": false,
+  "source_inventory": [
+    {
+      "directory": "poly_monitor",
+      "inode": 506734896,
+      "mtime_ns": 1793855780751758375,
+      "observed_prefix_bytes": 13053315
+    },
+    {
+      "directory": "poly_sport_shiroko",
+      "inode": 511729778,
+      "mtime_ns": 1793855760918678967,
+      "observed_prefix_bytes": 16917261
+    }
+  ]
+}

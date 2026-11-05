@@ -19,3 +19,5 @@
 4Nov owner clarification: Polymarket funding is not a dependency of current read-only work. No dated LIVE promise; funding only after distinct economic/admission decision and bounded owner-approved money packet. First E2 model result does not grant it.
 
 4Nov read-only crypto intake: SHORT_HVOST [BLOCKED](SHORT_HVOST_EXECUTION_RECON_2026_11_04.md): BTCmin80.3472 vs50, leverage/capital mismatch, no pair failure contract. LIQnext/AbsorptionafterNOT_ASSESSED. [Brain export](PUMP4_BRAIN_EXECUTABILITY_EXPORT_2026_11_04.md):8BLOCKED/known_since prepared;activeClaude reader needs time filter, no run/install.
+
+5Nov bounded diagnostics: [resolution/V3 conditions](POLY_E2_RESOLUTION_V3_FAILURES_2026_11_05.md). Decoder mixed-schema compatibilityOPEN; Claude quote source-lineage repair required. No oldsignal replay, no120s widening, no runtimechange in diagnostic cycle.

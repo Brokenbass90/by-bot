@@ -1,5 +1,25 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT5Nov05:20UTC — POLY_FAILURE_CONDITIONS_CONFIRMED / NO_RUNTIME_CHANGE
+
+Owner/Claude requested exact conditions, not newE2architecture. Readonlyreport
+POLY_E2_RESOLUTION_V3_FAILURES_2026_11_05.md/evidence poly_e2_failures_20261105.
+34resolved_at KeyErrors =34polls/5markets (25+1+1+5+2), allnew_version_q true,
+scalarprice/last_update_timestamp and NOresolved_at/payouts. DecoderCodexsupports
+onlyISOtime+payoutvector; mixedschema compatibilityOPEN. Not34missedtrades;nozeroPnL.
+EightV3blocked inobservedsnapshot:6SOURCE_PROVENANCE,2STALE_SCORE. Every6quoteSHA
+founduniquelyintheOTHERallowedjournalwithsameid/t;producer labels registry m.src,
+kn_raw mergesquoteoriginswithoutsource. Claudeowns lineagefix/futuresourceSHA;
+no silentconsumerfallback/oldsignalchainrepair/replay. STALEalreadyatemit171890ms
+Lakers/Kings and261426msPacers/Grizzlies vs120000;consumeruntilblocked1.537/1.411s.
+Exactclockatqualificationnotpersisted;blockedageupper173427/262837ms. Othergatesnot
+claimedPASS. producercb6c6bd… unchanged;consumer/runtime/keys/owners/units untouched.
+PriorfullofficialjoinsremainvalidforacceptedAPIshape. LIQtechnicalintakepending;
+PUMP/Monthlynotchanged. Canonicalqueue currentincidentrecorded, no financialauthority.
+
+---
+Earlier dated entries below are history.
+
 CURRENT4Nov18:02UTC — POLY_FIRST_FULL_CYCLES / SHORT_HVOST_READONLY_BLOCKED / BRAINDATA_PREPARED
 
 Polymarket existinghook automatically joined3markets same Buriram–Kashima match
