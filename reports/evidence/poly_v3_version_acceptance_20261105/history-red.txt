@@ -1,0 +1,107 @@
+........................................FFFFF                            [100%]
+=================================== FAILURES ===================================
+___________ test_current_producer_binding_preserves_startup_history ____________
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-998/test_current_producer_binding_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e08dd0>
+
+    def test_current_producer_binding_preserves_startup_history(tmp_path,monkeypatch):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch)
+     bound=m.producer_binding(r,j.name,epoch)
+>    assert bound['producer_history_sha256']==digest(history.read_bytes())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    KeyError: 'producer_history_sha256'
+
+tests/test_polymarket_signal_cycle_v1.py:294: KeyError
+_ test_startup_history_conflict_blocks_even_when_current_files_match[different_producer] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-998/test_startup_history_conflict_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106c3fe30>
+fault = 'different_producer'
+
+    @pytest.mark.parametrize('fault',['different_producer','wrong_start_line','partial_tail'])
+    def test_startup_history_conflict_blocks_even_when_current_files_match(tmp_path,monkeypatch,fault):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch)
+     row=dict(manifest,perv_stroka_etogo_zapuska=1)
+     if fault=='different_producer':row['producer_sha256']='f'*64
+     if fault=='wrong_start_line':row['perv_stroka_etogo_zapuska']=2
+     history.write_bytes(line(row)+(b'' if fault=='partial_tail' else b'\n'))
+>    with pytest.raises(ValueError,match='PRODUCER_HISTORY'):m.producer_binding(r,j.name,epoch)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    Failed: DID NOT RAISE ValueError
+
+tests/test_polymarket_signal_cycle_v1.py:306: Failed
+_ test_startup_history_conflict_blocks_even_when_current_files_match[wrong_start_line] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-998/test_startup_history_conflict_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e08050>
+fault = 'wrong_start_line'
+
+    @pytest.mark.parametrize('fault',['different_producer','wrong_start_line','partial_tail'])
+    def test_startup_history_conflict_blocks_even_when_current_files_match(tmp_path,monkeypatch,fault):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch)
+     row=dict(manifest,perv_stroka_etogo_zapuska=1)
+     if fault=='different_producer':row['producer_sha256']='f'*64
+     if fault=='wrong_start_line':row['perv_stroka_etogo_zapuska']=2
+     history.write_bytes(line(row)+(b'' if fault=='partial_tail' else b'\n'))
+>    with pytest.raises(ValueError,match='PRODUCER_HISTORY'):m.producer_binding(r,j.name,epoch)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    Failed: DID NOT RAISE ValueError
+
+tests/test_polymarket_signal_cycle_v1.py:306: Failed
+_ test_startup_history_conflict_blocks_even_when_current_files_match[partial_tail] _
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-998/test_startup_history_conflict_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e0b5f0>
+fault = 'partial_tail'
+
+    @pytest.mark.parametrize('fault',['different_producer','wrong_start_line','partial_tail'])
+    def test_startup_history_conflict_blocks_even_when_current_files_match(tmp_path,monkeypatch,fault):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch)
+     row=dict(manifest,perv_stroka_etogo_zapuska=1)
+     if fault=='different_producer':row['producer_sha256']='f'*64
+     if fault=='wrong_start_line':row['perv_stroka_etogo_zapuska']=2
+     history.write_bytes(line(row)+(b'' if fault=='partial_tail' else b'\n'))
+>    with pytest.raises(ValueError,match='PRODUCER_HISTORY'):m.producer_binding(r,j.name,epoch)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E    Failed: DID NOT RAISE ValueError
+
+tests/test_polymarket_signal_cycle_v1.py:306: Failed
+______ test_old_unobserved_producer_prefix_is_not_replayed_after_handoff _______
+
+tmp_path = PosixPath('/private/var/folders/38/vghcc6zj1n59cwhkfchbdrn80000gp/T/pytest-of-nikolay.bulgakov/pytest-998/test_old_unobserved_producer_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106c3eff0>
+
+    def test_old_unobserved_producer_prefix_is_not_replayed_after_handoff(tmp_path,monkeypatch):
+     m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch,started=1)
+     monkeypatch.setattr(m.snap,'get_capture',lambda _:pytest.fail('previous producer signal must not be repriced'))
+>    out=m.cycle_many(r,state,journals=(j.name,),epoch=epoch)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_polymarket_signal_cycle_v1.py:312: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+research_lab/polymarket_signal_cycle_v1.py:386: in cycle_many
+    try:results[name] = cycle_once(research_root, name, (state / epoch if epoch is not None else state) / Path(name).stem, epoch=epoch)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_lab/polymarket_signal_cycle_v1.py:339: in cycle_once
+    captured = snap.run_member(member, dict(kind='EXISTING_BROAD_MONITOR_SIGNAL', source_sha256=s['source_sha256']), folder / 'capture', signal=signal)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/measure_polymarket_snapshot_v1.py:107: in run_member
+    gamma = get_capture('https://gamma-api.polymarket.com/markets/' + market_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+_ = 'https://gamma-api.polymarket.com/markets/123'
+
+>   monkeypatch.setattr(m.snap,'get_capture',lambda _:pytest.fail('previous producer signal must not be repriced'))
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: previous producer signal must not be repriced
+
+tests/test_polymarket_signal_cycle_v1.py:311: Failed
+=========================== short test summary info ============================
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_current_producer_binding_preserves_startup_history
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_startup_history_conflict_blocks_even_when_current_files_match[different_producer]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_startup_history_conflict_blocks_even_when_current_files_match[wrong_start_line]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_startup_history_conflict_blocks_even_when_current_files_match[partial_tail]
+FAILED tests/test_polymarket_signal_cycle_v1.py::test_old_unobserved_producer_prefix_is_not_replayed_after_handoff
+5 failed, 40 passed in 1.70s

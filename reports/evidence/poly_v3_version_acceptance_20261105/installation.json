@@ -1,0 +1,11 @@
+{
+  "actual_selected_ms": 1793857217663,
+  "financial_changes": 0,
+  "launcher_sha256": "268e9baf9501cbea118276a5fc56f051850d2d51e3805d131e56492e775991c7",
+  "manifest_sha256": "3bf619bb0502d148f867ad191fba13258932d2aba398bffebdeeeda34b6a4c75",
+  "new_service": false,
+  "previous_launcher_sha256": "36240f94cdca19b7e26eaef62d7c3e947d10ae00fcf3ee0cfa680060a64e7fcb",
+  "producer_or_hook_changed": false,
+  "schema": "POLY_V3_VERSION_HISTORY_ACCEPTANCE_V1",
+  "v2_transition_owner_relay_pending": true
+}

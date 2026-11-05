@@ -220,8 +220,9 @@ def test_epoch_two_uses_pinned_manifest_and_never_reads_broken_e1(tmp_path,monke
  (r/'fabrika').mkdir();(r/'fabrika/poly_signal_zhurnal.py').write_bytes(b'writer lock');(r/'poly_signaly.py').write_bytes(b'producer')
  monkeypatch.setattr(m,'PRODUCERS',{'POLY_95_V2_SHIROKO.jsonl':('poly_signaly.py',digest(b'producer'))})
  monkeypatch.setattr(m,'JOURNAL_MODULE_PIN',digest(b'writer lock'))
- binding=dict(schema='POLY_SIGNAL_V1',epoha=epoch,pravilo=j.stem,zhurnal='research_lab/data/poly_signaly/'+epoch+'/'+j.name,producer='poly_signaly.py',producer_sha256=digest(b'producer'),zhurnal_modul_sha256=digest(b'writer lock'),pid=1,start_utc='2026-11-04T09:00:00Z')
+ binding=dict(schema='POLY_SIGNAL_V1',epoha=epoch,pravilo=j.stem,zhurnal='research_lab/data/poly_signaly/'+epoch+'/'+j.name,producer='poly_signaly.py',producer_sha256=digest(b'producer'),zhurnal_modul_sha256=digest(b'writer lock'),pid=1,start_utc='2026-11-04T09:00:00Z',strok_pri_starte=0)
  f=e/('MANIFEST_'+j.stem+'.json');f.write_text(json.dumps(binding))
+ (e/('MANIFEST_'+j.stem+'.history.jsonl')).write_bytes(line(dict(binding,perv_stroka_etogo_zapuska=1))+b'\n')
  out=m.cycle_many(r,state,journals=(j.name,),epoch=epoch);assert out['journals'][j.name]['measured']==1
  assert j.read_bytes()==b'BROKEN_E1_DO_NOT_REPAIR\n'
  assert (state/epoch/j.stem/'signals'/s['signal_observation_id']/'measurement-manifest.json').exists()
@@ -276,3 +277,55 @@ def test_sports_witness_rejects_future_claimed_first_observation(tmp_path):
  m=module();root,s,archive,seal=score_witness_fixture(tmp_path)
  s['score']['source_witness']['segment_first_seen_by_producer_ms']=s['signal_ms']+1
  with pytest.raises(ValueError,match='SCORE_FIRST_SEEN_TIME'):m.verify_sports_witness(s,root)
+
+
+def epoch_binding_fixture(m,root,j,monkeypatch,started=0):
+ epoch='E2_20261104';folder=j.parent/epoch;folder.mkdir();(folder/j.name).write_bytes(j.read_bytes())
+ (root/'fabrika').mkdir(exist_ok=True);(root/'fabrika/poly_signal_zhurnal.py').write_bytes(b'new writer with startup history');(root/'poly_signaly.py').write_bytes(b'new producer')
+ monkeypatch.setattr(m,'PRODUCERS',{j.name:('poly_signaly.py',digest(b'new producer'))});monkeypatch.setattr(m,'JOURNAL_MODULE_PIN',digest(b'new writer with startup history'))
+ manifest=dict(schema='POLY_SIGNAL_V1',epoha=epoch,pravilo=j.stem,zhurnal='research_lab/data/poly_signaly/'+epoch+'/'+j.name,producer='poly_signaly.py',producer_sha256=digest(b'new producer'),zhurnal_modul_sha256=digest(b'new writer with startup history'),pid=2,start_utc='2026-11-05T05:27:20Z',strok_pri_starte=started)
+ path=folder/('MANIFEST_'+j.stem+'.json');path.write_bytes(line(manifest))
+ history=folder/('MANIFEST_'+j.stem+'.history.jsonl');history.write_bytes(line(dict(manifest,perv_stroka_etogo_zapuska=started+1))+b'\n')
+ return epoch,folder,path,history,manifest
+
+
+def test_current_producer_binding_preserves_startup_history(tmp_path,monkeypatch):
+ m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch)
+ bound=m.producer_binding(r,j.name,epoch)
+ assert bound['producer_history_sha256']==digest(history.read_bytes())
+ assert bound['producer_history_raw_text']==history.read_text()
+ assert history.read_bytes()==line(dict(manifest,perv_stroka_etogo_zapuska=1))+b'\n'
+
+
+@pytest.mark.parametrize('fault',['different_producer','wrong_start_line','partial_tail'])
+def test_startup_history_conflict_blocks_even_when_current_files_match(tmp_path,monkeypatch,fault):
+ m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch)
+ row=dict(manifest,perv_stroka_etogo_zapuska=1)
+ if fault=='different_producer':row['producer_sha256']='f'*64
+ if fault=='wrong_start_line':row['perv_stroka_etogo_zapuska']=2
+ history.write_bytes(line(row)+(b'' if fault=='partial_tail' else b'\n'))
+ with pytest.raises(ValueError,match='PRODUCER_HISTORY'):m.producer_binding(r,j.name,epoch)
+
+
+def test_old_unobserved_producer_prefix_is_not_replayed_after_handoff(tmp_path,monkeypatch):
+ m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch,started=1)
+ monkeypatch.setattr(m.snap,'get_capture',lambda _:pytest.fail('previous producer signal must not be repriced'))
+ out=m.cycle_many(r,state,journals=(j.name,),epoch=epoch)
+ z=out['journals'][j.name];assert z['measured']==0 and z['blocked']==1 and any('PREVIOUS_PRODUCER_UNOBSERVED_NO_REPLAY' in x for x in z['issues'])
+ assert (folder/j.name).read_bytes()==j.read_bytes()
+
+
+def test_witnessed_measurement_survives_writer_restart_without_repricing(tmp_path,monkeypatch):
+ m,r,j,s,n,state=setup(tmp_path,monkeypatch);epoch,folder,path,history,manifest=epoch_binding_fixture(m,r,j,monkeypatch)
+ assert m.cycle_many(r,state,journals=(j.name,),epoch=epoch)['journals'][j.name]['measured']==1
+ signal_folder=state/epoch/j.stem/'signals'/s['signal_observation_id']
+ before={name:(signal_folder/name).read_bytes() for name in ['source-signal.json','intake.json','measurement-manifest.json']}
+ restarted=dict(manifest,pid=3,strok_pri_starte=1);path.write_bytes(line(restarted))
+ with history.open('ab') as f:f.write(line(dict(restarted,perv_stroka_etogo_zapuska=2))+b'\n')
+ def only_resolution(url):
+  assert '/resolutions?' in url,'writer restart must not fetch a fresh book'
+  return transport(n)(url)
+ monkeypatch.setattr(m.snap,'get_capture',only_resolution)
+ out=m.cycle_many(r,state,journals=(j.name,),epoch=epoch)
+ assert out['journals'][j.name]['measured']==0
+ assert all((signal_folder/name).read_bytes()==raw for name,raw in before.items())

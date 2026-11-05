@@ -1,0 +1,18 @@
+{
+  "account_blocked": false,
+  "actual_observed_ms": 1793856644668,
+  "bridge_sha256": "b21b52f2452e08c0f0fb777ade12c37823591ef5a37bae5f8965bd748bf0602b",
+  "broker_writes": 0,
+  "credentials_rotated": false,
+  "get_authentication_successful": true,
+  "helper_sha256": "0e2fb6980538e1fce9951dd2f8fa86456c3c8246353a2d6615a37af36b7b1860",
+  "history_complete": false,
+  "identity_matches_current_monthly_scope": "NOT_RECHECKED_BY_THIS_ACCESS_TEST",
+  "live_endpoint_guarded": true,
+  "open_order_count": 0,
+  "position_count": 0,
+  "post_admission_proven": false,
+  "status": "ACTIVE",
+  "trade_suspended_by_user": false,
+  "trading_blocked": false
+}

@@ -1,5 +1,29 @@
 # Current4Nov13:52UTC — real E2 measurements / V3 witness / PUMP diagnostic local
 
+CURRENT5Nov05:44UTC — V3_NEW_VERSION_SELECTED / V2_TRANSITION_PENDING / ALPACA_GET_AUTH_OK
+
+Owner suppliedV3producer86ed5827…/sharedmodulebd9175…;actualbytes/AST verified.
+Newmanifest96751/start05:27UTC/count11/historylatestline12accepted. Old11journal
+rowsEXACTmatchpriorownfsyncedprefix+savedsource-signal. Newline12quoteSHA/timestamp
+matchesdeclaredpoly_monitor. Ownconsumer pins/history/startlineboundariesupdated;
+102targetedPASS,5RED,oneboundedindependentreview7PASS/noP0/P1/P2within diff.
+Selectedimmutablebundle3bf619bb0502d148/launcher268e9baf…05:40:17UTC;onlyownlauncher
+atomicreplace/backupkept,producer/hook/nativefinancialunits untouched. V3binding
+passes;line12from05:27isnowSTALE_SIGNAL,no bookGET/replay. Awaitfreshnewsample.
+V2pid26905manifestoldmodulea2b3…vsdiskbd9175…remainsPRODUCER_DRIFT;ownerwillrelay
+Claudecontrolledwritertransition preservinglock/chain/IDs. No pinwaiver/manifestedit.
+Newscore_age_ms_at_signal=VPSframeage;consumerSTALE_SCOREremainsMacdeliveryage120s.
+ResolutionmixedschemaOPENunchanged;no guessedlast_update→resolvedtime/payoutmapping.
+Alpaca approvedpinnedGET05:30:44UTC exactLIVEendpoint/ACTIVE/allblockflagsfalse,
+positions0/openorders0;partialhistory/notCASH/notPOSTadmission. No APIkeyrotation,
+manualBUY/newGO/datecarry. Old422reasonUNKNOWN/no substantivebrokerreplyobserved.
+Report POLY_V3_VERSION_AND_ALPACA_ACCESS_2026_11_05.md, evidence poly_v3_version_acceptance_20261105.
+Privatefullbrokerreadback/mailmetadataexcluded;sanitizedGETonly. Rootfinancialstate
+unchanged. LIQtechnicalintakepending;do notrestartsource/PUMP/Monthly for this work.
+
+---
+Earlier dated entries below are history.
+
 CURRENT5Nov05:20UTC — POLY_FAILURE_CONDITIONS_CONFIRMED / NO_RUNTIME_CHANGE
 
 Owner/Claude requested exact conditions, not newE2architecture. Readonlyreport

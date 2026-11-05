@@ -21,3 +21,5 @@
 4Nov read-only crypto intake: SHORT_HVOST [BLOCKED](SHORT_HVOST_EXECUTION_RECON_2026_11_04.md): BTCmin80.3472 vs50, leverage/capital mismatch, no pair failure contract. LIQnext/AbsorptionafterNOT_ASSESSED. [Brain export](PUMP4_BRAIN_EXECUTABILITY_EXPORT_2026_11_04.md):8BLOCKED/known_since prepared;activeClaude reader needs time filter, no run/install.
 
 5Nov bounded diagnostics: [resolution/V3 conditions](POLY_E2_RESOLUTION_V3_FAILURES_2026_11_05.md). Decoder mixed-schema compatibilityOPEN; Claude quote source-lineage repair required. No oldsignal replay, no120s widening, no runtimechange in diagnostic cycle.
+
+5Nov versionacceptance: [V3+AlpacaGET](POLY_V3_VERSION_AND_ALPACA_ACCESS_2026_11_05.md). NewV3pins/historyselected,old11kept;V2requiresClaudecontrolledwritertransition. AlpacaGETACTIVE/unblocked, no newkeys/manualBUY;422UNKNOWN/mixedresolutiondecoderOPEN.

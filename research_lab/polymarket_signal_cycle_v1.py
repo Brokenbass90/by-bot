@@ -19,9 +19,9 @@ from .polymarket_ws_data_v1 import once, encoded, read, mkdirs_durable
 
 PRODUCERS = {
     'POLY_95_V2_SHIROKO.jsonl': ('poly_signaly.py', '0f7e5f9dbc2e409ec634f2d6f8ea127feadbf06d4605bc54b11a55ec58f306fa'),
-    'POLY_SCHET_V3.jsonl': ('poly_signaly_v3.py', 'cb6c6bd18d46a8d61be7ab0e8e44e5a0e28ad896004457efbb206f2b34a9d04a'),
+    'POLY_SCHET_V3.jsonl': ('poly_signaly_v3.py', '86ed58279cc7e96f8abb50aa1e9fae6e03e058e5f17012be6fbb0f99a79cf9d0'),
 }
-JOURNAL_MODULE_PIN = 'a2b3a0f34f4c9a28ec604e2f0496775c39dc3be56400b87859783d5afa294b30'
+JOURNAL_MODULE_PIN = 'bd9175ee7ccd10791f71d214376d03322eef4d9ff94100894de57ada5fb908ff'
 
 def need(ok, why):
     if not ok:
@@ -56,7 +56,19 @@ def producer_binding(root, journal_name, epoch):
     need(manifest.get('producer_sha256') == pin == sha(read(safe(root, filename)))
          and manifest.get('zhurnal_modul_sha256') == JOURNAL_MODULE_PIN == sha(read(safe(root, 'fabrika/poly_signal_zhurnal.py'))), 'PRODUCER_DRIFT')
     need(type(manifest.get('pid')) is int and manifest['pid'] > 0 and isinstance(manifest.get('start_utc'), str), 'PRODUCER_IDENTITY')
-    return dict(manifest_sha256=sha(raw), manifest=manifest)
+    count = manifest.get('strok_pri_starte')
+    need(type(count) is int and count >= 0, 'PRODUCER_HISTORY_START')
+    history_path = safe(root, 'data/poly_signaly/' + epoch + '/MANIFEST_' + Path(journal_name).stem + '.history.jsonl')
+    history_raw = read(history_path, 1024 * 1024)
+    need(history_raw.endswith(b'\n'), 'PRODUCER_HISTORY_PARTIAL')
+    history = [load(line) for line in history_raw.splitlines()]
+    need(0 < len(history) <= 256 and all(isinstance(x, dict) for x in history), 'PRODUCER_HISTORY_SCHEMA')
+    starts = [x.get('perv_stroka_etogo_zapuska') for x in history]
+    need(all(type(x) is int and x > 0 for x in starts) and starts == sorted(starts)
+         and history[-1] == dict(manifest, perv_stroka_etogo_zapuska=count + 1), 'PRODUCER_HISTORY_CONFLICT')
+    # Historical startup claims are not an independent durability witness.
+    return dict(manifest_sha256=sha(raw), manifest=manifest,
+                producer_history_sha256=sha(history_raw), producer_history_raw_text=history_raw.decode())
 
 
 def chain(raw):
@@ -316,8 +328,9 @@ def cycle_once(research_root, journal_name, state_root, *, epoch=None):
             once(anchor / 'source-prefix.jsonl', prefix)
             witness = dict(producer_binding=binding, observed_after_prefix_fsync_ms=now_ms(), prefix_bytes=len(prefix), prefix_sha256=sha(prefix), last_line_sha256=last)
             once(anchor / 'prefix.json', encoded(witness))
+        if binding is not None:need(binding['manifest']['strok_pri_starte'] <= len(rows), 'PRODUCER_HISTORY_START')
         made = set()
-        for s, raw in rows:
+        for ordinal, (s, raw) in enumerate(rows, 1):
             identity = s.get('signal_observation_id')
             need(isinstance(identity, str) and re.fullmatch(r'[0-9a-f]{24}', identity), 'SIGNAL_IDENTITY')
             folder = state / 'signals' / identity
@@ -329,9 +342,11 @@ def cycle_once(research_root, journal_name, state_root, *, epoch=None):
             if len(made) >= 4:break
             made.add(identity); once(folder / 'source-signal.json', raw + b'\n')
             try:
+                if binding is not None:
+                    need(ordinal > binding['manifest']['strok_pri_starte'], 'PREVIOUS_PRODUCER_UNOBSERVED_NO_REPLAY')
                 signal, member, provenance = qualify(s, root, now_ms())
                 resolve_index(signal, member, provenance, folder)
-                intake = dict(signal=signal, provenance=provenance,
+                intake = dict(signal=signal, provenance=provenance, source_line_number=ordinal,
                     source_signal_sha256=sha(raw), prefix_sha256=sha(prefix), producer_binding=binding,
                     consumer_observed_after_signal_fsync_ms=now_ms(), before_sports_final_proven=False,
                     producer_saved_ms_independently_proven=False, orders_allowed=False)

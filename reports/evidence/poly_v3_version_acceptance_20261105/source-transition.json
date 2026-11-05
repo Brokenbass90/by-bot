@@ -1,0 +1,73 @@
+{
+  "actual_observed_ms": 1793857347079,
+  "current_journal_sha256": "72b1b189bd5b594144db31176d64b4d4a4ffc0521ca2a149d59c1f5aff2a6ed8",
+  "current_manifest": {
+    "epoha": "E2_20261104",
+    "kontrakt": "KONTRAKT_SIGNALA_POLY_V1_1.md",
+    "pid": 96751,
+    "pravilo": "POLY_SCHET_V3",
+    "producer": "poly_signaly_v3.py",
+    "producer_sha256": "86ed58279cc7e96f8abb50aa1e9fae6e03e058e5f17012be6fbb0f99a79cf9d0",
+    "schema": "POLY_SIGNAL_V1",
+    "staraya_epoha_E1": "research_lab/data/poly_signaly/POLY_95_V2_SHIROKO.jsonl (сохранена без ремонта: 3 писателя, не использовать как одну цепочку)",
+    "start_utc": "2026-11-05T05:27:20Z",
+    "strok_pri_starte": 11,
+    "zhurnal": "research_lab/data/poly_signaly/E2_20261104/POLY_SCHET_V3.jsonl",
+    "zhurnal_modul_sha256": "bd9175ee7ccd10791f71d214376d03322eef4d9ff94100894de57ada5fb908ff"
+  },
+  "current_rows": 12,
+  "history_claims_not_independent_historical_durability_witness": true,
+  "history_sha256": "435e69d4f42e750fec87f4ca0d040c5ae853c5723ce8d5d63938c8b9e507c3a2",
+  "manifest_sha256": "fb517106028652757dcfb930a3b74000bbf84bc9edeb9c927d02b2867e6307d2",
+  "old_eleven_replayed": false,
+  "old_prefix_matches_prior_consumer_witness": true,
+  "old_prefix_rows": 11,
+  "old_prefix_sha256": "4e8cc776a69211eb37abba0aa3299fa63d99e86b60eaa67107b0ea87765cf11e",
+  "old_rows": [
+    {
+      "raw_sha256": "20f32dfd680a72036fa114b65cffe672c63ec1e084fd5f2ad6cc50b160592c12",
+      "signal_observation_id": "1136ba6f4eb17d2559ef174b"
+    },
+    {
+      "raw_sha256": "2083cdb381b63ad5655fa75a06c88a110d51c89c4669f0f8f498fb118012d142",
+      "signal_observation_id": "40c8850fc3d53b64956125a9"
+    },
+    {
+      "raw_sha256": "c7ce28161c0e8aaffeb42ab2630563fb75855ac5b522e503a1ff1a275a633f13",
+      "signal_observation_id": "cb52edeb34c5273f73214b36"
+    },
+    {
+      "raw_sha256": "23c10acd948ff4c88462452148237167ff07bcb8d94cdc608874faa6c77c4e53",
+      "signal_observation_id": "6200f17478b884d7e3ca80ba"
+    },
+    {
+      "raw_sha256": "57adfe40821b900fdfef74d9bd30ab7a614dc5c39a69142ccaf1de3fba003cdb",
+      "signal_observation_id": "673cf68fddf2f69f5ac48055"
+    },
+    {
+      "raw_sha256": "d79a48ee95be092c96372f0c74b7b15a183df2fabe3b02c0e338a959b5ba6cd5",
+      "signal_observation_id": "fd46e85d7aec8cc62c84a433"
+    },
+    {
+      "raw_sha256": "31f91f71df2dc5d6eef1968a6fb134a54089ec28579827899736b74c3d549ede",
+      "signal_observation_id": "ef591f20fe5574d486effc09"
+    },
+    {
+      "raw_sha256": "0372fc69356598d45b34f42646bb8e6a1184f892eef8fa2a2a9cd9e4364c8c3e",
+      "signal_observation_id": "9e049b47710339471d43d910"
+    },
+    {
+      "raw_sha256": "7d4e650f85d24ca7503c3012c44cf9c25cdf63f37e4f4d9addca152dcdb9e757",
+      "signal_observation_id": "bb21cf3117133e7e48cf3450"
+    },
+    {
+      "raw_sha256": "591f4debe84e215a97719c88ee9f098eac3a896b62fe1173c3723e184fddcb45",
+      "signal_observation_id": "162f354a2e5b274913d6ae0d"
+    },
+    {
+      "raw_sha256": "ab5b45bc564507654ca88cd3a577dcd2226871e5005949866431a96a050635e9",
+      "signal_observation_id": "6a7d5cd2664419b9dda2d1ad"
+    }
+  ],
+  "producer_history_raw_text": "{\"epoha\": \"E2_20261104\", \"pravilo\": \"POLY_SCHET_V3\", \"producer_sha256\": \"cb6c6bd18d46a8d61be7ab0e8e44e5a0e28ad896004457efbb206f2b34a9d04a\", \"pid\": 35337, \"start_utc\": \"2026-11-04T13:34:10Z\", \"perv_stroka_etogo_zapuska\": 1, \"primechanie\": \"восстановлено 05.11 из манифеста до перезапуска; строки 1–11 этого producer'а (source котировки мог указывать на журнал каталога — дефект, найденный Codex)\"}\n{\"schema\": \"POLY_SIGNAL_V1\", \"kontrakt\": \"KONTRAKT_SIGNALA_POLY_V1_1.md\", \"epoha\": \"E2_20261104\", \"pravilo\": \"POLY_SCHET_V3\", \"zhurnal\": \"research_lab/data/poly_signaly/E2_20261104/POLY_SCHET_V3.jsonl\", \"producer\": \"poly_signaly_v3.py\", \"producer_sha256\": \"86ed58279cc7e96f8abb50aa1e9fae6e03e058e5f17012be6fbb0f99a79cf9d0\", \"zhurnal_modul_sha256\": \"bd9175ee7ccd10791f71d214376d03322eef4d9ff94100894de57ada5fb908ff\", \"pid\": 96751, \"start_utc\": \"2026-11-05T05:27:20Z\", \"strok_pri_starte\": 11, \"staraya_epoha_E1\": \"research_lab/data/poly_signaly/POLY_95_V2_SHIROKO.jsonl (сохранена без ремонта: 3 писателя, не использовать как одну цепочку)\", \"perv_stroka_etogo_zapuska\": 12}\n"
+}
