@@ -1,5 +1,25 @@
 # Current4Nov13:52UTC — real E2 measurements / V3 witness / PUMP diagnostic local
 
+CURRENT5Nov06:01UTC — V2_TRANSITION_ACCEPTED / MONTHLY_PRECISION_NOT_PROVEN
+
+Actual06:00:45UTC V2manifest PID1879/start05:58:57/count115 matches producer0f7e…
+and sharedmodulebd9175…; history latestfirstline116 exact. Existing selectedconsumer
+accepts without source/runtime change;115rows/115IDs/fullprefix,100own oldanchors
+and savedsourceprefix bytes verified unchanged. PIDexists; lock not independently
+reacquired. Automatichook05:58:58 noPRODUCER_DRIFT,measured0/joined4/blocked3old
+PREVIOUS_PRODUCER_UNOBSERVED_NO_REPLAY; no retroactive measurement/credit.
+V3PENDING_OUTCOME; mixedresolutiondecoderOPEN, aggregatehookUNKNOWNnotHEALTHY.
+Monthly oldAMD2dpvsLLY9dp confirmed,NETqty+limitdifferent. Original422body/requestID
+lost; actual42210000/messageNOTobserved. OfficialfractionalAPIallows9dp; primary
+Alpacastaffnotionalincrementexample rejected11dp, advised<=9, not cents. Samecode
+also pricefields: no guessedrounding/codefix/POST/newkeys/manualBUY/datecarry/GO.
+Freshmailsearchonlypriorack/no substantiveanswer; privatemailmetadataexcluded.
+Report POLY_V2_TRANSITION_AND_MONTHLY_PRECISION_2026_11_05.md/evidence poly_v2_transition_20261105.
+No appcode/source/producer/hook/nativefinancialchanges ornewtestsuite rerun.
+
+---
+Earlier dated entries below are history.
+
 CURRENT5Nov05:44UTC — V3_NEW_VERSION_SELECTED / V2_TRANSITION_PENDING / ALPACA_GET_AUTH_OK
 
 Owner suppliedV3producer86ed5827…/sharedmodulebd9175…;actualbytes/AST verified.

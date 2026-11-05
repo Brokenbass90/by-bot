@@ -37,6 +37,8 @@ Project net/операционныерасходы и owner hours/week изме�
 
 Мини-очередь фактов/оставшихся gates: [CODEX_NEXT_GATES](reports/CODEX_NEXT_GATES_2026_11_04.md).
 
+5Nov06:01UTC factual update: [V2 transition / Monthly precision](reports/POLY_V2_TRANSITION_AND_MONTHLY_PRECISION_2026_11_05.md). V2controlledwritertransitionaccepted;115uniquechainrows/100oldanchors unchanged. Mixedresolutiondecoder/freshsignal remain next; original422bodylost,9dp documented, no confirmed centsfix orfinancialaction. This supersedes older V2transitionpending notes.
+
 ## Закрытие задач и прекращение повторного ремонта — принято 3 ноября
 
 | Задача | Проверяемое закрытие | Когда прекращаем текущий ремонт / следующий шаг |

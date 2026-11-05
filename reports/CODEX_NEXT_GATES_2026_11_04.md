@@ -23,3 +23,5 @@
 5Nov bounded diagnostics: [resolution/V3 conditions](POLY_E2_RESOLUTION_V3_FAILURES_2026_11_05.md). Decoder mixed-schema compatibilityOPEN; Claude quote source-lineage repair required. No oldsignal replay, no120s widening, no runtimechange in diagnostic cycle.
 
 5Nov versionacceptance: [V3+AlpacaGET](POLY_V3_VERSION_AND_ALPACA_ACCESS_2026_11_05.md). NewV3pins/historyselected,old11kept;V2requiresClaudecontrolledwritertransition. AlpacaGETACTIVE/unblocked, no newkeys/manualBUY;422UNKNOWN/mixedresolutiondecoderOPEN.
+
+5Nov06:01UTC update: [V2 transition + precision](POLY_V2_TRANSITION_AND_MONTHLY_PRECISION_2026_11_05.md). V2writer/currentmodule accepted;115uniquechainrows/100oldanchors preserved. Hook4priorjoins/3oldno-replay blocks, notfreshmeasurements. Nextmixedresolutiondecoder/freshsignal; MonthlycentsfixUNPROVEN (9dpdocumented, originalbodylost), nofinancialactions. Supersedes previous V2transitionpending note.

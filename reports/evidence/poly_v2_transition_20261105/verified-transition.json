@@ -1,0 +1,68 @@
+{
+  "broker_requests": 0,
+  "broker_writes": 0,
+  "claimed_writer_process_exists": true,
+  "complete_prefix_rows": 115,
+  "complete_prefix_sha256": "25c9130d343483dbe7274c54df48845b1ebecf1e0dc84ed591d263098545abe8",
+  "history_sha256": "1b6fb573011e2789e812e27e94dd43259e7e89edd546e70ef146e0fc267cd14d",
+  "hook_log_sha256": "1760d1ba6794b3a618ed00cad8054f98fe5a4607c9d992dcc4c3c72e0c4e2d37",
+  "latest_existing_hook_result": {
+    "journals": {
+      "POLY_95_V2_SHIROKO.jsonl": {
+        "blocked": 3,
+        "issues": [
+          "ValueError:PREVIOUS_PRODUCER_UNOBSERVED_NO_REPLAY",
+          "ValueError:PREVIOUS_PRODUCER_UNOBSERVED_NO_REPLAY",
+          "ValueError:PREVIOUS_PRODUCER_UNOBSERVED_NO_REPLAY"
+        ],
+        "joined": 4,
+        "measured": 0,
+        "money_authority": false,
+        "observed_ms": 1793858338669,
+        "order_posts": 0,
+        "status": "UNKNOWN"
+      },
+      "POLY_SCHET_V3.jsonl": {
+        "blocked": 0,
+        "issues": [],
+        "joined": 0,
+        "measured": 0,
+        "money_authority": false,
+        "observed_ms": 1793858338681,
+        "order_posts": 0,
+        "status": "PENDING_OUTCOME"
+      }
+    },
+    "money_authority": false,
+    "observed_ms": 1793858338681,
+    "order_posts": 0,
+    "status": "UNKNOWN"
+  },
+  "manifest": {
+    "epoha": "E2_20261104",
+    "kontrakt": "KONTRAKT_SIGNALA_POLY_V1_1.md",
+    "pid": 1879,
+    "pravilo": "POLY_95_V2_SHIROKO",
+    "producer": "poly_signaly.py",
+    "producer_sha256": "0f7e5f9dbc2e409ec634f2d6f8ea127feadbf06d4605bc54b11a55ec58f306fa",
+    "schema": "POLY_SIGNAL_V1",
+    "staraya_epoha_E1": "research_lab/data/poly_signaly/POLY_95_V2_SHIROKO.jsonl (сохранена без ремонта: 3 писателя, не использовать как одну цепочку)",
+    "start_utc": "2026-11-05T05:58:57Z",
+    "strok_pri_starte": 115,
+    "zhurnal": "research_lab/data/poly_signaly/E2_20261104/POLY_95_V2_SHIROKO.jsonl",
+    "zhurnal_modul_sha256": "bd9175ee7ccd10791f71d214376d03322eef4d9ff94100894de57ada5fb908ff"
+  },
+  "manifest_sha256": "a0503a0b810ed9c0e9f6ef6b71c648f9e942f466e889319a9b921859868a7d9f",
+  "new_cycle_run_by_this_check": false,
+  "observed_utc": "2026-11-05T06:00:45.790607+00:00",
+  "old_signals_replayed": false,
+  "partial_tail_bytes": 0,
+  "previous_own_prefix_anchors_verified": 100,
+  "producer_and_module_bytes_match": true,
+  "selected_bundle_files_match": true,
+  "selected_launcher_matches": true,
+  "single_writer_lock_independently_rechecked": false,
+  "source_and_state_mutations": 0,
+  "status": "V2_PRODUCER_BINDING_ACCEPTED",
+  "unique_signal_ids": 115
+}
