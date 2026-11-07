@@ -1,0 +1,20 @@
+{
+  "2026-11-04": {
+    "complete": 24,
+    "first_imported_ms": 1794082788362,
+    "missing": 0,
+    "raw": 0
+  },
+  "2026-11-05": {
+    "complete": 24,
+    "first_imported_ms": 1794082411792,
+    "missing": 0,
+    "raw": 0
+  },
+  "2026-11-06": {
+    "complete": 14,
+    "first_imported_ms": 1794082411796,
+    "missing": 10,
+    "raw": 0
+  }
+}

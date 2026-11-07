@@ -27,3 +27,5 @@
 5Nov06:01UTC update: [V2 transition + precision](POLY_V2_TRANSITION_AND_MONTHLY_PRECISION_2026_11_05.md). V2writer/currentmodule accepted;115uniquechainrows/100oldanchors preserved. Hook4priorjoins/3oldno-replay blocks, notfreshmeasurements. Nextmixedresolutiondecoder/freshsignal; MonthlycentsfixUNPROVEN (9dpdocumented, originalbodylost), nofinancialactions. Supersedes previous V2transitionpending note.
 
 5Nov cents proposal: [local draft](MONTHLY_CENTS_NEXT_PACKET_DRAFT_2026_11_05.md),101.41 offline only, existing9dptransport intentionally rejects. Coherent permit/intent/reconciliation + private full-body rejection capture remain before newdatedownerpacket/GO; no app/LIVEchanges and no claimed422cause.
+
+7 Nov: PUMP4 DATA disk reserve failure repaired by verified cold offload and exact DATA start. New H1 pending. Daily export active. Monthly local cents+capture 172 fixture passes, no deployed change. V3K BLOCKED_CONTRACT. See PUMP4_STORAGE_AND_RAW_EXPORT_2026_11_07.md.

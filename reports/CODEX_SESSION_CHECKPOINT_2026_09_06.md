@@ -1,5 +1,33 @@
 # Codex session checkpoint — 2026-09-06
 
+CURRENT 7 Nov 2026 — PUMP4 DATA restarted after verified storage offload
+
+PUMP4 DATA stopped on 6 Nov at 14:02 UTC. Later starts failed the 3 GiB disk
+reserve. Offloaded 12,741 verified public DATA files from inactive candidate
+e4feca498f37e27d to a checked Mac archive. Free space rose to 5.91 GB.
+Started the unchanged strict DATA service as PID1200512. Financial PID3669955,
+locks818853/4294867 and the original 8 Nov19:26:32.774UTC deadline are preserved.
+First new H1 acceptance pending 7 Nov21:00UTC. No missed hour is relabelled.
+Selected PUMP4 readback completed with source blocked. Legacy main expired
+separately. Scoped legacy wording installed e36fcca7, cron unchanged.
+
+Nightly DATA export installed at 03:20 Cyprus, automation
+pump4-live-raw-signals-claude-data. 4 and 5 Nov full24/24 zero raw, 6 Nov
+14/24 with 10 missing. UNKNOWN when financial attribution is unproven.
+3 Nov historical publication shape refused. See PUMP4_STORAGE_AND_RAW_EXPORT_2026_11_07.md.
+Breakout V2 replay all16 unique plans matched, 5 in epoch and 5 deals. V3K
+contract blocked by judge SHA, policy pin and forward clock differences.
+psig and psig3 present, nfp completed per log.
+
+Monthly cents and private response capture commit 44f477a. 171 focused tests
+plus full production CLI synthetic rotation passed, independent review findings
+regressed. 45 source pins recorded. Local candidate remains unselected. Fresh
+account/source preflight and separate dated owner decision precede entry.
+See MONTHLY_CENTS_CAPTURE_LOCAL_2026_11_07.md.
+
+---
+Earlier entries below are history.
+
 CURRENT5Nov — MONTHLY_CENTS_PROPOSAL_DRAFT_NOT_READY_FOR_GO
 
 Owner relayed Claude proposal: futureMonthly cents format, mandatory exact rejection

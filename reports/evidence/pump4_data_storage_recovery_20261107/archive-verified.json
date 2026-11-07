@@ -1,0 +1,11 @@
+{
+  "actual_ms": 1794083110638,
+  "archive_bytes": 979612810,
+  "archive_sha256": "cd4106c73eecbffc45fb47d32690a077d4e8071afb72052d4826cdfdfff6c507",
+  "estimated_reclaim_bytes": 2857381888,
+  "files": 12741,
+  "local_archive": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-recovery-20260824/.private/pump4_cold_archive_20261107/candidate-e4-public-symbols.tar.gz",
+  "manifest_sha256": "450d8b006567c1cc98f147acb697b3cf1856877233b9f689d8723ee0a55f6744",
+  "payload_bytes": 2830779057,
+  "status": "MAC_ARCHIVE_BYTE_VERIFIED"
+}

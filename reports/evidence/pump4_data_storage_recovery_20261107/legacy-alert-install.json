@@ -1,0 +1,9 @@
+{
+  "backup": "/root/by-bot/scripts/bybit_api_key_expiry_check.py.backup-20261107-cedd98b05331",
+  "cron_unchanged": true,
+  "financial_owner_pid": "3669955",
+  "manual_notifier_runs": 0,
+  "new_sha256": "e36fcca73d55ab6f2359352f9dad8fd7f8b0090c37e70649044e0582d1036c71",
+  "observed_ms": 1794082712809,
+  "old_sha256": "cedd98b0533105cf0cfc3307f041cc4aae5cd6fafaa47d2677dffdf4c32c1e8b"
+}

@@ -1,0 +1,12 @@
+{
+  "after_free_bytes": 5907578880,
+  "archive_sha256": "cd4106c73eecbffc45fb47d32690a077d4e8071afb72052d4826cdfdfff6c507",
+  "before_free_bytes": 3050201088,
+  "disk_gate_bytes": 3221225472,
+  "files": 12741,
+  "freed_bytes": 2857377792,
+  "manifest_sha256": "450d8b006567c1cc98f147acb697b3cf1856877233b9f689d8723ee0a55f6744",
+  "observed_ms": 1794083260959,
+  "owner_pid": "3669955",
+  "status": "VERIFIED_COLD_COPIES_OFFLOADED"
+}

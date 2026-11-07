@@ -27,6 +27,12 @@ from urllib import error, request
 
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_PATH = ROOT / "runtime" / "bybit_api_key_expiry_status.json"
+MONITOR_SCOPE = "LEGACY_BYBIT_ACCOUNTS"
+
+
+def _legacy_alert(name: str, severity: str, detail: str) -> str:
+    return (f"[{severity}] Bybit legacy {name} — {detail}\n"
+            "Проверьте службы, использующие эту привязку. Статус ключа владельца PUMP4 проверяется отдельно.")
 
 
 def _env(name: str, default: str = "") -> str:
@@ -78,6 +84,7 @@ def _write_status(accounts: list[dict]) -> None:
     STATUS_PATH.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
+        "monitor_scope": MONITOR_SCOPE,
         "accounts": accounts,
     }
     STATUS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -143,7 +150,7 @@ def main() -> int:
         rc = str(info.get("retCode"))
 
         if rc == "33004":
-            msg = f"🚨 [CRITICAL] {name}: Bybit API key УЖЕ ИСТЁК (retCode 33004)\nБот не может торговать. Срочно ротация."
+            msg = _legacy_alert(name, "CRITICAL", "срок ключа истёк (Bybit 33004).")
             print(msg)
             _tg_send(tg_token, tg_chat, msg)
             any_warn = True
@@ -196,16 +203,16 @@ def main() -> int:
         print(f"[{name}] API key expires in {days_left:.1f} days ({expires_on})")
 
         if days_left < 0:
-            msg = f"🚨 [{name}] API key EXPIRED {-days_left:.1f}d ago. Bot cannot trade. Rotate now."
+            msg = _legacy_alert(name, "CRITICAL", f"срок ключа истёк {-days_left:.1f} дн. назад.")
             _tg_send(tg_token, tg_chat, msg); any_warn = True
         elif days_left <= 1:
-            msg = f"🚨 [CRITICAL] {name}: API key expires in {days_left:.1f}d. Rotate IMMEDIATELY."
+            msg = _legacy_alert(name, "CRITICAL", f"до истечения ключа {days_left:.1f} дн.")
             _tg_send(tg_token, tg_chat, msg); any_warn = True
         elif days_left <= 3:
-            msg = f"⚠️ [WARN] {name}: API key expires in {days_left:.1f}d. Plan rotation."
+            msg = _legacy_alert(name, "WARN", f"до истечения ключа {days_left:.1f} дн.")
             _tg_send(tg_token, tg_chat, msg); any_warn = True
         elif days_left <= 7:
-            msg = f"ℹ️ [INFO] {name}: API key expires in {days_left:.1f}d. Schedule rotation soon."
+            msg = _legacy_alert(name, "INFO", f"до истечения ключа {days_left:.1f} дн.")
             _tg_send(tg_token, tg_chat, msg); any_warn = True
         # > 7 days — silent
 

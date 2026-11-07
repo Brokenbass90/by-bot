@@ -1,0 +1,24 @@
+{
+  "actual_entry_executed": "UNKNOWN",
+  "broker_writes": 0,
+  "config_sha256": "f715e67677d0c286d77a906810238ecd58f5c847457a1689bfc9d31383862daa",
+  "exit_code": 0,
+  "health": {
+    "observed_ms": 1794082129829,
+    "status": "UNHEALTHY"
+  },
+  "health_field_names": [
+    "actual_protection_proven",
+    "financial_trading_proven",
+    "observed_ms",
+    "orders_allowed",
+    "owner",
+    "reason",
+    "restart_allowed",
+    "schema",
+    "status"
+  ],
+  "observed_ms": 1794082129922,
+  "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+  "status": "OWNER_ACTION_REQUIRED"
+}

@@ -1,0 +1,21 @@
+{
+  "broker_calls": 0,
+  "data": {
+    "ActiveState": "active",
+    "MainPID": "1200512",
+    "NRestarts": "0"
+  },
+  "data_lock": 4294867,
+  "financial_lock": 818853,
+  "free_bytes": 5901500416,
+  "hour_ms": 1794085200000,
+  "observed_ms": 1794083501095,
+  "owner": {
+    "ActiveState": "active",
+    "MainPID": "3669955",
+    "NRestarts": "0"
+  },
+  "preloaded": null,
+  "recovery": null,
+  "status": "PENDING_NEW_H1"
+}

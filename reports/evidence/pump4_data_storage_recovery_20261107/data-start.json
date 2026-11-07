@@ -1,0 +1,21 @@
+{
+  "data_after": {
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/pump4-data-supervisor.service",
+    "MainPID": "1200512",
+    "NRestarts": "0"
+  },
+  "data_before": {
+    "ActiveState": "failed",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/pump4-data-supervisor.service",
+    "MainPID": "0",
+    "NRestarts": "0"
+  },
+  "disk_free_bytes": 5907435520,
+  "new_h1_verified": false,
+  "observed_ms": 1794083324036,
+  "owner_pid": "3669955",
+  "start_issued": true
+}

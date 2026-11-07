@@ -1,0 +1,127 @@
+{
+  "blocked": [],
+  "counts": {
+    "ALREADY_V2_MATCH": 16
+  },
+  "existing_unique_research_deals": 5,
+  "in_epoch_plans": 5,
+  "in_epoch_without_deal": 0,
+  "input_sha256": "449236796cf1cea1bf4a7ad1eec7a04c23b0bbb4881a2a9dba77e592d6d94f0a",
+  "plan_rows": 27,
+  "results": [
+    {
+      "had_frozen_plan": true,
+      "plan_id": "a8c230dd606161c8049fe6dc2913e473",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "ETHUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "31928a7fc2f313c23f1e3b85964653a9",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "6136efa7a8350617fc5d0823a53e7221",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "6071fd16583eeca48357a8125ba45b0c",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "eabd7a604554bb2b462a337a3646822a",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "TAOUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "4e1e1e539772d62e58a861e4cc25ba80",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "XLMUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "7df047ff3ed9af6211467ee824b651fc",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "dac16f288dbb67c054dddd926cd1582e",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "SNDKUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "bd5983679316069fdb79c2c197ec662b",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "XMRUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "c95098711e92214fb4d362b5e597f538",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "AEROUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "9666c5ea0f03d21cdee84c20f97c45a6",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "DOTUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "9d0972b38e5abccfc7026ed77ae958bb",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "ZECUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "60a3682e63d30f932da3dcea57faf620",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "NEARUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "077e02d2b061521e0803d7a551112223",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "ZROUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "b7746c1df25ad8dd3bb7364f7886c427",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "had_frozen_plan": true,
+      "plan_id": "8583f6d26776c0dc1ed2dc9c4e675b04",
+      "previous_version": "v2",
+      "status": "ALREADY_V2_MATCH",
+      "symbol": "XAGUSDT"
+    }
+  ],
+  "unique_plans": 16,
+  "writes": 0
+}
