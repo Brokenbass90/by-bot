@@ -7,7 +7,9 @@ reserve. Offloaded 12,741 verified public DATA files from inactive candidate
 e4feca498f37e27d to a checked Mac archive. Free space rose to 5.91 GB.
 Started the unchanged strict DATA service as PID1200512. Financial PID3669955,
 locks818853/4294867 and the original 8 Nov19:26:32.774UTC deadline are preserved.
-First new H1 acceptance pending 7 Nov21:00UTC. No missed hour is relabelled.
+First new H1 7 Nov21:00UTC passed 134/134 within60, last36.470s, raw0.
+Same-census owner coverage verified21:03UTC. Recovery4,020 bars, zero blocks.
+No missed hour is relabelled.
 Selected PUMP4 readback completed with source blocked. Legacy main expired
 separately. Scoped legacy wording installed e36fcca7, cron unchanged.
 

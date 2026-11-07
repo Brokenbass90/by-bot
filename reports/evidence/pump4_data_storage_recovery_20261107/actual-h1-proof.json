@@ -1,0 +1,49 @@
+{
+  "broker_calls": 0,
+  "data": {
+    "ActiveState": "active",
+    "MainPID": "1200512",
+    "NRestarts": "0"
+  },
+  "data_lock": 4294867,
+  "financial_lock": 818853,
+  "free_bytes": 5848891392,
+  "hour_ms": 1794085200000,
+  "observed_ms": 1794085380966,
+  "owner": {
+    "ActiveState": "active",
+    "MainPID": "3669955",
+    "NRestarts": "0"
+  },
+  "owner_readback": {
+    "checked_publications": 134,
+    "coverage_complete": true,
+    "observed_ms": 1794085377992,
+    "receipt_sha256": "4ef9f123134957281bb4d46dff65c26eb2e580c80106471b2caf176542b30327",
+    "same_h1_census": true,
+    "scope_sha256": "2de0b6ec1992b1df56f2a92f764a4b206dec1fcecc78b244b7264a63d00d0970",
+    "status": "ENTRY_WINDOW_CLOSED_COVERAGE_CHECKED"
+  },
+  "preloaded": {
+    "active": 134,
+    "broker_writes": 0,
+    "completed_ms": 1794084412514,
+    "target_ms": 1794085200000
+  },
+  "recovery": {
+    "blocked_count": 0,
+    "reason_examples": [],
+    "recovered": 4020,
+    "sha256": "f0f19bc5f839f92b39e2dd8b3f1d2a052a466ddfc1422136416180dd720c8e9b"
+  },
+  "source": {
+    "complete": 134,
+    "expected": 134,
+    "hour_pass": true,
+    "last_offset_ms": 36470,
+    "raw_signals": 0,
+    "receipt_sha256": "2860504c3be09469d9a106b56f9184091a39b8f1862891404893210999403fdc",
+    "within60": 134
+  },
+  "status": "SOURCE_PASS"
+}

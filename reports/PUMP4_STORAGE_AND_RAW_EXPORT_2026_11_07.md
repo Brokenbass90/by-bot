@@ -17,9 +17,13 @@ archive metadata remain at their original paths. The disk reserve stays 3 GiB.
 
 The exact strict DATA service was started after the space check. It was active
 as PID1200512 at first readback. Financial owner PID3669955 and lock818853,
-DATA lock4294867 and the existing scope remained stable. First new H1 expected
-7 Nov 21:00 UTC (23:00 Cyprus). Its acceptance requires a complete real receipt
-within 60 seconds and a fresh owner coverage readback.
+DATA lock4294867 and the existing scope remained stable. The first new H1 at
+7 Nov 21:00 UTC (23:00 Cyprus) passed. All134/134 publications were timely,
+with the last at36.470s and zero raw signals. The financial owner confirmed
+coverage from the same H1 receipt at21:02:57.992UTC. Independent readback
+21:03:00.966UTC observed active DATA PID1200512 and the unchanged financial
+owner. Recovery processed4,020 closed bars with zero blocked symbols.
+Earlier missing hours remain missing in the prospective coverage ledger.
 
 The legacy expiry monitor now labels the binding as legacy and explains that
 PUMP4 has a separate key check. Installed SHA
