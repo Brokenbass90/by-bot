@@ -159,7 +159,7 @@ def test_production_profile_loader_selects_monthly_contract_without_write_permit
     assert actual.order_contract==native.CONTRACT['schema'] and actual.writes_enabled
     actual._http=lambda *a:pytest.fail('No HTTP without existing exact permit')
     with pytest.raises(ValueError,match='PERMIT_REQUIRED'):
-        actual.submit_market_buy('NET',10,client_order_id='abm-'+'a'*32,notional_precision=9)
+        actual.submit_market_buy('NET',10,client_order_id='abm-'+'a'*32,notional_precision=2)
 
 
 @pytest.mark.parametrize('fault',['host','lock','pin'])

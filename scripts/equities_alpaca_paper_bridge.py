@@ -1564,13 +1564,15 @@ class IntendedPaperProtectionError(RuntimeError):
     """An intended-paper entry cannot be proven terminal and protected."""
 
 
-def _monthly_notional_wire(notional: float) -> str:
-    """Alpaca permits9dp; never round the monthly budget upward on the wire."""
+def _monthly_notional_wire(notional: float, *, precision: int = 9) -> str:
+    """Floor explicit Monthly precision; legacy callers keep the9dp helper."""
+    if type(precision) is not int or precision not in {2,9}:
+        raise IntendedPaperProtectionError('baseline_notional_precision_invalid')
     if isinstance(notional,bool) or not math.isfinite(float(notional)) or float(notional)<=0:
         raise IntendedPaperProtectionError('baseline_notional_invalid')
-    value=Decimal(str(notional)).quantize(Decimal('.000000001'),rounding=ROUND_DOWN)
+    value=Decimal(str(notional)).quantize(Decimal(1).scaleb(-precision),rounding=ROUND_DOWN)
     if value<=0:raise IntendedPaperProtectionError('baseline_notional_below_precision')
-    return format(value,'.9f')
+    return format(value,f'.{precision}f')
 
 
 _INTENDED_PAPER_STRATEGY_ID = "ALPACA-BASELINE-26f7ff663dc98e87"
@@ -1837,7 +1839,8 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
         distance=2.0*baseline_atr20
         baseline_fields=dict(baseline_contract='ALPACA_BASELINE_MONTHLY_DAILY_V1',atr20=baseline_atr20,
             signal_session=baseline_signal_session,baseline_selection_sha256=baseline_selection_sha256,
-            baseline_wire_notional=_monthly_notional_wire(notional))
+            baseline_wire_notional=_monthly_notional_wire(notional,precision=2),
+            baseline_notional_cap=notional)
         if baseline_entry_gate is not None:
             from research_lab.alpaca_dynamic_v1 import digest
             gate=baseline_entry_gate
@@ -1854,6 +1857,7 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
         from research_lab.alpaca_monthly_binding_v1 import entry_cid
         client_id=entry_cid({'selection_id':baseline_selection_sha256},pick.ticker)
     payload = json.loads(reentry_path.read_text()) if reentry_path.exists() else {"symbols": {}}
+    if baseline_fields:notional=float(baseline_fields['baseline_wire_notional'])
     intent = {"account_id": account_id, "strategy_id": _INTENDED_PAPER_STRATEGY_ID,
         "symbol": pick.ticker, "entry_session": pick.entry_day, "notional": notional,
         "risk_distance": distance, "status": "reserved",**baseline_fields}
@@ -1875,9 +1879,9 @@ def _submit_intended_reserved_entry(*, client: Any, base_url: str, account_id: s
                 baseline_dispatch_validator()  # after final account/position/CID GET, before permit/POST
             if hasattr(client,'permit_write'):
                 client.permit_write('POST','/v2/orders',dict(symbol=pick.ticker,
-                    notional=_monthly_notional_wire(notional),side='buy',type='market',
+                    notional=baseline_fields['baseline_wire_notional'],side='buy',type='market',
                     time_in_force='day',client_order_id=client_id))
-            entry=client.submit_market_buy(pick.ticker,notional,client_order_id=client_id,notional_precision=9)
+            entry=client.submit_market_buy(pick.ticker,notional,client_order_id=client_id,notional_precision=2)
         else:
             entry = client.submit_market_buy(pick.ticker, notional, client_order_id=client_id)
     return _finish_intended_entry_intent(client=client, base_url=base_url, account_id=account_id, capital=capital,

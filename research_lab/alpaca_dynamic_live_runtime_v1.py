@@ -94,7 +94,7 @@ class DynamicLiveClient(native.AlpacaClient):
         if kind==('buy','market'):
             if (set(payload)!=shared|{'notional'} or payload['time_in_force']!='day'
                 or not re.fullmatch(r'abm-[0-9a-f]{32}',cid)
-                or not re.fullmatch(r'[0-9]+\.[0-9]{9}',str(payload['notional']))):
+                or not re.fullmatch(r'[0-9]+\.[0-9]{2}',str(payload['notional']))):
                 raise ValueError('MONTHLY_NOTIONAL_MARKET_WIRE_REQUIRED')
             positive(payload['notional'])
         elif kind in {('sell','stop'),('sell','market')}:
@@ -107,7 +107,7 @@ class DynamicLiveClient(native.AlpacaClient):
             if kind[1]=='stop':positive(payload['stop_price'])
         else:raise ValueError('MONTHLY_ORDER_TYPE_REFUSED')
 
-    def _http_error_evidence(self,exc,method,url,payload,body):
+    def _http_error_evidence(self,exc,method,url,payload,body,*,private_capture=None):
         """Bounded safe rejection data, never headers/raw account balances/keys.
 
         The status-only exception string stays stable. Existing Monthly records
@@ -139,13 +139,35 @@ class DynamicLiveClient(native.AlpacaClient):
             {'symbol','side','type','time_in_force','notional','qty','stop_price','limit_price'}}
         cid=(payload or {}).get('client_order_id')
         out=dict(schema='ALPACA_HTTP_ERROR_EVIDENCE_V1',http_status=exc.code,
-            method=method,path=urlsplit(url).path,request_id=rid,
+            method=method,path=urlsplit(url).path,request_id=None,
+            request_id_sha256=hashlib.sha256(rid.encode()).hexdigest() if rid is not None else None,
             request_payload=safe_payload,request_payload_sha256=hashlib.sha256(body).hexdigest() if body is not None else None,
             client_order_id_sha256=hashlib.sha256(cid.encode()).hexdigest() if isinstance(cid,str) else None,
             body_capture_status='UNAVAILABLE',body_prefix_sha256=None,body_prefix_bytes=0,
             body_truncated=None,body_format='UNKNOWN',broker_code=None,message=None)
+        if private_capture is not None:
+            exact_id=exc.headers.get('X-Request-ID') if exc.headers is not None else None
+            private_capture.update(schema='ALPACA_HTTP_PRIVATE_CAPTURE_V1',
+                observed_ms=time.time_ns()//1000000,http_status=exc.code,method=method,
+                path=urlsplit(url).path,request_payload_sha256=out['request_payload_sha256'],
+                request_id=exact_id[:4096] if isinstance(exact_id,str) else None,
+                request_id_truncated=isinstance(exact_id,str) and len(exact_id)>4096,
+                body=None,body_complete=False,status='UNAVAILABLE')
+        raw=b''
         try:
-            with exc:raw=exc.read(8193)
+            deadline=time.monotonic()+10
+            with exc:
+                while len(raw)<2000001:
+                    if time.monotonic()>deadline:raise TimeoutError('HTTP_ERROR_CAPTURE_DEADLINE')
+                    chunk=exc.read(min(65536,2000001-len(raw)))
+                    if not chunk:break
+                    raw+=chunk
+            length=exc.headers.get('Content-Length') if exc.headers is not None else None
+            length_ok=(length is None or isinstance(length,str) and length.isdecimal() and int(length)==len(raw))
+            complete=len(raw)<=2000000 and length_ok
+            if private_capture is not None:
+                private_capture.update(body=raw[:2000000],body_complete=complete,
+                    status='TRUNCATED' if len(raw)>2000000 else 'COMPLETE' if complete else 'INCOMPLETE')
             prefix=raw[:8192];out.update(body_capture_status='CAPTURED',
                 body_prefix_sha256=hashlib.sha256(prefix).hexdigest(),body_prefix_bytes=len(prefix),body_truncated=len(raw)>8192)
             try:value=json.loads(prefix)
@@ -156,6 +178,9 @@ class DynamicLiveClient(native.AlpacaClient):
                     message=scrub(value['message']) if isinstance(value.get('message'),str) else None)
             else:out['body_format']='NON_JSON'
         except Exception:
+            # Keep any captured prefix private even when a later read fails.
+            if private_capture is not None and raw:
+                private_capture.update(body=raw[:2000000],body_complete=False,status='INCOMPLETE')
             # Diagnostics cannot turn a rejected/unknown request into a retry.
             pass
         return out
@@ -169,8 +194,16 @@ class DynamicLiveClient(native.AlpacaClient):
             return json.loads(raw) if raw else {}
         except error.HTTPError as exc:
             rejected=native.AlpacaAPIError(exc.code,'ALPACA_HTTP_'+str(exc.code))
-            try:rejected.http_error_evidence=self._http_error_evidence(exc,method,url,payload,body)
+            private={}
+            try:rejected.http_error_evidence=self._http_error_evidence(exc,method,url,payload,body,private_capture=private)
             except Exception:pass
+            # Deliberately not JSON/log text: only the existing manager persists
+            # this byte payload into owner-only runtime evidence.
+            if private:rejected._private_http_error_capture=private
+            sink=getattr(self,'_http_error_capture_sink',None)
+            if callable(sink):
+                try:sink(rejected)
+                except Exception:pass  # diagnostics never replace the broker error
             raise rejected from exc
 
     def cost_get(self,route,params):

@@ -1,0 +1,19 @@
+{
+  "broker_posts": 0,
+  "broker_requests": 0,
+  "independent_review": {
+    "effort": "high",
+    "important_findings": 2,
+    "model": "gpt-6-astra",
+    "regression_fixed": 2,
+    "runtime_metadata_verified": true
+  },
+  "live_deployed": false,
+  "next_owner_packet_ready": false,
+  "observed_utc": "2026-11-07T20:30:12.876489+00:00",
+  "production_cli_rotation_pass": 1,
+  "source_files": 45,
+  "source_pins_sha256": "84f5153f1e5069b4d20188d9927abf727b2e0cf2d619c78aa4825993befa1cb9",
+  "status": "LOCAL_ENGINEERING_PASS_UNSELECTED",
+  "targeted_pass": 171
+}

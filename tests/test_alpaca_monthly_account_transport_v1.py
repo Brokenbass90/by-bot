@@ -19,15 +19,15 @@ def test_existing_transport_can_explicitly_select_monthly_wire_without_relaxing_
                                order_contract=CONTRACT['schema'])
     sent = []
     client._http = lambda url, method, payload=None: sent.append((method, url, payload)) or payload
-    payload = dict(symbol='NET', notional='100.000000000', side='buy', type='market',
+    payload = dict(symbol='NET', notional='100.00', side='buy', type='market',
                    time_in_force='day', client_order_id='abm-'+'a'*32)
     with pytest.raises(ValueError):
-        client.submit_market_buy('NET', 100., client_order_id=payload['client_order_id'], notional_precision=9)
+        client.submit_market_buy('NET', 100., client_order_id=payload['client_order_id'], notional_precision=2)
     client.permit_write('POST', '/v2/orders', payload)
-    client.submit_market_buy('NET', 100., client_order_id=payload['client_order_id'], notional_precision=9)
+    client.submit_market_buy('NET', 100., client_order_id=payload['client_order_id'], notional_precision=2)
     assert sent == [('POST', LIVE+'/v2/orders', payload)]
     with pytest.raises(ValueError):
-        client.submit_market_buy('NET', 100., client_order_id=payload['client_order_id'], notional_precision=9)
+        client.submit_market_buy('NET', 100., client_order_id=payload['client_order_id'], notional_precision=2)
     legacy = DynamicLiveClient('fixture', 'fixture', writes_enabled=True)
     legacy._http = lambda *args: pytest.fail('Monthly must not widen legacy Dynamic')
     legacy.permit_write('POST', '/v2/orders', payload)
@@ -95,7 +95,7 @@ def connect_wire(setup,monkeypatch):
         if payload['side']=='buy':
             assert journal[payload['client_order_id']]['status']=='reserved'
             out=io.submit_market_buy(payload['symbol'],float(payload['notional']),
-                client_order_id=payload['client_order_id'],notional_precision=9)
+                client_order_id=payload['client_order_id'],notional_precision=2)
             io.positions[0].update(current_price='311.222',market_value='93.3666')
             return out
         assert next(iter(journal.values()))['baseline_stop_dispatch_started'] is True
@@ -221,8 +221,8 @@ def test_flat_exit_does_not_release_capital_until_existing_accounting_finality(s
 
 @pytest.mark.parametrize('payload', [
     dict(symbol='NET',qty='1',side='buy',type='market',time_in_force='day',client_order_id='abm-'+'a'*32),
-    dict(symbol='NET',notional='100.00',side='buy',type='market',time_in_force='day',client_order_id='abm-'+'a'*32),
-    dict(symbol='NET',notional='0.000000000',side='buy',type='market',time_in_force='day',client_order_id='abm-'+'a'*32),
+    dict(symbol='NET',notional='100.000000000',side='buy',type='market',time_in_force='day',client_order_id='abm-'+'a'*32),
+    dict(symbol='NET',notional='0.00',side='buy',type='market',time_in_force='day',client_order_id='abm-'+'a'*32),
     dict(symbol='NET',qty='1',side='sell',type='market',time_in_force='day',client_order_id='foreign'),
     dict(symbol='NET',qty='1',side='sell',type='stop',stop_price='NaN',time_in_force='day',client_order_id='abf-'+'a'*32),
 ])

@@ -5,7 +5,7 @@ import pytest
 from research_lab.alpaca_dynamic_live_runtime_v1 import DynamicLiveClient
 from scripts.equities_alpaca_paper_bridge import AlpacaAPIError
 
-PAYLOAD=dict(symbol='LLY',notional='101.413902261',side='buy',type='market',time_in_force='day',client_order_id='abm-'+'a'*32)
+PAYLOAD=dict(symbol='LLY',notional='101.41',side='buy',type='market',time_in_force='day',client_order_id='abm-'+'a'*32)
 KEY='fixture-key-123';SECRET='fixture-secret-456'
 
 class Endpoint:
@@ -28,11 +28,12 @@ def test_real_http422_preserves_sanitized_body_request_id_and_wire_hash():
  d=exc.http_error_evidence
  assert exc.status_code==422 and str(exc)=='ALPACA_HTTP_422'
  assert d['broker_code']==42210000 and d['message']=='notional must have at most 2 decimal places'
- assert d['request_id']=='request-fixture-1' and not d['body_truncated']
+ assert d['request_id'] is None and not d['body_truncated']
+ assert d['request_id_sha256']==hashlib.sha256(b'request-fixture-1').hexdigest()
  assert d['body_prefix_sha256']==hashlib.sha256(body).hexdigest()
  req=e.requests[0];assert req.get_method()=='POST' and json.loads(req.data)==PAYLOAD
  assert d['request_payload_sha256']==hashlib.sha256(req.data).hexdigest()
- assert d['request_payload']['notional']=='101.413902261'
+ assert d['request_payload']['notional']=='101.41'
  assert d['client_order_id_sha256']==hashlib.sha256(PAYLOAD['client_order_id'].encode()).hexdigest()
  assert c.write_permit is None
  with pytest.raises(ValueError,match='LIVE_EXACT_WRITE_PERMIT_REQUIRED'):c._request('POST','/v2/orders',PAYLOAD)

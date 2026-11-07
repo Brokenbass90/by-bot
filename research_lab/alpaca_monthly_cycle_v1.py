@@ -6,6 +6,8 @@ a broker whose HTTP implementation never leaves memory.
 """
 from contextlib import contextmanager,nullcontext
 import fcntl
+import hashlib
+import stat
 import json
 import os
 import time
@@ -58,8 +60,47 @@ class MonthlyManager:
         return MonthlyBook(p,CONTRACT)
 
     def native(self,client,*,base_url,**scope):
-        return MonthlyNativeBinding(self.book,client=client,base_url=base_url,account_id=self.account,
+        bound=MonthlyNativeBinding(self.book,client=client,base_url=base_url,account_id=self.account,
             capital=self.capital,runtime=self.root/'native',lock_path=self.lock,entry_halt_path=self.halt,**scope)
+        if client is not None:client._http_error_capture_sink=self._capture_http_rejection
+        return bound
+
+    def _capture_http_rejection(self,exc):
+        """Keep exact body/ID private; return only a non-sensitive reference.
+
+        Existing create-exclusive fsynced evidence writer; no retry or financial
+        state effect. An orphan body after a write failure is retained, never
+        presented as a committed capture without its metadata manifest.
+        """
+        previous=getattr(exc,'_http_error_capture_reference',None)
+        if isinstance(previous,dict):return previous
+        capture=getattr(exc,'_private_http_error_capture',None)
+        if not isinstance(capture,dict) or capture.get('schema')!='ALPACA_HTTP_PRIVATE_CAPTURE_V1':return None
+        ref=dict(status='WRITE_FAILED')
+        try:
+            folder=ops.safe_path(self.root/'http-rejections')
+            folder.mkdir(mode=0o700,exist_ok=True)
+            from research_lab.kity_oct15_deadline_v1 import fsync_dir
+            fsync_dir(self.root)
+            info=folder.stat()
+            if (not stat.S_ISDIR(info.st_mode) or info.st_uid!=os.getuid()
+                or stat.S_IMODE(info.st_mode)&0o077):raise ValueError('PRIVATE_CAPTURE_DIRECTORY_CUSTODY')
+            identity=uuid.uuid4().hex
+            raw=capture.get('body')
+            metadata={k:v for k,v in capture.items() if k!='body'}
+            metadata.update(capture_id=identity,body_bytes=len(raw) if isinstance(raw,bytes) else 0,
+                body_sha256=hashlib.sha256(raw).hexdigest() if isinstance(raw,bytes) else None)
+            if isinstance(raw,bytes):publish_once(folder/(identity+'.body'),raw)
+            publish(folder/(identity+'.json'),metadata)
+            ref=dict(capture_id=identity,status=metadata['status'],body_sha256=metadata['body_sha256'])
+        except Exception:
+            # Capture failure must preserve the rejected request and one-use
+            # permit; do not leak the body, path, request ID or failure text.
+            pass
+        exc._http_error_capture_reference=ref
+        try:self._record('HTTP_REJECTION_CAPTURE',dict(ref),time.time_ns()//1000000)
+        except Exception:pass  # a failed evidence disk cannot replace HTTP status
+        return ref
 
     def _record(self,kind,out,now_ms):
         publish(self.root/'observations'/(str(now_ms)+'-'+uuid.uuid4().hex+'.json'),
@@ -206,6 +247,8 @@ class MonthlyManager:
                 if isinstance(evidence,dict) and evidence.get('schema')=='ALPACA_HTTP_ERROR_EVIDENCE_V1':
                     try:issue['http_error_evidence']=json.loads(json.dumps(evidence,sort_keys=True,allow_nan=False))
                     except (TypeError,ValueError):issue['http_error_evidence_capture']='UNAVAILABLE'
+                private=self._capture_http_rejection(exc)
+                if private is not None:issue['http_error_private_capture']=private
                 out['issues'].append(issue)
                 return None
         with self.guard('dispatch.lock'):

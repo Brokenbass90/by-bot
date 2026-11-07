@@ -640,7 +640,9 @@ class MonthlyNativeBinding:
         if not 0<gate['weight']<=.60 or notional>self.capital*.70*.60+1e-9:
             raise ValueError('MONTHLY_WEIGHT_OR_NOTIONAL_CAP')
         out=result('MONTHLY_NATIVE_ENTRY_PREPARED_ORDERS_OFF',selection_id=selection_id,
-            client_order_id=entry_cid(s,symbol),symbol=symbol,notional=notional,entry_gate=gate)
+            client_order_id=entry_cid(s,symbol),symbol=symbol,
+            notional=float(native._monthly_notional_wire(notional,precision=2)),
+            notional_cap=notional,notional_precision=2,entry_gate=gate)
         out['ticket_sha256']=digest(out)
         return out
 
@@ -667,6 +669,10 @@ class MonthlyNativeBinding:
                     raise ValueError('UNCERTAIN_ENTRY_NO_RESEND')
                 native._recover_intended_entry_intents(**args)
             else:
+                if (ticket.get('notional_precision')!=2
+                    or dec(ticket['notional'])!=dec(native._monthly_notional_wire(ticket['notional'],precision=2))
+                    or positive(ticket.get('notional_cap'))<positive(ticket['notional'])):
+                    raise ValueError('MONTHLY_CENTS_TICKET_REQUIRED')
                 if self.halt.exists() or native.paper_entry_halted(base_url=self.base_url,state_dir=args['state_dir']):
                     raise ValueError('ENTRY_HALT_PRESERVED')
                 window=next(c for c in s['calendar'] if c['session']==s['entry_session'])
@@ -732,6 +738,12 @@ class MonthlyNativeBinding:
                         baseline_selection_sha256=s['selection_id'],baseline_entry_gate=gate,
                         baseline_dispatch_validator=final_dispatch)
                 except native.AlpacaAPIError as exc:
+                    # Persist before the existing STOP422 handler consumes the
+                    # original rejection or a later unwind raises another error.
+                    sink=getattr(self.client,'_http_error_capture_sink',None)
+                    if callable(sink):
+                        try:sink(exc)
+                        except Exception:pass
                     saved=json.loads(self.reentry.read_text())['entry_intents'][cid]
                     if exc.status_code!=422 or not saved.get('baseline_stop_rejected_422'):raise
                     entry=self.client.get_order_by_client_id(cid)

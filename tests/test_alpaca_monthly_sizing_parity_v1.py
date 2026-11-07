@@ -32,7 +32,7 @@ def test_monthly_native_wire_notional_cannot_round_above_approved_size(setup):
 @pytest.mark.parametrize('cash,equity,weight,cap,expected',[
     (1000.,1000.,.6,None,420.),
     (10.,1000.,.6,None,10.),
-    (1000.,1500.,.6,487.42,204.7164),
+    (1000.,1500.,.6,487.42,204.71),
     (1000.,200.,.6,487.42,84.),
 ])
 def test_actual_compiler_math_and_explicit_live_ceiling(cash,equity,weight,cap,expected):
